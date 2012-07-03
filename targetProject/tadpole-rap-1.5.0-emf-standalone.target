@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target name="tadpole-rap-1.5.0-emf-standalone" sequenceNumber="54">
+<target name="tadpole-rap-1.5.0-emf-standalone" sequenceNumber="58">
 <locations>
-<location path="${workspace_loc}/targetProject/tmf-xtext-Update-2.3.0RC4" type="Directory"/>
-<location path="${workspace_loc}\targetProject/rap-runtime-1.5.0-R-201206" type="Directory"/>
-<location path="${workspace_loc}/targetProject/standalone" type="Directory"/>
-<location path="${workspace_loc}/targetProject/eclipse-3.8M6-delta-pack" type="Directory"/>
-<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.7.0.v20120130-0943"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
+<location path="${git-tadpole}/targetProject/eclipse-3.8M6-delta-pack" type="Directory"/>
+<location path="${git-tadpole}/targetProject/standalone" type="Directory"/>
+<location path="${git-tadpole}/targetProject/tmf-xtext-Update-2.3.0RC4" type="Directory"/>
+<location path="${git-tadpole}\targetProject/rap-runtime-1.5.0-R-201206" type="Directory"/>
 </locations>
 </target>
