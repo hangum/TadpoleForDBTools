@@ -1,0 +1,143 @@
+grammar org.eclipselabs.mongo.query.MongoSQL hidden(WS, ML_COMMENT, SL_COMMENT)
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate query "http://www.eclipse.org/mongoemf/SQLQuery"
+
+Model:
+	'SELECT'
+	attrs=ColumnList
+	'FROM'
+	db=Database
+	('WHERE' whereEntry=WhereEntry)?
+	;
+
+Database:
+	'mongo://' url=ID (':' port=SINGED_LONG)?
+	'/' dbName=ID
+	'/' name=ID
+;
+
+ColumnList:
+  ID (',' ID)*
+  | '*'
+;
+
+WhereEntry returns WhereEntry:
+	AndWhereEntry ({OrWhereEntry.entries+=current} 
+    	("OR" entries+=AndWhereEntry)+)?
+;
+ 
+AndWhereEntry returns WhereEntry:
+	ConcreteWhereEntry ({AndWhereEntry.entries+=current} 
+    	("AND" entries+=ConcreteWhereEntry)+)?
+
+;
+
+ConcreteWhereEntry returns WhereEntry:
+	ParWhereEntry | ExpressionWhereEntry
+;
+
+ParWhereEntry  returns WhereEntry:
+	"(" WhereEntry ")"
+;
+
+ExpressionWhereEntry:
+	SingleExpressionWhereEntry | MultiExpressionWhereEntry
+;
+
+SingleExpressionWhereEntry:
+	name=ID operator=Operator rhs=Expression 
+;
+
+Expression:
+	DoubleExpression | LongExpression | StringExpression | NullExpression | DateExpression |BooleanExpression | ReplacableValue
+;
+
+ReplacableValue:
+	value="?"
+;
+
+DoubleExpression: 
+	value=SIGNED_DOUBLE
+; 
+
+LongExpression: 
+	value=SINGED_LONG	
+; 
+
+StringExpression: 
+	value=STRING
+; 
+
+NullExpression:
+	value="null"
+; 
+
+DateExpression:
+  value=DATE
+ ;
+
+BooleanExpression: 
+	true ="true"
+	|true="false"
+;
+
+MultiExpressionWhereEntry:
+	name=ID operator=ArrayOperator rhs=ArrayExpression 
+;
+
+ArrayExpression:
+	DoubleArrayExpression | LongArrayExpression | StringArrayExpression | NullArrayExpression | DateArrayExpression |BooleanArrayExpression
+;
+
+DoubleArrayExpression: 
+	'[' values+=SIGNED_DOUBLE (',' values+=SIGNED_DOUBLE)* ']'
+; 
+
+LongArrayExpression: 
+	'[' values+=SINGED_LONG (',' values+=SINGED_LONG)* ']'
+; 
+
+StringArrayExpression: 
+	'[' values+=STRING (',' values+=STRING)* ']'
+; 
+
+NullArrayExpression:
+	'[' values+="null" (',' values+="null")* ']'
+; 
+
+DateArrayExpression:
+  '[' values+=DATE (',' values+=DATE)* ']'
+ ;
+
+BooleanArrayExpression: 
+	'[' values+=BOOL (',' values+=BOOL)* ']'
+;
+
+enum ArrayOperator:
+	mongo_all = "$all"
+	|mongo_in = "$in"
+	|sql_in = "in"
+	|mongo_nin = "$nin"
+	|sql_notIn="not in"
+;
+
+enum Operator:
+	lessThen="<" | greaterThen=">" | lessEqual="<=" | greaterEqual=">=" | equal="=" | notEqual="!=" | like="like" | notLike="not like" | notIn="not in" | in="in"
+;
+
+terminal BOOL: "true"|"false"|"TRUE"|"FALSE";
+terminal SINGED_LONG returns ecore::ELong: '-'?('0'..'9')+;
+terminal DATE returns ecore::EDate : '0'..'9' '0'..'9' '0'..'9' '0'..'9' '-' ('0'..'1') '0'..'9' '-' '0'..'3' '0'..'9';	
+terminal SIGNED_DOUBLE returns ecore::EDouble: '-'?('0'..'9')+ ('.' ('0'..'9')+)?;
+
+terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_'|'.') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'.')*;
+terminal STRING	: 
+			'"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|'"') )* '"' |
+			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
+		; 
+terminal ML_COMMENT	: '/*' -> '*/';
+terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
+
+terminal WS			: (' '|'\t'|'\r'|'\n')+;

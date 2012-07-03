@@ -1,0 +1,39 @@
+.ruler_annotation {
+	background-color: #e1ebfb;
+	width: 16px;
+}
+
+.ruler_annotation_todo {
+}
+
+.ruler_annotation_todo_overview {
+	background-color: lightgreen;
+	border: 1px solid green;
+}
+
+.ruler_annotation_breakpoint {
+}
+
+.ruler_annotation_breakpoint_overview {
+	background-color: lightblue;
+	border: 1px solid blue;
+}
+
+.ruler_lines {
+	background-color: #e1ebfb;
+	border-right: 1px solid #b1badf;
+	text-align: right;
+}
+
+.ruler_overview {
+	background-color: #e1ebfb;
+}
+
+.ruler_lines_even {
+	background-color: #e1ebfb;
+}
+
+.ruler_lines_odd {
+	background-color: white;
+}
+

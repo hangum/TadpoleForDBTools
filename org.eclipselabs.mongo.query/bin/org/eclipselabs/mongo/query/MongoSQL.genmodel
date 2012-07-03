@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipselabs.mongo.query/src-gen" editDirectory="/org.eclipselabs.mongo.query.edit/src"
+    editorDirectory="/org.eclipselabs.mongo.query.editor/src" modelPluginID="org.eclipselabs.mongo.query"
+    forceOverwrite="true" modelName="MongoSQL" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="5.0" copyrightFields="false" editPluginID="org.eclipselabs.mongo.query.edit"
+    editorPluginID="org.eclipselabs.mongo.query.editor" runtimeVersion="2.8">
+  <genPackages prefix="Query" basePackage="org.eclipselabs.mongo.query" disposableProviderFactory="true"
+      ecorePackage="MongoSQL.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="MongoSQL.ecore#//ArrayOperator">
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//ArrayOperator/mongo_all"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//ArrayOperator/mongo_in"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//ArrayOperator/sql_in"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//ArrayOperator/mongo_nin"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//ArrayOperator/sql_notIn"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="MongoSQL.ecore#//Operator">
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/lessThen"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/greaterThen"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/lessEqual"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/greaterEqual"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/equal"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/notEqual"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/like"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/notLike"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/notIn"/>
+      <genEnumLiterals ecoreEnumLiteral="MongoSQL.ecore#//Operator/in"/>
+    </genEnums>
+    <genClasses ecoreClass="MongoSQL.ecore#//Model">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//Model/attrs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MongoSQL.ecore#//Model/db"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MongoSQL.ecore#//Model/whereEntry"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//Database">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//Database/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//Database/port"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//Database/dbName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//Database/name"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//WhereEntry"/>
+    <genClasses ecoreClass="MongoSQL.ecore#//ExpressionWhereEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//ExpressionWhereEntry/name"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//SingleExpressionWhereEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//SingleExpressionWhereEntry/operator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MongoSQL.ecore#//SingleExpressionWhereEntry/rhs"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//Expression"/>
+    <genClasses ecoreClass="MongoSQL.ecore#//ReplacableValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//ReplacableValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//DoubleExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//DoubleExpression/value"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//LongExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//LongExpression/value"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//StringExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//StringExpression/value"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//NullExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//NullExpression/value"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//DateExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//DateExpression/value"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//BooleanExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//BooleanExpression/true"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//MultiExpressionWhereEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//MultiExpressionWhereEntry/operator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MongoSQL.ecore#//MultiExpressionWhereEntry/rhs"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//ArrayExpression"/>
+    <genClasses ecoreClass="MongoSQL.ecore#//DoubleArrayExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//DoubleArrayExpression/values"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//LongArrayExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//LongArrayExpression/values"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//StringArrayExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//StringArrayExpression/values"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//NullArrayExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//NullArrayExpression/values"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//DateArrayExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//DateArrayExpression/values"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//BooleanArrayExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MongoSQL.ecore#//BooleanArrayExpression/values"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//OrWhereEntry">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MongoSQL.ecore#//OrWhereEntry/entries"/>
+    </genClasses>
+    <genClasses ecoreClass="MongoSQL.ecore#//AndWhereEntry">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MongoSQL.ecore#//AndWhereEntry/entries"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

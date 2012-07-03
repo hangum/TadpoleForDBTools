@@ -1,0 +1,14 @@
+1.gef-source(cvs)
+		:pserver:anonymous@dev.eclipse.org:/cvsroot/rt
+		
+		- require plugins
+		org.eclipse.draw2d
+		org.eclipse.draw2d.rap
+		org.eclipse.gef
+		org.eclipse.zest.core
+		org.eclipse.zest.layouts
+		
+		
+2. nubulra ( Contribution for Pagination control )
+		https://bugs.eclipse.org/bugs/show_bug.cgi?id=367064#c20
+		의 zip파일 가져와서 압축 푼것임.

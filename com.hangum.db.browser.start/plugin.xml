@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.hangum.db.browser.rap.Perspective"
+            id="com.hangum.db.browser.rap.perspective"
+            name="DBBrowser">
+      </perspective>
+   </extension>
+
+</plugin>
