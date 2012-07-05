@@ -3,6 +3,7 @@ package com.hangum.db.browser.rap.core.editors.table;
 import org.apache.commons.lang.StringUtils;
 
 import com.hangum.db.browser.rap.core.Messages;
+import com.hangum.db.util.XMLUtils;
 
 /**
  * 테이블뷰의 테이블 수정관련 정의
@@ -51,7 +52,7 @@ public class TbUtils {
 	public static String MODIFY_DATA = MODIFY_DATA_START + "%s" + MODIFY_DATA_END; //$NON-NLS-1$
 	/** 데이터 항목 수정 */
 	public static String getModifyData(String value) {
-		return String.format(MODIFY_DATA, value);
+		return String.format(MODIFY_DATA, XMLUtils.xmlToString(value));
 	}
 	/** is modify data */
 	public static boolean isModifyData(String value) {
@@ -62,7 +63,7 @@ public class TbUtils {
 		value = StringUtils.replace(value, TbUtils.MODIFY_DATA_START, ""); //$NON-NLS-1$
 		value = StringUtils.replace(value, TbUtils.MODIFY_DATA_END, ""); //$NON-NLS-1$
 		
-		return value;
+		return XMLUtils.stringToXml(value);
 	}
 
 }

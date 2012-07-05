@@ -51,6 +51,7 @@ import com.hangum.db.dao.mysql.TableColumnDAO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.db.util.XMLUtils;
 import com.hangum.db.util.tables.SQLResultContentProvider;
 import com.hangum.db.util.tables.SQLResultFilter;
 import com.hangum.db.util.tables.SQLResultLabelProvider;
@@ -370,7 +371,7 @@ public class TableViewerEditPart extends EditorPart {
 			ResultSetMetaData  rsm = rs.getMetaData();
 			int columnCount = rsm.getColumnCount();
 			for(int i=0; i<rsm.getColumnCount(); i++) {
-				logger.debug(i + "[type]" + rsm.getColumnClassName(i+1) ); //$NON-NLS-1$
+				if(logger.isDebugEnabled()) logger.debug(i + "[type]" + rsm.getColumnClassName(i+1) ); //$NON-NLS-1$
 				tableDataTypeList.put(i, rsm.getColumnClassName(i+1));
 			}
 			
@@ -388,7 +389,7 @@ public class TableViewerEditPart extends EditorPart {
 				tmpRs.put(0, TbUtils.COLUMN_MOD_TYPE.NONE.toString());
 				
 				for(int i=1;i<columnCount+1; i++) {
-					tmpRs.put(i, rs.getString(i));
+					tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i)));
 				}
 				
 				tableDataList.add(tmpRs);
@@ -396,7 +397,6 @@ public class TableViewerEditPart extends EditorPart {
 				HashMap<Integer, Object> clondRs = (HashMap<Integer, Object>)tmpRs.clone();
 				originalDataList.add(clondRs);
 			}
-			
 
 		} finally {
 			try { rs.close(); } catch(Exception e) {}
