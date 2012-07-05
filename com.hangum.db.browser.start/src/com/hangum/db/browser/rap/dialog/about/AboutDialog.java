@@ -65,15 +65,15 @@ public class AboutDialog extends Dialog {
 		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
 		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel0.setText("MAIL : <a href=\"mailto:adi.tadpole@gmail.com\" target=\"_blank\">adi.tadpole@gmail.com</a>");//Messages.AboutAction_4);
+		lblNewLabel0.setText("Mail : <a href=\"mailto:adi.tadpole@gmail.com\" target=\"_blank\">adi.tadpole@gmail.com</a>");//Messages.AboutAction_4);
 
 		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
 		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel2.setText("HOME : <a href=\"https://sites.google.com/site/tadpolefordb\" target=\"_blank\">https://sites.google.com/site/tadpolefordb</a>");//Messages.AboutAction_4);
+		lblNewLabel2.setText("Home page : <a href=\"https://sites.google.com/site/tadpolefordb\" target=\"_blank\">https://sites.google.com/site/tadpolefordb</a>");//Messages.AboutAction_4);
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel3.setText("ISSUES : <a href=\"http://code.google.com/p/tadpole-for-db-tools/issues/list\" target=\"_blank\">http://code.google.com/p/tadpole-for-db-tools/issues/list</a>");//Messages.AboutAction_4);
+		lblNewLabel3.setText("Bug & Issues : <a href=\"https://github.com/hangum/TadpoleForDBTools/issues\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools/issues</a>");//Messages.AboutAction_4);
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
