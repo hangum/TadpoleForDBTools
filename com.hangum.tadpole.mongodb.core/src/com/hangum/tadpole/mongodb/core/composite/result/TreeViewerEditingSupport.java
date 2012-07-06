@@ -14,7 +14,7 @@ import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBJavaStrToJavaObj;
 
 /**
- * treeeditor
+ * data direct editor
  * 
  * @author hangum
  *
