@@ -466,15 +466,19 @@ public class MongodbResultComposite extends Composite {
 	}
 	
 	/**
-	 * page init
+	 * page를 초기화 합니다.
 	 */
 	private void tabInit() {
-		if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
-			tabFolderMongoDB.setSelection(0);
-		} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
-			tabFolderMongoDB.setSelection(1);
-		} else {
-			tabFolderMongoDB.setSelection(2);
+
+		if(tabFolderMongoDB.getSelectionIndex() == 3) {
+			
+			if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
+				tabFolderMongoDB.setSelection(0);
+			} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
+				tabFolderMongoDB.setSelection(1);
+			} else {
+				tabFolderMongoDB.setSelection(2);
+			}
 		}
 	}
 	
@@ -576,11 +580,7 @@ public class MongodbResultComposite extends Composite {
 		
 		TableUtil.packTable(resultTableViewer.getTable());
 		
-		// tab을 초기화한다.
-		if(!isFirstCall) {
-			tabInit();
-			isFirstCall = true;
-		}
+		tabInit();
 		
 		// text view
 		StringBuffer sbJsonStr = new StringBuffer();		
@@ -700,6 +700,7 @@ public class MongodbResultComposite extends Composite {
 	 * console에 text 추가합니다.
 	 * 
 	 * @param msg
+	 * @deprecated
 	 */
 	public void appendConsole() {
 		tabInit();

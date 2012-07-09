@@ -35,6 +35,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.mysql.TableColumnDAO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.define.PreferenceDefine;
@@ -103,7 +104,7 @@ public class MongoDBTableEditor extends EditorPart {
 	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
 	
 	/** label count  string */
-	private String txtCnt = "";
+	private String txtCnt = ""; //$NON-NLS-1$
 	
 	/** console msg */
 	StringBuffer sbConsoleMsg = new StringBuffer();
@@ -121,6 +122,9 @@ public class MongoDBTableEditor extends EditorPart {
 	
 	/** preference default limit */
 	private String defaultLimit = Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_LIMIT);
+	
+	/** preference default max count */
+	private int defaultMaxCount = Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
 	
 	/**
 	 * 
@@ -479,10 +483,10 @@ public class MongoDBTableEditor extends EditorPart {
 		final int cntLimit = getCntLimit();
 		
 		// job
-		Job job = new Job("SQL execute job") {
+		Job job = new Job("SQL execute job") { //$NON-NLS-1$
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Starting JSON query...", IProgressMonitor.UNKNOWN);
+				monitor.beginTask("Starting JSON query...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 						
 				try {			
 					// field					
@@ -512,7 +516,7 @@ public class MongoDBTableEditor extends EditorPart {
 					find(basicFields, basicWhere, basicSort, cntSkip, cntLimit);
 				} catch (Exception e) {
 					logger.error("find basic collection exception", e); //$NON-NLS-1$
-					return new Status(Status.WARNING,Activator.PLUGIN_ID, "findBasic " + e.getMessage());
+					return new Status(Status.WARNING,Activator.PLUGIN_ID, "findBasic " + e.getMessage()); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
@@ -555,10 +559,10 @@ public class MongoDBTableEditor extends EditorPart {
 		final int cntLimit = getCntLimit();
 		
 		// job
-		Job job = new Job("SQL execute job") {
+		Job job = new Job(Messages.MongoDBTableEditor_4) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Starting Extension query...", IProgressMonitor.UNKNOWN);
+				monitor.beginTask(Messages.MongoDBTableEditor_5, IProgressMonitor.UNKNOWN);
 						
 				try {
 					// field
@@ -662,6 +666,13 @@ public class MongoDBTableEditor extends EditorPart {
 	 * @param basicSort
 	 */
 	private void find(BasicDBObject basicFields, DBObject basicWhere, BasicDBObject basicSort, int cntSkip, int cntLimit) throws Exception {
+		if( (cntLimit - cntSkip) >= defaultMaxCount) {
+			
+//			"검색 수가 " + defaultMaxCount + "를 넘을수 없습니다. Prefernece에서 값을 조절하십시오."
+//			Search can not exceed the number 5. Set in Perference.
+			throw new Exception(String.format(Messages.MongoDBTableEditor_0, ""+defaultMaxCount));  //$NON-NLS-2$
+		}
+		
 		mapColumns = new HashMap<Integer, String>();
 		sourceDataList = new ArrayList<HashMap<Integer, Object>>();
 		
@@ -732,7 +743,7 @@ public class MongoDBTableEditor extends EditorPart {
 			if(mapColumns.size() == 0) mapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
 			
 			// append tree text columnInfo.get(key)
-			MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			parserTreeObject(dbObject, treeDto, dbObject);
 			listTrees.add(treeDto);
 							

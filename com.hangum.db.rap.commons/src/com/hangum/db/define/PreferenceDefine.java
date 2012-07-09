@@ -33,6 +33,9 @@ public class PreferenceDefine {
 	public static final String MONGO_DEFAULT_LIMIT = "MONGO_DEFAULT_LIMIT_COUNT";
 	public static final String MONGO_DEFAULT_LIMIT_VALUE = "100";
 	
+	public static final String MONGO_DEFAULT_MAX_COUNT = "MONGO_DEFAULT_MAX_COUNT";
+	public static final String MONGO_DEFAULT_MAX_COUNT_VALUE = "1000";
+	
 	/** mongodb find page */ 
 	public static final String MONGO_DEFAULT_FIND = "MONGO_DEFAULT_FIND_PAGE";
 	public static final String MONGO_DEFAULT_FIND_BASIC = "MONGO_DEFAULT_FIND_PAGE_SEARCH";

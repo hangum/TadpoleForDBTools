@@ -24,6 +24,8 @@ public class MongoDBPreferenceInitializer extends AbstractPreferenceInitializer 
 		
 		// mongodb
 		store.setDefault(PreferenceDefine.MONGO_DEFAULT_LIMIT, PreferenceDefine.MONGO_DEFAULT_LIMIT_VALUE);
+		store.setDefault(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT, PreferenceDefine.MONGO_DEFAULT_MAX_COUNT_VALUE);
+		
 		store.setDefault(PreferenceDefine.MONGO_DEFAULT_FIND, PreferenceDefine.MONGO_DEFAULT_FIND_EXTEND);
 		store.setDefault(PreferenceDefine.MONGO_DEFAULT_RESULT, PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE);
 	}

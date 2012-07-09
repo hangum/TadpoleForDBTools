@@ -39,6 +39,12 @@ public class MongoDBPreferencePage extends FieldEditorPreferencePage implements 
 			integerFieldEditor.setTextLimit(5);
 			addField(integerFieldEditor);
 		}
+		{
+			IntegerFieldEditor integerFieldEditor = new IntegerFieldEditor(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT, PreferenceDefine.MONGO_DEFAULT_MAX_COUNT, getFieldEditorParent());
+			integerFieldEditor.setStringValue(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT_VALUE);
+			integerFieldEditor.setTextLimit(5);
+			addField(integerFieldEditor);
+		}
 		
 		addField(new RadioGroupFieldEditor(PreferenceDefine.MONGO_DEFAULT_FIND, "Default Find Page", 2, 
 				new String[][]{{"Basic Search", PreferenceDefine.MONGO_DEFAULT_FIND_BASIC}, 

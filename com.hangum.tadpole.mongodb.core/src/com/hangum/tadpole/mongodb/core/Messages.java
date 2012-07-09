@@ -11,8 +11,11 @@ public class Messages extends NLS {
 	public static String MongodbResultComposite_10;
 	public static String MongodbResultComposite_12;
 	public static String MongodbResultComposite_9;
+	public static String MongoDBTableEditor_0;
 	public static String MongoDBTableEditor_23;
 	public static String MongoDBTableEditor_31;
+	public static String MongoDBTableEditor_4;
+	public static String MongoDBTableEditor_5;
 	public static String MongoDBTableEditor_69;
 	public static String MongoSQLParser_29;
 	public static String MongoSQLParser_38;
