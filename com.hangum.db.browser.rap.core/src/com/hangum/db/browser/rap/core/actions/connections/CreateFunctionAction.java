@@ -12,9 +12,9 @@ import com.hangum.db.define.Define;
  * @author hangumNote
  *
  */
-public class CreatFunctionAction extends AbstractQueryAction {
+public class CreateFunctionAction extends AbstractQueryAction {
 
-	public CreatFunctionAction() {
+	public CreateFunctionAction() {
 		super();
 	}
 

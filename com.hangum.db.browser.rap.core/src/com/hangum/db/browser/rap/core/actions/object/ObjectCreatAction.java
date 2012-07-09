@@ -6,11 +6,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.db.browser.rap.core.actions.connections.CreatFunctionAction;
-import com.hangum.db.browser.rap.core.actions.connections.CreatIndexAction;
-import com.hangum.db.browser.rap.core.actions.connections.CreatProcedureAction;
-import com.hangum.db.browser.rap.core.actions.connections.CreatTableAction;
-import com.hangum.db.browser.rap.core.actions.connections.CreatViewAction;
+import com.hangum.db.browser.rap.core.actions.connections.CreateFunctionAction;
+import com.hangum.db.browser.rap.core.actions.connections.CreateIndexAction;
+import com.hangum.db.browser.rap.core.actions.connections.CreateProcedureAction;
+import com.hangum.db.browser.rap.core.actions.connections.CreateTableAction;
+import com.hangum.db.browser.rap.core.actions.connections.CreateViewAction;
 import com.hangum.db.browser.rap.core.actions.connections.CreateTriggerAction;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.define.Define;
@@ -45,7 +45,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			
 			// others db
 			if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
-				CreatTableAction cta = new CreatTableAction();
+				CreateTableAction cta = new CreateTableAction();
 				cta.run(userDB, actionType);
 			// moongodb
 			} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
@@ -58,16 +58,16 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			}
 			
 		} else if(actionType == DB_ACTION.VIEWS) {
-			CreatViewAction cva = new CreatViewAction();
+			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
 		} else if(actionType == DB_ACTION.INDEXES) {
-			CreatIndexAction cia = new CreatIndexAction();
+			CreateIndexAction cia = new CreateIndexAction();
 			cia.run(userDB, actionType);
 		} else if(actionType == DB_ACTION.PROCEDURES) {
-			CreatProcedureAction cia = new CreatProcedureAction();
+			CreateProcedureAction cia = new CreateProcedureAction();
 			cia.run(userDB, actionType);
 		} else if(actionType == DB_ACTION.FUNCTIONS) {
-			CreatFunctionAction cia = new CreatFunctionAction();
+			CreateFunctionAction cia = new CreateFunctionAction();
 			cia.run(userDB, actionType);
 		} else if(actionType == DB_ACTION.TRIGGERS) {
 			CreateTriggerAction cia = new CreateTriggerAction();

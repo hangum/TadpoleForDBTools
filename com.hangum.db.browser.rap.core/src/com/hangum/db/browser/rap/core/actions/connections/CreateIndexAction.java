@@ -7,23 +7,21 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.define.Define;
 
 /**
- * table 생성 action
+ * index 생성 action
  * 
  * @author hangumNote
  *
  */
-public class CreatTableAction extends AbstractQueryAction {
+public class CreateIndexAction extends AbstractQueryAction {
 
-	public CreatTableAction() {
-		super();
+	public CreateIndexAction() {
 	}
 
 	@Override
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		run(userDB, QueryTemplateUtils.getQuery(userDB, Define.DB_ACTION.TABLES));
+		run(userDB, QueryTemplateUtils.getQuery(userDB, Define.DB_ACTION.INDEXES));
 	}
 	
-
 }

@@ -7,14 +7,14 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.define.Define;
 
 /**
- * procedure 생성 action
+ * table 생성 action
  * 
  * @author hangumNote
  *
  */
-public class CreatProcedureAction extends AbstractQueryAction {
+public class CreateTableAction extends AbstractQueryAction {
 
-	public CreatProcedureAction() {
+	public CreateTableAction() {
 		super();
 	}
 
@@ -22,7 +22,7 @@ public class CreatProcedureAction extends AbstractQueryAction {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		run(userDB, QueryTemplateUtils.getQuery(userDB, Define.DB_ACTION.PROCEDURES));
+		run(userDB, QueryTemplateUtils.getQuery(userDB, Define.DB_ACTION.TABLES));
 	}
 	
 
