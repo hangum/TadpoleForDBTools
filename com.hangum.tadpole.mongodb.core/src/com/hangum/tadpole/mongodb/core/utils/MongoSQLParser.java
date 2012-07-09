@@ -260,6 +260,7 @@ public class MongoSQLParser {
 			if(expression.getOperator() == Operator.IN) {
 				
 				String strValue = getValue(expression.getRhs()).toString();
+				logger.debug("[in]" + strValue);
 				Object objValue = MongoDBJavaStrToJavaObj.convStrToObj(column.getType(), StringUtils.split(strValue, ",") ); //$NON-NLS-1$
 				
 				query.put(expression.getName(), new BasicDBObject("$in", objValue)); //$NON-NLS-1$

@@ -2,6 +2,7 @@ package com.hangum.tadpole.mongodb.core.test;
 
 import com.hangum.tadpole.mongodb.core.connection.MongoDBConnectionTest;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBJavaStrToJavaObjTest;
+import com.hangum.tadpole.mongodb.core.utils.MongoSQLParserTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -20,6 +21,8 @@ public class AllTests {
 		suite.addTestSuite(MongoDBConnectionTest.class);
 		
 		suite.addTestSuite(MongoDBJavaStrToJavaObjTest.class);
+		
+		suite.addTestSuite(MongoSQLParserTest.class);
 		
 		//$JUnit-END$
 		return suite;

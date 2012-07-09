@@ -104,8 +104,7 @@ public class MongoDBJavaStrToJavaObjTest extends TestCase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("java Date convert fail");
-		}
-		
+		}		
 	}
 
 	/**
@@ -115,8 +114,28 @@ public class MongoDBJavaStrToJavaObjTest extends TestCase {
 		String[] values = {"10", "20", "30"};
 		try {
 			Object[] objs = MongoDBJavaStrToJavaObj.convStrToObj("java.lang.Double", values);
+			for (Object object : objs) {
+				if(object instanceof Double) {
+				} else fail("java Double convert fail");
+			}
 		} catch (Exception e) {
 			fail("java array Dobule convert error");
+		}
+	}
+	
+	/**
+	 * Test method for {@link com.hangum.tadpole.mongodb.core.utils.MongoDBJavaStrToJavaObj#convStrToObj(java.lang.String, java.lang.String)}.
+	 */
+	public void testConvBoolToObject() {
+		try {
+			Object obj = MongoDBJavaStrToJavaObj.convStrToObj("java.lang.Boolean", "true");
+			System.out.println(obj.toString());
+			if(obj instanceof Boolean) {				
+			} else fail("java Boolean convert fail");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("java Date convert fail");
 		}
 	}
 

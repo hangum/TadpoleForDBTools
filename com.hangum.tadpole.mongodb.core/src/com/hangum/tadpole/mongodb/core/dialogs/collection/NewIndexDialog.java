@@ -43,7 +43,7 @@ public class NewIndexDialog extends NewDocumentDialog {
 		} catch (Exception e) {
 			logger.error("mongodb create collection", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Creat Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		super.okPressed();
@@ -52,6 +52,6 @@ public class NewIndexDialog extends NewDocumentDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("MongoDB Crate Index Dialog"); //$NON-NLS-1$
+		newShell.setText("MongoDB Create Index Dialog"); //$NON-NLS-1$
 	}
 }
