@@ -201,11 +201,13 @@ function initEmbeddedEditor(){
 	
 	editor.installTextView();
 	
+	var contentName = editorService.getContentName();
+	
 	// Set editor input by calling through editorService
-	editor.onInputChange(editorService.getContentName(), null, editorService.getInitialContent());
+	editor.onInputChange(contentName, null, editorService.getInitialContent());
 	
 	// Set the syntax highlighter
-	syntaxHighlighter.highlight(editorService.getContentName(), editor.getTextView());
+	syntaxHighlighter.highlight(contentName, editor.getTextView());
 } // end of initEmbeddedEditor
 	
 // Created embedded editor
