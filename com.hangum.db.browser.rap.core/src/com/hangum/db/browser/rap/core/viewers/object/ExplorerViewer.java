@@ -579,16 +579,18 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
 					IStructuredSelection is = (IStructuredSelection)event.getSelection();
-					String strTBName = is.getFirstElement().toString();
-					
-					if(strTBName != null) {
-						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-						showViewColumns = sqlClient.queryForList("tableColumnList", strTBName); //$NON-NLS-1$
-					}  else showViewColumns = null;
-					
-					
-					viewColumnViewer.setInput(showViewColumns);
-					viewColumnViewer.refresh();
+					if(is != null) {
+						String strTBName = is.getFirstElement().toString();
+						
+						if(strTBName != null) {
+							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+							showViewColumns = sqlClient.queryForList("tableColumnList", strTBName); //$NON-NLS-1$
+						}  else showViewColumns = null;
+						
+						
+						viewColumnViewer.setInput(showViewColumns);
+						viewColumnViewer.refresh();
+					}
 					
 				} catch(Exception e) {
 					logger.error("get table list", e); //$NON-NLS-1$
