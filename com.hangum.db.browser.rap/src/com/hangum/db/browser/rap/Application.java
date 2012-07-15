@@ -56,7 +56,7 @@ public class Application implements IEntryPoint {
 		boolean isNew = iss.getHttpSession().isNew();
 		
 		HttpServletRequest servletRequest = RWT.getRequest();
-		System.out.println( servletRequest.getLocalAddr() + ":" + servletRequest.getLocalName() );
+//		System.out.println( servletRequest.getLocalAddr() + ":" + servletRequest.getLocalName() );
 		
 //		System.out.println("[is New]" + isNew);
 //		System.out.println("[session] " + sessionId);
