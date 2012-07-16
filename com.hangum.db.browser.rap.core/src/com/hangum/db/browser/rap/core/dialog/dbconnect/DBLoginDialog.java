@@ -88,7 +88,7 @@ public class DBLoginDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("DB Connect Dialog"); //$NON-NLS-1$
+		newShell.setText("New Database Connection"); //$NON-NLS-1$
 	}
 	
 	/**
