@@ -73,7 +73,7 @@ public class AboutDialog extends Dialog {
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel3.setText("ISSUES : <a href=\"http://code.google.com/p/tadpole-for-db-tools/issues/list\" target=\"_blank\">http://code.google.com/p/tadpole-for-db-tools/issues/list</a>");//Messages.AboutAction_4);
+		lblNewLabel3.setText("ISSUES : <a href=\"https://github.com/hangum/TadpoleForDBTools/issues?state=open\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools/issues?state=open</a>");//Messages.AboutAction_4);
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
