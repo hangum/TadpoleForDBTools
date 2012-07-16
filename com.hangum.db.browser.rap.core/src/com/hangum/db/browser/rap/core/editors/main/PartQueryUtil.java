@@ -41,11 +41,14 @@ public class PartQueryUtil {
 		
 		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getType())) {
 			
-			if( StringUtils.indexOf(originalQuery, "where") == -1 ) {
-				requestQuery = String.format(CubridDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
-			} else {
+//			
+//			https://github.com/hangum/TadpoleForDBTools/issues/12 와 같은 이유로 더 좋은 방법이 나타나기 전까지는 주석 처리 합니다.
+//			
+//			if( StringUtils.indexOf(originalQuery, "where") == -1 ) {
+//				requestQuery = String.format(CubridDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
+//			} else {
 				requestQuery = originalQuery;				
-			}
+//			}
 			
 		// 정의 되지 않는 dbms는 전체로 동작하게 합니다.
 		} else {
