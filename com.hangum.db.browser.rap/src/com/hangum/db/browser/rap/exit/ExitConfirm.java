@@ -17,7 +17,7 @@ public class ExitConfirm implements IExitConfirmation {
 
 	@Override
 	public String getExitConfirmationText() {
-		return "Do you really wanna leave the Tadpole?";
+		return "Do you really wanna leave the Tadpole for DB Tools?";
 	}
 
 }
