@@ -790,6 +790,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		Table tableTableColumn = tableColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
+		
 		createTableColumne(tableColumnViewer);
 		
 		// dnd 기능 추가
@@ -974,9 +975,15 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			if(!isTriggers) createTrigger();
 		}
 		
-			if(showTableColumns != null) showTableColumns.clear();
-			tableColumnViewer.setInput(showTableColumns);
-			tableColumnViewer.refresh();
+		//
+		// table column viewer
+//			if(showTableColumns != null) showTableColumns.clear();
+//			tableColumnViewer.setInput(showTableColumns);
+//			tableColumnViewer.refresh();
+//		 viewer안에 table viewer가 여러개 있으니 먹지 않는다. 음음
+//		https://github.com/hangum/TadpoleForDBTools/issues/9
+			Table table = tableColumnViewer.getTable();
+			table.removeAll();
 			
 			creatAction_Table.setUserDB(getUserDB());
 	//		modifyAction.setUserDB(getUserDB());
