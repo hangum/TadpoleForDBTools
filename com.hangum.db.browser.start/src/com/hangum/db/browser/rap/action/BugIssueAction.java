@@ -17,6 +17,6 @@ public class BugIssueAction extends Action {
 	}
 	
 	public void run() {
-		ExternalBrowser.open( "Issues", "http://code.google.com/p/tadpole-for-db-tools/issues/entry", ExternalBrowser.LOCATION_BAR | ExternalBrowser.NAVIGATION_BAR | ExternalBrowser.STATUS );
+		ExternalBrowser.open( "Issues", "https://github.com/hangum/TadpoleForDBTools/issues", ExternalBrowser.LOCATION_BAR | ExternalBrowser.NAVIGATION_BAR | ExternalBrowser.STATUS );
 	}
 }
