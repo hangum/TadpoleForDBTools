@@ -4,6 +4,12 @@ import com.hangum.db.browser.rap.core.dialog.export.application.SQLToJavaConvert
 import com.hangum.db.browser.rap.core.dialog.export.application.SQLToPHPConvert;
 import com.hangum.db.define.Define;
 
+/**
+ * sql to language convert
+ * 
+ * @author hangum
+ *
+ */
 public class SQLToLanguageConvert {
 	private Define.SQL_TO_APPLICATION application ;
 
