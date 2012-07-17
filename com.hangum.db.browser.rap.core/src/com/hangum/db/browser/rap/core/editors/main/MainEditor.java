@@ -69,6 +69,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.editors.main.browserfunction.EditorBrowserFunctionService;
+import com.hangum.db.browser.rap.core.util.CubridExecutePlanUtils;
 import com.hangum.db.browser.rap.core.viewers.object.ExplorerViewer;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
@@ -909,7 +910,7 @@ public class MainEditor extends EditorPart {
 						changeTbName = StringUtils.trimToEmpty(selText.substring(10));
 					}
 					changeTbName = changeTbName.split(" ")[0]; //$NON-NLS-1$
-					logger.debug("[change name]" + changeTbName); //$NON-NLS-1$
+					if(logger.isDebugEnabled()) logger.debug("[change name]" + changeTbName); //$NON-NLS-1$
 				
 					refreshExplorerView(changeType, changeTbName);
 				} catch(Exception e) {
@@ -987,9 +988,9 @@ public class MainEditor extends EditorPart {
 			lastSelectQuery = executeLastSQL;
 		
 		
-		// 쿼리의 결과를 화면에 출력합니다.
-		setResultTable();
-		resultFolderSel(RESULT_TAB_NAME.RESULT_SET);
+			// 쿼리의 결과를 화면에 출력합니다.
+			setResultTable();
+			resultFolderSel(RESULT_TAB_NAME.RESULT_SET);
 		}
 		
 		setOrionTextFocus();
@@ -1150,7 +1151,7 @@ public class MainEditor extends EditorPart {
 	 * @param endResultPos
 	 */
 	private void runSQLSelect(String requestQuery, int startResultPos, int endResultPos) throws Exception {
-
+		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
@@ -1167,16 +1168,29 @@ public class MainEditor extends EditorPart {
 				}
 				
 				stmt = javaConn.prepareStatement(requestQuery);
+			//  환경설정에서 원하는 조건을 입력하였을 경우.
+				rs = stmt.executeQuery();//Query( selText );
 				
 			// explain
 			}  else if(Define.QUERY_MODE.EXPLAIN_PLAN == queryMode) {
 				
-				stmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, requestQuery));
+				// 큐브리드 디비이면 다음과 같아야 합니다.
+				if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.CUBRID_DEFAULT) {
+					
+					String cubridQueryPlan = CubridExecutePlanUtils.plan(userDB, requestQuery);
+					mapColumns = CubridExecutePlanUtils.getMapColumns();
+					sourceDataList = CubridExecutePlanUtils.getMakeData(cubridQueryPlan);
+					
+					return;
+					
+				} else {
+				
+					stmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, requestQuery));
+					rs = stmt.executeQuery();//Query( selText );
+					
+				}
 			}
-			
-			//  환경설정에서 원하는 조건을 입력하였을 경우.
-			rs = stmt.executeQuery();//Query( selText );
-			
+
 			//////////////////////////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////////////////////////////////////

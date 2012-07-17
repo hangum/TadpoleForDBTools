@@ -74,6 +74,8 @@ public class PartQueryUtil {
 			throw new Exception("Not Support DBMS Query Plan.");
 		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getType())) {
 			resultQuery = SQLiteDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+		} else if(DBDefine.CUBRID_DEFAULT ==  DBDefine.getDBDefine(userDB.getType())) {
+			resultQuery = query;
 		} else {
 			throw new Exception("Not Support DBMS Query Plan.");
 		}
