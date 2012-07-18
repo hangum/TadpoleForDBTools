@@ -2,12 +2,10 @@ package com.hangum.db.browser.rap.core.editors.main;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.define.MySQLDMLTemplate;
 import com.hangum.db.define.OracleDMLTemplate;
-import com.hangum.db.define.PreferenceDefine;
 import com.hangum.db.define.SQLiteDMLTemplate;
 
 /**
