@@ -43,7 +43,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 				TableColumnDAO dao = showTableColumns.get(i);
 				sbSQL.append(dao.getField());
 				
-				// 마지막 컬럼에는 ,를 않넣어주어야하니까
+				// 마지막 컬럼에는 ,를 않넣어주어야하니까 
 				if(i < (showTableColumns.size()-1)) sbSQL.append("= ?,  ");  //$NON-NLS-1$
 				else sbSQL.append("=? "); //$NON-NLS-1$
 			}
