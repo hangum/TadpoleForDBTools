@@ -16,7 +16,8 @@
 
    <launcher name="tadpole-standalone">
       <solaris/>
-      <win useIco="false">
+      <win useIco="true">
+         <ico path="/com.hangum.db.browser.rap/icons/TadpoleForDBTools.ico"/>
          <bmp/>
       </win>
    </launcher>

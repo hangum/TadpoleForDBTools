@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Eclipse-PlatformFilter: (& (osgi.ws=gtk) (osgi.os=aix) (osgi.arch=ppc)
+ )
+Bundle-Vendor: %providerName
+Bundle-Localization: launcher.gtk.aix.ppc
+Fragment-Host: org.eclipse.equinox.launcher;bundle-version="1.0.0"
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.equinox.launcher.gtk.aix.ppc
+Eclipse-BundleShape: dir
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/equino
+ x/rt.equinox.framework.git;path="bundles/org.eclipse.equinox.launcher
+ .gtk.aix.ppc";tag=v20120522-1822
+Bundle-Version: 1.1.100.v20120522-1822
+Bundle-ManifestVersion: 2
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: KyT9FF7C7t86NoBoa2kZT3ZJBfw=
+
+Name: launcher.gtk.aix.ppc.properties
+SHA1-Digest: kM/U3pkXMgzywU/cID5606Xh/IA=
+
+Name: eclipse_1502.so
+SHA1-Digest: 2AX5RwT0yyz4UM/fiiOfaRQCnaU=
+
+Name: about.html
+SHA1-Digest: a9lDHrGuLPkvHBUhsqWU+V2mhPw=
+
