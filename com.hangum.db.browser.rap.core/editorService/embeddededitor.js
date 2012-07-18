@@ -73,6 +73,9 @@ var editorService = {
 	SQL_TO_APPLICATION : 45,
 	sqlToApplication: function(editor) {},
 	
+	DOWNLOAD_SQL : 50,
+	downloadSQL: function(editor) {},
+	
 	SET_FOCUS : 999,
 	setTextFocus: function(editor) {}
 	
@@ -301,6 +304,11 @@ dojo.addOnLoad(function() {
 		// sql to application string 
 		editorService.sqlToApplication = function() {
 			editorServiceHandler(editorService.SQL_TO_APPLICATION, editor.getCaretOffsetAndContent());
+		}
+		
+		// download sql 
+		editorService.downloadSQL = function() {
+			editorServiceHandler(editorService.DOWNLOAD_SQL, editor.getCaretOffsetAndContent());
 		}
 
 		// text set focus

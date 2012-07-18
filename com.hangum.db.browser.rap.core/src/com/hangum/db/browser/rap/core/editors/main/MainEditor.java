@@ -200,6 +200,9 @@ public class MainEditor extends EditorPart {
     private StatusLineContributionItem keyMode;
     private StatusLineContributionItem writeMode;
     
+    /** content download를 위한 더미 composite */
+    private Composite compositeDumy;
+    
 	public MainEditor() {
 		super();
 	}
@@ -333,13 +336,25 @@ public class MainEditor extends EditorPart {
 				}
 			}
 		});
-//		SQLToApplicationSelectionListener sqlToApplicationListener = new SQLToApplicationSelectionListener(this, tltmSQLToApplication);
-//		for(Define.SQL_TO_APPLICATION app : Define.SQL_TO_APPLICATION.values()) {
-//			sqlToApplicationListener.add(app.toString());
-//		}
-//	    tltmSQLToApplication.addSelectionListener(sqlToApplicationListener);
 	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
-	    tltmSQLToApplication.setText("SQL to Application");
+	    tltmSQLToApplication.setText("SQL to Application"); //$NON-NLS-1$
+	    
+	    new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
+		tltmDownload.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_DOWNLOAD_SQL);
+				} catch(Exception ee) {
+					logger.error("download sql", ee); //$NON-NLS-1$
+				}
+			}
+		});
+		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
+		tltmDownload.setText("Download SQL"); //$NON-NLS-1$
+	    
 	    
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
@@ -463,7 +478,7 @@ public class MainEditor extends EditorPart {
 		});
 		btnNext.setText(Messages.MainEditor_9);
 		
-		final Composite compositeDumy = new Composite(compositeBtn, SWT.NONE);
+		compositeDumy = new Composite(compositeBtn, SWT.NONE);
 		compositeDumy.setLayout(new GridLayout(1, false));
 		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
@@ -1525,5 +1540,16 @@ public class MainEditor extends EditorPart {
 	
 	public UserDBResourceDAO getdBResource() {
 		return dBResource;
+	}
+
+	/**
+	 * download sql
+	 * 
+	 * @param newContents
+	 */
+	public void downloadSQL(String newContents) {
+		downloadServiceHandler.setName(userDB.getDisplay_name() + ".sql"); //$NON-NLS-1$
+		downloadServiceHandler.setContent(newContents);
+		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
 	}
 }

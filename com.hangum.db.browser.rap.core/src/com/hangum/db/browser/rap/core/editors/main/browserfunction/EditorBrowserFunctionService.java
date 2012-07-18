@@ -79,6 +79,10 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 				sqlToApplication(arguments);
 				break;
 				
+			case DOWNLOAD_SQL:
+				downloadSQL(arguments);
+				break;
+				
 			default:
 				return null;
 		}
@@ -222,4 +226,16 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 		}
 	}
 
+	/**
+	 * download sql
+	 * @param arguments
+	 */
+	private void downloadSQL(Object[] arguments) {
+		if (arguments.length == 2 && (arguments[1] instanceof String)) {
+			String newContents = (String) arguments[1];
+			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
+			
+			editor.downloadSQL(queryStruct[1]);
+		}
+	}
 }

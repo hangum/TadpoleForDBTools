@@ -27,6 +27,8 @@ public interface IEditorBrowserFunction {
 	public static final int APPEND_QUERY_TEXT 		= 40;
 	public static final int RE_NEW					= 41; 
 	public static final int SQL_TO_APPLICATION 		= 45;
+	
+	public static final int DOWNLOAD_SQL	 		= 50;
     
 	public static final int SET_FOCUS 				= 999;
     
@@ -59,6 +61,9 @@ public interface IEditorBrowserFunction {
     
     /** SQL TO APPLICATION STRING */
     public static final String JAVA_SCRIPT_SQL_TO_APPLICATION = EDITOR_SERVICE_MAP + ".sqlToApplication()";
+    
+    /** DOWNLOAD SQL */
+    public static final String JAVA_DOWNLOAD_SQL = EDITOR_SERVICE_MAP + ".downloadSQL()";
     
     /** TEXT FOCUS */
     public static final String JAVA_SCRIPT_SET_FOCUS_FUNCTION = EDITOR_SERVICE_MAP + ".setTextFocus()";
