@@ -17,6 +17,8 @@ public class TadpoleOpenBrowser  implements Runnable {
 		String s1 = System.getProperty("os.name").toLowerCase();
 		Runtime runtime = Runtime.getRuntime();
 		
+		if(logger.isDebugEnabled()) logger.debug("start open browser");
+		
 		try {
 			// 시스템 속도가 느려서 워크벤치가 정상적으로 동작하지 못했을 경우에 대비하여 기다립니다.
 			try { Thread.sleep(1000); } catch(Exception e) {};
@@ -57,6 +59,8 @@ public class TadpoleOpenBrowser  implements Runnable {
 		} catch (Exception e) {
 			logger.error("standalone start open URL", e);
 		}
+		
+		if(logger.isDebugEnabled()) logger.debug("end open browser");
 	} // end run
 	
 }	//  end class TadpoleOpenBrowser 
