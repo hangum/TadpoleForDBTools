@@ -26,6 +26,11 @@ public class PreferenceDefine {
 	/** MAX SESSION TIME OUT */
 	public static final int SESSION_DEFAULT_MAX_PREFERENEC_VALUE = 999999;
 	
+	/** ORACLE PLAN TABLE */
+	public static final String ORACLE_PLAN_TABLE = "ORACLE_PLAN_TABLE";
+	/** ORACLE PLAN TABLE VALUE */
+	public static final String ORACLE_PLAN_TABLE_VALUE = "PLAN_TABLE";
+	
 	/** login history */
 	public static final String LOGIN_HISTORY_PREFERENCE = "LOGIN_HISTORY_PREFERENCE";
 	

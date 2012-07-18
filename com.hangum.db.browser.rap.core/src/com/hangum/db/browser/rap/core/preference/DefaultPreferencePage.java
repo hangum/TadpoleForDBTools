@@ -8,6 +8,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.define.PreferenceDefine;
+import org.eclipse.jface.preference.StringFieldEditor;
 
 /**
  * tadpole default preference
@@ -44,6 +45,10 @@ public class DefaultPreferencePage extends FieldEditorPreferencePage implements 
 			integerFieldEditor.setTextLimit(5);
 			integerFieldEditor.setValidRange(5, PreferenceDefine.SELECT_DEFAULT_MAX_PREFERENCE_VALUE);
 			addField(integerFieldEditor);
+		}
+		{
+			StringFieldEditor stringFieldEditor = new StringFieldEditor(PreferenceDefine.ORACLE_PLAN_TABLE, Messages.DefaultPreferencePage_other_labelText, -1, StringFieldEditor.VALIDATE_ON_KEY_STROKE, getFieldEditorParent());
+			addField(stringFieldEditor);
 		}
 	}
 

@@ -30,6 +30,8 @@ public class AbstractPreferenceInitializer extends org.eclipse.core.runtime.pref
 			store.setDefault(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, PreferenceDefine.SESSION_SERVER_DEFAULT_PREFERENCE_VALUE);
 		}
 		
+		store.setDefault(PreferenceDefine.ORACLE_PLAN_TABLE, PreferenceDefine.ORACLE_PLAN_TABLE_VALUE);
+		
 	}
 
 }

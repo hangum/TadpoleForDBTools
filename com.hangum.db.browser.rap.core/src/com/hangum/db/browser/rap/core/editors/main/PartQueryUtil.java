@@ -2,11 +2,12 @@ package com.hangum.db.browser.rap.core.editors.main;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.define.CubridDMLTemplate;
 import com.hangum.db.define.MySQLDMLTemplate;
 import com.hangum.db.define.OracleDMLTemplate;
+import com.hangum.db.define.PreferenceDefine;
 import com.hangum.db.define.SQLiteDMLTemplate;
 
 /**
@@ -69,13 +70,21 @@ public class PartQueryUtil {
 		String resultQuery = "";
 		
 		if(DBDefine.MYSQL_DEFAULT ==   DBDefine.getDBDefine(userDB.getType())) {
+			
 			resultQuery = MySQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			
 		} else if(DBDefine.ORACLE_DEFAULT ==   DBDefine.getDBDefine(userDB.getType())) {
-			throw new Exception("Not Support DBMS Query Plan.");
+
+			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			
 		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getType())) {
+			
 			resultQuery = SQLiteDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			
 		} else if(DBDefine.CUBRID_DEFAULT ==  DBDefine.getDBDefine(userDB.getType())) {
+			
 			resultQuery = query;
+			
 		} else {
 			throw new Exception("Not Support DBMS Query Plan.");
 		}

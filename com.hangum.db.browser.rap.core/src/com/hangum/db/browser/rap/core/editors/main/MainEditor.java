@@ -70,6 +70,7 @@ import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.db.browser.rap.core.util.CubridExecutePlanUtils;
+import com.hangum.db.browser.rap.core.util.OracleExecutePlanUtils;
 import com.hangum.db.browser.rap.core.viewers.object.ExplorerViewer;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
@@ -128,6 +129,7 @@ public class MainEditor extends EditorPart {
 	
 	/** 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */
 	private int queryResultTerm = Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.SELECT_DEFAULT_PREFERENCE);
+	private String planTableName = Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.ORACLE_PLAN_TABLE);
 	
 	/** 실행한 마지막 SELECT 문. */
 	private String lastSelectQuery = ""; //$NON-NLS-1$
@@ -290,25 +292,20 @@ public class MainEditor extends EditorPart {
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
-		
-		if(  DBDefine.getDBDefine(userDB.getType()) != DBDefine.ORACLE_DEFAULT) {
-		
-			ToolItem tltmExplainPlanctrl = new ToolItem(toolBar, SWT.NONE);
-			tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					try {
-						browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
-					} catch(Exception ee) {
-						logger.error("execute plan", ee); //$NON-NLS-1$
-					}
+		ToolItem tltmExplainPlanctrl = new ToolItem(toolBar, SWT.NONE);
+		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
+				} catch(Exception ee) {
+					logger.error("execute plan", ee); //$NON-NLS-1$
 				}
-			});
-			tltmExplainPlanctrl.setText(Messages.MainEditor_3);
-			
-			new ToolItem(toolBar, SWT.SEPARATOR);
-		}
+			}
+		});
+		tltmExplainPlanctrl.setText(Messages.MainEditor_3);
 		
+		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
 		tltmSort.addSelectionListener(new SelectionAdapter() {
@@ -1183,10 +1180,16 @@ public class MainEditor extends EditorPart {
 					
 					return;
 					
+				} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.ORACLE_DEFAULT) {
+					
+					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
+					stmt = javaConn.prepareStatement("select * from " + planTableName);
+					rs = stmt.executeQuery();
+					
 				} else {
 				
 					stmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, requestQuery));
-					rs = stmt.executeQuery();//Query( selText );
+					rs = stmt.executeQuery();
 					
 				}
 			}
