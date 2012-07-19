@@ -1,12 +1,11 @@
 1.gef-source(cvs)
 		:pserver:anonymous@dev.eclipse.org:/cvsroot/rt
 		
+		Head -> org.eclipse.rap -> incubator -> ports -> gef
 		- require plugins
 		org.eclipse.draw2d
 		org.eclipse.draw2d.rap
 		org.eclipse.gef
-		org.eclipse.zest.core
-		org.eclipse.zest.layouts
 		
 		
 2. nubulra ( Contribution for Pagination control )
