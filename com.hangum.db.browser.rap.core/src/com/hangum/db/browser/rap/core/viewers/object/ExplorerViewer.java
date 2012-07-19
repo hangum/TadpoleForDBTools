@@ -580,9 +580,9 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				try {
 					IStructuredSelection is = (IStructuredSelection)event.getSelection();
 					if(is != null) {
-						String strTBName = is.getFirstElement().toString();
-						
-						if(strTBName != null) {
+						if(is.getFirstElement() != null) {
+							String strTBName = is.getFirstElement().toString();
+							
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							showViewColumns = sqlClient.queryForList("tableColumnList", strTBName); //$NON-NLS-1$
 						}  else showViewColumns = null;
