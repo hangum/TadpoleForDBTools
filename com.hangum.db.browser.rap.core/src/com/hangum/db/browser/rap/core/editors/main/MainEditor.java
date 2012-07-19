@@ -128,13 +128,11 @@ public class MainEditor extends EditorPart {
 	private UserDBDAO userDB;
 	
 	/** 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */
-	private int queryResultTerm = Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.SELECT_DEFAULT_PREFERENCE);
+	private int queryResultCount = Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.SELECT_DEFAULT_PREFERENCE);
+	/** 쿼리 결과를 page당 처리 하는 카운트 */
+	private int queryPageCount = Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
+	/** oracle plan table 이름 */
 	private String planTableName = Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.ORACLE_PLAN_TABLE);
-	
-	/** 실행한 마지막 SELECT 문. */
-	private String lastSelectQuery = ""; //$NON-NLS-1$
-	private int startResultPos = 0;
-	private int endResultPos = queryResultTerm;
 	
 	/** query의 히스토리를 보여줍니다. */
 	private List<String> listQueryHistory = new ArrayList<String>();
@@ -145,14 +143,14 @@ public class MainEditor extends EditorPart {
 	private HashMap<Integer, String> mapColumns = null;
 	/** query 의 결과 데이터  -- table의 데이터를 표시하는 용도 <column index, Data> */
 	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
-	
-//	/** sql to application string */
-//	private ToolItem tltmSQLToApplication;
 		
 	/** 이전 버튼 */
 	private Button btnPrev;
 	/** 이후 버튼 */
 	private Button btnNext;
+	
+	/** 페이지 로케이션 */
+	private int pageLocation = 1;
 	
 	/** 결과 filter */
 	private Text textFilter;
@@ -241,7 +239,7 @@ public class MainEditor extends EditorPart {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				if (PreferenceDefine.SELECT_DEFAULT_PREFERENCE.equalsIgnoreCase(event.getProperty())) {
-					queryResultTerm = Integer.valueOf(event.getNewValue().toString());
+					queryResultCount = Integer.valueOf(event.getNewValue().toString());
 				}
 			}
 		});
@@ -441,20 +439,7 @@ public class MainEditor extends EditorPart {
 		btnPrev.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				startResultPos -= queryResultTerm;
-				endResultPos = queryResultTerm;
-				
-				if(startResultPos < 0) {
-					startResultPos = 0;
-					endResultPos = queryResultTerm;
-					
-					return;
-				} else if(startResultPos == 0) {
-					if(btnPrev.isEnabled()) btnPrev.setEnabled(false);
-				}
-				if(!btnNext.isEnabled()) btnNext.setEnabled(true);
-				
-				runSQLSelectProgress(lastSelectQuery, startResultPos, endResultPos); 
+				btnPrev();
 			}
 		});
 		btnPrev.setText(Messages.MainEditor_8);
@@ -464,16 +449,7 @@ public class MainEditor extends EditorPart {
 		btnNext.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				startResultPos += queryResultTerm;
-				endResultPos = queryResultTerm;
- 
-				runSQLSelectProgress(lastSelectQuery, startResultPos, endResultPos); 
-				
-				// 결과 후 버튼 처리
-				if(!btnPrev.isEnabled()) btnPrev.setEnabled(true);
-				if( sourceDataList.size() < queryResultTerm ) {
-					btnNext.setEnabled(false);
-				}
+				btnNext();
 			}
 		});
 		btnNext.setText(Messages.MainEditor_9);
@@ -840,9 +816,7 @@ public class MainEditor extends EditorPart {
 								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
-							startResultPos = 0;
-							endResultPos = queryResultTerm;	
-							
+							pageLocation = 1;							
 							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$									
 						}
 						else runSQLOther(executeLastSQL);
@@ -970,10 +944,8 @@ public class MainEditor extends EditorPart {
 				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			
-			lastSelectQuery = executeLastSQL;
-			 
 			btnPrev.setEnabled(false);
-			if( sourceDataList.size() < queryResultTerm ) btnNext.setEnabled(false);
+			if( sourceDataList.size() < queryResultCount ) btnNext.setEnabled(false);
 			else btnNext.setEnabled(true);
 		} else {
 			btnPrev.setEnabled(false);
@@ -996,9 +968,6 @@ public class MainEditor extends EditorPart {
 		if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			
-			lastSelectQuery = executeLastSQL;
-		
 		
 			// 쿼리의 결과를 화면에 출력합니다.
 			setResultTable();
@@ -1050,7 +1019,19 @@ public class MainEditor extends EditorPart {
 			SQLResultLabelProvider.createTableColumn(sqlResultTableViewer, mapColumns, sqlSorter);
 			sqlResultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
 			sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
-			sqlResultTableViewer.setInput(sourceDataList);
+			
+			// 쿼리 결과를 사용자가 설정 한 만큼 보여준다. 
+			List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();
+			int readCount = (sourceDataList.size()+1) - queryPageCount;
+			if(readCount < -1) readCount = sourceDataList.size();
+			else if(readCount > queryPageCount) readCount = queryPageCount;
+				
+			for(int i=0; i<readCount; i++) {
+				showList.add(sourceDataList.get(i));
+			}
+			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
+			
+			sqlResultTableViewer.setInput(showList);
 			sqlResultTableViewer.setSorter(sqlSorter);
 			
 			// 메시지를 출력합니다.
@@ -1066,6 +1047,74 @@ public class MainEditor extends EditorPart {
 			tableViewerMessage.refresh(listMessage);
 			resultFolderSel(RESULT_TAB_NAME.TADPOLE_MESSAGE);
 		}
+	}
+	
+	/**
+	 * 다음 버튼 처리
+	 * 
+	 * pageLocation
+	 * 
+	 */
+	private void btnNext() {
+		// table data를 생성한다.
+		sqlSorter = new SQLResultSorter(-999);
+		
+		List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();
+		
+		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
+		int readCount = (sourceDataList.size()+1) - (queryPageCount * (pageLocation+1));
+		
+		//
+		// -이면 현재 페이지 카운트의 시작부터 끝까지 데이터를 조합.
+		//
+		if(readCount < -1) {
+			readCount = sourceDataList.size() - (queryPageCount * pageLocation);			
+		//
+		// +이면 
+		// 해당 페이지의 시작 부터, 해당 페이지 시작 * 페이지 카운트 만큼	
+		//			
+		//
+		} else if(readCount > queryPageCount) {
+			
+			readCount = queryPageCount;
+		}
+			
+		for(int i=0; i<readCount; i++) {
+			showList.add(sourceDataList.get(i));
+		}
+		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
+		
+		sqlResultTableViewer.setInput(showList);
+		sqlResultTableViewer.setSorter(sqlSorter);
+		
+		// Pack the columns
+		TableUtil.packTable(tableResult);
+	}
+	
+	/**
+	 * 이전 버튼 처리
+	 */
+	private void btnPrev() {
+		// table data를 생성한다.
+		sqlSorter = new SQLResultSorter(-999);
+		
+		List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();
+		
+		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
+		int readCount = (sourceDataList.size()+1) - queryPageCount;
+		if(readCount < -1) readCount = sourceDataList.size();
+		else if(readCount > queryPageCount) readCount = queryPageCount;
+			
+		for(int i=0; i<readCount; i++) {
+			showList.add(sourceDataList.get(i));
+		}
+		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
+		
+		sqlResultTableViewer.setInput(showList);
+		sqlResultTableViewer.setSorter(sqlSorter);
+		
+		// Pack the columns
+		TableUtil.packTable(tableResult);
 	}
 	
 	/**
@@ -1098,62 +1147,62 @@ public class MainEditor extends EditorPart {
 	 * @throws Exception
 	 */
 	private void runSQLSelect(String selText) throws Exception {
-		runSQLSelect(selText, startResultPos, endResultPos);
+		runSQLSelect(selText, pageLocation);
 	}
 	
-	/**
-	 * prev, next 버튼을 클릭했을 경우 처리 버튼
-	 * 
-	 * @param requestQuery
-	 * @param startResultPos
-	 * @param endResultPos
-	 */
-	private void runSQLSelectProgress(final String requestQuery, final int startResultPos, final int endResultPos) {
-		// job
-		Job job = new Job(Messages.MainEditor_58) {
-			@Override
-			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(Messages.MainEditor_59, IProgressMonitor.UNKNOWN);
-				
-				try{
-					monitor.subTask(requestQuery);
-					runSQLSelect(requestQuery, startResultPos, endResultPos);
-				} catch(Exception e) {
-					logger.error(Messages.MainEditor_60 + executeLastSQL, e);
-					
-					return new Status(Status.WARNING,Activator.PLUGIN_ID, Messages.MainEditor_26 + e.getMessage());
-				} finally {
-					monitor.done();
-				}
-						
-				/////////////////////////////////////////////////////////////////////////////////////////
-				return Status.OK_STATUS;
-			}
-		};
-		
-		// job의 event를 처리해 줍니다.
-		job.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-
-				final IJobChangeEvent jobEvent = event; 
-				getSite().getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if(jobEvent.getResult().isOK()) {
-							// table에 데이터 표시
-							executeFinishProgress();
-						} else {
-							resultTableInit();
-							executeErrorProgress(jobEvent.getResult().getMessage());
-						}
-					}
-				});	// end display.asyncExec				
-			}	// end done
-		});	// end job
-		
-		job.setName(userDB.getDisplay_name());
-		job.setUser(true);
-		job.schedule();
-	}
+//	/**
+//	 * prev, next 버튼을 클릭했을 경우 처리 버튼
+//	 * 
+//	 * @param requestQuery
+//	 * @param startResultPos
+//	 * @param endResultPos
+//	 */
+//	private void runSQLSelectProgress(final String requestQuery, final int startResultPos, final int endResultPos) {
+//		// job
+//		Job job = new Job(Messages.MainEditor_58) {
+//			@Override
+//			public IStatus run(IProgressMonitor monitor) {
+//				monitor.beginTask(Messages.MainEditor_59, IProgressMonitor.UNKNOWN);
+//				
+//				try{
+//					monitor.subTask(requestQuery);
+//					runSQLSelect(requestQuery, startResultPos, endResultPos);
+//				} catch(Exception e) {
+//					logger.error(Messages.MainEditor_60 + executeLastSQL, e);
+//					
+//					return new Status(Status.WARNING,Activator.PLUGIN_ID, Messages.MainEditor_26 + e.getMessage());
+//				} finally {
+//					monitor.done();
+//				}
+//						
+//				/////////////////////////////////////////////////////////////////////////////////////////
+//				return Status.OK_STATUS;
+//			}
+//		};
+//		
+//		// job의 event를 처리해 줍니다.
+//		job.addJobChangeListener(new JobChangeAdapter() {
+//			public void done(IJobChangeEvent event) {
+//
+//				final IJobChangeEvent jobEvent = event; 
+//				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						if(jobEvent.getResult().isOK()) {
+//							// table에 데이터 표시
+//							executeFinishProgress();
+//						} else {
+//							resultTableInit();
+//							executeErrorProgress(jobEvent.getResult().getMessage());
+//						}
+//					}
+//				});	// end display.asyncExec				
+//			}	// end done
+//		});	// end job
+//		
+//		job.setName(userDB.getDisplay_name());
+//		job.setUser(true);
+//		job.schedule();
+//	}
 
 	/**
 	 * select문을 실행합니다.
@@ -1162,7 +1211,7 @@ public class MainEditor extends EditorPart {
 	 * @param startResultPos
 	 * @param endResultPos
 	 */
-	private void runSQLSelect(String requestQuery, int startResultPos, int endResultPos) throws Exception {
+	private void runSQLSelect(String requestQuery, int startResultPos) throws Exception {
 		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
@@ -1175,7 +1224,7 @@ public class MainEditor extends EditorPart {
 			if(Define.QUERY_MODE.DEFAULT == queryMode) {
 				
 				if( requestQuery.toUpperCase().startsWith("SELECT") ) { //$NON-NLS-1$
-					requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startResultPos, endResultPos);
+					requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startResultPos, queryResultCount);
 					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + requestQuery); //$NON-NLS-1$
 				}
 				
@@ -1263,7 +1312,7 @@ public class MainEditor extends EditorPart {
 			// table metadata를 얻습니다.
 			mapColumns = SQLUtil.mataDataToMap(rs);
 			
-			// 결과 처리를 합니다.
+			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
 			while(rs.next()) {
 				tmpRs = new HashMap<Integer, Object>();
 				
@@ -1272,6 +1321,9 @@ public class MainEditor extends EditorPart {
 				}
 				
 				sourceDataList.add(tmpRs);
+				
+				// 쿼리 검색 결과 만큼만 결과셋을 받습니다. 
+				if(queryResultCount == rs.getRow()) break;
 			}
 			
 		} finally {

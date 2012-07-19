@@ -40,6 +40,12 @@ public class DefaultPreferencePage extends FieldEditorPreferencePage implements 
 			addField(integerFieldEditor);
 		}
 		{
+			IntegerFieldEditor integerFieldEditor = new IntegerFieldEditor(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, Messages.DefaultPreferencePage_other_labelText_1, getFieldEditorParent());
+			integerFieldEditor.setTextLimit(4);
+			integerFieldEditor.setValidRange(10, PreferenceDefine.SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE);
+			addField(integerFieldEditor);
+		}
+		{
 			
 			IntegerFieldEditor integerFieldEditor = new IntegerFieldEditor(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, Messages.DefaultPreferencePage_2, getFieldEditorParent());
 			integerFieldEditor.setTextLimit(5);

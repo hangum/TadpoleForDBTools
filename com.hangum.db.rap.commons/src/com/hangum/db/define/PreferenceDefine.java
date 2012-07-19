@@ -7,13 +7,19 @@ package com.hangum.db.define;
  *
  */
 public class PreferenceDefine {
-	/** selection 제한  갯수 */ 
+	/** select 제한  갯수 */ 
 	public static final String SELECT_DEFAULT_PREFERENCE = "SELECT_DEFAULT_PREFERENCE";
 	/** select 디폴트 값 */
 	public static final int SELECT_DEFAULT_PREFERENCE_VALUE = 100;
 	/** 한번에 select 할수 있는 최대 값 */
 	public static final int SELECT_DEFAULT_MAX_PREFERENCE_VALUE = 2000;
 	
+	/** 검색 결과 페이지 당 보여주는 갯수 */
+	public static final String SELECT_RESULT_PAGE_PREFERENCE = "SELECT_RESULT_PAGE_PREFERENCE";
+	/** select 결과를 페이지에 출력 디폴트 값 */
+	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 10;
+	/** select 결과를 페이지에 출력 최대 값 */
+	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 200;
 	
 	/** SESSION TIME OUT */
 	public static final String SESSION_DFEAULT_PREFERENCE = "SESSION_DFEAULT_PREFERENCE";

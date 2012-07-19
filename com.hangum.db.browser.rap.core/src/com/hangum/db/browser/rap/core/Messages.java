@@ -281,6 +281,7 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_button_text;
 	public static String DefaultPreferencePage_other_labelText;
 	public static String DefaultPreferencePage_stringFieldEditor_stringValue;
+	public static String DefaultPreferencePage_other_labelText_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

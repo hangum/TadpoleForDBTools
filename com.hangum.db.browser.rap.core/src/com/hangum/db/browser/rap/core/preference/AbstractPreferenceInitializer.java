@@ -23,6 +23,7 @@ public class AbstractPreferenceInitializer extends org.eclipse.core.runtime.pref
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// sql result size
 		store.setDefault(PreferenceDefine.SELECT_DEFAULT_PREFERENCE, PreferenceDefine.SELECT_DEFAULT_PREFERENCE_VALUE);
+		store.setDefault(PreferenceDefine.SELECT_DEFAULT_PREFERENCE, PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE_VALUE);
 
 		if(ApplicationArgumentUtils.isStandaloneMode()) {
 			store.setDefault(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, PreferenceDefine.SESSION_STANDALONE_DEFAULT_PREFERENCE_VALUE);
