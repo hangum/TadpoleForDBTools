@@ -101,6 +101,10 @@ public class TadpoleSystemConnector {
 				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_erd_table_create	);
 				logger.info(Messages.TadpoleSystemConnector_13+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
+				// user info data
+//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data);
+//				logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
 //				// ext account
 //				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
 //				logger.info("external user table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );

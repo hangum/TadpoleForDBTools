@@ -51,7 +51,6 @@ CREATE TABLE user_db (
 
 
 사용자 디비의 RESOURCE SQL, ERD
-
 CREATE TABLE user_db_resource (
      seq INTEGER PRIMARY KEY AUTOINCREMENT ,
      type VARCHAR(10) NOT NULL,
@@ -66,8 +65,23 @@ CREATE TABLE user_db_resource (
      FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
--
+사용자 프리퍼런스 데이터
+CREATE TABLE user_info_data (
+	seq INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_seq INTEGER NOT NULL,
+    db_seq INTEGER  NOT NULL,
+    name VARCHAR(40) NOT NULL,
+    value VARCHAR(200),
+    value1 VARCHAR(200),
+    value2 VARCHAR(200),
+    value3 VARCHAR(200),
+    value4 VARCHAR(200),
+    value5 VARCHAR(200),
+    FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
 
+-
 CREATE TABLE table_auth (
 	seq INTEGER PRIMARY KEY AUTOINCREMENT ,
 	user_group INTEGER NOT NULL,

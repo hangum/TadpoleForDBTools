@@ -34,6 +34,7 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_user_db_erd_table_create;
 	public static String TadpoleSystemConnector_user_db_table_create;
 	public static String TadpoleSystemConnector_user_table_create;
+	public static String TadpoleSystemConnector_user_info_data;
 //	public static String TadpoleSystemConnector_user_external_account;
 	static {
 		// initialize resource bundle
