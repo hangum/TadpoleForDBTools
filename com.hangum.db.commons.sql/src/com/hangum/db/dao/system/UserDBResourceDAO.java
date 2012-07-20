@@ -2,7 +2,6 @@ package com.hangum.db.dao.system;
 
 import java.util.Date;
 
-
 /**
  * user_db_resource dao
  * 

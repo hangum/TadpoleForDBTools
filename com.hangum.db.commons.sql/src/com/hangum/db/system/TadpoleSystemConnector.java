@@ -102,12 +102,12 @@ public class TadpoleSystemConnector {
 				logger.info(Messages.TadpoleSystemConnector_13+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 				// user info data
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data);
-//				logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data);
+				logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 //				// ext account
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
-//				logger.info("external user table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
+				logger.info("external user table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 				// 기본 그룹
 				int seqAdm = TadpoleSystem_UserGroupQuery.newUserDB("AdminGroup");

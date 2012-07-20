@@ -12,14 +12,14 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  libs/org.apache.log4j_1.2.13.v200806030600.jar
-Export-Package: com.hangum.db.commons.session,
- com.hangum.db.define,
+Export-Package: com.hangum.db.define,
  com.hangum.db.dialogs.message,
  com.hangum.db.dialogs.message.dao,
  com.hangum.db.exception,
  com.hangum.db.exception.dialog,
  com.hangum.db.log,
  com.hangum.db.rap.commons,
+ com.hangum.db.rap.commons.session,
  com.hangum.db.start,
  com.hangum.db.util,
  com.hangum.db.util.download,

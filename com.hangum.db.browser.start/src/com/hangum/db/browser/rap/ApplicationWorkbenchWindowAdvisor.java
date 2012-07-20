@@ -1,5 +1,9 @@
 package com.hangum.db.browser.rap;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -17,11 +21,13 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.dialog.login.LoginDialog;
-import com.hangum.db.commons.session.SessionManager;
 import com.hangum.db.dao.system.UserDAO;
+import com.hangum.db.dao.system.UserInfoDataDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.db.rap.commons.session.SessionManager;
 import com.hangum.db.system.TadpoleSystemConnector;
+import com.hangum.db.system.TadpoleSystem_UserInfoData;
 import com.hangum.db.system.TadpoleSystem_UserQuery;
 
 /**
@@ -49,23 +55,23 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setTitle("Tadpole for DB Tools Beta"); //$NON-NLS-1$
         
         // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
-//        if(getTadpoleRAPBundle()) {
-	        getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
-	        getWindowConfigurer().setShowMenuBar(false);
-//        }
+        getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
+        getWindowConfigurer().setShowMenuBar(false);
         
-	       	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
-	    	try {
-	    		TadpoleSystemConnector.createSystemTable();
-	    	} catch(Exception e) {
-//		    		MessageDialog.openError(null, com.hangum.db.browser.rap.Messages.ApplicationWorkbenchWindowAdvisor_1, com.hangum.db.browser.rap.Messages.ApplicationWorkbenchWindowAdvisor_2 + e.getMessage());
-	    		
-	    		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.db.browser.rap.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
-	    		
-	    		System.exit(0);
-	    	}
-	    	
+       	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
+    	try {
+    		TadpoleSystemConnector.createSystemTable();
+    	} catch(Exception e) {
+    		
+    		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.db.browser.rap.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
+    		
+    		System.exit(0);
+    	}
+    	
+    	// 이미 로그인 되어 있는지 검사합니다.
+    	if(0 == SessionManager.getSeq()) {
+    	
 	    	// login dialog를 뜨도록합니다.    
 	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
 	    	
@@ -89,10 +95,24 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
 					return;
 				}	
+		    	
+	    	// 정상 로그인하면 프리퍼런스 값을 로드합니다. 
+	    	} else {
+	    		//
+	    		try {
+	    			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
+	    			Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
+	    			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {
+						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
+					}
+	    			SessionManager.setUserInfos(mapUserInfoData);
+	    		} catch (Exception e) {
+	    			logger.error("Get user information date exception", e);
+	    		}
 	    		
 	    	}
-	    	
-////    	SessionManager.newLogin(0, "adi.tadpole@gmail.com", "admin");
+	    
+    	}	// end if(null != SessionManager.getEMAIL()) {
     }
     
     @Override

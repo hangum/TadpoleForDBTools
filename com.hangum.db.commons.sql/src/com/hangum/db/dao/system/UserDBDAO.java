@@ -5,6 +5,12 @@ import java.util.List;
 
 import com.hangum.db.dao.ManagerListDTO;
 
+/**
+ * 사용자 디비
+ * 
+ * @author hangum
+ *
+ */
 public class UserDBDAO {
 	int seq;
     int user_seq;

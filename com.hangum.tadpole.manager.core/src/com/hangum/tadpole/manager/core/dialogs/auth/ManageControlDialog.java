@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-import com.hangum.db.commons.session.SessionManager;
 import com.hangum.db.define.Define;
+import com.hangum.db.rap.commons.session.SessionManager;
 
 /**
  * user관리 화면

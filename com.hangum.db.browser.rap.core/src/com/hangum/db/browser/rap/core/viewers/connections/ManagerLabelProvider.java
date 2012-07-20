@@ -4,12 +4,12 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.db.browser.rap.core.Activator;
-import com.hangum.db.commons.session.SessionManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.ManagerListDTO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
 import com.hangum.db.define.Define;
+import com.hangum.db.rap.commons.session.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**

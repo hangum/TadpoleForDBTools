@@ -1,5 +1,11 @@
 package com.hangum.db.dao.system;
 
+/**
+ * 사용자 그룹
+ * 
+ * @author hangum
+ *
+ */
 public class UserGroupDAO {
 	int seq;
 	String name;

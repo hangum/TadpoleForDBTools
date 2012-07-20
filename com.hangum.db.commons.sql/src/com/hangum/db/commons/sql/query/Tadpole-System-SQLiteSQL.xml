@@ -316,4 +316,16 @@ CREATE TABLE table_auth (
 		db_seq = #db_seq#
 </delete>
 
+<!-- 
+	=========================================================================================================
+	user_info_data 정보를 설정합니다.
+	=========================================================================================================
+ -->
+<select id="allUserInfoData" resultClass="com.hangum.db.dao.system.UserInfoDataDAO" parameterClass="java.lang.Integer">
+	SELECT * FROM user_info_data
+	WHERE
+		user_seq = #user_seq#
+</select>
+
+
 </sqlMap>

@@ -14,8 +14,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.db.browser.rap.core.Messages;
-import com.hangum.db.commons.session.SessionManager;
 import com.hangum.db.dao.system.UserDAO;
+import com.hangum.db.rap.commons.session.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserQuery;
 
 /**
