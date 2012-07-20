@@ -150,7 +150,7 @@ public class MainEditor extends EditorPart {
 	private Button btnNext;
 	
 	/** 페이지 로케이션 */
-	private int pageLocation = 1;
+	private int pageNumber = 1;
 	
 	/** 결과 filter */
 	private Text textFilter;
@@ -816,7 +816,7 @@ public class MainEditor extends EditorPart {
 								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
-							pageLocation = 1;							
+							pageNumber = 1;							
 							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$									
 						}
 						else runSQLOther(executeLastSQL);
@@ -957,29 +957,6 @@ public class MainEditor extends EditorPart {
 	}
 	
 	/**
-	 * 1) 프로그래스바의 쿼리 마지막을 처리 합니다.
-	 * 2) filter를 설정한다.
-	 * 
-	 * @param lastQuery 실행된 마지막 쿼리
-	 */
-	private void executeFinishProgress() {
-		setFilter();
-		
-		if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
-				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		
-			// 쿼리의 결과를 화면에 출력합니다.
-			setResultTable();
-			resultFolderSel(RESULT_TAB_NAME.RESULT_SET);
-		}
-		
-		setOrionTextFocus();
-	}
-	
-	
-	
-	/**
 	 * error message 추가한다.
 	 * @param msg
 	 */
@@ -1025,6 +1002,12 @@ public class MainEditor extends EditorPart {
 			int readCount = (sourceDataList.size()+1) - queryPageCount;
 			if(readCount < -1) readCount = sourceDataList.size();
 			else if(readCount > queryPageCount) readCount = queryPageCount;
+			
+			if(logger.isDebugEnabled()) {
+				logger.debug("====[first][start]=================================================================");
+				logger.debug("[total count]" + (sourceDataList.size()+1) + "[first][readCount]" + readCount);
+				logger.debug("====[first][stop]=================================================================");
+			}
 				
 			for(int i=0; i<readCount; i++) {
 				showList.add(sourceDataList.get(i));
@@ -1062,24 +1045,20 @@ public class MainEditor extends EditorPart {
 		List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();
 		
 		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
-		int readCount = (sourceDataList.size()+1) - (queryPageCount * (pageLocation+1));
+		int startCount 	= queryPageCount * pageNumber;
+		int endCount 	= queryPageCount * (pageNumber+1);
+		if(logger.isDebugEnabled()) logger.debug("btnNext ======> [start point]" + startCount + "\t [endCount]" + endCount);
 		
-		//
-		// -이면 현재 페이지 카운트의 시작부터 끝까지 데이터를 조합.
-		//
-		if(readCount < -1) {
-			readCount = sourceDataList.size() - (queryPageCount * pageLocation);			
-		//
-		// +이면 
-		// 해당 페이지의 시작 부터, 해당 페이지 시작 * 페이지 카운트 만큼	
-		//			
-		//
-		} else if(readCount > queryPageCount) {
+		//  
+		if(endCount > (sourceDataList.size()+1)) {
+			endCount = sourceDataList.size();
 			
-			readCount = queryPageCount;
+			// 다음 버튼을 비활성화 한다.
+			btnNext.setEnabled(false);
 		}
-			
-		for(int i=0; i<readCount; i++) {
+		
+		// 데이터 출력.
+		for(int i=startCount; i<endCount; i++) {
 			showList.add(sourceDataList.get(i));
 		}
 		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
@@ -1089,6 +1068,10 @@ public class MainEditor extends EditorPart {
 		
 		// Pack the columns
 		TableUtil.packTable(tableResult);
+		
+		// page 번호를 하나 추가한다.
+		pageNumber++;
+		if(!btnPrev.getEnabled()) btnPrev.setEnabled(true);
 	}
 	
 	/**
@@ -1096,16 +1079,23 @@ public class MainEditor extends EditorPart {
 	 */
 	private void btnPrev() {
 		// table data를 생성한다.
-		sqlSorter = new SQLResultSorter(-999);
-		
+		sqlSorter = new SQLResultSorter(-999);		
 		List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();
 		
 		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
-		int readCount = (sourceDataList.size()+1) - queryPageCount;
-		if(readCount < -1) readCount = sourceDataList.size();
-		else if(readCount > queryPageCount) readCount = queryPageCount;
+		int startCount 	= queryPageCount * (pageNumber-2);
+		int endCount 	= queryPageCount * (pageNumber-1);
+		if(logger.isDebugEnabled()) logger.debug("btnPrev ======> [start point]" + startCount + "\t [endCount]" + endCount);
+		
+		if(startCount <= 0) {
+			startCount = 0;
+			endCount = queryPageCount;
 			
-		for(int i=0; i<readCount; i++) {
+			btnPrev.setEnabled(false);
+		}
+		
+		// 데이터 출력.
+		for(int i=startCount; i<endCount; i++) {
 			showList.add(sourceDataList.get(i));
 		}
 		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
@@ -1115,6 +1105,10 @@ public class MainEditor extends EditorPart {
 		
 		// Pack the columns
 		TableUtil.packTable(tableResult);
+		
+		// page 번호를 하나 추가한다.
+		pageNumber--;
+		if(!btnNext.getEnabled()) btnNext.setEnabled(true);
 	}
 	
 	/**
@@ -1147,7 +1141,7 @@ public class MainEditor extends EditorPart {
 	 * @throws Exception
 	 */
 	private void runSQLSelect(String selText) throws Exception {
-		runSQLSelect(selText, pageLocation);
+		runSQLSelect(selText, pageNumber);
 	}
 	
 //	/**
@@ -1503,7 +1497,7 @@ public class MainEditor extends EditorPart {
 				
 				} catch (Exception e) {
 					logger.error("save file", e); //$NON-NLS-1$
-//					MessageDialog.openError(null, Messages.MainEditor_71, Messages.MainEditor_72 + e.getMessage());
+
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
 					
@@ -1576,11 +1570,6 @@ public class MainEditor extends EditorPart {
 			logger.error("browser evaluate [ " + command + " ]", e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
-//	/** sql to appliation String */
-//	public String getSQLToApplicationString() {
-//		return tltmSQLToApplication.getText();
-//	}
 
 	@Override
 	public void doSaveAs() {
