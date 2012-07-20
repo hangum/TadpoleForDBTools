@@ -240,6 +240,10 @@ public class MainEditor extends EditorPart {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (PreferenceDefine.SELECT_DEFAULT_PREFERENCE.equalsIgnoreCase(event.getProperty())) {
 					queryResultCount = Integer.valueOf(event.getNewValue().toString());
+				} else if(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE.equalsIgnoreCase(event.getProperty())) {
+					queryPageCount  = Integer.valueOf(event.getNewValue().toString());
+				} else if(PreferenceDefine.ORACLE_PLAN_TABLE.equalsIgnoreCase(event.getProperty())) {
+					planTableName = event.getNewValue().toString();
 				}
 			}
 		});
@@ -1144,60 +1148,6 @@ public class MainEditor extends EditorPart {
 		runSQLSelect(selText, pageNumber);
 	}
 	
-//	/**
-//	 * prev, next 버튼을 클릭했을 경우 처리 버튼
-//	 * 
-//	 * @param requestQuery
-//	 * @param startResultPos
-//	 * @param endResultPos
-//	 */
-//	private void runSQLSelectProgress(final String requestQuery, final int startResultPos, final int endResultPos) {
-//		// job
-//		Job job = new Job(Messages.MainEditor_58) {
-//			@Override
-//			public IStatus run(IProgressMonitor monitor) {
-//				monitor.beginTask(Messages.MainEditor_59, IProgressMonitor.UNKNOWN);
-//				
-//				try{
-//					monitor.subTask(requestQuery);
-//					runSQLSelect(requestQuery, startResultPos, endResultPos);
-//				} catch(Exception e) {
-//					logger.error(Messages.MainEditor_60 + executeLastSQL, e);
-//					
-//					return new Status(Status.WARNING,Activator.PLUGIN_ID, Messages.MainEditor_26 + e.getMessage());
-//				} finally {
-//					monitor.done();
-//				}
-//						
-//				/////////////////////////////////////////////////////////////////////////////////////////
-//				return Status.OK_STATUS;
-//			}
-//		};
-//		
-//		// job의 event를 처리해 줍니다.
-//		job.addJobChangeListener(new JobChangeAdapter() {
-//			public void done(IJobChangeEvent event) {
-//
-//				final IJobChangeEvent jobEvent = event; 
-//				getSite().getShell().getDisplay().asyncExec(new Runnable() {
-//					public void run() {
-//						if(jobEvent.getResult().isOK()) {
-//							// table에 데이터 표시
-//							executeFinishProgress();
-//						} else {
-//							resultTableInit();
-//							executeErrorProgress(jobEvent.getResult().getMessage());
-//						}
-//					}
-//				});	// end display.asyncExec				
-//			}	// end done
-//		});	// end job
-//		
-//		job.setName(userDB.getDisplay_name());
-//		job.setUser(true);
-//		job.schedule();
-//	}
-
 	/**
 	 * select문을 실행합니다.
 	 * 
