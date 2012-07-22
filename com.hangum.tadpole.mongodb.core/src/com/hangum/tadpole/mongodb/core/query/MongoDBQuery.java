@@ -151,8 +151,10 @@ public class MongoDBQuery {
 	public static void updateDocument(UserDBDAO userDB, String colName, DBObject dBObject, String key, String value) throws Exception {
 		DBCollection collection = findCollection(userDB, colName);
 		
-		logger.debug("[dBObject] \t " + dBObject);
-		logger.debug("===============================[key]\t " + key + "\t [value]\t" + value);
+		if(logger.isDebugEnabled()) {
+			logger.debug("[dBObject] \t " + dBObject);
+			logger.debug("===============================[key]\t " + key + "\t [value]\t" + value);
+		}
 		BasicDBObject updateQuery = new BasicDBObject().append("$set", new BasicDBObject().append(key, value));
 //		BasicDBObject newDocument3 = new BasicDBObject().append("$set", new BasicDBObject().append("allPlans.0.cursor", "t2est"));
 		collection.update(dBObject, updateQuery);
@@ -172,4 +174,18 @@ public class MongoDBQuery {
 		collection.ensureIndex(dbObject);		
 	}
 	
+	/**
+	 * rename collection
+	 * 
+	 * @param userDB
+	 * @param originalName
+	 * @param newName
+	 * @throws Exception
+	 */
+	public static void renameCollection(UserDBDAO userDB, String originalName, String newName) throws Exception {
+		logger.debug("[original name]" + originalName + "[new Name]" + newName);
+		
+		DBCollection collection = findCollection(userDB, originalName);
+		collection.rename(newName, true);
+	}
 }

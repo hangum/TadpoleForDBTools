@@ -55,6 +55,7 @@ import com.hangum.db.browser.rap.core.actions.object.GenerateSQLSelectAction;
 import com.hangum.db.browser.rap.core.actions.object.GenerateSQLUpdateAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectCreatAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectDeleteAction;
+import com.hangum.db.browser.rap.core.actions.object.ObjectMongodbRenameAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectRefreshAction;
 import com.hangum.db.browser.rap.core.editors.table.DBTableEditorInput;
 import com.hangum.db.browser.rap.core.editors.table.TableViewerEditPart;
@@ -114,6 +115,9 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		private GenerateSQLSelectAction insertStmtAction;
 		private GenerateSQLSelectAction updateStmtAction;
 		private GenerateSQLSelectAction deleteStmtAction;
+		
+		/** mongodb rename action */
+		private ObjectMongodbRenameAction renameColAction;
 	
 	// view
 		private TableViewer viewListViewer;
@@ -805,30 +809,20 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		
 		tableFilter = new TableViewFilter();
 		tableListViewer.addFilter(tableFilter);
+
+		// action 설정 
+		creatAction_Table = 	new ObjectCreatAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		//		modifyAction = 	new ObjectModifyAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLE, "Table");
+		deleteAction_Table = 	new ObjectDeleteAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		refreshAction_Table =	new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		
-//		if(userDB != null) {
-//			creatAction_Table = 	new ObjectCreatAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-//	//		modifyAction = 	new ObjectModifyAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLE, "Table");
-//			deleteAction_Table = 	new ObjectDeleteAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-//			refreshAction_Table =	new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-//			
-//			selectStmtAction = new GenerateSQLSelectAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
-//			insertStmtAction = new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
-//			updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
-//			deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
-//
-//		// 이 코드는 디폴트 액션을 설정해야해서 넣은 더미코드.
-//		} else {
-			creatAction_Table = 	new ObjectCreatAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-			//		modifyAction = 	new ObjectModifyAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLE, "Table");
-			deleteAction_Table = 	new ObjectDeleteAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-			refreshAction_Table =	new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-			
-			selectStmtAction = new GenerateSQLSelectAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
-			insertStmtAction = new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
-			updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
-			deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
-//		}
+		selectStmtAction = new GenerateSQLSelectAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
+		insertStmtAction = new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
+		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
+		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
+
+		// mongodb 용 action설정  
+		renameColAction = new ObjectMongodbRenameAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -857,6 +851,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 						
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						manager.add(insertStmtAction);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(renameColAction);
 					}
 				}
 			}
@@ -994,6 +990,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			insertStmtAction.setUserDB(getUserDB());
 			updateStmtAction.setUserDB(getUserDB());
 			deleteStmtAction.setUserDB(getUserDB());
+			
+			renameColAction.setUserDB(getUserDB());
 		
 		// viewer
 			if(showViews != null) showViews.clear(); 

@@ -53,7 +53,7 @@ public class NewCollectionDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("MongoDB New Collection Dialog"); //$NON-NLS-1$
+		newShell.setText("New Collection Dialog"); //$NON-NLS-1$
 	}
 
 	/**
