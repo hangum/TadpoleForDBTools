@@ -58,7 +58,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		try {
 			Integer.parseInt(txtSessionTime);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_2 + "는 숫자이어야 합니다.");			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_2 + Messages.GeneralPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -71,7 +71,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		} catch(Exception e) {
 			e.printStackTrace();
 			
-			MessageDialog.openError(getShell(), "Confirm", "데이터를 수정하는 중에 오류가 발생했습니다.\n" + e.getMessage());
+			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -102,7 +102,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	 * 페이지 초기값 로딩 
 	 */
 	private void initDefaultValue() {
-		textSessionTime.setText( "" + GetPreferenceGeneral.getSessionTimeout() );
+		textSessionTime.setText( "" + GetPreferenceGeneral.getSessionTimeout() ); //$NON-NLS-1$
 	}
 
 }

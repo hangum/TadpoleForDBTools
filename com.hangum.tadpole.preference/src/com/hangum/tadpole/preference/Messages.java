@@ -16,9 +16,17 @@ public class Messages extends NLS {
 	public static String DefaultPreferencePage_other_labelText;
 	public static String DefaultPreferencePage_stringFieldEditor_stringValue;
 	public static String DefaultPreferencePage_other_labelText_1;
+
+	public static String GeneralPreferencePage_0;
+
+	public static String GeneralPreferencePage_2;
+	public static String RDBPreferencePage_0;
+
+	public static String RDBPreferencePage_3;
+
+	public static String RDBPreferencePage_5;
+
 	public static String RDBPreferencePage_btnCreatePlanTable_text;
-	public static String RDBPreferencePage_label_text;
-	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

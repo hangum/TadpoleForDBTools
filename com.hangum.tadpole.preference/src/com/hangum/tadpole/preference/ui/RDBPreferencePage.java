@@ -3,8 +3,11 @@ package com.hangum.tadpole.preference.ui;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -17,9 +20,7 @@ import com.hangum.db.system.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import com.hangum.tadpole.preference.internal.TadpoleSimpleMessageDialog;
 
 /**
  * rdb preference
@@ -61,7 +62,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		label.setText(Messages.RDBPreferencePage_label_text);
+		label.setText(""); //$NON-NLS-1$
 		
 		Label lblNewLabel_2 = new Label(container, SWT.NONE);
 		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -75,6 +76,8 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		btnCreatePlanTable.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				TadpoleSimpleMessageDialog planDialog = new TadpoleSimpleMessageDialog(getShell(), textOraclePlan.getText(), planTable);
+				planDialog.open();
 			}
 		});
 		btnCreatePlanTable.setText(Messages.RDBPreferencePage_btnCreatePlanTable_text);
@@ -93,19 +96,19 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		try {
 			Integer.parseInt(txtSelectLimit);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_0 + "는 숫자이어야 합니다.");			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_0 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
 		try {
 			Integer.parseInt(txtResultPage);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_other_labelText_1 + "는 숫자이어야 합니다.");			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_other_labelText_1 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
-		if("".equals(txtOraclePlan)) {
-			MessageDialog.openError(getShell(), "Confirm", "Oracle Plan 테이블이 공백 입니다.");			 //$NON-NLS-1$
+		if("".equals(txtOraclePlan)) { //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_3);			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -120,7 +123,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		} catch(Exception e) {
 			e.printStackTrace();
 			
-			MessageDialog.openError(getShell(), "Confirm", "데이터를 수정하는 중에 오류가 발생했습니다.\n" + e.getMessage());
+			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -151,9 +154,49 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	 * 초기값을 설정 합니다.
 	 */
 	private void initDefaultValue() {
-		textSelectLimit.setText( "" + GetPreferenceGeneral.getQueryResultCount() );
-		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() );
+		textSelectLimit.setText( "" + GetPreferenceGeneral.getQueryResultCount() ); //$NON-NLS-1$
+		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
 		textOraclePlan.setText( GetPreferenceGeneral.getPlanTableName() );
 		
 	}
+	
+	public static String planTable = 
+			" CREATE TABLE plan_table (							  \r\n" + 
+					"         STATEMENT_ID       VARCHAR2(30),    \r\n" + 
+					"         plan_id            NUMBER,          \r\n" + 
+					"         TIMESTAMP          DATE,            \r\n" + 
+					"         remarks            VARCHAR2(4000),  \r\n" + 
+					"         operation          VARCHAR2(30),    \r\n" + 
+					"         options            VARCHAR2(255),   \r\n" + 
+					"         object_node        VARCHAR2(128),   \r\n" + 
+					"         object_owner       VARCHAR2(30),    \r\n" + 
+					"         object_name        VARCHAR2(30),    \r\n" + 
+					"         object_alias       VARCHAR2(65),    \r\n" + 
+					"         object_instance    NUMERIC,         \r\n" + 
+					"         object_type        VARCHAR2(30),    \r\n" + 
+					"         optimizer          VARCHAR2(255),   \r\n" + 
+					"         search_columns     NUMBER,          \r\n" + 
+					"         ID                 NUMERIC,         \r\n" + 
+					"         parent_id          NUMERIC,         \r\n" + 
+					"         DEPTH              NUMERIC,         \r\n" + 
+					"         POSITION           NUMERIC,         \r\n" + 
+					"         COST               NUMERIC,         \r\n" + 
+					"         CARDINALITY        NUMERIC,         \r\n" + 
+					"         BYTES              NUMERIC,         \r\n" + 
+					"         other_tag          VARCHAR2(255),   \r\n" + 
+					"         partition_start    VARCHAR2(255),   \r\n" + 
+					"         partition_stop     VARCHAR2(255),   \r\n" + 
+					"         partition_id       NUMERIC,         \r\n" + 
+					"         other              LONG,            \r\n" + 
+					"         distribution       VARCHAR2(30),    \r\n" + 
+					"         cpu_cost           NUMERIC,         \r\n" + 
+					"         io_cost            NUMERIC,         \r\n" + 
+					"         temp_space         NUMERIC,         \r\n" + 
+					"         access_predicates  VARCHAR2(4000),  \r\n" + 
+					"         filter_predicates  VARCHAR2(4000),  \r\n" + 
+					"         projection         VARCHAR2(4000),  \r\n" + 
+					"         TIME               NUMERIC,         \r\n" + 
+					"         qblock_name        VARCHAR2(30)     \r\n" + 
+					" ) ";
 }
+
