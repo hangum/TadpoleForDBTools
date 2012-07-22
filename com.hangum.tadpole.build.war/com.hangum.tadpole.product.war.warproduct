@@ -4,6 +4,7 @@
 <product name="tadpole.product.war" id="com.hangum.db.browser.rap.product" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="false">
    <plugins>
       <plugin id="com.google.guava"/>
+      <plugin id="com.google.guava.source"/>
       <plugin id="com.google.inject"/>
       <plugin id="com.hangum.db.browser.rap"/>
       <plugin id="com.hangum.db.browser.rap.core"/>
@@ -16,6 +17,7 @@
       <plugin id="com.hangum.tadpole.manager.core"/>
       <plugin id="com.hangum.tadpole.model"/>
       <plugin id="com.hangum.tadpole.mongodb.core"/>
+      <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.ibm.icu.base"/>
       <plugin id="javax.inject"/>
       <plugin id="org.antlr.runtime"/>
@@ -86,6 +88,7 @@
 
    <configurations>
       <plugin id="com.google.guava" autoStart="true" startLevel="0" />
+      <plugin id="com.google.guava.source" autoStart="true" startLevel="0" />
       <plugin id="com.google.inject" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.db.browser.rap" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.db.browser.rap.core" autoStart="true" startLevel="0" />
@@ -98,6 +101,7 @@
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.ibm.icu.base" autoStart="true" startLevel="0" />
       <plugin id="javax.inject" autoStart="true" startLevel="0" />
       <plugin id="org.antlr.runtime" autoStart="true" startLevel="0" />

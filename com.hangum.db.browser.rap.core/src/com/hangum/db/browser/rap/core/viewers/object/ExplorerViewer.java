@@ -55,6 +55,7 @@ import com.hangum.db.browser.rap.core.actions.object.GenerateSQLSelectAction;
 import com.hangum.db.browser.rap.core.actions.object.GenerateSQLUpdateAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectCreatAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectDeleteAction;
+import com.hangum.db.browser.rap.core.actions.object.ObjectMongodbReIndexAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectMongodbRenameAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectRefreshAction;
 import com.hangum.db.browser.rap.core.editors.table.DBTableEditorInput;
@@ -118,6 +119,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		
 		/** mongodb rename action */
 		private ObjectMongodbRenameAction renameColAction;
+		private ObjectMongodbReIndexAction reIndexColAction;
 	
 	// view
 		private TableViewer viewListViewer;
@@ -823,6 +825,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		// mongodb 용 action설정  
 		renameColAction = new ObjectMongodbRenameAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
+		reIndexColAction = new ObjectMongodbReIndexAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -853,6 +856,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 						manager.add(insertStmtAction);
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						manager.add(renameColAction);
+						manager.add(reIndexColAction);
 					}
 				}
 			}
@@ -992,6 +996,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			deleteStmtAction.setUserDB(getUserDB());
 			
 			renameColAction.setUserDB(getUserDB());
+			reIndexColAction.setUserDB(getUserDB());
 		
 		// viewer
 			if(showViews != null) showViews.clear(); 

@@ -10,6 +10,7 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoDBConnection;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -66,6 +67,17 @@ public class MongoDBQuery {
 	public static DBCollection findCollection(UserDBDAO userDB, String colName) throws Exception {
 		DB mongoDB = MongoDBConnection.connection(userDB);
 		return mongoDB.getCollection(colName);
+	}
+	
+	/**
+	 * db정보를 리턴.
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static DB findDB(UserDBDAO userDB) throws Exception {
+		return MongoDBConnection.connection(userDB);
 	}
 	
 	/**
@@ -183,9 +195,24 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static void renameCollection(UserDBDAO userDB, String originalName, String newName) throws Exception {
-		logger.debug("[original name]" + originalName + "[new Name]" + newName);
-		
 		DBCollection collection = findCollection(userDB, originalName);
 		collection.rename(newName, true);
+	}
+
+	/**
+	 * reIndex collection
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @throws Exception
+	 */
+	public static void reIndexCollection(UserDBDAO userDB, String colName) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		
+		DBObject queryObj = new BasicDBObject("reIndex", colName );
+		CommandResult cr = mongoDB.command(queryObj);
+		
+		if(!cr.ok()) throw cr.getException();
+		if(logger.isDebugEnabled()) logger.debug("[reIndex] complements" + colName);
 	}
 }

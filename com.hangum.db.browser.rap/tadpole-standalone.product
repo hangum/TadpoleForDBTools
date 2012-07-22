@@ -40,6 +40,7 @@
       <plugin id="com.hangum.tadpole.manager.core"/>
       <plugin id="com.hangum.tadpole.model"/>
       <plugin id="com.hangum.tadpole.mongodb.core"/>
+      <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.ibm.icu.base"/>
       <plugin id="javax.inject"/>
       <plugin id="javax.servlet"/>
@@ -122,6 +123,7 @@
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.ibm.icu.base" autoStart="true" startLevel="0" />
       <plugin id="javax.inject" autoStart="true" startLevel="0" />
       <plugin id="javax.servlet" autoStart="true" startLevel="0" />
