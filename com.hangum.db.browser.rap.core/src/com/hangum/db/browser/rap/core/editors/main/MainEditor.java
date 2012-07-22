@@ -868,16 +868,20 @@ public class MainEditor extends EditorPart {
 			javaConn = client.getDataSource().getConnection();
 			
 			Statement stmt = javaConn.createStatement();
+			
+			// mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
+			if(StringUtils.containsAny(selText, "CREATE TABLE")) {
+				selText = StringUtils.replaceOnce(selText, "(", " (");
+			}			
 			boolean boolResult = stmt.execute( selText );
 			
-			// create table, drop table이면 작동하도록
-			String upperQuery = selText.toUpperCase();
-			if(upperQuery.startsWith("CREATE TABLE") || upperQuery.startsWith("DROP TABLE")) { //$NON-NLS-1$ //$NON-NLS-2$
+			// create table, drop table이면 작동하도록			
+			if(StringUtils.containsAny(selText, "CREATE TABLE") || StringUtils.containsAny(selText, "DROP TABLE")) { //$NON-NLS-1$ //$NON-NLS-2$
 				
 				try {
 					ExplorerViewer.CHANGE_TYPE changeType = ExplorerViewer.CHANGE_TYPE.DEL;
 					String changeTbName = ""; //$NON-NLS-1$
-					if(upperQuery.startsWith("CREATE TABLE")) { //$NON-NLS-1$
+					if(StringUtils.containsAny(selText, "CREATE TABLE")) { //$NON-NLS-1$
 						changeType = ExplorerViewer.CHANGE_TYPE.INS;
 						changeTbName = StringUtils.trimToEmpty(selText.substring(12));
 					} else {
