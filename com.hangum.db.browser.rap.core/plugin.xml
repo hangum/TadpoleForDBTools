@@ -321,25 +321,6 @@
       </factory>
    </extension>
    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="com.hangum.db.browser.rap.core.preference.DefaultPreferencePage"
-            id="com.hangum.db.browser.rap.core.page"
-            name="Basic RDB Setting">
-      </page>
-      <page
-            class="com.hangum.db.browser.rap.core.preference.UserInfoPerference"
-            id="com.hangum.db.browser.rap.core.page.userInfo"
-            name="User Setting">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="com.hangum.db.browser.rap.core.preference.AbstractPreferenceInitializer">
-      </initializer>
-   </extension>
-   <extension
          point="org.eclipse.equinox.http.registry.resources">
       <resource
             alias="/orion"

@@ -9,7 +9,7 @@ import com.hangum.db.dao.ManagerListDTO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
 import com.hangum.db.define.Define;
-import com.hangum.db.rap.commons.session.SessionManager;
+import com.hangum.db.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**

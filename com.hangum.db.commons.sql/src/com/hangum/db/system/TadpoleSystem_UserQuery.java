@@ -52,7 +52,10 @@ public class TadpoleSystem_UserQuery {
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
 	
 		if(isUser.size() == 0) {
-			return (UserDAO)sqlClient.insert("newUser", loginDAO); //$NON-NLS-1$
+			UserDAO userdb = (UserDAO)sqlClient.insert("newUser", loginDAO); //$NON-NLS-1$
+			TadpoleSystem_UserInfoData.insertUserInfoData(userdb);
+			
+			return userdb;
 		} else {
 			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_2);
 		}

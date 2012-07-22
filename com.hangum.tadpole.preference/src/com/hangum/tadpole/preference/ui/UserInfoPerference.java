@@ -1,4 +1,4 @@
-package com.hangum.db.browser.rap.core.preference;
+package com.hangum.tadpole.preference.ui;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -13,10 +13,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.dao.system.UserDAO;
-import com.hangum.db.rap.commons.session.SessionManager;
+import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.preference.Messages;
 
 /**
  * 사용자 정보 수정

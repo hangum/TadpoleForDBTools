@@ -22,8 +22,6 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -78,7 +76,6 @@ import com.hangum.db.commons.sql.util.SQLUtil;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
 import com.hangum.db.define.Define;
-import com.hangum.db.define.PreferenceDefine;
 import com.hangum.db.dialogs.message.TadpoleMessageDialog;
 import com.hangum.db.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.db.dialogs.message.dao.SQLHistoryDAO;
@@ -96,6 +93,7 @@ import com.hangum.db.util.tables.SQLResultFilter;
 import com.hangum.db.util.tables.SQLResultLabelProvider;
 import com.hangum.db.util.tables.SQLResultSorter;
 import com.hangum.db.util.tables.TableUtil;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.SWTResourceManager;
 
@@ -128,11 +126,11 @@ public class MainEditor extends EditorPart {
 	private UserDBDAO userDB;
 	
 	/** 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */
-	private int queryResultCount = Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.SELECT_DEFAULT_PREFERENCE);
+	private int queryResultCount 	= GetPreferenceGeneral.getQueryResultCount();
 	/** 쿼리 결과를 page당 처리 하는 카운트 */
-	private int queryPageCount = Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
+	private int queryPageCount 		= GetPreferenceGeneral.getPageCount();
 	/** oracle plan table 이름 */
-	private String planTableName = Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.ORACLE_PLAN_TABLE);
+	private String planTableName 	= GetPreferenceGeneral.getPlanTableName();
 	
 	/** query의 히스토리를 보여줍니다. */
 	private List<String> listQueryHistory = new ArrayList<String>();
@@ -233,20 +231,6 @@ public class MainEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		
-		// property change event
-		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent event) {
-				if (PreferenceDefine.SELECT_DEFAULT_PREFERENCE.equalsIgnoreCase(event.getProperty())) {
-					queryResultCount = Integer.valueOf(event.getNewValue().toString());
-				} else if(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE.equalsIgnoreCase(event.getProperty())) {
-					queryPageCount  = Integer.valueOf(event.getNewValue().toString());
-				} else if(PreferenceDefine.ORACLE_PLAN_TABLE.equalsIgnoreCase(event.getProperty())) {
-					planTableName = event.getNewValue().toString();
-				}
-			}
-		});
 		
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -949,7 +933,8 @@ public class MainEditor extends EditorPart {
 					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			
 			btnPrev.setEnabled(false);
-			if( sourceDataList.size() < queryResultCount ) btnNext.setEnabled(false);
+			
+			if( sourceDataList.size() < queryPageCount ) btnNext.setEnabled(false);
 			else btnNext.setEnabled(true);
 		} else {
 			btnPrev.setEnabled(false);
@@ -1054,7 +1039,7 @@ public class MainEditor extends EditorPart {
 		if(logger.isDebugEnabled()) logger.debug("btnNext ======> [start point]" + startCount + "\t [endCount]" + endCount);
 		
 		//  
-		if(endCount > (sourceDataList.size()+1)) {
+		if(endCount >= (sourceDataList.size()+1)) {
 			endCount = sourceDataList.size();
 			
 			// 다음 버튼을 비활성화 한다.

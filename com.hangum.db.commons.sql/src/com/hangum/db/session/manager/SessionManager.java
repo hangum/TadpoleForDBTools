@@ -1,10 +1,12 @@
-package com.hangum.db.rap.commons.session;
+package com.hangum.db.session.manager;
 
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.eclipse.rwt.RWT;
+
+import com.hangum.db.dao.system.UserInfoDataDAO;
 
 /**
  * tadpole의 session manager입니다
@@ -93,10 +95,12 @@ public class SessionManager {
 	 * @param key
 	 * @param obj
 	 */
-	public static void setUserINfo(String key, Object obj) {
+	public static void setUserInfo(String key, String obj) {
 		HttpSession sStore = RWT.getSessionStore().getHttpSession();
 		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(SESSEION_NAME.USER_INFO_DATA.toString());
-		mapUserInfoData.put(key, obj);
+		UserInfoDataDAO userInfoDataDAO = (UserInfoDataDAO)mapUserInfoData.get(key);
+		userInfoDataDAO.setValue(obj);
+		mapUserInfoData.put(key, userInfoDataDAO);
 		
 		sStore.setAttribute(SESSEION_NAME.USER_INFO_DATA.toString(), mapUserInfoData);
 	}
@@ -107,11 +111,11 @@ public class SessionManager {
 	 * @param key
 	 * @return
 	 */
-	public static Object getUserInfo(String key) {
+	public static UserInfoDataDAO getUserInfo(String key) {
 		HttpSession sStore = RWT.getSessionStore().getHttpSession();
 		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(SESSEION_NAME.USER_INFO_DATA.toString());
 		
-		return mapUserInfoData.get(key);
+		return (UserInfoDataDAO)mapUserInfoData.get(key);
 	}
 	
 }

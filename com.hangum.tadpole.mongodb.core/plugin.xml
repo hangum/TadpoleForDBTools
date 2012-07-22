@@ -18,19 +18,5 @@
             name="MongoDB Informations">
       </editor>
    </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="com.hangum.tadpole.mongodb.core.preference.MongoDBPreferencePage"
-            id="com.hangum.tadpole.mongodb.core.page"
-            name="MongoDB Default Setting">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="com.hangum.tadpole.mongodb.core.preference.MongoDBPreferenceInitializer">
-      </initializer>
-   </extension>
 
 </plugin>

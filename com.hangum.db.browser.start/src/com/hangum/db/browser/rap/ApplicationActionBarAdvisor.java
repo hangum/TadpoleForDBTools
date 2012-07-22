@@ -27,7 +27,7 @@ import com.hangum.db.browser.rap.core.actions.global.OpenQueryEditorAction;
 import com.hangum.db.browser.rap.core.actions.global.PreferenceAction;
 import com.hangum.db.browser.rap.core.actions.global.UserPermissionAction;
 import com.hangum.db.define.Define;
-import com.hangum.db.rap.commons.session.SessionManager;
+import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.util.ApplicationArgumentUtils;
 
 /**

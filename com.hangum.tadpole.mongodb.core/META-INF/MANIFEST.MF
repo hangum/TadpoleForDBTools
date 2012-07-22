@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  com.hangum.db.commons.libs;bundle-version="1.0.0",
  com.hangum.db.rap.commons;bundle-version="1.0.0",
  com.hangum.db.commons.sql;bundle-version="1.0.0",
- org.eclipselabs.mongo.query;bundle-version="1.0.0"
+ org.eclipselabs.mongo.query;bundle-version="1.0.0",
+ com.hangum.tadpole.preference;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

@@ -100,9 +100,6 @@ public class Messages extends NLS {
 	public static String MainEditor_lblFilter_text;
 	public static String MainEditor_tltmDropdownItem_text;
 	public static String DBLoginDialog_btnPing_text;
-	public static String DefaultPreferencePage_0;
-	public static String DefaultPreferencePage_1;
-	public static String DefaultPreferencePage_2;
 	public static String DeleteResourceAction_0;
 	public static String DeleteResourceAction_3;
 	public static String DeleteResourceAction_4;
@@ -274,14 +271,8 @@ public class Messages extends NLS {
 	public static String TextViewerEditingSupport_2;
 	public static String TextViewerEditingSupport_3;
 	public static String MainEditor_tltmExecuteAll_text;
-	public static String UserInfoPerference_0;
-	public static String UserInfoPerference_6;
-	public static String UserInfoPerference_8;
 	public static String MySQLLoginComposite_lblLocale_text;
 	public static String DBLoginDialog_button_text;
-	public static String DefaultPreferencePage_other_labelText;
-	public static String DefaultPreferencePage_stringFieldEditor_stringValue;
-	public static String DefaultPreferencePage_other_labelText_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

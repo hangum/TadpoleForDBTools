@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Tree;
 
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.define.Define;
-import com.hangum.db.define.PreferenceDefine;
 import com.hangum.db.dialogs.message.TadpoleMessageDialog;
 import com.hangum.db.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.db.dialogs.message.dao.TadpoleMessageDAO;
@@ -70,6 +69,7 @@ import com.hangum.tadpole.mongodb.core.dialogs.collection.NewIndexDialog;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.mongodb.DBObject;
 
 /**
@@ -462,7 +462,22 @@ public class MongodbResultComposite extends Composite {
 		
 		registerServiceHandler();
 		
-		tabInit();
+		firstTabInit();
+	}
+	
+	/**
+	 * page를 초기화 합니다.
+	 */
+	private void firstTabInit() {
+			
+		if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
+			tabFolderMongoDB.setSelection(0);
+		} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
+			tabFolderMongoDB.setSelection(1);
+		} else {
+			tabFolderMongoDB.setSelection(2);
+		}
+
 	}
 	
 	/**

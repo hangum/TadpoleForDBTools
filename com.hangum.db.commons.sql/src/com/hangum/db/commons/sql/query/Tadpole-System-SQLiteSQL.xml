@@ -71,17 +71,17 @@ CREATE TABLE user_info_data (
     user_seq INTEGER NOT NULL,
     db_seq INTEGER  NOT NULL,
     name VARCHAR(40) NOT NULL,
-    value VARCHAR(200),
-    value1 VARCHAR(200),
-    value2 VARCHAR(200),
-    value3 VARCHAR(200),
-    value4 VARCHAR(200),
-    value5 VARCHAR(200),
+    value VARCHAR(2000),
+    value1 VARCHAR(2000),
+    value2 VARCHAR(2000),
+    value3 VARCHAR(2000),
+    value4 VARCHAR(2000),
+    value5 VARCHAR(2000),
     FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
--
+- 외부 사용자 디비(아마존 rdc, ucloud db)
 CREATE TABLE table_auth (
 	seq INTEGER PRIMARY KEY AUTOINCREMENT ,
 	user_group INTEGER NOT NULL,
@@ -327,5 +327,38 @@ CREATE TABLE table_auth (
 		user_seq = #user_seq#
 </select>
 
+<!-- 
+	사용자 정보를 가져온다. 
+ -->
+<select id="getUserInfoData" resultClass="com.hangum.db.dao.system.UserInfoDataDAO" parameterClass="com.hangum.db.dao.system.UserInfoDataDAO">
+	SELECT * FROM user_info_data
+	WHERE
+		user_seq = #user_seq# AND
+		name = #name#
+</select>
+
+<!-- 
+	사용자 정보를 저장한다. 
+ -->
+<insert id="userInfoDataInsert" parameterClass="com.hangum.db.dao.system.UserInfoDataDAO">
+	INSERT INTO user_info_data(seq, user_seq, db_seq, name, value, value1, value2, value3, value4, value5)
+	VALUES( (select max(seq) from user_info_data)+1, #user_seq#, #db_seq#, #name#, #value#, #value1#, #value2#, #value3#, #value4#, #value5# )
+</insert>
+
+<!-- 
+	사용자 정보를 수정합니다.
+ -->
+<update id="userInfoDataUpdate" parameterClass="com.hangum.db.dao.system.UserInfoDataDAO">
+	UPDATE user_info_data 
+	SET
+		value = #value#,
+		value1 = #value1#,
+		value2 = #value2#,
+		value3 = #value3#,
+		value4 = #value4#,
+		value5 = #value5#
+	WHERE user_seq = #user_seq# AND
+		name = #name#
+</update>
 
 </sqlMap>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.hangum.tadpole.preference.ui.GeneralPreferencePage"
+            id="com.hangum.tadpole.preference.page.general"
+            name="General">
+      </page>
+      <page
+            class="com.hangum.tadpole.preference.ui.UserInfoPerference"
+            id="com.hangum.db.browser.rap.core.page.userInfo"
+            name="User">
+      </page>
+      <page
+            class="com.hangum.tadpole.preference.ui.RDBPreferencePage"
+            id="com.hangum.db.browser.rap.core.page.rdb"
+            name="RDB">
+      </page>
+      <page
+            class="com.hangum.tadpole.preference.ui.MongoDBPreferencePage"
+            id="com.hangum.tadpole.preference.page.mongodb"
+            name="MongoDB">
+      </page>
+   </extension>
+</plugin>

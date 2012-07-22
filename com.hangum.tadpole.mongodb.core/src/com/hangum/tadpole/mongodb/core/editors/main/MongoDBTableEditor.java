@@ -35,10 +35,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.mysql.TableColumnDAO;
 import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.define.PreferenceDefine;
 import com.hangum.db.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.db.util.JSONUtil;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -49,6 +47,8 @@ import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.mongodb.core.utils.MongoSQLParser;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -115,16 +115,16 @@ public class MongoDBTableEditor extends EditorPart {
 	private Text textBasicLimit;
 	
 	/** preference default find page */
-	private String defaultFindPage 	= Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_FIND);
-	
+	private String defaultFindPage 	= GetPreferenceGeneral.getMongoDefaultFindPage();//Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_FIND);
+
 	/** preference default result page */
-	private String defaultResultPage = Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_RESULT);
+	private String defaultResultPage = GetPreferenceGeneral.getMongoDefaultResultPage();//Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_RESULT);
 	
 	/** preference default limit */
-	private String defaultLimit = Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_LIMIT);
+	private String defaultLimit = GetPreferenceGeneral.getMongoDefaultLimit();//Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_LIMIT);
 	
 	/** preference default max count */
-	private int defaultMaxCount = Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
+	private int defaultMaxCount = GetPreferenceGeneral.getMongoDefaultMaxCount();//Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
 	
 	/**
 	 * 

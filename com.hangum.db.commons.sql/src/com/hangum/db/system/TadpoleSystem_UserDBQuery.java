@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.rap.commons.session.SessionManager;
+import com.hangum.db.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

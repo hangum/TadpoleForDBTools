@@ -100,7 +100,13 @@ public class UserInfoDataDAO {
 	public void setValue5(String value5) {
 		this.value5 = value5;
 	}
-	
-	
 
+	@Override
+	public String toString() {
+		return "UserInfoDataDAO [seq=" + seq + ", user_seq=" + user_seq
+				+ ", db_seq=" + db_seq + ", name=" + name + ", value=" + value
+				+ ", value1=" + value1 + ", value2=" + value2 + ", value3="
+				+ value3 + ", value4=" + value4 + ", value5=" + value5 + "]";
+	}
+	
 }

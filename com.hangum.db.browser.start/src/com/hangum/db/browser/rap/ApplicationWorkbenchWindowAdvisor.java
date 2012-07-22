@@ -25,7 +25,7 @@ import com.hangum.db.dao.system.UserDAO;
 import com.hangum.db.dao.system.UserInfoDataDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.db.rap.commons.session.SessionManager;
+import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystemConnector;
 import com.hangum.db.system.TadpoleSystem_UserInfoData;
 import com.hangum.db.system.TadpoleSystem_UserQuery;
@@ -95,24 +95,22 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
 					return;
 				}	
-		    	
-	    	// 정상 로그인하면 프리퍼런스 값을 로드합니다. 
 	    	} else {
-	    		//
 	    		try {
-	    			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
-	    			Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
-	    			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {
+		    		// 사용자 세션을 저장한다.
+					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
+					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
+					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
+						if(logger.isDebugEnabled()) logger.debug("[userInfoDataDAO] " + userInfoDataDAO.getName() + ":" + userInfoDataDAO);
+						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
-	    			SessionManager.setUserInfos(mapUserInfoData);
-	    		} catch (Exception e) {
-	    			logger.error("Get user information date exception", e);
+					SessionManager.setUserInfos(mapUserInfoData);
+	    		} catch(Exception e) {
+	    			logger.error("session set", e);
 	    		}
-	    		
 	    	}
-	    
-    	}	// end if(null != SessionManager.getEMAIL()) {
+    	} 
     }
     
     @Override

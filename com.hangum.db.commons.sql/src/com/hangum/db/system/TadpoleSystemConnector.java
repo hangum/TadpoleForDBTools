@@ -106,15 +106,15 @@ public class TadpoleSystemConnector {
 				logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 //				// ext account
-				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
-				logger.info("external user table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
+//				logger.info("external user table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 				// 기본 그룹
 				int seqAdm = TadpoleSystem_UserGroupQuery.newUserDB("AdminGroup");
 				int seqTest = TadpoleSystem_UserGroupQuery.newUserDB("TestGroup");
 				
 				// 기본 유저 저장
-				TadpoleSystem_UserQuery.newUser(seqAdm, ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, Define.USER_TYPE.ADMIN.toString(), Define.YES_NO.YES.toString());
+				TadpoleSystem_UserQuery.newUser(seqAdm, ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, Define.USER_TYPE.ADMIN.toString(), Define.YES_NO.YES.toString());				
 				TadpoleSystem_UserQuery.newUser(seqTest, MANAGER_EMAIL, MANAGER_PASSWD, MANAGER_NAME, Define.USER_TYPE.MANAGER.toString(), Define.YES_NO.YES.toString());
 				TadpoleSystem_UserQuery.newUser(seqTest, GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, Define.USER_TYPE.GUEST.toString(), Define.YES_NO.YES.toString());
 			} catch(Exception e) {

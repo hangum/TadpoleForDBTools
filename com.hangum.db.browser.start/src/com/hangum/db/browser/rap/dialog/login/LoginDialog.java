@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.db.browser.rap.Messages;
 import com.hangum.db.dao.system.UserDAO;
 import com.hangum.db.define.Define;
-import com.hangum.db.rap.commons.session.SessionManager;
+import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystemConnector;
 import com.hangum.db.system.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;

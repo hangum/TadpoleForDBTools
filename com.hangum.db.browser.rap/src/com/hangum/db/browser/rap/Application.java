@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 
-import com.hangum.db.define.PreferenceDefine;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
 
 
 /**

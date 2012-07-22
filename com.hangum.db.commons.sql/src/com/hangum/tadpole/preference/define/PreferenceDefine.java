@@ -1,4 +1,4 @@
-package com.hangum.db.define;
+package com.hangum.tadpole.preference.define;
 
 /**
  * Preference name define
@@ -8,11 +8,11 @@ package com.hangum.db.define;
  */
 public class PreferenceDefine {
 	/** select 제한  갯수 */ 
-	public static final String SELECT_DEFAULT_PREFERENCE = "SELECT_DEFAULT_PREFERENCE";
+	public static final String SELECT_LIMIT_COUNT = "SELECT_LIMIT_COUNT";
 	/** select 디폴트 값 */
-	public static final int SELECT_DEFAULT_PREFERENCE_VALUE = 100;
+	public static final int SELECT_SELECT_LIMIT_COUNT_VALUE = 100;
 	/** 한번에 select 할수 있는 최대 값 */
-	public static final int SELECT_DEFAULT_MAX_PREFERENCE_VALUE = 2000;
+	public static final int SELECT_SELECT_LIMIT_COUNT_MAX_PREFERENCE_VALUE = 1000;
 	
 	/** 검색 결과 페이지 당 보여주는 갯수 */
 	public static final String SELECT_RESULT_PAGE_PREFERENCE = "SELECT_RESULT_PAGE_PREFERENCE";
@@ -44,6 +44,7 @@ public class PreferenceDefine {
 	public static final String MONGO_DEFAULT_LIMIT = "MONGO_DEFAULT_LIMIT_COUNT";
 	public static final String MONGO_DEFAULT_LIMIT_VALUE = "100";
 	
+	/** monodb max */
 	public static final String MONGO_DEFAULT_MAX_COUNT = "MONGO_DEFAULT_MAX_COUNT";
 	public static final String MONGO_DEFAULT_MAX_COUNT_VALUE = "1000";
 	
