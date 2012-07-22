@@ -4,14 +4,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.browser.rap.core.actions.connections.CreateFunctionAction;
 import com.hangum.db.browser.rap.core.actions.connections.CreateIndexAction;
 import com.hangum.db.browser.rap.core.actions.connections.CreateProcedureAction;
 import com.hangum.db.browser.rap.core.actions.connections.CreateTableAction;
-import com.hangum.db.browser.rap.core.actions.connections.CreateViewAction;
 import com.hangum.db.browser.rap.core.actions.connections.CreateTriggerAction;
+import com.hangum.db.browser.rap.core.actions.connections.CreateViewAction;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.define.Define;
 import com.hangum.db.define.Define.DB_ACTION;
