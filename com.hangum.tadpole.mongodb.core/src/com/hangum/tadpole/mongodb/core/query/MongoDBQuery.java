@@ -215,4 +215,61 @@ public class MongoDBQuery {
 		if(!cr.ok()) throw cr.getException();
 		if(logger.isDebugEnabled()) logger.debug("[reIndex] complements" + colName);
 	}
+	
+	/**
+	 * Server status
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static String serverStatus(UserDBDAO userDB) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		
+		DBObject queryObj = new BasicDBObject("serverStatus", 1);
+		CommandResult cr = mongoDB.command(queryObj);
+		if(cr.ok()) {
+			return cr.toString();
+		} else {
+			throw cr.getException();
+		}
+	}
+	
+	/**
+	 * top
+	 * 
+	 * @param userDB
+	 * @param top
+	 * @return
+	 * @throws Exception
+	 */
+	public static String top(UserDBDAO userDB, int top) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		
+		DBObject queryObj = new BasicDBObject("top", top);
+		CommandResult cr = mongoDB.command(queryObj);
+		if(cr.ok()) {
+			return cr.toString();
+		} else {
+			
+			logger.error("top command" + userDB, cr.getException());
+			throw new Exception(cr.getErrorMessage());//cr.getException();
+		}
+	}
+	
+	/**
+	 * Server status
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static String currentOp(UserDBDAO userDB) throws Exception {
+		DB mongoDB =  findDB(userDB);
+
+		DBObject queryObj = new BasicDBObject("serverStatus", 1);
+		CommandResult cr = mongoDB.command(queryObj);
+		
+		if(cr.ok()) {
+			return cr.toString();
+		} else {
+			throw cr.getException();
+		}
+	}
 }

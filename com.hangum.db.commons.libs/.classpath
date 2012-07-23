@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.8.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/org.apache.log4j_1.2.13.v200806030600.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/postgreSQL/postgresql-9.1-902.jdbc4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.8.0-RC1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/cubrid/JDBC-8.4.1.2032-cubrid.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/oracle/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mysql/mysql-connector-java-5.1.19-bin.jar"/>

@@ -16,6 +16,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: com.hangum.tadpole.mongodb.core,
+ com.hangum.tadpole.mongodb.core.composite.result,
  com.hangum.tadpole.mongodb.core.connection,
  com.hangum.tadpole.mongodb.core.define,
  com.hangum.tadpole.mongodb.core.dialogs.collection,

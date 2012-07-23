@@ -15,7 +15,7 @@ Bundle-ClassPath: libs/commons-dbcp-1.2.2.jar,
  libs/mysql/mysql-connector-java-5.1.19-bin.jar,
  libs/oracle/ojdbc6.jar,
  libs/cubrid/JDBC-8.4.1.2032-cubrid.jar,
- libs/mongodb/mongo-2.8.0-RC1.jar,
+ libs/mongodb/mongo-2.8.0.jar,
  libs/postgreSQL/postgresql-9.1-902.jdbc4.jar,
  .
 Export-Package: .,

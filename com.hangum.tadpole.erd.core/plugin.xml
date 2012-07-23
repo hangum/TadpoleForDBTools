@@ -33,7 +33,7 @@
             class="com.hangum.tadpole.erd.core.editor.TadpoleEditor"
             contributorClass="com.hangum.tadpole.erd.core.editor.TadpoleERDActionBarContributor"
             default="false"
-            icon="resources/icons/relation.png"
+            icon="resources/icons/erd.png"
             id="com.hangum.tadpole.erd.core.editor"
             name="Tadpole ERD">
       </editor>

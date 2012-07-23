@@ -182,7 +182,7 @@
          <action
                class="com.hangum.db.browser.rap.core.actions.erd.ERDViewAction"
                enablesFor="1"
-               icon="resources/icons/relation.png"
+               icon="resources/icons/erd.png"
                id="com.hangum.db.erd.action"
                label="Create ERD Diagram"
                menubarPath="menu.erd/erd">
@@ -195,7 +195,7 @@
          <action
                class="com.hangum.db.browser.rap.core.actions.erd.ERDAllTableViewAction"
                enablesFor="1"
-               icon="resources/icons/relation.png"
+               icon="resources/icons/erd.png"
                id="com.hangum.db.erd.action.all"
                label="All Table ERD"
                menubarPath="menu.erd/erd">
@@ -217,6 +217,30 @@
             id="com.hangum.db.browser.rap.core.objectContribution.nosql"
             objectClass="com.hangum.db.dao.system.UserDBDAO">
          <action
+               class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbTopAction"
+               icon="resources/icons/go-top.png"
+               id="com.hangum.db.browser.rap.core.action.nosql.monogodb.top"
+               label="Top"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
+               class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbDBStatusAction"
+               icon="resources/icons/db_status.png"
+               id="com.hangum.db.browser.rap.core.action.nosql.monogodb.serverstatus"
+               label="Server Status"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
                class="com.hangum.db.browser.rap.core.actions.connections.DisconnectDBAction"
                enablesFor="1"
                icon="resources/icons/disconnect.png"
@@ -230,6 +254,7 @@
             </enablement>
          </action>
          <menu
+               icon="resources/icons/erd.png"
                id="menu.nosql.erd"
                label="ERD">
             <groupMarker
@@ -253,7 +278,7 @@
          <action
                class="com.hangum.db.browser.rap.core.actions.erd.ERDViewAction"
                enablesFor="1"
-               icon="resources/icons/relation.png"
+               icon="resources/icons/erd.png"
                id="com.hangum.db.erd.action"
                label="Create ERD Diagram"
                menubarPath="menu.nosql.erd/erd">
@@ -266,7 +291,7 @@
          <action
                class="com.hangum.db.browser.rap.core.actions.erd.ERDAllTableViewAction"
                enablesFor="1"
-               icon="resources/icons/relation.png"
+               icon="resources/icons/erd.png"
                id="com.hangum.db.erd.action.all"
                label="All Table ERD"
                menubarPath="menu.nosql.erd/erd">
