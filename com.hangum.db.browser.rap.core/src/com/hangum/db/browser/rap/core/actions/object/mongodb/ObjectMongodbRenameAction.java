@@ -1,4 +1,4 @@
-package com.hangum.db.browser.rap.core.actions.object;
+package com.hangum.db.browser.rap.core.actions.object.mongodb;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -10,6 +10,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.browser.rap.core.Activator;
+import com.hangum.db.browser.rap.core.actions.object.AbstractObjectAction;
 import com.hangum.db.define.Define;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;

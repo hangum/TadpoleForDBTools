@@ -30,6 +30,10 @@ Demo Video
 * RDB : http://www.youtube.com/watch?v=cXNthDhxWgs
 * MongoDB : http://youtu.be/idi9qTSTfWQ
 
+Tutorial
+-
+* http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
+
 Demo Site
 -
 * Amazon EC2 micro(very slow) http://goo.gl/BhwQe
@@ -40,7 +44,7 @@ Download
  
 License
 -
-EPL(Eclipse Public License)
+* EPL(Eclipse Public License)
 
 Contacts
 -
