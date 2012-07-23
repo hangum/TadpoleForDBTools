@@ -257,6 +257,7 @@ public class MongoDBQuery {
 	
 	/**
 	 * Server status
+	 * 
 	 * @param userDB
 	 * @throws Exception
 	 */
@@ -271,5 +272,15 @@ public class MongoDBQuery {
 		} else {
 			throw cr.getException();
 		}
+	}
+
+	/**
+	 * mongodb web console 정보 
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static String webConsole(UserDBDAO userDB) throws Exception {
+		return "http://" + userDB.getHost() + ":" + (Integer.parseInt(userDB.getPort()) + 1000);
 	}
 }

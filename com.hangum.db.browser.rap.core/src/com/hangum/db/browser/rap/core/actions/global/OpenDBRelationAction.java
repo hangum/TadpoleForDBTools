@@ -31,7 +31,7 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 		setId(ID);
 		setText(Messages.OpenDBRelationAction_1);
 		setToolTipText(Messages.OpenDBRelationAction_2);
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/relation.png"));
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/erd.png"));
 		setEnabled(false);
 		
 		window.getSelectionService().addPostSelectionListener(this);

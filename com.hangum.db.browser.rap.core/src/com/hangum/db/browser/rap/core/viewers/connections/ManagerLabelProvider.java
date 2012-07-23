@@ -45,7 +45,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			if(Define.RESOURCE_TYPE.ERD.toString().equals( dao.getType() )) {
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/relation.png"); //$NON-NLS-1$
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/erd.png"); //$NON-NLS-1$
 			} else {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sql-query.png"); //$NON-NLS-1$
 			}
