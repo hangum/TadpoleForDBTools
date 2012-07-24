@@ -88,7 +88,7 @@ public class DisconnectDBAction implements IViewActionDelegate {
 		// realdb disconnect
 		try {
 			TadpoleSQLManager.removeInstance(userDB);			
-		} catch (Exception e) {
+		} catch (Exception e) { 
 			logger.error("disconnection exception", e);			
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
