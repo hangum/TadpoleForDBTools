@@ -936,8 +936,8 @@ public class MainEditor extends EditorPart {
 				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			
-			btnPrev.setEnabled(false);
 			
+			btnPrev.setEnabled(false);
 			if( sourceDataList.size() < queryPageCount ) btnNext.setEnabled(false);
 			else btnNext.setEnabled(true);
 		} else {
@@ -998,7 +998,7 @@ public class MainEditor extends EditorPart {
 			
 			if(logger.isDebugEnabled()) {
 				logger.debug("====[first][start]=================================================================");
-				logger.debug("[total count]" + (sourceDataList.size()+1) + "[first][readCount]" + readCount);
+				logger.debug("[total count]" + sourceDataList.size() + "[first][readCount]" + readCount);
 				logger.debug("====[first][stop]=================================================================");
 			}
 				
@@ -1126,16 +1126,16 @@ public class MainEditor extends EditorPart {
 		sqlFilter.setFilter(textFilter.getText());
 		sqlResultTableViewer.addFilter( sqlFilter );
 	}
-	
-	/**
-	 * 쿼리를 요청합니다.
-	 * 
-	 * @param selText
-	 * @throws Exception
-	 */
-	private void runSQLSelect(String selText) throws Exception {
-		runSQLSelect(selText, pageNumber);
-	}
+//	
+//	/**
+//	 * 쿼리를 요청합니다.
+//	 * 
+//	 * @param selText
+//	 * @throws Exception
+//	 */
+//	private void runSQLSelect(String selText) throws Exception {
+//		runSQLSelect(selText, pageNumber);
+//	}
 	
 	/**
 	 * select문을 실행합니다.
@@ -1144,7 +1144,7 @@ public class MainEditor extends EditorPart {
 	 * @param startResultPos
 	 * @param endResultPos
 	 */
-	private void runSQLSelect(String requestQuery, int startResultPos) throws Exception {
+	private void runSQLSelect(String requestQuery) throws Exception {
 		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
@@ -1157,7 +1157,7 @@ public class MainEditor extends EditorPart {
 			if(Define.QUERY_MODE.DEFAULT == queryMode) {
 				
 				if( requestQuery.toUpperCase().startsWith("SELECT") ) { //$NON-NLS-1$
-					requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startResultPos, queryResultCount);
+					requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, queryResultCount);
 					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + requestQuery); //$NON-NLS-1$
 				}
 				
