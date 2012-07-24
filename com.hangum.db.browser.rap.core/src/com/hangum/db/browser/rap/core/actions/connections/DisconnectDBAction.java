@@ -1,6 +1,8 @@
 package com.hangum.db.browser.rap.core.actions.connections;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -11,6 +13,8 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.db.browser.rap.core.Activator;
+import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.editors.main.MainEditorInput;
 import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.browser.rap.core.viewers.object.ExplorerViewer;
@@ -18,6 +22,8 @@ import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.ManagerListDTO;
 import com.hangum.db.dao.system.UserDBDAO;
+import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * database disconnect
@@ -78,8 +84,18 @@ public class DisconnectDBAction implements IViewActionDelegate {
 				explorerView.initObjectHead(new ManagerListDTO(userDB.getDisplay_name(), DBDefine.getDBDefine(userDB.getType()) ));
 			}
 		});	// end display
+		
+		// realdb disconnect
+		try {
+			TadpoleSQLManager.removeInstance(userDB);			
+		} catch (Exception e) {
+			logger.error("disconnection exception", e);			
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$
+		}
 	}
-
+	
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		sel = (IStructuredSelection)selection;
