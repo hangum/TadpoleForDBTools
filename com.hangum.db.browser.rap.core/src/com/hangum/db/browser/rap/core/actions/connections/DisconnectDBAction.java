@@ -14,7 +14,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.browser.rap.core.Activator;
-import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.editors.main.MainEditorInput;
 import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.browser.rap.core.viewers.object.ExplorerViewer;
@@ -23,7 +22,6 @@ import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.ManagerListDTO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * database disconnect
