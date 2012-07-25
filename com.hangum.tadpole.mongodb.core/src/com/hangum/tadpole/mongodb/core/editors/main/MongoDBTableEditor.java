@@ -46,7 +46,6 @@ import com.hangum.tadpole.mongodb.core.connection.MongoDBConnection;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
-import com.hangum.tadpole.mongodb.core.utils.MongoSQLParser;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.mongodb.BasicDBList;
@@ -81,15 +80,15 @@ public class MongoDBTableEditor extends EditorPart {
 	/** collection의 전체 컬럼 */
 	private String strColumns = ""; //$NON-NLS-1$
 	
-	private Text textSearch;
-	private Text textSort;
-	private Text textField;
-	
-	private Text textCntSkip;
-	private Text textCntLimit;
+//	private Text textSearch;
+//	private Text textSort;
+//	private Text textField;
+//	
+//	private Text textCntSkip;
+//	private Text textCntLimit;
 	
 	/** where parser */
-	private MongoSQLParser parser = new MongoSQLParser();
+//	private MongoSQLParser parser = new MongoSQLParser();
 	
 	/** 쿼리 결과 출력 */
 	private MongodbResultComposite compositeResult ;
@@ -305,141 +304,141 @@ public class MongoDBTableEditor extends EditorPart {
 		});
 		btnBasicSearch.setText("Search"); //$NON-NLS-1$
 		
-		TabItem tbtmExtension = new TabItem(tabFolderSearchPanel, SWT.NONE);
-		tbtmExtension.setText("Extension Search"); //$NON-NLS-1$
+//		TabItem tbtmExtension = new TabItem(tabFolderSearchPanel, SWT.NONE);
+//		tbtmExtension.setText("Extension Search"); //$NON-NLS-1$
 		
-		Composite compositeSearchExtension = new Composite(tabFolderSearchPanel, SWT.NONE);
-		tbtmExtension.setControl(compositeSearchExtension);
-		compositeSearchExtension.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeSearchExtension = new GridLayout(1, false);
-		gl_compositeSearchExtension.verticalSpacing = 2;
-		gl_compositeSearchExtension.horizontalSpacing = 2;
-		gl_compositeSearchExtension.marginHeight = 2;
-		gl_compositeSearchExtension.marginWidth = 2;
-		compositeSearchExtension.setLayout(gl_compositeSearchExtension);
+//		Composite compositeSearchExtension = new Composite(tabFolderSearchPanel, SWT.NONE);
+//		tbtmExtension.setControl(compositeSearchExtension);
+//		compositeSearchExtension.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		GridLayout gl_compositeSearchExtension = new GridLayout(1, false);
+//		gl_compositeSearchExtension.verticalSpacing = 2;
+//		gl_compositeSearchExtension.horizontalSpacing = 2;
+//		gl_compositeSearchExtension.marginHeight = 2;
+//		gl_compositeSearchExtension.marginWidth = 2;
+//		compositeSearchExtension.setLayout(gl_compositeSearchExtension);
 		
-		Composite compositeHead = new Composite(compositeSearchExtension, SWT.NONE);
-		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(2, false));
-		
-		Label lblField = new Label(compositeHead, SWT.NONE);
-		lblField.setText("Field"); //$NON-NLS-1$
-		
-		textField = new Text(compositeHead, SWT.BORDER);
-		textField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textField.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		
-		Label lblSearch = new Label(compositeHead, SWT.NONE);
-		lblSearch.setText("Where"); //$NON-NLS-1$
-		
-		textSearch = new Text(compositeHead, SWT.BORDER);
-		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textSearch.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		
-		Label lblOrderBy = new Label(compositeHead, SWT.NONE);
-		lblOrderBy.setText("Sort"); //$NON-NLS-1$
-		
-		textSort = new Text(compositeHead, SWT.BORDER);
-		textSort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textSort.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) {
-					findExtension();
-				}
-			}
-		});
-		textSort.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		
-		textSearch.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) {
-					findExtension();
-				}
-			}
-		});
-		textField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) {
-					findExtension();
-				}
-			}
-		});
-		
-		Composite compositeFindSearch = new Composite(compositeSearchExtension, SWT.NONE);
-		compositeFindSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		GridLayout gl_compositeFindSearch = new GridLayout(8, false);
-		gl_compositeFindSearch.verticalSpacing = 1;
-		gl_compositeFindSearch.horizontalSpacing = 1;
-		gl_compositeFindSearch.marginHeight = 1;
-		gl_compositeFindSearch.marginWidth = 1;
-		compositeFindSearch.setLayout(gl_compositeFindSearch);
-		
-		Label lblStart = new Label(compositeFindSearch, SWT.NONE);
-		GridData gd_lblStart = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		gd_lblStart.widthHint = 30;
-		lblStart.setLayoutData(gd_lblStart);
-		
-		Label lblSkip = new Label(compositeFindSearch, SWT.NONE);
-		lblSkip.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSkip.setText("Skip"); //$NON-NLS-1$
-		
-		textCntSkip = new Text(compositeFindSearch, SWT.BORDER | SWT.RIGHT);
-		textCntSkip.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		textCntSkip.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) {
-					findExtension();
-				}
-			}
-		});
-		textCntSkip.setText("0"); //$NON-NLS-1$
-		GridData gd_textCntSkip = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		gd_textCntSkip.widthHint = 50;
-		textCntSkip.setLayoutData(gd_textCntSkip);
-		
-		Label lblLimit = new Label(compositeFindSearch, SWT.NONE);
-		lblLimit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblLimit.setText("Limit"); //$NON-NLS-1$
-		
-		textCntLimit = new Text(compositeFindSearch, SWT.BORDER | SWT.RIGHT);
-		textCntLimit.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		textCntLimit.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) {
-					findExtension();
-				}
-			}
-		});
-		GridData gd_textCntLimit = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		gd_textCntLimit.widthHint = 50;
-		textCntLimit.setLayoutData(gd_textCntLimit);
-		textCntLimit.setText(defaultLimit); //$NON-NLS-1$
-		
-		Label lblNewLabel = new Label(compositeFindSearch, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Button btnToApplication = new Button(compositeFindSearch, SWT.NONE);
-		btnToApplication.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				console();
-			}
-		});
-		btnToApplication.setText("Show Console"); //$NON-NLS-1$
-		
-		Button btnSearch = new Button(compositeFindSearch, SWT.NONE);
-		btnSearch.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				findExtension();
-			}
-		});
-		btnSearch.setText("Search"); //$NON-NLS-1$
+//		Composite compositeHead = new Composite(compositeSearchExtension, SWT.NONE);
+//		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		compositeHead.setLayout(new GridLayout(2, false));
+//		
+//		Label lblField = new Label(compositeHead, SWT.NONE);
+//		lblField.setText("Field"); //$NON-NLS-1$
+//		
+//		textField = new Text(compositeHead, SWT.BORDER);
+//		textField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		textField.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+//		
+//		Label lblSearch = new Label(compositeHead, SWT.NONE);
+//		lblSearch.setText("Where"); //$NON-NLS-1$
+//		
+//		textSearch = new Text(compositeHead, SWT.BORDER);
+//		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		textSearch.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+//		
+//		Label lblOrderBy = new Label(compositeHead, SWT.NONE);
+//		lblOrderBy.setText("Sort"); //$NON-NLS-1$
+//		
+//		textSort = new Text(compositeHead, SWT.BORDER);
+//		textSort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		textSort.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				if(e.keyCode == SWT.Selection) {
+//					findExtension();
+//				}
+//			}
+//		});
+//		textSort.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+//		
+//		textSearch.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				if(e.keyCode == SWT.Selection) {
+//					findExtension();
+//				}
+//			}
+//		});
+//		textField.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				if(e.keyCode == SWT.Selection) {
+//					findExtension();
+//				}
+//			}
+//		});
+//		
+//		Composite compositeFindSearch = new Composite(compositeSearchExtension, SWT.NONE);
+//		compositeFindSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+//		GridLayout gl_compositeFindSearch = new GridLayout(8, false);
+//		gl_compositeFindSearch.verticalSpacing = 1;
+//		gl_compositeFindSearch.horizontalSpacing = 1;
+//		gl_compositeFindSearch.marginHeight = 1;
+//		gl_compositeFindSearch.marginWidth = 1;
+//		compositeFindSearch.setLayout(gl_compositeFindSearch);
+//		
+//		Label lblStart = new Label(compositeFindSearch, SWT.NONE);
+//		GridData gd_lblStart = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+//		gd_lblStart.widthHint = 30;
+//		lblStart.setLayoutData(gd_lblStart);
+//		
+//		Label lblSkip = new Label(compositeFindSearch, SWT.NONE);
+//		lblSkip.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblSkip.setText("Skip"); //$NON-NLS-1$
+//		
+//		textCntSkip = new Text(compositeFindSearch, SWT.BORDER | SWT.RIGHT);
+//		textCntSkip.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+//		textCntSkip.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				if(e.keyCode == SWT.Selection) {
+//					findExtension();
+//				}
+//			}
+//		});
+//		textCntSkip.setText("0"); //$NON-NLS-1$
+//		GridData gd_textCntSkip = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+//		gd_textCntSkip.widthHint = 50;
+//		textCntSkip.setLayoutData(gd_textCntSkip);
+//		
+//		Label lblLimit = new Label(compositeFindSearch, SWT.NONE);
+//		lblLimit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblLimit.setText("Limit"); //$NON-NLS-1$
+//		
+//		textCntLimit = new Text(compositeFindSearch, SWT.BORDER | SWT.RIGHT);
+//		textCntLimit.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+//		textCntLimit.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				if(e.keyCode == SWT.Selection) {
+//					findExtension();
+//				}
+//			}
+//		});
+//		GridData gd_textCntLimit = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+//		gd_textCntLimit.widthHint = 50;
+//		textCntLimit.setLayoutData(gd_textCntLimit);
+//		textCntLimit.setText(defaultLimit); //$NON-NLS-1$
+//		
+//		Label lblNewLabel = new Label(compositeFindSearch, SWT.NONE);
+//		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//		Button btnToApplication = new Button(compositeFindSearch, SWT.NONE);
+//		btnToApplication.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				console();
+//			}
+//		});
+//		btnToApplication.setText("Show Console"); //$NON-NLS-1$
+//		
+//		Button btnSearch = new Button(compositeFindSearch, SWT.NONE);
+//		btnSearch.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				findExtension();
+//			}
+//		});
+//		btnSearch.setText("Search"); //$NON-NLS-1$
 		
 		Composite composite = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -464,12 +463,12 @@ public class MongoDBTableEditor extends EditorPart {
 		
 		if(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC.equals(defaultFindPage)) {
 			tabFolderSearchPanel.setSelection(0);
-		} else {
-			tabFolderSearchPanel.setSelection(1);
+//		} else {
+//			tabFolderSearchPanel.setSelection(1);
 		}
 		
 		findBasic();		
-		textField.setText(strColumns);
+//		textField.setText(strColumns);
 	}
 	
 	/**
@@ -548,115 +547,115 @@ public class MongoDBTableEditor extends EditorPart {
 		job.schedule();
 	}
 	
-	/**
-	 * 검색 확장
-	 */
-	public void findExtension() {
-		final String strBasicField = textField.getText().trim();
-		final String strBasicFind = textSearch.getText().trim();
-		final String strBasicSort = textSort.getText().trim();
-		final int cntSkip = getCntSkip();
-		final int cntLimit = getCntLimit();
-		
-		// job
-		Job job = new Job(Messages.MongoDBTableEditor_4) {
-			@Override
-			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(Messages.MongoDBTableEditor_5, IProgressMonitor.UNKNOWN);
-						
-				try {
-					// field
-					//
-					//	특정 컬럼을 검색하는지.(특정 컬럼을 검색하지 않으면 모든 컬럼을 검색)
-					//	*, 공백이면 모든 컬럼 검색
-					BasicDBObject basicFields = new BasicDBObject();
-					if(!strBasicField.equals("")) { //$NON-NLS-1$
-						if(!"*".equals(strBasicField)) { //$NON-NLS-1$
-							int columnCnt = 0;
-							
-							for(String field : StringUtils.split(strBasicField, ",")) { //$NON-NLS-1$
-								basicFields.append(field.trim(), true);
-								
-								mapColumns.put(columnCnt, field.trim());
-								columnCnt++;
-							}
-						}
-					}
-					
-					// where
-					DBObject basicWhere = new BasicDBObject();
-					if(!strBasicFind.equals("")) { //$NON-NLS-1$
-						basicWhere = parser.query(strBasicFind, columnInfo);
-					}
-					
-					// sort
-					BasicDBObject basicSort = new BasicDBObject();
-					if(!strBasicSort.equals("")) { //$NON-NLS-1$
-						for(String sortStmt : StringUtils.split(strBasicSort, ",")) { //$NON-NLS-1$
-							String[] search = StringUtils.split(sortStmt, "="); //$NON-NLS-1$
-							
-							// aa=-1
-							TableColumnDAO column = null;
-							if(search.length == 2) {
-		
-								// 원래 데이터 타입에 맞게 형변환 합니다.
-								column = columnInfo.get(search[0].trim());
-								// 컬럼이 발견 되지 않았으면..
-								if(column == null) {
-									throw new Exception("[Sort] " + search[0] + Messages.MongoDBTableEditor_23); //$NON-NLS-1$
-								}
-								
-								basicSort.append(search[0].trim(), Integer.parseInt(search[1].trim()));
-							}
-						}
-					}
-					
-					if(logger.isDebugEnabled()) {
-						logger.debug("############[text condition]#####################"); //$NON-NLS-1$
-						logger.debug("[Fields]" + strBasicField); //$NON-NLS-1$
-						logger.debug("[Find]" + strBasicFind); //$NON-NLS-1$
-						logger.debug("[Sort]" + strBasicSort); //$NON-NLS-1$
-						logger.debug("############[text condition]#####################"); //$NON-NLS-1$
-					}
-					monitor.setTaskName(basicWhere.toString());
-					
-					// 초기화
-					sbConsoleMsg.setLength(0);		
-					// 검색
-					find(basicFields, basicWhere, basicSort, cntSkip, cntLimit);
-				} catch (Exception e) {
-					logger.error("find extendsion collection exception", e); //$NON-NLS-1$
-					return new Status(Status.WARNING,Activator.PLUGIN_ID, e.getMessage());
-				} finally {
-					monitor.done();
-				}
-				
-				return Status.OK_STATUS;
-			}
-		};
-		
-		// job의 event를 처리해 줍니다.
-		job.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-	
-				final IJobChangeEvent jobEvent = event; 
-				getSite().getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if(jobEvent.getResult().isOK()) {
-							compositeResult.setResult(txtCnt, mapColumns, listTrees, sourceDataList);
-						} else {
-							sbConsoleMsg.append(jobEvent.getResult().getMessage());
-							compositeResult.appendMessage(jobEvent.getResult().getMessage());
-						}
-					}
-				});	// end display.asyncExec				
-			}	// end done
-		});	// end job
-		
-		job.setName(userDB.getDisplay_name());
-		job.setUser(true);
-		job.schedule();
-	}
+//	/**
+//	 * 검색 확장
+//	 */
+//	public void findExtension() {
+//		final String strBasicField = textField.getText().trim();
+//		final String strBasicFind = textSearch.getText().trim();
+//		final String strBasicSort = textSort.getText().trim();
+//		final int cntSkip = getCntSkip();
+//		final int cntLimit = getCntLimit();
+//		
+//		// job
+//		Job job = new Job(Messages.MongoDBTableEditor_4) {
+//			@Override
+//			public IStatus run(IProgressMonitor monitor) {
+//				monitor.beginTask(Messages.MongoDBTableEditor_5, IProgressMonitor.UNKNOWN);
+//						
+//				try {
+//					// field
+//					//
+//					//	특정 컬럼을 검색하는지.(특정 컬럼을 검색하지 않으면 모든 컬럼을 검색)
+//					//	*, 공백이면 모든 컬럼 검색
+//					BasicDBObject basicFields = new BasicDBObject();
+//					if(!strBasicField.equals("")) { //$NON-NLS-1$
+//						if(!"*".equals(strBasicField)) { //$NON-NLS-1$
+//							int columnCnt = 0;
+//							
+//							for(String field : StringUtils.split(strBasicField, ",")) { //$NON-NLS-1$
+//								basicFields.append(field.trim(), true);
+//								
+//								mapColumns.put(columnCnt, field.trim());
+//								columnCnt++;
+//							}
+//						}
+//					}
+//					
+//					// where
+//					DBObject basicWhere = new BasicDBObject();
+//					if(!strBasicFind.equals("")) { //$NON-NLS-1$
+//						basicWhere = parser.query(strBasicFind, columnInfo);
+//					}
+//					
+//					// sort
+//					BasicDBObject basicSort = new BasicDBObject();
+//					if(!strBasicSort.equals("")) { //$NON-NLS-1$
+//						for(String sortStmt : StringUtils.split(strBasicSort, ",")) { //$NON-NLS-1$
+//							String[] search = StringUtils.split(sortStmt, "="); //$NON-NLS-1$
+//							
+//							// aa=-1
+//							TableColumnDAO column = null;
+//							if(search.length == 2) {
+//		
+//								// 원래 데이터 타입에 맞게 형변환 합니다.
+//								column = columnInfo.get(search[0].trim());
+//								// 컬럼이 발견 되지 않았으면..
+//								if(column == null) {
+//									throw new Exception("[Sort] " + search[0] + Messages.MongoDBTableEditor_23); //$NON-NLS-1$
+//								}
+//								
+//								basicSort.append(search[0].trim(), Integer.parseInt(search[1].trim()));
+//							}
+//						}
+//					}
+//					
+//					if(logger.isDebugEnabled()) {
+//						logger.debug("############[text condition]#####################"); //$NON-NLS-1$
+//						logger.debug("[Fields]" + strBasicField); //$NON-NLS-1$
+//						logger.debug("[Find]" + strBasicFind); //$NON-NLS-1$
+//						logger.debug("[Sort]" + strBasicSort); //$NON-NLS-1$
+//						logger.debug("############[text condition]#####################"); //$NON-NLS-1$
+//					}
+//					monitor.setTaskName(basicWhere.toString());
+//					
+//					// 초기화
+//					sbConsoleMsg.setLength(0);		
+//					// 검색
+//					find(basicFields, basicWhere, basicSort, cntSkip, cntLimit);
+//				} catch (Exception e) {
+//					logger.error("find extendsion collection exception", e); //$NON-NLS-1$
+//					return new Status(Status.WARNING,Activator.PLUGIN_ID, e.getMessage());
+//				} finally {
+//					monitor.done();
+//				}
+//				
+//				return Status.OK_STATUS;
+//			}
+//		};
+//		
+//		// job의 event를 처리해 줍니다.
+//		job.addJobChangeListener(new JobChangeAdapter() {
+//			public void done(IJobChangeEvent event) {
+//	
+//				final IJobChangeEvent jobEvent = event; 
+//				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						if(jobEvent.getResult().isOK()) {
+//							compositeResult.setResult(txtCnt, mapColumns, listTrees, sourceDataList);
+//						} else {
+//							sbConsoleMsg.append(jobEvent.getResult().getMessage());
+//							compositeResult.appendMessage(jobEvent.getResult().getMessage());
+//						}
+//					}
+//				});	// end display.asyncExec				
+//			}	// end done
+//		});	// end job
+//		
+//		job.setName(userDB.getDisplay_name());
+//		job.setUser(true);
+//		job.schedule();
+//	}
 
 	/**
 	 * 실제 몽고디비와 접속해서 검색을 수행합니다.
@@ -854,11 +853,11 @@ public class MongoDBTableEditor extends EditorPart {
 	 * @return
 	 */
 	private int getCntSkip() {
-		if(tabFolderSearchPanel.getSelectionIndex() == 0) {
+//		if(tabFolderSearchPanel.getSelectionIndex() == 0) {
 			return Integer.parseInt(textBasicSkip.getText());
-		} else {
-			return Integer.parseInt(textCntSkip.getText());
-		}
+//		} else {
+//			return Integer.parseInt(textCntSkip.getText());
+//		}
 	}
 	
 	/**
@@ -866,11 +865,11 @@ public class MongoDBTableEditor extends EditorPart {
 	 * @return
 	 */
 	private int getCntLimit() {
-		if(tabFolderSearchPanel.getSelectionIndex() == 0) {
+//		if(tabFolderSearchPanel.getSelectionIndex() == 0) {
 			return Integer.parseInt(textBasicLimit.getText());
-		} else {
-			return Integer.parseInt(textCntLimit.getText());
-		}
+//		} else {
+//			return Integer.parseInt(textCntLimit.getText());
+//		}
 	}
 	
 	/**

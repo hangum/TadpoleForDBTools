@@ -8,7 +8,7 @@
 
    <launcherArgs>
       <programArgs>-standalone -debuglog</programArgs>
-      <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000 ‎-XX:+UseParNewGC -XX:+UseConcMarkSweepGC</vmArgs>
+      <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=8000</vmArgs>
       <vmArgsMac>-d32</vmArgsMac>
    </launcherArgs>
 
@@ -16,8 +16,7 @@
 
    <launcher name="tadpole-standalone">
       <solaris/>
-      <win useIco="true">
-         <ico path="/com.hangum.db.browser.rap/icons/TadpoleForDBTools.ico"/>
+      <win useIco="false">
          <bmp/>
       </win>
    </launcher>
@@ -27,8 +26,6 @@
    </vm>
 
    <plugins>
-      <plugin id="com.google.guava"/>
-      <plugin id="com.google.inject"/>
       <plugin id="com.hangum.db.browser.rap"/>
       <plugin id="com.hangum.db.browser.rap.core"/>
       <plugin id="com.hangum.db.browser.start"/>
@@ -40,12 +37,10 @@
       <plugin id="com.hangum.tadpole.manager.core"/>
       <plugin id="com.hangum.tadpole.model"/>
       <plugin id="com.hangum.tadpole.mongodb.core"/>
+      <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
       <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.ibm.icu.base"/>
-      <plugin id="javax.inject"/>
       <plugin id="javax.servlet"/>
-      <plugin id="org.antlr.runtime"/>
-      <plugin id="org.apache.log4j"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
@@ -101,17 +96,9 @@
       <plugin id="org.eclipse.rap.ui"/>
       <plugin id="org.eclipse.rap.ui.views"/>
       <plugin id="org.eclipse.rap.ui.workbench"/>
-      <plugin id="org.eclipse.xtext"/>
-      <plugin id="org.eclipse.xtext.common.types"/>
-      <plugin id="org.eclipse.xtext.logging" fragment="true"/>
-      <plugin id="org.eclipse.xtext.util"/>
-      <plugin id="org.eclipse.xtext.xbase.lib"/>
-      <plugin id="org.eclipselabs.mongo.query"/>
    </plugins>
 
    <configurations>
-      <plugin id="com.google.guava" autoStart="true" startLevel="0" />
-      <plugin id="com.google.inject" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.db.browser.rap" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.db.browser.rap.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.db.browser.start" autoStart="true" startLevel="0" />
@@ -123,12 +110,10 @@
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.ibm.icu.base" autoStart="true" startLevel="0" />
-      <plugin id="javax.inject" autoStart="true" startLevel="0" />
       <plugin id="javax.servlet" autoStart="true" startLevel="0" />
-      <plugin id="org.antlr.runtime" autoStart="true" startLevel="0" />
-      <plugin id="org.apache.log4j" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.core.commands" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.core.contenttype" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.core.databinding" autoStart="true" startLevel="0" />
@@ -168,11 +153,6 @@
       <plugin id="org.eclipse.rap.ui" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.views" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.workbench" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.xtext" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.xtext.common.types" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.xtext.util" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.xtext.xbase.lib" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipselabs.mongo.query" autoStart="true" startLevel="0" />
    </configurations>
 
 </product>

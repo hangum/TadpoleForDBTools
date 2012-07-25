@@ -1,6 +1,5 @@
 package com.hangum.tadpole.preference.ui;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -25,7 +24,7 @@ import com.hangum.tadpole.preference.Messages;
  *
  */
 public class UserInfoPerference extends PreferencePage implements IWorkbenchPreferencePage {
-	private static final Logger logger = Logger.getLogger(UserInfoPerference.class);
+//	private static final Logger logger = Logger.getLogger(UserInfoPerference.class);
 	
 	private Text textGroupName;
 	private Text textEmail;
@@ -115,7 +114,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 			
 			MessageDialog.openConfirm(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_8);
 		} catch (Exception e) {
-			logger.error("password change", e); //$NON-NLS-1$
+//			logger.error("password change", e); //$NON-NLS-1$
 			MessageDialog.openError(getShell(), "Confirm", e.getMessage());			 //$NON-NLS-1$
 			
 			return false;

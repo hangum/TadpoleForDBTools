@@ -1,6 +1,5 @@
 package com.hangum.tadpole.preference.internal;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -20,7 +19,7 @@ import org.eclipse.swt.widgets.Text;
  *
  */
 public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
-	private static final Logger logger = Logger.getLogger(TadpoleSimpleMessageDialog.class);
+//	private static final Logger logger = Logger.getLogger(TadpoleSimpleMessageDialog.class);
 	private Text textMessage;
 	
 	String title;

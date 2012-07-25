@@ -80,6 +80,7 @@
             </enablement>
          </action>
          <menu
+               icon="resources/icons/create-dml.png"
                id="menu.create"
                label="Create DML">
             <groupMarker
@@ -209,7 +210,7 @@
          <visibility>
             <objectState
                   name="db_type"
-                  value="cubrid,mysql,mssql,oracle,db2,postgressql">
+                  value="cubrid,mysql,mssql,oracle,db2,postgressql,sqlite">
             </objectState>
          </visibility>
       </objectContribution>

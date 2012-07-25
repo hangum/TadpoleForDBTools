@@ -73,6 +73,5 @@ Export-Package: com.hangum.db.commons.sql,
  com.ibatis.sqlmap.engine.type
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.hangum.db.CommonsSQLActivator
-Import-Package: javax.servlet;version="2.6.0",
- javax.servlet.http;version="2.6.0",
- javax.servlet.resources;version="2.6.0"
+Import-Package: javax.servlet;version="2.4.0",
+ javax.servlet.http;version="2.4.0"

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
+<?pde version="3.8"?>
 
-<target name="tadpole-rap-1.5" sequenceNumber="15">
+<target name="tadpole-rap-1.5" sequenceNumber="19">
 <locations>
-<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.7.0.v20120130-0943"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
-<location path="${workspace_loc}/targetProject/xtend" type="Directory"/>
-<location path="${workspace_loc}/targetProject/rap-runtime-1.5.0-RC1-20120521-1618" type="Directory"/>
+<location path="${git-tadpole}/targetProject/rap-runtime-1.5.0-R-20120612-1458" type="Directory"/>
+<location path="${git-tadpole}/targetProject/tmf-xtext-Update-2.3.0RC4" type="Directory"/>
 </locations>
 </target>
