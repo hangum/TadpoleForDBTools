@@ -7,12 +7,12 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
 /**
- * reIndex example
+ * server status example
  * 
  * @author hangum
  * 
  */
-public class MongoTestReIndex {
+public class MongoTestListCommand {
 
 	/**
 	 * @param args
@@ -22,9 +22,9 @@ public class MongoTestReIndex {
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
 		
-		DBObject queryObj = new BasicDBObject("reIndex", "store");
+		DBObject queryObj = new BasicDBObject("serverStatus", 0);
 		CommandResult cr = db.command(queryObj);
-		
+			
 		System.out.println("[ok]" + cr.ok() );
 		if(!cr.ok()) System.out.println("[Exception ]" + cr.getException().toString());
 		System.out.println("[toString]" + cr.toString() );

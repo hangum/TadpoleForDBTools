@@ -41,7 +41,7 @@ public class MongoTestORStmt {
 			System.out.println(myCursor.next());
 		}
 		
-
+		mongo.close();
 	}
 
 }

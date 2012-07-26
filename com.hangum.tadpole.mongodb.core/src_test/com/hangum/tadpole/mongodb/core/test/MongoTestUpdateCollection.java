@@ -73,6 +73,7 @@ public class MongoTestUpdateCollection {
 //
 //		System.out.println(wr.toString());
 //		
+		mongo.close();
 	}
 
 }

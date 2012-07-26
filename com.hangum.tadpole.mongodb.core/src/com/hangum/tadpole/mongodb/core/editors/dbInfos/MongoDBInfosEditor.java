@@ -71,6 +71,8 @@ public class MongoDBInfosEditor extends EditorPart {
 	 */
 	private static final Logger logger = Logger.getLogger(MongoDBInfosEditor.class);
 	
+	private Label lblServerInfo;
+	
 	private UserDBDAO userDB;
 	private MongoInfoFilter filter;
 	private MongoDBCollectionComparator collectionSorter;
@@ -90,17 +92,30 @@ public class MongoDBInfosEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout(1, false));
+		GridLayout gl_parent = new GridLayout(1, false);
+		gl_parent.marginHeight = 2;
+		gl_parent.verticalSpacing = 2;
+		gl_parent.horizontalSpacing = 2;
+		gl_parent.marginWidth = 2;
+		parent.setLayout(gl_parent);
 		
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(3, false));
+		Composite compositeHead = new Composite(parent, SWT.NONE);
+		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeHead.setLayout(new GridLayout(3, false));
 		
-		Label lblName = new Label(composite, SWT.NONE);
+//		Composite composite = new Composite(compositeHead, SWT.NONE);
+//		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+//		composite.setLayout(new GridLayout(1, false));
+//		
+//		lblServerInfo = new Label(composite, SWT.NONE);
+//		lblServerInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		lblServerInfo.setText(userDB.getHost() + ":" + userDB.getPort());
+		
+		Label lblName = new Label(compositeHead, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText("Name Filter"); //$NON-NLS-1$
 		
-		textFilter = new Text(composite, SWT.BORDER);
+		textFilter = new Text(compositeHead, SWT.BORDER);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textFilter.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
@@ -109,7 +124,7 @@ public class MongoDBInfosEditor extends EditorPart {
 			}
 		});
 		
-		Button btnRefresh = new Button(composite, SWT.NONE);
+		Button btnRefresh = new Button(compositeHead, SWT.NONE);
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

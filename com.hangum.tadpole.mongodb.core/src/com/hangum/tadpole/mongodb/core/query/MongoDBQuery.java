@@ -283,4 +283,21 @@ public class MongoDBQuery {
 	public static String webConsole(UserDBDAO userDB) throws Exception {
 		return "http://" + userDB.getHost() + ":" + (Integer.parseInt(userDB.getPort()) + 1000);
 	}
+	
+	/**
+	 * db stats
+	 * 
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static String dbStats(UserDBDAO userDB) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		CommandResult cr = mongoDB.getStats();
+		
+		if(cr.ok()) {
+			return cr.toString();
+		} else {
+			throw cr.getException();
+		}
+	}
 }

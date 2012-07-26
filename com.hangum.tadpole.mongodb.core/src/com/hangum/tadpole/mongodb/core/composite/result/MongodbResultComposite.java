@@ -76,8 +76,8 @@ import com.mongodb.DBObject;
 public class MongodbResultComposite extends Composite {
 	private static Logger logger = Logger.getLogger(MongodbResultComposite.class);
 	
-	/** composiate이 처음 호출 되었는지 */
-	private boolean isFirstCall = false;
+//	/** composiate이 처음 호출 되었는지 */
+//	private boolean isFirstCall = false;
 	
 	/** data userdb*/
 	private UserDBDAO userDB;
@@ -574,7 +574,7 @@ public class MongodbResultComposite extends Composite {
 		
 		// tree view
 		treeViewerMongo.setInput(listTrees);
-		treeViewerMongo.expandToLevel(2);
+		treeViewerMongo.expandToLevel(1);
 		lblTreeViewCount.setText(textCnt);
 		
 		// table view

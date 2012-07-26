@@ -33,6 +33,7 @@ public class ConAndAuthentication {
 				testMongoCls.getCollectionInfo(testDB, "city1");
 //			}
 		}
+		mongo.close();
 	}
 	
 	/**

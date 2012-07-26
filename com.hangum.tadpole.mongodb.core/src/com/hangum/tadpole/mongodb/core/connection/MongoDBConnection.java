@@ -29,9 +29,9 @@ public class MongoDBConnection {
 	 * @throws Exception
 	 */
 	public static DB connection(UserDBDAO userDB) throws Exception {
-		
+		Mongo mongo = null;
 		try {
-			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
+			mongo = new Mongo(new DBAddress(userDB.getUrl()) );
 			List<String> listDB = mongo.getDatabaseNames();
 			
 			boolean isDB = false;
@@ -58,6 +58,8 @@ public class MongoDBConnection {
 		} catch (MongoException e) {
 			logger.error("monodb exception", e); //$NON-NLS-1$
 			throw new Exception(Messages.MongoDBConnection_4 + e.getMessage());
+//		} finally {
+//			mongo.close();
 		}
 		
 	}

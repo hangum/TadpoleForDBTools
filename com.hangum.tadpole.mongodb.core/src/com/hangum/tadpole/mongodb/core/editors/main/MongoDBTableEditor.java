@@ -685,13 +685,13 @@ public class MongoDBTableEditor extends EditorPart {
 		DBCursor dbCursor = null;
 		if(cntSkip > 0 && cntLimit > 0) {
 				
-			sbConsoleMsg.append("############[skip & limit]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");					 //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Skip]" + cntSkip).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Limit]" + cntLimit).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("############[skip & limit]#####################"); //$NON-NLS-1$
+			sbConsoleMsg.append("############[query]#####################"); //$NON-NLS-1$
 			
 			dbCursor = dbCollection.
 								find(basicWhere, basicFields).
@@ -702,23 +702,23 @@ public class MongoDBTableEditor extends EditorPart {
 			
 		} else if(cntSkip == 0 && cntLimit > 0) {
 			
-			sbConsoleMsg.append("############[limit]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");				 //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Limit]" + cntLimit).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("############[limit]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			dbCursor = dbCollection.
 					find(basicWhere, basicFields).
 					sort(basicSort).
 					limit(cntLimit);
 		} else {
-			sbConsoleMsg.append("############[normal]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");				 //$NON-NLS-1$ //$NON-NLS-2$
 			sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("############[normal]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			dbCursor = dbCollection.
 								find(basicWhere, basicFields).

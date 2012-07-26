@@ -31,6 +31,8 @@ public class MongoTestNewCollection {
 		
 //		db.cappedcoll.insert({"names": {"First": "Gonza", "Last": "Vieira"}}); 
 //		db.cappedcoll.update({"names.First": "Gonza"},{$unset: {"_id":1}});
+		
+		mongo.close();
 	}
 
 }

@@ -36,6 +36,7 @@ public class MongoTestInStmt {
 			System.out.println(myCursor.next());
 		}
 
+		mongo.close();
 	}
 
 }

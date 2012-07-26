@@ -12,7 +12,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class TextWidgetText implements IEntryPoint {
+	private Text text_1;
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public int createUI() { 
 		final Display display = new Display();
 		Shell shell = new Shell(display);
@@ -23,7 +27,8 @@ public class TextWidgetText implements IEntryPoint {
 		text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-			
+				System.out.println(e.keyCode);
+				
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
 					text.insert(new Character(SWT.TAB).toString());
 				}
@@ -32,13 +37,34 @@ public class TextWidgetText implements IEntryPoint {
 		text.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+//					text.setFocus();
 					e.doit = false;
 					e.detail = SWT.TRAVERSE_NONE;
 				}
 			}
 		});
 		
-		shell.setSize(200, 200);
+		text_1 = new Text(shell, SWT.BORDER);
+		text_1.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+			
+				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
+					text_1.insert(new Character(SWT.TAB).toString());
+				}
+			}
+		});
+		text_1.addTraverseListener(new TraverseListener() {
+			public void keyTraversed(TraverseEvent e) {
+				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+//					text_1.setFocus();
+					e.doit = false;
+					e.detail = SWT.TRAVERSE_NONE;
+				}
+			}
+		});
+		
+		shell.setSize(404, 380);
 		shell.open();
 //		while (!shell.isDisposed()) {
 //			if (!display.readAndDispatch())

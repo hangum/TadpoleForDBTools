@@ -33,6 +33,7 @@ public class MongoTestNotEqualsStmt {
 			System.out.println(myCursor.next());
 		}
 
+		mongo.close();
 	}
 
 }

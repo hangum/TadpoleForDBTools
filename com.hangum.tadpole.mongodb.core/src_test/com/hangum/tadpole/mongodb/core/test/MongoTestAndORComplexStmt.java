@@ -53,6 +53,8 @@ public class MongoTestAndORComplexStmt {
 		while (myCursor.hasNext()) {
 			System.out.println(myCursor.next());
 		}
+		
+		mongo.close();
 	}
 	
 }
