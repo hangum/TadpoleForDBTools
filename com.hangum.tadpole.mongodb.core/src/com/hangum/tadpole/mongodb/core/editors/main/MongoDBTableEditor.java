@@ -179,6 +179,7 @@ public class MongoDBTableEditor extends EditorPart {
 		textBasicFind.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+					textBasicFind.setFocus();
 					e.doit = false;
 					e.detail = SWT.TRAVERSE_NONE;
 				}
@@ -203,6 +204,7 @@ public class MongoDBTableEditor extends EditorPart {
 		textBasicField.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+					textBasicField.setFocus();
 					e.doit = false;
 					e.detail = SWT.TRAVERSE_NONE;
 				}
@@ -227,6 +229,7 @@ public class MongoDBTableEditor extends EditorPart {
 		textBasicSort.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+					textBasicSort.setFocus();
 					e.doit = false;
 					e.detail = SWT.TRAVERSE_NONE;
 				}
@@ -451,7 +454,7 @@ public class MongoDBTableEditor extends EditorPart {
 		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, tableName, this);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeResult.setLayout(new GridLayout(1, false));
-		sashForm.setWeights(new int[] {20, 80});
+		sashForm.setWeights(new int[] {170, 294});
 		
 		initCollection();
 	}
