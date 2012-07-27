@@ -42,7 +42,7 @@ import com.hangum.db.util.JSONUtil;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
-import com.hangum.tadpole.mongodb.core.connection.MongoDBConnection;
+import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
@@ -678,93 +678,97 @@ public class MongoDBTableEditor extends EditorPart {
 		mapColumns = new HashMap<Integer, String>();
 		sourceDataList = new ArrayList<HashMap<Integer, Object>>();
 		
-		DB mongoDB = MongoDBConnection.connection(userDB);
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		DBCollection dbCollection = mongoDB.getCollection(tableName);
 		
 		// 데이터 검색
 		DBCursor dbCursor = null;
-		if(cntSkip > 0 && cntLimit > 0) {
+		try {
+			if(cntSkip > 0 && cntLimit > 0) {
+					
+				sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");					 //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Skip]" + cntSkip).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Limit]" + cntLimit).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("############[query]#####################"); //$NON-NLS-1$
 				
-			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");					 //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Skip]" + cntSkip).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Limit]" + cntLimit).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("############[query]#####################"); //$NON-NLS-1$
-			
-			dbCursor = dbCollection.
-								find(basicWhere, basicFields).
-								sort(basicSort).
-								skip(cntSkip).
-								limit(cntLimit)
-								;
-			
-		} else if(cntSkip == 0 && cntLimit > 0) {
-			
-			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");				 //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Limit]" + cntLimit).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			
-			dbCursor = dbCollection.
-					find(basicWhere, basicFields).
-					sort(basicSort).
-					limit(cntLimit);
-		} else {
-			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");				 //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			
-			dbCursor = dbCollection.
-								find(basicWhere, basicFields).
-								sort(basicSort);				
-		}
-
-		DBObject explainDBObject = dbCursor.explain();
-		sbConsoleMsg.append("############[result]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		sbConsoleMsg.append("[query explain]\r\n" + JSONUtil.getPretty(explainDBObject.toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		sbConsoleMsg.append("[error]\r\n" + JSONUtil.getPretty(mongoDB.getLastError().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		sbConsoleMsg.append("############[result]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		mongoDB.forceError();
-        mongoDB.resetError();
-        
-        if(logger.isDebugEnabled()) logger.debug(sbConsoleMsg);
-		
-		// 결과 데이터를 출력합니다.
-		int totCnt = 0;
-		listTrees = new ArrayList<MongodbTreeViewDTO>();
-		
-		for (DBObject dbObject : dbCursor) {
-			// 초기 호출시 컬럼 정보 설정 되어 있지 않을때
-			if(mapColumns.size() == 0) mapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
-			
-			// append tree text columnInfo.get(key)
-			MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			parserTreeObject(dbObject, treeDto, dbObject);
-			listTrees.add(treeDto);
-							
-			// append table text
-			HashMap<Integer, Object> dataMap = new HashMap<Integer, Object>();				
-			for(int i=0; i<mapColumns.size(); i++)	{
+				dbCursor = dbCollection.
+									find(basicWhere, basicFields).
+									sort(basicSort).
+									skip(cntSkip).
+									limit(cntLimit)
+									;
 				
-				Object keyVal = dbObject.get(mapColumns.get(i));
-				if(keyVal == null) dataMap.put(i, "");  //$NON-NLS-1$
-				else dataMap.put(i, keyVal.toString());
+			} else if(cntSkip == 0 && cntLimit > 0) {
+				
+				sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");				 //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Limit]" + cntLimit).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				
+				dbCursor = dbCollection.
+						find(basicWhere, basicFields).
+						sort(basicSort).
+						limit(cntLimit);
+			} else {
+				sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Fields]" + basicFields.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Where]" + basicWhere.toString()).append("\r\n");				 //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("[Sort] " + basicSort.toString()).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				sbConsoleMsg.append("############[query]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				
+				dbCursor = dbCollection.
+									find(basicWhere, basicFields).
+									sort(basicSort);				
 			}
-			// 데이터 삭제 및 수정에서 사용하기 위한 id
-			dataMap.put(MongoDBDefine.PRIMARY_ID_KEY, dbObject);
-			sourceDataList.add(dataMap);
+	
+			DBObject explainDBObject = dbCursor.explain();
+			sbConsoleMsg.append("############[result]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("[query explain]\r\n" + JSONUtil.getPretty(explainDBObject.toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("[error]\r\n" + JSONUtil.getPretty(mongoDB.getLastError().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("############[result]#####################").append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+	
+			mongoDB.forceError();
+	        mongoDB.resetError();
+	        
+	        if(logger.isDebugEnabled()) logger.debug(sbConsoleMsg);
 			
-			// append row text
-			totCnt++;
+			// 결과 데이터를 출력합니다.
+			int totCnt = 0;
+			listTrees = new ArrayList<MongodbTreeViewDTO>();
+			
+			for (DBObject dbObject : dbCursor) {
+				// 초기 호출시 컬럼 정보 설정 되어 있지 않을때
+				if(mapColumns.size() == 0) mapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
+				
+				// append tree text columnInfo.get(key)
+				MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				parserTreeObject(dbObject, treeDto, dbObject);
+				listTrees.add(treeDto);
+								
+				// append table text
+				HashMap<Integer, Object> dataMap = new HashMap<Integer, Object>();				
+				for(int i=0; i<mapColumns.size(); i++)	{
+					
+					Object keyVal = dbObject.get(mapColumns.get(i));
+					if(keyVal == null) dataMap.put(i, "");  //$NON-NLS-1$
+					else dataMap.put(i, keyVal.toString());
+				}
+				// 데이터 삭제 및 수정에서 사용하기 위한 id
+				dataMap.put(MongoDBDefine.PRIMARY_ID_KEY, dbObject);
+				sourceDataList.add(dataMap);
+				
+				// append row text
+				totCnt++;
+			}
+			txtCnt = dbCursor.count() + "/" + totCnt + Messages.MongoDBTableEditor_69; //$NON-NLS-1$
+		} finally {
+			if(dbCursor != null) dbCursor.close();
 		}
-		txtCnt = dbCursor.count() + "/" + totCnt + Messages.MongoDBTableEditor_69; //$NON-NLS-1$
 	}
 	
 	/**

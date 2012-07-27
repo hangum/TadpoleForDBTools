@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.8.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.8.0.jar" sourcepath="/mongodb-java-driver"/>
 	<classpathentry exported="true" kind="lib" path="libs/org.apache.log4j_1.2.13.v200806030600.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/postgreSQL/postgresql-9.1-902.jdbc4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.1.1.jar"/>

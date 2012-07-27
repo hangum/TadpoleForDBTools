@@ -16,7 +16,7 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.system.TadpoleSystem_UserDBQuery;
 import com.hangum.db.util.ApplicationArgumentUtils;
-import com.hangum.tadpole.mongodb.core.connection.MongoDBConnection;
+import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.mongodb.DB;
 
 /**
@@ -108,7 +108,7 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 
 		// db가 정상적인지 채크해본다 
 		try {
-			DB mongoDB = MongoDBConnection.connection(userDB);
+			DB mongoDB = MongoConnectionManager.getInstance(userDB);
 
 		} catch (Exception e) {
 			logger.error("MongoDB Connection error", e);

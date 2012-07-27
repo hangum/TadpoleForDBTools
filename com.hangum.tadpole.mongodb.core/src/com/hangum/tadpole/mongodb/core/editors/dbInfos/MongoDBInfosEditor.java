@@ -45,7 +45,7 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.util.NumberFormatUtils;
 import com.hangum.tadpole.mongodb.core.Activator;
-import com.hangum.tadpole.mongodb.core.connection.MongoDBConnection;
+import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.dto.MongoDBCollectionInfoDTO;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
@@ -71,7 +71,7 @@ public class MongoDBInfosEditor extends EditorPart {
 	 */
 	private static final Logger logger = Logger.getLogger(MongoDBInfosEditor.class);
 	
-	private Label lblServerInfo;
+//	private Label lblServerInfo;
 	
 	private UserDBDAO userDB;
 	private MongoInfoFilter filter;
@@ -255,13 +255,12 @@ public class MongoDBInfosEditor extends EditorPart {
 		collectionList.clear();
 		
 		try {
-			DB mongoDB = MongoDBConnection.connection(userDB);
+			DB mongoDB = MongoConnectionManager.getInstance(userDB);
 			
 			for (String col : mongoDB.getCollectionNames()) {
 				
 				CommandResult commandResult = mongoDB.getCollection(col).getStats();
 				//logger.debug(commandResult);
-				
 				
 				MongoDBCollectionInfoDTO info = new MongoDBCollectionInfoDTO();			
 				info.setName(col);

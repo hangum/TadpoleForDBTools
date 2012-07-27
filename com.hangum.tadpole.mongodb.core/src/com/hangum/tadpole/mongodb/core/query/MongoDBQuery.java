@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.hangum.db.dao.mysql.TableColumnDAO;
 import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.tadpole.mongodb.core.connection.MongoDBConnection;
+import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
@@ -38,7 +38,7 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static List<TableColumnDAO> collectionColumn(UserDBDAO userDB, String colName) throws Exception {
-		DB mongoDB = MongoDBConnection.connection(userDB);
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		DBCollection coll = mongoDB.getCollection(colName);
 									
 		return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
@@ -52,7 +52,7 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static void deleteCollection(UserDBDAO userDB, String colName) throws Exception {
-		DB mongoDB = MongoDBConnection.connection(userDB);
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		mongoDB.getCollection(colName).drop();
 	}
 	
@@ -65,7 +65,7 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static DBCollection findCollection(UserDBDAO userDB, String colName) throws Exception {
-		DB mongoDB = MongoDBConnection.connection(userDB);
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		return mongoDB.getCollection(colName);
 	}
 	
@@ -77,7 +77,7 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static DB findDB(UserDBDAO userDB) throws Exception {
-		return MongoDBConnection.connection(userDB);
+		return MongoConnectionManager.getInstance(userDB);
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static void createCollection(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
-		DB mongoDB = MongoDBConnection.connection(userDB);
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		
 		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
 		mongoDB.createCollection(colName, dbObject);
@@ -271,7 +271,7 @@ public class MongoDBQuery {
 			return cr.toString();
 		} else {
 			throw cr.getException();
-		}
+		}		
 	}
 
 	/**
