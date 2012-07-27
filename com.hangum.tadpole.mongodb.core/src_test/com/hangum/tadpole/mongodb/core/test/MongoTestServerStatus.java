@@ -23,12 +23,12 @@ public class MongoTestServerStatus {
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
 		
-		DBObject queryObj = new BasicDBObject("listCommands", 1);
+		DBObject queryObj = new BasicDBObject("serverStatus", 0);
 		CommandResult cr = db.command(queryObj);
 			
 		System.out.println("[ok]" + cr.ok() );
 		if(!cr.ok()) System.out.println("[Exception ]" + cr.getException().toString());
-		System.out.println("[toString]" + JSONUtil.getPretty(cr.toString()));
+		System.out.println("[toString]" + cr.toString() );
 		System.out.println("[size]" + cr.size() );
 		
 

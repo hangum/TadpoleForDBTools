@@ -51,7 +51,7 @@ public class MongoDBQuery {
 	 * @param colName
 	 * @throws Exception
 	 */
-	public static void deleteCollection(UserDBDAO userDB, String colName) throws Exception {
+	public static void dropCollection(UserDBDAO userDB, String colName) throws Exception {
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		mongoDB.getCollection(colName).drop();
 	}
@@ -300,4 +300,38 @@ public class MongoDBQuery {
 			throw cr.getException();
 		}
 	}
+	
+	/**
+	 * collection exist
+	 * 
+	 * @param userDB
+	 * @param collName
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean collectionExist(UserDBDAO userDB, String collName) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		return mongoDB.collectionExists(collName);
+	}
+
+	/**
+	 * profiling start
+	 * @param userDB
+	 * @param level 0 : stop, 1 or 2 : start
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean commandProfiling(UserDBDAO userDB, int level) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		
+		DBObject queryObj = new BasicDBObject("profile", level);
+		CommandResult cr = mongoDB.command(queryObj);
+		
+		if(cr.ok()) {
+			return true;
+		} else {
+			throw cr.getException();
+		}
+	}
+	
 }

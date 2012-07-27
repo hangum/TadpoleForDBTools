@@ -80,7 +80,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 			} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, tbName + Messages.ObjectDeleteAction_31)) {
 					try {
-						MongoDBQuery.deleteCollection(getUserDB(), tbName);
+						MongoDBQuery.dropCollection(getUserDB(), tbName);
 						refreshTable();
 					} catch(Exception e) {
 						logger.error("Collection Delete", e); //$NON-NLS-1$

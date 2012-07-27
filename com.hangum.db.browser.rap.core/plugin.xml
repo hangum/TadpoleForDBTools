@@ -219,6 +219,18 @@
             id="com.hangum.db.browser.rap.core.objectContribution.nosql"
             objectClass="com.hangum.db.dao.system.UserDBDAO">
          <action
+               class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbProfillingAction"
+               icon="resources/icons/profile.png"
+               id="com.hangum.db.browser.rap.core.action.nosql.mongodb.profilling"
+               label="Profilling"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
                class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbWebConsoleAction"
                icon="resources/icons/web-management.png"
                id="com.hangum.db.browser.rap.core.action.nosql.monogodb.top"
