@@ -260,7 +260,7 @@ public class MongoDBTableEditor extends EditorPart {
 		textBasicSkip.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				findBasic();
+				if(e.keyCode == SWT.Selection)	findBasic();
 			}
 		});
 		textBasicSkip.setText("0"); //$NON-NLS-1$
@@ -277,7 +277,7 @@ public class MongoDBTableEditor extends EditorPart {
 		textBasicLimit.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				findBasic();
+				if(e.keyCode == SWT.Selection)	findBasic();
 			}
 		});
 		textBasicLimit.setText(defaultLimit); //$NON-NLS-1$

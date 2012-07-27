@@ -76,9 +76,6 @@ import com.mongodb.DBObject;
 public class MongodbResultComposite extends Composite {
 	private static Logger logger = Logger.getLogger(MongodbResultComposite.class);
 	
-//	/** composiate이 처음 호출 되었는지 */
-//	private boolean isFirstCall = false;
-	
 	/** data userdb*/
 	private UserDBDAO userDB;
 	/** collection name */
@@ -110,11 +107,106 @@ public class MongodbResultComposite extends Composite {
 	Composite compositeExternal;
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
+
+	private Text textTextView;
+	private Label lblTextViewCnt;
 	
 	/** query 의 결과 데이터  -- table의 데이터를 표시하는 용도 <column index, Data> */
 	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
-	private Text textTextView;
-	private Label lblTextViewCnt;
+	private String textCnt;
+	private Map<Integer, String> mapColumns;
+	private List<MongodbTreeViewDTO> listTrees;
+	
+	/**
+	 * 테이블의 결과를 출력합니다.
+	 *
+	 * @param textCnt count
+	 * @param mapColumns table column
+	 * @param listTrees tree data
+	 * @param sourceDataList table data
+	 */
+	public void setResult(String textCnt, 
+							Map<Integer, String> mapColumns, 
+							List<MongodbTreeViewDTO> listTrees,
+							List<HashMap<Integer, Object>> sourceDataList
+	) {
+		
+		// 데이터를 초기화 합니다.
+		this.textCnt = textCnt;
+		this.mapColumns = mapColumns;
+		this.listTrees = listTrees;
+		this.sourceDataList = sourceDataList;
+		
+		// 화면을 초기화 합니다.
+		List<MongodbTreeViewDTO> tmpTree = new ArrayList<MongodbTreeViewDTO>();
+		treeViewerMongo.setInput(tmpTree);
+		treeViewerMongo.refresh();
+		
+		List<HashMap<Integer, Object>> tmpTable = new ArrayList<HashMap<Integer,Object>>();
+		resultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
+		resultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
+		resultTableViewer.setInput(tmpTable);
+		resultTableViewer.refresh();
+		
+		textTextView.setText("");
+		lblTextViewCnt.setText(textCnt);
+		
+		// 
+		if(tabFolderMongoDB.getSelectionIndex() == 3) {
+			
+			if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
+				tabFolderMongoDB.setSelection(0);
+			} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
+				tabFolderMongoDB.setSelection(1);
+			} else {
+				tabFolderMongoDB.setSelection(2);
+			}
+		}
+		selectData();
+		
+	}
+	
+	/**
+	 * select data
+	 */
+	private void selectData() {
+		int selectionIndex = tabFolderMongoDB.getSelectionIndex();
+		logger.debug("[session tab]" + tabFolderMongoDB.getSelectionIndex());
+		
+		// tree view
+		if(selectionIndex == 0) {
+			
+			treeViewerMongo.setInput(listTrees);
+			treeViewerMongo.expandToLevel(1);
+			lblTreeViewCount.setText(textCnt);
+			
+		// table view
+		} else if(selectionIndex == 1) {
+			
+			lblSearchCnt.setText(textCnt);
+			sqlSorter = new SQLResultSorter(-999);
+			
+			createTableColumn(mapColumns, sqlSorter);
+			resultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
+			resultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
+			resultTableViewer.setInput(sourceDataList);
+			resultTableViewer.setSorter(sqlSorter);		
+			sqlFilter.setTable(resultTableViewer.getTable());
+			
+			TableUtil.packTable(resultTableViewer.getTable());
+			
+		// text view
+		} else if(selectionIndex == 2) {
+			
+			StringBuffer sbJsonStr = new StringBuffer();		
+			for(int i=0; i<sourceDataList.size(); i++) {
+				sbJsonStr.append("/* " + i + " */" + Define.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
+				sbJsonStr.append(sourceDataList.get(i).get(MongoDBDefine.PRIMARY_ID_KEY) + Define.LINE_SEPARATOR);
+			}
+			textTextView.setText(JSONUtil.getPretty(sbJsonStr.toString()));
+			
+		}
+	}
 	
 	/**
 	 * Create the composite.
@@ -128,6 +220,15 @@ public class MongodbResultComposite extends Composite {
 		this.editor = editor;
 		
 		tabFolderMongoDB = new TabFolder(parent, SWT.NONE);
+		tabFolderMongoDB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(treeViewerMongo == null) return;
+					
+				selectData();
+				
+			}
+		});
 		tabFolderMongoDB.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		TabItem tbtmTreeView = new TabItem(tabFolderMongoDB, SWT.NONE);
@@ -474,23 +575,23 @@ public class MongodbResultComposite extends Composite {
 		}
 
 	}
-	
-	/**
-	 * page를 초기화 합니다.
-	 */
-	private void tabInit() {
-
-		if(tabFolderMongoDB.getSelectionIndex() == 3) {
-			
-			if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
-				tabFolderMongoDB.setSelection(0);
-			} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
-				tabFolderMongoDB.setSelection(1);
-			} else {
-				tabFolderMongoDB.setSelection(2);
-			}
-		}
-	}
+//	
+//	/**
+//	 * page를 초기화 합니다.
+//	 */
+//	private void tabInit() {
+//
+//		if(tabFolderMongoDB.getSelectionIndex() == 3) {
+//			
+//			if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
+//				tabFolderMongoDB.setSelection(0);
+//			} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
+//				tabFolderMongoDB.setSelection(1);
+//			} else {
+//				tabFolderMongoDB.setSelection(2);
+//			}
+//		}
+//	}
 	
 	/**
 	 * document insert
@@ -557,51 +658,6 @@ public class MongodbResultComposite extends Composite {
 		}
 	}
 	
-	/**
-	 * 테이블의 결과를 출력합니다.
-	 *
-	 * @param textCnt count
-	 * @param mapColumns table column
-	 * @param listTrees tree data
-	 * @param sourceDataList table data
-	 */
-	public void setResult(String textCnt, 
-							Map<Integer, String> mapColumns, 
-							List<MongodbTreeViewDTO> listTrees,
-							List<HashMap<Integer, Object>> sourceDataList
-	) {
-		this.sourceDataList = sourceDataList; 
-		
-		// tree view
-		treeViewerMongo.setInput(listTrees);
-		treeViewerMongo.expandToLevel(1);
-		lblTreeViewCount.setText(textCnt);
-		
-		// table view
-		lblSearchCnt.setText(textCnt);
-		sqlSorter = new SQLResultSorter(-999);
-		
-		createTableColumn(mapColumns, sqlSorter);
-		resultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
-		resultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
-		resultTableViewer.setInput(sourceDataList);
-		resultTableViewer.setSorter(sqlSorter);		
-		sqlFilter.setTable(resultTableViewer.getTable());
-		
-		TableUtil.packTable(resultTableViewer.getTable());
-		
-		tabInit();
-		
-		// text view
-		StringBuffer sbJsonStr = new StringBuffer();		
-		for(int i=0; i<sourceDataList.size(); i++) {
-			sbJsonStr.append("/* " + i + " */" + Define.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
-			sbJsonStr.append(sourceDataList.get(i).get(MongoDBDefine.PRIMARY_ID_KEY) + Define.LINE_SEPARATOR);
-		}
-		textTextView.setText(JSONUtil.getPretty(sbJsonStr.toString()));
-		lblTextViewCnt.setText(textCnt);		
-	}
-
 	/**
 	 * treeview create
 	 */
@@ -706,15 +762,15 @@ public class MongodbResultComposite extends Composite {
 		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
 	}
 	
-	/**
-	 * console에 text 추가합니다.
-	 * 
-	 * @param msg
-	 * @deprecated
-	 */
-	public void appendConsole() {
-		tabInit();
-	}
+//	/**
+//	 * console에 text 추가합니다.
+//	 * 
+//	 * @param msg
+//	 * @deprecated
+//	 */
+//	public void appendConsole() {
+//		tabInit();
+//	}
 	
 	/**
 	 * append tadpole message 
