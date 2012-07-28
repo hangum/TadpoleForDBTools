@@ -231,6 +231,18 @@
             </enablement>
          </action>
          <action
+               class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbCurrentOpAction"
+               icon="resources/icons/current-operation.png"
+               id="com.hangum.db.browser.rap.core.action.nosql.mongodb.currentop"
+               label="Current Operation"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
                class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbWebConsoleAction"
                icon="resources/icons/web-management.png"
                id="com.hangum.db.browser.rap.core.action.nosql.monogodb.top"

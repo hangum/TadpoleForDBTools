@@ -15,24 +15,24 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.mongodb.core.ext.editors.Profilling.ProfillingEditor;
-import com.hangum.tadpole.mongodb.core.ext.editors.Profilling.ProfillingEditorInput;
+import com.hangum.tadpole.mongodb.core.ext.editors.currentOp.CurrentOpEditorInput;
+import com.hangum.tadpole.mongodb.core.ext.editors.currentOp.CurrentOperationEditor;
 
 /**
- * mongodb profilling action
+ * mongodb currentOp action
  * 	
  * @author hangum
  *
  */
-public class MongodbProfillingAction implements IViewActionDelegate {
+public class MongodbCurrentOpAction implements IViewActionDelegate {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(MongodbProfillingAction.class);
+	private static final Logger logger = Logger.getLogger(MongodbCurrentOpAction.class);
 
 	private IStructuredSelection sel;
 
-	public MongodbProfillingAction() {
+	public MongodbCurrentOpAction() {
 	}
 
 	@Override
@@ -41,14 +41,14 @@ public class MongodbProfillingAction implements IViewActionDelegate {
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			ProfillingEditorInput input = new ProfillingEditorInput(userDB);
-			page.openEditor(input, ProfillingEditor.ID, false);
+			CurrentOpEditorInput input = new CurrentOpEditorInput(userDB);
+			page.openEditor(input, CurrentOperationEditor.ID, false);
 			
 		} catch (PartInitException e) {
-			logger.error("Mongodb profilling", e);
+			logger.error("Mongodb current operation", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Profilling Exception", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "current operation Exception", errStatus); //$NON-NLS-1$
 		}
 	}
 

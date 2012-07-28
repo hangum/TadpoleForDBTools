@@ -254,25 +254,6 @@ public class MongoDBQuery {
 			throw new Exception(cr.getErrorMessage());//cr.getException();
 		}
 	}
-	
-	/**
-	 * Server status
-	 * 
-	 * @param userDB
-	 * @throws Exception
-	 */
-	public static String currentOp(UserDBDAO userDB) throws Exception {
-		DB mongoDB =  findDB(userDB);
-
-		DBObject queryObj = new BasicDBObject("serverStatus", 1);
-		CommandResult cr = mongoDB.command(queryObj);
-		
-		if(cr.ok()) {
-			return cr.toString();
-		} else {
-			throw cr.getException();
-		}		
-	}
 
 	/**
 	 * mongodb web console 정보 
@@ -332,6 +313,33 @@ public class MongoDBQuery {
 		} else {
 			throw cr.getException();
 		}
+	}
+	
+	/**
+	 * currentOp
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Excepiton
+	 */
+	public static DBObject currentOp(UserDBDAO userDB) throws Exception {
+		DB mongoDb = findDB(userDB);
+		DBObject dbObj = (DBObject)mongoDb.eval("db.currentOp()");
+		
+		return dbObj;
+	}
+	
+	/**
+	 * killOp
+	 * 
+	 * @param userDB
+	 * @param opId
+	 * @throws Exception
+	 */
+	public static void killOp(UserDBDAO userDB, String opId) throws Exception {
+		DB mongoDb = findDB(userDB);
+		DBObject dbObj = (DBObject)mongoDb.eval("db.killOp(" + opId + ")");
+		logger.debug("[killOp] " + dbObj);
 	}
 	
 }
