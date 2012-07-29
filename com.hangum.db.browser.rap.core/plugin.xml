@@ -279,12 +279,23 @@
             </enablement>
          </action>
          <action
+               class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbAddUserAction"
+               icon="resources/icons/add_user.png"
+               id="com.hangum.db.browser.rap.core.action.nosql.mongodb.adduser"
+               label="Add User"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
                class="com.hangum.db.browser.rap.core.actions.connections.DisconnectDBAction"
                enablesFor="1"
                icon="resources/icons/disconnect.png"
                id="com.hangum.db.browser.rap.core.action.connection.disconnectdb"
-               label="Disconnnect Database"
-               menubarPath="additions">
+               label="Disconnnect Database">
             <enablement>
                <objectClass
                      name="com.hangum.db.dao.system.UserDBDAO">

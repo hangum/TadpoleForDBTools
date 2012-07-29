@@ -339,7 +339,22 @@ public class MongoDBQuery {
 	public static void killOp(UserDBDAO userDB, String opId) throws Exception {
 		DB mongoDb = findDB(userDB);
 		DBObject dbObj = (DBObject)mongoDb.eval("db.killOp(" + opId + ")");
-		logger.debug("[killOp] " + dbObj);
+		if(logger.isDebugEnabled()) logger.debug("[killOp] " + dbObj);
+	}
+	
+	/**
+	 * user 추가.
+	 * 
+	 * @param userDB
+	 * @param id
+	 * @param passwd
+	 * @param isReadOnly
+	 * @throws Exception
+	 */
+	public static void addUser(UserDBDAO userDB, String id, String passwd, boolean isReadOnly) throws Exception {
+		DB mongoDb = findDB(userDB);
+		
+		WriteResult wr = mongoDb.addUser(id, passwd.toCharArray(), isReadOnly);		
 	}
 	
 }

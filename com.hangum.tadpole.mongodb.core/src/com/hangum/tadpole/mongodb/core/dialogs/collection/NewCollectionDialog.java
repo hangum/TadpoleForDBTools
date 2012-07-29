@@ -126,6 +126,8 @@ public class NewCollectionDialog extends Dialog {
 			logger.error("mongodb create collection", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			return;
 		}
 		
 		
