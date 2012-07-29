@@ -279,10 +279,10 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbAddUserAction"
+               class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbUserManagerAction"
                icon="resources/icons/add_user.png"
                id="com.hangum.db.browser.rap.core.action.nosql.mongodb.adduser"
-               label="Add User"
+               label="User Manager"
                menubarPath="additions">
             <enablement>
                <objectClass

@@ -9,30 +9,30 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.tadpole.mongodb.core.dialogs.users.AddUserDialog;
+import com.hangum.tadpole.mongodb.core.dialogs.users.UserManagerDialog;
 
 /**
- * mongodb currentOp action
+ * mongodb user manager action
  * 	
  * @author hangum
  *
  */
-public class MongodbAddUserAction implements IViewActionDelegate {
+public class MongodbUserManagerAction implements IViewActionDelegate {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(MongodbAddUserAction.class);
+	private static final Logger logger = Logger.getLogger(MongodbUserManagerAction.class);
 
 	private IStructuredSelection sel;
 
-	public MongodbAddUserAction() {
+	public MongodbUserManagerAction() {
 	}
 
 	@Override
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		AddUserDialog dialog = new AddUserDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
+		UserManagerDialog dialog = new UserManagerDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 		dialog.open();
 	}
 

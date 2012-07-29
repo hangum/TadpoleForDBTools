@@ -1,9 +1,9 @@
 package com.hangum.tadpole.mongodb.core.query;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
-
-import java.util.List;
 
 import com.hangum.db.dao.mysql.TableColumnDAO;
 import com.hangum.db.dao.system.UserDBDAO;
@@ -13,6 +13,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
@@ -355,6 +356,30 @@ public class MongoDBQuery {
 		DB mongoDb = findDB(userDB);
 		
 		WriteResult wr = mongoDb.addUser(id, passwd.toCharArray(), isReadOnly);		
+	}
+	
+	/**
+	 * 사용자 리스트 
+	 * 
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static DBCursor getUser(UserDBDAO userDB) throws Exception {
+		DB mongoDb = findDB(userDB);
+		return mongoDb.getCollection("system.users").find();
+	}
+	
+	/**
+	 * 사용자 삭제.
+	 * @param userDB
+	 * @param id
+	 * @throws Exception
+	 */
+	public static void deleteUser(UserDBDAO userDB, String id) throws Exception {
+		DBCollection collection = findCollection(userDB, "system.users");
+		
+		DBObject query = new BasicDBObject("user", id);
+		WriteResult wr = collection.remove(query);
 	}
 	
 }
