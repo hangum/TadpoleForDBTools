@@ -23,8 +23,6 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.system.TadpoleSystem_UserDBQuery;
 import com.hangum.db.util.ApplicationArgumentUtils;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 
 /**
  * mysql login composite
@@ -33,11 +31,6 @@ import org.eclipse.swt.events.KeyEvent;
  *
  */
 public class MySQLLoginComposite extends AbstractLoginComposite {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4307997343484426490L;
-
 	private static final Logger logger = Logger.getLogger(MySQLLoginComposite.class);
 	
 	protected Text textHost;

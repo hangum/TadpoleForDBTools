@@ -270,7 +270,11 @@ public class MongoDBInfosEditor extends EditorPart {
 					info.setSize(commandResult.getInt("size")); //$NON-NLS-1$
 					info.setStorage(commandResult.getInt("storageSize"));				 //$NON-NLS-1$
 					info.setIndex(commandResult.getInt("totalIndexSize"));				 //$NON-NLS-1$
-					info.setAvgObj(commandResult.getDouble("avgObjSize"));				 //$NON-NLS-1$
+					try { 
+						info.setAvgObj(commandResult.getDouble("avgObjSize"));				 //$NON-NLS-1$					
+					} catch(NullPointerException npe) {
+						info.setAvgObj(0);				 //$NON-NLS-1$
+					}
 					info.setPadding(commandResult.getInt("paddingFactor"));				 //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error("collection info error [" + col + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
