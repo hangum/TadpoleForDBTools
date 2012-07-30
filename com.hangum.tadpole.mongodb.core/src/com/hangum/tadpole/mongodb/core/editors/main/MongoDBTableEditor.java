@@ -20,8 +20,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -173,7 +171,7 @@ public class MongoDBTableEditor extends EditorPart {
 			public void keyPressed(KeyEvent e) {
 			
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicFind.insert(new Character(SWT.TAB).toString());
+					textBasicFind.insert("    ");//new Character(SWT.TAB).toString());
 				}
 			}
 		});
@@ -199,7 +197,7 @@ public class MongoDBTableEditor extends EditorPart {
 			public void keyPressed(KeyEvent e) {
 			
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicField.insert(new Character(SWT.TAB).toString());
+					textBasicField.insert("    ");//new Character(SWT.TAB).toString());
 				}
 			}
 		});
@@ -225,7 +223,7 @@ public class MongoDBTableEditor extends EditorPart {
 			public void keyPressed(KeyEvent e) {
 			
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicSort.insert(new Character(SWT.TAB).toString());
+					textBasicSort.insert("    ");//new Character(SWT.TAB).toString());
 				}
 			}
 		});

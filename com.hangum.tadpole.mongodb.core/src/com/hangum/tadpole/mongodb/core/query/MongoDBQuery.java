@@ -430,10 +430,27 @@ public class MongoDBQuery {
 		if("".equals(strBucket)) gridFs = new GridFS(mongoDb);
 		else gridFs = new GridFS(mongoDb, strBucket);
 	
-		ObjectId objectId = new ObjectId(_id);
-		GridFSDBFile gridFSFile = gridFs.findOne(objectId);
+		GridFSDBFile gridFSFile = gridFs.findOne(new ObjectId(_id));
 		InputStream is = gridFSFile.getInputStream();
 		return IOUtils.toByteArray(is);
+	}
+	
+	/**
+	 * delte gridfs
+	 * 
+	 * @param userDB
+	 * @param _id
+	 * @throws Exception
+	 */
+	public static void dleteGridFs(UserDBDAO userDB, String strBucket, String _id) throws Exception {
+		DB mongoDb = findDB(userDB);
+		GridFS gridFs = null;
+		
+		if("".equals(strBucket)) gridFs = new GridFS(mongoDb);
+		else gridFs = new GridFS(mongoDb, strBucket);
+		
+		gridFs.remove(gridFs.findOne(new ObjectId(_id)));
+	
 	}
 	
 }
