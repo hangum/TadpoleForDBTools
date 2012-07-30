@@ -31,7 +31,7 @@
             default="false"
             icon="resources/icons/information-white.png"
             id="com.hangum.db.browser.rap.core.editor.intor"
-            name="%editor.name">
+            name="Home">
       </editor>
       <editor
             class="com.hangum.db.browser.rap.core.editors.main.MainEditor"
