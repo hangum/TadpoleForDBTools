@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -176,15 +177,16 @@ public class MongoDBTableEditor extends EditorPart {
 				}
 			}
 		});
-		textBasicFind.addTraverseListener(new TraverseListener() {
-			public void keyTraversed(TraverseEvent e) {
-				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-					textBasicFind.setFocus();
-					e.doit = false;
-					e.detail = SWT.TRAVERSE_NONE;
-				}
-			}
-		});
+//		textBasicFind.addTraverseListener(new TraverseListener() {
+//			public void keyTraversed(TraverseEvent e) {
+//				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+//					textBasicFind.setFocus();
+//					e.doit = false;
+//					e.detail = SWT.TRAVERSE_NONE;
+//				}
+//			}
+//		});
+		textBasicFind.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textBasicFind.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
@@ -201,15 +203,16 @@ public class MongoDBTableEditor extends EditorPart {
 				}
 			}
 		});
-		textBasicField.addTraverseListener(new TraverseListener() {
-			public void keyTraversed(TraverseEvent e) {
-				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-					textBasicField.setFocus();
-					e.doit = false;
-					e.detail = SWT.TRAVERSE_NONE;
-				}
-			}
-		});
+//		textBasicField.addTraverseListener(new TraverseListener() {
+//			public void keyTraversed(TraverseEvent e) {
+//				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+//					textBasicField.setFocus();
+//					e.doit = false;
+//					e.detail = SWT.TRAVERSE_NONE;
+//				}
+//			}
+//		});
+		textBasicFind.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textBasicField.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -226,15 +229,16 @@ public class MongoDBTableEditor extends EditorPart {
 				}
 			}
 		});
-		textBasicSort.addTraverseListener(new TraverseListener() {
-			public void keyTraversed(TraverseEvent e) {
-				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-					textBasicSort.setFocus();
-					e.doit = false;
-					e.detail = SWT.TRAVERSE_NONE;
-				}
-			}
-		});
+//		textBasicSort.addTraverseListener(new TraverseListener() {
+//			public void keyTraversed(TraverseEvent e) {
+//				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+//					textBasicSort.setFocus();
+//					e.doit = false;
+//					e.detail = SWT.TRAVERSE_NONE;
+//				}
+//			}
+//		});
+		textBasicSort.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textBasicSort.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
