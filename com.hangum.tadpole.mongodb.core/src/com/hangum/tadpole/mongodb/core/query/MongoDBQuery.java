@@ -1,7 +1,10 @@
 package com.hangum.tadpole.mongodb.core.query;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
@@ -16,6 +19,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.util.JSON;
 
 /**
@@ -353,8 +358,7 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static void addUser(UserDBDAO userDB, String id, String passwd, boolean isReadOnly) throws Exception {
-		DB mongoDb = findDB(userDB);
-		
+		DB mongoDb = findDB(userDB);		
 		WriteResult wr = mongoDb.addUser(id, passwd.toCharArray(), isReadOnly);		
 	}
 	
@@ -380,6 +384,56 @@ public class MongoDBQuery {
 		
 		DBObject query = new BasicDBObject("user", id);
 		WriteResult wr = collection.remove(query);
+	}
+	
+	/**
+	 * gridFS
+	 * 
+	 * @param userDB
+	 * @param strBucket
+	 * @param strFileName
+	 * @param intSkip
+	 * @param intLimit
+	 * @return
+	 * @throws Exception
+	 */
+	public static DBCursor getGridFS(UserDBDAO userDB, String strBucket, String strFileName, int intSkip, int intLimit) throws Exception {
+		DB mongoDb = findDB(userDB);
+		GridFS gridFs = null;
+		
+		if("".equals(strBucket)) gridFs = new GridFS(mongoDb);
+		else gridFs = new GridFS(mongoDb, strBucket);
+		
+		if("".equals(strFileName)) {
+			return gridFs.getFileList().skip(intSkip).limit(intLimit);
+		} else {
+			DBObject queryObj = new BasicDBObject(); 
+			Pattern regex = Pattern.compile(".*" + strFileName + "*");
+			queryObj.put("filename", regex);
+			
+			return gridFs.getFileList(queryObj).skip(intSkip).limit(intLimit);
+		}
+	}
+	
+	/**
+	 * get gridfs data
+	 * 
+	 * @param userDB
+	 * @param _id
+	 * @return 
+	 * @throws Exception
+	 */
+	public static byte[] getGridFS(UserDBDAO userDB, String strBucket, String _id) throws Exception {
+		DB mongoDb = findDB(userDB);
+		GridFS gridFs = null;
+		
+		if("".equals(strBucket)) gridFs = new GridFS(mongoDb);
+		else gridFs = new GridFS(mongoDb, strBucket);
+	
+		ObjectId objectId = new ObjectId(_id);
+		GridFSDBFile gridFSFile = gridFs.findOne(objectId);
+		InputStream is = gridFSFile.getInputStream();
+		return IOUtils.toByteArray(is);
 	}
 	
 }

@@ -37,7 +37,6 @@ public class TextWidgetText implements IEntryPoint {
 		text.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-//					text.setFocus();
 					e.doit = false;
 					e.detail = SWT.TRAVERSE_NONE;
 				}
@@ -57,7 +56,6 @@ public class TextWidgetText implements IEntryPoint {
 		text_1.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-//					text_1.setFocus();
 					e.doit = false;
 					e.detail = SWT.TRAVERSE_NONE;
 				}

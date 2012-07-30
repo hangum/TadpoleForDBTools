@@ -469,7 +469,7 @@ public class MainEditor extends EditorPart {
 				}
 				
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_ResultSetExport.csv"); //$NON-NLS-1$
-				downloadServiceHandler.setContent(sbExportData.toString());
+				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
 				DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
 			}
 		});
@@ -563,7 +563,7 @@ public class MainEditor extends EditorPart {
 				}
 				
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_ReCallSQLExport.txt"); //$NON-NLS-1$
-				downloadServiceHandler.setContent(sbExportData.toString());
+				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
 				DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
 			}
 		});
@@ -633,7 +633,7 @@ public class MainEditor extends EditorPart {
 			}
 			
 			downloadServiceHandler.setName(userDB.getDisplay_name() + "_Message.txt"); //$NON-NLS-1$
-			downloadServiceHandler.setContent(sbExportData.toString());
+			downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
 			DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
 		}
 		});
@@ -1529,7 +1529,7 @@ public class MainEditor extends EditorPart {
 	 */
 	public void downloadSQL(String newContents) {
 		downloadServiceHandler.setName(userDB.getDisplay_name() + ".sql"); //$NON-NLS-1$
-		downloadServiceHandler.setContent(newContents);
+		downloadServiceHandler.setByteContent(newContents.getBytes());
 		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
 	}
 }

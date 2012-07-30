@@ -323,7 +323,7 @@ public class MongodbResultComposite extends Composite {
 				}
 				
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_ResultSetExport.csv"); //$NON-NLS-1$
-				downloadServiceHandler.setContent(sbExportData.toString());
+				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
 				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
 			}
 		});
@@ -387,7 +387,7 @@ public class MongodbResultComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_JSONExport.json"); //$NON-NLS-1$
-				downloadServiceHandler.setContent(textTextView.getText());
+				downloadServiceHandler.setByteContent(textTextView.getText().getBytes());
 				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
 			}
 		});
@@ -457,7 +457,7 @@ public class MongodbResultComposite extends Composite {
 				}
 				
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_Message.txt"); //$NON-NLS-1$
-				downloadServiceHandler.setContent(sbExportData.toString());
+				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
 				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
 			}
 		});

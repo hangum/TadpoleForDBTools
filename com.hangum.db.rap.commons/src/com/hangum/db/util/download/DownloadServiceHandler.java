@@ -22,7 +22,8 @@ public class DownloadServiceHandler implements IServiceHandler {
 	public static final String ID = "com.hangum.db.browser.rap.core.editors.main.internals.DownloadServiceHandler";
 	private static final Logger logger = Logger.getLogger(DownloadServiceHandler.class);
 	private String name;
-	private String content;
+	private String contentType;
+	private byte[] byteContent;
 
 	@Override
 	public void service() throws IOException, ServletException {
@@ -33,12 +34,11 @@ public class DownloadServiceHandler implements IServiceHandler {
 	private void makeHtmlFile(HttpServletResponse resp) {
 		OutputStream os = null;
 	    try {
-	      byte[] editorContentBytes = getContent().getBytes();
-	      String contentType = "text/html";
+	      String contentType = getContentType().equals("")?"text/html":getContentType();
 	      
 	      // Set response headers
 	      resp.setContentType( contentType );
-	      resp.setContentLength( editorContentBytes.length );
+	      resp.setContentLength( getByteContent().length );
 	      resp.setHeader( "Content-Disposition", "attachment; filename="
 	                                             + "\""
 	                                             + getName()
@@ -47,7 +47,7 @@ public class DownloadServiceHandler implements IServiceHandler {
 	      resp.flushBuffer();
 	      // Copy documentation to responce's output stream.
 	      os = resp.getOutputStream();
-	      os.write( editorContentBytes );
+	      os.write( getByteContent() );
 	      os.flush();
 	    } catch( Exception e ) {
 	      throw new IllegalArgumentException( "Download failed. Exception: " + e.getLocalizedMessage() );
@@ -66,11 +66,12 @@ public class DownloadServiceHandler implements IServiceHandler {
 		return ID + hashCode();
 	}
 
-	public String getContent() {
-		return content;
+	public byte[] getByteContent() {
+		return byteContent;
 	}
-	public void setContent(String content) {
-		this.content = content;
+
+	public void setByteContent(byte[] byteContent) {
+		this.byteContent = byteContent;
 	}
 
 	public void setName(String name) {
@@ -81,4 +82,12 @@ public class DownloadServiceHandler implements IServiceHandler {
 		return name;
 	}
 
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	
 }

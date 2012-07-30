@@ -279,6 +279,18 @@
             </enablement>
          </action>
          <action
+               class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbGridFSAction"
+               icon="resources/icons/GridFS.png"
+               id="com.hangum.db.browser.rap.core.action.nosql.mongodb.gridfs"
+               label="GridFS"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
                class="com.hangum.db.browser.rap.core.actions.nosql.mongodb.MongodbUserManagerAction"
                icon="resources/icons/add_user.png"
                id="com.hangum.db.browser.rap.core.action.nosql.mongodb.adduser"

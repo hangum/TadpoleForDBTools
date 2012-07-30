@@ -33,6 +33,11 @@ public class Messages extends NLS {
 	public static String TreeViewerEditingSupport_2;
 	public static String TreeViewerEditingSupport_3;
 	public static String TreeViewerEditingSupport_4;
+	public static String UserManagerDialog_11;
+	public static String UserManagerDialog_14;
+	public static String UserManagerDialog_17;
+	public static String UserManagerDialog_19;
+	public static String UserManagerDialog_22;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
