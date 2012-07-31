@@ -1,5 +1,6 @@
 package com.hangum.tadpole.mongodb.core.query;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -21,6 +22,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
 
 /**
@@ -248,7 +250,16 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static String top(UserDBDAO userDB, int top) throws Exception {
-		DB mongoDB =  findDB(userDB);
+		
+		UserDBDAO adminDB = new UserDBDAO();
+		adminDB.setHost(userDB.getHost());
+		adminDB.setPort(userDB.getPort());
+		adminDB.setUser(userDB.getUser());
+		adminDB.setPasswd(userDB.getPasswd());
+		adminDB.setUrl(userDB.getHost() + ":" + userDB.getPort() + "/admin");
+		adminDB.setDatabase("admin");
+		
+		DB mongoDB =  findDB(adminDB);
 		
 		DBObject queryObj = new BasicDBObject("top", top);
 		CommandResult cr = mongoDB.command(queryObj);
@@ -451,6 +462,32 @@ public class MongoDBQuery {
 		
 		gridFs.remove(gridFs.findOne(new ObjectId(_id)));
 	
+	}
+	
+	/**
+	 * insert gridfs
+	 * 
+	 * @param userDB
+	 * @param strBucket
+	 * @param fileList
+	 * @throws Exception
+	 */
+	public static void insertGridFS(UserDBDAO userDB, String strBucket, List<String> fileList) throws Exception {
+		
+		DB mongoDb = findDB(userDB);
+		GridFS gridFs = null;
+		
+		if("".equals(strBucket)) gridFs = new GridFS(mongoDb);
+		else gridFs = new GridFS(mongoDb, strBucket);
+		
+		for (String strFile : fileList) {
+			String saveFileName = strFile.substring(strFile.lastIndexOf(File.separator)+1);
+			
+			GridFSInputFile gfsFile = gridFs.createFile(new File(strFile));
+			gfsFile.setFilename(saveFileName);
+			gfsFile.save();
+		}
+		
 	}
 	
 }
