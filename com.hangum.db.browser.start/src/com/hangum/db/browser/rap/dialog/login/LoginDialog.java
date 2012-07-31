@@ -209,6 +209,8 @@ public class LoginDialog extends Dialog {
 		
 	@Override
 	public boolean close() {
+		// 로그인이 안되었을 경우 로그인 창이 남아 있도록...
+		// https://github.com/hangum/TadpoleForDBTools/issues/31
 		if( SessionManager.getSeq() == 0) return false;
 		
 		return super.close();
