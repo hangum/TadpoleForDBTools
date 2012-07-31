@@ -18,7 +18,7 @@
 	TNAME 		: 테이블 명
  -->
 <select id="tableList" resultClass="java.lang.String">
-	SELECT class_name 
+	SELECT class_name name
 	FROM DB_CLASS
 	WHERE  is_system_class = 'NO' AND class_type = 'CLASS'
 	ORDER BY  class_name

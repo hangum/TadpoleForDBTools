@@ -38,6 +38,9 @@ public class TableColumnDAO {
 	// mssql key
 	String mskey = "";
 	
+	/** table column의 comment */
+	String desc = "";
+	
 	public TableColumnDAO() {
 	}
 	
@@ -152,5 +155,14 @@ public class TableColumnDAO {
 	public void setMskey(String mskey) {
 		this.mskey = mskey;
 		setKey(null != mskey?"PRI":"");
+	}
+
+	// 공통 table comment
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 }
