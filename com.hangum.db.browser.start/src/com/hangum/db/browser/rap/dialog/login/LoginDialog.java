@@ -176,8 +176,6 @@ public class LoginDialog extends Dialog {
 			super.okPressed();
 			
 		}
-		
-//		super.buttonPressed(buttonId);
 	}
 	
 	@Override
@@ -207,6 +205,13 @@ public class LoginDialog extends Dialog {
 		}	
 		
 		super.okPressed();
+	}
+		
+	@Override
+	public boolean close() {
+		if( SessionManager.getSeq() == 0) return false;
+		
+		return super.close();
 	}
 
 	/**
