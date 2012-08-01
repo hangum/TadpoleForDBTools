@@ -7,6 +7,11 @@ package com.hangum.tadpole.preference.define;
  *
  */
 public class PreferenceDefine {
+	
+	/** export시 데이터 분리자. */
+	public static final String EXPORT_DILIMITER = "EXPORT_DILIMITER";
+	public static final String EXPORT_DILIMITER_VALUE = ",";
+	
 	/** select 제한  갯수 */ 
 	public static final String SELECT_LIMIT_COUNT = "SELECT_LIMIT_COUNT";
 	/** select 디폴트 값 */

@@ -27,6 +27,8 @@ public class Messages extends NLS {
 	public static String RDBPreferencePage_5;
 
 	public static String RDBPreferencePage_btnCreatePlanTable_text;
+	public static String GeneralPreferencePage_lblExportDilimit_text;
+	public static String GeneralPreferencePage_text_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

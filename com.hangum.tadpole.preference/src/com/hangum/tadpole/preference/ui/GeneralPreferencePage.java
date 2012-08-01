@@ -26,6 +26,7 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
  */
 public class GeneralPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private Text textSessionTime;
+	private Text textExportDelimit;
 
 	public GeneralPreferencePage() {
 	}
@@ -46,6 +47,14 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		textSessionTime = new Text(container, SWT.BORDER);
 		textSessionTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label lblExportDilimit = new Label(container, SWT.NONE);
+		lblExportDilimit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblExportDilimit.setText(Messages.GeneralPreferencePage_lblExportDilimit_text);
+		
+		textExportDelimit = new Text(container, SWT.BORDER);
+		textExportDelimit.setText(Messages.GeneralPreferencePage_text_text);
+		textExportDelimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		initDefaultValue();
 		
 		return container;
@@ -54,6 +63,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	@Override
 	public boolean performOk() {
 		String txtSessionTime = textSessionTime.getText();
+		String txtExportDelimit = textExportDelimit.getText();
 		
 		try {
 			Integer.parseInt(txtSessionTime);
@@ -65,9 +75,11 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateGeneralUserInfoData(txtSessionTime);
+			TadpoleSystem_UserInfoData.updateGeneralExportDelimitData(txtExportDelimit);
 			
 			// session 데이터를 수정한다.
-			SessionManager.setUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE, txtSessionTime);			
+			SessionManager.setUserInfo(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, txtSessionTime);			
+			SessionManager.setUserInfo(PreferenceDefine.EXPORT_DILIMITER, txtExportDelimit);
 		} catch(Exception e) {
 			e.printStackTrace();
 			
@@ -103,6 +115,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	private void initDefaultValue() {
 		textSessionTime.setText( "" + GetPreferenceGeneral.getSessionTimeout() ); //$NON-NLS-1$
+		textExportDelimit.setText( "" + GetPreferenceGeneral.getExportDelimit() ); //$NON-NLS-1$
 	}
 
 }

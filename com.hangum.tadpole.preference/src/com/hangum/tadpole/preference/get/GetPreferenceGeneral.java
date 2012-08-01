@@ -21,6 +21,19 @@ public class GetPreferenceGeneral {
 		return userInfo.getValue();
 	}
 	
+	/**
+	 *export dilimit
+	 *
+	 * @return
+	 */
+	public static String getExportDelimit() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EXPORT_DILIMITER);
+		if(null == userInfo) return PreferenceDefine.EXPORT_DILIMITER_VALUE;
+		else if("".equals(userInfo.getValue())) return PreferenceDefine.EXPORT_DILIMITER_VALUE;
+		
+		return userInfo.getValue();
+	}
+	
 	////////////////// rdb 설정 ////////////////////////////////////////////////////////////////////////////
 	/** rdb 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */ 
 	public static int getQueryResultCount() {

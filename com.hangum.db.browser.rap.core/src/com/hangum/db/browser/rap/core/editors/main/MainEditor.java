@@ -131,6 +131,8 @@ public class MainEditor extends EditorPart {
 	private int queryPageCount 		= GetPreferenceGeneral.getPageCount();
 	/** oracle plan table 이름 */
 	private String planTableName 	= GetPreferenceGeneral.getPlanTableName();
+	/** export delimit */
+	private String exportDelimit = GetPreferenceGeneral.getExportDelimit().toLowerCase().equals("tab")?"	":GetPreferenceGeneral.getExportDelimit();
 	
 	/** query의 히스토리를 보여줍니다. */
 	private List<String> listQueryHistory = new ArrayList<String>();
@@ -450,12 +452,13 @@ public class MainEditor extends EditorPart {
 		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				// 분리자 정보를 가져옵니다.
 				StringBuffer sbExportData = new StringBuffer();
 					
 				// column 헤더추
 				TableColumn[] tcs = sqlResultTableViewer.getTable().getColumns();
 				for (TableColumn tableColumn : tcs) {
-					sbExportData.append( tableColumn.getText()).append(","); //$NON-NLS-1$
+					sbExportData.append( tableColumn.getText()).append(exportDelimit);//","); //$NON-NLS-1$
 				}
 				sbExportData.append(Define.LINE_SEPARATOR); //$NON-NLS-1$
 				
@@ -463,7 +466,7 @@ public class MainEditor extends EditorPart {
 				for(int i=0; i<sourceDataList.size(); i++) {
 					HashMap<Integer, Object> mapColumns = sourceDataList.get(i);
 					for(int j=0; j<mapColumns.size(); j++) {
-						sbExportData.append(mapColumns.get(j)).append(","); //$NON-NLS-1$
+						sbExportData.append(mapColumns.get(j)).append(exportDelimit); //$NON-NLS-1$
 					}
 					sbExportData.append(Define.LINE_SEPARATOR); //$NON-NLS-1$
 				}

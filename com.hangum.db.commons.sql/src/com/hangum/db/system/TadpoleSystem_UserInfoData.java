@@ -58,9 +58,20 @@ public class TadpoleSystem_UserInfoData {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
 		sqlClient.insert("userInfoDataInsert", listUserData); //$NON-NLS-1$
 	}
+	
+	/**
+	 * user info data insert
+	 * 
+	 * @param listUserData
+	 * @throws Exception
+	 */
+	public static void insertUserInfoData(UserInfoDataDAO listUserData) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		sqlClient.insert("userInfoDataInsert", listUserData); //$NON-NLS-1$
+	}
 
 	/**
-	 * general 정보를 저장합니다.
+	 * general 정보의 session time을 저장합니다.
 	 * 
 	 * @param sessionTimeOut
 	 * @throws Exception
@@ -73,6 +84,23 @@ public class TadpoleSystem_UserInfoData {
 		// 	select 제한  갯수		
 		userInfoData.setName(PreferenceDefine.SESSION_DFEAULT_PREFERENCE);
 		userInfoData.setValue(sessionTimeOut);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+	}
+	
+	/**
+	 * general 정보의 export delimit을 저장합니다.
+	 * 
+	 * @param sessionTimeOut
+	 * @throws Exception
+	 */
+	public static void updateGeneralExportDelimitData(String delimit) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(SessionManager.getSeq());
+		
+		// 	select 제한  갯수		
+		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
+		userInfoData.setValue(delimit);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
 	
@@ -149,6 +177,11 @@ public class TadpoleSystem_UserInfoData {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(userdb.getSeq());
+		
+		// export delimiter
+		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
+		userInfoData.setValue(""+PreferenceDefine.EXPORT_DILIMITER_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		//SESSION TIME OUT 
 		userInfoData.setName(PreferenceDefine.SESSION_DFEAULT_PREFERENCE);

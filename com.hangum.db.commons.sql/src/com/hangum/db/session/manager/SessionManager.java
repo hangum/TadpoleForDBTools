@@ -1,5 +1,7 @@
 package com.hangum.db.session.manager;
 
+import org.apache.log4j.Logger;
+
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -7,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.eclipse.rwt.RWT;
 
 import com.hangum.db.dao.system.UserInfoDataDAO;
+import com.hangum.db.system.TadpoleSystem_UserInfoData;
 
 /**
  * tadpole의 session manager입니다
@@ -15,6 +18,11 @@ import com.hangum.db.dao.system.UserInfoDataDAO;
  *
  */
 public class SessionManager {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(SessionManager.class);
+
 	/**
 	 * <pre>
 	 * 		MANAGER_SEQ는 그룹의 manager 권한 사용자의 seq 입니다.  seq로  그룹의 db list를 얻기위해 미리 가져옵니다.
@@ -99,7 +107,21 @@ public class SessionManager {
 		HttpSession sStore = RWT.getSessionStore().getHttpSession();
 		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(SESSEION_NAME.USER_INFO_DATA.toString());
 		UserInfoDataDAO userInfoDataDAO = (UserInfoDataDAO)mapUserInfoData.get(key);
-		userInfoDataDAO.setValue(obj);
+		if(userInfoDataDAO == null) {
+			userInfoDataDAO = new UserInfoDataDAO();
+			userInfoDataDAO.setName(key);
+			userInfoDataDAO.setUser_seq(SessionManager.getSeq());
+			userInfoDataDAO.setValue(obj);
+		
+			try {
+				TadpoleSystem_UserInfoData.insertUserInfoData(userInfoDataDAO);
+			} catch(Exception e) {
+				logger.error("User data save exception [key]" + key + "[value]" + obj, e);
+			}
+		} else {
+			userInfoDataDAO.setValue(obj);
+		}
+			
 		mapUserInfoData.put(key, userInfoDataDAO);
 		
 		sStore.setAttribute(SESSEION_NAME.USER_INFO_DATA.toString(), mapUserInfoData);
