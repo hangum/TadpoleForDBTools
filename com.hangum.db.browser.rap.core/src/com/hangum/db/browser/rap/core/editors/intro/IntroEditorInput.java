@@ -23,7 +23,7 @@ public class IntroEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Intro";
+		return "Home";
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class IntroEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Tadpole Intro";
+		return "Tadpole Home";
 	}
 
 }
