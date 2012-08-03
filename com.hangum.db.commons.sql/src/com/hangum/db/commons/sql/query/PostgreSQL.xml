@@ -4,6 +4,10 @@
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
+<!-- 
+	PostgreSQL 9.1 버전으로 초기 작업을 시작했습니다.
+	이전 버전으로는 테스트 못해봤어요.
+ -->
 <sqlMap namespace="POSTGRESQL_query">
 
 <!-- 
