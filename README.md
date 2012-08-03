@@ -9,6 +9,7 @@ RDB Feature
 * User Management (Admin, Manager, User)
 * Support CUBRID, MySQL, Oracle, SQLite, MSSQL, PostgreSQL, MongoDB Database
 * Select, Insert, Update, Delete
+* Query result download
 * SQL Syntax Highlighting
 * Format SQL
 * SQL Statement <-> Java, PHP String Literal Each Convert
@@ -24,7 +25,8 @@ MongoDB Feature
 * Intuitive web interface (Safari, Chrome, IE, Firefox, Opera)
 * User Management (Admin, Manager, User)
 * MongoDB User Management
-* Query View(Tree, Table, Text) 
+* Query View(Tree, Table, Text)
+* Download query result 
 * GridFS(Insert, Delete, Download) 
 * Server Status
 * Top
