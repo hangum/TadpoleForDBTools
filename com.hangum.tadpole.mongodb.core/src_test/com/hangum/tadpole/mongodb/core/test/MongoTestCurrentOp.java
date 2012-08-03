@@ -31,9 +31,9 @@ public class MongoTestCurrentOp {
 			BasicDBObject obj = (BasicDBObject)object;			
 			System.out.println("[opid]" + obj.get("opid"));
 			
-			System.out.println("##[start] killOp##############");
-			db.eval("db.killOp(" + obj.get("opid") + ")");
-			System.out.println("##[stop] killOp##############");
+//			System.out.println("##[start] killOp##############");
+//			db.eval("db.killOp(" + obj.get("opid") + ")");
+//			System.out.println("##[stop] killOp##############");
 		}
 			
 		mongo.close();

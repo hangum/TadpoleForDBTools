@@ -21,22 +21,28 @@ public class MongoTestInStmt {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		ConAndAuthentication testMongoCls = new ConAndAuthentication();
-		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
-		DB db = mongo.getDB("test");
-		
-		DBCollection myColl = db.getCollection("rental");
-		
-		Integer[] inCondition = {1, 2};		
-		BasicDBObject inQuery = new BasicDBObject();
-		inQuery.put("rental_id", new BasicDBObject("$in", inCondition));
-		
-		DBCursor myCursor = myColl.find(inQuery);		
-		while (myCursor.hasNext()) {
-			System.out.println(myCursor.next());
-		}
-
-		mongo.close();
+//		for(int i=0; i<1000000; i++) {
+			ConAndAuthentication testMongoCls = new ConAndAuthentication();
+			Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
+			DB db = mongo.getDB("test");
+			
+			DBCollection myColl = db.getCollection("rental");
+			
+			Integer[] inCondition = {1, 2};		
+			BasicDBObject inQuery = new BasicDBObject();
+			inQuery.put("rental_id", new BasicDBObject("$in", inCondition));
+			
+			DBCursor myCursor = myColl.find(inQuery);		
+			while (myCursor.hasNext()) {
+				System.out.println(myCursor.next());
+			}
+	
+			mongo.close();
+			
+			try {
+				Thread.sleep(1);
+			} catch(Exception e) {}
+//		}
 	}
 
 }
