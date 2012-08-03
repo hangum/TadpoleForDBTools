@@ -41,7 +41,8 @@ public enum DBDefine {
 //	Teradata,
 //	Tibero,
 	SQLite_DEFAULT,
-	CUBRID_DEFAULT, 
+	CUBRID_DEFAULT,
+	POSTGRE_DEFAULT,
 	
 	/* NO SQL */
 	MONGODB_DEFAULT
@@ -72,6 +73,7 @@ public enum DBDefine {
 //			case Tibero:			return prefix + "TiberoConfig.xml";
 			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
+			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
 			default:
 				return "undefine db";
 		}
@@ -98,6 +100,7 @@ public enum DBDefine {
 //		else if(type.equals("Tibero")) 		return Tibero;
 		else if(type.equals("SQLite"))		return SQLite_DEFAULT;
 		else if(type.equals("CUBRID"))		return CUBRID_DEFAULT;
+		else if(type.equals("POSTGRE"))		return POSTGRE_DEFAULT;
 		
 		else if(type.equals("MONGODB"))		return MONGODB_DEFAULT;
 		else return null;
@@ -123,8 +126,10 @@ public enum DBDefine {
 //			case Informix:			return "jdbc:mysql://#IP#:#PORT#/#SID#";
 //			case Teradata:			return "jdbc:mysql://#IP#:#PORT#/#SID#";
 //			case Tibero:			return "jdbc:mysql://#IP#:#PORT#/#SID#";
-			case SQLite_DEFAULT:			return "jdbc:sqlite:/%s";
-			case CUBRID_DEFAULT:			return "jdbc:CUBRID:%s:%s:%s:::";
+			case SQLite_DEFAULT:	return "jdbc:sqlite:/%s";
+			case CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";
+			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
+			
 			/** http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html */
 			case MONGODB_DEFAULT:		return "%s:%s/%s";
 			
@@ -147,8 +152,9 @@ public enum DBDefine {
 //			case Informix:			return "Informix";
 //			case Teradata:			return "Teradata";
 //			case Tibero:			return "Tibero";
-			case SQLite_DEFAULT:			return "SQLite";
+			case SQLite_DEFAULT:		return "SQLite";
 			case CUBRID_DEFAULT:		return "CUBRID";
+			case POSTGRE_DEFAULT:		return "POSTGRE";
 			
 			case MONGODB_DEFAULT : return "MONGODB";
 			default:
@@ -170,6 +176,7 @@ public enum DBDefine {
 		supportDb.add(MYSQL_DEFAULT);		
 		supportDb.add(MSSQL_DEFAULT);						
 		supportDb.add(ORACLE_DEFAULT);
+		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);		
 		
 		return supportDb;

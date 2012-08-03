@@ -5,6 +5,7 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.define.CubridDMLTemplate;
 import com.hangum.db.define.Define;
 import com.hangum.db.define.MySQLDMLTemplate;
+import com.hangum.db.define.PostgreDMLTemplate;
 import com.hangum.db.define.SQLiteDMLTemplate;
 
 /**
@@ -26,7 +27,7 @@ public class QueryTemplateUtils {
 		String defaultStr = "";
 		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getType()) ||
 				DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getType()) ||
-				DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getType()) 
+				DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getType()) 				
 			) {
 			
 			if(initAction == Define.DB_ACTION.TABLES) {
@@ -69,8 +70,21 @@ public class QueryTemplateUtils {
 			} else if(initAction == Define.DB_ACTION.TRIGGERS) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
+		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB.getType())) {
+			if(initAction == Define.DB_ACTION.TABLES) {
+				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TABLE_STMT;
+			} else if(initAction == Define.DB_ACTION.VIEWS) {
+				defaultStr =  PostgreDMLTemplate.TMP_CREATE_VIEW_STMT;
+			} else if(initAction == Define.DB_ACTION.INDEXES) {
+				defaultStr =  PostgreDMLTemplate.TMP_CREATE_INDEX_STMT;
+			} else if(initAction == Define.DB_ACTION.PROCEDURES) {
+				defaultStr =  PostgreDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
+			} else if(initAction == Define.DB_ACTION.FUNCTIONS) {
+				defaultStr =  PostgreDMLTemplate.TMP_CREATE_FUNCTION_STMT;
+			} else if(initAction == Define.DB_ACTION.TRIGGERS) {
+				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
+			}
 		}
-		
 		
 //		else if(DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getType())) {
 //		

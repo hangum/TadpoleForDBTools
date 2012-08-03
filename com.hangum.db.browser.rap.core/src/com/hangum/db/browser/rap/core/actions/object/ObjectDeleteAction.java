@@ -104,7 +104,11 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 			InformationSchemaDAO indexDAO = (InformationSchemaDAO)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_14, indexDAO.getTABLE_NAME()+ Messages.ObjectDeleteAction_15 + indexDAO.getINDEX_NAME() + Messages.ObjectDeleteAction_16)) {
 				try {
-					TadpoleSystemCommons.executSQL(getUserDB(), "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
+					if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.POSTGRE_DEFAULT) {
+						TadpoleSystemCommons.executSQL(getUserDB(), "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
+					} else {
+						TadpoleSystemCommons.executSQL(getUserDB(), "drop index " + indexDAO.getINDEX_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
 					
 					refreshIndexes();
 				} catch(Exception e) {

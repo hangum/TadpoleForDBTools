@@ -7,6 +7,8 @@ package com.hangum.db.define;
  *
  */
 public class MySQLDMLTemplate {
+	public static final String LINE_SEPARATION = "\r\n";
+	
 	/**  
 	 * mysql 을 수행할때 preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.
 	 */	
@@ -15,15 +17,15 @@ public class MySQLDMLTemplate {
 	public static final String TMP_EXPLAIN_EXTENDED = "explain extended  ";
 	
 	/** table - mysql */
-	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE   sample_table   ( \r\n" + 
-						 " id INT(11) default NULL auto_increment,  \r\n" +
-						 " name char(60) default NULL, \r\n" +
-						 " PRIMARY KEY (id) \r\n" +
+	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE   sample_table   (  " + LINE_SEPARATION + 
+						 " id INT(11) default NULL auto_increment,   " + LINE_SEPARATION +
+						 " name char(60) default NULL,  " + LINE_SEPARATION +
+						 " PRIMARY KEY (id)  " + LINE_SEPARATION +
 						" );";
 
 	
 	/** view -mysql */
-	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS \r\n" + 
+	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS  " + LINE_SEPARATION + 
 																" SELECT   columns   FROM   table;";
 	
 	/** index */
@@ -32,23 +34,23 @@ public class MySQLDMLTemplate {
 	
 	
 	/** procedure */
-	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE PROCEDURE simpleproc (OUT param1 INT) \r\n"+
-																	  " BEGIN  \r\n"+
-																	  "  SELECT COUNT(*) INTO param1 FROM t;  \r\n"+
+	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE PROCEDURE simpleproc (OUT param1 INT) " + LINE_SEPARATION +
+																	  " BEGIN  " + LINE_SEPARATION +
+																	  "  SELECT COUNT(*) INTO param1 FROM t;  " + LINE_SEPARATION +
 																	  " END;";
 	
 	
 	/** function */
-	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE FUNCTION hello (s CHAR(20)) RETURNS CHAR(50) \r\n" + 
+	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE FUNCTION hello (s CHAR(20)) RETURNS CHAR(50)  " + LINE_SEPARATION + 
 																	" RETURN CONCAT('Hello, 's');";
 	
 	
 	
 	/** trigger */
-	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER testref BEFORE INSERT ON test1 \r\n" +
-																"	  FOR EACH ROW BEGIN  \r\n" +
-																"	    INSERT INTO test2 SET a2 = NEW.a1;  \r\n" +
-																"	    DELETE FROM test3 WHERE a3 = NEW.a1;  \r\n" +
-																"	    UPDATE test4 SET b4 = b4 + 1 WHERE a4 = NEW.a1;  \r\n" +
+	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER testref BEFORE INSERT ON test1  " + LINE_SEPARATION +
+																"	  FOR EACH ROW BEGIN   " + LINE_SEPARATION +
+																"	    INSERT INTO test2 SET a2 = NEW.a1;   " + LINE_SEPARATION +
+																"	    DELETE FROM test3 WHERE a3 = NEW.a1;   " + LINE_SEPARATION +
+																"	    UPDATE test4 SET b4 = b4 + 1 WHERE a4 = NEW.a1;   " + LINE_SEPARATION +
 																"	  END;";
 }

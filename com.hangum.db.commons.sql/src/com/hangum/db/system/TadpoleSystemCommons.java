@@ -1,5 +1,7 @@
 package com.hangum.db.system;
 
+import org.apache.log4j.Logger;
+
 import java.sql.Statement;
 
 import com.hangum.db.commons.sql.TadpoleSQLManager;
@@ -13,6 +15,10 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class TadpoleSystemCommons {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(TadpoleSystemCommons.class);
 
 	/**
 	 * smtm.execute문의 쿼리를 날립니다. 즉 select 이외의 문...
@@ -20,6 +26,8 @@ public class TadpoleSystemCommons {
 	 * @param selText
 	 */
 	public static void executSQL(UserDBDAO userDB, String selText) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("[executeSQL]" + selText);
+		
 		java.sql.Connection javaConn = null;
 		
 		try {

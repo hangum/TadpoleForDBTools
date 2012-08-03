@@ -170,6 +170,8 @@ public class DBLoginDialog extends Dialog {
 			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE);
 		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
 			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE);
+		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
+			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE);
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
 			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE);
 		}

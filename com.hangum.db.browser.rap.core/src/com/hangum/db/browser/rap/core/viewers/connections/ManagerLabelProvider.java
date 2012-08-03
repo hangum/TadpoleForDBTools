@@ -37,6 +37,9 @@ public class ManagerLabelProvider extends LabelProvider {
 			else if(DBDefine.CUBRID_DEFAULT == dto.getDbType()) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
 			
+			else if(DBDefine.POSTGRE_DEFAULT == dto.getDbType()) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
+			
 			else if(DBDefine.MONGODB_DEFAULT == dto.getDbType()) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
 			

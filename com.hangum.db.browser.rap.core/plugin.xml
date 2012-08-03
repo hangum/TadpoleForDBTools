@@ -210,7 +210,7 @@
          <visibility>
             <objectState
                   name="db_type"
-                  value="cubrid,mysql,mssql,oracle,db2,postgressql,sqlite">
+                  value="cubrid,mysql,mssql,oracle,db2,postgre,sqlite">
             </objectState>
          </visibility>
       </objectContribution>

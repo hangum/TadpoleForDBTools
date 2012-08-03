@@ -161,7 +161,7 @@ public class ManagerViewer extends ViewPart {
 		}
 		
 		treeViewer.refresh();
-		treeViewer.expandToLevel(2); 
+		treeViewer.expandToLevel(1); 
 	}
 
 	/**
@@ -284,6 +284,7 @@ public class ManagerViewer extends ViewPart {
 					}
 					
 					treeViewer.refresh(userDB);
+					
 					treeViewer.expandToLevel(userDB, 3);
 					
 					break;

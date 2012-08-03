@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="POSTGRESQL_query">
+
+<!-- 
+	table 이름
+ -->
+<select id="tableList" resultClass="java.lang.String">
+	SELECT table_name 
+	FROM information_schema.tables
+	where table_schema = 'public' and 
+		table_type = 'BASE TABLE'
+	ORDER BY table_name 
+</select>
+
+<!-- 
+	특정 table의 table이나 view 컬럼 정보
+	
+	컬럼 설명
+	Field			: 컬럼 명
+	Type			: 컬럼 타입
+	Null			: Null 유무 (예: YES,NO)
+	Key				: primary key, foreign key(예: PK, FK)
+	Default			: 기본값
+	Extra			: 특수컬럼(예: auto_increment)
+ -->
+<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.lang.String">
+	SELECT column_name AS "FIELD",
+         data_type || '(' || character_maximum_length || ')' AS "TYPE",
+         is_nullable AS "NULL"
+    FROM information_schema.columns 
+    WHERE table_name = #table#
+	ORDER BY ordinal_position 
+</select>
+
+<!-- 
+	테이블간의 관계 목록 정보를 얻습니다.
+	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
+	 SELECT constraint_name,table_name, column_name, referenced_table_name, referenced_column_name
+ FROM     information_schema.key_column_usage
+ WHERE  referenced_table_name IS NOT NULL
+ ORDER BY table_name, column_name;
+ -->
+<select id="referencedTableList"  resultClass="com.hangum.db.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+SELECT constraint_name, table_name, column_name, referenced_table_name, referenced_column_name
+ FROM     information_schema.key_column_usage
+ WHERE  referenced_table_name IS NOT NULL 		and  
+ 		table_name in ($tables$) 				and 
+ 		referenced_table_name in ($tables$)
+ ORDER BY table_name, column_name;
+</select>
+
+<!-- 
+	모든 관계 테이블 목록을 가져옵니다.
+ -->
+<select id="referencedTableListALL"  resultClass="com.hangum.db.dao.mysql.ReferencedTableDAO" >
+SELECT constraint_name, table_name, column_name, referenced_table_name, referenced_column_name
+ FROM     information_schema.key_column_usage
+ WHERE  referenced_table_name IS NOT NULL
+ ORDER BY table_name, column_name;
+</select>
+	
+<!-- 
+	db의 view 정보
+	
+	컬럼 설명
+	oebjt_name		: view 이름
+ -->
+<select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT table_name 
+	FROM information_schema.tables 
+	where table_schema = 'public' and 
+		table_type = 'VIEW'
+	ORDER BY table_name
+</select>
+	
+<!-- 
+	index 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	table_name			:  	테이블 명
+    index_name			:	인덱스 명
+    column_name			:	컬럼 명
+    column_position		: 
+    column_length		:
+    char_length			:
+    descend				:	
+    uniqueness			:
+    table_owner			:
+    constraint_type		:
+    status				:
+    #table_schema# AS table_schema
+ -->
+ <select id="indexList" resultClass="com.hangum.db.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+	select
+	     t.relname  as "table_name",
+	     c.relname  as "index_name"
+	from
+	          pg_catalog.pg_class c
+	     join pg_catalog.pg_namespace n on n.oid        = c.relnamespace
+	     join pg_catalog.pg_index i     on i.indexrelid = c.oid
+	     join pg_catalog.pg_class t     on i.indrelid   = t.oid
+	where
+	        c.relkind = 'i'
+	    and n.nspname not in ('pg_catalog', 'pg_toast')
+	    and pg_catalog.pg_table_is_visible(c.oid)
+</select>
+
+<!-- 
+	procedure 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	db				:	db 명
+	name			:	procedure 명
+	type			:	procedure type
+	definer			:	procedure 정의 자
+	modified		:	수정일시
+	created			:	생성일시
+	security_type	:	예를 들어 (DEFINER)
+	comment			:
+	character_set_client	:	예를 들어 (utf8)
+	collation_connection	:	에를 들어 (utf8_general_ci)
+	database				:
+	collation				:
+ -->
+<select id="procedureList" resultClass="com.hangum.db.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT  proname "name" 
+	FROM    pg_catalog.pg_namespace n 
+	JOIN    pg_catalog.pg_proc p 
+	ON      pronamespace = n.oid 
+	WHERE   nspname = 'public'; 
+</select>
+
+<!-- 
+	function 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	db				:	db 명
+	name			:	procedure 명
+	type			:	procedure type
+	definer			:	procedure 정의 자
+	modified		:	수정일시
+	created			:	생성일시
+	security_type	:	예를 들어 (DEFINER)
+	comment			:
+	character_set_client	:	예를 들어 (utf8)
+	collation_connection	:	에를 들어 (utf8_general_ci)
+	database				:
+	collation				:
+ -->
+<select id="functionList" resultClass="com.hangum.db.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT  proname "name" 
+	FROM    pg_catalog.pg_namespace n 
+	JOIN    pg_catalog.pg_proc p 
+	ON      pronamespace = n.oid 
+	WHERE   nspname = 'public'; 
+</select>
+
+<!-- 
+	show 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	trigger			: trigger name	
+	event			: event
+	table			: table name
+	statement		:
+	timing			:
+	created			:
+	sql_mode		:
+	definer			:
+	character_set_client	:	
+	collation_connection	:
+	database				:
+	collation				:
+ -->
+<select id="triggerList" resultClass="com.hangum.db.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	select tgname "trigger" from pg_trigger 
+</select>
+
+</sqlMap>
