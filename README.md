@@ -2,16 +2,17 @@ Tadpole For DB Tools
 ==
 Tadpole for DB Tools is Unified infrastructure tool, various environment based interface for managing <b>CUBRID, MySQL, Oracle, SQLite, MSSQL, PostgreSQL and MongoDB</b> databases. 
 It enables you to handle typical DB over the World Wide Web
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1343987753405/home/TadpoleForDBToolsArch.png?height=359&width=420)
 
 RDB Feature
 -
 * Intuitive web interface (Safari, Chrome, IE, Firefox, Opera)
 * User Management (Admin, Manager, User)
-* Support CUBRID, MySQL, Oracle, SQLite, MSSQL, PostgreSQL, MongoDB Database
+* Support CUBRID, MySQL, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
-* Query result download
+* Download query result 
 * SQL Syntax Highlighting
-* Format SQL
+* SQL Formatting
 * SQL Statement <-> Java, PHP String Literal Each Convert
 * Content Assist
 * Execute SQL Statement
@@ -20,20 +21,25 @@ RDB Feature
 * Generate SQL Statement (Select, Insert, Update, Delete, Table, View, Index, Procedure, Function, Trigger)
 * Generate ER Diagram (Auto Layout)
 
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1330247183579/home/tadpole-erd.png?height=400&width=365)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1333501091536/home/tadpole-screen-sql.png?height=400&width=349)
+
 MongoDB Feature
 -
 * Intuitive web interface (Safari, Chrome, IE, Firefox, Opera)
 * User Management (Admin, Manager, User)
 * MongoDB User Management
-* Query View(Tree, Table, Text)
+* Query View(Tree, Table, Text) 
+* Show query plan and console
 * Download query result 
 * GridFS(Insert, Delete, Download) 
 * Server Status
 * Top
 * Web Console
-* Current Operation, Kill Operation
+* Current, Kill Operation
 * Query Profiling
 * Generate ER Diagram (Auto Layout)
+
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1340699960549/home/mongodbAllCollections.png?height=400&width=342)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1340699986205/home/mongodb%20editor.png?height=328&width=400)
 
 Environment
 -
