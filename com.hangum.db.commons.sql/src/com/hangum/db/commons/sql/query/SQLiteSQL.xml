@@ -17,8 +17,9 @@
 <!-- 
 	table 이름
  -->
-<select id="tableList" resultClass="java.lang.String">
-	SELECT name FROM sqlite_master
+<select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	SELECT name 
+	FROM sqlite_master
 	WHERE type = 'table'
 	ORDER BY name
 </select>
@@ -26,7 +27,7 @@
 <!-- 
 	table, view의 컬럼 정보
  -->
-<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.lang.String">
+<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	 PRAGMA table_info($table$)
 </select>
 

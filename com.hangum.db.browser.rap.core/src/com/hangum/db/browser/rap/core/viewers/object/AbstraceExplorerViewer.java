@@ -82,8 +82,8 @@ public abstract class AbstraceExplorerViewer extends ViewPart {
 	 * table table column
 	 */
 	protected void createTableColumne(TableViewer tv) {
-		String[] name = {"Field", "Type", "Key", "Null", "Default", "Extra"};
-		int[] size = {120, 70, 50, 50, 50, 50};
+		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
+		int[] size = {120, 70, 50, 100, 50, 50, 50};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);

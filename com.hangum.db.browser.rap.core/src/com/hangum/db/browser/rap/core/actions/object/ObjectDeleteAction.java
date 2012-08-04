@@ -15,6 +15,7 @@ import com.hangum.db.browser.rap.core.viewers.object.ExplorerViewer;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.mysql.InformationSchemaDAO;
 import com.hangum.db.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.db.dao.mysql.TableDAO;
 import com.hangum.db.dao.mysql.TriggerDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.define.Define.DB_ACTION;
@@ -63,13 +64,13 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 	public void run() {
 		
 		if(actionType == DB_ACTION.TABLES) {
-			String tbName = (String)sel.getFirstElement();
+			TableDAO dao = (TableDAO)sel.getFirstElement();
 			
 			if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
-				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, tbName + Messages.ObjectDeleteAction_3)) {				
+				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {				
 					// mongodb인지..
 					try {
-						TadpoleSystemCommons.executSQL(getUserDB(), "drop table " + tbName); //$NON-NLS-1$
+						TadpoleSystemCommons.executSQL(getUserDB(), "drop table " + dao.getName()); //$NON-NLS-1$
 						refreshTable();
 					} catch(Exception e) {
 						logger.error(Messages.ObjectDeleteAction_5, e);
@@ -78,9 +79,9 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					
 				}
 			} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
-				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, tbName + Messages.ObjectDeleteAction_31)) {
+				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_31)) {
 					try {
-						MongoDBQuery.dropCollection(getUserDB(), tbName);
+						MongoDBQuery.dropCollection(getUserDB(), dao.getName());
 						refreshTable();
 					} catch(Exception e) {
 						logger.error("Collection Delete", e); //$NON-NLS-1$

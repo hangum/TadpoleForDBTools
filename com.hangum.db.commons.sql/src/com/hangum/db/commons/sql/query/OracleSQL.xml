@@ -18,8 +18,10 @@
 	컬럼 설명
 	TNAME 		: 테이블 명
  -->
-<select id="tableList" resultClass="java.lang.String">
-	select TNAME from tab
+<select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	select TNAME name 
+	from tab
+	order by name
 </select>
 
 <!-- 
@@ -33,7 +35,7 @@
 	Default			: 기본값
 	Extra			: 특수컬럼(예: auto_increment)
  -->
-<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.lang.String">
+<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	 SELECT C.COLUMN_NAME AS "FIELD",
          C.DATA_TYPE || '(' || DATA_LENGTH || ')' AS "TYPE",
          CASE WHEN C.NULLABLE = 'Y' THEN 'YES' ELSE 'NO' END AS "NULL",

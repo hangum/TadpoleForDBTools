@@ -9,15 +9,16 @@
 <!-- 
 	table 이름
  -->
-<select id="tableList" resultClass="java.lang.String">
-	select name from sys.tables
+<select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	select name 
+	from sys.tables
 	order by name
 </select>
 
 <!-- 
 	table, view의 컬럼 정보
  -->
-<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.lang.String">
+<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 SELECT  b.name field, 
         c.name + CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
                  ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' 
@@ -30,7 +31,7 @@ FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
 	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
 WHERE 
-		a.name = #tablename#
+		a.name = #table#
 ORDER BY a.id, b.colid
 </select>
 

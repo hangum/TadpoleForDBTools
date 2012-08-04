@@ -144,7 +144,12 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	public List<TableColumnDAO> getColumns(String strTBName) throws Exception {
 		if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			return sqlClient.queryForList("tableColumnList", strTBName);
+			
+			Map<String, String> param = new HashMap<String, String>();
+			param.put("db", userDB.getDatabase());
+			param.put("table", strTBName);			
+			
+			return sqlClient.queryForList("tableColumnList", param);
 		} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
 			
 			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );

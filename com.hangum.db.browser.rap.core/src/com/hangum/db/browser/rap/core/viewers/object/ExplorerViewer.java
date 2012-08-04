@@ -1,7 +1,9 @@
 package com.hangum.db.browser.rap.core.viewers.object;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -66,6 +68,7 @@ import com.hangum.db.browser.rap.core.viewers.object.comparator.ObjectComparator
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.ManagerListDTO;
+import com.hangum.db.dao.mysql.TableDAO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
 import com.hangum.db.define.Define;
@@ -588,9 +591,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 					if(is != null) {
 						if(is.getFirstElement() != null) {
 							String strTBName = is.getFirstElement().toString();
+							Map<String, String> param = new HashMap<String, String>();
+							param.put("db", userDB.getDatabase());
+							param.put("table", strTBName);
 							
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-							showViewColumns = sqlClient.queryForList("tableColumnList", strTBName); //$NON-NLS-1$
+							showViewColumns = sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
 						}  else showViewColumns = null;
 						
 						
@@ -695,12 +701,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				
 				if(null != is) {
-					Object strTBName = is.getFirstElement();
+					TableDAO tableDAO = (TableDAO)is.getFirstElement();
 					
 					// is rdb
 					if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
 					
-						DBTableEditorInput mei = new DBTableEditorInput(strTBName.toString(), userDB, showTableColumns);
+						DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 						try {
 							page.openEditor(mei, TableViewerEditPart.ID);
@@ -714,7 +720,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 					// is mongo db
 					} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
 						
-						MongoDBEditorInput input = new MongoDBEditorInput(strTBName.toString(), userDB, showTableColumns);
+						MongoDBEditorInput input = new MongoDBEditorInput(tableDAO.getName(), userDB, showTableColumns);
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 						try {
 							page.openEditor(input, MongoDBTableEditor.ID);
@@ -734,16 +740,22 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
 					IStructuredSelection is = (IStructuredSelection)event.getSelection();
-					Object strTBName = is.getFirstElement();
+					Object tableDAO = is.getFirstElement();
 					
-					if(strTBName != null) {
-						if(selectTableName.equals(strTBName.toString())) return;
-						selectTableName = strTBName.toString();
+					if(tableDAO != null) {
+						TableDAO table = (TableDAO)tableDAO;
+						
+						if(selectTableName.equals(table.getName())) return;
+						selectTableName = table.getName();
 						
 						if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
 							
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-							showTableColumns = sqlClient.queryForList("tableColumnList", strTBName); //$NON-NLS-1$
+							Map<String, String> mapParam = new HashMap<String, String>();
+							mapParam.put("db", userDB.getDatabase());
+							mapParam.put("table", table.getName());
+							
+							showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 														
 						// mongo db
 						} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
@@ -776,17 +788,31 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
 		
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableListViewer, SWT.NONE);
-		TableColumn tblclmnTableName = tableViewerColumn.getColumn();
-		tblclmnTableName.setWidth(400);
-		tblclmnTableName.setText("Name"); //$NON-NLS-1$
-		tblclmnTableName.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tblclmnTableName, 0));
-		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
+		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
+		TableColumn tbName = tvColName.getColumn();
+		tbName.setWidth(150);
+		tbName.setText("Name"); //$NON-NLS-1$
+		tbName.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbName, 0));
+		tvColName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return element.toString();
+				TableDAO table = (TableDAO)element;
+				return table.getName();
 			}
 		});
+		TableViewerColumn tvColCmt = new TableViewerColumn(tableListViewer, SWT.NONE);
+		TableColumn tbCmt = tvColCmt.getColumn();
+		tbCmt.setWidth(400);
+		tbCmt.setText("Comment"); //$NON-NLS-1$
+		tbCmt.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbCmt, 1));
+		tvColCmt.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				TableDAO table = (TableDAO)element;
+				return table.getComment();
+			}
+		});
+		
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
 		
@@ -1163,10 +1189,13 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				DB mongoDB = mongo.getDB(userDB.getDatabase());
 				
 				if(showTables != null) showTables.clear();
-				else showTables = new ArrayList<String>();
+				else showTables = new ArrayList<TableDAO>();
 				
 				for (String col : mongoDB.getCollectionNames()) {
-					showTables.add(col);
+					TableDAO dao = new TableDAO();
+					dao.setName(col);
+					
+					showTables.add(dao);
 				}				
 			}
 			
@@ -1207,7 +1236,10 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		if(CHANGE_TYPE.DEL == changeType) {
 			showTables.remove(changeTbName);
 		} else if(CHANGE_TYPE.INS == changeType) {
-			showTables.add(changeTbName);
+			TableDAO dao = new TableDAO();
+			dao.setName(changeTbName);
+			
+			showTables.add(dao);
 		}
 
 		tableListViewer.setInput(showTables);

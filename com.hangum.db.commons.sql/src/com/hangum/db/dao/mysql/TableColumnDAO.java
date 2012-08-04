@@ -39,7 +39,7 @@ public class TableColumnDAO {
 	String mskey = "";
 	
 	/** table column의 comment */
-	String desc = "";
+	String comment = "";
 	
 	public TableColumnDAO() {
 	}
@@ -158,11 +158,12 @@ public class TableColumnDAO {
 	}
 
 	// 공통 table comment
-	public String getDesc() {
-		return desc;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
+
 }

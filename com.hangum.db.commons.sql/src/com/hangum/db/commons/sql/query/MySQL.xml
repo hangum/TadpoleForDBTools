@@ -9,16 +9,38 @@
 <!-- 
 	table 이름
  -->
-<select id="tableList" resultClass="java.lang.String">
-	SHOW FULL TABLES IN $dbName$ 
-	WHERE TABLE_TYPE = 'BASE TABLE'
+<select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	SELECT TABLE_NAME name, TABLE_COMMENT comment
+	FROM INFORMATION_SCHEMA.TABLES
+	WHERE TABLE_SCHEMA = #db# AND TABLE_TYPE = 'BASE TABLE'
+	ORDER BY name
 </select>
 
 <!-- 
-	table, view의 컬럼 정보
+	특정 table의 table이나 view 컬럼 정보
+	
+	컬럼 설명
+	Field			: 컬럼 명
+	Type			: 컬럼 타입
+	Null			: Null 유무 (예: YES,NO)
+	Key				: primary key, foreign key(예: PK, FK)
+	Default			: 기본값
+	Extra			: 특수컬럼(예: auto_increment)
+	Comment
  -->
-<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.lang.String">
-	show columns FROM $table$
+<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.Map">
+	SELECT   
+         column_name field,
+         column_type type,
+         is_nullable "null",
+         column_key "key",
+         column_default "default",
+         extra,
+         column_comment "comment"
+	FROM information_schema.columns
+	WHERE table_schema = #db# AND 
+		table_name = #table#
+	order by ordinal_position
 </select>
 
 <!-- 

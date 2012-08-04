@@ -6,19 +6,19 @@
 
 <!-- 
 	PostgreSQL 9.1 버전으로 초기 작업을 시작했습니다.
-	이전 버전으로는 테스트 못해봤어요.
+	이전 버전으로는 테스트 못해봤어요. 
  -->
 <sqlMap namespace="POSTGRESQL_query">
 
 <!-- 
 	table 이름
  -->
-<select id="tableList" resultClass="java.lang.String">
-	SELECT table_name 
+<select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	SELECT table_name "name" 
 	FROM information_schema.tables
 	where table_schema = 'public' and 
 		table_type = 'BASE TABLE'
-	ORDER BY table_name 
+	ORDER BY name 
 </select>
 
 <!-- 
@@ -32,7 +32,7 @@
 	Default			: 기본값
 	Extra			: 특수컬럼(예: auto_increment)
  -->
-<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.lang.String">
+<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	SELECT column_name AS "FIELD",
          data_type || '(' || character_maximum_length || ')' AS "TYPE",
          is_nullable AS "NULL"

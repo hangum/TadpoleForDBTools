@@ -11,6 +11,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.mysql.TableColumnDAO;
+import com.hangum.db.dao.mysql.TableDAO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.tadpole.erd.core.relation.RelationUtil;
 import com.hangum.tadpole.model.Column;
@@ -67,7 +68,7 @@ public enum TadpoleModelUtils {
 		
 //		try {
 			// 테이블목록
-			List<String> tables = getTables();
+			List<TableDAO> tables = getTables();
 			// 전체 참조 테이블 목록
 			Map<String, Table> mapDBTables = new HashMap<String, Table>();
 			
@@ -78,10 +79,10 @@ public enum TadpoleModelUtils {
 			int nextTableX = START_TABLE_WIDTH_POINT;
 			int nextTableY = START_TABLE_HIGHT_POINT;
 			
-			for(String tableName : tables) {
+			for(TableDAO table : tables) {
 				Table tableModel = factory.createTable();
 				tableModel.setDb(db);
-				tableModel.setName(tableName);
+				tableModel.setName(table.getName());
 				mapDBTables.put(tableModel.getName(), tableModel);
 				
 				// 첫번째 보여주는 항 
@@ -103,7 +104,7 @@ public enum TadpoleModelUtils {
 				tableModel.setConstraints(prevRectangle);
 				
 				// column add
-				List<TableColumnDAO> columnList = getColumns(tableName);
+				List<TableColumnDAO> columnList = getColumns(userDB.getDatabase(), table.getName());
 				for (TableColumnDAO columnDAO : columnList) {
 					
 					Column column = factory.createColumn();
@@ -150,18 +151,22 @@ public enum TadpoleModelUtils {
 	/**
 	 * table 정보를 가져옵니다.
 	 */
-	public List<String> getTables() throws Exception {
-		List<String> showTables = new ArrayList<String>();
+	public List<TableDAO> getTables() throws Exception {
+		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
 		if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			return sqlClient.queryForList("tableList", userDB.getDatabase()); //$NON-NLS-1$
+			
 		} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
 			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
 			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDatabase());
 			
 			for (String col : mongoDB.getCollectionNames()) {
-				showTables.add(col);
+				TableDAO dao = new TableDAO();
+				dao.setName(col);
+				
+				showTables.add(dao);
 			}
 			
 			return showTables;
@@ -178,10 +183,15 @@ public enum TadpoleModelUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<TableColumnDAO> getColumns(String strTBName) throws Exception {
+	public List<TableColumnDAO> getColumns(String db, String strTBName) throws Exception {
 		if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			return sqlClient.queryForList("tableColumnList", strTBName);
+			
+			Map<String, String> param = new HashMap<String, String>();
+			param.put("db", db);
+			param.put("table", strTBName);
+			
+			return sqlClient.queryForList("tableColumnList", param);
 		} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
 			
 			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );

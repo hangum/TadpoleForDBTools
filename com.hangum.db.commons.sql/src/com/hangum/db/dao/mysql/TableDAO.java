@@ -8,7 +8,7 @@ package com.hangum.db.dao.mysql;
  */
 public class TableDAO {
 	String name;
-	String desc;
+	String comment;
 	
 	public TableDAO() {
 	}
@@ -21,13 +21,12 @@ public class TableDAO {
 		this.name = name;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
-
 
 }

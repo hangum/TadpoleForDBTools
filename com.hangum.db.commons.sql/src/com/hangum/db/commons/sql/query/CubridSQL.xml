@@ -17,7 +17,7 @@
 	컬럼 설명
 	TNAME 		: 테이블 명
  -->
-<select id="tableList" resultClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
 	SELECT class_name name
 	FROM DB_CLASS
 	WHERE  is_system_class = 'NO' AND class_type = 'CLASS'
@@ -35,7 +35,7 @@
 	Default		: 기본값
 	Extra			: 특수컬럼(예: auto_increment)
  -->
-<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.lang.String">
+<select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	show columns FROM $table$
 </select>
 
