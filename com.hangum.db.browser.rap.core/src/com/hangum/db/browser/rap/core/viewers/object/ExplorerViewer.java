@@ -1233,12 +1233,11 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		if(this.userDB.getSeq() != chgUserDB.getSeq()) return;
 		if(tabFolderObject.getSelectionIndex() != 0) return;
 		
+		TableDAO dao = new TableDAO();
+		dao.setName(changeTbName);		
 		if(CHANGE_TYPE.DEL == changeType) {
-			showTables.remove(changeTbName);
+			showTables.remove(dao);
 		} else if(CHANGE_TYPE.INS == changeType) {
-			TableDAO dao = new TableDAO();
-			dao.setName(changeTbName);
-			
 			showTables.add(dao);
 		}
 
