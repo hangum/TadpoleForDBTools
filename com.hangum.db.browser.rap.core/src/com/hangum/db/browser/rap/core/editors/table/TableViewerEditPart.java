@@ -161,7 +161,9 @@ public class TableViewerEditPart extends EditorPart {
 				try {
 					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 					javaConn = client.getDataSource().getConnection();
-					stmt = javaConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+					// sqlite에서는 forward cursor만 지원하여 블럭 처리 
+					stmt = javaConn.createStatement();//ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 					javaConn.setAutoCommit(false);
 
 					String[] querys = SQLTextUtil.delLineChar(getChangeQuery()).split(";"); //$NON-NLS-1$
