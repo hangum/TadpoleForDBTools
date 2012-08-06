@@ -4,6 +4,13 @@
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
+<!-- 
+	jtds 1.2.5버전으로 작업.
+	MSSQL 2008 R2로 작업.
+	이전 버전으로는 테스트 못해봤어요.  - 12.08.07
+	
+	@author hangum	
+ -->
 <sqlMap namespace="MsSQL_query">
 
 <!-- 

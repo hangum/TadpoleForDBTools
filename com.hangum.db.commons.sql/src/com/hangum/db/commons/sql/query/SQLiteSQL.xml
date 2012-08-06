@@ -2,10 +2,14 @@
 
 <!-- 
 
-	http://overoid.tistory.com/19
+	SQLite JDBC 3.7.2 으로 초기 작업시작
+	다른버전으로는 테스트 해보지 못함. - 12.08.07
 
+	http://overoid.tistory.com/19
 	http://www.sqlite.org/faq.html#q7
 	http://stackoverflow.com/questions/6460671/sqlite-schema-information-metadata
+	
+	@author hangum	
  -->
 
 <!DOCTYPE sqlMap      

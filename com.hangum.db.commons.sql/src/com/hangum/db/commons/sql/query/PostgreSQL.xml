@@ -6,7 +6,9 @@
 
 <!-- 
 	PostgreSQL 9.1 버전으로 초기 작업을 시작했습니다.
-	이전 버전으로는 테스트 못해봤어요. 
+	이전 버전으로는 테스트 못해봤어요.  - 12.08.07
+	
+	@author hangum	
  -->
 <sqlMap namespace="POSTGRESQL_query">
 
@@ -14,10 +16,10 @@
 	table 이름
  -->
 <select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
-	SELECT table_name "name" 
-	FROM information_schema.tables
-	where table_schema = 'public' and 
-		table_type = 'BASE TABLE'
+	SELECT a.table_name "name"
+	FROM information_schema.tables a
+	where a.table_schema = 'public' and 
+		a.table_type = 'BASE TABLE'
 	ORDER BY name 
 </select>
 
@@ -33,39 +35,65 @@
 	Extra			: 특수컬럼(예: auto_increment)
  -->
 <select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
-	SELECT column_name AS "FIELD",
-         data_type || '(' || character_maximum_length || ')' AS "TYPE",
-         is_nullable AS "NULL"
-    FROM information_schema.columns 
-    WHERE table_name = #table#
-	ORDER BY ordinal_position 
+	SELECT a.column_name AS "FIELD",
+       a.data_type  "TYPE",
+       a.is_nullable AS "NULL",
+       a.column_default as "Default"  ,
+       (SELECT
+  			tc.constraint_type 
+			FROM 
+   				 information_schema.table_constraints AS tc 
+  				  JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+			WHERE tc.table_name = #table# 
+			AND kcu.column_name = a.column_name) as "key",
+		(
+		SELECT 
+		    pg_catalog.col_description(attrelid, attnum)
+		FROM 
+		    pg_catalog.pg_attribute
+		WHERE 
+		    attrelid = (select oid from pg_catalog.pg_class where relname = #table#) AND 
+		    attname= a.column_name AND 
+		    attnum > 0 AND 
+		    NOT attisdropped
+		)	as "comment"			
+    FROM information_schema.columns a
+    WHERE a.table_name = #table#
+	ORDER BY a.ordinal_position
 </select>
 
 <!-- 
 	테이블간의 관계 목록 정보를 얻습니다.
 	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
-	 SELECT constraint_name,table_name, column_name, referenced_table_name, referenced_column_name
- FROM     information_schema.key_column_usage
- WHERE  referenced_table_name IS NOT NULL
- ORDER BY table_name, column_name;
  -->
 <select id="referencedTableList"  resultClass="com.hangum.db.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
-SELECT constraint_name, table_name, column_name, referenced_table_name, referenced_column_name
- FROM     information_schema.key_column_usage
- WHERE  referenced_table_name IS NOT NULL 		and  
- 		table_name in ($tables$) 				and 
- 		referenced_table_name in ($tables$)
- ORDER BY table_name, column_name;
+ SELECT
+    tc.constraint_name, 
+    tc.table_name, 
+    kcu.column_name, 
+    ccu.table_name AS referenced_table_name,
+    ccu.column_name AS referenced_column_name 
+FROM 
+    information_schema.table_constraints AS tc 
+    JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+    JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+WHERE tc.table_name in ($tables$)
 </select>
 
 <!-- 
 	모든 관계 테이블 목록을 가져옵니다.
  -->
 <select id="referencedTableListALL"  resultClass="com.hangum.db.dao.mysql.ReferencedTableDAO" >
-SELECT constraint_name, table_name, column_name, referenced_table_name, referenced_column_name
- FROM     information_schema.key_column_usage
- WHERE  referenced_table_name IS NOT NULL
- ORDER BY table_name, column_name;
+SELECT
+    tc.constraint_name, 
+    tc.table_name, 
+    kcu.column_name, 
+    ccu.table_name AS referenced_table_name,
+    ccu.column_name AS referenced_column_name 
+FROM 
+    information_schema.table_constraints AS tc 
+    JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+    JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
 </select>
 	
 <!-- 
