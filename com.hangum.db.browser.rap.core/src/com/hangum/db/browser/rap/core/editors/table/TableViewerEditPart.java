@@ -364,7 +364,6 @@ public class TableViewerEditPart extends EditorPart {
 			javaConn = client.getDataSource().getConnection();
 			
 			PreparedStatement stmt = null;
-			if(logger.isDebugEnabled()) logger.debug(requestQuery);
 			stmt = javaConn.prepareStatement(requestQuery);
 			
 			rs = stmt.executeQuery();//Query( selText );
@@ -373,7 +372,7 @@ public class TableViewerEditPart extends EditorPart {
 			ResultSetMetaData  rsm = rs.getMetaData();
 			int columnCount = rsm.getColumnCount();
 			for(int i=0; i<rsm.getColumnCount(); i++) {
-				if(logger.isDebugEnabled()) logger.debug(i + "[type]" + rsm.getColumnClassName(i+1) ); //$NON-NLS-1$
+//				if(logger.isDebugEnabled()) logger.debug(i + "[type]" + rsm.getColumnClassName(i+1) ); //$NON-NLS-1$
 				tableDataTypeList.put(i, rsm.getColumnClassName(i+1));
 			}
 			
