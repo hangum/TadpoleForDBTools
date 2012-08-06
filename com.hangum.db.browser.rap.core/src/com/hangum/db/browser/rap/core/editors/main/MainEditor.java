@@ -873,13 +873,13 @@ public class MainEditor extends EditorPart {
 			Statement stmt = javaConn.createStatement();
 			
 			// mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
-			if(StringUtils.containsAny(selText, "CREATE TABLE")) {
+			if(StringUtils.startsWith(selText.trim().toUpperCase(), "CREATE TABLE")) {
 				selText = StringUtils.replaceOnce(selText, "(", " (");
 			}			
 			boolean boolResult = stmt.execute( selText );
 			
 			// create table, drop table이면 작동하도록			
-			if(StringUtils.containsAny(selText, "CREATE TABLE") || StringUtils.containsAny(selText, "DROP TABLE")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if(StringUtils.startsWith(selText.trim().toUpperCase(), "CREATE TABLE") || StringUtils.startsWith(selText.trim().toUpperCase(), "DROP TABLE")) { //$NON-NLS-1$ //$NON-NLS-2$
 				
 				try {
 					ExplorerViewer.CHANGE_TYPE changeType = ExplorerViewer.CHANGE_TYPE.DEL;

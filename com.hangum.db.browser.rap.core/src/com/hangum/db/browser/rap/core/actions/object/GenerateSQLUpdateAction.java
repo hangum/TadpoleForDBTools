@@ -2,7 +2,9 @@ package com.hangum.db.browser.rap.core.actions.object;
 
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -13,6 +15,7 @@ import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.actions.connections.QueryEditorAction;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.dao.mysql.TableColumnDAO;
+import com.hangum.db.dao.mysql.TableDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.define.Define.DB_ACTION;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
@@ -33,12 +36,16 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 	public void run() {
 		StringBuffer sbSQL = new StringBuffer();
 		try {
-			Object strTBName = sel.getFirstElement();
+			TableDAO tableDAO = (TableDAO)sel.getFirstElement();
+			
+			Map<String, String> parameter = new HashMap<String, String>();
+			parameter.put("db", userDB.getDatabase());
+			parameter.put("table", tableDAO.getName());
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", strTBName); //$NON-NLS-1$
+			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
 			
-			sbSQL.append(" UPDATE " + strTBName + " \r\n SET "); //$NON-NLS-1$ //$NON-NLS-2$
+			sbSQL.append(" UPDATE " + tableDAO.getName() + " \r\n SET "); //$NON-NLS-1$ //$NON-NLS-2$
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				sbSQL.append(dao.getField());

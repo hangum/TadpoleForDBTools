@@ -1,13 +1,14 @@
 package com.hangum.db.browser.rap.core.actions.object;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
@@ -15,6 +16,7 @@ import com.hangum.db.browser.rap.core.actions.connections.QueryEditorAction;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.mysql.TableColumnDAO;
+import com.hangum.db.dao.mysql.TableDAO;
 import com.hangum.db.define.Define.DB_ACTION;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
@@ -33,16 +35,19 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	
 	@Override
 	public void run() {
-		Object strTBName = sel.getFirstElement();
+		TableDAO tableDAO = (TableDAO)sel.getFirstElement();
 		
 		if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
 			StringBuffer sbSQL = new StringBuffer();
 			try {
+				Map<String, String> parameter = new HashMap<String, String>();
+				parameter.put("db", userDB.getDatabase());
+				parameter.put("table", tableDAO.getName());
 				
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", strTBName); //$NON-NLS-1$
+				List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
 				
-				sbSQL.append(" INSERT INTO " + strTBName + " \r\n ("); //$NON-NLS-1$ //$NON-NLS-2$
+				sbSQL.append(" INSERT INTO " + tableDAO.getName() + " \r\n ("); //$NON-NLS-1$ //$NON-NLS-2$
 				for (int i=0; i<showTableColumns.size(); i++) {
 					TableColumnDAO dao = showTableColumns.get(i);
 					sbSQL.append(dao.getField());
@@ -69,7 +74,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 		// mongo db
 		} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
 			
-			NewDocumentDialog dialog = new NewDocumentDialog(Display.getCurrent().getActiveShell(), userDB, strTBName.toString());
+			NewDocumentDialog dialog = new NewDocumentDialog(Display.getCurrent().getActiveShell(), userDB, tableDAO.getName());
 			dialog.open();
 			
 		}

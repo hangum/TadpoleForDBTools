@@ -1,6 +1,8 @@
 package com.hangum.db.browser.rap.core.actions.object;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -16,6 +18,7 @@ import com.hangum.db.browser.rap.core.actions.connections.QueryEditorAction;
 import com.hangum.db.browser.rap.core.viewers.object.ExplorerViewer;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.dao.mysql.TableColumnDAO;
+import com.hangum.db.dao.mysql.TableDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.define.Define.DB_ACTION;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
@@ -47,10 +50,14 @@ public class GenerateSQLSelectAction extends AbstractObjectAction {
 	public void run() {
 		StringBuffer sbSQL = new StringBuffer();
 		try {
-			Object strTBName = sel.getFirstElement();
+			TableDAO tableDAO = (TableDAO)sel.getFirstElement();
+			
+			Map<String, String> parameter = new HashMap<String, String>();
+			parameter.put("db", userDB.getDatabase());
+			parameter.put("table", tableDAO.getName());
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", strTBName); //$NON-NLS-1$
+			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
 			
 			sbSQL.append(" SELECT "); //$NON-NLS-1$
 			for (int i=0; i<showTableColumns.size(); i++) {
@@ -61,7 +68,7 @@ public class GenerateSQLSelectAction extends AbstractObjectAction {
 				if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
 				else sbSQL.append(" "); //$NON-NLS-1$
 			}
-			sbSQL.append("\r\n FROM " + strTBName + Define.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+			sbSQL.append("\r\n FROM " + tableDAO.getName() + Define.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			//
 			QueryEditorAction qea = new QueryEditorAction();
