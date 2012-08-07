@@ -14,6 +14,23 @@
 
 <!-- 
 	table 이름
+	테이블 코멘트 부분 처리를 못해서... 
+	AND relname ~ '^(emp)$' 부분에 AND relname ~ '^(a.table_name)$' 가 들어가야 합니다. 
+	
+	SELECT a.table_name "name", 
+	(
+		SELECT 
+		  pg_catalog.obj_description(oid, 'pg_class') 
+		FROM pg_catalog.pg_class
+		WHERE relkind IN ('r','')
+		  AND relname ~ '^(emp)$'
+		  AND pg_catalog.pg_table_is_visible(oid)
+  	) as "comment"
+	FROM information_schema.tables a
+	where a.table_schema = 'public' and 
+		a.table_type = 'BASE TABLE'
+	ORDER BY name 
+	
  -->
 <select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
 	SELECT a.table_name "name"
