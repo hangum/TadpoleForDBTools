@@ -23,7 +23,7 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IFolderLayout leftUnderFolder = layout.createFolder("id"+ExplorerViewer.ID, IPageLayout.BOTTOM, 0.3f, "id"+ManagerViewer.ID);		
 		leftUnderFolder.addView(ExplorerViewer.ID);
-		leftUnderFolder.addView(IPageLayout.ID_OUTLINE);
+//		leftUnderFolder.addView(IPageLayout.ID_OUTLINE);
 		 
 	}
 }

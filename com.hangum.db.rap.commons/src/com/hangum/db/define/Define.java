@@ -12,6 +12,9 @@ public class Define {
 	/** change resource save */
 	public static final String SAVE_FILE = "CHANGE_TADPOLE_RESOURE";
 	
+	/** erd - select table */
+	public static final String SELECT_ERD_TABLE = "SELECT_ERD_TABLE_RESOURE";
+	
 	/** USER TYPE */
 	public static enum USER_TYPE {ADMIN, MANAGER, USER, GUEST};
 	

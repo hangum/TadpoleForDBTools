@@ -31,25 +31,18 @@ import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
-import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
-import org.eclipse.gef.ui.parts.TreeViewer;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.part.IPageSite;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
@@ -58,10 +51,10 @@ import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.erd.core.Messages;
 import com.hangum.tadpole.erd.core.actions.AutoLayoutAction;
+import com.hangum.tadpole.erd.core.actions.TableSelectionAction;
 import com.hangum.tadpole.erd.core.dnd.TableTransferDropTargetListener;
 import com.hangum.tadpole.erd.core.dnd.TableTransferFactory;
 import com.hangum.tadpole.erd.core.part.TadpoleEditPartFactory;
-import com.hangum.tadpole.erd.core.part.tree.TadpoleTreeEditPartFactory;
 import com.hangum.tadpole.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.erd.stanalone.Activator;
 import com.hangum.tadpole.model.DB;
@@ -170,7 +163,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 							db.setDbType(userDB.getType());
 							db.setId(userDB.getUser());
 							db.setUrl(userDB.getUrl());
-						} else {
+//						} else {
 //							logger.debug("###change event object strat #####################################");
 //							commandStackChanged(new EventObject(""));
 //							logger.debug("###change event object end #####################################");
@@ -246,6 +239,10 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		autoLayoutAction = new AutoLayoutAction(this, getGraphicalViewer());
 		registry.registerAction(autoLayoutAction);
 		getSelectionActions().add(autoLayoutAction.getId());
+		
+		IAction action = new TableSelectionAction(this, getGraphicalViewer());
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
 	}
 
 	@Override
@@ -273,7 +270,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 			ResourceSet resourceSet = new ResourceSetImpl();
 			
 			String loadFile = Define.ERD_FILE_LOCATION + userDBErd.getFilepath() + userDBErd.getFilename() + ".erd"; //$NON-NLS-1$
-			logger.debug("#### [load erd]####" + loadFile); //$NON-NLS-1$
+			if(logger.isDebugEnabled()) logger.debug("#### [load erd]####" + loadFile); //$NON-NLS-1$
 			if(new File(loadFile).exists()) {
 				dbResource = resourceSet.createResource(URI.createURI(loadFile));
 		      
@@ -386,9 +383,9 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 			return ((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
 		}
  
-		if(type == IContentOutlinePage.class) {
-			return new OutlinePage();
-		}
+//		if(type == IContentOutlinePage.class) {
+//			return new OutlinePage();
+//		}
 		
 		return super.getAdapter(type);
 	}
@@ -424,79 +421,79 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		
 	}
 	
-	/**
-	 * outline page
-	 * @author hangum
-	 *
-	 */
-	protected class OutlinePage extends ContentOutlinePage {
-		private SashForm sash;
-//		private ScrollableThumbnail thumbnail;
-//		private DisposeListener disposeListener;
-		
-		public OutlinePage() {
-			super(new TreeViewer());
-		}
-		
-		@Override
-		public void createControl(Composite parent) {
-			sash = new SashForm(parent, SWT.VERTICAL);
-			
-			getViewer().createControl(sash);
-			getViewer().setEditDomain(getEditDomain());
-			getViewer().setEditPartFactory(new TadpoleTreeEditPartFactory());
-			getViewer().setContents(db);
-			getSelectionSynchronizer().addViewer(getViewer());
-
+//	/**
+//	 * outline page
+//	 * @author hangum
+//	 *
+//	 */
+//	protected class OutlinePage extends ContentOutlinePage {
+//		private SashForm sash;
+////		private ScrollableThumbnail thumbnail;
+////		private DisposeListener disposeListener;
+//		
+//		public OutlinePage() {
+//			super(new TreeViewer());
+//		}
+//		
+//		@Override
+//		public void createControl(Composite parent) {
+//			sash = new SashForm(parent, SWT.VERTICAL);
 //			
-			// thumbnail 백그라운드가 검은색으로 나와서 주석으로 막습니다. ( http://hangumkj.blogspot.com/2012/02/rap-gef-port.html )
+//			getViewer().createControl(sash);
+//			getViewer().setEditDomain(getEditDomain());
+//			getViewer().setEditPartFactory(new TadpoleTreeEditPartFactory());
+//			getViewer().setContents(db);
+//			getSelectionSynchronizer().addViewer(getViewer());
+//
+////			
+//			// thumbnail 백그라운드가 검은색으로 나와서 주석으로 막습니다. ( http://hangumkj.blogspot.com/2012/02/rap-gef-port.html )
+////			
+////			Canvas canvas = new Canvas(sash, SWT.BORDER);
+////			LightweightSystem lws = new LightweightSystem(canvas);
+////			
+////			thumbnail = new ScrollableThumbnail((Viewport)((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getFigure());
+////			thumbnail.setSource(((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getLayer(LayerConstants.PRINTABLE_LAYERS));
+////			lws.setContents(thumbnail);
+////			
+////			disposeListener = new DisposeListener() {
+////				
+////				@Override
+////				public void widgetDisposed(DisposeEvent event) {
+////					if(thumbnail != null) {
+////						thumbnail.deactivate();
+////						thumbnail = null;
+////					}
+////				}
+////			};
+////			getGraphicalViewer().getControl().addDisposeListener(disposeListener);
 //			
-//			Canvas canvas = new Canvas(sash, SWT.BORDER);
-//			LightweightSystem lws = new LightweightSystem(canvas);
+//		}
+//		
+//		@Override
+//		public void init(IPageSite pageSite) {
+//			super.init(pageSite);
 //			
-//			thumbnail = new ScrollableThumbnail((Viewport)((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getFigure());
-//			thumbnail.setSource(((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getLayer(LayerConstants.PRINTABLE_LAYERS));
-//			lws.setContents(thumbnail);
+//			IActionBars bars = getSite().getActionBars();
+//			bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getActionRegistry().getAction(ActionFactory.UNDO.getId()));
+//			bars.setGlobalActionHandler(ActionFactory.REDO.getId(), getActionRegistry().getAction(ActionFactory.REDO.getId()));
+//			bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
+//			bars.updateActionBars();
 //			
-//			disposeListener = new DisposeListener() {
-//				
-//				@Override
-//				public void widgetDisposed(DisposeEvent event) {
-//					if(thumbnail != null) {
-//						thumbnail.deactivate();
-//						thumbnail = null;
-//					}
-//				}
-//			};
-//			getGraphicalViewer().getControl().addDisposeListener(disposeListener);
-			
-		}
-		
-		@Override
-		public void init(IPageSite pageSite) {
-			super.init(pageSite);
-			
-			IActionBars bars = getSite().getActionBars();
-			bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getActionRegistry().getAction(ActionFactory.UNDO.getId()));
-			bars.setGlobalActionHandler(ActionFactory.REDO.getId(), getActionRegistry().getAction(ActionFactory.REDO.getId()));
-			bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
-			bars.updateActionBars();
-			
-			getViewer().setKeyHandler(keyHandler);
-		}
-		
-		@Override
-		public Control getControl() {
-			return sash;
-		}
-		
-		@Override
-		public void dispose() {
-			getSelectionSynchronizer().removeViewer(getViewer());
-//			if(getGraphicalViewer().getControl() != null && !getGraphicalViewer().getControl().isDisposed())
-//				getGraphicalViewer().getControl().removeDisposeListener(disposeListener);
-			
-			super.dispose();
-		}
-	}
+//			getViewer().setKeyHandler(keyHandler);
+//		}
+//		
+//		@Override
+//		public Control getControl() {
+//			return sash;
+//		}
+//		
+//		@Override
+//		public void dispose() {
+//			getSelectionSynchronizer().removeViewer(getViewer());
+////			if(getGraphicalViewer().getControl() != null && !getGraphicalViewer().getControl().isDisposed())
+////				getGraphicalViewer().getControl().removeDisposeListener(disposeListener);
+//			
+//			super.dispose();
+//		}
+//	}
 }

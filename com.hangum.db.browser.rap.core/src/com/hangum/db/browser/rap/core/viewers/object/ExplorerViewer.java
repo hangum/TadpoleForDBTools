@@ -12,6 +12,8 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -20,6 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -281,6 +284,27 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		
 		// 왼쪽 트리에서 데이터 받았는지.
 		getSite().getPage().addSelectionListener(ManagerViewer.ID, managementViewerListener);
+		
+		// erd table에 선택되었을때.. 
+		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+
+				if(event.getProperty() ==  Define.SELECT_ERD_TABLE) {
+					String tableName = event.getNewValue().toString();
+					if(tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
+					
+					Table table = tableListViewer.getTable();
+					for(int i=0; i<table.getItemCount(); i++) {
+						if(tableName.equals( table.getItem(i).getText(0) )) {
+							tableListViewer.setSelection(new StructuredSelection(tableListViewer.getElementAt(i)),true);
+						}
+						
+					}					
+				}	// end if(event.getProperty()
+				
+			}	//
+		});	// end property change
 	}
 	
 	/**
