@@ -68,7 +68,7 @@ License
 -
 * EPL(Eclipse Public License)
 
-Contacts
+Contact
 -
 * Email: adi.tadpole@gmail.com
 * site : https://sites.google.com/site/tadpolefordb/
