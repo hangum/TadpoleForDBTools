@@ -7,9 +7,8 @@
 		<!-- Note if running this standalone you will need to copy requirejs from bundles/org.eclipse.orion.client.core/web/ -->
 		
 		<!-- download(hangum) :  http://code.google.com/p/xoomla/downloads/detail?name=dojo.xd.js&can=2&q=  -->
-		<!--  http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js  -->
-		<script type="text/javascript" src="dojo.xd.js"></script>
-		
+		<!--  http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js  -->		
+		<script src="dojo.xd.js"></script>		
 		<script src="../../requirejs/require.js"></script>
 		<script type="text/javascript">
 			require({
@@ -20,7 +19,7 @@
 			      domReady: 'requirejs/domReady'
 			  }
 			});
-			require(["embeddededitor.js"]);
+			require(["embeddededitor.js"]);			
 		</script>
    </head>
 

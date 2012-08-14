@@ -194,9 +194,15 @@ function initEmbeddedEditor(){
 //				dirtyIndicator = "";
 //				console.log("[2]dirty changed event saved");
 			}
-		});
-		
+		});		
 		editor.installTextView();
+		
+		try {
+			editorService.getInitialContent();
+		} catch(err) {
+			console.log("[error msg]" + err);
+		}
+		
 		contentAssist.addEventListener("Activating", function() {
 			contentAssist.setProviders([sqlContentAssistProvider]);
 		});
@@ -241,6 +247,8 @@ dojo.addOnLoad(function() {
 			
 			syntaxHighlighter.highlight(varExt, editor);
 			editor.highlightAnnotations();
+			
+			editor.setTextFocus();
 //
 //			console.log("==> 5 ending ");
 		};

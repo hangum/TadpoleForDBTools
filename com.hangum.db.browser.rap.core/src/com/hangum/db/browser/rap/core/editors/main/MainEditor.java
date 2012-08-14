@@ -350,9 +350,9 @@ public class MainEditor extends EditorPart {
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
 	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	    
-	    browserQueryEditor.setText("about:blank"); //$NON-NLS-1$
-	    addBrowserHandler();
+//	    browserQueryEditor.setText("about:blank"); //$NON-NLS-1$
 	    browserQueryEditor.setUrl(URL);
+	    addBrowserHandler();
 		
 		createStatusLine();
 		
@@ -675,14 +675,17 @@ public class MainEditor extends EditorPart {
 	 * brower handler
 	 */
 	private void addBrowserHandler() {
-		 browserQueryEditor.addProgressListener( new ProgressListener() {
-		      public void completed( ProgressEvent event ) {
-		    	  browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
-		      }
-		      public void changed( ProgressEvent event ) {}
-		 });
-		 
-		 registerBrowserFunctions();
+		browserQueryEditor.addProgressListener( new ProgressListener() {
+			public void completed( ProgressEvent event ) {
+				try {
+					registerBrowserFunctions();
+					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
+				} catch(Exception e) {
+					logger.error("set register browser function and content initialize", e);
+				}
+			}
+			public void changed( ProgressEvent event ) {}
+		});
 	}
 	
 	private void registerBrowserFunctions() {
@@ -1279,7 +1282,7 @@ public class MainEditor extends EditorPart {
 	
 	@Override
 	public void setFocus() {
-		setOrionTextFocus();
+//		setOrionTextFocus();
 	}
 	
 	/**
