@@ -1,0 +1,29 @@
+.dark {
+	color: gray;
+	font-size: 12pt;
+}
+
+.dark .textview {
+	background-color: #202020;
+}
+
+.dark .ruler {
+	color: white;
+	background-color: #505050;
+}
+
+.dark .token_doc_comment {
+	color: magenta;
+}
+
+.dark .line_caret {
+	background-color: #fefefe;
+}
+
+.dark .annotationLine.currentLine {
+	background-color: #fefefe;
+}
+
+.dark .annotationRange.task {
+	color: magenta;
+}

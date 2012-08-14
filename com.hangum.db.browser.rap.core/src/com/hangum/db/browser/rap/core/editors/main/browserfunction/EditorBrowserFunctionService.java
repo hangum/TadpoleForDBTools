@@ -42,8 +42,8 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			case DIRTY_CHANGED:
 				return doDirtyChanged(arguments);
 				
-			case GET_CONTENT_NAME:
-				return doGetContentName(arguments);
+//			case GET_CONTENT_NAME:
+//				return doGetContentName(arguments);
 
 			case GET_INITIAL_CONTENT:
 				return doGetInitialContent(arguments);
@@ -91,20 +91,36 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 	}
 	
 	private Object doGetInitialContent(Object[] arguments) {
-		return editor.getOrionText();
+		String extension = "";
+		
+		if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MYSQL_DEFAULT) {
+			extension = editor.getEditorInput().getName() + ".mysql";
+		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.ORACLE_DEFAULT) {
+			extension = editor.getEditorInput().getName() + ".oracle";
+		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MSSQL_DEFAULT) {
+			extension = editor.getEditorInput().getName() + ".mssql";
+		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.SQLite_DEFAULT) {
+			extension = editor.getEditorInput().getName() + ".sqlite";
+		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.CUBRID_DEFAULT) {
+			extension = editor.getEditorInput().getName() + ".mysql";
+		} else {
+			extension = editor.getEditorInput().getName() + ".postgresql";
+		}
+		
+		return extension + ":ext:" + editor.getOrionText();
 	}
 	
-	private Object doGetContentName(Object[] arguments) {
-		if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MYSQL_DEFAULT) {
-			return editor.getEditorInput().getName() + ".mysql";
-		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.ORACLE_DEFAULT) {
-			return editor.getEditorInput().getName() + ".oracle";
-		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MSSQL_DEFAULT) {
-			return editor.getEditorInput().getName() + ".mssql";
-		} else {
-			return editor.getEditorInput().getName() + ".sqlite";
-		}
-	}
+//	private Object doGetContentName(Object[] arguments) {
+//		if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MYSQL_DEFAULT) {
+//			return editor.getEditorInput().getName() + ".mysql";
+//		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.ORACLE_DEFAULT) {
+//			return editor.getEditorInput().getName() + ".oracle";
+//		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MSSQL_DEFAULT) {
+//			return editor.getEditorInput().getName() + ".mssql";
+//		} else {
+//			return editor.getEditorInput().getName() + ".sqlite";
+//		}
+//	}
 
 	private boolean doStatusChanged(Object[] arguments) {
 		if (arguments.length != 2 || !(arguments[1] instanceof String)) {
@@ -154,6 +170,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 		if (arguments.length == 2 && (arguments[1] instanceof Boolean)) {
 			editor.setDirty((Boolean) arguments[1]);
 		}
+		
 		return editor.isDirty();
 	}
 	

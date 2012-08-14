@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -7,193 +8,169 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Mihai Sucan (Mozilla Foundation) - fix for bug 350636
  *******************************************************************************/
  
- /*globals window define document navigator setTimeout XMLHttpRequest PerformanceTest */
+/*globals define window document setTimeout */
+
+
+define(['tadpole/textview/demoSetup', 'tests/textview/test-performance'],   
  
- 
-function log (text) {
-	var console = window.document.getElementById('console');
-	if (!console) { return; }
-	for (var n = 1; n < arguments.length; n++) {
-		text += " ";
-		text += arguments[n];
-	}
-	
-	var document = console.contentWindow.document;
-	var t = document.createTextNode(text);
-	document.body.appendChild(t);
-	var br = document.createElement("br");
-	document.body.appendChild(br);
-	if (!console.scroll) {
-		console.scroll = true;
-		setTimeout(function() {
-			document.body.lastChild.scrollIntoView(false);
-			console.scroll = false;
-		}, 0);
-	}
-}
- 
- define(["orion/textview/keyBinding",
-		"orion/textview/textModel", 
-		"orion/textview/textView", 
-		"orion/textview/rulers",
-		"orion/textview/undoStack",
-		"tadpole/textview/textStyler",
-		"tests/textview/test-performance"],   
- 
-function(mKeyBinding, mTextModel, mTextView, mRulers, mUndoStack, mTextStyler) {
-	var view = null;
-	var styler = null;
-	var isMac = navigator.platform.indexOf("Mac") !== -1;
-	
-	function clearLog () {
+function(mSetup, mTestPerformance) {
+
+	function clearConsole () {
 		var console = window.document.getElementById('console');
 		if (!console) { return; }
-		var document = console.contentWindow.document;
-		var body = document.body;
-		while (body.hasChildNodes()) { body.removeChild(body.lastChild); }
+		while (console.hasChildNodes()) { console.removeChild(console.lastChild); }
 	}
 	
-	function getFile(file) {
-		try {
-			var objXml = new XMLHttpRequest();
-			objXml.open("GET",file,false);
-			objXml.send(null);
-			return objXml.responseText;
-		} catch (e) {
-			return null;
+	function showConsole () {
+		var console = window.document.getElementById('console');
+		if (!console) { return; }
+		var consoleCol = window.document.getElementById('consoleCol');
+		var consoleHeader = window.document.getElementById('consoleHeader');
+		var consoleActions = window.document.getElementById('consoleActions');
+		consoleCol.style.display = consoleHeader.style.display = consoleActions.style.display = "block";
+		if (mSetup.view) { mSetup.view.resize(); }
+	}
+	
+	function hideConsole () {
+		var console = window.document.getElementById('console');
+		if (!console) { return; }
+		var consoleCol = window.document.getElementById('consoleCol');
+		var consoleHeader = window.document.getElementById('consoleHeader');
+		var consoleActions = window.document.getElementById('consoleActions');
+		consoleCol.style.display = consoleHeader.style.display = consoleActions.style.display = "none";
+		if (mSetup.view) { mSetup.view.resize(); }
+	}
+	
+	function log (text) {
+		var console = window.document.getElementById('console');
+		if (!console) { return; }
+		showConsole();
+		for (var n = 1; n < arguments.length; n++) {
+			text += " ";
+			text += arguments[n];
 		}
+		console.appendChild(document.createTextNode(text));
+		console.appendChild(document.createElement("br"));
+		console.scrollTop = console.scrollHeight;
+	}
+	window.log = log;
+
+	var bCreateJava = document.getElementById("createJavaSample");
+	var bCreateJS = document.getElementById("createJavaScriptSample");
+	var bCreateHTML = document.getElementById("createHtmlSample");
+	var bCreatePlain = document.getElementById("createPlainTextSample");
+	var bCreateBidi = document.getElementById("createBidiTextSample");
+	var bCreateLoad = document.getElementById("createLoad");
+	var sLangSelect = document.getElementById("langSelect");
+	var tURLContent = document.getElementById("urlContent");
+	var bSetOptions = document.getElementById("setOptions");
+	var bClearLog = document.getElementById("clearLog");
+	var bHideLog = document.getElementById("hideLog");
+	var bTest = document.getElementById("test");
+	var bPerform = document.getElementById("performanceTest");
+	var sPerform = document.getElementById("performanceTestSelect");
+	var sTheme = document.getElementById("themeSelect");
+	var bReadOnly = document.getElementById('readOnly');
+	var bFullSel = document.getElementById('fullSelection');
+	var bExpandTab = document.getElementById('expandTab');
+	var sTabSize = document.getElementById('tabSize');
+	
+	function getOptions() {
+		return {
+			readonly: bReadOnly.checked,
+			fullSelection: bFullSel.checked,
+			expandTab: bExpandTab.checked,
+			tabSize: parseInt(sTabSize.value, 10),
+			themeClass: sTheme.value
+		};
 	}
 	
-	function checkView() {
-		if (view) { return; }
-		var stylesheets = [
-			"/orion/textview/textview.css",
-			"/orion/textview/rulers.css",
-			"/examples/textview/textstyler.css"
-		];
-		var options = {
-			parent: "divParent",
-			model: new mTextModel.TextModel(),
-			stylesheet: stylesheets,
-			tabSize: 4
-		};
-		view = new mTextView.TextView(options);
-		
-		/* Undo stack */
-		var undoStack = new mUndoStack.UndoStack(view, 200);
-		view.setKeyBinding(new mKeyBinding.KeyBinding('z', true), "undo");
-		view.setAction("undo", function() {
-			undoStack.undo();
-			return true;
-		});
-		view.setKeyBinding(isMac ? new mKeyBinding.KeyBinding('z', true, true) : new mKeyBinding.KeyBinding('y', true), "redo");
-		view.setAction("redo", function() {
-			undoStack.redo();
-			return true;
-		});
-		
-		/* Example: Adding a keyBinding and action*/
-		view.setKeyBinding(new mKeyBinding.KeyBinding('s', true), "save");
-		view.setAction("save", function() {
-			log("*****************SAVE");
-			return true;
-		});
-	
-		/* Adding the Rulers */	
-		var breakpoint = {
-			html: "<img src='images/brkp_obj.gif'></img>",
-			style: {styleClass: "ruler_annotation_breakpoint"},
-			overviewStyle: {styleClass: "ruler_annotation_breakpoint_overview"}
-		};
-		var todo = {
-			html: "<img src='images/todo.gif'></img>",
-			style: {styleClass: "ruler_annotation_todo"},
-			overviewStyle: {styleClass: "ruler_annotation_todo_overview"}
-		};
-		var annotation = new mRulers.AnnotationRuler("left", {styleClass: "ruler_annotation"}, breakpoint);
-		annotation.onDblClick =  function(lineIndex, e) {
-			if (lineIndex === undefined) { return; }
-			annotation.setAnnotation(lineIndex, annotation.getAnnotation(lineIndex) !== undefined ? undefined : e.ctrlKey ? todo : breakpoint);
-		};
-		var lines = new mRulers.LineNumberRuler("left", {styleClass: "ruler_lines"}, {styleClass: "ruler_lines_odd"}, {styleClass: "ruler_lines_even"});
-		lines.onDblClick = annotation.onDblClick;
-		var overview = new mRulers.OverviewRuler("right", {styleClass: "ruler_overview"}, annotation);
-		view.addRuler(annotation);
-		view.addRuler(lines);
-		view.addRuler(overview);
+	function updateOptions() {
+		var view = mSetup.view;
+		var options = view.getOptions();
+		bReadOnly.checked = options.readonly;
+		bFullSel.checked = options.fullSelection;
+		bExpandTab.checked = options.expandTab;
+		sTabSize.value = options.tabSize;
+		sTheme.value = options.themeClass;
+	}
+
+	function setOptions() {
+		var view = mSetup.checkView(getOptions());
+		view.focus();
+		updateOptions();
+	}
+
+	function setupView(text, lang) {
+		var view = mSetup.setupView(text, lang, getOptions());
+		view.focus();
+		updateOptions();
+		return view;
 	}
 	
 	function createJavaSample() {
-		checkView();
-		var file =  getFile("text.txt");
-		if (styler) {
-			styler.destroy();
-			styler = null;
-		}
-		styler = new mTextStyler.TextStyler(view, "java");
-		view.setText(file);
+		return setupView(mSetup.getFile("text.txt"), "java");
 	}
 	
 	function createJavaScriptSample() {
-		checkView();
-		var file =  getFile("/orion/textview/textview.js");
-		if (styler) {
-			styler.destroy();
-			styler = null;
-		}
-		styler = new mTextStyler.TextStyler(view, "js");
-		view.setText(file);
+		return setupView(mSetup.getFile("/orion/textview/textView.js"), "js");
+	}
+
+	function createHtmlSample() {
+		return setupView(mSetup.getFile("/tadpole/textview/demo.html"), "html");
 	}
 	
 	function createPlainTextSample() {
-		checkView();
 		var lineCount = 50000;
 		var lines = [];
 		for(var i = 0; i < lineCount; i++) {
 			lines.push("This is the line of text number "+i);
 		}
-		if (styler) {
-			styler.destroy();
-			styler = null;
-		}
-		view.setText(lines.join("\r\n"));
+		return setupView(lines.join("\r\n"), null);
 	}
 	
 	function createBidiTextSample() {
-		checkView();
 		var lines = [];
 		lines.push("Hello \u0644\u0645\u0646\u0647");
-		if (styler) {
-			styler.destroy();
-			styler = null;
-		}
-		view.setText(lines.join("\r\n"));
+		return setupView(lines.join("\r\n"), null);
 	}
 	
+	function createLoad() {
+		var text = tURLContent.value ? mSetup.getFile(tURLContent.value) : "";
+		return setupView(text, sLangSelect.value);
+	}
+
 	function test() {
+		log("test");
 	}
 	
 	function performanceTest() {
-		checkView();
-		if (styler) {
-			styler.destroy();
-			styler = null;
-		}
-		/* Note: PerformanceTest is not using require js */
-		var test = new PerformanceTest(view);
-		var select = document.getElementById("performanceTestSelect");
-		test[select.value]();
+		mTestPerformance[sPerform.value]();
 	}
-
+	
 	/* Adding events */
-	document.getElementById("createJavaSample").onclick = createJavaSample;
-	document.getElementById("createJavaScriptSample").onclick = createJavaScriptSample;
-	document.getElementById("createPlainTextSample").onclick = createPlainTextSample;
-	document.getElementById("createBidiTextSample").onclick = createBidiTextSample;
-	document.getElementById("clearLog").onclick = clearLog;
-	document.getElementById("test").onclick = test;
-	document.getElementById("performanceTest").onclick = performanceTest;
-		 
+	bCreateJava.onclick = createJavaSample;
+	bCreateJS.onclick = createJavaScriptSample;
+	bCreateHTML.onclick = createHtmlSample;
+	bCreatePlain.onclick = createPlainTextSample;
+	bCreateBidi.onclick = createBidiTextSample;
+	bCreateLoad.onclick = createLoad;
+	bSetOptions.onclick = setOptions;
+	bClearLog.onclick = clearConsole;
+	bHideLog.onclick = hideConsole;
+	bTest.onclick = test;
+	bPerform.onclick = performanceTest;
+	var prefix = "test";
+	mTestPerformance.noDojo = true;
+	for (var property in mTestPerformance) {
+		if (property.indexOf(prefix) === 0) {
+			var option = document.createElement("OPTION");
+			option.setAttribute("value", property);
+			option.appendChild(document.createTextNode(property.substring(prefix.length	)));
+			sPerform.appendChild(option);
+		}
+	}
  });

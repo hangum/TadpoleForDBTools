@@ -1,0 +1,19 @@
+.orion {
+	color: black;
+}
+
+.orion .textview {
+	background-color: #ffd400;
+}
+
+.orion .ruler {
+	background-color: #ededed;
+}
+
+.orion .line_caret {
+	background-color: #fcffca;
+}
+
+.orion .annotationLine.currentLine {
+	background-color: #fcffca;
+}

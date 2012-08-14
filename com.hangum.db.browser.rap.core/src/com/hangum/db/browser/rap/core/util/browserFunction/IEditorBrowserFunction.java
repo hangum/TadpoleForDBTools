@@ -11,7 +11,7 @@ public interface IEditorBrowserFunction {
 	public static final String CARET_QUERY_DELIMIT = "-tadpole-del-";
 	
 	public static final int DIRTY_CHANGED 			= 1;
-	public static final int GET_CONTENT_NAME 		= 5;
+//	public static final int GET_CONTENT_NAME 		= 5;
 	public static final int GET_INITIAL_CONTENT 	= 10;
 	
 	public static final int SAVE 					= 15;
@@ -37,6 +37,9 @@ public interface IEditorBrowserFunction {
     
     /** 자바 스크립트 초기화 */
     public static final String JAVA_SCRIPT_INIT_EMBEDDED_EDITOR = "initEmbeddedEditor()";
+    
+    /** init container */
+    public static final String JAVA_SCRIPT_GET_INITCONTAINER = EDITOR_SERVICE_MAP + ".getInitialContent()";
     
     /** 저장 */
     public static final String JAVA_SCRIPT_SAVE_FUNCTION = "return " + EDITOR_SERVICE_MAP + ".save()";

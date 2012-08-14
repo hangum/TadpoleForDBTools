@@ -1,54 +1,31 @@
 <!doctype html>
-<html style="height: 100%">
+<html style="height: 100%;">
     <head>
-		<meta name="copyright" content="Copyright (c) IBM Corporation and others 2010." >
 		<meta http-equiv="Content-Language" content="en-us">
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    	<title>Embedded Orion Editor</title>
-    	<link rel="stylesheet" type="text/css" href="embeddededitor.css" />
-    	<!--  hide right side scroll -->
-    	<style type='text/css'>
-        <!--
-              body {
-                    background-color: #000000; overflow: hidden; margin-top:0; margin-left:0; 
-              }
-        -->
-        </style>
+		<link rel="stylesheet" type="text/css" href="embeddededitor.css" />
+		<!-- Note if running this standalone you will need to copy requirejs from bundles/org.eclipse.orion.client.core/web/ -->
 		
+		<!-- download(hangum) :  http://code.google.com/p/xoomla/downloads/detail?name=dojo.xd.js&can=2&q=  -->
+		<!--  http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js  -->
+		<script type="text/javascript" src="dojo.xd.js"></script>
+		
+		<script src="../../requirejs/require.js"></script>
 		<script type="text/javascript">
-			var djConfig = {
-				isDebug:false,
-				parseOnLoad:true
-			};
+			require({
+			  baseUrl: '../..',
+			  paths: {
+				  text: 'requirejs/text',
+				  i18n: 'requirejs/i18n',
+			      domReady: 'requirejs/domReady'
+			  }
+			});
+			require(["embeddededitor.js"]);
 		</script>
-		<script>
-			// temporary
-	    	var __originalDefine = window.define;
-	    </script>
-	    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js"></script>
-		<script>
-			// temporary
-	    	window.define = __originalDefine;
-	    </script>  
-
-		<!-- Web Editor -->
-		<script src="../../orion/textview/keyBinding.js"></script>
-		<script src="../../orion/textview/textModel.js"></script>
-		<script src="../../orion/textview/textView.js"></script>
-		<script src="../../orion/textview/rulers.js"></script>
-		<script src="../../orion/textview/undoStack.js"></script>
-		<script src="../../tadpole/textview/textStyler.js"></script>
-	 	<script src="../../orion/editor/editorFeatures.js"></script>
-	 	<script src="../../orion/editor/contentAssist.js"></script>
-	 	<script src="../../orion/editor/htmlGrammar.js"></script>
-	 	<script src="../../orion/editor/textMateStyler.js"></script>
-	 	<script src="../../orion/editor/webContentAssist.js"></script>
-	 	<script src="../../orion/editor/editor.js"></script>
-		<script src="../../../editorService/embeddededitor.js"></script>
    </head>
 
-	<body class="nihilo" style="margin: 0px; width: 100%; height: 100%">
-	    <div id="editor" style="width: 100%; height: 100%"></div>
-		<!-- div id="contentassist" class="contentassist"></div>  -->
+	<body class="claro" style="width: 100%; height: 100%;">
+	    <div id="editor" style="width: 100%; height: 100%;"></div>
+		<div id="contentassist" class="contentassist"></div>
 	</body>
 </html>

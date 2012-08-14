@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -6,14 +7,12 @@
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
+ *               Alex Lakatos - fix for bug#369781
  ******************************************************************************/
 
-/*global document window navigator */
+/*global document window navigator define */
 
-var examples = examples || {};
-examples.textview = examples.textview || {};
-
-examples.textview.TextStyler = (function() {
+define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(mAnnotations) {
 
 	var MYSQL_KEYWORDS =
 		[
@@ -287,230 +286,468 @@ examples.textview.TextStyler = (function() {
 		"LIKE"
 		 ];
 
-	var CSS_KEYWORDS =
-		["color", "text-align", "text-indent", "text-decoration", 
-		 "font", "font-style", "font-family", "font-weight", "font-size", "font-variant", "line-height",
-		 "background", "background-color", "background-image", "background-position", "background-repeat", "background-attachment",
-		 "list-style", "list-style-image", "list-style-position", "list-style-type", 
-		 "outline", "outline-color", "outline-style", "outline-width",
-		 "border", "border-left", "border-top", "border-bottom", "border-right", "border-color", "border-width", "border-style",
-		 "border-bottom-color", "border-bottom-style", "border-bottom-width",
-		 "border-left-color", "border-left-style", "border-left-width",
-		 "border-top-color", "border-top-style", "border-top-width",
-		 "border-right-color", "border-right-style", "border-right-width",
-		 "padding", "padding-left", "padding-top", "padding-bottom", "padding-right",
-		 "margin", "margin-left", "margin-top", "margin-bottom", "margin-right",
-		 "width", "height", "left", "top", "right", "bottom",
-		 "min-width", "max-width", "min-height", "max-height",
-		 "display", "visibility",
-		 "clip", "cursor", "overflow", "overflow-x", "overflow-y", "position", "z-index",
-		 "vertical-align", "horizontal-align",
-		 "float", "clear"
-		];
-
 	// Scanner constants
 	var UNKOWN = 1;
 	var KEYWORD = 2;
-	var STRING = 3;
-	var COMMENT = 4;
-	var WHITE = 5;
-	var WHITE_TAB = 6;
-	var WHITE_SPACE = 7;
+	var NUMBER = 3;
+	var STRING = 4;
+	var MULTILINE_STRING = 5;
+	var SINGLELINE_COMMENT = 6;
+	var MULTILINE_COMMENT = 7;
+	var DOC_COMMENT = 8;
+	var WHITE = 9;
+	var WHITE_TAB = 10;
+	var WHITE_SPACE = 11;
+	var HTML_MARKUP = 12;
+	var DOC_TAG = 13;
+	var TASK_TAG = 14;
 
 	// Styles 
-	var isIE = document.selection && window.ActiveXObject && /MSIE/.test(navigator.userAgent) ? document.documentMode : undefined;
-	var commentStyle = {styleClass: "token_comment"};
-	var javadocStyle = {styleClass: "token_javadoc"};
+	var singleCommentStyle = {styleClass: "token_singleline_comment"};
+	var multiCommentStyle = {styleClass: "token_multiline_comment"};
+	var docCommentStyle = {styleClass: "token_doc_comment"};
+	var htmlMarkupStyle = {styleClass: "token_doc_html_markup"};
+	var tasktagStyle = {styleClass: "token_task_tag"};
+	var doctagStyle = {styleClass: "token_doc_tag"};
 	var stringStyle = {styleClass: "token_string"};
+	var numberStyle = {styleClass: "token_number"};
 	var keywordStyle = {styleClass: "token_keyword"};
 	var spaceStyle = {styleClass: "token_space"};
 	var tabStyle = {styleClass: "token_tab"};
-	var bracketStyle = {styleClass: isIE < 9 ? "token_bracket" : "token_bracket_outline"};
 	var caretLineStyle = {styleClass: "line_caret"};
 	
-	var Scanner = (function() {
-		function Scanner (keywords, whitespacesVisible) {
-			this.keywords = keywords;
-			this.whitespacesVisible = whitespacesVisible;
-			this.setText("");
-		}
-		
-		Scanner.prototype = {
-			getOffset: function() {
-				return this.offset;
-			},
-			getStartOffset: function() {
-				return this.startOffset;
-			},
-			getData: function() {
-				return this.text.substring(this.startOffset, this.offset).toLowerCase();
-			},
-			getDataLength: function() {
-				return this.offset - this.startOffset;
-			},
-			_read: function() {
-				if (this.offset < this.text.length) {
-					return this.text.charCodeAt(this.offset++);
-				}
-				return -1;
-			},
-			_unread: function(c) {
-				if (c !== -1) { this.offset--; }
-			},
-			nextToken: function() {
-				this.startOffset = this.offset;
-				while (true) {
-					var c = this._read();
-					switch (c) {
-						case -1: return null;
-						case 47:	// SLASH -> comment
+	var rulerStyle = {styleClass:"ruler"};
+	var rulerAnnotationsStyle = {styleCLass:"ruler.annotations"};
+	var rulerFoldingStyle = {styleClass:"ruler.lines"};
+	var rulerOverviewStyle = {styleClass:"ruler.overview"};
+	var rulerLinesStyle = {styleCLass:"rulerLines"};
+	var rulerLinesEvenStyle = {styleClass:"rulerLines.even"};
+	var rulerLinesOddStyle = {styleClass:"rulerLines.odd"};
+	
+	function Scanner (keywords, whitespacesVisible) {
+		this.keywords = keywords;
+		this.whitespacesVisible = whitespacesVisible;
+		this.setText("");
+	}
+	
+	Scanner.prototype = {
+		getOffset: function() {
+			return this.offset;
+		},
+		getStartOffset: function() {
+			return this.startOffset;
+		},
+		getData: function() {
+			/** convert the text lowcase - hangum */
+			return this.text.substring(this.startOffset, this.offset).toLowerCase();
+		},
+		getDataLength: function() {
+			return this.offset - this.startOffset;
+		},
+		_default: function(c) {
+			switch (c) {
+				case 32: // SPACE
+				case 9: // TAB
+					if (this.whitespacesVisible) {
+						return c === 32 ? WHITE_SPACE : WHITE_TAB;
+					}
+					do {
+						c = this._read();
+					} while(c === 32 || c === 9);
+					this._unread(c);
+					return WHITE;
+				case 123: // {
+				case 125: // }
+				case 40: // (
+				case 41: // )
+				case 91: // [
+				case 93: // ]
+				case 60: // <
+				case 62: // >
+					// BRACKETS
+					return c;
+				default:
+					var isCSS = this.isCSS;
+					var off = this.offset - 1;
+					if (!isCSS && 48 <= c && c <= 57) {
+						var floating = false, exponential = false, hex = false, firstC = c;
+						do {
 							c = this._read();
-							if (c === 47) {
+							if (c === 46 /* dot */ && !floating) {
+								floating = true;
+							} else if (c === 101 /* e */ && !exponential) {
+								floating = exponential = true;
+								c = this._read();
+								if (c !== 45 /* MINUS */) {
+									this._unread(c);
+								}
+							} else if (c === 120 /* x */ && firstC === 48 && (this.offset - off === 2)) {
+								floating = exponential = hex = true;
+							} else if (!(48 <= c && c <= 57 || (hex && ((65 <= c && c <= 70) || (97 <= c && c <= 102))))) { //NUMBER DIGIT or HEX
+								break;
+							}
+						} while(true);
+						this._unread(c);
+						return NUMBER;
+					}
+					if ((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (45 /* DASH */ === c && isCSS)) { //LETTER OR UNDERSCORE OR NUMBER
+						do {
+							c = this._read();
+						} while((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (48 <= c && c <= 57) || (45 /* DASH */ === c && isCSS));  //LETTER OR UNDERSCORE OR NUMBER
+						this._unread(c);
+						var keywords = this.keywords;
+						if (keywords.length > 0) {
+							/** convert the text lowcase - hangum */ 
+							var word = this.text.substring(off, this.offset).toLowerCase();
+							//TODO slow
+							for (var i=0; i<keywords.length; i++) {
+								if (this.keywords[i] === word) { return KEYWORD; }
+							}
+						}
+					}
+					return UNKOWN;
+			}
+		},
+		_read: function() {
+			if (this.offset < this.text.length) {
+				return this.text.charCodeAt(this.offset++);
+			}
+			return -1;
+		},
+		_unread: function(c) {
+			if (c !== -1) { this.offset--; }
+		},
+		nextToken: function() {
+			this.startOffset = this.offset;
+			while (true) {
+				var c = this._read(), result;
+				switch (c) {
+					case -1: return null;
+					case 47:	// SLASH -> comment
+						c = this._read();
+						if (!this.isCSS) {
+							if (c === 47) { // SLASH -> single line
 								while (true) {
 									c = this._read();
-									if ((c === -1) || (c === 10)) {
+									if ((c === -1) || (c === 10) || (c === 13)) {
 										this._unread(c);
-										return COMMENT;
+										return SINGLELINE_COMMENT;
 									}
 								}
 							}
-							this._unread(c);
-							return UNKOWN;
-						case 39:	// SINGLE QUOTE -> char const
-							while(true) {
-								c = this._read();
-								switch (c) {
-									case 39:
-										return STRING;
-									case -1:
-										this._unread(c);
-										return STRING;
-									case 92: // BACKSLASH
-										c = this._read();
-										break;
-								}
-							}
-							break;
-						case 34:	// DOUBLE QUOTE -> string
-							while(true) {
-								c = this._read();
-								switch (c) {
-									case 34: // DOUBLE QUOTE
-										return STRING;
-									case -1:
-										this._unread(c);
-										return STRING;
-									case 92: // BACKSLASH
-										c = this._read();
-										break;
-								}
-							}
-							break;
-						case 32: // SPACE
-						case 9: // TAB
-							if (this.whitespacesVisible) {
-								return c === 32 ? WHITE_SPACE : WHITE_TAB;
-							}
-							do {
-								c = this._read();
-							} while(c === 32 || c === 9);
-							this._unread(c);
-							return WHITE;
-						default:
-							var isCSS = this.isCSS;
-							if ((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (48 <= c && c <= 57) || (0x2d === c && isCSS)) { //LETTER OR UNDERSCORE OR NUMBER
-								var off = this.offset - 1;
-								do {
-									c = this._read();
-								} while((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (48 <= c && c <= 57) || (0x2d === c && isCSS));  //LETTER OR UNDERSCORE OR NUMBER
-								this._unread(c);
-								var word = this.text.substring(off, this.offset).toLowerCase();
-								//TODO slow
-								for (var i=0; i<this.keywords.length; i++) {
-									if (this.keywords[i] === word) { return KEYWORD; }
-								}
-							}
-							return UNKOWN;
-					}
-				}
-			},
-			setText: function(text) {
-				this.text = text;
-				this.offset = 0;
-				this.startOffset = 0;
-			}
-		};
-		return Scanner;
-	}());
-	
-	var WhitespaceScanner = (function() {
-		function WhitespaceScanner () {
-			Scanner.call(this, null, true);
-		}
-		WhitespaceScanner.prototype = new Scanner(null);
-		WhitespaceScanner.prototype.nextToken = function() {
-			this.startOffset = this.offset;
-			while (true) {
-				var c = this._read();
-				switch (c) {
-					case -1: return null;
-					case 32: // SPACE
-						return WHITE_SPACE;
-					case 9: // TAB
-						return WHITE_TAB;
-					default:
-						do {
+						}
+						if (c === 42) { // STAR -> multi line 
 							c = this._read();
-						} while(!(c === 32 || c === 9 || c === -1));
+							var token = MULTILINE_COMMENT;
+							if (c === 42) {
+								token = DOC_COMMENT;
+							}
+							while (true) {
+								while (c === 42) {
+									c = this._read();
+									if (c === 47) {
+										return token;
+									}
+								}
+								if (c === -1) {
+									this._unread(c);
+									return token;
+								}
+								c = this._read();
+							}
+						}
 						this._unread(c);
 						return UNKOWN;
+					case 39:	// SINGLE QUOTE -> char const
+						result = STRING;
+						while(true) {
+							c = this._read();
+							switch (c) {
+								case 39:
+									return result;
+								case 13:
+								case 10:
+								case -1:
+									this._unread(c);
+									return result;
+								case 92: // BACKSLASH
+									c = this._read();
+									switch (c) {
+										case 10: result = MULTILINE_STRING; break;
+										case 13:
+											result = MULTILINE_STRING;
+											c = this._read();
+											if (c !== 10) {
+												this._unread(c);
+											}
+											break;
+									}
+									break;
+							}
+						}
+						break;
+					case 34:	// DOUBLE QUOTE -> string
+						result = STRING;
+						while(true) {
+							c = this._read();
+							switch (c) {
+								case 34: // DOUBLE QUOTE
+									return result;
+								case 13:
+								case 10:
+								case -1:
+									this._unread(c);
+									return result;
+								case 92: // BACKSLASH
+									c = this._read();
+									switch (c) {
+										case 10: result = MULTILINE_STRING; break;
+										case 13:
+											result = MULTILINE_STRING;
+											c = this._read();
+											if (c !== 10) {
+												this._unread(c);
+											}
+											break;
+									}
+									break;
+							}
+						}
+						break;
+					default:
+						return this._default(c);
 				}
 			}
-		};
-		
-		return WhitespaceScanner;
-	}());
+		},
+		setText: function(text) {
+			this.text = text;
+			this.offset = 0;
+			this.startOffset = 0;
+		}
+	};
 	
-	function TextStyler (view, lang) {
+	function WhitespaceScanner () {
+		Scanner.call(this, null, true);
+	}
+	WhitespaceScanner.prototype = new Scanner(null);
+	WhitespaceScanner.prototype.nextToken = function() {
+		this.startOffset = this.offset;
+		while (true) {
+			var c = this._read();
+			switch (c) {
+				case -1: return null;
+				case 32: // SPACE
+					return WHITE_SPACE;
+				case 9: // TAB
+					return WHITE_TAB;
+				default:
+					do {
+						c = this._read();
+					} while(!(c === 32 || c === 9 || c === -1));
+					this._unread(c);
+					return UNKOWN;
+			}
+		}
+	};
+	
+	function CommentScanner (whitespacesVisible) {
+		Scanner.call(this, null, whitespacesVisible);
+	}
+	CommentScanner.prototype = new Scanner(null);
+	CommentScanner.prototype.setType = function(type) {
+		this._type = type;
+	};
+	CommentScanner.prototype.nextToken = function() {
+		this.startOffset = this.offset;
+		while (true) {
+			var c = this._read();
+			switch (c) {
+				case -1: return null;
+				case 32: // SPACE
+				case 9: // TAB
+					if (this.whitespacesVisible) {
+						return c === 32 ? WHITE_SPACE : WHITE_TAB;
+					}
+					do {
+						c = this._read();
+					} while(c === 32 || c === 9);
+					this._unread(c);
+					return WHITE;
+				case 60: // <
+					if (this._type === DOC_COMMENT) {
+						do {
+							c = this._read();
+						} while(!(c === 62 || c === -1)); // >
+						if (c === 62) {
+							return HTML_MARKUP;
+						}
+					}
+					return UNKOWN;
+				case 64: // @
+					if (this._type === DOC_COMMENT) {
+						do {
+							c = this._read();
+						} while((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (48 <= c && c <= 57));  //LETTER OR UNDERSCORE OR NUMBER
+						this._unread(c);
+						return DOC_TAG;
+					}
+					return UNKOWN;
+				case 84: // T
+					if ((c = this._read()) === 79) { // O
+						if ((c = this._read()) === 68) { // D
+							if ((c = this._read()) === 79) { // O
+								c = this._read();
+								if (!((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (48 <= c && c <= 57))) {
+									this._unread(c);
+									return TASK_TAG;
+								}
+								this._unread(c);
+							} else {
+								this._unread(c);
+							}
+						} else {
+							this._unread(c);
+						}
+					} else {
+						this._unread(c);
+					}
+					//FALL THROUGH
+				default:
+					do {
+						c = this._read();
+					} while(!(c === 32 || c === 9 || c === -1 || c === 60 || c === 64 || c === 84));
+					this._unread(c);
+					return UNKOWN;
+			}
+		}
+	};
+	
+	function FirstScanner () {
+		Scanner.call(this, null, false);
+	}
+	FirstScanner.prototype = new Scanner(null);
+	FirstScanner.prototype._default = function(c) {
+		while(true) {
+			c = this._read();
+			switch (c) {
+				case 47: // SLASH
+				case 34: // DOUBLE QUOTE
+				case 39: // SINGLE QUOTE
+				case -1:
+					this._unread(c);
+					return UNKOWN;
+			}
+		}
+	};
+	
+	function TextStyler (view, lang, annotationModel) {
 		this.commentStart = "/*";
 		this.commentEnd = "*/";
 		var keywords = [];
 		
-		switch (lang) {
-			case "oracle": keywords = ORACLE_KEYWORDS; break;
-			case "mysql": keywords = MYSQL_KEYWORDS; break;
-			case "mssql": keywords = MSSQL_KEYWORDS; break;
-			case "sqlite": keywords = MYSQL_KEYWORDS; break;
+		switch (lang) {	
+			case "oracle": 
+				keywords = ORACLE_KEYWORDS; 
+				break;
+			case "mysql": 
+				keywords = MYSQL_KEYWORDS; 
+				break;
+			case "mssql": 
+				keywords = MSSQL_KEYWORDS; 
+				break;
+//			case "sqlite": 
+//				keywords = MYSQL_KEYWORDS; 
+//				break;
+			default:
+				keywords = MYSQL_KEYWORDS;
 		}
 		this.whitespacesVisible = false;
-		this.highlightCaretLine = true;
+		this.detectHyperlinks = true;
+		this.highlightCaretLine = false;
+		this.foldingEnabled = true;
+		this.detectTasks = true;
 		this._scanner = new Scanner(keywords, this.whitespacesVisible);
-		//TODO this scanner is not the best/correct way to parse CSS
+		this._firstScanner = new FirstScanner();
+		this._commentScanner = new CommentScanner(this.whitespacesVisible);
+		this._whitespaceScanner = new WhitespaceScanner();
+		//TODO these scanners are not the best/correct way to parse CSS
 		if (lang === "css") {
 			this._scanner.isCSS = true;
+			this._firstScanner.isCSS = true;
 		}
-		this._whitespaceScanner = new WhitespaceScanner();
 		this.view = view;
-		this.commentOffset = 0;
-		this.commentOffsets = [];
-		this._currentBracket = undefined; 
-		this._matchingBracket = undefined;
+		this.annotationModel = annotationModel;
+		this._bracketAnnotations = undefined; 
 		
-		view.addEventListener("Selection", this, this._onSelection);
-		view.addEventListener("ModelChanged", this, this._onModelChanged);
-		view.addEventListener("Destroy", this, this._onDestroy);
-		view.addEventListener("LineStyle", this, this._onLineStyle);
+		var self = this;
+		this._listener = {
+			onChanged: function(e) {
+				self._onModelChanged(e);
+			},
+			onDestroy: function(e) {
+				self._onDestroy(e);
+			},
+			onLineStyle: function(e) {
+				self._onLineStyle(e);
+			},
+			onSelection: function(e) {
+				self._onSelection(e);
+			}
+		};
+		var model = view.getModel();
+		if (model.getBaseModel) {
+			model.getBaseModel().addEventListener("Changed", this._listener.onChanged);
+		} else {
+			//TODO still needed to keep the event order correct (styler before view)
+			view.addEventListener("ModelChanged", this._listener.onChanged);
+		}
+		view.addEventListener("Selection", this._listener.onSelection);
+		view.addEventListener("Destroy", this._listener.onDestroy);
+		view.addEventListener("LineStyle", this._listener.onLineStyle);
+		this._computeComments ();
+		this._computeFolding();
 		view.redrawLines();
 	}
 	
 	TextStyler.prototype = {
+		getClassNameForToken: function(token) {
+			switch (token) {
+			
+				case "singleLineComment": return singleCommentStyle.styleClass;
+				case "multiLineComment": return multiCommentStyle.styleClass;
+				case "docComment": return docCommentStyle.styleClass;
+				case "docHtmlComment": return htmlMarkupStyle.styleClass;
+				case "tasktag": return tasktagStyle.styleClass;
+				case "doctag": return doctagStyle.styleClass;
+				case "string": return stringStyle.styleClass;
+				case "number": return numberStyle.styleClass;
+				case "keyword": return keywordStyle.styleClass;
+				case "space": return spaceStyle.styleClass;
+				case "tab": return tabStyle.styleClass;
+				case "caretLine": return caretLineStyle.styleClass;
+				
+				case "rulerStyle": return rulerStyle.styleClass;
+				case "annotationsStyle": return rulerAnnotationsStyle.styleClass;
+				case "rulerFolding": return rulerLinesStyle.styleClass;
+				case "rulerOverview": return rulerOverviewStyle.styleClass;
+				case "rulerLines": return rulerLinesStyle.styleClass;
+				case "rulerLinesEven": return rulerLinesEvenStyle.styleClass;
+				case "rulerLinesOdd": return rulerLinesOddStyle.styleClass;
+			}
+			return null;
+		},
 		destroy: function() {
 			var view = this.view;
 			if (view) {
-				view.removeEventListener("Selection", this, this._onSelection);
-				view.removeEventListener("ModelChanged", this, this._onModelChanged);
-				view.removeEventListener("Destroy", this, this._onDestroy);
-				view.removeEventListener("LineStyle", this, this._onLineStyle);
+				var model = view.getModel();
+				if (model.getBaseModel) {
+					model.getBaseModel().removeEventListener("Changed", this._listener.onChanged);
+				} else {
+					view.removeEventListener("ModelChanged", this._listener.onChanged);
+				}
+				view.removeEventListener("Selection", this._listener.onSelection);
+				view.removeEventListener("Destroy", this._listener.onDestroy);
+				view.removeEventListener("LineStyle", this._listener.onLineStyle);
 				this.view = null;
 			}
 		},
@@ -520,55 +757,98 @@ examples.textview.TextStyler = (function() {
 		setWhitespacesVisible: function(visible) {
 			this.whitespacesVisible = visible;
 			this._scanner.whitespacesVisible = visible;
+			this._commentScanner.whitespacesVisible = visible;
 		},
-		_binarySearch: function(offsets, offset, low, high) {
-			while (high - low > 2) {
-				var index = (((high + low) >> 1) >> 1) << 1;
-				var end = offsets[index + 1];
-				if (end > offset) {
+		setDetectHyperlinks: function(enabled) {
+			this.detectHyperlinks = enabled;
+		},
+		setFoldingEnabled: function(enabled) {
+			this.foldingEnabled = enabled;
+		},
+		setDetectTasks: function(enabled) {
+			this.detectTasks = enabled;
+		},
+		_binarySearch: function (array, offset, inclusive, low, high) {
+			var index;
+			if (low === undefined) { low = -1; }
+			if (high === undefined) { high = array.length; }
+			while (high - low > 1) {
+				index = Math.floor((high + low) / 2);
+				if (offset <= array[index].start) {
 					high = index;
+				} else if (inclusive && offset < array[index].end) {
+					high = index;
+					break;
 				} else {
 					low = index;
 				}
 			}
 			return high;
 		},
-		_computeComments: function(end) {
-			// compute comments between commentOffset and end
-			if (end <= this.commentOffset) { return; }
+		_computeComments: function() {
 			var model = this.view.getModel();
-			var charCount = model.getCharCount();
-			var e = end;
-			// Uncomment to compute all comments
-//			e = charCount;
-			var t = /*start == this.commentOffset && e == end ? text : */model.getText(this.commentOffset, e);
-			if (this.commentOffsets.length > 1 && this.commentOffsets[this.commentOffsets.length - 1] === charCount) {
-				this.commentOffsets.length--;
-			}
-			var offset = 0;
-			while (offset < t.length) {
-				var begin = (this.commentOffsets.length & 1) === 0;
-				var search = begin ? this.commentStart : this.commentEnd;
-				var index = t.indexOf(search, offset);
-				if (index !== -1) {
-					this.commentOffsets.push(this.commentOffset + (begin ? index : index + search.length));
-				} else {
-					break;
-				}
-				offset = index + search.length;
-			}
-			if ((this.commentOffsets.length & 1) === 1) { this.commentOffsets.push(charCount); }
-			this.commentOffset = e;
+			if (model.getBaseModel) { model = model.getBaseModel(); }
+			this.comments = this._findComments(model.getText());
 		},
-		_getCommentRanges: function(start, end) {
-			this._computeComments (end);
-			var commentCount = this.commentOffsets.length;
-			var commentStart = this._binarySearch(this.commentOffsets, start, -1, commentCount);
-			if (commentStart >= commentCount) { return []; }
-			if (this.commentOffsets[commentStart] > end) { return []; }
-			var commentEnd = Math.min(commentCount - 2, this._binarySearch(this.commentOffsets, end, commentStart - 1, commentCount));
-			if (this.commentOffsets[commentEnd] > end) { commentEnd = Math.max(commentStart, commentEnd - 2); }
-			return this.commentOffsets.slice(commentStart, commentEnd + 2);
+		_computeFolding: function() {
+			if (!this.foldingEnabled) { return; }
+			var view = this.view;
+			var viewModel = view.getModel();
+			if (!viewModel.getBaseModel) { return; }
+			var annotationModel = this.annotationModel;
+			if (!annotationModel) { return; }
+			annotationModel.removeAnnotations(mAnnotations.AnnotationType.ANNOTATION_FOLDING);
+			var add = [];
+			var baseModel = viewModel.getBaseModel();
+			var comments = this.comments;
+			for (var i=0; i<comments.length; i++) {
+				var comment = comments[i];
+				var annotation = this._createFoldingAnnotation(viewModel, baseModel, comment.start, comment.end);
+				if (annotation) { 
+					add.push(annotation);
+				}
+			}
+			annotationModel.replaceAnnotations(null, add);
+		},
+		_createFoldingAnnotation: function(viewModel, baseModel, start, end) {
+			var startLine = baseModel.getLineAtOffset(start);
+			var endLine = baseModel.getLineAtOffset(end);
+			if (startLine === endLine) {
+				return null;
+			}
+			return new (mAnnotations.AnnotationType.getType(mAnnotations.AnnotationType.ANNOTATION_FOLDING))(start, end, viewModel);
+		},
+		_computeTasks: function(type, commentStart, commentEnd) {
+			if (!this.detectTasks) { return; }
+			var annotationModel = this.annotationModel;
+			if (!annotationModel) { return; }
+			var view = this.view;
+			var viewModel = view.getModel(), baseModel = viewModel;
+			if (viewModel.getBaseModel) { baseModel = viewModel.getBaseModel(); }
+			var annotations = annotationModel.getAnnotations(commentStart, commentEnd);
+			var remove = [];
+			var annotationType = mAnnotations.AnnotationType.ANNOTATION_TASK;
+			while (annotations.hasNext()) {
+				var annotation = annotations.next();
+				if (annotation.type === annotationType) {
+					remove.push(annotation);
+				}
+			}
+			var add = [];
+			var scanner = this._commentScanner;
+			scanner.setText(baseModel.getText(commentStart, commentEnd));
+			var token;
+			while ((token = scanner.nextToken())) {
+				var tokenStart = scanner.getStartOffset() + commentStart;
+				if (token === TASK_TAG) {
+					var end = baseModel.getLineEnd(baseModel.getLineAtOffset(tokenStart));
+					if (type !== SINGLELINE_COMMENT) {
+						end = Math.min(end, commentEnd - this.commentEnd.length);
+					}
+					add.push(mAnnotations.AnnotationType.createAnnotation(annotationType, tokenStart, end, baseModel.getText(tokenStart, end)));
+				}
+			}
+			annotationModel.replaceAnnotations(remove, add);
 		},
 		_getLineStyle: function(lineIndex) {
 			if (this.highlightCaretLine) {
@@ -581,37 +861,50 @@ examples.textview.TextStyler = (function() {
 			}
 			return null;
 		},
-		_getStyles: function(text, start) {
+		_getStyles: function(model, text, start) {
+			if (model.getBaseModel) {
+				start = model.mapOffset(start);
+			}
 			var end = start + text.length;
-			var model = this.view.getModel();
 			
-			// get comment ranges that intersect with range
-			var commentRanges = this._getCommentRanges (start, end);
 			var styles = [];
 			
 			// for any sub range that is not a comment, parse code generating tokens (keywords, numbers, brackets, line comments, etc)
-			var offset = start;
-			for (var i = 0; i < commentRanges.length; i+= 2) {
-				var commentStart = commentRanges[i];
+			var offset = start, comments = this.comments;
+			var startIndex = this._binarySearch(comments, start, true);
+			for (var i = startIndex; i < comments.length; i++) {
+				if (comments[i].start >= end) { break; }
+				var commentStart = comments[i].start;
+				var commentEnd = comments[i].end;
 				if (offset < commentStart) {
 					this._parse(text.substring(offset - start, commentStart - start), offset, styles);
 				}
-				var style = commentStyle;
-				if ((commentRanges[i+1] - commentStart) > (this.commentStart.length + this.commentEnd.length)) {
-					var o = commentStart + this.commentStart.length;
-					if (model.getText(o, o + 1) === "*") { style = javadocStyle; }
+				var type = comments[i].type, style;
+				switch (type) {
+					case DOC_COMMENT: style = docCommentStyle; break;
+					case MULTILINE_COMMENT: style = multiCommentStyle; break;
+					case MULTILINE_STRING: style = stringStyle; break;
 				}
-				if (this.whitespacesVisible) {
-					var s = Math.max(offset, commentStart);
-					var e = Math.min(end, commentRanges[i+1]);
-					this._parseWhitespace(text.substring(s - start, e - start), s, styles, style);
+				var s = Math.max(offset, commentStart);
+				var e = Math.min(end, commentEnd);
+				if ((type === DOC_COMMENT || type === MULTILINE_COMMENT) && (this.whitespacesVisible || this.detectHyperlinks)) {
+					this._parseComment(text.substring(s - start, e - start), s, styles, style, type);
+				} else if (type === MULTILINE_STRING && this.whitespacesVisible) {
+					this._parseString(text.substring(s - start, e - start), s, styles, stringStyle);
 				} else {
-					styles.push({start: commentRanges[i], end: commentRanges[i+1], style: style});
+					styles.push({start: s, end: e, style: style});
 				}
-				offset = commentRanges[i+1];
+				offset = commentEnd;
 			}
 			if (offset < end) {
 				this._parse(text.substring(offset - start, end - start), offset, styles);
+			}
+			if (model.getBaseModel) {
+				for (var j = 0; j < styles.length; j++) {
+					var length = styles[j].end - styles[j].start;
+					styles[j].start = model.mapOffset(styles[j].start, true);
+					styles[j].end = styles[j].start + length;
+				}
 			}
 			return styles;
 		},
@@ -622,43 +915,80 @@ examples.textview.TextStyler = (function() {
 			while ((token = scanner.nextToken())) {
 				var tokenStart = scanner.getStartOffset() + offset;
 				var style = null;
-				if (tokenStart === this._matchingBracket) {
-					style = bracketStyle;
-				} else {
-					switch (token) {
-						case KEYWORD: style = keywordStyle; break;
-						case STRING:
-							if (this.whitespacesVisible) {
-								this._parseWhitespace(scanner.getData(), tokenStart, styles, stringStyle);
-								continue;
-							} else {
-								style = stringStyle;
-							}
-							break;
-						case COMMENT: 
-							if (this.whitespacesVisible) {
-								this._parseWhitespace(scanner.getData(), tokenStart, styles, commentStyle);
-								continue;
-							} else {
-								style = commentStyle;
-							}
-							break;
-						case WHITE_TAB:
-							if (this.whitespacesVisible) {
-								style = tabStyle;
-							}
-							break;
-						case WHITE_SPACE:
-							if (this.whitespacesVisible) {
-								style = spaceStyle;
-							}
-							break;
-					}
+				switch (token) {
+					case KEYWORD: style = keywordStyle; break;
+					case NUMBER: style = numberStyle; break;
+					case MULTILINE_STRING:
+					case STRING:
+						if (this.whitespacesVisible) {
+							this._parseString(scanner.getData(), tokenStart, styles, stringStyle);
+							continue;
+						} else {
+							style = stringStyle;
+						}
+						break;
+					case DOC_COMMENT: 
+						this._parseComment(scanner.getData(), tokenStart, styles, docCommentStyle, token);
+						continue;
+					case SINGLELINE_COMMENT:
+						this._parseComment(scanner.getData(), tokenStart, styles, singleCommentStyle, token);
+						continue;
+					case MULTILINE_COMMENT: 
+						this._parseComment(scanner.getData(), tokenStart, styles, multiCommentStyle, token);
+						continue;
+					case WHITE_TAB:
+						if (this.whitespacesVisible) {
+							style = tabStyle;
+						}
+						break;
+					case WHITE_SPACE:
+						if (this.whitespacesVisible) {
+							style = spaceStyle;
+						}
+						break;
 				}
 				styles.push({start: tokenStart, end: scanner.getOffset() + offset, style: style});
 			}
 		},
-		_parseWhitespace: function(text, offset, styles, s) {
+		_parseComment: function(text, offset, styles, s, type) {
+			var scanner = this._commentScanner;
+			scanner.setText(text);
+			scanner.setType(type);
+			var token;
+			while ((token = scanner.nextToken())) {
+				var tokenStart = scanner.getStartOffset() + offset;
+				var style = s;
+				switch (token) {
+					case WHITE_TAB:
+						if (this.whitespacesVisible) {
+							style = tabStyle;
+						}
+						break;
+					case WHITE_SPACE:
+						if (this.whitespacesVisible) {
+							style = spaceStyle;
+						}
+						break;
+					case HTML_MARKUP:
+						style = htmlMarkupStyle;
+						break;
+					case DOC_TAG:
+						style = doctagStyle;
+						break;
+					case TASK_TAG:
+						style = tasktagStyle;
+						break;
+					default:
+						if (this.detectHyperlinks) {
+							style = this._detectHyperlinks(scanner.getData(), tokenStart, styles, style);
+						}
+				}
+				if (style) {
+					styles.push({start: tokenStart, end: scanner.getOffset() + offset, style: style});
+				}
+			}
+		},
+		_parseString: function(text, offset, styles, s) {
 			var scanner = this._whitespaceScanner;
 			scanner.setText(text);
 			var token;
@@ -667,49 +997,193 @@ examples.textview.TextStyler = (function() {
 				var style = s;
 				switch (token) {
 					case WHITE_TAB:
-						style = tabStyle;
+						if (this.whitespacesVisible) {
+							style = tabStyle;
+						}
 						break;
 					case WHITE_SPACE:
-						style = spaceStyle;
+						if (this.whitespacesVisible) {
+							style = spaceStyle;
+						}
 						break;
 				}
-				styles.push({start: tokenStart, end: scanner.getOffset() + offset, style: style});
+				if (style) {
+					styles.push({start: tokenStart, end: scanner.getOffset() + offset, style: style});
+				}
 			}
+		},
+		_detectHyperlinks: function(text, offset, styles, s) {
+			var href = null, index, linkStyle;
+			if ((index = text.indexOf("://")) > 0) {
+				href = text;
+				var start = index;
+				while (start > 0) {
+					var c = href.charCodeAt(start - 1);
+					if (!((97 <= c && c <= 122) || (65 <= c && c <= 90) || 0x2d === c || (48 <= c && c <= 57))) { //LETTER OR DASH OR NUMBER
+						break;
+					}
+					start--;
+				}
+				if (start > 0) {
+					var brackets = "\"\"''(){}[]<>";
+					index = brackets.indexOf(href.substring(start - 1, start));
+					if (index !== -1 && (index & 1) === 0 && (index = href.lastIndexOf(brackets.substring(index + 1, index + 2))) !== -1) {
+						var end = index;
+						linkStyle = this._clone(s);
+						linkStyle.tagName = "A";
+						linkStyle.attributes = {href: href.substring(start, end)};
+						styles.push({start: offset, end: offset + start, style: s});
+						styles.push({start: offset + start, end: offset + end, style: linkStyle});
+						styles.push({start: offset + end, end: offset + text.length, style: s});
+						return null;
+					}
+				}
+			} else if (text.toLowerCase().indexOf("bug#") === 0) {
+				href = "https://bugs.eclipse.org/bugs/show_bug.cgi?id=" + parseInt(text.substring(4), 10);
+			}
+			if (href) {
+				linkStyle = this._clone(s);
+				linkStyle.tagName = "A";
+				linkStyle.attributes = {href: href};
+				return linkStyle;
+			}
+			return s;
+		},
+		_clone: function(obj) {
+			if (!obj) { return obj; }
+			var newObj = {};
+			for (var p in obj) {
+				if (obj.hasOwnProperty(p)) {
+					var value = obj[p];
+					newObj[p] = value;
+				}
+			}
+			return newObj;
+		},
+		_findComments: function(text, offset) {
+			offset = offset || 0;
+			var scanner = this._firstScanner, token;
+			scanner.setText(text);
+			var result = [];
+			while ((token = scanner.nextToken())) {
+				if (token === MULTILINE_COMMENT || token === DOC_COMMENT || token === MULTILINE_STRING) {
+					result.push({
+						start: scanner.getStartOffset() + offset,
+						end: scanner.getOffset() + offset,
+						type: token
+					});
+				}
+				if (token === SINGLELINE_COMMENT || token === MULTILINE_COMMENT || token === DOC_COMMENT) {
+					//TODO can we avoid this work if edition does not overlap comment?
+					this._computeTasks(token, scanner.getStartOffset() + offset, scanner.getOffset() + offset);
+				}
+			}
+			return result;
+		}, 
+		_findMatchingBracket: function(model, offset) {
+			var brackets = "{}()[]<>";
+			var bracket = model.getText(offset, offset + 1);
+			var bracketIndex = brackets.indexOf(bracket, 0);
+			if (bracketIndex === -1) { return -1; }
+			var closingBracket;
+			if (bracketIndex & 1) {
+				closingBracket = brackets.substring(bracketIndex - 1, bracketIndex);
+			} else {
+				closingBracket = brackets.substring(bracketIndex + 1, bracketIndex + 2);
+			}
+			var lineIndex = model.getLineAtOffset(offset);
+			var lineText = model.getLine(lineIndex);
+			var lineStart = model.getLineStart(lineIndex);
+			var lineEnd = model.getLineEnd(lineIndex);
+			brackets = this._findBrackets(bracket, closingBracket, lineText, lineStart, lineStart, lineEnd);
+			for (var i=0; i<brackets.length; i++) {
+				var sign = brackets[i] >= 0 ? 1 : -1;
+				if (brackets[i] * sign === offset) {
+					var level = 1;
+					if (bracketIndex & 1) {
+						i--;
+						for (; i>=0; i--) {
+							sign = brackets[i] >= 0 ? 1 : -1;
+							level += sign;
+							if (level === 0) {
+								return brackets[i] * sign;
+							}
+						}
+						lineIndex -= 1;
+						while (lineIndex >= 0) {
+							lineText = model.getLine(lineIndex);
+							lineStart = model.getLineStart(lineIndex);
+							lineEnd = model.getLineEnd(lineIndex);
+							brackets = this._findBrackets(bracket, closingBracket, lineText, lineStart, lineStart, lineEnd);
+							for (var j=brackets.length - 1; j>=0; j--) {
+								sign = brackets[j] >= 0 ? 1 : -1;
+								level += sign;
+								if (level === 0) {
+									return brackets[j] * sign;
+								}
+							}
+							lineIndex--;
+						}
+					} else {
+						i++;
+						for (; i<brackets.length; i++) {
+							sign = brackets[i] >= 0 ? 1 : -1;
+							level += sign;
+							if (level === 0) {
+								return brackets[i] * sign;
+							}
+						}
+						lineIndex += 1;
+						var lineCount = model.getLineCount ();
+						while (lineIndex < lineCount) {
+							lineText = model.getLine(lineIndex);
+							lineStart = model.getLineStart(lineIndex);
+							lineEnd = model.getLineEnd(lineIndex);
+							brackets = this._findBrackets(bracket, closingBracket, lineText, lineStart, lineStart, lineEnd);
+							for (var k=0; k<brackets.length; k++) {
+								sign = brackets[k] >= 0 ? 1 : -1;
+								level += sign;
+								if (level === 0) {
+									return brackets[k] * sign;
+								}
+							}
+							lineIndex++;
+						}
+					}
+					break;
+				}
+			}
+			return -1;
 		},
 		_findBrackets: function(bracket, closingBracket, text, textOffset, start, end) {
 			var result = [];
-			
-			// get comment ranges that intersect with range
-			var commentRanges = this._getCommentRanges (start, end);
-			
+			var bracketToken = bracket.charCodeAt(0);
+			var closingBracketToken = closingBracket.charCodeAt(0);
 			// for any sub range that is not a comment, parse code generating tokens (keywords, numbers, brackets, line comments, etc)
-			var offset = start, scanner = this._scanner, token, tokenData;
-			for (var i = 0; i < commentRanges.length; i+= 2) {
-				var commentStart = commentRanges[i];
+			var offset = start, scanner = this._scanner, token, comments = this.comments;
+			var startIndex = this._binarySearch(comments, start, true);
+			for (var i = startIndex; i < comments.length; i++) {
+				if (comments[i].start >= end) { break; }
+				var commentStart = comments[i].start;
+				var commentEnd = comments[i].end;
 				if (offset < commentStart) {
 					scanner.setText(text.substring(offset - start, commentStart - start));
 					while ((token = scanner.nextToken())) {
-						if (scanner.getDataLength() !== 1) { continue; }
-						tokenData = scanner.getData();
-						if (tokenData === bracket) {
+						if (token === bracketToken) {
 							result.push(scanner.getStartOffset() + offset - start + textOffset);
-						}
-						if (tokenData === closingBracket) {
+						} else if (token === closingBracketToken) {
 							result.push(-(scanner.getStartOffset() + offset - start + textOffset));
 						}
 					}
 				}
-				offset = commentRanges[i+1];
+				offset = commentEnd;
 			}
 			if (offset < end) {
 				scanner.setText(text.substring(offset - start, end - start));
 				while ((token = scanner.nextToken())) {
-					if (scanner.getDataLength() !== 1) { continue; }
-					tokenData = scanner.getData();
-					if (tokenData === bracket) {
+					if (token === bracketToken) {
 						result.push(scanner.getStartOffset() + offset - start + textOffset);
-					}
-					if (tokenData === closingBracket) {
+					} else if (token === closingBracketToken) {
 						result.push(-(scanner.getStartOffset() + offset - start + textOffset));
 					}
 				}
@@ -720,8 +1194,10 @@ examples.textview.TextStyler = (function() {
 			this.destroy();
 		},
 		_onLineStyle: function (e) {
-			e.style = this._getLineStyle(e.lineIndex);
-			e.ranges = this._getStyles(e.lineText, e.lineStart);
+			if (e.textView === this.view) {
+				e.style = this._getLineStyle(e.lineIndex);
+			}
+			e.ranges = this._getStyles(e.textView.getModel(), e.lineText, e.lineStart);
 		},
 		_onSelection: function(e) {
 			var oldSelection = e.oldValue;
@@ -729,11 +1205,6 @@ examples.textview.TextStyler = (function() {
 			var view = this.view;
 			var model = view.getModel();
 			var lineIndex;
-			if (this._matchingBracket !== undefined) {
-				lineIndex = model.getLineAtOffset(this._matchingBracket);
-				view.redrawLines(lineIndex, lineIndex + 1);
-				this._matchingBracket = this._currentBracket = undefined;
-			}
 			if (this.highlightCaretLine) {
 				var oldLineIndex = model.getLineAtOffset(oldSelection.start);
 				lineIndex = model.getLineAtOffset(newSelection.start);
@@ -748,212 +1219,150 @@ examples.textview.TextStyler = (function() {
 					}
 				}
 			}
-			if (newSelection.start !== newSelection.end || newSelection.start === 0) {
-				return;
-			}
-			var caret = view.getCaretOffset();
-			if (caret === 0) { return; }
-			var brackets = "{}()[]<>";
-			var bracket = model.getText(caret - 1, caret);
-			var bracketIndex = brackets.indexOf(bracket, 0);
-			if (bracketIndex === -1) { return; }
-			var closingBracket;
-			if (bracketIndex & 1) {
-				closingBracket = brackets.substring(bracketIndex - 1, bracketIndex);
-			} else {
-				closingBracket = brackets.substring(bracketIndex + 1, bracketIndex + 2);
-			}
-			lineIndex = model.getLineAtOffset(caret);
-			var lineText = model.getLine(lineIndex);
-			var lineStart = model.getLineStart(lineIndex);
-			var lineEnd = model.getLineEnd(lineIndex);
-			brackets = this._findBrackets(bracket, closingBracket, lineText, lineStart, lineStart, lineEnd);
-			for (var i=0; i<brackets.length; i++) {
-				var sign = brackets[i] >= 0 ? 1 : -1;
-				if (brackets[i] * sign === caret - 1) {
-					var level = 1;
-					this._currentBracket = brackets[i] * sign;
-					if (bracketIndex & 1) {
-						i--;
-						for (; i>=0; i--) {
-							sign = brackets[i] >= 0 ? 1 : -1;
-							level += sign;
-							if (level === 0) {
-								this._matchingBracket = brackets[i] * sign;
-								view.redrawLines(lineIndex, lineIndex + 1);
-								return;
-							}
-						}
-						lineIndex -= 1;
-						while (lineIndex >= 0) {
-							lineText = model.getLine(lineIndex);
-							lineStart = model.getLineStart(lineIndex);
-							lineEnd = model.getLineEnd(lineIndex);
-							brackets = this._findBrackets(bracket, closingBracket, lineText, lineStart, lineStart, lineEnd);
-							for (var j=brackets.length - 1; j>=0; j--) {
-								sign = brackets[j] >= 0 ? 1 : -1;
-								level += sign;
-								if (level === 0) {
-									this._matchingBracket = brackets[j] * sign;
-									view.redrawLines(lineIndex, lineIndex + 1);
-									return;
-								}
-							}
-							lineIndex--;
-						}
-					} else {
-						i++;
-						for (; i<brackets.length; i++) {
-							sign = brackets[i] >= 0 ? 1 : -1;
-							level += sign;
-							if (level === 0) {
-								this._matchingBracket = brackets[i] * sign;
-								view.redrawLines(lineIndex, lineIndex + 1);
-								return;
-							}
-						}
-						lineIndex += 1;
-						var lineCount = model.getLineCount ();
-						while (lineIndex < lineCount) {
-							lineText = model.getLine(lineIndex);
-							lineStart = model.getLineStart(lineIndex);
-							lineEnd = model.getLineEnd(lineIndex);
-							brackets = this._findBrackets(bracket, closingBracket, lineText, lineStart, lineStart, lineEnd);
-							for (var k=0; k<brackets.length; k++) {
-								sign = brackets[k] >= 0 ? 1 : -1;
-								level += sign;
-								if (level === 0) {
-									this._matchingBracket = brackets[k] * sign;
-									view.redrawLines(lineIndex, lineIndex + 1);
-									return;
-								}
-							}
-							lineIndex++;
-						}
-					}
-					break;
+			if (!this.annotationModel) { return; }
+			var remove = this._bracketAnnotations, add, caret;
+			if (newSelection.start === newSelection.end && (caret = view.getCaretOffset()) > 0) {
+				var mapCaret = caret - 1;
+				if (model.getBaseModel) {
+					mapCaret = model.mapOffset(mapCaret);
+					model = model.getBaseModel();
+				}
+				var bracket = this._findMatchingBracket(model, mapCaret);
+				if (bracket !== -1) {
+					add = [
+						mAnnotations.AnnotationType.createAnnotation(mAnnotations.AnnotationType.ANNOTATION_MATCHING_BRACKET, bracket, bracket + 1),
+						mAnnotations.AnnotationType.createAnnotation(mAnnotations.AnnotationType.ANNOTATION_CURRENT_BRACKET, mapCaret, mapCaret + 1)
+					];
 				}
 			}
+			this._bracketAnnotations = add;
+			this.annotationModel.replaceAnnotations(remove, add);
 		},
 		_onModelChanged: function(e) {
 			var start = e.start;
 			var removedCharCount = e.removedCharCount;
 			var addedCharCount = e.addedCharCount;
-			if (this._matchingBracket && start < this._matchingBracket) { this._matchingBracket += addedCharCount + removedCharCount; }
-			if (this._currentBracket && start < this._currentBracket) { this._currentBracket += addedCharCount + removedCharCount; }
-			if (start >= this.commentOffset) { return; }
-			var model = this.view.getModel();
-			
-//			window.console.log("start=" + start + " added=" + addedCharCount + " removed=" + removedCharCount)
-//			for (var i=0; i< this.commentOffsets.length; i++) {
-//				window.console.log(i +"="+ this.commentOffsets[i]);
-//			}
-
-			var commentCount = this.commentOffsets.length;
-			var extra = Math.max(this.commentStart.length - 1, this.commentEnd.length - 1);
-			if (commentCount === 0) {
-				this.commentOffset = Math.max(0, start - extra);
-				return;
-			}
-			var charCount = model.getCharCount();
-			var oldCharCount = charCount - addedCharCount + removedCharCount;
-			var commentStart = this._binarySearch(this.commentOffsets, start, -1, commentCount);
+			var changeCount = addedCharCount - removedCharCount;
+			var view = this.view;
+			var viewModel = view.getModel();
+			var baseModel = viewModel.getBaseModel ? viewModel.getBaseModel() : viewModel;
 			var end = start + removedCharCount;
-			var commentEnd = this._binarySearch(this.commentOffsets, end, commentStart - 1, commentCount);
-//			window.console.log("s=" + commentStart + " e=" + commentEnd);
+			var charCount = baseModel.getCharCount();
+			var commentCount = this.comments.length;
+			var lineStart = baseModel.getLineStart(baseModel.getLineAtOffset(start));
+			var commentStart = this._binarySearch(this.comments, lineStart, true);
+			var commentEnd = this._binarySearch(this.comments, end, false, commentStart - 1, commentCount);
+			
 			var ts;
-			if (commentStart > 0) {
-				ts = this.commentOffsets[--commentStart];
+			if (commentStart < commentCount && this.comments[commentStart].start <= lineStart && lineStart < this.comments[commentStart].end) {
+				ts = this.comments[commentStart].start;
+				if (ts > start) { ts += changeCount; }
 			} else {
-				ts = Math.max(0, Math.min(this.commentOffsets[commentStart], start) - extra);
-				--commentStart;
+				if (commentStart === commentCount && commentCount > 0 && charCount - changeCount === this.comments[commentCount - 1].end) {
+					ts = this.comments[commentCount - 1].start;
+				} else {
+					ts = lineStart;
+				}
 			}
 			var te;
-			var redrawEnd = charCount;
-			if (commentEnd + 1 < this.commentOffsets.length) {
-				te = this.commentOffsets[++commentEnd];
-				if (end > (te - this.commentEnd.length)) {
-					if (commentEnd + 2 < this.commentOffsets.length) { 
-						commentEnd += 2;
-						te = this.commentOffsets[commentEnd];
-						redrawEnd = te + 1;
-						if (redrawEnd > start) { redrawEnd += addedCharCount - removedCharCount; }
-					} else {
-						te = Math.min(oldCharCount, end + extra);
-						this.commentOffset = te;
-					}
-				}
+			if (commentEnd < commentCount) {
+				te = this.comments[commentEnd].end;
+				if (te > start) { te += changeCount; }
+				commentEnd += 1;
 			} else {
-				te = Math.min(oldCharCount, end + extra);
-				this.commentOffset = te;
-				if (commentEnd > 0 && commentEnd === this.commentOffsets.length) {
-					commentEnd = this.commentOffsets.length - 1;
-				}
+				commentEnd = commentCount;
+				te = charCount;//TODO could it be smaller?
 			}
-			if (ts > start) { ts += addedCharCount - removedCharCount; }
-			if (te > start) { te += addedCharCount - removedCharCount; }
-			
-//			window.console.log("commentStart="+ commentStart + " commentEnd=" + commentEnd + " ts=" + ts + " te=" + te)
-
-			if (this.commentOffsets.length > 1 && this.commentOffsets[this.commentOffsets.length - 1] === oldCharCount) {
-				this.commentOffsets.length--;
+			var text = baseModel.getText(ts, te), comment;
+			var newComments = this._findComments(text, ts), i;
+			for (i = commentStart; i < this.comments.length; i++) {
+				comment = this.comments[i];
+				if (comment.start > start) { comment.start += changeCount; }
+				if (comment.start > start) { comment.end += changeCount; }
 			}
-			
-			var offset = 0;
-			var newComments = [];
-			var t = model.getText(ts, te);
-			if (this.commentOffset < te) { this.commentOffset = te; }
-			while (offset < t.length) {
-				var begin = ((commentStart + 1 + newComments.length) & 1) === 0;
-				var search = begin ? this.commentStart : this.commentEnd;
-				var index = t.indexOf(search, offset);
-				if (index !== -1) {
-					newComments.push(ts + (begin ? index : index + search.length));
-				} else {
-					break;
-				}
-				offset = index + search.length;
-			}
-//			window.console.log("lengths=" + newComments.length + " " + (commentEnd - commentStart) + " t=<" + t + ">")
-//			for (var i=0; i< newComments.length; i++) {
-//				window.console.log(i +"=>"+ newComments[i]);
-//			}
 			var redraw = (commentEnd - commentStart) !== newComments.length;
 			if (!redraw) {
-				for (var i=0; i<newComments.length; i++) {
-					offset = this.commentOffsets[commentStart + 1 + i];
-					if (offset > start) { offset += addedCharCount - removedCharCount; }
-					if (offset !== newComments[i]) {
+				for (i=0; i<newComments.length; i++) {
+					comment = this.comments[commentStart + i];
+					var newComment = newComments[i];
+					if (comment.start !== newComment.start || comment.end !== newComment.end || comment.type !== newComment.type) {
 						redraw = true;
 						break;
 					} 
 				}
 			}
-			
-			var args = [commentStart + 1, (commentEnd - commentStart)].concat(newComments);
-			Array.prototype.splice.apply(this.commentOffsets, args);
-			for (var k=commentStart + 1 + newComments.length; k< this.commentOffsets.length; k++) {
-				this.commentOffsets[k] += addedCharCount - removedCharCount;
-			}
-			
-			if ((this.commentOffsets.length & 1) === 1) { this.commentOffsets.push(charCount); }
-			
+			var args = [commentStart, commentEnd - commentStart].concat(newComments);
+			Array.prototype.splice.apply(this.comments, args);
 			if (redraw) {
-//				window.console.log ("redraw " + (start + addedCharCount) + " " + redrawEnd);
-				this.view.redrawRange(start + addedCharCount, redrawEnd);
+				var redrawStart = ts;
+				var redrawEnd = te;
+				if (viewModel !== baseModel) {
+					redrawStart = viewModel.mapOffset(redrawStart, true);
+					redrawEnd = viewModel.mapOffset(redrawEnd, true);
+				}
+				view.redrawRange(redrawStart, redrawEnd);
 			}
 
-//			for (var i=0; i< this.commentOffsets.length; i++) {
-//				window.console.log(i +"="+ this.commentOffsets[i]);
-//			}
-
+			if (this.foldingEnabled && baseModel !== viewModel && this.annotationModel) {
+				var annotationModel = this.annotationModel;
+				var iter = annotationModel.getAnnotations(ts, te);
+				var remove = [], all = [];
+				var annotation;
+				while (iter.hasNext()) {
+					annotation = iter.next();
+					if (annotation.type === mAnnotations.AnnotationType.ANNOTATION_FOLDING) {
+						all.push(annotation);
+						for (i = 0; i < newComments.length; i++) {
+							if (annotation.start === newComments[i].start && annotation.end === newComments[i].end) {
+								break;
+							}
+						}
+						if (i === newComments.length) {
+							remove.push(annotation);
+							annotation.expand();
+						} else {
+							var annotationStart = annotation.start;
+							var annotationEnd = annotation.end;
+							if (annotationStart > start) {
+								annotationStart -= changeCount;
+							}
+							if (annotationEnd > start) {
+								annotationEnd -= changeCount;
+							}
+							if (annotationStart <= start && start < annotationEnd && annotationStart <= end && end < annotationEnd) {
+								var startLine = baseModel.getLineAtOffset(annotation.start);
+								var endLine = baseModel.getLineAtOffset(annotation.end);
+								if (startLine !== endLine) {
+									if (!annotation.expanded) {
+										annotation.expand();
+										annotationModel.modifyAnnotation(annotation);
+									}
+								} else {
+									annotationModel.removeAnnotation(annotation);
+								}
+							}
+						}
+					}
+				}
+				var add = [];
+				for (i = 0; i < newComments.length; i++) {
+					comment = newComments[i];
+					for (var j = 0; j < all.length; j++) {
+						if (all[j].start === comment.start && all[j].end === comment.end) {
+							break;
+						}
+					}
+					if (j === all.length) {
+						annotation = this._createFoldingAnnotation(viewModel, baseModel, comment.start, comment.end);
+						if (annotation) {
+							add.push(annotation);
+						}
+					}
+				}
+				annotationModel.replaceAnnotations(remove, add);
+			}
 		}
 	};
-	return TextStyler;
-}());
-
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define([], function() {
-		return examples.textview;
-	});
-}
+	
+	return {TextStyler: TextStyler};
+});

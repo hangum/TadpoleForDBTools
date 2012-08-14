@@ -1,67 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="copyright" content="Copyright (c) IBM Corporation and others 2010."/>
+<meta name="copyright" content="Copyright (c) IBM Corporation and others 2010, 2012."/>
 <meta http-equiv="PRAGMA" content="NO-CACHE"/>
 <meta http-equiv="Expires" content="-1"/>
+<meta http-equiv='X-UA-Compatible' content='IE=EmulateIE7,IE=edge'/>
 <title>Orion TextView Demo</title>
 <link rel="stylesheet" type="text/css" href="demo.css" />
-<script type="text/javascript" src="/requirejs/require.js"></script>
+<!-- Note if running this standalone you will need to copy requirejs from bundles/org.eclipse.orion.client.core/web/ -->
+<script type="text/javascript" src="../../requirejs/require.js"></script>
 <script type="text/javascript">
 	require({
-	  baseUrl: '',
+	  baseUrl: '../..',
 	  paths: {
-	    orion: '/orion',
-	    examples: '/examples',
-	    tests: '/js-tests',
+		  text: 'requirejs/text',
+		  i18n: 'requirejs/i18n',
+		  tests: 'js-tests',
+		  domReady: 'requirejs/domReady'
 	  }
 	});
-	require(["demo"]);
+	require(["demo.js"]);
 </script>
 </head>
-<body>
+<body spellcheck="false">
 
-<h1>Orion Text View Demo</h1>
+<h3>Orion Text View Demo</h3>
 
 <table width="100%">
 <tr>
-<th>View</th>
-<th>Console</th>
+	<th align="left">View</th>
+	<th align="left" id="consoleHeader" style="display:none;">Console</th>
 </tr>
 <tr>
-<td width="100%">
-<div id='divParent' class='parentElement' style='width:100%;height:650px;'>
-Create the view by clicking one of the buttons at the bottom.
-</div>
-</td>
-<td>
-<div id='consoleParent' class='parentElement' style='width:300px;height:650px;'>
-<iframe id='console' frameBorder="0" style="width:100%;height:100%;"></iframe>
-</div>
-</td>
+	<td width="100%">
+		<div id='divParent' class='parentElement' style='width:100%;height:650px;'>
+			Create the view by clicking one of the buttons at the bottom.
+		</div>
+	</td>
+	<td id="consoleCol" style="display:none;">
+		<div id='consoleParent' class='parentElement' style='width:300px;height:650px;'>
+			<div id='console' style="overflow:scroll;white-space:pre;width:100%;height:100%;"></div>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		Contents:
+		<span id='createJavaScriptSample' class="button">JavaScript</span>
+		<span id='createHtmlSample' class="button">HTML</span>
+		<span id='createJavaSample' class="button">Java</span>
+		<span id='createPlainTextSample' class="button">Plain</span>
+		<span id='createBidiTextSample' class="button">Bidi</span>
+		URL: <input type="text" size="60" id="urlContent">
+		Lang: <select id="langSelect">
+			<option>js</option>
+			<option>css</option>
+			<option>html</option>
+			<option>java</option>
+		</select>
+		<span id='createLoad' class="button">Load</span>
+	</td>
+	<td id="consoleActions" style="display:none;">
+		<span id='clearLog' class="button">Clear</span>
+		<span id='hideLog' class="button">Hide</span>
+	</td>
+</tr>
+<tr>
+	<td>
+		Options:
+		<span class="option">
+			Read Only: <input type="checkbox" id="readOnly">
+		</span>&nbsp;
+		<span class="option">
+			Full Selection: <input type="checkbox" checked="checked" id="fullSelection">
+		</span>&nbsp;
+		<span class="option">	
+			Expand Tabs: <input type="checkbox" id="expandTab">
+		</span>&nbsp;
+		<span class="option">
+			Tab Size: <input type="text" value="4" size="2" id="tabSize">
+		</span>&nbsp;
+		<span class="option">
+			Theme:
+			<select id="themeSelect">
+				<option value="">Default</option>
+				<option value="dark">Dark</option>
+				<option value="">Eclipse</option>
+				<option value="orion">Orion</option>
+			</select>
+		</span>&nbsp;
+		<span id='setOptions' class="button">Set Options</span>
+	</td>
+</tr>
+<tr>
+	<td>
+		Tests:
+		<span id='test' class="button">Test</span>
+		Performance:
+		<select id="performanceTestSelect"></select>
+		<span id='performanceTest' class="button">Run</span>
+	</td>
 </tr>
 </table>
-<span id='createJavaSample' class="button">Java file</span>
-<span id='createJavaScriptSample' class="button">JavaScript file</span>
-<span id='createPlainTextSample' class="button">Plain Text</span>
-<span id='createBidiTextSample' class="button">Bidi Text</span>
-<span id='clearLog' class="button">ClearConsole</span>
-<span id='test' class="button">Test</span>
-Performance tests:
-<select id="performanceTestSelect">
-  <option value="test_pageDown">Page Down</option>
-  <option value="test_pageUp">Page Up</option>
-  <option value="test_lineDown">Line Down</option>
-  <option value="test_lineUp">Line Up</option>
-  <option value="test_selectPageDown">Select Page Down</option>
-  <option value="test_selectPageUp">Select Page Up</option>
-  <option value="test_selectLineDown">Select Line Down</option>
-  <option value="test_selectLineUp">Select Line Up</option>
-  <option value="test_getLocationAtOffset">Location at Offset</option>
-  <option value="test_getOffsetAtLocation">Offset at Location</option>
-  <option value="test_getLocationAtOffsetStyled">Location at Offset[styles]</option>
-  <option value="test_getOffsetAtLocationStyled">Offset at Location[styles]</option>
-</select>
-<span id='performanceTest' class="button">Run</span>
 </body>
 </html>

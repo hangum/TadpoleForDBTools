@@ -69,6 +69,7 @@ import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.db.browser.rap.core.util.CubridExecutePlanUtils;
 import com.hangum.db.browser.rap.core.util.OracleExecutePlanUtils;
+import com.hangum.db.browser.rap.core.util.browserFunction.IEditorBrowserFunction;
 import com.hangum.db.browser.rap.core.viewers.object.ExplorerViewer;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
@@ -349,9 +350,10 @@ public class MainEditor extends EditorPart {
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
 	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	    
-//	    browserQueryEditor.setText("about:blank"); //$NON-NLS-1$
+	    browserQueryEditor.setText("about:blank"); //$NON-NLS-1$
+	    addBrowserHandler();
 	    browserQueryEditor.setUrl(URL);
-		addBrowserHandler();
+		
 		createStatusLine();
 		
 		Composite compositeResult = new Composite(sashForm, SWT.NONE);
@@ -675,7 +677,7 @@ public class MainEditor extends EditorPart {
 	private void addBrowserHandler() {
 		 browserQueryEditor.addProgressListener( new ProgressListener() {
 		      public void completed( ProgressEvent event ) {
-		    	  browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
+		    	  browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
 		      }
 		      public void changed( ProgressEvent event ) {}
 		 });
@@ -707,6 +709,12 @@ public class MainEditor extends EditorPart {
 	private void initEditor() {
 		registerServiceHandler();
 		setOrionText( initDefaultEditorStr );
+		
+//		try {
+//			browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
+//		} catch(Exception e) {
+//			logger.error("init javascript editor", e);
+//		}
 	}
 
 	/** registery service handler */

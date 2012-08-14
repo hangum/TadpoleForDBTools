@@ -1,7 +1,6 @@
 package com.hangum.db.browser.rap;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -11,8 +10,6 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.db.browser.rap.core.editors.intro.IntroEditor;
 import com.hangum.db.browser.rap.core.editors.intro.IntroEditorInput;
-import com.hangum.db.start.TadpoleSystem;
-import com.hangum.db.util.ApplicationArgumentUtils;
 
 /**
  * This workbench advisor creates the window advisor, and specifies

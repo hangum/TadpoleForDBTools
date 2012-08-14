@@ -1,4 +1,5 @@
 /******************************************************************************* 
+ * @license
  * Copyright (c) 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -9,49 +10,34 @@
  ******************************************************************************/
 
 /*jslint */
-/*global dojo orion:true*/
+/*global define */
 
-var orion = orion || {};
+define("orion/editor/htmlGrammar", [], function() {
 
-orion.editor = orion.editor || {};
-
-/**
- * Uses a grammar to provide some very rough syntax highlighting for HTML.<p>
- * @class orion.syntax.HtmlGrammar
- */
-orion.editor.HtmlGrammar = (function() {
-	var _fileTypes = [ "html", "htm" ];
-	return {
-		/**
-		 * What kind of highlight provider we are.
-		 * @public
-		 * @type "grammar"|"parser"
-		 */
-		type: "grammar",
-		
-		/**
-		 * The file extensions that we provide rules for.
-		 * @public
-		 * @type String[]
-		 */
-		fileTypes: _fileTypes,
-		
+	/**
+	 * Provides a grammar that can do some very rough syntax highlighting for HTML.
+	 * @class orion.syntax.HtmlGrammar
+	 */
+	function HtmlGrammar() {
 		/**
 		 * Object containing the grammar rules.
 		 * @public
-		 * @type JSONObject
+		 * @type Object
 		 */
-		grammar: {
-			"comment": "HTML syntax rules",
-			"name": "HTML",
-			"fileTypes": _fileTypes,
+		return {
 			"scopeName": "source.html",
 			"uuid": "3B5C76FB-EBB5-D930-F40C-047D082CE99B",
 			"patterns": [
-				// TODO unicode?
 				{
-					"match": "<!(doctype|DOCTYPE)[^>]+>",
-					"name": "entity.name.tag.doctype.html"
+					"begin": "<!(doctype|DOCTYPE)",
+					"end": ">",
+					"contentName": "entity.name.tag.doctype.html",
+					"beginCaptures": {
+						"0": { "name": "entity.name.tag.doctype.html" }
+					},
+					"endCaptures": {
+						"0": { "name": "entity.name.tag.doctype.html" }
+					}
 				},
 				{
 					"begin": "<!--",
@@ -64,7 +50,6 @@ orion.editor.HtmlGrammar = (function() {
 					},
 					"patterns": [
 						{
-							// For testing nested subpatterns
 							"match": "--",
 							"name": "invalid.illegal.badcomment.html"
 						}
@@ -78,6 +63,7 @@ orion.editor.HtmlGrammar = (function() {
 				{ "include": "#attrName" },
 				{ "include": "#qString" },
 				{ "include": "#qqString" },
+				{ "include": "#entity" },
 				// TODO attrName, qString, qqString should be applied first while inside a tag
 				{ // startDelimiter + slash + tagName + endDelimiter
 					"match": "</[A-Za-z0-9_\\-:]+>",
@@ -99,14 +85,14 @@ orion.editor.HtmlGrammar = (function() {
 				"qString": { // single quoted string
 					"match": "(')[^']+(\')",
 					"name": "string.quoted.single.html"
+				},
+				"entity": {
+					"match": "&[A-Za-z0-9]+;",
+					"name": "constant.character.entity.html"
 				}
 			}
-		}
-	};
-}());
+		};
+	}
 
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define([], function() {
-		return orion.editor;
-	});
-}
+	return {HtmlGrammar: HtmlGrammar};
+});

@@ -1,39 +1,24 @@
-.ruler_annotation {
-	background-color: #e1ebfb;
+/* Styles for rulers */
+.ruler {
+}
+.ruler.annotations {
 	width: 16px;
 }
-
-.ruler_annotation_todo {
+.ruler.folding {
+	background-color: white;
+	width: 14px;
 }
-
-.ruler_annotation_todo_overview {
-	background-color: lightgreen;
-	border: 1px solid green;
-}
-
-.ruler_annotation_breakpoint {
-}
-
-.ruler_annotation_breakpoint_overview {
-	background-color: lightblue;
-	border: 1px solid blue;
-}
-
-.ruler_lines {
-	background-color: #e1ebfb;
-	border-right: 1px solid #b1badf;
+.ruler.lines {
+	background-color: white;
 	text-align: right;
 }
-
-.ruler_overview {
-	background-color: #e1ebfb;
+.ruler.overview {
+	width: 14px;
 }
 
-.ruler_lines_even {
-	background-color: #e1ebfb;
+/* Styles for the line number ruler */
+.rulerLines {
 }
-
-.ruler_lines_odd {
-	background-color: white;
+.rulerLines.even
+.rulerLines.odd {
 }
-

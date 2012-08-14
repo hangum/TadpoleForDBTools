@@ -1,8 +1,17 @@
+@import "./themes/default.css";
+
 .button {
-  border: 2px dotted orange;
-  padding: 0 2 0 2
+	color: teal;
+	cursor: pointer;
+	text-decoration: underline;
+	padding: 0px 2px 0px 2px;
 }
 
 .parentElement {
 	border: 1px solid teal;
+}
+
+.option {
+	border: 1px solid teal;
+	padding: 2px 2px 3px 2px;
 }
