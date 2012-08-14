@@ -69,7 +69,6 @@ import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.db.browser.rap.core.util.CubridExecutePlanUtils;
 import com.hangum.db.browser.rap.core.util.OracleExecutePlanUtils;
-import com.hangum.db.browser.rap.core.util.browserFunction.IEditorBrowserFunction;
 import com.hangum.db.browser.rap.core.viewers.object.ExplorerViewer;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
@@ -100,6 +99,9 @@ import com.swtdesigner.SWTResourceManager;
 
 /**
  * 쿼리 수행 및 검색 창.
+ * 
+ * 에디터는 org.eclipse.orion.client-20120810-1752 로 작업.
+ * 
  * @author hangumNote
  *
  */
