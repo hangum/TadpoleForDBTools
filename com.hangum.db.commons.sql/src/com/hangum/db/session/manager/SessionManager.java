@@ -140,4 +140,15 @@ public class SessionManager {
 		return (UserInfoDataDAO)mapUserInfoData.get(key);
 	}
 	
+	/**
+	 * logout 처리를 합니다.
+	 */
+	public static void logout() {
+		try {
+			HttpSession sStore = RWT.getSessionStore().getHttpSession();
+			sStore.invalidate();
+		} catch(Exception e) {
+			// ignor exception
+		}
+	}
 }

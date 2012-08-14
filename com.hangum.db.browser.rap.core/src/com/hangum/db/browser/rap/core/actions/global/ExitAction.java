@@ -11,6 +11,8 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
+import com.hangum.db.session.manager.SessionManager;
+import com.hangum.db.util.ApplicationArgumentUtils;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -31,14 +33,26 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		
 		setId(ID);
 		setText(Messages.ExitAction_0);
-		setToolTipText(Messages.ExitAction_1);
+		if(ApplicationArgumentUtils.isStandaloneMode()) { 
+			setToolTipText(Messages.ExitAction_1);		
+		} else {
+			setToolTipText("Log out");
+		}
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png"));
 	}
 
 	@Override
 	public void run() {
-		if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
-			System.exit(0);
+		// standalone 모드일경우에는 프로그램 종료한다.
+		if(ApplicationArgumentUtils.isStandaloneMode()) {
+			if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
+				System.exit(0);
+			}
+		// 서버모드 일 경우 프로그램 로그아웃한다.
+		} else {
+			if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
+				SessionManager.logout();
+			}
 		}
 	}
 	

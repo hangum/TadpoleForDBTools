@@ -167,10 +167,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(bugIssueAction);
         toolbar.add(aboutAction);
         
-        if(ApplicationArgumentUtils.isStandaloneMode()) {
+//        if(ApplicationArgumentUtils.isStandaloneMode()) {
         	toolbar.add(new Separator());
         	toolbar.add(exitAction);
-        }
+//        }
         
     }
     
