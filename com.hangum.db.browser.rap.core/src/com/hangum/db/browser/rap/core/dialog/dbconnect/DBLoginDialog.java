@@ -115,7 +115,7 @@ public class DBLoginDialog extends Dialog {
 		lblNewLabel.setText(Messages.DBLoginDialog_0);
 
 		comboDBList = new Combo(compositeHead, SWT.READ_ONLY);
-		comboDBList.setVisibleItemCount(6);
+		comboDBList.setVisibleItemCount(7);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
