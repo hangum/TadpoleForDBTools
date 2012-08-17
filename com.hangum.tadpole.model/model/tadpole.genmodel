@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.hangum.tadpole.model/src"
-    modelPluginID="com.hangum.tadpole.model" modelName="Tadpole" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="6.0" copyrightFields="false" runtimePlatform="RAP">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.hangum.tadpole.model/src" modelPluginID="com.hangum.tadpole.model"
+    modelName="Tadpole" importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0"
+    copyrightFields="false" runtimePlatform="RAP">
   <foreignModel>tadpole.ecore</foreignModel>
   <genPackages prefix="Tadpole" basePackage="com.hangum" disposableProviderFactory="true"
       interfacePackageSuffix="model" metaDataPackageSuffix="model" classPackageSuffix="model.impl"
       utilityPackageSuffix="model.util" providerPackageSuffix="model.provider" presentationPackageSuffix="model.presentation"
       testsPackageSuffix="model.tests" ecorePackage="tadpole.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="tadpole.ecore#//RelationKind">
+      <genEnumLiterals ecoreEnumLiteral="tadpole.ecore#//RelationKind/ONLY_ONE"/>
+      <genEnumLiterals ecoreEnumLiteral="tadpole.ecore#//RelationKind/ZERO_OR_ONE"/>
+      <genEnumLiterals ecoreEnumLiteral="tadpole.ecore#//RelationKind/ZERO_OR_MANY"/>
+      <genEnumLiterals ecoreEnumLiteral="tadpole.ecore#//RelationKind/ONE_OR_MANY"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="tadpole.ecore#//Rectangle"/>
+    <genDataTypes ecoreDataType="tadpole.ecore#//Point"/>
+    <genClasses ecoreClass="tadpole.ecore#//DB">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/dbType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//DB/tables"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/sid"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tadpole.ecore#//DB/references"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/comment"/>
+    </genClasses>
+    <genClasses ecoreClass="tadpole.ecore#//Table">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Table/columns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Table/db"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/constraints"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Table/incomingLinks"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Table/outgoingLinks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/logicalName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/commant"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Table/UserCommentReference"/>
+    </genClasses>
     <genClasses ecoreClass="tadpole.ecore#//Column">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/field"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/type"/>
@@ -16,16 +44,108 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/default"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/extra"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Column/table"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/logicalField"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/comment"/>
     </genClasses>
-    <genClasses ecoreClass="tadpole.ecore#//Table">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Table/columns"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Table/db"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/name"/>
+    <genClasses ecoreClass="tadpole.ecore#//Relation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Relation/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//Relation/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/source_kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/target_kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/column_name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/referenced_column_name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/bendpoint"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference tadpole.ecore#//Relation/db"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/comment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/constraint_name"/>
     </genClasses>
-    <genClasses ecoreClass="tadpole.ecore#//DB">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/db"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/tableCount"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//DB/tables"/>
+    <genClasses ecoreClass="tadpole.ecore#//View">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadpole.ecore#//View/tableName"/>
     </genClasses>
+    <genClasses ecoreClass="tadpole.ecore#//ERDInfo">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//ERDInfo/autoLayout"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//ERDInfo/version"/>
+    </genClasses>
+    <genClasses ecoreClass="tadpole.ecore#//UserComment">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//UserComment/comment"/>
+    </genClasses>
+    <nestedGenPackages prefix="Tadpole" basePackage="com.hangum" disposableProviderFactory="true"
+        interfacePackageSuffix="model" metaDataPackageSuffix="model" classPackageSuffix="model.impl"
+        utilityPackageSuffix="model.util" providerPackageSuffix="model.provider" presentationPackageSuffix="model.presentation"
+        testsPackageSuffix="model.tests" ecorePackage="tadpole.ecore#/">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="tadpole.ecore#//RelationKind">
+        <genEnumLiterals ecoreEnumLiteral="tadpole.ecore#//RelationKind/ONLY_ONE"/>
+        <genEnumLiterals ecoreEnumLiteral="tadpole.ecore#//RelationKind/ZERO_OR_ONE"/>
+        <genEnumLiterals ecoreEnumLiteral="tadpole.ecore#//RelationKind/ZERO_OR_MANY"/>
+        <genEnumLiterals ecoreEnumLiteral="tadpole.ecore#//RelationKind/ONE_OR_MANY"/>
+      </genEnums>
+      <genDataTypes ecoreDataType="tadpole.ecore#//Rectangle"/>
+      <genDataTypes ecoreDataType="tadpole.ecore#//Point"/>
+      <genClasses ecoreClass="tadpole.ecore#//DB">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/dbType"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//DB/tables"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/key"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/url"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/id"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/sid"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tadpole.ecore#//DB/references"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//DB/comment"/>
+      </genClasses>
+      <genClasses ecoreClass="tadpole.ecore#//Table">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//Table/columns"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//Table/db"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/name"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/constraints"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//Table/incomingLinks"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//Table/outgoingLinks"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/logicalName"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Table/commant"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//Table/UserCommentReference"/>
+      </genClasses>
+      <genClasses ecoreClass="tadpole.ecore#//Column">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/field"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/type"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/null"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/default"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/extra"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//Column/table"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/logicalField"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/key"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Column/comment"/>
+      </genClasses>
+      <genClasses ecoreClass="tadpole.ecore#//Relation">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//Relation/source"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//Relation/target"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/source_kind"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/target_kind"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/column_name"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/referenced_column_name"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/bendpoint"/>
+        <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference tadpole.ecore#//Relation/db"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/comment"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//Relation/constraint_name"/>
+      </genClasses>
+      <genClasses ecoreClass="tadpole.ecore#//View">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference tadpole.ecore#//View/tableName"/>
+      </genClasses>
+      <genClasses ecoreClass="tadpole.ecore#//ERDInfo">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//ERDInfo/autoLayout"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//ERDInfo/version"/>
+      </genClasses>
+      <genClasses ecoreClass="tadpole.ecore#//UserComment">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadpole.ecore#//UserComment/comment"/>
+      </genClasses>
+    </nestedGenPackages>
   </genPackages>
 </genmodel:GenModel>
