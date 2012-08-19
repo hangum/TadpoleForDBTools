@@ -70,9 +70,4 @@ public class Define {
 		return false;
 	}
 	
-//	/**  ERD 파일 저장위치 */
-//	public static final String ERD_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/erd/";// //$NON-NLS-1$
-//	/** sql file location */
-//	public static final String SQL_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/sql/";// //$NON-NLS-1$
-
 }

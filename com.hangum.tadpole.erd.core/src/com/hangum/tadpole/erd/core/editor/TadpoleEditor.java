@@ -363,26 +363,10 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 	/**
 	 * model to string
 	 * 
-	 * reference to http://wiki.eclipse.org/EMF/FAQ#How_do_I_serialize_a_resource_to_a_String_instead_of_a_file.3F
-	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	private String createResourceToString() throws Exception {
-//		ResourceSet resourceSet = new ResourceSetImpl();
-//		// uri empty is resource to a string convert
-//		Resource dbResource = resourceSet.createResource(URI.createURI(""));
-//		dbResource.getContents().add(db);
-//
-//		Map options = new HashMap();
-//		options.put(XMLResource.OPTION_ENCODING, "UTF-8");				
-//		
-//		StringWriter sw = new StringWriter();
-//		URIConverter.WriteableOutputStream uws = new URIConverter.WriteableOutputStream(sw, "UTF-8");		
-//		dbResource.save(uws, options);
-//		
-//		return sw.toString();
-		
 		XMLResourceImpl resource = new XMLResourceImpl();
         XMLProcessor processor = new XMLProcessor();
         resource.setEncoding("UTF-8");
