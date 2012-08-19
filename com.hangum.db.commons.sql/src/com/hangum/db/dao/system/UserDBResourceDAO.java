@@ -14,7 +14,6 @@ public class UserDBResourceDAO {
 	String type;
 	int user_seq;
 	int db_seq;
-	String filepath;
 	String filename;
 	Date create_time;
 	String delYn;
@@ -57,14 +56,6 @@ public class UserDBResourceDAO {
 		this.db_seq = db_seq;
 	}
 
-	public String getFilepath() {
-		return filepath;
-	}
-
-	public void setFilepath(String filepath) {
-		this.filepath = filepath;
-	}
-
 	public String getFilename() {
 		return filename;
 	}
@@ -103,7 +94,7 @@ public class UserDBResourceDAO {
 	public String toString() {
 		return "UserDBResourceDAO [seq=" + seq + ", type=" + type
 				+ ", user_seq=" + user_seq + ", db_seq=" + db_seq
-				+ ", filepath=" + filepath + ", filename=" + filename
+				+ " filename=" + filename 
 				+ ", create_time=" + create_time + ", parent=" + parent + "]";
 	}
 

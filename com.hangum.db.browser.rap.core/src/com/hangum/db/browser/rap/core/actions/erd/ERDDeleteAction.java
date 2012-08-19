@@ -42,7 +42,8 @@ public class ERDDeleteAction implements IViewActionDelegate {
 		try {
 			TadpoleSystem_UserDBResource.delete(userDBErd);
 			
-			new File(Define.ERD_FILE_LOCATION + userDBErd.getFilepath() + userDBErd.getFilename()).delete();
+//			2012.08.18 table modify - hangum
+//			new File(Define.ERD_FILE_LOCATION + userDBErd.getFilepath() + userDBErd.getFilename()).delete();
 			
 			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
 			mv.deleteErd(userDBErd);

@@ -2,11 +2,14 @@ package com.hangum.db.system;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.db.commons.sql.TadpoleSQLManager;
+import com.hangum.db.commons.sql.util.SQLUtil;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
+import com.hangum.db.dao.system.UserDBResourceDataDAO;
 import com.hangum.db.define.Define;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -20,26 +23,61 @@ public class TadpoleSystem_UserDBResource {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBResource.class);
 	
 	/**
-	 * 저장
+	 * 저장 
+	 * 
 	 * @param userDB
-	 * @param filepath
 	 * @param filename
 	 * @throws Exception
 	 */
-	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filepath, String filename) throws Exception {
+	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
 		UserDBResourceDAO resourceDao = new UserDBResourceDAO();
 		resourceDao.setUser_seq(userDB.getUser_seq());
 		resourceDao.setType(type.toString());
 		resourceDao.setDb_seq(userDB.getSeq());
-		resourceDao.setFilepath(filepath);
 		resourceDao.setFilename(filename);
 		
 		// 기존에 등록 되어 있는지 검사한다
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
-		sqlClient.insert("userDbResourceInsert", resourceDao); //$NON-NLS-1$
-
-		// 저장한 seq를 얻는다.
-		return (UserDBResourceDAO)sqlClient.queryForObject("userDBResourceDuplication", resourceDao); //$NON-NLS-1$
+		UserDBResourceDAO userDBResource =  (UserDBResourceDAO)sqlClient.insert("userDbResourceInsert", resourceDao); //$NON-NLS-1$
+		
+		// content data를 저장합니다.
+		insertResourceData(userDBResource, contents);
+		
+		return userDBResource;
+	}
+	
+	/**
+	 * update 
+	 * 
+	 * @param dbResource
+	 * @param content
+	 * @throws Exception
+	 */
+	public static void updateResource(UserDBResourceDAO userDBResource, String contents) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		sqlClient.delete("userDbResourceDataDelete", userDBResource.getSeq()); //$NON-NLS-1$
+		
+		insertResourceData(userDBResource, contents);
+	}
+	
+	/**
+	 * resource data 
+	 * 
+	 * @param userDBResource
+	 * @param contents
+	 * @throws Exception
+	 */
+	private static void insertResourceData(UserDBResourceDAO userDBResource, String contents) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		
+		// content data를 저장합니다.
+		UserDBResourceDataDAO dataDao = new UserDBResourceDataDAO();
+		dataDao.setUser_db_resource_seq(userDBResource.getSeq());
+		String[] arrayContent = SQLUtil.makeResourceDataArays(contents);
+		for (String content : arrayContent) {
+			dataDao.setData(content);		
+			sqlClient.insert("userDbResourceDataInsert", dataDao); //$NON-NLS-1$				
+		}
 	}
 	
 	/**
@@ -75,7 +113,8 @@ public class TadpoleSystem_UserDBResource {
 	}
 	
 	/**
-	 * user db삭제
+	 * user_db_resource 삭제.
+	 * user_db_resource_data 삭제.
 	 * 
 	 * @param userDBErd
 	 * @throws Exception
@@ -83,6 +122,26 @@ public class TadpoleSystem_UserDBResource {
 	public static void delete(UserDBResourceDAO userDBErd) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
 		sqlClient.delete("userDBResourceDelete", userDBErd); //$NON-NLS-1$
+		
+		sqlClient.delete("userDbResourceDataDelete", userDBErd.getSeq()); //$NON-NLS-1$
+	}
+	
+	/**
+	 * userdb의 resource data를 얻습니다.
+	 * 
+	 * @param userDBResource
+	 * @throws Exception
+	 */
+	public static String getResourceData(UserDBResourceDAO userDBResource) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		List<UserDBResourceDataDAO> datas =  (List<UserDBResourceDataDAO>)sqlClient.queryForList("userDBResourceData", userDBResource); //$NON-NLS-1$
+		
+		String retData = "";
+		for (UserDBResourceDataDAO userDBResourceDataDAO : datas) {
+			retData += userDBResourceDataDAO.getData();
+		}
+	
+		return retData;
 	}
 	
 }

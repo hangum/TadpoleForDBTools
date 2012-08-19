@@ -54,7 +54,7 @@ public class TadpoleSystemConnector {
 		if(!new File(DB_FILE_LOCATION).exists()) {
 			new File(DB_FILE_LOCATION).mkdirs();					
 		}
-		logger.debug(DB_FILE_LOCATION + DB_NAME);
+		if(logger.isDebugEnabled()) logger.debug(DB_FILE_LOCATION + DB_NAME);
 		
 		final String dbUrl = String.format(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDB_URL_INFO(), DB_FILE_LOCATION + DB_NAME);
 		UserDBDAO userDB = new UserDBDAO();
@@ -98,16 +98,20 @@ public class TadpoleSystemConnector {
 				logger.info(Messages.TadpoleSystemConnector_9+ (!boolResult?Messages.TadpoleSystemConnector_10:Messages.TadpoleSystemConnector_11) );
 				
 				// user resource
-				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_erd_table_create	);
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_resource_create	);
 				logger.info(Messages.TadpoleSystemConnector_13+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
+				// user resource data
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_resource_data_create	);
+				logger.info("user_db_resource_data Tables" + (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 				// user info data
 				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data);
 				logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 //				// ext account
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
-//				logger.info("external user table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
+				logger.info("external account table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 				// 기본 그룹
 				int seqAdm = TadpoleSystem_UserGroupQuery.newUserDB("AdminGroup");

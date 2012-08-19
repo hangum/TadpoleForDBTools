@@ -35,6 +35,7 @@ CREATE TABLE   user  (
 CREATE TABLE user_db (
      seq INTEGER PRIMARY KEY AUTOINCREMENT ,
      user_seq INTEGER  NOT NULL,
+     ext_seq INTEGER,
      type     	VARCHAR(50)  	NOT NULL,
      url			VARCHAR(2000)  	NOT NULL,
      database	VARCHAR(50)  	NOT NULL,
@@ -47,6 +48,7 @@ CREATE TABLE user_db (
      create_time DATE DEFAULT (datetime('now','localtime')),
      delYn CHAR(3) DEFAULT 'NO',
      FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+     FOREIGN KEY (ext_seq) REFERENCES ext_account (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
 
@@ -56,13 +58,20 @@ CREATE TABLE user_db_resource (
      type VARCHAR(10) NOT NULL,
      user_seq INTEGER NOT NULL,
      db_seq INTEGER  NOT NULL,
-     filepath VARCHAR(4000) NOT NULL,
      filename VARCHAR(2000)  NOT NULL,
      create_time DATE DEFAULT (datetime('now','localtime')),
-      delYn CHAR(3) DEFAULT 'NO',
+     delYn CHAR(3) DEFAULT 'NO',
      UNIQUE(type, user_seq, db_seq, filename),
      FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
      FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+
+사용자 디비의 실제 데이터 입력
+CREATE TABLE user_db_resource_data (
+     seq INTEGER PRIMARY KEY AUTOINCREMENT ,
+     user_db_resource_seq INTEGER NOT NULL,
+     data VARCHAR(2000)  NOT NULL,
+     FOREIGN KEY (user_db_resource_seq) REFERENCES user_db_resource (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
 사용자 프리퍼런스 데이터
@@ -81,17 +90,26 @@ CREATE TABLE user_info_data (
     FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
-- 외부 사용자 디비(아마존 rdc, ucloud db)
-CREATE TABLE table_auth (
+- 외부 사용자 디비(amazonRDS, ucloud db)
+CREATE TABLE ext_account (
 	seq INTEGER PRIMARY KEY AUTOINCREMENT ,
-	user_group INTEGER NOT NULL,
 	user_seq INTEGER  NOT NULL,
-	db_seq INTEGER  NOT NULL,
-	type CHAR(5) DEFAULT '1',
-	table_name VARCHAR(100) NOT NULL,
-	column_names VARCHAR(1000) NOT NULL,
+	name VARCHAR(1000) NOT NULL,
+	value VARCHAR(1000) NOT NULL,
+	value1 VARCHAR(1000),
+	value2 VARCHAR(1000),
+	value3 VARCHAR(1000),
+	value4 VARCHAR(1000),
+	value5 VARCHAR(1000),
+	value6 VARCHAR(1000),
+	value7 VARCHAR(1000),
+	value8 VARCHAR(1000),
+	value9 VARCHAR(1000),
+	success VARCHAR(10),
+	message VARCHAR(1000),
 	create_time DATE DEFAULT (datetime('now','localtime')),
-    delYn CHAR(3) DEFAULT 'NO'
+    delYn CHAR(3) DEFAULT 'NO',
+    FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
  -->
@@ -102,7 +120,9 @@ CREATE TABLE table_auth (
 
 <sqlMap namespace="Tadpole-System-SQLiteSQL">
 <!-- 
+	============================================================================================================================
 	user group
+	============================================================================================================================
  -->
  <select id="isUserGroup" resultClass="com.hangum.db.dao.system.UserGroupDAO" parameterClass="com.hangum.db.dao.system.UserGroupDAO">
 	SELECT name 
@@ -133,6 +153,7 @@ CREATE TABLE table_auth (
 <!--
 	============================================================================================================================ 
 	user table이 있는 지 여부에 따라 시스템 테이블의 존재 유무를 가린다.
+	============================================================================================================================
  -->
 <select id="isUserTable" resultClass="java.lang.String">
 	SELECT name 
@@ -235,6 +256,7 @@ CREATE TABLE table_auth (
 <!-- 
 	============================================================================================================================
 	user db
+	============================================================================================================================
  -->
  <!-- 
 	1) userDB 중복 저장 용도
@@ -268,10 +290,20 @@ CREATE TABLE table_auth (
 <!-- 
 	============================================================================================================================
 	user db resource
+	============================================================================================================================
  -->
 <insert id="userDbResourceInsert" parameterClass="com.hangum.db.dao.system.UserDBResourceDAO">
-	INSERT INTO user_db_resource(seq, user_seq, type, db_seq, filepath, filename)
-	VALUES( (select max(seq) from user_db_resource)+1, #user_seq#, #type#, #db_seq#, #filepath#, #filename#)
+	INSERT INTO user_db_resource(seq, user_seq, type, db_seq, filename)
+	VALUES( (select max(seq) from user_db_resource)+1, #user_seq#, #type#, #db_seq#, #filename#)
+	
+	<selectKey resultClass="com.hangum.db.dao.system.UserDBResourceDAO">
+		SELECT * 
+		FROM user_db_resource 
+		WHERE user_seq = #user_seq# AND 
+			type = #type# AND 
+			db_seq = #db_seq# AND 
+			filename = #filename#
+	</selectKey>
 </insert>
 
 <select id="userDbResourceTree" resultClass="com.hangum.db.dao.system.UserDBResourceDAO" parameterClass="com.hangum.db.dao.system.UserDBDAO">
@@ -314,6 +346,33 @@ CREATE TABLE table_auth (
 	DELETE FROM user_db_resource 
 	WHERE
 		db_seq = #db_seq#
+</delete>
+
+<!-- 
+	resource data를 얻습니다.
+ -->
+<select id="userDBResourceData" resultClass="com.hangum.db.dao.system.UserDBResourceDataDAO" parameterClass="com.hangum.db.dao.system.UserDBResourceDAO">
+	SELECT * FROM user_db_resource_data
+	WHERE
+		user_db_resource_seq = #seq#
+	ORDER BY seq
+</select>
+
+<!-- 
+	resource data를 저장합니다.
+ -->
+<insert id="userDbResourceDataInsert" parameterClass="com.hangum.db.dao.system.UserDBResourceDataDAO">
+	INSERT INTO user_db_resource_data(seq, user_db_resource_seq, data)
+	VALUES( (select max(seq) from user_db_resource_data)+1, #user_db_resource_seq#, #data#)
+</insert>
+
+<!-- 
+	resource data를 삭제합니다.
+ -->
+<delete id="userDbResourceDataDelete" parameterClass="java.lang.Integer">
+	DELETE FROM user_db_resource_data
+	WHERE
+		user_db_resource_seq = #seq#
 </delete>
 
 <!-- 

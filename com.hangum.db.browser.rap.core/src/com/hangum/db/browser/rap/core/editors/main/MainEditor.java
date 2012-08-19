@@ -1,7 +1,5 @@
 package com.hangum.db.browser.rap.core.editors.main;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -714,12 +712,6 @@ public class MainEditor extends EditorPart {
 	private void initEditor() {
 		registerServiceHandler();
 		setOrionText( initDefaultEditorStr );
-		
-//		try {
-//			browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
-//		} catch(Exception e) {
-//			logger.error("init javascript editor", e);
-//		}
 	}
 
 	/** registery service handler */
@@ -1355,7 +1347,7 @@ public class MainEditor extends EditorPart {
 	/**
 	 * <pre>
 	 * set create status line
-	 * 현재 리소스를 10% 정도 잡아 먹는 것으로 파악되어서 블럭 처리 합니다.
+	 * TODO orion editor의 현재 리소스를 10% 정도 잡아 먹는 것으로 파악되어서 블럭 처리 합니다.
 	 * 더 좋은 방법이 나올때까지는 이 방법을 사용합니다.
 	 * </pre>
 	 */
@@ -1430,18 +1422,12 @@ public class MainEditor extends EditorPart {
 		if(dBResource == null) {
 //			FileNameValidator fv = new FileNameValidator(userDB);
 //			InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", Messages.MainEditor_68, userDB.getDisplay_name(), fv); //$NON-NLS-1$
-//			if (dlg.open() == Window.OK) {
-			
-				String absultPath = Define.RESOURCE_TYPE.SQL.toString() + userDB.getUser_seq() + userDB.getSeq();//  + userDB.getDisplay_name();
-				String saveFullFileName = Define.SQL_FILE_LOCATION + absultPath + saveFileName + ".sql"; //$NON-NLS-1$
-
-				new File(Define.SQL_FILE_LOCATION).mkdirs();
+//			
+//			if (dlg.open() == Window.OK) {			
 				
 				try {
-					fileSave(saveFullFileName, newContents);
-					
 					// db 저장
-					dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.SQL, absultPath, saveFileName);
+					dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.SQL, saveFileName, newContents);
 					dBResource.setParent(userDB);
 					
 					// title 수정
@@ -1449,7 +1435,7 @@ public class MainEditor extends EditorPart {
 					
 					// tree 갱신
 					PlatformUI.getPreferenceStore().setValue(Define.SAVE_FILE, ""+dBResource.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				
+					setDirty(false);
 				} catch (Exception e) {
 					logger.error("save file", e); //$NON-NLS-1$
 
@@ -1462,8 +1448,8 @@ public class MainEditor extends EditorPart {
 			
 		} else {
 			try {
-				fileSave(Define.SQL_FILE_LOCATION + dBResource.getFilepath() + dBResource.getFilename() + ".sql", newContents); //$NON-NLS-1$
-				
+				TadpoleSystem_UserDBResource.updateResource(dBResource, newContents);
+				setDirty(false);
 			} catch (Exception e) {
 				logger.error("update file", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -1474,26 +1460,6 @@ public class MainEditor extends EditorPart {
 		}
 
 		return true;
-	}
-	
-	/**
-	 * 파일 저장
-	 * 
-	 * @param saveFileName
-	 * @param newContents
-	 * @throws Exception
-	 */
-	private void fileSave(String saveFileName, String newContents) throws Exception {
-	
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(new File(saveFileName), false);
-			fw.write(newContents);
-			fw.flush();
-			
-		} finally {
-			try { fw.close(); } catch(Exception e) {}
-		}
 	}
 	
 	/** save property dirty */

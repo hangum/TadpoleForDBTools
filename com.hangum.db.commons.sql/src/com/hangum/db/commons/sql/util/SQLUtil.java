@@ -8,7 +8,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
+ * <pre>
  *  java.sql.ResultSet과 ResultSetMeta를 TableViewer로 바꾸기 위해 가공하는 Util
+ *  
+ *  resource데이터를 저장하기 위해 data를 배열화시킨다.
+ * </pre>
  * 
  * @author hangum
  *
@@ -64,7 +68,7 @@ public class SQLUtil {
 		
 		result.append(')');			
 		
-		logger.info("[make insert statment is " + result.toString());
+		if(logger.isDebugEnabled()) logger.debug("[make insert statment is " + result.toString());
 		
 		return result.toString();
 	}
@@ -92,7 +96,7 @@ public class SQLUtil {
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
 			
 		} catch(Exception e) {
-			logger.error("쿼리 가공중에", e);
+			logger.error("query execute", e);
 		}
 		
 		return exeSQL;
@@ -128,5 +132,46 @@ public class SQLUtil {
 		}
 	
 		return sql;
+	}
+	
+	/**
+	 * db resource data를 저장할때 2000byte 단위로 저장하도록 합니다.
+	 * 
+	 * @param resource data
+	 * @return
+	 */
+	public static String[] makeResourceDataArays(String resourceContent)  {
+		int cutsize = 1998;
+		String[] tmpRetArryStr = new String[10000];
+		byte[] byteSqlText = resourceContent.getBytes();
+
+		int isEndTextHangul = 0;
+		int workCnt = 0;
+
+		while (byteSqlText.length > cutsize) {
+			isEndTextHangul = 0;
+			for (int i=0; i<cutsize; i++) {
+				if (byteSqlText[i] < 0) isEndTextHangul++;
+			}
+
+			if (isEndTextHangul%2 != 0) {
+				tmpRetArryStr[workCnt] = new String(byteSqlText, 0, cutsize + 1);
+				byteSqlText = new String(byteSqlText, cutsize + 1, byteSqlText.length - (cutsize + 1)).getBytes();
+			} else {
+				tmpRetArryStr[workCnt] = new String(byteSqlText, 0, cutsize);
+				byteSqlText = new String(byteSqlText, cutsize, byteSqlText.length - cutsize).getBytes();
+			}
+
+			workCnt++;
+		}
+		tmpRetArryStr[workCnt] = new String(byteSqlText);
+		
+		// 결과가 있는 만큼 담기위해
+		String[] returnDataArry = new String[workCnt+1];
+		for (int i=0; i<=workCnt; i++) {
+			returnDataArry[i] = tmpRetArryStr[i];
+		}
+		
+		return returnDataArry;
 	}
 }

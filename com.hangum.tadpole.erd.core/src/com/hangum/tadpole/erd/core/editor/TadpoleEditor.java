@@ -1,9 +1,8 @@
 package com.hangum.tadpole.erd.core.editor;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 
@@ -14,10 +13,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
+import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
@@ -43,6 +40,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.xml.sax.InputSource;
 
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
@@ -59,7 +57,6 @@ import com.hangum.tadpole.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.erd.stanalone.Activator;
 import com.hangum.tadpole.model.DB;
 import com.hangum.tadpole.model.TadpoleFactory;
-import com.hangum.tadpole.model.TadpolePackage;
 
 /**
  * tadpole editor
@@ -74,9 +71,6 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleEditor.class);
 	
-	/** tadpole resource */
-	private Resource dbResource;
-
 	/** first init data */
 	private DB db;
 	private UserDBDAO userDB;
@@ -265,27 +259,37 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		if(null != erdInput.getUserDBERD()) { 
 			userDBErd = erdInput.getUserDBERD();
 			
-			// load resouce
-			TadpolePackage.eINSTANCE.eClass();
-			ResourceSet resourceSet = new ResourceSetImpl();
-			
-			String loadFile = Define.ERD_FILE_LOCATION + userDBErd.getFilepath() + userDBErd.getFilename() + ".erd"; //$NON-NLS-1$
-			if(logger.isDebugEnabled()) logger.debug("#### [load erd]####" + loadFile); //$NON-NLS-1$
-			if(new File(loadFile).exists()) {
-				dbResource = resourceSet.createResource(URI.createURI(loadFile));
-		      
-				try {
-					dbResource.load(null);
-					db = (DB)dbResource.getContents().get(0);
-					
-				} catch(IOException e) {
-					dbResource = null;
-					
-					logger.error("Load ERD Resource", e); //$NON-NLS-1$
-			        
-			        Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_0, errStatus); //$NON-NLS-1$
-				}
+//			// load resouce
+//			TadpolePackage.eINSTANCE.eClass();
+//			ResourceSet resourceSet = new ResourceSetImpl();
+//			
+//			Resource dbResource = resourceSet.createResource(URI.createURI(""));	      
+			InputStream is = null;
+			try {
+				String xmlString = TadpoleSystem_UserDBResource.getResourceData(userDBErd);
+				
+//				Map options = new HashMap();
+//				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+//				
+//				
+//				is = new ByteArrayInputStream(TadpoleSystem_UserDBResource.getResourceData(userDBErd).getBytes());
+//				
+//				XMIResourceImpl resource = new XMIResourceImpl();
+//				resource.load(is, options);
+				XMLResourceImpl resource = new XMLResourceImpl();
+				resource.setEncoding("UTF-8");
+		        resource.load(new InputSource(new StringReader(xmlString)), null);
+		        
+//				dbResource.load(is, options);
+				db = (DB)resource.getContents().get(0);
+				
+			} catch(Exception e) {
+				logger.error("Load ERD Resource", e); //$NON-NLS-1$
+		        
+		        Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_0, errStatus); //$NON-NLS-1$
+			} finally {
+				if(is != null) try{ is.close(); } catch(Exception e) {}
 			}
 			
 			setPartName(isAllTable?"All " + userDBErd.getFilename():userDBErd.getFilename());
@@ -304,7 +308,6 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 	
 //	@Override
 //	public void doSaveAs() {
-//		// TODO Auto-generated method stub
 //		super.doSaveAs();
 //	}
 
@@ -312,25 +315,15 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 	public void doSave(IProgressMonitor monitor) {
 		
 		// 신규 저장이면 
-		if(dbResource == null) {
+		if(userDBErd == null) {
 			
 			// file 이름 dialog
 			InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "Save", Messages.TadpoleEditor_4, userDB.getDisplay_name(), new FileNameValidator()); //$NON-NLS-1$
 			if (dlg.open() == Window.OK) {
 				
-				String absultPath = Define.RESOURCE_TYPE.ERD.toString() + userDB.getUser_seq() + userDB.getSeq();//  + userDB.getDisplay_name();
-				String saveFileName = Define.ERD_FILE_LOCATION + absultPath + erdDetailFileName + ".erd"; //$NON-NLS-1$
-				logger.debug("### [save file name]" + new File(saveFileName).getAbsolutePath() ); //$NON-NLS-1$
-				
-				ResourceSet resSet = new ResourceSetImpl();
-				dbResource = resSet.createResource(URI.createURI(saveFileName));
-				dbResource.getContents().add(db);
-				
 				try {
-					// erd 파일저장
-					dbResource.save(Collections.EMPTY_MAP);
 					// erd 정보 디비저장
-					userDBErd = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.ERD, absultPath, erdDetailFileName);
+					userDBErd = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.ERD, erdDetailFileName, createResourceToString());
 					userDBErd.setParent(userDB);
 					
 					// command stack 초기화
@@ -339,15 +332,12 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 					// title 수정
 					setPartName(erdDetailFileName);
 
-					// managerView tree refersh
-					//
+					// managerView tree refresh
 					// 뒤에 시간을붙인것은 한번 저장한 db_seq는 업데이지 않는 오류를 방지하기위해...
 					//
 					PlatformUI.getPreferenceStore().setValue(Define.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					
 				} catch (Exception e) {
-					dbResource = null;
-					
 					logger.error(Messages.TadpoleEditor_9, e);
 					
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -359,16 +349,45 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		} else {
 			
 			try {
-				dbResource.save(Collections.EMPTY_MAP);
+				TadpoleSystem_UserDBResource.updateResource(userDBErd, createResourceToString());
 				getCommandStack().markSaveLocation();
-			} catch(IOException e) {
+			} catch(Exception e) {
 				logger.error(Messages.TadpoleEditor_12, e);
-				dbResource = null;
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_1, errStatus); //$NON-NLS-1$
 			}
 		}
+	}
+	
+	/**
+	 * model to string
+	 * 
+	 * reference to http://wiki.eclipse.org/EMF/FAQ#How_do_I_serialize_a_resource_to_a_String_instead_of_a_file.3F
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private String createResourceToString() throws Exception {
+//		ResourceSet resourceSet = new ResourceSetImpl();
+//		// uri empty is resource to a string convert
+//		Resource dbResource = resourceSet.createResource(URI.createURI(""));
+//		dbResource.getContents().add(db);
+//
+//		Map options = new HashMap();
+//		options.put(XMLResource.OPTION_ENCODING, "UTF-8");				
+//		
+//		StringWriter sw = new StringWriter();
+//		URIConverter.WriteableOutputStream uws = new URIConverter.WriteableOutputStream(sw, "UTF-8");		
+//		dbResource.save(uws, options);
+//		
+//		return sw.toString();
+		
+		XMLResourceImpl resource = new XMLResourceImpl();
+        XMLProcessor processor = new XMLProcessor();
+        resource.setEncoding("UTF-8");
+        resource.getContents().add(db);
+        return processor.saveToString(resource, null);
 	}
 	
 	@Override
