@@ -228,15 +228,15 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		logger.debug("[mysql dbURL]" + dbUrl);
 		
 		userDB = new UserDBDAO();
-		userDB.setType(DBDefine.MYSQL_DEFAULT.getDBToString());
+		userDB.setTypes(DBDefine.MYSQL_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDatabase(textDatabase.getText());
+		userDB.setDb(textDatabase.getText());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());
 		userDB.setPort(textPort.getText());
 		userDB.setLocale(comboLocale.getText());
-		userDB.setUser(textUser.getText());
+		userDB.setUsers(textUser.getText());
 		
 		// 이미 연결한 것인지 검사한다.
 		if( !connectValite(userDB, textDatabase.getText()) ) return false;

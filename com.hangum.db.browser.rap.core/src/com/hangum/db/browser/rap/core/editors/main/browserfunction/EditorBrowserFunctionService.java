@@ -93,15 +93,15 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 	private Object doGetInitialContent(Object[] arguments) {
 		String extension = "";
 		
-		if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MYSQL_DEFAULT) {
+		if( DBDefine.getDBDefine( editor.getUserDB().getTypes() ) == DBDefine.MYSQL_DEFAULT) {
 			extension = editor.getEditorInput().getName() + ".mysql";
-		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.ORACLE_DEFAULT) {
+		} else if( DBDefine.getDBDefine( editor.getUserDB().getTypes() ) == DBDefine.ORACLE_DEFAULT) {
 			extension = editor.getEditorInput().getName() + ".oracle";
-		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MSSQL_DEFAULT) {
+		} else if( DBDefine.getDBDefine( editor.getUserDB().getTypes() ) == DBDefine.MSSQL_DEFAULT) {
 			extension = editor.getEditorInput().getName() + ".mssql";
-		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.SQLite_DEFAULT) {
+		} else if( DBDefine.getDBDefine( editor.getUserDB().getTypes() ) == DBDefine.SQLite_DEFAULT) {
 			extension = editor.getEditorInput().getName() + ".sqlite";
-		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.CUBRID_DEFAULT) {
+		} else if( DBDefine.getDBDefine( editor.getUserDB().getTypes() ) == DBDefine.CUBRID_DEFAULT) {
 			extension = editor.getEditorInput().getName() + ".mysql";
 		} else {
 			extension = editor.getEditorInput().getName() + ".postgresql";

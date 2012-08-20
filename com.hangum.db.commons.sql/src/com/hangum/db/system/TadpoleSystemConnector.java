@@ -58,12 +58,12 @@ public class TadpoleSystemConnector {
 		
 		final String dbUrl = String.format(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDB_URL_INFO(), DB_FILE_LOCATION + DB_NAME);
 		UserDBDAO userDB = new UserDBDAO();
-		userDB.setType(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDBToString());
+		userDB.setTypes(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDatabase(DB_INFORMATION);
+		userDB.setDb(DB_INFORMATION);
 		userDB.setDisplay_name(DB_INFORMATION);
 		userDB.setPasswd(""); //$NON-NLS-1$
-		userDB.setUser(""); //$NON-NLS-1$
+		userDB.setUsers(""); //$NON-NLS-1$
 		
 		return userDB;
 	}

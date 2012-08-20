@@ -43,11 +43,11 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		if(actionType == DB_ACTION.TABLES) {
 			
 			// others db
-			if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 				CreateTableAction cta = new CreateTableAction();
 				cta.run(userDB, actionType);
 			// moongodb
-			} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
+			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 				
 				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == ncd.open() ) {

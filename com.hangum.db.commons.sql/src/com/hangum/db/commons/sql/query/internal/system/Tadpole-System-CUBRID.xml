@@ -3,99 +3,37 @@
 <!-- 
 
 사용자 그룹
-
 CREATE TABLE user_group  (
-	seq INTEGER PRIMARY KEY AUTOINCREMENT,
+	seq INTEGER AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(60) NOT NULL,
-	create_time DATE DEFAULT (datetime('now','localtime')),
+	create_time DATE DEFAULT SYSTIMESTAMP,
 	delYn CHAR(3) DEFAULT 'NO'
 )
 
-
 사용자
 	user_type(
-			admin, manager, user, guest) 
-
+			admin, manager, user, guest)
 CREATE TABLE   users  (
-	seq INTEGER PRIMARY KEY AUTOINCREMENT ,
+	seq INTEGER AUTO_INCREMENT PRIMARY KEY,
 	group_seq INTEGER NOT NULL, 
 	email VARCHAR(60) NOT NULL,
 	passwd VARCHAR(60) NOT NULL,
 	name VARCHAR(60) NOT NULL,
-	user_type VARCHAR(20) NOT NULL DEFAULT 'user',
-	approval_yn VARCHAR(3) NOT NULL DEFAULT 'NO' ,
-	create_time DATE DEFAULT (datetime('now','localtime')),
+	user_type VARCHAR(20) DEFAULT 'user',
+	approval_yn VARCHAR(3)  DEFAULT 'NO' ,
+	create_time DATE DEFAULT SYSTIMESTAMP,
 	delYn CHAR(3) DEFAULT 'NO',
 	UNIQUE(email, user_type),
-	FOREIGN KEY (group_seq) REFERENCES user_group  (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
-
-사용자 디비
-// host, port는 sqlite는 값이 없으므로 not null에서 제외 했습니다.
-CREATE TABLE user_db (
-     seq INTEGER PRIMARY KEY AUTOINCREMENT ,
-     user_seq INTEGER  NOT NULL,
-     ext_seq INTEGER,
-     type     	VARCHAR(50)  	NOT NULL,
-     url			VARCHAR(2000)  	NOT NULL,
-     database	VARCHAR(50)  	NOT NULL,
-     display_name VARCHAR(50)  	NOT NULL,
-     host		 VARCHAR(50) 	,
-     port		 VARCHAR(10) ,
-     locale	VARCHAR(10)		,
-     passwd		 VARCHAR(100)  	,
-     user		 VARCHAR(100) 	,
-     create_time DATE DEFAULT (datetime('now','localtime')),
-     delYn CHAR(3) DEFAULT 'NO',
-     FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
-     FOREIGN KEY (ext_seq) REFERENCES ext_account (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
-
-
-사용자 디비의 RESOURCE SQL, ERD
-CREATE TABLE user_db_resource (
-     seq INTEGER PRIMARY KEY AUTOINCREMENT ,
-     type VARCHAR(10) NOT NULL,
-     user_seq INTEGER NOT NULL,
-     db_seq INTEGER  NOT NULL,
-     filename VARCHAR(2000)  NOT NULL,
-     create_time DATE DEFAULT (datetime('now','localtime')),
-     delYn CHAR(3) DEFAULT 'NO',
-     UNIQUE(type, user_seq, db_seq, filename),
-     FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
-     FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
-
-사용자 디비의 실제 데이터 입력
-CREATE TABLE user_db_resource_data (
-     seq INTEGER PRIMARY KEY AUTOINCREMENT ,
-     user_db_resource_seq INTEGER NOT NULL,
-     data VARCHAR(2000)  NOT NULL,
-     FOREIGN KEY (user_db_resource_seq) REFERENCES user_db_resource (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
-
-사용자 프리퍼런스 데이터
-CREATE TABLE user_info_data (
-	seq INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_seq INTEGER NOT NULL,
-    db_seq INTEGER  NOT NULL,
-    name VARCHAR(40) NOT NULL,
-    value VARCHAR(2000),
-    value1 VARCHAR(2000),
-    value2 VARCHAR(2000),
-    value3 VARCHAR(2000),
-    value4 VARCHAR(2000),
-    value5 VARCHAR(2000),
-    FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+	CONSTRAINT fk_users FOREIGN KEY (group_seq) REFERENCES user_group  (seq)  ON DELETE CASCADE ON UPDATE RESTRICT
 )
 
 - 외부 사용자 디비(amazonRDS, ucloud db)
 CREATE TABLE ext_account (
-	seq INTEGER PRIMARY KEY AUTOINCREMENT ,
+	seq INTEGER AUTO_INCREMENT PRIMARY KEY,
 	user_seq INTEGER  NOT NULL,
+	types VARCHAR(100) NOT NULL,
 	name VARCHAR(1000) NOT NULL,
-	value VARCHAR(1000) NOT NULL,
+	value0 VARCHAR(1000) NOT NULL,
 	value1 VARCHAR(1000),
 	value2 VARCHAR(1000),
 	value3 VARCHAR(1000),
@@ -107,10 +45,73 @@ CREATE TABLE ext_account (
 	value9 VARCHAR(1000),
 	success VARCHAR(10),
 	message VARCHAR(1000),
-	create_time DATE DEFAULT (datetime('now','localtime')),
-    delYn CHAR(3) DEFAULT 'NO',
-    FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+	create_time DATE DEFAULT SYSTIMESTAMP,
+  delYn CHAR(3) DEFAULT 'NO',
+  UNIQUE(user_seq, types, name),
+  CONSTRAINT  fk_ext_account_user_seq FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE CASCADE ON UPDATE RESTRICT
 )
+
+
+사용자 디비
+// host, port는 sqlite는 값이 없으므로 not null에서 제외 했습니다.
+CREATE TABLE user_db (
+     seq INTEGER AUTO_INCREMENT PRIMARY KEY,
+     user_seq INTEGER  NOT NULL,
+     ext_seq INTEGER,
+     types     	VARCHAR(50)  	NOT NULL,
+     url			VARCHAR(2000)  	NOT NULL,
+     db	VARCHAR(50)  	NOT NULL,
+     display_name VARCHAR(50)  	NOT NULL,
+     host		 VARCHAR(50) 	,
+     port		 VARCHAR(10) ,
+     locale	VARCHAR(10)		,
+     passwd		 VARCHAR(100)  	,
+     users		 VARCHAR(100) 	,
+     create_time DATE DEFAULT SYSTIMESTAMP,
+     delYn CHAR(3) DEFAULT 'NO',
+     CONSTRAINT fk_user_db_seq FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE CASCADE ON UPDATE RESTRICT,
+     CONSTRAINT fk_user_db_ext_seq FOREIGN KEY (ext_seq) REFERENCES ext_account (seq) ON DELETE CASCADE ON UPDATE RESTRICT
+)
+
+
+사용자 디비의 RESOURCE SQL, ERD
+CREATE TABLE user_db_resource (
+     seq INTEGER AUTO_INCREMENT PRIMARY KEY,
+     types VARCHAR(10) NOT NULL,
+     user_seq INTEGER NOT NULL,
+     db_seq INTEGER  NOT NULL,
+     filename VARCHAR(2000)  NOT NULL,
+     create_time DATE DEFAULT SYSTIMESTAMP,
+     delYn CHAR(3) DEFAULT 'NO',
+     UNIQUE(types, user_seq, db_seq, filename),
+     CONSTRAINT fk_user_resource_seq FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     CONSTRAINT fk_user_db_resource_seq FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+
+사용자 디비의 실제 데이터 입력
+CREATE TABLE user_db_resource_data (
+     seq INTEGER AUTO_INCREMENT PRIMARY KEY,
+     user_db_resource_seq INTEGER NOT NULL,
+     datas VARCHAR(2000)  NOT NULL,
+     CONSTRAINT fk_user_db_resourc_data FOREIGN KEY (user_db_resource_seq) REFERENCES user_db_resource (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+
+사용자 프리퍼런스 데이터
+CREATE TABLE user_info_data (
+	seq INTEGER AUTO_INCREMENT PRIMARY KEY,
+    user_seq INTEGER NOT NULL,
+    db_seq INTEGER  NOT NULL,
+    name VARCHAR(40) NOT NULL,
+    value0 VARCHAR(2000),
+    value1 VARCHAR(2000),
+    value2 VARCHAR(2000),
+    value3 VARCHAR(2000),
+    value4 VARCHAR(2000),
+    value5 VARCHAR(2000),
+    CONSTRAINT fk_user_info_data_users FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_user_info_data_users_db FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+
 
  -->
 
@@ -118,7 +119,7 @@ CREATE TABLE ext_account (
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
-<sqlMap namespace="Tadpole-System-SQLiteSQL">
+<sqlMap namespace="Tadpole-System-CUBRID">
 <!-- 
 	============================================================================================================================
 	user group
@@ -266,7 +267,7 @@ CREATE TABLE ext_account (
 	SELECT * FROM user_db 
 	WHERE 
 		user_seq = #user_seq# and 
-		database = #database# and 
+		db = #db# and 
 		display_name = #display_name#
 	ORDER BY display_name
 </select>
@@ -279,8 +280,8 @@ CREATE TABLE ext_account (
 </select>
 
 <insert id="userDBInsert" parameterClass="com.hangum.db.dao.system.UserDBDAO">
-	INSERT INTO user_db(seq, user_seq, type, url, database, display_name, host, port, locale, passwd, user)
-	VALUES( (select max(seq) from user_db)+1 , #user_seq#, #type#, #url#, #database#, #display_name#, #host#, #port#, #locale#, #passwd#, #user#)
+	INSERT INTO user_db(seq, user_seq, types, url, db, display_name, host, port, locale, passwd, users)
+	VALUES( (select max(seq) from user_db)+1 , #user_seq#, #types#, #url#, #db#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#)
 </insert>
 
 <delete id="userDBDelete" parameterClass="java.lang.Integer">
@@ -293,14 +294,14 @@ CREATE TABLE ext_account (
 	============================================================================================================================
  -->
 <insert id="userDbResourceInsert" parameterClass="com.hangum.db.dao.system.UserDBResourceDAO">
-	INSERT INTO user_db_resource(seq, user_seq, type, db_seq, filename)
-	VALUES( (select max(seq) from user_db_resource)+1, #user_seq#, #type#, #db_seq#, #filename#)
+	INSERT INTO user_db_resource(seq, user_seq, types, db_seq, filename)
+	VALUES( (select max(seq) from user_db_resource)+1, #user_seq#, #types#, #db_seq#, #filename#)
 	
 	<selectKey resultClass="com.hangum.db.dao.system.UserDBResourceDAO">
 		SELECT * 
 		FROM user_db_resource 
 		WHERE user_seq = #user_seq# AND 
-			type = #type# AND 
+			types = #types# AND 
 			db_seq = #db_seq# AND 
 			filename = #filename#
 	</selectKey>
@@ -327,7 +328,7 @@ CREATE TABLE ext_account (
 <select id="userDBResourceDuplication" resultClass="com.hangum.db.dao.system.UserDBResourceDAO" parameterClass="com.hangum.db.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource
 	WHERE
-		type = #type# 			and
+		types = #types# 			and
 		user_seq = #user_seq# 	and
 		db_seq = #db_seq# 		and
 		filename = #filename#
@@ -362,8 +363,8 @@ CREATE TABLE ext_account (
 	resource data를 저장합니다.
  -->
 <insert id="userDbResourceDataInsert" parameterClass="com.hangum.db.dao.system.UserDBResourceDataDAO">
-	INSERT INTO user_db_resource_data(seq, user_db_resource_seq, data)
-	VALUES( (select max(seq) from user_db_resource_data)+1, #user_db_resource_seq#, #data#)
+	INSERT INTO user_db_resource_data(seq, user_db_resource_seq, datas)
+	VALUES( (select max(seq) from user_db_resource_data)+1, #user_db_resource_seq#, #datas#)
 </insert>
 
 <!-- 
@@ -400,8 +401,8 @@ CREATE TABLE ext_account (
 	사용자 정보를 저장한다. 
  -->
 <insert id="userInfoDataInsert" parameterClass="com.hangum.db.dao.system.UserInfoDataDAO">
-	INSERT INTO user_info_data(seq, user_seq, db_seq, name, value, value1, value2, value3, value4, value5)
-	VALUES( (select max(seq) from user_info_data)+1, #user_seq#, #db_seq#, #name#, #value#, #value1#, #value2#, #value3#, #value4#, #value5# )
+	INSERT INTO user_info_data(seq, user_seq, db_seq, name, value0, value1, value2, value3, value4, value5)
+	VALUES( (select max(seq) from user_info_data)+1, #user_seq#, #db_seq#, #name#, #value0#, #value1#, #value2#, #value3#, #value4#, #value5# )
 </insert>
 
 <!-- 
@@ -410,7 +411,7 @@ CREATE TABLE ext_account (
 <update id="userInfoDataUpdate" parameterClass="com.hangum.db.dao.system.UserInfoDataDAO">
 	UPDATE user_info_data 
 	SET
-		value = #value#,
+		value0 = #value0#,
 		value1 = #value1#,
 		value2 = #value2#,
 		value3 = #value3#,

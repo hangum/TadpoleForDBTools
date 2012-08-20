@@ -51,7 +51,7 @@ public class TadpoleSQLManager {
 
 					// oracle 일 경우 로케일을 설정합니다.
 					try { 
-						if(DBDefine.getDBDefine(dbInfo.getType()) == DBDefine.ORACLE_DEFAULT) {
+						if(DBDefine.getDBDefine(dbInfo.getTypes()) == DBDefine.ORACLE_DEFAULT) {
 							if(!"".equals(dbInfo.getLocale())) {
 								Locale.setDefault(new Locale(dbInfo.getLocale()));
 							}
@@ -96,6 +96,6 @@ public class TadpoleSQLManager {
 	 * @return
 	 */
 	private static String getKey(UserDBDAO dbInfo) {
-		return dbInfo.getType()+dbInfo.getUrl()+dbInfo.getUser()+dbInfo.getPasswd();
+		return dbInfo.getTypes()+dbInfo.getUrl()+dbInfo.getUsers()+dbInfo.getPasswd();
 	}
 }

@@ -18,15 +18,15 @@ public class MakeUserDBDAO {
 				"127.0.0.1", "27017", "Sample MondogoDB");
 		
 		
-		userDB.setType(DBDefine.MONGODB_DEFAULT.getDBToString());
+		userDB.setTypes(DBDefine.MONGODB_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDatabase("test");
+		userDB.setDb("test");
 		userDB.setDisplay_name("Sample MondogoDB");
 		userDB.setHost("127.0.0.1");
 		userDB.setPasswd("");
 		userDB.setPort("27017");
 		userDB.setLocale("");
-		userDB.setUser("");
+		userDB.setUsers("");
 		
 		return userDB;
 	}

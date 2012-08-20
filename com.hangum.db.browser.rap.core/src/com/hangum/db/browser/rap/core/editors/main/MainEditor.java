@@ -1177,7 +1177,7 @@ public class MainEditor extends EditorPart {
 			}  else if(Define.QUERY_MODE.EXPLAIN_PLAN == queryMode) {
 				
 				// 큐브리드 디비이면 다음과 같아야 합니다.
-				if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.CUBRID_DEFAULT) {
+				if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.CUBRID_DEFAULT) {
 					
 					String cubridQueryPlan = CubridExecutePlanUtils.plan(userDB, requestQuery);
 					mapColumns = CubridExecutePlanUtils.getMapColumns();
@@ -1185,7 +1185,7 @@ public class MainEditor extends EditorPart {
 					
 					return;
 					
-				} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.ORACLE_DEFAULT) {
+				} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
 					
 					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
 					stmt = javaConn.prepareStatement("select * from " + planTableName);

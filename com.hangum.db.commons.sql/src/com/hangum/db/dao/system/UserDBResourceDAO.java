@@ -11,7 +11,7 @@ import java.util.Date;
 public class UserDBResourceDAO {
 	int seq;
 	/** sql, erd */
-	String type;
+	String types;
 	int user_seq;
 	int db_seq;
 	String filename;
@@ -32,12 +32,12 @@ public class UserDBResourceDAO {
 		this.seq = seq;
 	}
 
-	public String getType() {
-		return type;
+	public String getTypes() {
+		return types;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTypes(String types) {
+		this.types = types;
 	}
 
 	public int getUser_seq() {
@@ -88,14 +88,6 @@ public class UserDBResourceDAO {
 
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
-	}
-
-	@Override
-	public String toString() {
-		return "UserDBResourceDAO [seq=" + seq + ", type=" + type
-				+ ", user_seq=" + user_seq + ", db_seq=" + db_seq
-				+ " filename=" + filename 
-				+ ", create_time=" + create_time + ", parent=" + parent + "]";
 	}
 
 }

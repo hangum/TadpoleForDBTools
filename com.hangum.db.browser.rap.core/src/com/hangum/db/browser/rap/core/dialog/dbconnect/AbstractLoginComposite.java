@@ -105,7 +105,7 @@ public abstract class AbstractLoginComposite extends Group {
 			return false;
 		}
 
-		if(DBDefine.getDBDefine(loginInfo.getType()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(loginInfo.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			// db가 정상적인지 채크해본다 
 			try {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);

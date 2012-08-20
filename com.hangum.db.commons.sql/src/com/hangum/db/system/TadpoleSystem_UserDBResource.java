@@ -31,7 +31,7 @@ public class TadpoleSystem_UserDBResource {
 	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
 		UserDBResourceDAO resourceDao = new UserDBResourceDAO();
 		resourceDao.setUser_seq(userDB.getUser_seq());
-		resourceDao.setType(type.toString());
+		resourceDao.setTypes(type.toString());
 		resourceDao.setDb_seq(userDB.getSeq());
 		resourceDao.setFilename(filename);
 		
@@ -74,7 +74,7 @@ public class TadpoleSystem_UserDBResource {
 		dataDao.setUser_db_resource_seq(userDBResource.getSeq());
 		String[] arrayContent = SQLUtil.makeResourceDataArays(contents);
 		for (String content : arrayContent) {
-			dataDao.setData(content);		
+			dataDao.setDatas(content);		
 			sqlClient.insert("userDbResourceDataInsert", dataDao); //$NON-NLS-1$				
 		}
 	}
@@ -102,7 +102,7 @@ public class TadpoleSystem_UserDBResource {
 	 */
 	public static boolean userDBResourceDuplication(Define.RESOURCE_TYPE type, int user_seq, int db_seq, String filename) throws Exception {
 		UserDBResourceDAO erd = new UserDBResourceDAO();
-		erd.setType(type.toString());
+		erd.setTypes(type.toString());
 		erd.setUser_seq(user_seq);
 		erd.setDb_seq(db_seq);
 		erd.setFilename(filename);
@@ -137,7 +137,7 @@ public class TadpoleSystem_UserDBResource {
 		
 		String retData = "";
 		for (UserDBResourceDataDAO userDBResourceDataDAO : datas) {
-			retData += userDBResourceDataDAO.getData();
+			retData += userDBResourceDataDAO.getDatas();
 		}
 	
 		return retData;

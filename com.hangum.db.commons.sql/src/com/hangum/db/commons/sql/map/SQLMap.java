@@ -40,12 +40,12 @@ public class SQLMap {
 	 * @throws Exception
 	 */
 	private static String getConfig(UserDBDAO dbInfo) throws Exception {
-		String config = getFileToString(DBDefine.getDBDefine(dbInfo.getType()).getLocation());
+		String config = getFileToString(DBDefine.getDBDefine(dbInfo.getTypes()).getLocation());
 		
 		// url chnage
 		config = config.replace(URL, StringEscapeUtils.escapeXml( dbInfo.getUrl() ));			
 		// id change
-		config = config.replace(USERNAME, StringEscapeUtils.escapeXml( dbInfo.getUser() ));			
+		config = config.replace(USERNAME, StringEscapeUtils.escapeXml( dbInfo.getUsers() ));			
 		// pass change
 		config = config.replace(PASSWORD, StringEscapeUtils.escapeXml( dbInfo.getPasswd() )) ;
 		

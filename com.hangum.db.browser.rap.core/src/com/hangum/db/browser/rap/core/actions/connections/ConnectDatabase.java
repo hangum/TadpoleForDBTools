@@ -49,7 +49,7 @@ public class ConnectDatabase implements IViewActionDelegate {
 			Display.getCurrent().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					managerView.addUserDB(userDB.getType(), userDB, true);
+					managerView.addUserDB(userDB.getTypes(), userDB, true);
 				}
 			});	// end display
 				

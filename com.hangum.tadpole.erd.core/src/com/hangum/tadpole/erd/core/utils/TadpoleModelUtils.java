@@ -62,8 +62,8 @@ public enum TadpoleModelUtils {
 	public DB getDBAllTable(UserDBDAO userDB) throws Exception {
 		this.userDB = userDB;
 		DB db = factory.createDB();
-		db.setDbType(userDB.getType());
-		db.setId(userDB.getUser());
+		db.setDbType(userDB.getTypes());
+		db.setId(userDB.getUsers());
 		db.setUrl(userDB.getUrl());
 		
 //		try {
@@ -104,7 +104,7 @@ public enum TadpoleModelUtils {
 				tableModel.setConstraints(prevRectangle);
 				
 				// column add
-				List<TableColumnDAO> columnList = getColumns(userDB.getDatabase(), table.getName());
+				List<TableColumnDAO> columnList = getColumns(userDB.getDb(), table.getName());
 				for (TableColumnDAO columnDAO : columnList) {
 					
 					Column column = factory.createColumn();
@@ -154,13 +154,13 @@ public enum TadpoleModelUtils {
 	public List<TableDAO> getTables() throws Exception {
 		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
-		if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			return sqlClient.queryForList("tableList", userDB.getDatabase()); //$NON-NLS-1$
+			return sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 			
-		} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDatabase());
+			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
 			
 			for (String col : mongoDB.getCollectionNames()) {
 				TableDAO dao = new TableDAO();
@@ -184,7 +184,7 @@ public enum TadpoleModelUtils {
 	 * @throws Exception
 	 */
 	public List<TableColumnDAO> getColumns(String db, String strTBName) throws Exception {
-		if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			
 			Map<String, String> param = new HashMap<String, String>();
@@ -192,10 +192,10 @@ public enum TadpoleModelUtils {
 			param.put("table", strTBName);
 			
 			return sqlClient.queryForList("tableColumnList", param);
-		} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 			
 			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDatabase());
+			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
 			DBCollection coll = mongoDB.getCollection(strTBName);
 										
 			return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());

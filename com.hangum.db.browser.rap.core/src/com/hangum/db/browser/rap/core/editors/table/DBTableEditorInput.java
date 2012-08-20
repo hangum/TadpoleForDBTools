@@ -58,7 +58,7 @@ public class DBTableEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return userDB.getDatabase() + "[" + tableName + "]";
+		return userDB.getDb() + "[" + tableName + "]";
 	}
 
 	public UserDBDAO getUserDB() {

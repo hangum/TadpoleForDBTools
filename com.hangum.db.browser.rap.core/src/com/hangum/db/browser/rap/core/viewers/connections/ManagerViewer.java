@@ -96,7 +96,7 @@ public class ManagerViewer extends ViewPart {
 				} else if(selElement instanceof UserDBResourceDAO) {
 					UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					
-					if( Define.RESOURCE_TYPE.ERD.toString().equals( dao.getType() ) ) {
+					if( Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() ) ) {
 						ERDViewAction ea = new ERDViewAction();
 						ea.run(dao);
 					} else {
@@ -151,7 +151,7 @@ public class ManagerViewer extends ViewPart {
 		try {
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : userDBS) {
-				addUserDB(userDBDAO.getType(), userDBDAO, false);
+				addUserDB(userDBDAO.getTypes(), userDBDAO, false);
 			}
 		} catch (Exception e) {
 			logger.error("getUserDBDAO", e); //$NON-NLS-1$
@@ -300,9 +300,9 @@ public class ManagerViewer extends ViewPart {
 		IEditorReference iEditorReference = null;
 		
 		// 열린화면 검색
-		if(userDBResource.getType().equals(Define.RESOURCE_TYPE.SQL.toString())) {
+		if(userDBResource.getTypes().equals(Define.RESOURCE_TYPE.SQL.toString())) {
 			iEditorReference = EditorUtils.findSQLEditor(userDBResource);
-		} else if(userDBResource.getType().equals(Define.RESOURCE_TYPE.ERD.toString())) {
+		} else if(userDBResource.getTypes().equals(Define.RESOURCE_TYPE.ERD.toString())) {
 			iEditorReference = EditorUtils.findERDEditor(userDBResource);
 		}
 		
@@ -348,7 +348,7 @@ public class ManagerViewer extends ViewPart {
 		treeViewer.setSelection(new StructuredSelection(dto), true);
 		
 		// mongodb 일경우 열지 않는다.
-		if(DBDefine.getDBDefine(dto.getType()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(dto.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			MainEditorInput mei = new MainEditorInput(dto);		
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {

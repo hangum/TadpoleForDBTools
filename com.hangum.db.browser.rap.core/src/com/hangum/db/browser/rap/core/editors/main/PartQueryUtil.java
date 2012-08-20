@@ -24,10 +24,10 @@ public class PartQueryUtil {
 	public static String makeSelect(UserDBDAO userDB, String originalQuery, int startResultPos, int endResultPos) {
 		String requestQuery = "";
 		
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getType()) ) {
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) ) {
 			requestQuery = String.format(MySQLDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
 		
-		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
 			
 			if( StringUtils.indexOf(originalQuery, "where") == -1 ) {
 				requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
@@ -35,10 +35,10 @@ public class PartQueryUtil {
 				requestQuery = originalQuery;				
 			}
 		
-		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
 			requestQuery = String.format(SQLiteDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
 		
-		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
 			
 //			
 //			https://github.com/hangum/TadpoleForDBTools/issues/12 와 같은 이유로 더 좋은 방법이 나타나기 전까지는 주석 처리 합니다.
@@ -67,19 +67,19 @@ public class PartQueryUtil {
 	public static String makeExplainQuery(UserDBDAO userDB, String query) throws Exception {
 		String resultQuery = "";
 		
-		if(DBDefine.MYSQL_DEFAULT ==   DBDefine.getDBDefine(userDB.getType())) {
+		if(DBDefine.MYSQL_DEFAULT ==   DBDefine.getDBDefine(userDB.getTypes())) {
 			
 			resultQuery = MySQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.ORACLE_DEFAULT ==   DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.ORACLE_DEFAULT ==   DBDefine.getDBDefine(userDB.getTypes())) {
 
 			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getTypes())) {
 			
 			resultQuery = SQLiteDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.CUBRID_DEFAULT ==  DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.CUBRID_DEFAULT ==  DBDefine.getDBDefine(userDB.getTypes())) {
 			
 			resultQuery = query;
 			

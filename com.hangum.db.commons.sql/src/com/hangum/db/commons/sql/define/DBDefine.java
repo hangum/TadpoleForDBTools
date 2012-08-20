@@ -28,29 +28,23 @@ import java.util.List;
 public enum DBDefine {
 	/** Tadpole System DB */
 	TADPOLE_SYSTEM_DEFAULT,
+	TADPOLE_SYSTEM_CUBRID_DEFAULT,
 	
-	/* USER DB */
+	/** USER DB */
 	ORACLE_DEFAULT,
 	MSSQL_DEFAULT,
-//	DB2_DEFAULT,
-//	SYBASE_IQ_DEFAULT,
-//	SYBASE_ASE_DEFAULT,
 	MYSQL_DEFAULT,
-//	Altibase,
-//	Informix,
-//	Teradata,
-//	Tibero,
 	SQLite_DEFAULT,
 	CUBRID_DEFAULT,
 	POSTGRE_DEFAULT,
 	
-	/* NO SQL */
+	/** NO SQL */
 	MONGODB_DEFAULT
 	;	
 	
-
 	/** 환경정보가 있는 상대 위치 */
-	private final static String prefix = "com/hangum/db/commons/sql/config/";
+	private final static String prefix 			= "com/hangum/db/commons/sql/config/";
+	private final static String prefix_system 	= "com/hangum/db/commons/sql/config/internal/system/";	
 
 	/**
 	 * db 환경이 있는 정보를 리턴한다.
@@ -59,18 +53,12 @@ public enum DBDefine {
 	 */
 	public String getLocation() {
 		switch ( this ) {
-			case TADPOLE_SYSTEM_DEFAULT: return prefix + "TadpoleSystem-SQLite-Config.xml";
+			case TADPOLE_SYSTEM_DEFAULT: return prefix_system + "TadpoleSystem-SQLite-Config.xml";
+			case TADPOLE_SYSTEM_CUBRID_DEFAULT: return prefix_system + "TadpoleSystem-CUBRID-Config.xml";
 			
 			case ORACLE_DEFAULT:	return prefix + "OracleConfig.xml";
 			case MSSQL_DEFAULT:		return prefix + "MSSQLConfig.xml";
-//			case DB2_DEFAULT:		return prefix + "DB2Config.xml";
-//			case SYBASE_IQ_DEFAULT: return prefix + "SYBASE_IQ_Config.xml";
-//			case SYBASE_ASE_DEFAULT: return prefix + "SYBASE_ASE_Config.xml";
 			case MYSQL_DEFAULT:		return prefix + "MySQLConfig.xml";
-//			case Altibase:			return prefix + "AltibaseConfig.xml";
-//			case Informix:			return prefix + "InformixConfig.xml";
-//			case Teradata:			return prefix + "TeradataConfig.xml";
-//			case Tibero:			return prefix + "TiberoConfig.xml";
 			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
 			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
@@ -87,17 +75,11 @@ public enum DBDefine {
 	public static DBDefine getDBDefine(String type) {
 		
 		if(type.equals("TadpoleSystem")) 	return TADPOLE_SYSTEM_DEFAULT;
+		if(type.equals("TadpoleSystem_CUBRID")) 	return TADPOLE_SYSTEM_CUBRID_DEFAULT;
 		
 		else if(type.equals("Oracle")) 		return ORACLE_DEFAULT;
 		else if(type.equals("MSSQL")) 		return MSSQL_DEFAULT;
-//		else if(type.equals("DB2(Unix)")) 	return DB2_DEFAULT;
-//		else if(type.equals("SybaseIQ")) 	return SYBASE_IQ_DEFAULT;
-//		else if(type.equals("SybaseASE")) 	return SYBASE_ASE_DEFAULT;
 		else if(type.equals("MySQL")) 		return MYSQL_DEFAULT;
-//		else if(type.equals("Altibase")) 	return Altibase;
-//		else if(type.equals("Informix")) 	return Informix;
-//		else if(type.equals("Teradata")) 	return Teradata;
-//		else if(type.equals("Tibero")) 		return Tibero;
 		else if(type.equals("SQLite"))		return SQLite_DEFAULT;
 		else if(type.equals("CUBRID"))		return CUBRID_DEFAULT;
 		else if(type.equals("POSTGRE"))		return POSTGRE_DEFAULT;
@@ -114,18 +96,12 @@ public enum DBDefine {
 	 */
 	public String getDB_URL_INFO() {
 		switch ( this ) {
-			case TADPOLE_SYSTEM_DEFAULT:	return "jdbc:sqlite:/%s";
+			case TADPOLE_SYSTEM_DEFAULT:		return "jdbc:sqlite:/%s";
+			case TADPOLE_SYSTEM_CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";
 			
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
 			case MSSQL_DEFAULT:		return "jdbc:jtds:sqlserver://%s:%s/%s";
-//			case DB2_DEFAULT:		return "jdbc:mysql://#IP#:#PORT#/#SID#";
-//			case SYBASE_IQ_DEFAULT: return "jdbc:mysql://#IP#:#PORT#/#SID#";
-//			case SYBASE_ASE_DEFAULT: return "jdbc:mysql://#IP#:#PORT#/#SID#";
 			case MYSQL_DEFAULT:		return "jdbc:mysql://%s:%s/%s";
-//			case Altibase:			return "jdbc:mysql://#IP#:#PORT#/#SID#?Unicode=true&characterEncoding=EUC_KR";
-//			case Informix:			return "jdbc:mysql://#IP#:#PORT#/#SID#";
-//			case Teradata:			return "jdbc:mysql://#IP#:#PORT#/#SID#";
-//			case Tibero:			return "jdbc:mysql://#IP#:#PORT#/#SID#";
 			case SQLite_DEFAULT:	return "jdbc:sqlite:/%s";
 			case CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";
 			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
@@ -140,28 +116,21 @@ public enum DBDefine {
 	
 	public String getDBToString() {
 		switch ( this ) {
-			case TADPOLE_SYSTEM_DEFAULT:	return "TadpoleSystem";
+			case TADPOLE_SYSTEM_DEFAULT:		return "TadpoleSystem";
+			case TADPOLE_SYSTEM_CUBRID_DEFAULT: return "TadpoleSystem_CUBRID";
 		
 			case ORACLE_DEFAULT:	return "Oracle";
 			case MSSQL_DEFAULT:		return "MSSQL";
-//			case DB2_DEFAULT:		return "DB2";
-//			case SYBASE_IQ_DEFAULT: return "Sybase IQ";
-//			case SYBASE_ASE_DEFAULT: return "Sybase ASE";
 			case MYSQL_DEFAULT:		return "MySQL";
-//			case Altibase:			return "Altibase";
-//			case Informix:			return "Informix";
-//			case Teradata:			return "Teradata";
-//			case Tibero:			return "Tibero";
-			case SQLite_DEFAULT:		return "SQLite";
-			case CUBRID_DEFAULT:		return "CUBRID";
-			case POSTGRE_DEFAULT:		return "POSTGRE";
+			case SQLite_DEFAULT:	return "SQLite";
+			case CUBRID_DEFAULT:	return "CUBRID";
+			case POSTGRE_DEFAULT:	return "POSTGRE";
 			
-			case MONGODB_DEFAULT : return "MONGODB";
+			case MONGODB_DEFAULT :  return "MONGODB";
 			default:
 				return "undefine db";
 		}
 	}
-	
 	
 	/**
 	 * 사용자 디비를 리턴한다.

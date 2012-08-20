@@ -9,7 +9,7 @@ package com.hangum.db.dao.system;
 public class UserDBResourceDataDAO {
 	int seq;
 	int user_db_resource_seq;
-	String data;
+	String datas;
 	
 	public UserDBResourceDataDAO() {
 	}
@@ -30,13 +30,13 @@ public class UserDBResourceDataDAO {
 		this.user_db_resource_seq = user_db_resource_seq;
 	}
 
-	public String getData() {
-		return data;
+	public String getDatas() {
+		return datas;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public void setDatas(String datas) {
+		this.datas = datas;
 	}
-	
+
 	
 }

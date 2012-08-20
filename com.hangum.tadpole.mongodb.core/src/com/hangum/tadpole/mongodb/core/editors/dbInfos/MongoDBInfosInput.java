@@ -53,7 +53,7 @@ public class MongoDBInfosInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return userDB.getDatabase();
+		return userDB.getDb();
 	}
 
 	public UserDBDAO getUserDB() {

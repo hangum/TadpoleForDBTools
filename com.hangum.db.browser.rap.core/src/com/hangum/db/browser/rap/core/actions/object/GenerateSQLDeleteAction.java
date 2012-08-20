@@ -44,7 +44,7 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 			TableDAO tableDAO = (TableDAO)sel.getFirstElement();
 			
 			Map<String, String> parameter = new HashMap<String, String>();
-			parameter.put("db", userDB.getDatabase());
+			parameter.put("db", userDB.getDb());
 			parameter.put("table", tableDAO.getName());
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

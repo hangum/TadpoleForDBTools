@@ -25,9 +25,9 @@ public class QueryTemplateUtils {
 	 */
 	public static String getQuery(UserDBDAO userDB, Define.DB_ACTION initAction) {
 		String defaultStr = "";
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getType()) ||
-				DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getType()) ||
-				DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getType()) 				
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) ||
+				DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) ||
+				DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) 				
 			) {
 			
 			if(initAction == Define.DB_ACTION.TABLES) {
@@ -44,7 +44,7 @@ public class QueryTemplateUtils {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getTypes())) {
 			
 			if(initAction == Define.DB_ACTION.TABLES) {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -56,7 +56,7 @@ public class QueryTemplateUtils {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
 			if(initAction == Define.DB_ACTION.TABLES) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == Define.DB_ACTION.VIEWS) {
@@ -70,7 +70,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == Define.DB_ACTION.TRIGGERS) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB.getType())) {
+		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
 			if(initAction == Define.DB_ACTION.TABLES) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == Define.DB_ACTION.VIEWS) {

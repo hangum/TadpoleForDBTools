@@ -40,7 +40,7 @@ public class ERDViewAction implements IViewActionDelegate {
 	public void run(UserDBDAO userDB) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDatabase() + ")", userDB, false);
+			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
 			page.openEditor(input, TadpoleEditor.ID, false);
 			
 		} catch (PartInitException e) {
@@ -55,7 +55,7 @@ public class ERDViewAction implements IViewActionDelegate {
 		UserDBDAO userDB = userDBErd.getParent();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDatabase() + ")", userDBErd);
+			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDBErd);
 			page.openEditor(input, TadpoleEditor.ID, false);
 			
 		} catch (PartInitException e) {

@@ -37,11 +37,11 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	public void run() {
 		TableDAO tableDAO = (TableDAO)sel.getFirstElement();
 		
-		if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			StringBuffer sbSQL = new StringBuffer();
 			try {
 				Map<String, String> parameter = new HashMap<String, String>();
-				parameter.put("db", userDB.getDatabase());
+				parameter.put("db", userDB.getDb());
 				parameter.put("table", tableDAO.getName());
 				
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -72,7 +72,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLInsertAction_0, errStatus); //$NON-NLS-1$
 			}
 		// mongo db
-		} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 			
 			NewDocumentDialog dialog = new NewDocumentDialog(Display.getCurrent().getActiveShell(), userDB, tableDAO.getName());
 			dialog.open();

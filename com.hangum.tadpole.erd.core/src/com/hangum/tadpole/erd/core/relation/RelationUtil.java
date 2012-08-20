@@ -54,14 +54,14 @@ public class RelationUtil {
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db, String refTableNames) throws Exception {
 		
 		// mongodb는 관계가 없으므로 리턴한다.
-		if(DBDefine.MONGODB_DEFAULT.getDBToString().equals( userDB.getType() )) return;
+		if(DBDefine.MONGODB_DEFAULT.getDBToString().equals( userDB.getTypes() )) return;
 		
 		// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getType() )) {
+		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
 			
 			calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 			
-		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getType() )) {
+		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
 			
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
 			
@@ -81,14 +81,14 @@ public class RelationUtil {
 	 */
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db)  throws Exception {
 		// mongodb는 관계가 없으므로 리턴한다.
-		if(DBDefine.MONGODB_DEFAULT.getDBToString().equals( userDB.getType() )) return;
+		if(DBDefine.MONGODB_DEFAULT.getDBToString().equals( userDB.getTypes() )) return;
 		
 		// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getType() )) {
+		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
 			 
 			calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 			
-		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getType() )) {
+		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
 			
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
 			

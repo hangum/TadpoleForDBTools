@@ -254,10 +254,10 @@ public class MongoDBQuery {
 		UserDBDAO adminDB = new UserDBDAO();
 		adminDB.setHost(userDB.getHost());
 		adminDB.setPort(userDB.getPort());
-		adminDB.setUser(userDB.getUser());
+		adminDB.setUsers(userDB.getUsers());
 		adminDB.setPasswd(userDB.getPasswd());
 		adminDB.setUrl(userDB.getHost() + ":" + userDB.getPort() + "/admin");
-		adminDB.setDatabase("admin");
+		adminDB.setDb("admin");
 		
 		DB mongoDB =  findDB(adminDB);
 		

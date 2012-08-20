@@ -64,15 +64,15 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 				textHost.getText(), textPort.getText(), textDatabase.getText());
 
 		userDB = new UserDBDAO();
-		userDB.setType(DB_DEFINE.getDBToString());
+		userDB.setTypes(DB_DEFINE.getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDatabase(textDatabase.getText());
+		userDB.setDb(textDatabase.getText());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());
 		userDB.setPort(textPort.getText());
 		userDB.setLocale(comboLocale.getText().trim());
-		userDB.setUser(textUser.getText());
+		userDB.setUsers(textUser.getText());
 		
 		// 이미 연결한 것인지 검사한다.
 		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);

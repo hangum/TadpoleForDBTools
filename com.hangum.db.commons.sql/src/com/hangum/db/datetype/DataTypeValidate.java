@@ -33,7 +33,7 @@ public class DataTypeValidate {
 		type = type.toLowerCase();
 		if(logger.isDebugEnabled()) logger.debug("[type]" + type + "[value]" + value);
 				
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getType() )) {
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes() )) {
 			if(type.equals("datetime") || type.indexOf("timestamp") >= 0) {
 				return strToData(value);
 			}
@@ -41,7 +41,7 @@ public class DataTypeValidate {
 				return strToNumber(value);
 			}
 			
-		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getType() )) {
+		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getTypes() )) {
 			
 			if(type.equals("date") || type.equals("timestamp")) {
 				return strToData(value);
@@ -50,7 +50,7 @@ public class DataTypeValidate {
 				return strToNumber(value);
 			}
 			
-		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB.getType() )) {
+		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB.getTypes() )) {
 			
 			if(type.equals("date") || type.equals("datetime")) {
 				return strToData(value);
@@ -59,7 +59,7 @@ public class DataTypeValidate {
 				return strToNumber(value);
 			}
 		
-		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getType() )) {
+		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getTypes() )) {
 			
 			if(type.equals("date") || type.equals("datetime")) {
 				return strToData(value);
@@ -68,7 +68,7 @@ public class DataTypeValidate {
 				return strToNumber(value);
 			}
 			
-		} else if(DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getType() )) {
+		} else if(DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes() )) {
 			if(type.equals("java.lang.Double")) {
 				return strToNumber(value);
 			} else if(type.equals("java.lang.Integer")) {

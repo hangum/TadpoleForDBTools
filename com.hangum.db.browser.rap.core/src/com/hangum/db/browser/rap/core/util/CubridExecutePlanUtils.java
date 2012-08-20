@@ -55,7 +55,7 @@ public class CubridExecutePlanUtils {
 
 		try {
 			Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-			conn = DriverManager.getConnection(userDB.getUrl(), userDB.getUser(), userDB.getPasswd());
+			conn = DriverManager.getConnection(userDB.getUrl(), userDB.getUsers(), userDB.getPasswd());
 			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.		
 
 			sql = sql.substring(6);

@@ -120,12 +120,12 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		final String dbUrl = String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), textFile.getText());
 		
 		userDB = new UserDBDAO();
-		userDB.setType(DBDefine.SQLite_DEFAULT.getDBToString());
+		userDB.setTypes(DBDefine.SQLite_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDatabase(textFile.getText());
+		userDB.setDb(textFile.getText());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setPasswd(""); //$NON-NLS-1$
-		userDB.setUser(""); //$NON-NLS-1$
+		userDB.setUsers(""); //$NON-NLS-1$
 		
 		// 이미 연결한 것인지 검사한다.
 		if( !connectValite(userDB, textFile.getText()) ) return false;

@@ -616,7 +616,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 						if(is.getFirstElement() != null) {
 							String strTBName = is.getFirstElement().toString();
 							Map<String, String> param = new HashMap<String, String>();
-							param.put("db", userDB.getDatabase());
+							param.put("db", userDB.getDb());
 							param.put("table", strTBName);
 							
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -728,7 +728,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 					TableDAO tableDAO = (TableDAO)is.getFirstElement();
 					
 					// is rdb
-					if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+					if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 					
 						DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -742,7 +742,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 						}
 						
 					// is mongo db
-					} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
+					} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 						
 						MongoDBEditorInput input = new MongoDBEditorInput(tableDAO.getName(), userDB, showTableColumns);
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -772,17 +772,17 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 						if(selectTableName.equals(table.getName())) return;
 						selectTableName = table.getName();
 						
-						if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+						if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 							
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							Map<String, String> mapParam = new HashMap<String, String>();
-							mapParam.put("db", userDB.getDatabase());
+							mapParam.put("db", userDB.getDb());
 							mapParam.put("table", table.getName());
 							
 							showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 														
 						// mongo db
-						} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
+						} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 							
 							showTableColumns = MongoDBQuery.collectionColumn(userDB, selectTableName);							
 						}						
@@ -884,7 +884,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(userDB != null) {
-					if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+					if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 						manager.add(creatAction_Table);
 		//				manager.add(modifyAction);
 						manager.add(deleteAction_Table);
@@ -954,11 +954,11 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			}
 			userDB = selectUserDb;
 			
-			getViewSite().getActionBars().getStatusLineManager().setMessage(userDB.getDatabase());
+			getViewSite().getActionBars().getStatusLineManager().setMessage(userDB.getDb());
 			tabFolderObject.setSelection(0);
 			
 			refreshTable("DB"); //$NON-NLS-1$
-			initObjectDetail(DBDefine.getDBDefine( userDB.getType() ));
+			initObjectDetail(DBDefine.getDBDefine( userDB.getTypes() ));
 		} else if(element instanceof ManagerListDTO) {
 			ManagerListDTO managerList = (ManagerListDTO)element;
 			
@@ -1109,7 +1109,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public void refreshView() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showViews = sqlClient.queryForList("viewList", userDB.getDatabase()); //$NON-NLS-1$
+			showViews = sqlClient.queryForList("viewList", userDB.getDb()); //$NON-NLS-1$
 			
 			viewListViewer.setInput(showViews);
 			viewListViewer.refresh();
@@ -1127,7 +1127,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public void refreshIndexes() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showIndex = sqlClient.queryForList("indexList", userDB.getDatabase()); //$NON-NLS-1$
+			showIndex = sqlClient.queryForList("indexList", userDB.getDb()); //$NON-NLS-1$
 			
 			indexesListViewer.setInput(showIndex);
 			indexesListViewer.refresh();
@@ -1145,7 +1145,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public void refreshProcedure() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showProcedure = sqlClient.queryForList("procedureList", userDB.getDatabase()); //$NON-NLS-1$
+			showProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
 			
 			procedureListViewer.setInput(showProcedure);
 			procedureListViewer.refresh();
@@ -1163,7 +1163,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public void refreshTrigger() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTrigger = sqlClient.queryForList("triggerList", userDB.getDatabase()); //$NON-NLS-1$
+			showTrigger = sqlClient.queryForList("triggerList", userDB.getDb()); //$NON-NLS-1$
 			
 			triggerListViewer.setInput(showTrigger);
 			triggerListViewer.refresh();
@@ -1181,7 +1181,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public void refreshFunction() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showFunction = sqlClient.queryForList("functionList", userDB.getDatabase()); //$NON-NLS-1$
+			showFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
 			
 			functionListViewer.setInput(showFunction);
 			functionListViewer.refresh();
@@ -1201,16 +1201,16 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		// 접속이 끊어졌는지 확인하기 위해 ping 테스트 실시한후 검사합니다.		
 		try {
 		
-			if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 				
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				showTables = sqlClient.queryForList("tableList", userDB.getDatabase()); //$NON-NLS-1$
+				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 				
 			// mongo db
-			} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
+			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 				
 				Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-				DB mongoDB = mongo.getDB(userDB.getDatabase());
+				DB mongoDB = mongo.getDB(userDB.getDb());
 				
 				if(showTables != null) showTables.clear();
 				else showTables = new ArrayList<TableDAO>();

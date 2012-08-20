@@ -47,7 +47,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/server_database.png"); //$NON-NLS-1$
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
-			if(Define.RESOURCE_TYPE.ERD.toString().equals( dao.getType() )) {
+			if(Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() )) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/erd.png"); //$NON-NLS-1$
 			} else {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sql-query.png"); //$NON-NLS-1$
@@ -68,7 +68,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			
 			// 자신의 디비만 보이도록 수정
 			if(dao.getUser_seq() == SessionManager.getSeq()) {
-				return dao.getDisplay_name() + " (" + dao.getUser() + "@" + dao.getDatabase() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return dao.getDisplay_name() + " (" + dao.getUsers() + "@" + dao.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
 				return dao.getDisplay_name() + " (not visible)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}

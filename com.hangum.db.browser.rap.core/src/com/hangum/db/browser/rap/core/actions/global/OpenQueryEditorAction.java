@@ -58,7 +58,7 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 		if(sel != null) {
 			if( sel.getFirstElement() instanceof UserDBDAO ) {
 				UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-				if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {				
+				if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {				
 					iss = sel;					
 					setEnabled(true);
 					

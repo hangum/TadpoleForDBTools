@@ -83,7 +83,7 @@ public class TadpoleSystem_UserInfoData {
 		
 		// 	select 제한  갯수		
 		userInfoData.setName(PreferenceDefine.SESSION_DFEAULT_PREFERENCE);
-		userInfoData.setValue(sessionTimeOut);
+		userInfoData.setValue0(sessionTimeOut);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
 	
@@ -100,7 +100,7 @@ public class TadpoleSystem_UserInfoData {
 		
 		// 	select 제한  갯수		
 		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
-		userInfoData.setValue(delimit);
+		userInfoData.setValue0(delimit);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
 	
@@ -119,17 +119,17 @@ public class TadpoleSystem_UserInfoData {
 		
 		// 	select 제한  갯수		
 		userInfoData.setName(PreferenceDefine.SELECT_LIMIT_COUNT);
-		userInfoData.setValue(limitSelect);
+		userInfoData.setValue0(limitSelect);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// 검색 결과 페이지 당 보여주는 갯수 
 		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
-		userInfoData.setValue(resultSelect);
+		userInfoData.setValue0(resultSelect);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// ORACLE PLAN TABLE 
 		userInfoData.setName(PreferenceDefine.ORACLE_PLAN_TABLE);
-		userInfoData.setValue(oraclePlan);
+		userInfoData.setValue0(oraclePlan);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
 	
@@ -149,22 +149,22 @@ public class TadpoleSystem_UserInfoData {
 		
 		// 	MONGO_DEFAULT_LIMIT
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_LIMIT);
-		userInfoData.setValue(txtLimitCount);
+		userInfoData.setValue0(txtLimitCount);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// MONGO_DEFAULT_MAX_COUNT 
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
-		userInfoData.setValue(txtMacCount);
+		userInfoData.setValue0(txtMacCount);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// MONGO_DEFAULT_FIND
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_FIND);
-		userInfoData.setValue(txtFindPage);
+		userInfoData.setValue0(txtFindPage);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// MONGO_DEFAULT_RESULT 
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_RESULT);
-		userInfoData.setValue(txtResultPage);
+		userInfoData.setValue0(txtResultPage);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 	}
@@ -180,47 +180,47 @@ public class TadpoleSystem_UserInfoData {
 		
 		// export delimiter
 		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
-		userInfoData.setValue(""+PreferenceDefine.EXPORT_DILIMITER_VALUE);
+		userInfoData.setValue0(""+PreferenceDefine.EXPORT_DILIMITER_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		//SESSION TIME OUT 
 		userInfoData.setName(PreferenceDefine.SESSION_DFEAULT_PREFERENCE);
-		userInfoData.setValue(""+PreferenceDefine.SESSION_SERVER_DEFAULT_PREFERENCE_VALUE);
+		userInfoData.setValue0(""+PreferenceDefine.SESSION_SERVER_DEFAULT_PREFERENCE_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// 	select 제한  갯수		
 		userInfoData.setName(PreferenceDefine.SELECT_LIMIT_COUNT);
-		userInfoData.setValue(""+PreferenceDefine.SELECT_SELECT_LIMIT_COUNT_VALUE);
+		userInfoData.setValue0(""+PreferenceDefine.SELECT_SELECT_LIMIT_COUNT_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// 검색 결과 페이지 당 보여주는 갯수 
 		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
-		userInfoData.setValue(""+PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE_VALUE);
+		userInfoData.setValue0(""+PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// ORACLE PLAN TABLE 
 		userInfoData.setName(PreferenceDefine.ORACLE_PLAN_TABLE);
-		userInfoData.setValue(PreferenceDefine.ORACLE_PLAN_TABLE_VALUE);
+		userInfoData.setValue0(PreferenceDefine.ORACLE_PLAN_TABLE_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// MONGO_DEFAULT_LIMIT
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_LIMIT);
-		userInfoData.setValue(PreferenceDefine.MONGO_DEFAULT_LIMIT_VALUE);
+		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_LIMIT_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// MONGO_DEFAULT_MAX_COUNT
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
-		userInfoData.setValue(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT_VALUE);
+		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$		
 		
 		// MONGO_DEFAULT_FIND
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_FIND);
-		userInfoData.setValue(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC);
+		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// MONGO_DEFAULT_RESULT
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_RESULT);
-		userInfoData.setValue(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE);
+		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 	}

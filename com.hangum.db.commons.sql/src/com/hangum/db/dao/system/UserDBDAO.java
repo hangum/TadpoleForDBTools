@@ -15,15 +15,15 @@ public class UserDBDAO {
 	int seq;
     int user_seq;
     
-    String type;
+    String types;
     String url;
-    String database;
+    String db;
     String display_name;
     String host;
     String port;
     String locale;
     String passwd;
-    String user;
+    String users;
     Date create_time;
     String delYn;
     
@@ -49,28 +49,12 @@ public class UserDBDAO {
 		this.user_seq = user_seq;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public String getUrl() {
 		return url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public String getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(String database) {
-		this.database = database;
 	}
 
 	public String getDisplay_name() {
@@ -113,14 +97,6 @@ public class UserDBDAO {
 		this.passwd = passwd;
 	}
 
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
 	public Date getCreate_time() {
 		return create_time;
 	}
@@ -153,14 +129,28 @@ public class UserDBDAO {
 		this.delYn = delYn;
 	}
 
-	@Override
-	public String toString() {
-		return "UserDBDAO [seq=" + seq + ", user_seq=" + user_seq + ", type="
-				+ type + ", url=" + url + ", database=" + database
-				+ ", display_name=" + display_name + ", host=" + host
-				+ ", port=" + port + ", passwd=" + passwd + ", user=" + user
-				+ "]";
+	public String getTypes() {
+		return types;
 	}
-	
-    
+
+	public void setTypes(String types) {
+		this.types = types;
+	}
+
+	public String getDb() {
+		return db;
+	}
+
+	public void setDb(String db) {
+		this.db = db;
+	}
+
+	public String getUsers() {
+		return users;
+	}
+
+	public void setUsers(String users) {
+		this.users = users;
+	}
+
 }

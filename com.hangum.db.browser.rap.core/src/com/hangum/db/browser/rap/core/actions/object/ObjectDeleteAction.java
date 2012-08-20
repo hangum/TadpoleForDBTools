@@ -66,7 +66,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 		if(actionType == DB_ACTION.TABLES) {
 			TableDAO dao = (TableDAO)sel.getFirstElement();
 			
-			if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.MONGODB_DEFAULT) {
+			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {				
 					// mongodb인지..
 					try {
@@ -78,7 +78,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					}
 					
 				}
-			} else if(DBDefine.getDBDefine(userDB.getType()) == DBDefine.MONGODB_DEFAULT) {
+			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_31)) {
 					try {
 						MongoDBQuery.dropCollection(getUserDB(), dao.getName());
@@ -105,7 +105,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 			InformationSchemaDAO indexDAO = (InformationSchemaDAO)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_14, indexDAO.getTABLE_NAME()+ Messages.ObjectDeleteAction_15 + indexDAO.getINDEX_NAME() + Messages.ObjectDeleteAction_16)) {
 				try {
-					if(DBDefine.getDBDefine(userDB.getType()) != DBDefine.POSTGRE_DEFAULT) {
+					if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.POSTGRE_DEFAULT) {
 						TadpoleSystemCommons.executSQL(getUserDB(), "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
 						TadpoleSystemCommons.executSQL(getUserDB(), "drop index " + indexDAO.getINDEX_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$

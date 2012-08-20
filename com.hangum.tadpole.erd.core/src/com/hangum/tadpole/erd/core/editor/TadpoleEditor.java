@@ -120,7 +120,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 						} else {
 							TadpoleFactory factory = TadpoleFactory.eINSTANCE;
 							db = factory.createDB();
-							db.setDbType(userDB.getType() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
+							db.setDbType(userDB.getTypes() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
 //							db.setId("");//userDB.getDisplay_name());
 //							db.setUrl("");//userDB.getUrl());
 						}
@@ -154,8 +154,8 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 							// 오류가 발생했을때는 기본 정보로 
 							TadpoleFactory factory = TadpoleFactory.eINSTANCE;
 							db = factory.createDB();
-							db.setDbType(userDB.getType());
-							db.setId(userDB.getUser());
+							db.setDbType(userDB.getTypes());
+							db.setId(userDB.getUsers());
 							db.setUrl(userDB.getUrl());
 //						} else {
 //							logger.debug("###change event object strat #####################################");

@@ -209,7 +209,7 @@ public class DBLoginDialog extends Dialog {
 			@Override
 			public String getText(Object element) {
 				UserDBDAO login = (UserDBDAO) element;
-				return login.getType();//ComboDBList();
+				return login.getTypes();//ComboDBList();
 			}
 		});
 		TableColumn tblclmnDbType = tvcDBType.getColumn();
@@ -287,7 +287,7 @@ public class DBLoginDialog extends Dialog {
 	}
 
 	private void selectDatabase(UserDBDAO userDb) {
-		if (loginComposite.connectValite(userDb, userDb.getDatabase())) {
+		if (loginComposite.connectValite(userDb, userDb.getDb())) {
 			this.retuserDb = userDb;
 
 			super.okPressed();
@@ -387,7 +387,7 @@ class LoginHistoryComparator extends ViewerComparator {
 
 		switch (propertyIndex) {
 		case 0:
-			rc = login1.getType().compareTo(login2.getType());
+			rc = login1.getTypes().compareTo(login2.getTypes());
 			break;
 		case 1:
 			rc = login1.getDisplay_name().compareTo(login2.getDisplay_name());

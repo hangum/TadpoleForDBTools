@@ -11,7 +11,7 @@ public class UserInfoDataDAO {
     int user_seq;
     int db_seq;
     String name;
-    String value;
+    String value0;
     String value1;
     String value2;
     String value3;
@@ -53,12 +53,12 @@ public class UserInfoDataDAO {
 		this.name = name;
 	}
 
-	public String getValue() {
-		return value;
+	public String getValue0() {
+		return value0;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setValue0(String value0) {
+		this.value0 = value0;
 	}
 
 	public String getValue1() {
@@ -99,14 +99,6 @@ public class UserInfoDataDAO {
 
 	public void setValue5(String value5) {
 		this.value5 = value5;
-	}
-
-	@Override
-	public String toString() {
-		return "UserInfoDataDAO [seq=" + seq + ", user_seq=" + user_seq
-				+ ", db_seq=" + db_seq + ", name=" + name + ", value=" + value
-				+ ", value1=" + value1 + ", value2=" + value2 + ", value3="
-				+ value3 + ", value4=" + value4 + ", value5=" + value5 + "]";
 	}
 	
 }

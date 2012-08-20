@@ -330,7 +330,7 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 			UserDBDAO userDB = (UserDBDAO)element;
 			switch(columnIndex) {
 			case 0: return "";
-			case 1: return userDB.getType();
+			case 1: return userDB.getTypes();
 			case 2: return userDB.getDisplay_name();
 			case 3:
 				if(userDB.getHost() == null) return "";
@@ -382,7 +382,7 @@ class AdminCompFilter extends ViewerFilter {
 		
 		if(element instanceof UserDBDAO) {
 			UserDBDAO userDB = (UserDBDAO)element;
-			if(userDB.getType().matches(searchString)) return true;
+			if(userDB.getTypes().matches(searchString)) return true;
 			if(userDB.getDisplay_name().matches(searchString)) return true;
 			if(userDB.getHost() != null) if(userDB.getHost().matches(searchString)) return true;
 			if(userDB.getPort() != null)  if(userDB.getPort().matches(searchString)) return true;

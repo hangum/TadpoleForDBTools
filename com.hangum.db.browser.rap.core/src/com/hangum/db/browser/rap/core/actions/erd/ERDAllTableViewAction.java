@@ -45,7 +45,7 @@ public class ERDAllTableViewAction implements IViewActionDelegate {
 	public void run(UserDBDAO userDB) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDatabase() + ")", userDB, true); //$NON-NLS-1$ //$NON-NLS-2$
+			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, true); //$NON-NLS-1$ //$NON-NLS-2$
 			page.openEditor(input, TadpoleEditor.ID, false);
 			
 		} catch (PartInitException e) {

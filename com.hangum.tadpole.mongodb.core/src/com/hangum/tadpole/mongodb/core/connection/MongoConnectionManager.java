@@ -57,15 +57,15 @@ public class MongoConnectionManager {
 					List<String> listDB = mongo.getDatabaseNames();
 					
 					boolean isDB = false;
-					for (String dbName : listDB) if(userDB.getDatabase().equals(dbName)) isDB = true;						
+					for (String dbName : listDB) if(userDB.getDb().equals(dbName)) isDB = true;						
 					if(!isDB) {
-						throw new Exception(userDB.getDatabase() + Messages.MongoDBConnection_0);
+						throw new Exception(userDB.getDb() + Messages.MongoDBConnection_0);
 					}
 					
 					// password 검색
-					db = mongo.getDB(userDB.getDatabase());
-					if(!"".equals(userDB.getUser())) { //$NON-NLS-1$
-						boolean auth = db.authenticate(userDB.getUser(), userDB.getPasswd().toCharArray() );
+					db = mongo.getDB(userDB.getDb());
+					if(!"".equals(userDB.getUsers())) { //$NON-NLS-1$
+						boolean auth = db.authenticate(userDB.getUsers(), userDB.getPasswd().toCharArray() );
 						if(!auth) {
 							throw new Exception(Messages.MongoDBConnection_3);
 						}
@@ -75,7 +75,7 @@ public class MongoConnectionManager {
 					dbManager.put(searchKey, mongo);
 					
 				} else {
-					db = mongo.getDB(userDB.getDatabase());
+					db = mongo.getDB(userDB.getDb());
 				}
 				
 			} catch(Exception e) {
@@ -94,7 +94,7 @@ public class MongoConnectionManager {
 	 * @return
 	 */
 	private static String getKey(UserDBDAO userDB) {
-		return userDB.getType()+userDB.getUrl()+userDB.getUser()+userDB.getPasswd();
+		return userDB.getTypes()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd();
 	}
 //	/**
 //	 * mongo db connection

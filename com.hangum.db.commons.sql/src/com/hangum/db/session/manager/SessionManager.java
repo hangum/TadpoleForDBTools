@@ -111,7 +111,7 @@ public class SessionManager {
 			userInfoDataDAO = new UserInfoDataDAO();
 			userInfoDataDAO.setName(key);
 			userInfoDataDAO.setUser_seq(SessionManager.getSeq());
-			userInfoDataDAO.setValue(obj);
+			userInfoDataDAO.setValue0(obj);
 		
 			try {
 				TadpoleSystem_UserInfoData.insertUserInfoData(userInfoDataDAO);
@@ -119,7 +119,7 @@ public class SessionManager {
 				logger.error("User data save exception [key]" + key + "[value]" + obj, e);
 			}
 		} else {
-			userInfoDataDAO.setValue(obj);
+			userInfoDataDAO.setValue0(obj);
 		}
 			
 		mapUserInfoData.put(key, userInfoDataDAO);
