@@ -16,7 +16,7 @@ CREATE TABLE user_group  (
 	user_type(
 			admin, manager, user, guest) 
 
-CREATE TABLE   user  (
+CREATE TABLE   users  (
 	seq INTEGER PRIMARY KEY AUTOINCREMENT ,
 	group_seq INTEGER NOT NULL, 
 	email VARCHAR(60) NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE user_db (
      user		 VARCHAR(100) 	,
      create_time DATE DEFAULT (datetime('now','localtime')),
      delYn CHAR(3) DEFAULT 'NO',
-     FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+     FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
      FOREIGN KEY (ext_seq) REFERENCES ext_account (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
@@ -62,7 +62,7 @@ CREATE TABLE user_db_resource (
      create_time DATE DEFAULT (datetime('now','localtime')),
      delYn CHAR(3) DEFAULT 'NO',
      UNIQUE(type, user_seq, db_seq, filename),
-     FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
      FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
@@ -86,7 +86,7 @@ CREATE TABLE user_info_data (
     value3 VARCHAR(2000),
     value4 VARCHAR(2000),
     value5 VARCHAR(2000),
-    FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
@@ -109,7 +109,7 @@ CREATE TABLE ext_account (
 	message VARCHAR(1000),
 	create_time DATE DEFAULT (datetime('now','localtime')),
     delYn CHAR(3) DEFAULT 'NO',
-    FOREIGN KEY (user_seq) REFERENCES user (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+    FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
  -->
@@ -136,7 +136,7 @@ CREATE TABLE ext_account (
  -->
 <insert id="newGroup" parameterClass="com.hangum.db.dao.system.UserGroupDAO">
 	INSERT INTO user_group (seq, name)
-	VALUES((select max(seq) from user)+1,  #name#)
+	VALUES((select max(seq) from user_group)+1,  #name#)
 	
 	<selectKey keyProperty="seq" resultClass="int">
 		select max(seq) from user_group 
@@ -160,7 +160,7 @@ CREATE TABLE ext_account (
 	FROM sqlite_master
 	WHERE 
 		type = 'table' and 
-		name = 'user'  
+		name = 'users'  
 </select>
 
 <!--
@@ -168,7 +168,7 @@ CREATE TABLE ext_account (
  -->
 <select id="isUser" resultClass="java.lang.String" parameterClass="java.lang.String">
 	SELECT email 
-	FROM user 
+	FROM users 
 	WHERE 
 		email = #email#
 </select>
@@ -177,11 +177,11 @@ CREATE TABLE ext_account (
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.db.dao.system.UserDAO">
-	INSERT INTO user(group_seq, email, passwd, name, user_type, approval_yn)
+	INSERT INTO users(group_seq, email, passwd, name, user_type, approval_yn)
 	VALUES( #group_seq#, #email#, #passwd#, #name#, #user_type#, #approval_yn#)
 	
 	<selectKey resultClass="com.hangum.db.dao.system.UserDAO">
-		select * from user where email = #email# 
+		select * from users where email = #email# 
 	</selectKey>
 </insert>
 
@@ -190,7 +190,7 @@ CREATE TABLE ext_account (
  -->
 <select id="login" resultClass="com.hangum.db.dao.system.UserDAO" parameterClass="com.hangum.db.dao.system.UserDAO">
 	SELECT * 
-	FROM user 
+	FROM users 
 	WHERE 
 		email = #email# AND 
 		passwd = #passwd#
@@ -198,7 +198,7 @@ CREATE TABLE ext_account (
 
 <!-- userDB의 manager 권한 리스트 -->
 <select id="groupManager" resultClass="com.hangum.db.dao.system.UserDAO" parameterClass="java.lang.Integer">
-	select * from user
+	select * from users
 	where group_seq = #group_seq#
 	and user_type='MANAGER'
 </select>
@@ -209,11 +209,11 @@ CREATE TABLE ext_account (
  -->
 <select id="loginUserCount" resultClass="java.lang.Integer">
 	SELECT count(*)
-	FROM user
+	FROM users
 </select>
 <select id="onlyOnUser" resultClass="com.hangum.db.dao.system.UserDAO" parameterClass="com.hangum.db.dao.system.UserDAO">
 	SELECT * 
-	FROM user 
+	FROM users 
 </select>
 
 <!-- 
@@ -222,7 +222,7 @@ CREATE TABLE ext_account (
  <select id="userListPermissions" resultClass="com.hangum.db.dao.system.ext.UserGroupAUserDAO">
  SELECT a.name user_group_name, 
  	b.seq, group_seq, email, passwd, b.name, user_type, approval_yn, b.delYn, b.create_time 
- FROM user_group a, user b
+ FROM user_group a, users b
  WHERE a.seq = b.group_seq
  ORDER BY email
  </select>
@@ -230,7 +230,7 @@ CREATE TABLE ext_account (
  <select id="userListGroup" resultClass="com.hangum.db.dao.system.ext.UserGroupAUserDAO" parameterClass="java.lang.Integer">
  SELECT a.name user_group_name, 
  	b.seq, group_seq, email, passwd, b.name, user_type, approval_yn, b.delYn, b.create_time 
- FROM user_group a, user b
+ FROM user_group a, users b
  WHERE a.seq = b.group_seq
  	AND b.group_seq = #group_seq#
  ORDER BY email
@@ -240,7 +240,7 @@ CREATE TABLE ext_account (
 	유저의 권한 데이터를 수정합니다.
  -->
 <update id="updateUserPermission" parameterClass="com.hangum.db.dao.system.UserDAO">
-	UPDATE user SET
+	UPDATE users SET
 		approval_yn = #approval_yn#, delYn = #delYn#
 	WHERE seq = #seq#
 </update>
@@ -249,7 +249,7 @@ CREATE TABLE ext_account (
 	유저의 패스워드 번경
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.db.dao.system.UserDAO">
-	UPDATE user SET
+	UPDATE users SET
 		passwd = #passwd#
 	WHERE seq = #seq#
 </update>
