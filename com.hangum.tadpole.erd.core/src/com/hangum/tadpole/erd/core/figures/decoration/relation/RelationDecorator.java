@@ -1,7 +1,6 @@
 package com.hangum.tadpole.erd.core.figures.decoration.relation;
 
 import org.apache.log4j.Logger;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.Shape;
