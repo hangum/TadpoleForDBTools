@@ -1,8 +1,10 @@
 package com.hangum.db.system;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
@@ -16,10 +18,15 @@ import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.util.ApplicationArgumentUtils;
+import com.hangum.db.util.secret.EncryptiDecryptUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
+ * <pre>
  * tadpole system의 connection과 연결을 담당합니다.
+ * 
+ * 엔진의 런타임 옵션은targetProject/docs/engine argument options.txt 를 참고합니다.
+ * </pre> 
  * 
  * @author hangum
  *
@@ -142,7 +149,7 @@ public class TadpoleSystemConnector {
 					boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data);
 					logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 					
-				// cubrid
+				// default is cubrid
 				} else {
 				
 					// group
@@ -212,17 +219,30 @@ public class TadpoleSystemConnector {
 			tadpoleEngineDB.setUsers(""); //$NON-NLS-1$			
 			
 		} else {
+			FileInputStream fis = null;
 			try{
+				// get file
+				fis = new FileInputStream(dbServerPath);
+				int available = fis.available();
+				byte[] readData = new byte[available];
+				fis.read(readData, 0, available);
+				
+				// decrypt
+				String propData= EncryptiDecryptUtil.decryption(new String(readData));				
+				InputStream is = new ByteArrayInputStream(propData.getBytes());
+				
+				// properties
 				Properties prop = new Properties();
-				prop.load(new FileInputStream(dbServerPath));
+				prop.load(is);
 			
-				String whichDB = prop.getProperty("DB");
-				String ip		= prop.getProperty("ip");
-				String port		= prop.getProperty("port");
-				String database	= prop.getProperty("database");
-				String user		= prop.getProperty("user");
-				String passwd	= prop.getProperty("password");
+				String whichDB 	= prop.getProperty("DB").trim();
+				String ip		= prop.getProperty("ip").trim();
+				String port		= prop.getProperty("port").trim();
+				String database	= prop.getProperty("database").trim();
+				String user		= prop.getProperty("user").trim();
+				String passwd	= prop.getProperty("password").trim();
 			
+				// make userDB
 				tadpoleEngineDB.setTypes(DBDefine.TADPOLE_SYSTEM_CUBRID_DEFAULT.getDBToString());
 				tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_CUBRID_DEFAULT.getDB_URL_INFO(), ip, port, database));
 				tadpoleEngineDB.setDb(database);
@@ -235,9 +255,11 @@ public class TadpoleSystemConnector {
 					logger.debug(tadpoleEngineDB.toString());				
 				}
 				
-			} catch(IOException ioe) {
-				logger.error("File not found exception. check the exist file." + dbServerPath, ioe);
+			} catch(Exception ioe) {
+				logger.error("File not found exception or file encrypt exception. check the exist file." + dbServerPath, ioe);
 				System.exit(0);
+			} finally {
+				if(fis != null) try { fis.close(); } catch(Exception e) {}
 			}
 			
 		}
