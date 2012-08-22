@@ -153,4 +153,13 @@ public class UserDBDAO {
 		this.users = users;
 	}
 
+	@Override
+	public String toString() {
+		return "UserDBDAO [seq=" + seq + ", user_seq=" + user_seq + ", types="
+				+ types + ", url=" + url + ", db=" + db + ", display_name="
+				+ display_name + ", host=" + host + ", port=" + port
+				+ ", locale=" + locale + ", users=" + users + ", create_time="
+				+ create_time + "]";
+	}
+	
 }

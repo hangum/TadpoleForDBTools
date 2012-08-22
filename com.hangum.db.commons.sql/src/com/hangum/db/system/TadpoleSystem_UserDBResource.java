@@ -120,9 +120,9 @@ public class TadpoleSystem_UserDBResource {
 	 */
 	public static void delete(UserDBResourceDAO userDBErd) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
-		sqlClient.delete("userDBResourceDelete", userDBErd); //$NON-NLS-1$
 		
 		sqlClient.delete("userDbResourceDataDelete", userDBErd.getSeq()); //$NON-NLS-1$
+		sqlClient.delete("userDBResourceDelete", userDBErd); //$NON-NLS-1$
 	}
 	
 	/**

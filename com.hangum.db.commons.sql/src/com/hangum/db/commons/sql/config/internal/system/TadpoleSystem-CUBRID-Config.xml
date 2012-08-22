@@ -33,9 +33,9 @@
 	</transactionManager>
 
 	<!--
-		List the SQL Map XML files. They can be loaded from the classpath, as
-		they are here (com.domain.data...)
+		DML문은 SQLite와 같아서 sqlite것을 사용합니다. - hangum
 	-->
-	<sqlMap resource="com/hangum/db/commons/sql/query/internal/Tadpole-System-CUBRID.xml" />
+	<sqlMap resource="com/hangum/db/commons/sql/query/internal/system/Tadpole-System-Common.xml" />
+	<sqlMap resource="com/hangum/db/commons/sql/query/internal/system/Tadpole-System-CUBRID.xml" />
 
 </sqlMapConfig>

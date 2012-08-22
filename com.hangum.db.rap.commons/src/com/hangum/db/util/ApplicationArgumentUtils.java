@@ -1,5 +1,7 @@
 package com.hangum.db.util;
 
+import org.apache.log4j.Logger;
+
 import org.eclipse.core.runtime.Platform;
 
 /**
@@ -9,6 +11,30 @@ import org.eclipse.core.runtime.Platform;
  *
  */
 public class ApplicationArgumentUtils {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(ApplicationArgumentUtils.class);
+	
+	/**
+	 * 엔진이 외부 디비를 사용 할 것인지?
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean isDBServer() {
+		return checkString("-dbServer");
+	}
+	
+	/**
+	 * <pre>
+	 * 	엔진이 디비를 공유 디비정보를 가져온다.
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	public static String getDbServer() throws Exception {
+		return getValue("-dbServer");
+	}
 
 	/**
 	 * <pre>
@@ -40,12 +66,30 @@ public class ApplicationArgumentUtils {
 	}
 	
 	/**
-	 * runtime시에 실행 모드를 검사합니다.
+	 * runtime시에 argument의 value를 리턴합니다.
+	 * 
+	 * @param key
+	 * @return
+	 */
+	private static String getValue(String key) throws Exception {
+		String[] applicationArgs = Platform.getApplicationArgs();
+		for(int i=0; i<applicationArgs.length; i++) {
+			String arg = applicationArgs[i];
+			if( arg.startsWith(key) ) {
+				return applicationArgs[i+1];
+			}
+		}
+	
+		throw new Exception("Can't find argument. key is " + key);
+	}
+	
+	/**
+	 * runtime시에 argument가 있는지 검사합니다.
 	 * 
 	 * @param checkString
 	 * @return
 	 */
-	public static boolean checkString(String checkString) {
+	private static boolean checkString(String checkString) {
 		String[] applicationArgs = Platform.getApplicationArgs();
 		
 		for (String string : applicationArgs) {

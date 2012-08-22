@@ -30,5 +30,6 @@
 		</dataSource>
 	</transactionManager>
 
+	<sqlMap resource="com/hangum/db/commons/sql/query/internal/system/Tadpole-System-Common.xml" />
 	<sqlMap resource="com/hangum/db/commons/sql/query/internal/system/Tadpole-System-SQLiteSQL.xml" />
 </sqlMapConfig>

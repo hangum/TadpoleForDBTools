@@ -1,26 +1,14 @@
 package com.hangum.db.browser.rap.core.editors.main;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import com.hangum.db.browser.rap.core.Activator;
-import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.util.QueryTemplateUtils;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
-import com.hangum.db.dao.system.UserDBResourceDataDAO;
 import com.hangum.db.define.Define;
-import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.system.TadpoleSystem_UserDBResource;
 
 /**
