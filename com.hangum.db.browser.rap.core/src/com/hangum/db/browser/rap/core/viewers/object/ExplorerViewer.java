@@ -58,6 +58,7 @@ import com.hangum.db.browser.rap.core.actions.object.GenerateSQLDeleteAction;
 import com.hangum.db.browser.rap.core.actions.object.GenerateSQLInsertAction;
 import com.hangum.db.browser.rap.core.actions.object.GenerateSQLSelectAction;
 import com.hangum.db.browser.rap.core.actions.object.GenerateSQLUpdateAction;
+import com.hangum.db.browser.rap.core.actions.object.GenerateSampleDataAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectCreatAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectDeleteAction;
 import com.hangum.db.browser.rap.core.actions.object.ObjectRefreshAction;
@@ -117,6 +118,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	//	private ObjectModifyAction 	modifyAction_Table;
 		private ObjectDeleteAction 	deleteAction_Table;
 		private ObjectRefreshAction refreshAction_Table;
+		
+		private GenerateSampleDataAction generateSampleData;
 		
 		private GenerateSQLSelectAction selectStmtAction;
 		private GenerateSQLSelectAction insertStmtAction;
@@ -868,6 +871,9 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		deleteAction_Table = 	new ObjectDeleteAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		refreshAction_Table =	new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		
+		// generation sample data
+		generateSampleData = new GenerateSampleDataAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		
 		selectStmtAction = new GenerateSQLSelectAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
 		insertStmtAction = new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
 		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
@@ -889,6 +895,10 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		//				manager.add(modifyAction);
 						manager.add(deleteAction_Table);
 						manager.add(refreshAction_Table);
+						
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						
+						manager.add(generateSampleData);
 						
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						
@@ -1039,6 +1049,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	//		modifyAction.setUserDB(getUserDB());
 			deleteAction_Table.setUserDB(getUserDB());
 			refreshAction_Table.setUserDB(getUserDB());
+			
+			generateSampleData.setUserDB(getUserDB());
 			
 			selectStmtAction.setUserDB(getUserDB());
 			insertStmtAction.setUserDB(getUserDB());
