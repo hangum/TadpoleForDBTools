@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="site.rmap">
+    <cq:rootRequest name="com.hangum.tadpole.feature.site" componentType="eclipse.feature"/>
+</cq:componentQuery>
