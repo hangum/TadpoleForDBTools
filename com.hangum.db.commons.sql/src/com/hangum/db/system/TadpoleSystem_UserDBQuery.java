@@ -19,14 +19,14 @@ public class TadpoleSystem_UserDBQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBQuery.class);
 	
 	/**
-	 * 신규 유저를 등록합니다.
+	 * 신규 유저디비를 등록합니다.
 	 * @param email
 	 * @param pass
 	 * @param name
 	 * @param type user-type
 	 */
-	public static UserDBDAO newUserDB(UserDBDAO userDb) throws Exception {
-		userDb.setUser_seq(SessionManager.getSeq());
+	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
+		userDb.setUser_seq(userSeq);
 		
 		// 기존에 등록 되어 있는지 검사한다
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
@@ -38,7 +38,7 @@ public class TadpoleSystem_UserDBQuery {
 		}
 
 		// 신규 유저를 등록합니다.
-		userDb.setUser_seq(SessionManager.getSeq());
+		userDb.setUser_seq(userSeq);
 		
 		sqlClient.insert("userDBInsert", userDb); //$NON-NLS-1$
 		
@@ -58,7 +58,7 @@ public class TadpoleSystem_UserDBQuery {
 	 */
 	public static List<UserDBDAO> getUserDB(int userSeq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
-		List<UserDBDAO> userDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getSeq()); //$NON-NLS-1$
+		List<UserDBDAO> userDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", userSeq);//SessionManager.getSeq()); //$NON-NLS-1$
 		
 		// user가 manager 일 경우 (session에 넣을때 부터..)
 		if(SessionManager.getManagerSeq() != -1) {

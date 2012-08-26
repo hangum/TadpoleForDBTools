@@ -3,7 +3,7 @@ package com.hangum.db.system;
 import junit.framework.TestCase;
 
 /**
- * <code>com.hangum.db.system.TadpoleSystemCommons</code>
+ * {@link com.hangum.db.system.TadpoleSystemCommons 시스템쿼리}
  * 
  * @author hangum
  *
@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 public class TadpoleSystemCommonsTest extends TestCase {
 
 	/**
-	 * executeSQL
+	 * {@link com.hangum.db.system.TadpoleSystemCommons#executSQL(com.hangum.db.dao.system.UserDBDAO, String) 쿼리실행(select 제외)}executeSQL
 	 */
 	public void testExecutSQL() {
 		try {

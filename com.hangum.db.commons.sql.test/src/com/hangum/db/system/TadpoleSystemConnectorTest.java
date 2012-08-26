@@ -5,8 +5,7 @@ import java.io.File;
 import junit.framework.TestCase;
 
 /**
- * Tadpole System Connnector
- * <code>com.hangum.db.system.TadpoleSystemConnector</code>
+ * {@link com.hangum.db.system.TadpoleSystemConnector 시스템엔진디비 초기화}
  * 
  * @author hangum
  *
@@ -14,7 +13,7 @@ import junit.framework.TestCase;
 public class TadpoleSystemConnectorTest extends TestCase {
 
 	/**
-	 * 테스트를 sqlite 기준으로 진행.
+	 * {@link com.hangum.db.system.TadpoleSystemConnector#createSystemTable() 시스템엔진디비 초기화}
 	 * 
 	 */
 	public void testCreateSystemTable() {

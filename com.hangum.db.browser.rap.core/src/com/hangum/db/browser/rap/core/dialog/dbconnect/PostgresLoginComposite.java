@@ -16,6 +16,7 @@ import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserDBQuery;
 import com.hangum.db.util.ApplicationArgumentUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -98,7 +99,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		// preference에 save합니다.
 		if(btnSavePreference.getSelection())
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB);
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {
 				logger.error("PostgreSQL db preference save", e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

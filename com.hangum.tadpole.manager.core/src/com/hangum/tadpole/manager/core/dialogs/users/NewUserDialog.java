@@ -202,7 +202,7 @@ public class NewUserDialog extends Dialog {
 			userType = Define.USER_TYPE.MANAGER;
 			// 그룹 등록
 			try {
-				groupSeq = TadpoleSystem_UserGroupQuery.newUserDB(strGroupName);
+				groupSeq = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
 			} catch(Exception e) {
 				logger.error(Messages.NewUserDialog_8, e);
 				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_16 + e.getMessage());

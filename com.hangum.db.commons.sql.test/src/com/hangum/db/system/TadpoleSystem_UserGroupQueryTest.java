@@ -7,21 +7,25 @@ import com.hangum.db.dao.system.UserGroupDAO;
 import junit.framework.TestCase;
 
 /**
- * <code>com.hangum.db.system.TadpoleSystem_UserGroupQuery</code>
+ * {@link com.hangum.db.system.TadpoleSystem_UserGroupQuery 유저그룹테스트}
  * 
  * @author hangum
  *
  */
 public class TadpoleSystem_UserGroupQueryTest extends TestCase {
 	
-	private String groupName = "sample test group";
+	/** test user group */
+	public static String groupName = "sample test group";
 	
-	public void testNewUserDB() {
+	/**
+	 * {@link com.hangum.db.system.TadpoleSystem_UserGroupQuery#newUserGroup(String) 신규 유저그룹 등록 테스트}
+	 */
+	public void testNewUserGroup() {
 		try {
 			boolean isGroup = TadpoleSystem_UserGroupQuery.isUserGroup(groupName);
-			if(isGroup) {
+			if(!isGroup) {
 				
-				int group = TadpoleSystem_UserGroupQuery.newUserDB(groupName);
+				int group = TadpoleSystem_UserGroupQuery.newUserGroup(groupName);
 				
 			}
 			
@@ -32,14 +36,28 @@ public class TadpoleSystem_UserGroupQueryTest extends TestCase {
 		
 	}
 
+	/**
+	 * {@link com.hangum.db.system.TadpoleSystem_UserGroupQuery#isUserGroup(String) 유저그룹 존재}
+	 */
 	public void testIsUserGroup() {
 		boolean isGroup = TadpoleSystem_UserGroupQuery.isUserGroup(groupName);
-		if(isGroup) fail("fail dup user group");
+		assertEquals(isGroup, true);
 	}
 
+	/**
+	 * {@link com.hangum.db.system.TadpoleSystem_UserGroupQuery#getGroup() 유저그룹 리스트 테스트}
+	 */
 	public void testGetGroup() {
+		boolean isGroupExist = false;
 		try {
 			List<UserGroupDAO> listGroup = TadpoleSystem_UserGroupQuery.getGroup();
+			for (UserGroupDAO userGroupDAO : listGroup) {
+				if(groupName.equals(userGroupDAO.getName())) {
+					isGroupExist = true;
+				}
+			}
+			
+			assertEquals(isGroupExist, true);
 			
 		} catch (Exception e) {
 			fail("fail list user group");			
