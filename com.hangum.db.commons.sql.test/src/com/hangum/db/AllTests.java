@@ -1,7 +1,16 @@
-package com.hangum.db.system;
+package com.hangum.db;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import com.hangum.db.commons.sql.map.SQLMapTest;
+import com.hangum.db.system.TadpoleSystemCommonsTest;
+import com.hangum.db.system.TadpoleSystemConnectorTest;
+import com.hangum.db.system.TadpoleSystem_UserDBQueryTest;
+import com.hangum.db.system.TadpoleSystem_UserDBResourceTest;
+import com.hangum.db.system.TadpoleSystem_UserGroupQueryTest;
+import com.hangum.db.system.TadpoleSystem_UserInfoDataTest;
+import com.hangum.db.system.TadpoleSystem_UserQueryTest;
 
 public class AllTests {
 
@@ -17,6 +26,8 @@ public class AllTests {
 		suite.addTestSuite(TadpoleSystem_UserDBQueryTest.class);
 		suite.addTestSuite(TadpoleSystem_UserDBResourceTest.class);
 		suite.addTestSuite(TadpoleSystem_UserInfoDataTest.class);
+		
+		suite.addTestSuite(SQLMapTest.class);
 		
 		//$JUnit-END$
 		
