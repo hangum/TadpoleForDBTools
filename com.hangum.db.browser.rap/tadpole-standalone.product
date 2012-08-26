@@ -8,7 +8,7 @@
 
    <launcherArgs>
       <programArgs>-standalone -debuglog</programArgs>
-      <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=8000</vmArgs>
+      <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000</vmArgs>
       <vmArgsMac>-d32</vmArgsMac>
    </launcherArgs>
 
@@ -101,6 +101,10 @@
       <plugin id="org.eclipse.rap.ui.views"/>
       <plugin id="org.eclipse.rap.ui.workbench"/>
    </plugins>
+
+   <features>
+      <feature id="com.hangum.tadpole.feature" version="1.0.0.qualifier"/>
+   </features>
 
    <configurations>
       <plugin id="com.hangum.db.browser.rap" autoStart="true" startLevel="0" />
