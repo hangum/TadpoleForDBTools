@@ -19,7 +19,7 @@
                 <attribute name="site.p2" />
             </prerequisites>
             <products alias="destination" base="${buckminster.output}">
-                <path path="mail.${target.ws}.${target.os}.${target.arch}/" />
+                <path path="tadpole.${target.ws}.${target.os}.${target.arch}/" />
             </products>
         </public>
         
@@ -32,7 +32,7 @@
                 <attribute name="create.product" />
             </prerequisites>
             <products alias="action.output" base="${buckminster.output}">
-                <path path="mail.${target.ws}.${target.os}.${target.arch}.zip" />
+                <path path="tadpole.${target.ws}.${target.os}.${target.arch}.zip" />
             </products>
         </public>
         
