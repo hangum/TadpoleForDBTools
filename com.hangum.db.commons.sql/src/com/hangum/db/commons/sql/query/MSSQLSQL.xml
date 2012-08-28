@@ -17,9 +17,11 @@
 	table 이름
  -->
 <select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
-	select name 
-	from sys.tables
-	order by name
+	/*
+	SELECT SERVERPROPERTY('productversion')	
+	select name from sys.tables	order by name
+	*/
+	select name from sysobjects where xtype = 'U' order by name
 </select>
 
 <!-- 
@@ -112,8 +114,11 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 	view 정보
  -->
 <select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
-	select name from sys.views
-	order by name
+	/*
+	SELECT SERVERPROPERTY('productversion')
+	select name from sys.views order by name	
+	*/
+	select name from sysobjects where xtype = 'V' order by name
 </select>
 	
 <!-- 
