@@ -51,11 +51,11 @@ public class Application implements IEntryPoint {
 			iss.getHttpSession().setMaxInactiveInterval(sessionTimeOut * 60);
 		}
 		
-		String sessionId = iss.getHttpSession().getId();
-		long longCreatTime = iss.getHttpSession().getCreationTime();
-		boolean isNew = iss.getHttpSession().isNew();
-		
-		HttpServletRequest servletRequest = RWT.getRequest();
+//		String sessionId = iss.getHttpSession().getId();
+//		long longCreatTime = iss.getHttpSession().getCreationTime();
+//		boolean isNew = iss.getHttpSession().isNew();
+//		
+//		HttpServletRequest servletRequest = RWT.getRequest();
 //		System.out.println( servletRequest.getLocalAddr() + ":" + servletRequest.getLocalName() );
 		
 //		System.out.println("[is New]" + isNew);

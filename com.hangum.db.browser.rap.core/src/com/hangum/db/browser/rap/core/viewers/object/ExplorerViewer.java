@@ -356,7 +356,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableTableList.setHeaderVisible(true);
 		
 		triggerComparator = new ObjectComparator();
-		triggerListViewer.setComparator(triggerComparator);
+		triggerListViewer.setSorter(triggerComparator);
 		
 //		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 //		triggerListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(triggerListViewer));
@@ -421,7 +421,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableTableList.setHeaderVisible(true);
 		
 		fuctionComparator = new ObjectComparator();
-		functionListViewer.setComparator(fuctionComparator);
+		functionListViewer.setSorter(fuctionComparator);
 		
 //		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 //		functionListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(functionListViewer));
@@ -486,7 +486,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableTableList.setHeaderVisible(true);
 		
 		procedureComparator = new ObjectComparator();
-		procedureListViewer.setComparator(procedureComparator);		
+		procedureListViewer.setSorter(procedureComparator);		
 
 //		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 //		procedureListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(procedureListViewer));
@@ -554,7 +554,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 //		indexesListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(indexesListViewer));
 		
 		indexComparator = new DefaultComparator();
-		indexesListViewer.setComparator(indexComparator);
+		indexesListViewer.setSorter(indexComparator);
 		
 		createIndexesColumn(indexesListViewer, indexComparator);
 		
@@ -644,7 +644,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		
 		// sorter
 		viewComparator = new ObjectComparator();
-		viewListViewer.setComparator(viewComparator);
+		viewListViewer.setSorter(viewComparator);
 		
 //		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 //		viewListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(viewListViewer));
@@ -809,7 +809,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		
 		// sorter
 		tableComparator = new ObjectComparator();
-		tableListViewer.setComparator(tableComparator);
+		tableListViewer.setSorter(tableComparator);
 		
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};

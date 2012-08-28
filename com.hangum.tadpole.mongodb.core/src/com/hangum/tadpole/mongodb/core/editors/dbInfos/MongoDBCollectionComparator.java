@@ -1,7 +1,7 @@
 package com.hangum.tadpole.mongodb.core.editors.dbInfos;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 
 import com.hangum.tadpole.mongodb.core.dto.MongoDBCollectionInfoDTO;
@@ -12,7 +12,7 @@ import com.hangum.tadpole.mongodb.core.dto.MongoDBCollectionInfoDTO;
  * @author hangum
  *
  */
-public class MongoDBCollectionComparator extends ViewerComparator {
+public class MongoDBCollectionComparator extends ViewerSorter {
 	private int propertyIndex;
 	private static final int DESCENDING = 1;
 	private int direction = DESCENDING;

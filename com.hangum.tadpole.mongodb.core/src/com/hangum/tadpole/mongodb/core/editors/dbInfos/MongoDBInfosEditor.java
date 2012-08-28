@@ -191,7 +191,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		treeViewerCollections.setContentProvider(new MongoInfoContentProvider());
 		treeViewerCollections.setLabelProvider(new MongoInfoLabelProvider());
 		treeViewerCollections.setInput(collectionList);
-		treeViewerCollections.setComparator(collectionSorter);
+		treeViewerCollections.setSorter(collectionSorter);
 		
 		filter = new MongoInfoFilter();
 		treeViewerCollections.addFilter(filter);
