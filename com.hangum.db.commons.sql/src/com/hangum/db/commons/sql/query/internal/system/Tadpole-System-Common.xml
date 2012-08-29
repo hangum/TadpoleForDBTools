@@ -132,6 +132,14 @@
 		passwd = #passwd#
 	WHERE seq = #seq#
 </update>
+
+<!-- 
+	유저를 삭제합니다.
+ -->
+<delete id="deleteUser" parameterClass="com.hangum.db.dao.system.UserDAO">
+	DELETE FROM users WHERE email = #email#
+</delete>
+
 <!-- 
 	============================================================================================================================
 	user db

@@ -1,6 +1,5 @@
 package com.hangum.db.define;
 
-import org.eclipse.core.runtime.Platform;
 
 public class Define {
 	/** 올챙이가 지원 하는 디비 타입을 정의 합니다  */

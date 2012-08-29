@@ -35,48 +35,10 @@ public class GenerateSampleDataAction extends AbstractObjectAction {
 
 	@Override
 	public void run() {
-//		if(actionType == DB_ACTION.TABLES) {
-//			
-//			// others db
-//			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-//				CreateTableAction cta = new CreateTableAction();
-//				cta.run(userDB, actionType);
-//			// moongodb
-//			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-//				
-//				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
-//				if(Dialog.OK == ncd.open() ) {
-//					refreshTable();
-//				}
-//				
-//			}
-//			
-//		} else if(actionType == DB_ACTION.VIEWS) {
-//			CreateViewAction cva = new CreateViewAction();
-//			cva.run(userDB, actionType);
-//		} else if(actionType == DB_ACTION.INDEXES) {
-//			CreateIndexAction cia = new CreateIndexAction();
-//			cia.run(userDB, actionType);
-//		} else if(actionType == DB_ACTION.PROCEDURES) {
-//			CreateProcedureAction cia = new CreateProcedureAction();
-//			cia.run(userDB, actionType);
-//		} else if(actionType == DB_ACTION.FUNCTIONS) {
-//			CreateFunctionAction cia = new CreateFunctionAction();
-//			cia.run(userDB, actionType);
-//		} else if(actionType == DB_ACTION.TRIGGERS) {
-//			CreateTriggerAction cia = new CreateTriggerAction();
-//			cia.run(userDB, actionType);
-//		}
-		
-		logger.debug("###################################");
-		
-		logger.debug("[] ======================> GenerationSample data");
 		TableDAO tableDao = (TableDAO)sel.getFirstElement();
 		
 		SampleDataGenerateDialog dialog = new SampleDataGenerateDialog(window.getShell(), userDB, tableDao.getName());
 		dialog.open();
-		
-		logger.debug("###################################");
 	}
 	
 

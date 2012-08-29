@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -259,7 +260,7 @@ public class DBLoginDialog extends Dialog {
 		}
 
 		comparator = new LoginHistoryComparator();
-		tableViewerLoginHistory.setComparator(comparator);
+		tableViewerLoginHistory.setSorter(comparator);
 	}
 
 	/**
@@ -356,7 +357,7 @@ public class DBLoginDialog extends Dialog {
 	}
 }
 
-class LoginHistoryComparator extends ViewerComparator {
+class LoginHistoryComparator extends ViewerSorter  {
 	private int propertyIndex;
 	private static final int DESCENDING = 1;
 	private int direction = DESCENDING;

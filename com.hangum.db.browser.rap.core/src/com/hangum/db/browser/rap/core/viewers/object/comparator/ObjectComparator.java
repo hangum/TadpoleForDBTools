@@ -1,7 +1,7 @@
 package com.hangum.db.browser.rap.core.viewers.object.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 
 /**
@@ -10,7 +10,7 @@ import org.eclipse.swt.SWT;
  * @author hangum
  *
  */
-public  class ObjectComparator extends ViewerComparator {
+public  class ObjectComparator extends ViewerSorter  {
 	protected int propertyIndex;
 	protected static final int DESCENDING = 1;
 	protected int direction = DESCENDING;

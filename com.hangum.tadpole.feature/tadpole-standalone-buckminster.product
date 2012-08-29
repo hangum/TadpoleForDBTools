@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="tadpole-standalone" id="com.hangum.db.browser.rap.product" application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
+<product name="tadpole-stndalone-buckminster" uid="tadpole-stndalone-buckminster" id="com.hangum.db.browser.rap.product" application="org.eclipse.ui.ide.workbench" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -39,6 +39,7 @@
       <plugin id="com.hangum.tadpole.mongodb.core"/>
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
       <plugin id="com.hangum.tadpole.preference"/>
+      <plugin id="com.hangum.tadpole.rdb.core.ext"/>
       <plugin id="com.ibm.icu.base"/>
       <plugin id="javax.servlet"/>
       <plugin id="org.apache.commons.fileupload"/>

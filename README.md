@@ -52,9 +52,10 @@ Demo Video
 * RDB : http://www.youtube.com/watch?v=cXNthDhxWgs
 * MongoDB : http://www.youtube.com/watch?v=gUsVbin-2FM
 
-Tutorial
+Document
 -
-* http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
+* RDB Turorial : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
+* Developer Guide : https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide
 
 Demo Site
 -

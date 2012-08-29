@@ -43,13 +43,10 @@ public class TadpoleSystem_UserGroupQuery {
 	}
 	
 	/**
-	 * 신규 유저를 등록합니다.
-	 * @param email
-	 * @param pass
+	 * 신규 유저그룹를 등록합니다.
 	 * @param name
-	 * @param type user-type
 	 */
-	public static int newUserDB(String name) throws Exception {
+	public static int newUserGroup(String name) throws Exception {
 		UserGroupDAO group = new UserGroupDAO();
 		group.setName(name);
 		

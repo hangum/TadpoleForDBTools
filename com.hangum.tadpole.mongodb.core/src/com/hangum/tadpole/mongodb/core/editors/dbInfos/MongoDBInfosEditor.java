@@ -185,13 +185,14 @@ public class MongoDBInfosEditor extends EditorPart {
 		tree.setHeaderVisible(true);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		collectionSorter = new MongoDBCollectionComparator();
 		createTableColumn();
 		
 		treeViewerCollections.setContentProvider(new MongoInfoContentProvider());
 		treeViewerCollections.setLabelProvider(new MongoInfoLabelProvider());
 		treeViewerCollections.setInput(collectionList);
-		treeViewerCollections.setComparator(collectionSorter);
+		
+		collectionSorter = new MongoDBCollectionComparator();
+		treeViewerCollections.setSorter(collectionSorter);
 		
 		filter = new MongoInfoFilter();
 		treeViewerCollections.addFilter(filter);

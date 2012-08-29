@@ -3,7 +3,6 @@ package com.hangum.db.system;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Statement;
 import java.util.List;
@@ -183,8 +182,8 @@ public class TadpoleSystemConnector {
 				}
 				
 				// 기본 그룹
-				int seqAdm = TadpoleSystem_UserGroupQuery.newUserDB("AdminGroup");
-				int seqTest = TadpoleSystem_UserGroupQuery.newUserDB("TestGroup");
+				int seqAdm = TadpoleSystem_UserGroupQuery.newUserGroup("AdminGroup");
+				int seqTest = TadpoleSystem_UserGroupQuery.newUserGroup("TestGroup");
 				
 				// 기본 유저 저장
 				TadpoleSystem_UserQuery.newUser(seqAdm, ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, Define.USER_TYPE.ADMIN.toString(), Define.YES_NO.YES.toString());
