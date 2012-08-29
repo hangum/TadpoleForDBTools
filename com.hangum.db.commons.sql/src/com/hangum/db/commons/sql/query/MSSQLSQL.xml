@@ -17,6 +17,11 @@
 	table 이름
  -->
 <select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<!-- 
+	table comment
+	   fisusr이라는 사용자 소유의 t_users테이블에 comment를 지정할때. 
+	   exec sp_addextendedproperty 'caption', '사용자 아이디', 'user', fisusr, 'table', 't_users';
+ -->
 	/*
 	SELECT SERVERPROPERTY('productversion')	
 	select name from sys.tables	order by name
@@ -33,6 +38,14 @@
 	table, view의 컬럼 정보
  -->
 <select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<!-- 
+	column comment
+	   fisusr이라는 사용자 소유의 t_users테이블에 user_id컬럼에 comment를 지정할때. 
+	   exec sp_addextendedproperty 'column_comment', '사용자 아이디', 'user', fisusr, 'table', 't_users', 'column', 'user_id';
+	   
+	       천번째 인수인 caption이라는 문자열은 extendedproperty의 name속성이다.
+	   and t.name = 'column_comment'    
+ -->
 SELECT  b.name field, 
         c.name + CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
                  ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' 
@@ -45,7 +58,8 @@ SELECT  b.name field,
 FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
 	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
-    left join sysproperties t on a.id = t.id and c.type = '4'	
+    left join sysproperties t on a.id = t.id and b.colid = t.smallid and t.type = '4'
+        and t.name in ('ms_description', 'caption', 'comment')    	
 WHERE 
 		a.name = #table#
 ORDER BY a.id, b.colid
