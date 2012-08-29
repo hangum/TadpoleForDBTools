@@ -807,14 +807,6 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 		
-		// sorter
-		tableComparator = new ObjectComparator();
-		tableListViewer.setSorter(tableComparator);
-		
-		// dnd 기능 추가
-		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
-		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
-		
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();
 		tbName.setWidth(150);
@@ -843,6 +835,19 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
 		
+		// sorter
+		tableComparator = new ObjectComparator();
+		tableListViewer.setSorter(tableComparator);
+		
+//		현재 사용하지 않으므로..
+//		// dnd 기능 추가
+//		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
+//		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
+		
+		// filter
+		tableFilter = new TableViewFilter();
+		tableListViewer.addFilter(tableFilter);
+		
 		// columns 
 		tableColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		tableColumnViewer.setUseHashlookup(true);
@@ -860,11 +865,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableColumnViewer.setLabelProvider(new TableColumnLabelprovider());
 		tableColumnViewer.setInput(showTableColumns);
 		
-		sashForm.setWeights(new int[] {1, 1});
+		sashForm.setWeights(new int[] {1, 1});		
 		
-		tableFilter = new TableViewFilter();
-		tableListViewer.addFilter(tableFilter);
-
 		// action 설정 
 		creatAction_Table = 	new ObjectCreatAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		//		modifyAction = 	new ObjectModifyAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLE, "Table");
