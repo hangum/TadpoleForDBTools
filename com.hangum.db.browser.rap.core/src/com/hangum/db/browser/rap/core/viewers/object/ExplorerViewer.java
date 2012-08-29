@@ -807,6 +807,10 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 		
+		// sorter
+		tableComparator = new ObjectComparator();
+		tableListViewer.setSorter(tableComparator);
+		
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();
 		tbName.setWidth(150);
@@ -834,10 +838,6 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
-		
-		// sorter
-		tableComparator = new ObjectComparator();
-		tableListViewer.setSorter(tableComparator);
 		
 //		현재 사용하지 않으므로..
 //		// dnd 기능 추가
