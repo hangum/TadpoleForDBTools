@@ -35,11 +35,11 @@
          point="org.eclipse.core.runtime.products">
 		<product
             application="org.eclipse.ui.ide.workbench"
-         	name="tadpole-stndalone-buckminster">
+         	name="tadpole-standalone">
       
          <property
                name="appName"
-               value="tadpole-stndalone-buckminster">
+               value="tadpole-standalone">
          </property>
       </product>
    </extension>
