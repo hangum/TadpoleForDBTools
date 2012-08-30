@@ -412,10 +412,6 @@
             alias="/orion"
             base-name="/orion">
       </resource>
-      <resource
-            alias="/editorService"
-            base-name="/editorService">
-      </resource>
    </extension>
 
 </plugin>
