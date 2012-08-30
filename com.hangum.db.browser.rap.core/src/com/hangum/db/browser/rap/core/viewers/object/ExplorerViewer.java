@@ -29,8 +29,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -69,6 +67,7 @@ import com.hangum.db.browser.rap.core.editors.table.TableViewerEditPart;
 import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.browser.rap.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.db.browser.rap.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.db.browser.rap.core.viewers.object.comparator.TableComparator;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.ManagerListDTO;
@@ -808,7 +807,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableTableList.setHeaderVisible(true);
 		
 		// sorter
-		tableComparator = new ObjectComparator();
+		tableComparator = new TableComparator();
 		tableListViewer.setSorter(tableComparator);
 		
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);

@@ -5,7 +5,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 
 /**
- * sort를 위한 최상위 클래서(기본으로 table, view 사용)
+ * sort를 위한 최상위 클래서(기본으로 table 사용)
  * 
  * @author hangum
  *
