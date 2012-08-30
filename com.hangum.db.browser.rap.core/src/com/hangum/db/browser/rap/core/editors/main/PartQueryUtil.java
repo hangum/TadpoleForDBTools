@@ -29,7 +29,7 @@ public class PartQueryUtil {
 		
 		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
 			
-			if( StringUtils.indexOf(originalQuery, "where") == -1 ) {
+			if( StringUtils.indexOf(originalQuery.toLowerCase(), "where") == -1 ) {
 				requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
 			} else {
 				requestQuery = originalQuery;				
