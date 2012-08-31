@@ -896,10 +896,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		//				manager.add(modifyAction);
 						manager.add(deleteAction_Table);
 						manager.add(refreshAction_Table);
-						
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-						
-						manager.add(generateSampleData);
+					
+						// 현재는 oracle db만 데이터 수정 모드..
+						if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));						
+							manager.add(generateSampleData);
+						}
 						
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						
