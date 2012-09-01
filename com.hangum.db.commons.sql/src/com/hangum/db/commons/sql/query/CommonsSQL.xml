@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="EUC-KR" ?>
-
+<!--
+  Copyright (c) 2012 Cho Hyun Jong.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+  
+  Contributors:
+      Cho Hyun Jong - initial API and implementation
+-->
 <!DOCTYPE sqlMap      
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">

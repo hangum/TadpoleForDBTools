@@ -1,117 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<!-- 
-
-사용자 그룹
-CREATE TABLE user_group  (
-	seq INTEGER AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(60) NOT NULL,
-	create_time DATE DEFAULT SYSTIMESTAMP,
-	delYn CHAR(3) DEFAULT 'NO'
-)
-
-사용자
-	user_type(
-			admin, manager, user, guest)
-CREATE TABLE   users  (
-	seq INTEGER AUTO_INCREMENT PRIMARY KEY,
-	group_seq INTEGER NOT NULL, 
-	email VARCHAR(60) NOT NULL,
-	passwd VARCHAR(60) NOT NULL,
-	name VARCHAR(60) NOT NULL,
-	user_type VARCHAR(20) DEFAULT 'user',
-	approval_yn VARCHAR(3)  DEFAULT 'NO' ,
-	create_time DATE DEFAULT SYSTIMESTAMP,
-	delYn CHAR(3) DEFAULT 'NO',
-	UNIQUE(email, user_type),
-	CONSTRAINT fk_users FOREIGN KEY (group_seq) REFERENCES user_group  (seq)  ON DELETE CASCADE ON UPDATE RESTRICT
-)
-
-- 외부 사용자 디비(amazonRDS, ucloud db)
-CREATE TABLE ext_account (
-	seq INTEGER AUTO_INCREMENT PRIMARY KEY,
-	user_seq INTEGER  NOT NULL,
-	types VARCHAR(100) NOT NULL,
-	name VARCHAR(1000) NOT NULL,
-	value0 VARCHAR(1000) NOT NULL,
-	value1 VARCHAR(1000),
-	value2 VARCHAR(1000),
-	value3 VARCHAR(1000),
-	value4 VARCHAR(1000),
-	value5 VARCHAR(1000),
-	value6 VARCHAR(1000),
-	value7 VARCHAR(1000),
-	value8 VARCHAR(1000),
-	value9 VARCHAR(1000),
-	success VARCHAR(10),
-	message VARCHAR(1000),
-	create_time DATE DEFAULT SYSTIMESTAMP,
-  delYn CHAR(3) DEFAULT 'NO',
-  UNIQUE(user_seq, types, name),
-  CONSTRAINT  fk_ext_account_user_seq FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE CASCADE ON UPDATE RESTRICT
-)
-
-
-사용자 디비
-// host, port는 sqlite는 값이 없으므로 not null에서 제외 했습니다.
-CREATE TABLE user_db (
-     seq INTEGER AUTO_INCREMENT PRIMARY KEY,
-     user_seq INTEGER  NOT NULL,
-     ext_seq INTEGER,
-     types     	VARCHAR(50)  	NOT NULL,
-     url			VARCHAR(2000)  	NOT NULL,
-     db	VARCHAR(50)  	NOT NULL,
-     display_name VARCHAR(50)  	NOT NULL,
-     host		 VARCHAR(50) 	,
-     port		 VARCHAR(10) ,
-     locale	VARCHAR(10)		,
-     passwd		 VARCHAR(100)  	,
-     users		 VARCHAR(100) 	,
-     create_time DATE DEFAULT SYSTIMESTAMP,
-     delYn CHAR(3) DEFAULT 'NO',
-     CONSTRAINT fk_user_db_seq FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE CASCADE ON UPDATE RESTRICT,
-     CONSTRAINT fk_user_db_ext_seq FOREIGN KEY (ext_seq) REFERENCES ext_account (seq) ON DELETE CASCADE ON UPDATE RESTRICT
-)
-
-
-사용자 디비의 RESOURCE SQL, ERD
-CREATE TABLE user_db_resource (
-     seq INTEGER AUTO_INCREMENT PRIMARY KEY,
-     types VARCHAR(10) NOT NULL,
-     user_seq INTEGER NOT NULL,
-     db_seq INTEGER  NOT NULL,
-     filename VARCHAR(2000)  NOT NULL,
-     create_time DATE DEFAULT SYSTIMESTAMP,
-     delYn CHAR(3) DEFAULT 'NO',
-     UNIQUE(types, user_seq, db_seq, filename),
-     CONSTRAINT fk_user_resource_seq FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
-     CONSTRAINT fk_user_db_resource_seq FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
-
-사용자 디비의 실제 데이터 입력
-CREATE TABLE user_db_resource_data (
-     seq INTEGER AUTO_INCREMENT PRIMARY KEY,
-     user_db_resource_seq INTEGER NOT NULL,
-     datas VARCHAR(2000)  NOT NULL,
-     CONSTRAINT fk_user_db_resourc_data FOREIGN KEY (user_db_resource_seq) REFERENCES user_db_resource (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
-
-사용자 프리퍼런스 데이터
-CREATE TABLE user_info_data (
-	seq INTEGER AUTO_INCREMENT PRIMARY KEY,
-    user_seq INTEGER NOT NULL,
-    db_seq INTEGER  NOT NULL,
-    name VARCHAR(40) NOT NULL,
-    value0 VARCHAR(2000),
-    value1 VARCHAR(2000),
-    value2 VARCHAR(2000),
-    value3 VARCHAR(2000),
-    value4 VARCHAR(2000),
-    value5 VARCHAR(2000),
-    CONSTRAINT fk_user_info_data_users FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
+<!--
+  Copyright (c) 2012 Cho Hyun Jong.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+  
+  Contributors:
+      Cho Hyun Jong - initial API and implementation
 -->
-
 <!DOCTYPE sqlMap      
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">

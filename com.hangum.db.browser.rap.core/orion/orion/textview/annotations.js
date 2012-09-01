@@ -1,3 +1,13 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2012 Cho Hyun Jong.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+# 
+# Contributors:
+#     Cho Hyun Jong - initial API and implementation
+#-------------------------------------------------------------------------------
 /*******************************************************************************
  * @license
  * Copyright (c) 2010, 2011 IBM Corporation and others.
@@ -147,7 +157,8 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	 * @param {String} type The annotation type (for example, orion.annotation.error).
 	 * @param {Object|Function} properties The common annotation properties of the registered
 	 *		annotation type. All annotations create with this annotation type will expose these
-	 *		properties.	 */
+	 *		properties.
+	 */
 	AnnotationType.registerType = function(type, properties) {
 		var constructor = properties;
 		if (typeof constructor !== "function") { //$NON-NLS-0$
