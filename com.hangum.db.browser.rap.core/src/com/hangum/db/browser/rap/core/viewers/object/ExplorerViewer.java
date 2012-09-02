@@ -38,7 +38,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -78,6 +77,7 @@ import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.browser.rap.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.db.browser.rap.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.db.browser.rap.core.viewers.object.comparator.TableComparator;
+import com.hangum.db.browser.rap.core.viewers.object.editor.TableColumnEditor;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.ManagerListDTO;
@@ -106,7 +106,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public static String ID = "com.hangum.db.browser.rap.core.view.object.explorer"; //$NON-NLS-1$
 	static Logger logger = Logger.getLogger(ExplorerViewer.class);
 	
-	private int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
+//	private int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
 	
 	private UserDBDAO userDB;
 	private String selectTableName = ""; //$NON-NLS-1$
@@ -678,7 +678,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		Table tableTableColumn = viewColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
-		createTableColumne(viewColumnViewer);
+		
+		createViewColumne(viewColumnViewer);
 		
 //		transferTypes = new Transfer[]{TextTransfer.getInstance()};
 //		viewColumnViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(viewColumnViewer));
@@ -832,11 +833,16 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				return table.getName();
 			}
 		});
+		
 		TableViewerColumn tvColCmt = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbCmt = tvColCmt.getColumn();
 		tbCmt.setWidth(400);
 		tbCmt.setText("Comment"); //$NON-NLS-1$
 		tbCmt.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbCmt, 1));
+
+		// comment가 있는 항목만 수정하독합니다.
+		if(isCommentEdit(getUserDB())) tvColCmt.setEditingSupport(new TableColumnEditor(this, tableListViewer));
+		
 		tvColCmt.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -864,7 +870,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
 		
-		createTableColumne(tableColumnViewer);
+		createTableColumne(this, tableColumnViewer, getUserDB());
 		
 		// dnd 기능 추가
 //		transferTypes = new Transfer[]{TextTransfer.getInstance()};

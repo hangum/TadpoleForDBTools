@@ -18,7 +18,7 @@ package com.hangum.db.dao.mysql;
  */
 public class TableDAO {
 	String name;
-	String comment;
+	String comment="";
 	
 	public TableDAO() {
 	}

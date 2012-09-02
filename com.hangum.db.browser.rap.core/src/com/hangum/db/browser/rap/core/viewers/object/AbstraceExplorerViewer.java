@@ -19,9 +19,37 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.db.browser.rap.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.db.browser.rap.core.viewers.object.editor.TableColumnEditor;
+import com.hangum.db.commons.sql.define.DBDefine;
+import com.hangum.db.dao.system.UserDBDAO;
 
+/**
+ * Explorer view의 abstract class
+ * 
+ * @author hangum
+ *
+ */
 public abstract class AbstraceExplorerViewer extends ViewPart {
 
+	/**
+	 * 디비 중에 올챙이가 테이블,컬럼의 도움말을 제공하는 디비를 정의합니다.
+	 */
+	protected static DBDefine[] editType = {DBDefine.ORACLE_DEFAULT, DBDefine.POSTGRE_DEFAULT, DBDefine.MYSQL_DEFAULT};
+	/**
+	 * 테이블, 테이블 컬럼의 컬럼을 에디트 할수 있는지.
+	 * @param userDB
+	 * @return
+	 */
+	protected boolean isCommentEdit(UserDBDAO userDB) {
+		if(userDB == null) return false;
+		
+		for (DBDefine dbType : editType) {
+			if(dbType.getDBToString().equals(userDB.getDb())) return true;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * trigger table column
 	 * @param tv
@@ -89,9 +117,9 @@ public abstract class AbstraceExplorerViewer extends ViewPart {
 	}
 	
 	/**
-	 * table table column
+	 * view column
 	 */
-	protected void createTableColumne(TableViewer tv) {
+	protected void createViewColumne(TableViewer tv) {
 		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
 		int[] size = {120, 70, 50, 100, 50, 50, 50};
 
@@ -99,6 +127,24 @@ public abstract class AbstraceExplorerViewer extends ViewPart {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
+		}
+	}
+	
+	/**
+	 * table table column
+	 */
+	protected void createTableColumne(ExplorerViewer explorerViewer, TableViewer tv, UserDBDAO userDB) {
+		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
+		int[] size = {120, 70, 50, 100, 50, 50, 50};
+
+		for (int i=0; i<name.length; i++) {
+			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
+			tableColumn.getColumn().setText(name[i]);
+			tableColumn.getColumn().setWidth(size[i]);
+			
+			if(i == 3) {
+				if(isCommentEdit(userDB)) tableColumn.setEditingSupport(new TableColumnEditor(explorerViewer, tv));
+			}
 		}
 	}
 	
