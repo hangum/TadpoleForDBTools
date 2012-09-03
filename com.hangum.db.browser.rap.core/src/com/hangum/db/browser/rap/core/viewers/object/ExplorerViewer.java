@@ -104,7 +104,7 @@ import com.mongodb.Mongo;
 public class ExplorerViewer extends AbstraceExplorerViewer {
 	
 	public static String ID = "com.hangum.db.browser.rap.core.view.object.explorer"; //$NON-NLS-1$
-	static Logger logger = Logger.getLogger(ExplorerViewer.class);
+	private static Logger logger = Logger.getLogger(ExplorerViewer.class);
 	
 //	private int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
 	
@@ -840,9 +840,6 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tbCmt.setText("Comment"); //$NON-NLS-1$
 		tbCmt.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbCmt, 1));
 
-		// comment가 있는 항목만 수정하독합니다.
-		if(isCommentEdit(getUserDB())) tvColCmt.setEditingSupport(new TableColumnEditor(this, tableListViewer));
-		
 		tvColCmt.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -870,7 +867,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
 		
-		createTableColumne(this, tableColumnViewer, getUserDB());
+		createTableColumne(tableColumnViewer);
 		
 		// dnd 기능 추가
 //		transferTypes = new Transfer[]{TextTransfer.getInstance()};
@@ -987,11 +984,14 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			tabFolderObject.setSelection(0);
 			
 			refreshTable("DB"); //$NON-NLS-1$
+			
 			initObjectDetail(DBDefine.getDBDefine( userDB.getTypes() ));
+			
 		} else if(element instanceof ManagerListDTO) {
 			ManagerListDTO managerList = (ManagerListDTO)element;
 			
 			userDB = null;
+
 			// table을 닫는다.
 			if(showTables != null) showTables.clear();
 			tableListViewer.setInput(showTables);
@@ -1063,6 +1063,13 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 //		https://github.com/hangum/TadpoleForDBTools/issues/9
 			Table table = tableColumnViewer.getTable();
 			table.removeAll();
+			
+			// table comment edit
+//			if(isCommentEdit(getUserDB())) tvColCmt.setEditingSupport(new TableColumnEditor(this, tableListViewer));			
+			
+			// table column comment edit
+//			if(isCommentEdit(userDB)) tableColumn.setEditingSupport(new TableColumnEditor(explorerViewer, tv));
+			
 			
 			creatAction_Table.setUserDB(getUserDB());
 	//		modifyAction.setUserDB(getUserDB());
@@ -1229,9 +1236,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	 */
 	public void refreshTable(final String source) {
 		
-		// 접속이 끊어졌는지 확인하기 위해 ping 테스트 실시한후 검사합니다.		
 		try {
-		
 			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 				
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
