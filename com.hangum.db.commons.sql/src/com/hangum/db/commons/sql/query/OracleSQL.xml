@@ -30,9 +30,13 @@
 	TNAME 		: 테이블 명
  -->
 <select id="tableList" resultClass="com.hangum.db.dao.mysql.TableDAO" parameterClass="java.lang.String">
-	select TNAME name 
-	from tab
-	order by name
+  SELECT 
+      T.table_name AS "NAME"
+      , S.COMMENTS AS "COMMENT"
+    FROM user_tables T 
+      LEFT JOIN USER_TAB_COMMENTS S
+            ON S.TABLE_NAME = T.TABLE_NAME
+ORDER BY T.table_name
 </select>
 
 <!-- 
@@ -57,7 +61,8 @@
          END
             AS "KEY",
          C.DATA_DEFAULT AS "DEFAULT",
-         '' AS EXTRA
+         '' AS EXTRA,
+         S.COMMENTS AS "COMMENT"
     FROM USER_TAB_COLUMNS C
          LEFT JOIN USER_CONSTRAINTS P
             ON P.TABLE_NAME = C.TABLE_NAME AND P.CONSTRAINT_TYPE = 'P'
@@ -65,6 +70,9 @@
             ON     C.TABLE_NAME = D.TABLE_NAME
                AND C.COLUMN_NAME = D.COLUMN_NAME
                AND P.CONSTRAINT_NAME = D.INDEX_NAME
+         LEFT JOIN USER_COL_COMMENTS S 
+            ON S.TABLE_NAME = C.TABLE_NAME
+               AND S.COLUMN_NAME = C.COLUMN_NAME 
    WHERE C.TABLE_NAME = #table#
 ORDER BY C.COLUMN_ID 
 </select>
