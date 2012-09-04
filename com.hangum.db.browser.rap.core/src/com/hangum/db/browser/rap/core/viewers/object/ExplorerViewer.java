@@ -746,110 +746,110 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
 		compositeTables.setLayout(new GridLayout(1, false));
-		
+
 		SashForm sashForm = new SashForm(compositeTables, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		tableListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);// | SWT.MULTI);
+
+		tableListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);// |
+																									// SWT.MULTI);
 		tableListViewer.setUseHashlookup(true);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				
-				if(null != is) {
-					TableDAO tableDAO = (TableDAO)is.getFirstElement();
-					
+				IStructuredSelection is = (IStructuredSelection) event.getSelection();
+
+				if (null != is) {
+					TableDAO tableDAO = (TableDAO) is.getFirstElement();
+
 					// is rdb
-					if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-						
-						
-					
+					if (DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+
 						DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 						try {
 							page.openEditor(mei, TableViewerEditPart.ID);
 						} catch (PartInitException e) {
 							logger.error("Load the table data", e); //$NON-NLS-1$
-							
+
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_39, errStatus); //$NON-NLS-1$
 						}
-						
-					// is mongo db
-					} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-						
+
+						// is mongo db
+					} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+
 						MongoDBEditorInput input = new MongoDBEditorInput(tableDAO.getName(), userDB, showTableColumns);
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 						try {
 							page.openEditor(input, MongoDBTableEditor.ID);
 						} catch (PartInitException e) {
 							logger.error("Load the table data", e); //$NON-NLS-1$
-							
+
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_39, errStatus); //$NON-NLS-1$
 						}
-					} 
-					
-				}	// if(null
+					}
+
+				} // if(null
 			}
 		});
-		//tableListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		// tableListViewer.addSelectionChangedListener(new
+		// ISelectionChangedListener() {
 		tableListViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
-					IStructuredSelection is = (IStructuredSelection)event.getSelection();
+					IStructuredSelection is = (IStructuredSelection) event.getSelection();
 					Object tableDAO = is.getFirstElement();
-					
-					if(tableDAO != null) {
-						TableDAO table = (TableDAO)tableDAO;
-						
-						if(selectTableName.equals(table.getName())) return;
+
+					if (tableDAO != null) {
+						TableDAO table = (TableDAO) tableDAO;
+
+						if (selectTableName.equals(table.getName()))
+							return;
 						selectTableName = table.getName();
-						
-						if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-							
+
+						if (DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							Map<String, String> mapParam = new HashMap<String, String>();
 							mapParam.put("db", userDB.getDb());
-							mapParam.put("table", table.getName());							
-							
+							mapParam.put("table", table.getName());
+
 							showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
-							
-							// TODO :
-							//TableViewerColumn tvColCmt = new TableViewerColumn(tableListViewer, SWT.NONE);
-							//tvColCmt.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB));
-							
-							tableListViewer.editElement(table, 1);
-						// mongo db
-						} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-							
-							showTableColumns = MongoDBQuery.collectionColumn(userDB, selectTableName);							
+
+							if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
+								tableListViewer.editElement(table, 1);
+							}
+							// mongo db
+						} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+
+							showTableColumns = MongoDBQuery.collectionColumn(userDB, selectTableName);
 						}
-						
-					}  else showTableColumns = null;
-					
+
+					} else
+						showTableColumns = null;
+
 					tableColumnViewer.setInput(showTableColumns);
 					tableColumnViewer.refresh();
-					
-				} catch(Exception e) {
+
+				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$
-					
+
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});
-		
+
 		Table tableTableList = tableListViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
-		
+
 		// sorter
 		tableComparator = new TableComparator();
 		tableListViewer.setSorter(tableComparator);
-		
+
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();
 		tbName.setWidth(150);
@@ -858,13 +858,13 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tvColName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				TableDAO table = (TableDAO)element;
+				TableDAO table = (TableDAO) element;
 				return table.getName();
 			}
 		});
-		
+
 		TableViewerColumn tvColCmt = new TableViewerColumn(tableListViewer, SWT.NONE);
-		
+
 		TableColumn tbCmt = tvColCmt.getColumn();
 		tbCmt.setWidth(400);
 		tbCmt.setText("Comment"); //$NON-NLS-1$
@@ -873,94 +873,97 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tvColCmt.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				TableDAO table = (TableDAO)element;
+				TableDAO table = (TableDAO) element;
 				return table.getComment();
 			}
 		});
-		
-		// TODO : 
-		tvColCmt.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB));
-		
+
+		tvColCmt.setEditingSupport(new TableCommentEditorSupport(tableListViewer, this));
+
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
-		
-//		현재 사용하지 않으므로..
-//		// dnd 기능 추가
-//		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
-//		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
-		
+
+		// 현재 사용하지 않으므로..
+		// // dnd 기능 추가
+		// Transfer[] transferTypes = new
+		// Transfer[]{TextTransfer.getInstance()};
+		// tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new
+		// DragListener(tableListViewer));
+
 		// filter
 		tableFilter = new TableViewFilter();
 		tableListViewer.addFilter(tableFilter);
-		
-		// columns 
+
+		// columns
 		tableColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		tableColumnViewer.setUseHashlookup(true);
 		Table tableTableColumn = tableColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
-		
+
 		createTableColumne(tableColumnViewer);
-		
+
 		// dnd 기능 추가
-//		transferTypes = new Transfer[]{TextTransfer.getInstance()};
-//		tableColumnViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableColumnViewer));
-		
+		// transferTypes = new Transfer[]{TextTransfer.getInstance()};
+		// tableColumnViewer.addDragSupport(DND_OPERATIONS, transferTypes , new
+		// DragListener(tableColumnViewer));
+
 		tableColumnViewer.setContentProvider(new ArrayContentProvider());
 		tableColumnViewer.setLabelProvider(new TableColumnLabelprovider());
 		tableColumnViewer.setInput(showTableColumns);
-		
-		sashForm.setWeights(new int[] {1, 1});		
-		
-		// action 설정 
-		creatAction_Table = 	new ObjectCreatAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		//		modifyAction = 	new ObjectModifyAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLE, "Table");
-		deleteAction_Table = 	new ObjectDeleteAction(	getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		refreshAction_Table =	new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		
+
+		sashForm.setWeights(new int[] { 1, 1 });
+
+		// action 설정
+		creatAction_Table = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		// modifyAction = new ObjectModifyAction(
+		// getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLE, "Table");
+		deleteAction_Table = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+
 		// generation sample data
 		generateSampleData = new GenerateSampleDataAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		
+
 		selectStmtAction = new GenerateSQLSelectAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
 		insertStmtAction = new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
 		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
 
-		// mongodb 용 action설정  
+		// mongodb 용 action설정
 		renameColAction = new ObjectMongodbRenameAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
 		reIndexColAction = new ObjectMongodbReIndexAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");
-		
+
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				if(userDB != null) {
-					if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+				if (userDB != null) {
+					if (DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 						manager.add(creatAction_Table);
-		//				manager.add(modifyAction);
+						// manager.add(modifyAction);
 						manager.add(deleteAction_Table);
 						manager.add(refreshAction_Table);
-					
+
 						// 현재는 oracle db만 데이터 수정 모드..
-						if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
-							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));						
+						if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(generateSampleData);
 						}
-						
+
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-						
+
 						manager.add(selectStmtAction);
 						manager.add(insertStmtAction);
 						manager.add(updateStmtAction);
 						manager.add(deleteStmtAction);
-					// is mongodb
+						// is mongodb
 					} else {
 						manager.add(creatAction_Table);
 						manager.add(deleteAction_Table);
 						manager.add(refreshAction_Table);
-						
+
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						manager.add(insertStmtAction);
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -970,7 +973,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				}
 			}
 		});
-		
+
 		Menu popupMenu = menuMgr.createContextMenu(tableListViewer.getTable());
 		tableListViewer.getTable().setMenu(popupMenu);
 		getSite().registerContextMenu(menuMgr, tableListViewer);

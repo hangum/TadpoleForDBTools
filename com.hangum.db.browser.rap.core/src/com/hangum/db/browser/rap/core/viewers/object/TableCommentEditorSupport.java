@@ -11,7 +11,6 @@
 package com.hangum.db.browser.rap.core.viewers.object;
 
 import java.sql.PreparedStatement;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
@@ -25,12 +24,12 @@ import com.hangum.db.dao.mysql.TableDAO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
-/**
- * SampleDAtaEditingSupport
- * 
- * @author hangum
- */
 public class TableCommentEditorSupport extends EditingSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6292003867430114514L;
 
 	/**
 	 * Logger for this class
@@ -38,41 +37,40 @@ public class TableCommentEditorSupport extends EditingSupport {
 	private static final Logger logger = Logger.getLogger(TableCommentEditorSupport.class);
 
 	private final TableViewer viewer;
-	private final UserDBDAO userDB;
+	private final ExplorerViewer explorer;
+	private UserDBDAO userDB;
 
-	public TableCommentEditorSupport(TableViewer viewer, UserDBDAO userDB) {
+	public TableCommentEditorSupport(TableViewer viewer, ExplorerViewer explorer) {
 		super(viewer);
-		this.userDB = userDB;
+		this.explorer = explorer;
 		this.viewer = viewer;
-		logger.debug("////////////////////////////////");
-		try {
-			logger.debug("userDB is " + userDB.toString());
-		} catch (Exception e) {
-
-		}
-		logger.debug("////////////////////////////////");
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-
 		return new TextCellEditor(viewer.getTable());
 	}
 
 	@Override
 	protected boolean canEdit(Object element) {
-		return true;
+		// TODO : ORACLE과 MSSQL일때만 처리한다.
+		// 다른 DBMS들은 코멘트를 저장할 수 있는 테이블을 직접 만들어 주면 안될까?
+		// Tadpole_Props 이런식으로...^^;
+		userDB = explorer.getUserDB();
+		if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	protected Object getValue(Object element) {
-
 		String comment = "";
 		try {
 			TableDAO dao = (TableDAO) element;
 			comment = dao.getComment();
 		} catch (Exception e) {
-
 		}
 		return comment;
 	}
@@ -80,7 +78,6 @@ public class TableCommentEditorSupport extends EditingSupport {
 	@Override
 	protected void setValue(Object element, Object value) {
 		String comment = "";
-
 		try {
 			TableDAO dao = (TableDAO) element;
 
@@ -93,16 +90,12 @@ public class TableCommentEditorSupport extends EditingSupport {
 		} catch (Exception e) {
 			viewer.update(element, null);
 		}
-
 	}
 
 	private void ApplyComment(TableDAO dao) {
 
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
-
-		Random oRandom = new Random();
-
 		try {
 
 			logger.debug("userDB is " + userDB.toString());
@@ -113,14 +106,15 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.ORACLE_DEFAULT.equals(this.userDB.getTypes())) {
+			
+			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
 				query.append(" COMMENT ON TABLE ").append(dao.getName()).append(" IS '").append(dao.getComment()).append("'");
-			} else if (DBDefine.MSSQL_DEFAULT.equals(this.userDB.getTypes())) {
+			} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' ").append(userDB.getUsers()).append(" ,'table' ").append(" , '").append(dao.getName()).append("'");
 			}
 
 			logger.debug("Table Comment SQL is " + query.toString());
-			if (DBDefine.ORACLE_DEFAULT.equals(this.userDB.getTypes()) || DBDefine.MSSQL_DEFAULT.equals(this.userDB.getTypes())) {
+			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.executeQuery();
 				javaConn.commit();
