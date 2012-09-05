@@ -82,9 +82,12 @@ public class TableCommentEditorSupport extends EditingSupport {
 			TableDAO dao = (TableDAO) element;
 
 			comment = (String) value;
-			dao.setComment(comment);
-
-			ApplyComment(dao);
+			
+			// 기존 코멘트와 다를때만 db에 반영한다.
+			if (!dao.getComment().equals(comment)){
+				dao.setComment(comment);
+				ApplyComment(dao);
+			}
 
 			viewer.update(element, null);
 		} catch (Exception e) {
