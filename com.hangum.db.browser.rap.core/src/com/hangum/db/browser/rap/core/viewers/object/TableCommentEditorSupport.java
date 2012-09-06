@@ -120,22 +120,20 @@ public class TableCommentEditorSupport extends EditingSupport {
 				stmt.executeQuery();
 
 			} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
-				query.append(" exec sp_dropextendedproperty 'Caption', '").append(" ,'user' ,").append(userDB.getUsers()).append(" ,'table' ").append(" , '").append(dao.getName()).append("'");
+				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers()).append(" ,'table' ").append(" , '").append(dao.getName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
-					stmt.executeQuery();
+					stmt.execute();
 				} catch (Exception e) {
+					logger.debug("query is " + query.toString());
+					logger.error("Comment change error ", e);
 				}
 
 				query = new StringBuffer();
 				query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(" ,'table' ").append(" , '").append(dao.getName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
-				stmt.executeQuery();
+				stmt.execute();
 			}
-
-			logger.debug("Table Comment SQL is " + query.toString());
-
-			javaConn.commit();
 
 		} catch (Exception e) {
 			logger.error("Comment change error ", e);
