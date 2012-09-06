@@ -99,6 +99,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 	}
 
 	private void ApplyComment(TableDAO dao) {
+		// TODO : DBMS별 처리를 위해 별도의 Class로 분리해야 하지 않을까? 
 
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
@@ -114,16 +115,27 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
 				query.append(" COMMENT ON TABLE ").append(dao.getName()).append(" IS '").append(dao.getComment()).append("'");
+
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.executeQuery();
+
 			} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
-				query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' ").append(userDB.getUsers()).append(" ,'table' ").append(" , '").append(dao.getName()).append("'");
+				query.append(" exec sp_dropextendedproperty 'Caption', '").append(" ,'user' ,").append(userDB.getUsers()).append(" ,'table' ").append(" , '").append(dao.getName()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				try {
+					stmt.executeQuery();
+				} catch (Exception e) {
+				}
+
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(" ,'table' ").append(" , '").append(dao.getName()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.executeQuery();
 			}
 
 			logger.debug("Table Comment SQL is " + query.toString());
-			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
-				stmt = javaConn.prepareStatement(query.toString());
-				stmt.executeQuery();
-				javaConn.commit();
-			}
+
+			javaConn.commit();
 
 		} catch (Exception e) {
 			logger.error("Comment change error ", e);
