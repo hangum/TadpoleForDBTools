@@ -69,10 +69,11 @@ public class TableCommentEditorSupport extends EditingSupport {
 	protected Object getValue(Object element) {
 		try {
 			TableDAO dao = (TableDAO) element;
-			return dao.getComment();
+			String comment = dao.getComment();
+			return comment == null ? "" : comment;
 		} catch (Exception e) {
 			logger.error("getValue error ", e);
-			return null;
+			return "";
 		}
 	}
 
