@@ -48,6 +48,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
+		logger.debug("-----------getCellEditor---------------");
 		return new TextCellEditor(viewer.getTable());
 	}
 
@@ -66,13 +67,13 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected Object getValue(Object element) {
-		String comment = "";
 		try {
 			TableDAO dao = (TableDAO) element;
-			comment = dao.getComment();
+			return dao.getComment();
 		} catch (Exception e) {
+			logger.error("getValue error ", e);
+			return null;
 		}
-		return comment;
 	}
 
 	@Override
@@ -81,18 +82,19 @@ public class TableCommentEditorSupport extends EditingSupport {
 		try {
 			TableDAO dao = (TableDAO) element;
 
-			comment = (String) value;
-			
+			comment = (String) (value == null ? "" : value);
+
 			// 기존 코멘트와 다를때만 db에 반영한다.
-			if (!dao.getComment().equals(comment)){
+			if (!(comment.equals(dao.getComment()))) {
 				dao.setComment(comment);
 				ApplyComment(dao);
 			}
 
 			viewer.update(element, null);
 		} catch (Exception e) {
-			viewer.update(element, null);
+			logger.error("setValue error ", e);
 		}
+		viewer.update(element, null);
 	}
 
 	private void ApplyComment(TableDAO dao) {
@@ -109,7 +111,6 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			
 			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
 				query.append(" COMMENT ON TABLE ").append(dao.getName()).append(" IS '").append(dao.getComment()).append("'");
 			} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
