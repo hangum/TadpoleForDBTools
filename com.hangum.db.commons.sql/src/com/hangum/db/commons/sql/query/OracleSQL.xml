@@ -322,4 +322,28 @@ ORDER BY s.object_name
 	ORDER BY O.OBJECT_NAME, S.LINE
 </select>
 
+<!-- 
+	지정한 컬럼에 정의된 제약조건 목록을 조회한다.
+	
+ -->
+<select id="constraintList" resultClass="com.hangum.db.dao.mysql.ConstraintDAO" parameterClass="java.util.HashMap">
+  SELECT SUBSTR ( a.column_name, 1, 15 ) column_name 
+       , b.constraint_type constraint_type 
+       , DECODE ( b.constraint_type, 'P', 'PRIMARY KEY', 'U', 'UNIQUE KEY', 'C', 'CHECK OR NOT NULL', 'R', 'FOREIGN KEY' ) constraint_type_nm 
+       , a.constraint_name constraint_name 
+       , b.search_condition 
+       , b.status 
+       , r.table_name AS ref_table 
+    FROM USER_CONS_COLUMNS a 
+         INNER JOIN USER_CONSTRAINTS b 
+            ON a.table_name = b.table_name 
+           AND a.constraint_name = b.constraint_name 
+         LEFT JOIN USER_CONSTRAINTS r 
+            ON b.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME 
+   WHERE 1=1 
+   AND a.table_name = UPPER ( #table# ) 
+   AND a.column_name = UPPER ( #column# ) 
+ORDER BY 1, 2 
+</select>
+
 </sqlMap>
