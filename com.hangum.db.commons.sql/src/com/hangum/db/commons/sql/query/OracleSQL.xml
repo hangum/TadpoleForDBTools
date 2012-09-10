@@ -52,7 +52,12 @@ ORDER BY T.table_name
  -->
 <select id="tableColumnList" resultClass="com.hangum.db.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	 SELECT C.COLUMN_NAME AS "FIELD",
-         C.DATA_TYPE || '(' || DATA_LENGTH || ')' AS "TYPE",
+         C.DATA_TYPE ||  
+         CASE WHEN C.DATA_TYPE = 'NUMBER' AND C.DATA_PRECISION > 0 AND C.DATA_SCALE > 0 THEN '('||C.DATA_PRECISION || ',' || C.DATA_SCALE||')'
+              WHEN C.DATA_TYPE = 'NUMBER' AND C.DATA_PRECISION > 0 THEN '('||C.DATA_PRECISION ||')'
+              WHEN C.DATA_TYPE = 'DATE' THEN ''
+              ELSE '(' || TO_CHAR(C.DATA_LENGTH) || ')' END  
+         AS "TYPE",
          CASE WHEN C.NULLABLE = 'Y' THEN 'YES' ELSE 'NO' END AS "NULL",
          CASE P.CONSTRAINT_TYPE
             WHEN 'P' THEN 'PK'
