@@ -77,7 +77,6 @@ import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.browser.rap.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.db.browser.rap.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.db.browser.rap.core.viewers.object.comparator.TableComparator;
-import com.hangum.db.browser.rap.core.viewers.object.editor.TableColumnEditor;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.ManagerListDTO;
@@ -90,7 +89,6 @@ import com.hangum.db.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataEditingSupport;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.mongodb.DB;
 import com.mongodb.DBAddress;
@@ -818,9 +816,6 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 							showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 
-							if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
-								tableListViewer.editElement(table, 1);
-							}
 							// mongo db
 						} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 
@@ -862,23 +857,21 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				return table.getName();
 			}
 		});
+		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, this, 0));
 
-		TableViewerColumn tvColCmt = new TableViewerColumn(tableListViewer, SWT.NONE);
-
-		TableColumn tbCmt = tvColCmt.getColumn();
-		tbCmt.setWidth(400);
-		tbCmt.setText("Comment"); //$NON-NLS-1$
-		tbCmt.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbCmt, 1));
-
-		tvColCmt.setLabelProvider(new ColumnLabelProvider() {
+		TableViewerColumn tvColComment = new TableViewerColumn(tableListViewer, SWT.NONE);
+		TableColumn tbComment = tvColComment.getColumn();
+		tbComment.setWidth(400);
+		tbComment.setText("Comment"); //$NON-NLS-1$
+		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
+		tvColComment.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
 				return table.getComment();
 			}
 		});
-
-		tvColCmt.setEditingSupport(new TableCommentEditorSupport(tableListViewer, this));
+		tvColComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, this, 1));
 
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
