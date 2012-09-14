@@ -316,4 +316,14 @@
 		name = #name#
 </update>
 
+<!-- 
+	SQL Library를 조회한다.
+ -->
+<select id="sqlLibraryList" resultClass="com.hangum.db.dialogs.message.dao.SQLLibraryDAO" parameterClass="java.util.HashMap">
+	select seq, types, user_seq, db_type, title, sqltext, description, delyn
+	from user_db_sqlibrary
+	where 1=1
+	  and db_type = #db_type#
+</select>
+
 </sqlMap>
