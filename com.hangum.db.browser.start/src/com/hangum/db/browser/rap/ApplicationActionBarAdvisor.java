@@ -38,17 +38,13 @@ import com.hangum.db.browser.rap.core.actions.global.PreferenceAction;
 import com.hangum.db.browser.rap.core.actions.global.UserPermissionAction;
 import com.hangum.db.define.Define;
 import com.hangum.db.session.manager.SessionManager;
-import com.hangum.db.util.ApplicationArgumentUtils;
 
 /**
- * Creates, adds and disposes actions for the menus and action bars of
- * each workbench window.
+ * 올챙이에서 사용하려는 workbench의 action과 toolbar, menu를 생성합니다.
+ * 
+ * @author hangum
  */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
-
-	// Actions - important to allocate these only in makeActions, and then use them
-    // in the fill methods.  This ensures that the actions aren't recreated
-    // when fillActionBars is called with FILL_PROXY.
     private IWorkbenchAction exitAction;
     
     private IAction saveAction;
@@ -71,12 +67,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
     
     protected void makeActions(final IWorkbenchWindow window) {
-        // Creates the actions and registers them.
-        // Registering is needed to ensure that key bindings work.
-        // The corresponding commands keybindings are defined in the plugin.xml file.
-        // Registering also provides automatic disposal of the actions when
-        // the window is closed.
-    	
+   	
     	saveAction = ActionFactory.SAVE.create(window);
     	register(saveAction);
     	
