@@ -47,6 +47,7 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_user_table_create;
 	public static String TadpoleSystemConnector_user_info_data;
 	public static String TadpoleSystemConnector_user_external_account;
+	public static String TadpoleSystemConnector_user_db_sqlibrary_create;
 	
 	public static String TadpoleSystemConnector_group_create_CUBRID;
 	public static String TadpoleSystemConnector_user_db_resource_create_CUBRID;
@@ -55,6 +56,7 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_user_table_create_CUBRID;
 	public static String TadpoleSystemConnector_user_info_data_CUBRID;
 	public static String TadpoleSystemConnector_user_external_account_CUBRID;
+	public static String TadpoleSystemConnector_user_db_sqlibrary_create_CUBRID;
 	
 	static {
 		// initialize resource bundle

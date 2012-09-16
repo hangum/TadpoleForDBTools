@@ -117,7 +117,39 @@ public class TadpoleSystemConnector {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
 		List isUserTable = sqlClient.queryForList("isUserTable"); //$NON-NLS-1$
 		
-		if(isUserTable.size() != 1) {
+		if(isUserTable.size() == 1) {
+			// 새로 추가되거나 변경되는 테이블 처리.
+			java.sql.Connection javaConn = null;
+
+			try {
+				javaConn = sqlClient.getDataSource().getConnection();
+				
+				// 테이블 생성
+				Statement stmt = javaConn.createStatement();
+				
+				boolean boolResult = false;
+				
+				if(!ApplicationArgumentUtils.isDBServer()) {					
+					// sql library
+					boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_sqlibrary_create);
+					logger.info("user_db_sqlibrary"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );					
+				// default is cubrid
+				} else {
+					// sql library
+					boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_sqlibrary_create_CUBRID);
+					logger.info("user_db_sqlibrary"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+					
+				}
+			
+			} catch(Exception e) {
+				logger.error("System table crateion", e);
+				//throw e;
+			} finally {
+				try { javaConn.close(); } catch(Exception e){}
+			}
+
+		}else{
+			
 			java.sql.Connection javaConn = null;
 			
 			try {
@@ -157,6 +189,10 @@ public class TadpoleSystemConnector {
 					// user info data
 					boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data);
 					logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+
+					// sql library
+					boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_sqlibrary_create);
+					logger.info("user_db_sqlibrary"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 					
 				// default is cubrid
 				} else {
@@ -189,6 +225,9 @@ public class TadpoleSystemConnector {
 					boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data_CUBRID );
 					logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 					
+					// sql library
+					boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_sqlibrary_create_CUBRID);
+					logger.info("user_db_sqlibrary"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				}
 				
 				// 기본 그룹
