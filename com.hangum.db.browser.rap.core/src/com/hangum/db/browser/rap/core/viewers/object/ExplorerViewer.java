@@ -38,6 +38,9 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -105,7 +108,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public static String ID = "com.hangum.db.browser.rap.core.view.object.explorer"; //$NON-NLS-1$
 	private static Logger logger = Logger.getLogger(ExplorerViewer.class);
 
-	// private int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
+	// erd dnd
+	private int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
 
 	private UserDBDAO userDB;
 	private String selectTableName = ""; //$NON-NLS-1$
@@ -876,12 +880,9 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
 
-		// 현재 사용하지 않으므로..
-		// // dnd 기능 추가
-		// Transfer[] transferTypes = new
-		// Transfer[]{TextTransfer.getInstance()};
-		// tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new
-		// DragListener(tableListViewer));
+		// dnd 기능 추가
+		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
+		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
 
 		// filter
 		tableFilter = new TableViewFilter();
