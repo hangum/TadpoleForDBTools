@@ -33,6 +33,7 @@ import com.hangum.db.define.Define;
 import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystemConnector;
 import com.hangum.db.system.TadpoleSystem_UserQuery;
+import com.hangum.db.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.swtdesigner.ResourceManager;
 
@@ -254,10 +255,14 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 //		createButton(parent, ID_ADMIN_USER, "Admin", false);
-		createButton(parent, ID_MANAGER_USER, "Manager", false);
-		createButton(parent, ID_GUEST_USER, "Guest", false);
+		
+		// -test 일 경우만 ..
+		if(ApplicationArgumentUtils.isTestMode()) {
+			createButton(parent, ID_MANAGER_USER, "Manager", false);
+			createButton(parent, ID_GUEST_USER, "Guest", false);
+		}
+		
 		createButton(parent, ID_NEW_USER, "New", false);
-
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
 

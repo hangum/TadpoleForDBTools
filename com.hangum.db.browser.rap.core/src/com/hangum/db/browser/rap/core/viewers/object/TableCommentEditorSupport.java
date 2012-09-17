@@ -24,6 +24,12 @@ import com.hangum.db.dao.mysql.TableDAO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
+/**
+ * table comment editor
+ * 
+ * @author hangum
+ *
+ */
 public class TableCommentEditorSupport extends EditingSupport {
 
 	/**
@@ -39,17 +45,25 @@ public class TableCommentEditorSupport extends EditingSupport {
 	private final TableViewer viewer;
 	private final ExplorerViewer explorer;
 	private UserDBDAO userDB;
+	private int column;
 
-	public TableCommentEditorSupport(TableViewer viewer, ExplorerViewer explorer) {
+	/**
+	 * 
+	 * @param viewer
+	 * @param explorer
+	 */
+	public TableCommentEditorSupport(TableViewer viewer, ExplorerViewer explorer, int column) {
 		super(viewer);
+		
 		this.explorer = explorer;
 		this.viewer = viewer;
+		this.column = column;
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		logger.debug("-----------getCellEditor---------------");
-		return new TextCellEditor(viewer.getTable());
+		if(column == 1) return new TextCellEditor(viewer.getTable());
+		else return null;
 	}
 
 	@Override
@@ -57,9 +71,14 @@ public class TableCommentEditorSupport extends EditingSupport {
 		// TODO : ORACLE과 MSSQL일때만 처리한다.
 		// 다른 DBMS들은 코멘트를 저장할 수 있는 테이블을 직접 만들어 주면 안될까?
 		// Tadpole_Props 이런식으로...^^;
-		userDB = explorer.getUserDB();
-		if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
-			return true;
+		
+		if(column == 1) {
+			userDB = explorer.getUserDB();
+			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}

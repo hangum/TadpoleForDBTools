@@ -55,7 +55,8 @@ Demo Video
 Document
 -
 * RDB Turorial : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
-* Developer Guide : https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide
+* Developer Guide :  https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide(Eng), https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide(kor)
+* User Guide : https://github.com/hangum/TadpoleForDBTools/wiki/User-Guide(Kor)
 
 Demo Site
 -

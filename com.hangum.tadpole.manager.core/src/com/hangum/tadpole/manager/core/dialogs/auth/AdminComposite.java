@@ -145,21 +145,24 @@ public class AdminComposite extends Composite {
 				if(ss.getFirstElement() instanceof UserGroupAUserDAO) {
 					UserGroupAUserDAO userGroup = (UserGroupAUserDAO)ss.getFirstElement();
 					
-					if( userGroup.child.size() == 0) {						
+					// 등록된 정보가 있으면 로그인 하지 않습니다. 
+//					if(userGroup.child.size() == 0) {
 						try {
 							List<UserDBDAO> userDBs = TadpoleSystem_UserDBQuery.getSpecificUserDB(userGroup.getSeq());
 							for (UserDBDAO userDBDAO : userDBs) {
 								userGroup.child.add(userDBDAO);							
 							}
+							
 							treeViewerAdmin.refresh(userGroup, true);
 							
 						} catch (Exception e) {
 							logger.error("get userDb", e);
 						}
-					}
-					
-				}	// end if ss.getFirstElement()
+//					}
+				} 
+								
 			}	// end selection
+			
 		});
 		treeAdmin = treeViewerAdmin.getTree();
 		treeAdmin.setLinesVisible(true);
@@ -231,23 +234,26 @@ public class AdminComposite extends Composite {
 				}								
 			}
 			
-			// use 추가
-			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-				if(Define.USER_TYPE.USER.toString().equals(userGroupAUserDAO.getUser_type())) {
-					UserGroupAUserDAO groupUserDAO = groupHash.get(userGroupAUserDAO.getGroup_seq());
-
-					userGroupAUserDAO.setParent(groupUserDAO);
-					groupUserDAO.child.add(userGroupAUserDAO);
-				}								
-			}
-			
-			// user가 manager이면 manager 디비를 추가합니다.
+			// 메니저 권한만 유저 정보를 표시한다.
 			if(Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
-				List<UserDBDAO> userDBs = TadpoleSystem_UserDBQuery.getSpecificUserDB(SessionManager.getSeq());
-				for (UserDBDAO userDBDAO : userDBs) {
-					rootUserGroup.child.add(userDBDAO);							
+				// use 추가
+				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
+					if(Define.USER_TYPE.USER.toString().equals(userGroupAUserDAO.getUser_type())) {
+						UserGroupAUserDAO groupUserDAO = groupHash.get(userGroupAUserDAO.getGroup_seq());
+	
+						userGroupAUserDAO.setParent(groupUserDAO);
+						groupUserDAO.child.add(userGroupAUserDAO);
+					}								
 				}
 			}
+			
+////			 user가 manager이면 manager 디비를 추가합니다.
+//			if(Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
+//				List<UserDBDAO> userDBs = TadpoleSystem_UserDBQuery.getSpecificUserDB(SessionManager.getSeq());
+//				for (UserDBDAO userDBDAO : userDBs) {
+//					rootUserGroup.child.add(userDBDAO);							
+//				}
+//			}
 			
 			return rootUserGroup;
 		} catch (Exception e) {
@@ -325,9 +331,9 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if(element instanceof UserDBDAO) {
-			if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/user.png"); //$NON-NLS-1$
-		} else {
 			if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/db.png"); //$NON-NLS-1$
+		} else {
+			if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/user.png"); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -355,7 +361,13 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 			UserGroupAUserDAO user = (UserGroupAUserDAO)element;
 			
 			switch(columnIndex) {
-			case 0: return user.getUser_group_name();
+			case 0:
+				if(Define.USER_TYPE.MANAGER.toString().equals(user.getUser_type())) {
+					return user.getUser_group_name();	
+				} else {
+					return "";
+				}
+				
 			case 1: return user.getUser_type();
 			case 2: return user.getEmail();
 			case 3: return user.getName();
