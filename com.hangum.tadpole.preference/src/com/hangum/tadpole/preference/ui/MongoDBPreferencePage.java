@@ -39,7 +39,7 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 	
 	// find page
 	private Button btnBasicSearch;
-	private Button btnExtendSearch;
+//	private Button btnExtendSearch;
 	
 	// result page
 	private Button btnTreeView;
@@ -84,9 +84,9 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 		btnBasicSearch.setText("Basic Search");
 		btnBasicSearch.setData(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC);
 		
-		btnExtendSearch = new Button(composite, SWT.RADIO);
-		btnExtendSearch.setText("Extend Search");
-		btnExtendSearch.setData(PreferenceDefine.MONGO_DEFAULT_FIND_EXTEND);
+//		btnExtendSearch = new Button(composite, SWT.RADIO);
+//		btnExtendSearch.setText("Extend Search");
+//		btnExtendSearch.setData(PreferenceDefine.MONGO_DEFAULT_FIND_EXTEND);
 		
 		Label lblResultPage = new Label(container, SWT.NONE);
 		lblResultPage.setText("view result page");
@@ -133,11 +133,11 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 			return false;
 		}
 		
-		if(btnBasicSearch.getSelection()) {
+//		if(btnBasicSearch.getSelection()) {
 			txtFindPage = btnBasicSearch.getData().toString();
-		} else {
-			txtFindPage = btnExtendSearch.getData().toString();
-		}
+//		} else {
+//			txtFindPage = btnExtendSearch.getData().toString();
+//		}
 		
 		if(btnTreeView.getSelection()) {
 			txtResultPage = btnTreeView.getData().toString();
@@ -192,18 +192,18 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	private void initDefaultValue() {
 		btnBasicSearch.setSelection(false);
-		btnExtendSearch.setSelection(false);
+//		btnExtendSearch.setSelection(false);
 		btnTreeView.setSelection(false);
 		btnTableView.setSelection(false);
 		btnTextView.setSelection(false);
 		
 		textLimitCount.setText( "" + GetPreferenceGeneral.getMongoDefaultLimit() );
 		textMaxCount.setText( "" + GetPreferenceGeneral.getMongoDefaultMaxCount() );
-		if(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC.equals( GetPreferenceGeneral.getMongoDefaultFindPage() )) {
+//		if(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC.equals( GetPreferenceGeneral.getMongoDefaultFindPage() )) {
 			btnBasicSearch.setSelection(true);
-		} else {
-			btnExtendSearch.setSelection(true);
-		}
+//		} else {
+//			btnExtendSearch.setSelection(true);
+//		}
 		
 		if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals(GetPreferenceGeneral.getMongoDefaultResultPage() )) {
 			btnTreeView.setSelection(true);

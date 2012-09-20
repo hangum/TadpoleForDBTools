@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.db.dao.system.UserDAO;
 import com.hangum.db.dao.system.UserGroupDAO;
 import com.hangum.db.define.Define;
+import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserGroupQuery;
 import com.hangum.db.system.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Messages;
@@ -176,8 +177,28 @@ public class NewUserDialog extends Dialog {
 			try {
 				List<UserGroupDAO> listUserGroup = TadpoleSystem_UserGroupQuery.getGroup();
 				for (UserGroupDAO userGroupDAO : listUserGroup) {
-					comboUserGroup.add(userGroupDAO.getName());
-					comboUserGroup.setData(userGroupDAO.getName(), userGroupDAO.getSeq());
+					
+					// admin group에는 등록이 되지 않도록 합니다.
+					if(1 != userGroupDAO.getSeq() ) {
+						
+						// 처음 로그인일 경우에...
+						int groupSeq = -1;
+						try {
+							// 이미 로그인 했을 경우 다이얼로그인창
+							groupSeq = SessionManager.getGroupSeq();
+						} catch(Exception e) {};
+						
+						if(userGroupDAO.getSeq() == groupSeq) {
+							comboUserGroup.add(userGroupDAO.getName());
+							comboUserGroup.setData(userGroupDAO.getName(), userGroupDAO.getSeq());
+							
+							comboUserGroup.setEnabled(false);
+						} else {
+							comboUserGroup.add(userGroupDAO.getName());
+							comboUserGroup.setData(userGroupDAO.getName(), userGroupDAO.getSeq());
+						}
+					}
+					
 				}
 				comboUserGroup.select(0);
 			} catch (Exception e) {
