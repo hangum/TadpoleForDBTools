@@ -284,6 +284,8 @@ public class Messages extends NLS {
 	public static String MainEditor_tltmExecuteAll_text;
 	public static String MySQLLoginComposite_lblLocale_text;
 	public static String DBLoginDialog_button_text;
+	public static String MainEditor_btnDetailView_text;
+	public static String MainEditor_label_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

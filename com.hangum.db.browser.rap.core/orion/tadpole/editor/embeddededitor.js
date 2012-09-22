@@ -46,14 +46,17 @@ var editorService = {
 	APPEND_QUERY_TEXT : 40,
 	appendQueryText: function(editor) {},
 	
-	RE_NEW : 41,
-	reNew: function(editor) {},
+	RE_NEW_TEXT  : 41,
+	reNewText: function(editor) {},
 	
 	SQL_TO_APPLICATION : 45,
 	sqlToApplication: function(editor) {},
 	
 	DOWNLOAD_SQL : 50,
 	downloadSQL: function(editor) {},
+	
+	MOVE_HISTORY_PAGE : 55,
+	moveHistoryPage: function(editor) {},
 	
 	SET_FOCUS : 999,
 	setTextFocus: function(editor) {}
@@ -67,7 +70,7 @@ var sqlContentAssistProvider;
 //var jsContentAssistProvider;
 
 function initEmbeddedEditor(){
-	console.log(" v2 [console log] initEmbeddedEditor start..................");
+//	console.log(" v2 [console log] initEmbeddedEditor start..................");
 	
 	define([
 		"require", 
@@ -92,7 +95,6 @@ function initEmbeddedEditor(){
 				tabSize: 4
 			});
 		};
-	
 		
 		var contentAssistFactory = {
 			createContentAssistMode: function(editor) {
@@ -155,21 +157,62 @@ function initEmbeddedEditor(){
 			// execute query
 			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("e", true), "executeQuery");
 			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㄷ", true), "executeQuery");
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("r", true), "executeQuery");
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㄱ", true), "executeQuery");
+			
+			// return or enter
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(13, true), "executeQuery");
 			editor.getTextView().setAction("executeQuery", function(){
-				// The save function is called through the editorService allowing Eclipse and Browser hosted instances to behave differently
 				editorService.executeQuery(editor);
 				return true;
 			});
 			
-			// execute query
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("r", true), "executeQuery");
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㄱ", true), "executeQuery");
-			editor.getTextView().setAction("executeQuery", function(){
-				// The save function is called through the editorService allowing Eclipse and Browser hosted instances to behave differently
-				editorService.executeQuery(editor);
+			// execute plan
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㅜ", true), "executePlan");
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("n", true), "executePlan");
+			editor.getTextView().setAction("executePlan", function(){
+				editorService.executePlan(editor);
 				return true;
 			});
-	
+			
+			// 쿼리 정렬
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㅡ", true), "executeFormat");
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("m", true), "executeFormat");
+			editor.getTextView().setAction("executeFormat", function(){
+				editorService.executeFormat(editor);
+				return true;
+			});
+			
+			// focus move sql history page
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㅗ", true), "moveHistoryPage");
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("h", true), "moveHistoryPage");
+			editor.getTextView().setAction("moveHistoryPage", function(){
+				editorService.moveHistoryPage(editor);
+				return true;
+			});
+			
+//			// upper case
+//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("u", true), "upperCaseText");
+//			editor.getTextView().setAction("upperCaseText", function(){
+//				editorService.upperCaseText(editor);
+//				return true;
+//			});
+//			
+//			// low case
+//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("l", true), "lowCaseText");
+//			editor.getTextView().setAction("lowCaseText", function(){
+//				editorService.lowCaseText(editor);
+//				return true;
+//			});
+//			
+//			// 화면 모두 clear
+//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("c", true), "allClearText");
+//			editor.getTextView().setAction("allClearText", function(){
+//				editorService.lowCaseText(editor);
+//				return true;
+//			});
+//			
+			
 		};
 			
 		var statusReporter = function(message, isError) {
@@ -200,7 +243,7 @@ function initEmbeddedEditor(){
 		try {
 			editorService.getInitialContent();
 		} catch(err) {
-			console.log("[error msg]" + err);
+//			console.log("[error msg]" + err);
 		}
 		
 		contentAssist.addEventListener("Activating", function() {
@@ -208,7 +251,7 @@ function initEmbeddedEditor(){
 		});
 		
 		// end of code to run when content changes.
-		console.log('====== end ==== ');
+//		console.log('====== end ==== ');
 
 	});
 }
@@ -233,7 +276,7 @@ dojo.addOnLoad(function() {
 		
 		// Register an implementation that can return initial content for the editor
 		editorService.getInitialContent = function() {
-			console.log("=======> editorService.getInitialContent() ");
+//			console.log("=======> editorService.getInitialContent() ");
 			// This is a function created in Eclipse and registered with the page.
 			var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
 			
@@ -241,9 +284,9 @@ dojo.addOnLoad(function() {
 			var varExt = content.substring(0, idxExt);
 			var varCon = content.substring(idxExt+5, content.length);
 			
-			console.log("==> [1 ext:] " + varExt + "[content]" + varCon);
+//			console.log("==> [1 ext:] " + varExt + "[content]" + varCon);
 			editor.setInput(varExt, null, varCon);
-			console.log("==> 2 setInput success ");
+//			console.log("==> 2 setInput success ");
 			
 			syntaxHighlighter.highlight(varExt, editor);
 			editor.highlightAnnotations();
@@ -304,7 +347,7 @@ dojo.addOnLoad(function() {
 		editorService.executeFormat = function() {
 			var sql = editorServiceHandler(editorService.EXECUTE_FORMAT, editor.getContents());
 //			console.log("[executeFormat]" + sql);
-			editor.setText(sql);//onInputChange(null, null, sql, false);
+			editor.setText(sql);
 			editor.setTextFocus();
 		};
 		
@@ -318,21 +361,26 @@ dojo.addOnLoad(function() {
 		};
 		
 		// re new query text
-		editorService.reNew = function() {
-			var sql = editorServiceHandler(editorService.RE_NEW, '');
+		editorService.reNewText = function() {
+			var sql = editorServiceHandler(editorService.RE_NEW_TEXT, '');
 			editor.onInputChange(null, null, sql, false);
 		};
 		
 		// sql to application string 
 		editorService.sqlToApplication = function() {
 			editorServiceHandler(editorService.SQL_TO_APPLICATION, editor.getCaretOffsetAndContent());
-		}
+		};
 		
 		// download sql 
 		editorService.downloadSQL = function() {
 			editorServiceHandler(editorService.DOWNLOAD_SQL, editor.getCaretOffsetAndContent());
-		}
-
+		};
+		
+		// move history page
+		editorService.moveHistoryPage = function() {
+			editorServiceHandler(editorService.MOVE_HISTORY_PAGE, '');
+		};
+	
 		// text set focus
 		editorService.setTextFocus = function() {
 			editor.setTextFocus();

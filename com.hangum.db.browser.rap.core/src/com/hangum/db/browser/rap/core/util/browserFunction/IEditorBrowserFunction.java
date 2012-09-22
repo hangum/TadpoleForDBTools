@@ -35,10 +35,16 @@ public interface IEditorBrowserFunction {
 	public static final int EXECUTE_FORMAT 			= 35;
 	
 	public static final int APPEND_QUERY_TEXT 		= 40;
-	public static final int RE_NEW					= 41; 
+	public static final int RE_NEW_TEXT				= 41; 
 	public static final int SQL_TO_APPLICATION 		= 45;
 	
 	public static final int DOWNLOAD_SQL	 		= 50;
+	
+	/** query history page로 이동합니다 */
+	public static final int MOVE_HISTORY_PAGE		= 55;
+	
+	/** format sql */
+	public static final int FORMAT_SQL				= 60;
     
 	public static final int SET_FOCUS 				= 999;
     

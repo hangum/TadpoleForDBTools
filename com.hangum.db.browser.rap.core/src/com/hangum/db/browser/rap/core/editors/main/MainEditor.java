@@ -508,11 +508,13 @@ public class MainEditor extends EditorPart {
 			public void doubleClick(DoubleClickEvent event) {
 				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				Object selElement = is.getFirstElement();
-				if(selElement instanceof SQLHistoryDAO) {
-					SQLHistoryDAO tmd = (SQLHistoryDAO)selElement;
-					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getSite().getShell(), Messages.MainEditor_11, SQLHistoryLabelProvider.dateToStr(tmd.getDateExecute()), tmd.getStrSQLText() );
-					dlg.open();
+				if(!is.isEmpty()) {
+					try {
+						setAppendQueryText(getHistoryTabelSelectData() + Define.SQL_DILIMITER); //$NON-NLS-1$
+						browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+					} catch(Exception ee){
+						logger.error("history selection" , ee); //$NON-NLS-1$
+					}
 				}
 			}
 		});
@@ -544,7 +546,7 @@ public class MainEditor extends EditorPart {
 		
 		Composite compositeRecallBtn = new Composite(compositeSQLHistory, SWT.NONE);
 		compositeRecallBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeRecallBtn.setLayout(new GridLayout(2, false));
+		compositeRecallBtn.setLayout(new GridLayout(3, false));
 		
 		final Button btnExportHistory = new Button(compositeRecallBtn, SWT.NONE);
 		btnExportHistory.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -565,6 +567,20 @@ public class MainEditor extends EditorPart {
 		});
 		btnExportHistory.setText(Messages.MainEditor_12);
 		
+		Button btnDetailView = new Button(compositeRecallBtn, SWT.NONE);
+		btnDetailView.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection is = (IStructuredSelection)tableViewerSQLHistory.getSelection();
+				Object selElement = is.getFirstElement();
+				if(selElement instanceof SQLHistoryDAO) {
+					SQLHistoryDAO tmd = (SQLHistoryDAO)selElement;
+					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getSite().getShell(), Messages.MainEditor_11, SQLHistoryLabelProvider.dateToStr(tmd.getDateExecute()), tmd.getStrSQLText() );
+					dlg.open();
+				}
+			}
+		});
+		btnDetailView.setText(Messages.MainEditor_btnDetailView_text);
 		
 		Button btnSetEditor = new Button(compositeRecallBtn, SWT.NONE);
 		btnSetEditor.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -772,7 +788,6 @@ public class MainEditor extends EditorPart {
 	 */
 	public void execute() {
 		listQueryHistory = new ArrayList<String>();
-		
 		
 		// job
 		Job job = new Job(Messages.MainEditor_45) {
@@ -1522,6 +1537,24 @@ public class MainEditor extends EditorPart {
 	public void downloadSQL(String newContents) {
 		downloadServiceHandler.setName(userDB.getDisplay_name() + ".sql"); //$NON-NLS-1$
 		downloadServiceHandler.setByteContent(newContents.getBytes());
+		
 		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
+	}
+	
+	/**
+	 * sql history 를 선택합니다.
+	 */
+	public void selectHistoryPage() {
+		// tab으로 이동.
+		if(tabFolderResult.getSelectionIndex() != 1) {
+			tabFolderResult.setSelection(1);
+		}
+		
+		// table 데이터가 있으면 첫번째 데이터를 선택합니다.
+		if(listSQLHistory.size() >= 1) {
+			Table tb = tableViewerSQLHistory.getTable();
+			tb.select(0);
+			tb.setFocus();
+		}
 	}
 }

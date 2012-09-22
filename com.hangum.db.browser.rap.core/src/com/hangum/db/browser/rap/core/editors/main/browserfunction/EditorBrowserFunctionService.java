@@ -93,6 +93,13 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 				downloadSQL(arguments);
 				break;
 				
+			case MOVE_HISTORY_PAGE:
+				moveHistoryPage();
+				break;
+				
+			case FORMAT_SQL:
+				return doExecuteFormat(arguments);
+				
 			default:
 				return null;
 		}
@@ -264,5 +271,12 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			
 			editor.downloadSQL(queryStruct[1]);
 		}
+	}
+	
+	/**
+	 * 쿼리 히스토리 페이지로 이동합니다.
+	 */
+	private void moveHistoryPage() {
+		editor.selectHistoryPage();
 	}
 }
