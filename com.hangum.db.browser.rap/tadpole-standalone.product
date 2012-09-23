@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-standalone -debuglog</programArgs>
+      <programArgs>-standalone -debuglog -test</programArgs>
       <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000</vmArgs>
       <vmArgsMac>-d32</vmArgsMac>
    </launcherArgs>
