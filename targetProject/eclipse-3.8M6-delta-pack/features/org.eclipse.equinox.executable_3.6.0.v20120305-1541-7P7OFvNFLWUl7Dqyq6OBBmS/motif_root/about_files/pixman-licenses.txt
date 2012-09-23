@@ -1,13 +1,3 @@
-#-------------------------------------------------------------------------------
-# Copyright (c) 2012 Cho Hyun Jong.
-# All rights reserved. This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License v1.0
-# which accompanies this distribution, and is available at
-# http://www.eclipse.org/legal/epl-v10.html
-# 
-# Contributors:
-#     Cho Hyun Jong - initial API and implementation
-#-------------------------------------------------------------------------------
 libpixregion
 
 Copyright 1987, 1998  The Open Group
@@ -56,7 +46,7 @@ SOFTWARE.
 ----------------------------------------------------------------------
 libic
 
-Copyright ï¿½ 2001 Keith Packard
+Copyright © 2001 Keith Packard
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
@@ -79,7 +69,7 @@ PERFORMANCE OF THIS SOFTWARE.
 ----------------------------------------------------------------------
 slim
 
-slim is Copyright ï¿½ 2003 Richard Henderson
+slim is Copyright © 2003 Richard Henderson
 
 Permission to use, copy, modify, distribute, and sell this software
 and its documentation for any purpose is hereby granted without fee,
