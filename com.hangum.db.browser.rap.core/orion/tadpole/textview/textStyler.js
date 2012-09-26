@@ -13,7 +13,7 @@
 /*global document window navigator define */
 
 define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(mAnnotations) {
-
+	
 	var MYSQL_KEYWORDS =
 		[
 		 "alert", "add", "all", "alter", "and", "as", "asc", "auto_increment",
@@ -80,10 +80,78 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 		 "text", "time", "timestamp", "tinyint", "tinytext", "tinyblob",
 		 "varbinary", "varchar", "varying",
 		 "=", "-", "+", "\\", "*", ">", "<", "<=", ">=",
-		 "sqlstate"
-		 
+		 "sqlstate"		 
 		 ];
-	
+
+	// 기존 mysql 키워드 중에 auto_increment를 autoincrement로 바꾼것입니다.
+	var SQLITE_KEYWORDS = 
+		[
+		 "alert", "add", "all", "alter", "and", "as", "asc", "autoincrement",
+		 "between", "binary", "both", "by", "begin",
+		 "change", "check", "column", "columns", "create", "cross", "continue", "cursor",
+		 "data", "database", "databases", "default", "delayed", "delete", "desc", "describe", "distinct", "drop",
+		 "delimiter", "declare", "deterministic", "deallocate",
+		 "enclosed", "escaped", "exists", "explain", "end", "else", "execute",
+		 "field", "fields", "flush", "for", "foreign", "from", "function", "fetch",
+		 "grant", "group",
+		 "having", "handler",
+		 "identified", "if", "ignore", "index", "insert", "infile", "into", "in", "is",
+		 "join",
+		 "key", "keys", "kill",
+		 "leading", "left", "like", "limit", "lines", "load", "local", "lock", "low_priority", "leave",
+		 "modify",
+		 "natural", "not", "null",
+		 "on", "optimize", "option", "optionally", "or", "order", "outer", "outfile",
+		 "primary", "procedure", "prepare",
+		 "read", "references", "regexp", "rename", "replace", "returns", "revoke", "rlike", "return",
+		 "select", "set", "show", "soname", "status", "straight_join",
+		 "table", "tables", "teminated", "to", "trailing", "then",
+		 "unique", "unlock", "unsigned", "update", "use", "using",
+		 "values", "variables",
+		 "where", "with", "write",
+		 "zerofill",
+		 "xor",
+		 "abs", "acos", "adddate", "ascii", "asin", "atan", "atan2", "avg", "aes_decrypt", "aes_encrypt",
+		 "bin", "bit_and", "bit_count", "bit_or",
+		 "ceiling", "char_lengh", "character_length", "concat", "conv", "cos", "cot", "count", "curdate",
+		 "curtime", "current_time", "current_timestamp", "close",
+		 "concat_ws",
+		 "date_add", "date_format", "date_sub", "dayname", "dayofmonth", "dayofweek", "dayofyear", "degrees",
+		 "elt", "encrypt", "exp",
+		 "find_in_set", "floor", "format", "from_days", "from_unixtime",
+		 "get_lock", "greatest", "group_concat",
+		 "hex", "hour",
+		 "ifnull", "instr", "isnull", "interval",
+		 "last_insert_id", "lcase", "lower", "least", "length", "locate", "log", "log10", "lpad", "ltrim",
+		 "max", "mid", "min", "minute", "mod", "month", "monthname",
+		 "now",
+		 "oct", "octet_length", "open",
+		 "password", "period_add", "period_diff", "pi", "position", "pow",
+		 "quarter",
+		 "radians", "rand", "release_lock", "repeat", "reverse", "right", "round", "rpad", "rtrim",
+		 "second", "sec_to_time", "session_user", "sign", "sin", "soundex", "space", "sqrt", "strcmp", "substring",
+		 "substring_index", "sysdate", "system_user", "std", "sum",
+		 "tan", "time_format", "time_to_sec", "to_days", "trim", "truncate",
+		 "ucase", "unix_timestamp", "user", "until",
+		 "version",
+		 "week", "weekday",
+		 "year",
+		 "bigint", "blob",
+		 "char",
+		 "date", "datetime", "decimal", "double", "doubleprecision",
+		 "enum",
+		 "float", "float4", "float8",
+		 "int", "int1", "int2", "int3", "int4", "int8", "integer",
+		 "long", "longblob", "longtext",
+		 "mediumblob", "mediumint", "mediumtext", "middleint",
+		 "numeric",
+		 "real",
+		 "smallint",
+		 "text", "time", "timestamp", "tinyint", "tinytext", "tinyblob",
+		 "varbinary", "varchar", "varying",
+		 "=", "-", "+", "\\", "*", ">", "<", "<=", ">=",
+		 "sqlstate"		 
+		 ];
 
 	var ORACLE_KEYWORDS =
 		["abort", "accept", "access", "add", "all", "alter", "and", "any", "array", "arraylen", "as", "asc", "assert", "assign", "at", "attributes", "audit",
@@ -655,9 +723,9 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 			case "mssql": 
 				keywords = MSSQL_KEYWORDS; 
 				break;
-//			case "sqlite": 
-//				keywords = MYSQL_KEYWORDS; 
-//				break;
+			case "sqlite": 
+				keywords = SQLITE_KEYWORDS; 
+				break;
 			default:
 				keywords = MYSQL_KEYWORDS;
 		}
