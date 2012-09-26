@@ -58,6 +58,9 @@ var editorService = {
 	MOVE_HISTORY_PAGE : 55,
 	moveHistoryPage: function(editor) {},
 	
+	HELP_POPUP : 60,
+	helpPopup: function(editor) {},
+	
 	SET_FOCUS : 999,
 	setTextFocus: function(editor) {}
 	
@@ -146,72 +149,72 @@ function initEmbeddedEditor(){
 			var codeBindings = new mEditorFeatures.SourceCodeActions(editor, undoStack, contentAssist);
 			keyModeStack.push(codeBindings);
 			
-			// save binding
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("s", true), "save");
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㄴ", true), "save");
+			// save(ctrl + s)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(83, true), "save");
 			editor.getTextView().setAction("save", function(){
 				editorService.saveS(editor);
 				return true;
 			});
 			
 			// execute query
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("e", true), "executeQuery");
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㄷ", true), "executeQuery");
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("r", true), "executeQuery");
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㄱ", true), "executeQuery");
+			// f5
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(116), "executeQuery");
 			
-			// return or enter
+			// ctrl + enter
 			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(13, true), "executeQuery");
 			editor.getTextView().setAction("executeQuery", function(){
 				editorService.executeQuery(editor);
 				return true;
 			});
 			
-			// execute plan
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㅜ", true), "executePlan");
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("n", true), "executePlan");
+			// execute plan(ctrl + e)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(69, true), "executePlan");
 			editor.getTextView().setAction("executePlan", function(){
 				editorService.executePlan(editor);
 				return true;
 			});
 			
-			// 쿼리 정렬
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㅡ", true), "executeFormat");
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("m", true), "executeFormat");
+			// 쿼리 정렬 (ctrl + shift + f)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(70, true, true), "executeFormat");
 			editor.getTextView().setAction("executeFormat", function(){
 				editorService.executeFormat(editor);
 				return true;
 			});
 			
-			// focus move sql history page
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("ㅗ", true), "moveHistoryPage");
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("h", true), "moveHistoryPage");
+			// 히스토리페이지(ctrl + h)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(72, true), "moveHistoryPage");
 			editor.getTextView().setAction("moveHistoryPage", function(){
 				editorService.moveHistoryPage(editor);
 				return true;
 			});
 			
-//			// upper case
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("u", true), "upperCaseText");
-//			editor.getTextView().setAction("upperCaseText", function(){
-//				editorService.upperCaseText(editor);
-//				return true;
-//			});
-//			
-//			// low case
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("l", true), "lowCaseText");
-//			editor.getTextView().setAction("lowCaseText", function(){
-//				editorService.lowCaseText(editor);
-//				return true;
-//			});
-//			
-//			// 화면 모두 clear
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("c", true), "allClearText");
-//			editor.getTextView().setAction("allClearText", function(){
-//				editorService.lowCaseText(editor);
-//				return true;
-//			});
-//			
+			// to low case(ctrl + shift + y)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(89, true, true), "lowCaseText");
+			editor.getTextView().setAction("lowCaseText", function(){
+				editorService.lowCaseText(editor);
+				return true;
+			});
+			
+			// to upper case(ctrl + shift + x)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(88, true, true), "upperCaseText");
+			editor.getTextView().setAction("upperCaseText", function(){
+				editorService.upperCaseText(editor);
+				return true;
+			});
+			
+			// 에디터 도움말(ctrl + shift + l)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(76, true, true), "helpPopup");
+			editor.getTextView().setAction("helpPopup", function(){
+				editorService.helpPopup(editor);
+				return true;
+			});
+			
+			// 화면 모두 clear(f7)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(118), "allClearText");
+			editor.getTextView().setAction("allClearText", function(){
+				editorService.allClearText(editor);
+				return true;
+			});
 			
 		};
 			
@@ -277,23 +280,18 @@ dojo.addOnLoad(function() {
 		// Register an implementation that can return initial content for the editor
 		editorService.getInitialContent = function() {
 //			console.log("=======> editorService.getInitialContent() ");
-			// This is a function created in Eclipse and registered with the page.
 			var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
 			
 			var idxExt = content.indexOf(":ext:");
 			var varExt = content.substring(0, idxExt);
 			var varCon = content.substring(idxExt+5, content.length);
 			
-//			console.log("==> [1 ext:] " + varExt + "[content]" + varCon);
 			editor.setInput(varExt, null, varCon);
-//			console.log("==> 2 setInput success ");
-			
+
 			syntaxHighlighter.highlight(varExt, editor);
 			editor.highlightAnnotations();
 			
 			editor.setTextFocus();
-//
-//			console.log("==> 5 ending ");
 		};
 		
 		// Register an implementation that should run when the editors status changes.
@@ -346,7 +344,7 @@ dojo.addOnLoad(function() {
 		// query format
 		editorService.executeFormat = function() {
 			var sql = editorServiceHandler(editorService.EXECUTE_FORMAT, editor.getContents());
-//			console.log("[executeFormat]" + sql);
+
 			editor.setText(sql);
 			editor.setTextFocus();
 		};
@@ -354,7 +352,6 @@ dojo.addOnLoad(function() {
 		// append query text
 		editorService.appendQueryText = function() {
 			var sql = editorServiceHandler(editorService.APPEND_QUERY_TEXT, '');
-//			console.log("[append squery]" + sql);
 			
 			editor.appendQueryText(sql);
 			editor.setTextFocus();
@@ -380,10 +377,30 @@ dojo.addOnLoad(function() {
 		editorService.moveHistoryPage = function() {
 			editorServiceHandler(editorService.MOVE_HISTORY_PAGE, '');
 		};
+		
+		// to upper case text
+		editorService.upperCaseText = function() {
+			editor.upperCaseText();
+		};
+		
+		// to low case text
+		editorService.lowCaseText = function() {
+			editor.lowCaseText();
+		};
 	
 		// text set focus
 		editorService.setTextFocus = function() {
 			editor.setTextFocus();
+		};
+		
+		// help popup
+		editorService.helpPopup = function() {
+			editorServiceHandler(editorService.HELP_POPUP, '');
+		};
+		
+		// all text clean
+		editorService.allClearText = function() {
+			editor.setText("");
 		};
 	}
 

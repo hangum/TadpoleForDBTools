@@ -30,6 +30,7 @@ public class PingTest implements Runnable {
 	private int status;
 
 	/**
+	 * 테스트 할 정보를 넣습니다.
 	 * 
 	 * @param hostname
 	 * @param port
@@ -68,12 +69,15 @@ public class PingTest implements Runnable {
 	public static int ping(String hostname, int port, long maxWait) {
 		
 		PingTest ping = new PingTest(hostname, port);
+		
 		try {
 			Thread t = new Thread(ping);
 			t.setDaemon(true);
 			t.start();
 			t.join(maxWait);
+			
 		} catch (InterruptedException ie) {
+			//ignor exception
 		}
 		
 		return ping.status;

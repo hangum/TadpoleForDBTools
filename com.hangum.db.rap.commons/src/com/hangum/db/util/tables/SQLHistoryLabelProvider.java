@@ -13,6 +13,7 @@ package com.hangum.db.util.tables;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -40,7 +41,8 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 			
 			switch(columnIndex) {
 				case 0: return dateToStr(historyDAO.getDateExecute());
-				case 1: return historyDAO.getStrSQLText();
+				// 쿼리에 개행 문자가 있으면 테이블에 개행 문자 이후 쿼리가 보이지 않으므로 보여줄 때는 개행 문자를 제거합니다.
+				case 1: return StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", " ");
 			}
 		} else if(element instanceof TadpoleMessageDAO) {
 			TadpoleMessageDAO messageDAO = (TadpoleMessageDAO)element;

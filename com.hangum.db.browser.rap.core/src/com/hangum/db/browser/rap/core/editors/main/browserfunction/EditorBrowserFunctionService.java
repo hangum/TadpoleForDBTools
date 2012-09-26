@@ -11,10 +11,12 @@
 package com.hangum.db.browser.rap.core.editors.main.browserfunction;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.db.browser.rap.core.dialog.editor.ShortcutHelpDialog;
 import com.hangum.db.browser.rap.core.dialog.export.SQLToStringDialog;
 import com.hangum.db.browser.rap.core.editors.main.MainEditor;
 import com.hangum.db.browser.rap.core.util.browserFunction.IEditorBrowserFunction;
@@ -64,8 +66,8 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			case SAVE_S:
 				return doSaveS(arguments);
 				
-			case STATUS_CHANGED:
-				return doStatusChanged(arguments);
+//			case STATUS_CHANGED:
+//				return doStatusChanged(arguments);
 			
 			case EXECUTE_QUERY:
 				doExecuteQuery(arguments);
@@ -97,8 +99,9 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 				moveHistoryPage();
 				break;
 				
-			case FORMAT_SQL:
-				return doExecuteFormat(arguments);
+			case HELP_POPUP:
+				helpPopup();
+				break;
 				
 			default:
 				return null;
@@ -138,30 +141,30 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 //			return editor.getEditorInput().getName() + ".sqlite";
 //		}
 //	}
-
-	private boolean doStatusChanged(Object[] arguments) {
-		if (arguments.length != 2 || !(arguments[1] instanceof String)) {
-			return false;
-		}
-		
-		String[] position = parsePosition((String) arguments[1]);
-		editor.setPositionStatus(position[0] + CARET_QUERY_DELIMIT + position[1]);
-		return true;
-	}
-	
-	private String[] parsePosition(String message) {
-        int start = message.indexOf("Line ") + "Line ".length();
-        int end = message.indexOf(' ', start);
-        String line = message.substring(start, end);
-        start = message.indexOf("Col ") + "Col ".length();
-        end = message.indexOf(' ', start);
-        if(end == -1)
-            end = message.length();
-        String col = message.substring(start, end);
-        return (new String[] {
-            line, col
-        });
-    }
+//
+//	private boolean doStatusChanged(Object[] arguments) {
+//		if (arguments.length != 2 || !(arguments[1] instanceof String)) {
+//			return false;
+//		}
+//		
+//		String[] position = parsePosition((String) arguments[1]);
+//		editor.setPositionStatus(position[0] + CARET_QUERY_DELIMIT + position[1]);
+//		return true;
+//	}
+//	
+//	private String[] parsePosition(String message) {
+//        int start = message.indexOf("Line ") + "Line ".length();
+//        int end = message.indexOf(' ', start);
+//        String line = message.substring(start, end);
+//        start = message.indexOf("Col ") + "Col ".length();
+//        end = message.indexOf(' ', start);
+//        if(end == -1)
+//            end = message.length();
+//        String col = message.substring(start, end);
+//        return (new String[] {
+//            line, col
+//        });
+//    }
 
 	private Object doSave(Object[] arguments) {
 		boolean result = false;
@@ -278,5 +281,13 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 	 */
 	private void moveHistoryPage() {
 		editor.selectHistoryPage();
+	}
+	
+	/**
+	 * help popup
+	 */
+	private void helpPopup() {
+		ShortcutHelpDialog dialog = new ShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+		dialog.open();
 	}
 }

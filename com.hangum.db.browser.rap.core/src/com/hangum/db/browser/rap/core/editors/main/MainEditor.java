@@ -26,9 +26,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -204,10 +201,10 @@ public class MainEditor extends EditorPart {
 	///[browser editor]/////////////////////////////////////////////////////////////////////////////////////////////////
     
 	// 상태 정보
-	private IStatusLineManager statusLineManager;
-    private StatusLineContributionItem position;
-    private StatusLineContributionItem keyMode;
-    private StatusLineContributionItem writeMode;
+//	private IStatusLineManager statusLineManager;
+//    private StatusLineContributionItem position;
+//    private StatusLineContributionItem keyMode;
+//    private StatusLineContributionItem writeMode;
     
     /** content download를 위한 더미 composite */
     private Composite compositeDumy;
@@ -969,7 +966,6 @@ public class MainEditor extends EditorPart {
 				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			
-			
 			btnPrev.setEnabled(false);
 			if( sourceDataList.size() < queryPageCount ) btnNext.setEnabled(false);
 			else btnNext.setEnabled(true);
@@ -1351,14 +1347,14 @@ public class MainEditor extends EditorPart {
 		this.queryText = queryText;
 	}
 	
-	/**
-	 * set position text
-	 * 
-	 * @param text
-	 */
-	public void setPositionStatus(String text) {
-		position.setText(text);
-	}
+//	/**
+//	 * set position text
+//	 * 
+//	 * @param text
+//	 */
+//	public void setPositionStatus(String text) {
+//		position.setText(text);
+//	}
 	
 	/////[query 추가]/////////////////////////////////////////////////////////////////////////////
 	public String getAppendQueryText() {
@@ -1377,7 +1373,7 @@ public class MainEditor extends EditorPart {
 	 * </pre>
 	 */
 	private void createStatusLine() {
-		statusLineManager = getEditorSite().getActionBars().getStatusLineManager();
+//		statusLineManager = getEditorSite().getActionBars().getStatusLineManager();
 //		IContributionItem[] ics = statusLineManager.getItems();
 //		for (IContributionItem iContributionItem : ics) {
 //			if("position".equals( iContributionItem.getId() )) { //$NON-NLS-1$
@@ -1387,20 +1383,20 @@ public class MainEditor extends EditorPart {
 //			}
 //		}
 		
-		position = new StatusLineContributionItem("position", 15); //$NON-NLS-1$
-		keyMode = new StatusLineContributionItem("keyMode", 15); //$NON-NLS-1$
-		writeMode = new StatusLineContributionItem("writeMode", 15); //$NON-NLS-1$
-		statusLineManager.add(writeMode);
-		statusLineManager.add(new Separator());
-		statusLineManager.add(keyMode);
-		statusLineManager.add(new Separator());
-		statusLineManager.add(position);
-//		
+//		position = new StatusLineContributionItem("position", 15); //$NON-NLS-1$
+//		keyMode = new StatusLineContributionItem("keyMode", 15); //$NON-NLS-1$
+//		writeMode = new StatusLineContributionItem("writeMode", 15); //$NON-NLS-1$
+//		statusLineManager.add(writeMode);
+//		statusLineManager.add(new Separator());
+//		statusLineManager.add(keyMode);
+//		statusLineManager.add(new Separator());
+//		statusLineManager.add(position);
+////		
 //		// Set the initial cursor position
 //		position.setText("0 : 0"); //$NON-NLS-1$
 
-		writeMode.setText(Messages.MainEditor_1);
-		keyMode.setText(Messages.MainEditor_67);
+//		writeMode.setText(Messages.MainEditor_1);
+//		keyMode.setText(Messages.MainEditor_67);
 	}
 	
 	@Override

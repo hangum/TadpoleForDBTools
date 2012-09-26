@@ -43,9 +43,9 @@ public interface IEditorBrowserFunction {
 	/** query history page로 이동합니다 */
 	public static final int MOVE_HISTORY_PAGE		= 55;
 	
-	/** format sql */
-	public static final int FORMAT_SQL				= 60;
-    
+	// help popup
+	public static final int HELP_POPUP				= 60;
+	
 	public static final int SET_FOCUS 				= 999;
     
     public static final String EDITOR_SERVICE_MAP = "editorService";
