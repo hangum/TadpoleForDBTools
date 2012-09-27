@@ -157,6 +157,9 @@ public class MainEditor extends EditorPart {
 	/** 이후 버튼 */
 	private Button btnNext;
 	
+	/** 모든 쿼리 실행 */
+	public static int ALL_EXECUTE_QUERY = -999;
+	
 	/** 페이지 로케이션 */
 	private int pageNumber = 1;
 	
@@ -260,6 +263,7 @@ public class MainEditor extends EditorPart {
 		compositeEditor.setLayout(gl_compositeEditor);
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.FLAT | SWT.RIGHT);
+		toolBar.setToolTipText(Messages.MainEditor_toolBar_toolTipText);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
@@ -795,8 +799,7 @@ public class MainEditor extends EditorPart {
 				try {
 					int tmpStartPoint 	= getOrionTextPosition();	// cursor의 시작 포인트
 					String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
-					if(tmpStartPoint != -999) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$
-						
+					if(tmpStartPoint != ALL_EXECUTE_QUERY) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
 						tmpStrSelText = SQLTextUtil.executeQuery(tmpStrSelText, tmpStartPoint);
 					}
 					if("".equals(tmpStrSelText)) return Status.OK_STATUS; //$NON-NLS-1$
