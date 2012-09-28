@@ -25,6 +25,8 @@ public class UserDBDAO {
 	int seq;
     int user_seq;
     
+    String group_name = "";
+    
     String types;
     String url;
     String db;
@@ -57,6 +59,14 @@ public class UserDBDAO {
 
 	public void setUser_seq(int user_seq) {
 		this.user_seq = user_seq;
+	}
+
+	public String getGroup_name() {
+		return group_name;
+	}
+
+	public void setGroup_name(String group_name) {
+		this.group_name = group_name;
 	}
 
 	public String getUrl() {

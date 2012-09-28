@@ -54,6 +54,7 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserDBQuery;
 import com.hangum.db.system.TadpoleSystem_UserDBResource;
 
@@ -150,28 +151,49 @@ public class ManagerViewer extends ViewPart {
 	 * 트리 데이터 초기화
 	 */
 	private void init() {
-		
-		// 초기 디비 종류를 추가 합니다.
-		for(DBDefine dbDefine : DBDefine.userDBValues()) {
-			ManagerListDTO parent = new ManagerListDTO(dbDefine.getDBToString(), dbDefine);
-			treeList.add(parent);
-		}
-		
-		// 사용자가 등록한 디비를 추가합니다.
 		try {
+			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeq());
+			for (String groupName : groupNames) {
+				ManagerListDTO parent = new ManagerListDTO(groupName);
+				treeList.add(parent);
+			}
+
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : userDBS) {
-				addUserDB(userDBDAO.getTypes(), userDBDAO, false);
+				addUserDB(userDBDAO.getGroup_name(), userDBDAO, false);
 			}
+			
 		} catch (Exception e) {
-			logger.error("getUserDBDAO", e); //$NON-NLS-1$
+			logger.error("initialize Managerview", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
 		}
-		
+
 		treeViewer.refresh();
-		treeViewer.expandToLevel(1); 
+		treeViewer.expandToLevel(1);
+		
+//		// 초기 디비 종류를 추가 합니다.
+//		for(DBDefine dbDefine : DBDefine.userDBValues()) {
+//			ManagerListDTO parent = new ManagerListDTO(dbDefine.getDBToString(), dbDefine);
+//			treeList.add(parent);
+//		}
+//		
+//		// 사용자가 등록한 디비를 추가합니다.
+//		try {
+//			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+//			for (UserDBDAO userDBDAO : userDBS) {
+//				addUserDB(userDBDAO.getTypes(), userDBDAO, false);
+//			}
+//		} catch (Exception e) {
+//			logger.error("getUserDBDAO", e); //$NON-NLS-1$
+//			
+//			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
+//		}
+//		
+//		treeViewer.refresh();
+//		treeViewer.expandToLevel(1); 
 	}
 
 	/**
@@ -222,21 +244,22 @@ public class ManagerViewer extends ViewPart {
 	/**
 	 * tree에 새로운 항목 추가
 	 * 
-	 * @param dbType
+	 * @param groupName
 	 * @param userDB
-	 * @param defaultOpen defaulteditor open
+	 * @param defaultOpen default editor open
 	 */
-	public void addUserDB(String dbType, UserDBDAO userDB, boolean defaultOpne) {
+	public void addUserDB(String groupName, UserDBDAO userDB, boolean defaultOpne) {
 		for(ManagerListDTO dto: treeList) {
-			if(dto.getName().equals(dbType)) {
+			if(dto.getName().equals(groupName)) {
 				dto.addLogin(userDB);
 				
-				if(defaultOpne) refresh(userDB);
-				treeViewer.expandToLevel(userDB, 2);
-				
+				if(defaultOpne) {
+					refresh(userDB);
+					treeViewer.expandToLevel(userDB, 2);
+				}
 				return;
-			}			
-		}
+			}	// end if(dto.getname()....		
+		}	// end for
 	}
 	
 	/**

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,14 +49,17 @@ public class MSSQLLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public MSSQLLoginComposite(Composite parent, int style) {
-		super(DBDefine.MSSQL_DEFAULT, parent, style);
+	public MSSQLLoginComposite(Composite parent, int style, List<String> listGroupName) {
+		super(DBDefine.MSSQL_DEFAULT, parent, style, listGroupName);
 		setText(DBDefine.MSSQL_DEFAULT.getDBToString());
 	}
 	
 	@Override
 	public void init() {
 		if(ApplicationArgumentUtils.isTestMode()) {
+			comboGroup.add("Test group");
+			comboGroup.select(0);
+			
 			textHost.setText("192.168.61.130"); //$NON-NLS-1$
 			textPort.setText("1433"); //$NON-NLS-1$
 			textDatabase.setText("northwind"); //$NON-NLS-1$
@@ -78,6 +83,7 @@ public class MSSQLLoginComposite extends MySQLLoginComposite {
 		userDB.setTypes(DBDefine.MSSQL_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());

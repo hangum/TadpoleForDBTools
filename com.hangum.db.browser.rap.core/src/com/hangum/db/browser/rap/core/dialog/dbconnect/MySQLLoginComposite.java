@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -44,19 +46,24 @@ import com.hangum.db.util.ApplicationArgumentUtils;
 public class MySQLLoginComposite extends AbstractLoginComposite {
 	private static final Logger logger = Logger.getLogger(MySQLLoginComposite.class);
 	
+	protected List<String> listGroupName;
+	protected Combo comboGroup;
+	protected Text textDisplayName;
+	
 	protected Text textHost;
 	protected Text textUser;
 	protected Text textPassword;
 	protected Text textDatabase;
 	protected Text textPort;
 	protected Combo comboLocale;
-	protected Text textDisplayName;
 	
 	protected Button btnSavePreference;
 	
-	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style) {
+	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style, List<String> listGroupName) {
 		super(selectDB, parent, style);
 		setText(selectDB.getDBToString());
+		
+		this.listGroupName = listGroupName;
 	}
 
 	@Override
@@ -67,6 +74,24 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		
+		Label lblGroupName = new Label(compositeBody, SWT.NONE);
+		lblGroupName.setText(Messages.MySQLLoginComposite_lblGroupName_text);
+		comboGroup = new Combo(compositeBody, SWT.NONE);
+		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		if(listGroupName != null) {
+			for (String strGroup : listGroupName) comboGroup.add(strGroup);
+		}
+		
+		Label lblNewLabel_1 = new Label(compositeBody, SWT.NONE);
+		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_1.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
+		
+		textDisplayName = new Text(compositeBody, SWT.BORDER);
+		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		new Label(compositeBody, SWT.NONE);		
+		new Label(compositeBody, SWT.NONE);
 		
 		Label lblHost = new Label(compositeBody, SWT.NONE);
 		lblHost.setText(Messages.DBLoginDialog_1);
@@ -167,13 +192,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			comboLocale.select(0);
 		}
 		
-		Label lblNewLabel_1 = new Label(compositeBody, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_1.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
-		
-		textDisplayName = new Text(compositeBody, SWT.BORDER);
-		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		Button btnPing = new Button(compositeBody, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -209,6 +227,9 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	@Override
 	public void init() {
 		if(ApplicationArgumentUtils.isTestMode()) {
+			comboGroup.add("Test group");
+			comboGroup.select(0);
+			
 			textHost.setText(Messages.DBLoginDialog_16);
 			textUser.setText(Messages.DBLoginDialog_17);
 			textPassword.setText(Messages.DBLoginDialog_18);
@@ -242,6 +263,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setTypes(DBDefine.MYSQL_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());

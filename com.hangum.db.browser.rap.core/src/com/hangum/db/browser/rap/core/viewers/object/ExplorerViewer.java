@@ -1029,17 +1029,21 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			tableListViewer.setInput(showTables);
 			tableListViewer.refresh();
 
-			initObjectDetail(managerList.getDbType());
+			initObjectDetail(managerList.getName());//DbType());
 		}
 	}
 
 	/**
 	 * 다른 디비가 선택되어 지면 초기화 되어야 할 object 목록
 	 * 
+	 * @param Connection Manager에서 선택된 object
 	 */
-	private void initObjectDetail(DBDefine dbDefie) {
+	private void initObjectDetail(Object selObject) {//DBDefine dbDefie) {
+		DBDefine dbDefine = null;
+		if(selObject instanceof DBDefine) dbDefine = (DBDefine)selObject;
+				
 		// dbtype에 따른 object 뷰를 조절합니다.
-		if (dbDefie == DBDefine.SQLite_DEFAULT) {
+		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			// procedure, function 항목을 닫는다.
 			for (TabItem tabItem : tabFolderObject.getItems()) {
 				if (!tabItem.isDisposed()) {
@@ -1047,7 +1051,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 					else if ("Functions".equals(tabItem.getText()))tabItem.dispose(); //$NON-NLS-1$
 				}
 			}
-		} else if (dbDefie == DBDefine.MONGODB_DEFAULT) {
+		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
 			// table 항목 이외의 모든 항목을 닫는다.
 			for (TabItem tabItem : tabFolderObject.getItems()) {
 				if (!tabItem.isDisposed()) {
@@ -1077,18 +1081,13 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				if ("Triggers".equals(tabItem.getText()))isTriggers = true; //$NON-NLS-1$
 			}
 
-			if (!isViews)
-				createView();
-			if (!isIndexes)
-				createIndexes();
+			if (!isViews) 	createView();
+			if (!isIndexes) createIndexes();
 
-			if (!isProcedure)
-				createProcedure();
-			if (!isFunction)
-				createFunction();
+			if (!isProcedure) createProcedure();
+			if (!isFunction)  createFunction();
 
-			if (!isTriggers)
-				createTrigger();
+			if (!isTriggers) createTrigger();
 		}
 
 		//

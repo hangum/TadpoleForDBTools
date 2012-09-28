@@ -11,6 +11,7 @@
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -21,6 +22,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -33,8 +35,6 @@ import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserDBQuery;
 import com.hangum.db.util.ApplicationArgumentUtils;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 
 /**
  * sqlite login composite
@@ -50,6 +50,8 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 
 	private static final Logger logger = Logger.getLogger(SQLiteLoginComposite.class);
 	
+	protected List<String> listGroupName;
+	protected Combo comboGroup;
 	protected Text textFile;
 	protected Text textDisplayName;
 	
@@ -60,9 +62,11 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public SQLiteLoginComposite(Composite parent, int style) {
+	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName) {
 		super(DBDefine.SQLite_DEFAULT, parent, style);
 		setText(Messages.SQLiteLoginComposite_0);
+		
+		this.listGroupName = listGroupName;
 	}
 	
 	@Override
@@ -75,16 +79,18 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		container.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(3, false));
+		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
-		Label lblDbFile = new Label(compositeBody, SWT.NONE);
-		lblDbFile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDbFile.setText(Messages.SQLiteLoginComposite_1);
+		Label lblGroup = new Label(compositeBody, SWT.NONE);
+		lblGroup.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblGroup.setText(Messages.SQLiteLoginComposite_lblGroup_text);
 		
-		textFile = new Text(compositeBody, SWT.BORDER);
-		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeBody, SWT.NONE);
+		comboGroup = new Combo(compositeBody, SWT.NONE);
+		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		if(listGroupName != null) {
+			for (String strGroup : listGroupName) comboGroup.add(strGroup);
+		}
 		
 		Label lblDisplayName = new Label(compositeBody, SWT.NONE);
 		lblDisplayName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -95,10 +101,17 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		new Label(compositeBody, SWT.NONE);
 		new Label(compositeBody, SWT.NONE);
 		
+		Label lblDbFile = new Label(compositeBody, SWT.NONE);
+		lblDbFile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblDbFile.setText(Messages.SQLiteLoginComposite_1);
+		
+		textFile = new Text(compositeBody, SWT.BORDER);
+		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeBody, SWT.NONE);
+		
 		btnSavePreference = new Button(compositeBody, SWT.CHECK);
 		btnSavePreference.setText(Messages.SQLiteLoginComposite_btnSavePreference_text);
 		btnSavePreference.setSelection(true);
-		new Label(compositeBody, SWT.NONE);
 		
 		init();
 	}
@@ -107,6 +120,9 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	protected void init() {
 		if(ApplicationArgumentUtils.isTestMode()) {
 //			textFile.setText("C:/dev/eclipse-rcp-indigo-SR2-win32/workspace/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/configuration/tadpole/db/tadpole-system.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
+			comboGroup.add("Test group");
+			comboGroup.select(0);
+			
 			textFile.setText("C:/tadpole-test.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
 			textDisplayName.setText(Messages.SQLiteLoginComposite_4);
 		}
@@ -134,6 +150,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		userDB.setTypes(DBDefine.SQLite_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textFile.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setPasswd(""); //$NON-NLS-1$
 		userDB.setUsers(""); //$NON-NLS-1$

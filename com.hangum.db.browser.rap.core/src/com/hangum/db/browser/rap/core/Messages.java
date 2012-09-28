@@ -287,6 +287,9 @@ public class Messages extends NLS {
 	public static String MainEditor_btnDetailView_text;
 	public static String MainEditor_label_text;
 	public static String MainEditor_toolBar_toolTipText;
+	public static String SQLiteLoginComposite_lblGroup_text;
+	public static String MySQLLoginComposite_lblGroupName_text;
+	public static String MySQLLoginComposite_label_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

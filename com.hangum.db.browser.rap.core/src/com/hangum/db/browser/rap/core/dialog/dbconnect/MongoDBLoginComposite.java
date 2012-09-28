@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -48,8 +50,8 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public MongoDBLoginComposite(Composite parent, int style) {
-		super(DBDefine.MONGODB_DEFAULT, parent, style);
+	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName) {
+		super(DBDefine.MONGODB_DEFAULT, parent, style, listGroupName);
 		setText(DBDefine.MONGODB_DEFAULT.getDBToString());
 	}
 	
@@ -57,6 +59,9 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 	public void init() {
 		
 		if(ApplicationArgumentUtils.isTestMode()) {
+			comboGroup.add("Test group");
+			comboGroup.select(0);
+			
 			textHost.setText("127.0.0.1");
 			textUser.setText("");
 			textPassword.setText("");
@@ -102,6 +107,7 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 		userDB.setTypes(DBDefine.MONGODB_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -24,7 +26,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -63,6 +64,9 @@ public class DBLoginDialog extends Dialog {
 	 */
 	private static final long serialVersionUID = 1327678815994219469L;
 	private static final Logger logger = Logger.getLogger(DBLoginDialog.class);
+	
+	/** group name */
+	protected List<String> groupName;
 	
 	private DBDefine selDBDefine;
 	
@@ -158,6 +162,14 @@ public class DBLoginDialog extends Dialog {
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 //		loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE);
+		
+		// db groupData 
+		try {
+			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeq());
+		} catch (Exception e1) {
+			logger.error("get group info", e1);
+		}
+		
 		initDBWidget();
 
 		// history .....................................
@@ -172,19 +184,19 @@ public class DBLoginDialog extends Dialog {
 	private void initDBWidget() {
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(DBDefine.MYSQL_DEFAULT, compositeBody, SWT.NONE);
+			loginComposite = new MySQLLoginComposite(DBDefine.MYSQL_DEFAULT, compositeBody, SWT.NONE, groupName);
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
-			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE);
+			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, groupName);
 		} else if (dbDefine == DBDefine.SQLite_DEFAULT) {
-			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE);
+			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, groupName);
 		} else if (dbDefine == DBDefine.MSSQL_DEFAULT) {
-			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE);
+			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, groupName);
 		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
-			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE);
+			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, groupName);
 		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
-			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE);
+			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, groupName);
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
-			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE);
+			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName);
 		}
 
 	}
@@ -356,6 +368,15 @@ public class DBLoginDialog extends Dialog {
 				}	// end if 자신의 등록한 것
 			}	// end select
 		}	// end delete button
+	}
+	
+	/**
+	 * group name
+	 * 
+	 * @return
+	 */
+	public List<String> getGroupName() {
+		return groupName;
 	}
 
 	/**

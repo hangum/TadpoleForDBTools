@@ -49,8 +49,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public CubridLoginComposite(Composite parent, int style) {
-		super(DBDefine.CUBRID_DEFAULT, parent, style);
+	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName) {
+		super(DBDefine.CUBRID_DEFAULT, parent, style, listGroupName);
 		setText(DBDefine.CUBRID_DEFAULT.getDBToString());
 	}
 	
@@ -58,6 +58,9 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	public void init() {
 		
 		if(ApplicationArgumentUtils.isTestMode()) {
+			comboGroup.add("Test group");
+			comboGroup.select(0);
+			
 			textHost.setText("127.0.0.1");
 			textUser.setText("dba");
 			textPassword.setText("");
@@ -80,6 +83,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 		userDB.setTypes(DBDefine.CUBRID_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());

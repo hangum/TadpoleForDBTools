@@ -47,8 +47,8 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public PostgresLoginComposite(Composite parent, int style) {
-		super(DB_DEFINE, parent, style);
+	public PostgresLoginComposite(Composite parent, int style, List<String> listGroupName) {
+		super(DB_DEFINE, parent, style, listGroupName);
 		setText(DB_DEFINE.getDBToString());
 	}
 	
@@ -56,6 +56,9 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	public void init() {
 		
 		if(ApplicationArgumentUtils.isTestMode()) {
+			comboGroup.add("Test group");
+			comboGroup.select(0);
+			
 			textHost.setText("127.0.0.1");
 			textUser.setText("tadpole");
 			textPassword.setText("tadpole");
@@ -78,6 +81,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		userDB.setTypes(DB_DEFINE.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());

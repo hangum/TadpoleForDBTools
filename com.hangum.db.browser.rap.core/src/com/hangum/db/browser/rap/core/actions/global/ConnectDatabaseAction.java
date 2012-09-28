@@ -60,15 +60,15 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 	public void runConnectionDialog(IStructuredSelection sel) {
 		DBDefine selDbType = null;
 		
-		if(sel != null) {
-			if(sel.getFirstElement() instanceof ManagerListDTO) {
-				ManagerListDTO mana = (ManagerListDTO)sel.getFirstElement();
-				selDbType = mana.getDbType();
-			} else if(sel.getFirstElement() instanceof UserDBDAO) {
-				UserDBDAO user =(UserDBDAO)sel.getFirstElement();
-				selDbType = user.getParent().getDbType();
-			}
-		}
+//		if(sel != null) {
+//			if(sel.getFirstElement() instanceof ManagerListDTO) {
+//				ManagerListDTO mana = (ManagerListDTO)sel.getFirstElement();
+//				selDbType = mana.getDbType();
+//			} else if(sel.getFirstElement() instanceof UserDBDAO) {
+//				UserDBDAO user =(UserDBDAO)sel.getFirstElement();
+//				selDbType = user.getParent().getDbType();
+//			}
+//		}
 		
 		final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selDbType);
 		int ret = dialog.open();

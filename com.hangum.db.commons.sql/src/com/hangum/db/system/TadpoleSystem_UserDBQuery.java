@@ -29,6 +29,18 @@ public class TadpoleSystem_UserDBQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBQuery.class);
 	
 	/**
+	 * group의 그룹명을 리턴합니다.
+	 * 
+	 * @param groupSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> getUserGroup(int groupSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		return (List<String>)sqlClient.queryForList("userDBGroup", groupSeq); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 신규 유저디비를 등록합니다.
 	 * @param email
 	 * @param pass

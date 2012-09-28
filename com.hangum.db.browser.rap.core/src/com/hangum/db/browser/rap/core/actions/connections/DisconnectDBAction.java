@@ -89,7 +89,7 @@ public class DisconnectDBAction implements IViewActionDelegate {
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				explorerView.initObjectHead(new ManagerListDTO(userDB.getDisplay_name(), DBDefine.getDBDefine(userDB.getTypes()) ));
+//				explorerView.initObjectHead(new ManagerListDTO(userDB.getDisplay_name(), DBDefine.getDBDefine(userDB.getTypes()) ));
 			}
 		});	// end display
 		
