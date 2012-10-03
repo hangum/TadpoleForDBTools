@@ -50,7 +50,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 
 	private static final Logger logger = Logger.getLogger(SQLiteLoginComposite.class);
 	
-	protected List<String> listGroupName;
 	protected Combo comboGroup;
 	protected Text textFile;
 	protected Text textDisplayName;
@@ -62,11 +61,9 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName) {
-		super(DBDefine.SQLite_DEFAULT, parent, style);
+	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName) {
+		super(DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName);
 		setText(Messages.SQLiteLoginComposite_0);
-		
-		this.listGroupName = listGroupName;
 	}
 	
 	@Override
@@ -88,9 +85,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		comboGroup = new Combo(compositeBody, SWT.NONE);
 		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if(listGroupName != null) {
-			for (String strGroup : listGroupName) comboGroup.add(strGroup);
-		}
+		for (String strGroup : listGroupName) comboGroup.add(strGroup);
 		
 		Label lblDisplayName = new Label(compositeBody, SWT.NONE);
 		lblDisplayName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -120,11 +115,15 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	protected void init() {
 		if(ApplicationArgumentUtils.isTestMode()) {
 //			textFile.setText("C:/dev/eclipse-rcp-indigo-SR2-win32/workspace/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/configuration/tadpole/db/tadpole-system.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
-			comboGroup.add("Test group");
-			comboGroup.select(0);
+//			comboGroup.setText(strTestGroupName);
+//			comboGroup.select(0);
 			
 			textFile.setText("C:/tadpole-test.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
 			textDisplayName.setText(Messages.SQLiteLoginComposite_4);
+		}
+		
+		for(int i=0; i<comboGroup.getItemCount(); i++) {
+			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
 		}
 	}
 
@@ -144,11 +143,9 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			if( !MessageDialog.openConfirm(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_9) ) return false; 
 		}
 		
-		final String dbUrl = String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), textFile.getText());
-		
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.SQLite_DEFAULT.getDBToString());
-		userDB.setUrl(dbUrl);
+		userDB.setUrl(String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), textFile.getText()));
 		userDB.setDb(textFile.getText());
 		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
@@ -156,7 +153,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		userDB.setUsers(""); //$NON-NLS-1$
 		
 		// 이미 연결한 것인지 검사한다.
-		if( !connectValite(userDB, textFile.getText()) ) return false;
+		if(!connectValidate(userDB)) return false;
 		
 		// preference에 save합니다.
 		if(btnSavePreference.getSelection())

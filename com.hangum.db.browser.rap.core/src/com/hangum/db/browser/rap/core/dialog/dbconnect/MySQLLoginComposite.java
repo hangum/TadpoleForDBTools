@@ -46,7 +46,6 @@ import com.hangum.db.util.ApplicationArgumentUtils;
 public class MySQLLoginComposite extends AbstractLoginComposite {
 	private static final Logger logger = Logger.getLogger(MySQLLoginComposite.class);
 	
-	protected List<String> listGroupName;
 	protected Combo comboGroup;
 	protected Text textDisplayName;
 	
@@ -59,11 +58,9 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	
 	protected Button btnSavePreference;
 	
-	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style, List<String> listGroupName) {
-		super(selectDB, parent, style);
+	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style, List<String> listGroupName, String selGroupName) {
+		super(selectDB, parent, style, listGroupName, selGroupName);
 		setText(selectDB.getDBToString());
-		
-		this.listGroupName = listGroupName;
 	}
 
 	@Override
@@ -79,9 +76,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		lblGroupName.setText(Messages.MySQLLoginComposite_lblGroupName_text);
 		comboGroup = new Combo(compositeBody, SWT.NONE);
 		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if(listGroupName != null) {
-			for (String strGroup : listGroupName) comboGroup.add(strGroup);
-		}
+		for (String strGroup : listGroupName) comboGroup.add(strGroup);
 		
 		Label lblNewLabel_1 = new Label(compositeBody, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -227,8 +222,8 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	@Override
 	public void init() {
 		if(ApplicationArgumentUtils.isTestMode()) {
-			comboGroup.add("Test group");
-			comboGroup.select(0);
+//			comboGroup.add(strTestGroupName);
+//			comboGroup.select(0);
 			
 			textHost.setText(Messages.DBLoginDialog_16);
 			textUser.setText(Messages.DBLoginDialog_17);
@@ -237,6 +232,10 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textPort.setText(Messages.DBLoginDialog_20);
 			
 			textDisplayName.setText(Messages.DBLoginDialog_21);
+		}
+		
+		for(int i=0; i<comboGroup.getItemCount(); i++) {
+			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
 		}
 	}
 
@@ -257,7 +256,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 					DBDefine.MYSQL_DEFAULT.getDB_URL_INFO(), 
 					textHost.getText(), textPort.getText(), textDatabase.getText() + "?Unicode=true&characterEncoding=" + selectLocale.trim());
 		}
-		logger.debug("[mysql dbURL]" + dbUrl);
+//		logger.debug("[mysql dbURL]" + dbUrl);
 		
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.MYSQL_DEFAULT.getDBToString());
@@ -272,7 +271,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setUsers(textUser.getText());
 		
 		// 이미 연결한 것인지 검사한다.
-		if( !connectValite(userDB, textDatabase.getText()) ) return false;
+		if(!connectValidate(userDB)) return false;
 		
 		// preference에 save합니다.
 		if(btnSavePreference.getSelection())

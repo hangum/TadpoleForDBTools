@@ -10,24 +10,25 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.browser.rap.core.Messages;
-import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.system.UserDBDAO;
+import com.hangum.db.session.manager.SessionManager;
+import com.hangum.db.system.TadpoleSystem_UserDBQuery;
 import com.hangum.db.util.PingTest;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * 로그인시에 사용하게될 디비의 abstrace composite
+ * 로그인시에 사용하게될 디비의 abstract composite
  * 
  * @author hangum
  *
@@ -38,6 +39,11 @@ public abstract class AbstractLoginComposite extends Group {
 	 */
 	private static final long serialVersionUID = -3434604591881525231L;
 	private static final Logger logger = Logger.getLogger(AbstractLoginComposite.class);
+	
+	protected String strTestGroupName = "Test Group";
+	protected String selGroupName = "";
+	
+	protected List<String> listGroupName = new ArrayList<String>();
 	protected UserDBDAO userDB;
 	protected DBDefine selectDB;
 	
@@ -46,9 +52,12 @@ public abstract class AbstractLoginComposite extends Group {
 	 * @param parent
 	 * @param style
 	 */
-	public AbstractLoginComposite(DBDefine dbDefine, Composite parent, int style) {
+	public AbstractLoginComposite(DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName) {
 		super(parent, style);
 		this.selectDB = dbDefine;
+		this.listGroupName = listGroupName;
+		this.selGroupName = selGroupName;
+		
 		crateComposite();
 	}
 
@@ -106,23 +115,37 @@ public abstract class AbstractLoginComposite extends Group {
 	 * @param searchTable 디비의 테이블 검증을위한 쿼리 
 	 * @return
 	 */
-	public boolean connectValite(UserDBDAO loginInfo, String searchTable) {
+	public boolean connectValidate(UserDBDAO loginInfo) {//, String tableList) {//String searchTable) {
 		// 이미 연결한 것인지 검사한다.
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-		if( !managerView.isAdd(DBDefine.MYSQL_DEFAULT, loginInfo) ) {
-			MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.DBLoginDialog_24);
+//		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+//		if( !managerView.isAdd(DBDefine.MYSQL_DEFAULT, loginInfo) ) {
+//			MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.DBLoginDialog_24);
+//			
+//			return false;
+//		}
+		try {
+			// 이미 등록된 디비 인지 검사합니다.
+			if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), loginInfo.getUrl(), loginInfo.getUsers())) {
+				MessageDialog.openError(null, Messages.DBLoginDialog_23, "Already Database Exist. Check information.");
+				
+				return false;
+			}
+		} catch(Exception e) {
+			logger.error("DB Connecting... ", e);
+			MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.DBLoginDialog_27 + "\n" + e.getMessage());
 			
 			return false;
 		}
 		
+		// 디비가 정상적인지 등록하려는 디비의 테이블 정보를 검사합니다.
 		if(DBDefine.getDBDefine(loginInfo.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			// db가 정상적인지 채크해본다 
 			try {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
-				List showTables = sqlClient.queryForList("tableList", searchTable);
+				List showTables = sqlClient.queryForList("tableList", loginInfo.getDb());
 				
 			} catch (Exception e) {
-				logger.error("MySQL DB Connecting... ", e);
+				logger.error("DB Connecting... ", e);
 				MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.DBLoginDialog_27 + "\n" + e.getMessage());
 				
 				return false;

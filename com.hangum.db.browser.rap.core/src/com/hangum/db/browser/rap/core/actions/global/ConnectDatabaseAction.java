@@ -25,7 +25,6 @@ import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
-import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.ManagerListDTO;
 import com.hangum.db.dao.system.UserDBDAO;
 import com.swtdesigner.ResourceManager;
@@ -58,19 +57,19 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 	}
 	
 	public void runConnectionDialog(IStructuredSelection sel) {
-		DBDefine selDbType = null;
+		String selGroupName = null;
 		
-//		if(sel != null) {
-//			if(sel.getFirstElement() instanceof ManagerListDTO) {
-//				ManagerListDTO mana = (ManagerListDTO)sel.getFirstElement();
-//				selDbType = mana.getDbType();
-//			} else if(sel.getFirstElement() instanceof UserDBDAO) {
-//				UserDBDAO user =(UserDBDAO)sel.getFirstElement();
-//				selDbType = user.getParent().getDbType();
-//			}
-//		}
+		if(sel != null) {
+			if(sel.getFirstElement() instanceof ManagerListDTO) {
+				ManagerListDTO mana = (ManagerListDTO)sel.getFirstElement();
+				selGroupName = mana.getName();
+			} else if(sel.getFirstElement() instanceof UserDBDAO) {
+				UserDBDAO user =(UserDBDAO)sel.getFirstElement();
+				selGroupName = user.getParent().getName();
+			}
+		}
 		
-		final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selDbType);
+		final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selGroupName);
 		int ret = dialog.open();
 		
 		if(ret == Dialog.OK) {
@@ -80,7 +79,7 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 			Display.getCurrent().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					managerView.addUserDB(userDB.getTypes(), userDB, true);
+					managerView.addUserDB(userDB, true);
 				}
 			});	// end display
 				

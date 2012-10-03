@@ -49,8 +49,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName) {
-		super(DBDefine.CUBRID_DEFAULT, parent, style, listGroupName);
+	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName) {
+		super(DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName);
 		setText(DBDefine.CUBRID_DEFAULT.getDBToString());
 	}
 	
@@ -58,8 +58,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	public void init() {
 		
 		if(ApplicationArgumentUtils.isTestMode()) {
-			comboGroup.add("Test group");
-			comboGroup.select(0);
+//			comboGroup.add("Test group");
+//			comboGroup.select(0);
 			
 			textHost.setText("127.0.0.1");
 			textUser.setText("dba");
@@ -68,6 +68,10 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			textPort.setText("33000");
 			
 			textDisplayName.setText("Cubrid 8.4.1.2032");
+		}
+		
+		for(int i=0; i<comboGroup.getItemCount(); i++) {
+			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
 		}
 	}
 	

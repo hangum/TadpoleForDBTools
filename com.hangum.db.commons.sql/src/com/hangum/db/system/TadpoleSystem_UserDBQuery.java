@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.hangum.db.system;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -29,15 +31,37 @@ public class TadpoleSystem_UserDBQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBQuery.class);
 	
 	/**
-	 * group의 그룹명을 리턴합니다.
+	 * 신규디비 등록시 이미 등록되어 있는지 검사합니다.
 	 * 
-	 * @param groupSeq
+	 * @param user_seq
+	 * @param url
+	 * @param users
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<String> getUserGroup(int groupSeq) throws Exception {
+	public static boolean isAlreadyExistDB(int user_seq, String url, String users) throws Exception {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("user_seq",user_seq);
+		queryMap.put("url", 	url);
+		queryMap.put("users", 	users);
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
-		return (List<String>)sqlClient.queryForList("userDBGroup", groupSeq); //$NON-NLS-1$
+		List<Object> listUserDB = sqlClient.queryForList("isAlreadyExistDB", queryMap);
+		
+		if(listUserDB.size() == 0) return false;
+		else return true;
+	}
+	
+	/**
+	 * group의 그룹명을 리턴합니다.
+	 * 
+	 * @param userSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> getUserGroup(int userSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		return (List<String>)sqlClient.queryForList("userDBGroup", userSeq); //$NON-NLS-1$
 	}
 	
 	/**

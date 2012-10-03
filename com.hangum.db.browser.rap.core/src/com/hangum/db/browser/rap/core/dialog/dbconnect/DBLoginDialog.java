@@ -67,8 +67,8 @@ public class DBLoginDialog extends Dialog {
 	
 	/** group name */
 	protected List<String> groupName;
-	
-	private DBDefine selDBDefine;
+	/** 초기 선택한 그룹 */
+	private String selGroupName;
 	
 	private Combo comboDBList;
 	private Composite compositeBody;
@@ -94,10 +94,10 @@ public class DBLoginDialog extends Dialog {
 		super(parentShell);
 	}
 	
-	public DBLoginDialog(Shell paShell, DBDefine selDBDefine) {
+	public DBLoginDialog(Shell paShell, String selGroupName) {
 		super(paShell);
 		
-		this.selDBDefine = selDBDefine;
+		this.selGroupName = selGroupName;
 	}
 
 	@Override
@@ -146,28 +146,22 @@ public class DBLoginDialog extends Dialog {
 		comboDBList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		// 초기데이터 추가
-		int i=0;
 		for (DBDefine dbDefine : DBDefine.userDBValues()) {
 			comboDBList.add(dbDefine.getDBToString());
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
-			
-			if(selDBDefine == dbDefine) comboDBList.select(i);
-			i++;
 		}
-		// select combo
-		if(selDBDefine == null)		comboDBList.select(3);
+		comboDBList.select(3);
 
 		// combo에서 선택된 디비의 콤포짖
 		compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-//		loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE);
 		
 		// db groupData 
 		try {
-			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeq());
+			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
 		} catch (Exception e1) {
-			logger.error("get group info", e1);
+			logger.error("get group info", e1); //$NON-NLS-1$
 		}
 		
 		initDBWidget();
@@ -182,21 +176,22 @@ public class DBLoginDialog extends Dialog {
 	 * 초기화면에서 로드될 widget
 	 */
 	private void initDBWidget() {
+		
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(DBDefine.MYSQL_DEFAULT, compositeBody, SWT.NONE, groupName);
+			loginComposite = new MySQLLoginComposite(DBDefine.MYSQL_DEFAULT, compositeBody, SWT.NONE, groupName, selGroupName);
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
-			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, groupName);
+			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
 		} else if (dbDefine == DBDefine.SQLite_DEFAULT) {
-			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, groupName);
+			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
 		} else if (dbDefine == DBDefine.MSSQL_DEFAULT) {
-			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, groupName);
+			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
 		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
-			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, groupName);
+			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
 		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
-			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, groupName);
+			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
-			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName);
+			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
 		}
 
 	}
@@ -213,19 +208,32 @@ public class DBLoginDialog extends Dialog {
 		grpLoginHistory.setLayout(new GridLayout(1, false));
 
 		tableViewerLoginHistory = new TableViewer(grpLoginHistory, SWT.BORDER | SWT.FULL_SELECTION);
-		tableViewerLoginHistory.addDoubleClickListener(new IDoubleClickListener() {
-					public void doubleClick(DoubleClickEvent event) {
-						IStructuredSelection ss = (IStructuredSelection) event.getSelection();
-						UserDBDAO userDb = (UserDBDAO) ss.getFirstElement();
-
-						selectDatabase(userDb);
-
-					}
-				});
+//		tableViewerLoginHistory.addDoubleClickListener(new IDoubleClickListener() {
+//			public void doubleClick(DoubleClickEvent event) {
+//				IStructuredSelection ss = (IStructuredSelection) event.getSelection();
+//				UserDBDAO userDb = (UserDBDAO) ss.getFirstElement();
+//
+//				selectDatabase(userDb);
+//
+//			}
+//		});
 		Table table = tableViewerLoginHistory.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		TableViewerColumn tvcGroupName = new TableViewerColumn(tableViewerLoginHistory, SWT.NONE);
+		tvcGroupName.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				UserDBDAO login = (UserDBDAO) element;
+				return login.getGroup_name();
+			}
+		});
+		TableColumn tblclmnGroupName = tvcGroupName.getColumn();
+		tblclmnGroupName.addSelectionListener(getSelectionAdapter(tblclmnGroupName, 1));
+		tblclmnGroupName.setWidth(110);
+		tblclmnGroupName.setText(Messages.DBLoginDialog_36);
 
 		TableViewerColumn tvcDBType = new TableViewerColumn(tableViewerLoginHistory, SWT.NONE);
 		tvcDBType.setLabelProvider(new ColumnLabelProvider() {
@@ -239,7 +247,7 @@ public class DBLoginDialog extends Dialog {
 		tblclmnDbType.addSelectionListener(getSelectionAdapter(tblclmnDbType, 0));
 		tblclmnDbType.setWidth(65);
 		tblclmnDbType.setText(Messages.DBLoginDialog_tblclmnDbType_text);
-
+		
 		TableViewerColumn tvcDisplayName = new TableViewerColumn(tableViewerLoginHistory, SWT.NONE);
 		tvcDisplayName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -263,7 +271,7 @@ public class DBLoginDialog extends Dialog {
 				if(login.getUser_seq() == SessionManager.getSeq()) {
 					return login.getUrl();
 				} else {
-					return "*** not visible ***";
+					return "*** not visible ***"; //$NON-NLS-1$
 				}
 			}
 		});
@@ -276,7 +284,7 @@ public class DBLoginDialog extends Dialog {
 		try {
 			tableViewerLoginHistory.setInput(TadpoleSystem_UserDBQuery.getUserDB());
 		} catch (Exception e) {
-			logger.error("user db", e); //$NON-NLS-1$
+			logger.error("select login history db", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.DBLoginDialog_22, errStatus); //$NON-NLS-1$
 		}
@@ -294,8 +302,7 @@ public class DBLoginDialog extends Dialog {
 	 */
 	private SelectionListener getSelectionAdapter(final TableColumn column, final int index) {
 		
-		SelectionAdapter selectionAdapter = new SelectionAdapter() {
-		
+		SelectionAdapter selectionAdapter = new SelectionAdapter() {		
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				comparator.setColumn(index);
@@ -309,12 +316,16 @@ public class DBLoginDialog extends Dialog {
 		return selectionAdapter;
 	}
 
+	/**
+	 * 
+	 * @param userDb
+	 */
 	private void selectDatabase(UserDBDAO userDb) {
-		if (loginComposite.connectValite(userDb, userDb.getDb())) {
+//		if (loginComposite.connectValite(userDb, userDb.getDb())) {
 			this.retuserDb = userDb;
 
 			super.okPressed();
-		}
+//		}
 	}
 
 	@Override
@@ -361,8 +372,7 @@ public class DBLoginDialog extends Dialog {
 							logger.error(Messages.DBLoginDialog_32, e);
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.DBLoginDialog_29, errStatus); //$NON-NLS-1$
-						}
-						
+						}						
 					}	// end confirm
 					
 				}	// end if 자신의 등록한 것
@@ -419,12 +429,15 @@ class LoginHistoryComparator extends ViewerSorter  {
 
 		switch (propertyIndex) {
 		case 0:
-			rc = login1.getTypes().compareTo(login2.getTypes());
+			rc = login1.getGroup_name().compareTo(login2.getGroup_name());
 			break;
 		case 1:
-			rc = login1.getDisplay_name().compareTo(login2.getDisplay_name());
+			rc = login1.getTypes().compareTo(login2.getTypes());
 			break;
 		case 2:
+			rc = login1.getDisplay_name().compareTo(login2.getDisplay_name());
+			break;
+		case 3:
 			rc = login1.getUrl().compareTo(login2.getUrl());
 			break;
 		default:

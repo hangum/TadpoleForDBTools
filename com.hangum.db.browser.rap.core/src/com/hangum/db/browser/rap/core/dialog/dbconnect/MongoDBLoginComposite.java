@@ -50,8 +50,8 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName) {
-		super(DBDefine.MONGODB_DEFAULT, parent, style, listGroupName);
+	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName) {
+		super(DBDefine.MONGODB_DEFAULT, parent, style, listGroupName, selGroupName);
 		setText(DBDefine.MONGODB_DEFAULT.getDBToString());
 	}
 	
@@ -59,8 +59,8 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 	public void init() {
 		
 		if(ApplicationArgumentUtils.isTestMode()) {
-			comboGroup.add("Test group");
-			comboGroup.select(0);
+//			comboGroup.add("Test group");
+//			comboGroup.select(0);
 			
 			textHost.setText("127.0.0.1");
 			textUser.setText("");
@@ -69,6 +69,10 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 			textPort.setText("27017");
 			
 			textDisplayName.setText("MongoDB Default");
+		}
+		
+		for(int i=0; i<comboGroup.getItemCount(); i++) {
+			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
 		}
 	}
 	

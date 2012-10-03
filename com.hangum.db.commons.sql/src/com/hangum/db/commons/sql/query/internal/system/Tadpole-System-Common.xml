@@ -156,11 +156,24 @@
 	============================================================================================================================
  -->
  <!-- 
+ 		신규디비 등록시 이미 등록되어 있는지 검사합니다.
+  -->
+ <select id="isAlreadyExistDB" resultClass="com.hangum.db.dao.system.UserDBDAO" parameterClass="java.util.Map">
+ 	SELECT *
+ 	FROM user_db
+ 	WHERE user_seq = #user_seq# AND
+ 		url = #url# AND
+ 		users = #users#
+ </select>
+ 
+ <!-- 
  	유저디비 그룹정보를 가져옵니다.
   -->
- <select id="userDBGroup" resultClass="java.lang.String">
+ <select id="userDBGroup" resultClass="java.lang.String" parameterClass="java.lang.Integer">
  	SELECT group_name
  	FROM user_db
+ 	WHERE 
+		user_seq = #user_seq#
  	group by group_name 
  </select>
  

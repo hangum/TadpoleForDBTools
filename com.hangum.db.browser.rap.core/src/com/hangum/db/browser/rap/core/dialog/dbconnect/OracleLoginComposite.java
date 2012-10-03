@@ -49,8 +49,8 @@ public class OracleLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public OracleLoginComposite(Composite parent, int style, List<String> listGroupName) {
-		super(DBDefine.ORACLE_DEFAULT, parent, style, listGroupName);
+	public OracleLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName) {
+		super(DBDefine.ORACLE_DEFAULT, parent, style, listGroupName, selGroupName);
 		setText(DBDefine.ORACLE_DEFAULT.getDBToString());
 	}
 	
@@ -58,8 +58,8 @@ public class OracleLoginComposite extends MySQLLoginComposite {
 	public void init() {
 		
 		if(ApplicationArgumentUtils.isTestMode()) {
-			comboGroup.add("Test group");
-			comboGroup.select(0);
+//			comboGroup.add("Test group");
+//			comboGroup.select(0);
 			
 			textHost.setText(Messages.OracleLoginComposite_0);
 			textUser.setText(Messages.OracleLoginComposite_1);
@@ -68,6 +68,10 @@ public class OracleLoginComposite extends MySQLLoginComposite {
 			textPort.setText(Messages.OracleLoginComposite_4);
 			
 			textDisplayName.setText(Messages.OracleLoginComposite_5);
+		}
+		
+		for(int i=0; i<comboGroup.getItemCount(); i++) {
+			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
 		}
 	}
 	

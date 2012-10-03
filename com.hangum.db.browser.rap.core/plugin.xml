@@ -66,6 +66,7 @@
             adaptable="false"
             id="com.hangum.db.browser.rap.core.objectContribution.rdb"
             objectClass="com.hangum.db.dao.system.UserDBDAO">
+            <!--
          <action
                class="com.hangum.db.browser.rap.core.actions.connections.DisconnectDBAction"
                enablesFor="1"
@@ -79,6 +80,7 @@
                </objectClass>
             </enablement>
          </action>
+         -->
          <menu
                icon="resources/icons/create-dml.png"
                id="menu.create"
@@ -302,6 +304,7 @@
                </objectClass>
             </enablement>
          </action>
+         <!--
          <action
                class="com.hangum.db.browser.rap.core.actions.connections.DisconnectDBAction"
                enablesFor="1"
@@ -314,6 +317,7 @@
                </objectClass>
             </enablement>
          </action>
+         -->
          <menu
                icon="resources/icons/erd.png"
                id="menu.nosql.erd"

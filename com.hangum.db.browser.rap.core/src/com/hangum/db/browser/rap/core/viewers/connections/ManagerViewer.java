@@ -152,7 +152,7 @@ public class ManagerViewer extends ViewPart {
 	 */
 	private void init() {
 		try {
-			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeq());
+			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
 			for (String groupName : groupNames) {
 				ManagerListDTO parent = new ManagerListDTO(groupName);
 				treeList.add(parent);
@@ -160,7 +160,7 @@ public class ManagerViewer extends ViewPart {
 
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : userDBS) {
-				addUserDB(userDBDAO.getGroup_name(), userDBDAO, false);
+				addUserDB(userDBDAO, false);
 			}
 			
 		} catch (Exception e) {
@@ -248,9 +248,9 @@ public class ManagerViewer extends ViewPart {
 	 * @param userDB
 	 * @param defaultOpen default editor open
 	 */
-	public void addUserDB(String groupName, UserDBDAO userDB, boolean defaultOpne) {
+	public void addUserDB(UserDBDAO userDB, boolean defaultOpne) {
 		for(ManagerListDTO dto: treeList) {
-			if(dto.getName().equals(groupName)) {
+			if(dto.getName().equals(userDB.getGroup_name())) {
 				dto.addLogin(userDB);
 				
 				if(defaultOpne) {
@@ -260,6 +260,13 @@ public class ManagerViewer extends ViewPart {
 				return;
 			}	// end if(dto.getname()....		
 		}	// end for
+		
+		// 신규 그룹이면...
+		ManagerListDTO managerDto = new ManagerListDTO(userDB.getGroup_name());
+		managerDto.addLogin(userDB);
+		treeList.add(managerDto);		
+		refresh(userDB);
+		treeViewer.expandToLevel(userDB, 2);
 	}
 	
 	/**
