@@ -65,7 +65,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	public void crateComposite() {
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 3;
+		gridLayout.horizontalSpacing = 3;
+		gridLayout.marginHeight = 3;
+		gridLayout.marginWidth = 3;
+		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite compositeBody = new Composite(this, SWT.NONE);

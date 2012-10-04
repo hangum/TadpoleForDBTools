@@ -291,6 +291,10 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_lblGroup_text;
 	public static String MySQLLoginComposite_lblGroupName_text;
 	public static String MySQLLoginComposite_label_text;
+	public static String DBLoginDialog_trclmnGroupName_text;
+	public static String DBLoginDialog_trclmnType_text;
+	public static String DBLoginDialog_trclmnDisplayName_text;
+	public static String DBLoginDialog_trclmnNewColumn_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

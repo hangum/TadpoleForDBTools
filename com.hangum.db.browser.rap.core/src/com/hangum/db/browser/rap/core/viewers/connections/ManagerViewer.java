@@ -244,7 +244,6 @@ public class ManagerViewer extends ViewPart {
 	/**
 	 * tree에 새로운 항목 추가
 	 * 
-	 * @param groupName
 	 * @param userDB
 	 * @param defaultOpen default editor open
 	 */
@@ -323,8 +322,7 @@ public class ManagerViewer extends ViewPart {
 						ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_8, errStatus); //$NON-NLS-1$
 					}
 					
-					treeViewer.refresh(userDB);
-					
+					treeViewer.refresh(userDB);					
 					treeViewer.expandToLevel(userDB, 3);
 					
 					break;
@@ -356,27 +354,27 @@ public class ManagerViewer extends ViewPart {
 		treeViewer.refresh(userDB);
 	}
 	
-	/**
-	 * 
-	 * tree list를 삭제합니다
-	 * 
-	 * @param dbType
-	 * @param userDB
-	 */
-	public void removeTreeList(String dbType, UserDBDAO userDB) {
-		for(ManagerListDTO dto: treeList) {
-			if(dto.getName().equals(dbType)) {
-				dto.removeDB(userDB);
-				
-				treeViewer.refresh();
-				
-				// 0번째 항목이 선택되도록
-				treeViewer.getTree().select(treeViewer.getTree().getItem(0));
-				
-				return;
-			}			
-		}
-	}
+//	/**
+//	 * 
+//	 * tree list를 삭제합니다
+//	 * 
+//	 * @param dbType
+//	 * @param userDB
+//	 */
+//	public void removeTreeList(String dbType, UserDBDAO userDB) {
+//		for(ManagerListDTO dto: treeList) {
+//			if(dto.getName().equals(dbType)) {
+//				dto.removeDB(userDB);
+//				
+//				treeViewer.refresh();
+//				
+//				// 0번째 항목이 선택되도록
+//				treeViewer.getTree().select(treeViewer.getTree().getItem(0));
+//				
+//				return;
+//			}			
+//		}
+//	}
 	
 	/**
 	 * 트리를 갱신하고 쿼리 창을 엽니다.

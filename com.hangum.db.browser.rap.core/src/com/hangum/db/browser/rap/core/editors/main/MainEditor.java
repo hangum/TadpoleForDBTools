@@ -262,7 +262,7 @@ public class MainEditor extends EditorPart {
 		gl_compositeEditor.marginHeight = 0;
 		compositeEditor.setLayout(gl_compositeEditor);
 		
-		ToolBar toolBar = new ToolBar(compositeEditor, SWT.FLAT | SWT.RIGHT);
+		ToolBar toolBar = new ToolBar(compositeEditor, SWT.BORDER | SWT.FLAT | SWT.RIGHT);
 		toolBar.setToolTipText(Messages.MainEditor_toolBar_toolTipText);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);

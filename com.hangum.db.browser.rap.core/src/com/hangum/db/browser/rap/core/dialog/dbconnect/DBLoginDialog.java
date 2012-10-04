@@ -10,7 +10,10 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -18,19 +21,19 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -40,8 +43,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.browser.rap.core.Activator;
@@ -51,6 +54,9 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserDBQuery;
+import com.swtdesigner.ResourceManager;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Login dialog
@@ -75,8 +81,9 @@ public class DBLoginDialog extends Dialog {
 
 	private AbstractLoginComposite loginComposite;
 	private Group grpLoginHistory;
-	private TableViewer tableViewerLoginHistory;
-	private LoginHistoryComparator comparator;
+	
+	private List<UserDBDAO> listTreeData = new ArrayList<UserDBDAO>();
+	private TreeViewer treeViewerLoginData;
 
 	// 결과셋으로 사용할 logindb
 	private UserDBDAO retuserDb;
@@ -206,116 +213,93 @@ public class DBLoginDialog extends Dialog {
 		grpLoginHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpLoginHistory.setText(Messages.DBLoginDialog_grpHistory_text);
 		grpLoginHistory.setLayout(new GridLayout(1, false));
-
-		tableViewerLoginHistory = new TableViewer(grpLoginHistory, SWT.BORDER | SWT.FULL_SELECTION);
-//		tableViewerLoginHistory.addDoubleClickListener(new IDoubleClickListener() {
-//			public void doubleClick(DoubleClickEvent event) {
-//				IStructuredSelection ss = (IStructuredSelection) event.getSelection();
-//				UserDBDAO userDb = (UserDBDAO) ss.getFirstElement();
-//
-//				selectDatabase(userDb);
-//
-//			}
-//		});
-		Table table = tableViewerLoginHistory.getTable();
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		TableViewerColumn tvcGroupName = new TableViewerColumn(tableViewerLoginHistory, SWT.NONE);
-		tvcGroupName.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				UserDBDAO login = (UserDBDAO) element;
-				return login.getGroup_name();
-			}
-		});
-		TableColumn tblclmnGroupName = tvcGroupName.getColumn();
-		tblclmnGroupName.addSelectionListener(getSelectionAdapter(tblclmnGroupName, 1));
-		tblclmnGroupName.setWidth(110);
-		tblclmnGroupName.setText(Messages.DBLoginDialog_36);
-
-		TableViewerColumn tvcDBType = new TableViewerColumn(tableViewerLoginHistory, SWT.NONE);
-		tvcDBType.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				UserDBDAO login = (UserDBDAO) element;
-				return login.getTypes();//ComboDBList();
-			}
-		});
-		TableColumn tblclmnDbType = tvcDBType.getColumn();
-		tblclmnDbType.addSelectionListener(getSelectionAdapter(tblclmnDbType, 0));
-		tblclmnDbType.setWidth(65);
-		tblclmnDbType.setText(Messages.DBLoginDialog_tblclmnDbType_text);
 		
-		TableViewerColumn tvcDisplayName = new TableViewerColumn(tableViewerLoginHistory, SWT.NONE);
-		tvcDisplayName.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				UserDBDAO login = (UserDBDAO) element;
-				return login.getDisplay_name();//TextDisplayName();
-			}
-		});
-		TableColumn tblclmnDisplayName = tvcDisplayName.getColumn();
-		tblclmnDisplayName.addSelectionListener(getSelectionAdapter(tblclmnDisplayName, 1));
-		tblclmnDisplayName.setWidth(110);
-		tblclmnDisplayName.setText(Messages.DBLoginDialog_tblclmnDisplayName_text);
-
-		TableViewerColumn tvcInfo = new TableViewerColumn(tableViewerLoginHistory, SWT.NONE);
-		tvcInfo.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				UserDBDAO login = (UserDBDAO) element;
+		Composite composite = new Composite(grpLoginHistory, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		TreeColumnLayout tcl_composite = new TreeColumnLayout();
+		composite.setLayout(tcl_composite);
+		
+		treeViewerLoginData = new TreeViewer(composite, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		treeViewerLoginData.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				// 선택이 될때마다 로그인창의 화면에 정보를 출력합니다.
 				
-				// 자신의 디비만 보이도록 수정
-				if(login.getUser_seq() == SessionManager.getSeq()) {
-					return login.getUrl();
-				} else {
-					return "*** not visible ***"; //$NON-NLS-1$
-				}
 			}
 		});
-		TableColumn tblclmnIfo = tvcInfo.getColumn();
-		tblclmnIfo.addSelectionListener(getSelectionAdapter(tblclmnIfo, 2));
-		tblclmnIfo.setWidth(300);
-		tblclmnIfo.setText(Messages.DBLoginDialog_tblclmnIfo_text);
-
-		tableViewerLoginHistory.setContentProvider(new ArrayContentProvider());
-		try {
-			tableViewerLoginHistory.setInput(TadpoleSystem_UserDBQuery.getUserDB());
-		} catch (Exception e) {
-			logger.error("select login history db", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.DBLoginDialog_22, errStatus); //$NON-NLS-1$
-		}
-
-		comparator = new LoginHistoryComparator();
-		tableViewerLoginHistory.setSorter(comparator);
+		Tree tree = treeViewerLoginData.getTree();
+		tree.setHeaderVisible(true);
+		tree.setLinesVisible(true);
+		
+		TreeViewerColumn tvcGroup = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
+		TreeColumn trclmnGroupName = tvcGroup.getColumn();
+		tcl_composite.setColumnData(trclmnGroupName, new ColumnPixelData(106, true, true));
+		trclmnGroupName.setText(Messages.DBLoginDialog_trclmnGroupName_text);
+		
+		TreeViewerColumn tvcDisplayName = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
+		TreeColumn trclmnDisplayName = tvcDisplayName.getColumn();
+		tcl_composite.setColumnData(trclmnDisplayName, new ColumnPixelData(111, true, true));
+		trclmnDisplayName.setText(Messages.DBLoginDialog_trclmnDisplayName_text);
+		
+		TreeViewerColumn tvcURL = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
+		TreeColumn trclmnURL = tvcURL.getColumn();
+		tcl_composite.setColumnData(trclmnURL, new ColumnPixelData(240, true, true));
+		trclmnURL.setText(Messages.DBLoginDialog_trclmnNewColumn_text);
+		
+		TreeViewerColumn tvcUser = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
+		TreeColumn trclmnUSer = tvcUser.getColumn();
+		tcl_composite.setColumnData(trclmnUSer, new ColumnPixelData(100, true, true));
+		trclmnUSer.setText("User");
+		
+		treeViewerLoginData.setContentProvider(new LoginContentProvider());
+		treeViewerLoginData.setLabelProvider(new LoginLabelProvider());
+		makeHistoryData();
 	}
 
 	/**
-	 * column adapter
+	 * 입력된 디비 정보 가공
 	 * 
-	 * @param tblclmnIfo
-	 * @param i
 	 * @return
 	 */
-	private SelectionListener getSelectionAdapter(final TableColumn column, final int index) {
+	private void makeHistoryData() {
+		listTreeData.clear();
 		
-		SelectionAdapter selectionAdapter = new SelectionAdapter() {		
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				comparator.setColumn(index);
-				int dir = comparator.getDirection();
-				tableViewerLoginHistory.getTable().setSortDirection(dir);
-				tableViewerLoginHistory.getTable().setSortColumn(column);
-				tableViewerLoginHistory.refresh();
+		try {
+			// groupName 기준으로 그룹을 만든다.
+			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
+			List<UserDBDAO> listUserDB = TadpoleSystem_UserDBQuery.getUserDB();
+			Map<String, List<UserDBDAO>> mapGroupUserDB = new HashMap<String, List<UserDBDAO>>();
+			
+			for(String groupName: groupNames) {
+				List listGrp = new ArrayList<UserDBDAO>();
+				mapGroupUserDB.put(groupName, listGrp);
+				
+				for (UserDBDAO userDB : listUserDB) {
+					if(groupName.equals(userDB.getGroup_name())) listGrp.add(userDB);
+				}	// end for
 			}
-		};
+			
+			// listTreeData에 그룹을 넣는다.
+			for(String groupName: groupNames) {
+				List<UserDBDAO> calcUserDB = mapGroupUserDB.get(groupName);
+				UserDBDAO groupHead = calcUserDB.get(0);
+				for(int i=1; i<calcUserDB.size(); i++) {
+					calcUserDB.get(i).setGroup_name("");
+					groupHead.getListUserDBGroup().add(calcUserDB.get(i));
+				}
+				
+				listTreeData.add(groupHead);
+			}
+			
+		} catch (Exception e) {
+			logger.error("initialize DBLogin", e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
+		}
 		
-		return selectionAdapter;
+		treeViewerLoginData.setInput(listTreeData);
 	}
-
+	
 	/**
 	 * 
 	 * @param userDb
@@ -357,7 +341,7 @@ public class DBLoginDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		
 		if(buttonId == DELETE_BTN_ID) {
-			IStructuredSelection ss = (IStructuredSelection) tableViewerLoginHistory.getSelection();
+			IStructuredSelection ss = (IStructuredSelection) treeViewerLoginData.getSelection();
 			if(!ss.isEmpty()) {
 				UserDBDAO userDb = (UserDBDAO) ss.getFirstElement();
 				
@@ -366,8 +350,10 @@ public class DBLoginDialog extends Dialog {
 					
 					if(MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.DBLoginDialog_9, Messages.DBLoginDialog_28)) {
 						try {
-							TadpoleSystem_UserDBQuery.removeUserDB(userDb.getSeq());
-							tableViewerLoginHistory.setInput(TadpoleSystem_UserDBQuery.getUserDB());
+							
+							TadpoleSystem_UserDBQuery.removeUserDB(userDb.getSeq());							
+							makeHistoryData();
+
 						} catch(Exception e) {
 							logger.error(Messages.DBLoginDialog_32, e);
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -376,6 +362,9 @@ public class DBLoginDialog extends Dialog {
 					}	// end confirm
 					
 				}	// end if 자신의 등록한 것
+				else {
+					MessageDialog.openInformation(null, "Confirm", "You can just delete their registered.");//자신이 등록한 것만 삭제 할수 있습니다.");
+				}
 			}	// end select
 		}	// end delete button
 	}
@@ -398,55 +387,82 @@ public class DBLoginDialog extends Dialog {
 	}
 }
 
-class LoginHistoryComparator extends ViewerSorter  {
-	private int propertyIndex;
-	private static final int DESCENDING = 1;
-	private int direction = DESCENDING;
+/**
+ * login data content provider
+ * @author hangum
+ *
+ */
+class LoginContentProvider extends ArrayContentProvider implements ITreeContentProvider {
 
-	public LoginHistoryComparator() {
-		this.propertyIndex = 0;
-		direction = DESCENDING;
-	}
-
-	public int getDirection() {
-		return direction == 1 ? SWT.DOWN : SWT.UP;
-	}
-
-	public void setColumn(int column) {
-		if (column == this.propertyIndex) {
-			direction = 1 - direction;
-		} else {
-			this.propertyIndex = column;
-			direction = DESCENDING;
-		}
+	@Override
+	public Object[] getChildren(Object parentElement) {
+		UserDBDAO listUserDBDAO = (UserDBDAO)parentElement;
+		return listUserDBDAO.getListUserDBGroup().toArray();
 	}
 
 	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		UserDBDAO login1 = (UserDBDAO) e1;
-		UserDBDAO login2 = (UserDBDAO) e2;
-		int rc = 0;
-
-		switch (propertyIndex) {
-		case 0:
-			rc = login1.getGroup_name().compareTo(login2.getGroup_name());
-			break;
-		case 1:
-			rc = login1.getTypes().compareTo(login2.getTypes());
-			break;
-		case 2:
-			rc = login1.getDisplay_name().compareTo(login2.getDisplay_name());
-			break;
-		case 3:
-			rc = login1.getUrl().compareTo(login2.getUrl());
-			break;
-		default:
-			rc = 0;
-		}
-
-		if (direction == DESCENDING)
-			rc = -rc;
-
-		return rc;
+	public Object getParent(Object element) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	@Override
+	public boolean hasChildren(Object element) {
+		UserDBDAO groupDao = (UserDBDAO)element;
+		return groupDao.getListUserDBGroup().size() > 0;				
+	}	
+}
+
+/**
+ * login data label provider
+ * @author hangum
+ *
+ */
+class LoginLabelProvider extends LabelProvider implements ITableLabelProvider {
+
+	@Override
+	public Image getColumnImage(Object element, int columnIndex) {
+		if(columnIndex == 1) {
+			UserDBDAO dto = (UserDBDAO)element;
+			DBDefine dbType = DBDefine.getDBDefine(dto.getTypes());
+			
+			if(DBDefine.MYSQL_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.ORACLE_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.SQLite_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MSSQL_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.CUBRID_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MONGODB_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getColumnText(Object element, int columnIndex) {
+		UserDBDAO dto = (UserDBDAO)element;
+		
+		switch(columnIndex) {
+		case 0: return dto.getGroup_name();
+		case 1: return dto.getDb();
+		case 2: return dto.getUrl();
+		case 3: return dto.getUsers();
+		}
+		
+		return "*** not set column ***";
+	}
+	
 }

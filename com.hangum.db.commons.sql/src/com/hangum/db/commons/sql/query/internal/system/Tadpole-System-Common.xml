@@ -196,6 +196,7 @@
 	SELECT * FROM user_db 
 	WHERE 
 		user_seq = #user_seq# 
+	ORDER BY group_name
 </select>
 
 <insert id="userDBInsert" parameterClass="com.hangum.db.dao.system.UserDBDAO">

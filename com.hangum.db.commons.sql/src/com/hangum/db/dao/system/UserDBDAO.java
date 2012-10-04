@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.db.dao.system;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,25 +23,28 @@ import com.hangum.db.dao.ManagerListDTO;
  *
  */
 public class UserDBDAO {
-	int seq;
-    int user_seq;
+	protected int seq;
+	protected int user_seq;
     
-    String group_name = "";
+	protected String group_name = "";
     
-    String types;
-    String url;
-    String db;
-    String display_name;
-    String host;
-    String port;
-    String locale;
-    String passwd;
-    String users;
-    Date create_time;
-    String delYn;
+	protected String types;
+	protected String url;
+	protected String db;
+	protected String display_name;
+	protected String host;
+	protected String port;
+	protected String locale;
+	protected String passwd;
+	protected String users;
+	protected Date create_time;
+	protected String delYn;
     
-    private ManagerListDTO parent;
-    private List<UserDBResourceDAO> listUserDBErd;
+    protected ManagerListDTO parent;
+    protected List<UserDBResourceDAO> listUserDBErd;
+    
+    /** userdb를 그룹으로 표시 하고자 할때 사용합니다. 현재는 로그인창에서 디비 관리하면에서 사용. */
+    protected List<UserDBDAO> listUserDBGroup = new ArrayList<UserDBDAO>();
     
     public UserDBDAO() {
 	}
@@ -171,6 +175,10 @@ public class UserDBDAO {
 
 	public void setUsers(String users) {
 		this.users = users;
+	}
+	
+	public List<UserDBDAO> getListUserDBGroup() {
+		return listUserDBGroup;
 	}
 
 	@Override

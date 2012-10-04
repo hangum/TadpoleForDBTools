@@ -72,7 +72,12 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite container = new Composite(this, SWT.NONE);
-		container.setLayout(new GridLayout(1, false));
+		GridLayout gl_container = new GridLayout(1, false);
+		gl_container.verticalSpacing = 3;
+		gl_container.horizontalSpacing = 3;
+		gl_container.marginHeight = 3;
+		gl_container.marginWidth = 3;
+		container.setLayout(gl_container);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
