@@ -56,6 +56,7 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_32;
 	public static String DBLoginDialog_33;
 	public static String DBLoginDialog_34;
+	public static String DBLoginDialog_36;
 	public static String DBLoginDialog_4;
 	public static String DBLoginDialog_5;
 	public static String DBLoginDialog_6;
@@ -215,6 +216,7 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_1;
 	public static String SQLiteLoginComposite_10;
 	public static String SQLiteLoginComposite_12;
+	public static String SQLiteLoginComposite_13;
 	public static String SQLiteLoginComposite_15;
 	public static String SQLiteLoginComposite_2;
 	public static String SQLiteLoginComposite_3;
@@ -286,6 +288,16 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_button_text;
 	public static String MainEditor_btnDetailView_text;
 	public static String MainEditor_label_text;
+	public static String MainEditor_toolBar_toolTipText;
+	public static String SQLiteLoginComposite_lblGroup_text;
+	public static String MySQLLoginComposite_lblGroupName_text;
+	public static String MySQLLoginComposite_label_text;
+	public static String DBLoginDialog_trclmnGroupName_text;
+	public static String DBLoginDialog_trclmnType_text;
+	public static String DBLoginDialog_trclmnDisplayName_text;
+	public static String DBLoginDialog_trclmnNewColumn_text;
+	public static String MainEditor_tltmExecute_toolTipText;
+	public static String MainEditor_tltmExecute_toolTipText_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.hangum.db.system;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -29,11 +31,43 @@ public class TadpoleSystem_UserDBQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBQuery.class);
 	
 	/**
+	 * 신규디비 등록시 이미 등록되어 있는지 검사합니다.
+	 * 
+	 * @param user_seq
+	 * @param url
+	 * @param users
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean isAlreadyExistDB(int user_seq, String url, String users) throws Exception {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("user_seq",user_seq);
+		queryMap.put("url", 	url);
+		queryMap.put("users", 	users);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		List<Object> listUserDB = sqlClient.queryForList("isAlreadyExistDB", queryMap);
+		
+		if(listUserDB.size() == 0) return false;
+		else return true;
+	}
+	
+	/**
+	 * group의 그룹명을 리턴합니다.
+	 * 
+	 * @param userSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> getUserGroup(int userSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		return (List<String>)sqlClient.queryForList("userDBGroup", userSeq); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 신규 유저디비를 등록합니다.
-	 * @param email
-	 * @param pass
-	 * @param name
-	 * @param type user-type
+	 * @param userDb
+	 * @param userSeq
 	 */
 	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
 		userDb.setUser_seq(userSeq);
@@ -47,8 +81,8 @@ public class TadpoleSystem_UserDBQuery {
 			return userDb;
 		}
 
-		// 신규 유저를 등록합니다.
-		userDb.setUser_seq(userSeq);
+//		// 신규 유저를 등록합니다.
+//		userDb.setUser_seq(userSeq);
 		
 		sqlClient.insert("userDBInsert", userDb); //$NON-NLS-1$
 		
@@ -57,6 +91,25 @@ public class TadpoleSystem_UserDBQuery {
 		userDb.setSeq(insertSeq.getSeq());
 			
 		return userDb;
+	}
+	
+	/**
+	 * userDAO 수정 
+	 * 
+	 * @param oldUserDb
+	 * @param newUserDb
+	 * @param userSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDBDAO updateUserDB(UserDBDAO newUserDb, UserDBDAO oldUserDb, int userSeq) throws Exception {
+		newUserDb.setUser_seq(userSeq);
+		newUserDb.setSeq(oldUserDb.getSeq());
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		sqlClient.update("userDBUpdate", newUserDb); //$NON-NLS-1$
+		
+		return newUserDb;
 	}
 	
 	/**

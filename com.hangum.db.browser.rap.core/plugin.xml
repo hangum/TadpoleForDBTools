@@ -61,24 +61,17 @@
                label="Connect Database"
                menubarPath="additions">
          </action>
+         <action
+               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionManagerRefreshAction"
+               icon="resources/icons/refresh.png"
+               id="com.hangum.db.browser.rap.core.action.refresh"
+               label="Refersh">
+         </action>
       </objectContribution>
       <objectContribution
             adaptable="false"
             id="com.hangum.db.browser.rap.core.objectContribution.rdb"
             objectClass="com.hangum.db.dao.system.UserDBDAO">
-         <action
-               class="com.hangum.db.browser.rap.core.actions.connections.DisconnectDBAction"
-               enablesFor="1"
-               icon="resources/icons/disconnect.png"
-               id="com.hangum.db.browser.rap.core.action.connection.disconnectdb"
-               label="Disconnnect Database"
-               menubarPath="additions">
-            <enablement>
-               <objectClass
-                     name="com.hangum.db.dao.system.UserDBDAO">
-               </objectClass>
-            </enablement>
-         </action>
          <menu
                icon="resources/icons/create-dml.png"
                id="menu.create"
@@ -207,6 +200,39 @@
                </objectClass>
             </enablement>
          </action>
+         <action
+               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionInformationAction"
+               icon="resources/icons/connect.png"
+               id="com.hangum.db.browser.rap.core.action.connectionInformation"
+               label="Connection Information"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
+               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionManagerRefreshAction"
+               icon="resources/icons/refresh.png"
+               id="com.hangum.db.browser.rap.core.action.refresh"
+               label="Refersh">
+         </action>
+            <!--
+         <action
+               class="com.hangum.db.browser.rap.core.actions.connections.DisconnectDBAction"
+               enablesFor="1"
+               icon="resources/icons/disconnect.png"
+               id="com.hangum.db.browser.rap.core.action.connection.disconnectdb"
+               label="Disconnnect Database"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         -->
          <visibility>
             <objectState
                   name="db_type"
@@ -302,18 +328,6 @@
                </objectClass>
             </enablement>
          </action>
-         <action
-               class="com.hangum.db.browser.rap.core.actions.connections.DisconnectDBAction"
-               enablesFor="1"
-               icon="resources/icons/disconnect.png"
-               id="com.hangum.db.browser.rap.core.action.connection.disconnectdb"
-               label="Disconnnect Database">
-            <enablement>
-               <objectClass
-                     name="com.hangum.db.dao.system.UserDBDAO">
-               </objectClass>
-            </enablement>
-         </action>
          <menu
                icon="resources/icons/erd.png"
                id="menu.nosql.erd"
@@ -362,6 +376,38 @@
                </objectClass>
             </enablement>
          </action>
+         <action
+               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionInformationAction"
+               icon="resources/icons/connect.png"
+               id="com.hangum.db.browser.rap.core.action.connectionInformation"
+               label="Connection Information"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>         
+         <action
+               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionManagerRefreshAction"
+               icon="resources/icons/refresh.png"
+               id="com.hangum.db.browser.rap.core.action.refresh"
+               label="Refersh">
+         </action>
+         <!--
+         <action
+               class="com.hangum.db.browser.rap.core.actions.connections.DisconnectDBAction"
+               enablesFor="1"
+               icon="resources/icons/disconnect.png"
+               id="com.hangum.db.browser.rap.core.action.connection.disconnectdb"
+               label="Disconnnect Database">
+            <enablement>
+               <objectClass
+                     name="com.hangum.db.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         -->
          <visibility>
             <objectState
                   name="db_type"

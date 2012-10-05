@@ -11,6 +11,7 @@
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -21,6 +22,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -33,8 +35,6 @@ import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserDBQuery;
 import com.hangum.db.util.ApplicationArgumentUtils;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 
 /**
  * sqlite login composite
@@ -50,18 +50,19 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 
 	private static final Logger logger = Logger.getLogger(SQLiteLoginComposite.class);
 	
+	protected Combo comboGroup;
 	protected Text textFile;
 	protected Text textDisplayName;
 	
 	protected Button btnSavePreference;
-
+	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public SQLiteLoginComposite(Composite parent, int style) {
-		super(DBDefine.SQLite_DEFAULT, parent, style);
+	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+		super(DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 		setText(Messages.SQLiteLoginComposite_0);
 	}
 	
@@ -71,20 +72,25 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite container = new Composite(this, SWT.NONE);
-		container.setLayout(new GridLayout(1, false));
+		GridLayout gl_container = new GridLayout(1, false);
+		gl_container.verticalSpacing = 3;
+		gl_container.horizontalSpacing = 3;
+		gl_container.marginHeight = 3;
+		gl_container.marginWidth = 3;
+		container.setLayout(gl_container);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(3, false));
+		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
-		Label lblDbFile = new Label(compositeBody, SWT.NONE);
-		lblDbFile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDbFile.setText(Messages.SQLiteLoginComposite_1);
+		Label lblGroup = new Label(compositeBody, SWT.NONE);
+		lblGroup.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblGroup.setText(Messages.SQLiteLoginComposite_lblGroup_text);
 		
-		textFile = new Text(compositeBody, SWT.BORDER);
-		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeBody, SWT.NONE);
+		comboGroup = new Combo(compositeBody, SWT.NONE);
+		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for (String strGroup : listGroupName) comboGroup.add(strGroup);
 		
 		Label lblDisplayName = new Label(compositeBody, SWT.NONE);
 		lblDisplayName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -95,21 +101,38 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		new Label(compositeBody, SWT.NONE);
 		new Label(compositeBody, SWT.NONE);
 		
+		Label lblDbFile = new Label(compositeBody, SWT.NONE);
+		lblDbFile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblDbFile.setText(Messages.SQLiteLoginComposite_1);
+		
+		textFile = new Text(compositeBody, SWT.BORDER);
+		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeBody, SWT.NONE);
+		
 		btnSavePreference = new Button(compositeBody, SWT.CHECK);
 		btnSavePreference.setText(Messages.SQLiteLoginComposite_btnSavePreference_text);
 		btnSavePreference.setSelection(true);
-		new Label(compositeBody, SWT.NONE);
 		
 		init();
 	}
 
 	@Override
 	protected void init() {
-		if(ApplicationArgumentUtils.isTestMode()) {
-//			textFile.setText("C:/dev/eclipse-rcp-indigo-SR2-win32/workspace/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/configuration/tadpole/db/tadpole-system.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
+		
+		if(oldUserDB != null) {
+			selGroupName = oldUserDB.getGroup_name();
+			textFile.setText(oldUserDB.getDb());
+			textDisplayName.setText(oldUserDB.getDisplay_name());
+		} else if(ApplicationArgumentUtils.isTestMode()) {
 			textFile.setText("C:/tadpole-test.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
 			textDisplayName.setText(Messages.SQLiteLoginComposite_4);
 		}
+		
+		// 콤보 선택 
+		for(int i=0; i<comboGroup.getItemCount(); i++) {
+			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+		}
+		
 	}
 
 	@Override
@@ -128,31 +151,51 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			if( !MessageDialog.openConfirm(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_9) ) return false; 
 		}
 		
-		final String dbUrl = String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), textFile.getText());
-		
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.SQLite_DEFAULT.getDBToString());
-		userDB.setUrl(dbUrl);
+		userDB.setUrl(String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), textFile.getText()));
 		userDB.setDb(textFile.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setPasswd(""); //$NON-NLS-1$
 		userDB.setUsers(""); //$NON-NLS-1$
 		
-		// 이미 연결한 것인지 검사한다.
-		if( !connectValite(userDB, textFile.getText()) ) return false;
-		
-		// preference에 save합니다.
-		if(btnSavePreference.getSelection())
+		// 기존 데이터 업데이트
+		if(oldUserDB != null) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			
+			if(!checkDatabase(userDB)) return false;
+			
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
 			} catch (Exception e) {
 				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
 			}
+			
+		// 신규 데이터 저장.
+		} else {
+			// 이미 연결한 것인지 검사한다.
+			if(!connectValidate(userDB)) return false;
+			
+			// preference에 save합니다.
+			if(btnSavePreference.getSelection())
+				try {
+					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				} catch (Exception e) {
+					logger.error(Messages.SQLiteLoginComposite_8, e);
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+					
+					return false;
+				}
+			
+		}
 		
-		return true;
-		
+		return true;		
 	}
 
 }

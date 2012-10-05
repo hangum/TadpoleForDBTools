@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.editors.main;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -71,6 +72,8 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
+import com.hangum.db.browser.rap.core.dialog.db.DBInformationDialog;
+import com.hangum.db.browser.rap.core.dialog.editor.ShortcutHelpDialog;
 import com.hangum.db.browser.rap.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.db.browser.rap.core.util.CubridExecutePlanUtils;
 import com.hangum.db.browser.rap.core.util.OracleExecutePlanUtils;
@@ -100,6 +103,7 @@ import com.hangum.db.util.tables.SQLResultSorter;
 import com.hangum.db.util.tables.TableUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -156,6 +160,9 @@ public class MainEditor extends EditorPart {
 	private Button btnPrev;
 	/** 이후 버튼 */
 	private Button btnNext;
+	
+	/** 모든 쿼리 실행 */
+	public static int ALL_EXECUTE_QUERY = -999;
 	
 	/** 페이지 로케이션 */
 	private int pageNumber = 1;
@@ -259,9 +266,31 @@ public class MainEditor extends EditorPart {
 		gl_compositeEditor.marginHeight = 0;
 		compositeEditor.setLayout(gl_compositeEditor);
 		
-		ToolBar toolBar = new ToolBar(compositeEditor, SWT.FLAT | SWT.RIGHT);
+		ToolBar toolBar = new ToolBar(compositeEditor, SWT.BORDER | SWT.FLAT | SWT.RIGHT);
+		toolBar.setToolTipText(Messages.MainEditor_toolBar_toolTipText);
+		
+		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
+		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
+		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
+		if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.SQLite_DEFAULT ) {
+			String fileName = new File(userDB.getDb()).getName();			
+			tltmConnectURL.setText("Connect [ " + fileName + " ]"); //$NON-NLS-1$
+		} else {
+			tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getUsers() + " ]"); //$NON-NLS-1$
+		}
+		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DBInformationDialog dialog = new DBInformationDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+				dialog.open();
+			}
+		});
+
+		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
+		tltmExecute.setToolTipText(Messages.MainEditor_tltmExecute_toolTipText_1);
+		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png"));
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -272,11 +301,12 @@ public class MainEditor extends EditorPart {
 				}
 			}
 		});
-		tltmExecute.setText(Messages.MainEditor_2);
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecuteAll = new ToolItem(toolBar, SWT.NONE);
+		tltmExecuteAll.setToolTipText(Messages.MainEditor_tltmExecuteAll_text);
+		tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png"));
 		tltmExecuteAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -287,11 +317,11 @@ public class MainEditor extends EditorPart {
 				}
 			}
 		});
-		tltmExecuteAll.setText(Messages.MainEditor_tltmExecuteAll_text);
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExplainPlanctrl = new ToolItem(toolBar, SWT.NONE);
+		tltmExplainPlanctrl.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/execute_plan.png"));
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -302,11 +332,12 @@ public class MainEditor extends EditorPart {
 				}
 			}
 		});
-		tltmExplainPlanctrl.setText(Messages.MainEditor_3);
+		tltmExplainPlanctrl.setToolTipText(Messages.MainEditor_3);
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
+		tltmSort.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/query_format.png"));
 		tltmSort.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -317,27 +348,29 @@ public class MainEditor extends EditorPart {
 				}
 			}
 		});
-		tltmSort.setText(Messages.MainEditor_4);
+		tltmSort.setToolTipText(Messages.MainEditor_4);
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSQLToApplication = new ToolItem(toolBar, SWT.NONE);
+		tltmSQLToApplication.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql_to_applications.png"));
 		tltmSQLToApplication.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SQL_TO_APPLICATION);
 				} catch(Exception ee) {
-					logger.error("execute format", ee); //$NON-NLS-1$
+					logger.error("sql to application", ee); //$NON-NLS-1$
 				}
 			}
 		});
 	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
-	    tltmSQLToApplication.setText("SQL to Application"); //$NON-NLS-1$
+//	    tltmSQLToApplication.setText("SQL to Application"); //$NON-NLS-1$
 	    
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
+		tltmDownload.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/download_query.png"));
 		tltmDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -349,9 +382,21 @@ public class MainEditor extends EditorPart {
 			}
 		});
 		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
-		tltmDownload.setText("Download SQL"); //$NON-NLS-1$
-	    
-	    
+//		tltmDownload.setText("Download SQL"); //$NON-NLS-1$
+		
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
+		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
+		tltmHelp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ShortcutHelpDialog dialog = new ShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+				dialog.open();
+			}
+		});
+		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
+		
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
@@ -795,8 +840,7 @@ public class MainEditor extends EditorPart {
 				try {
 					int tmpStartPoint 	= getOrionTextPosition();	// cursor의 시작 포인트
 					String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
-					if(tmpStartPoint != -999) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$
-						
+					if(tmpStartPoint != ALL_EXECUTE_QUERY) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
 						tmpStrSelText = SQLTextUtil.executeQuery(tmpStrSelText, tmpStartPoint);
 					}
 					if("".equals(tmpStrSelText)) return Status.OK_STATUS; //$NON-NLS-1$

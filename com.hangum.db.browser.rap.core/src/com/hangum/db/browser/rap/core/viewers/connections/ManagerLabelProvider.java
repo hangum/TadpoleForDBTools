@@ -35,26 +35,34 @@ public class ManagerLabelProvider extends LabelProvider {
 
 		if(element instanceof ManagerListDTO) {
 			
-			ManagerListDTO dto = (ManagerListDTO)element;
-			if(DBDefine.MYSQL_DEFAULT == dto.getDbType()) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
-			else if(DBDefine.ORACLE_DEFAULT == dto.getDbType()) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
-			else if(DBDefine.SQLite_DEFAULT == dto.getDbType()) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
-			else if(DBDefine.MSSQL_DEFAULT == dto.getDbType()) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
-			else if(DBDefine.CUBRID_DEFAULT == dto.getDbType()) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.POSTGRE_DEFAULT == dto.getDbType()) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.MONGODB_DEFAULT == dto.getDbType()) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
+			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/server_database.png"); //$NON-NLS-1$
 			
 		} else if(element instanceof UserDBDAO) {
-			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/server_database.png"); //$NON-NLS-1$
+			
+			UserDBDAO dto = (UserDBDAO)element;
+			DBDefine dbType = DBDefine.getDBDefine(dto.getTypes());
+			
+			if(DBDefine.MYSQL_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.ORACLE_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.SQLite_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MSSQL_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.CUBRID_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MONGODB_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
+			
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			if(Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() )) {
