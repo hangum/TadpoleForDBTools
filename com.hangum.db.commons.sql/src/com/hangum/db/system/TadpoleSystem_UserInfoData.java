@@ -115,6 +115,40 @@ public class TadpoleSystem_UserInfoData {
 	}
 	
 	/**
+	 * default home page
+	 * 
+	 * @param url
+	 * @throws Exception
+	 */
+	public static void updateDefaultHomePage(String url) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(SessionManager.getSeq());
+		
+		// 	select 제한  갯수		
+		userInfoData.setName(PreferenceDefine.DEFAULT_HOME_PAGE);
+		userInfoData.setValue0(url);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+	}
+	
+	/**
+	 * default home page
+	 * 
+	 * @param use
+	 * @throws Exception
+	 */
+	public static void updateDefaultHomePageUse(String use) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(SessionManager.getSeq());
+		
+		// 	select 제한  갯수		
+		userInfoData.setName(PreferenceDefine.DEFAULT_HOME_PAGE_USE);
+		userInfoData.setValue0(use);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
 	 * 
 	 * @param userdb
@@ -196,6 +230,16 @@ public class TadpoleSystem_UserInfoData {
 		//SESSION TIME OUT 
 		userInfoData.setName(PreferenceDefine.SESSION_DFEAULT_PREFERENCE);
 		userInfoData.setValue0(""+PreferenceDefine.SESSION_SERVER_DEFAULT_PREFERENCE_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+
+		//DEFAULT_HOME PAGE
+		userInfoData.setName(PreferenceDefine.DEFAULT_HOME_PAGE);
+		userInfoData.setValue0(""+PreferenceDefine.DEFAULT_HOME_PAGE_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		
+		//DEFAULT_HOME PAGE_USE
+		userInfoData.setName(PreferenceDefine.DEFAULT_HOME_PAGE_USE);
+		userInfoData.setValue0(""+PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// 	select 제한  갯수		

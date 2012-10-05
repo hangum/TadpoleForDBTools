@@ -20,6 +20,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.db.browser.rap.core.editors.intro.IntroEditor;
 import com.hangum.db.browser.rap.core.editors.intro.IntroEditorInput;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 
 /**
  * This workbench advisor creates the window advisor, and specifies
@@ -40,13 +41,16 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	@Override
 	public void postStartup() {
 		
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		try {
-			IntroEditorInput mei = new IntroEditorInput();
-			page.openEditor(mei, IntroEditor.ID);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		};
+		if("true".equals(GetPreferenceGeneral.getDefaultHomePageUse())) {			
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			try {
+				IntroEditorInput mei = new IntroEditorInput();
+				page.openEditor(mei, IntroEditor.ID);
+			} catch (PartInitException e) {
+				logger.error("Default home page", e);
+			};
+		}
+		
 	}
 	
 //	@Override

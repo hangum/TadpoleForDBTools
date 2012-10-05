@@ -22,6 +22,14 @@ public class PreferenceDefine {
 	public static final String EXPORT_DILIMITER = "EXPORT_DILIMITER";
 	public static final String EXPORT_DILIMITER_VALUE = ",";
 	
+	/** default home page */
+	public static final String DEFAULT_HOME_PAGE 		= "DEFAULT_HOME_PAGE";
+	public static final String DEFAULT_HOME_PAGE_VALUE 	= "https://sites.google.com/site/tadpolefordb/home";//"https://www.github.com/hangum/TadpoleForDBTools/wiki";
+	
+	/** default home page use */
+	public static final String DEFAULT_HOME_PAGE_USE 		= "DEFAULT_HOME_PAGE_USE";
+	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "true";
+	
 	/** select 제한  갯수 */ 
 	public static final String SELECT_LIMIT_COUNT = "SELECT_LIMIT_COUNT";
 	/** select 디폴트 값 */

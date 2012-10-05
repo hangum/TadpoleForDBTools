@@ -44,6 +44,30 @@ public class GetPreferenceGeneral {
 		return userInfo.getValue0();
 	}
 	
+	/**
+	 * default home page
+	 * @return
+	 */
+	public static String getDefaultHomePage() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE);
+		if(null == userInfo) return PreferenceDefine.DEFAULT_HOME_PAGE_VALUE;
+		else if("".equals(userInfo.getValue0())) return PreferenceDefine.DEFAULT_HOME_PAGE_VALUE;
+		
+		return userInfo.getValue0();
+	}
+	
+	/**
+	 * default home page use
+	 * @return
+	 */
+	public static String getDefaultHomePageUse() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE_USE);
+		if(null == userInfo) return PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE;
+		else if("".equals(userInfo.getValue0())) return PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE;
+		
+		return userInfo.getValue0();
+	}
+	
 	////////////////// rdb 설정 ////////////////////////////////////////////////////////////////////////////
 	/** rdb 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */ 
 	public static int getQueryResultCount() {

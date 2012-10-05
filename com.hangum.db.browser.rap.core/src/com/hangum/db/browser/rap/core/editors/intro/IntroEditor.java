@@ -10,9 +10,9 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.editors.intro;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
@@ -23,6 +23,16 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Combo;
+
 /**
  * 기본 intro
  * 
@@ -32,6 +42,8 @@ import org.eclipse.ui.part.EditorPart;
 public class IntroEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(IntroEditor.class);
 	public static final String ID = "com.hangum.db.browser.rap.core.editor.intor";
+	private Text textURL;
+	private Browser browser;
 
 	public IntroEditor() {
 		super();
@@ -71,31 +83,61 @@ public class IntroEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		
-		Composite composite = new Composite(parent, SWT.NONE);
+		Composite compositeHead = new Composite(parent, SWT.NONE);
+		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeHead = new GridLayout(3, false);
+		gl_compositeHead.verticalSpacing = 2;
+		gl_compositeHead.horizontalSpacing = 2;
+		gl_compositeHead.marginWidth = 2;
+		compositeHead.setLayout(gl_compositeHead);
+		
+		Label lblUrl = new Label(compositeHead, SWT.NONE);
+		lblUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblUrl.setText("URL  ");
+		
+		textURL = new Text(compositeHead, SWT.BORDER);
+		textURL.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) {
+					setBrowserURL(textURL.getText());
+				}
+			}
+		});
+		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textURL.setText(GetPreferenceGeneral.getDefaultHomePage());
+		
+		Button btnGo = new Button(compositeHead, SWT.NONE);
+		btnGo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setBrowserURL(textURL.getText());
+			}
+		});
+		btnGo.setText("go");
+		
+		Composite composite = new Composite(parent, SWT.BORDER);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		composite.setLayout(new GridLayout(1, false));
 		
-		Browser browser = new Browser(composite, SWT.NONE);
+		browser = new Browser(composite, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		if(RWT.getLocale().toString().startsWith("ko")) {
-			browser.setUrl("https://sites.google.com/site/tadpolefordb/home");//http://hangumkj.blogspot.com/2011/05/db-browser.html");
-		} else {
-			browser.setUrl("https://sites.google.com/site/tadpolefordbtoolsen/");//http://hangumkj.blogspot.com/2011/05/db-browser.html");
-		}
+		logger.debug("home page : " + GetPreferenceGeneral.getDefaultHomePage());
+		setBrowserURL(GetPreferenceGeneral.getDefaultHomePage());
 		
-//		Composite composite_1 = new Composite(parent, SWT.NONE);
-//		composite_1.setLayout(new GridLayout(1, false));
-//		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		
-//		Label lblTestMysql = new Label(composite_1, SWT.NONE);
-//		lblTestMysql.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 1));
-//		lblTestMysql.setText("Test MySQL : jdbc:mysql://14.63.212.152:13306/tester, tester/1234");
-		
-//		text = new Text(composite, SWT.BORDER);
-//		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		text.setText("");
-
+	}
+	
+	/**
+	 * broswer set
+	 * 
+	 * https://sites.google.com/site/tadpolefordb/home
+	 * @param url
+	 */
+	private void setBrowserURL(String url) {
+		boolean boolStartHttp = StringUtils.startsWith(url, "http");
+		if(boolStartHttp) browser.setUrl(url);
+		else browser.setUrl("http://" + url);
 	}
 
 	@Override

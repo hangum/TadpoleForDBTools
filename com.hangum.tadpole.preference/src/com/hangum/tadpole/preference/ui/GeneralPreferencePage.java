@@ -27,6 +27,7 @@ import com.hangum.db.system.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import org.eclipse.swt.widgets.Button;
 
 /**
  * general preference
@@ -37,6 +38,8 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 public class GeneralPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private Text textSessionTime;
 	private Text textExportDelimit;
+	private Text textHomePage;
+	private Button btnCheckButtonHomepage;
 
 	public GeneralPreferencePage() {
 	}
@@ -65,6 +68,19 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		textExportDelimit.setText(Messages.GeneralPreferencePage_text_text);
 		textExportDelimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label lblHomePage = new Label(container, SWT.NONE);
+		lblHomePage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblHomePage.setText(Messages.GeneralPreferencePage_lblHomePage_text);
+		
+		textHomePage = new Text(container, SWT.BORDER);
+		textHomePage.setText(Messages.GeneralPreferencePage_text_text_1);
+		textHomePage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(container, SWT.NONE);
+		
+		btnCheckButtonHomepage = new Button(container, SWT.CHECK);
+		btnCheckButtonHomepage.setText(Messages.GeneralPreferencePage_btnCheckButton_text);
+		btnCheckButtonHomepage.setSelection(true);
+		
 		initDefaultValue();
 		
 		return container;
@@ -74,6 +90,8 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	public boolean performOk() {
 		String txtSessionTime = textSessionTime.getText();
 		String txtExportDelimit = textExportDelimit.getText();
+		String txtHomePage = textHomePage.getText();
+		String txtHomePageUse = ""+btnCheckButtonHomepage.getSelection();
 		
 		try {
 			Integer.parseInt(txtSessionTime);
@@ -86,10 +104,14 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		try {
 			TadpoleSystem_UserInfoData.updateGeneralUserInfoData(txtSessionTime);
 			TadpoleSystem_UserInfoData.updateGeneralExportDelimitData(txtExportDelimit);
+			TadpoleSystem_UserInfoData.updateDefaultHomePage(txtHomePage);
+			TadpoleSystem_UserInfoData.updateDefaultHomePageUse(txtHomePageUse);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, txtSessionTime);			
 			SessionManager.setUserInfo(PreferenceDefine.EXPORT_DILIMITER, txtExportDelimit);
+			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE, txtHomePage);
+			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE_USE, txtHomePageUse);
 		} catch(Exception e) {
 			e.printStackTrace();
 			
@@ -126,6 +148,14 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	private void initDefaultValue() {
 		textSessionTime.setText( "" + GetPreferenceGeneral.getSessionTimeout() ); //$NON-NLS-1$
 		textExportDelimit.setText( "" + GetPreferenceGeneral.getExportDelimit() ); //$NON-NLS-1$
+		textHomePage.setText( "" + GetPreferenceGeneral.getDefaultHomePage() ); //$NON-NLS-1$
+		
+		String use = GetPreferenceGeneral.getDefaultHomePageUse();
+		if("true".equals(use)) {
+			btnCheckButtonHomepage.setSelection(true);
+		} else {
+			btnCheckButtonHomepage.setSelection(false);
+		}
 	}
 
 }
