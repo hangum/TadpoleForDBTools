@@ -54,6 +54,7 @@ import com.hangum.db.dao.system.UserDBDAO;
 import com.hangum.db.dao.system.UserDBResourceDAO;
 import com.hangum.db.define.Define;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.db.session.manager.SessionManager;
 import com.hangum.db.system.TadpoleSystem_UserDBQuery;
 import com.hangum.db.system.TadpoleSystem_UserDBResource;
 
@@ -149,29 +150,30 @@ public class ManagerViewer extends ViewPart {
 	/**
 	 * 트리 데이터 초기화
 	 */
-	private void init() {
+	public void init() {
+		treeList.clear();
 		
-		// 초기 디비 종류를 추가 합니다.
-		for(DBDefine dbDefine : DBDefine.userDBValues()) {
-			ManagerListDTO parent = new ManagerListDTO(dbDefine.getDBToString(), dbDefine);
-			treeList.add(parent);
-		}
-		
-		// 사용자가 등록한 디비를 추가합니다.
 		try {
+			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
+			for (String groupName : groupNames) {
+				ManagerListDTO parent = new ManagerListDTO(groupName);
+				treeList.add(parent);
+			}
+
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : userDBS) {
-				addUserDB(userDBDAO.getTypes(), userDBDAO, false);
+				addUserDB(userDBDAO, false);
 			}
+			
 		} catch (Exception e) {
-			logger.error("getUserDBDAO", e); //$NON-NLS-1$
+			logger.error("initialize Managerview", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
 		}
-		
+
 		treeViewer.refresh();
-		treeViewer.expandToLevel(1); 
+		treeViewer.expandToLevel(1);
 	}
 
 	/**
@@ -222,21 +224,28 @@ public class ManagerViewer extends ViewPart {
 	/**
 	 * tree에 새로운 항목 추가
 	 * 
-	 * @param dbType
 	 * @param userDB
-	 * @param defaultOpen defaulteditor open
+	 * @param defaultOpen default editor open
 	 */
-	public void addUserDB(String dbType, UserDBDAO userDB, boolean defaultOpne) {
+	public void addUserDB(UserDBDAO userDB, boolean defaultOpne) {
 		for(ManagerListDTO dto: treeList) {
-			if(dto.getName().equals(dbType)) {
+			if(dto.getName().equals(userDB.getGroup_name())) {
 				dto.addLogin(userDB);
 				
-				if(defaultOpne) refresh(userDB);
-				treeViewer.expandToLevel(userDB, 2);
-				
+				if(defaultOpne) {
+					refresh(userDB);
+					treeViewer.expandToLevel(userDB, 2);
+				}
 				return;
-			}			
-		}
+			}	// end if(dto.getname()....		
+		}	// end for
+		
+		// 신규 그룹이면...
+		ManagerListDTO managerDto = new ManagerListDTO(userDB.getGroup_name());
+		managerDto.addLogin(userDB);
+		treeList.add(managerDto);		
+		refresh(userDB);
+		treeViewer.expandToLevel(userDB, 2);
 	}
 	
 	/**
@@ -293,8 +302,7 @@ public class ManagerViewer extends ViewPart {
 						ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_8, errStatus); //$NON-NLS-1$
 					}
 					
-					treeViewer.refresh(userDB);
-					
+					treeViewer.refresh(userDB);					
 					treeViewer.expandToLevel(userDB, 3);
 					
 					break;
@@ -326,27 +334,27 @@ public class ManagerViewer extends ViewPart {
 		treeViewer.refresh(userDB);
 	}
 	
-	/**
-	 * 
-	 * tree list를 삭제합니다
-	 * 
-	 * @param dbType
-	 * @param userDB
-	 */
-	public void removeTreeList(String dbType, UserDBDAO userDB) {
-		for(ManagerListDTO dto: treeList) {
-			if(dto.getName().equals(dbType)) {
-				dto.removeDB(userDB);
-				
-				treeViewer.refresh();
-				
-				// 0번째 항목이 선택되도록
-				treeViewer.getTree().select(treeViewer.getTree().getItem(0));
-				
-				return;
-			}			
-		}
-	}
+//	/**
+//	 * 
+//	 * tree list를 삭제합니다
+//	 * 
+//	 * @param dbType
+//	 * @param userDB
+//	 */
+//	public void removeTreeList(String dbType, UserDBDAO userDB) {
+//		for(ManagerListDTO dto: treeList) {
+//			if(dto.getName().equals(dbType)) {
+//				dto.removeDB(userDB);
+//				
+//				treeViewer.refresh();
+//				
+//				// 0번째 항목이 선택되도록
+//				treeViewer.getTree().select(treeViewer.getTree().getItem(0));
+//				
+//				return;
+//			}			
+//		}
+//	}
 	
 	/**
 	 * 트리를 갱신하고 쿼리 창을 엽니다.

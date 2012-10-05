@@ -75,9 +75,25 @@ public class TadpoleSystem_UserGroupQuery {
 		return seq.intValue();
 	}
 	
+	/**
+	 * group목록을 리턴합니다.
+	 * @return
+	 * @throws Exception
+	 */
 	public static List<UserGroupDAO> getGroup() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
 		return (List<UserGroupDAO>)sqlClient.queryForList("userDBList"); //$NON-NLS-1$
+	}
+	
+	/**
+	 * group정보를 리턴합니다.
+	 * @param groupSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static String findGroupName(int groupSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		return ""+sqlClient.queryForObject("findGroupName", groupSeq); //$NON-NLS-1$
 	}
 	
 //	public static void removeUserDB(int seq) throws Exception {

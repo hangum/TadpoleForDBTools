@@ -27,17 +27,18 @@ public class SQLTextUtil {
 	/**
 	 * 경우의 수
 	 * 
-	 * 1.  ;가 하나만 있거나 하나도 없을 경우는 =>  모든 텍스트를 쿼리본다.
-	 * 2.  현재 커서의 포인트와 쿼리 불럭의 포인트를 비교합니다. 
+	 * 1. 키워드(Define.SQL_DILIMITER(;)) 또는 라인피드가 하나만 있거나 하나도 없을 경우는 =>  모든 텍스트를 쿼리본다.
+	 * 2. 현재 커서의 포인트와 쿼리 불럭의 포인트를 비교합니다. 
 	 *   
-	 * 
 	 * @param query
 	 * @param cursorPoint
 	 * @return
 	 */
 	public static String executeQuery(String query, int cursorPoint) throws Exception {
-		if( query.split(Define.SQL_DILIMITER).length == 1 || query.indexOf(Define.SQL_DILIMITER) == -1) return StringUtils.trimToEmpty(query);
-		int queryPosition = -1;
+		if( query.split(Define.SQL_DILIMITER).length == 1 || query.indexOf(Define.SQL_DILIMITER) == -1) {
+			return StringUtils.trimToEmpty(query);
+		}
+
 		String[] querys = StringUtils.split(query, Define.SQL_DILIMITER);
 	
 		if(logger.isDebugEnabled()) logger.debug("=====[query]" + query);
@@ -56,21 +57,11 @@ public class SQLTextUtil {
 			queryBeforeCount += firstSearch;
 
 			if(cursorPoint <= queryBeforeCount) {
-				queryPosition = i;
-				break;
+				return querys[i];
 			}
 		}
 		
-		if(logger.isDebugEnabled()) logger.debug("[selection pointsion]" + queryPosition);
-		
-		if(queryPosition == -1) {
-			if(logger.isDebugEnabled()) logger.debug("[select stmt]" + querys[querys.length-1]);
-			return querys[querys.length-1];
-		} else {
-			if(logger.isDebugEnabled()) logger.debug("[select stmt]" + querys[queryPosition]);
-			return querys[queryPosition];
-		}
-		
+		return querys[querys.length-1];
 	}
 	
 	/**
@@ -81,5 +72,27 @@ public class SQLTextUtil {
 	 */
 	public static String delLineChar(String query) {
 		return query.replaceAll("(\r\n|\n|\r)", "");
+	}
+	
+	public static void main(String[] args) {
+		String query = " SELECT store_id, manager_staff_id, address_id, last_update "+
+" FROM store;"+
+" "+
+""+
+""+
+" SELECT staff_id, first_name, last_name, address_id, picture, email, store_id, active, username, password, last_update"+ 
+" FROM staff;"+
+""+
+" SELECT city_id, city, country_id, last_update"+ 
+" FROM city;"; 
+ 
+		try {
+			String exeQuery = SQLTextUtil.executeQuery(query, 30);
+			System.out.println(exeQuery);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
 	}
 }

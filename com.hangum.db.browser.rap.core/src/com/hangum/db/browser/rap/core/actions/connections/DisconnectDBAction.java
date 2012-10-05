@@ -56,21 +56,21 @@ public class DisconnectDBAction implements IViewActionDelegate {
 
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 
-		// 실제 db connection 삭제 
-		try {
-			TadpoleSQLManager.removeInstance(userDB);			
-		} catch (Exception e) {
-			logger.error("remove Instnce db", e);
-		}
+//		// 실제 db connection 삭제 
+//		try {
+//			TadpoleSQLManager.removeInstance(userDB);			
+//		} catch (Exception e) {
+//			logger.error("remove Instnce db", e);
+//		}
 		
 		// Connection tree 삭제
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-		Display.getCurrent().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				managerView.removeTreeList(userDB.getTypes(), userDB);
-			}
-		});	// end display
+//		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+//		Display.getCurrent().asyncExec(new Runnable() {
+//			@Override
+//			public void run() {
+//				managerView.removeTreeList(userDB.getTypes(), userDB);
+//			}
+//		});	// end display
 		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		
@@ -89,7 +89,7 @@ public class DisconnectDBAction implements IViewActionDelegate {
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				explorerView.initObjectHead(new ManagerListDTO(userDB.getDisplay_name(), DBDefine.getDBDefine(userDB.getTypes()) ));
+//				explorerView.initObjectHead(new ManagerListDTO(userDB.getDisplay_name(), DBDefine.getDBDefine(userDB.getTypes()) ));
 			}
 		});	// end display
 		

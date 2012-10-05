@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.dialog.dbconnect;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -44,29 +46,52 @@ import com.hangum.db.util.ApplicationArgumentUtils;
 public class MySQLLoginComposite extends AbstractLoginComposite {
 	private static final Logger logger = Logger.getLogger(MySQLLoginComposite.class);
 	
+	protected Combo comboGroup;
+	protected Text textDisplayName;
+	
 	protected Text textHost;
 	protected Text textUser;
 	protected Text textPassword;
 	protected Text textDatabase;
 	protected Text textPort;
 	protected Combo comboLocale;
-	protected Text textDisplayName;
 	
 	protected Button btnSavePreference;
 	
-	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style) {
-		super(selectDB, parent, style);
+	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+		super(selectDB, parent, style, listGroupName, selGroupName, userDB);
 		setText(selectDB.getDBToString());
 	}
 
 	@Override
 	public void crateComposite() {
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 3;
+		gridLayout.horizontalSpacing = 3;
+		gridLayout.marginHeight = 3;
+		gridLayout.marginWidth = 3;
+		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		
+		Label lblGroupName = new Label(compositeBody, SWT.NONE);
+		lblGroupName.setText(Messages.MySQLLoginComposite_lblGroupName_text);
+		comboGroup = new Combo(compositeBody, SWT.NONE);
+		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for (String strGroup : listGroupName) comboGroup.add(strGroup);
+		
+		Label lblNewLabel_1 = new Label(compositeBody, SWT.NONE);
+		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_1.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
+		
+		textDisplayName = new Text(compositeBody, SWT.BORDER);
+		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		new Label(compositeBody, SWT.NONE);		
+		new Label(compositeBody, SWT.NONE);
 		
 		Label lblHost = new Label(compositeBody, SWT.NONE);
 		lblHost.setText(Messages.DBLoginDialog_1);
@@ -167,13 +192,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			comboLocale.select(0);
 		}
 		
-		Label lblNewLabel_1 = new Label(compositeBody, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_1.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
-		
-		textDisplayName = new Text(compositeBody, SWT.BORDER);
-		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		Button btnPing = new Button(compositeBody, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -208,14 +226,30 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public void init() {
-		if(ApplicationArgumentUtils.isTestMode()) {
+		
+		if(oldUserDB != null) {
+			
+			selGroupName = oldUserDB.getGroup_name();
+			textDisplayName.setText(oldUserDB.getDisplay_name());
+			
+			textHost.setText(oldUserDB.getHost());
+			textUser.setText(oldUserDB.getUsers());
+			textPassword.setText(oldUserDB.getPasswd());
+			textDatabase.setText(oldUserDB.getDb());
+			textPort.setText(oldUserDB.getPort());
+		} else if(ApplicationArgumentUtils.isTestMode()) {
+			
+			textDisplayName.setText(Messages.DBLoginDialog_21);
+			
 			textHost.setText(Messages.DBLoginDialog_16);
 			textUser.setText(Messages.DBLoginDialog_17);
 			textPassword.setText(Messages.DBLoginDialog_18);
 			textDatabase.setText(Messages.DBLoginDialog_19);
-			textPort.setText(Messages.DBLoginDialog_20);
-			
-			textDisplayName.setText(Messages.DBLoginDialog_21);
+			textPort.setText(Messages.DBLoginDialog_20);			
+		}
+		
+		for(int i=0; i<comboGroup.getItemCount(); i++) {
+			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
 		}
 	}
 
@@ -236,12 +270,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 					DBDefine.MYSQL_DEFAULT.getDB_URL_INFO(), 
 					textHost.getText(), textPort.getText(), textDatabase.getText() + "?Unicode=true&characterEncoding=" + selectLocale.trim());
 		}
-		logger.debug("[mysql dbURL]" + dbUrl);
 		
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.MYSQL_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());
@@ -249,22 +283,47 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setLocale(comboLocale.getText());
 		userDB.setUsers(textUser.getText());
 		
-		// 이미 연결한 것인지 검사한다.
-		if( !connectValite(userDB, textDatabase.getText()) ) return false;
-		
-		// preference에 save합니다.
-		if(btnSavePreference.getSelection())
+		// 기존 데이터 업데이트
+		if(oldUserDB != null) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			
+			if(!checkDatabase(userDB)) return false;
+			
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
 			} catch (Exception e) {
-				logger.error(Messages.MySQLLoginComposite_0, e);
+				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
 			}
-		
-		return true;
+			
+			return true;
+		// 신규 데이터 저장.
+		} else {
+			// 이미 연결한 것인지 검사한다.
+			if(!connectValidate(userDB)) return false;
+			
+			// preference에 save합니다.
+			if(btnSavePreference.getSelection())
+				try {
+					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				} catch (Exception e) {
+					logger.error(Messages.MySQLLoginComposite_0, e);
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+				}
+			
+			return true;
+		}
 	}
 	
+	/**
+	 * 화면에 값이 올바른지 검사합니다.
+	 * 
+	 * @return
+	 */
 	public boolean isValidate() {
 		
 		if(!message(textHost, "Host")) return false; //$NON-NLS-1$
@@ -290,6 +349,13 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		return true;
 	}
 	
+	/**
+	 * message
+	 * 
+	 * @param text
+	 * @param msg
+	 * @return
+	 */
 	protected boolean message(Text text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);

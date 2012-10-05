@@ -13,7 +13,6 @@ package com.hangum.db.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.system.UserDBDAO;
 
 /**
@@ -24,15 +23,15 @@ import com.hangum.db.dao.system.UserDBDAO;
  */
 public class ManagerListDTO {
 	String name;
-	DBDefine dbType;
+//	DBDefine dbType;
 	List<UserDBDAO> managerList = new ArrayList<UserDBDAO>();
 	
 	public ManagerListDTO() {
 	}
 	
-	public ManagerListDTO(String name, DBDefine dbType) {
+	public ManagerListDTO(String name) {
 		this.name = name;
-		this.dbType = dbType;
+//		this.dbType = dbType;
 	}
 	
 	public void addLogin(UserDBDAO dbInfo) {
@@ -55,7 +54,7 @@ public class ManagerListDTO {
 		return managerList;
 	}
 	
-	public DBDefine getDbType() {
-		return dbType;
-	}
+//	public DBDefine getDbType() {
+//		return dbType;
+//	}
 }
