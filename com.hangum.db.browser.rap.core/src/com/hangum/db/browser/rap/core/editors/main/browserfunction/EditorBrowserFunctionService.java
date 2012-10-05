@@ -214,7 +214,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			editor.setOrionText(queryStruct[1]);
-			editor.setOrionTestPostion(-999);//new Integer(queryStruct[0]));
+			editor.setOrionTestPostion(MainEditor.ALL_EXECUTE_QUERY);//-999);//new Integer(queryStruct[0]));
 			
 			editor.executeCommand(Define.QUERY_MODE.DEFAULT);
 		}

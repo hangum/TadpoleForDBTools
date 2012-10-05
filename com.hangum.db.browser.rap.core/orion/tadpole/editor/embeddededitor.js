@@ -279,19 +279,22 @@ dojo.addOnLoad(function() {
 		
 		// Register an implementation that can return initial content for the editor
 		editorService.getInitialContent = function() {
-//			console.log("=======> editorService.getInitialContent() ");
-			var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
-			
-			var idxExt = content.indexOf(":ext:");
-			var varExt = content.substring(0, idxExt);
-			var varCon = content.substring(idxExt+5, content.length);
-			
-			editor.setInput(varExt, null, varCon);
-
-			syntaxHighlighter.highlight(varExt, editor);
-			editor.highlightAnnotations();
-			
-			editor.setTextFocus();
+			try {
+				var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
+				
+				var idxExt = content.indexOf(":ext:");
+				var varExt = content.substring(0, idxExt);
+				var varCon = content.substring(idxExt+5, content.length);
+				
+				editor.setInput(varExt, null, varCon);
+	
+				syntaxHighlighter.highlight(varExt, editor);
+				editor.highlightAnnotations();
+				
+				editor.setTextFocus();
+			} catch(err) {
+				console.log(err);
+			}
 		};
 		
 		// Register an implementation that should run when the editors status changes.

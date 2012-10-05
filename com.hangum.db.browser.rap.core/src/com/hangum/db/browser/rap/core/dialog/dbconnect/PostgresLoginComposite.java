@@ -47,15 +47,25 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public PostgresLoginComposite(Composite parent, int style) {
-		super(DB_DEFINE, parent, style);
+	public PostgresLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+		super(DB_DEFINE, parent, style, listGroupName, selGroupName, userDB);
 		setText(DB_DEFINE.getDBToString());
 	}
 	
 	@Override
 	public void init() {
 		
-		if(ApplicationArgumentUtils.isTestMode()) {
+		if(oldUserDB != null) {
+			selGroupName = oldUserDB.getGroup_name();
+			textDisplayName.setText(oldUserDB.getDisplay_name());
+			
+			textHost.setText(oldUserDB.getHost());
+			textUser.setText(oldUserDB.getUsers());
+			textPassword.setText(oldUserDB.getPasswd());
+			textDatabase.setText(oldUserDB.getDb());
+			textPort.setText(oldUserDB.getPort());
+		} else if(ApplicationArgumentUtils.isTestMode()) {
+			
 			textHost.setText("127.0.0.1");
 			textUser.setText("tadpole");
 			textPassword.setText("tadpole");
@@ -63,6 +73,10 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textPort.setText("5432");
 			
 			textDisplayName.setText("PostgreSQL 9.1");
+		}
+		
+		for(int i=0; i<comboGroup.getItemCount(); i++) {
+			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
 		}
 	}
 	
@@ -78,43 +92,57 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		userDB.setTypes(DB_DEFINE.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
+		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());
 		userDB.setPort(textPort.getText());
 		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setUsers(textUser.getText());
-		
-		// 이미 연결한 것인지 검사한다.
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-		if( !managerView.isAdd(DB_DEFINE, userDB) ) {
-			MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.DBLoginDialog_24);
+	
+		// 기존 데이터 업데이트
+		if(oldUserDB != null) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
-			return false;
-		}
-
-		// db가 정상적인지 채크해본다 
-		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List showTables = sqlClient.queryForList("tableList", textDatabase.getText());
+			if(!checkDatabase(userDB)) return false;
 			
-		} catch (Exception e) {
-			logger.error("PostgreSQL DB Connection", e);
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getShell(), "Error", "PostgreSQL Connection Exception", errStatus);
-			
-			return false;
-		}
-		
-		// preference에 save합니다.
-		if(btnSavePreference.getSelection())
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
 			} catch (Exception e) {
-				logger.error("PostgreSQL db preference save", e);
+				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "PostgreSQL Connection Exception", errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
 			}
+			
+		// 신규 데이터 저장.
+		} else {
+	
+			// db가 정상적인지 채크해본다 
+			try {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				List showTables = sqlClient.queryForList("tableList", textDatabase.getText());
+				
+			} catch (Exception e) {
+				logger.error("PostgreSQL DB Connection", e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "PostgreSQL Connection Exception", errStatus);
+				
+				return false;
+			}
+			
+			// preference에 save합니다.
+			if(btnSavePreference.getSelection())
+				try {
+					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				} catch (Exception e) {
+					logger.error("PostgreSQL db preference save", e);
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", "PostgreSQL Connection Exception", errStatus); //$NON-NLS-1$
+				}
+			
+		}
 		
 		return true;
 	}

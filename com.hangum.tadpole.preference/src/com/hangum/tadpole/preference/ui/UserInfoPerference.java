@@ -65,7 +65,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		textGroupName.setEnabled(false);
 		textGroupName.setEditable(false);
 		textGroupName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textGroupName.setText(SessionManager.getName());
+		textGroupName.setText(SessionManager.getGroupName());
 		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
