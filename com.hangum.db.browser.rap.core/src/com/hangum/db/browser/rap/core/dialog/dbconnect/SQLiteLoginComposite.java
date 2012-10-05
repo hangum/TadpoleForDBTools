@@ -128,9 +128,14 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			textDisplayName.setText(Messages.SQLiteLoginComposite_4);
 		}
 		
-		// 콤보 선택 
-		for(int i=0; i<comboGroup.getItemCount(); i++) {
-			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+		if(comboGroup.getItems().length == 0) {
+			comboGroup.add(strOtherGroupName);
+			comboGroup.select(0);
+		} else {
+			// 콤보 선택 
+			for(int i=0; i<comboGroup.getItemCount(); i++) {
+				if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+			}
 		}
 		
 	}
@@ -139,7 +144,10 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	protected boolean connection() {
 		String strFile = StringUtils.trimToEmpty(textFile.getText());
 		
-		if("".equals( strFile ) ) { //$NON-NLS-1$
+		if("".equals(comboGroup.getText().trim())) {
+			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "Group" + Messages.MySQLLoginComposite_10);
+			return false;
+		} else if("".equals( strFile ) ) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_7);
 			return false;
 		} else if("".equals(StringUtils.trimToEmpty(textDisplayName.getText()))) { //$NON-NLS-1$

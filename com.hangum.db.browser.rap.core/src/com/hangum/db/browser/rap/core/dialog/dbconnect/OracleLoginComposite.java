@@ -17,11 +17,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
-import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.commons.sql.TadpoleSQLManager;
 import com.hangum.db.commons.sql.define.DBDefine;
 import com.hangum.db.dao.system.UserDBDAO;
@@ -78,8 +76,14 @@ public class OracleLoginComposite extends MySQLLoginComposite {
 			textDisplayName.setText(Messages.OracleLoginComposite_5);
 		}
 		
-		for(int i=0; i<comboGroup.getItemCount(); i++) {
-			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+		if(comboGroup.getItems().length == 0) {
+			comboGroup.add(strOtherGroupName);
+			comboGroup.select(0);
+		} else {
+			// 콤보 선택 
+			for(int i=0; i<comboGroup.getItemCount(); i++) {
+				if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+			}
 		}
 	}
 	

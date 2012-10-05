@@ -248,8 +248,14 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textPort.setText(Messages.DBLoginDialog_20);			
 		}
 		
-		for(int i=0; i<comboGroup.getItemCount(); i++) {
-			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+		if(comboGroup.getItems().length == 0) {
+			comboGroup.add(strOtherGroupName);
+			comboGroup.select(0);
+		} else {
+			// 콤보 선택 
+			for(int i=0; i<comboGroup.getItemCount(); i++) {
+				if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+			}
 		}
 	}
 
@@ -325,7 +331,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	 * @return
 	 */
 	public boolean isValidate() {
-		
+		if(!message(comboGroup, "Group")) return false;
 		if(!message(textHost, "Host")) return false; //$NON-NLS-1$
 		if(!message(textPort, "Port")) return false; //$NON-NLS-1$
 		if(!message(textDatabase, "Database")) return false; //$NON-NLS-1$
@@ -350,13 +356,31 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	}
 	
 	/**
-	 * message
+	 * text message
 	 * 
 	 * @param text
 	 * @param msg
 	 * @return
 	 */
 	protected boolean message(Text text, String msg) {
+		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
+			text.setFocus();
+			
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * combo message
+	 * 
+	 * @param text
+	 * @param msg
+	 * @return
+	 */
+	protected boolean message(Combo text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
 			text.setFocus();

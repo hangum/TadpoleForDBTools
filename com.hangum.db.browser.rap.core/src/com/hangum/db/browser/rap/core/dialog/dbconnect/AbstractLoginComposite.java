@@ -40,7 +40,7 @@ public abstract class AbstractLoginComposite extends Group {
 	private static final long serialVersionUID = -3434604591881525231L;
 	private static final Logger logger = Logger.getLogger(AbstractLoginComposite.class);
 	
-	protected String strTestGroupName = "Test Group";
+	protected String strOtherGroupName = "Other Group";
 	protected String selGroupName = "";
 	
 	protected List<String> listGroupName = new ArrayList<String>();
