@@ -150,7 +150,9 @@ public class ManagerViewer extends ViewPart {
 	/**
 	 * 트리 데이터 초기화
 	 */
-	private void init() {
+	public void init() {
+		treeList.clear();
+		
 		try {
 			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
 			for (String groupName : groupNames) {
@@ -172,28 +174,6 @@ public class ManagerViewer extends ViewPart {
 
 		treeViewer.refresh();
 		treeViewer.expandToLevel(1);
-		
-//		// 초기 디비 종류를 추가 합니다.
-//		for(DBDefine dbDefine : DBDefine.userDBValues()) {
-//			ManagerListDTO parent = new ManagerListDTO(dbDefine.getDBToString(), dbDefine);
-//			treeList.add(parent);
-//		}
-//		
-//		// 사용자가 등록한 디비를 추가합니다.
-//		try {
-//			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
-//			for (UserDBDAO userDBDAO : userDBS) {
-//				addUserDB(userDBDAO.getTypes(), userDBDAO, false);
-//			}
-//		} catch (Exception e) {
-//			logger.error("getUserDBDAO", e); //$NON-NLS-1$
-//			
-//			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
-//		}
-//		
-//		treeViewer.refresh();
-//		treeViewer.expandToLevel(1); 
 	}
 
 	/**

@@ -51,6 +51,14 @@
 	WHERE delYn = 'NO'
 </select> 
 
+<!-- 
+	그룹 seq로 이름
+ -->
+<select id="findGroupName" resultClass="java.lang.String" parameterClass="java.lang.Integer">
+	SELECT name
+	FROM user_group
+	WHERE seq = #seq#
+</select>
 
 <!--
 	user가 있는지 중복 검사 합니다. 
@@ -203,6 +211,22 @@
 	INSERT INTO user_db(seq, user_seq, types, url, db, group_name, display_name, host, port, locale, passwd, users)
 	VALUES( (select max(seq) from user_db)+1 , #user_seq#, #types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#)
 </insert>
+
+<update id="userDBUpdate" parameterClass="com.hangum.db.dao.system.UserDBDAO">
+	UPDATE user_db SET
+		types 		= #types#, 
+		url 		= #url#, 
+		db			= #db#,  
+		group_name 	= #group_name#, 
+		display_name 	= #display_name#, 
+		host			= #host#, 
+		port			= #port#, 
+		locale			= #locale#, 
+		passwd			= #passwd#,  
+		users			= #users#
+	WHERE seq = #seq#
+	
+</update>
 
 <delete id="userDBDelete" parameterClass="java.lang.Integer">
 	DELETE FROM user_db WHERE seq = #seq#

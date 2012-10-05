@@ -58,8 +58,8 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	
 	protected Button btnSavePreference;
 	
-	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style, List<String> listGroupName, String selGroupName) {
-		super(selectDB, parent, style, listGroupName, selGroupName);
+	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+		super(selectDB, parent, style, listGroupName, selGroupName, userDB);
 		setText(selectDB.getDBToString());
 	}
 
@@ -226,17 +226,26 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public void init() {
-		if(ApplicationArgumentUtils.isTestMode()) {
-//			comboGroup.add(strTestGroupName);
-//			comboGroup.select(0);
+		
+		if(oldUserDB != null) {
+			
+			selGroupName = oldUserDB.getGroup_name();
+			textDisplayName.setText(oldUserDB.getDisplay_name());
+			
+			textHost.setText(oldUserDB.getHost());
+			textUser.setText(oldUserDB.getUsers());
+			textPassword.setText(oldUserDB.getPasswd());
+			textDatabase.setText(oldUserDB.getDb());
+			textPort.setText(oldUserDB.getPort());
+		} else if(ApplicationArgumentUtils.isTestMode()) {
+			
+			textDisplayName.setText(Messages.DBLoginDialog_21);
 			
 			textHost.setText(Messages.DBLoginDialog_16);
 			textUser.setText(Messages.DBLoginDialog_17);
 			textPassword.setText(Messages.DBLoginDialog_18);
 			textDatabase.setText(Messages.DBLoginDialog_19);
-			textPort.setText(Messages.DBLoginDialog_20);
-			
-			textDisplayName.setText(Messages.DBLoginDialog_21);
+			textPort.setText(Messages.DBLoginDialog_20);			
 		}
 		
 		for(int i=0; i<comboGroup.getItemCount(); i++) {
@@ -261,7 +270,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 					DBDefine.MYSQL_DEFAULT.getDB_URL_INFO(), 
 					textHost.getText(), textPort.getText(), textDatabase.getText() + "?Unicode=true&characterEncoding=" + selectLocale.trim());
 		}
-//		logger.debug("[mysql dbURL]" + dbUrl);
 		
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.MYSQL_DEFAULT.getDBToString());
@@ -275,22 +283,47 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setLocale(comboLocale.getText());
 		userDB.setUsers(textUser.getText());
 		
-		// 이미 연결한 것인지 검사한다.
-		if(!connectValidate(userDB)) return false;
-		
-		// preference에 save합니다.
-		if(btnSavePreference.getSelection())
+		// 기존 데이터 업데이트
+		if(oldUserDB != null) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			
+			if(!checkDatabase(userDB)) return false;
+			
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
 			} catch (Exception e) {
-				logger.error(Messages.MySQLLoginComposite_0, e);
+				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
 			}
-		
-		return true;
+			
+			return true;
+		// 신규 데이터 저장.
+		} else {
+			// 이미 연결한 것인지 검사한다.
+			if(!connectValidate(userDB)) return false;
+			
+			// preference에 save합니다.
+			if(btnSavePreference.getSelection())
+				try {
+					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				} catch (Exception e) {
+					logger.error(Messages.MySQLLoginComposite_0, e);
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+				}
+			
+			return true;
+		}
 	}
 	
+	/**
+	 * 화면에 값이 올바른지 검사합니다.
+	 * 
+	 * @return
+	 */
 	public boolean isValidate() {
 		
 		if(!message(textHost, "Host")) return false; //$NON-NLS-1$
@@ -316,6 +349,13 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		return true;
 	}
 	
+	/**
+	 * message
+	 * 
+	 * @param text
+	 * @param msg
+	 * @return
+	 */
 	protected boolean message(Text text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);

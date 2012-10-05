@@ -44,6 +44,10 @@ public abstract class AbstractLoginComposite extends Group {
 	protected String selGroupName = "";
 	
 	protected List<String> listGroupName = new ArrayList<String>();
+
+	/** 기존에 접속한 user db */
+	protected UserDBDAO oldUserDB = null;
+
 	protected UserDBDAO userDB;
 	protected DBDefine selectDB;
 	
@@ -52,11 +56,12 @@ public abstract class AbstractLoginComposite extends Group {
 	 * @param parent
 	 * @param style
 	 */
-	public AbstractLoginComposite(DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName) {
+	public AbstractLoginComposite(DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO oldUserDB) {
 		super(parent, style);
 		this.selectDB = dbDefine;
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
+		this.oldUserDB = oldUserDB;
 		
 		crateComposite();
 	}
@@ -115,14 +120,8 @@ public abstract class AbstractLoginComposite extends Group {
 	 * @param searchTable 디비의 테이블 검증을위한 쿼리 
 	 * @return
 	 */
-	public boolean connectValidate(UserDBDAO loginInfo) {//, String tableList) {//String searchTable) {
-		// 이미 연결한 것인지 검사한다.
-//		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-//		if( !managerView.isAdd(DBDefine.MYSQL_DEFAULT, loginInfo) ) {
-//			MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.DBLoginDialog_24);
-//			
-//			return false;
-//		}
+	protected boolean connectValidate(UserDBDAO loginInfo) {
+		
 		try {
 			// 이미 등록된 디비 인지 검사합니다.
 			if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), loginInfo.getUrl(), loginInfo.getUsers())) {
@@ -138,8 +137,17 @@ public abstract class AbstractLoginComposite extends Group {
 		}
 		
 		// 디비가 정상적인지 등록하려는 디비의 테이블 정보를 검사합니다.
+		if(checkDatabase(loginInfo)) return true;
+		else return false;
+	}
+	
+	/**
+	 * db가 정상적으로 접속가능한지 검사합니다.
+	 * @param loginInfo
+	 * @return
+	 */
+	protected boolean checkDatabase(UserDBDAO loginInfo) {
 		if(DBDefine.getDBDefine(loginInfo.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-			// db가 정상적인지 채크해본다 
 			try {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
 				List showTables = sqlClient.queryForList("tableList", loginInfo.getDb());

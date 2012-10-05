@@ -20,6 +20,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.db.browser.rap.core.dialog.dbconnect.DBLoginDialog;
+import com.hangum.db.browser.rap.core.dialog.dbconnect.DBLoginDialog.WORK_TYPE;
 import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.dao.ManagerListDTO;
 import com.hangum.db.dao.system.UserDBDAO;
@@ -50,18 +51,28 @@ public class ConnectDatabase implements IViewActionDelegate {
 		final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selGroupName);
 		int ret = dialog.open();
 		
-		if(ret == Dialog.OK) {
+		if(ret == Dialog.OK || ret == dialog.DELETE_BTN_ID) {
 			final UserDBDAO userDB = dialog.getDTO();
-			final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-					
+			final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
+			final WORK_TYPE workType = dialog.getWorkType();
+			
 			Display.getCurrent().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					managerView.addUserDB(userDB, true);
+					// 입력
+					if(WORK_TYPE.INSERT == workType) {
+						managerView.addUserDB(userDB, true);
+//					// 수정 삭제
+//					} else if(WORK_TYPE.MODIFY == workType) {
+//						managerView.modifyUserDB(userDB);
+//					} else if(WORK_TYPE.DELETE == workType) {
+//						managerView.deleteUserDB(userDB);
+					} else {
+						managerView.init();
+					}
 				}
 			});	// end display
-				
-		}	// end fi
+		}	// end if
 		
 	}
 

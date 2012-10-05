@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import org.eclipse.rwt.RWT;
 
 import com.hangum.db.dao.system.UserInfoDataDAO;
+import com.hangum.db.system.TadpoleSystem_UserGroupQuery;
 import com.hangum.db.system.TadpoleSystem_UserInfoData;
 
 /**
@@ -36,13 +37,11 @@ public class SessionManager {
 	/**
 	 * <pre>
 	 * 		MANAGER_SEQ는 그룹의 manager 권한 사용자의 seq 입니다.  seq로  그룹의 db list를 얻기위해 미리 가져옵니다.
-	 * 
-	 * 
 	 * </pre>
 	 * 
 	 * @author hangum
 	 */
-	enum SESSEION_NAME {GROUP_SEQ, SEQ, LOGIN_EMAIL, LOGIN_PASSWORD, LOGIN_NAME, LOGIN_TYPE, MANAGER_SEQ, USER_INFO_DATA}
+	enum SESSEION_NAME {GROUP_SEQ, SEQ, GROUP_NAME, LOGIN_EMAIL, LOGIN_PASSWORD, LOGIN_NAME, LOGIN_TYPE, MANAGER_SEQ, USER_INFO_DATA}
 	
 	/**
 	 * 신규 user의 사용자를 등록
@@ -53,8 +52,16 @@ public class SessionManager {
 	public static void newLogin(int groupSeq, int seq, String email, String password, String name, String userType, int managerSeq) {
 		HttpSession sStore = RWT.getSessionStore().getHttpSession();
 		
-		sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), groupSeq);
+		String groupName = "";
+		try {
+			groupName = TadpoleSystem_UserGroupQuery.findGroupName(groupSeq);
+		} catch(Exception e) {
+			logger.error("Session group name", e);
+		}
+		
+		sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), groupSeq);		
 		sStore.setAttribute(SESSEION_NAME.SEQ.toString(), seq);
+		sStore.setAttribute(SESSEION_NAME.GROUP_NAME.toString(), groupName);
 		sStore.setAttribute(SESSEION_NAME.LOGIN_EMAIL.toString(), email);
 		sStore.setAttribute(SESSEION_NAME.LOGIN_PASSWORD.toString(), password);
 		sStore.setAttribute(SESSEION_NAME.LOGIN_NAME.toString(), name);
@@ -73,6 +80,11 @@ public class SessionManager {
 		
 		if(obj == null) return 0;
 		else return (Integer)obj;
+	}
+	
+	public static String getGroupName() {
+		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		return (String)sStore.getAttribute(SESSEION_NAME.GROUP_NAME.toString());
 	}
 	
 	public static String getEMAIL() {

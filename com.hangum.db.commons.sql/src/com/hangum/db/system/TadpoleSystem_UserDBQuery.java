@@ -66,10 +66,8 @@ public class TadpoleSystem_UserDBQuery {
 	
 	/**
 	 * 신규 유저디비를 등록합니다.
-	 * @param email
-	 * @param pass
-	 * @param name
-	 * @param type user-type
+	 * @param userDb
+	 * @param userSeq
 	 */
 	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
 		userDb.setUser_seq(userSeq);
@@ -83,8 +81,8 @@ public class TadpoleSystem_UserDBQuery {
 			return userDb;
 		}
 
-		// 신규 유저를 등록합니다.
-		userDb.setUser_seq(userSeq);
+//		// 신규 유저를 등록합니다.
+//		userDb.setUser_seq(userSeq);
 		
 		sqlClient.insert("userDBInsert", userDb); //$NON-NLS-1$
 		
@@ -93,6 +91,25 @@ public class TadpoleSystem_UserDBQuery {
 		userDb.setSeq(insertSeq.getSeq());
 			
 		return userDb;
+	}
+	
+	/**
+	 * userDAO 수정 
+	 * 
+	 * @param oldUserDb
+	 * @param newUserDb
+	 * @param userSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDBDAO updateUserDB(UserDBDAO newUserDb, UserDBDAO oldUserDb, int userSeq) throws Exception {
+		newUserDb.setUser_seq(userSeq);
+		newUserDb.setSeq(oldUserDb.getSeq());
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		sqlClient.update("userDBUpdate", newUserDb); //$NON-NLS-1$
+		
+		return newUserDb;
 	}
 	
 	/**

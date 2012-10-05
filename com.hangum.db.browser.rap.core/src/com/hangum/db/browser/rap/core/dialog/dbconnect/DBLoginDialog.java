@@ -71,6 +71,8 @@ public class DBLoginDialog extends Dialog {
 	private static final long serialVersionUID = 1327678815994219469L;
 	private static final Logger logger = Logger.getLogger(DBLoginDialog.class);
 	
+	Composite container;
+	
 	/** group name */
 	protected List<String> groupName;
 	/** 초기 선택한 그룹 */
@@ -87,9 +89,11 @@ public class DBLoginDialog extends Dialog {
 
 	// 결과셋으로 사용할 logindb
 	private UserDBDAO retuserDb;
+	public enum WORK_TYPE {INSERT, MODIFY, DELETE};
+	public WORK_TYPE thisWorkType = WORK_TYPE.INSERT;
 	
 	// delete button id
-	final int DELETE_BTN_ID = 99999;
+	public final int DELETE_BTN_ID = 99999;
 
 	/**
 	 * Create the dialog.
@@ -120,7 +124,7 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		final Composite container = (Composite) super.createDialogArea(parent);
+		container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.verticalSpacing = 3;
 		gridLayout.horizontalSpacing = 3;
@@ -141,13 +145,9 @@ public class DBLoginDialog extends Dialog {
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (loginComposite != null)loginComposite.dispose();
-				grpLoginHistory.dispose();
-
-				initDBWidget();
-				createHistory(container);
-				compositeBody.layout();
-				container.layout();
+				
+				thisWorkType = WORK_TYPE.INSERT;				
+				initDBWidget(null);
 			}
 		});
 		comboDBList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -157,7 +157,7 @@ public class DBLoginDialog extends Dialog {
 			comboDBList.add(dbDefine.getDBToString());
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
 		}
-		comboDBList.select(3);
+		comboDBList.select(2);
 
 		// combo에서 선택된 디비의 콤포짖
 		compositeBody = new Composite(container, SWT.NONE);
@@ -171,7 +171,7 @@ public class DBLoginDialog extends Dialog {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}
 		
-		initDBWidget();
+		createDBWidget(null);
 
 		// history .....................................
 		createHistory(container);
@@ -180,27 +180,40 @@ public class DBLoginDialog extends Dialog {
 	}
 	
 	/**
-	 * 초기화면에서 로드될 widget
+	 * db widget을 설정한다.
+	 * @param userDB
 	 */
-	private void initDBWidget() {
+	private void initDBWidget(UserDBDAO userDB) {
+		if (loginComposite != null)loginComposite.dispose();
+//		grpLoginHistory.dispose();
+
+		createDBWidget(userDB);
+//		createHistory(container);
+		compositeBody.layout();
+		container.layout();
+	}
+	
+	/**
+	 * db widget을 생성한다.
+	 */
+	private void createDBWidget(UserDBDAO userDB) {
 		
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(DBDefine.MYSQL_DEFAULT, compositeBody, SWT.NONE, groupName, selGroupName);
+			loginComposite = new MySQLLoginComposite(DBDefine.MYSQL_DEFAULT, compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
-			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
+			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.SQLite_DEFAULT) {
-			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
+			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.MSSQL_DEFAULT) {
-			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
+			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
-			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
+			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
-			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
+			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
-			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName);
+			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		}
-
 	}
 
 	/**
@@ -223,7 +236,13 @@ public class DBLoginDialog extends Dialog {
 		treeViewerLoginData.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				// 선택이 될때마다 로그인창의 화면에 정보를 출력합니다.
+				IStructuredSelection iss = (IStructuredSelection)event.getSelection();
+				UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
 				
+				comboDBList.setText(userDB.getTypes());
+				initDBWidget(userDB);
+				
+				thisWorkType = WORK_TYPE.MODIFY;
 			}
 		});
 		Tree tree = treeViewerLoginData.getTree();
@@ -283,10 +302,8 @@ public class DBLoginDialog extends Dialog {
 				List<UserDBDAO> calcUserDB = mapGroupUserDB.get(groupName);
 				UserDBDAO groupHead = calcUserDB.get(0);
 				for(int i=1; i<calcUserDB.size(); i++) {
-					calcUserDB.get(i).setGroup_name("");
 					groupHead.getListUserDBGroup().add(calcUserDB.get(i));
-				}
-				
+				}				
 				listTreeData.add(groupHead);
 			}
 			
@@ -354,6 +371,8 @@ public class DBLoginDialog extends Dialog {
 							TadpoleSystem_UserDBQuery.removeUserDB(userDb.getSeq());							
 							makeHistoryData();
 
+							thisWorkType = WORK_TYPE.DELETE;
+							
 						} catch(Exception e) {
 							logger.error(Messages.DBLoginDialog_32, e);
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -376,6 +395,14 @@ public class DBLoginDialog extends Dialog {
 	 */
 	public List<String> getGroupName() {
 		return groupName;
+	}
+	
+	/**
+	 * 사용자 작업타입.
+	 * @return
+	 */
+	public WORK_TYPE getWorkType() {
+		return thisWorkType;
 	}
 
 	/**
@@ -457,7 +484,7 @@ class LoginLabelProvider extends LabelProvider implements ITableLabelProvider {
 		
 		switch(columnIndex) {
 		case 0: return dto.getGroup_name();
-		case 1: return dto.getDb();
+		case 1: return dto.getDisplay_name();
 		case 2: return dto.getUrl();
 		case 3: return dto.getUsers();
 		}

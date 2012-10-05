@@ -216,6 +216,7 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_1;
 	public static String SQLiteLoginComposite_10;
 	public static String SQLiteLoginComposite_12;
+	public static String SQLiteLoginComposite_13;
 	public static String SQLiteLoginComposite_15;
 	public static String SQLiteLoginComposite_2;
 	public static String SQLiteLoginComposite_3;
@@ -295,6 +296,8 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_trclmnType_text;
 	public static String DBLoginDialog_trclmnDisplayName_text;
 	public static String DBLoginDialog_trclmnNewColumn_text;
+	public static String MainEditor_tltmExecute_toolTipText;
+	public static String MainEditor_tltmExecute_toolTipText_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

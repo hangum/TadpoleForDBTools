@@ -55,14 +55,14 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	protected Text textDisplayName;
 	
 	protected Button btnSavePreference;
-
+	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName) {
-		super(DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName);
+	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+		super(DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 		setText(Messages.SQLiteLoginComposite_0);
 	}
 	
@@ -118,18 +118,21 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	protected void init() {
-		if(ApplicationArgumentUtils.isTestMode()) {
-//			textFile.setText("C:/dev/eclipse-rcp-indigo-SR2-win32/workspace/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/configuration/tadpole/db/tadpole-system.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
-//			comboGroup.setText(strTestGroupName);
-//			comboGroup.select(0);
-			
+		
+		if(oldUserDB != null) {
+			selGroupName = oldUserDB.getGroup_name();
+			textFile.setText(oldUserDB.getDb());
+			textDisplayName.setText(oldUserDB.getDisplay_name());
+		} else if(ApplicationArgumentUtils.isTestMode()) {
 			textFile.setText("C:/tadpole-test.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
 			textDisplayName.setText(Messages.SQLiteLoginComposite_4);
 		}
 		
+		// 콤보 선택 
 		for(int i=0; i<comboGroup.getItemCount(); i++) {
 			if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
 		}
+		
 	}
 
 	@Override
@@ -157,21 +160,42 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		userDB.setPasswd(""); //$NON-NLS-1$
 		userDB.setUsers(""); //$NON-NLS-1$
 		
-		// 이미 연결한 것인지 검사한다.
-		if(!connectValidate(userDB)) return false;
-		
-		// preference에 save합니다.
-		if(btnSavePreference.getSelection())
+		// 기존 데이터 업데이트
+		if(oldUserDB != null) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			
+			if(!checkDatabase(userDB)) return false;
+			
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
 			} catch (Exception e) {
 				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
 			}
+			
+		// 신규 데이터 저장.
+		} else {
+			// 이미 연결한 것인지 검사한다.
+			if(!connectValidate(userDB)) return false;
+			
+			// preference에 save합니다.
+			if(btnSavePreference.getSelection())
+				try {
+					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				} catch (Exception e) {
+					logger.error(Messages.SQLiteLoginComposite_8, e);
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+					
+					return false;
+				}
+			
+		}
 		
-		return true;
-		
+		return true;		
 	}
 
 }

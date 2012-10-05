@@ -49,16 +49,24 @@ public class MSSQLLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public MSSQLLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName) {
-		super(DBDefine.MSSQL_DEFAULT, parent, style, listGroupName, selGroupName);
+	public MSSQLLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+		super(DBDefine.MSSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 		setText(DBDefine.MSSQL_DEFAULT.getDBToString());
 	}
 	
 	@Override
 	public void init() {
-		if(ApplicationArgumentUtils.isTestMode()) {
-//			comboGroup.add("Test group");
-//			comboGroup.select(0);
+		if(oldUserDB != null) {
+			
+			selGroupName = oldUserDB.getGroup_name();
+			textDisplayName.setText(oldUserDB.getDisplay_name());
+			
+			textHost.setText(oldUserDB.getHost());
+			textUser.setText(oldUserDB.getUsers());
+			textPassword.setText(oldUserDB.getPasswd());
+			textDatabase.setText(oldUserDB.getDb());
+			textPort.setText(oldUserDB.getPort());
+		} else if(ApplicationArgumentUtils.isTestMode()) {
 
 			textDisplayName.setText("MSSQL Server"); //$NON-NLS-1$
 			textHost.setText("192.168.61.130"); //$NON-NLS-1$
@@ -93,35 +101,47 @@ public class MSSQLLoginComposite extends MySQLLoginComposite {
 		userDB.setPort(textPort.getText());
 		userDB.setUsers(textUser.getText());
 		
-		// 이미 연결한 것인지 검사한다.
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-		if( !managerView.isAdd(DBDefine.MSSQL_DEFAULT, userDB) ) {
-			MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.DBLoginDialog_24);
+		// 기존 데이터 업데이트
+		if(oldUserDB != null) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
-			return false;
-		}
-
-		// db가 정상적인지 채크해본다 
-		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			sqlClient.queryForList("tableList", textDatabase.getText()); //$NON-NLS-1$
-		} catch (Exception e) {
-			logger.error("MSSQL Connection", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
+			if(!checkDatabase(userDB)) return false;
 			
-			return false;
-		}
-		
-		// preference에 save합니다.
-		if(btnSavePreference.getSelection())
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
 			} catch (Exception e) {
-				logger.error("MSSQL", e); //$NON-NLS-1$
+				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
 			}
+			
+		// 신규 데이터 저장.
+		} else {
+	
+			// db가 정상적인지 채크해본다 
+			try {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				sqlClient.queryForList("tableList", textDatabase.getText()); //$NON-NLS-1$
+			} catch (Exception e) {
+				logger.error("MSSQL Connection", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
+			
+			// preference에 save합니다.
+			if(btnSavePreference.getSelection())
+				try {
+					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				} catch (Exception e) {
+					logger.error("MSSQL", e); //$NON-NLS-1$
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
+				}
+		}
 		
 		return true;
 	}
