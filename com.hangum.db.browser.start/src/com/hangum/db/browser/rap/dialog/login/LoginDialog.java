@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.db.browser.rap.BrowserActivator;
 import com.hangum.db.browser.rap.Messages;
 import com.hangum.db.dao.system.UserDAO;
 import com.hangum.db.define.Define;
@@ -97,7 +98,7 @@ public class LoginDialog extends Dialog {
 		
 		Label lblLoginImage = new Label(container, SWT.NONE);
 		lblLoginImage.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 2));
-		lblLoginImage.setImage(ResourceManager.getPluginImage("com.hangum.db.browser.start", "resources/icons/LoginManager.png")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblLoginImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/LoginManager.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		Label lblPassword = new Label(container, SWT.NONE);
 		lblPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));

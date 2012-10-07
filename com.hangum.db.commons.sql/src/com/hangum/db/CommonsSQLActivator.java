@@ -21,7 +21,7 @@ import com.hangum.db.log.LogListener;
 public class CommonsSQLActivator extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "com.hangum.db.commons.sql";
+	public static final String PLUGIN_ID = "com.hangum.tadpole.commons.sql";
 
 	// The shared instance
 	private static CommonsSQLActivator plugin;

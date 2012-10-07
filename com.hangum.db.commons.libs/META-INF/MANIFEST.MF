@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Libs
-Bundle-SymbolicName: com.hangum.db.commons.libs
+Bundle-SymbolicName: com.hangum.tadpole.commons.libs
 Bundle-Version: 1.0.0
 Bundle-Vendor: SINSIWAY
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.actions.erd;
 
-import java.io.File;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -27,7 +25,6 @@ import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
 import com.hangum.db.browser.rap.core.viewers.connections.ManagerViewer;
 import com.hangum.db.dao.system.UserDBResourceDAO;
-import com.hangum.db.define.Define;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.system.TadpoleSystem_UserDBResource;
 

@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Commons
-Bundle-SymbolicName: com.hangum.db.rap.commons
+Bundle-SymbolicName: com.hangum.tadpole.rap.commons
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.db.rap.commons.Activator
 Bundle-Vendor: SINSIWAY
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.4.0",
- com.hangum.db.commons.libs;bundle-version="1.0.0"
+ com.hangum.tadpole.commons.libs;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

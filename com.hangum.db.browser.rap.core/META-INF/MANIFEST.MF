@@ -1,18 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: com.hangum.db.browser.rap.core;singleton:=true
+Bundle-SymbolicName: com.hangum.tadpole.browser.rap.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.db.browser.rap.core.Activator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.3.2",
  org.eclipse.core.runtime,
- com.hangum.db.commons.libs;bundle-version="1.0.0",
- com.hangum.db.commons.sql;bundle-version="1.0.0",
- com.hangum.db.rap.commons;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.sql;bundle-version="1.0.0",
+ com.hangum.tadpole.rap.commons;bundle-version="1.0.0",
  com.hangum.tadpole.erd.core;bundle-version="1.0.0",
  com.hangum.tadpole.model;bundle-version="1.0.0",
- com.hangum.sql.parser2;bundle-version="1.0.0",
+ com.hangum.tadpole.sql.parser2;bundle-version="1.0.0",
  org.eclipse.equinox.http.registry;bundle-version="1.1.100",
  com.hangum.tadpole.manager.core;bundle-version="1.0.0",
  com.hangum.tadpole.mongodb.core;bundle-version="1.0.0",

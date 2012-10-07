@@ -26,7 +26,7 @@ import com.hangum.db.start.TadpoleSystem;
 public class Activator extends AbstractUIPlugin {
 	private static final Logger logger = Logger.getLogger(Activator.class);
 	// The plug-in ID
-	public static final String PLUGIN_ID = "com.hangum.db.browser.rap.core"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "com.hangum.tadpole.browser.rap.core"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;

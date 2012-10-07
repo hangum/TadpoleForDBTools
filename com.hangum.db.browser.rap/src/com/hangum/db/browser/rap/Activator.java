@@ -25,7 +25,7 @@ import com.hangum.db.log.LogListener;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "com.hangum.db.browser.rap"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "com.hangum.tadpole.browser.rap"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;

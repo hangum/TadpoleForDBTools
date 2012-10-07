@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.db.browser.rap.BrowserActivator;
 import com.hangum.db.browser.rap.Messages;
 import com.swtdesigner.ResourceManager;
 
@@ -62,7 +63,7 @@ public class AboutDialog extends Dialog {
 		gd_lblNewLabelImage.minimumWidth = 300;
 		lblNewLabelImage.setLayoutData(gd_lblNewLabelImage);
 //		lblNewLabel_1.setText(Messages.AboutDialog_lblNewLabel_1_text);
-		lblNewLabelImage.setImage(ResourceManager.getPluginImage("com.hangum.db.browser.start", "resources/icons/TadpoleForDBTools.png"));
+		lblNewLabelImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/TadpoleForDBTools.png"));
 		
 		Composite composite_1 = new Composite(container, SWT.NONE);
 		composite_1.setLayout(new GridLayout(1, false));
