@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.rap.ui.entrypoint">
       <entrypoint
-            class="com.hangum.db.browser.rap.Application"
+            class="com.hangum.tadpole.browser.rap.Application"
             parameter="tadpole"
             id="com.hangum.db.browser.rap.Application">
       </entrypoint>
@@ -15,7 +15,7 @@
       <branding
             body="html/body.html"
             defaultEntrypointId="com.hangum.db.browser.rap.Application"
-            exitConfirmationClass="com.hangum.db.browser.rap.exit.ExitConfirm"
+            exitConfirmationClass="com.hangum.tadpole.browser.rap.exit.ExitConfirm"
             favicon="icons/TadpoleForDBTools.ico"
             id="com.hangum.db.browser.rap.branding"
             servletName="db"

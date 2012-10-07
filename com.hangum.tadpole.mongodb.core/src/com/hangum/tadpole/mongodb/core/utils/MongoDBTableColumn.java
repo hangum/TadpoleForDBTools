@@ -19,7 +19,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.db.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 

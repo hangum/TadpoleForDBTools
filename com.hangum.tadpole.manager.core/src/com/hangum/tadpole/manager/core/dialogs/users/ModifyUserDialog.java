@@ -27,13 +27,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.db.dao.system.UserDAO;
-import com.hangum.db.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.db.system.TadpoleSystem_UserQuery;
-import com.hangum.db.util.ManagerSession;
+import com.hangum.tadpole.dao.system.UserDAO;
+import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.util.ManagerSession;
 
 /**
  * 사용자 수정 다이얼로그

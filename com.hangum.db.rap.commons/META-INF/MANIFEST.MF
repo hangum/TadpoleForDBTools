@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Commons
 Bundle-SymbolicName: com.hangum.tadpole.rap.commons
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.hangum.db.rap.commons.Activator
+Bundle-Activator: com.hangum.tadpole.rap.commons.Activator
 Bundle-Vendor: SINSIWAY
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.4.0",
@@ -12,19 +12,19 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  libs/org.apache.log4j_1.2.13.v200806030600.jar
-Export-Package: com.hangum.db.define,
- com.hangum.db.dialogs.message,
- com.hangum.db.dialogs.message.dao,
- com.hangum.db.exception,
- com.hangum.db.exception.dialog,
- com.hangum.db.log,
- com.hangum.db.rap.commons,
- com.hangum.db.start,
- com.hangum.db.util,
- com.hangum.db.util.download,
- com.hangum.db.util.secret,
- com.hangum.db.util.tables,
- com.hangum.db.viewsupport,
+Export-Package: com.hangum.tadpole.define,
+ com.hangum.tadpole.dialogs.message,
+ com.hangum.tadpole.dialogs.message.dao,
+ com.hangum.tadpole.exception,
+ com.hangum.tadpole.exception.dialog,
+ com.hangum.tadpole.log,
+ com.hangum.tadpole.rap.commons,
+ com.hangum.tadpole.start,
+ com.hangum.tadpole.util,
+ com.hangum.tadpole.util.download,
+ com.hangum.tadpole.util.secret,
+ com.hangum.tadpole.util.tables,
+ com.hangum.tadpole.viewsupport,
  com.swtdesigner,
  org.apache.log4j
 Import-Package: javax.servlet;version="2.5.0",

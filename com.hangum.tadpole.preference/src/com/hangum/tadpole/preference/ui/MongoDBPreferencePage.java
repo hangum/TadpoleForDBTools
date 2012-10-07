@@ -23,10 +23,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.hangum.db.session.manager.SessionManager;
-import com.hangum.db.system.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
 
 /** 
  * mongodb prefernec page

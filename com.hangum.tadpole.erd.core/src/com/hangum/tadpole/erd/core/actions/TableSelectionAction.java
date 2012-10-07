@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.db.define.Define;
+import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.erd.core.part.TableEditPart;
 import com.hangum.tadpole.model.Table;
 

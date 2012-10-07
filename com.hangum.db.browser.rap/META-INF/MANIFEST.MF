@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: tabpole
 Bundle-SymbolicName: com.hangum.tadpole.browser.rap;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.hangum.db.browser.rap.Activator
+Bundle-Activator: com.hangum.tadpole.browser.rap.Activator
 Bundle-Vendor: HANGUM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

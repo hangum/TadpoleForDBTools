@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="com.hangum.db.browser.rap.Perspective"
+            class="com.hangum.tadpole.browser.rap.Perspective"
             id="com.hangum.db.browser.rap.perspective"
             name="Tadpole for db Tools">
       </perspective>

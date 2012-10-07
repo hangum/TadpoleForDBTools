@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Parser2
 Bundle-SymbolicName: com.hangum.tadpole.sql.parser2
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.hangum.sql.parser2.Activator
+Bundle-Activator: com.hangum.tadpole.sql.parser2.Activator
 Bundle-Vendor: HANGUM
 Require-Bundle: org.eclipse.core.runtime,
  com.hangum.tadpole.rap.commons;bundle-version="1.0.0"
@@ -11,4 +11,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: libs/gsp.jar,
  .
-Export-Package: com.hangum.sql.parser.format
+Export-Package: com.hangum.tadpole.sql.parser.format

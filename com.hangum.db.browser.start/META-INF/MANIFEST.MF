@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
  com.hangum.tadpole.manager.core;bundle-version="1.0.0",
  com.hangum.tadpole.preference;bundle-version="1.0.0"
-Export-Package: com.hangum.db.browser.rap,
- com.hangum.db.browser.rap.dialog.login
+Export-Package: com.hangum.tadpole.browser.rap,
+ com.hangum.tadpole.browser.rap.dialog.login
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"

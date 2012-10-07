@@ -18,9 +18,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.db.commons.sql.TadpoleSQLManager;
-import com.hangum.db.dao.mysql.ReferencedTableDAO;
-import com.hangum.db.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.dao.mysql.ReferencedTableDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

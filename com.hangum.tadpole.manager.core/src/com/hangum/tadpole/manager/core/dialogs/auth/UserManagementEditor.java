@@ -22,8 +22,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.db.define.Define;
-import com.hangum.db.session.manager.SessionManager;
+import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * 사용자 관리 에디터

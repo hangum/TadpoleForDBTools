@@ -10,9 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.get;
 
-import com.hangum.db.dao.system.UserInfoDataDAO;
-import com.hangum.db.session.manager.SessionManager;
+import com.hangum.tadpole.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * preference의 일반적인 정보를 얻습니다.
