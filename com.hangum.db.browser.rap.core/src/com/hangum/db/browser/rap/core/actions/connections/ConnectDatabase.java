@@ -36,7 +36,7 @@ public class ConnectDatabase implements IViewActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		String selGroupName = null;
+		String selGroupName = "";
 		
 		if(sel != null) {
 			if(sel.getFirstElement() instanceof ManagerListDTO) {

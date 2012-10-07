@@ -252,9 +252,13 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			// 콤보 선택 
-			for(int i=0; i<comboGroup.getItemCount(); i++) {
-				if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+			if("".equals(selGroupName)) {
+				comboGroup.setText(strOtherGroupName);
+			} else {
+				// 콤보 선택 
+				for(int i=0; i<comboGroup.getItemCount(); i++) {
+					if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+				}
 			}
 		}
 	}

@@ -31,6 +31,7 @@ import com.hangum.db.dao.system.UserDAO;
 import com.hangum.db.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.db.system.TadpoleSystem_UserQuery;
+import com.hangum.db.util.ManagerSession;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 
@@ -146,6 +147,8 @@ public class ModifyUserDialog extends Dialog {
 		textCreateDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		initData();
+		
+		ManagerSession.sessionManager();
 
 		return container;
 	}
@@ -172,6 +175,10 @@ public class ModifyUserDialog extends Dialog {
 			user.setDelYn(comboDel.getText());
 			user.setSeq(userDAO.getSeq());
 			
+			// 사용자를
+//			if("YES".equals(user.getDelYn())) {
+//			}
+			
 			try {
 				TadpoleSystem_UserQuery.updateUserData(user);
 			} catch (Exception e) {
@@ -186,10 +193,8 @@ public class ModifyUserDialog extends Dialog {
 			super.okPressed();	
 		} else {
 			return;
-		}
-		
+		}		
 	}
-	
 
 	/**
 	 * Create contents of the button bar.

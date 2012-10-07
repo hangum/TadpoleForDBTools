@@ -49,13 +49,12 @@
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="com.hangum.db.browser.rap.core.objectContribution.connectDatabase"
-            objectClass="com.hangum.db.dao.ManagerListDTO">
-         <action
+      <viewerContribution
+            id="com.hangum.db.browser.rap.core.viewerContribution.connect.manager"
+            targetID="com.hangum.db.browser.rap.core.view.connection.manager">
+            
+            <action
                class="com.hangum.db.browser.rap.core.actions.connections.ConnectDatabase"
-               enablesFor="1"
                icon="resources/icons/connect.png"
                id="com.hangum.db.browser.rap.core.action5"
                label="Connect Database"
@@ -65,9 +64,10 @@
                class="com.hangum.db.browser.rap.core.actions.connections.ConnectionManagerRefreshAction"
                icon="resources/icons/refresh.png"
                id="com.hangum.db.browser.rap.core.action.refresh"
-               label="Refersh">
+               label="Refersh"
+               menubarPath="additions">
          </action>
-      </objectContribution>
+      </viewerContribution>
       <objectContribution
             adaptable="false"
             id="com.hangum.db.browser.rap.core.objectContribution.rdb"
@@ -199,24 +199,6 @@
                      name="com.hangum.db.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
-         </action>
-         <action
-               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionInformationAction"
-               icon="resources/icons/connect.png"
-               id="com.hangum.db.browser.rap.core.action.connectionInformation"
-               label="Connection Information"
-               menubarPath="additions">
-            <enablement>
-               <objectClass
-                     name="com.hangum.db.dao.system.UserDBDAO">
-               </objectClass>
-            </enablement>
-         </action>
-         <action
-               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionManagerRefreshAction"
-               icon="resources/icons/refresh.png"
-               id="com.hangum.db.browser.rap.core.action.refresh"
-               label="Refersh">
          </action>
             <!--
          <action
@@ -375,24 +357,6 @@
                      name="com.hangum.db.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
-         </action>
-         <action
-               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionInformationAction"
-               icon="resources/icons/connect.png"
-               id="com.hangum.db.browser.rap.core.action.connectionInformation"
-               label="Connection Information"
-               menubarPath="additions">
-            <enablement>
-               <objectClass
-                     name="com.hangum.db.dao.system.UserDBDAO">
-               </objectClass>
-            </enablement>
-         </action>         
-         <action
-               class="com.hangum.db.browser.rap.core.actions.connections.ConnectionManagerRefreshAction"
-               icon="resources/icons/refresh.png"
-               id="com.hangum.db.browser.rap.core.action.refresh"
-               label="Refersh">
          </action>
          <!--
          <action

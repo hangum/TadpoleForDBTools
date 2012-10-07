@@ -46,8 +46,13 @@ public class SessionManager {
 	/**
 	 * 신규 user의 사용자를 등록
 	 * 
+	 * @param groupSeq
+	 * @param seq
 	 * @param email
+	 * @param password
 	 * @param name
+	 * @param userType
+	 * @param managerSeq
 	 */
 	public static void newLogin(int groupSeq, int seq, String email, String password, String name, String userType, int managerSeq) {
 		HttpSession sStore = RWT.getSessionStore().getHttpSession();

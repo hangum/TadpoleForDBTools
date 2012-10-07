@@ -25,6 +25,7 @@ public class PreferenceDefine {
 	/** default home page */
 	public static final String DEFAULT_HOME_PAGE 		= "DEFAULT_HOME_PAGE";
 	public static final String DEFAULT_HOME_PAGE_VALUE 	= "https://sites.google.com/site/tadpolefordb/home";//"https://www.github.com/hangum/TadpoleForDBTools/wiki";
+//	public static final String DEFAULT_HOME_PAGE_EN_VALUE 	= "https://sites.google.com/site/tadpolefordbtoolsen";
 	
 	/** default home page use */
 	public static final String DEFAULT_HOME_PAGE_USE 		= "DEFAULT_HOME_PAGE_USE";

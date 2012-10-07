@@ -10,17 +10,24 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap.core.actions.global;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.db.browser.rap.core.Activator;
 import com.hangum.db.browser.rap.core.Messages;
-import com.hangum.tadpole.manager.core.dialogs.auth.ManageControlDialog;
+import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.manager.core.dialogs.auth.UserManagementEditor;
+import com.hangum.tadpole.manager.core.dialogs.auth.UserManagementEditorInput;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -30,8 +37,13 @@ import com.swtdesigner.ResourceManager;
  *
  */
 public class UserPermissionAction extends Action implements ISelectionListener, IWorkbenchAction {
-	private final IWorkbenchWindow window;
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(UserPermissionAction.class);
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.UserPermissionAction"; //$NON-NLS-1$
+	
+	private final IWorkbenchWindow window;
 	private IStructuredSelection iss;
 	
 	public UserPermissionAction(IWorkbenchWindow window) {
@@ -46,8 +58,15 @@ public class UserPermissionAction extends Action implements ISelectionListener, 
 	
 	@Override
 	public void run() {
-		ManageControlDialog dialog = new ManageControlDialog(window.getShell());
-		dialog.open();
+		try {
+			UserManagementEditorInput userMe = new UserManagementEditorInput();
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, UserManagementEditor.ID);
+		} catch (PartInitException e) {
+			logger.error("User Management editor", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "User Management editor", errStatus); //$NON-NLS-1$
+		}
 	}
 
 	@Override

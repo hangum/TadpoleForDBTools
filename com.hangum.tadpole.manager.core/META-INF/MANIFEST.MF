@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core
-Bundle-SymbolicName: com.hangum.tadpole.manager.core
+Bundle-SymbolicName: com.hangum.tadpole.manager.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.manager.core.Activator
 Bundle-Vendor: HANGUM
@@ -14,3 +14,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.manager.core.dialogs.auth,
  com.hangum.tadpole.manager.core.dialogs.users
+Import-Package: javax.servlet;version="2.4.0",
+ javax.servlet.http;version="2.4.0"
