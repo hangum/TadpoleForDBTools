@@ -10,7 +10,10 @@
  ******************************************************************************/
 package com.hangum.db.browser.rap;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.rwt.RWT;
@@ -60,6 +63,16 @@ public class Application implements IEntryPoint {
 		} else {
 			iss.getHttpSession().setMaxInactiveInterval(sessionTimeOut * 60);
 		}
+		
+		HttpSessionContext hsc = iss.getHttpSession().getSessionContext();
+		Enumeration enumS = hsc.getIds();
+		while(enumS.hasMoreElements()) {
+			String id = enumS.nextElement().toString();
+			
+			HttpSession hs = hsc.getSession(id);
+			System.out.println(hs.getId());
+		}
+		
 		
 //		String sessionId = iss.getHttpSession().getId();
 //		long longCreatTime = iss.getHttpSession().getCreationTime();
