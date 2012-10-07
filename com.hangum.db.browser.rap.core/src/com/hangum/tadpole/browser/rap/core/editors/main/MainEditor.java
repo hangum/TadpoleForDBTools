@@ -116,7 +116,7 @@ import com.swtdesigner.SWTResourceManager;
  */
 public class MainEditor extends EditorPart {
 	/** Editor ID. */
-	public static final String ID = "com.hangum.db.browser.rap.core.editor.main"; //$NON-NLS-1$
+	public static final String ID = "com.hangum.tadpole.browser.rap.core.editor.main"; //$NON-NLS-1$
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(MainEditor.class);
 	

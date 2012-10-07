@@ -7,17 +7,17 @@
       <entrypoint
             class="com.hangum.tadpole.browser.rap.Application"
             parameter="tadpole"
-            id="com.hangum.db.browser.rap.Application">
+            id="com.hangum.tadpole.browser.rap.Application">
       </entrypoint>
    </extension>
    <extension
          point="org.eclipse.rap.ui.branding">
       <branding
             body="html/body.html"
-            defaultEntrypointId="com.hangum.db.browser.rap.Application"
+            defaultEntrypointId="com.hangum.tadpole.browser.rap.Application"
             exitConfirmationClass="com.hangum.tadpole.browser.rap.exit.ExitConfirm"
             favicon="icons/TadpoleForDBTools.ico"
-            id="com.hangum.db.browser.rap.branding"
+            id="com.hangum.tadpole.browser.rap.branding"
             servletName="db"
             themeId="org.eclipse.rap.design.example.business.theme"
             title="Tadpole for DB Tools - 0.0.8 SR6">

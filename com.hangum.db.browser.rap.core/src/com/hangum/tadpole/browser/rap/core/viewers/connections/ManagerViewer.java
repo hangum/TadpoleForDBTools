@@ -66,7 +66,7 @@ import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
  */
 public class ManagerViewer extends ViewPart {
 	private static final Logger logger = Logger.getLogger(ManagerViewer.class);
-	public static String ID = "com.hangum.db.browser.rap.core.view.connection.manager"; //$NON-NLS-1$
+	public static String ID = "com.hangum.tadpole.browser.rap.core.view.connection.manager"; //$NON-NLS-1$
 	
 	List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
 	TreeViewer treeViewer;

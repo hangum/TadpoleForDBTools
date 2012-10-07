@@ -105,7 +105,7 @@ import com.mongodb.Mongo;
  */
 public class ExplorerViewer extends AbstraceExplorerViewer {
 
-	public static String ID = "com.hangum.db.browser.rap.core.view.object.explorer"; //$NON-NLS-1$
+	public static String ID = "com.hangum.tadpole.browser.rap.core.view.object.explorer"; //$NON-NLS-1$
 	private static Logger logger = Logger.getLogger(ExplorerViewer.class);
 
 	// erd dnd

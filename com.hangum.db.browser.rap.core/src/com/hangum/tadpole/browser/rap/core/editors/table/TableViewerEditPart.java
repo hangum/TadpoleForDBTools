@@ -95,7 +95,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TableViewerEditPart extends EditorPart {
 
-	public static final String ID = "com.hangum.db.browser.rap.core.editors.table.TableViewerEditPart"; //$NON-NLS-1$
+	public static final String ID = "com.hangum.tadpole.browser.rap.core.editors.table.TableViewerEditPart"; //$NON-NLS-1$
 	private static final Logger logger = Logger.getLogger(TableViewerEditPart.class);
 	
 	private boolean isDirty = false;

@@ -31,7 +31,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
  *
  */
 public class ConnectDatabase implements IViewActionDelegate {
-	public static final String ID = "com.hangum.db.browser.rap.core.action.connect.database";
+	public static final String ID = "com.hangum.tadpole.browser.rap.core.action.connect.database";
 	private IStructuredSelection sel;
 
 	@Override
