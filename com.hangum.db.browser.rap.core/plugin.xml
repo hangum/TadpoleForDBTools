@@ -4,22 +4,22 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            id="com.hangum.tadpole.browser.rap.core.category.info"
+            id="com.hangum.tadpole.rdb.core.category.info"
             name="%category.name">
       </category>
       <view
-            category="com.hangum.tadpole.browser.rap.core.category.info"
-            class="com.hangum.tadpole.browser.rap.core.viewers.connections.ManagerViewer"
+            category="com.hangum.tadpole.rdb.core.category.info"
+            class="com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer"
             icon="resources/icons/database_table.png"
-            id="com.hangum.tadpole.browser.rap.core.view.connection.manager"
+            id="com.hangum.tadpole.rdb.core.view.connection.manager"
             name="%view.name"
             restorable="true">
       </view>
       <view
-            category="com.hangum.tadpole.browser.rap.core.category.info"
-            class="com.hangum.tadpole.browser.rap.core.viewers.object.ExplorerViewer"
+            category="com.hangum.tadpole.rdb.core.category.info"
+            class="com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer"
             icon="resources/icons/object-explorer.png"
-            id="com.hangum.tadpole.browser.rap.core.view.object.explorer"
+            id="com.hangum.tadpole.rdb.core.view.object.explorer"
             name="%view.name.0"
             restorable="true">
       </view>
@@ -27,50 +27,50 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="com.hangum.tadpole.browser.rap.core.editors.intro.IntroEditor"
+            class="com.hangum.tadpole.rdb.core.editors.intro.IntroEditor"
             default="false"
             icon="resources/icons/information-white.png"
-            id="com.hangum.tadpole.browser.rap.core.editor.intor"
+            id="com.hangum.tadpole.rdb.core.editor.intor"
             name="Home">
       </editor>
       <editor
-            class="com.hangum.tadpole.browser.rap.core.editors.main.MainEditor"
+            class="com.hangum.tadpole.rdb.core.editors.main.MainEditor"
             default="false"
             icon="resources/icons/sql-query.png"
-            id="com.hangum.tadpole.browser.rap.core.editor.main"
+            id="com.hangum.tadpole.rdb.core.editor.main"
             name="%editor.name.0">
       </editor>
       <editor
-            class="com.hangum.tadpole.browser.rap.core.editors.table.TableViewerEditPart"
+            class="com.hangum.tadpole.rdb.core.editors.table.TableViewerEditPart"
             icon="resources/icons/database_table.png"
-            id="com.hangum.tadpole.browser.rap.core.editors.table.TableViewerEditPart"
+            id="com.hangum.tadpole.rdb.core.editors.table.edit"
             name="Table Data Editor">
       </editor>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            id="com.hangum.tadpole.browser.rap.core.viewerContribution.connect.manager"
-            targetID="com.hangum.tadpole.browser.rap.core.view.connection.manager">
+            id="com.hangum.tadpole.rdb.core.viewerContribution.connect.manager"
+            targetID="com.hangum.tadpole.rdb.core.view.connection.manager">
             
             <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.ConnectDatabase"
+               class="com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase"
                icon="resources/icons/connect.png"
-               id="com.hangum.tadpole.browser.rap.core.action5"
+               id="com.hangum.tadpole.rdb.core.action.connect"
                label="Connect Database"
                menubarPath="additions">
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.ConnectionManagerRefreshAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.ConnectionManagerRefreshAction"
                icon="resources/icons/refresh.png"
-               id="com.hangum.tadpole.browser.rap.core.action.refresh"
+               id="com.hangum.tadpole.rdb.core.action.refresh"
                label="Refersh"
                menubarPath="additions">
          </action>
       </viewerContribution>
       <objectContribution
             adaptable="false"
-            id="com.hangum.tadpole.browser.rap.core.objectContribution.rdb"
+            id="com.hangum.tadpole.rdb.core.objectContribution.rdb"
             objectClass="com.hangum.tadpole.dao.system.UserDBDAO">
          <menu
                icon="resources/icons/create-dml.png"
@@ -89,9 +89,9 @@
             </groupMarker>
          </menu>
           <action
-                class="com.hangum.tadpole.browser.rap.core.actions.connections.CreateTriggerAction"
+                class="com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction"
                 enablesFor="1"
-                id="com.hangum.tadpole.browser.rap.core.action.creatTrigger"
+                id="com.hangum.tadpole.rdb.core.action.creatTrigger"
                 label="Creat Trigger"
                 menubarPath="menu.create/dml">
             <enablement>
@@ -101,9 +101,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.CreateFunctionAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction"
                enablesFor="1"
-               id="com.hangum.tadpole.browser.rap.core.action.creatFunction"
+               id="com.hangum.tadpole.rdb.core.action.creatFunction"
                label="Creat Functiontion"
                menubarPath="menu.create/dml">
             <enablement>
@@ -113,9 +113,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.CreateProcedureAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction"
                enablesFor="1"
-               id="com.hangum.tadpole.browser.rap.core.action.creatProcedure"
+               id="com.hangum.tadpole.rdb.core.action.creatProcedure"
                label="Creat Procedure"
                menubarPath="menu.create/dml">
             <enablement>
@@ -125,9 +125,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.CreateIndexAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction"
                enablesFor="1"
-               id="com.hangum.tadpole.browser.rap.core.action.createIndex"
+               id="com.hangum.tadpole.rdb.core.action.createIndex"
                label="Creat Index"
                menubarPath="menu.create/dml">
             <enablement>
@@ -137,9 +137,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.CreateViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction"
                enablesFor="1"
-               id="com.hangum.tadpole.browser.rap.core.action.createView"
+               id="com.hangum.tadpole.rdb.core.action.createView"
                label="%action.label"
                menubarPath="menu.create/dml">
             <enablement>
@@ -149,9 +149,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.CreateTableAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction"
                enablesFor="1"
-               id="com.hangum.tadpole.browser.rap.core.action.createTable"
+               id="com.hangum.tadpole.rdb.core.action.createTable"
                label="%action.label.0"
                menubarPath="menu.create/dml">
             <enablement>
@@ -162,10 +162,10 @@
          </action>
     
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.QueryEditorAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction"
                enablesFor="1"
                icon="resources/icons/sql-query.png"
-               id="com.hangum.tadpole.browser.rap.core.action.query"
+               id="com.hangum.tadpole.rdb.core.action.query"
                label="Edit SQL"
                menubarPath="additions">
             <enablement>
@@ -175,7 +175,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.erd.ERDViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action"
@@ -188,7 +188,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.erd.ERDAllTableViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.ERDAllTableViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action.all"
@@ -202,10 +202,10 @@
          </action>
             <!--
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.DisconnectDBAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"
                enablesFor="1"
                icon="resources/icons/disconnect.png"
-               id="com.hangum.tadpole.browser.rap.core.action.connection.disconnectdb"
+               id="com.hangum.tadpole.rdb.core.action.connection.disconnectdb"
                label="Disconnnect Database"
                menubarPath="additions">
             <enablement>
@@ -224,12 +224,12 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
-            id="com.hangum.tadpole.browser.rap.core.objectContribution.nosql"
+            id="com.hangum.tadpole.rdb.core.objectContribution.nosql"
             objectClass="com.hangum.tadpole.dao.system.UserDBDAO">
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.nosql.mongodb.MongodbProfillingAction"
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbProfillingAction"
                icon="resources/icons/profile.png"
-               id="com.hangum.tadpole.browser.rap.core.action.nosql.mongodb.profilling"
+               id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.profilling"
                label="Profilling"
                menubarPath="additions">
             <enablement>
@@ -239,9 +239,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.nosql.mongodb.MongodbCurrentOpAction"
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbCurrentOpAction"
                icon="resources/icons/current-operation.png"
-               id="com.hangum.tadpole.browser.rap.core.action.nosql.mongodb.currentop"
+               id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.currentop"
                label="Current Operation"
                menubarPath="additions">
             <enablement>
@@ -251,9 +251,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.nosql.mongodb.MongodbWebConsoleAction"
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbWebConsoleAction"
                icon="resources/icons/web-management.png"
-               id="com.hangum.tadpole.browser.rap.core.action.nosql.monogodb.top"
+               id="com.hangum.tadpole.rdb.core.action.nosql.monogodb.top"
                label="Web Console"
                menubarPath="additions">
             <enablement>
@@ -263,9 +263,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.nosql.mongodb.MongodbTopAction"
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbTopAction"
                icon="resources/icons/go-top.png"
-               id="com.hangum.tadpole.browser.rap.core.action.nosql.monogodb.top"
+               id="com.hangum.tadpole.rdb.core.action.nosql.monogodb.top"
                label="Top"
                menubarPath="additions">
             <enablement>
@@ -275,9 +275,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.nosql.mongodb.MongodbDBStatusAction"
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbDBStatusAction"
                icon="resources/icons/db_status.png"
-               id="com.hangum.tadpole.browser.rap.core.action.nosql.monogodb.serverstatus"
+               id="com.hangum.tadpole.rdb.core.action.nosql.monogodb.serverstatus"
                label="Server Status"
                menubarPath="additions">
             <enablement>
@@ -287,9 +287,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.nosql.mongodb.MongodbGridFSAction"
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbGridFSAction"
                icon="resources/icons/GridFS.png"
-               id="com.hangum.tadpole.browser.rap.core.action.nosql.mongodb.gridfs"
+               id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.gridfs"
                label="GridFS"
                menubarPath="additions">
             <enablement>
@@ -299,9 +299,9 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.nosql.mongodb.MongodbUserManagerAction"
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbUserManagerAction"
                icon="resources/icons/add_user.png"
-               id="com.hangum.tadpole.browser.rap.core.action.nosql.mongodb.adduser"
+               id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.adduser"
                label="User Manager"
                menubarPath="additions">
             <enablement>
@@ -319,7 +319,7 @@
             </groupMarker>
          </menu>
 		<action
-        class="com.hangum.tadpole.browser.rap.core.actions.erd.ERDDeleteAction"
+        class="com.hangum.tadpole.rdb.core.actions.erd.ERDDeleteAction"
         enablesFor="1"
         icon="resources/icons/delete-relation.png"
         id="com.hangum.tadpole.erd.delete.action"
@@ -333,7 +333,7 @@
          </action>
     
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.erd.ERDViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action"
@@ -346,7 +346,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.erd.ERDAllTableViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.ERDAllTableViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action.all"
@@ -360,10 +360,10 @@
          </action>
          <!--
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.connections.DisconnectDBAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"
                enablesFor="1"
                icon="resources/icons/disconnect.png"
-               id="com.hangum.tadpole.browser.rap.core.action.connection.disconnectdb"
+               id="com.hangum.tadpole.rdb.core.action.connection.disconnectdb"
                label="Disconnnect Database">
             <enablement>
                <objectClass
@@ -381,13 +381,13 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
-            id="com.hangum.tadpole.browser.rap.core.objectContribution.resource"
+            id="com.hangum.tadpole.rdb.core.objectContribution.resource"
             objectClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
          <action
-               class="com.hangum.tadpole.browser.rap.core.actions.erd.ERDDeleteAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.ERDDeleteAction"
                enablesFor="1"
                icon="resources/icons/delete-relation.png"
-               id="com.hangum.tadpole.browser.rap.core.action.deleteResource"
+               id="com.hangum.tadpole.rdb.core.action.deleteResource"
                label="Delete Resource"
                menubarPath="additions">
          </action>
@@ -403,14 +403,14 @@
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="com.hangum.tadpole.dao.system.UserDBDAO"
-            class="com.hangum.tadpole.browser.rap.core.actions.adapter.rdb.DBTypeActionFilterAdapterFactory">
+            class="com.hangum.tadpole.rdb.core.actions.adapter.rdb.DBTypeActionFilterAdapterFactory">
          <adapter
                type="org.eclipse.ui.IActionFilter">
          </adapter>
       </factory>
       <factory
             adaptableType="com.hangum.tadpole.dao.system.UserDBResourceDAO"
-            class="com.hangum.tadpole.browser.rap.core.actions.adapter.resource.ResourceTypeAdapterFactory">
+            class="com.hangum.tadpole.rdb.core.actions.adapter.resource.ResourceTypeAdapterFactory">
          <adapter
                type="org.eclipse.ui.IActionFilter">
          </adapter>
