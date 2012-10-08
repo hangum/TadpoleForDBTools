@@ -42,15 +42,15 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 
-import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.db.define.Define;
-import com.hangum.db.session.manager.SessionManager;
-import com.hangum.db.system.TadpoleSystem_UserDBQuery;
-import com.hangum.db.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
+import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 
 /**

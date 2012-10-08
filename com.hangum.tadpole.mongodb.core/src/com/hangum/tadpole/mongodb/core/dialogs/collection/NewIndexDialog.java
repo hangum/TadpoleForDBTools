@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;

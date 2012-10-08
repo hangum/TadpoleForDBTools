@@ -50,16 +50,16 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.db.dao.mysql.TableColumnDAO;
-import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.db.util.NumberFormatUtils;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.dto.MongoDBCollectionInfoDTO;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.util.NumberFormatUtils;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 

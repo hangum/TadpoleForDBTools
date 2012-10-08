@@ -19,8 +19,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
-import com.hangum.db.dao.mysql.TableColumnDAO;
-import com.hangum.db.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.mongodb.BasicDBObject;

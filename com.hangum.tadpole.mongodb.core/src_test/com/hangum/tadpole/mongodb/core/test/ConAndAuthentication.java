@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Set;
 
-import com.hangum.db.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;

@@ -14,8 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 
 public class TadpoleEditorInput implements IEditorInput {
 	private String name = null;

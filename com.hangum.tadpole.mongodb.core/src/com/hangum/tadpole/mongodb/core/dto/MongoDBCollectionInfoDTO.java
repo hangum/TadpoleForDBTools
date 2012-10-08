@@ -13,7 +13,7 @@ package com.hangum.tadpole.mongodb.core.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hangum.db.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 
 /**
  * mongodb collection infos
