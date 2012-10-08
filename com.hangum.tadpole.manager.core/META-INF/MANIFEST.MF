@@ -1,16 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core
-Bundle-SymbolicName: com.hangum.tadpole.manager.core
+Bundle-SymbolicName: com.hangum.tadpole.manager.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.manager.core.Activator
 Bundle-Vendor: HANGUM
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  org.eclipse.core.runtime,
- com.hangum.db.commons.sql;bundle-version="1.0.0",
- com.hangum.db.rap.commons;bundle-version="1.0.0",
- com.hangum.db.commons.libs;bundle-version="1.0.0"
+ com.hangum.tadpole.commons.sql;bundle-version="1.0.0",
+ com.hangum.tadpole.rap.commons;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.libs;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.manager.core.dialogs.auth,
  com.hangum.tadpole.manager.core.dialogs.users
+Import-Package: javax.servlet;version="2.4.0",
+ javax.servlet.http;version="2.4.0"

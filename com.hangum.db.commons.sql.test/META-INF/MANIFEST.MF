@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
-Bundle-SymbolicName: com.hangum.db.commons.sql.test
+Bundle-SymbolicName: com.hangum.tadpole.commons.sql.test
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.hangum.db.commons.sql.test.Activator
+Bundle-Activator: com.hangum.tadpole.commons.sql.test.Activator
 Bundle-Vendor: HANGUM
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  org.eclipse.core.runtime,
- com.hangum.db.commons.libs;bundle-version="1.0.0",
- com.hangum.db.commons.sql;bundle-version="1.0.0",
- com.hangum.db.rap.commons;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.sql;bundle-version="1.0.0",
+ com.hangum.tadpole.rap.commons;bundle-version="1.0.0",
  org.eclipse.rap.junit;bundle-version="1.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

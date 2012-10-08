@@ -18,11 +18,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import com.hangum.db.commons.sql.TadpoleSQLManager;
-import com.hangum.db.commons.sql.define.DBDefine;
-import com.hangum.db.dao.mysql.TableColumnDAO;
-import com.hangum.db.dao.mysql.TableDAO;
-import com.hangum.db.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mysql.TableDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.erd.core.relation.RelationUtil;
 import com.hangum.tadpole.model.Column;
 import com.hangum.tadpole.model.DB;

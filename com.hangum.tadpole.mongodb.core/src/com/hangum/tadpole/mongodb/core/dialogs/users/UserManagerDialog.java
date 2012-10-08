@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dto.UserDTO;

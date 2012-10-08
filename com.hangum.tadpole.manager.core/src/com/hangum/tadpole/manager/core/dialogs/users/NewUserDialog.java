@@ -33,13 +33,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.db.dao.system.UserDAO;
-import com.hangum.db.dao.system.UserGroupDAO;
-import com.hangum.db.define.Define;
-import com.hangum.db.session.manager.SessionManager;
-import com.hangum.db.system.TadpoleSystem_UserGroupQuery;
-import com.hangum.db.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.dao.system.UserDAO;
+import com.hangum.tadpole.dao.system.UserGroupDAO;
+import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
+import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 
 /**
  * 신규 유저 등록

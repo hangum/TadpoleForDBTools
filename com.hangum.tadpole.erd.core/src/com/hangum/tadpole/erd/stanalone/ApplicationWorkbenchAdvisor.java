@@ -17,7 +17,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import com.hangum.db.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.erd.core.editor.TadpoleEditor;
 import com.hangum.tadpole.erd.core.editor.TadpoleEditorInput;
 

@@ -52,11 +52,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.xml.sax.InputSource;
 
-import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.dao.system.UserDBResourceDAO;
-import com.hangum.db.define.Define;
-import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.db.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.erd.core.Messages;
 import com.hangum.tadpole.erd.core.actions.AutoLayoutAction;
 import com.hangum.tadpole.erd.core.actions.TableSelectionAction;
@@ -65,8 +63,10 @@ import com.hangum.tadpole.erd.core.dnd.TableTransferFactory;
 import com.hangum.tadpole.erd.core.part.TadpoleEditPartFactory;
 import com.hangum.tadpole.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.erd.stanalone.Activator;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.model.DB;
 import com.hangum.tadpole.model.TadpoleFactory;
+import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
 /**
  * tadpole editor

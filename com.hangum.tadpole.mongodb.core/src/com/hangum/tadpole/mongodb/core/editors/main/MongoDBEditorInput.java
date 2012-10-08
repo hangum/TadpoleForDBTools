@@ -16,7 +16,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import com.hangum.db.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 
 /**
  * mongodb기본 editor의 editorinput
