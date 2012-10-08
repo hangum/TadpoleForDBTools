@@ -140,7 +140,7 @@ public class DBLoginDialog extends Dialog {
 		lblNewLabel.setBounds(0, 0, 56, 15);
 		lblNewLabel.setText(Messages.DBLoginDialog_0);
 
-		comboDBList = new Combo(compositeHead, SWT.READ_ONLY);
+		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboDBList.setVisibleItemCount(7);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override

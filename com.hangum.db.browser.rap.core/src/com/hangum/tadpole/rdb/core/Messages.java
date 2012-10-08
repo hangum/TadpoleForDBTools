@@ -288,11 +288,9 @@ public class Messages extends NLS {
 	public static String MySQLLoginComposite_lblLocale_text;
 	public static String DBLoginDialog_button_text;
 	public static String MainEditor_btnDetailView_text;
-	public static String MainEditor_label_text;
 	public static String MainEditor_toolBar_toolTipText;
 	public static String SQLiteLoginComposite_lblGroup_text;
 	public static String MySQLLoginComposite_lblGroupName_text;
-	public static String MySQLLoginComposite_label_text;
 	public static String DBLoginDialog_trclmnGroupName_text;
 	public static String DBLoginDialog_trclmnType_text;
 	public static String DBLoginDialog_trclmnDisplayName_text;
