@@ -14,7 +14,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.rwt.widgets.ExternalBrowser;
 import org.eclipse.ui.IWorkbenchWindow;
 
+import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.swtdesigner.ResourceManager;
 
 public class BugIssueAction extends Action {
 	private final IWorkbenchWindow window;
@@ -22,6 +24,8 @@ public class BugIssueAction extends Action {
 	public BugIssueAction(IWorkbenchWindow window) {
 		super(Messages.BugIssueAction_0);
 		setId(this.getClass().getName());
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(BrowserActivator.ID, "resources/icons/bugAndIssue.png"));
+		setToolTipText("Github Issue");
 		
 		this.window = window;
 	}

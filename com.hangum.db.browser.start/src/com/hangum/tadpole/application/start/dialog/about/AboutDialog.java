@@ -36,6 +36,12 @@ public class AboutDialog extends Dialog {
 		super(parentShell);
 		// Tadpole for DB Tools - 뒷다리 나오기 프로젝트 (2012/04/01)
 	}
+	
+	@Override
+	public void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("About Tadpole for DB Tools");
+	}
 
 	/**
 	 * Create contents of the dialog.
