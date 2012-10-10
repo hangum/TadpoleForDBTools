@@ -16,7 +16,7 @@
             body="html/body.html"
             defaultEntrypointId="com.hangum.tadpole.browser.rap.Application"
             exitConfirmationClass="com.hangum.tadpole.application.exit.ExitConfirm"
-            favicon="icons/TadpoleForDBTools.ico"
+            favicon="icons/old_TadpoleForDBTools.ico"
             id="com.hangum.tadpole.browser.rap.branding"
             servletName="db"
             themeId="org.eclipse.rap.design.example.business.theme"
@@ -40,6 +40,10 @@
          <property
                name="appName"
                value="tadpole-standalone">
+         </property>
+         <property
+               name="windowImages"
+               value="platform:/plugin/com.hangum.tadpole.applicaion.start/resources/icons/TadpoleForDBTools.png">
          </property>
       </product>
    </extension>

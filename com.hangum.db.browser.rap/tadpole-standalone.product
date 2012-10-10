@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="tadpole-standalone" id="com.hangum.tadpole.browser.rap.product" application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
+<product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
 
 
    <configIni use="default">
@@ -13,12 +13,13 @@
       <vmArgsMac>-d32</vmArgsMac>
    </launcherArgs>
 
-   <windowImages/>
+   <windowImages i16="/com.hangum.tadpole.applicaion.start/resources/icons/TadpoleForDBTools.png"/>
 
 
    <launcher name="tadpole-standalone">
       <solaris/>
-      <win useIco="false">
+      <win useIco="true">
+         <ico path="/com.hangum.tadpole.application/icons/TadpoleForDBTools.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -30,9 +31,8 @@
 
 
    <plugins>
-      <plugin id="com.hangum.tadpole.browser.rap"/>
-      <plugin id="com.hangum.tadpole.browser.rap.core"/>
-      <plugin id="com.hangum.tadpole.browser.start"/>
+      <plugin id="com.hangum.tadpole.applicaion.start"/>
+      <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.sql"/>
       <plugin id="com.hangum.tadpole.erd.core"/>
@@ -42,6 +42,7 @@
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
       <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.hangum.tadpole.rap.commons"/>
+      <plugin id="com.hangum.tadpole.rdb.core"/>
       <plugin id="com.hangum.tadpole.rdb.core.ext"/>
       <plugin id="com.hangum.tadpole.sql.parser2"/>
       <plugin id="com.ibm.icu.base"/>
@@ -112,9 +113,6 @@
    </features>
 
    <configurations>
-      <plugin id="com.hangum.tadpole.browser.rap" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.browser.rap.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.browser.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.erd.core" autoStart="true" startLevel="0" />
