@@ -10,9 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.get;
 
-import com.hangum.db.dao.system.UserInfoDataDAO;
-import com.hangum.db.session.manager.SessionManager;
+import com.hangum.tadpole.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * preference의 일반적인 정보를 얻습니다.
@@ -40,6 +40,30 @@ public class GetPreferenceGeneral {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EXPORT_DILIMITER);
 		if(null == userInfo) return PreferenceDefine.EXPORT_DILIMITER_VALUE;
 		else if("".equals(userInfo.getValue0())) return PreferenceDefine.EXPORT_DILIMITER_VALUE;
+		
+		return userInfo.getValue0();
+	}
+	
+	/**
+	 * default home page
+	 * @return
+	 */
+	public static String getDefaultHomePage() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE);
+		if(null == userInfo) return PreferenceDefine.DEFAULT_HOME_PAGE_VALUE;
+		else if("".equals(userInfo.getValue0())) return PreferenceDefine.DEFAULT_HOME_PAGE_VALUE;
+		
+		return userInfo.getValue0();
+	}
+	
+	/**
+	 * default home page use
+	 * @return
+	 */
+	public static String getDefaultHomePageUse() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE_USE);
+		if(null == userInfo) return PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE;
+		else if("".equals(userInfo.getValue0())) return PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE;
 		
 		return userInfo.getValue0();
 	}

@@ -18,12 +18,12 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.db.commons.sql.TadpoleSQLManager;
-import com.hangum.db.commons.sql.define.DBDefine;
-import com.hangum.db.dao.mysql.ReferencedTableDAO;
-import com.hangum.db.dao.sqlite.SQLiteRefTableDAO;
-import com.hangum.db.dao.system.UserDBDAO;
-import com.hangum.db.define.Define;
+import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.mysql.ReferencedTableDAO;
+import com.hangum.tadpole.dao.sqlite.SQLiteRefTableDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.erd.core.dnd.TableTransferDropTargetListener;
 import com.hangum.tadpole.model.Column;
 import com.hangum.tadpole.model.DB;

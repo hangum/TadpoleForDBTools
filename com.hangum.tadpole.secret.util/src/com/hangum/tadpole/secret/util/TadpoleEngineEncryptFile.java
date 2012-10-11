@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.db.util.secret.EncryptiDecryptUtil;
+import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 
 /**
  * 올챙이 엔진디비의 암호화 파일 

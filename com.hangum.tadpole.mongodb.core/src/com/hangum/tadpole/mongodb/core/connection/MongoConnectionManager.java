@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.db.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.mongodb.DB;
 import com.mongodb.DBAddress;

@@ -29,11 +29,11 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.db.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.erd.core.Messages;
 import com.hangum.tadpole.erd.core.part.RelationEditPart;
 import com.hangum.tadpole.erd.core.part.TableEditPart;
 import com.hangum.tadpole.erd.stanalone.Activator;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.model.Relation;
 import com.hangum.tadpole.model.Table;
 

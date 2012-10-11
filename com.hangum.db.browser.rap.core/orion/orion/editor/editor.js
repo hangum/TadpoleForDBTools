@@ -210,6 +210,61 @@ define("orion/editor/editor", ['i18n!orion/editor/nls/messages', 'orion/textview
 				this._textView.focus();
 			}
 		},
+		// to upper case text
+		upperCaseText : function() {
+//			console.log('upperCaseText called');
+			
+			if (this._textView) {
+				
+				var selection = this._textView.getSelection();
+				// 블럭을 지정 하였으면... 
+				if (selection.end > selection.start) {
+					// 소문자로변환 					
+					var selectString = this._textView.getText().substring(selection.start, selection.end).toUpperCase();
+//					console.log("[selectString] " + selectString);
+					
+					var firstString = this._textView.getText().substring(0, selection.start);
+//					console.log("[firstString] " + firstString);
+					var lastString = this._textView.getText().substring(selection.end);
+//					console.log("[lastString] " + lastString);
+
+					// 새로운 텍스트를 입력한다.
+					this._textView.setText(firstString + selectString + lastString);
+					
+					// 블럭을 선택합니다.
+					this._textView.setSelection(selection.start, selection.end, true);
+					
+					this.checkDirty();
+				}
+			}
+		},
+		// to low case text
+		lowCaseText : function() {
+//			console.log('lowCaseText called');
+			if (this._textView) {
+				
+				var selection = this._textView.getSelection();
+				// 블럭을 지정 하였으면... 
+				if (selection.end > selection.start) {
+					// 소문자로변환 					
+					var selectString = this._textView.getText().substring(selection.start, selection.end).toLowerCase();
+//					console.log("[selectString] " + selectString);
+					
+					var firstString = this._textView.getText().substring(0, selection.start);
+//					console.log("[firstString] " + firstString);
+					var lastString = this._textView.getText().substring(selection.end);
+//					console.log("[lastString] " + lastString);
+
+					// 새로운 텍스트를 입력한다.
+					this._textView.setText(firstString + selectString + lastString);
+					
+					// 블럭을 선택합니다.
+					this._textView.setSelection(selection.start, selection.end, true);
+					
+					this.checkDirty();
+				}
+			}
+		},
 		/**
 		 * Sets whether the annotation ruler is visible.
 		 *

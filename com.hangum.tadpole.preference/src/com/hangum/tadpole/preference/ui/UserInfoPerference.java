@@ -22,10 +22,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.hangum.db.dao.system.UserDAO;
-import com.hangum.db.session.manager.SessionManager;
-import com.hangum.db.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.preference.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 
 /**
  * 사용자 정보 수정
@@ -65,7 +65,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		textGroupName.setEnabled(false);
 		textGroupName.setEditable(false);
 		textGroupName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textGroupName.setText(SessionManager.getName());
+		textGroupName.setText(SessionManager.getGroupName());
 		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
