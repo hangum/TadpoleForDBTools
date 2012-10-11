@@ -15,23 +15,18 @@
 
 <!-- 
 	table 이름
+	
+	select substring(convert(varchar(100), SERVERPROPERTY('ProductVersion')), 1, charindex('.', convert(varchar(100), SERVERPROPERTY('ProductVersion')) )-1) as version
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.dao.mysql.TableDAO" parameterClass="java.lang.String">
-<!-- 
-	table comment
-	   fisusr이라는 사용자 소유의 t_users테이블에 comment를 지정할때. 
-	   exec sp_addextendedproperty 'caption', '사용자 아이디', 'user', fisusr, 'table', 't_users';
- -->
-	/*
-	SELECT SERVERPROPERTY('productversion')	
-	select name from sys.tables	order by name
-	*/
+		
 	select o.name, c.value as comment 
-	from sysobjects o
-	    left join sysproperties c on o.id = c.id	     
-    	and c.type = '3'	
-	where o.xtype = 'U' 
-	order by o.name
+		from sysobjects o
+		    left join sysproperties c on o.id = c.id	     
+	    	and c.type = '3'	
+		where o.xtype = 'U' 
+		order by o.name
+	
 </select>
 
 <!-- 

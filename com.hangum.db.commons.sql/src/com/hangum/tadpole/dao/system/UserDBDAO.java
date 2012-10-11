@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+\ * Copyright (c) 2012 Cho Hyun Jong.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,9 @@ public class UserDBDAO {
     
     protected ManagerListDTO parent;
     protected List<UserDBResourceDAO> listUserDBErd;
+    
+    /** 디비의 버전 정보 */
+    protected String version;
     
     /** userdb를 그룹으로 표시 하고자 할때 사용합니다. 현재는 로그인창에서 디비 관리하면에서 사용. */
     protected List<UserDBDAO> listUserDBGroup = new ArrayList<UserDBDAO>();
@@ -179,6 +182,14 @@ public class UserDBDAO {
 	
 	public List<UserDBDAO> getListUserDBGroup() {
 		return listUserDBGroup;
+	}
+	
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	@Override
