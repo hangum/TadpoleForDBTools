@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 
@@ -81,11 +82,17 @@ public class EditorUtils {
 		
 		for (IEditorReference iEditorReference : editors) {
 			if(id.equals( iEditorReference.getId() )) {				
-				MainEditor editor = (MainEditor)iEditorReference.getEditor(true);
-				if(editor.getdBResource() == null) continue;
-				
-				if(editor.getdBResource().getSeq() == dao.getSeq()) {
-					return iEditorReference;
+				IEditorPart ier = iEditorReference.getEditor(true);
+				if(ier instanceof MainEditor) {
+					MainEditor editor = (MainEditor)iEditorReference.getEditor(true);
+					if(editor.getdBResource() == null) continue;
+					
+					if(editor.getdBResource().getSeq() == dao.getSeq()) return iEditorReference;
+				} else if(ier instanceof TadpoleEditor) {
+					TadpoleEditor editor = (TadpoleEditor)iEditorReference.getEditor(true);
+					if(editor.getUserDBErd() == null) continue;
+					
+					if(editor.getUserDBErd().getSeq() == dao.getSeq()) return iEditorReference;
 				}
 			}
 		}

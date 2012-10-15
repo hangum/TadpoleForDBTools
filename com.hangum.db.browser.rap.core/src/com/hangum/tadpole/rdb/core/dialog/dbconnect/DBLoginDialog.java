@@ -238,11 +238,13 @@ public class DBLoginDialog extends Dialog {
 				// 선택이 될때마다 로그인창의 화면에 정보를 출력합니다.
 				IStructuredSelection iss = (IStructuredSelection)event.getSelection();
 				UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
-				
-				comboDBList.setText(userDB.getTypes());
-				initDBWidget(userDB);
-				
-				thisWorkType = WORK_TYPE.MODIFY;
+			
+				if(userDB != null) {
+					comboDBList.setText(userDB.getTypes());
+					initDBWidget(userDB);
+					
+					thisWorkType = WORK_TYPE.MODIFY;
+				}
 			}
 		});
 		Tree tree = treeViewerLoginData.getTree();

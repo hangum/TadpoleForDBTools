@@ -138,32 +138,6 @@ public class AdminComposite extends Composite {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		treeViewerAdmin = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
-		treeViewerAdmin.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection ss = (IStructuredSelection)event.getSelection();
-				
-				if(ss.getFirstElement() instanceof UserGroupAUserDAO) {
-					UserGroupAUserDAO userGroup = (UserGroupAUserDAO)ss.getFirstElement();
-					
-					// 등록된 정보가 있으면 로그인 하지 않습니다. 
-//					if(userGroup.child.size() == 0) {
-						try {
-							List<UserDBDAO> userDBs = TadpoleSystem_UserDBQuery.getSpecificUserDB(userGroup.getSeq());
-							for (UserDBDAO userDBDAO : userDBs) {
-								userGroup.child.add(userDBDAO);							
-							}
-							
-							treeViewerAdmin.refresh(userGroup, true);
-							
-						} catch (Exception e) {
-							logger.error("get userDb", e);
-						}
-//					}
-				} 
-								
-			}	// end selection
-			
-		});
 		treeAdmin = treeViewerAdmin.getTree();
 		treeAdmin.setLinesVisible(true);
 		treeAdmin.setHeaderVisible(true);
@@ -227,11 +201,19 @@ public class AdminComposite extends Composite {
 			// 데이터 수집 종료			
 			
 			// Manager 추가
+			UserGroupAUserDAO managerGroupAUserDAO = null;
 			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
 				if(Define.USER_TYPE.MANAGER.toString().equals(userGroupAUserDAO.getUser_type())) {
 					rootUserGroup.child.add(userGroupAUserDAO);
 					groupHash.put(userGroupAUserDAO.getGroup_seq(), userGroupAUserDAO);
+					managerGroupAUserDAO = userGroupAUserDAO;
 				}								
+			}
+			
+			// 그룹에 속한 디비를 추가한다.
+			List<UserDBDAO> userDBs = TadpoleSystem_UserDBQuery.getSpecificUserDB(managerGroupAUserDAO.getSeq());
+			for (UserDBDAO userDBDAO : userDBs) {
+				rootUserGroup.child.add(userDBDAO);							
 			}
 			
 			// 메니저 권한만 유저 정보를 표시한다.
@@ -246,15 +228,7 @@ public class AdminComposite extends Composite {
 					}								
 				}
 			}
-			
-////			 user가 manager이면 manager 디비를 추가합니다.
-//			if(Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
-//				List<UserDBDAO> userDBs = TadpoleSystem_UserDBQuery.getSpecificUserDB(SessionManager.getSeq());
-//				for (UserDBDAO userDBDAO : userDBs) {
-//					rootUserGroup.child.add(userDBDAO);							
-//				}
-//			}
-			
+
 			return rootUserGroup;
 		} catch (Exception e) {
 			logger.error("user list", e);

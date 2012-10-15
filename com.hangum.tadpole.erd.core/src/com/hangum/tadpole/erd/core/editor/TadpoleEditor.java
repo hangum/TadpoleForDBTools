@@ -434,6 +434,10 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		
 	}
 	
+	public UserDBResourceDAO getUserDBErd() {
+		return userDBErd;
+	}
+	
 //	/**
 //	 * outline page
 //	 * @author hangum

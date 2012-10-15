@@ -1309,15 +1309,13 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		} catch (Exception e) {
 			logger.error(source + " Table Referesh", e);
 
-			if (showTables != null)
-				showTables.clear();
+			if (showTables != null) showTables.clear();
 			tableListViewer.setInput(showTables);
 			tableListViewer.refresh();
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			if ("DB".equals(source))ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_4, errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-			else
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
+			if ("DB".equals(source)) ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_4, errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			else  ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
 		}
 
 	}
