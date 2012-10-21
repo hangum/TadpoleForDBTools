@@ -42,7 +42,7 @@ public class UnicodeUtils {
 			else {
 //				Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(c);
 				
-				logger.debug("[unicode] [" + c + "]");
+				if(logger.isDebugEnabled()) logger.debug("[unicode] [" + c + "]");
 				
 				if( UnicodeBlock.HANGUL_SYLLABLES.equals(ub) ||  
 			        	UnicodeBlock.HANGUL_COMPATIBILITY_JAMO.equals(ub) || 

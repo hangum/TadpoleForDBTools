@@ -100,7 +100,7 @@ public class SQLUtil {
 //			exeSQL = StringUtils.replace(exeSQL, "\r", " ");
 //			exeSQL = StringUtils.replace(exeSQL, "\n", " ");
 //			exeSQL = StringUtils.replace(exeSQL, Define.LINE_SEPARATOR, " ");
-			exeSQL = exeSQL.replaceAll("(\r\n|\n|\r)", " ");
+//			exeSQL = exeSQL.replaceAll("(\r\n|\n|\r)", " ");
 			
 			// 모든 쿼리에 공백 주석 제거
 			exeSQL = StringUtils.trimToEmpty(exeSQL);

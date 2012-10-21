@@ -368,7 +368,6 @@ public class MainEditor extends EditorPart {
 			}
 		});
 	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
-//	    tltmSQLToApplication.setText("SQL to Application"); //$NON-NLS-1$
 	    
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -385,7 +384,6 @@ public class MainEditor extends EditorPart {
 			}
 		});
 		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
-//		tltmDownload.setText("Download SQL"); //$NON-NLS-1$
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		

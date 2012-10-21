@@ -22,7 +22,7 @@ import com.hangum.tadpole.rdb.core.editors.main.SQLTextUtil;
  *
  */
 public class SQLToJavaConvert {
-	public static final String name = "sqlBuff";
+	public static final String DEFAULT_VARIABLE = "sqlBuff";
 	
 	/**
 	 * sql to string

@@ -48,6 +48,7 @@ public class SQLToStringDialog extends Dialog {
 	private String sql = ""; //$NON-NLS-1$
 	
 	Text textConvert;
+	private Text textVariable;
 
 	/**
 	 * Create the dialog.
@@ -76,6 +77,11 @@ public class SQLToStringDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
+		GridLayout gridLayout = (GridLayout) container.getLayout();
+		gridLayout.verticalSpacing = 4;
+		gridLayout.horizontalSpacing = 4;
+		gridLayout.marginHeight = 4;
+		gridLayout.marginWidth = 4;
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
@@ -112,6 +118,24 @@ public class SQLToStringDialog extends Dialog {
 		});
 		btnOriginalText.setText(Messages.SQLToStringDialog_4);
 		
+		Label lblVariable = new Label(compositeTitle, SWT.NONE);
+		lblVariable.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblVariable.setText(Messages.SQLToStringDialog_lblVariable_text);
+		
+		textVariable = new Text(compositeTitle, SWT.BORDER);
+		textVariable.setText(Messages.SQLToStringDialog_text_text);
+		textVariable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textVariable.setText(SQLToJavaConvert.DEFAULT_VARIABLE);
+		
+		Button btnConvertSQL = new Button(compositeTitle, SWT.NONE);
+		btnConvertSQL.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				sqlToStr();
+			}
+		});
+		btnConvertSQL.setText(Messages.SQLToStringDialog_btnNewButton_text);
+		
 		textConvert = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
 		textConvert.addKeyListener(new KeyAdapter() {
 			@Override
@@ -128,6 +152,12 @@ public class SQLToStringDialog extends Dialog {
 	}
 	
 	private void sqlToStr() {
+		String variable = textVariable.getText();
+		if(StringUtils.trim(variable).equals("")){
+			variable = SQLToJavaConvert.DEFAULT_VARIABLE;
+			textVariable.setText(variable);
+		}
+		
 		StringBuffer sbStr = new StringBuffer();
 		String[] sqls = parseSQL();
 		
@@ -135,8 +165,11 @@ public class SQLToStringDialog extends Dialog {
 		for(int i=0; i < sqls.length; i++) {
 			if("".equals(StringUtils.trimToEmpty(sqls[i]))) continue;
 			
-			if(i ==0) sbStr.append( slt.sqlToString(SQLToJavaConvert.name, sqls[i]) );
-			else sbStr.append( slt.sqlToString(SQLToJavaConvert.name + i, sqls[i]) );
+			if(i ==0) sbStr.append( slt.sqlToString(variable, sqls[i]) );
+			else sbStr.append( slt.sqlToString(variable + i, sqls[i]) );
+			
+			// 쿼리가 여러개일 경우 하나씩 한개를 준다.
+			sbStr.append("\r\n");
 		}
 		
 		textConvert.setText(sbStr.toString());
@@ -165,7 +198,7 @@ public class SQLToStringDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(562, 388);
+		return new Point(562, 481);
 	}
 
 }
