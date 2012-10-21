@@ -51,9 +51,9 @@ public class NewIndexDialog extends NewDocumentDialog {
 		try {
 			MongoDBQuery.crateIndex(userDB, textName.getText().trim(), textContent.getText().trim());
 		} catch (Exception e) {
-			logger.error("mongodb create collection", e); //$NON-NLS-1$
+			logger.error("mongodb create index", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Create index Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			return;
 		}
