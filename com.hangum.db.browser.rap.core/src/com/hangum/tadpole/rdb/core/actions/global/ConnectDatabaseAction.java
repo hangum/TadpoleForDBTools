@@ -84,11 +84,6 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 					// 입력
 					if(WORK_TYPE.INSERT == workType) {
 						managerView.addUserDB(userDB, true);
-//					// 수정 삭제
-//					} else if(WORK_TYPE.MODIFY == workType) {
-//						managerView.modifyUserDB(userDB);
-//					} else if(WORK_TYPE.DELETE == workType) {
-//						managerView.deleteUserDB(userDB);
 					} else {
 						managerView.init();
 					}

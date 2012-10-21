@@ -171,7 +171,8 @@
  	FROM user_db
  	WHERE user_seq = #user_seq# AND
  		url = #url# AND
- 		users = #users#
+ 		users = #users#  AND
+		delYn = 'NO'
  </select>
  
  <!-- 
@@ -181,7 +182,8 @@
  	SELECT group_name
  	FROM user_db
  	WHERE 
-		user_seq = #user_seq#
+		user_seq = #user_seq# AND
+		delYn = 'NO'
  	group by group_name 
  </select>
  
@@ -203,7 +205,8 @@
 <select id="userDB" resultClass="com.hangum.tadpole.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
 	SELECT * FROM user_db 
 	WHERE 
-		user_seq = #user_seq# 
+		user_seq = #user_seq# AND
+		delYn = 'NO'
 	ORDER BY group_name
 </select>
 
@@ -228,9 +231,11 @@
 	
 </update>
 
-<delete id="userDBDelete" parameterClass="java.lang.Integer">
-	DELETE FROM user_db WHERE seq = #seq#
-</delete>
+<update id="userDBDelete" parameterClass="java.lang.Integer">
+	UPDATE user_db SET
+		delYn = 'YES'
+	WHERE seq = #seq#
+</update>
 
 <!-- 
 	============================================================================================================================

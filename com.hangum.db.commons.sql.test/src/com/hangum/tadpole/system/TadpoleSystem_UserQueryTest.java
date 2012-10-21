@@ -62,16 +62,16 @@ public class TadpoleSystem_UserQueryTest extends TestCase {
 		super.setUp();
 	}
 	
-	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserQuery#deleteUser(UserDAO) 유저삭제} 
-	 */
-	public void testDeleteUser() {
-		try {
-			TadpoleSystem_UserQuery.deleteUser(defaultUserDAO);
-		} catch (Exception e) {
-			fail("delete user");
-		}
-	}
+//	/**
+//	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserQuery#deleteUser(UserDAO) 유저삭제} 
+//	 */
+//	public void testDeleteUser() {
+//		try {
+//			TadpoleSystem_UserQuery.deleteUser(defaultUserDAO);
+//		} catch (Exception e) {
+//			fail("delete user");
+//		}
+//	}
 
 	/**
 	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserQuery#newUser(int, String, String, String, USER_TYPE) 시스템엔진디비 유저 입력}

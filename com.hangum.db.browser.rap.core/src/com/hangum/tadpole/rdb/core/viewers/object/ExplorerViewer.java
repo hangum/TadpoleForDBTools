@@ -1029,6 +1029,16 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			tableListViewer.refresh();
 
 			initObjectDetail(managerList.getName());//DbType());
+			
+		// Connection Manager의 모든 db가 삭제 되었을때 호출됨 
+		} else {
+			tabFolderObject.setSelection(0);
+			userDB = null;
+
+			// table을 닫는다.
+			if (showTables != null) showTables.clear();
+			tableListViewer.setInput(showTables);
+			tableListViewer.refresh();
 		}
 	}
 

@@ -196,14 +196,14 @@ public class TadpoleSystem_UserQuery {
 		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
 	}
 	
-	/**
-	 * 유저삭제
-	 * @param user
-	 * @throws Exception
-	 */
-	public static void deleteUser(UserDAO user) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
-		sqlClient.update("deleteUser", user); //$NON-NLS-1$
-	}
+//	/**
+//	 * 유저삭제
+//	 * @param user
+//	 * @throws Exception
+//	 */
+//	public static void deleteUser(UserDAO user) throws Exception {
+//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+//		sqlClient.update("deleteUser", user); //$NON-NLS-1$
+//	}
 
 }
