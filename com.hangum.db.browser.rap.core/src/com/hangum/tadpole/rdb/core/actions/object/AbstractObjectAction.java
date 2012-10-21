@@ -116,9 +116,9 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		this.sel = (IStructuredSelection)selection;
+		
 		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-			this.sel = (IStructuredSelection)selection;
-			
 			if(userDB != null) setEnabled(true);
 			else setEnabled(false);
 		}

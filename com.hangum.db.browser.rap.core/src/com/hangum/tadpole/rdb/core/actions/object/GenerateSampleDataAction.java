@@ -54,11 +54,11 @@ public class GenerateSampleDataAction extends AbstractObjectAction {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-			
+		this.sel = (IStructuredSelection)selection;
+		
+		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {			
 			if(userDB != null) {
-				if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					this.sel = (IStructuredSelection)selection;
+				if(selection instanceof IStructuredSelection && !selection.isEmpty()) {					
 					setEnabled(this.sel.size() > 0);
 				} else setEnabled(false);
 			}

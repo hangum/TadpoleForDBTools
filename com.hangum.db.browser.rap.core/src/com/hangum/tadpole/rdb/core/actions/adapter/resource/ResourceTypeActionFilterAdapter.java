@@ -25,7 +25,7 @@ public class ResourceTypeActionFilterAdapter implements IActionFilter {
 	
 	@Override
 	public boolean testAttribute(Object target, String name, String value) {
-		System.out.println(target);
+//		System.out.println(target);
 		
 		if (target instanceof UserDBResourceDAO) {
 //			UserDBResourceDAO obj = (UserDBResourceDAO) target;
