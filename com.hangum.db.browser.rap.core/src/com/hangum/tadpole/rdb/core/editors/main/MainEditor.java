@@ -231,7 +231,10 @@ public class MainEditor extends EditorPart {
 		
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
-		else setPartName(dBResource.getFilename());
+		else {
+			setPartName(dBResource.getFilename());
+			saveFileName = dBResource.getFilename();
+		}
 		
 		initDefaultEditorStr = qei.getDefaultStr();
 	}
