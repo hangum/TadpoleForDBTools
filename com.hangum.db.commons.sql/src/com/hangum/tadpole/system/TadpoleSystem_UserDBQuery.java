@@ -161,9 +161,6 @@ public class TadpoleSystem_UserDBQuery {
 	public static void removeUserDB(int seq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
 		
-//		sqlClient.delete("userDbResourceDataDelete", seq);
-//		sqlClient.delete("userDBResourceDeleteAtDB", seq); //$NON-NLS-1$
-		
 		sqlClient.update("userDBDelete", seq); //$NON-NLS-1$		
 	}
 }
