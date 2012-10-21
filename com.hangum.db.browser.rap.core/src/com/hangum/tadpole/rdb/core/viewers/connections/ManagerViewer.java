@@ -227,13 +227,13 @@ public class ManagerViewer extends ViewPart {
 	 * @param userDB
 	 * @param defaultOpen default editor open
 	 */
-	public void addUserDB(UserDBDAO userDB, boolean defaultOpne) {
+	public void addUserDB(UserDBDAO userDB, boolean defaultOpen) {
 		for(ManagerListDTO dto: treeList) {
 			if(dto.getName().equals(userDB.getGroup_name())) {
 				dto.addLogin(userDB);
 				
-				if(defaultOpne) {
-					refresh(userDB);
+				if(defaultOpen) {
+					selectAndOpenView(userDB);
 					treeViewer.expandToLevel(userDB, 2);
 				}
 				return;
@@ -243,9 +243,12 @@ public class ManagerViewer extends ViewPart {
 		// 신규 그룹이면...
 		ManagerListDTO managerDto = new ManagerListDTO(userDB.getGroup_name());
 		managerDto.addLogin(userDB);
-		treeList.add(managerDto);		
-		refresh(userDB);
-		treeViewer.expandToLevel(userDB, 2);
+		treeList.add(managerDto);	
+		
+		if(defaultOpen) {
+			selectAndOpenView(userDB);
+			treeViewer.expandToLevel(userDB, 2);
+		}
 	}
 	
 	/**
@@ -361,7 +364,7 @@ public class ManagerViewer extends ViewPart {
 	 * 
 	 * @param dto
 	 */
-	public void refresh(UserDBDAO dto) {
+	public void selectAndOpenView(UserDBDAO dto) {
 		treeViewer.refresh();
 		treeViewer.setSelection(new StructuredSelection(dto), true);
 		
