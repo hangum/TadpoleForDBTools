@@ -3,7 +3,6 @@
 
 <product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -15,7 +14,6 @@
 
    <windowImages i16="/com.hangum.tadpole.applicaion.start/resources/icons/TadpoleForDBTools.png"/>
 
-
    <launcher name="tadpole-standalone">
       <solaris/>
       <win useIco="true">
@@ -24,11 +22,9 @@
       </win>
    </launcher>
 
-
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
    </vm>
-
 
    <plugins>
       <plugin id="com.hangum.tadpole.applicaion.start"/>
@@ -49,6 +45,8 @@
       <plugin id="javax.servlet"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>
+      <plugin id="org.apache.felix.gogo.runtime"/>
+      <plugin id="org.apache.felix.gogo.shell"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
@@ -62,6 +60,7 @@
       <plugin id="org.eclipse.emf.ecore.xmi"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.console"/>
       <plugin id="org.eclipse.equinox.http.jetty"/>
       <plugin id="org.eclipse.equinox.http.registry"/>
       <plugin id="org.eclipse.equinox.http.servlet"/>
@@ -113,6 +112,8 @@
    </features>
 
    <configurations>
+      <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.erd.core" autoStart="true" startLevel="0" />
@@ -122,12 +123,15 @@
       <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rap.commons" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core.ext" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.sql.parser2" autoStart="true" startLevel="0" />
       <plugin id="com.ibm.icu.base" autoStart="true" startLevel="0" />
       <plugin id="javax.servlet" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.fileupload" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.io" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.felix.gogo.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.felix.gogo.shell" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.core.commands" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.core.contenttype" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.core.databinding" autoStart="true" startLevel="0" />
@@ -141,6 +145,7 @@
       <plugin id="org.eclipse.emf.ecore.xmi" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.app" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.console" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.http.jetty" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.http.registry" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.http.servlet" autoStart="true" startLevel="0" />
