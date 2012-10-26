@@ -279,7 +279,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		// view의 set selection provider 설정
 		StructuredViewer[] viewers = new StructuredViewer[] { tableListViewer, viewListViewer, indexesListViewer, procedureListViewer, functionListViewer, triggerListViewer };
-		SelectionProviderMediator mediator = new SelectionProviderMediator(viewers, null);
+		SelectionProviderMediator mediator = new SelectionProviderMediator(viewers, tableListViewer);
 		getViewSite().setSelectionProvider(mediator);
 
 		// TabItem tbtmDatabases = new TabItem(tabFolder, SWT.NONE);
@@ -287,8 +287,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		//
 		// TabItem tbtmUsers = new TabItem(tabFolder, SWT.NONE);
 		// tbtmUsers.setText("Users");
-
-		getViewSite().getActionBars().getStatusLineManager().setMessage(""); //$NON-NLS-1$
+//
+//		getViewSite().getActionBars().getStatusLineManager().setMessage(""); //$NON-NLS-1$
 
 		// 왼쪽 트리에서 데이터 받았는지.
 		getSite().getPage().addSelectionListener(ManagerViewer.ID, managementViewerListener);
@@ -308,7 +308,6 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 						if (tableName.equals(table.getItem(i).getText(0))) {
 							tableListViewer.setSelection(new StructuredSelection(tableListViewer.getElementAt(i)), true);
 						}
-
 					}
 				} // end if(event.getProperty()
 
