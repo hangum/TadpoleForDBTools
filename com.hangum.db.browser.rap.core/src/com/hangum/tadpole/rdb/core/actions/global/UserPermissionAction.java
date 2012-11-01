@@ -27,7 +27,6 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.dialogs.auth.UserManagementEditor;
 import com.hangum.tadpole.manager.core.dialogs.auth.UserManagementEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.ResourceManager;
 
 /**

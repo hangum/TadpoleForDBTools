@@ -27,7 +27,7 @@ import com.hangum.tadpole.define.Define.DB_ACTION;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -74,8 +74,8 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 			sbSQL.append(Define.SQL_DILIMITER); //$NON-NLS-1$
 			
 			//
-			QueryEditorAction qea = new QueryEditorAction();
-			qea.run(userDB, sbSQL.toString());
+//			QueryEditorAction qea = new QueryEditorAction();
+			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLDeleteAction_10, e);
 			

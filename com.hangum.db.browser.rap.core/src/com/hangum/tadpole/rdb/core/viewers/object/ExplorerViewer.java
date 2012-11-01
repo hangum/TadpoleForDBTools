@@ -279,7 +279,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		// view의 set selection provider 설정
 		StructuredViewer[] viewers = new StructuredViewer[] { tableListViewer, viewListViewer, indexesListViewer, procedureListViewer, functionListViewer, triggerListViewer };
-		SelectionProviderMediator mediator = new SelectionProviderMediator(viewers, tableListViewer);
+		SelectionProviderMediator mediator = new SelectionProviderMediator(viewers, null);
 		getViewSite().setSelectionProvider(mediator);
 
 		// TabItem tbtmDatabases = new TabItem(tabFolder, SWT.NONE);
@@ -308,6 +308,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 						if (tableName.equals(table.getItem(i).getText(0))) {
 							tableListViewer.setSelection(new StructuredSelection(tableListViewer.getElementAt(i)), true);
 						}
+
 					}
 				} // end if(event.getProperty()
 
@@ -1004,8 +1005,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 			// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
 			if (userDB != null) {
-				if (userDB.getSeq() == selectUserDb.getSeq())
-					return;
+				if (userDB.getSeq() == selectUserDb.getSeq()) return;
 			}
 			userDB = selectUserDb;
 
@@ -1132,13 +1132,11 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		reIndexColAction.setUserDB(getUserDB());
 
 		// viewer
-		if (showViews != null)
-			showViews.clear();
+		if (showViews != null) showViews.clear();
 		viewListViewer.setInput(showViews);
 		viewListViewer.refresh();
 
-		if (showViewColumns != null)
-			showViewColumns.clear();
+		if (showViewColumns != null) showViewColumns.clear();
 		viewColumnViewer.setInput(showViewColumns);
 		viewColumnViewer.refresh();
 
@@ -1148,8 +1146,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		refreshAction_View.setUserDB(getUserDB());
 
 		// index
-		if (showIndex != null)
-			showIndex.clear();
+		if (showIndex != null) showIndex.clear();
 		indexesListViewer.setInput(showIndex);
 		indexesListViewer.refresh();
 
@@ -1159,8 +1156,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		refreshAction_Index.setUserDB(getUserDB());
 
 		// procedure
-		if (showProcedure != null)
-			showProcedure.clear();
+		if (showProcedure != null) showProcedure.clear();
 		procedureListViewer.setInput(showProcedure);
 		procedureListViewer.refresh();
 
@@ -1170,8 +1166,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		refreshAction_Procedure.setUserDB(getUserDB());
 
 		// function
-		if (showFunction != null)
-			showFunction.clear();
+		if (showFunction != null) showFunction.clear();
 		functionListViewer.setInput(showFunction);
 		functionListViewer.refresh();
 
@@ -1181,8 +1176,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		refreshAction_Function.setUserDB(getUserDB());
 
 		// trigger
-		if (showFunction != null)
-			showFunction.clear();
+		if (showFunction != null) showFunction.clear();
 		triggerListViewer.setInput(showTrigger);
 		triggerListViewer.refresh();
 
@@ -1299,10 +1293,8 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()));
 				DB mongoDB = mongo.getDB(userDB.getDb());
 
-				if (showTables != null)
-					showTables.clear();
-				else
-					showTables = new ArrayList<TableDAO>();
+				if (showTables != null) showTables.clear();
+				else showTables = new ArrayList<TableDAO>();
 
 				for (String col : mongoDB.getCollectionNames()) {
 					TableDAO dao = new TableDAO();

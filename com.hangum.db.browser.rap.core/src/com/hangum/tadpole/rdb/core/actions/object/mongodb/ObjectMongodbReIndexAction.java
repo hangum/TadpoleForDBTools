@@ -13,10 +13,7 @@ package com.hangum.tadpole.rdb.core.actions.object.mongodb;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -46,7 +43,7 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 		setId(ID + actionType.toString());
 		setText(title);
 		
-		window.getSelectionService().addSelectionListener(this);
+//		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		setId(ID + actionType.toString());
 		setText("Create " + title);
 		
-		window.getSelectionService().addSelectionListener(this);
+//		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override
@@ -63,7 +63,6 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				if(Dialog.OK == ncd.open() ) {
 					refreshTable();
 				}
-				
 			}
 			
 		} else if(actionType == DB_ACTION.VIEWS) {

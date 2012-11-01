@@ -35,7 +35,7 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 		setId(ID + actionType.toString());
 		setText("Refresh " + title);
 		
-		window.getSelectionService().addSelectionListener(this);
+//		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override

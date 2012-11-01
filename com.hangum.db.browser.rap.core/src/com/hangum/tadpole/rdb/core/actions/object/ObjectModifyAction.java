@@ -10,12 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.define.Define;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -32,7 +29,7 @@ public class ObjectModifyAction extends AbstractObjectAction {
 		setId(ID + actionType.toString());
 		setText("Alert " + title); //$NON-NLS-1$
 		
-		window.getSelectionService().addSelectionListener(this);
+//		window.getSelectionService().addSelectionListener(this);
 	}
 	
 
@@ -41,13 +38,13 @@ public class ObjectModifyAction extends AbstractObjectAction {
 //		System.out.println(Messages.ObjectModifyAction_2);
 	}
 
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-			
-			if(userDB != null) setEnabled(true);
-			else setEnabled(false);
-		}
-	}
+//	@Override
+//	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+//		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
+//			
+//			if(userDB != null) setEnabled(true);
+//			else setEnabled(false);
+//		}
+//	}
 	
 }

@@ -44,7 +44,7 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 		setId(ID + actionType.toString());
 		setText(title);
 		
-		window.getSelectionService().addSelectionListener(this);
+//		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override
