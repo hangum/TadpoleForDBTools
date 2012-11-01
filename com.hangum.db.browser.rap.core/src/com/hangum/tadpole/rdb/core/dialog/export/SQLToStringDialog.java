@@ -123,7 +123,6 @@ public class SQLToStringDialog extends Dialog {
 		lblVariable.setText(Messages.SQLToStringDialog_lblVariable_text);
 		
 		textVariable = new Text(compositeTitle, SWT.BORDER);
-		textVariable.setText(Messages.SQLToStringDialog_text_text);
 		textVariable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textVariable.setText(SQLToJavaConvert.DEFAULT_VARIABLE);
 		

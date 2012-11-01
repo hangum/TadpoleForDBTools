@@ -111,7 +111,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
 					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-						if(logger.isDebugEnabled()) logger.debug("[userInfoDataDAO] " + userInfoDataDAO.getName() + ":" + userInfoDataDAO);
+//						if(logger.isDebugEnabled()) logger.debug("[userInfoDataDAO] " + userInfoDataDAO.getName() + ":" + userInfoDataDAO);
 						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}

@@ -256,8 +256,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tabFolderObject.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent evt) {
-				if (userDB == null)
-					return;
+				if (userDB == null) return;
 
 				TabItem ti = (TabItem) evt.item;
 				refershSelectTable(ti);
@@ -322,25 +321,17 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	 * @param ti
 	 */
 	private void refershSelectTable(TabItem ti) {
+		if(userDB == null) return;
+		
 		if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.VIEWS.toString())) {
-			if (showViews != null)
-				return;
 			refreshView();
 		} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.INDEXES.toString())) {
-			if (showIndex != null)
-				return;
 			refreshIndexes();
 		} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.PROCEDURES.toString())) {
-			if (showProcedure != null)
-				return;
 			refreshProcedure();
 		} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.FUNCTIONS.toString())) {
-			if (showFunction != null)
-				return;
 			refreshFunction();
 		} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
-			if (showTrigger != null)
-				return;
 			refreshTrigger();
 		}
 	}
