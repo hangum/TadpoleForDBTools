@@ -28,7 +28,7 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 public class EditorUtils {
 
 	/**
-	 * fins sql editor
+	 * find sql editor
 	 * 
 	 * @param dao UserDBDAO
 	 * @return

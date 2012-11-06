@@ -51,15 +51,15 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 		
 		setId(ID + actionType);
 		setText("Drop " + title); //$NON-NLS-1$
-		setEnabled(false);
+//		setEnabled(false);
 		
-		window.getSelectionService().addSelectionListener(this);
+//		window.getSelectionService().addSelectionListener(this);
 	}
 	
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		this.sel = (IStructuredSelection)selection;
-		
+	
 		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {			
 			if(userDB != null) {
 				if(selection instanceof IStructuredSelection && !selection.isEmpty()) setEnabled(this.sel.size() > 0);
@@ -98,6 +98,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 				}
 			}
 		} else if(actionType == DB_ACTION.VIEWS) {
+			
 			String viewName = (String)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_8, viewName + Messages.ObjectDeleteAction_9)) {
 				try {

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.define;
 
+import org.eclipse.core.runtime.Platform;
+
 
 public class Define {
 	/** 올챙이가 지원 하는 디비 타입을 정의 합니다  */
@@ -79,4 +81,6 @@ public class Define {
 		return false;
 	}
 	
+	/**  ERD 파일 저장위치 */
+	public static final String ERD_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/erd/";// //$NON-NLS-1$
 }

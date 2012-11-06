@@ -161,8 +161,11 @@ public class MainEditor extends EditorPart {
 	/** 이후 버튼 */
 	private Button btnNext;
 	
-	/** 모든 쿼리 실행 */
-	public static int ALL_EXECUTE_QUERY = -999;
+	/** 에디터에 블럭을 지정 하였으면... */
+	public static int BLOCK_QUERY_EXECUTE 	= -999;
+	
+	/** 에디터의 모든 쿼리를 수행합니다. */
+	public static int ALL_QUERY_EXECUTE 	= -998;
 	
 	/** 페이지 로케이션 */
 	private int pageNumber = 1;
@@ -829,7 +832,7 @@ public class MainEditor extends EditorPart {
 	 * ;를 기준으로 여러개로 나누어 쿼리를 수행합니다.
 	 * 
 	 */
-	public void execute() {
+	private void execute() {
 		listQueryHistory = new ArrayList<String>();
 		
 		// job
@@ -841,49 +844,89 @@ public class MainEditor extends EditorPart {
 				try {
 					int tmpStartPoint 	= getOrionTextPosition();	// cursor의 시작 포인트
 					String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
-					if(tmpStartPoint != ALL_EXECUTE_QUERY) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
-						tmpStrSelText = SQLTextUtil.executeQuery(tmpStrSelText, tmpStartPoint);
-					}
 					if("".equals(tmpStrSelText)) return Status.OK_STATUS; //$NON-NLS-1$
 					
-					/////////////////////////////////////////////////////////////////////////////////////////
-//					logger.debug("[original] =========================================\r\n]" + tmpStrSelText);
-//					logger.debug("######################################################################");
-					String[] strArrySQLS = UnicodeUtils.getUnicode(tmpStrSelText).split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
-//				
-//					logger.debug("[processing] =========================================\r\n]" + strArrySQLS[0]);
-//					logger.debug("######################################################################");
-					
-					for (String strSQL : strArrySQLS) {
+					// 전체 쿼리를 선택하였으면...
+					if(tmpStartPoint != BLOCK_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$
 						
-						if(monitor.isCanceled()) {
-							monitor.done();
-							return Status.CANCEL_STATUS;
-						}
-
-						// 구분자 ;로 여러개의 쿼리를 실행했으면
+						tmpStrSelText = SQLTextUtil.executeQuery(tmpStrSelText, tmpStartPoint);
+						
+						/////////////////////////////////////////////////////////////////////////////////////////
+	//					logger.debug("[original] =========================================\r\n]" + tmpStrSelText);
+	//					logger.debug("######################################################################");
+	//					String[] strArrySQLS = UnicodeUtils.getUnicode(tmpStrSelText).split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
+						
+						String strUnicode = UnicodeUtils.getUnicode(tmpStrSelText);
+						String[] strArrySQLS = strUnicode.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
+	//				
+	//					logger.debug("[processing] =========================================\r\n]" + strArrySQLS[0]);
+	//					logger.debug("######################################################################");
+						
+						for (String strSQL : strArrySQLS) {
+							
+							if(monitor.isCanceled()) {
+								monitor.done();
+								return Status.CANCEL_STATUS;
+							}
+	
+							// 구분자 ;로 여러개의 쿼리를 실행했으면
+							if(strSQL.endsWith( Define.SQL_DILIMITER )) { 				//$NON-NLS-1$
+								strSQL = strSQL.substring(0, strSQL.length()-1);
+							}
+							
+							// 히스토리 데이터에 실행된 쿼리를 남긴다.
+							listQueryHistory.add(strSQL);						
+							
+							// 쿼리를 수행할수 있도록 가공합니다.
+							executeLastSQL = SQLUtil.executeQuery(strSQL);
+	
+							// 프로그래스바 정보.
+							monitor.subTask(executeLastSQL);
+							monitor.setTaskName(executeLastSQL);
+							
+							if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
+									executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
+										executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								
+								pageNumber = 1;							
+								runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
+							// create 로 시작하는 쿼리.
+							} else {
+								runSQLOther(executeLastSQL);
+							}
+						}	// end query for
+					
+					// 블럭 쿼리를 실행하였으면 쿼리를 분리자로 나누지 않고 전체를 수행합니다.
+					} else {
+						
+						String strSQL = tmpStrSelText;
+						
 						if(strSQL.endsWith( Define.SQL_DILIMITER )) { 				//$NON-NLS-1$
 							strSQL = strSQL.substring(0, strSQL.length()-1);
 						}
 						
+						// 히스토리 데이터에 실행된 쿼리를 남긴다.
 						listQueryHistory.add(strSQL);						
 						
-						// 모니터링 쿼리
-						monitor.subTask(executeLastSQL);
-						monitor.setTaskName(executeLastSQL);
-
 						// 쿼리를 수행할수 있도록 가공합니다.
 						executeLastSQL = SQLUtil.executeQuery(strSQL);
+
+						// 프로그래스바 정보.
+						monitor.subTask(executeLastSQL);
+						monitor.setTaskName(executeLastSQL);
 						
 						if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
 							pageNumber = 1;							
-							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$									
+							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
+						// create 로 시작하는 쿼리.
+						} else {
+							runSQLOther(executeLastSQL);
 						}
-						else runSQLOther(executeLastSQL);
-					}	// end query for
+					}
+					
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + executeLastSQL, e);
 					
@@ -1302,7 +1345,6 @@ public class MainEditor extends EditorPart {
 //				logger.debug("\t ==[column end]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
 //			}
 //			
-//			
 //			logger.debug("#### [Table] [end ] ########################################################################################################");
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1456,10 +1498,10 @@ public class MainEditor extends EditorPart {
 		}
 		
 		// 파일 명이 있으면... 
-		if(!"".equals( saveFileName) ) { //$NON-NLS-1$
+		if(!"".equals(saveFileName)) { //$NON-NLS-1$
 			try {
 				Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
-				if (!(resultObj instanceof Boolean && (Boolean) resultObj)) {
+				if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
 					monitor.setCanceled(true);
 				}
 			} catch(SWTException e) {

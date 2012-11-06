@@ -33,8 +33,8 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
-import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
 
 /**
@@ -132,43 +132,10 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 	 * @param actionType
 	 */
 	public void run(UserDBDAO userDB, DB_ACTION actionType) {
-		run(userDB, QueryTemplateUtils.getQuery(userDB, actionType));
+		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, actionType));
 	}
 	
-	/**
-	 * 쿼리 스트링으로 엽니다.
-	 * 
-	 * @param userDB
-	 * @param str
-	 */
-	public void run(UserDBDAO userDB, String str) {
-		IEditorReference reference = EditorUtils.findSQLEditor(userDB);
-		if(reference == null) {
-			try {
-				MainEditorInput mei = new MainEditorInput(userDB, str);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID);
-			} catch (PartInitException e) {
-				logger.error("new editor", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
-			}
-		} else {
-			try {
-				MainEditor editor = (MainEditor)reference.getEditor(false);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
-				editor.setAppendQueryText(str); //$NON-NLS-1$
-				editor.browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
-				
-			} catch (Exception e) {
-				logger.error("findEditor", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
-			}
-		}
-	}
-	
+
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		sel = (IStructuredSelection)selection;

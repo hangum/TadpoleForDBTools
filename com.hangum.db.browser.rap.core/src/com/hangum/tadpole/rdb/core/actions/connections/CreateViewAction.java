@@ -14,6 +14,7 @@ import org.eclipse.jface.action.IAction;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
 
 /**
@@ -32,7 +33,7 @@ public class CreateViewAction extends AbstractQueryAction {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		run(userDB, QueryTemplateUtils.getQuery(userDB, Define.DB_ACTION.VIEWS));
+		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, Define.DB_ACTION.VIEWS));
 	}
 
 

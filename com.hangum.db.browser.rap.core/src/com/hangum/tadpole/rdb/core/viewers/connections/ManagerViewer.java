@@ -255,7 +255,7 @@ public class ManagerViewer extends ViewPart {
 	 * tree에 user resource 항목을 추가합니다.
 	 * 
 	 * @param userDB
-	 */
+	 */ 
 	public void addUserResouceData(UserDBDAO userDB) {
 		if(userDB.getListUserDBErd() == null) {
 			// user_resource_data 목록을 추가해 줍니다.

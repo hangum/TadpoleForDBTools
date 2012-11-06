@@ -298,7 +298,6 @@ public class Messages extends NLS {
 	public static String MainEditor_tltmExecute_toolTipText;
 	public static String MainEditor_tltmExecute_toolTipText_1;
 	public static String SQLToStringDialog_lblVariable_text;
-	public static String SQLToStringDialog_text_text;
 	public static String SQLToStringDialog_btnNewButton_text;
 	static {
 		// initialize resource bundle

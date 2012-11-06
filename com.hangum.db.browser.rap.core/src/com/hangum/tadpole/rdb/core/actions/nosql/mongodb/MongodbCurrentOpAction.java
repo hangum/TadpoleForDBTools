@@ -66,7 +66,7 @@ public class MongodbCurrentOpAction implements IViewActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.sel = (IStructuredSelection)selection;
 	}
-
+	
 	@Override
 	public void init(IViewPart view) {
 	}

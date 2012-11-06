@@ -100,6 +100,14 @@ public class TadpoleAdapterFactory extends AdapterFactoryImpl {
 				return createUserCommentAdapter();
 			}
 			@Override
+			public Adapter caseTadpole_ERDInfo(ERDInfo object) {
+				return createTadpole_ERDInfoAdapter();
+			}
+			@Override
+			public Adapter caseTadpole_Table(Table object) {
+				return createTadpole_TableAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -186,6 +194,34 @@ public class TadpoleAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUserCommentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.hangum.tadpole.model.ERDInfo <em>ERD Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.hangum.tadpole.model.ERDInfo
+	 * @generated
+	 */
+	public Adapter createTadpole_ERDInfoAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.hangum.tadpole.model.Table <em>Table</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.hangum.tadpole.model.Table
+	 * @generated
+	 */
+	public Adapter createTadpole_TableAdapter() {
 		return null;
 	}
 

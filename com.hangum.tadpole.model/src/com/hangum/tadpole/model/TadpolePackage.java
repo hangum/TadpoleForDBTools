@@ -43,7 +43,7 @@ public interface TadpolePackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://tadpole/0.0.8";
+	String eNS_URI = "http://com.hangum.tadpole.model.ERDInfo";
 
 	/**
 	 * The package namespace name.
@@ -70,33 +70,6 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 */
 	int ERD_INFO = 5;
-
-	/**
-	 * The feature id for the '<em><b>Auto Layout</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ERD_INFO__AUTO_LAYOUT = 0;
-
-	/**
-	 * The feature id for the '<em><b>Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ERD_INFO__VERSION = 1;
-
-	/**
-	 * The number of structural features of the '<em>ERD Info</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ERD_INFO_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.model.impl.ColumnImpl <em>Column</em>}' class.
@@ -129,13 +102,33 @@ public interface TadpolePackage extends EPackage {
 	int DB = 0;
 
 	/**
+	 * The meta object id for the '{@link com.hangum.tadpole.model.impl.RelationImpl <em>Relation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.hangum.tadpole.model.impl.RelationImpl
+	 * @see com.hangum.tadpole.model.impl.TadpolePackageImpl#getRelation()
+	 * @generated
+	 */
+	int RELATION = 3;
+
+	/**
+	 * The meta object id for the '{@link com.hangum.tadpole.model.impl.ViewImpl <em>View</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.hangum.tadpole.model.impl.ViewImpl
+	 * @see com.hangum.tadpole.model.impl.TadpolePackageImpl#getView()
+	 * @generated
+	 */
+	int VIEW = 4;
+
+	/**
 	 * The feature id for the '<em><b>Auto Layout</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DB__AUTO_LAYOUT = ERD_INFO__AUTO_LAYOUT;
+	int DB__AUTO_LAYOUT = TadpolePackage.ERD_INFO__AUTO_LAYOUT;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -144,7 +137,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__VERSION = ERD_INFO__VERSION;
+	int DB__VERSION = TadpolePackage.ERD_INFO__VERSION;
 
 	/**
 	 * The feature id for the '<em><b>Db Type</b></em>' attribute.
@@ -153,7 +146,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__DB_TYPE = ERD_INFO_FEATURE_COUNT + 0;
+	int DB__DB_TYPE = TadpolePackage.ERD_INFO_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Tables</b></em>' containment reference list.
@@ -162,7 +155,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__TABLES = ERD_INFO_FEATURE_COUNT + 1;
+	int DB__TABLES = TadpolePackage.ERD_INFO_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -171,7 +164,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__KEY = ERD_INFO_FEATURE_COUNT + 2;
+	int DB__KEY = TadpolePackage.ERD_INFO_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -180,7 +173,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__URL = ERD_INFO_FEATURE_COUNT + 3;
+	int DB__URL = TadpolePackage.ERD_INFO_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -189,7 +182,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__ID = ERD_INFO_FEATURE_COUNT + 4;
+	int DB__ID = TadpolePackage.ERD_INFO_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Sid</b></em>' attribute.
@@ -198,7 +191,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__SID = ERD_INFO_FEATURE_COUNT + 5;
+	int DB__SID = TadpolePackage.ERD_INFO_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>References</b></em>' containment reference list.
@@ -207,7 +200,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__REFERENCES = ERD_INFO_FEATURE_COUNT + 6;
+	int DB__REFERENCES = TadpolePackage.ERD_INFO_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Comment</b></em>' attribute.
@@ -216,7 +209,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB__COMMENT = ERD_INFO_FEATURE_COUNT + 7;
+	int DB__COMMENT = TadpolePackage.ERD_INFO_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>DB</em>' class.
@@ -225,7 +218,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DB_FEATURE_COUNT = ERD_INFO_FEATURE_COUNT + 8;
+	int DB_FEATURE_COUNT = TadpolePackage.ERD_INFO_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Columns</b></em>' containment reference list.
@@ -407,17 +400,6 @@ public interface TadpolePackage extends EPackage {
 	 */
 	int COLUMN_FEATURE_COUNT = 9;
 
-
-	/**
-	 * The meta object id for the '{@link com.hangum.tadpole.model.impl.RelationImpl <em>Relation</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see com.hangum.tadpole.model.impl.RelationImpl
-	 * @see com.hangum.tadpole.model.impl.TadpolePackageImpl#getRelation()
-	 * @generated
-	 */
-	int RELATION = 3;
-
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -518,23 +500,13 @@ public interface TadpolePackage extends EPackage {
 	int RELATION_FEATURE_COUNT = 10;
 
 	/**
-	 * The meta object id for the '{@link com.hangum.tadpole.model.impl.ViewImpl <em>View</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see com.hangum.tadpole.model.impl.ViewImpl
-	 * @see com.hangum.tadpole.model.impl.TadpolePackageImpl#getView()
-	 * @generated
-	 */
-	int VIEW = 4;
-
-	/**
 	 * The feature id for the '<em><b>Columns</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__COLUMNS = TABLE__COLUMNS;
+	int VIEW__COLUMNS = TadpolePackage.TABLE__COLUMNS;
 
 	/**
 	 * The feature id for the '<em><b>Db</b></em>' container reference.
@@ -543,7 +515,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__DB = TABLE__DB;
+	int VIEW__DB = TadpolePackage.TABLE__DB;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -552,7 +524,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__NAME = TABLE__NAME;
+	int VIEW__NAME = TadpolePackage.TABLE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Constraints</b></em>' attribute.
@@ -561,7 +533,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__CONSTRAINTS = TABLE__CONSTRAINTS;
+	int VIEW__CONSTRAINTS = TadpolePackage.TABLE__CONSTRAINTS;
 
 	/**
 	 * The feature id for the '<em><b>Incoming Links</b></em>' reference list.
@@ -570,7 +542,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__INCOMING_LINKS = TABLE__INCOMING_LINKS;
+	int VIEW__INCOMING_LINKS = TadpolePackage.TABLE__INCOMING_LINKS;
 
 	/**
 	 * The feature id for the '<em><b>Outgoing Links</b></em>' reference list.
@@ -579,7 +551,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__OUTGOING_LINKS = TABLE__OUTGOING_LINKS;
+	int VIEW__OUTGOING_LINKS = TadpolePackage.TABLE__OUTGOING_LINKS;
 
 	/**
 	 * The feature id for the '<em><b>Logical Name</b></em>' attribute.
@@ -588,7 +560,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__LOGICAL_NAME = TABLE__LOGICAL_NAME;
+	int VIEW__LOGICAL_NAME = TadpolePackage.TABLE__LOGICAL_NAME;
 
 	/**
 	 * The feature id for the '<em><b>Commant</b></em>' attribute.
@@ -597,7 +569,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__COMMANT = TABLE__COMMANT;
+	int VIEW__COMMANT = TadpolePackage.TABLE__COMMANT;
 
 	/**
 	 * The feature id for the '<em><b>User Comment Reference</b></em>' reference.
@@ -606,7 +578,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__USER_COMMENT_REFERENCE = TABLE__USER_COMMENT_REFERENCE;
+	int VIEW__USER_COMMENT_REFERENCE = TadpolePackage.TABLE__USER_COMMENT_REFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Table Name</b></em>' reference.
@@ -615,7 +587,7 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__TABLE_NAME = TABLE_FEATURE_COUNT + 0;
+	int VIEW__TABLE_NAME = TadpolePackage.TABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>View</em>' class.
@@ -624,7 +596,34 @@ public interface TadpolePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW_FEATURE_COUNT = TABLE_FEATURE_COUNT + 1;
+	int VIEW_FEATURE_COUNT = TadpolePackage.TABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Auto Layout</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ERD_INFO__AUTO_LAYOUT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ERD_INFO__VERSION = 1;
+
+	/**
+	 * The number of structural features of the '<em>ERD Info</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ERD_INFO_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.model.impl.UserCommentImpl <em>User Comment</em>}' class.

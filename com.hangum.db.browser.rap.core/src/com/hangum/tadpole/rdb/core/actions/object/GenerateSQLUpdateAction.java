@@ -10,12 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object;
 
-import org.apache.log4j.Logger;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -28,7 +27,7 @@ import com.hangum.tadpole.define.Define.DB_ACTION;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
@@ -78,8 +77,8 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 			sbSQL.append(" ; "); //$NON-NLS-1$
 			
 			//
-			QueryEditorAction qea = new QueryEditorAction();
-			qea.run(userDB, sbSQL.toString());
+//			QueryEditorAction qea = new QueryEditorAction();
+			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
 		} catch(Exception e) {
 			logger.error("Generate SQL Statement Error", e); //$NON-NLS-1$
 			

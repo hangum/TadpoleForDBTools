@@ -52,6 +52,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 		this.actionType = actionType;
 		
 		setEnabled(userDB != null);
+		window.getSelectionService().addSelectionListener(this);
 	}
 	
 	/**
@@ -121,6 +122,8 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
 			if(userDB != null) setEnabled(true);
 			else setEnabled(false);
+		} else {
+			setEnabled(false);
 		}
 	}
 	

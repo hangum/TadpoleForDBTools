@@ -38,7 +38,7 @@ public class TadpoleFactoryImpl extends EFactoryImpl implements TadpoleFactory {
 	 */
 	public static TadpoleFactory init() {
 		try {
-			TadpoleFactory theTadpoleFactory = (TadpoleFactory)EPackage.Registry.INSTANCE.getEFactory("http://tadpole/0.0.8"); 
+			TadpoleFactory theTadpoleFactory = (TadpoleFactory)EPackage.Registry.INSTANCE.getEFactory("http://com.hangum.tadpole.model.ERDInfo"); 
 			if (theTadpoleFactory != null) {
 				return theTadpoleFactory;
 			}

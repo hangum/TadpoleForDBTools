@@ -29,7 +29,7 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
@@ -73,8 +73,8 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 				}
 				
 				//
-				QueryEditorAction qea = new QueryEditorAction();
-				qea.run(userDB, sbSQL.toString());
+//				QueryEditorAction qea = new QueryEditorAction();
+				FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
 			} catch(Exception e) {
 				logger.error(Messages.GenerateSQLInsertAction_9, e);
 				
@@ -86,9 +86,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 			
 			NewDocumentDialog dialog = new NewDocumentDialog(Display.getCurrent().getActiveShell(), userDB, tableDAO.getName());
 			dialog.open();
-			
 		}
-
 	}
 
 }

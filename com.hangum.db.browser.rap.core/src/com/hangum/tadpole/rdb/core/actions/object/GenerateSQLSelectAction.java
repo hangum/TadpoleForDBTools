@@ -30,7 +30,7 @@ import com.hangum.tadpole.define.Define.DB_ACTION;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -81,8 +81,8 @@ public class GenerateSQLSelectAction extends AbstractObjectAction {
 			sbSQL.append("\r\n FROM " + tableDAO.getName() + Define.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			//
-			QueryEditorAction qea = new QueryEditorAction();
-			qea.run(userDB, sbSQL.toString());
+//			QueryEditorAction qea = new QueryEditorAction();
+			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLSelectAction_8, e);
 			
@@ -94,16 +94,17 @@ public class GenerateSQLSelectAction extends AbstractObjectAction {
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		this.sel = (IStructuredSelection)selection;
-		
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {			
-			if(userDB != null) {
+			
+		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
+//			if(userDB != null) {
 				if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
 					setEnabled(this.sel.size() > 0);
 				} else setEnabled(false);
-			}
-			else setEnabled(false);
+//			}
+//		} else {
+//			setEnabled(false);
 		}
+
 	}
 	
-
 }
