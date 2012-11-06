@@ -145,12 +145,12 @@ public class TadpoleSystem_UserDBResource {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
 		List<UserDBResourceDataDAO> datas =  (List<UserDBResourceDataDAO>)sqlClient.queryForList("userDBResourceData", userDBResource); //$NON-NLS-1$
 		
-		String retData = "";
+		StringBuffer retData = new StringBuffer();
 		for (UserDBResourceDataDAO userDBResourceDataDAO : datas) {
-			retData += userDBResourceDataDAO.getDatas();
+			retData.append(userDBResourceDataDAO.getDatas());
 		}
 	
-		return retData;
+		return retData.toString();
 	}
 	
 }

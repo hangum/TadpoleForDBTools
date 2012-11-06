@@ -73,7 +73,7 @@ public class TadpoleSwitch<T> extends Switch<T> {
 			case TadpolePackage.DB: {
 				DB db = (DB)theEObject;
 				T result = caseDB(db);
-				if (result == null) result = caseERDInfo(db);
+				if (result == null) result = caseTadpole_ERDInfo(db);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -98,7 +98,7 @@ public class TadpoleSwitch<T> extends Switch<T> {
 			case TadpolePackage.VIEW: {
 				View view = (View)theEObject;
 				T result = caseView(view);
-				if (result == null) result = caseTable(view);
+				if (result == null) result = caseTadpole_Table(view);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -190,6 +190,36 @@ public class TadpoleSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseUserComment(UserComment object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ERD Info</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ERD Info</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTadpole_ERDInfo(ERDInfo object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Table</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTadpole_Table(Table object) {
 		return null;
 	}
 

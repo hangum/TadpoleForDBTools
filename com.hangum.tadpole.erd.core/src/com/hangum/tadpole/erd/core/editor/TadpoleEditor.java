@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.erd.core.editor;
 
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.EventObject;
@@ -23,6 +22,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.gef.ContextMenuProvider;
@@ -66,6 +67,7 @@ import com.hangum.tadpole.erd.stanalone.Activator;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.model.DB;
 import com.hangum.tadpole.model.TadpoleFactory;
+import com.hangum.tadpole.model.TadpolePackage;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
 /**
@@ -265,32 +267,29 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		userDB = erdInput.getUserDBDAO();
 		isAllTable = erdInput.isAllTable();
 		
+		
+		
 		// 신규로드 인지 기존 파일 로드 인지 검사합니다.
 		if(null != erdInput.getUserDBERD()) { 
 			userDBErd = erdInput.getUserDBERD();
 			
 //			// load resouce
-//			TadpolePackage.eINSTANCE.eClass();
-//			ResourceSet resourceSet = new ResourceSetImpl();
-//			
-//			Resource dbResource = resourceSet.createResource(URI.createURI(""));	      
-			InputStream is = null;
 			try {
 				String xmlString = TadpoleSystem_UserDBResource.getResourceData(userDBErd);
 				
-//				Map options = new HashMap();
-//				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-//				
-//				
-//				is = new ByteArrayInputStream(TadpoleSystem_UserDBResource.getResourceData(userDBErd).getBytes());
-//				
-//				XMIResourceImpl resource = new XMIResourceImpl();
-//				resource.load(is, options);
+				// 처음 로드 할때 ResourceSet에 instance가 등록 되어 있어야 합니다.
+				/**
+				 * <code>TadpolePackage.eNS_URI</code>
+				 */
+				ResourceSet resourceSet = new ResourceSetImpl();
+				if(resourceSet.getPackageRegistry().get("http://com.hangum.tadpole.model.ERDInfo") == null) {
+					resourceSet.getPackageRegistry().put("http://com.hangum.tadpole.model.ERDInfo", TadpolePackage.eINSTANCE.getClass());
+				}
+				
+				// 
 				XMLResourceImpl resource = new XMLResourceImpl();
 				resource.setEncoding("UTF-8");
 		        resource.load(new InputSource(new StringReader(xmlString)), null);
-		        
-//				dbResource.load(is, options);
 				db = (DB)resource.getContents().get(0);
 				
 			} catch(Exception e) {
@@ -299,7 +298,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		        Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_0, errStatus); //$NON-NLS-1$
 			} finally {
-				if(is != null) try{ is.close(); } catch(Exception e) {}
+//				if(fos != null) try{ fos.close(); } catch(Exception e) {}
 			}
 			
 			setPartName(isAllTable?"All " + userDBErd.getFilename():userDBErd.getFilename());
