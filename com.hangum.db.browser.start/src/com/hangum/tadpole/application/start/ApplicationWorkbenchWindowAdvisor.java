@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rwt.RWT;
+import org.eclipse.rwt.service.ISessionStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
@@ -34,6 +36,7 @@ import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystemConnector;
@@ -100,6 +103,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 						SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), -1);
 					}
 					
+					initSession();
 				} catch (Exception e) {
 					logger.error("demo mode user login", e);
 					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
@@ -116,12 +120,28 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
 					SessionManager.setUserInfos(mapUserInfoData);
+					
+					initSession();
 	    		} catch(Exception e) {
 	    			logger.error("session set", e);
 	    		}
 	    	}
     	} 
     }
+    
+    /**
+	 * session을 설정합니다.
+	 */
+	private void initSession() {
+		ISessionStore iss = RWT.getSessionStore();
+		
+		int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
+		if(sessionTimeOut <= 0) {
+			iss.getHttpSession().setMaxInactiveInterval( 60 * 60 * 24 );
+		} else {
+			iss.getHttpSession().setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
+		}
+	}	// end method
     
     @Override
     public void postWindowCreate() {

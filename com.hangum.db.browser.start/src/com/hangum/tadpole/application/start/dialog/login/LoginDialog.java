@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rwt.RWT;
+import org.eclipse.rwt.service.ISessionStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -32,6 +34,7 @@ import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystemConnector;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
@@ -152,6 +155,7 @@ public class LoginDialog extends Dialog {
 				return;
 		 } else if(buttonId == IDialogConstants.OK_ID) {
 			 okPressed();
+			 
 		 } else {
 			String userId = "", password = "";
 			
@@ -179,6 +183,7 @@ public class LoginDialog extends Dialog {
 					SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), -1);
 				}
 				
+				init();
 			} catch (Exception e) {
 				logger.error("demo mode user login", e);
 				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
@@ -248,7 +253,7 @@ public class LoginDialog extends Dialog {
 		
 		return true;
 	}
-
+	
 	/**
 	 * Create contents of the button bar.
 	 * @param parent
