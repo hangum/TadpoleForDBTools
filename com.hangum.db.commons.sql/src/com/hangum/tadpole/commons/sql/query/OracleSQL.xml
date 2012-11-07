@@ -232,11 +232,14 @@ ORDER BY m.table_name, m.index_name, m.column_position
 	collation				:
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	  SELECT s.object_name as procedure_name,
-	   #db_name# as db_name
-    FROM user_objects s
-   WHERE s.object_type IN ('PROCEDURE', 'PACKAGE')
-ORDER BY s.object_type DESC, s.object_name
+SELECT  
+          s.object_name AS name
+        , s.object_type AS TYPE
+        , #db_name#   AS db
+        , s.created
+FROM    user_objects s
+WHERE   s.object_type IN ('PROCEDURE', 'PACKAGE')
+ORDER BY s.object_type DESC, s.object_name 
 </select>
 
 <!-- 
@@ -258,11 +261,14 @@ ORDER BY s.object_type DESC, s.object_name
 	collation				:
  -->
 <select id="functionList" resultClass="com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	  SELECT s.object_name as function_name,
-	   #db_name# as db_name
-    FROM user_objects s
-   WHERE s.object_type = 'FUNCTION'
-ORDER BY s.object_name
+SELECT  
+          s.object_name AS name
+        , s.object_type AS TYPE
+        , #db_name#   AS db
+        , s.created
+FROM    user_objects s
+WHERE   s.object_type = 'FUNCTION'
+ORDER BY s.object_name 
 </select>
 
 <!-- 
@@ -284,11 +290,14 @@ ORDER BY s.object_name
 	collation				:
  -->
 <select id="triggerList" resultClass="com.hangum.tadpole.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
-	  SELECT s.object_name as trigger_name,
-	   #db_name# as db_name
-    FROM user_objects s
-   WHERE s.object_type = 'TRIGGER'
-ORDER BY s.object_name
+SELECT  
+          s.object_name AS name
+        , s.object_type AS TYPE
+        , #db_name#   AS db
+        , s.created
+FROM    user_objects s
+WHERE   s.object_type = 'TRIGGER'
+ORDER BY s.object_name 
 </select>
 
 <!-- 
