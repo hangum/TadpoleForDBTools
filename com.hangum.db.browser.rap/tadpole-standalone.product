@@ -3,6 +3,7 @@
 
 <product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
 
+
    <configIni use="default">
    </configIni>
 
@@ -12,15 +13,17 @@
       <vmArgsMac>-d32</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/com.hangum.tadpole.applicaion.start/resources/icons/TadpoleForDBTools.png"/>
+   <windowImages/>
+
 
    <launcher name="tadpole-standalone">
       <solaris/>
-      <win useIco="true">
+      <win useIco="false">
          <ico path="/com.hangum.tadpole.application/icons/TadpoleForDBTools.ico"/>
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>

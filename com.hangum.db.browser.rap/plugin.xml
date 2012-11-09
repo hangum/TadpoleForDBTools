@@ -41,10 +41,6 @@
                name="appName"
                value="tadpole-standalone">
          </property>
-         <property
-               name="windowImages"
-               value="platform:/plugin/com.hangum.tadpole.applicaion.start/resources/icons/TadpoleForDBTools.png">
-         </property>
       </product>
    </extension>
    
