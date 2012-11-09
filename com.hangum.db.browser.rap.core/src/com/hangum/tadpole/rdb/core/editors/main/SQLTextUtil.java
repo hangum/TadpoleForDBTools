@@ -39,10 +39,10 @@ public class SQLTextUtil {
 			return StringUtils.trimToEmpty(query);
 		}
 
-		String[] querys = StringUtils.split(query, Define.SQL_DILIMITER);
-	
-		if(logger.isDebugEnabled()) logger.debug("=====[query]" + query);
-		if(logger.isDebugEnabled()) logger.debug("=====[mouse point]" + cursorPoint);
+		String[] querys = StringUtils.split(query, Define.SQL_DILIMITER);	
+		if(logger.isDebugEnabled()) {
+			logger.debug("=====[query]" + query + " =====[mouse point]" + cursorPoint);
+		}
 
 		int queryBeforeCount = 0;
 		for(int i=0; i<querys.length; i++) {
@@ -55,7 +55,6 @@ public class SQLTextUtil {
 			}
 			
 			queryBeforeCount += firstSearch;
-
 			if(cursorPoint <= queryBeforeCount) {
 				return querys[i];
 			}

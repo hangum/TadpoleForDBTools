@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -68,7 +69,7 @@ public class CubridExecutePlanUtils {
 			conn = DriverManager.getConnection(userDB.getUrl(), userDB.getUsers(), userDB.getPasswd());
 			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.		
 
-			sql = sql.substring(6);
+			sql = StringUtils.trim(sql).substring(6);
 			if(logger.isDebugEnabled()) logger.debug("[qubrid modifying query]" + sql);
 			sql = "select " + RECOMPILE + sql;				
 

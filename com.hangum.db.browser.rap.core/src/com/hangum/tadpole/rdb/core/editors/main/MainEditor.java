@@ -90,7 +90,10 @@ import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFun
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.util.RequestInfoUtils;
+import com.hangum.tadpole.util.ServletUserAgnet;
 import com.hangum.tadpole.util.UnicodeUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
@@ -300,11 +303,7 @@ public class MainEditor extends EditorPart {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
-				} catch(Exception ee) {
-					logger.error("execute query", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
 			}
 		});
 		
@@ -316,11 +315,7 @@ public class MainEditor extends EditorPart {
 		tltmExecuteAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_ALL_FUNCTION);
-				} catch(Exception ee) {
-					logger.error("execute query", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_ALL_FUNCTION);
 			}
 		});
 		
@@ -331,11 +326,7 @@ public class MainEditor extends EditorPart {
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
-				} catch(Exception ee) {
-					logger.error("execute plan", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
 			}
 		});
 		tltmExplainPlanctrl.setToolTipText(Messages.MainEditor_3);
@@ -347,11 +338,7 @@ public class MainEditor extends EditorPart {
 		tltmSort.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
-				} catch(Exception ee) {
-					logger.error("execute format", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
 			}
 		});
 		tltmSort.setToolTipText(Messages.MainEditor_4);
@@ -363,11 +350,7 @@ public class MainEditor extends EditorPart {
 		tltmSQLToApplication.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SQL_TO_APPLICATION);
-				} catch(Exception ee) {
-					logger.error("sql to application", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SQL_TO_APPLICATION);
 			}
 		});
 	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
@@ -379,11 +362,7 @@ public class MainEditor extends EditorPart {
 		tltmDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_DOWNLOAD_SQL);
-				} catch(Exception ee) {
-					logger.error("download sql", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_DOWNLOAD_SQL);
 			}
 		});
 		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
@@ -557,7 +536,7 @@ public class MainEditor extends EditorPart {
 				if(!is.isEmpty()) {
 					try {
 						setAppendQueryText(getHistoryTabelSelectData() + Define.SQL_DILIMITER); //$NON-NLS-1$
-						browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+						browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
 					} catch(Exception ee){
 						logger.error("history selection" , ee); //$NON-NLS-1$
 					}
@@ -604,7 +583,7 @@ public class MainEditor extends EditorPart {
 				if(!is.isEmpty()) {
 					try {
 						setAppendQueryText(getHistoryTabelSelectData() + Define.SQL_DILIMITER); //$NON-NLS-1$
-						browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+						browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
 					} catch(Exception ee){
 						logger.error("history selection" , ee); //$NON-NLS-1$
 					}
@@ -751,7 +730,7 @@ public class MainEditor extends EditorPart {
 			public void completed( ProgressEvent event ) {
 				try {
 					registerBrowserFunctions();
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
+					browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error("set register browser function and content initialize", e);
 				}
@@ -1278,8 +1257,8 @@ public class MainEditor extends EditorPart {
 					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + requestQuery); //$NON-NLS-1$
 				}
 				
-				stmt = javaConn.prepareStatement(requestQuery);
-			//  환경설정에서 원하는 조건을 입력하였을 경우.
+				stmt = javaConn.prepareStatement(requestQuery, ResultSet.CONCUR_READ_ONLY);
+				//  환경설정에서 원하는 조건을 입력하였을 경우.
 				rs = stmt.executeQuery();//Query( selText );
 				
 			// explain
@@ -1392,7 +1371,7 @@ public class MainEditor extends EditorPart {
 	 */
 	public void setOrionTextFocus() {
 		try {
-			browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SET_FOCUS_FUNCTION);
+			browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SET_FOCUS_FUNCTION);
 		} catch(Exception e) {
 			// ignore exception
 		}
@@ -1505,7 +1484,7 @@ public class MainEditor extends EditorPart {
 					monitor.setCanceled(true);
 				}
 			} catch(SWTException e) {
-				logger.error("doSave exception", e); //$NON-NLS-1$
+				logger.error(RequestInfoUtils.requestInfo("doSave exception", SessionManager.getEMAIL()), e); //$NON-NLS-1$
 				monitor.setCanceled(true);
 			}	
 		}
@@ -1591,15 +1570,19 @@ public class MainEditor extends EditorPart {
 		downloadServiceHandler = null;
 	}
 	
-	/** sqleditor browser function call */
+	/** 
+	 * browser function call
+	 * 
+	 *  @param command brower command
+	 */
 	public void browserEvaluate(String command) {
 		try {
 			browserQueryEditor.evaluate(command);
 		} catch(Exception e) {
-			logger.error("browser evaluate [ " + command + " ]", e); //$NON-NLS-1$ //$NON-NLS-2$
+			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", SessionManager.getEMAIL()), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-
+	
 	@Override
 	public void doSaveAs() {
 	}
