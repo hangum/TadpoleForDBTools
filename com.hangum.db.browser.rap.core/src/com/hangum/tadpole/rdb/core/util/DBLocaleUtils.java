@@ -51,7 +51,7 @@ public class DBLocaleUtils {
 	 */
 	public static List<String> getMySQLList() {
 		List<String> listLocale = new ArrayList<String>();
-		
+		listLocale.add("");
 		listLocale.add("armscii8 | ARMSCII-8 Armenian");
 		listLocale.add("ascii      | US ASCII");
 		listLocale.add("big5      | Big5 Traditional Chinese");

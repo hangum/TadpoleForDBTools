@@ -29,12 +29,14 @@
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
    </vm>
 
+
    <plugins>
       <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.sql"/>
       <plugin id="com.hangum.tadpole.erd.core"/>
+      <plugin id="com.hangum.tadpole.importdb"/>
       <plugin id="com.hangum.tadpole.manager.core"/>
       <plugin id="com.hangum.tadpole.model"/>
       <plugin id="com.hangum.tadpole.mongodb.core"/>
@@ -120,6 +122,7 @@
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.erd.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.importdb" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
