@@ -74,6 +74,12 @@ public class MongoDBImportDialog extends Dialog {
 		
 		this.userDB = userDB;
 	}
+	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Imports"); //$NON-NLS-1$
+	}
 
 	/**
 	 * Create contents of the dialog.
@@ -90,7 +96,11 @@ public class MongoDBImportDialog extends Dialog {
 		
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(1, false));
+		compositeHead.setLayout(new GridLayout(2, false));
+		
+		Label lblSource = new Label(compositeHead, SWT.NONE);
+		lblSource.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSource.setText("Source");
 		
 		comboDBList = new Combo(compositeHead, SWT.READ_ONLY);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
@@ -100,6 +110,12 @@ public class MongoDBImportDialog extends Dialog {
 			}
 		});
 		comboDBList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblTarget = new Label(compositeHead, SWT.NONE);
+		lblTarget.setText("Target");
+		
+		Label lblTargetDB = new Label(compositeHead, SWT.NONE);
+		lblTargetDB.setText(userDB.getDisplay_name());
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
@@ -145,6 +161,7 @@ public class MongoDBImportDialog extends Dialog {
 		
 		textCollectionName = new Text(compositeQueryTail, SWT.BORDER);
 		textCollectionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeQueryTail, SWT.NONE);
 		
 //		Button btnPreview = new Button(compositeQueryTail, SWT.NONE);
 //		btnPreview.setText("Preview");
