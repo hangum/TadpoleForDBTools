@@ -18,6 +18,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -25,6 +26,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
+import com.hangum.tadpole.sql.parser.format.FormatSQL;
+import com.hangum.tadpole.sql.parser.format.ParserDefine;
 
 /**
  * 쿼리 생성관련 유틸입니다.
@@ -42,15 +45,19 @@ public class FindEditorAndWriteQueryUtil {
 	 * 쿼리 스트링으로 엽니다.
 	 * 
 	 * @param userDB
-	 * @param str
+	 * @param lowSQL
 	 */
-	public static void run(UserDBDAO userDB, String str) {
+	public static void run(UserDBDAO userDB, String lowSQL) {
 		IEditorReference reference = EditorUtils.findSQLEditor(userDB);
+		
+		try {
+			lowSQL = FormatSQL.format(ParserDefine.DB_TYPE.MYSQL, lowSQL);
+		} catch(Exception e) {}
 		
 		if(reference == null) {
 			
 			try {
-				MainEditorInput mei = new MainEditorInput(userDB, str);
+				MainEditorInput mei = new MainEditorInput(userDB, lowSQL);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);
 			} catch (PartInitException e) {
 				logger.error("new editor open", e); //$NON-NLS-1$
@@ -65,7 +72,7 @@ public class FindEditorAndWriteQueryUtil {
 				MainEditor editor = (MainEditor)reference.getEditor(false);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
 				
-				editor.setAppendQueryText(str); //$NON-NLS-1$
+				editor.setAppendQueryText(lowSQL); //$NON-NLS-1$
 				editor.browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
 				
 			} catch (Exception e) {

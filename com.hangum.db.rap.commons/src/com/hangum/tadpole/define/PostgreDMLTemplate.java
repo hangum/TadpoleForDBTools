@@ -17,7 +17,7 @@ package com.hangum.tadpole.define;
  *
  */
 public class PostgreDMLTemplate extends MySQLDMLTemplate {
-	public static final String TMP_GET_PARTDATA = "%s where ROWNUM > %s and ROWNUM <= %s";
+	public static final String TMP_GET_PARTDATA = "%s limit %s offset %s";
 
 	// plan_table	
 	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN PLAN INTO %s FOR ";

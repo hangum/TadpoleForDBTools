@@ -173,7 +173,7 @@ public class ManagerViewer extends ViewPart {
 		}
 
 		treeViewer.refresh();
-		treeViewer.expandToLevel(1);
+		treeViewer.expandToLevel(2);
 	}
 
 	/**

@@ -14,8 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.editors.main.PartQueryUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

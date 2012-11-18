@@ -72,6 +72,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
@@ -93,7 +94,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.util.RequestInfoUtils;
-import com.hangum.tadpole.util.ServletUserAgnet;
 import com.hangum.tadpole.util.UnicodeUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
@@ -1257,7 +1257,7 @@ public class MainEditor extends EditorPart {
 					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + requestQuery); //$NON-NLS-1$
 				}
 				
-				stmt = javaConn.prepareStatement(requestQuery, ResultSet.CONCUR_READ_ONLY);
+				stmt = javaConn.prepareStatement(requestQuery);
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
 				rs = stmt.executeQuery();//Query( selText );
 				
@@ -1345,7 +1345,12 @@ public class MainEditor extends EditorPart {
 				tmpRs = new HashMap<Integer, Object>();
 				
 				for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
-					tmpRs.put(i, rs.getString(i+1));
+					try {
+						tmpRs.put(i, rs.getString(i+1) == null ?"":rs.getString(i+1));
+					} catch(Exception e) {
+						logger.error("ResutSet fetch error", e);
+						tmpRs.put(i, "");
+					}
 				}
 				
 				sourceDataList.add(tmpRs);

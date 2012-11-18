@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.9.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jasypt-1.7.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-io-2.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-fileupload-1.2.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.8.0.jar" sourcepath="/mongodb-java-driver"/>
 	<classpathentry exported="true" kind="lib" path="libs/org.apache.log4j_1.2.13.v200806030600.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/postgreSQL/postgresql-9.1-902.jdbc4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/cubrid/JDBC-8.4.1.2032-cubrid.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/oracle/ojdbc6.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/mysql/mysql-connector-java-5.1.19-bin.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mssql/jtds-1.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sqlite/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>

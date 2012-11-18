@@ -51,6 +51,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -58,7 +59,6 @@ import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.main.PartQueryUtil;
 import com.hangum.tadpole.rdb.core.editors.main.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.editors.table.TbUtils.TABLE_MOD_TYPE;
 import com.hangum.tadpole.util.XMLUtils;
@@ -179,7 +179,7 @@ public class TableViewerEditPart extends EditorPart {
 					String[] querys = SQLTextUtil.delLineChar(getChangeQuery()).split(";"); //$NON-NLS-1$
 					for(int i=0; i<querys.length; i++) {
 						
-						logger.info("exe query [" + querys[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+					//	logger.info("exe query [" + querys[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 						
 						lastExeQuery = querys[i] ;
 						stmt.execute(querys[i] );
@@ -399,8 +399,13 @@ public class TableViewerEditPart extends EditorPart {
 				/** column modify info */
 				tmpRs.put(0, TbUtils.COLUMN_MOD_TYPE.NONE.toString());
 				
-				for(int i=1;i<columnCount+1; i++) {
-					tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i)));
+				for(int i=1;i<columnCount+1; i++) {					
+					try {
+						tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i) == null?"":rs.getString(i)));
+					} catch(Exception e) {
+						logger.error("ResutSet fetch error", e);
+						tmpRs.put(i, "");
+					}
 				}
 				
 				tableDataList.add(tmpRs);

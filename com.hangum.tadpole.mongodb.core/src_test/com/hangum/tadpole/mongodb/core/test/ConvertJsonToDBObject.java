@@ -10,12 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.test;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.util.JSON;
 
 public class ConvertJsonToDBObject {
 	public static void main(String[] args) throws Exception {
@@ -24,9 +24,14 @@ public class ConvertJsonToDBObject {
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
 		
-		DBCollection myColl = db.getCollection("rental");
+		DBCollection myColl = db.getCollection("objectInsert");
+		
+		
+		DBObject dbObject = new BasicDBObject();
+		dbObject.put("aa", 1);
+		dbObject.put("bb", "33");
 
-		DBObject dbObject = (DBObject) JSON.parse("{'rental_id':1,  'inventory_id':367}");
+//		DBObject dbObject = (DBObject) JSON.parse("{'rental_id':1,  'inventory_id':367}");
 		myColl.insert(dbObject);
 		
 		DBCursor cursorDoc = myColl.find();
