@@ -1,60 +1,53 @@
-/*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Cho Hyun Jong - initial API and implementation
- ******************************************************************************/
-package com.hangum.tadpole.importdb.core.dialog.importdb.mongodb;
+package com.hangum.tadpole.importdb.core.dialog.importdb.editor;
 
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.TableColumnLIstComposite;
+import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.QueryToMongoDBImport;
+import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.RDBTableToMongoDBImport;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 
 /**
- * 올챙이디비 데이터를 몽고디비로 이관합니다.
+ * mongodb import
  * 
  * @author hangum
  *
  */
-public class MongoDBImportDialog extends Dialog {
+public class MongoDBImportEditor extends EditorPart {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(MongoDBImportDialog.class);
+	private static final Logger logger = Logger.getLogger(MongoDBImportEditor.class);
+	public static final String ID = "com.hangum.tadpole.importdb.editor.mongodb";
 	
 	private TabFolder tabFolderQuery;
 
@@ -64,39 +57,46 @@ public class MongoDBImportDialog extends Dialog {
 	
 	private Combo comboDBList;
 	private TableColumnLIstComposite tableColumnListComposite;
-	
-	/**
-	 * Create the dialog.
-	 * @param parentShell
-	 */
-	public MongoDBImportDialog(Shell parentShell, UserDBDAO userDB) {
-		super(parentShell);
-		
-		this.userDB = userDB;
-	}
-	
-	@Override
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText("Imports"); //$NON-NLS-1$
+
+	public MongoDBImportEditor() {
+		super();
 	}
 
-	/**
-	 * Create contents of the dialog.
-	 * @param parent
-	 */
 	@Override
-	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
-		GridLayout gridLayout = (GridLayout) container.getLayout();
-		gridLayout.verticalSpacing = 3;
-		gridLayout.horizontalSpacing = 3;
-		gridLayout.marginHeight = 3;
-		gridLayout.marginWidth = 3;
+	public void doSave(IProgressMonitor monitor) {
+	}
+
+	@Override
+	public void doSaveAs() {
+	}
+
+	@Override
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
+		setSite(site);
+		setInput(input);
 		
-		Composite compositeHead = new Composite(container, SWT.NONE);
+		MongoDBImportEditorInput qei = (MongoDBImportEditorInput)input;
+		userDB = qei.getUserDB();
+	}
+
+	@Override
+	public boolean isDirty() {
+		return false;
+	}
+
+	@Override
+	public boolean isSaveAsAllowed() {
+		return false;
+	}
+
+	@Override
+	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout(1, false));
+		
+		Composite compositeHead = new Composite(parent, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(2, false));
+		compositeHead.setLayout(new GridLayout(3, false));
 		
 		Label lblSource = new Label(compositeHead, SWT.NONE);
 		lblSource.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -109,15 +109,25 @@ public class MongoDBImportDialog extends Dialog {
 				initCombo();
 			}
 		});
-		comboDBList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboDBList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblTarget = new Label(compositeHead, SWT.NONE);
 		lblTarget.setText("Target");
 		
 		Label lblTargetDB = new Label(compositeHead, SWT.NONE);
+		lblTargetDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblTargetDB.setText(userDB.getDisplay_name());
 		
-		Composite compositeBody = new Composite(container, SWT.NONE);
+		Button btnImport = new Button(compositeHead, SWT.NONE);
+		btnImport.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				importData();
+			}
+		});
+		btnImport.setText("Import");
+		
+		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -166,9 +176,7 @@ public class MongoDBImportDialog extends Dialog {
 //		Button btnPreview = new Button(compositeQueryTail, SWT.NONE);
 //		btnPreview.setText("Preview");
 		
-		init();
-
-		return container;
+		initEditor();
 	}
 	
 	private void initCombo() {
@@ -179,7 +187,7 @@ public class MongoDBImportDialog extends Dialog {
 	/**
 	 * 화면을 초기화 합니다.
 	 */
-	private void init() {
+	private void initEditor() {
 		try {
 			int visibleItemCount = 0;
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
@@ -202,8 +210,10 @@ public class MongoDBImportDialog extends Dialog {
 		}
 	}
 	
-	@Override
-	protected void okPressed() {
+	/**
+	 * data import
+	 */
+	private void importData() {
 		final UserDBDAO exportDBDAO = (UserDBDAO)comboDBList.getData(comboDBList.getText());
 		Job job = null;
 		
@@ -221,7 +231,7 @@ public class MongoDBImportDialog extends Dialog {
 		job.addJobChangeListener(new JobChangeAdapter() {			
 			public void done(IJobChangeEvent event) {
 				final IJobChangeEvent jobEvent = event; 
-				getShell().getDisplay().asyncExec(new Runnable() {
+				getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
 							MessageDialog.openInformation(null, "Confirm", "complet import data.");
@@ -235,24 +245,13 @@ public class MongoDBImportDialog extends Dialog {
 		
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
-		job.schedule();		
-	}	
-
-	/**
-	 * Create contents of the button bar.
-	 * @param parent
-	 */
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Import", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		job.schedule();	
 	}
 
-	/**
-	 * Return the initial size of the dialog.
-	 */
 	@Override
-	protected Point getInitialSize() {
-		return new Point(573, 490);
+	public void setFocus() {
+		// TODO Auto-generated method stub
+
 	}
+
 }

@@ -157,7 +157,7 @@ public class MongoDBQuery {
 	 * @param dbObject
 	 * @throws Exception
 	 */
-	public static void insertDocument(UserDBDAO userDB, String colName, DBObject dbObject) throws Exception {
+	public static void insertDocument(UserDBDAO userDB, String colName, DBObject[] dbObject) throws Exception {
 		DBCollection collection = findCollection(userDB, colName);		
 		WriteResult wr = collection.insert(dbObject);
 	}

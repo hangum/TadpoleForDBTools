@@ -59,8 +59,8 @@ public class QueryUtil {
 	
 	
 	public void nextQuery() throws Exception {
-		startPoint += nextPoint;
-		nextPoint += DATA_COUNT;
+		startPoint = nextPoint+1;
+		nextPoint = nextPoint + DATA_COUNT;
 		runSQLSelect();
 	}
 	
@@ -71,7 +71,7 @@ public class QueryUtil {
 		tableDataTypeList.clear();
 		tableDataList.clear();		
 
-		requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, nextPoint);		
+		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, nextPoint);		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
 		
@@ -80,7 +80,7 @@ public class QueryUtil {
 			javaConn = client.getDataSource().getConnection();
 			
 			PreparedStatement stmt = null;
-			stmt = javaConn.prepareStatement(requestQuery); 
+			stmt = javaConn.prepareStatement(thisTimeQuery); 
 			
 			rs = stmt.executeQuery();//Query( selText );
 			

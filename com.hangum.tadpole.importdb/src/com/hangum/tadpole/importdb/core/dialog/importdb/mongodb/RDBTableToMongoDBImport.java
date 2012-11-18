@@ -105,24 +105,27 @@ public class RDBTableToMongoDBImport {
 			List<HashMap<Integer, Object>> listTableData = qu.getTableDataList();
 			
 			// row 단위
-			for (HashMap<Integer, Object> resultMap : listTableData) {
+			DBObject[] arrayDBObject = new DBObject[listTableData.size()];
+			for (int i=0; i<listTableData.size(); i++) {
+				HashMap<Integer, Object> resultMap = listTableData.get(i);					
 				
 				DBObject insertObject = new BasicDBObject();
 				// column 단위
-				for(int i=0; i<mapCNameToIndex.size(); i++) {
-//					if(logger.isDebugEnabled()) logger.debug("\t\t[key]" + mapCNameToIndex.get(i) + "[value]" +  resultMap.get(i));
+				for(int j=0; j<mapCNameToIndex.size(); j++) {
 					// BigDecimal is not support mongodb 
-					if(resultMap.get(i) instanceof java.math.BigDecimal) {
-						BigDecimal db = (BigDecimal)resultMap.get(i);
-						insertObject.put(mapCNameToIndex.get(i), db.longValue());	
+					if(resultMap.get(j) instanceof java.math.BigDecimal) {
+						BigDecimal db = (BigDecimal)resultMap.get(j);
+						insertObject.put(mapCNameToIndex.get(j), db.longValue());	
 					} else {
-						insertObject.put(mapCNameToIndex.get(i), resultMap.get(i));
+						insertObject.put(mapCNameToIndex.get(j), resultMap.get(j));
 					}						
 				}
-//				if(logger.isDebugEnabled()) logger.debug("insert: " + workTable);
 				
-				MongoDBQuery.insertDocument(importUserDB, workTable, insertObject);
-			}			
+				arrayDBObject[i] = insertObject;
+			}	// end for
+			logger.debug("[work table]" + workTable + " size is " + arrayDBObject.length);
+		
+			MongoDBQuery.insertDocument(importUserDB, workTable, arrayDBObject);
 		}
 	}
 }
