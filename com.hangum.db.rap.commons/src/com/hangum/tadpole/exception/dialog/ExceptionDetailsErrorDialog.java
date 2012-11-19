@@ -254,14 +254,11 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      */
     protected Text createDropDownList(Composite parent) {
         // create the list
-        text = new Text(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
-                | SWT.MULTI);
+        text = new Text(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
         // fill the list
         populateList(text);
-        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-                | GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
-                | GridData.GRAB_VERTICAL);
-//        data.heightHint = text.getItemHeight() * LIST_ITEM_COUNT;
+        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL);
+        data.heightHint = 300;//text.getItemHeight() * LIST_ITEM_COUNT;
         data.horizontalSpan = 2;
         text.setLayoutData(data);
         text.setFont(parent.getFont());
