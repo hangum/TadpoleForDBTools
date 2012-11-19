@@ -985,6 +985,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	 * @param element
 	 */
 	public void initObjectHead(Object element) {
+		textSearch.setText("");
 
 		if (element instanceof UserDBDAO || element instanceof UserDBResourceDAO) {
 			UserDBDAO selectUserDb = null;
