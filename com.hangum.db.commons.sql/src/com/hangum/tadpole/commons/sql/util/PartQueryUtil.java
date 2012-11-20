@@ -76,12 +76,12 @@ public class PartQueryUtil {
 				requestQuery = originalQuery;	
 			}
 			
-		} else if(DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
-			if(!StringUtils.contains(originalQuery.toLowerCase(), "where")) {
-				requestQuery = String.format(MSSQLDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
-			} else {
-				requestQuery = originalQuery;				
-			}
+//		} else if(DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+//			if(!StringUtils.contains(originalQuery.toLowerCase(), "where")) {
+//				requestQuery = String.format(MSSQLDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
+//			} else {
+//				requestQuery = originalQuery;				
+//			}
 			
 		// 정의 되지 않는 dbms는 전체로 동작하게 합니다.
 		} else {

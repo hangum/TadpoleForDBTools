@@ -128,19 +128,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		Label lblLocale = new Label(compositeBody, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
-		comboLocale = new Combo(compositeBody, SWT.NONE);
+		comboLocale = new Combo(compositeBody, SWT.READ_ONLY);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if(selectDB == DBDefine.ORACLE_DEFAULT) {
-			comboLocale.setVisibleItemCount(8);
 			
-			for(String val : DBLocaleUtils.getOracleList()) comboLocale.add(val);
-			comboLocale.select(0);
-		} else if(selectDB == DBDefine.MYSQL_DEFAULT) {
-			comboLocale.setVisibleItemCount(12);
-			
-			for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
-			comboLocale.select(0);
-		}
+		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
+		comboLocale.setVisibleItemCount(12);
+		comboLocale.select(0);
 		
 		Button btnPing = new Button(compositeBody, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {
@@ -218,12 +211,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		if(!isValidate()) return false;
 
 		String dbUrl = "";
-		if(comboLocale.getText().trim().equals("")) {
+		String locale = comboLocale.getText().trim();
+		if(locale.equals("") || DBLocaleUtils.NONE_TXT.equals(locale)) {
 			dbUrl = String.format(
 					DBDefine.MYSQL_DEFAULT.getDB_URL_INFO(), 
 					textHost.getText(), textPort.getText(), textDatabase.getText());
-		} else {
-			
+		} else {			
 			String selectLocale = StringUtils.substringBefore(comboLocale.getText(), "|");			
 			
 			dbUrl = String.format(

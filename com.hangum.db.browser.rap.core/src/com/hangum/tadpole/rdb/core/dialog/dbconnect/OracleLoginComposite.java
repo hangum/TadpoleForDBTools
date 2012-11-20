@@ -153,17 +153,12 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		
 		comboLocale = new Combo(compositeBody, SWT.NONE);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if(selectDB == DBDefine.ORACLE_DEFAULT) {
+		
 			comboLocale.setVisibleItemCount(8);
 			
 			for(String val : DBLocaleUtils.getOracleList()) comboLocale.add(val);
 			comboLocale.select(0);
-		} else if(selectDB == DBDefine.MYSQL_DEFAULT) {
-			comboLocale.setVisibleItemCount(12);
-			
-			for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
-			comboLocale.select(0);
-		}
+	
 		
 		Button btnPing = new Button(compositeBody, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {

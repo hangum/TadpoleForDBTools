@@ -20,6 +20,7 @@ import java.util.List;
  *
  */
 public class DBLocaleUtils {
+	public static final String NONE_TXT = "none";
 	
 	/**
 	 * oracle list
@@ -29,7 +30,7 @@ public class DBLocaleUtils {
 	public static List<String> getOracleList() {
 		List<String> listLocale = new ArrayList<String>();
 		
-		listLocale.add("");
+		listLocale.add(NONE_TXT);
 		
 		listLocale.add("ko");
 		listLocale.add("ja");
@@ -51,7 +52,7 @@ public class DBLocaleUtils {
 	 */
 	public static List<String> getMySQLList() {
 		List<String> listLocale = new ArrayList<String>();
-		listLocale.add("");
+		listLocale.add(NONE_TXT);
 		listLocale.add("armscii8 | ARMSCII-8 Armenian");
 		listLocale.add("ascii      | US ASCII");
 		listLocale.add("big5      | Big5 Traditional Chinese");

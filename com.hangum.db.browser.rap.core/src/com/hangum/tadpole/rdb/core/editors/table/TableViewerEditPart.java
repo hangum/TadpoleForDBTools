@@ -51,6 +51,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
@@ -364,7 +365,17 @@ public class TableViewerEditPart extends EditorPart {
 		if(!"".equals( whereSQL )) { //$NON-NLS-1$
 			requestQuery += " where " + whereSQL; //$NON-NLS-1$
 		}
-		requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, 500);
+		
+		// 임시코드를 넣습니다.
+		//
+		//
+		//
+		//
+		if(DBDefine.MSSQL_DEFAULT != DBDefine.getDBDefine(userDB.getTypes())) {
+			requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, 500);
+		} else {
+			requestQuery = requestQuery + " top 500";
+		}
 		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;

@@ -985,7 +985,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	 * @param element
 	 */
 	public void initObjectHead(Object element) {
-		textSearch.setText("");
+		initSearch();
 
 		if (element instanceof UserDBDAO || element instanceof UserDBResourceDAO) {
 			UserDBDAO selectUserDb = null;
@@ -1031,6 +1031,19 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			tableListViewer.setInput(showTables);
 			tableListViewer.refresh();
 		}
+	}
+	
+	/**
+	 * init search
+	 */
+	private void initSearch() {
+		textSearch.setText("");
+		tableFilter.setSearchText("");
+		viewFilter.setSearchText("");
+		indexFilter.setSearchText("");
+		procedureFilter.setSearchText("");
+		functionFilter.setSearchText("");
+		triggerFilter.setSearchText("");
 	}
 
 	/**
