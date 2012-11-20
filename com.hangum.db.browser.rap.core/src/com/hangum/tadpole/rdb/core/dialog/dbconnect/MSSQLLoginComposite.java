@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.DBInfoDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -127,11 +129,15 @@ public class MSSQLLoginComposite extends MySQLLoginComposite {
 			
 		// 신규 데이터 저장.
 		} else {
-	
-			// db가 정상적인지 채크해본다 
+			
+			int intVersion = 0;
+			
 			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				sqlClient.queryForList("tableList", textDatabase.getText()); //$NON-NLS-1$
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
+				// 디비 버전을 찾아옵니다.
+				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
+				intVersion = Integer.parseInt( StringUtils.substringBefore(dbInfo.getProductversion(), ".") );
+				
 			} catch (Exception e) {
 				logger.error("MSSQL Connection", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -143,6 +149,10 @@ public class MSSQLLoginComposite extends MySQLLoginComposite {
 			// preference에 save합니다.
 			if(btnSavePreference.getSelection()) {
 				try {
+					if(intVersion <= 8) {
+						userDB.setTypes(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
+					}
+					
 					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 				} catch (Exception e) {
 					logger.error("MSSQL", e); //$NON-NLS-1$

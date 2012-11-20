@@ -215,9 +215,13 @@
 	VALUES( (select max(seq) from user_db)+1 , #user_seq#, #types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#)
 </insert>
 
+<!--
+	db type은 업데이트 되지 않도록 합니다. 
+	types 		= #types#,
+ -->
 <update id="userDBUpdate" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
 	UPDATE user_db SET
-		types 		= #types#, 
+		 
 		url 		= #url#, 
 		db			= #db#,  
 		group_name 	= #group_name#, 
