@@ -221,7 +221,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			
 			dbUrl = String.format(
 					DBDefine.MYSQL_DEFAULT.getDB_URL_INFO(), 
-					textHost.getText(), textPort.getText(), textDatabase.getText() + "?Unicode=true&characterEncoding=" + selectLocale.trim());
+					textHost.getText(), textPort.getText(), textDatabase.getText() + "?useUnicode=false&characterEncoding=" + selectLocale.trim());
 		}
 		
 		userDB = new UserDBDAO();
