@@ -13,11 +13,14 @@ package com.hangum.tadpole.rdb.core.editors.main;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -104,6 +107,7 @@ import com.hangum.tadpole.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.util.tables.SQLResultFilter;
 import com.hangum.tadpole.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.util.tables.SQLResultSorter;
+import com.hangum.tadpole.util.tables.SQLTypeUtils;
 import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
@@ -156,6 +160,9 @@ public class MainEditor extends EditorPart {
 	private String executeLastSQL = ""; //$NON-NLS-1$
 	/** query 결과의 컬럼 정보 HashMap -- table의 헤더를 생성하는 용도 <column index, Data> */
 	private HashMap<Integer, String> mapColumns = null;
+	/** query 결과 column, type 정보를 가지고 있습니다 */
+	private Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
+	
 	/** query 의 결과 데이터  -- table의 데이터를 표시하는 용도 <column index, Data> */
 	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
 		
@@ -1082,7 +1089,7 @@ public class MainEditor extends EditorPart {
 			// table data를 생성한다.
 			sqlSorter = new SQLResultSorter(-999);
 			
-			SQLResultLabelProvider.createTableColumn(sqlResultTableViewer, mapColumns, sqlSorter);
+			SQLResultLabelProvider.createTableColumn(sqlResultTableViewer, mapColumns, mapColumnType, sqlSorter);
 			sqlResultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
 			sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
 			
@@ -1291,14 +1298,14 @@ public class MainEditor extends EditorPart {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 //			// table column을 생성한다.
-//			ResultSetMetaData  rsm = rs.getMetaData();
+			ResultSetMetaData  rsm = rs.getMetaData();
 //			int columnCount = rs.getMetaData().getColumnCount();
 //			
 //			logger.debug("### [Table] [start ]### [column count]" + rsm.getColumnCount() + "#####################################################################################################");
-//			for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
+			for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
 //				logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
 //				logger.debug("\tColumnLabel  		:  " 	+ rsm.getColumnLabel(i+1));
-//				
+				
 //				logger.debug("\t AutoIncrement  	:  " 	+ rsm.isAutoIncrement(i+1));
 //				logger.debug("\t Nullable		  	:  " 	+ rsm.isNullable(i+1));
 //				logger.debug("\t CaseSensitive  	:  " 	+ rsm.isCaseSensitive(i+1));
@@ -1316,13 +1323,14 @@ public class MainEditor extends EditorPart {
 //				logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
 //				logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
 //				logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
-//				
+				mapColumnType.put(i, rsm.getColumnType(i+1));
+				
 //				logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
 //				logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
 //				logger.debug("\t SchemaName		 	:  " 	+ rsm.getSchemaName(i+1));
 //				logger.debug("\t TableName		 	:  " 	+ rsm.getTableName(i+1));
 //				logger.debug("\t ==[column end]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
-//			}
+			}
 //			
 //			logger.debug("#### [Table] [end ] ########################################################################################################");
 			
@@ -1346,7 +1354,7 @@ public class MainEditor extends EditorPart {
 				
 				for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
 					try {
-						tmpRs.put(i, rs.getString(i+1) == null ?"":rs.getString(i+1));
+						tmpRs.put(i, rs.getString(i+1) == null ?"":prettyData(i, rs.getObject(i+1)));
 					} catch(Exception e) {
 						logger.error("ResutSet fetch error", e);
 						tmpRs.put(i, "");
@@ -1364,6 +1372,28 @@ public class MainEditor extends EditorPart {
 			try { rs.close(); } catch(Exception e) {}
 			try { javaConn.close(); } catch(Exception e){}
 		}
+	}
+	
+	/**
+	 * 숫자일 경우 ,를 찍어보여줍니다.
+	 * 
+	 * @param index
+	 * @param value
+	 * @return
+	 */
+	private String prettyData(int index, Object value) {
+		if(SQLTypeUtils.isNumberType(mapColumnType.get(index))) {
+			try{
+				NumberFormat pf = NumberFormat.getNumberInstance();
+				String val = pf.format(value);
+				
+				return val;
+			} catch(Exception e){
+				logger.error("pretty data", e);
+			}			
+		} 
+
+		return value.toString();
 	}
 	
 	@Override
