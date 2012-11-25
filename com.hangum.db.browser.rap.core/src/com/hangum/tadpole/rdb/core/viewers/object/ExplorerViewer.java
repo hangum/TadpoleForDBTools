@@ -206,6 +206,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	@Override
 	public void createPartControl(Composite parent) {
 		GridLayout gl_parent = new GridLayout(1, false);
+		gl_parent.marginWidth = 1;
 		gl_parent.verticalSpacing = 0;
 		gl_parent.horizontalSpacing = 0;
 		gl_parent.marginHeight = 0;
@@ -213,7 +214,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeSearch.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeSearch = new GridLayout(2, false);
+		gl_compositeSearch.horizontalSpacing = 2;
+		gl_compositeSearch.verticalSpacing = 2;
+		gl_compositeSearch.marginHeight = 2;
+		gl_compositeSearch.marginWidth = 2;
+		compositeSearch.setLayout(gl_compositeSearch);
 
 		Label lblNewLabel = new Label(compositeSearch, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -250,7 +256,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 
 		tabFolderObject = new TabFolder(compositeBody, SWT.NONE);
 		tabFolderObject.addSelectionListener(new SelectionAdapter() {
@@ -345,7 +356,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTriggers.setControl(compositeIndexes);
-		compositeIndexes.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeIndexes = new GridLayout(1, false);
+		gl_compositeIndexes.verticalSpacing = 2;
+		gl_compositeIndexes.horizontalSpacing = 2;
+		gl_compositeIndexes.marginHeight = 2;
+		gl_compositeIndexes.marginWidth = 2;
+		compositeIndexes.setLayout(gl_compositeIndexes);
 
 		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -414,7 +430,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmFunctions.setControl(compositeIndexes);
-		compositeIndexes.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeIndexes = new GridLayout(1, false);
+		gl_compositeIndexes.verticalSpacing = 2;
+		gl_compositeIndexes.horizontalSpacing = 2;
+		gl_compositeIndexes.marginHeight = 2;
+		gl_compositeIndexes.marginWidth = 2;
+		compositeIndexes.setLayout(gl_compositeIndexes);
 
 		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -483,7 +504,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositeIndexes);
-		compositeIndexes.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeIndexes = new GridLayout(1, false);
+		gl_compositeIndexes.verticalSpacing = 2;
+		gl_compositeIndexes.horizontalSpacing = 2;
+		gl_compositeIndexes.marginHeight = 2;
+		gl_compositeIndexes.marginWidth = 2;
+		compositeIndexes.setLayout(gl_compositeIndexes);
 
 		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -552,7 +578,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);
-		compositeIndexes.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeIndexes = new GridLayout(1, false);
+		gl_compositeIndexes.verticalSpacing = 2;
+		gl_compositeIndexes.horizontalSpacing = 2;
+		gl_compositeIndexes.marginHeight = 2;
+		gl_compositeIndexes.marginWidth = 2;
+		compositeIndexes.setLayout(gl_compositeIndexes);
 
 		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -620,7 +651,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmViews.setControl(compositeTables);
-		compositeTables.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeTables = new GridLayout(1, false);
+		gl_compositeTables.verticalSpacing = 2;
+		gl_compositeTables.horizontalSpacing = 2;
+		gl_compositeTables.marginHeight = 2;
+		gl_compositeTables.marginWidth = 2;
+		compositeTables.setLayout(gl_compositeTables);
 
 		SashForm sashForm = new SashForm(compositeTables, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -738,7 +774,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
-		compositeTables.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeTables = new GridLayout(1, false);
+		gl_compositeTables.verticalSpacing = 2;
+		gl_compositeTables.horizontalSpacing = 2;
+		gl_compositeTables.marginHeight = 2;
+		gl_compositeTables.marginWidth = 2;
+		compositeTables.setLayout(gl_compositeTables);
 		compositeTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		SashForm sashForm = new SashForm(compositeTables, SWT.NONE);
