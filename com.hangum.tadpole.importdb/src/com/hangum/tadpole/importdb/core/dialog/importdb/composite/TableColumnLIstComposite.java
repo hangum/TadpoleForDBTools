@@ -154,8 +154,20 @@ public class TableColumnLIstComposite extends Composite {
 		tableViewer.refresh();
 	}
 	
+	/**
+	 * 
+	 */
+	public void selectNotAll() {
+		for(ModTableDAO modDAO : getListTables()) {
+			modDAO.setModify(false);
+		}
+		tableViewer.refresh();	
+	}
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
+
+	
 }

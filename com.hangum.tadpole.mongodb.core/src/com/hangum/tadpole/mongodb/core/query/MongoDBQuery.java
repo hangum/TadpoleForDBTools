@@ -158,8 +158,19 @@ public class MongoDBQuery {
 	 * @throws Exception
 	 */
 	public static void insertDocument(UserDBDAO userDB, String colName, DBObject[] dbObject) throws Exception {
+		if(dbObject.length == 0) return;
+		
 		DBCollection collection = findCollection(userDB, colName);		
 		WriteResult wr = collection.insert(dbObject);
+		if(logger.isDebugEnabled()) {
+			try {
+				logger.debug( "[writer document]" + wr!=null?wr.toString():"" );
+				logger.debug( "[wr error]" + wr!=null?wr.getError():"" );		
+				logger.debug("[n]" + wr!=null?wr.getN():"" );
+			} catch(Exception e) {
+				logger.error("저장중에", e);
+			}
+		}
 	}
 	
 	/**

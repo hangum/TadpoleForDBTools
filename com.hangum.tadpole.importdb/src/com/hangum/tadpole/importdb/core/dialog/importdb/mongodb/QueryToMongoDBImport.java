@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.Activator;
+import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.importdb.core.dialog.importdb.QueryUtil;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.mongodb.BasicDBObject;
@@ -56,26 +57,26 @@ public class QueryToMongoDBImport {
 	 * table import
 	 */
 	public Job workTableImport() {
-		if("".equals(userQuery.trim())) {
-			MessageDialog.openInformation(null, "Confirm", "Please input the query.");			
+		if("".equals(userQuery.trim())) { //$NON-NLS-1$
+			MessageDialog.openInformation(null, Messages.QueryToMongoDBImport_1, Messages.QueryToMongoDBImport_2);			
 			return null;		
 		}
 		if("".equals(colName.trim())) {
-			MessageDialog.openInformation(null, "Confirm", "Please input the collection name.");			
+			MessageDialog.openInformation(null, Messages.QueryToMongoDBImport_1, Messages.QueryToMongoDBImport_5);			
 			return null;		
 		}
 		
 		// job
-		Job job = new Job("Execute data Import.") {
+		Job job = new Job("Execute data Import.") { //$NON-NLS-1$
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Start import....", IProgressMonitor.UNKNOWN);
+				monitor.beginTask("Start import....", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 				
 				try {
-					monitor.subTask(userQuery + " table importing...");
+					monitor.subTask(userQuery + " table importing..."); //$NON-NLS-1$
 					insertMongoDB();
 				} catch(Exception e) {
-					logger.error("press ok button", e);						
+					logger.error("press ok button", e);						 //$NON-NLS-1$
 					return new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				} finally {
 					monitor.done();
