@@ -739,6 +739,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
 		compositeTables.setLayout(new GridLayout(1, false));
+		compositeTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		SashForm sashForm = new SashForm(compositeTables, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
