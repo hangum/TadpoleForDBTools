@@ -13,10 +13,13 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
@@ -158,6 +161,42 @@ public abstract class AbstractLoginComposite extends Group {
 				
 				return false;
 			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * text message
+	 * 
+	 * @param text
+	 * @param msg
+	 * @return
+	 */
+	protected boolean message(Text text, String msg) {
+		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
+			text.setFocus();
+			
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * combo message
+	 * 
+	 * @param text
+	 * @param msg
+	 * @return
+	 */
+	protected boolean message(Combo text, String msg) {
+		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
+			text.setFocus();
+			
+			return false;
 		}
 		
 		return true;

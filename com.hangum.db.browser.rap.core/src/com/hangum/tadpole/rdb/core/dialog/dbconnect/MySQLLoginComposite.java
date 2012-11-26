@@ -223,6 +223,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 					DBDefine.MYSQL_DEFAULT.getDB_URL_INFO(), 
 					textHost.getText(), textPort.getText(), textDatabase.getText() + "?useUnicode=false&characterEncoding=" + selectLocale.trim());
 		}
+		if(logger.isDebugEnabled()) logger.debug("[db url]" + dbUrl);
 		
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.MYSQL_DEFAULT.getDBToString());
@@ -297,42 +298,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			}
 		} catch(NumberFormatException nfe) {
 			MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * text message
-	 * 
-	 * @param text
-	 * @param msg
-	 * @return
-	 */
-	protected boolean message(Text text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
-			text.setFocus();
-			
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * combo message
-	 * 
-	 * @param text
-	 * @param msg
-	 * @return
-	 */
-	protected boolean message(Combo text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
-			text.setFocus();
-			
 			return false;
 		}
 		

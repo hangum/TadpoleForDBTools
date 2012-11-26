@@ -67,7 +67,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	protected Text textPassword;
 	protected Text textDatabase;
 	protected Text textPort;
-	protected Combo comboLocale;
+//	protected Combo comboLocale;
 	
 	protected Button btnSavePreference;
 	private Label lblDatabase;
@@ -151,13 +151,13 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		Label lblLocale = new Label(compositeBody, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
-		comboLocale = new Combo(compositeBody, SWT.NONE);
-		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-			comboLocale.setVisibleItemCount(8);
-			
-			for(String val : DBLocaleUtils.getOracleList()) comboLocale.add(val);
-			comboLocale.select(0);
+//		comboLocale = new Combo(compositeBody, SWT.NONE);
+//		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//			comboLocale.setVisibleItemCount(8);
+//			
+//			for(String val : DBLocaleUtils.getOracleList()) comboLocale.add(val);
+//			comboLocale.select(0);
 	
 		
 		Button btnPing = new Button(compositeBody, SWT.NONE);
@@ -255,7 +255,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());
 		userDB.setPort(textPort.getText());
-		userDB.setLocale(comboLocale.getText().trim());
+//		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setUsers(textUser.getText());
 
 		// 기존 데이터 업데이트
@@ -334,39 +334,4 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		return true;
 	}
 	
-	/**
-	 * text message
-	 * 
-	 * @param text
-	 * @param msg
-	 * @return
-	 */
-	protected boolean message(Text text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
-			text.setFocus();
-			
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * combo message
-	 * 
-	 * @param text
-	 * @param msg
-	 * @return
-	 */
-	protected boolean message(Combo text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
-			text.setFocus();
-			
-			return false;
-		}
-		
-		return true;
-	}
 }
