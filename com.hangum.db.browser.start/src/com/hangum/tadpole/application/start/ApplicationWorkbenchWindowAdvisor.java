@@ -65,7 +65,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowStatusLine(true);
         
         configurer.setShowProgressIndicator(true);
-        configurer.setTitle("Tadpole for DB Tools 0.0.8 SR7"); //$NON-NLS-1$
+        configurer.setTitle("Tadpole for DB Tools 0.0.8 SR8"); //$NON-NLS-1$
         
         // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);

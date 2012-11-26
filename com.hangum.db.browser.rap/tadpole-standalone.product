@@ -3,18 +3,16 @@
 
 <product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>-standalone -debuglog -test</programArgs>
+      <programArgs>-standalone -test</programArgs>
       <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000</vmArgs>
       <vmArgsMac>-d32</vmArgsMac>
    </launcherArgs>
 
    <windowImages/>
-
 
    <launcher name="tadpole-standalone">
       <solaris/>
@@ -24,11 +22,9 @@
       </win>
    </launcher>
 
-
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
    </vm>
-
 
    <plugins>
       <plugin id="com.hangum.tadpole.applicaion.start"/>

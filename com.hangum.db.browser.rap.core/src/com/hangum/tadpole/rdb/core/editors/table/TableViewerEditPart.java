@@ -371,11 +371,11 @@ public class TableViewerEditPart extends EditorPart {
 		//
 		//
 		//
-		if(DBDefine.MSSQL_DEFAULT != DBDefine.getDBDefine(userDB.getTypes())) {
+//		if(DBDefine.MSSQL_DEFAULT != DBDefine.getDBDefine(userDB.getTypes())) {
 			requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, 500);
-		} else {
-			requestQuery = requestQuery + " top 500";
-		}
+//		} else {
+//			requestQuery = requestQuery + " top 500";
+//		}
 		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;

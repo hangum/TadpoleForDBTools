@@ -189,6 +189,11 @@ public class TadpoleEditor extends GraphicalEditorWithFlyoutPalette {
 		job.setUser(true);
 		job.schedule();		
 	}	
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 
 	@Override
 	protected void configureGraphicalViewer() {
