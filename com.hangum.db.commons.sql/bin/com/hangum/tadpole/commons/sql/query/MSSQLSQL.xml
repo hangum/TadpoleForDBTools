@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- 
+	jtds 1.2.5버전으로 작업.
+	MSSQL 2008 R2로 작업.
+	이전 버전으로는 테스트 못해봤어요.  - 12.08.07
+	
+	@author hangum	
+ -->
+<sqlMap namespace="MsSQL_query">
+
+<!-- 
+	MSSQL의 버전 정보를 가져옵니다.
+ -->
+<select id="findDBInfo" resultClass="com.hangum.tadpole.dao.DBInfoDAO">
+	SELECT SERVERPROPERTY('productversion') productversion, SERVERPROPERTY ('productlevel') productlevel, SERVERPROPERTY ('edition') edition;
+</select>
+
+<!-- 
+	table 이름
+	
+	select substring(convert(varchar(100), SERVERPROPERTY('ProductVersion')), 1, charindex('.', convert(varchar(100), SERVERPROPERTY('ProductVersion')) )-1) as version
+ -->
+<select id="tableList" resultClass="com.hangum.tadpole.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	select name from sys.tables
+	order by name
+	
+</select>
+
+<!-- 
+	table, view의 컬럼 정보
+ -->
+<select id="tableColumnList" resultClass="com.hangum.tadpole.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+SELECT  b.name field, 
+        c.name + CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
+                 ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' 
+        END type, 
+        CASE WHEN b.isnullable = 0  then 'NO' 
+             ELSE 'YES' 
+        END notnull, 
+        d.keyno mskey
+FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
+	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
+	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+WHERE 
+		a.name = #table#
+ORDER BY a.id, b.colid
+</select>
+
+<!-- 
+	테이블간의 관계 목록 정보를 얻습니다.
+	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
+ -->
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+  SELECT X.TABLE_NAME
+       ,X.CONSTRAINT_NAME
+       , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.COLUMN_NAME ELSE '' END)) AS COLUMN_NAME
+       ,X.REFERENCED_TABLE_NAME
+       , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.REFERENCED_COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.REFERENCED_COLUMN_NAME ELSE '' END)) AS REFERENCED_COLUMN_NAME
+   FROM (SELECT B.CONSTRAINT_COLUMN_ID
+               ,E.NAME AS TABLE_NAME
+               ,C.NAME AS CONSTRAINT_NAME
+               ,D.NAME AS COLUMN_NAME
+               ,B.REFERENCED_COLUMN_ID
+               ,G.NAME AS REFERENCED_TABLE_NAME
+               ,F.NAME AS REFERENCED_COLUMN_NAME
+           FROM SYS.FOREIGN_KEYS A
+                INNER JOIN SYS.FOREIGN_KEY_COLUMNS B
+                   ON A.OBJECT_ID = B.CONSTRAINT_OBJECT_ID
+                INNER JOIN SYS.OBJECTS C
+                   ON A.OBJECT_ID = C.OBJECT_ID
+                INNER JOIN SYS.SYSCOLUMNS D
+                   ON B.PARENT_OBJECT_ID = D.ID AND B.PARENT_COLUMN_ID = D.COLID
+                INNER JOIN SYS.SYSOBJECTS E
+                   ON B.PARENT_OBJECT_ID = E.ID
+                INNER JOIN SYS.SYSCOLUMNS F
+                   ON B.REFERENCED_OBJECT_ID = F.ID AND B.REFERENCED_COLUMN_ID = F.COLID
+                INNER JOIN SYS.SYSOBJECTS G
+                   ON B.REFERENCED_OBJECT_ID = G.ID) X
+WHERE X.TABLE_NAME in ( $table$ )                     
+GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
+</select>
+
+<!-- 
+	모든 erd 보기
+ -->
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.dao.mysql.ReferencedTableDAO" >
+SELECT X.TABLE_NAME
+       ,X.CONSTRAINT_NAME
+       , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.COLUMN_NAME ELSE '' END)) AS COLUMN_NAME
+       ,X.REFERENCED_TABLE_NAME
+       , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.REFERENCED_COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.REFERENCED_COLUMN_NAME ELSE '' END)) AS REFERENCED_COLUMN_NAME
+   FROM (SELECT B.CONSTRAINT_COLUMN_ID
+               ,E.NAME AS TABLE_NAME
+               ,C.NAME AS CONSTRAINT_NAME
+               ,D.NAME AS COLUMN_NAME
+               ,B.REFERENCED_COLUMN_ID
+               ,G.NAME AS REFERENCED_TABLE_NAME
+               ,F.NAME AS REFERENCED_COLUMN_NAME
+           FROM SYS.FOREIGN_KEYS A
+                INNER JOIN SYS.FOREIGN_KEY_COLUMNS B
+                   ON A.OBJECT_ID = B.CONSTRAINT_OBJECT_ID
+                INNER JOIN SYS.OBJECTS C
+                   ON A.OBJECT_ID = C.OBJECT_ID
+                INNER JOIN SYS.SYSCOLUMNS D
+                   ON B.PARENT_OBJECT_ID = D.ID AND B.PARENT_COLUMN_ID = D.COLID
+                INNER JOIN SYS.SYSOBJECTS E
+                   ON B.PARENT_OBJECT_ID = E.ID
+                INNER JOIN SYS.SYSCOLUMNS F
+                   ON B.REFERENCED_OBJECT_ID = F.ID AND B.REFERENCED_COLUMN_ID = F.COLID
+                INNER JOIN SYS.SYSOBJECTS G
+                   ON B.REFERENCED_OBJECT_ID = G.ID) X
+GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
+</select>
+
+<!-- 
+	view 정보
+ -->
+<select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
+	/*
+	SELECT SERVERPROPERTY('productversion')
+	select name from sys.views order by name	
+	*/
+	select name from sysobjects where xtype = 'V' order by name
+</select>
+
+<!-- 
+	index 정보, SHOW INDEX FROM $tableName$
+ -->
+ <select id="indexList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+	SELECT table_name,
+         constraint_name index_name,
+         column_name,         
+         table_catalog AS table_schema
+    FROM information_schema.CONSTRAINT_COLUMN_USAGE
+    ORDER BY table_name     
+</select>
+
+<!-- 
+	procedure list
+ -->
+<select id="procedureList" resultClass="com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT s.name,
+		s.type,
+	   #db_name# as db,
+	   crdate as created
+    FROM     sysobjects s
+	WHERE    s.TYPE = 'P'
+	ORDER BY s.name
+</select>
+
+<!-- 
+	function list
+ -->
+<select id="functionList" resultClass="com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT s.name,
+		s.type,
+	   #db_name# as db,
+	   crdate as created
+    FROM     sysobjects s
+	WHERE    s.TYPE = 'F'
+	ORDER BY s.name
+</select>
+
+<!-- 
+	show triggers
+ -->
+<select id="triggerList" resultClass="com.hangum.tadpole.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SELECT s.name,
+	 	#db_name# as db,
+	   crdate as created 
+	FROM sysobjects  s
+	WHERE s.type = 'TR'
+</select>
+
+</sqlMap>
