@@ -147,9 +147,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		
 		textPassword = new Text(compositeBody, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblLocale = new Label(compositeBody, SWT.NONE);
-		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
+//		new Label(compositeBody, SWT.NONE);
 		
 //		comboLocale = new Combo(compositeBody, SWT.NONE);
 //		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -188,6 +186,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		btnSavePreference = new Button(compositeBody, SWT.CHECK);
 		btnSavePreference.setText(Messages.MySQLLoginComposite_btnSavePreference_text);
 		btnSavePreference.setSelection(true);
+		new Label(compositeBody, SWT.NONE);
 
 		init();
 	}
