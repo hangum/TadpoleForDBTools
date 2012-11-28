@@ -38,7 +38,7 @@ public class TadpoleSystem_UserGroupQuery {
 		group.setName(name);
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 			List<UserGroupDAO> isUserDB = (List<UserGroupDAO>)sqlClient.queryForList("isUserGroup", group);
 			
 			if(isUserDB.size() >= 1) {
@@ -61,7 +61,7 @@ public class TadpoleSystem_UserGroupQuery {
 		group.setName(name);
 		
 		// 기존에 등록 되어 있는지 검사한다
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserGroupDAO> isUserDB = (List<UserGroupDAO>)sqlClient.queryForList("isUserGroup", group); //$NON-NLS-1$
 		
 		// 존재하
@@ -81,7 +81,7 @@ public class TadpoleSystem_UserGroupQuery {
 	 * @throws Exception
 	 */
 	public static List<UserGroupDAO> getGroup() throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (List<UserGroupDAO>)sqlClient.queryForList("userDBList"); //$NON-NLS-1$
 	}
 	
@@ -92,7 +92,7 @@ public class TadpoleSystem_UserGroupQuery {
 	 * @throws Exception
 	 */
 	public static String findGroupName(int groupSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return ""+sqlClient.queryForObject("findGroupName", groupSeq); //$NON-NLS-1$
 	}
 	

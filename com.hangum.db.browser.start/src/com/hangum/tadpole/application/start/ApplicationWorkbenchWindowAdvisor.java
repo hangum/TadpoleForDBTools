@@ -36,10 +36,11 @@ import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.preference.define.SystemDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystemConnector;
+import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 
@@ -65,7 +66,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowStatusLine(true);
         
         configurer.setShowProgressIndicator(true);
-        configurer.setTitle("Tadpole for DB Tools 0.0.8 SR8"); //$NON-NLS-1$
+        configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION);
         
         // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
@@ -73,9 +74,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         
        	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
     	try {
-    		TadpoleSystemConnector.createSystemTable();
+    		boolean isInit = TadpoleSystemInitializer.initSystem();
+    		if(!isInit) {
+    			// 어떻게 어떻게 초기화 합니다.
+    		}
     	} catch(Exception e) {
-    		
+    		logger.error("System initialize", e);
     		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
     		
@@ -91,8 +95,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	// 로그인 취소 버튼을 누르면 manager 권한으로 사용하도록 합니다.
 	    	if(Dialog.OK != loginDialog.open()) {
 	    		
-	    		String userId = TadpoleSystemConnector.MANAGER_EMAIL;
-				String password = TadpoleSystemConnector.MANAGER_PASSWD;
+	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
+				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
 		    	try {
 					UserDAO login = TadpoleSystem_UserQuery.login(userId, password);
 					if(!Define.USER_TYPE.MANAGER.toString().equals(login.getUser_type())) {

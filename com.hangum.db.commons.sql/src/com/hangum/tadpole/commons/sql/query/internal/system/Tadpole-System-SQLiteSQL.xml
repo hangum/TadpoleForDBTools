@@ -9,7 +9,19 @@
   Contributors:
       Cho Hyun Jong - initial API and implementation
 -->
-<!-- 
+
+<!--
+- 시스템 사용자 정보 디비
+CREATE TABLE tadpole_system (
+	seq INTEGER PRIMARY KEY AUTOINCREMENT,
+	name		VARCHAR(100) NOT NULL,
+	major_version VARCHAR(50) NOT NULL,
+	sub_version VARCHAR(50) NOT NULL,	
+	information VARCHAR(2000) NOT NULL,
+	create_time DATE DEFAULT (datetime('now','localtime'))
+)
+
+
 -사용자 그룹
 CREATE TABLE user_group  (
 	seq INTEGER PRIMARY KEY AUTOINCREMENT,

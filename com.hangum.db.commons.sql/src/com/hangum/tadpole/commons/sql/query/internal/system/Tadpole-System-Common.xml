@@ -21,12 +21,30 @@
  -->
 
 <sqlMap namespace="Tadpole-System-Common">
+    
+<!-- 
+	=====================================================================
+	SYSTEM QUERY
+	=====================================================================
+ -->
+<select id="system_information" resultClass="com.hangum.tadpole.dao.system.TadpoleSystemDAO">
+    SELECT * FROM tadpole_system
+</select>
+
+<!-- 
+	신규 시스템 정보를 입력합니다.
+ -->
+<insert id="newSystem" parameterClass="com.hangum.tadpole.dao.system.TadpoleSystemDAO">
+	INSERT INTO tadpole_system(name, major_version, sub_version, information)
+	VALUES (#name#, #major_version#, #sub_version#, #information#)    
+</insert>
+    
 <!-- 
 	============================================================================================================================
 	user group
 	============================================================================================================================
  -->
- <select id="isUserGroup" resultClass="com.hangum.tadpole.dao.system.UserGroupDAO" parameterClass="com.hangum.tadpole.dao.system.UserGroupDAO">
+<select id="isUserGroup" resultClass="com.hangum.tadpole.dao.system.UserGroupDAO" parameterClass="com.hangum.tadpole.dao.system.UserGroupDAO">
 	SELECT name 
 	FROM user_group 
 	WHERE 
