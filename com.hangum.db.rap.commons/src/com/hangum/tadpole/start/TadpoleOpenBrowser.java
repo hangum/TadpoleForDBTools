@@ -12,6 +12,8 @@ package com.hangum.tadpole.start;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.define.Define;
+
 /**
  * standalone 모드로 시스템이 시작할 때 디폴트 브라우저를 오픈하여 주도록 합니다. 
  * 
@@ -20,10 +22,10 @@ import org.apache.log4j.Logger;
  */
 public class TadpoleOpenBrowser  implements Runnable {
 	private static final Logger logger = Logger.getLogger(TadpoleOpenBrowser.class);
-	public static final String url = "http://127.0.0.1:10081/db?startup=tadpole";
 	
 	@Override
 	public void run() {
+		
 		String s1 = System.getProperty("os.name").toLowerCase();
 		Runtime runtime = Runtime.getRuntime();
 		
@@ -35,11 +37,11 @@ public class TadpoleOpenBrowser  implements Runnable {
 			
 			// window
 			if (s1.indexOf("windows") >= 0) {
-				runtime.exec(new String[] { "rundll32", "url.dll,FileProtocolHandler", url });
+				runtime.exec(new String[] { "rundll32", "url.dll,FileProtocolHandler", Define.getTadpoleUrl() });
 			
 			// mac
 			} else if (s1.indexOf("mac") >= 0) {
-				Runtime.getRuntime().exec(new String[] { "open", url });
+				Runtime.getRuntime().exec(new String[] { "open", Define.getTadpoleUrl() });
 			
 			// linux
 			} else {
@@ -54,7 +56,7 @@ public class TadpoleOpenBrowser  implements Runnable {
 					if (i >= as.length)
 						break;
 					try {
-						runtime.exec(new String[] { as[i], url });
+						runtime.exec(new String[] { as[i], Define.getTadpoleUrl() });
 						isSuccess = true;
 						break;
 					} catch (Exception exception) {

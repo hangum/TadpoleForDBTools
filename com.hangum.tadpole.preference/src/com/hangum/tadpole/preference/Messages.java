@@ -40,9 +40,9 @@ public class Messages extends NLS {
 	public static String GeneralPreferencePage_lblExportDilimit_text;
 	public static String GeneralPreferencePage_text_text;
 	public static String GeneralPreferencePage_lblHomePage_text;
-	public static String GeneralPreferencePage_text_text_1;
 	public static String GeneralPreferencePage_lblHomePageUse_text;
 	public static String GeneralPreferencePage_btnCheckButton_text;
+	public static String GeneralPreferencePage_lblStandalonePort_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
