@@ -17,16 +17,16 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 
 /**
- * TABLE, VIEW의 FILTER
+ * TABLE의 FILTER
  * 
  * @author hangumNote
  *
  */
-public class TableViewFilter extends ViewerFilter {
+public class TableFilter extends ViewerFilter {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TableViewFilter.class);
+	private static final Logger logger = Logger.getLogger(TableFilter.class);
 
 	private String searchString;
 	

@@ -124,7 +124,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 	private TableViewer tableColumnViewer;
 	private List showTableColumns;
-	private TableViewFilter tableFilter;
+	private TableFilter tableFilter;
 
 	private ObjectCreatAction creatAction_Table;
 	// private ObjectModifyAction modifyAction_Table;
@@ -148,7 +148,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	private List showViews;
 	private TableViewer viewColumnViewer;
 	private List showViewColumns;
-	private TableViewFilter viewFilter;
+	private RDBViewFilter viewFilter;
 
 	private ObjectCreatAction creatAction_View;
 	// private ObjectModifyAction modifyAction_Table;
@@ -738,7 +738,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		sashForm.setWeights(new int[] { 1, 1 });
 
-		viewFilter = new TableViewFilter();
+		viewFilter = new RDBViewFilter();
 		viewListViewer.addFilter(viewFilter);
 
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
@@ -917,7 +917,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
 
 		// filter
-		tableFilter = new TableViewFilter();
+		tableFilter = new TableFilter();
 		tableListViewer.addFilter(tableFilter);
 
 		// columns
