@@ -297,6 +297,7 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_trclmnNewColumn_text;
 	public static String MainEditor_tltmExecute_toolTipText;
 	public static String MainEditor_tltmExecute_toolTipText_1;
+	public static String MongoDBLoginComposite_9;
 	public static String SQLToStringDialog_lblVariable_text;
 	public static String SQLToStringDialog_btnNewButton_text;
 	public static String OracleLoginComposite_lblDatabase_text;

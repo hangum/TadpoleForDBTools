@@ -1337,15 +1337,13 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 				// mongo db
 			} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 
-				Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()));
-				DB mongoDB = mongo.getDB(userDB.getDb());
-
 				if (showTables != null) showTables.clear();
 				else showTables = new ArrayList<TableDAO>();
-
-				for (String col : mongoDB.getCollectionNames()) {
+				
+				List<String> listCollection = MongoDBQuery.collectionList(userDB);
+				for (String strColl : listCollection) {
 					TableDAO dao = new TableDAO();
-					dao.setName(col);
+					dao.setName(strColl);
 
 					showTables.add(dao);
 				}

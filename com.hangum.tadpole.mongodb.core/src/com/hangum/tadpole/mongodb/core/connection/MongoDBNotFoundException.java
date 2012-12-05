@@ -8,22 +8,18 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.mongodb.core.define;
+package com.hangum.tadpole.mongodb.core.connection;
 
 /**
- * mongodb defien class
+ * mongodb not found exception
  * 
  * @author hangum
- *
+ * 
  */
-public class MongoDBDefine {
-
-	/**
-	 * ObjectID
-	 */
-	public static final int PRIMARY_ID_KEY = 99999;
-	public static final String PRIMARY_ID_STRING = "__object_id__";
+public class MongoDBNotFoundException extends Exception {
 	
-	public static final String[] SYSTEM_COLLECTION = {"system.namespaces", "system.indexes", "system.profile", "system.users"}; 
+	public MongoDBNotFoundException(String msg) {
+		super(msg);
+	}
 	
 }
