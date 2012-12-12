@@ -61,16 +61,19 @@ public class TableUtil {
 	}
 	
 	public static void packTable(Table table) {
-		TableColumn[] columns = table.getColumns();
 		
+		TableColumn[] columns = table.getColumns();		
 		for (int i = 0; i < columns.length; i++) {
 			columns[i].pack();
 			
-			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
-			if(columns.length >= 3) {
-				if(columns[i].getWidth() < 50) columns[i].setWidth(50);
-				else if(columns[i].getWidth() >=  300) columns[i].setWidth(300);
-			}
+//			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
+//			if(columns.length >= 3) {
+//				if(columns[i].getWidth() < 50) columns[i].setWidth(50);
+//				else if(columns[i].getWidth() >=  300) columns[i].setWidth(300);
+//			}
 		}
+		
+		AutoResizeTableLayout layout = new AutoResizeTableLayout(table);
+		table.setLayout(layout);
 	}
 }

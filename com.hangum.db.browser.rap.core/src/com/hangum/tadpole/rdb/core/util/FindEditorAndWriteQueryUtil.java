@@ -50,9 +50,10 @@ public class FindEditorAndWriteQueryUtil {
 	public static void run(UserDBDAO userDB, String lowSQL) {
 		IEditorReference reference = EditorUtils.findSQLEditor(userDB);
 		
-		try {
-			lowSQL = FormatSQL.format(ParserDefine.DB_TYPE.MYSQL, lowSQL);
-		} catch(Exception e) {}
+//		query formater 오류로 이해서 주석합니다. 
+//		try {
+//			lowSQL = FormatSQL.format(ParserDefine.DB_TYPE.MYSQL, lowSQL);
+//		} catch(Exception e) {}
 		
 		if(reference == null) {
 			

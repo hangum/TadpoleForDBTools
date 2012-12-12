@@ -93,9 +93,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.viewsupport.SelectionProviderMediator;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.mongodb.DB;
-import com.mongodb.DBAddress;
-import com.mongodb.Mongo;
 
 /**
  * 선택된 db의 object를
