@@ -271,7 +271,7 @@ public class TableViewerEditPart extends EditorPart {
 		});
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		sqlResultTableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		sqlResultTableViewer = new TableViewer(compositeBody, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		sqlResultTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if(primaryKeyListIndex.size() >= 1) tltmDelete.setEnabled(true);

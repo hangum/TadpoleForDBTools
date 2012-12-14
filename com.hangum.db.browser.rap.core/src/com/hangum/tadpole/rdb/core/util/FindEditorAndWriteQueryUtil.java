@@ -11,14 +11,12 @@
 package com.hangum.tadpole.rdb.core.util;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -27,7 +25,6 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.tadpole.sql.parser.format.FormatSQL;
-import com.hangum.tadpole.sql.parser.format.ParserDefine;
 
 /**
  * 쿼리 생성관련 유틸입니다.
@@ -50,10 +47,9 @@ public class FindEditorAndWriteQueryUtil {
 	public static void run(UserDBDAO userDB, String lowSQL) {
 		IEditorReference reference = EditorUtils.findSQLEditor(userDB);
 		
-//		query formater 오류로 이해서 주석합니다. 
-//		try {
-//			lowSQL = FormatSQL.format(ParserDefine.DB_TYPE.MYSQL, lowSQL);
-//		} catch(Exception e) {}
+		try {
+			lowSQL = FormatSQL.format(lowSQL);
+		} catch(Exception e) {}
 		
 		if(reference == null) {
 			

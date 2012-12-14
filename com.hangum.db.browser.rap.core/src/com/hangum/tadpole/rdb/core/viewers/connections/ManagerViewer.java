@@ -80,7 +80,7 @@ public class ManagerViewer extends ViewPart {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		
-		treeViewer = new TreeViewer(composite, SWT.BORDER);
+		treeViewer = new TreeViewer(composite, SWT.VIRTUAL | SWT.BORDER);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				

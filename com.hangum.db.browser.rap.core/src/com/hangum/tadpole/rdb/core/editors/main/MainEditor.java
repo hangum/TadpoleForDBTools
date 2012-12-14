@@ -535,7 +535,7 @@ public class MainEditor extends EditorPart {
 		gl_compositeSQLHistory.marginHeight = 0;
 		compositeSQLHistory.setLayout(gl_compositeSQLHistory);
 		
-		tableViewerSQLHistory = new TableViewer(compositeSQLHistory, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		tableViewerSQLHistory = new TableViewer(compositeSQLHistory, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tableViewerSQLHistory.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				
@@ -642,7 +642,7 @@ public class MainEditor extends EditorPart {
 		gl_compositeMessage.marginHeight = 0;
 		compositeMessage.setLayout(gl_compositeMessage);
 		
-		tableViewerMessage = new TableViewer(compositeMessage, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		tableViewerMessage = new TableViewer(compositeMessage, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tableViewerMessage.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				

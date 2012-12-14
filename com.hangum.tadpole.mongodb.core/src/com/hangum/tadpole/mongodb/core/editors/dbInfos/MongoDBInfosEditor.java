@@ -147,7 +147,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
-		treeViewerCollections = new TreeViewer(compositeBody, SWT.BORDER);
+		treeViewerCollections = new TreeViewer(compositeBody, SWT.BORDER | SWT.VIRTUAL);
 		treeViewerCollections.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				try {
@@ -194,6 +194,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		tree.setLinesVisible(true);
 		tree.setHeaderVisible(true);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		treeViewerCollections.setUseHashlookup(true);
 
 		collectionSorter = new MongoDBCollectionComparator();
 		treeViewerCollections.setSorter(collectionSorter);
