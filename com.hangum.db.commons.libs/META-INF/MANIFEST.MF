@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Libs
+Bundle-Name: commons libs
 Bundle-SymbolicName: com.hangum.tadpole.commons.libs
 Bundle-Version: 1.0.0
-Bundle-Vendor: SINSIWAY
+Bundle-Vendor: hangum
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: libs/commons-dbcp-1.2.2.jar,
  libs/commons-lang-2.4.jar,

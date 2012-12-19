@@ -1010,11 +1010,10 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
 			if (selection instanceof IStructuredSelection) {
-
 				IStructuredSelection is = (IStructuredSelection) selection;
 				initObjectHead(is.getFirstElement());
-
 			} // end selection
+			
 		} // end selectionchange
 	};
 
@@ -1046,6 +1045,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			refreshTable("DB"); //$NON-NLS-1$
 
 			initObjectDetail(DBDefine.getDBDefine(userDB.getTypes()));
+			
 
 		} else if (element instanceof ManagerListDTO) {
 			ManagerListDTO managerList = (ManagerListDTO) element;
@@ -1099,15 +1099,17 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			// procedure, function 항목을 닫는다.
 			for (TabItem tabItem : tabFolderObject.getItems()) {
 				if (!tabItem.isDisposed()) {
-					if ("Procedures".equals(tabItem.getText()))tabItem.dispose(); //$NON-NLS-1$
-					else if ("Functions".equals(tabItem.getText()))tabItem.dispose(); //$NON-NLS-1$
+					if ("Procedures".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
+					else if ("Functions".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
 				}
 			}
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
+			
+			
 			// table 항목 이외의 모든 항목을 닫는다.
 			for (TabItem tabItem : tabFolderObject.getItems()) {
 				if (!tabItem.isDisposed()) {
-					if (!"Tables".equals(tabItem.getText()))tabItem.dispose(); //$NON-NLS-1$
+					if (!"Tables".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
 				}
 			}
 
@@ -1327,13 +1329,11 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		try {
 			if (DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-
+				
 				// mongo db
 			} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-
 				if (showTables != null) showTables.clear();
 				else showTables = new ArrayList<TableDAO>();
 				
