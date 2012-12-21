@@ -835,7 +835,7 @@ public class MainEditor extends EditorPart {
 					// 전체 쿼리를 선택하였으면...
 					if(tmpStartPoint != BLOCK_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$
 						
-						tmpStrSelText = SQLTextUtil.executeQuery(tmpStrSelText, tmpStartPoint);
+//						tmpStrSelText = SQLTextUtil.executeQuery(tmpStrSelText, tmpStartPoint);
 						
 						/////////////////////////////////////////////////////////////////////////////////////////
 	//					logger.debug("[original] =========================================\r\n]" + tmpStrSelText);
