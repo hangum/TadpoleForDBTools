@@ -48,6 +48,8 @@ public class ConnectDatabase implements IViewActionDelegate {
 			}
 		}
 		
+		run();
+		
 	}
 	
 	public void run() {
