@@ -318,7 +318,7 @@ public class MainEditor extends EditorPart {
 		
 		ToolItem tltmExecuteAll = new ToolItem(toolBar, SWT.NONE);
 		tltmExecuteAll.setToolTipText(Messages.MainEditor_tltmExecuteAll_text);
-		tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png"));
+		tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query-all.png"));
 		tltmExecuteAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
