@@ -846,6 +846,7 @@ public class MainEditor extends EditorPart {
 					if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
 						tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
 						String[] strArrySQLS = tmpStrSelText.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
+						List<String> listStrExecuteQuery = new ArrayList<String>();
 						
 						for (String strSQL : strArrySQLS) {							
 							if(monitor.isCanceled()) {
@@ -863,22 +864,32 @@ public class MainEditor extends EditorPart {
 							
 							// 쿼리를 수행할수 있도록 가공합니다.
 							executeLastSQL = SQLUtil.executeQuery(strSQL);
-	
-							// 프로그래스바 정보.
-							monitor.subTask(executeLastSQL);
-							monitor.setTaskName(executeLastSQL);
 							
+							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 							if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 									executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 										executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								
-								pageNumber = 1;							
-								runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
-							// create 로 시작하는 쿼리.
 							} else {
-								runSQLOther(executeLastSQL);
+								listStrExecuteQuery.add(executeLastSQL);
 							}
-						}	// end query for
+						}
+						
+						// 프로그래스바 정보.
+						monitor.subTask(executeLastSQL);
+						monitor.setTaskName(executeLastSQL);
+						
+						// 마지막 쿼리가 select 문일 경우에 execute batch insert 후에 select 문을 호출합니다.
+						if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
+								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
+									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							
+							pageNumber = 1;	
+							runSQLExecuteBatch(listStrExecuteQuery);
+							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
+						// create 로 시작하는 쿼리.
+						} else {
+							runSQLExecuteBatch(listStrExecuteQuery);
+						}					
 					
 					// 블럭 쿼리를 실행하였으면 쿼리를 분리자로 나누지 않고 전체를 수행합니다.
 					} else {
@@ -958,6 +969,36 @@ public class MainEditor extends EditorPart {
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
 		job.schedule();
+	}
+	
+	/**
+	 * select문의 execute 쿼리를 수행합니다.
+	 * 
+	 * @param listQuery
+	 * @throws Exception
+	 */
+	private void runSQLExecuteBatch(List<String> listQuery) throws Exception {
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		try {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			javaConn = client.getDataSource().getConnection();
+			statement = javaConn.createStatement();
+			
+			javaConn.setAutoCommit(false);
+			
+			for (String strQuery : listQuery) {
+				statement.addBatch(strQuery);
+			}
+			statement.executeBatch();
+		} catch(Exception e) {
+			logger.error("Execute batch update", e);
+			throw e;
+		} finally {
+			try { statement.close();} catch(Exception e) {}
+			try { javaConn.close(); } catch(Exception e) {}
+		}
 	}
 
 	/**
