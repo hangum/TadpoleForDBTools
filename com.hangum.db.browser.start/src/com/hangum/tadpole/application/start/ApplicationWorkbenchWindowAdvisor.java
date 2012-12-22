@@ -33,14 +33,17 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.dao.system.UserDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.preference.define.SystemDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 
@@ -126,11 +129,26 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					SessionManager.setUserInfos(mapUserInfoData);
 					
 					initSession();
+					
 	    		} catch(Exception e) {
 	    			logger.error("session set", e);
 	    		}
 	    	}
     	} 
+    }
+    
+    @Override
+    public void postWindowOpen() {
+    	// 로그인 이후 디비가 없을 경우 디비 커넥트 다이얼로그가 출력되도록 합니다.
+    	try {
+    		List<UserDBDAO> listUserDB = TadpoleSystem_UserDBQuery.getUserDB();
+    		if(listUserDB.size() == 0) {
+    			ConnectDatabase cd = new ConnectDatabase();
+    			cd.run();
+    		}    		
+    	} catch(Exception e) {
+    		logger.error("list user db", e);
+    	}    	
     }
     
     /**

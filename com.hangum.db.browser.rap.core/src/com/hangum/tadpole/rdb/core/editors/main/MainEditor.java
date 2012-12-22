@@ -989,6 +989,9 @@ public class MainEditor extends EditorPart {
 			javaConn.setAutoCommit(false);
 			
 			for (String strQuery : listQuery) {
+				if(StringUtils.startsWith(strQuery.trim().toUpperCase(), "CREATE TABLE")) {
+					strQuery = StringUtils.replaceOnce(strQuery, "(", " (");
+				}
 				statement.addBatch(strQuery);
 			}
 			statement.executeBatch();

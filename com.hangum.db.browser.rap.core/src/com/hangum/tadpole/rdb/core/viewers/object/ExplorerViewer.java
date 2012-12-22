@@ -107,6 +107,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 	// erd dnd
 	private int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
+	/**
+	 * 현재 오픈된페이지를 리프레쉬한다.
+	 */
+	public static enum CHANGE_TYPE {
+		DEL, INS
+	};
 
 	private UserDBDAO userDB;
 	private String selectTableName = ""; //$NON-NLS-1$
@@ -1370,13 +1376,6 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
-
-	/**
-	 * 현재 오픈된페이지를 리프레쉬한다.
-	 */
-	public static enum CHANGE_TYPE {
-		DEL, INS
-	};
 
 	public void refreshCurrentTab(UserDBDAO chgUserDB, CHANGE_TYPE changeType, String changeTbName) {
 
