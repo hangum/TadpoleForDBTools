@@ -10,6 +10,7 @@ public class Messages extends NLS {
 	public static String QueryToMongoDBImport_1;
 	public static String QueryToMongoDBImport_2;
 	public static String QueryToMongoDBImport_5;
+	public static String TableColumnLIstComposite_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -30,6 +30,7 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.Activator;
+import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
@@ -94,7 +95,7 @@ public class TableColumnLIstComposite extends Composite {
 		tableColumn.setEditingSupport(new ModifyEditingSupport(tableViewer));
 		
 		final TableViewerColumn tableColumnName = new TableViewerColumn(tableViewer, SWT.LEFT);
-		tableColumnName.getColumn().setText("Table Name");
+		tableColumnName.getColumn().setText("Table Name"); //$NON-NLS-1$
 		tableColumnName.getColumn().setWidth(400);
 		tableColumnName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -109,6 +110,11 @@ public class TableColumnLIstComposite extends Composite {
 	}
 	
 	public void init(UserDBDAO userDB) {
+		if(userDB == null) {
+			MessageDialog.openError(null, "Data Import", Messages.TableColumnLIstComposite_1); //$NON-NLS-1$
+			
+			return;
+		}
 		listTables.clear();
 		this.userDB = userDB;
 		
