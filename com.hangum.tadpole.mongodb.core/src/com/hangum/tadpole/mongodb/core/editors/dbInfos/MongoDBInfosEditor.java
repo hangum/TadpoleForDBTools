@@ -229,8 +229,8 @@ public class MongoDBInfosEditor extends EditorPart {
 	}
 	
 	private void createTableColumn() {
-		String[] columnName = {"Name", "Count", "Size", "Storage", "Index", "AvgObj","Padding" };  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		int[] columnSize = {200, 100, 100, 100, 100, 100, 100 };
+		String[] columnName = {"Name", "Count", "Size", "Storage", "Index", "Last Extent Size", "AvgObj","Padding" };  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		int[] columnSize = {200, 100, 100, 100, 100, 100, 100, 100 };
 		
 		try {
 			// reset column 
@@ -288,6 +288,13 @@ public class MongoDBInfosEditor extends EditorPart {
 						info.setAvgObj(0);				 //$NON-NLS-1$
 					}
 					info.setPadding(commandResult.getInt("paddingFactor"));				 //$NON-NLS-1$
+					
+					try { 
+						info.setLastExtentSize(commandResult.getDouble("lastExtentSize"));				 //$NON-NLS-1$					
+					} catch(NullPointerException npe) {
+						info.setLastExtentSize(0);				 //$NON-NLS-1$
+					}
+					
 				} catch(Exception e) {
 					logger.error("collection info error [" + col + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}

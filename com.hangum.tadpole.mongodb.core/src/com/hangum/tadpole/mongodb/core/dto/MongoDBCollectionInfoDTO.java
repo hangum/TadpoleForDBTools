@@ -29,6 +29,7 @@ public class MongoDBCollectionInfoDTO {
 	private int index;
 	private double avgObj;
 	private int padding;
+	private double lastExtentSize;
 	
 	private List<TableColumnDAO> child = new ArrayList<TableColumnDAO>(); 
 	
@@ -90,7 +91,15 @@ public class MongoDBCollectionInfoDTO {
 	public void setPadding(int padding) {
 		this.padding = padding;
 	}
-	
+
+	public double getLastExtentSize() {
+		return lastExtentSize;
+	}
+
+	public void setLastExtentSize(double lastExtentSize) {
+		this.lastExtentSize = lastExtentSize;
+	}
+
 	public List<TableColumnDAO> getChild() {
 		return child;
 	}	

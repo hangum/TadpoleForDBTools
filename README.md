@@ -4,9 +4,9 @@ Tadpole for DB Tools is Unified infrastructure tool, various environment based i
 It enables you to handle typical DB over the World Wide Web
 ![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1344090383946/home/TadpoleForDBToolsArch.png?height=359&width=420)
 
-RDB Feature
+1.RDB Feature
 -
-* Intuitive web interface (Safari, Chrome, IE, Firefox, Opera)
+* Intuitive web interface (Safari, Chrome, IE 9, Firefox, Opera) recommended IE
 * User Management (Admin, Manager, User)
 * Support CUBRID, MySQL, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
@@ -23,7 +23,7 @@ RDB Feature
 
 ![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1330247183579/home/tadpole-erd.png?height=400&width=365)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1333501091536/home/tadpole-screen-sql.png?height=400&width=349)
 
-MongoDB Feature
+2.MongoDB Feature
 -
 * Intuitive web interface (Safari, Chrome, IE, Firefox, Opera)
 * User Management (Admin, Manager, User)
@@ -54,9 +54,15 @@ Demo Video
 
 Document
 -
-* RDB Turorial : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
-* Developer Guide :  https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide(Eng), https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide(kor)
-* User Guide : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide(Kor), https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide(Eng)
+* RDB Turorial 
+ - http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
+* Developer Guide 
+ - https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide(Eng)
+ - https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide(kor)
+* User Guide : 
+ - https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide(Kor)
+ - https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide(Eng)
+ - https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide(KOR)
 
 Demo Site
 -
@@ -64,7 +70,7 @@ Demo Site
  
 Download
 -
-* https://github.com/hangum/TadpoleForDBTools/downloads
+* http://code.google.com/p/tadpole-for-db-tools/downloads/list
  
 License
 -
@@ -74,7 +80,6 @@ Contacts
 -
 * Email: adi.tadpole@gmail.com
 * site : https://sites.google.com/site/tadpolefordb/
-
 * google talk : hangum@gmail.com
 
 Contributor
@@ -83,3 +88,7 @@ Contributor
 * suhyunjun@gmail.com
 * hangum@gmail.com 
 * darkcanol@gmail.com
+
+Donation
+- 
+Paypal(paypal.com) : hangum@gmail.com
