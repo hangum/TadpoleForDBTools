@@ -227,6 +227,18 @@
             id="com.hangum.tadpole.rdb.core.objectContribution.nosql"
             objectClass="com.hangum.tadpole.dao.system.UserDBDAO">
          <action
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongoDBImportAction"
+               icon="resources/icons/db_import.png"
+               id="com.hangum.tadpole.rdb.core.action.import"
+               label="Import"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbProfillingAction"
                icon="resources/icons/profile.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.profilling"

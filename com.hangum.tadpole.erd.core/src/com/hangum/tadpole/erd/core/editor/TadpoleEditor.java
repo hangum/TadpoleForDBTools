@@ -35,11 +35,12 @@ import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
-import org.eclipse.gef.ui.parts.GraphicalEditor;
+import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -71,12 +72,12 @@ import com.hangum.tadpole.model.TadpolePackage;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
 /**
- * tadpole editor
+ * Tadpole for DB Tools ERD editor
  * 
  * @author hangum
  *
  */
-public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
+public class TadpoleEditor extends GraphicalEditorWithFlyoutPalette {
 	public static final String ID = "com.hangum.tadpole.erd.core.editor"; //$NON-NLS-1$
 	/**
 	 * Logger for this class
@@ -108,8 +109,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 	
 	@Override
 	protected void initializeGraphicalViewer() {
-//		palette 주석
-//		super.initializeGraphicalViewer();
+		super.initializeGraphicalViewer();
 		
 		Job job = new Job("ERD Initialize") {
 			@Override
@@ -187,10 +187,13 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
-		job.schedule();
-		
-	}
+		job.schedule();		
+	}	
 	
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 
 	@Override
 	protected void configureGraphicalViewer() {
@@ -230,7 +233,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		getActionRegistry().registerAction(new ZoomInAction(manager));
 		getActionRegistry().registerAction(new ZoomOutAction(manager));
 		
-		zoomLevels = new double[]{0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 20.0 };
+		zoomLevels = new double[]{0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0, 10.0, 20.0};
 		manager.setZoomLevels(zoomLevels);
 		
 		zoomContributions = new ArrayList<String>();
@@ -266,8 +269,6 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		TadpoleEditorInput erdInput = (TadpoleEditorInput)input;
 		userDB = erdInput.getUserDBDAO();
 		isAllTable = erdInput.isAllTable();
-		
-		
 		
 		// 신규로드 인지 기존 파일 로드 인지 검사합니다.
 		if(null != erdInput.getUserDBERD()) { 
@@ -309,11 +310,10 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 		}
 	}
 	
-//	palette 주석
-//	@Override
-//	protected PaletteRoot getPaletteRoot() {
-//		return null;
-//	}
+	@Override
+	protected PaletteRoot getPaletteRoot() {
+		return null;
+	}
 	
 //	@Override
 //	public void doSaveAs() {
@@ -436,7 +436,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 	public UserDBResourceDAO getUserDBErd() {
 		return userDBErd;
 	}
-	
+
 //	/**
 //	 * outline page
 //	 * @author hangum

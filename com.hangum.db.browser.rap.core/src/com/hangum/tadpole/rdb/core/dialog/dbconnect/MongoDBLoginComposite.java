@@ -23,6 +23,7 @@ import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
+import com.hangum.tadpole.mongodb.core.connection.MongoDBNotFoundException;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -68,20 +69,20 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
-			textDisplayName.setText("MongoDB v2.0.5 ~ Default");
+			textDisplayName.setText("MongoDB v2.0.5 ~ Default"); //$NON-NLS-1$
 			
-			textHost.setText("127.0.0.1");
-			textUser.setText("");
-			textPassword.setText("");
-			textDatabase.setText("test");
-			textPort.setText("27017");			
+			textHost.setText("127.0.0.1"); //$NON-NLS-1$
+			textUser.setText(""); //$NON-NLS-1$
+			textPassword.setText(""); //$NON-NLS-1$
+			textDatabase.setText("test"); //$NON-NLS-1$
+			textPort.setText("27017");			 //$NON-NLS-1$
 		}
 		
 		if(comboGroup.getItems().length == 0) {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) {
+			if("".equals(selGroupName)) { //$NON-NLS-1$
 				comboGroup.setText(strOtherGroupName);
 			} else {
 				// 콤보 선택 
@@ -94,7 +95,7 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 	
 	public boolean isValidate() {
 		
-		if(!message(comboGroup, "Group")) return false;
+		if(!message(comboGroup, "Group")) return false; //$NON-NLS-1$
 		if(!message(textHost, "Host")) return false; //$NON-NLS-1$
 		if(!message(textPort, "Port")) return false; //$NON-NLS-1$
 		if(!message(textDatabase, "Database")) return false; //$NON-NLS-1$		
@@ -158,9 +159,17 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 			// db가 정상적인지 채크해본다 
 			try {
 				DB mongoDB = MongoConnectionManager.getInstance(userDB);
+			} catch(MongoDBNotFoundException mdbfe) {
+				
+				if(MessageDialog.openConfirm(null, "Confirm", userDB.getDb() + Messages.MongoDBLoginComposite_9)) { //$NON-NLS-1$
+					return true;
+				} else {
+					return false;
+				}
+				
 	
 			} catch (Exception e) {
-				logger.error("MongoDB Connection error", e);
+				logger.error("MongoDB Connection error", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
 				
@@ -172,9 +181,9 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 				try {
 					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 				} catch (Exception e) {
-					logger.error("MongoDB info save", e);
+					logger.error("MongoDB info save", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getShell(), "Error", "MongoDB", errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", "MongoDB", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}

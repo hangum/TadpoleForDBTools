@@ -171,7 +171,7 @@ public class DBInformationDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, "Close", true);
-//		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+//		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
 	}
 
 	/**

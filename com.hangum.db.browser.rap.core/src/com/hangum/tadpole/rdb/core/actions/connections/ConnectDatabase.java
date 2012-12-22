@@ -33,10 +33,10 @@ import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 public class ConnectDatabase implements IViewActionDelegate {
 	public static final String ID = "com.hangum.tadpole.browser.rap.core.action.connect.database";
 	private IStructuredSelection sel;
+	private String selGroupName = "";
 
 	@Override
 	public void run(IAction action) {
-		String selGroupName = "";
 		
 		if(sel != null) {
 			if(sel.getFirstElement() instanceof ManagerListDTO) {
@@ -48,6 +48,11 @@ public class ConnectDatabase implements IViewActionDelegate {
 			}
 		}
 		
+		run();
+		
+	}
+	
+	public void run() {
 		final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selGroupName);
 		int ret = dialog.open();
 		
@@ -68,8 +73,8 @@ public class ConnectDatabase implements IViewActionDelegate {
 				}
 			});	// end display
 		}	// end if
-		
 	}
+	
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {

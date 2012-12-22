@@ -40,7 +40,7 @@ public class AboutDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("About Tadpole for DB Tools");
+		newShell.setText("About");
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class AboutDialog extends Dialog {
 
 		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
 		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel2.setText("HOME : <a href=\"https://sites.google.com/site/tadpolefordb\" target=\"_blank\">https://sites.google.com/site/tadpolefordb</a>");//Messages.AboutAction_4);
+		lblNewLabel2.setText("HOME : <a href=\"https://github.com/hangum/TadpoleForDBTools\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools</a>");//Messages.AboutAction_4);
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -105,7 +105,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID, "Ok", true);
 	}
 
 	/**

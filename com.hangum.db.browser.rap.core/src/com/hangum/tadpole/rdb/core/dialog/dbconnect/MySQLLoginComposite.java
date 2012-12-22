@@ -33,6 +33,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
@@ -127,70 +128,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		Label lblLocale = new Label(compositeBody, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
-		comboLocale = new Combo(compositeBody, SWT.NONE);
+		comboLocale = new Combo(compositeBody, SWT.READ_ONLY);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if(selectDB == DBDefine.ORACLE_DEFAULT) {
-
-			comboLocale.setVisibleItemCount(8);
 			
-			comboLocale.add("");
-			
-			comboLocale.add("ko");
-			comboLocale.add("ja");
-			comboLocale.add("zh");
-			comboLocale.add("de");
-			comboLocale.add("fr");
-			comboLocale.add("it");
-			comboLocale.add("en");
-			comboLocale.select(0);
-		} else if(selectDB == DBDefine.MYSQL_DEFAULT) {
-			// http://dev.mysql.com/doc/refman//5.5/en/charset-charsets.html
-			
-			comboLocale.setVisibleItemCount(12);
-			
-			comboLocale.add("");
-			comboLocale.add("armscii8 | ARMSCII-8 Armenian");
-			comboLocale.add("ascii      | US ASCII");
-			comboLocale.add("big5      | Big5 Traditional Chinese");
-			comboLocale.add("binary    | Binary pseudo charset");
-			comboLocale.add("cp850    | DOS West European");
-			comboLocale.add("cp852    | DOS Central European");
-			comboLocale.add("cp866    | DOS Russian");
-			comboLocale.add("cp932    | SJIS for Windows Japanese");
-			comboLocale.add("cp1250   | Windows Central European");
-			comboLocale.add("cp1251   | Windows Cyrillic");
-			comboLocale.add("cp1256   | Windows Arabic");
-			comboLocale.add("cp1257   | Windows Baltic");
-			comboLocale.add("dec8      | DEC West European");
-			comboLocale.add("eucjpms  | UJIS for Windows Japanese");
-			comboLocale.add("euckr     | EUC-KR Korean");
-			comboLocale.add("gb2312   | GB2312 Simplified Chinese");
-			comboLocale.add("gbk       | GBK Simplified Chinese");
-			comboLocale.add("geostd8  | GEOSTD8 Georgian");
-			comboLocale.add("greek     | ISO 8859-7 Greek");
-			comboLocale.add("hebrew   | ISO 8859-8 Hebrew");
-			comboLocale.add("hp8       | HP West European");
-			comboLocale.add("keybcs2  | DOS Kamenicky Czech-Slovak");
-			comboLocale.add("koi8r      | KOI8-R Relcom Russian");
-			comboLocale.add("koi8u     | KOI8-U Ukrainian");
-			comboLocale.add("latin1    | cp1252 West European");
-			comboLocale.add("latin2    | ISO 8859-2 Central European");
-			comboLocale.add("latin5    | ISO 8859-9 Turkish");
-			comboLocale.add("latin7    | ISO 8859-13 Baltic");
-			comboLocale.add("macce   | Mac Central European");
-			comboLocale.add("macroman | Mac West European");
-			comboLocale.add("sjis       | Shift-JIS Japanese");
-			comboLocale.add("swe7    | 7bit Swedish");
-			comboLocale.add("ucs2     | UCS-2 Unicode");
-			comboLocale.add("tis620   | TIS620 Thai");
-			comboLocale.add("ujis       | EUC-JP Japanese");
-			comboLocale.add("utf8      | UTF-8 Unicode");
-			comboLocale.add("utf8mb4 | UTF-8 Unicode");
-			comboLocale.add("utf16     | UTF-16 Unicode");
-			comboLocale.add("utf32     | UTF-32 Unicode");
-
-			comboLocale.select(0);
-		}
+		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
+		comboLocale.setVisibleItemCount(12);
+		comboLocale.select(0);
 		
 		Button btnPing = new Button(compositeBody, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {
@@ -268,18 +211,19 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		if(!isValidate()) return false;
 
 		String dbUrl = "";
-		if(comboLocale.getText().trim().equals("")) {
+		String locale = comboLocale.getText().trim();
+		if(locale.equals("") || DBLocaleUtils.NONE_TXT.equals(locale)) {
 			dbUrl = String.format(
 					DBDefine.MYSQL_DEFAULT.getDB_URL_INFO(), 
 					textHost.getText(), textPort.getText(), textDatabase.getText());
-		} else {
-			
+		} else {			
 			String selectLocale = StringUtils.substringBefore(comboLocale.getText(), "|");			
 			
 			dbUrl = String.format(
 					DBDefine.MYSQL_DEFAULT.getDB_URL_INFO(), 
-					textHost.getText(), textPort.getText(), textDatabase.getText() + "?Unicode=true&characterEncoding=" + selectLocale.trim());
+					textHost.getText(), textPort.getText(), textDatabase.getText() + "?useUnicode=false&characterEncoding=" + selectLocale.trim());
 		}
+		if(logger.isDebugEnabled()) logger.debug("[db url]" + dbUrl);
 		
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.MYSQL_DEFAULT.getDBToString());
@@ -354,42 +298,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			}
 		} catch(NumberFormatException nfe) {
 			MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * text message
-	 * 
-	 * @param text
-	 * @param msg
-	 * @return
-	 */
-	protected boolean message(Text text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
-			text.setFocus();
-			
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * combo message
-	 * 
-	 * @param text
-	 * @param msg
-	 * @return
-	 */
-	protected boolean message(Combo text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
-			text.setFocus();
-			
 			return false;
 		}
 		

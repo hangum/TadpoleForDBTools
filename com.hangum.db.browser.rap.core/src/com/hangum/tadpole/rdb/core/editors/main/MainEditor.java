@@ -13,11 +13,14 @@ package com.hangum.tadpole.rdb.core.editors.main;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -72,6 +75,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
@@ -90,7 +94,9 @@ import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFun
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.util.RequestInfoUtils;
 import com.hangum.tadpole.util.UnicodeUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
@@ -101,6 +107,7 @@ import com.hangum.tadpole.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.util.tables.SQLResultFilter;
 import com.hangum.tadpole.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.util.tables.SQLResultSorter;
+import com.hangum.tadpole.util.tables.SQLTypeUtils;
 import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
@@ -153,6 +160,9 @@ public class MainEditor extends EditorPart {
 	private String executeLastSQL = ""; //$NON-NLS-1$
 	/** query 결과의 컬럼 정보 HashMap -- table의 헤더를 생성하는 용도 <column index, Data> */
 	private HashMap<Integer, String> mapColumns = null;
+	/** query 결과 column, type 정보를 가지고 있습니다 */
+	private Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
+	
 	/** query 의 결과 데이터  -- table의 데이터를 표시하는 용도 <column index, Data> */
 	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
 		
@@ -161,8 +171,8 @@ public class MainEditor extends EditorPart {
 	/** 이후 버튼 */
 	private Button btnNext;
 	
-	/** 에디터에 블럭을 지정 하였으면... */
-	public static int BLOCK_QUERY_EXECUTE 	= -999;
+//	/** 에디터에 블럭을 지정 하였으면... */
+//	public static int BLOCK_QUERY_EXECUTE 	= -999;
 	
 	/** 에디터의 모든 쿼리를 수행합니다. */
 	public static int ALL_QUERY_EXECUTE 	= -998;
@@ -205,7 +215,7 @@ public class MainEditor extends EditorPart {
     /** 에디터의 텍스트 */
     private String queryText = ""; //$NON-NLS-1$
     /** 에디터의 커서 포인트 */
-    private int queryTextPoistion = 0;
+    private int queryEditorCursorPoistion = 0;
     /** query append 텍스트 */
     private String appendQueryText = ""; //$NON-NLS-1$
 	///[browser editor]/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -300,11 +310,7 @@ public class MainEditor extends EditorPart {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
-				} catch(Exception ee) {
-					logger.error("execute query", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
 			}
 		});
 		
@@ -312,15 +318,11 @@ public class MainEditor extends EditorPart {
 		
 		ToolItem tltmExecuteAll = new ToolItem(toolBar, SWT.NONE);
 		tltmExecuteAll.setToolTipText(Messages.MainEditor_tltmExecuteAll_text);
-		tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png"));
+		tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query-all.png"));
 		tltmExecuteAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_ALL_FUNCTION);
-				} catch(Exception ee) {
-					logger.error("execute query", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_ALL_FUNCTION);
 			}
 		});
 		
@@ -331,11 +333,7 @@ public class MainEditor extends EditorPart {
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
-				} catch(Exception ee) {
-					logger.error("execute plan", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
 			}
 		});
 		tltmExplainPlanctrl.setToolTipText(Messages.MainEditor_3);
@@ -347,11 +345,7 @@ public class MainEditor extends EditorPart {
 		tltmSort.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
-				} catch(Exception ee) {
-					logger.error("execute format", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
 			}
 		});
 		tltmSort.setToolTipText(Messages.MainEditor_4);
@@ -363,11 +357,7 @@ public class MainEditor extends EditorPart {
 		tltmSQLToApplication.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SQL_TO_APPLICATION);
-				} catch(Exception ee) {
-					logger.error("sql to application", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SQL_TO_APPLICATION);
 			}
 		});
 	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
@@ -379,11 +369,7 @@ public class MainEditor extends EditorPart {
 		tltmDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_DOWNLOAD_SQL);
-				} catch(Exception ee) {
-					logger.error("download sql", ee); //$NON-NLS-1$
-				}
+				browserEvaluate(EditorBrowserFunctionService.JAVA_DOWNLOAD_SQL);
 			}
 		});
 		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
@@ -549,7 +535,7 @@ public class MainEditor extends EditorPart {
 		gl_compositeSQLHistory.marginHeight = 0;
 		compositeSQLHistory.setLayout(gl_compositeSQLHistory);
 		
-		tableViewerSQLHistory = new TableViewer(compositeSQLHistory, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		tableViewerSQLHistory = new TableViewer(compositeSQLHistory, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tableViewerSQLHistory.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				
@@ -557,7 +543,7 @@ public class MainEditor extends EditorPart {
 				if(!is.isEmpty()) {
 					try {
 						setAppendQueryText(getHistoryTabelSelectData() + Define.SQL_DILIMITER); //$NON-NLS-1$
-						browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+						browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
 					} catch(Exception ee){
 						logger.error("history selection" , ee); //$NON-NLS-1$
 					}
@@ -604,7 +590,7 @@ public class MainEditor extends EditorPart {
 				if(!is.isEmpty()) {
 					try {
 						setAppendQueryText(getHistoryTabelSelectData() + Define.SQL_DILIMITER); //$NON-NLS-1$
-						browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+						browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
 					} catch(Exception ee){
 						logger.error("history selection" , ee); //$NON-NLS-1$
 					}
@@ -656,7 +642,7 @@ public class MainEditor extends EditorPart {
 		gl_compositeMessage.marginHeight = 0;
 		compositeMessage.setLayout(gl_compositeMessage);
 		
-		tableViewerMessage = new TableViewer(compositeMessage, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		tableViewerMessage = new TableViewer(compositeMessage, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tableViewerMessage.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				
@@ -751,7 +737,7 @@ public class MainEditor extends EditorPart {
 			public void completed( ProgressEvent event ) {
 				try {
 					registerBrowserFunctions();
-					browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
+					browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error("set register browser function and content initialize", e);
 				}
@@ -842,28 +828,27 @@ public class MainEditor extends EditorPart {
 				monitor.beginTask(Messages.MainEditor_46, IProgressMonitor.UNKNOWN);
 				
 				try {
-					int tmpStartPoint 	= getOrionTextPosition();	// cursor의 시작 포인트
+					int intOrionEditorCursorPosition 	= getOrionEditorCursorPosition();
+					if(logger.isDebugEnabled()) {
+						logger.debug("#[execute query][start]###################################################################################");
+						if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) logger.debug("\t[execute type] ALL Querey");
+						else {
+							logger.debug("\t [execute type] part Query");
+							logger.debug("\t [cursor position]" + intOrionEditorCursorPosition);
+						}
+						logger.debug("#[execute query][end]###################################################################################");
+					}
+					
 					String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
 					if("".equals(tmpStrSelText)) return Status.OK_STATUS; //$NON-NLS-1$
 					
-					// 전체 쿼리를 선택하였으면...
-					if(tmpStartPoint != BLOCK_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$
+					// cursor 위치가 ALL_QUERY_EXECUTE 이면 전체 쿼리 실행이다.
+					if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
+						tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
+						String[] strArrySQLS = tmpStrSelText.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
+						List<String> listStrExecuteQuery = new ArrayList<String>();
 						
-						tmpStrSelText = SQLTextUtil.executeQuery(tmpStrSelText, tmpStartPoint);
-						
-						/////////////////////////////////////////////////////////////////////////////////////////
-	//					logger.debug("[original] =========================================\r\n]" + tmpStrSelText);
-	//					logger.debug("######################################################################");
-	//					String[] strArrySQLS = UnicodeUtils.getUnicode(tmpStrSelText).split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
-						
-						String strUnicode = UnicodeUtils.getUnicode(tmpStrSelText);
-						String[] strArrySQLS = strUnicode.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
-	//				
-	//					logger.debug("[processing] =========================================\r\n]" + strArrySQLS[0]);
-	//					logger.debug("######################################################################");
-						
-						for (String strSQL : strArrySQLS) {
-							
+						for (String strSQL : strArrySQLS) {							
 							if(monitor.isCanceled()) {
 								monitor.done();
 								return Status.CANCEL_STATUS;
@@ -879,28 +864,41 @@ public class MainEditor extends EditorPart {
 							
 							// 쿼리를 수행할수 있도록 가공합니다.
 							executeLastSQL = SQLUtil.executeQuery(strSQL);
-	
-							// 프로그래스바 정보.
-							monitor.subTask(executeLastSQL);
-							monitor.setTaskName(executeLastSQL);
 							
+							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 							if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 									executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
 										executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								
-								pageNumber = 1;							
-								runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
-							// create 로 시작하는 쿼리.
 							} else {
-								runSQLOther(executeLastSQL);
+								listStrExecuteQuery.add(executeLastSQL);
 							}
-						}	// end query for
+						}
+						
+						// 프로그래스바 정보.
+						monitor.subTask(executeLastSQL);
+						monitor.setTaskName(executeLastSQL);
+						
+						// 마지막 쿼리가 select 문일 경우에 execute batch insert 후에 select 문을 호출합니다.
+						if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
+								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
+									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							
+							pageNumber = 1;	
+							runSQLExecuteBatch(listStrExecuteQuery);
+							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
+						// create 로 시작하는 쿼리.
+						} else {
+							runSQLExecuteBatch(listStrExecuteQuery);
+						}					
 					
 					// 블럭 쿼리를 실행하였으면 쿼리를 분리자로 나누지 않고 전체를 수행합니다.
 					} else {
+						if(monitor.isCanceled()) {
+							monitor.done();
+							return Status.CANCEL_STATUS;
+						}
 						
-						String strSQL = tmpStrSelText;
-						
+						String strSQL = SQLTextUtil.executeQuery(tmpStrSelText, intOrionEditorCursorPosition);
 						if(strSQL.endsWith( Define.SQL_DILIMITER )) { 				//$NON-NLS-1$
 							strSQL = strSQL.substring(0, strSQL.length()-1);
 						}
@@ -971,6 +969,39 @@ public class MainEditor extends EditorPart {
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
 		job.schedule();
+	}
+	
+	/**
+	 * select문의 execute 쿼리를 수행합니다.
+	 * 
+	 * @param listQuery
+	 * @throws Exception
+	 */
+	private void runSQLExecuteBatch(List<String> listQuery) throws Exception {
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		try {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			javaConn = client.getDataSource().getConnection();
+			statement = javaConn.createStatement();
+			
+			javaConn.setAutoCommit(false);
+			
+			for (String strQuery : listQuery) {
+				if(StringUtils.startsWith(strQuery.trim().toUpperCase(), "CREATE TABLE")) {
+					strQuery = StringUtils.replaceOnce(strQuery, "(", " (");
+				}
+				statement.addBatch(strQuery);
+			}
+			statement.executeBatch();
+		} catch(Exception e) {
+			logger.error("Execute batch update", e);
+			throw e;
+		} finally {
+			try { statement.close();} catch(Exception e) {}
+			try { javaConn.close(); } catch(Exception e) {}
+		}
 	}
 
 	/**
@@ -1103,7 +1134,7 @@ public class MainEditor extends EditorPart {
 			// table data를 생성한다.
 			sqlSorter = new SQLResultSorter(-999);
 			
-			SQLResultLabelProvider.createTableColumn(sqlResultTableViewer, mapColumns, sqlSorter);
+			SQLResultLabelProvider.createTableColumn(sqlResultTableViewer, mapColumns, mapColumnType, sqlSorter);
 			sqlResultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
 			sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
 			
@@ -1279,7 +1310,7 @@ public class MainEditor extends EditorPart {
 				}
 				
 				stmt = javaConn.prepareStatement(requestQuery);
-			//  환경설정에서 원하는 조건을 입력하였을 경우.
+				//  환경설정에서 원하는 조건을 입력하였을 경우.
 				rs = stmt.executeQuery();//Query( selText );
 				
 			// explain
@@ -1312,14 +1343,14 @@ public class MainEditor extends EditorPart {
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 //			// table column을 생성한다.
-//			ResultSetMetaData  rsm = rs.getMetaData();
+			ResultSetMetaData  rsm = rs.getMetaData();
 //			int columnCount = rs.getMetaData().getColumnCount();
 //			
 //			logger.debug("### [Table] [start ]### [column count]" + rsm.getColumnCount() + "#####################################################################################################");
-//			for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
+			for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
 //				logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
 //				logger.debug("\tColumnLabel  		:  " 	+ rsm.getColumnLabel(i+1));
-//				
+				
 //				logger.debug("\t AutoIncrement  	:  " 	+ rsm.isAutoIncrement(i+1));
 //				logger.debug("\t Nullable		  	:  " 	+ rsm.isNullable(i+1));
 //				logger.debug("\t CaseSensitive  	:  " 	+ rsm.isCaseSensitive(i+1));
@@ -1337,13 +1368,14 @@ public class MainEditor extends EditorPart {
 //				logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
 //				logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
 //				logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
-//				
+				mapColumnType.put(i, rsm.getColumnType(i+1));
+				
 //				logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
 //				logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
 //				logger.debug("\t SchemaName		 	:  " 	+ rsm.getSchemaName(i+1));
 //				logger.debug("\t TableName		 	:  " 	+ rsm.getTableName(i+1));
 //				logger.debug("\t ==[column end]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
-//			}
+			}
 //			
 //			logger.debug("#### [Table] [end ] ########################################################################################################");
 			
@@ -1366,7 +1398,12 @@ public class MainEditor extends EditorPart {
 				tmpRs = new HashMap<Integer, Object>();
 				
 				for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
-					tmpRs.put(i, rs.getString(i+1));
+					try {
+						tmpRs.put(i, rs.getString(i+1) == null ?"":prettyData(i, rs.getObject(i+1)));
+					} catch(Exception e) {
+						logger.error("ResutSet fetch error", e);
+						tmpRs.put(i, "");
+					}
 				}
 				
 				sourceDataList.add(tmpRs);
@@ -1382,6 +1419,28 @@ public class MainEditor extends EditorPart {
 		}
 	}
 	
+	/**
+	 * 숫자일 경우 ,를 찍어보여줍니다.
+	 * 
+	 * @param index
+	 * @param value
+	 * @return
+	 */
+	private String prettyData(int index, Object value) {
+		if(SQLTypeUtils.isNumberType(mapColumnType.get(index))) {
+			try{
+				NumberFormat pf = NumberFormat.getNumberInstance();
+				String val = pf.format(value);
+				
+				return val;
+			} catch(Exception e){
+				logger.error("pretty data", e);
+			}			
+		} 
+
+		return value.toString();
+	}
+	
 	@Override
 	public void setFocus() {
 //		setOrionTextFocus();
@@ -1392,7 +1451,7 @@ public class MainEditor extends EditorPart {
 	 */
 	public void setOrionTextFocus() {
 		try {
-			browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SET_FOCUS_FUNCTION);
+			browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SET_FOCUS_FUNCTION);
 		} catch(Exception e) {
 			// ignore exception
 		}
@@ -1408,21 +1467,21 @@ public class MainEditor extends EditorPart {
 	}
 	
 	/**
-	 * orion text pocus position
+	 * orion editor cursor position
 	 * 
 	 * @return
 	 */
-	public int getOrionTextPosition() {
-		return this.queryTextPoistion;
+	public int getOrionEditorCursorPosition() {
+		return this.queryEditorCursorPoistion;
 	}
 	
 	/**
-	 * set orion text position
+	 * set orion editor cursor position
 	 * 
 	 * @param queryTextPoistion
 	 */
-	public void setOrionTestPostion(int queryTextPoistion) {
-		this.queryTextPoistion = queryTextPoistion;
+	public void setOrionEditorCursorPostion(int queryTextPoistion) {
+		this.queryEditorCursorPoistion = queryTextPoistion;
 	}
 	
 	/**
@@ -1505,7 +1564,7 @@ public class MainEditor extends EditorPart {
 					monitor.setCanceled(true);
 				}
 			} catch(SWTException e) {
-				logger.error("doSave exception", e); //$NON-NLS-1$
+				logger.error(RequestInfoUtils.requestInfo("doSave exception", SessionManager.getEMAIL()), e); //$NON-NLS-1$
 				monitor.setCanceled(true);
 			}	
 		}
@@ -1591,15 +1650,19 @@ public class MainEditor extends EditorPart {
 		downloadServiceHandler = null;
 	}
 	
-	/** sqleditor browser function call */
+	/** 
+	 * browser function call
+	 * 
+	 *  @param command brower command
+	 */
 	public void browserEvaluate(String command) {
 		try {
 			browserQueryEditor.evaluate(command);
 		} catch(Exception e) {
-			logger.error("browser evaluate [ " + command + " ]", e); //$NON-NLS-1$ //$NON-NLS-2$
+			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", SessionManager.getEMAIL()), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-
+	
 	@Override
 	public void doSaveAs() {
 	}

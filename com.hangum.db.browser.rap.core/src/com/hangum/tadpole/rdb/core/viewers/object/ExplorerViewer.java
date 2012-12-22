@@ -93,9 +93,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.viewsupport.SelectionProviderMediator;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.mongodb.DB;
-import com.mongodb.DBAddress;
-import com.mongodb.Mongo;
 
 /**
  * 선택된 db의 object를
@@ -110,6 +107,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 	// erd dnd
 	private int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
+	/**
+	 * 현재 오픈된페이지를 리프레쉬한다.
+	 */
+	public static enum CHANGE_TYPE {
+		DEL, INS
+	};
 
 	private UserDBDAO userDB;
 	private String selectTableName = ""; //$NON-NLS-1$
@@ -124,7 +127,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 	private TableViewer tableColumnViewer;
 	private List showTableColumns;
-	private TableViewFilter tableFilter;
+	private TableFilter tableFilter;
 
 	private ObjectCreatAction creatAction_Table;
 	// private ObjectModifyAction modifyAction_Table;
@@ -148,7 +151,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	private List showViews;
 	private TableViewer viewColumnViewer;
 	private List showViewColumns;
-	private TableViewFilter viewFilter;
+	private RDBViewFilter viewFilter;
 
 	private ObjectCreatAction creatAction_View;
 	// private ObjectModifyAction modifyAction_Table;
@@ -206,6 +209,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	@Override
 	public void createPartControl(Composite parent) {
 		GridLayout gl_parent = new GridLayout(1, false);
+		gl_parent.marginWidth = 1;
 		gl_parent.verticalSpacing = 0;
 		gl_parent.horizontalSpacing = 0;
 		gl_parent.marginHeight = 0;
@@ -213,7 +217,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeSearch.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeSearch = new GridLayout(2, false);
+		gl_compositeSearch.horizontalSpacing = 2;
+		gl_compositeSearch.verticalSpacing = 2;
+		gl_compositeSearch.marginHeight = 2;
+		gl_compositeSearch.marginWidth = 2;
+		compositeSearch.setLayout(gl_compositeSearch);
 
 		Label lblNewLabel = new Label(compositeSearch, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -250,7 +259,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 
 		tabFolderObject = new TabFolder(compositeBody, SWT.NONE);
 		tabFolderObject.addSelectionListener(new SelectionAdapter() {
@@ -345,7 +359,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTriggers.setControl(compositeIndexes);
-		compositeIndexes.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeIndexes = new GridLayout(1, false);
+		gl_compositeIndexes.verticalSpacing = 2;
+		gl_compositeIndexes.horizontalSpacing = 2;
+		gl_compositeIndexes.marginHeight = 2;
+		gl_compositeIndexes.marginWidth = 2;
+		compositeIndexes.setLayout(gl_compositeIndexes);
 
 		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -414,7 +433,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmFunctions.setControl(compositeIndexes);
-		compositeIndexes.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeIndexes = new GridLayout(1, false);
+		gl_compositeIndexes.verticalSpacing = 2;
+		gl_compositeIndexes.horizontalSpacing = 2;
+		gl_compositeIndexes.marginHeight = 2;
+		gl_compositeIndexes.marginWidth = 2;
+		compositeIndexes.setLayout(gl_compositeIndexes);
 
 		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -483,7 +507,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositeIndexes);
-		compositeIndexes.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeIndexes = new GridLayout(1, false);
+		gl_compositeIndexes.verticalSpacing = 2;
+		gl_compositeIndexes.horizontalSpacing = 2;
+		gl_compositeIndexes.marginHeight = 2;
+		gl_compositeIndexes.marginWidth = 2;
+		compositeIndexes.setLayout(gl_compositeIndexes);
 
 		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -552,7 +581,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);
-		compositeIndexes.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeIndexes = new GridLayout(1, false);
+		gl_compositeIndexes.verticalSpacing = 2;
+		gl_compositeIndexes.horizontalSpacing = 2;
+		gl_compositeIndexes.marginHeight = 2;
+		gl_compositeIndexes.marginWidth = 2;
+		compositeIndexes.setLayout(gl_compositeIndexes);
 
 		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -620,7 +654,12 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmViews.setControl(compositeTables);
-		compositeTables.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeTables = new GridLayout(1, false);
+		gl_compositeTables.verticalSpacing = 2;
+		gl_compositeTables.horizontalSpacing = 2;
+		gl_compositeTables.marginHeight = 2;
+		gl_compositeTables.marginWidth = 2;
+		compositeTables.setLayout(gl_compositeTables);
 
 		SashForm sashForm = new SashForm(compositeTables, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -702,7 +741,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		sashForm.setWeights(new int[] { 1, 1 });
 
-		viewFilter = new TableViewFilter();
+		viewFilter = new RDBViewFilter();
 		viewListViewer.addFilter(viewFilter);
 
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
@@ -738,7 +777,13 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
-		compositeTables.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeTables = new GridLayout(1, false);
+		gl_compositeTables.verticalSpacing = 2;
+		gl_compositeTables.horizontalSpacing = 2;
+		gl_compositeTables.marginHeight = 2;
+		gl_compositeTables.marginWidth = 2;
+		compositeTables.setLayout(gl_compositeTables);
+		compositeTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		SashForm sashForm = new SashForm(compositeTables, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
@@ -875,7 +920,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
 
 		// filter
-		tableFilter = new TableViewFilter();
+		tableFilter = new TableFilter();
 		tableListViewer.addFilter(tableFilter);
 
 		// columns
@@ -971,11 +1016,10 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
 			if (selection instanceof IStructuredSelection) {
-
 				IStructuredSelection is = (IStructuredSelection) selection;
 				initObjectHead(is.getFirstElement());
-
 			} // end selection
+			
 		} // end selectionchange
 	};
 
@@ -985,6 +1029,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	 * @param element
 	 */
 	public void initObjectHead(Object element) {
+		initSearch();
 
 		if (element instanceof UserDBDAO || element instanceof UserDBResourceDAO) {
 			UserDBDAO selectUserDb = null;
@@ -1006,6 +1051,7 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			refreshTable("DB"); //$NON-NLS-1$
 
 			initObjectDetail(DBDefine.getDBDefine(userDB.getTypes()));
+			
 
 		} else if (element instanceof ManagerListDTO) {
 			ManagerListDTO managerList = (ManagerListDTO) element;
@@ -1031,6 +1077,19 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			tableListViewer.refresh();
 		}
 	}
+	
+	/**
+	 * init search
+	 */
+	private void initSearch() {
+		textSearch.setText("");
+		tableFilter.setSearchText("");
+		viewFilter.setSearchText("");
+		indexFilter.setSearchText("");
+		procedureFilter.setSearchText("");
+		functionFilter.setSearchText("");
+		triggerFilter.setSearchText("");
+	}
 
 	/**
 	 * 다른 디비가 선택되어 지면 초기화 되어야 할 object 목록
@@ -1046,15 +1105,17 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 			// procedure, function 항목을 닫는다.
 			for (TabItem tabItem : tabFolderObject.getItems()) {
 				if (!tabItem.isDisposed()) {
-					if ("Procedures".equals(tabItem.getText()))tabItem.dispose(); //$NON-NLS-1$
-					else if ("Functions".equals(tabItem.getText()))tabItem.dispose(); //$NON-NLS-1$
+					if ("Procedures".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
+					else if ("Functions".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
 				}
 			}
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
+			
+			
 			// table 항목 이외의 모든 항목을 닫는다.
 			for (TabItem tabItem : tabFolderObject.getItems()) {
 				if (!tabItem.isDisposed()) {
-					if (!"Tables".equals(tabItem.getText()))tabItem.dispose(); //$NON-NLS-1$
+					if (!"Tables".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
 				}
 			}
 
@@ -1274,22 +1335,18 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 
 		try {
 			if (DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-
+				
 				// mongo db
 			} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-
-				Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()));
-				DB mongoDB = mongo.getDB(userDB.getDb());
-
 				if (showTables != null) showTables.clear();
 				else showTables = new ArrayList<TableDAO>();
-
-				for (String col : mongoDB.getCollectionNames()) {
+				
+				List<String> listCollection = MongoDBQuery.collectionList(userDB);
+				for (String strColl : listCollection) {
 					TableDAO dao = new TableDAO();
-					dao.setName(col);
+					dao.setName(strColl);
 
 					showTables.add(dao);
 				}
@@ -1319,13 +1376,6 @@ public class ExplorerViewer extends AbstraceExplorerViewer {
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
-
-	/**
-	 * 현재 오픈된페이지를 리프레쉬한다.
-	 */
-	public static enum CHANGE_TYPE {
-		DEL, INS
-	};
 
 	public void refreshCurrentTab(UserDBDAO chgUserDB, CHANGE_TYPE changeType, String changeTbName) {
 

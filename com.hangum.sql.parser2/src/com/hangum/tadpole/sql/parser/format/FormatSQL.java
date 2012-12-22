@@ -10,11 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.parser.format;
 
-import gudusoft.gsqlparser.EDbVendor;
-import gudusoft.gsqlparser.TGSqlParser;
-import gudusoft.gsqlparser.pp.para.GFmtOpt;
-import gudusoft.gsqlparser.pp.para.GFmtOptFactory;
-import gudusoft.gsqlparser.pp.stmtformattor.FormattorFactory;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.pretty.Formatter;
+
 
 /**
  * SQL을 포메팅합니다.
@@ -32,38 +30,33 @@ public class FormatSQL {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String format(ParserDefine.DB_TYPE dbType, String lowSQL) throws Exception {
-		TGSqlParser sqlparser = new TGSqlParser(EDbVendor.dbvmysql);
-		sqlparser.sqltext = lowSQL;
-		 
-		int ret = sqlparser.parse();
-        if (ret == 0){
-        	GFmtOpt option = GFmtOptFactory.newInstance();
-            String formatSQL = FormattorFactory.pp(sqlparser, option);
-
-            return formatSQL;
-        } else {
-            throw new Exception(sqlparser.getErrormessage());
-        }
+	public static String format(String lowSQL) throws Exception {
+		String retStr = "";
+		
+		String[] arraySQL = StringUtils.split(lowSQL, ";");
+		for(int i=0; i<arraySQL.length; i++) {
+			Formatter formatter = new Formatter(arraySQL[i]);		
+			
+			// formatter에서 첫 부분에 \n을 넘겨 주어서.. 제거 합니다.
+			String tmpSql = StringUtils.removeStart(formatter.format(), "\n");
+			
+			if(i == (arraySQL.length-1)) retStr += tmpSql + ";";
+			else retStr += tmpSql + ";\n\n";
+		}
+		
+		return retStr;
 	}
 
 	 public static void main(String args[]) {
-        TGSqlParser sqlparser = new TGSqlParser(EDbVendor.dbvmysql);
-
-         sqlparser.sqltext = "select col1, \r\n" + 
-         "col2,sum(col3) from table1, table2 where col4 > col5 and col6= 1000;";
-         sqlparser.sqltext += "select test from hangum;";
-         sqlparser.sqltext += "select test2 from hangum2;";
-         
-//        sqlparser.sqltext = "select * from test3";
-
-        int ret = sqlparser.parse();
-        if (ret == 0){
-            GFmtOpt option = GFmtOptFactory.newInstance();
-            String result = FormattorFactory.pp(sqlparser, option);
-            System.out.println(result);
-        }else{
-            System.out.println(sqlparser.getErrormessage());
-        }
-     }
+		 String sql = "select * from tab;";
+		 sql += "Select aa From aTest";
+		 
+		 try {
+			String retSql = FormatSQL.format(sql);
+			System.out.println(retSql);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

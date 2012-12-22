@@ -24,4 +24,6 @@ public class MongoDBDefine {
 	public static final int PRIMARY_ID_KEY = 99999;
 	public static final String PRIMARY_ID_STRING = "__object_id__";
 	
+	public static final String[] SYSTEM_COLLECTION = {"system.namespaces", "system.indexes", "system.profile", "system.users"}; 
+	
 }

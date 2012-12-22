@@ -15,7 +15,7 @@ import java.sql.Statement;
 import junit.framework.TestCase;
 
 import com.hangum.tadpole.commons.sql.map.SQLMap;
-import com.hangum.tadpole.system.TadpoleSystemConnector;
+import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -34,7 +34,7 @@ public class SQLMapTest extends TestCase {
 		
 		try {
 			
-			SqlMapClient client = SQLMap.getInstance( TadpoleSystemConnector.getUserDB() );
+			SqlMapClient client = SQLMap.getInstance( TadpoleSystemInitializer.getUserDB() );
 			javaConn = client.getDataSource().getConnection();
 			
 			Statement stmt = javaConn.createStatement();

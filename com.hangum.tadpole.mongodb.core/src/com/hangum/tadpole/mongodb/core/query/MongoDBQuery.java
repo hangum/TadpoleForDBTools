@@ -12,16 +12,20 @@ package com.hangum.tadpole.mongodb.core.query;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
+import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
@@ -46,6 +50,32 @@ public class MongoDBQuery {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(MongoDBQuery.class);
+	
+	/**
+	 * collection list
+	 * 
+	 * System collections(http://docs.mongodb.org/manual/reference/system-collections/)을 제외한 collection list를 리턴합니다.
+	 * 
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> collectionList(UserDBDAO userDB) throws Exception {
+		List<String> listReturn = new ArrayList<String>();
+		
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
+		for (String col : mongoDB.getCollectionNames()) {
+			boolean isSystemCollection = false;
+			for(String sysColl : MongoDBDefine.SYSTEM_COLLECTION) {
+				if(col.equals(sysColl)) isSystemCollection = true;
+			}
+			
+			if(!isSystemCollection) listReturn.add(col);
+		}
+		
+		return listReturn;
+	}
 	
 	/**
 	 * collection column list
@@ -147,6 +177,30 @@ public class MongoDBQuery {
 //			logger.debug( wr.getError() );		
 //			logger.debug("[n]" + wr.getN() );
 //		}
+	}
+	
+	/**
+	 * insert document
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @param dbObject
+	 * @throws Exception
+	 */
+	public static void insertDocument(UserDBDAO userDB, String colName, DBObject[] dbObject) throws Exception {
+		if(dbObject.length == 0) return;
+		
+		DBCollection collection = findCollection(userDB, colName);		
+		WriteResult wr = collection.insert(dbObject);
+		if(logger.isDebugEnabled()) {
+			try {
+				logger.debug( "[writer document]" + wr!=null?wr.toString():"" );
+				logger.debug( "[wr error]" + wr!=null?wr.getError():"" );		
+				logger.debug("[n]" + wr!=null?wr.getN():"" );
+			} catch(Exception e) {
+				logger.error("저장중에", e);
+			}
+		}
 	}
 	
 	/**

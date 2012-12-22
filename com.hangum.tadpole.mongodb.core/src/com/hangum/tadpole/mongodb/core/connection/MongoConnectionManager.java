@@ -50,7 +50,7 @@ public class MongoConnectionManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static DB getInstance(UserDBDAO userDB) throws Exception {
+	public static DB getInstance(UserDBDAO userDB) throws MongoDBNotFoundException, Exception {
 		DB db = null;
 		
 		synchronized (dbManager) {
@@ -69,7 +69,7 @@ public class MongoConnectionManager {
 					boolean isDB = false;
 					for (String dbName : listDB) if(userDB.getDb().equals(dbName)) isDB = true;						
 					if(!isDB) {
-						throw new Exception(userDB.getDb() + Messages.MongoDBConnection_0);
+						throw new MongoDBNotFoundException(userDB.getDb() + Messages.MongoDBConnection_0);
 					}
 					
 					// password 검색

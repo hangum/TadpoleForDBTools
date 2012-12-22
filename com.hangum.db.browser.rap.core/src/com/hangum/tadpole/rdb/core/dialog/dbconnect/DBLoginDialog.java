@@ -24,10 +24,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -55,8 +57,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.ResourceManager;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * Login dialog
@@ -144,8 +145,7 @@ public class DBLoginDialog extends Dialog {
 		comboDBList.setVisibleItemCount(7);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
+			public void widgetSelected(SelectionEvent e) {				
 				thisWorkType = WORK_TYPE.INSERT;				
 				initDBWidget(null);
 			}
@@ -157,7 +157,7 @@ public class DBLoginDialog extends Dialog {
 			comboDBList.add(dbDefine.getDBToString());
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
 		}
-		comboDBList.select(2);
+		comboDBList.select(1);
 
 		// combo에서 선택된 디비의 콤포짖
 		compositeBody = new Composite(container, SWT.NONE);

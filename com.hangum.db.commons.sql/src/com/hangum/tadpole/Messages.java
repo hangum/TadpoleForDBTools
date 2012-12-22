@@ -40,6 +40,7 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_6;
 	public static String TadpoleSystemConnector_7;
 	public static String TadpoleSystemConnector_9;
+	public static String TadpoleSystemConnector_system_info_create;
 	public static String TadpoleSystemConnector_group_create;
 	public static String TadpoleSystemConnector_user_db_resource_create;
 	public static String TadpoleSystemConnector_user_db_resource_data_create;
@@ -47,7 +48,8 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_user_table_create;
 	public static String TadpoleSystemConnector_user_info_data;
 	public static String TadpoleSystemConnector_user_external_account;
-	
+
+	public static String TadpoleSystemConnector_system_info_create_CUBRID;
 	public static String TadpoleSystemConnector_group_create_CUBRID;
 	public static String TadpoleSystemConnector_user_db_resource_create_CUBRID;
 	public static String TadpoleSystemConnector_user_db_resource_data_create_CUBRID;

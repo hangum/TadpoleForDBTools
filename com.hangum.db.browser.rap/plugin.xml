@@ -20,7 +20,7 @@
             id="com.hangum.tadpole.browser.rap.branding"
             servletName="db"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="Tadpole for DB Tools - 0.0.8 SR6">
+            title="Tadpole for DB Tools - 0.0.8 SR8">
       </branding>
    </extension>
    <extension
@@ -41,9 +41,17 @@
                name="appName"
                value="tadpole-standalone">
          </property>
+      </product>
+   </extension>
+   <extension
+         id="product1"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="tadpole-standalone">
          <property
-               name="windowImages"
-               value="platform:/plugin/com.hangum.tadpole.applicaion.start/resources/icons/TadpoleForDBTools.png">
+               name="appName"
+               value="tadpole-standalone">
          </property>
       </product>
    </extension>
