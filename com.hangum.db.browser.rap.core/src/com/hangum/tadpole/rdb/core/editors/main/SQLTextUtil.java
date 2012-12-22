@@ -31,36 +31,33 @@ public class SQLTextUtil {
 	 * 2. 현재 커서의 포인트와 쿼리 불럭의 포인트를 비교합니다. 
 	 *   
 	 * @param query
-	 * @param cursorPoint
+	 * @param cursorPosition
 	 * @return
 	 */
-	public static String executeQuery(String query, int cursorPoint) throws Exception {
+	public static String executeQuery(String query, int cursorPosition) throws Exception {
 		if( query.split(Define.SQL_DILIMITER).length == 1 || query.indexOf(Define.SQL_DILIMITER) == -1) {
 			return StringUtils.trimToEmpty(query);
 		}
 
 		String[] querys = StringUtils.split(query, Define.SQL_DILIMITER);	
-		if(logger.isDebugEnabled()) {
-			logger.debug("=====[query]" + query + " =====[mouse point]" + cursorPoint);
-		}
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("=====[query]" + query + " =====[mouse point]" + cursorPoint);
+//		}
 
 		int queryBeforeCount = 0;
 		for(int i=0; i<querys.length; i++) {
-			int firstSearch = -1;
-			if(i == 0) {
-				firstSearch = StringUtils.indexOf(query, Define.SQL_DILIMITER) + 2;
-			} else {
-				// 쿼리 텍스트 + 2(;) + 이전 쿼리의 전체 수 
-				firstSearch = querys[i].length() + 2;
-			}
+			// dilimiter 을 추가한 +1 입니다.
+			int firstSearch = querys[i].length() + 1;
 			
 			queryBeforeCount += firstSearch;
-			if(cursorPoint <= queryBeforeCount) {
-				return querys[i];
+			if(cursorPosition <= queryBeforeCount) {
+				if(logger.isDebugEnabled()) logger.debug("[cursorPosition]" + cursorPosition + "[find postion]" + queryBeforeCount + "[execute query]" + StringUtils.trim(querys[i]));
+				return StringUtils.trim(querys[i]);
 			}
 		}
 		
-		return querys[querys.length-1];
+		if(logger.isDebugEnabled()) logger.debug("[last find execute query]" + StringUtils.trim(querys[querys.length-1]));
+		return StringUtils.trim(querys[querys.length-1]);
 	}
 	
 	/**

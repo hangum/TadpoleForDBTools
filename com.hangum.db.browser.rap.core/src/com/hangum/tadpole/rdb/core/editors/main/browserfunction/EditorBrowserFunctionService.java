@@ -200,7 +200,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			editor.setOrionText(queryStruct[1]);
-			editor.setOrionTestPostion(new Integer(queryStruct[0]));
+			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
 			
 			editor.executeCommand(Define.QUERY_MODE.DEFAULT);
 		}
@@ -213,7 +213,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			editor.setOrionText(queryStruct[1]);
-			editor.setOrionTestPostion(MainEditor.ALL_QUERY_EXECUTE);
+			editor.setOrionEditorCursorPostion(MainEditor.ALL_QUERY_EXECUTE);
 			
 			editor.executeCommand(Define.QUERY_MODE.DEFAULT);
 		}
@@ -226,7 +226,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			editor.setOrionText(queryStruct[1]);
-			editor.setOrionTestPostion(new Integer(queryStruct[0]));
+			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
 			
 			editor.executeCommand(Define.QUERY_MODE.EXPLAIN_PLAN);
 		}

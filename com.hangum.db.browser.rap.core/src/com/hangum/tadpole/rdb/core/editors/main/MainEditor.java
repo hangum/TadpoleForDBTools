@@ -171,8 +171,8 @@ public class MainEditor extends EditorPart {
 	/** 이후 버튼 */
 	private Button btnNext;
 	
-	/** 에디터에 블럭을 지정 하였으면... */
-	public static int BLOCK_QUERY_EXECUTE 	= -999;
+//	/** 에디터에 블럭을 지정 하였으면... */
+//	public static int BLOCK_QUERY_EXECUTE 	= -999;
 	
 	/** 에디터의 모든 쿼리를 수행합니다. */
 	public static int ALL_QUERY_EXECUTE 	= -998;
@@ -215,7 +215,7 @@ public class MainEditor extends EditorPart {
     /** 에디터의 텍스트 */
     private String queryText = ""; //$NON-NLS-1$
     /** 에디터의 커서 포인트 */
-    private int queryTextPoistion = 0;
+    private int queryEditorCursorPoistion = 0;
     /** query append 텍스트 */
     private String appendQueryText = ""; //$NON-NLS-1$
 	///[browser editor]/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -828,28 +828,26 @@ public class MainEditor extends EditorPart {
 				monitor.beginTask(Messages.MainEditor_46, IProgressMonitor.UNKNOWN);
 				
 				try {
-					int tmpStartPoint 	= getOrionTextPosition();	// cursor의 시작 포인트
+					int intOrionEditorCursorPosition 	= getOrionEditorCursorPosition();
+					if(logger.isDebugEnabled()) {
+						logger.debug("#[execute query][start]###################################################################################");
+						if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) logger.debug("\t[execute type] ALL Querey");
+						else {
+							logger.debug("\t [execute type] part Query");
+							logger.debug("\t [cursor position]" + intOrionEditorCursorPosition);
+						}
+						logger.debug("#[execute query][end]###################################################################################");
+					}
+					
 					String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
 					if("".equals(tmpStrSelText)) return Status.OK_STATUS; //$NON-NLS-1$
 					
-					// 전체 쿼리를 선택하였으면...
-					if(tmpStartPoint != BLOCK_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$
+					// cursor 위치가 ALL_QUERY_EXECUTE 이면 전체 쿼리 실행이다.
+					if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
+						tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
+						String[] strArrySQLS = tmpStrSelText.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
 						
-//						tmpStrSelText = SQLTextUtil.executeQuery(tmpStrSelText, tmpStartPoint);
-						
-						/////////////////////////////////////////////////////////////////////////////////////////
-	//					logger.debug("[original] =========================================\r\n]" + tmpStrSelText);
-	//					logger.debug("######################################################################");
-	//					String[] strArrySQLS = UnicodeUtils.getUnicode(tmpStrSelText).split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
-						
-						String strUnicode = UnicodeUtils.getUnicode(tmpStrSelText);
-						String[] strArrySQLS = strUnicode.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
-	//				
-	//					logger.debug("[processing] =========================================\r\n]" + strArrySQLS[0]);
-	//					logger.debug("######################################################################");
-						
-						for (String strSQL : strArrySQLS) {
-							
+						for (String strSQL : strArrySQLS) {							
 							if(monitor.isCanceled()) {
 								monitor.done();
 								return Status.CANCEL_STATUS;
@@ -884,9 +882,12 @@ public class MainEditor extends EditorPart {
 					
 					// 블럭 쿼리를 실행하였으면 쿼리를 분리자로 나누지 않고 전체를 수행합니다.
 					} else {
+						if(monitor.isCanceled()) {
+							monitor.done();
+							return Status.CANCEL_STATUS;
+						}
 						
-						String strSQL = tmpStrSelText;
-						
+						String strSQL = SQLTextUtil.executeQuery(tmpStrSelText, intOrionEditorCursorPosition);
 						if(strSQL.endsWith( Define.SQL_DILIMITER )) { 				//$NON-NLS-1$
 							strSQL = strSQL.substring(0, strSQL.length()-1);
 						}
@@ -1422,21 +1423,21 @@ public class MainEditor extends EditorPart {
 	}
 	
 	/**
-	 * orion text pocus position
+	 * orion editor cursor position
 	 * 
 	 * @return
 	 */
-	public int getOrionTextPosition() {
-		return this.queryTextPoistion;
+	public int getOrionEditorCursorPosition() {
+		return this.queryEditorCursorPoistion;
 	}
 	
 	/**
-	 * set orion text position
+	 * set orion editor cursor position
 	 * 
 	 * @param queryTextPoistion
 	 */
-	public void setOrionTestPostion(int queryTextPoistion) {
-		this.queryTextPoistion = queryTextPoistion;
+	public void setOrionEditorCursorPostion(int queryTextPoistion) {
+		this.queryEditorCursorPoistion = queryTextPoistion;
 	}
 	
 	/**
