@@ -17,16 +17,15 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
+import com.hangum.tadpole.util.JSONUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
@@ -156,6 +155,23 @@ public class MongoDBQuery {
 		DBObject queryObj = new BasicDBObject("_id", new ObjectId(objectId));
 		
 		return collection.findOne(queryObj);
+	}
+	
+	/**
+	 * explain
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @param jsonStr
+	 * @return
+	 * @throws Exception
+	 */
+	public static String explain(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
+		DBCollection collection = findCollection(userDB, colName);
+		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
+		
+		DBObject explainDBObject = collection.find(dbObject).explain();
+		return JSONUtil.getPretty(explainDBObject.toString());		
 	}
 	
 	/**
