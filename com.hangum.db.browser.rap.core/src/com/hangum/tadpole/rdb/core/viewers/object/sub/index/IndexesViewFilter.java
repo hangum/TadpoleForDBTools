@@ -8,32 +8,27 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.index;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 
-import com.hangum.tadpole.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.util.TadpoleViewrFilter;
 
 /**
- * Trigger의 FILTER
+ * Indexes의 FILTER
  * 
  * @author hangumNote
  *
  */
-public class TriggerViewFilter extends ViewerFilter {
-	private String searchString;
-	
-	public void setSearchText(String s) {
-		this.searchString = ".*" + s + ".*";
-	}
+public class IndexesViewFilter extends TadpoleViewrFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if(searchString == null || searchString.length() == 0) return true;
 		
-		TriggerDAO dao  = (TriggerDAO)element;
-		if(dao.getTrigger().matches(searchString)) return true;
+		InformationSchemaDAO dao  = (InformationSchemaDAO)element;
+		if(dao.getTABLE_NAME().toUpperCase().matches(searchString.toUpperCase())) return true;
 		
 		return false;
 	}

@@ -8,7 +8,7 @@
  * Contributors:
  *     Jeong jaehong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.table;
 
 import java.sql.PreparedStatement;
 
@@ -43,7 +43,6 @@ public class TableCommentEditorSupport extends EditingSupport {
 	private static final Logger logger = Logger.getLogger(TableCommentEditorSupport.class);
 
 	private final TableViewer viewer;
-	private final ExplorerViewer explorer;
 	private UserDBDAO userDB;
 	private int column;
 
@@ -52,11 +51,11 @@ public class TableCommentEditorSupport extends EditingSupport {
 	 * @param viewer
 	 * @param explorer
 	 */
-	public TableCommentEditorSupport(TableViewer viewer, ExplorerViewer explorer, int column) {
+	public TableCommentEditorSupport(TableViewer viewer, UserDBDAO userDB, int column) {
 		super(viewer);
 		
-		this.explorer = explorer;
 		this.viewer = viewer;
+		this.userDB = userDB;
 		this.column = column;
 	}
 
@@ -73,7 +72,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 		// Tadpole_Props 이런식으로...^^;
 		
 		if(column == 1) {
-			userDB = explorer.getUserDB();
+//			userDB = explorer.getUserDB();
 			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
 				return true;
 			} else {

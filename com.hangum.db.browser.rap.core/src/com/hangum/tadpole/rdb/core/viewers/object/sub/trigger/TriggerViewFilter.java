@@ -8,36 +8,27 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.trigger;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+
+import com.hangum.tadpole.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.util.TadpoleViewrFilter;
 
 /**
- * VIEW의 FILTER
+ * Trigger의 FILTER
  * 
  * @author hangumNote
  *
  */
-public class RDBViewFilter extends ViewerFilter {
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger logger = Logger.getLogger(RDBViewFilter.class);
-
-	private String searchString;
-	
-	public void setSearchText(String s) {
-		this.searchString = ".*" + s + ".*";
-	}
+public class TriggerViewFilter extends TadpoleViewrFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if(searchString == null || searchString.length() == 0) return true;
 		
-		String strView = (String)element;
-		if(strView.toUpperCase().matches(searchString.toUpperCase())) return true;
+		TriggerDAO dao  = (TriggerDAO)element;
+		if(dao.getTrigger().matches(searchString)) return true;
 		
 		return false;
 	}

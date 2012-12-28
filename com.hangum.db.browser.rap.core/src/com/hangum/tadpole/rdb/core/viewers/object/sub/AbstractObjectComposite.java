@@ -8,32 +8,73 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object;
+package com.hangum.tadpole.rdb.core.viewers.object.sub;
 
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 
 /**
- * Explorer view의 abstract class
+ * Object explorer composite
  * 
  * @author hangum
  *
  */
-public abstract class AbstraceExplorerViewer extends ViewPart {
-
+public abstract class AbstractObjectComposite extends Composite {
+	protected IWorkbenchPartSite site;
+	protected UserDBDAO userDB;
+	protected int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
+	
 	/**
 	 * 디비 중에 올챙이가 테이블,컬럼의 도움말을 제공하는 디비를 정의합니다.
 	 */
 	protected static DBDefine[] editType = {DBDefine.ORACLE_DEFAULT, DBDefine.POSTGRE_DEFAULT, DBDefine.MYSQL_DEFAULT};
+
+	/**
+	 * 
+	 * @param site
+	 * @param parent
+	 * @param userDB
+	 */
+	public AbstractObjectComposite(IWorkbenchPartSite site, Composite parent, UserDBDAO userDB) {
+		super(parent, SWT.NONE);
+		
+		this.site = site;
+		this.userDB = userDB;
+	}
+	
+	/**
+	 * select userDB
+	 * @return
+	 */
+	protected UserDBDAO getUserDB() {
+		return userDB;
+	}
+	
+	/**
+	 * select site
+	 * @return
+	 */
+	protected IWorkbenchPartSite getSite() {
+		return site;
+	}
+	
+	/**
+	 * search text
+	 * @param searchText
+	 */
+	public abstract void setSearchText(String searchText);
+
 	/**
 	 * 테이블, 테이블 컬럼의 컬럼을 에디트 할수 있는지.
 	 * @param userDB
@@ -165,5 +206,9 @@ public abstract class AbstraceExplorerViewer extends ViewPart {
 		};
 		
 		return adapter;
+	}
+	
+	@Override
+	protected void checkSubclass() {
 	}
 }

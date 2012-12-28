@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.table;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Table;
  * table의 컬럼의 0번째 값을 소스로 설정합니다. 
  * 
  * @author hangumNote
- *
  */
 public class DragListener implements DragSourceListener {
 	TableViewer viewer;
@@ -36,12 +35,6 @@ public class DragListener implements DragSourceListener {
 	public void dragSetData(DragSourceEvent event) {
 		Table table = viewer.getTable();
 		if( table.getSelectionCount() == 0) return;
-		
-//		StringBuffer sbTableName = new StringBuffer();
-//		IStructuredSelection is = (IStructuredSelection)viewer.getSelection();
-//		for(Object obj : is.toArray()) {
-//			sbTableName.append(obj.toString()).append(":");
-//		}
 		
 		event.data = table.getSelection()[0].getText();
 	}

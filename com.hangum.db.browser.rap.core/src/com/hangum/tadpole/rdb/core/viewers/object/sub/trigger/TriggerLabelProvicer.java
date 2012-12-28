@@ -8,43 +8,48 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.trigger;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mysql.TriggerDAO;
 
 /**
- * TABLE, VIEW의 컬럼 정보
+ * Trigger 의 컬럼 정보
  * 
  * @author hangumNote
  *
  */
-public class TableColumnLabelprovider extends LabelProvider implements ITableLabelProvider {
-	
-	
+public class TriggerLabelProvicer extends LabelProvider implements ITableLabelProvider {
+
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
 	}
-
+	
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		TableColumnDAO tc = (TableColumnDAO) element;
+		TriggerDAO tc = (TriggerDAO) element;
+
+		switch(columnIndex) {
+		case 0: return tc.getTrigger();
+		case 1: return tc.getEvent();
+		case 2: return tc.getTable();
+		case 3: return tc.getStatement();
+		case 4: return tc.getTiming();
+		case 5: return tc.getCreated();
 		
-			
-			switch(columnIndex) {
-			case 0: return tc.getField();
-			case 1: return tc.getType();
-			case 2: return tc.getKey();
-			case 3: return tc.getComment();
-			case 4: return tc.getNull();
-			case 5: return tc.getDefault();
-			case 6: return tc.getExtra();
-			}
-		return null;
+		case 6: return tc.getSql_mode();
+		case 7: return tc.getDefiner();
+		case 8: return tc.getCharacter_set_client();
+		case 9: return tc.getCollation_connection();
+		case 10: return tc.getDatabase();
+		case 11: return tc.getCollation();
+		}
+		
+		return "** not set column **";
 	}
 
 }

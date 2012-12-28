@@ -8,12 +8,12 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.procedure;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.util.TadpoleViewrFilter;
 
 /**
  * Procedure Function 의 FILTER
@@ -21,12 +21,7 @@ import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
  * @author hangumNote
  *
  */
-public class ProcedureFunctionViewFilter extends ViewerFilter {
-	private String searchString;
-	
-	public void setSearchText(String s) {
-		this.searchString = ".*" + s + ".*";
-	}
+public class ProcedureFunctionViewFilter extends TadpoleViewrFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
