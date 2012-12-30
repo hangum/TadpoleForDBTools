@@ -20,7 +20,7 @@
             id="com.hangum.tadpole.browser.rap.branding"
             servletName="db"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="Tadpole for DB Tools - 0.0.8 SR8">
+            title="Tadpole for DB Tools - 0.0.8 SR10">
       </branding>
    </extension>
    <extension
