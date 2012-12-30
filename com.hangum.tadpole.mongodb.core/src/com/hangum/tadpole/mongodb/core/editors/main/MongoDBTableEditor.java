@@ -25,6 +25,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -35,8 +37,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -57,6 +57,7 @@ import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.util.JSONUtil;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -82,7 +83,7 @@ public class MongoDBTableEditor extends EditorPart {
 	private String tableName;
 	
 	/** search panel */
-	TabFolder tabFolderSearchPanel;
+	private CTabFolder tabFolderSearchPanel;
 	
 	/** collection column info */
 	private Map<String, TableColumnDAO> columnInfo;
@@ -153,18 +154,19 @@ public class MongoDBTableEditor extends EditorPart {
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		tabFolderSearchPanel = new TabFolder(sashForm, SWT.NONE);
+		tabFolderSearchPanel = new CTabFolder(sashForm, SWT.NONE);
+		tabFolderSearchPanel.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
-		TabItem tabItemBasic = new TabItem(tabFolderSearchPanel, SWT.NONE);
+		CTabItem tabItemBasic = new CTabItem(tabFolderSearchPanel, SWT.NONE);
 		tabItemBasic.setText("JSON Search"); //$NON-NLS-1$
 		
 		Composite compositeBasic = new Composite(tabFolderSearchPanel, SWT.NONE);
 		tabItemBasic.setControl(compositeBasic);
 		GridLayout gl_compositeBasic = new GridLayout(1, false);
-		gl_compositeBasic.verticalSpacing = 2;
-		gl_compositeBasic.horizontalSpacing = 2;
-		gl_compositeBasic.marginHeight = 2;
-		gl_compositeBasic.marginWidth = 2;
+		gl_compositeBasic.verticalSpacing = 0;
+		gl_compositeBasic.horizontalSpacing = 0;
+		gl_compositeBasic.marginHeight = 0;
+		gl_compositeBasic.marginWidth = 0;
 		compositeBasic.setLayout(gl_compositeBasic);
 		
 		Composite compositeBasicHead = new Composite(compositeBasic, SWT.NONE);
@@ -466,7 +468,7 @@ public class MongoDBTableEditor extends EditorPart {
 		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, tableName, this);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeResult.setLayout(new GridLayout(1, false));
-		sashForm.setWeights(new int[] {170, 294});
+		sashForm.setWeights(new int[] {40, 60});
 		
 		initCollection();
 	}

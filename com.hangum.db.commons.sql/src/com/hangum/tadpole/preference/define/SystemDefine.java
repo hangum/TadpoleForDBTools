@@ -27,6 +27,4 @@ public class SystemDefine {
 	public static final String ADMIN_EMAIL = "adi.tadpole@gmail.com";
 	public static final String SOURCE_PAGE = "https://github.com/hangum/TadpoleForDBTools";
 	
-	
-	
 }

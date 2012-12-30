@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -37,8 +36,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.Define;
@@ -62,7 +59,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.table.DragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableColumnLabelprovider;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableFilter;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Mongodb Collection composite

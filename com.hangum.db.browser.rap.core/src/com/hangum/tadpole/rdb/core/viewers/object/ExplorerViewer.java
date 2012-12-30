@@ -48,6 +48,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.procedure.TadpoleProcedure
 import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.view.TadpoleViewerComposite;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.viewsupport.SelectionProviderMediator;
 
 /**
@@ -144,12 +145,7 @@ public class ExplorerViewer extends ViewPart {
 
 		tabFolderObject = new CTabFolder(compositeBody, SWT.NONE);
 		tabFolderObject.setBorderVisible(false);		
-		Display display = tabFolderObject.getDisplay();
-		tabFolderObject.setSelectionBackground(new Color[]{display.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW),
-                display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
-                display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
-                display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW)},
-                new int[] {25, 50, 100});
+		tabFolderObject.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
 		tabFolderObject.addSelectionListener(new SelectionAdapter() {
 			@Override

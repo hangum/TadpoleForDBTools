@@ -63,7 +63,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -100,6 +99,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.util.RequestInfoUtils;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.util.UnicodeUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
@@ -410,12 +410,7 @@ public class MainEditor extends EditorPart {
 		tabFolderResult = new CTabFolder(compositeResult, SWT.NONE);
 		tabFolderResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolderResult.setBounds(0, 0, 124, 43);
-		Display display = tabFolderResult.getDisplay();
-		tabFolderResult.setSelectionBackground(new Color[]{display.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW),
-				                                  display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
-				                                  display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
-				                                  display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW)},
-				                      new int[] {25, 50, 100});		
+		tabFolderResult.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());		
 		
 		// tab 의 index를 설정한다.
 		tabFolderResult.setData(RESULT_TAB_NAME.RESULT_SET.toString(), 0);

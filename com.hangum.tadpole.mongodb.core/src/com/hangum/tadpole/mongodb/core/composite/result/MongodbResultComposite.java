@@ -31,6 +31,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -42,8 +44,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -65,6 +65,7 @@ import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.util.JSONUtil;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
 import com.hangum.tadpole.util.tables.DefaultViewerSorter;
@@ -94,7 +95,7 @@ public class MongodbResultComposite extends Composite {
 	private MongoDBTableEditor editor;
 	
 	/** result tab folder */
-	private TabFolder tabFolderMongoDB;
+	private CTabFolder tabFolderMongoDB;
 	
 	/** tree viewer */
 	private TreeViewer treeViewerMongo;
@@ -138,7 +139,7 @@ public class MongodbResultComposite extends Composite {
 		this.collectionName = collectionName;
 		this.editor = editor;
 		
-		tabFolderMongoDB = new TabFolder(parent, SWT.NONE);
+		tabFolderMongoDB = new CTabFolder(parent, SWT.NONE);
 		tabFolderMongoDB.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -147,8 +148,8 @@ public class MongodbResultComposite extends Composite {
 			}
 		});
 		tabFolderMongoDB.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		TabItem tbtmTreeView = new TabItem(tabFolderMongoDB, SWT.NONE);
+		tabFolderMongoDB.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
+		CTabItem tbtmTreeView = new CTabItem(tabFolderMongoDB, SWT.NONE);
 		tbtmTreeView.setText("Tree View"); //$NON-NLS-1$
 		
 		Composite compositeTreeView = new Composite(tabFolderMongoDB, SWT.NONE);
@@ -228,7 +229,7 @@ public class MongodbResultComposite extends Composite {
 		treeViewerMongo.setContentProvider(new TreeMongoContentProvider() );
 		treeViewerMongo.setLabelProvider(new TreeMongoLabelProvider());
 		
-		TabItem tbtmTableView = new TabItem(tabFolderMongoDB, SWT.NONE);
+		CTabItem tbtmTableView = new CTabItem(tabFolderMongoDB, SWT.NONE);
 		tbtmTableView.setText("Table View"); //$NON-NLS-1$
 		
 		sashFormCollectionResult = new SashForm(tabFolderMongoDB, SWT.VERTICAL);
@@ -350,7 +351,7 @@ public class MongodbResultComposite extends Composite {
 		new Label(compositeTail, SWT.NONE);
 		new Label(compositeTail, SWT.NONE);
 		
-		TabItem tbtmTextView = new TabItem(tabFolderMongoDB, SWT.NONE);
+		CTabItem tbtmTextView = new CTabItem(tabFolderMongoDB, SWT.NONE);
 		tbtmTextView.setText("Text View"); //$NON-NLS-1$
 		
 		Composite compositeTextView = new Composite(tabFolderMongoDB, SWT.NONE);
@@ -409,7 +410,7 @@ public class MongodbResultComposite extends Composite {
 		lblTextViewCnt = new Label(compositeTextJson, SWT.NONE);
 		
 		// tabpole message
-		TabItem tbtmTadpoleMessage = new TabItem(tabFolderMongoDB, SWT.NONE);
+		CTabItem tbtmTadpoleMessage = new CTabItem(tabFolderMongoDB, SWT.NONE);
 		tbtmTadpoleMessage.setText("Tadpole Message"); //$NON-NLS-1$
 		
 		Composite compositeTadpoleMsg = new Composite(tabFolderMongoDB, SWT.NONE);
