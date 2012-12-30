@@ -10,10 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.procedure;
 
-import org.apache.log4j.Logger;
-
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
@@ -22,13 +21,13 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -73,17 +72,13 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	 * @param tabFolderObject
 	 * @param userDB
 	 */
-	public TadpoleProcedureComposite(IWorkbenchPartSite site, TabFolder tabFolderObject, UserDBDAO userDB) {
+	public TadpoleProcedureComposite(IWorkbenchPartSite site, CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(site, tabFolderObject, userDB);
-		
-		createProcedure(tabFolderObject);
+		createWidget(tabFolderObject);
 	}
 	
-	/**
-	 * Procedure 정의
-	 */
-	private void createProcedure(final TabFolder tabFolderObject) {
-		TabItem tbtmProcedures = new TabItem(tabFolderObject, SWT.NONE);
+	private void createWidget(final CTabFolder tabFolderObject) {
+		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setText("Procedures"); //$NON-NLS-1$
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
@@ -101,7 +96,6 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 		// procedure table viewer
 		tableViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
-		tableViewer.setUseHashlookup(true);
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
@@ -113,7 +107,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 		tableViewer.setLabelProvider(new ProcedureFunctionLabelProvicer());
 		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setInput(showProcedure);
+//		tableViewer.setInput(showProcedure);
 
 		procedureFilter = new ProcedureFunctionViewFilter();
 		tableViewer.addFilter(procedureFilter);
@@ -121,6 +115,10 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		sashForm.setWeights(new int[] { 1 });
 
 		// creat action
+		createMenu();
+	}
+	
+	private void createMenu() {
 		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 		deleteAction_Procedure = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
@@ -168,7 +166,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	/**
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshProcedure(final UserDBDAO userDB) {
+	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh) {
+		if(!boolRefresh) if(showProcedure != null) return;
 		this.userDB = userDB;
 		
 		try {

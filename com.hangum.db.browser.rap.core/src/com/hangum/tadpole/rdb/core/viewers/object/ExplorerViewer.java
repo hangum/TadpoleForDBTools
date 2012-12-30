@@ -17,16 +17,18 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -34,12 +36,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.ManagerListDTO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.collections.TadpoleCollectionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.function.TadpoleFunctionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.index.TadpoleIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.procedure.TadpoleProcedureComposite;
@@ -55,27 +57,32 @@ import com.hangum.tadpole.viewsupport.SelectionProviderMediator;
  * 
  */
 public class ExplorerViewer extends ViewPart {
-
-	public static String ID = "com.hangum.tadpole.rdb.core.view.object.explorer"; //$NON-NLS-1$
 	private static Logger logger = Logger.getLogger(ExplorerViewer.class);
+	public static String ID = "com.hangum.tadpole.rdb.core.view.object.explorer"; //$NON-NLS-1$
+	private StructuredViewer[] arrayStructureViewer = null;
+	
+	/** tabfolder가 초기화 될때는 tab select 이벤트 먹지 않도록 조절하지 않도록 */
+	private boolean boolInitObjectHead = true;
 
 	/**
 	 * 현재 오픈된페이지를 리프레쉬한다.
 	 */
-	public static enum CHANGE_TYPE {
-		DEL, INS
-	};
+	public static enum CHANGE_TYPE { DEL, INS };
 
 	private UserDBDAO userDB;
-	private TabFolder tabFolderObject;
+	private CTabFolder tabFolderObject;
 	private Text textSearch;
 	
+	private Composite compositeBody;
 	private TadpoleTriggerComposite 	triggerComposite 	= null;
 	private TadpoleFunctionComposite 	functionCompostite 	= null;
-	private TadpoleProcedureComposite	 procedureComposite = null;
+	private TadpoleProcedureComposite	procedureComposite 	= null;
 	private TadpoleIndexesComposite 	indexComposite 		= null;
-	private TadpoleViewerComposite 	viewComposite 			= null;
-	private TadpoleTableComposite 	tabbleCompost 			= null;
+	private TadpoleViewerComposite 		viewComposite 		= null;
+	private TadpoleTableComposite 		tableCompost 		= null;
+	
+	// mongodb
+	private TadpoleCollectionComposite collectionComposite = null;
 
 	public ExplorerViewer() {
 		super();
@@ -108,9 +115,9 @@ public class ExplorerViewer extends ViewPart {
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				TabItem ti = tabFolderObject.getItem(tabFolderObject.getSelectionIndex());
+				CTabItem ti = tabFolderObject.getItem(tabFolderObject.getSelectionIndex());
 				if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.TABLES.toString())) {
-					tabbleCompost.filter(textSearch.getText());
+					tableCompost.filter(textSearch.getText());
 				} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.VIEWS.toString())) {
 					viewComposite.filter(textSearch.getText());
 				} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.INDEXES.toString())) {
@@ -126,7 +133,7 @@ public class ExplorerViewer extends ViewPart {
 		});
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Composite compositeBody = new Composite(parent, SWT.NONE);
+		compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeBody = new GridLayout(1, false);
 		gl_compositeBody.verticalSpacing = 2;
@@ -135,41 +142,29 @@ public class ExplorerViewer extends ViewPart {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 
-		tabFolderObject = new TabFolder(compositeBody, SWT.NONE);
+		tabFolderObject = new CTabFolder(compositeBody, SWT.NONE);
+		tabFolderObject.setBorderVisible(false);		
+		Display display = tabFolderObject.getDisplay();
+		tabFolderObject.setSelectionBackground(new Color[]{display.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW),
+                display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
+                display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
+                display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW)},
+                new int[] {25, 50, 100});
+		
 		tabFolderObject.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent evt) {
 				if (userDB == null) return;
-
-				TabItem ti = (TabItem) evt.item;
-				refershSelectTable(ti);
+				if(boolInitObjectHead) {
+					String strSelectItem = ((CTabItem)evt.item).getText();
+					refershSelectObject(strSelectItem);
+				}
 			}
 		});
 		tabFolderObject.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
+		// dumy table
 		createTable();
-
-		createView();
-
-		createIndexes();
-
-		createProcedure();
-
-		createFunction();
-
-		createTrigger();
-
-//		// view의 set selection provider 설정
-		StructuredViewer[] viewers = new StructuredViewer[] { 
-				tabbleCompost.getTableListViewer(), 
-				viewComposite.getViewListViewer(), 
-				indexComposite.getTableViewer(), 
-				procedureComposite.getTableViewer(), 
-				functionCompostite.getTableviewer(), 
-				triggerComposite.getTableViewer()
-			};
-		SelectionProviderMediator mediator = new SelectionProviderMediator(viewers, tabbleCompost.getTableListViewer());
-		getViewSite().setSelectionProvider(mediator);
 
 		// 왼쪽 트리에서 데이터 받았는지.
 		getSite().getPage().addSelectionListener(ManagerViewer.ID, managementViewerListener);
@@ -183,31 +178,148 @@ public class ExplorerViewer extends ViewPart {
 					String tableName = event.getNewValue().toString();
 					if (tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
 
-					tabbleCompost.selectTable(tableName);
+					tableCompost.selectTable(tableName);
 				} // end if(event.getProperty()
 			} //
 		}); // end property change
 	}
 
 	/**
+	 * management의 tree가 선택되었을때
+	 */
+	private ISelectionListener managementViewerListener = new ISelectionListener() {
+
+		@Override
+		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+			if (selection instanceof IStructuredSelection) {
+				IStructuredSelection is = (IStructuredSelection) selection;
+				boolInitObjectHead = false;
+				initObjectHead(is.getFirstElement());
+				boolInitObjectHead = true;
+			} // end selection			
+		} // end selectionchange
+	};
+
+	/**
+	 * management의 head가 선택되었을때
+	 * 
+	 * @param selectElement
+	 */
+	private void initObjectHead(Object selectElement) {
+		if (selectElement instanceof UserDBDAO || selectElement instanceof UserDBResourceDAO) {
+			UserDBDAO selectUserDb = null;
+			if (selectElement instanceof UserDBDAO) selectUserDb = (UserDBDAO)selectElement;
+			else 									selectUserDb = ((UserDBResourceDAO)selectElement).getParent();
+
+			// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
+			if (userDB != null) if (userDB.getSeq() == selectUserDb.getSeq()) return;
+
+			// 디비 선택
+			userDB = selectUserDb;
+			getViewSite().getActionBars().getStatusLineManager().setMessage(userDB.getDb());
+			
+			// 존재하는 tadfolder를 삭제한다.
+			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
+			initObjectDetail(DBDefine.getDBDefine(userDB.getTypes()));
+
+		} else {
+			userDB = null;
+			getViewSite().getActionBars().getStatusLineManager().setMessage("");
+
+			// 존재하는 tadfolder를 삭제한다.
+			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
+			createTable();
+		}
+	}
+	
+	/**
+	 * 다른 디비가 선택되어 지면 초기화 되어야 할 object 목록
+	 * 
+	 * @param dbDefine Manager에서 선택된 object
+	 */
+	private void initObjectDetail(DBDefine dbDefine) {				
+		// sqlite
+		if (dbDefine == DBDefine.SQLite_DEFAULT) {
+			createTable();
+			createView();
+			createIndexes();
+			createTrigger();
+			
+			// view의 set selection provider 설정
+			arrayStructureViewer = new StructuredViewer[] { 
+					tableCompost.getTableListViewer(), 
+					viewComposite.getViewListViewer(), 
+					indexComposite.getTableViewer(), 
+					triggerComposite.getTableViewer()
+				};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
+			
+			refreshTable(false);
+			
+		// mongodb
+		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
+			
+			createMongoCollection();
+			refreshTable(false);
+			
+			arrayStructureViewer = new StructuredViewer[] { 
+				collectionComposite.getCollectionListViewer()
+			};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, collectionComposite.getCollectionListViewer()));
+
+		// cubrid, mysql, oracle, postgre, mssql
+		} else {
+			createTable();
+			createView();
+			createIndexes();
+			createProcedure();
+			createFunction();
+			createTrigger();
+			
+			arrayStructureViewer = new StructuredViewer[] { 
+					tableCompost.getTableListViewer(), 
+					viewComposite.getViewListViewer(), 
+					indexComposite.getTableViewer(), 
+					procedureComposite.getTableViewer(), 
+					functionCompostite.getTableviewer(), 
+					triggerComposite.getTableViewer()
+				};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
+		
+			refreshTable(false);
+		}
+	}
+	
+	/**
 	 * 현재 선택된 tab을 리프레쉬합니다.
 	 * 
-	 * @param ti
+	 * @param strSelectItemText TabItem text
 	 */
-	private void refershSelectTable(TabItem ti) {
-		if(userDB == null) return;
-		
-		if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.VIEWS.toString())) {
-			refreshView();
-		} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.INDEXES.toString())) {
-			refreshIndexes();
-		} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.PROCEDURES.toString())) {
-			refreshProcedure();
-		} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.FUNCTIONS.toString())) {
-			refreshFunction();
-		} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
-			refreshTrigger();
+	private void refershSelectObject(String strSelectItemText) {
+//		if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.TABLES.toString())) {
+//			refreshTable();
+//			System.out.println("\t =========== refresh table=-");
+//		} else 
+		if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.VIEWS.toString())) {
+			refreshView(false);
+		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.INDEXES.toString())) {
+			refreshIndexes(false);
+		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.PROCEDURES.toString())) {
+			refreshProcedure(false);
+		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.FUNCTIONS.toString())) {
+			refreshFunction(false);
+		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
+			refreshTrigger(false);
 		}
+	}
+	
+	/**
+	 * mongodb collection
+	 */
+	private void createMongoCollection() {
+		collectionComposite = new TadpoleCollectionComposite(getSite(), tabFolderObject, userDB);
+		collectionComposite.initAction();
+		tabFolderObject.setSelection(0);
 	}
 
 	/**
@@ -215,6 +327,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createTrigger() {
 		triggerComposite = new TadpoleTriggerComposite(getSite(), tabFolderObject, userDB);
+		triggerComposite.initAction();
 	}
 
 	/**
@@ -222,6 +335,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createFunction() {
 		functionCompostite = new TadpoleFunctionComposite(getSite(), tabFolderObject, userDB);
+		functionCompostite.initAction();
 	}
 
 	/**
@@ -229,6 +343,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createProcedure() {
 		procedureComposite = new TadpoleProcedureComposite(getSite(), tabFolderObject, userDB);
+		procedureComposite.initAction();
 	}
 
 	/**
@@ -236,6 +351,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createIndexes() {
 		indexComposite = new TadpoleIndexesComposite(getSite(), tabFolderObject, userDB);
+		indexComposite.initAction();
 	}
 
 	/**
@@ -243,213 +359,62 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createView() {
 		viewComposite = new TadpoleViewerComposite(getSite(), tabFolderObject, userDB);
+		viewComposite.initAction();
 	}
 	
 	/**
 	 * Table 정의
 	 */
 	private void createTable() {
-		tabbleCompost = new TadpoleTableComposite(getSite(), tabFolderObject, userDB);
+		tableCompost = new TadpoleTableComposite(getSite(), tabFolderObject, userDB);
+		tableCompost.initAction();
+		tabFolderObject.setSelection(0);
 	}
 
-	/**
-	 * management의 tree가 선택되었을때
-	 */
-	private ISelectionListener managementViewerListener = new ISelectionListener() {
-		@Override
-		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection is = (IStructuredSelection) selection;
-				initObjectHead(is.getFirstElement());
-			} // end selection
-			
-		} // end selectionchange
-	};
-
-	/**
-	 * management의 head가 선택되었을때
-	 * 
-	 * @param element
-	 */
-	public void initObjectHead(Object element) {
-		initSearch();
-
-		if (element instanceof UserDBDAO || element instanceof UserDBResourceDAO) {
-			UserDBDAO selectUserDb = null;
-			if (element instanceof UserDBDAO) {
-				selectUserDb = (UserDBDAO) element;
-			} else if (element instanceof UserDBResourceDAO) {
-				selectUserDb = ((UserDBResourceDAO) element).getParent();
-			}
-
-			// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
-			if (userDB != null) {
-				if (userDB.getSeq() == selectUserDb.getSeq()) return;
-			}
-			userDB = selectUserDb;
-
-			getViewSite().getActionBars().getStatusLineManager().setMessage(userDB.getDb());
-			tabFolderObject.setSelection(0);
-
-			tabbleCompost.refreshTable(userDB, "DB"); //$NON-NLS-1$
-
-			initObjectDetail(DBDefine.getDBDefine(userDB.getTypes()));
-
-		} else if (element instanceof ManagerListDTO) {
-			ManagerListDTO managerList = (ManagerListDTO) element;
-
-			userDB = null;
-			
-			// table을 닫는다.
-			tabbleCompost.initTable();
-
-			initObjectDetail(managerList.getName());//DbType());
-			
-		// Connection Manager의 모든 db가 삭제 되었을때 호출됨 
-		} else {
-			tabFolderObject.setSelection(0);
-			userDB = null;
-
-			// table을 닫는다.
-			tabbleCompost.initTable();
-		}
-	}
-	
-	/**
-	 * 다른 디비가 선택되어 지면 초기화 되어야 할 object 목록
-	 * 
-	 * @param Connection Manager에서 선택된 object
-	 */
-	private void initObjectDetail(Object selObject) {//DBDefine dbDefie) {
-		DBDefine dbDefine = null;
-		if(selObject instanceof DBDefine) dbDefine = (DBDefine)selObject;
-				
-		// dbtype에 따른 object 뷰를 조절합니다.
-		if (dbDefine == DBDefine.SQLite_DEFAULT) {
-			// procedure, function 항목을 닫는다.
-			for (TabItem tabItem : tabFolderObject.getItems()) {
-				if (!tabItem.isDisposed()) {
-					if ("Procedures".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
-					else if ("Functions".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
-				}
-			}
-		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
-			
-			// table 항목 이외의 모든 항목을 닫는다.
-			for (TabItem tabItem : tabFolderObject.getItems()) {
-				if (!tabItem.isDisposed()) {
-					if (!"Tables".equals(tabItem.getText())) tabItem.dispose(); //$NON-NLS-1$
-				}
-			}
-
-		} else {
-
-			boolean isViews = false;
-			boolean isIndexes = false;
-
-			boolean isProcedure = false;
-			boolean isFunction = false;
-
-			boolean isTriggers = false;
-
-			TabItem[] tItems = tabFolderObject.getItems();
-			for (TabItem tabItem : tItems) {
-
-				if ("Views".equals(tabItem.getText()))isViews = true; //$NON-NLS-1$
-				if ("Indexes".equals(tabItem.getText()))isIndexes = true; //$NON-NLS-1$
-
-				if ("Procedures".equals(tabItem.getText()))isProcedure = true; //$NON-NLS-1$
-				if ("Functions".equals(tabItem.getText()))isFunction = true; //$NON-NLS-1$
-
-				if ("Triggers".equals(tabItem.getText()))isTriggers = true; //$NON-NLS-1$
-			}
-
-			if (!isViews) 	createView();
-			if (!isIndexes) createIndexes();
-
-			if (!isProcedure) createProcedure();
-			if (!isFunction)  createFunction();
-
-			if (!isTriggers) createTrigger();
-		}
-
-		// table column viewer
-		tabbleCompost.initAction();
-
-		// viewer
-		viewComposite.initAction();
-
-		// index
-		indexComposite.initAction();
-
-		// procedure
-		procedureComposite.initAction();
-
-		// function
-		functionCompostite.initAction();
-
-		// trigger
-		triggerComposite.initAction();
-	}
-	
-	/**
-	 * init search
-	 */
-	private void initSearch() {
-		textSearch.setText("");
-		
-		tabbleCompost.setSearchText("");
-		viewComposite.setSearchText("");
-		indexComposite.setSearchText("");
-		procedureComposite.setSearchText("");
-		functionCompostite.setSearchText("");
-		triggerComposite.setSearchText("");
-	}
 	/**
 	 * view 정보를 최신으로 리프레쉬합니다.
 	 */
-	public void refreshView() {
-		viewComposite.refreshView(getUserDB());
+	public void refreshView(boolean boolRefresh) {
+		viewComposite.refreshView(getUserDB(), boolRefresh);
 	}
 
 	/**
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshIndexes() {
-		indexComposite.refreshIndexes(getUserDB());
+	public void refreshIndexes(boolean boolRefresh) {
+		indexComposite.refreshIndexes(getUserDB(), boolRefresh);
 	}
 
 	/**
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshProcedure() {
-		procedureComposite.refreshProcedure(userDB);
+	public void refreshProcedure(boolean boolRefresh) {
+		procedureComposite.refreshProcedure(userDB, boolRefresh);
 	}
 
 	/**
 	 * trigger 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshTrigger() {
-		triggerComposite.refreshTrigger(userDB);
+	public void refreshTrigger(boolean boolRefresh) {
+		triggerComposite.refreshTrigger(userDB, boolRefresh);
 	}
 
 	/**
 	 * function 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshFunction() {
-		functionCompostite.refreshFunction(userDB);
+	public void refreshFunction(boolean boolRefresh) {
+		functionCompostite.refreshFunction(userDB, boolRefresh);
 	}
 
 	/**
 	 * table 정보를 최신으로 리프레쉬합니다.
 	 */
-	public void refreshTable(final String source) {		
-		tabbleCompost.refreshTable(userDB, source);
-	}
-
-	@Override
-	public void setFocus() {
+	public void refreshTable(boolean boolRefresh) {
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {		
+			collectionComposite.refreshTable(userDB, boolRefresh);	
+		} else {
+			tableCompost.refreshTable(userDB, boolRefresh);
+		}		
 	}
 
 	public UserDBDAO getUserDB() {
@@ -467,6 +432,11 @@ public class ExplorerViewer extends ViewPart {
 		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
 		if (tabFolderObject.getSelectionIndex() != 0)	return;
 
-		tabbleCompost.refreshTable(changeType, changeTbName);
+		tableCompost.refreshTable(changeType, changeTbName);
 	}
+	
+	@Override
+	public void setFocus() {
+	}
+
 }

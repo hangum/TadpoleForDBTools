@@ -74,6 +74,11 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param searchText
 	 */
 	public abstract void setSearchText(String searchText);
+	
+	/**
+	 * init action
+	 */
+	public abstract void initAction();
 
 	/**
 	 * 테이블, 테이블 컬럼의 컬럼을 에디트 할수 있는지.
@@ -139,13 +144,14 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createIndexesColumn(final TableViewer tv, final ObjectComparator comparator) {
-		String[] name = {"TABLE NAME", "INDEX NAME", "NON UNIQUE", "INDEX SCHEMA", "SEQ IN INDEX", 
-						"COLUMN NAME", "COLLATION", "CARDINALITY", "SUB PART", "PACKED", 
-						"NULLABLE", 	"INDEX TYPE","COMMENT"
-		};
-		int[] size = {120, 70, 70, 70, 70, 
-						70,	70, 70, 70, 70, 
-						70, 70,	70
+//		String[] name = {"TABLE NAME", "INDEX NAME", "NON UNIQUE", "INDEX SCHEMA", "SEQ IN INDEX", 
+//						"COLUMN NAME", "COLLATION", "CARDINALITY", "SUB PART", "PACKED", 
+//						"NULLABLE", 	"INDEX TYPE","COMMENT"
+//		};
+		String[] name = {"TABLE NAME", "INDEX NAME","INDEX TYPE","COMMENT"};
+		int[] size = {120, 70, 70, 70//, 70, 
+//						70,	70, 70, 70, 70, 
+//						70, 70,	70
 		};
 
 		for (int i=0; i<name.length; i++) {

@@ -72,7 +72,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 */
 	protected void refreshTable() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshTable("Table");		
+		if(ev != null) ev.refreshTable(true);		
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 */
 	protected void refreshView() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshView();		
+		if(ev != null) ev.refreshView(true);		
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 */
 	protected void refreshIndexes() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshIndexes();		
+		if(ev != null) ev.refreshIndexes(true);		
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 */
 	protected void refreshProcedure() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshProcedure();		
+		if(ev != null) ev.refreshProcedure(true);		
 	}
 	
 	/**
@@ -104,7 +104,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 */
 	protected void refreshFunction() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshFunction();		
+		if(ev != null) ev.refreshFunction(true);		
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 */
 	protected void refreshTrigger() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshTrigger();		
+		if(ev != null) ev.refreshTrigger(true);		
 	}
 
 	@Override

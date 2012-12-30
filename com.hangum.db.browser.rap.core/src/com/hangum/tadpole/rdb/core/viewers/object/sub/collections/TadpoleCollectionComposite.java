@@ -1,19 +1,7 @@
-/*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Cho Hyun Jong - initial API and implementation
- ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.table;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.collections;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -29,7 +17,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -60,32 +48,33 @@ import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLInsertAction;
 import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLSelectAction;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLUpdateAction;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSampleDataAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
-import com.hangum.tadpole.rdb.core.editors.table.DBTableEditorInput;
-import com.hangum.tadpole.rdb.core.editors.table.TableViewerEditPart;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer.CHANGE_TYPE;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbReIndexAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbRenameAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.table.DragListener;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableColumnLabelprovider;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableCommentEditorSupport;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableFilter;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * RDB table composite
+ * Mongodb Collection composite
+ * 
  * @author hangum
  *
  */
-public class TadpoleTableComposite extends AbstractObjectComposite {
+public class TadpoleCollectionComposite extends AbstractObjectComposite {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TadpoleTableComposite.class);
+	private static final Logger logger = Logger.getLogger(TadpoleCollectionComposite.class);
 	
 	/** select table name */
 	private String selectTableName = ""; //$NON-NLS-1$
@@ -103,22 +92,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Table;
 	private ObjectDeleteAction deleteAction_Table;
 	private ObjectRefreshAction refreshAction_Table;
-
-	private GenerateSampleDataAction generateSampleData;
-
-	private GenerateSQLSelectAction selectStmtAction;
 	private GenerateSQLSelectAction insertStmtAction;
-	private GenerateSQLSelectAction updateStmtAction;
-	private GenerateSQLSelectAction deleteStmtAction;
+	private ObjectMongodbRenameAction renameColAction;
+	private ObjectMongodbReIndexAction reIndexColAction;
 	
-	/**
-	 * Create the composite.
-	 * 
-	 * @param partSite
-	 * @param parent
-	 * @param userDB
-	 */
-	public TadpoleTableComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
+	public TadpoleCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(partSite, tabFolderObject, userDB);
 		
 		createWidget(tabFolderObject);
@@ -126,8 +104,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTable.setText("Tables"); //$NON-NLS-1$
-
+		tbtmTable.setText("Collection"); //$NON-NLS-1$
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
 		GridLayout gl_compositeTables = new GridLayout(1, false);
@@ -150,10 +127,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
 
-					DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
+					MongoDBEditorInput input = new MongoDBEditorInput(tableDAO.getName(), userDB, showTableColumns);
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
-						page.openEditor(mei, TableViewerEditPart.ID);
+						page.openEditor(input, MongoDBTableEditor.ID);
 					} catch (PartInitException e) {
 						logger.error("Load the table data", e); //$NON-NLS-1$
 
@@ -176,12 +153,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						if (selectTableName.equals(table.getName())) return;
 						selectTableName = table.getName();
 
-						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-						Map<String, String> mapParam = new HashMap<String, String>();
-						mapParam.put("db", userDB.getDb());
-						mapParam.put("table", table.getName());
-
-						showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
+						showTableColumns = MongoDBQuery.collectionColumn(userDB, selectTableName);
 
 					} else
 						showTableColumns = null;
@@ -267,14 +239,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-
-		// generation sample data
-		generateSampleData = new GenerateSampleDataAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-
-		selectStmtAction = new GenerateSQLSelectAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
 		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
-		updateStmtAction = new GenerateSQLUpdateAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
-		deleteStmtAction = new GenerateSQLDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
+
+		renameColAction = new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
+		reIndexColAction = new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -287,18 +255,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					manager.add(deleteAction_Table);
 					manager.add(refreshAction_Table);
 
-					// 현재는 oracle db만 데이터 수정 모드..
-					if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-						manager.add(generateSampleData);
-					}
-
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
-					manager.add(selectStmtAction);
 					manager.add(insertStmtAction);
-					manager.add(updateStmtAction);
-					manager.add(deleteStmtAction);
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					manager.add(renameColAction);
+					manager.add(reIndexColAction);
 				}
 			}
 		});
@@ -308,18 +269,41 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		getSite().registerContextMenu(menuMgr, tableListViewer);
 	}
 
-	/**
-	 * table 정보를 최신으로 리프레쉬합니다.
-	 */
+	@Override
+	public void setSearchText(String searchText) {
+		tableFilter.setSearchText(searchText);
+	}
+
+	public void initAction() {
+		creatAction_Table.setUserDB(getUserDB());
+		deleteAction_Table.setUserDB(getUserDB());
+		refreshAction_Table.setUserDB(getUserDB());
+		insertStmtAction.setUserDB(getUserDB());
+		renameColAction.setUserDB(getUserDB());
+		reIndexColAction.setUserDB(getUserDB());
+	}
+
+	public TableViewer getCollectionListViewer() {
+		return tableListViewer;
+	}
+
 	public void refreshTable(final UserDBDAO selectUserDb, boolean boolRefresh) {
 		if(!boolRefresh) if(selectUserDb == null) return;
 
 		this.userDB = selectUserDb;
 
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			if (showTables != null) showTables.clear();
+			else showTables = new ArrayList<TableDAO>();
 			
+			List<String> listCollection = MongoDBQuery.collectionList(userDB);
+			for (String strColl : listCollection) {
+				TableDAO dao = new TableDAO();
+				dao.setName(strColl);
+
+				showTables.add(dao);
+			}
+
 			tableListViewer.setInput(showTables);
 			tableListViewer.refresh();
 
@@ -334,79 +318,4 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
 		}
 	}
-	
-	/**
-	 * initialize action
-	 */
-	public void initAction() {
-		creatAction_Table.setUserDB(getUserDB());
-		deleteAction_Table.setUserDB(getUserDB());
-		refreshAction_Table.setUserDB(getUserDB());
-
-		generateSampleData.setUserDB(getUserDB());
-
-		selectStmtAction.setUserDB(getUserDB());
-		insertStmtAction.setUserDB(getUserDB());
-		updateStmtAction.setUserDB(getUserDB());
-		deleteStmtAction.setUserDB(getUserDB());
-	}
-	
-	/**
-	 * initialize filter text
-	 * @param textSearch
-	 */
-	public void filter(String textSearch) {
-		tableFilter.setSearchText(textSearch);
-		tableListViewer.refresh();
-	}
-	
-	/**
-	 * select table
-	 * @param tableName
-	 */
-	public void selectTable(String tableName) {
-		Table table = tableListViewer.getTable();
-		for (int i = 0; i < table.getItemCount(); i++) {
-			if (tableName.equals(table.getItem(i).getText(0))) {
-				tableListViewer.setSelection(new StructuredSelection(tableListViewer.getElementAt(i)), true);
-			}
-		}
-	}
-	
-	/**
-	 * get tableviewer
-	 * @return
-	 */
-	public TableViewer getTableListViewer() {
-		return tableListViewer;
-	}
-
-	/**
-	 * refresh tableviewer
-	 * @param changeType
-	 * @param changeTbName
-	 */
-	public void refreshTable(CHANGE_TYPE changeType, String changeTbName) {
-		TableDAO dao = new TableDAO();
-		dao.setName(changeTbName);
-		
-		if (CHANGE_TYPE.DEL == changeType) {
-			showTables.remove(dao);
-		} else if (CHANGE_TYPE.INS == changeType) {
-			showTables.add(dao);
-		}
-
-		tableListViewer.setInput(showTables);
-		tableListViewer.refresh(changeTbName, false, true);
-	}
-
-	/**
-	 * table search 
-	 * 
-	 * @param string
-	 */
-	public void setSearchText(String searchText) {
-		tableFilter.setSearchText(searchText);		
-	}
-
 }

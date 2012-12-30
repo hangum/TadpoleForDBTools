@@ -10,10 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.function;
 
-import org.apache.log4j.Logger;
-
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
@@ -22,13 +21,13 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -75,17 +74,13 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	 * @param tabFolderObject
 	 * @param userDB
 	 */
-	public TadpoleFunctionComposite(IWorkbenchPartSite site, TabFolder tabFolderObject, UserDBDAO userDB) {
+	public TadpoleFunctionComposite(IWorkbenchPartSite site, CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(site, tabFolderObject, userDB);
-		
-		createFunction(tabFolderObject);
+		createWidget(tabFolderObject);
 	}
 	
-	/**
-	 * Procedure 정의
-	 */
-	private void createFunction(final TabFolder tabFolderObject) {
-		TabItem tbtmFunctions = new TabItem(tabFolderObject, SWT.NONE);
+	private void createWidget(final CTabFolder tabFolderObject) {
+		CTabItem  tbtmFunctions = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmFunctions.setText("Functions");; //$NON-NLS-1$
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
@@ -103,7 +98,6 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 
 		// procedure table viewer
 		tableViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
-		tableViewer.setUseHashlookup(true);
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
@@ -115,7 +109,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 
 		tableViewer.setLabelProvider(new ProcedureFunctionLabelProvicer());
 		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setInput(showFunction);
+//		tableViewer.setInput(showFunction);
 
 		functionFilter = new ProcedureFunctionViewFilter();
 		tableViewer.addFilter(functionFilter);
@@ -123,6 +117,10 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		sashForm.setWeights(new int[] { 1 });
 
 		// creat action
+		createMenu();
+	}
+	
+	private void createMenu() {
 		creatAction_Function = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
 		deleteAction_Function = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
 		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
@@ -169,8 +167,10 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	/**
 	 * function 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshFunction(final UserDBDAO userDB) {
+	public void refreshFunction(final UserDBDAO userDB, boolean boolRefresh) {
+		if(!boolRefresh) if(showFunction != null) return;
 		this.userDB = userDB;
+		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$

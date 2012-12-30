@@ -13,7 +13,6 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.index;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
@@ -22,13 +21,13 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -61,7 +60,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	// index
 	private TableViewer tableViewer;
 	private ObjectComparator indexComparator;
-	private List showIndex;
+	private List listIndexes;
 	private IndexesViewFilter indexFilter;
 
 	private ObjectCreatAction creatAction_Index;
@@ -75,17 +74,13 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * @param tabFolderObject
 	 * @param userDB
 	 */
-	public TadpoleIndexesComposite(IWorkbenchPartSite site, TabFolder tabFolderObject, UserDBDAO userDB) {
+	public TadpoleIndexesComposite(IWorkbenchPartSite site, CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(site, tabFolderObject, userDB);
-		
-		createIndexes(tabFolderObject);
+		createWidget(tabFolderObject);
 	}
 	
-	/**
-	 * indexes 정의
-	 */
-	private void createIndexes(final TabFolder tabFolderObject) {
-		TabItem tbtmIndex = new TabItem(tabFolderObject, SWT.NONE);
+	private void createWidget(final CTabFolder tabFolderObject) {
+		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmIndex.setText("Indexes"); //$NON-NLS-1$
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
@@ -103,7 +98,6 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 
 		// index table viewer
 		tableViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
-		tableViewer.setUseHashlookup(true);
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
@@ -115,14 +109,24 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 
 		tableViewer.setLabelProvider(new IndexesLabelProvicer());
 		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setInput(showIndex);
+//		tableViewer.setInput(listIndexes);
 
 		indexFilter = new IndexesViewFilter();
 		tableViewer.addFilter(indexFilter);
 
+		createMenu();
+		// index detail column
+		
+
 		sashForm.setWeights(new int[] { 1 });
 
-		// creat action
+	}
+
+	/**
+	 * create menu
+	 * 
+	 */
+	private void createMenu() {
 		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
@@ -142,14 +146,15 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		Menu popupMenu = menuMgr.createContextMenu(tableViewer.getTable());
 		tableViewer.getTable().setMenu(popupMenu);
 		getSite().registerContextMenu(menuMgr, tableViewer);
+
 	}
 
 	/**
 	 * init action
 	 */
 	public void initAction() {
-		if (showIndex != null) showIndex.clear();
-		tableViewer.setInput(showIndex);
+		if (listIndexes != null) listIndexes.clear();
+		tableViewer.setInput(listIndexes);
 		tableViewer.refresh();
 
 		creatAction_Index.setUserDB(getUserDB());
@@ -160,13 +165,15 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	/**
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshIndexes(final UserDBDAO userDB) {
+	public void refreshIndexes(final UserDBDAO userDB, boolean boolRefresh) {
+		if(!boolRefresh) if(listIndexes != null) return;
+		
 		this.userDB = userDB;
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showIndex = sqlClient.queryForList("indexList", userDB.getDb()); //$NON-NLS-1$
+			listIndexes = sqlClient.queryForList("indexList", userDB.getDb()); //$NON-NLS-1$
 
-			tableViewer.setInput(showIndex);
+			tableViewer.setInput(listIndexes);
 			tableViewer.refresh();
 
 		} catch (Exception e) {

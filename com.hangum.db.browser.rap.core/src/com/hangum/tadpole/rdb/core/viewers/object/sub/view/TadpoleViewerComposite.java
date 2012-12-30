@@ -28,16 +28,16 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.swt.widgets.TabFolder;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -76,17 +76,19 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private ObjectDeleteAction deleteAction_View;
 	private ObjectRefreshAction refreshAction_View;
 
-	public TadpoleViewerComposite(IWorkbenchPartSite site, TabFolder tabFolderObject, UserDBDAO userDB) {
+	/**
+	 * 
+	 * @param partSite
+	 * @param parent
+	 * @param userDB
+	 */
+	public TadpoleViewerComposite(IWorkbenchPartSite site, final CTabFolder tabFolderObject, final UserDBDAO userDB) {
 		super(site, tabFolderObject, userDB);
-		
-		createView(tabFolderObject);
+		createWidget(tabFolderObject);
 	}
 	
-	/**
-	 * view 정의
-	 */
-	private void createView(final TabFolder tabFolderObject) {
-		TabItem tbtmViews = new TabItem(tabFolderObject, SWT.NONE);
+	private void createWidget(final CTabFolder tabFolderObject) {
+		CTabItem tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmViews.setText("Views"); //$NON-NLS-1$
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
@@ -103,7 +105,6 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		viewListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
-		viewListViewer.setUseHashlookup(true);
 		viewListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				// 테이블의 컬럼 목록을 출력합니다.
@@ -165,13 +166,20 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 		viewColumnViewer.setContentProvider(new ArrayContentProvider());
 		viewColumnViewer.setLabelProvider(new TableColumnLabelprovider());
-		viewColumnViewer.setInput(showViewColumns);
+//		viewColumnViewer.setInput(showViewColumns);
 
 		sashForm.setWeights(new int[] { 1, 1 });
 
 		viewFilter = new RDBViewFilter();
 		viewListViewer.addFilter(viewFilter);
 
+		createMenu();
+	}
+	
+	/**
+	 * create menu
+	 */
+	private void createMenu() {
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		deleteAction_View = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
@@ -205,7 +213,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	/**
 	 * view 정보를 최신으로 리프레쉬합니다.
 	 */
-	public void refreshView(final UserDBDAO userDB) {
+	public void refreshView(final UserDBDAO userDB, boolean boolRefresh) {
+		if(!boolRefresh) if(showViews != null) return;
 		this.userDB = userDB;
 		
 		try {

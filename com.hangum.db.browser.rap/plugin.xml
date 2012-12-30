@@ -43,18 +43,6 @@
          </property>
       </product>
    </extension>
-   <extension
-         id="product1"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.eclipse.ui.ide.workbench"
-            name="tadpole-standalone">
-         <property
-               name="appName"
-               value="tadpole-standalone">
-         </property>
-      </product>
-   </extension>
    
 
 </plugin>

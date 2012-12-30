@@ -45,21 +45,24 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -189,7 +192,7 @@ public class MainEditor extends EditorPart {
 	private Table tableResult;
 	
 	/** query 결과 창 */
-	private TabFolder tabFolderResult;
+	private CTabFolder tabFolderResult;
 	/** tab index name */
 	private enum RESULT_TAB_NAME {RESULT_SET, SQL_RECALL, TADPOLE_MESSAGE};
 	
@@ -404,16 +407,22 @@ public class MainEditor extends EditorPart {
 		gl_compositeResult.marginHeight = 0;
 		compositeResult.setLayout(gl_compositeResult);
 		
-		tabFolderResult = new TabFolder(compositeResult, SWT.NONE);
+		tabFolderResult = new CTabFolder(compositeResult, SWT.NONE);
 		tabFolderResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolderResult.setBounds(0, 0, 124, 43);
+		Display display = tabFolderResult.getDisplay();
+		tabFolderResult.setSelectionBackground(new Color[]{display.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW),
+				                                  display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
+				                                  display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
+				                                  display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW)},
+				                      new int[] {25, 50, 100});		
 		
 		// tab 의 index를 설정한다.
 		tabFolderResult.setData(RESULT_TAB_NAME.RESULT_SET.toString(), 0);
 		tabFolderResult.setData(RESULT_TAB_NAME.SQL_RECALL.toString(), 1);
 		tabFolderResult.setData(RESULT_TAB_NAME.TADPOLE_MESSAGE.toString(), 2);
 		
-		TabItem tbtmResult = new TabItem(tabFolderResult, SWT.NONE);
+		CTabItem tbtmResult = new CTabItem(tabFolderResult, SWT.NONE);
 		tbtmResult.setText(Messages.MainEditor_7);
 		
 		Composite compositeQueryResult = new Composite(tabFolderResult, SWT.NONE);
@@ -526,7 +535,7 @@ public class MainEditor extends EditorPart {
 		sqlResultStatusLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 
 		///////////////////// tab item //////////////////////////
-		TabItem tbtmNewItem = new TabItem(tabFolderResult, SWT.NONE);
+		CTabItem tbtmNewItem = new CTabItem(tabFolderResult, SWT.NONE);
 		tbtmNewItem.setText(Messages.MainEditor_10);
 		
 		Composite compositeSQLHistory = new Composite(tabFolderResult, SWT.NONE);
@@ -633,7 +642,7 @@ public class MainEditor extends EditorPart {
 		btnSetEditor.setText(Messages.MainEditor_17);
 		
 		///////////////////// tab Message //////////////////////////
-		TabItem tbtmMessage = new TabItem(tabFolderResult, SWT.NONE);
+		CTabItem tbtmMessage = new CTabItem(tabFolderResult, SWT.NONE);
 		tbtmMessage.setText(Messages.MainEditor_0);
 		
 		Composite compositeMessage = new Composite(tabFolderResult, SWT.NONE);
@@ -768,6 +777,8 @@ public class MainEditor extends EditorPart {
 	 * 데이터 초기화 합니다.
 	 */
 	private void initEditor() {
+		tabFolderResult.setSelection(0);
+		
 		registerServiceHandler();
 		setOrionText( initDefaultEditorStr );
 	}
