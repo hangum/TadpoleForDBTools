@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.table;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +54,6 @@ import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
-import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
-import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLDeleteAction;
@@ -239,7 +235,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
-		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
+		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(userDB, tableListViewer));
 
 		// filter
 		tableFilter = new TableFilter();

@@ -207,7 +207,7 @@ public class TadpoleCollectionComposite extends AbstractObjectComposite {
 
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
-		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(tableListViewer));
+		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(userDB, tableListViewer));
 
 		// filter
 		tableFilter = new TableFilter();

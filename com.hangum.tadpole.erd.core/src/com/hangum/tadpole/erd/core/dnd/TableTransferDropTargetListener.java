@@ -23,11 +23,13 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.dnd.AbstractTransferDropTargetListener;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
@@ -79,8 +81,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	}
 
 	@Override
-	protected void updateTargetRequest() {
-		
+	protected void updateTargetRequest() {		
 		((CreateRequest)getTargetRequest()).setLocation(getDropLocation());
 	}
 	
@@ -92,16 +93,31 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	
 	@Override
 	protected void handleDrop() {
-		String tableName = ((String)getCurrentEvent().data);
-		String refTableNames = "'" + tableName + "',";
+		String[] arrayDragSourceData = null;
+		try {
+			arrayDragSourceData = StringUtils.splitByWholeSeparator(((String)getCurrentEvent().data), PublicTadpoleDefine.DELIMITER);
+
+			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
+			if(userDB.getSeq() != sourceDBSeq) {
+				MessageDialog.openError(null, "Error", Messages.TableTransferDropTargetListener_1); //$NON-NLS-1$
+				return;
+			}
+		} catch(Exception e) {
+			logger.error("dragger error", e); //$NON-NLS-1$
+			MessageDialog.openError(null, "Error", "Draging exception : " + e.getMessage()); //$NON-NLS-1$
+			return;
+		}
+		
+		String tableName = arrayDragSourceData[1];		
+		String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		// 이미 editor 상에 테이블 정보를 가져온다.
 		Map<String, Table> mapDBTables = new HashMap<String, Table>();
 		for (Table table : db.getTables()) {
 			mapDBTables.put(table.getName(), table);
-			refTableNames += "'" + table.getName() + "',";
+			refTableNames += "'" + table.getName() + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		refTableNames = StringUtils.chompLast(refTableNames, ",");
+		refTableNames = StringUtils.chompLast(refTableNames, ","); //$NON-NLS-1$
 		
 		// 이미 등록되어 있는 것이 아니라면
 		if(mapDBTables.get(tableName) == null) {
@@ -130,7 +146,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 				RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);//RelationUtil.getReferenceTable(userDB, refTableNames));
 				
 			} catch(Exception e) {
-				logger.error("GEF Table Drag and Drop Exception", e);
+				logger.error("GEF Table Drag and Drop Exception", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
@@ -156,10 +172,10 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			
 			Map<String, String> param = new HashMap<String, String>();
-			param.put("db", userDB.getDb());
-			param.put("table", strTBName);			
+			param.put("db", userDB.getDb()); //$NON-NLS-1$
+			param.put("table", strTBName);			 //$NON-NLS-1$
 			
-			return sqlClient.queryForList("tableColumnList", param);
+			return sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
 		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 			
 			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );

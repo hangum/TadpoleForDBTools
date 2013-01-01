@@ -18,6 +18,7 @@ public class Messages extends NLS {
 	public static String AutoLayoutAction_1;
 	public static String AutoLayoutAction_2;
 	public static String AutoLayoutAction_3;
+	public static String TableTransferDropTargetListener_1;
 	public static String TadpoleEditor_0;
 	public static String TadpoleEditor_1;
 	public static String TadpoleEditor_10;

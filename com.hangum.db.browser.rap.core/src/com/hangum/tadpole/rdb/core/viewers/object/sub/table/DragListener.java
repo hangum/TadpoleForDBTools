@@ -10,10 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.table;
 
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.widgets.Table;
+
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.dao.mysql.TableDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 
 /**
  * table의 컬럼의 0번째 값을 소스로 설정합니다. 
@@ -21,9 +25,11 @@ import org.eclipse.swt.widgets.Table;
  * @author hangumNote
  */
 public class DragListener implements DragSourceListener {
-	TableViewer viewer;
+	private UserDBDAO userDB;
+	private TableViewer viewer;
 	
-	public DragListener(TableViewer viewer) {
+	public DragListener(UserDBDAO userDB, TableViewer viewer) {
+		this.userDB = userDB;
 		this.viewer = viewer;
 	}
 
@@ -33,10 +39,14 @@ public class DragListener implements DragSourceListener {
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		Table table = viewer.getTable();
-		if( table.getSelectionCount() == 0) return;
-		
-		event.data = table.getSelection()[0].getText();
+		IStructuredSelection iss = (IStructuredSelection)viewer.getSelection();
+		if(!iss.isEmpty()) {
+//			Table table = viewer.getTable();
+//			if( table.getSelectionCount() == 0) return;
+//			event.data = table.getSelection()[0].getText();
+			TableDAO td = (TableDAO)iss.getFirstElement();
+			event.data = userDB.getSeq() + PublicTadpoleDefine.DELIMITER + td.getName();
+		}
 	}
 
 	@Override
