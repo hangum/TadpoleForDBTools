@@ -168,7 +168,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	 * @throws Exception
 	 */
 	public List<TableColumnDAO> getColumns(String strTBName) throws Exception {
-		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+//		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			
 			Map<String, String> param = new HashMap<String, String>();
@@ -176,16 +176,16 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			param.put("table", strTBName);			 //$NON-NLS-1$
 			
 			return sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
-		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-			
-			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-			DBCollection coll = mongoDB.getCollection(strTBName);
-										
-			return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
-		} 
+//		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+//			
+//			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
+//			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
+//			DBCollection coll = mongoDB.getCollection(strTBName);
+//										
+//			return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
+//		} 
 		
-		return null;
+//		return null;
 	}
 
 }

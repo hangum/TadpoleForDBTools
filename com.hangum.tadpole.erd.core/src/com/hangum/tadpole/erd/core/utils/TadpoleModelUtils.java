@@ -164,25 +164,25 @@ public enum TadpoleModelUtils {
 	public List<TableDAO> getTables() throws Exception {
 		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
-		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+//		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			return sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 			
-		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-			
-			for (String col : mongoDB.getCollectionNames()) {
-				TableDAO dao = new TableDAO();
-				dao.setName(col);
-				
-				showTables.add(dao);
-			}
-			
-			return showTables;
-		}
+//		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+//			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
+//			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
+//			
+//			for (String col : mongoDB.getCollectionNames()) {
+//				TableDAO dao = new TableDAO();
+//				dao.setName(col);
+//				
+//				showTables.add(dao);
+//			}
+//			
+//			return showTables;
+//		}
 		
-		return showTables;
+//		return showTables;
 	}
 	
 	
@@ -194,7 +194,7 @@ public enum TadpoleModelUtils {
 	 * @throws Exception
 	 */
 	public List<TableColumnDAO> getColumns(String db, String strTBName) throws Exception {
-		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+//		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			
 			Map<String, String> param = new HashMap<String, String>();
@@ -202,16 +202,16 @@ public enum TadpoleModelUtils {
 			param.put("table", strTBName);
 			
 			return sqlClient.queryForList("tableColumnList", param);
-		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-			
-			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-			DBCollection coll = mongoDB.getCollection(strTBName);
-										
-			return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
-		} 
-		
-		return null;
+//		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+//			
+//			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
+//			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
+//			DBCollection coll = mongoDB.getCollection(strTBName);
+//										
+//			return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
+//		} 
+//		
+//		return null;
 	}
 	
 	

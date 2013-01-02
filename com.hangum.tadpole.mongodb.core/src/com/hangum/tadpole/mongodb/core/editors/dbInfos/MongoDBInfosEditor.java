@@ -50,6 +50,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -441,7 +442,7 @@ class MongoInfoLabelProvider extends LabelProvider implements ITableLabelProvide
 			}
 			return "*** not set column ***"; //$NON-NLS-1$
 		} else {
-			TableColumnDAO dao = (TableColumnDAO) element;
+			CollectionFieldDAO dao = (CollectionFieldDAO) element;
 			
 			switch(columnIndex) {
 			case 0: return dao.getField();

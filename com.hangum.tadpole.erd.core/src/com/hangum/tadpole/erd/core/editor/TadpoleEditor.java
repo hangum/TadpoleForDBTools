@@ -35,12 +35,11 @@ import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
-import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
-import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
+import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -77,7 +76,7 @@ import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
  * @author hangum
  *
  */
-public class TadpoleEditor extends GraphicalEditorWithFlyoutPalette {
+public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 	public static final String ID = "com.hangum.tadpole.erd.core.editor"; //$NON-NLS-1$
 	/**
 	 * Logger for this class
@@ -109,7 +108,7 @@ public class TadpoleEditor extends GraphicalEditorWithFlyoutPalette {
 	
 	@Override
 	protected void initializeGraphicalViewer() {
-		super.initializeGraphicalViewer();
+//		super.initializeGraphicalViewer();
 		
 		Job job = new Job("ERD Initialize") {
 			@Override
@@ -310,11 +309,11 @@ public class TadpoleEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 	}
 	
-	@Override
-	protected PaletteRoot getPaletteRoot() {
-		return null;
-	}
-	
+//	@Override
+//	protected PaletteRoot getPaletteRoot() {
+//		return null;
+//	}
+//	
 //	@Override
 //	public void doSaveAs() {
 //		super.doSaveAs();

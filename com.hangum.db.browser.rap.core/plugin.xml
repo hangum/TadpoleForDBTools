@@ -322,6 +322,7 @@
                </objectClass>
             </enablement>
          </action>
+         <!--
          <menu
                icon="resources/icons/erd.png"
                id="menu.nosql.erd"
@@ -370,6 +371,7 @@
                </objectClass>
             </enablement>
          </action>
+         -->
          <!--
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"

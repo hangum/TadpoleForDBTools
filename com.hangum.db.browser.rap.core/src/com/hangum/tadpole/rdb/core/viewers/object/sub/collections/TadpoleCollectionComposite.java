@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Cho Hyun Jong.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Cho Hyun Jong - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.collections;
 
 import java.util.ArrayList;
@@ -19,6 +29,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -30,6 +42,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -56,7 +69,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.table.DragListener;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableColumnLabelprovider;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableFilter;
 
@@ -82,7 +94,7 @@ public class TadpoleCollectionComposite extends AbstractObjectComposite {
 	private TableFilter tableFilter;
 	
 	// column info
-	private TableViewer tableColumnViewer;
+	private TreeViewer treeColumnViewer;
 	private List showTableColumns;
 	
 	private ObjectCreatAction creatAction_Table;
@@ -154,8 +166,8 @@ public class TadpoleCollectionComposite extends AbstractObjectComposite {
 					} else
 						showTableColumns = null;
 
-					tableColumnViewer.setInput(showTableColumns);
-					tableColumnViewer.refresh();
+					treeColumnViewer.setInput(showTableColumns);
+					treeColumnViewer.refresh();
 
 				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$
@@ -205,6 +217,8 @@ public class TadpoleCollectionComposite extends AbstractObjectComposite {
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
 
+		createMenu();
+
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(userDB, tableListViewer));
@@ -214,28 +228,50 @@ public class TadpoleCollectionComposite extends AbstractObjectComposite {
 		tableListViewer.addFilter(tableFilter);
 
 		// columns
-		tableColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
-		Table tableTableColumn = tableColumnViewer.getTable();
+		treeColumnViewer = new TreeViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		Tree tableTableColumn = treeColumnViewer.getTree();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
 
-		createTableColumne(tableColumnViewer);
+		createTableMongoColumne(treeColumnViewer);
 
-		tableColumnViewer.setContentProvider(new ArrayContentProvider());
-		tableColumnViewer.setLabelProvider(new TableColumnLabelprovider());
-		createMenu();
+		treeColumnViewer.setContentProvider(new MongoDBCollectionFieldsContentProvider());
+		treeColumnViewer.setLabelProvider(new MongoDBCollectionFieldsLabelProvider());
 		
 		sashForm.setWeights(new int[] { 1, 1 });
 	}
 	
 	/**
+	 * mongodb collection column
+	 * @param treeColumnViewer2
+	 */
+	private void createTableMongoColumne(TreeViewer treeColumnViewer2) {
+		String[] columnName = {"Field", "Type", "Key"};  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		int[] columnSize = {200, 100, 100};
+		
+		try {
+			// reset column 
+			for(int i=0; i<columnName.length; i++) {
+				final TreeViewerColumn tableColumn = new TreeViewerColumn(treeColumnViewer, SWT.LEFT);
+				tableColumn.getColumn().setText( columnName[i] );
+				tableColumn.getColumn().setWidth( columnSize[i] );
+				tableColumn.getColumn().setResizable(true);
+				tableColumn.getColumn().setMoveable(false);
+			}	// end for
+			
+		} catch(Exception e) { 
+			logger.error("MongoDB Table Editor", e); //$NON-NLS-1$
+		}	
+	}
+
+	/**
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
+		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 
 		renameColAction = new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
 		reIndexColAction = new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");

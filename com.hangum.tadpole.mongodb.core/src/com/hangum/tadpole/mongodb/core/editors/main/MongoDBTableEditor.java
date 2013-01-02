@@ -44,7 +44,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -86,7 +86,7 @@ public class MongoDBTableEditor extends EditorPart {
 	private CTabFolder tabFolderSearchPanel;
 	
 	/** collection column info */
-	private Map<String, TableColumnDAO> columnInfo;
+	private Map<String, CollectionFieldDAO> columnInfo;
 	/** collection의 전체 컬럼 */
 	private String strColumns = ""; //$NON-NLS-1$
 	
@@ -932,9 +932,9 @@ public class MongoDBTableEditor extends EditorPart {
 		MongoDBEditorInput moInput = (MongoDBEditorInput)input;
 		this.userDB = moInput.getUserDB();
 		this.tableName = moInput.getName();
-		this.columnInfo = new HashMap<String, TableColumnDAO>();
+		this.columnInfo = new HashMap<String, CollectionFieldDAO>();
 		for (int i=0; i<moInput.getShowTableColumns().size(); i++) {
-			TableColumnDAO tcDAO = (TableColumnDAO)moInput.getShowTableColumns().get(i);
+			CollectionFieldDAO tcDAO = (CollectionFieldDAO)moInput.getShowTableColumns().get(i);
 			columnInfo.put(tcDAO.getField(), tcDAO);
 		
 //			if(!tcDAO.getType().equals("com.mongodb.BasicDBObject")) 

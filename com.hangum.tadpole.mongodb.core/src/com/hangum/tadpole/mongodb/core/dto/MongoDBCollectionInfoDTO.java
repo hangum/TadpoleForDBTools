@@ -13,7 +13,7 @@ package com.hangum.tadpole.mongodb.core.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 
 /**
  * mongodb collection infos
@@ -31,7 +31,7 @@ public class MongoDBCollectionInfoDTO {
 	private int padding;
 	private double lastExtentSize;
 	
-	private List<TableColumnDAO> child = new ArrayList<TableColumnDAO>(); 
+	private List<CollectionFieldDAO> child = new ArrayList<CollectionFieldDAO>(); 
 	
 	public MongoDBCollectionInfoDTO() {
 	}
@@ -100,11 +100,11 @@ public class MongoDBCollectionInfoDTO {
 		this.lastExtentSize = lastExtentSize;
 	}
 
-	public List<TableColumnDAO> getChild() {
+	public List<CollectionFieldDAO> getChild() {
 		return child;
 	}	
 	
-	public void setChild(List<TableColumnDAO> child) {
+	public void setChild(List<CollectionFieldDAO> child) {
 		this.child = child;
 	}
 }

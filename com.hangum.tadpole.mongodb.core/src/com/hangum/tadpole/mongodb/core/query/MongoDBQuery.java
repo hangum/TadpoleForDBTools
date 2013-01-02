@@ -20,7 +20,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
@@ -84,7 +84,7 @@ public class MongoDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<TableColumnDAO> collectionColumn(UserDBDAO userDB, String colName) throws Exception {
+	public static List<CollectionFieldDAO> collectionColumn(UserDBDAO userDB, String colName) throws Exception {
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		DBCollection coll = mongoDB.getCollection(colName);
 									
