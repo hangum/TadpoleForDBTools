@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.view;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view;
 
 import org.eclipse.jface.viewers.Viewer;
 

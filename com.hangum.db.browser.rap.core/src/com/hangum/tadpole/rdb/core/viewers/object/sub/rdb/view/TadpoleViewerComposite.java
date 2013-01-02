@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.view;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +50,7 @@ import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.table.TableColumnLabelprovider;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableColumnLabelprovider;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.trigger;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger;
 
 import java.util.List;
 

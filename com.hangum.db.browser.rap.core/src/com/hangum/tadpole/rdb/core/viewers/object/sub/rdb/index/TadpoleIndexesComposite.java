@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.function;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index;
 
 import java.util.List;
 
@@ -40,51 +40,51 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.procedure.ProcedureFunctionLabelProvicer;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.procedure.ProcedureFunctionViewFilter;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * Function composite
+ * RDB indexes composite
  * 
  * @author hangum
  *
  */
-public class TadpoleFunctionComposite extends AbstractObjectComposite {
+public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TadpoleFunctionComposite.class);
+	private static final Logger logger = Logger.getLogger(TadpoleIndexesComposite.class);
 	
+	// index
 	private TableViewer tableViewer;
-	private ObjectComparator fuctionComparator;
-	private List showFunction;
-	private ProcedureFunctionViewFilter functionFilter;
+	private ObjectComparator indexComparator;
+	private List listIndexes;
+	private IndexesViewFilter indexFilter;
 
-	private ObjectCreatAction creatAction_Function;
-	private ObjectDeleteAction deleteAction_Function;
-	private ObjectRefreshAction refreshAction_Function;
+	private ObjectCreatAction creatAction_Index;
+	private ObjectDeleteAction deleteAction_Index;
+	private ObjectRefreshAction refreshAction_Index;
 
 	/**
-	 * function composite
+	 * indexes info
 	 * 
 	 * @param site
 	 * @param tabFolderObject
 	 * @param userDB
 	 */
-	public TadpoleFunctionComposite(IWorkbenchPartSite site, CTabFolder tabFolderObject, UserDBDAO userDB) {
+	public TadpoleIndexesComposite(IWorkbenchPartSite site, CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(site, tabFolderObject, userDB);
 		createWidget(tabFolderObject);
 	}
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
-		CTabItem  tbtmFunctions = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmFunctions.setText("Functions");; //$NON-NLS-1$
+		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmIndex.setText("Indexes"); //$NON-NLS-1$
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
-		tbtmFunctions.setControl(compositeIndexes);
+		tbtmIndex.setControl(compositeIndexes);
 		GridLayout gl_compositeIndexes = new GridLayout(1, false);
 		gl_compositeIndexes.verticalSpacing = 2;
 		gl_compositeIndexes.horizontalSpacing = 2;
@@ -96,34 +96,40 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		// procedure table viewer
+		// index table viewer
 		tableViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
-		fuctionComparator = new ObjectComparator();
-		tableViewer.setSorter(fuctionComparator);
+		indexComparator = new DefaultComparator();
+		tableViewer.setSorter(indexComparator);
 
-		createProcedureFunctionColumn(tableViewer, fuctionComparator);
+		createIndexesColumn(tableViewer, indexComparator);
 
-		tableViewer.setLabelProvider(new ProcedureFunctionLabelProvicer());
+		tableViewer.setLabelProvider(new IndexesLabelProvicer());
 		tableViewer.setContentProvider(new ArrayContentProvider());
-//		tableViewer.setInput(showFunction);
+//		tableViewer.setInput(listIndexes);
 
-		functionFilter = new ProcedureFunctionViewFilter();
-		tableViewer.addFilter(functionFilter);
+		indexFilter = new IndexesViewFilter();
+		tableViewer.addFilter(indexFilter);
+
+		createMenu();
+		// index detail column
+		
 
 		sashForm.setWeights(new int[] { 1 });
 
-		// creat action
-		createMenu();
 	}
-	
+
+	/**
+	 * create menu
+	 * 
+	 */
 	private void createMenu() {
-		creatAction_Function = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
-		deleteAction_Function = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
-		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -131,72 +137,72 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(creatAction_Function);
-				manager.add(deleteAction_Function);
-				manager.add(refreshAction_Function);
+				manager.add(creatAction_Index);
+				manager.add(deleteAction_Index);
+				manager.add(refreshAction_Index);
 			}
 		});
 
 		Menu popupMenu = menuMgr.createContextMenu(tableViewer.getTable());
 		tableViewer.getTable().setMenu(popupMenu);
 		getSite().registerContextMenu(menuMgr, tableViewer);
+
 	}
 
 	/**
-	 * text filter
-	 * @param textSearch
-	 */
-	public void filter(String textSearch) {
-		functionFilter.setSearchText(textSearch);
-		tableViewer.refresh();
-	}
-
-	/**
-	 * initialize action
+	 * init action
 	 */
 	public void initAction() {
-		if (showFunction != null) showFunction.clear();
-		tableViewer.setInput(showFunction);
+		if (listIndexes != null) listIndexes.clear();
+		tableViewer.setInput(listIndexes);
 		tableViewer.refresh();
 
-		creatAction_Function.setUserDB(getUserDB());
-		deleteAction_Function.setUserDB(getUserDB());
-		refreshAction_Function.setUserDB(getUserDB());
+		creatAction_Index.setUserDB(getUserDB());
+		deleteAction_Index.setUserDB(getUserDB());
+		refreshAction_Index.setUserDB(getUserDB());
 	}
 	
 	/**
-	 * function 정보를 최신으로 갱신 합니다.
+	 * index 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshFunction(final UserDBDAO userDB, boolean boolRefresh) {
-		if(!boolRefresh) if(showFunction != null) return;
-		this.userDB = userDB;
+	public void refreshIndexes(final UserDBDAO userDB, boolean boolRefresh) {
+		if(!boolRefresh) if(listIndexes != null) return;
 		
+		this.userDB = userDB;
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
+			listIndexes = sqlClient.queryForList("indexList", userDB.getDb()); //$NON-NLS-1$
 
-			tableViewer.setInput(showFunction);
+			tableViewer.setInput(listIndexes);
 			tableViewer.refresh();
 
 		} catch (Exception e) {
-			logger.error("showFunction refresh", e); //$NON-NLS-1$
+			logger.error("index refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_81, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_1, errStatus); //$NON-NLS-1$
 		}
+	}
+
+	/**
+	 * filter
+	 * 
+	 * @param textSearch
+	 */
+	public void filter(String textSearch) {
+		indexFilter.setSearchText(textSearch);
+		tableViewer.refresh();		
 	}
 	
 	/**
-	 * tableviewer
-	 * 
+	 * table viewer
 	 * @return
 	 */
-	public TableViewer getTableviewer() {
+	public TableViewer getTableViewer() {
 		return tableViewer;
 	}
 
 	@Override
 	public void setSearchText(String searchText) {
-		functionFilter.setSearchText(searchText);
+		indexFilter.setSearchText(searchText);
 	}
-
 }

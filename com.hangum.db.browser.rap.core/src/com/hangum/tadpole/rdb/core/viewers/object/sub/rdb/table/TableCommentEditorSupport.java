@@ -8,7 +8,7 @@
  * Contributors:
  *     Jeong jaehong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.table;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
 import java.sql.PreparedStatement;
 

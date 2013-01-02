@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.collections;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections;
 
 import java.util.List;
 

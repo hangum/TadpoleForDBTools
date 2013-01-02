@@ -8,26 +8,31 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.procedure;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.util.TadpoleViewrFilter;
 
 /**
- * Procedure Function 의 FILTER
+ * TABLE의 FILTER
  * 
  * @author hangumNote
  *
  */
-public class ProcedureFunctionViewFilter extends TadpoleViewrFilter {
+public class TableFilter extends TadpoleViewrFilter {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(TableFilter.class);
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if(searchString == null || searchString.length() == 0) return true;
 		
-		ProcedureFunctionDAO dao  = (ProcedureFunctionDAO)element;
+		TableDAO dao = (TableDAO)element;
 		if(dao.getName().toUpperCase().matches(searchString.toUpperCase())) return true;
 		
 		return false;
