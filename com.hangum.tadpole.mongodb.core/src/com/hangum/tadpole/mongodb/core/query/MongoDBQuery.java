@@ -14,13 +14,18 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.dao.mongodb.MongoDBIndexFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
@@ -65,12 +70,7 @@ public class MongoDBQuery {
 		
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		for (String col : mongoDB.getCollectionNames()) {
-			boolean isSystemCollection = false;
-			for(String sysColl : MongoDBDefine.SYSTEM_COLLECTION) {
-				if(col.equals(sysColl)) isSystemCollection = true;
-			}
-			
-			if(!isSystemCollection) listReturn.add(col);
+			if(!isSystemCollection(col)) listReturn.add(col);
 		}
 		
 		return listReturn;
@@ -302,6 +302,59 @@ public class MongoDBQuery {
 		
 		if(!cr.ok()) throw cr.getException();
 		if(logger.isDebugEnabled()) logger.debug("[reIndex] complements" + colName);
+	}
+	
+	/**
+	 * list index
+	 * 
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static List<MongoDBIndexDAO> listAllIndex(UserDBDAO userDB) throws Exception {
+		List<MongoDBIndexDAO> listReturnIndex = new ArrayList<MongoDBIndexDAO>();
+		
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
+		for (String col : mongoDB.getCollectionNames()) {
+			
+			if(!isSystemCollection(col)) {
+				List<DBObject> listIndexObj = mongoDB.getCollection(col).getIndexInfo();
+				for (DBObject dbObject : listIndexObj) {
+					MongoDBIndexDAO indexDao = new MongoDBIndexDAO();
+					
+					indexDao.setV(dbObject.get("v").toString());
+					Map<String, Integer> objMap = (Map)dbObject.get("key");
+					for (String strKey : objMap.keySet()) {
+						indexDao.getListIndexField().add(new MongoDBIndexFieldDAO(strKey, objMap.get(strKey)));
+					}
+					
+					if(dbObject.containsField("unique")) {
+						indexDao.setUnique( Boolean.valueOf(dbObject.get("unique").toString()) );
+					}
+					String strNs = dbObject.get("ns").toString();
+					strNs = StringUtils.substringAfter(strNs, userDB.getDb() + ".");
+					
+					indexDao.setNs(strNs);
+					indexDao.setName(dbObject.get("name").toString());				
+
+					listReturnIndex.add(indexDao);
+				}
+			}
+		}
+		
+		return listReturnIndex;
+	}
+	
+	/**
+	 * is system collection
+	 * @param colName
+	 * @return
+	 */
+	public static boolean isSystemCollection(String colName) {
+		for(String sysColl : MongoDBDefine.SYSTEM_COLLECTION) {
+			if(colName.equals(sysColl)) return true;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -568,6 +621,16 @@ public class MongoDBQuery {
 			gfsFile.save();
 		}
 		
+	}
+
+	/**
+	 * index를 삭제합니다.
+	 * 
+	 * @param userDB
+	 * @param name
+	 */
+	public static void dropIndex(UserDBDAO userDB, String colName, String name) throws Exception {
+		findCollection(userDB, colName).dropIndex(name);		
 	}
 	
 }

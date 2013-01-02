@@ -148,7 +148,7 @@ public abstract class AbstractObjectComposite extends Composite {
 //						"COLUMN NAME", "COLLATION", "CARDINALITY", "SUB PART", "PACKED", 
 //						"NULLABLE", 	"INDEX TYPE","COMMENT"
 //		};
-		String[] name = {"TABLE NAME", "INDEX NAME","INDEX TYPE","COMMENT"};
+		String[] name = {"Table Name", "Index Name","Type","Comment"};
 		int[] size = {120, 70, 70, 70//, 70, 
 //						70,	70, 70, 70, 70, 
 //						70, 70,	70

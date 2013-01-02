@@ -11,6 +11,7 @@
 package com.hangum.tadpole.mongodb.core.test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.mongodb.DB;
@@ -43,6 +44,11 @@ public class MongoTestIndex {
 				System.out.println("[colection]" + colName);
 				for (DBObject dbObject : listIndex) {
 					System.out.println("\t" + dbObject);
+//					Map<String, Integer> objMap = (Map)dbObject.get("key");
+//					Set<String> objMapKey = objMap.keySet();
+//					for (String strKey : objMapKey) {
+//						System.out.println("[key]" + strKey + "\t [value]" + objMap.get(strKey).toString());
+//					}
 				}
 			}
 

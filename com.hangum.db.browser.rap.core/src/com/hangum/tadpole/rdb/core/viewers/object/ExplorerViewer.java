@@ -23,11 +23,9 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
@@ -41,7 +39,8 @@ import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleCollectionComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index.TadpoleIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
@@ -83,7 +82,8 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleTableComposite 		tableCompost 		= null;
 	
 	// mongodb
-	private TadpoleCollectionComposite collectionComposite = null;
+	private TadpoleMongoDBCollectionComposite collectionComposite 	= null;
+	private TadpoleMongoDBIndexesComposite mongoIndexComposite 		= null;
 
 	public ExplorerViewer() {
 		super();
@@ -256,10 +256,12 @@ public class ExplorerViewer extends ViewPart {
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
 			
 			createMongoCollection();
+			createMongoIndex();
 			refreshTable(false);
 			
 			arrayStructureViewer = new StructuredViewer[] { 
-				collectionComposite.getCollectionListViewer()
+				collectionComposite.getCollectionListViewer(),
+				mongoIndexComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, collectionComposite.getCollectionListViewer()));
 
@@ -310,12 +312,20 @@ public class ExplorerViewer extends ViewPart {
 	}
 	
 	/**
-	 * mongodb collection
+	 * mongodb collection define
 	 */
 	private void createMongoCollection() {
-		collectionComposite = new TadpoleCollectionComposite(getSite(), tabFolderObject, userDB);
+		collectionComposite = new TadpoleMongoDBCollectionComposite(getSite(), tabFolderObject, userDB);
 		collectionComposite.initAction();
 		tabFolderObject.setSelection(0);
+	}
+	
+	/**
+	 * mongodb index define
+	 */
+	private void createMongoIndex() {
+		mongoIndexComposite = new TadpoleMongoDBIndexesComposite(getSite(), tabFolderObject, userDB);
+		mongoIndexComposite.initAction();
 	}
 
 	/**
@@ -378,7 +388,11 @@ public class ExplorerViewer extends ViewPart {
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshIndexes(boolean boolRefresh) {
-		indexComposite.refreshIndexes(getUserDB(), boolRefresh);
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+			mongoIndexComposite.refreshIndexes(userDB, boolRefresh);
+		} else {
+			indexComposite.refreshIndexes(getUserDB(), boolRefresh);
+		}
 	}
 
 	/**

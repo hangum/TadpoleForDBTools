@@ -78,11 +78,11 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
  * @author hangum
  *
  */
-public class TadpoleCollectionComposite extends AbstractObjectComposite {
+public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TadpoleCollectionComposite.class);
+	private static final Logger logger = Logger.getLogger(TadpoleMongoDBCollectionComposite.class);
 	
 	/** select table name */
 	private String selectTableName = ""; //$NON-NLS-1$
@@ -104,7 +104,7 @@ public class TadpoleCollectionComposite extends AbstractObjectComposite {
 	private ObjectMongodbRenameAction renameColAction;
 	private ObjectMongodbReIndexAction reIndexColAction;
 	
-	public TadpoleCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
+	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(partSite, tabFolderObject, userDB);
 		
 		createWidget(tabFolderObject);
@@ -247,7 +247,7 @@ public class TadpoleCollectionComposite extends AbstractObjectComposite {
 	 */
 	private void createTableMongoColumne(TreeViewer treeColumnViewer2) {
 		String[] columnName = {"Field", "Type", "Key"};  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		int[] columnSize = {200, 100, 100};
+		int[] columnSize = {150, 100, 100};
 		
 		try {
 			// reset column 
