@@ -437,8 +437,9 @@ class MongoInfoLabelProvider extends LabelProvider implements ITableLabelProvide
 			case 2: return NumberFormatUtils.kbMbFormat(info.getSize());
 			case 3: return NumberFormatUtils.kbMbFormat(info.getStorage());
 			case 4: return NumberFormatUtils.kbMbFormat(info.getIndex());
-			case 5: return NumberFormatUtils.commaFormat(info.getAvgObj());
-			case 6: return NumberFormatUtils.commaFormat(info.getPadding());
+			case 5: return NumberFormatUtils.commaFormat(info.getLastExtentSize());
+			case 6: return NumberFormatUtils.commaFormat(info.getAvgObj());
+			case 7: return NumberFormatUtils.commaFormat(info.getPadding());
 			}
 			return "*** not set column ***"; //$NON-NLS-1$
 		} else {
@@ -452,6 +453,7 @@ class MongoInfoLabelProvider extends LabelProvider implements ITableLabelProvide
 			case 4: return ""; //$NON-NLS-1$
 			case 5: return ""; //$NON-NLS-1$
 			case 6: return ""; //$NON-NLS-1$
+			case 7: return ""; //$NON-NLS-1$
 			}			
 			return "*** not set column ***"; //$NON-NLS-1$
 		}

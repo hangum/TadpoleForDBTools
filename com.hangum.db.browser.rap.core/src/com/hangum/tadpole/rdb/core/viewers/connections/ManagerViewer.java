@@ -89,6 +89,10 @@ public class ManagerViewer extends ViewPart {
 				
 				if(selElement instanceof UserDBDAO) {
 					addUserResouceData((UserDBDAO)selElement);
+					
+					getViewSite().getActionBars().getStatusLineManager().setMessage(((UserDBDAO)selElement).getDb());
+				} else {
+					getViewSite().getActionBars().getStatusLineManager().setMessage("");
 				}
 				
 			}

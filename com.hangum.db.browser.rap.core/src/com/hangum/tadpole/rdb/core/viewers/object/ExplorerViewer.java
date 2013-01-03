@@ -231,7 +231,6 @@ public class ExplorerViewer extends ViewPart {
 
 			// 디비 선택
 			userDB = selectUserDb;
-			getViewSite().getActionBars().getStatusLineManager().setMessage(userDB.getDb());
 			
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
@@ -239,7 +238,6 @@ public class ExplorerViewer extends ViewPart {
 
 		} else {
 			userDB = null;
-			getViewSite().getActionBars().getStatusLineManager().setMessage("");
 
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
