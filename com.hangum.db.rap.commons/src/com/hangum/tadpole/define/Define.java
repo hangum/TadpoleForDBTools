@@ -46,7 +46,16 @@ public class Define {
 	public static final String SQL_DILIMITER = ";";
 	
 	/** objec explorer에서 정의한 action */
-	public static enum DB_ACTION {TABLES, VIEWS, INDEXES, PROCEDURES, FUNCTIONS, TRIGGERS};
+	public static enum DB_ACTION {
+		TABLES, 
+		VIEWS, 
+		INDEXES, 
+		PROCEDURES, 
+		FUNCTIONS, 
+		TRIGGERS,
+		COLLECTIONS,
+		JAVASCRIPT
+	};
 	
 	/** query editor에서 실행 모드 */
 	public static enum QUERY_MODE {DEFAULT, EXPLAIN_PLAN};

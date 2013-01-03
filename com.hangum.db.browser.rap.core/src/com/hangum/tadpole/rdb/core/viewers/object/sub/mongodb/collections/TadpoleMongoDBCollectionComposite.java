@@ -112,7 +112,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTable.setText("Collection"); //$NON-NLS-1$
+		tbtmTable.setText("Collections"); //$NON-NLS-1$
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
 		GridLayout gl_compositeTables = new GridLayout(1, false);
@@ -349,5 +349,10 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
 		}
+	}
+
+	public void filter(String textSearch) {
+		tableFilter.setSearchText(textSearch);
+		tableListViewer.refresh();
 	}
 }

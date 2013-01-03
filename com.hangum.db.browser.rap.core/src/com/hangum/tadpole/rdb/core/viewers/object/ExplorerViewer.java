@@ -41,6 +41,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index.TadpoleIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
@@ -82,8 +83,9 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleTableComposite 		tableCompost 		= null;
 	
 	// mongodb
-	private TadpoleMongoDBCollectionComposite collectionComposite 	= null;
-	private TadpoleMongoDBIndexesComposite mongoIndexComposite 		= null;
+	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
+	private TadpoleMongoDBIndexesComposite mongoIndexComposite 			= null;
+	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite 	= null;
 
 	public ExplorerViewer() {
 		super();
@@ -116,19 +118,36 @@ public class ExplorerViewer extends ViewPart {
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				CTabItem ti = tabFolderObject.getItem(tabFolderObject.getSelectionIndex());
-				if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.TABLES.toString())) {
-					tableCompost.filter(textSearch.getText());
-				} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.VIEWS.toString())) {
-					viewComposite.filter(textSearch.getText());
-				} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.INDEXES.toString())) {
-					indexComposite.filter(textSearch.getText());
-				} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.PROCEDURES.toString())) {
-					procedureComposite.filter(textSearch.getText());
-				} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.FUNCTIONS.toString())) {
-					functionCompostite.filter(textSearch.getText());
-				} else if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
-					triggerComposite.filter(textSearch.getText());
+				String strSelectTab = tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getText();
+				String strSearchText = textSearch.getText();
+				
+				if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.COLLECTIONS.toString())) {
+					mongoCollectionComposite.filter(strSearchText);
+				
+				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.TABLES.toString())) {
+					tableCompost.filter(strSearchText);
+				
+				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.VIEWS.toString())) {
+					viewComposite.filter(strSearchText);					
+				
+				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.INDEXES.toString())) {
+					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+						mongoIndexComposite.filter(strSearchText);
+					} else {
+						indexComposite.filter(strSearchText);
+					}					
+				
+				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.PROCEDURES.toString())) {
+					procedureComposite.filter(strSearchText);
+				
+				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.FUNCTIONS.toString())) {
+					functionCompostite.filter(strSearchText);
+				
+				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
+					triggerComposite.filter(strSearchText);
+				
+				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.JAVASCRIPT.toString())) {
+					mongoJavaScriptComposite.filter(strSearchText);
 				}
 			}
 		});
@@ -257,13 +276,15 @@ public class ExplorerViewer extends ViewPart {
 			
 			createMongoCollection();
 			createMongoIndex();
+			createMongoJavaScript();
+			
 			refreshTable(false);
 			
 			arrayStructureViewer = new StructuredViewer[] { 
-				collectionComposite.getCollectionListViewer(),
+				mongoCollectionComposite.getCollectionListViewer(),
 				mongoIndexComposite.getTableViewer()
 			};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, collectionComposite.getCollectionListViewer()));
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, mongoCollectionComposite.getCollectionListViewer()));
 
 		// cubrid, mysql, oracle, postgre, mssql
 		} else {
@@ -308,15 +329,25 @@ public class ExplorerViewer extends ViewPart {
 			refreshFunction(false);
 		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
 			refreshTrigger(false);
+		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.JAVASCRIPT.toString())) {
+			refreshSSJavaScript(false);
 		}
+	}
+	
+	/**
+	 * mongo server side javascript define
+	 */
+	private void createMongoJavaScript() {
+		mongoJavaScriptComposite = new TadpoleMongoDBJavaScriptComposite(getSite(), tabFolderObject, userDB);
+		mongoJavaScriptComposite.initAction();
 	}
 	
 	/**
 	 * mongodb collection define
 	 */
 	private void createMongoCollection() {
-		collectionComposite = new TadpoleMongoDBCollectionComposite(getSite(), tabFolderObject, userDB);
-		collectionComposite.initAction();
+		mongoCollectionComposite = new TadpoleMongoDBCollectionComposite(getSite(), tabFolderObject, userDB);
+		mongoCollectionComposite.initAction();
 		tabFolderObject.setSelection(0);
 	}
 	
@@ -421,10 +452,17 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshTable(boolean boolRefresh) {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {		
-			collectionComposite.refreshTable(userDB, boolRefresh);	
+			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
 		} else {
 			tableCompost.refreshTable(userDB, boolRefresh);
 		}		
+	}
+	
+	/**
+	 * mongodb server side javascript define
+	 */
+	private void refreshSSJavaScript(boolean boolRefresh) {
+		mongoJavaScriptComposite.refreshJavaScript(userDB, boolRefresh);
 	}
 
 	public UserDBDAO getUserDB() {

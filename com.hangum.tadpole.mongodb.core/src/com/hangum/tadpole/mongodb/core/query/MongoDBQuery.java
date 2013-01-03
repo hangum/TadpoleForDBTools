@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
@@ -26,6 +25,7 @@ import org.bson.types.ObjectId;
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
 import com.hangum.tadpole.dao.mongodb.MongoDBIndexFieldDAO;
+import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
@@ -342,6 +342,23 @@ public class MongoDBQuery {
 		}
 		
 		return listReturnIndex;
+	}
+	
+	/**
+	 * all Server Side Java Scirpt
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static List<MongoDBServerSideJavaScriptDAO> listAllJavaScript(UserDBDAO userDB) throws Exception {
+		List<MongoDBServerSideJavaScriptDAO> listReturn = new ArrayList<MongoDBServerSideJavaScriptDAO>();
+		
+		DBCursor dbCursor = findDB(userDB).getCollection("system.js").find();
+		List<DBObject> lsitCursor = dbCursor.toArray();
+		for (DBObject dbObject : lsitCursor) {
+			listReturn.add(new MongoDBServerSideJavaScriptDAO(dbObject.get("_id").toString(), dbObject.get("value").toString()));
+		}
+		
+		return listReturn;
 	}
 	
 	/**
