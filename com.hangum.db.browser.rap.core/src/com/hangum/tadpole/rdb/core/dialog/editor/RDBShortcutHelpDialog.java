@@ -42,11 +42,11 @@ import org.eclipse.swt.widgets.Label;
  * @author hangum
  *
  */
-public class ShortcutHelpDialog extends Dialog {
+public class RDBShortcutHelpDialog extends Dialog {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ShortcutHelpDialog.class);
+	private static final Logger logger = Logger.getLogger(RDBShortcutHelpDialog.class);
 
 	protected Object result;
 	protected Shell shlEditorShortcutDialog;
@@ -59,7 +59,7 @@ public class ShortcutHelpDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public ShortcutHelpDialog(Shell parent, int style) {
+	public RDBShortcutHelpDialog(Shell parent, int style) {
 		super(parent, style);
 	}
 

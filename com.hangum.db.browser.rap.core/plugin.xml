@@ -46,6 +46,13 @@
             id="com.hangum.tadpole.rdb.core.editors.table.edit"
             name="Table Data Editor">
       </editor>
+      <editor
+            class="com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor"
+            default="false"
+            icon="resources/icons/mongodb-add.png"
+            id="com.hangum.tadpole.mongodb.core.ext.editor.javascript"
+            name="Server Side Java Script">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">

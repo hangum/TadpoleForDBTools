@@ -52,14 +52,12 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -91,7 +89,7 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
-import com.hangum.tadpole.rdb.core.dialog.editor.ShortcutHelpDialog;
+import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
@@ -210,7 +208,7 @@ public class MainEditor extends EditorPart {
 	private List<TadpoleMessageDAO> listMessage = new ArrayList<TadpoleMessageDAO>();
 
 	///[browser editor]/////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static final String URL = "orion/tadpole/editor/embeddededitor.html"; //$NON-NLS-1$
+	private static final String URL = "orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
 	private Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */
 	private EditorBrowserFunctionService editorService;
@@ -384,7 +382,7 @@ public class MainEditor extends EditorPart {
 		tltmHelp.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ShortcutHelpDialog dialog = new ShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+				RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
 				dialog.open();
 			}
 		});
@@ -691,18 +689,18 @@ public class MainEditor extends EditorPart {
 		Button btnExportMessage = new Button(compositeMessageSub, SWT.NONE);
 		btnExportMessage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnExportMessage.addSelectionListener(new SelectionAdapter() {
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			StringBuffer sbExportData = new StringBuffer();
-			
-			for(TadpoleMessageDAO dao : listMessage) {
-				sbExportData.append( dao.getStrMessage() ).append(Define.LINE_SEPARATOR); //$NON-NLS-1$
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				StringBuffer sbExportData = new StringBuffer();
+				
+				for(TadpoleMessageDAO dao : listMessage) {
+					sbExportData.append( dao.getStrMessage() ).append(Define.LINE_SEPARATOR); //$NON-NLS-1$
+				}
+				
+				downloadServiceHandler.setName(userDB.getDisplay_name() + "_Message.txt"); //$NON-NLS-1$
+				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
+				DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
 			}
-			
-			downloadServiceHandler.setName(userDB.getDisplay_name() + "_Message.txt"); //$NON-NLS-1$
-			downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
-			DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
-		}
 		});
 		btnExportMessage.setText(Messages.MainEditor_43);
 		/////////////////////// end tap item /////////////////////////////////////////////

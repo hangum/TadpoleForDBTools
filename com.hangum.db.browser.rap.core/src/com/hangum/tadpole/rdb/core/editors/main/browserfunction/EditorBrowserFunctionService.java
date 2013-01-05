@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.define.Define;
-import com.hangum.tadpole.rdb.core.dialog.editor.ShortcutHelpDialog;
+import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.util.browserFunction.IEditorBrowserFunction;
@@ -286,7 +286,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 	 * help popup
 	 */
 	private void helpPopup() {
-		ShortcutHelpDialog dialog = new ShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+		RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
 		dialog.open();
 	}
 }

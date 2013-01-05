@@ -301,6 +301,10 @@ public class Messages extends NLS {
 	public static String SQLToStringDialog_lblVariable_text;
 	public static String SQLToStringDialog_btnNewButton_text;
 	public static String OracleLoginComposite_lblDatabase_text;
+	public static String ServerSideJavaScriptEditor_tbtmResult_text;
+	public static String ServerSideJavaScriptEditor_tbtmResult_text_1;
+	public static String ServerSideJavaScriptEditor_tbtmUserJavascript_text;
+	public static String ServerSideJavaScriptEditor_tbtmTadpoleMessage_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

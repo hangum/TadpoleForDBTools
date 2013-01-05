@@ -39,8 +39,11 @@ public class MongoTestServerSideJavascript {
 		createServerSideJavaScript(db);
 		findAllServerSideJavaScript(db);
 		
-		Object[] arryArgs ={25, 34};
-		evalServerSideJavaScript(db, "addNumbers", arryArgs);
+//		Object[] arryArgs ={25, 34};
+//		evalServerSideJavaScript(db, "addNumbers", arryArgs);
+		
+		String[] arrayString = {"store"};
+		evalServerSideJavaScript(db, "findCollection", arrayString);
 		
 		mongo.close();
 		
@@ -57,8 +60,8 @@ public class MongoTestServerSideJavascript {
 //		DBObject dbObject = (DBObject) JSON.parse("{'_id':'addNumbers', 'value':'function(x, y){ return x + y; }'}");
 //		db.getCollection("system.js").save(dbObject);
 		
-		DBObject dbObject = (DBObject) JSON.parse("{'_id':'addNumbers2', 'value':'function(x, y){ return x + y; }'}");
-		db.getCollection("system.js").save(dbObject);
+//		DBObject dbObject = (DBObject) JSON.parse("{'_id':'addNumbers2', 'value':'function(x, y){ return x + y; }'}");
+//		db.getCollection("system.js").save(dbObject);	
 	}
 	
 	/**
@@ -97,8 +100,8 @@ public class MongoTestServerSideJavascript {
 	 * @param arryArgs
 	 */
 	private static void evalServerSideJavaScript(DB db, String name, Object[] arryArgs) {
-		Object obj = db.eval(findServerSideJavaScript(db, name), arryArgs);
-		System.out.println("[result]\t" + obj);
+		Object dbObject = db.eval(findServerSideJavaScript(db, name), arryArgs);
+		System.out.println("[result]\t" + dbObject);
 	}
 
 }
