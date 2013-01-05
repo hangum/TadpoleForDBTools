@@ -19,9 +19,10 @@ Bundle-ClassPath: libs/commons-dbcp-1.2.2.jar,
  libs/postgreSQL/postgresql-9.1-902.jdbc4.jar,
  .,
  libs/jasypt-1.7.1.jar,
- libs/mongodb/mongo-2.9.3.jar,
- libs/mysql/mysql-connector-java-5.1.22-bin.jar
+ libs/mysql/mysql-connector-java-5.1.22-bin.jar,
+ libs/mongodb/mongo-2.10.1.jar
 Export-Package: .,
+ com.hangum.tadpold.commons.libs.core.browser,
  com.hangum.tadpold.commons.libs.core.define,
  com.hangum.tadpole.db.db2,
  com.mongodb,
