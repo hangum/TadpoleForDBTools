@@ -47,7 +47,7 @@ public class SQLToStringDialog extends Dialog {
 	private String languageType = ""; //$NON-NLS-1$
 	private String sql = ""; //$NON-NLS-1$
 	
-	Text textConvert;
+	private Text textConvert;
 	private Text textVariable;
 
 	/**

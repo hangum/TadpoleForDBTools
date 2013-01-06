@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.ext.editors.javascript;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rwt.RWT;
@@ -32,6 +34,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
@@ -44,10 +47,12 @@ import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
+import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
+import com.hangum.tadpole.rdb.core.dialog.editor.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.editors.main.FileNameValidator;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -55,7 +60,6 @@ import com.hangum.tadpole.util.RequestInfoUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
 import com.swtdesigner.ResourceManager;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * MongoDB ServerSide Java Script editor
@@ -99,7 +103,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if(javascriptDAO == null) {
-			FileNameValidator fv = new FileNameValidator(userDB);
+			MongoJSNameValidator fv = new MongoJSNameValidator(userDB);
 			InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", Messages.MainEditor_68, userDB.getDisplay_name(), fv); //$NON-NLS-1$
 			if (dlg.open() == Window.OK) {
 				save_id = fv.getFileName();
@@ -257,28 +261,27 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_DOWNLOAD_SQL);
 			}
 		});
-		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
+		tltmDownload.setToolTipText("Download JavaScript"); //$NON-NLS-1$
 		
-//		new ToolItem(toolBar, SWT.SEPARATOR);
-//		
-//		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
-//		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
-//		tltmHelp.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
-//				dialog.open();
-//			}
-//		});
-//		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
+		new ToolItem(toolBar, SWT.SEPARATOR);
 		
-		browserQueryEditor = new Browser(compositeBody, SWT.NONE);
+		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
+		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
+		tltmHelp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MongoDBShortcutHelpDialog dialog = new MongoDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+				dialog.open();
+			}
+		});
+		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
+		
+		browserQueryEditor = new Browser(compositeBody, SWT.BORDER);
 		browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		browserQueryEditor.setUrl(URL);
 		
 		compositeDumy = new Composite(compositeBody, SWT.NONE);
 		compositeDumy.setLayout(new GridLayout(1, false));
-//		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		addBrowserHandler();
 		
@@ -432,15 +435,26 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	}
 
 	/**
-	 * execute eval 
+	 * execute javascript eval 
 	 * 
-	 * @param queryStruct
+	 * @param strJavaScript
 	 */
-	public void executeEval(String queryStruct) {
-		Object[] arryArgs ={25, 34};
+	public void executeEval(String strJavaScript) {
+		Object[] arryArgs = null;//{25, 34};
+		logger.debug("[original javascript]" + strJavaScript);
+		
+		// argument 갯수를 입력받기 
+		String strArgument = StringUtils.substringBetween(strJavaScript, "function", "{");
+		if(strArgument != null) {
+			int intArgumentCount = StringUtils.countMatches(strArgument, ",")+1;
+			EvalInputDialog dialog = new EvalInputDialog(getSite().getShell(), intArgumentCount);
+			if(Dialog.OK == dialog.open()) {
+				arryArgs = dialog.getInputObject();
+			}
+		}
+		
 		try {
-			Object objResult = MongoDBQuery.executeEval(getUserDB(), queryStruct, arryArgs);
-			
+			Object objResult = MongoDBQuery.executeEval(getUserDB(), strJavaScript, arryArgs);			
 			textResultJavaScript.setText(objResult.toString());
 		} catch (Exception e) {
 			textResultJavaScript.setText("");

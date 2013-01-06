@@ -33,17 +33,17 @@ public class MongoDBShortcutHelpDialog extends RDBShortcutHelpDialog {
 	public MongoDBShortcutHelpDialog(Shell parent, int style) {
 		super(parent, style);
 	}
+	
+	public void createContents() {
+		super.createContents();
+		initData();
+	}
 
 	/**
 	 * 단축키 데이터
 	 */
 	private void initData() {
-//		listShortcut.add( new ShortcutHelpDAO("Save", 			"Ctrl + S") 		);
-//		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"Ctrl + enter") 	);
-//		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"F5") 				);
-//		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	"Ctrl + E") 		);
-//		listShortcut.add( new ShortcutHelpDAO("Query Format", 	"Ctrl + Shift + F") );
-//		listShortcut.add( new ShortcutHelpDAO("Query History", 	"Ctrl + H") 		);
+		listShortcut.clear();
 		
 		listShortcut.add( new ShortcutHelpDAO("To Lower case", 	"Ctrl + Shift + Y") );
 		listShortcut.add( new ShortcutHelpDAO("To Upper case", 	"Ctrl + Shift + X") );

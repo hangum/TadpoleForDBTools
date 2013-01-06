@@ -173,10 +173,6 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 		
 		return newContents;
 	}
-	
-//	private String appendQueryText(Object[] arguments) {
-//		return "";//editor.getAppendQueryText();
-//	}
 
 	/**
 	 * download sql

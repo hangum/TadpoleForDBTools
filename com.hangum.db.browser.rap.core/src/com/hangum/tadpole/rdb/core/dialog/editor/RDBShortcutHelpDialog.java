@@ -82,7 +82,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
+	public void createContents() {
 		shlEditorShortcutDialog = new Shell(getParent(), SWT.CLOSE | SWT.APPLICATION_MODAL);
 		shlEditorShortcutDialog.setSize(240, 300);
 //		shlEditorShortcutDialog.setText("Editor Shortcut Dialog");

@@ -305,7 +305,6 @@ public class Messages extends NLS {
 	public static String ServerSideJavaScriptEditor_tbtmResult_text_1;
 	public static String ServerSideJavaScriptEditor_tbtmUserJavascript_text;
 	public static String ServerSideJavaScriptEditor_tbtmTadpoleMessage_text;
-	public static String ServerSideJavaScriptEditor_text_text;
 	public static String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text;
 	public static String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1;
 	static {
