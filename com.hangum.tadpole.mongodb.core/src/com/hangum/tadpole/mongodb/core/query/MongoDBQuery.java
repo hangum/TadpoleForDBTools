@@ -389,6 +389,18 @@ public class MongoDBQuery {
 	}
 	
 	/**
+	 * remove javascript
+	 * 
+	 * @param userDB
+	 * @param _id
+	 * @throws Exception
+	 */
+	public static void deleteJavaScirpt(UserDBDAO userDB, String _id) throws Exception {
+		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + _id + "'}");
+		findDB(userDB).getCollection("system.js").remove(dbFindObject);
+	}
+	
+	/**
 	 * execute eval
 	 * 
 	 * @param userDB

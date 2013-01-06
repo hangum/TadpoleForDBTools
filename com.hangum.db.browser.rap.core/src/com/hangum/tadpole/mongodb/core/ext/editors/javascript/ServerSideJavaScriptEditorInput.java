@@ -32,6 +32,10 @@ public class ServerSideJavaScriptEditorInput implements IEditorInput {
 		this.javascriptDAO = mjsDAO;
 	}
 
+	public ServerSideJavaScriptEditorInput(UserDBDAO userDB) {
+		this.userDB = userDB;
+	}
+
 	@Override
 	public Object getAdapter(Class adapter) {
 		return null;

@@ -114,6 +114,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 		ExplorerViewer ev = getExplorerView();
 		if(ev != null) ev.refreshTrigger(true);		
 	}
+	
+	/**
+	 * mongodb javascript 최신정보로 갱신
+	 */
+	protected void refreshJS() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshJS(true);
+	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {

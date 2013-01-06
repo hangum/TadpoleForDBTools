@@ -175,6 +175,7 @@ public class Messages extends NLS {
 	public static String ObjectDeleteAction_39;
 	public static String ObjectDeleteAction_4;
 	public static String ObjectDeleteAction_40;
+	public static String ObjectDeleteAction_42;
 	public static String ObjectDeleteAction_5;
 	public static String ObjectDeleteAction_6;
 	public static String ObjectDeleteAction_7;

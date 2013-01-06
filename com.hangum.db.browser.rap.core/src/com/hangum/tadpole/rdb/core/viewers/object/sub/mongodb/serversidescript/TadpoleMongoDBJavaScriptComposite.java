@@ -15,12 +15,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -30,6 +31,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -38,12 +40,16 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditorInput;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
@@ -66,9 +72,9 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	private MongoJavaScriptViewFilter javascriptFilter;
 	
 
-////	private ObjectCreatAction creatAction_Index;
-//	private ObjectDeleteAction deleteAction_Index;
-//	private ObjectRefreshAction refreshAction_Index;
+	private ObjectCreatAction creatActionJS;
+	private ObjectDeleteAction deleteActionJS;
+	private ObjectRefreshAction refreshActionJS;
 
 	/**
 	 * ServerSide JavaScirpt
@@ -115,10 +121,10 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 						page.openEditor(input, ServerSideJavaScriptEditor.ID);
 						
 					} catch (PartInitException e) {
-						logger.error("Mongodb gridfs", e);
+						logger.error("Mongodb javascirpt", e);
 						
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(null, "Error", "GridFS Open Exception", errStatus); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(null, "Error", "JavaScript Open Exception", errStatus); //$NON-NLS-1$
 					}
 
 				} catch (Exception e) {
@@ -169,38 +175,38 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-////		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-//		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-//		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-//
-//		// menu
-//		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-//		menuMgr.setRemoveAllWhenShown(true);
-//		menuMgr.addMenuListener(new IMenuListener() {
-//			@Override
-//			public void menuAboutToShow(IMenuManager manager) {
-////				manager.add(creatAction_Index);
-//				manager.add(deleteAction_Index);
-//				manager.add(refreshAction_Index);
-//			}
-//		});
-//
-//		Menu popupMenu = menuMgr.createContextMenu(tableViewer.getTable());
-//		tableViewer.getTable().setMenu(popupMenu);
-//		getSite().registerContextMenu(menuMgr, tableViewer);
+		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
+		deleteActionJS = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
+		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
+
+		// menu
+		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				manager.add(creatActionJS);
+				manager.add(deleteActionJS);
+				manager.add(refreshActionJS);
+			}
+		});
+
+		Menu popupMenu = menuMgr.createContextMenu(tableViewer.getTable());
+		tableViewer.getTable().setMenu(popupMenu);
+		getSite().registerContextMenu(menuMgr, tableViewer);
 	}
 
 	/**
 	 * init action
 	 */
 	public void initAction() {
-//		if (listIndexes != null) listIndexes.clear();
-//		tableViewer.setInput(listIndexes);
-//		tableViewer.refresh();
-//
-////		creatAction_Index.setUserDB(getUserDB());
-//		deleteAction_Index.setUserDB(getUserDB());
-//		refreshAction_Index.setUserDB(getUserDB());
+		if (listJavaScript != null) listJavaScript.clear();
+		tableViewer.setInput(listJavaScript);
+		tableViewer.refresh();
+
+		creatActionJS.setUserDB(getUserDB());
+		deleteActionJS.setUserDB(getUserDB());
+		refreshActionJS.setUserDB(getUserDB());
 	}
 	
 	/**

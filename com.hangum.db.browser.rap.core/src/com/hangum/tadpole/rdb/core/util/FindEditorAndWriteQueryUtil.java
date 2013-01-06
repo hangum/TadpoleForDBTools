@@ -14,11 +14,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
+import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
@@ -45,41 +49,53 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param lowSQL
 	 */
 	public static void run(UserDBDAO userDB, String lowSQL) {
-		IEditorReference reference = EditorUtils.findSQLEditor(userDB);
 		
-		try {
-			lowSQL = FormatSQL.format(lowSQL);
-		} catch(Exception e) {}
-		
-		if(reference == null) {
-			
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 			try {
-				MainEditorInput mei = new MainEditorInput(userDB, lowSQL);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);
+				ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB);
+				page.openEditor(input, ServerSideJavaScriptEditor.ID);
+				
 			} catch (PartInitException e) {
-				logger.error("new editor open", e); //$NON-NLS-1$
+				logger.error("Mongodb javascirpt", e);
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "GridFS Open Exception", errStatus); //$NON-NLS-1$
 			}
-			
 		} else {
+			IEditorReference reference = EditorUtils.findSQLEditor(userDB);
 			
 			try {
-				MainEditor editor = (MainEditor)reference.getEditor(false);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
-				
-				editor.setAppendQueryText(lowSQL); //$NON-NLS-1$
-				editor.browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
-				
-			} catch (Exception e) {
-				logger.error("find editor open", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
-			}
+				lowSQL = FormatSQL.format(lowSQL);
+			} catch(Exception e) {}
 			
-		}
-	}
+			if(reference == null) {				
+				try {
+					MainEditorInput mei = new MainEditorInput(userDB, lowSQL);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);
+				} catch (PartInitException e) {
+					logger.error("new editor open", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				}				
+			} else {				
+				try {
+					MainEditor editor = (MainEditor)reference.getEditor(false);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
+					
+					editor.setAppendQueryText(lowSQL); //$NON-NLS-1$
+					editor.browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+					
+				} catch (Exception e) {
+					logger.error("find editor open", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				}
+				
+			}	// end reference
+		}	// end db
+	}	// end method
 	
 }

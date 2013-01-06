@@ -53,8 +53,9 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.editor.MongoDBShortcutHelpDialog;
-import com.hangum.tadpole.rdb.core.editors.main.FileNameValidator;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
+import com.hangum.tadpole.rdb.core.util.FindTadpoleViewerOrEditor;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.util.RequestInfoUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
@@ -80,7 +81,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	/** save field */
 	private boolean isFirstLoad = false;
 	private boolean isDirty = false;
-
+	
 	private static final String URL = "orion/tadpole/editor/mongoDBEmbeddededitor.html"; //$NON-NLS-1$
 	private Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */
@@ -140,7 +141,10 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			MongoDBServerSideJavaScriptDAO javaScriptDAO = new MongoDBServerSideJavaScriptDAO(save_id, newContents);
 			try {
 				MongoDBQuery.insertJavaScript(userDB, javaScriptDAO);
+				
+				setPartName(save_id);
 				setDirty(false);
+				
 			} catch(Exception e) {
 				logger.error("save javascript", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -152,6 +156,10 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			try {
 				MongoDBQuery.updateJavaScript(userDB, javascriptDAO.getName(), newContents);
 				setDirty(false);
+				
+				// explorer refresh합니다.
+				ExplorerViewer ev = FindTadpoleViewerOrEditor.getExplorerView(userDB);
+				if(ev != null) ev.refreshJS(true);
 			} catch(Exception e) {
 				logger.error("save javascript", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -371,6 +379,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 * @return
 	 */
 	public String getInputJavaScriptName() {
+		if(javascriptDAO == null) return "";
 		return javascriptDAO.getName();
 	}
 
@@ -379,6 +388,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 * @return
 	 */
 	public String getInputJavaScriptContent() {
+		if(javascriptDAO == null) return "";
 		return javascriptDAO.getContent();
 	}
 

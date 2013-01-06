@@ -44,8 +44,6 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText("Create " + title);
-		
-//		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override
@@ -80,6 +78,8 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		} else if(actionType == DB_ACTION.TRIGGERS) {
 			CreateTriggerAction cia = new CreateTriggerAction();
 			cia.run(userDB, actionType);
+		} else if(actionType == DB_ACTION.JAVASCRIPT) {
+			
 		}
 	}
 	

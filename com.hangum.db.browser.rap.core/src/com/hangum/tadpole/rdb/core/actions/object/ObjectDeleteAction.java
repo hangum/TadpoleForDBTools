@@ -21,6 +21,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
@@ -52,9 +53,6 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 		
 		setId(ID + actionType);
 		setText("Drop " + title); //$NON-NLS-1$
-//		setEnabled(false);
-		
-//		window.getSelectionService().addSelectionListener(this);
 	}
 	
 	@Override
@@ -63,7 +61,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 	
 		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {			
 			if(userDB != null) {
-				if(selection instanceof IStructuredSelection && !selection.isEmpty()) setEnabled(this.sel.size() > 0);
+				if(selection instanceof IStructuredSelection && !selection.isEmpty()) setEnabled(true);
 				else setEnabled(false);
 			} else setEnabled(false);
 		}
@@ -128,7 +126,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 				}
 			} else {
 				MongoDBIndexDAO indexDAO = (MongoDBIndexDAO)sel.getFirstElement();
-				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_14, indexDAO.getNs() + " [ " + indexDAO.getName() + "] " + Messages.ObjectDeleteAction_16)) {
+				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_14, indexDAO.getNs() + " [ " + indexDAO.getName() + "] " + Messages.ObjectDeleteAction_16)) { //$NON-NLS-1$ //$NON-NLS-2$
 					try {
 						MongoDBQuery.dropIndex(getUserDB(), indexDAO.getNs(), indexDAO.getName());
 						refreshIndexes();
@@ -172,6 +170,17 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 				} catch(Exception e) {
 					logger.error(Messages.ObjectDeleteAction_38, e);
 					exeMessage(Messages.ObjectDeleteAction_18, e);
+				}
+			}
+		} else if(actionType == DB_ACTION.JAVASCRIPT) {
+			MongoDBServerSideJavaScriptDAO jsDAO = (MongoDBServerSideJavaScriptDAO)sel.getFirstElement();
+			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_35,  jsDAO.getName() + Messages.ObjectDeleteAction_42)) {
+				try {
+					MongoDBQuery.deleteJavaScirpt(userDB, jsDAO.getName());					
+					refreshJS();
+				} catch(Exception e) {
+					logger.error("MongoDB ServerSide JavaScript delelte", e); //$NON-NLS-1$
+					exeMessage("JavaScript", e); //$NON-NLS-1$
 				}
 			}
 		}

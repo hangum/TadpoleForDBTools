@@ -280,7 +280,8 @@ public class ExplorerViewer extends ViewPart {
 			
 			arrayStructureViewer = new StructuredViewer[] { 
 				mongoCollectionComposite.getCollectionListViewer(),
-				mongoIndexComposite.getTableViewer()
+				mongoIndexComposite.getTableViewer(),
+				mongoJavaScriptComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, mongoCollectionComposite.getCollectionListViewer()));
 
@@ -328,7 +329,7 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
 			refreshTrigger(false);
 		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.JAVASCRIPT.toString())) {
-			refreshSSJavaScript(false);
+			refreshJS(false);
 		}
 	}
 	
@@ -459,7 +460,7 @@ public class ExplorerViewer extends ViewPart {
 	/**
 	 * mongodb server side javascript define
 	 */
-	private void refreshSSJavaScript(boolean boolRefresh) {
+	public void refreshJS(boolean boolRefresh) {
 		mongoJavaScriptComposite.refreshJavaScript(userDB, boolRefresh);
 	}
 

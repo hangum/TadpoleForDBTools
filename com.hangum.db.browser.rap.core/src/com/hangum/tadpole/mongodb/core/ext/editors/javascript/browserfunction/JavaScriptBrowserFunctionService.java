@@ -84,6 +84,9 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	}
 	
 	private Object doGetInitialContent(Object[] arguments) {
+		if("".equals(editor.getInputJavaScriptName())) {
+			return "mongojavascript.js"+ ":ext:";
+		}
 		return editor.getInputJavaScriptName() + ".js" + ":ext:" + editor.getInputJavaScriptContent();
 	}
 	
