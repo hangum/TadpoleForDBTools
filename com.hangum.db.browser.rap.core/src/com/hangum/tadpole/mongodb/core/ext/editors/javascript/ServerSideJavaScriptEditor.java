@@ -12,10 +12,13 @@ package com.hangum.tadpole.mongodb.core.ext.editors.javascript;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.swt.browser.ProgressEvent;
@@ -29,10 +32,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -41,17 +42,20 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
-import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
+import com.hangum.tadpole.rdb.core.editors.main.FileNameValidator;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.util.RequestInfoUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
 import com.swtdesigner.ResourceManager;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * MongoDB ServerSide Java Script editor
@@ -68,19 +72,25 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	
 	private UserDBDAO userDB;
 	private MongoDBServerSideJavaScriptDAO javascriptDAO;
+	
+	/** save field */
+	private boolean isFirstLoad = false;
+	private boolean isDirty = false;
 
 	private static final String URL = "orion/tadpole/editor/mongoDBEmbeddededitor.html"; //$NON-NLS-1$
 	private Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */
 	private JavaScriptBrowserFunctionService editorService;
-	private Table tableUserJavascript;
-	private Table tableTadpoleMessage;
 	
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
 	
 	/** content download를 위한 더미 composite */
     private Composite compositeDumy;
+	private String save_id;
+	private Text textResultJavaScript;
+	
+	private CTabFolder tabFolder;
 	
 	public ServerSideJavaScriptEditor() {
 		super();
@@ -88,6 +98,65 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
+		if(javascriptDAO == null) {
+			FileNameValidator fv = new FileNameValidator(userDB);
+			InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", Messages.MainEditor_68, userDB.getDisplay_name(), fv); //$NON-NLS-1$
+			if (dlg.open() == Window.OK) {
+				save_id = fv.getFileName();
+			}
+		}
+	
+		if(!"".equals(save_id)) {
+			try {
+				Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
+				if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
+					monitor.setCanceled(true);
+				}
+			} catch(SWTException e) {
+				logger.error(RequestInfoUtils.requestInfo("doSave exception", SessionManager.getEMAIL()), e); //$NON-NLS-1$
+				monitor.setCanceled(true);
+			}
+		}		
+	}
+	
+	public boolean performSaveS(String newContents) {
+		if(javascriptDAO != null) {
+			return performSave(newContents);
+		}
+		return false;
+	}
+	
+	/**
+	 * 실제 저장
+	 * @param newContents
+	 * @return
+	 */
+	public boolean performSave(String newContents) {
+		if(javascriptDAO == null) {
+			MongoDBServerSideJavaScriptDAO javaScriptDAO = new MongoDBServerSideJavaScriptDAO(save_id, newContents);
+			try {
+				MongoDBQuery.insertJavaScript(userDB, javaScriptDAO);
+				setDirty(false);
+			} catch(Exception e) {
+				logger.error("save javascript", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
+		} else {
+			try {
+				MongoDBQuery.updateJavaScript(userDB, javascriptDAO.getName(), newContents);
+				setDirty(false);
+			} catch(Exception e) {
+				logger.error("save javascript", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -103,15 +172,16 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		this.userDB = qei.getUserDB();
 		this.javascriptDAO = qei.getJavascriptDAO();
 		if(this.javascriptDAO != null) {
+			isFirstLoad = true;
 			setPartName(this.javascriptDAO.getName());
 		}
 	}
-
+	
 	@Override
 	public boolean isDirty() {
-		return false;
+		return isDirty;
 	}
-
+	
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
@@ -161,7 +231,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
+				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
 			}
 		});
 		
@@ -172,7 +242,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 //		tltmSort.addSelectionListener(new SelectionAdapter() {
 //			@Override
 //			public void widgetSelected(SelectionEvent e) {
-//				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
+//				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
 //			}
 //		});
 //		tltmSort.setToolTipText(Messages.MainEditor_4);
@@ -184,68 +254,56 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		tltmDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				browserEvaluate(EditorBrowserFunctionService.JAVA_DOWNLOAD_SQL);
+				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_DOWNLOAD_SQL);
 			}
 		});
 		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
 		
-		new ToolItem(toolBar, SWT.SEPARATOR);
-		
-		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
-		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
-		tltmHelp.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
-				dialog.open();
-			}
-		});
-		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
+//		new ToolItem(toolBar, SWT.SEPARATOR);
+//		
+//		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
+//		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
+//		tltmHelp.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+//				dialog.open();
+//			}
+//		});
+//		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
 		
 		browserQueryEditor = new Browser(compositeBody, SWT.NONE);
 		browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		browserQueryEditor.setUrl(URL);
 		
-		Composite composite = new Composite(compositeBody, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
+		compositeDumy = new Composite(compositeBody, SWT.NONE);
+		compositeDumy.setLayout(new GridLayout(1, false));
+//		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		
 		addBrowserHandler();
 		
 		Composite compositeTail = new Composite(sashForm, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeTail.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeTail = new GridLayout(1, false);
+		gl_compositeTail.verticalSpacing = 1;
+		gl_compositeTail.horizontalSpacing = 1;
+		gl_compositeTail.marginHeight = 1;
+		gl_compositeTail.marginWidth = 1;
+		compositeTail.setLayout(gl_compositeTail);
 		
-		CTabFolder tabFolder = new CTabFolder(compositeTail, SWT.BORDER);
+		tabFolder = new CTabFolder(compositeTail, SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		
-		CTabItem tbtmResult = new CTabItem(tabFolder, SWT.NONE);
-		tbtmResult.setText(Messages.ServerSideJavaScriptEditor_tbtmResult_text_1);
+		CTabItem tbtmEvalJavaScript = new CTabItem(tabFolder, SWT.NONE);
+		tbtmEvalJavaScript.setText(Messages.ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1);
 		
-		TreeViewer treeViewerResult = new TreeViewer(tabFolder, SWT.BORDER);
-		Tree tree = treeViewerResult.getTree();
-		tree.setHeaderVisible(true);
-		tree.setLinesVisible(true);
-		tbtmResult.setControl(tree);
-		
-		CTabItem tbtmUserJavascript = new CTabItem(tabFolder, SWT.NONE);
-		tbtmUserJavascript.setText(Messages.ServerSideJavaScriptEditor_tbtmUserJavascript_text);
-		
-		TableViewer tableViewerUserJavaScript = new TableViewer(tabFolder, SWT.BORDER | SWT.FULL_SELECTION);
-		tableUserJavascript = tableViewerUserJavaScript.getTable();
-		tableUserJavascript.setHeaderVisible(true);
-		tableUserJavascript.setLinesVisible(true);
-		tbtmUserJavascript.setControl(tableUserJavascript);
-		
-		CTabItem tbtmTadpoleMessage = new CTabItem(tabFolder, SWT.NONE);
-		tbtmTadpoleMessage.setText(Messages.ServerSideJavaScriptEditor_tbtmTadpoleMessage_text);
-		
-		TableViewer tableViewerTadpoleMessage = new TableViewer(tabFolder, SWT.BORDER | SWT.FULL_SELECTION);
-		tableTadpoleMessage = tableViewerTadpoleMessage.getTable();
-		tableTadpoleMessage.setHeaderVisible(true);
-		tableTadpoleMessage.setLinesVisible(true);
-		tbtmTadpoleMessage.setControl(tableTadpoleMessage);
+		textResultJavaScript = new Text(tabFolder, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		tbtmEvalJavaScript.setControl(textResultJavaScript);
 
-		sashForm.setWeights(new int[] {65, 35});
+		sashForm.setWeights(new int[] {7, 3});
+		
+		initEditor();
 	}
 
 	/**
@@ -324,13 +382,22 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	/**
 	 * download javascript
 	 * 
-	 * @param string
+	 * @param fileName
+	 * @param newContents
 	 */
-	public void downloadJavaScript(String newContents) {
-		downloadServiceHandler.setName(userDB.getDisplay_name() + ".sql"); //$NON-NLS-1$
+	public void downloadJavaScript(String fileName, String newContents) {
+		downloadServiceHandler.setName(fileName); //$NON-NLS-1$
 		downloadServiceHandler.setByteContent(newContents.getBytes());
 		
 		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
+	}
+	
+	/**
+	 * 데이터 초기화 합니다.
+	 */
+	private void initEditor() {
+		registerServiceHandler();
+		tabFolder.setSelection(0);		
 	}
 	
 	/** registery service handler */
@@ -344,5 +411,43 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
 		downloadServiceHandler = null;
 	}
+	
+	public UserDBDAO getUserDB() {
+		return userDB;
+	}
 
+	/**
+	 * save property change
+	 * @param boolean1
+	 */
+	public void setDirty(Boolean boolean1) {
+		if(!isFirstLoad) {
+			if(isDirty != boolean1) {
+				isDirty = boolean1;
+				firePropertyChange(PROP_DIRTY);
+			}
+		}
+		
+		isFirstLoad = false;
+	}
+
+	/**
+	 * execute eval 
+	 * 
+	 * @param queryStruct
+	 */
+	public void executeEval(String queryStruct) {
+		Object[] arryArgs ={25, 34};
+		try {
+			Object objResult = MongoDBQuery.executeEval(getUserDB(), queryStruct, arryArgs);
+			
+			textResultJavaScript.setText(objResult.toString());
+		} catch (Exception e) {
+			textResultJavaScript.setText("");
+			logger.error("execute javascript", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+		}
+				
+	}
 }

@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * sql editor 단축키 도움말.
@@ -51,8 +50,8 @@ public class RDBShortcutHelpDialog extends Dialog {
 	protected Object result;
 	protected Shell shlEditorShortcutDialog;
 	
-	private TableViewer tableViewer;
-	private List<ShortcutHelpDAO> listShortcut = new ArrayList<ShortcutHelpDAO>();
+	protected TableViewer tableViewer;
+	protected List<ShortcutHelpDAO> listShortcut = new ArrayList<ShortcutHelpDAO>();
 
 	/**
 	 * Create the dialog.

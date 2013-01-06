@@ -271,7 +271,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String newContents = (String) arguments[1];
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
-			editor.downloadSQL(queryStruct[1]);
+			editor.downloadExtFile(editor.getUserDB().getDisplay_name()+".sql", queryStruct[1]);
 		}
 	}
 	

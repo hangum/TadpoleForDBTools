@@ -37,13 +37,11 @@ public class MongoTestServerSideJavascript {
 		DB db = mongo.getDB("test");
 		
 		createServerSideJavaScript(db);
+		updateServerSideJavaScript(db, "addNumbers", "update java script");
 		findAllServerSideJavaScript(db);
 		
-//		Object[] arryArgs ={25, 34};
-//		evalServerSideJavaScript(db, "addNumbers", arryArgs);
-		
-		String[] arrayString = {"store"};
-		evalServerSideJavaScript(db, "findCollection", arrayString);
+		Object[] arryArgs ={25, 34};
+		evalServerSideJavaScript(db, "addNumbers2", arryArgs);
 		
 		mongo.close();
 		
@@ -62,6 +60,21 @@ public class MongoTestServerSideJavascript {
 		
 //		DBObject dbObject = (DBObject) JSON.parse("{'_id':'addNumbers2', 'value':'function(x, y){ return x + y; }'}");
 //		db.getCollection("system.js").save(dbObject);	
+	}
+	
+	/**
+	 * update java script
+	 * 
+	 * @param db
+	 * @param id
+	 * @param content
+	 */
+	private static void updateServerSideJavaScript(DB db, String id, String content) {
+		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + id + "'}");
+		DBObject dbUpdateObject = (DBObject) JSON.parse("{'_id':'" + id + "', 'value':'" + content +"'}");
+		
+		db.getCollection("system.js").findAndModify(dbFindObject, dbUpdateObject);
+		
 	}
 	
 	/**

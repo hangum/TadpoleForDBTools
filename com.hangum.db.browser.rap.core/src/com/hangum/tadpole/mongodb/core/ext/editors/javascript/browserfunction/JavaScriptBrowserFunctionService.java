@@ -17,7 +17,7 @@ import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
-import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
+import com.hangum.tadpole.rdb.core.dialog.editor.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.util.JSONUtil;
 
 /**
@@ -68,9 +68,6 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 				doExecuteQuery(arguments);
 				break;
 				
-			case EXECUTE_FORMAT:
-				return doExecuteFormat(arguments);
-				
 			case DOWNLOAD_SQL:
 				downloadJavaScript(arguments);
 				break;
@@ -87,7 +84,7 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	}
 	
 	private Object doGetInitialContent(Object[] arguments) {
-		return editor.getInputJavaScriptName() + ".json" + ":ext:" + editor.getInputJavaScriptContent();
+		return editor.getInputJavaScriptName() + ".js" + ":ext:" + editor.getInputJavaScriptContent();
 	}
 	
 //	private Object doGetContentName(Object[] arguments) {
@@ -128,52 +125,47 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 //
 	private Object doSave(Object[] arguments) {
 		boolean result = false;
-//		if (arguments.length == 2 && (arguments[1] instanceof String)) {
-//			String newContents = (String) arguments[1];
-//			result = editor.performSave(newContents);
-//		}
+		if (arguments.length == 2 && (arguments[1] instanceof String)) {
+			String newContents = (String) arguments[1];
+			result = editor.performSave(newContents);
+		}
 		
 		return result;
 	}
 	
 	private Object doSaveS(Object[] arguments) {
 		boolean result = false;
-//		if (arguments.length == 2 && (arguments[1] instanceof String)) {
-//			String newContents = (String) arguments[1];
-//			result = editor.performSaveS(newContents);
-//		}
+		if (arguments.length == 2 && (arguments[1] instanceof String)) {
+			String newContents = (String) arguments[1];
+			result = editor.performSaveS(newContents);
+		}
 		
 		return result;
 	}
 //
 	private Object doDirtyChanged(Object[] arguments) {
-//		if (arguments.length == 2 && (arguments[1] instanceof Boolean)) {
-//			editor.setDirty((Boolean) arguments[1]);
-//		}
+		if (arguments.length == 2 && (arguments[1] instanceof Boolean)) {
+			editor.setDirty((Boolean) arguments[1]);
+		}
 		
 		return editor.isDirty();
 	}
 	
 	private void doExecuteQuery(Object[] arguments) {
 		
-//		if (arguments.length == 2 && (arguments[1] instanceof String)) {
-//			String newContents = (String) arguments[1];
-//			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
-//			
-//			editor.setOrionText(queryStruct[1]);
-//			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
-//			
-//			editor.executeCommand(Define.QUERY_MODE.DEFAULT);
-//		}
+		if (arguments.length == 2 && (arguments[1] instanceof String)) {
+			String newContents = (String) arguments[1];
+			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
+			
+			editor.executeEval(queryStruct[1]);
+		}
 	}
-
 	
 	private String doExecuteFormat(Object[] arguments) {
 		String newContents = (String) arguments[1];
 		
 		try {
-			newContents = JSONUtil.getPretty(newContents );
-			
+			newContents = JSONUtil.getPretty(newContents );			
 			return newContents;						
 		} catch (Exception e) {
 			logger.error("sql format", e);
@@ -182,9 +174,9 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 		return newContents;
 	}
 	
-	private String appendQueryText(Object[] arguments) {
-		return "";//editor.getAppendQueryText();
-	}
+//	private String appendQueryText(Object[] arguments) {
+//		return "";//editor.getAppendQueryText();
+//	}
 
 	/**
 	 * download sql
@@ -195,7 +187,7 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 			String newContents = (String) arguments[1];
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
-			editor.downloadJavaScript(queryStruct[1]);
+			editor.downloadJavaScript(editor.getUserDB().getDisplay_name() + ".js",  queryStruct[1]);
 		}
 	}
 //	
@@ -210,7 +202,7 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	 * help popup
 	 */
 	private void helpPopup() {
-		RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+		MongoDBShortcutHelpDialog dialog = new MongoDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
 		dialog.open();
 	}
 }

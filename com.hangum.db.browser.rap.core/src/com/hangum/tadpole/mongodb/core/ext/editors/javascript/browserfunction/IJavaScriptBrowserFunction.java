@@ -31,12 +31,8 @@ public interface IJavaScriptBrowserFunction extends TadpoleBrowserFunction {
 	public static final int STATUS_CHANGED 			= 20;
 	
 	public static final int EXECUTE_QUERY 			= 25;
-	public static final int EXECUTE_FORMAT 			= 35;
 	
 	public static final int DOWNLOAD_SQL	 		= 50;
-	
-	/** query history page로 이동합니다 */
-	public static final int MOVE_HISTORY_PAGE		= 55;
 	
 	// help popup
 	public static final int HELP_POPUP				= 60;

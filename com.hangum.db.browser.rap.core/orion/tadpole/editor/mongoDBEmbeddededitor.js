@@ -85,8 +85,9 @@ function initEmbeddedEditor(){
 		"orion/editor/editor",
 		"orion/editor/editorFeatures",
 		"orion/editor/contentAssist",
-//		"orion/editor/jsContentAssist",
-		"orion/editor/sqlContentAssist"],
+		"orion/editor/jsContentAssist"
+//		"orion/editor/sqlContentAssist"
+		],
 	
 	function(require, mTextView, mKeyBinding, mTextStyler, /*mTextMateStyler, mHtmlGrammar,*/ mEditor, mEditorFeatures, mContentAssist, mSQLContentAssist){
 		

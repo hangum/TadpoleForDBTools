@@ -131,7 +131,8 @@ public class MainEditor extends EditorPart {
 	/** resource 정보. */
 	private UserDBResourceDAO dBResource;
 	
-	/** save mode. */
+	/** save mode */
+	private boolean isFirstLoad = false;
 	private boolean isDirty = false;
 	
 	/** download servcie handler. */
@@ -171,9 +172,6 @@ public class MainEditor extends EditorPart {
 	private Button btnPrev;
 	/** 이후 버튼 */
 	private Button btnNext;
-	
-//	/** 에디터에 블럭을 지정 하였으면... */
-//	public static int BLOCK_QUERY_EXECUTE 	= -999;
 	
 	/** 에디터의 모든 쿼리를 수행합니다. */
 	public static int ALL_QUERY_EXECUTE 	= -998;
@@ -244,10 +242,12 @@ public class MainEditor extends EditorPart {
 		userDB = qei.getUserDB();
 		
 		dBResource = qei.getResourceDAO();
-		if(dBResource == null) setPartName(qei.getName());
-		else {
+		if(dBResource == null) {
+			setPartName(qei.getName());
+		} else {
 			setPartName(dBResource.getFilename());
 			saveFileName = dBResource.getFilename();
+			isFirstLoad = true;
 		}
 		
 		initDefaultEditorStr = qei.getDefaultStr();
@@ -517,9 +517,7 @@ public class MainEditor extends EditorPart {
 					sbExportData.append(Define.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadServiceHandler.setName(userDB.getDisplay_name() + "_ResultSetExport.csv"); //$NON-NLS-1$
-				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
-				DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
+				downloadExtFile(userDB.getDisplay_name() + "_ResultSetExport.csv", sbExportData.toString());
 			}
 		});
 		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);
@@ -627,9 +625,7 @@ public class MainEditor extends EditorPart {
 					sbExportData.append( dao.getStrSQLText() ).append(Define.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadServiceHandler.setName(userDB.getDisplay_name() + "_ReCallSQLExport.txt"); //$NON-NLS-1$
-				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
-				DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
+				downloadExtFile(userDB.getDisplay_name() + "_ReCallSQLExport.txt", sbExportData.toString());
 			}
 		});
 		btnSetEditor.setText(Messages.MainEditor_17);
@@ -697,9 +693,8 @@ public class MainEditor extends EditorPart {
 					sbExportData.append( dao.getStrMessage() ).append(Define.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadServiceHandler.setName(userDB.getDisplay_name() + "_Message.txt"); //$NON-NLS-1$
-				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
-				DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
+				downloadExtFile(userDB.getDisplay_name() + "_Message.txt", sbExportData.toString());
+				
 			}
 		});
 		btnExportMessage.setText(Messages.MainEditor_43);
@@ -1635,10 +1630,14 @@ public class MainEditor extends EditorPart {
 	
 	/** save property dirty */
 	public void setDirty(Boolean newValue) {
-		if(isDirty != newValue) {
-			isDirty = newValue;
-			firePropertyChange(PROP_DIRTY);
+		if(!isFirstLoad) {
+			if(isDirty != newValue) {
+				isDirty = newValue;
+				firePropertyChange(PROP_DIRTY);
+			}
 		}
+		
+		isFirstLoad = false;
 	}
 	
 	@Override
@@ -1680,12 +1679,13 @@ public class MainEditor extends EditorPart {
 	}
 
 	/**
-	 * download sql
+	 * download external file
 	 * 
+	 * @param fileName
 	 * @param newContents
 	 */
-	public void downloadSQL(String newContents) {
-		downloadServiceHandler.setName(userDB.getDisplay_name() + ".sql"); //$NON-NLS-1$
+	public void downloadExtFile(String fileName, String newContents) {
+		downloadServiceHandler.setName(fileName);
 		downloadServiceHandler.setByteContent(newContents.getBytes());
 		
 		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());

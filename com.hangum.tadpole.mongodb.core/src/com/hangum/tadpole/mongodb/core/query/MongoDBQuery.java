@@ -360,6 +360,48 @@ public class MongoDBQuery {
 		
 		return listReturn;
 	}
+
+	/**
+	 * save java script
+	 * 
+	 * @param userDB
+	 * @param javaScriptDAO
+	 * @throws Exception
+	 */
+	public static void insertJavaScript(UserDBDAO userDB, MongoDBServerSideJavaScriptDAO javaScriptDAO) throws Exception {
+		DBObject dbObject = (DBObject) JSON.parse("{'_id':'" + javaScriptDAO.getName() + "', 'value':'" +  javaScriptDAO.getContent() + "'}");
+		findDB(userDB).getCollection("system.js").save(dbObject);
+	}
+	
+	/**
+	 * update java script
+	 * 
+	 * @param userDB
+	 * @param _id
+	 * @param content
+	 * @throws Exception
+	 */
+	public static void updateJavaScript(UserDBDAO userDB, String _id, String content) throws Exception {
+		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + _id + "'}");
+		DBObject dbUpdateObject = (DBObject) JSON.parse("{'_id':'" + _id + "', 'value':'" + content +"'}");
+		
+		findDB(userDB).getCollection("system.js").findAndModify(dbFindObject, dbUpdateObject);
+	}
+	
+	/**
+	 * execute eval
+	 * 
+	 * @param userDB
+	 * @param content
+	 * @param inputArray
+	 * @return
+	 * @throws Exception
+	 */
+	public static Object executeEval(UserDBDAO userDB, String content, Object[] inputArray) throws Exception {
+		Object dbObject = findDB(userDB).eval(content, inputArray);
+		
+		return dbObject;
+	}
 	
 	/**
 	 * is system collection
@@ -649,5 +691,7 @@ public class MongoDBQuery {
 	public static void dropIndex(UserDBDAO userDB, String colName, String name) throws Exception {
 		findCollection(userDB, colName).dropIndex(name);		
 	}
+
+	
 	
 }
