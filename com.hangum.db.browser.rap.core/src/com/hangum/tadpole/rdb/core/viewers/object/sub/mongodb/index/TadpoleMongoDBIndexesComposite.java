@@ -116,6 +116,8 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
 					MongoDBIndexDAO tableDAO = (MongoDBIndexDAO)is.getFirstElement();
 
+					if(tableDAO == null) return;
+					
 					tableColumnViewer.setInput(tableDAO.getListIndexField());
 					tableColumnViewer.refresh();
 

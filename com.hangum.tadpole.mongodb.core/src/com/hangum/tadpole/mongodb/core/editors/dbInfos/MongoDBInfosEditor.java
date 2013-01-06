@@ -148,7 +148,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
-		treeViewerCollections = new TreeViewer(compositeBody, SWT.BORDER | SWT.VIRTUAL);
+		treeViewerCollections = new TreeViewer(compositeBody, SWT.BORDER | SWT.VIRTUAL | SWT.FULL_SELECTION);
 		treeViewerCollections.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				try {

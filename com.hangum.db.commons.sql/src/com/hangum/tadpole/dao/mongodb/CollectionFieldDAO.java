@@ -24,6 +24,8 @@ public class CollectionFieldDAO {
 	String Type= "";
 	String Key= "";
 	
+	String newIndex = "";
+	
 	List<CollectionFieldDAO> children = new ArrayList<CollectionFieldDAO>();
 	
 	public CollectionFieldDAO(String field, String type, String key) {
@@ -62,6 +64,14 @@ public class CollectionFieldDAO {
 
 	public void setChildren(List<CollectionFieldDAO> children) {
 		this.children = children;
+	}
+	
+	public String getNewIndex() {
+		return newIndex;
+	}
+	
+	public void setNewIndex(String newIndex) {
+		this.newIndex = newIndex;
 	}
 
 }

@@ -265,13 +265,15 @@ public class MongoDBQuery {
 	 * 
 	 * @param userDB
 	 * @param colName
-	 * @param object
+	 * @param strIndexName
+	 * @param jsonStr
+	 * @param unique	 
 	 */
-	public static void crateIndex(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
+	public static void crateIndex(UserDBDAO userDB, String colName, String strIndexName, String jsonStr,  boolean unique) throws Exception {
 		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
 		
 		DBCollection collection = findCollection(userDB, colName);
-		collection.ensureIndex(dbObject);		
+		collection.ensureIndex(dbObject, strIndexName, unique);
 	}
 	
 	/**
@@ -704,6 +706,5 @@ public class MongoDBQuery {
 		findCollection(userDB, colName).dropIndex(name);		
 	}
 
-	
 	
 }

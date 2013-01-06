@@ -233,7 +233,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
 
-		createTableMongoColumne(treeColumnViewer);
+		createTableMongoColumne();
 
 		treeColumnViewer.setContentProvider(new MongoDBCollectionFieldsContentProvider());
 		treeColumnViewer.setLabelProvider(new MongoDBCollectionFieldsLabelProvider());
@@ -245,9 +245,9 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * mongodb collection column
 	 * @param treeColumnViewer2
 	 */
-	private void createTableMongoColumne(TreeViewer treeColumnViewer2) {
+	private void createTableMongoColumne() {
 		String[] columnName = {"Field", "Type", "Key"};  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		int[] columnSize = {150, 100, 100};
+		int[] columnSize = {110, 100, 100};
 		
 		try {
 			// reset column 
