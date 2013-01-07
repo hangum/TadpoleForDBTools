@@ -94,7 +94,6 @@ public class ServerSideJavaScriptEditor extends EditorPart {
     private Composite compositeDumy;
 	private String save_id;
 	private Text textResultJavaScript;
-	
 	private CTabFolder tabFolder;
 	
 	public ServerSideJavaScriptEditor() {
@@ -102,10 +101,147 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	}
 
 	@Override
+	public void createPartControl(Composite parent) {
+		GridLayout gl_parent = new GridLayout(1, false);
+		gl_parent.verticalSpacing = 2;
+		gl_parent.horizontalSpacing = 2;
+		gl_parent.marginHeight = 2;
+		gl_parent.marginWidth = 2;
+		parent.setLayout(gl_parent);
+		
+		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Composite compositeBody = new Composite(sashForm, SWT.NONE);
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 1;
+		gl_compositeBody.horizontalSpacing = 1;
+		gl_compositeBody.marginHeight = 1;
+		gl_compositeBody.marginWidth = 1;
+		compositeBody.setLayout(gl_compositeBody);
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		ToolBar toolBar = new ToolBar(compositeBody, SWT.FLAT | SWT.RIGHT);
+		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
+		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
+		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
+		tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getDb() + " ]"); //$NON-NLS-1$		
+		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DBInformationDialog dialog = new DBInformationDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+				dialog.open();
+			}
+		});
+		
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
+		tltmExecute.setToolTipText(Messages.MainEditor_tltmExecute_toolTipText_1);
+		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb/mongo-executable.png"));
+		tltmExecute.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
+			}
+		});
+		
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+//		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
+//		tltmSort.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/query_format.png"));
+//		tltmSort.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
+//			}
+//		});
+//		tltmSort.setToolTipText(Messages.MainEditor_4);
+//		
+//		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
+		tltmDownload.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/download_query.png"));
+		tltmDownload.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_DOWNLOAD_SQL);
+			}
+		});
+		tltmDownload.setToolTipText("Download JavaScript"); //$NON-NLS-1$
+		
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
+		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
+		tltmHelp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MongoDBShortcutHelpDialog dialog = new MongoDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+				dialog.open();
+			}
+		});
+		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
+		
+		browserQueryEditor = new Browser(compositeBody, SWT.BORDER);
+		browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		browserQueryEditor.setUrl(URL);
+		addBrowserHandler();
+		
+		Composite compositeTail = new Composite(sashForm, SWT.NONE);
+		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeTail = new GridLayout(1, false);
+		gl_compositeTail.verticalSpacing = 1;
+		gl_compositeTail.horizontalSpacing = 1;
+		gl_compositeTail.marginHeight = 1;
+		gl_compositeTail.marginWidth = 1;
+		compositeTail.setLayout(gl_compositeTail);
+		
+		tabFolder = new CTabFolder(compositeTail, SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		
+		CTabItem tbtmEvalJavaScript = new CTabItem(tabFolder, SWT.NONE);
+		tbtmEvalJavaScript.setText(Messages.ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1);
+		
+		Composite compositeTabJS = new Composite(tabFolder, SWT.NONE);
+		tbtmEvalJavaScript.setControl(compositeTabJS);
+		GridLayout gl_compositeTabJS = new GridLayout(1, false);
+		gl_compositeTabJS.verticalSpacing = 1;
+		gl_compositeTabJS.horizontalSpacing = 1;
+		gl_compositeTabJS.marginHeight = 1;
+		gl_compositeTabJS.marginWidth = 1;
+		compositeTabJS.setLayout(gl_compositeTabJS);
+
+		textResultJavaScript = new Text(compositeTabJS, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textResultJavaScript.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		compositeDumy = new Composite(compositeTabJS, SWT.NONE);
+		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeDumy.setLayout(new GridLayout(1, false));
+		
+//		tbtmEvalJavaScript.setControl(textResultJavaScript);
+
+		sashForm.setWeights(new int[] {7, 3});
+		
+		initEditor();
+	}
+	
+	/**
+	 * 데이터 초기화 합니다.
+	 */
+	private void initEditor() {
+		registerServiceHandler();
+		tabFolder.setSelection(0);		
+	}
+
+	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if(javascriptDAO == null) {
 			MongoJSNameValidator fv = new MongoJSNameValidator(userDB);
-			InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", Messages.MainEditor_68, userDB.getDisplay_name(), fv); //$NON-NLS-1$
+			InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", "Java Script Name", userDB.getDisplay_name(), fv); //$NON-NLS-1$
 			if (dlg.open() == Window.OK) {
 				save_id = fv.getFileName();
 			}
@@ -198,125 +334,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
-
-	@Override
-	public void createPartControl(Composite parent) {
-		GridLayout gl_parent = new GridLayout(1, false);
-		gl_parent.verticalSpacing = 2;
-		gl_parent.horizontalSpacing = 2;
-		gl_parent.marginHeight = 2;
-		gl_parent.marginWidth = 2;
-		parent.setLayout(gl_parent);
-		
-		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		Composite compositeBody = new Composite(sashForm, SWT.NONE);
-		GridLayout gl_compositeBody = new GridLayout(1, false);
-		gl_compositeBody.verticalSpacing = 1;
-		gl_compositeBody.horizontalSpacing = 1;
-		gl_compositeBody.marginHeight = 1;
-		gl_compositeBody.marginWidth = 1;
-		compositeBody.setLayout(gl_compositeBody);
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		ToolBar toolBar = new ToolBar(compositeBody, SWT.FLAT | SWT.RIGHT);
-		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
-		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
-		tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getDb() + " ]"); //$NON-NLS-1$		
-		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DBInformationDialog dialog = new DBInformationDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
-				dialog.open();
-			}
-		});
-		
-		new ToolItem(toolBar, SWT.SEPARATOR);
-		
-		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmExecute.setToolTipText(Messages.MainEditor_tltmExecute_toolTipText_1);
-		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb/mongo-executable.png"));
-		tltmExecute.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
-			}
-		});
-		
-		new ToolItem(toolBar, SWT.SEPARATOR);
-		
-//		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
-//		tltmSort.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/query_format.png"));
-//		tltmSort.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
-//			}
-//		});
-//		tltmSort.setToolTipText(Messages.MainEditor_4);
-//		
-//		new ToolItem(toolBar, SWT.SEPARATOR);
-		
-		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
-		tltmDownload.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/download_query.png"));
-		tltmDownload.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_DOWNLOAD_SQL);
-			}
-		});
-		tltmDownload.setToolTipText("Download JavaScript"); //$NON-NLS-1$
-		
-		new ToolItem(toolBar, SWT.SEPARATOR);
-		
-		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
-		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
-		tltmHelp.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				MongoDBShortcutHelpDialog dialog = new MongoDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
-				dialog.open();
-			}
-		});
-		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
-		
-		browserQueryEditor = new Browser(compositeBody, SWT.BORDER);
-		browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		browserQueryEditor.setUrl(URL);
-		
-		compositeDumy = new Composite(compositeBody, SWT.NONE);
-		compositeDumy.setLayout(new GridLayout(1, false));
-		
-		addBrowserHandler();
-		
-		Composite compositeTail = new Composite(sashForm, SWT.NONE);
-		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeTail = new GridLayout(1, false);
-		gl_compositeTail.verticalSpacing = 1;
-		gl_compositeTail.horizontalSpacing = 1;
-		gl_compositeTail.marginHeight = 1;
-		gl_compositeTail.marginWidth = 1;
-		compositeTail.setLayout(gl_compositeTail);
-		
-		tabFolder = new CTabFolder(compositeTail, SWT.BORDER);
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
-		
-		CTabItem tbtmEvalJavaScript = new CTabItem(tabFolder, SWT.NONE);
-		tbtmEvalJavaScript.setText(Messages.ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1);
-		
-		textResultJavaScript = new Text(tabFolder, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		tbtmEvalJavaScript.setControl(textResultJavaScript);
-
-		sashForm.setWeights(new int[] {7, 3});
-		
-		initEditor();
-	}
-
+	
 	/**
 	 * browser initialize 
 	 */
@@ -337,7 +355,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	/** 
 	 * browser function call
 	 * 
-	 *  @param command brower command
+	 *  @param command browser
 	 */
 	public void browserEvaluate(String command) {
 		try {
@@ -403,14 +421,6 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		downloadServiceHandler.setByteContent(newContents.getBytes());
 		
 		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
-	}
-	
-	/**
-	 * 데이터 초기화 합니다.
-	 */
-	private void initEditor() {
-		registerServiceHandler();
-		tabFolder.setSelection(0);		
 	}
 	
 	/** registery service handler */

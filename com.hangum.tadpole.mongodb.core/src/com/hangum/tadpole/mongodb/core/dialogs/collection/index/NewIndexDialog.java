@@ -175,7 +175,7 @@ public class NewIndexDialog extends Dialog {
 	 */
 	private void createTableMongoColumne() {
 		String[] columnName = {"Field", "Type", "Key", "Select Index"};  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		int[] columnSize = {110, 100, 100, 100};
+		int[] columnSize = {200, 170, 40, 100};
 		
 		try {
 			// reset column 

@@ -34,12 +34,6 @@ var editorService = {
 	EXECUTE_QUERY : 25,
 	executeQuery: function(editor) {},
 	
-	EXECUTE_ALL_QUERY : 26,
-	executeAllQuery: function(editor) {},
-	
-	EXECUTE_PLAN : 30,
-	executePlan: function(editor) {},
-	
 	EXECUTE_FORMAT : 35,
 	executeFormat: function(editor) {},
 	
@@ -49,14 +43,8 @@ var editorService = {
 	RE_NEW_TEXT  : 41,
 	reNewText: function(editor) {},
 	
-	SQL_TO_APPLICATION : 45,
-	sqlToApplication: function(editor) {},
-	
 	DOWNLOAD_SQL : 50,
 	downloadSQL: function(editor) {},
-	
-	MOVE_HISTORY_PAGE : 55,
-	moveHistoryPage: function(editor) {},
 	
 	HELP_POPUP : 60,
 	helpPopup: function(editor) {},
@@ -85,8 +73,8 @@ function initEmbeddedEditor(){
 		"orion/editor/editor",
 		"orion/editor/editorFeatures",
 		"orion/editor/contentAssist",
-		"orion/editor/jsContentAssist"
-//		"orion/editor/sqlContentAssist"
+//		"orion/editor/jsContentAssist",
+		"orion/editor/sqlContentAssist"
 		],
 	
 	function(require, mTextView, mKeyBinding, mTextStyler, /*mTextMateStyler, mHtmlGrammar,*/ mEditor, mEditorFeatures, mContentAssist, mSQLContentAssist){
@@ -119,6 +107,7 @@ function initEmbeddedEditor(){
 					this.styler = null;
 				}
 				if (fileName) {
+					
 					var splits = fileName.split(".");
 					var extension = splits.pop().toLowerCase();
 					var textView = editor.getTextView();
@@ -168,12 +157,12 @@ function initEmbeddedEditor(){
 				return true;
 			});
 			
-			// execute plan(ctrl + e)
-			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(69, true), "executePlan");
-			editor.getTextView().setAction("executePlan", function(){
-				editorService.executePlan(editor);
-				return true;
-			});
+//			// execute plan(ctrl + e)
+//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(69, true), "executePlan");
+//			editor.getTextView().setAction("executePlan", function(){
+//				editorService.executePlan(editor);
+//				return true;
+//			});
 			
 			// 쿼리 정렬 (ctrl + shift + f)
 			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(70, true, true), "executeFormat");
@@ -334,17 +323,6 @@ dojo.addOnLoad(function() {
 			editor.setTextFocus();
 		};
 		
-		editorService.executeAllQuery = function() {
-			editorServiceHandler(editorService.EXECUTE_ALL_QUERY, editor.getCaretOffsetAndContent());
-			editor.setTextFocus();
-		};
-		
-		// query plan
-		editorService.executePlan = function() {
-			editorServiceHandler(editorService.EXECUTE_PLAN, editor.getCaretOffsetAndContent());
-			editor.setTextFocus();
-		};
-		
 		// query format
 		editorService.executeFormat = function() {
 			var sql = editorServiceHandler(editorService.EXECUTE_FORMAT, editor.getContents());
@@ -353,23 +331,10 @@ dojo.addOnLoad(function() {
 			editor.setTextFocus();
 		};
 		
-		// append query text
-		editorService.appendQueryText = function() {
-			var sql = editorServiceHandler(editorService.APPEND_QUERY_TEXT, '');
-			
-			editor.appendQueryText(sql);
-			editor.setTextFocus();
-		};
-		
 		// re new query text
 		editorService.reNewText = function() {
 			var sql = editorServiceHandler(editorService.RE_NEW_TEXT, '');
 			editor.onInputChange(null, null, sql, false);
-		};
-		
-		// sql to application string 
-		editorService.sqlToApplication = function() {
-			editorServiceHandler(editorService.SQL_TO_APPLICATION, editor.getCaretOffsetAndContent());
 		};
 		
 		// download sql 

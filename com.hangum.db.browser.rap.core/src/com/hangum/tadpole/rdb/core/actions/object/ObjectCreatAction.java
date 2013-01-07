@@ -21,6 +21,7 @@ import com.hangum.tadpole.define.Define.DB_ACTION;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
+import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
@@ -79,7 +80,8 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			CreateTriggerAction cia = new CreateTriggerAction();
 			cia.run(userDB, actionType);
 		} else if(actionType == DB_ACTION.JAVASCRIPT) {
-			
+			CreateJavaScriptAction csa = new CreateJavaScriptAction();
+			csa.run(userDB, actionType);
 		}
 	}
 	
