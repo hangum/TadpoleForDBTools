@@ -220,10 +220,14 @@ public class NewIndexDialog extends Dialog {
 			}
 			
 			List<String> listFullIndex = new ArrayList<String>();
-			List<CollectionFieldDAO> listDao = (List)treeColumnViewer.getInput();
-			for (CollectionFieldDAO dao : listDao) {
+			List<CollectionFieldDAO> listColFieldDao = (List)treeColumnViewer.getInput();
+			for (CollectionFieldDAO dao : listColFieldDao) {
 				if(!dao.getNewIndex().equals("")) {
 					listFullIndex.add(getMakeIndexString(dao.getField(), dao.getNewIndex()));
+				}
+				
+				if(!dao.getChildren().isEmpty()) {
+					findSelectIndex(dao.getChildren(), dao.getField(), listFullIndex);
 				}
 			}
 			String fullIndex = "";
@@ -233,6 +237,10 @@ public class NewIndexDialog extends Dialog {
 				} else {
 					fullIndex += listFullIndex.get(i) + ",";
 				}
+			}
+			
+			if(logger.isDebugEnabled()) {
+				logger.debug("[select index]" + fullIndex);
 			}
 			
 			try {
@@ -250,6 +258,25 @@ public class NewIndexDialog extends Dialog {
 		super.okPressed();
 	}
 	
+	/**
+	 * child element에 index를 입력했는지 검사합니다.
+	 * 
+	 * @param listColFieldDao
+	 * @param field
+	 * @param listFullIndex
+	 */
+	private void findSelectIndex(List<CollectionFieldDAO> listColFieldDao, String field, List<String> listFullIndex) {
+		for (CollectionFieldDAO dao : listColFieldDao) {
+			if(!dao.getNewIndex().equals("")) {
+				listFullIndex.add(getMakeIndexString(field + "." + dao.getField(), dao.getNewIndex()));
+			}
+			
+			if(!dao.getChildren().isEmpty()) {
+				findSelectIndex(dao.getChildren(), field + "." + dao.getField(), listFullIndex);
+			}
+		}	
+	}
+
 	private String getMakeIndexString(String name, String strIndex) {
 		String retValue = "";
 		for (int i=0; i<FieldIndexEditorSupport.arryIndexKey.length; i++) {

@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -39,8 +40,8 @@ public class FieldIndexEditorSupport extends EditingSupport {
 
 	private final TreeViewer viewer;
 	private UserDBDAO userDB;
-	public static final String[] arryIndexKey = new String[] {"", "Ascending", "Desending", "Geospatial"};
-	public static final int[] arryIndexValue = new int[] {0, 1, -1, 2};
+	public static final String[] arryIndexKey 	= new String[] {"", "Ascending", "Desending", "Geospatial"};
+	public static final int[] arryIndexValue 	= new int[]    {0, 		1, 			-1, 		2};
 
 	/**
 	 * 
@@ -56,7 +57,7 @@ public class FieldIndexEditorSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		return new ComboBoxCellEditor(viewer.getTree(), arryIndexKey);		
+		return new ComboBoxCellEditor(viewer.getTree(), arryIndexKey, SWT.READ_ONLY);		
 	}
 
 	@Override
