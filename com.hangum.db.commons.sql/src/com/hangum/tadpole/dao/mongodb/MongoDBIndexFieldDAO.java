@@ -19,9 +19,9 @@ package com.hangum.tadpole.dao.mongodb;
 public class MongoDBIndexFieldDAO {
 
 	String name;
-	int order;
+	String order;
 	
-	public MongoDBIndexFieldDAO(String name, int order) {
+	public MongoDBIndexFieldDAO(String name, String order) {
 		this.name = name;
 		this.order = order;
 	}
@@ -32,10 +32,10 @@ public class MongoDBIndexFieldDAO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getOrder() {
+	public String getOrder() {
 		return order;
 	}
-	public void setOrder(int order) {
+	public void setOrder(String order) {
 		this.order = order;
 	}
 }

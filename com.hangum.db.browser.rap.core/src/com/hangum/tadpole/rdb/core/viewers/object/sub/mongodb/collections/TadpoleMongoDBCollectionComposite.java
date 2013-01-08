@@ -97,12 +97,12 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private TreeViewer treeColumnViewer;
 	private List showTableColumns;
 	
-	private ObjectCreatAction creatAction_Table;
-	private ObjectDeleteAction deleteAction_Table;
-	private ObjectRefreshAction refreshAction_Table;
-	private GenerateSQLSelectAction insertStmtAction;
-	private ObjectMongodbRenameAction renameColAction;
-	private ObjectMongodbReIndexAction reIndexColAction;
+	private ObjectCreatAction 			creatAction_Table;
+	private ObjectDeleteAction 			deleteAction_Table;
+	private ObjectRefreshAction 		refreshAction_Table;
+	private GenerateSQLSelectAction 	insertStmtAction;
+	private ObjectMongodbRenameAction 	renameColAction;
+	private ObjectMongodbReIndexAction 	reIndexColAction;
 	
 	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(partSite, tabFolderObject, userDB);
@@ -328,7 +328,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			if (showTables != null) showTables.clear();
 			else showTables = new ArrayList<TableDAO>();
 			
-			List<String> listCollection = MongoDBQuery.collectionList(userDB);
+			List<String> listCollection = MongoDBQuery.listCollection(userDB);
 			for (String strColl : listCollection) {
 				TableDAO dao = new TableDAO();
 				dao.setName(strColl);

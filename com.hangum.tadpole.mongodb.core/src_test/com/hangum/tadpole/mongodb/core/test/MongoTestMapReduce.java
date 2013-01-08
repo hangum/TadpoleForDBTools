@@ -27,7 +27,7 @@ import com.mongodb.Mongo;
  */
 public class MongoTestMapReduce {
 
-	static String map = "function(){emit(this.name, {count: 1, sum: this.number});" + "};";
+	static String map = "function(){emit(this.name, {count: 1, sum: this.number});};";
 
 	static String reduce = 
 			"function( key , values ){" +

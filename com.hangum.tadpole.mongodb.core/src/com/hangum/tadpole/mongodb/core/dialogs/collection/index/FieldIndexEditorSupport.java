@@ -41,7 +41,7 @@ public class FieldIndexEditorSupport extends EditingSupport {
 	private final TreeViewer viewer;
 	private UserDBDAO userDB;
 	public static final String[] arryIndexKey 	= new String[] {"", "Ascending", "Desending", "Geospatial"};
-	public static final int[] arryIndexValue 	= new int[]    {0, 		1, 			-1, 		2};
+	public static final Object[] arryIndexValue = new Object[] {0, 		1, 			-1, 		"2d"};
 
 	/**
 	 * 

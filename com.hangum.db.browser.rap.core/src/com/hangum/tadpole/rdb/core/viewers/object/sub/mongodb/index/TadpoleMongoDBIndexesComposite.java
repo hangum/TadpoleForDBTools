@@ -44,12 +44,12 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index.IndexesViewFilter;
 
 /**
  * MongoDB indexes composite
@@ -72,7 +72,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	// index detail field
 	private TableViewer tableColumnViewer;
 
-//	private ObjectCreatAction creatAction_Index;
+	private ObjectCreatAction creatAction_Index;
 	private ObjectDeleteAction deleteAction_Index;
 	private ObjectRefreshAction refreshAction_Index;
 
@@ -167,7 +167,9 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				MongoDBIndexFieldDAO table = (MongoDBIndexFieldDAO) element;
-				return table.getOrder()==1?"Ascending":"Descending";
+				
+				return table.getOrder().equals("1")?"Ascending":
+					table.getOrder().equals("-1")?"Descending":"Geospatial";
 			}
 		});
 
@@ -199,7 +201,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-//		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 
@@ -209,7 +211,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-//				manager.add(creatAction_Index);
+				manager.add(creatAction_Index);
 				manager.add(deleteAction_Index);
 				manager.add(refreshAction_Index);
 			}
@@ -229,7 +231,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		tableViewer.setInput(listIndexes);
 		tableViewer.refresh();
 
-//		creatAction_Index.setUserDB(getUserDB());
+		creatAction_Index.setUserDB(getUserDB());
 		deleteAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
 	}

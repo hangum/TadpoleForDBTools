@@ -19,6 +19,7 @@ import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.define.Define.DB_ACTION;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
+import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
@@ -55,9 +56,9 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
 				CreateTableAction cta = new CreateTableAction();
 				cta.run(userDB, actionType);
-			// moongodb
-			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 				
+			// moongodb
+			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {				
 				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == ncd.open() ) {
 					refreshTable();
@@ -68,8 +69,16 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
 		} else if(actionType == DB_ACTION.INDEXES) {
-			CreateIndexAction cia = new CreateIndexAction();
-			cia.run(userDB, actionType);
+			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+				CreateIndexAction cia = new CreateIndexAction();
+				cia.run(userDB, actionType);
+			// moongodb
+			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+				NewIndexDialog nid = new NewIndexDialog(Display.getCurrent().getActiveShell(), userDB);
+				if(Dialog.OK == nid.open()) {
+					refreshIndexes();
+				}
+			}
 		} else if(actionType == DB_ACTION.PROCEDURES) {
 			CreateProcedureAction cia = new CreateProcedureAction();
 			cia.run(userDB, actionType);

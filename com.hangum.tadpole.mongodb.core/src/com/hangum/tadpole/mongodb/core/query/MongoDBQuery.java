@@ -65,7 +65,7 @@ public class MongoDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<String> collectionList(UserDBDAO userDB) throws Exception {
+	public static List<String> listCollection(UserDBDAO userDB) throws Exception {
 		List<String> listReturn = new ArrayList<String>();
 		
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
@@ -324,9 +324,9 @@ public class MongoDBQuery {
 					MongoDBIndexDAO indexDao = new MongoDBIndexDAO();
 					
 					indexDao.setV(dbObject.get("v").toString());
-					Map<String, Integer> objMap = (Map)dbObject.get("key");
+					Map<String, Object> objMap = (Map)dbObject.get("key");
 					for (String strKey : objMap.keySet()) {
-						indexDao.getListIndexField().add(new MongoDBIndexFieldDAO(strKey, objMap.get(strKey)));
+						indexDao.getListIndexField().add(new MongoDBIndexFieldDAO(strKey, objMap.get(strKey).toString()));
 					}
 					
 					if(dbObject.containsField("unique")) {

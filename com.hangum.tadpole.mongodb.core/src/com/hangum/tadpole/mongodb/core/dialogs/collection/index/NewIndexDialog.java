@@ -45,6 +45,7 @@ import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.util.JSONUtil;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
+import org.eclipse.swt.widgets.Combo;
 
 /**
  * 몽고디비 인덱스 생성
@@ -59,10 +60,11 @@ public class NewIndexDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(NewIndexDialog.class);
 	
 	protected UserDBDAO userDB;
-	protected String collectionName;
+	protected String initCollectionName;
+	
+	private Combo comboColName;
 	
 	private CTabFolder tabFolder;
-	private Text textName;
 	private Text textIndexName;
 	private Text textJSON;
 	private Button btnUnique;
@@ -70,13 +72,19 @@ public class NewIndexDialog extends Dialog {
 	private TreeViewer treeColumnViewer;
 	private List<CollectionFieldDAO> listCollFields;
 
-	public NewIndexDialog(Shell parentShell, UserDBDAO userDB, String collectionName) {
+	public NewIndexDialog(Shell parentShell, UserDBDAO userDB, String initCollectionName) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		this.userDB = userDB;
-		this.collectionName = collectionName;
+		this.initCollectionName = initCollectionName;
 	}
 	
+	public NewIndexDialog(Shell parentShell, UserDBDAO userDB) {
+		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		this.userDB = userDB;
+	}
+
 	/**
 	 * Create contents of the dialog.
 	 * @param parent
@@ -93,13 +101,16 @@ public class NewIndexDialog extends Dialog {
 		
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText("Collection Name"); //$NON-NLS-1$
+		lblName.setText("Collection Name");
 		
-		textName = new Text(container, SWT.BORDER);
-		textName.setEnabled(false);
-		textName.setEditable(false);
-		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textName.setText(collectionName);
+		comboColName = new Combo(container, SWT.READ_ONLY);
+		comboColName.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectCollection();
+			}
+		});
+		comboColName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblIndexName = new Label(container, SWT.NONE);
 		lblIndexName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -154,11 +165,37 @@ public class NewIndexDialog extends Dialog {
 		return container;
 	}
 	
+	/**
+	 * UI를 초기화합니다.
+	 */
 	private void initUI() {
 		tabFolder.setSelection(1);
 		
 		try {
-			listCollFields = MongoDBQuery.collectionColumn(userDB, collectionName);
+			List<String> listCollFields = MongoDBQuery.listCollection(userDB);
+			for (String string : listCollFields) comboColName.add(string);
+			
+			if(null != initCollectionName) {
+				comboColName.setText(initCollectionName);
+				selectCollection(initCollectionName);
+			} else {
+				comboColName.select(0);
+				selectCollection(comboColName.getText());
+			}
+		} catch (Exception e) {
+			logger.error("get collection list", e); //$NON-NLS-1$
+
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * 선택된 컬랙선의 필드정보를 트리에 출력합니다.
+	 */
+	private void selectCollection(String colName) {
+		try {
+			listCollFields = MongoDBQuery.collectionColumn(userDB, colName);
 		} catch (Exception e) {
 			logger.error("get collection column", e); //$NON-NLS-1$
 
@@ -167,6 +204,13 @@ public class NewIndexDialog extends Dialog {
 		}
 		treeColumnViewer.setInput(listCollFields);
 		treeColumnViewer.refresh();
+	}
+
+	/**
+	 * 선택된 컬랙선의 필드정보를 트리에 출력합니다.
+	 */
+	private void selectCollection() {
+		selectCollection(comboColName.getText());
 	}
 	
 	/**
@@ -203,7 +247,7 @@ public class NewIndexDialog extends Dialog {
 			}
 	
 			try {
-				MongoDBQuery.crateIndex(userDB, textName.getText().trim(), textIndexName.getText().trim(), textJSON.getText().trim(), btnUnique.getSelection());
+				MongoDBQuery.crateIndex(userDB, comboColName.getText().trim(), textIndexName.getText().trim(), textJSON.getText().trim(), btnUnique.getSelection());
 			} catch (Exception e) {
 				logger.error("mongodb create index", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -244,7 +288,7 @@ public class NewIndexDialog extends Dialog {
 			}
 			
 			try {
-				MongoDBQuery.crateIndex(userDB, textName.getText().trim(), textIndexName.getText().trim(), "{" + fullIndex + "}",  btnUnique.getSelection());
+				MongoDBQuery.crateIndex(userDB, comboColName.getText().trim(), textIndexName.getText().trim(), "{" + fullIndex + "}",  btnUnique.getSelection());
 			} catch (Exception e) {
 				logger.error("mongodb create index", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -277,11 +321,23 @@ public class NewIndexDialog extends Dialog {
 		}	
 	}
 
+	/**
+	 * index string을 만듭니다.
+	 * @param name
+	 * @param strIndex
+	 * @return
+	 */
 	private String getMakeIndexString(String name, String strIndex) {
 		String retValue = "";
 		for (int i=0; i<FieldIndexEditorSupport.arryIndexKey.length; i++) {
 			if(strIndex.equals(FieldIndexEditorSupport.arryIndexKey[i])) {
-				retValue = "'" +  name + "': " +  FieldIndexEditorSupport.arryIndexValue[i]; 
+				
+				// Geospatial 이면..
+				if(FieldIndexEditorSupport.arryIndexKey[3] == FieldIndexEditorSupport.arryIndexKey[i]) {
+					retValue = "'" +  name + "': '" +  FieldIndexEditorSupport.arryIndexValue[i] + "'";
+				} else {
+					retValue = "'" +  name + "': " +  FieldIndexEditorSupport.arryIndexValue[i];					
+				}
 			}
 		}
 		
