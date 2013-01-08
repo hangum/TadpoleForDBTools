@@ -221,9 +221,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		compositeDumy = new Composite(compositeTabJS, SWT.NONE);
 		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeDumy.setLayout(new GridLayout(1, false));
-		
-//		tbtmEvalJavaScript.setControl(textResultJavaScript);
-
+	
 		sashForm.setWeights(new int[] {7, 3});
 		
 		initEditor();
