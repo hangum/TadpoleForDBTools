@@ -23,6 +23,9 @@ import com.swtdesigner.SWTResourceManager;
  */
 public class TadpoleWidgetUtils {
 	
+	/** tab content */
+	public static final String TAB_CONETNT = "    ";
+	
 	/**
 	 * CTabFolder background color
 	 * @return

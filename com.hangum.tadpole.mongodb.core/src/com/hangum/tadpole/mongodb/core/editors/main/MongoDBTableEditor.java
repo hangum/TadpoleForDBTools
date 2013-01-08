@@ -124,16 +124,16 @@ public class MongoDBTableEditor extends EditorPart {
 	private Text textBasicLimit;
 	
 	/** preference default find page */
-	private String defaultFindPage 	= GetPreferenceGeneral.getMongoDefaultFindPage();//Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_FIND);
+	private String defaultFindPage 	= GetPreferenceGeneral.getMongoDefaultFindPage();
 
 	/** preference default result page */
-	private String defaultResultPage = GetPreferenceGeneral.getMongoDefaultResultPage();//Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_RESULT);
+	private String defaultResultPage = GetPreferenceGeneral.getMongoDefaultResultPage();
 	
 	/** preference default limit */
-	private String defaultLimit = GetPreferenceGeneral.getMongoDefaultLimit();//Activator.getDefault().getPreferenceStore().getString(PreferenceDefine.MONGO_DEFAULT_LIMIT);
+	private String defaultLimit = GetPreferenceGeneral.getMongoDefaultLimit();
 	
 	/** preference default max count */
-	private int defaultMaxCount = GetPreferenceGeneral.getMongoDefaultMaxCount();//Activator.getDefault().getPreferenceStore().getInt(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
+	private int defaultMaxCount = GetPreferenceGeneral.getMongoDefaultMaxCount();
 	
 	/**
 	 * 
@@ -183,7 +183,7 @@ public class MongoDBTableEditor extends EditorPart {
 			public void keyPressed(KeyEvent e) {
 			
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicFind.insert("    ");//new Character(SWT.TAB).toString());
+					textBasicFind.insert(TadpoleWidgetUtils.TAB_CONETNT);
 				}
 			}
 		});
@@ -209,7 +209,7 @@ public class MongoDBTableEditor extends EditorPart {
 			public void keyPressed(KeyEvent e) {
 			
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicField.insert("    ");//new Character(SWT.TAB).toString());
+					textBasicField.insert(TadpoleWidgetUtils.TAB_CONETNT);
 				}
 			}
 		});
@@ -235,7 +235,7 @@ public class MongoDBTableEditor extends EditorPart {
 			public void keyPressed(KeyEvent e) {
 			
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicSort.insert("    ");//new Character(SWT.TAB).toString());
+					textBasicSort.insert(TadpoleWidgetUtils.TAB_CONETNT);
 				}
 			}
 		});
@@ -942,7 +942,7 @@ public class MongoDBTableEditor extends EditorPart {
 		}
 		strColumns = StringUtils.chompLast(strColumns, ", "); //$NON-NLS-1$
 		
-		setPartName(userDB.getDisplay_name() + " [" + moInput.getName() + "]");		 //$NON-NLS-1$ //$NON-NLS-2$
+		setPartName(moInput.getName());		 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

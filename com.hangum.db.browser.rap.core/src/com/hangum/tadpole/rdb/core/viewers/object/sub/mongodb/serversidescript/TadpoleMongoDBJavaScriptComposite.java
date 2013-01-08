@@ -118,7 +118,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 					try {
 						ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB, mDBSJSDAO);
-						page.openEditor(input, ServerSideJavaScriptEditor.ID);
+						page.openEditor(input, ServerSideJavaScriptEditor.ID, false);
 						
 					} catch (PartInitException e) {
 						logger.error("Mongodb javascirpt", e);

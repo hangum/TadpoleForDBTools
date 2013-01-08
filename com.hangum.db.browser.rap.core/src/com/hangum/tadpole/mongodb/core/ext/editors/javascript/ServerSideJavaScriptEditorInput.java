@@ -53,8 +53,8 @@ public class ServerSideJavaScriptEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		if(javascriptDAO == null) return userDB.getDb() + " JavaScript";
-		else return userDB.getDb() + "[" + javascriptDAO.getName() + "] " + " JavaScript";
+		if(javascriptDAO == null) return " JavaScript" + userDB.getDb();
+		else return "JavaScript " + userDB.getDb() + "[" + javascriptDAO.getName() + "]";
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class ServerSideJavaScriptEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		if(javascriptDAO == null) return userDB.getDb() + " JavaScript";
-		else return userDB.getDb() + "[" + javascriptDAO.getName() + "] " + " JavaScript";
+		if(javascriptDAO == null) return " JavaScript" + userDB.getDb();
+		else return "JavaScript " + userDB.getDb() + "[" + javascriptDAO.getName() + "]";
 	}
 
 	public UserDBDAO getUserDB() {

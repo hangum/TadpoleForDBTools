@@ -18,9 +18,14 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -33,12 +38,7 @@ import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.util.JSONUtil;
-
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 
 /**
  * 신규 document 를 생성합니다.
@@ -104,7 +104,7 @@ public class NewDocumentDialog extends Dialog {
 			public void keyPressed(KeyEvent e) {
 			
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textContent.insert("    ");//new Character(SWT.TAB).toString());
+					textContent.insert(TadpoleWidgetUtils.TAB_CONETNT);
 				}
 			}
 		});

@@ -331,7 +331,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		
 		MongoDBInfosInput moInput = (MongoDBInfosInput)input;
 		this.userDB = moInput.getUserDB();		
-		setPartName(userDB.getDisplay_name() + " All Collections");		 //$NON-NLS-1$ //$NON-NLS-2$
+		setPartName(moInput.getName());
 	}
 
 	@Override

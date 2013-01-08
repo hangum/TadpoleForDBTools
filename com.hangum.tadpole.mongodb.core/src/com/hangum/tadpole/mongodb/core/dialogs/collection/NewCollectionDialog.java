@@ -35,6 +35,7 @@ import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.util.JSONUtil;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.mongodb.DBCollection;
 
 /**
@@ -102,7 +103,7 @@ public class NewCollectionDialog extends Dialog {
 			public void keyPressed(KeyEvent e) {
 			
 				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textContent.insert("    ");//new Character(SWT.TAB).toString());
+					textContent.insert(TadpoleWidgetUtils.TAB_CONETNT);
 				}
 			}
 		});

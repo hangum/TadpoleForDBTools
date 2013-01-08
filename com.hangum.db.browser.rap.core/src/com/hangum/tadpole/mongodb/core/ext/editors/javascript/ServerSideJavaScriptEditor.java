@@ -320,9 +320,9 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		this.userDB = qei.getUserDB();
 		this.javascriptDAO = qei.getJavascriptDAO();
 		if(this.javascriptDAO != null) {
-			isFirstLoad = true;
-			setPartName(this.javascriptDAO.getName());
+			setPartName(qei.getName());
 		}
+		isFirstLoad = true;
 	}
 	
 	@Override

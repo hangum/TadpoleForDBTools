@@ -54,7 +54,7 @@ public class FindEditorAndWriteQueryUtil {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 			try {
 				ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB);
-				page.openEditor(input, ServerSideJavaScriptEditor.ID);
+				page.openEditor(input, ServerSideJavaScriptEditor.ID, false);
 				
 			} catch (PartInitException e) {
 				logger.error("Mongodb javascirpt", e);

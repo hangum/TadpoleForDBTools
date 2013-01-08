@@ -63,6 +63,7 @@ import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLSelectAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbMapReduceAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbReIndexAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbRenameAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -103,6 +104,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private GenerateSQLSelectAction 	insertStmtAction;
 	private ObjectMongodbRenameAction 	renameColAction;
 	private ObjectMongodbReIndexAction 	reIndexColAction;
+	private ObjectMongodbMapReduceAction mapReduceAction;
 	
 	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(partSite, tabFolderObject, userDB);
@@ -268,13 +270,14 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		creatAction_Table 	= new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		deleteAction_Table 	= new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		insertStmtAction 	= new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 
-		renameColAction = new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
-		reIndexColAction = new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");
+		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
+		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");
+		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "MapReduce");
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -292,6 +295,9 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(renameColAction);
 					manager.add(reIndexColAction);
+					
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					manager.add(mapReduceAction);
 				}
 			}
 		});
@@ -313,6 +319,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		insertStmtAction.setUserDB(getUserDB());
 		renameColAction.setUserDB(getUserDB());
 		reIndexColAction.setUserDB(getUserDB());
+		mapReduceAction.setUserDB(getUserDB());
 	}
 
 	public TableViewer getCollectionListViewer() {
