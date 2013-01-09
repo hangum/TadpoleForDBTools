@@ -533,7 +533,7 @@ public class MongodbResultComposite extends Composite {
 	 */
 	private void selectData() {
 		int selectionIndex = tabFolderMongoDB.getSelectionIndex();
-		logger.debug("[session tab]" + tabFolderMongoDB.getSelectionIndex());
+//		logger.debug("[session tab]" + tabFolderMongoDB.getSelectionIndex());
 		
 		// tree view
 		if(selectionIndex == 0) {

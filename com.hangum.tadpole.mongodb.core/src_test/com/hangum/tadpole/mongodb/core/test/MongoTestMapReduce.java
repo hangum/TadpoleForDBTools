@@ -22,6 +22,25 @@ import com.mongodb.Mongo;
 /**
  * MongoDB MapReduce example
  * 
+ * 
+ // map
+function() {
+     emit(this.name, {count: 1, sum: this.number});
+};
+
+ // reduce
+ function(key,values) {
+    var n = { count: 0, sum: 0};
+    for ( var i = 0; i < values.length; i ++ ) {
+        n.sum += values[i].sum;
+        n.count += values[i].count;
+    };
+
+    return n;
+};
+
+ * 
+ * 
  * @author hangum
  * 
  */

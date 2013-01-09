@@ -21,8 +21,8 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.mongodb.core.ext.editors.mapreduce.MapReduceEditor;
-import com.hangum.tadpole.mongodb.core.ext.editors.mapreduce.MapReduceEditorInput;
+import com.hangum.tadpole.mongodb.core.editors.mapreduce.MapReduceEditor;
+import com.hangum.tadpole.mongodb.core.editors.mapreduce.MapReduceEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 

@@ -110,6 +110,8 @@ public class NewDocumentDialog extends Dialog {
 		});
 		textContent.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
+		textContent.setFocus();
+		
 		return container;
 	}
 	

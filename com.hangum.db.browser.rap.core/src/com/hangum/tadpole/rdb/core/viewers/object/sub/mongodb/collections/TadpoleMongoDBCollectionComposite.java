@@ -277,7 +277,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 
 		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
 		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");
-		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "MapReduce");
+		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "MapReduce Collection");
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

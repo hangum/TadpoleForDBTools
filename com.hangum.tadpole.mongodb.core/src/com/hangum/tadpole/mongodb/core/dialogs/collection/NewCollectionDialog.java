@@ -109,6 +109,8 @@ public class NewCollectionDialog extends Dialog {
 		});
 		textContent.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
+		textName.setFocus();
+		
 		return container;
 	}
 	

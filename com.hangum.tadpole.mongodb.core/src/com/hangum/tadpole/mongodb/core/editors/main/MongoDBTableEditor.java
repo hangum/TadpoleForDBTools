@@ -50,9 +50,9 @@ import com.hangum.tadpole.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
-import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -80,7 +80,7 @@ public class MongoDBTableEditor extends EditorPart {
 	/** userDB */
 	private UserDBDAO userDB;
 	/** collectionName */
-	private String tableName;
+	private String initColName;
 	
 	/** search panel */
 	private CTabFolder tabFolderSearchPanel;
@@ -187,15 +187,6 @@ public class MongoDBTableEditor extends EditorPart {
 				}
 			}
 		});
-//		textBasicFind.addTraverseListener(new TraverseListener() {
-//			public void keyTraversed(TraverseEvent e) {
-//				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-//					textBasicFind.setFocus();
-//					e.doit = false;
-//					e.detail = SWT.TRAVERSE_NONE;
-//				}
-//			}
-//		});
 		textBasicFind.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textBasicFind.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
@@ -213,15 +204,6 @@ public class MongoDBTableEditor extends EditorPart {
 				}
 			}
 		});
-//		textBasicField.addTraverseListener(new TraverseListener() {
-//			public void keyTraversed(TraverseEvent e) {
-//				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-//					textBasicField.setFocus();
-//					e.doit = false;
-//					e.detail = SWT.TRAVERSE_NONE;
-//				}
-//			}
-//		});
 		textBasicFind.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textBasicField.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -239,15 +221,6 @@ public class MongoDBTableEditor extends EditorPart {
 				}
 			}
 		});
-//		textBasicSort.addTraverseListener(new TraverseListener() {
-//			public void keyTraversed(TraverseEvent e) {
-//				if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-//					textBasicSort.setFocus();
-//					e.doit = false;
-//					e.detail = SWT.TRAVERSE_NONE;
-//				}
-//			}
-//		});
 		textBasicSort.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textBasicSort.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -465,7 +438,7 @@ public class MongoDBTableEditor extends EditorPart {
 		gl_composite.marginWidth = 0;
 		composite.setLayout(gl_composite);
 		
-		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, tableName, this);
+		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName, this);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeResult.setLayout(new GridLayout(1, false));
 		sashForm.setWeights(new int[] {40, 60});
@@ -692,8 +665,8 @@ public class MongoDBTableEditor extends EditorPart {
 		mapColumns = new HashMap<Integer, String>();
 		sourceDataList = new ArrayList<HashMap<Integer, Object>>();
 		
-		DB mongoDB = MongoConnectionManager.getInstance(userDB);
-		DBCollection dbCollection = mongoDB.getCollection(tableName);
+		DB mongoDB = MongoDBQuery.findDB(userDB);		
+		DBCollection dbCollection = MongoDBQuery.findCollection(userDB, initColName);
 		
 		// 데이터 검색
 		DBCursor dbCursor = null;
@@ -749,7 +722,7 @@ public class MongoDBTableEditor extends EditorPart {
 			mongoDB.forceError();
 	        mongoDB.resetError();
 	        
-	        if(logger.isDebugEnabled()) logger.debug(sbConsoleMsg);
+//	        if(logger.isDebugEnabled()) logger.debug(sbConsoleMsg);
 			
 			// 결과 데이터를 출력합니다.
 			int totCnt = 0;
@@ -898,7 +871,7 @@ public class MongoDBTableEditor extends EditorPart {
 	 */
 	private void console() {
 		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-				tableName + " query Console",  //$NON-NLS-1$
+				initColName + " query Console",  //$NON-NLS-1$
 				sbConsoleMsg.toString());
 		dialog.open();
 	}
@@ -931,7 +904,7 @@ public class MongoDBTableEditor extends EditorPart {
 		
 		MongoDBEditorInput moInput = (MongoDBEditorInput)input;
 		this.userDB = moInput.getUserDB();
-		this.tableName = moInput.getName();
+		this.initColName = moInput.getCollectionName();
 		this.columnInfo = new HashMap<String, CollectionFieldDAO>();
 		for (int i=0; i<moInput.getShowTableColumns().size(); i++) {
 			CollectionFieldDAO tcDAO = (CollectionFieldDAO)moInput.getShowTableColumns().get(i);

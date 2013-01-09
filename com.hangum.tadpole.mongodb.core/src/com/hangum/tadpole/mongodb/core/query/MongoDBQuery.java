@@ -37,6 +37,8 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.MapReduceCommand;
+import com.mongodb.MapReduceOutput;
 import com.mongodb.WriteResult;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -347,7 +349,7 @@ public class MongoDBQuery {
 	}
 	
 	/**
-	 * all Server Side Java Scirpt
+	 * all Server Side Java Script
 	 * @param userDB
 	 * @throws Exception
 	 */
@@ -705,6 +707,39 @@ public class MongoDBQuery {
 	public static void dropIndex(UserDBDAO userDB, String colName, String name) throws Exception {
 		findCollection(userDB, colName).dropIndex(name);		
 	}
-
 	
+	
+	/**
+	 * map/reduce 실행 메소드
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @param strMap
+	 * @param strReduce
+	 * @param strFinalize
+	 * @param outputTarget
+	 * @param outputType
+	 * @param dbQuery
+	 * @return
+	 * @throws Exception
+	 */
+	public static MapReduceOutput mapReduce(UserDBDAO userDB, 
+											String colName, 
+											String strMap, 
+											String strReduce, 
+											String strFinalize,
+											String outputTarget, 
+											String outputType, 
+											DBObject dbQuery) throws Exception {
+		
+		// outputType을 MapReduceCommand.OutputType 으로 바꾸어야 합니다.
+		
+		DBCollection dbCollection = findCollection(userDB, colName);		
+		MapReduceCommand command = new MapReduceCommand(dbCollection, strMap, strMap, outputTarget, MapReduceCommand.OutputType.INLINE, dbQuery);
+		if(!"".equals(strFinalize)) command.setFinalize(strFinalize);
+		
+		MapReduceOutput out = dbCollection.mapReduce(command);
+		
+		return out;
+	}	
 }

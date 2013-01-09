@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.10.1.jar" sourcepath="/mongo-java-driver"/>
 	<classpathentry exported="true" kind="lib" path="libs/jasypt-1.7.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-io-2.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-fileupload-1.2.2.jar"/>

@@ -83,4 +83,8 @@ public class MongoDBEditorInput implements IEditorInput {
 	public List getShowTableColumns() {
 		return showTableColumns;
 	}
+	
+	public String getCollectionName() {
+		return collectionName;
+	}
 }
