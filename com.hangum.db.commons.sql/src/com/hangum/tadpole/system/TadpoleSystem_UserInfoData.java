@@ -274,7 +274,7 @@ public class TadpoleSystem_UserInfoData {
 		
 		// MONGO_DEFAULT_RESULT
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_RESULT);
-		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE);
+		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 	}
