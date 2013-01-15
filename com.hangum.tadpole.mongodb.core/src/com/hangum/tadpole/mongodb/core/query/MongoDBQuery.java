@@ -159,22 +159,38 @@ public class MongoDBQuery {
 		return collection.findOne(queryObj);
 	}
 	
-	/**
-	 * explain
-	 * 
-	 * @param userDB
-	 * @param colName
-	 * @param jsonStr
-	 * @return
-	 * @throws Exception
-	 */
-	public static String explain(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
-		DBCollection collection = findCollection(userDB, colName);
-		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
-		
-		DBObject explainDBObject = collection.find(dbObject).explain();
-		return JSONUtil.getPretty(explainDBObject.toString());		
-	}
+//	/**
+//	 * explain
+//	 * 
+//	 * @param userDB
+//	 * @param colName
+//	 * @param jsonStr
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static String explain(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
+//		DBCollection collection = findCollection(userDB, colName);
+//		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
+//		
+//		DBObject explainDBObject = collection.find(dbObject).explain();
+//		return JSONUtil.getPretty(explainDBObject.toString());		
+//	}
+//	
+//	/**
+//	 * find query
+//	 * 
+//	 * @param userDB
+//	 * @param colName
+//	 * @param jsonStr
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static DBCursor findQuery(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
+//		DBCollection collection = findCollection(userDB, colName);
+//		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
+//		
+//		return collection.find(dbObject);	
+//	}
 	
 	/**
 	 * insert document
@@ -720,26 +736,41 @@ public class MongoDBQuery {
 	 * @param outputTarget
 	 * @param outputType
 	 * @param dbQuery
+	 * @param dbSort
+	 * @param intLimit
 	 * @return
 	 * @throws Exception
 	 */
-	public static MapReduceOutput mapReduce(UserDBDAO userDB, 
+	public static Object mapReduce(UserDBDAO userDB, 
 											String colName, 
 											String strMap, 
 											String strReduce, 
 											String strFinalize,
-											String outputTarget, 
-											String outputType, 
-											DBObject dbQuery) throws Exception {
+											String strOutputTarget, 
+											MapReduceCommand.OutputType outputType, 
+											DBObject dbQuery,
+											DBObject dbSort,
+											int intLimit
+				) throws Exception {
 		
-		// outputType을 MapReduceCommand.OutputType 으로 바꾸어야 합니다.
 		
 		DBCollection dbCollection = findCollection(userDB, colName);		
-		MapReduceCommand command = new MapReduceCommand(dbCollection, strMap, strMap, outputTarget, MapReduceCommand.OutputType.INLINE, dbQuery);
-		if(!"".equals(strFinalize)) command.setFinalize(strFinalize);
+		MapReduceCommand mrCommand = new MapReduceCommand(dbCollection, strMap, strMap, strOutputTarget, outputType, dbQuery);
+		if(!"".equals(strFinalize)) mrCommand.setFinalize(strFinalize);
+		if(dbSort != null) mrCommand.setSort(dbSort);		
+		if(intLimit > 0) mrCommand.setLimit(intLimit);
 		
-		MapReduceOutput out = dbCollection.mapReduce(command);
+		final BasicDBObject cmdOBJ = (BasicDBObject) mrCommand.toDBObject();   
 		
-		return out;
+		CommandResult res = null;
+		if(outputType == MapReduceCommand.OutputType.INLINE) {
+			res = dbCollection.getDB().command(cmdOBJ, dbCollection.getOptions());
+			
+			return res;			
+		} else {
+			res = dbCollection.getDB().command(cmdOBJ);
+			
+			return new MapReduceOutput(dbCollection, cmdOBJ, res);
+		}
 	}	
 }

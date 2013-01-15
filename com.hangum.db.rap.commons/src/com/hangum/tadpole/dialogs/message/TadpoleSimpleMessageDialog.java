@@ -13,7 +13,10 @@ package com.hangum.tadpole.dialogs.message;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -22,6 +25,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 
 /**
  * tadpole message dialog
@@ -73,6 +78,16 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 		new Label(container, SWT.NONE);
 		
 		textMessage = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMessage.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+			
+				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
+					textMessage.insert(TadpoleWidgetUtils.TAB_CONETNT);
+				}
+			}
+		});
+		textMessage.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
 

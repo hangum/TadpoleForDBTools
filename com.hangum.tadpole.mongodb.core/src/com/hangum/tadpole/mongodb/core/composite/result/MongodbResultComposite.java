@@ -17,8 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -61,9 +65,10 @@ import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
-import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.util.JSONUtil;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
@@ -76,7 +81,13 @@ import com.hangum.tadpole.util.tables.SQLResultFilter;
 import com.hangum.tadpole.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.util.tables.SQLResultSorter;
 import com.hangum.tadpole.util.tables.TableUtil;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 /**
  * 몽고 디비 결과셋을 출력하는 콤포짖
@@ -87,12 +98,25 @@ import com.mongodb.DBObject;
 public class MongodbResultComposite extends Composite {
 	private static Logger logger = Logger.getLogger(MongodbResultComposite.class);
 	
+	/** preference default max count */
+	private int defaultMaxCount = GetPreferenceGeneral.getMongoDefaultMaxCount();
+	
+	/** preference default result page */
+	private String defaultResultPage = GetPreferenceGeneral.getMongoDefaultResultPage();
+	
 	/** data userdb*/
 	private UserDBDAO userDB;
 	/** collection name */
 	private String collectionName;
-	/** call editor */
-	private MongoDBTableEditor editor;
+	
+	/** 기본 검색 조건 */
+	String strBasicField 	= "";
+	String strBasicFind 	= "";
+	String strBasicSort 	= "";
+	int cntSkip 			= 0;
+	int cntLimit 			= 0;
+	
+	private StringBuffer sbConsoleMsg = new StringBuffer();
 	
 	/** result tab folder */
 	private CTabFolder tabFolderMongoDB;
@@ -115,7 +139,7 @@ public class MongodbResultComposite extends Composite {
 	private List<TadpoleMessageDAO> listMessage = new ArrayList<TadpoleMessageDAO>();
 	
 	/** browser */
-	Composite compositeExternal;
+	private Composite compositeExternal;
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
 
@@ -128,16 +152,18 @@ public class MongodbResultComposite extends Composite {
 	private Map<Integer, String> mapColumns;
 	private List<MongodbTreeViewDTO> listTrees;
 	
+	/** label count  string */
+	private String txtCnt = ""; //$NON-NLS-1$
+	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public MongodbResultComposite(Composite parent, int style, final UserDBDAO userDB, final String collectionName, final MongoDBTableEditor editor) {
+	public MongodbResultComposite(Composite parent, int style, final UserDBDAO userDB, final String collectionName) {
 		super(parent, style);
 		this.userDB = userDB;
 		this.collectionName = collectionName;
-		this.editor = editor;
 		
 		tabFolderMongoDB = new CTabFolder(parent, SWT.NONE);
 		tabFolderMongoDB.addSelectionListener(new SelectionAdapter() {
@@ -479,6 +505,277 @@ public class MongodbResultComposite extends Composite {
 		firstTabInit();
 	}
 	
+	public void find(String strBasicField) {
+		this.strBasicField 	= strBasicField;
+		
+		find();
+	}
+	
+	/**
+	 * find query
+	 * 
+	 * @param strBasicField
+	 * @param strBasicFind
+	 * @param strBasicSort
+	 * @param cntSkip
+	 * @param cntLimit
+	 */
+	public void find(String strBasicField, String strBasicFind, String strBasicSort, int cntSkip, int cntLimit) {
+
+		this.strBasicField 	= strBasicField;
+		this.strBasicFind 	= strBasicFind;
+		this.strBasicSort 	= strBasicSort;
+		this.cntSkip 		= cntSkip;
+		this.cntLimit 		= cntLimit;
+		
+		find();
+	}	
+	
+	/**
+	 * 
+	 */
+	private void find() {
+		
+		final Display display = getDisplay();		
+		// job
+		Job job = new Job("SQL execute job") { //$NON-NLS-1$
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Starting JSON query...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+						
+				try {			
+					// field					
+					BasicDBObject basicFields = (BasicDBObject)JSON.parse(strBasicField);
+					if(null == basicFields) basicFields = new BasicDBObject();
+					
+					// search
+					DBObject basicWhere = (DBObject)JSON.parse(strBasicFind);
+					if(null == basicWhere) basicWhere = new BasicDBObject();
+					
+					// sort
+					BasicDBObject basicSort = (BasicDBObject)JSON.parse(strBasicSort);
+					if(null == basicSort) basicSort = new BasicDBObject();
+					
+					if(logger.isDebugEnabled()) {
+						logger.debug("############[text condition]#####################"); //$NON-NLS-1$
+						logger.debug("[Fields]" + strBasicField); //$NON-NLS-1$
+						logger.debug("[Find]" + strBasicFind); //$NON-NLS-1$
+						logger.debug("[Sort]" + strBasicSort); //$NON-NLS-1$
+						logger.debug("############[text condition]#####################"); //$NON-NLS-1$
+					}
+					monitor.setTaskName(basicWhere.toString());
+		
+					// console 초기화
+					sbConsoleMsg.setLength(0);
+					// 검색
+					find(basicFields, basicWhere, basicSort, cntSkip, cntLimit);
+				} catch (Exception e) {
+					logger.error("find basic collection exception", e); //$NON-NLS-1$
+					return new Status(Status.WARNING,Activator.PLUGIN_ID, "findBasic " + e.getMessage()); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				
+				return Status.OK_STATUS;
+			}
+		};
+		
+		// job의 event를 처리해 줍니다.
+		job.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+
+				final IJobChangeEvent jobEvent = event; 
+				
+				display.asyncExec(new Runnable() {
+					public void run() {
+						if(jobEvent.getResult().isOK()) {
+							setResult(txtCnt, mapColumns, listTrees, sourceDataList);
+						} else {
+							sbConsoleMsg.append(jobEvent.getResult().getMessage());
+							appendMessage(jobEvent.getResult().getMessage());
+						}
+					}
+				});	// end display.asyncExec				
+			}	// end done
+		});	// end job
+		
+		job.setName(userDB.getDisplay_name());
+		job.setUser(true);
+		job.schedule();
+	}
+	
+	/**
+	 * 실제 몽고디비와 접속해서 검색을 수행합니다.
+	 * 
+	 * @param basicFields
+	 * @param basicWhere
+	 * @param basicSort
+	 */
+	private void find(BasicDBObject basicFields, DBObject basicWhere, BasicDBObject basicSort, int cntSkip, int cntLimit) throws Exception {
+		if( (cntLimit - cntSkip) >= defaultMaxCount) {
+			
+//			"검색 수가 " + defaultMaxCount + "를 넘을수 없습니다. Prefernece에서 값을 조절하십시오."
+//			Search can not exceed the number 5. Set in Perference.
+			throw new Exception(String.format(Messages.MongoDBTableEditor_0, ""+defaultMaxCount));  //$NON-NLS-2$
+		}
+		
+		mapColumns = new HashMap<Integer, String>();
+		sourceDataList = new ArrayList<HashMap<Integer, Object>>();
+		
+		DB mongoDB = MongoDBQuery.findDB(userDB);		
+		DBCollection dbCollection = MongoDBQuery.findCollection(userDB, collectionName);
+		
+		// 데이터 검색
+		DBCursor dbCursor = null;
+		try {
+			if(cntSkip > 0 && cntLimit > 0) {
+					
+				dbCursor = dbCollection.
+									find(basicWhere, basicFields).
+									sort(basicSort).
+									skip(cntSkip).
+									limit(cntLimit)
+									;
+				
+			} else if(cntSkip == 0 && cntLimit > 0) {
+				
+				dbCursor = dbCollection.
+						find(basicWhere, basicFields).
+						sort(basicSort).
+						limit(cntLimit);
+			} else {
+				dbCursor = dbCollection.
+									find(basicWhere, basicFields).
+									sort(basicSort);				
+			}
+			
+			DBObject explainDBObject = dbCursor.explain();
+			sbConsoleMsg.append("[query explain]\r\n" + JSONUtil.getPretty(explainDBObject.toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleMsg.append("[error]\r\n" + JSONUtil.getPretty(mongoDB.getLastError().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+	
+			mongoDB.forceError();
+	        mongoDB.resetError();
+	        
+//	        if(logger.isDebugEnabled()) logger.debug(sbConsoleMsg);
+			
+			// 결과 데이터를 출력합니다.
+			int totCnt = 0;
+			listTrees = new ArrayList<MongodbTreeViewDTO>();
+			
+			for (DBObject dbObject : dbCursor) {
+				// 초기 호출시 컬럼 정보 설정 되어 있지 않을때
+				if(mapColumns.size() == 0) mapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
+				
+				// append tree text columnInfo.get(key)
+				MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				parserTreeObject(dbObject, treeDto, dbObject);
+				listTrees.add(treeDto);
+								
+				// append table text
+				HashMap<Integer, Object> dataMap = new HashMap<Integer, Object>();				
+				for(int i=0; i<mapColumns.size(); i++)	{
+					
+					Object keyVal = dbObject.get(mapColumns.get(i));
+					if(keyVal == null) dataMap.put(i, "");  //$NON-NLS-1$
+					else dataMap.put(i, keyVal.toString());
+				}
+				// 데이터 삭제 및 수정에서 사용하기 위한 id
+				dataMap.put(MongoDBDefine.PRIMARY_ID_KEY, dbObject);
+				sourceDataList.add(dataMap);
+				
+				// append row text
+				totCnt++;
+			}
+			txtCnt = dbCursor.count() + "/" + totCnt + Messages.MongoDBTableEditor_69; //$NON-NLS-1$
+		} finally {
+			if(dbCursor != null) dbCursor.close();
+		}
+	}
+	
+	/**
+	 * parser tree obejct
+	 * 
+	 * @param dbObject
+	 */
+	private void parserTreeObject(final DBObject rootDbObject, final MongodbTreeViewDTO treeDto, final DBObject dbObject) throws Exception {
+		List<MongodbTreeViewDTO> listTrees = new ArrayList<MongodbTreeViewDTO>();
+		
+		Map<Integer, String> tmpMapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
+		for(int i=0; i<tmpMapColumns.size(); i++)	{
+			MongodbTreeViewDTO tmpTreeDto = new MongodbTreeViewDTO();
+			tmpTreeDto.setDbObject(rootDbObject);
+			
+			String keyName = tmpMapColumns.get(i);			
+			Object keyVal = dbObject.get(keyName);
+			
+			tmpTreeDto.setRealKey(keyName);
+			// is sub document
+			if( keyVal instanceof BasicDBObject ) {
+				tmpTreeDto.setKey(tmpMapColumns.get(i) + " {..}"); //$NON-NLS-1$
+				tmpTreeDto.setType("Document"); //$NON-NLS-1$
+				
+				parserTreeObject(rootDbObject, tmpTreeDto, (DBObject)keyVal);
+			} else if(keyVal instanceof BasicDBList) {
+				BasicDBList dbObjectList = (BasicDBList)keyVal;
+				
+				tmpTreeDto.setKey(tmpMapColumns.get(i) + " [" + dbObjectList.size() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+				tmpTreeDto.setType("Array"); //$NON-NLS-1$
+				parseObjectArray(rootDbObject, tmpTreeDto, dbObjectList);
+			} else {
+				tmpTreeDto.setKey(tmpMapColumns.get(i));
+				tmpTreeDto.setType(keyVal != null?keyVal.getClass().getName():"Unknow"); //$NON-NLS-1$
+				
+				if(keyVal == null) tmpTreeDto.setValue(""); //$NON-NLS-1$
+				else tmpTreeDto.setValue(keyVal.toString());
+			}
+			
+			// 컬럼의 데이터를 넣는다.
+			listTrees.add(tmpTreeDto);
+		}
+		
+		treeDto.setChildren(listTrees);
+	}
+	
+	/**
+	 * object array
+	 * 
+	 * @param treeDto
+	 * @param dbObject
+	 * @throws Exception
+	 */
+	private void parseObjectArray(final DBObject rootDbObject, final MongodbTreeViewDTO treeDto, final BasicDBList dbObjectList) throws Exception {
+		List<MongodbTreeViewDTO> listTrees = new ArrayList<MongodbTreeViewDTO>();
+		
+		for(int i=0; i<dbObjectList.size(); i++) {
+			MongodbTreeViewDTO mongodbDto = new MongodbTreeViewDTO();
+			
+			mongodbDto.setRealKey("" + i ); //$NON-NLS-1$
+			mongodbDto.setKey("(" + i + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+			mongodbDto.setDbObject(rootDbObject);
+
+			Object keyVal = dbObjectList.get(i);
+			if( keyVal instanceof BasicDBObject ) {
+				mongodbDto.setType("Document"); //$NON-NLS-1$
+				
+				parserTreeObject(rootDbObject, mongodbDto, (DBObject)keyVal);
+			} else if(keyVal instanceof BasicDBList) {
+				BasicDBList tmpDbObjectList = (BasicDBList)keyVal;
+				
+				mongodbDto.setType("Array"); //$NON-NLS-1$
+				parseObjectArray(rootDbObject, mongodbDto, tmpDbObjectList);
+			} else {
+				mongodbDto.setType(keyVal != null?keyVal.getClass().getName():"Unknow"); //$NON-NLS-1$
+				
+				if(keyVal == null) mongodbDto.setValue(""); //$NON-NLS-1$
+				else mongodbDto.setValue(keyVal.toString());
+			}
+			
+			listTrees.add(mongodbDto);
+		}
+		
+		treeDto.setChildren(listTrees);
+	}
+	
 	/**
 	 * 테이블의 결과를 출력합니다.
 	 *
@@ -516,9 +813,9 @@ public class MongodbResultComposite extends Composite {
 		// 
 		if(tabFolderMongoDB.getSelectionIndex() == 3) {
 			
-			if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
+			if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( defaultResultPage )) {
 				tabFolderMongoDB.setSelection(0);
-			} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
+			} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( defaultResultPage )) {
 				tabFolderMongoDB.setSelection(1);
 			} else {
 				tabFolderMongoDB.setSelection(2);
@@ -575,32 +872,15 @@ public class MongodbResultComposite extends Composite {
 	 */
 	private void firstTabInit() {
 			
-		if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
+		if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( defaultResultPage )) {
 			tabFolderMongoDB.setSelection(0);
-		} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
+		} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( defaultResultPage )) {
 			tabFolderMongoDB.setSelection(1);
 		} else {
 			tabFolderMongoDB.setSelection(2);
 		}
 
 	}
-//	
-//	/**
-//	 * page를 초기화 합니다.
-//	 */
-//	private void tabInit() {
-//
-//		if(tabFolderMongoDB.getSelectionIndex() == 3) {
-//			
-//			if(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE.equals( editor.getDefaultResultPage() )) {
-//				tabFolderMongoDB.setSelection(0);
-//			} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( editor.getDefaultResultPage() )) {
-//				tabFolderMongoDB.setSelection(1);
-//			} else {
-//				tabFolderMongoDB.setSelection(2);
-//			}
-//		}
-//	}
 	
 	/**
 	 * document insert
@@ -608,7 +888,7 @@ public class MongodbResultComposite extends Composite {
 	private void newDocument() {
 		NewDocumentDialog dialog = new NewDocumentDialog(Display.getCurrent().getActiveShell(), userDB, collectionName);
 		if(Dialog.OK == dialog.open()) {
-			editor.findBasic();//Extension();
+			find();
 		}
 	}
 	
@@ -635,7 +915,7 @@ public class MongodbResultComposite extends Composite {
 			
 			try {
 				MongoDBQuery.deleteDocument(userDB, collectionName, dto.getDbObject());
-				editor.findBasic();//Extension();
+				find();
 			} catch (Exception e) {
 				logger.error(collectionName + " collection document remove object id is" + dto.getDbObject(), e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -658,7 +938,7 @@ public class MongodbResultComposite extends Composite {
 			
 			try {
 				MongoDBQuery.deleteDocument(userDB, collectionName, (DBObject)dbObject);
-				editor.findBasic();//Extension();
+				find();
 			} catch (Exception e) {
 				logger.error(collectionName + " collection document remove object id is" + dbObject, e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -795,4 +1075,13 @@ public class MongodbResultComposite extends Composite {
 	@Override
 	protected void checkSubclass() {
 	}
+	
+	/**
+	 * 콘솔창을 보여줍니다.
+	 */
+	public void console() {
+		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " query Console", sbConsoleMsg.toString());
+		dialog.open();
+	}
+
 }

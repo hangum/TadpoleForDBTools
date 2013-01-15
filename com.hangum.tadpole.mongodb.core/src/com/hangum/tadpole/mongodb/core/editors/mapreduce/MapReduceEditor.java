@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Cho Hyun Jong.
+	 * Copyright (c) 2013 Cho Hyun Jong.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 package com.hangum.tadpole.mongodb.core.editors.mapreduce;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -43,6 +42,8 @@ import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.mongodb.DBObject;
+import com.mongodb.MapReduceCommand;
+import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
 import com.mongodb.util.JSON;
 
@@ -78,6 +79,7 @@ public class MapReduceEditor extends EditorPart {
 	private Text textQuery;
 	private Text textLimit;
 	private Text textSort;
+	private Text textOutputTarget;
 
 	public MapReduceEditor() {
 		super();
@@ -244,14 +246,20 @@ public class MapReduceEditor extends EditorPart {
 		lblType.setText("Type");
 		
 		comboOutputType = new Combo(grpOutput_1, SWT.READ_ONLY);
+//		comboOutputType.setEnabled(false);
 		comboOutputType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboOutputType.add("Inline");
-		comboOutputType.add("Merge");
-		comboOutputType.add("Replace");
-		comboOutputType.add("Reduce");
-		comboOutputType.select(0);
-		new Label(grpOutput_1, SWT.NONE);
-		new Label(grpOutput_1, SWT.NONE);
+		for (OutputType outputType : MapReduceCommand.OutputType.values()) {
+			comboOutputType.add(outputType.toString());
+			comboOutputType.setData(outputType.toString(), outputType);
+		}
+		comboOutputType.select(3);
+		
+		Label lblOutput = new Label(grpOutput_1, SWT.NONE);
+		lblOutput.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOutput.setText("Output");
+		
+		textOutputTarget = new Text(grpOutput_1, SWT.BORDER);
+		textOutputTarget.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(grpOutput_1, SWT.NONE);
 		
 		Button btnExecute = new Button(grpOutput_1, SWT.NONE);
@@ -284,20 +292,32 @@ public class MapReduceEditor extends EditorPart {
 	 * execute map reduce
 	 */
 	private void executeMapReduce() {
-		String strMap = textMap.getText();
-		String strReduce = textReduce.getText();
-		String strFinilize = textFinalize.getText();
-		String strOutputTarget = null;
+		String strMap 		= textMap.getText();
+		String strReduce 	= textReduce.getText();
+		String strFinilize 	= textFinalize.getText();
+		String strOutputTarget = textOutputTarget.getText();
+		MapReduceCommand.OutputType outputType = (MapReduceCommand.OutputType)comboOutputType.getData(comboOutputType.getText());
 		
 		DBObject dbQuery = null;
-		if("".equals(textQuery.getText())) dbQuery = (DBObject) JSON.parse(textQuery.getText());
+		if(!"".equals(textQuery.getText())) {
+			dbQuery = (DBObject) JSON.parse(textQuery.getText());
+			logger.debug("[dbQuery]" + dbQuery.toString());
+		}
+		
+		DBObject dbSort = null;
+		if(!"".equals(textSort.getText())) dbSort = (DBObject) JSON.parse(textSort.getText());
+		
+		int intLimit = 0;
+		try {
+			intLimit = Integer.parseInt(textLimit.getText());
+		} catch(Exception e) {}
 		
 		try {
-			MapReduceOutput out = MongoDBQuery.mapReduce(userDB, initColName, strMap, strReduce, strFinilize, strOutputTarget, comboOutputType.getText(), dbQuery);
-			Iterable<DBObject> iteDBObject = out.results();
-			for (DBObject dbObject : iteDBObject) {
-				logger.debug(dbObject.toMap().toString());
-			}
+			Object outObj = MongoDBQuery.mapReduce(userDB, initColName, strMap, strReduce, strFinilize, strOutputTarget, outputType, dbQuery, dbSort, intLimit);
+//			for(DBObject dbObj : out.results()) {
+//				System.out.println(dbObj);
+//			}
+
 		} catch(Exception e) {
 			logger.error("MapReduce execute exception.", e);
 			

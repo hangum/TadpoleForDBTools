@@ -85,9 +85,8 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 			if("".equals(selGroupName)) { //$NON-NLS-1$
 				comboGroup.setText(strOtherGroupName);
 			} else {
-				// 콤보 선택 
 				for(int i=0; i<comboGroup.getItemCount(); i++) {
-					if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+					if(comboGroup.getItem(i).equals(selGroupName)) comboGroup.select(i);
 				}
 			}
 		}
