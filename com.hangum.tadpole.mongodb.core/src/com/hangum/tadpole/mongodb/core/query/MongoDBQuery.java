@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
@@ -30,15 +31,12 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
-import com.hangum.tadpole.util.JSONUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.MapReduceCommand;
-import com.mongodb.MapReduceOutput;
 import com.mongodb.WriteResult;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -648,6 +646,48 @@ public class MongoDBQuery {
 			
 			return gridFs.getFileList(queryObj).skip(intSkip).limit(intLimit);
 		}
+	}
+	
+	/**
+	 * bucket list 정보를 리턴합니다.
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> getGridFSBucketList(UserDBDAO userDB) throws Exception {
+		List<String> listStr = new ArrayList<String>();
+		
+		DB mongoDb = findDB(userDB);
+		Set<String> colNames = mongoDb.getCollectionNames();
+		for (String name : colNames) {
+			if(StringUtils.contains(name, ".chunks")) listStr.add(StringUtils.removeEnd(name, ".chunks"));			
+		}
+		
+		return listStr;
+	}
+	
+	/**
+	 * GridFS chunck detail information
+	 * 
+	 * @param userDB
+	 * @param objectId
+	 * @return
+	 * @throws Exception
+	 */
+	public static DBCursor getGridFSChunckDetail(UserDBDAO userDB, String searchChunkName, String objectId) throws Exception {
+		DBCollection col = findCollection(userDB, searchChunkName);
+		
+		// 
+		DBObject queryObj = new BasicDBObject();
+		queryObj.put("files_id", new ObjectId(objectId));
+		
+		// field
+		DBObject fieldObj = new BasicDBObject();
+		fieldObj.put("files_id", 1);
+		fieldObj.put("n", 1);
+		
+		return col.find(queryObj, fieldObj);
 	}
 	
 	/**
