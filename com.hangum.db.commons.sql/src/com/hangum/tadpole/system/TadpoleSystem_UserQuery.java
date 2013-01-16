@@ -20,6 +20,7 @@ import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.TadpoleRuntimeException;
+import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -73,13 +74,21 @@ public class TadpoleSystem_UserQuery {
 	
 	/**
 	 * 신규 유저를 등록합니다.
+	 * 
 	 * @param email
 	 * @param pass
 	 * @param name
 	 * @param type user-type
 	 */
 	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, String type) throws Exception {
-		return newUser(groupSeq, email, passwd, name, type, Define.YES_NO.NO.toString());
+		//
+		// 테스트모드 일 경우 관리자의 허락이 필요치 않도록 수정합니다.
+		// 
+		if(ApplicationArgumentUtils.isTestMode()) {
+			return newUser(groupSeq, email, passwd, name, type, Define.YES_NO.YES.toString());
+		} else {
+			return newUser(groupSeq, email, passwd, name, type, Define.YES_NO.NO.toString());
+		}
 	}
 	
 	
