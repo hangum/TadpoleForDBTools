@@ -14,7 +14,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -30,7 +32,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -39,12 +40,15 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
+import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
-import com.mongodb.MapReduceOutput;
 import com.mongodb.util.JSON;
 
 /**
@@ -61,9 +65,9 @@ public class MapReduceEditor extends EditorPart {
 
 	public static final String ID = "com.hangum.tadpole.mongodb.core.ext.editor.mapreduce";
 	
-	private String strMap = "function() {\r" + TadpoleWidgetUtils.TAB_CONETNT + " emit(this.user_id, 1); \r}";
-	private String strReduce = "function(k,values) {\r" + TadpoleWidgetUtils.TAB_CONETNT + " return 1; \r}";
-	private String strFinalize = "";//"function Finalize(key, reduced) {\r" + TadpoleWidgetUtils.TAB_CONETNT + " return reduced; \r}";
+	private String TEMPLATE_MAP_SRC 	= "function() {\r" + TadpoleWidgetUtils.TAB_CONETNT + " emit(this.user_id, 1); \r}";
+	private String TEMPLATE_REDUCE_SRC 	= "function(k,values) {\r" + TadpoleWidgetUtils.TAB_CONETNT + " return 1; \r}";
+	private String TEMPLATE_FINALIZE_SRC = "";//"function Finalize(key, reduced) {\r" + TadpoleWidgetUtils.TAB_CONETNT + " return reduced; \r}";
 	
 	/** 초기에 선택된 collection name */
 	private UserDBDAO userDB;
@@ -73,13 +77,19 @@ public class MapReduceEditor extends EditorPart {
 	private Text textReduce;
 	private Text textFinalize;
 	
-	
 	// output
 	private Combo comboOutputType;
 	private Text textQuery;
 	private Text textLimit;
 	private Text textSort;
 	private Text textOutputTarget;
+	
+	private Button btnSharded;
+	private Button btnNoneAtomic; 
+	private Button btnJsMode;
+	
+	/** 쿼리 결과 출력 */
+	private MongodbResultComposite compositeResult ;
 
 	public MapReduceEditor() {
 		super();
@@ -177,7 +187,12 @@ public class MapReduceEditor extends EditorPart {
 		sashFormMRF.setWeights(new int[] {4, 4, 2});
 		
 		Composite compositeInOut = new Composite(sashFormMain, SWT.NONE);
-		compositeInOut.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeInOut = new GridLayout(1, false);
+		gl_compositeInOut.verticalSpacing = 1;
+		gl_compositeInOut.horizontalSpacing = 1;
+		gl_compositeInOut.marginHeight = 1;
+		gl_compositeInOut.marginWidth = 1;
+		compositeInOut.setLayout(gl_compositeInOut);
 		
 		SashForm sashForm = new SashForm(compositeInOut, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -246,7 +261,7 @@ public class MapReduceEditor extends EditorPart {
 		lblType.setText("Type");
 		
 		comboOutputType = new Combo(grpOutput_1, SWT.READ_ONLY);
-//		comboOutputType.setEnabled(false);
+		comboOutputType.setEnabled(false);
 		comboOutputType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (OutputType outputType : MapReduceCommand.OutputType.values()) {
 			comboOutputType.add(outputType.toString());
@@ -262,11 +277,29 @@ public class MapReduceEditor extends EditorPart {
 		textOutputTarget.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(grpOutput_1, SWT.NONE);
 		
+		btnSharded = new Button(grpOutput_1, SWT.CHECK);
+		btnSharded.setText("Sharded ");
+		new Label(grpOutput_1, SWT.NONE);
+		
+		btnNoneAtomic = new Button(grpOutput_1, SWT.CHECK);
+		btnNoneAtomic.setText("None Atomic");
+		new Label(grpOutput_1, SWT.NONE);
+		
+		btnJsMode = new Button(grpOutput_1, SWT.CHECK);
+		btnJsMode.setText("JS Mode");
+		new Label(grpOutput_1, SWT.NONE);
+		
 		Button btnExecute = new Button(grpOutput_1, SWT.NONE);
 		btnExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				executeMapReduce();
+				try {
+					executeMapReduce();
+				} catch (Exception e1) {
+					logger.error("MapReduce Error", e1); //$NON-NLS-1$
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null, "Error", "MapReduce execute exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 			}
 		});
 		btnExecute.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -274,14 +307,16 @@ public class MapReduceEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {1, 1});
 		
-		Composite compositeResult = new Composite(sashFormMain, SWT.NONE);
-		compositeResult.setLayout(new GridLayout(1, false));
+		Composite composite = new Composite(sashFormMain, SWT.NONE);
+		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.horizontalSpacing = 0;
+		gl_composite.verticalSpacing = 0;
+		gl_composite.marginHeight = 0;
+		gl_composite.marginWidth = 0;
+		composite.setLayout(gl_composite);
 		
-		TreeViewer treeViewer = new TreeViewer(compositeResult, SWT.BORDER);
-		Tree tree = treeViewer.getTree();
-		tree.setHeaderVisible(true);
-		tree.setLinesVisible(true);
-		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName, false);
+		compositeResult.setLayout(new GridLayout(1, false));
 		
 		sashFormMain.setWeights(new int[] {40, 30, 30});
 		
@@ -291,7 +326,7 @@ public class MapReduceEditor extends EditorPart {
 	/**
 	 * execute map reduce
 	 */
-	private void executeMapReduce() {
+	private void executeMapReduce() throws Exception {
 		String strMap 		= textMap.getText();
 		String strReduce 	= textReduce.getText();
 		String strFinilize 	= textFinalize.getText();
@@ -299,30 +334,101 @@ public class MapReduceEditor extends EditorPart {
 		MapReduceCommand.OutputType outputType = (MapReduceCommand.OutputType)comboOutputType.getData(comboOutputType.getText());
 		
 		DBObject dbQuery = null;
-		if(!"".equals(textQuery.getText())) {
-			dbQuery = (DBObject) JSON.parse(textQuery.getText());
-			logger.debug("[dbQuery]" + dbQuery.toString());
-		}
+		if(!"".equals(textQuery.getText())) dbQuery = (DBObject) JSON.parse(textQuery.getText());
 		
 		DBObject dbSort = null;
 		if(!"".equals(textSort.getText())) dbSort = (DBObject) JSON.parse(textSort.getText());
 		
-		int intLimit = 0;
-		try {
-			intLimit = Integer.parseInt(textLimit.getText());
-		} catch(Exception e) {}
+		// 쿼리 합니다.
+		DBCollection dbCol = MongoDBQuery.findCollection(userDB, initColName);		
+		MapReduceCommand mrCmd = new MapReduceCommand(dbCol, strMap, strReduce, strOutputTarget, outputType, dbQuery);
+		if(!"".equals(strFinilize)) mrCmd.setFinalize(strFinilize);
+		if(dbSort != null) mrCmd.setSort(dbSort);		
+		if(getLimit() > 0) mrCmd.setLimit(getLimit());
+		if(btnJsMode.getSelection()) mrCmd.addExtraOption("jsMode", true);
 		
+		final BasicDBObject searchObj = (BasicDBObject)mrCmd.toDBObject();   
+		if(btnSharded.getSelection()) 	((BasicDBObject)searchObj.get("out")).put("sharded", true);
+		if(btnNoneAtomic.getSelection()) ((BasicDBObject)searchObj.get("out")).put("nonAtomic", true);
+		
+		goMapReduce(dbCol, searchObj, outputType);
+	}	
+	
+	/**
+	 * 검색합니다.
+	 * 
+	 * @param dbCollection
+	 * @param cmdSearchObj
+	 * @param outputType
+	 */
+	CommandResult 	cmdResult = null;
+//	MapReduceOutput mrOutput = null;
+	private void goMapReduce(final DBCollection dbCol, final BasicDBObject basicObj, final MapReduceCommand.OutputType mrOType) {
+		Job job = new Job("SQL execute job") { //$NON-NLS-1$
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Starting JSON query...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				try {
+				
+//					if(mrOType == MapReduceCommand.OutputType.INLINE) {
+//						cmdResult = dbCol.getDB().command(basicObj, dbCol.getOptions());
+//						cmdResult.throwOnError();
+//						mrOutput = new MapReduceOutput(dbCol, basicObj, cmdResult);
+//					} else {
+						cmdResult = dbCol.getDB().command(basicObj);
+//						cmdResult.throwOnError();
+//						mrOutput = new MapReduceOutput(dbCol, basicObj, cmdResult);
+//					}
+						if(!cmdResult.ok()) {
+							throw cmdResult.getException();
+						}
+					
+				} catch (Exception e) {
+					logger.error("find basic collection exception", e); //$NON-NLS-1$
+					return new Status(Status.WARNING,Activator.PLUGIN_ID, "findBasic " + e.getMessage()); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				
+				return Status.OK_STATUS;
+			}
+		};
+		
+		// job의 event를 처리해 줍니다.
+		job.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+	
+				final IJobChangeEvent jobEvent = event; 
+				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if(jobEvent.getResult().isOK()) {
+							try {
+								Iterable<DBObject> iteResult = (Iterable<DBObject>)cmdResult.get("results");
+								compositeResult.refreshDBView(iteResult, 0);
+								compositeResult.setResult();
+							} catch(Exception e) {
+								logger.error("MapReduce Error", e); //$NON-NLS-1$
+								Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+								ExceptionDetailsErrorDialog.openError(null, "Error", "MapReduce execute exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+						} else {
+//							compositeResult.errorView(jobEvent.getResult().getMessage());
+						}
+					}
+				});	// end display.asyncExec				
+			}	// end done
+		});	// end job
+		
+		job.setName(userDB.getDisplay_name());
+		job.setUser(true);
+		job.schedule();		
+	}
+	
+	private int getLimit() {
 		try {
-			Object outObj = MongoDBQuery.mapReduce(userDB, initColName, strMap, strReduce, strFinilize, strOutputTarget, outputType, dbQuery, dbSort, intLimit);
-//			for(DBObject dbObj : out.results()) {
-//				System.out.println(dbObj);
-//			}
-
+			return Integer.parseInt(textLimit.getText());
 		} catch(Exception e) {
-			logger.error("MapReduce execute exception.", e);
-			
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "An error has occurred.", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			return 0;
 		}
 	}
 	
@@ -330,9 +436,9 @@ public class MapReduceEditor extends EditorPart {
 	 * ui초기화 작업을 합니다.
 	 */
 	private void initUI() {
-		textMap.setText(strMap);
-		textReduce.setText(strReduce);
-		textFinalize.setText(strFinalize);
+		textMap.setText(TEMPLATE_MAP_SRC);
+		textReduce.setText(TEMPLATE_REDUCE_SRC);
+		textFinalize.setText(TEMPLATE_FINALIZE_SRC);
 		
 		textMap.setFocus();
 	}

@@ -99,7 +99,6 @@ public class UserManagementEditor extends EditorPart {
 		Composite composite = new AdminComposite(tabFolder, SWT.NONE);
 		tbtmItem.setControl(composite);
 		composite.setLayout(new GridLayout(1, false));
-
 	}
 
 	@Override

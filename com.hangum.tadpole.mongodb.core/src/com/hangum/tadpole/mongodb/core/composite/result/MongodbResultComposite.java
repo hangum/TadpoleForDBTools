@@ -108,6 +108,8 @@ public class MongodbResultComposite extends Composite {
 	private UserDBDAO userDB;
 	/** collection name */
 	private String collectionName;
+	/** 사용자가 action을 할수 있는지 */
+	private boolean isUserAction;
 	
 	/** 기본 검색 조건 */
 	String strBasicField 	= "";
@@ -128,7 +130,7 @@ public class MongodbResultComposite extends Composite {
 	private Text textFilter;
 	/** collection 결과 */
 	private TableViewer resultTableViewer;
-	private Label lblSearchCnt;
+	private Label lblTableViewCount;
 	private SashForm sashFormCollectionResult;
 	
 	private SQLResultFilter sqlFilter = new SQLResultFilter();
@@ -148,22 +150,26 @@ public class MongodbResultComposite extends Composite {
 	
 	/** query 의 결과 데이터  -- table의 데이터를 표시하는 용도 <column index, Data> */
 	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
-	private String textCnt;
-	private Map<Integer, String> mapColumns;
+	private Map<Integer, String> mapColumns = new HashMap<Integer, String>();
 	private List<MongodbTreeViewDTO> listTrees;
 	
 	/** label count  string */
 	private String txtCnt = ""; //$NON-NLS-1$
 	
 	/**
-	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
+	 * @param userDB
+	 * @param collectionName
 	 */
-	public MongodbResultComposite(Composite parent, int style, final UserDBDAO userDB, final String collectionName) {
+	public MongodbResultComposite(Composite parent, int style, final UserDBDAO userDB, final String collectionName, final boolean isUserAction) {
 		super(parent, style);
+		setLayout(new GridLayout(1, false));
+		
 		this.userDB = userDB;
 		this.collectionName = collectionName;
+		this.isUserAction = isUserAction;
 		
 		tabFolderMongoDB = new CTabFolder(parent, SWT.NONE);
 		tabFolderMongoDB.addSelectionListener(new SelectionAdapter() {
@@ -205,55 +211,57 @@ public class MongodbResultComposite extends Composite {
 		tree.setLinesVisible(true);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Composite compositeTreeViewTail = new Composite(compositeTreeView, SWT.NONE);
-		compositeTreeViewTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeTreeViewTail.setLayout(new GridLayout(6, false));
-		
-		Button btnTreeInsertDocument = new Button(compositeTreeViewTail, SWT.NONE);
-		btnTreeInsertDocument.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				newDocument();
-			}
-		});
-		btnTreeInsertDocument.setText("Insert Document"); //$NON-NLS-1$
-		
-//		Button btnTreeModifyDocument = new Button(compositeTreeViewTail, SWT.NONE);
-//		btnTreeModifyDocument.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//			}
-//		});
-//		btnTreeModifyDocument.setText("Modify Document");
-		
-		Button btnTreeDeleteDocument = new Button(compositeTreeViewTail, SWT.NONE);
-		btnTreeDeleteDocument.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				deleteDocumentTree();
-			}
-		});
-		btnTreeDeleteDocument.setText("Delete Document"); //$NON-NLS-1$
-		
-		Button btnTreeCreateIndex = new Button(compositeTreeViewTail, SWT.NONE);
-		btnTreeCreateIndex.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				createIndex();
-			}
-		});
-		btnTreeCreateIndex.setText("Add Index");
-		
-		Label labelTreeViewDumy = new Label(compositeTreeViewTail, SWT.NONE);
-		labelTreeViewDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		lblTreeViewCount = new Label(compositeTreeViewTail, SWT.NONE);
-		new Label(compositeTreeViewTail, SWT.NONE);
-		
 		createTreeColumn();
 		
 		treeViewerMongo.setContentProvider(new TreeMongoContentProvider() );
 		treeViewerMongo.setLabelProvider(new TreeMongoLabelProvider());
+		
+		Composite compositeTreeViewTail = new Composite(compositeTreeView, SWT.NONE);
+		compositeTreeViewTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeTreeViewTail.setLayout(new GridLayout(6, false));
+		
+		if(isUserAction) {
+			Button btnTreeInsertDocument = new Button(compositeTreeViewTail, SWT.NONE);
+			btnTreeInsertDocument.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					newDocument();
+				}
+			});
+			btnTreeInsertDocument.setText("Insert Document"); //$NON-NLS-1$
+			
+	//		Button btnTreeModifyDocument = new Button(compositeTreeViewTail, SWT.NONE);
+	//		btnTreeModifyDocument.addSelectionListener(new SelectionAdapter() {
+	//			@Override
+	//			public void widgetSelected(SelectionEvent e) {
+	//			}
+	//		});
+	//		btnTreeModifyDocument.setText("Modify Document");
+			
+			Button btnTreeDeleteDocument = new Button(compositeTreeViewTail, SWT.NONE);
+			btnTreeDeleteDocument.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					deleteDocumentTree();
+				}
+			});
+			btnTreeDeleteDocument.setText("Delete Document"); //$NON-NLS-1$
+			
+			Button btnTreeCreateIndex = new Button(compositeTreeViewTail, SWT.NONE);
+			btnTreeCreateIndex.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					createIndex();
+				}
+			});
+			btnTreeCreateIndex.setText("Add Index");
+		
+			Label labelTreeViewDumy = new Label(compositeTreeViewTail, SWT.NONE);
+			labelTreeViewDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		}
+		
+		lblTreeViewCount = new Label(compositeTreeViewTail, SWT.NONE);
+		lblTreeViewCount.setText("Count");
 		
 		CTabItem tbtmTableView = new CTabItem(tabFolderMongoDB, SWT.NONE);
 		tbtmTableView.setText("Table View"); //$NON-NLS-1$
@@ -305,37 +313,39 @@ public class MongodbResultComposite extends Composite {
 		compositeTail.setLayout(new GridLayout(10, false));
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Button btnInsertDocument = new Button(compositeTail, SWT.NONE);
-		btnInsertDocument.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				newDocument();
-			}
-		});
-		btnInsertDocument.setText("Insert Document"); //$NON-NLS-1$
+		if(isUserAction) {
+			Button btnInsertDocument = new Button(compositeTail, SWT.NONE);
+			btnInsertDocument.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					newDocument();
+				}
+			});
+			btnInsertDocument.setText("Insert Document"); //$NON-NLS-1$
+			
+			Button btnDeleteDocument = new Button(compositeTail, SWT.NONE);
+			btnDeleteDocument.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					deleteDocumentTable();
+				}
+			});
+			btnDeleteDocument.setText("Delete Document"); //$NON-NLS-1$
+			
+			Button btnCreateIndex = new Button(compositeTail, SWT.NONE);
+			btnCreateIndex.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					 createIndex();
+				}
+			});
+			btnCreateIndex.setText("Add Index");
 		
-		Button btnDeleteDocument = new Button(compositeTail, SWT.NONE);
-		btnDeleteDocument.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				deleteDocumentTable();
-			}
-		});
-		btnDeleteDocument.setText("Delete Document"); //$NON-NLS-1$
-		
-		Button btnCreateIndex = new Button(compositeTail, SWT.NONE);
-		btnCreateIndex.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				 createIndex();
-			}
-		});
-		btnCreateIndex.setText("Add Index");
-		
-		Label labelTableDumy = new Label(compositeTail, SWT.NONE);
-		GridData gd_labelTableDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_labelTableDumy.widthHint = 5;
-		labelTableDumy.setLayoutData(gd_labelTableDumy);
+			Label labelTableDumy = new Label(compositeTail, SWT.NONE);
+			GridData gd_labelTableDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+			gd_labelTableDumy.widthHint = 5;
+			labelTableDumy.setLayoutData(gd_labelTableDumy);
+		}
 		
 		Button btnExportCSV = new Button(compositeTail, SWT.NONE);
 		btnExportCSV.addSelectionListener(new SelectionAdapter() {
@@ -373,9 +383,8 @@ public class MongodbResultComposite extends Composite {
 		Label lblNewLabel_1 = new Label(compositeTail, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblSearchCnt = new Label(compositeTail, SWT.NONE);
-		new Label(compositeTail, SWT.NONE);
-		new Label(compositeTail, SWT.NONE);
+		lblTableViewCount = new Label(compositeTail, SWT.NONE);
+		
 		
 		CTabItem tbtmTextView = new CTabItem(tabFolderMongoDB, SWT.NONE);
 		tbtmTextView.setText("Text View"); //$NON-NLS-1$
@@ -396,28 +405,30 @@ public class MongodbResultComposite extends Composite {
 		compositeTextJson.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeTextJson.setLayout(new GridLayout(6, false));
 		
-		Button btnInsertTextDocument = new Button(compositeTextJson, SWT.NONE);
-		btnInsertTextDocument.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				newDocument();
-			}
-		});
-		btnInsertTextDocument.setText("Insert Document");
-		
-		Button btnTextCreateIndex = new Button(compositeTextJson, SWT.NONE);
-		btnTextCreateIndex.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				createIndex();
-			}
-		});
-		btnTextCreateIndex.setText("Add Index");
-		
-		Label labelTextDumy = new Label(compositeTextJson, SWT.NONE);
-		GridData gd_labelTextDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_labelTextDumy.widthHint = 5;
-		labelTextDumy.setLayoutData(gd_labelTextDumy);
+		if(isUserAction) {
+			Button btnInsertTextDocument = new Button(compositeTextJson, SWT.NONE);
+			btnInsertTextDocument.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					newDocument();
+				}
+			});
+			btnInsertTextDocument.setText("Insert Document");
+			
+			Button btnTextCreateIndex = new Button(compositeTextJson, SWT.NONE);
+			btnTextCreateIndex.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					createIndex();
+				}
+			});
+			btnTextCreateIndex.setText("Add Index");
+			
+			Label labelTextDumy = new Label(compositeTextJson, SWT.NONE);
+			GridData gd_labelTextDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+			gd_labelTextDumy.widthHint = 5;
+			labelTextDumy.setLayoutData(gd_labelTextDumy);
+		}
 		
 		Button btnExportJson = new Button(compositeTextJson, SWT.NONE);
 		btnExportJson.addSelectionListener(new SelectionAdapter() {
@@ -589,7 +600,7 @@ public class MongodbResultComposite extends Composite {
 				display.asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							setResult(txtCnt, mapColumns, listTrees, sourceDataList);
+							setResult();
 						} else {
 							sbConsoleMsg.append(jobEvent.getResult().getMessage());
 							appendMessage(jobEvent.getResult().getMessage());
@@ -618,9 +629,6 @@ public class MongodbResultComposite extends Composite {
 //			Search can not exceed the number 5. Set in Perference.
 			throw new Exception(String.format(Messages.MongoDBTableEditor_0, ""+defaultMaxCount));  //$NON-NLS-2$
 		}
-		
-		mapColumns = new HashMap<Integer, String>();
-		sourceDataList = new ArrayList<HashMap<Integer, Object>>();
 		
 		DB mongoDB = MongoDBQuery.findDB(userDB);		
 		DBCollection dbCollection = MongoDBQuery.findCollection(userDB, collectionName);
@@ -659,37 +667,52 @@ public class MongodbResultComposite extends Composite {
 //	        if(logger.isDebugEnabled()) logger.debug(sbConsoleMsg);
 			
 			// 결과 데이터를 출력합니다.
-			int totCnt = 0;
-			listTrees = new ArrayList<MongodbTreeViewDTO>();
+			refreshDBView(dbCursor, dbCursor.count());
 			
-			for (DBObject dbObject : dbCursor) {
-				// 초기 호출시 컬럼 정보 설정 되어 있지 않을때
-				if(mapColumns.size() == 0) mapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
-				
-				// append tree text columnInfo.get(key)
-				MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				parserTreeObject(dbObject, treeDto, dbObject);
-				listTrees.add(treeDto);
-								
-				// append table text
-				HashMap<Integer, Object> dataMap = new HashMap<Integer, Object>();				
-				for(int i=0; i<mapColumns.size(); i++)	{
-					
-					Object keyVal = dbObject.get(mapColumns.get(i));
-					if(keyVal == null) dataMap.put(i, "");  //$NON-NLS-1$
-					else dataMap.put(i, keyVal.toString());
-				}
-				// 데이터 삭제 및 수정에서 사용하기 위한 id
-				dataMap.put(MongoDBDefine.PRIMARY_ID_KEY, dbObject);
-				sourceDataList.add(dataMap);
-				
-				// append row text
-				totCnt++;
-			}
-			txtCnt = dbCursor.count() + "/" + totCnt + Messages.MongoDBTableEditor_69; //$NON-NLS-1$
 		} finally {
 			if(dbCursor != null) dbCursor.close();
 		}
+	}
+	
+	/**
+	 * 결과셋을 출력합니다.
+	 * 
+	 * @param iteResult
+	 * @param intTotalCnt
+	 * @throws Exception
+	 */
+	public void refreshDBView(Iterable<DBObject> iteResult, int intTotalCnt) throws Exception {
+		int totCnt = 0;
+		
+		mapColumns = new HashMap<Integer, String>();
+		sourceDataList = new ArrayList<HashMap<Integer, Object>>();
+		listTrees = new ArrayList<MongodbTreeViewDTO>();
+		
+		for(DBObject dbObject : iteResult) {
+			// 초기 호출시 컬럼 정보 설정 되어 있지 않을때
+			if(mapColumns.size() == 0) mapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
+			
+			// append tree text columnInfo.get(key)
+			MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			parserTreeObject(dbObject, treeDto, dbObject);
+			listTrees.add(treeDto);
+							
+			// append table text
+			HashMap<Integer, Object> dataMap = new HashMap<Integer, Object>();				
+			for(int i=0; i<mapColumns.size(); i++)	{
+				
+				Object keyVal = dbObject.get(mapColumns.get(i));
+				if(keyVal == null) dataMap.put(i, "");  //$NON-NLS-1$
+				else dataMap.put(i, keyVal.toString());
+			}
+			// 데이터 삭제 및 수정에서 사용하기 위한 id
+			dataMap.put(MongoDBDefine.PRIMARY_ID_KEY, dbObject);
+			sourceDataList.add(dataMap);
+			
+			// append row text
+			totCnt++;
+		}
+		txtCnt = intTotalCnt + "/" + totCnt + Messages.MongoDBTableEditor_69; //$NON-NLS-1$
 	}
 	
 	/**
@@ -779,22 +802,8 @@ public class MongodbResultComposite extends Composite {
 	/**
 	 * 테이블의 결과를 출력합니다.
 	 *
-	 * @param textCnt count
-	 * @param mapColumns table column
-	 * @param listTrees tree data
-	 * @param sourceDataList table data
 	 */
-	public void setResult(String textCnt, 
-							Map<Integer, String> mapColumns, 
-							List<MongodbTreeViewDTO> listTrees,
-							List<HashMap<Integer, Object>> sourceDataList
-	) {
-		
-		// 데이터를 초기화 합니다.
-		this.textCnt = textCnt;
-		this.mapColumns = mapColumns;
-		this.listTrees = listTrees;
-		this.sourceDataList = sourceDataList;
+	public void setResult() {
 		
 		// 화면을 초기화 합니다.
 		List<MongodbTreeViewDTO> tmpTree = new ArrayList<MongodbTreeViewDTO>();
@@ -808,7 +817,10 @@ public class MongodbResultComposite extends Composite {
 		resultTableViewer.refresh();
 		
 		textTextView.setText("");
-		lblTextViewCnt.setText(textCnt);
+		
+		lblTreeViewCount.setText("");
+		lblTableViewCount.setText("");
+		lblTextViewCnt.setText("");
 		
 		// 
 		if(tabFolderMongoDB.getSelectionIndex() == 3) {
@@ -821,8 +833,7 @@ public class MongodbResultComposite extends Composite {
 				tabFolderMongoDB.setSelection(2);
 			}
 		}
-		selectData();
-		
+		selectData();		
 	}
 	
 	/**
@@ -837,12 +848,16 @@ public class MongodbResultComposite extends Composite {
 			
 			treeViewerMongo.setInput(listTrees);
 			treeViewerMongo.expandToLevel(1);
-			lblTreeViewCount.setText(textCnt);
+			
+			lblTreeViewCount.setText(txtCnt);
+			lblTreeViewCount.getParent().layout();
 			
 		// table view
 		} else if(selectionIndex == 1) {
 			
-			lblSearchCnt.setText(textCnt);
+			lblTableViewCount.setText(txtCnt);
+			lblTableViewCount.getParent().layout();
+			
 			sqlSorter = new SQLResultSorter(-999);
 			
 			createTableColumn(mapColumns, sqlSorter);
@@ -864,6 +879,8 @@ public class MongodbResultComposite extends Composite {
 			}
 			textTextView.setText(JSONUtil.getPretty(sbJsonStr.toString()));
 			
+			lblTextViewCnt.setText(txtCnt);
+			lblTextViewCnt.getParent().layout();
 		}
 	}
 	
@@ -962,8 +979,9 @@ public class MongodbResultComposite extends Composite {
 				tableColumn.getColumn().setWidth( columnSize[i] );
 				tableColumn.getColumn().setResizable(true);
 				tableColumn.getColumn().setMoveable(false);
-				
-				if(i == 1) tableColumn.setEditingSupport(new TreeViewerEditingSupport(userDB, collectionName, treeViewerMongo));
+				if(isUserAction) {
+					if(i == 1) tableColumn.setEditingSupport(new TreeViewerEditingSupport(userDB, collectionName, treeViewerMongo));
+				}
 			}	// end for
 			
 		} catch(Exception e) { 
@@ -1083,5 +1101,6 @@ public class MongodbResultComposite extends Composite {
 		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " query Console", sbConsoleMsg.toString());
 		dialog.open();
 	}
+
 
 }

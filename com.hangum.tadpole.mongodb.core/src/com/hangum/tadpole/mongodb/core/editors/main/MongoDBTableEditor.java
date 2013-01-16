@@ -10,19 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.editors.main;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -41,30 +34,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.dialogs.message.TadpoleSimpleMessageDialog;
-import com.hangum.tadpole.mongodb.core.Activator;
-import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
-import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
-import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
-import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.util.JSONUtil;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -269,8 +246,7 @@ public class MongoDBTableEditor extends EditorPart {
 		gl_composite.marginWidth = 0;
 		composite.setLayout(gl_composite);
 		
-		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName);
-		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName, true);
 		compositeResult.setLayout(new GridLayout(1, false));
 		
 		sashForm.setWeights(new int[] {40, 60});
@@ -281,8 +257,7 @@ public class MongoDBTableEditor extends EditorPart {
 	/**
 	 * collection을 초기화 한다.
 	 */
-	private void initCollection() {	
-		
+	private void initCollection() {		
 		if(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC.equals(defaultFindPage)) {
 			tabFolderSearchPanel.setSelection(0);
 		}
