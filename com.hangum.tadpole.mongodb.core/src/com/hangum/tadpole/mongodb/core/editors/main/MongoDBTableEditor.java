@@ -227,7 +227,7 @@ public class MongoDBTableEditor extends EditorPart {
 				compositeResult.console();
 			}
 		});
-		btnBasicLastCommandConsole.setText("Show Console"); //$NON-NLS-1$
+		btnBasicLastCommandConsole.setText("Execute Plan & Error"); //$NON-NLS-1$
 		
 		Button btnBasicSearch = new Button(compositeBasicSearch, SWT.NONE);
 		btnBasicSearch.addSelectionListener(new SelectionAdapter() {
