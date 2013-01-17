@@ -118,7 +118,11 @@ public class MongodbResultComposite extends Composite {
 	int cntSkip 			= 0;
 	int cntLimit 			= 0;
 	
-	private StringBuffer sbConsoleMsg = new StringBuffer();
+	/** error console 내용 */
+	private StringBuffer sbConsoleErrorMsg = new StringBuffer();
+	
+	/** execute plan console */
+	private StringBuffer sbConsoleExecuteMsg = new StringBuffer();
 	
 	/** result tab folder */
 	private CTabFolder tabFolderMongoDB;
@@ -577,7 +581,9 @@ public class MongodbResultComposite extends Composite {
 					monitor.setTaskName(basicWhere.toString());
 		
 					// console 초기화
-					sbConsoleMsg.setLength(0);
+					sbConsoleErrorMsg.setLength(0);
+					sbConsoleExecuteMsg.setLength(0);
+					
 					// 검색
 					find(basicFields, basicWhere, basicSort, cntSkip, cntLimit);
 				} catch (Exception e) {
@@ -602,7 +608,7 @@ public class MongodbResultComposite extends Composite {
 						if(jobEvent.getResult().isOK()) {
 							setResult();
 						} else {
-							sbConsoleMsg.append(jobEvent.getResult().getMessage());
+							sbConsoleErrorMsg.append(jobEvent.getResult().getMessage());
 							appendMessage(jobEvent.getResult().getMessage());
 						}
 					}
@@ -658,8 +664,8 @@ public class MongodbResultComposite extends Composite {
 			}
 			
 			DBObject explainDBObject = dbCursor.explain();
-			sbConsoleMsg.append("[query explain]\r\n" + JSONUtil.getPretty(explainDBObject.toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleMsg.append("[error]\r\n" + JSONUtil.getPretty(mongoDB.getLastError().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleExecuteMsg.append(JSONUtil.getPretty(explainDBObject.toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleErrorMsg.append(JSONUtil.getPretty(mongoDB.getLastError().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 	
 			mongoDB.forceError();
 	        mongoDB.resetError();
@@ -1095,10 +1101,18 @@ public class MongodbResultComposite extends Composite {
 	}
 	
 	/**
-	 * 콘솔창을 보여줍니다.
+	 * error console
 	 */
-	public void console() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " query Console", sbConsoleMsg.toString());
+	public void consoleError() {
+		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " Error", sbConsoleErrorMsg.toString());
+		dialog.open();
+	}
+
+	/**
+	 * execute plan console
+	 */
+	public void consoleExecutePlan() {
+		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " Execute Plan", sbConsoleExecuteMsg.toString());
 		dialog.open();
 	}
 

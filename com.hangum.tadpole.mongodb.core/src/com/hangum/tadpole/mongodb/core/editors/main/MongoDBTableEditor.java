@@ -170,7 +170,7 @@ public class MongoDBTableEditor extends EditorPart {
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBasicSearch = new Composite(compositeBasic, SWT.NONE);
-		GridLayout gl_compositeBasicSearch = new GridLayout(8, false);
+		GridLayout gl_compositeBasicSearch = new GridLayout(10, false);
 		gl_compositeBasicSearch.verticalSpacing = 2;
 		gl_compositeBasicSearch.horizontalSpacing = 2;
 		gl_compositeBasicSearch.marginHeight = 2;
@@ -220,14 +220,28 @@ public class MongoDBTableEditor extends EditorPart {
 		Label label_1 = new Label(compositeBasicSearch, SWT.NONE);
 		label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Button btnExecutePlan = new Button(compositeBasicSearch, SWT.NONE);
+		btnExecutePlan.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				compositeResult.consoleExecutePlan();
+			}
+		});
+		btnExecutePlan.setText("Execute Plan");
+		
 		Button btnBasicLastCommandConsole = new Button(compositeBasicSearch, SWT.NONE);
 		btnBasicLastCommandConsole.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				compositeResult.console();
+				compositeResult.consoleError();
 			}
 		});
-		btnBasicLastCommandConsole.setText("Execute Plan and Error"); //$NON-NLS-1$
+		btnBasicLastCommandConsole.setText("Error"); //$NON-NLS-1$
+		
+		Label label_2 = new Label(compositeBasicSearch, SWT.NONE);
+		GridData gd_label_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_label_2.widthHint = 10;
+		label_2.setLayoutData(gd_label_2);
 		
 		Button btnBasicSearch = new Button(compositeBasicSearch, SWT.NONE);
 		btnBasicSearch.addSelectionListener(new SelectionAdapter() {
