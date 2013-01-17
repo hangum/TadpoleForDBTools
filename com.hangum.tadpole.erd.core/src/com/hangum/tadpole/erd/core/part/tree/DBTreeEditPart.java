@@ -17,7 +17,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 
-import com.hangum.tadpole.model.DB;
+import com.hangum.tadpole.rdb.model.DB;
 
 public class DBTreeEditPart extends AbstractTreeEditPart {
 	private  DBAdapter adapter;

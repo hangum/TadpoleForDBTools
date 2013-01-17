@@ -19,20 +19,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.erd.core.relation.RelationUtil;
-import com.hangum.tadpole.model.Column;
-import com.hangum.tadpole.model.DB;
-import com.hangum.tadpole.model.Table;
-import com.hangum.tadpole.model.TadpoleFactory;
-import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
+import com.hangum.tadpole.rdb.model.Column;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.RdbFactory;
+import com.hangum.tadpole.rdb.model.Table;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.mongodb.DBAddress;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
 
 /**
  * db의 모델을 생성합니다.
@@ -61,7 +56,7 @@ public enum TadpoleModelUtils {
 	public static final int GAP_HIGHT =  300;
 	public static final int GAP_WIDTH =  300;
 		
-	private TadpoleFactory factory = TadpoleFactory.eINSTANCE;
+	private RdbFactory factory = RdbFactory.eINSTANCE;
 	
 	/**
 	 * logindb의  모든 테이블 정보를 리턴합니다.

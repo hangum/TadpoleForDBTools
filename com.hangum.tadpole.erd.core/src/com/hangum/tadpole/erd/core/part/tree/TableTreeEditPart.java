@@ -16,7 +16,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 
 import com.hangum.tadpole.erd.stanalone.Activator;
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.Table;
 import com.swtdesigner.ResourceManager;
 
 public class TableTreeEditPart extends AbstractTreeEditPart {

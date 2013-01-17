@@ -15,7 +15,7 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 
 import com.hangum.tadpole.erd.core.command.TableDeleteCommand;
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.Table;
 
 /**
  * table delete command policy

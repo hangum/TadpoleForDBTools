@@ -25,12 +25,12 @@ import com.hangum.tadpole.dao.sqlite.SQLiteRefTableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.erd.core.dnd.TableTransferDropTargetListener;
-import com.hangum.tadpole.model.Column;
-import com.hangum.tadpole.model.DB;
-import com.hangum.tadpole.model.Relation;
-import com.hangum.tadpole.model.RelationKind;
-import com.hangum.tadpole.model.Table;
-import com.hangum.tadpole.model.TadpoleFactory;
+import com.hangum.tadpole.rdb.model.Column;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.RdbFactory;
+import com.hangum.tadpole.rdb.model.Relation;
+import com.hangum.tadpole.rdb.model.RelationKind;
+import com.hangum.tadpole.rdb.model.Table;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -182,7 +182,7 @@ public class RelationUtil {
 	 */
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db, List<ReferencedTableDAO> referenceTableList) throws Exception {
 		
-		TadpoleFactory tadpoleFactory = TadpoleFactory.eINSTANCE;
+		RdbFactory tadpoleFactory = RdbFactory.eINSTANCE;
 		
 		// 디비에서 관계 정보를 찾아서 넣어준다.
 		for (ReferencedTableDAO refTabDAO : referenceTableList) {

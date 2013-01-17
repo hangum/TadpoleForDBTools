@@ -17,7 +17,7 @@ import org.eclipse.gef.requests.BendpointRequest;
 
 import com.hangum.tadpole.erd.core.command.RelationCreateBendpointCommand;
 import com.hangum.tadpole.erd.core.command.RelationMoveBendpointCommand;
-import com.hangum.tadpole.model.Relation;
+import com.hangum.tadpole.rdb.model.Relation;
 
 public class RelationBendpointEditPolicy extends BendpointEditPolicy {
 

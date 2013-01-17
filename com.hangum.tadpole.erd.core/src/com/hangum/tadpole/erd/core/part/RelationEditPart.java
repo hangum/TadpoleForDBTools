@@ -33,7 +33,7 @@ import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 
 import com.hangum.tadpole.erd.core.figures.decoration.relation.RelationDecorator;
 import com.hangum.tadpole.erd.core.policies.RelationBendpointEditPolicy;
-import com.hangum.tadpole.model.Relation;
+import com.hangum.tadpole.rdb.model.Relation;
 
 public class RelationEditPart extends AbstractConnectionEditPart {
 	private static final Logger logger = Logger.getLogger(RelationEditPart.class);

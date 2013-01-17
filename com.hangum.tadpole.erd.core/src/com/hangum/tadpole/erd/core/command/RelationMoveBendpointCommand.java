@@ -13,7 +13,7 @@ package com.hangum.tadpole.erd.core.command;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 
-import com.hangum.tadpole.model.Relation;
+import com.hangum.tadpole.rdb.model.Relation;
 
 public final class RelationMoveBendpointCommand extends Command {
 	private Point oldLocation;

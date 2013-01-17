@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.erd.core.part.TableEditPart;
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.Table;
 
 /**
  * table selection action

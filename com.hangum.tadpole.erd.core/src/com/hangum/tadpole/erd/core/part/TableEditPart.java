@@ -30,8 +30,8 @@ import com.hangum.tadpole.erd.core.figures.ColumnFigure;
 import com.hangum.tadpole.erd.core.figures.TableFigure;
 import com.hangum.tadpole.erd.core.figures.TableFigure.COLUMN_TYPE;
 import com.hangum.tadpole.erd.core.policies.TableComponentEditPolicy;
-import com.hangum.tadpole.model.Column;
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.Column;
+import com.hangum.tadpole.rdb.model.Table;
 
 public class TableEditPart extends AbstractGraphicalEditPart implements NodeEditPart {
 	private static final Logger logger = Logger.getLogger(TableEditPart.class);

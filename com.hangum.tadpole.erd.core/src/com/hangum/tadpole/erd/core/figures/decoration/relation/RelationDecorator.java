@@ -19,7 +19,7 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transform;
 
-import com.hangum.tadpole.model.RelationKind;
+import com.hangum.tadpole.rdb.model.RelationKind;
 
 /**
  * relation decoration

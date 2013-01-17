@@ -31,22 +31,17 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.erd.core.Messages;
 import com.hangum.tadpole.erd.core.relation.RelationUtil;
 import com.hangum.tadpole.erd.stanalone.Activator;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.model.Column;
-import com.hangum.tadpole.model.DB;
-import com.hangum.tadpole.model.Table;
-import com.hangum.tadpole.model.TadpoleFactory;
-import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
+import com.hangum.tadpole.rdb.model.Column;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.RdbFactory;
+import com.hangum.tadpole.rdb.model.Table;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.mongodb.DBAddress;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
 
 /**
  * Explorer의 테이블 명을 넘겨 받아서 erd에 테이블을 그려줍니다.
@@ -56,7 +51,7 @@ import com.mongodb.Mongo;
  */
 public class TableTransferDropTargetListener extends AbstractTransferDropTargetListener {
 	private static final Logger logger = Logger.getLogger(TableTransferDropTargetListener.class);
-	private TadpoleFactory tadpoleFactory = TadpoleFactory.eINSTANCE;
+	private RdbFactory tadpoleFactory = RdbFactory.eINSTANCE;
 	
 	private TableTransferFactory transferFactory = new TableTransferFactory();
 	private UserDBDAO userDB;

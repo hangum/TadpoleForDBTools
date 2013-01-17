@@ -27,8 +27,8 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import com.hangum.tadpole.erd.core.figures.DBFigure;
 import com.hangum.tadpole.erd.core.policies.TableXYLayoutPolicy;
-import com.hangum.tadpole.model.DB;
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.Table;
 
 public class DBEditPart extends AbstractGraphicalEditPart implements LayerConstants  {
 	private static final Logger logger = Logger.getLogger(DBEditPart.class);

@@ -31,10 +31,10 @@
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.sql"/>
-      <plugin id="com.hangum.tadpole.erd.core"/>
+      <plugin id="com.hangum.tadpole.erd.core.rdb"/>
       <plugin id="com.hangum.tadpole.importdb"/>
       <plugin id="com.hangum.tadpole.manager.core"/>
-      <plugin id="com.hangum.tadpole.model"/>
+      <plugin id="com.hangum.tadpole.model.rdb"/>
       <plugin id="com.hangum.tadpole.mongodb.core"/>
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
       <plugin id="com.hangum.tadpole.preference"/>
@@ -117,10 +117,10 @@
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.erd.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.erd.core.rdb" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.importdb" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.model" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.model.rdb" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />

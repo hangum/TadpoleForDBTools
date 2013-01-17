@@ -12,16 +12,16 @@ package com.hangum.tadpole.erd.core.utils;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import com.hangum.tadpole.model.Column;
-import com.hangum.tadpole.model.DB;
-import com.hangum.tadpole.model.Relation;
-import com.hangum.tadpole.model.RelationKind;
-import com.hangum.tadpole.model.Table;
-import com.hangum.tadpole.model.TadpoleFactory;
+import com.hangum.tadpole.rdb.model.Column;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.RdbFactory;
+import com.hangum.tadpole.rdb.model.Relation;
+import com.hangum.tadpole.rdb.model.RelationKind;
+import com.hangum.tadpole.rdb.model.Table;
 
 public enum TestDataUtil {
 	INSTANCE;
-	private TadpoleFactory factory = TadpoleFactory.eINSTANCE;
+	private RdbFactory factory = RdbFactory.eINSTANCE;
 	
 	/**
 	 * test data

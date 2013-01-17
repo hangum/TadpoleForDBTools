@@ -12,7 +12,7 @@ package com.hangum.tadpole.erd.core.dnd;
 
 import org.eclipse.gef.requests.CreationFactory;
 
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.Table;
 
 public class TableTransferFactory implements CreationFactory {
 	private Table table;

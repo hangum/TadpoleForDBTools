@@ -34,8 +34,8 @@ import com.hangum.tadpole.erd.core.part.RelationEditPart;
 import com.hangum.tadpole.erd.core.part.TableEditPart;
 import com.hangum.tadpole.erd.stanalone.Activator;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.model.Relation;
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.Relation;
+import com.hangum.tadpole.rdb.model.Table;
 
 /**
  * autolayout action

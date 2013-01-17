@@ -13,9 +13,9 @@ package com.hangum.tadpole.erd.core.part;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 
-import com.hangum.tadpole.model.DB;
-import com.hangum.tadpole.model.Relation;
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.Relation;
+import com.hangum.tadpole.rdb.model.Table;
 
 public class TadpoleEditPartFactory implements EditPartFactory {
 

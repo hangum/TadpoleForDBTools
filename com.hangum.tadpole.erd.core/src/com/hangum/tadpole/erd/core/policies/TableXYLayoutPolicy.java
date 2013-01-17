@@ -18,8 +18,8 @@ import org.eclipse.gef.requests.CreateRequest;
 
 import com.hangum.tadpole.erd.core.command.TableChangeConstraintCommand;
 import com.hangum.tadpole.erd.core.command.TableCreateCommand;
-import com.hangum.tadpole.model.DB;
-import com.hangum.tadpole.model.Table;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.Table;
 
 public class TableXYLayoutPolicy extends XYLayoutEditPolicy {
 	

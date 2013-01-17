@@ -65,9 +65,9 @@ import com.hangum.tadpole.erd.core.part.TadpoleEditPartFactory;
 import com.hangum.tadpole.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.erd.stanalone.Activator;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.model.DB;
-import com.hangum.tadpole.model.TadpoleFactory;
-import com.hangum.tadpole.model.TadpolePackage;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.RdbFactory;
+import com.hangum.tadpole.rdb.model.RdbPackage;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
 /**
@@ -129,7 +129,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 
 						// 부분 테이블 정보를 처리한다.
 						} else {
-							TadpoleFactory factory = TadpoleFactory.eINSTANCE;
+							RdbFactory factory = RdbFactory.eINSTANCE;
 							db = factory.createDB();
 							db.setDbType(userDB.getTypes() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
 //							db.setId("");//userDB.getDisplay_name());
@@ -163,7 +163,7 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 							ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
 							
 							// 오류가 발생했을때는 기본 정보로 
-							TadpoleFactory factory = TadpoleFactory.eINSTANCE;
+							RdbFactory factory = RdbFactory.eINSTANCE;
 							db = factory.createDB();
 							db.setDbType(userDB.getTypes());
 							db.setId(userDB.getUsers());
@@ -282,8 +282,8 @@ public class TadpoleEditor extends GraphicalEditor {//WithFlyoutPalette {
 				 * <code>TadpolePackage.eNS_URI</code>
 				 */
 				ResourceSet resourceSet = new ResourceSetImpl();
-				if(resourceSet.getPackageRegistry().get("http://com.hangum.tadpole.model.ERDInfo") == null) {
-					resourceSet.getPackageRegistry().put("http://com.hangum.tadpole.model.ERDInfo", TadpolePackage.eINSTANCE.getClass());
+				if(resourceSet.getPackageRegistry().get("http://com.hangum.tadpole.rdb.model.ERDInfo") == null) {
+					resourceSet.getPackageRegistry().put("http://com.hangum.tadpole.rdb.model.ERDInfo", RdbPackage.eINSTANCE.getClass());
 				}
 				
 				// 
