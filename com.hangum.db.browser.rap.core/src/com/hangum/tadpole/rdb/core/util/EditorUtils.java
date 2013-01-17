@@ -16,8 +16,8 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.erd.core.editor.TadpoleEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 
 /**
  * editor utils
@@ -67,7 +67,7 @@ public class EditorUtils {
 	 * @return
 	 */
 	public static IEditorReference findERDEditor(UserDBResourceDAO dao) {
-		return findEditor(TadpoleEditor.ID, dao);
+		return findEditor(TadpoleRDBEditor.ID, dao);
 	}
 
 	/**
@@ -88,8 +88,8 @@ public class EditorUtils {
 					if(editor.getdBResource() == null) continue;
 					
 					if(editor.getdBResource().getSeq() == dao.getSeq()) return iEditorReference;
-				} else if(ier instanceof TadpoleEditor) {
-					TadpoleEditor editor = (TadpoleEditor)iEditorReference.getEditor(true);
+				} else if(ier instanceof TadpoleRDBEditor) {
+					TadpoleRDBEditor editor = (TadpoleRDBEditor)iEditorReference.getEditor(true);
 					if(editor.getUserDBErd() == null) continue;
 					
 					if(editor.getUserDBErd().getSeq() == dao.getSeq()) return iEditorReference;

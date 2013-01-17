@@ -23,11 +23,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.erd.core.editor.TadpoleEditor;
-import com.hangum.tadpole.erd.core.editor.TadpoleEditorInput;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
+import com.hangum.tadpole.rdb.erd.core.editor.TadpoleEditorInput;
 
 /**
  * 전체 table의 erd를 그립니다.
@@ -56,7 +56,7 @@ public class ERDAllTableViewAction implements IViewActionDelegate {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
 			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, true); //$NON-NLS-1$ //$NON-NLS-2$
-			page.openEditor(input, TadpoleEditor.ID, false);
+			page.openEditor(input, TadpoleRDBEditor.ID, false);
 			
 		} catch (PartInitException e) {
 			logger.error("erd editor opend", e); //$NON-NLS-1$

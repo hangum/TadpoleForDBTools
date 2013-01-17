@@ -24,11 +24,11 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.erd.core.editor.TadpoleEditor;
-import com.hangum.tadpole.erd.core.editor.TadpoleEditorInput;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
+import com.hangum.tadpole.rdb.erd.core.editor.TadpoleEditorInput;
 
 public class ERDViewAction implements IViewActionDelegate {
 	/**
@@ -51,7 +51,7 @@ public class ERDViewAction implements IViewActionDelegate {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
 			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
-			page.openEditor(input, TadpoleEditor.ID, false);
+			page.openEditor(input, TadpoleRDBEditor.ID, false);
 			
 		} catch (PartInitException e) {
 			logger.error("erd editor opend", e);
@@ -66,7 +66,7 @@ public class ERDViewAction implements IViewActionDelegate {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
 			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDBErd);
-			page.openEditor(input, TadpoleEditor.ID, false);
+			page.openEditor(input, TadpoleRDBEditor.ID, false);
 			
 		} catch (PartInitException e) {
 			logger.error("erd editor opend", e);
