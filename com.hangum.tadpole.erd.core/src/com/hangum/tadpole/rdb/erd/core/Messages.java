@@ -13,7 +13,7 @@ package com.hangum.tadpole.rdb.erd.core;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "com.hangum.tadpole.erd.core.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.erd.core.messages"; //$NON-NLS-1$
 	public static String AutoLayoutAction_0;
 	public static String AutoLayoutAction_1;
 	public static String AutoLayoutAction_2;
