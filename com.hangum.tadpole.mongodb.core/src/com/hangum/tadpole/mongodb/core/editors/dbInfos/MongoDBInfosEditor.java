@@ -13,6 +13,8 @@ package com.hangum.tadpole.mongodb.core.editors.dbInfos;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.net.aso.p;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -321,7 +323,6 @@ public class MongoDBInfosEditor extends EditorPart {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "MongoDB Information", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
 	}
 
 	@Override
@@ -351,7 +352,6 @@ public class MongoDBInfosEditor extends EditorPart {
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
-
 	
 	@Override
 	public void setFocus() {
@@ -381,10 +381,9 @@ class MongoInfoContentProvider implements ITreeContentProvider {
 		
 		if(list.get(0) instanceof MongoDBCollectionInfoDTO) {
 			return ((List<MongoDBCollectionInfoDTO>)inputElement).toArray();
-		} else {//if(list.get(0) instanceof TableColumnDAO) {
+		} else {
 			return ((List<TableColumnDAO>)inputElement).toArray();
 		}
-
 	}
 
 	@Override
@@ -392,6 +391,9 @@ class MongoInfoContentProvider implements ITreeContentProvider {
 		if(parentElement instanceof MongoDBCollectionInfoDTO) {
 			MongoDBCollectionInfoDTO dto = (MongoDBCollectionInfoDTO) parentElement;
 			return dto.getChild().toArray();
+		} else if(parentElement instanceof CollectionFieldDAO) {
+			CollectionFieldDAO dao = (CollectionFieldDAO) parentElement;
+			return dao.getChildren().toArray();
 		}
 		return null;
 	}
@@ -407,6 +409,10 @@ class MongoInfoContentProvider implements ITreeContentProvider {
 			MongoDBCollectionInfoDTO info = (MongoDBCollectionInfoDTO)element;
 			
 			return info.getChild().size() > 0;
+		} else if(element instanceof CollectionFieldDAO) {
+			CollectionFieldDAO dao = (CollectionFieldDAO)element;
+			
+			return dao.getChildren().size() > 0;
 		}
 		return false;
 	}

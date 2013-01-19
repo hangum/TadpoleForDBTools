@@ -75,7 +75,7 @@ public class MongoDBTableColumn {
 			Set<String> names = dbObject.keySet();			
 			for (String name : names) {
 				CollectionFieldDAO column = new CollectionFieldDAO(name, 
-														dbObject.get(name) != null?dbObject.get(name).getClass().getName():"Unknow",  //$NON-NLS-1$
+														dbObject.get(name) != null?dbObject.get(name).getClass().getSimpleName():"Unknow",  //$NON-NLS-1$
 														mapIndex.get(name) != null?"YES":"NO"); //$NON-NLS-1$ //$NON-NLS-2$
 				// 자식들이 있는 케이스 이면
 				if( dbObject.get(name) instanceof BasicDBObject ) {
@@ -103,7 +103,7 @@ public class MongoDBTableColumn {
 		List<CollectionFieldDAO> listChildField = new ArrayList<CollectionFieldDAO>(); 
 		for (String name : names) {	
 			CollectionFieldDAO columnSub = new CollectionFieldDAO(name,  		//$NON-NLS-1$
-															dbObject.get(name) != null ? dbObject.get(name).getClass().getName():"Unknow",  //$NON-NLS-1$
+															dbObject.get(name) != null ? dbObject.get(name).getClass().getSimpleName():"Unknow",  //$NON-NLS-1$
 															"NO");			 	//$NON-NLS-1$
 			
 			if( dbObject.get(name) instanceof BasicDBObject ) {
