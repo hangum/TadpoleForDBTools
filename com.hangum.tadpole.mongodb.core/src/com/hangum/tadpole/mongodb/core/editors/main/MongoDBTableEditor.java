@@ -236,7 +236,7 @@ public class MongoDBTableEditor extends EditorPart {
 				compositeResult.consoleError();
 			}
 		});
-		btnBasicLastCommandConsole.setText("Error"); //$NON-NLS-1$
+		btnBasicLastCommandConsole.setText("Server Msg"); //$NON-NLS-1$
 		
 		Label label_2 = new Label(compositeBasicSearch, SWT.NONE);
 		GridData gd_label_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
