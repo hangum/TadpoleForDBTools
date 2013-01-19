@@ -245,12 +245,17 @@ public class MongoDBQuery {
 	 */
 	public static void deleteDocument(UserDBDAO userDB, String colName, DBObject dbObject) throws Exception {
 		DBCollection collection = findCollection(userDB, colName);
-//		DBObject query = new BasicDBObject("_id", new ObjectId(objectId));
 		WriteResult wr = collection.remove(dbObject);
+		
 		if(logger.isDebugEnabled()) {
 			logger.debug( "[writer document]" + wr.toString() );
 			logger.debug( wr.getError() );		
 			logger.debug("[n]" + wr.getN() );
+		}
+		
+		// 외부 참조키가 있어 삭제 되지 않는 경우
+		if(wr.getN() == 0 && !"".equals(wr.getError())) {
+			throw new Exception(wr.getError());
 		}
 	}
 	

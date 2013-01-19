@@ -50,7 +50,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class RelationUtil {
-	private static final Logger logger = Logger.getLogger(TableTransferDropTargetListener.class);
+	private static final Logger logger = Logger.getLogger(RelationUtil.class);
 	
 	/**
 	 * 특정 테이블 관계를 조회합니다.
@@ -62,10 +62,7 @@ public class RelationUtil {
 	 * @throws Exception
 	 */
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db, String refTableNames) throws Exception {
-		
-		// mongodb는 관계가 없으므로 리턴한다.
-		if(DBDefine.MONGODB_DEFAULT.getDBToString().equals( userDB.getTypes() )) return;
-		
+			
 		// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
 		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
 			
@@ -77,7 +74,7 @@ public class RelationUtil {
 			
 		} else {
 		
-			calRelation(userDB, mapDBTables, db, RelationUtil.getReferenceTable(userDB, refTableNames));
+			calRelation(userDB, mapDBTables, db, getReferenceTable(userDB, refTableNames));
 		}
 	}
 	
@@ -90,8 +87,6 @@ public class RelationUtil {
 	 * @throws Exception
 	 */
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db)  throws Exception {
-		// mongodb는 관계가 없으므로 리턴한다.
-		if(DBDefine.MONGODB_DEFAULT.getDBToString().equals( userDB.getTypes() )) return;
 		
 		// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
 		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
@@ -104,7 +99,7 @@ public class RelationUtil {
 			
 		} else {
 
-			calRelation(userDB, mapDBTables, db, RelationUtil.getReferenceTable(userDB));
+			calRelation(userDB, mapDBTables, db, getReferenceTable(userDB));
 		}
 	}
 	

@@ -73,8 +73,8 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 		if(actionType == DB_ACTION.TABLES) {
 			TableDAO dao = (TableDAO)sel.getFirstElement();
 
-			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {
-				if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {				
+			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {
 					try {
 						TadpoleSystemCommons.executSQL(getUserDB(), "drop table " + dao.getName()); //$NON-NLS-1$
 						refreshTable();
@@ -82,8 +82,10 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 						logger.error(Messages.ObjectDeleteAction_5, e);
 						exeMessage(Messages.ObjectDeleteAction_0, e);
 					}
-	
-				} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+				}
+
+			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {
 					try {
 						MongoDBQuery.dropCollection(getUserDB(), dao.getName());
 						refreshTable();

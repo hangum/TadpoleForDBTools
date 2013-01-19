@@ -277,13 +277,13 @@ public interface RdbPackage extends EPackage {
 	int TABLE__LOGICAL_NAME = 6;
 
 	/**
-	 * The feature id for the '<em><b>Commant</b></em>' attribute.
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TABLE__COMMANT = 7;
+	int TABLE__COMMENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>User Comment Reference</b></em>' reference.
@@ -586,13 +586,13 @@ public interface RdbPackage extends EPackage {
 	int VIEW__LOGICAL_NAME = TABLE__LOGICAL_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Commant</b></em>' attribute.
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__COMMANT = TABLE__COMMANT;
+	int VIEW__COMMENT = TABLE__COMMENT;
 
 	/**
 	 * The feature id for the '<em><b>User Comment Reference</b></em>' reference.
@@ -866,15 +866,15 @@ public interface RdbPackage extends EPackage {
 	EAttribute getTable_LogicalName();
 
 	/**
-	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Table#getCommant <em>Commant</em>}'.
+	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Table#getComment <em>Comment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Commant</em>'.
-	 * @see com.hangum.tadpole.rdb.model.Table#getCommant()
+	 * @return the meta object for the attribute '<em>Comment</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Table#getComment()
 	 * @see #getTable()
 	 * @generated
 	 */
-	EAttribute getTable_Commant();
+	EAttribute getTable_Comment();
 
 	/**
 	 * Returns the meta object for the reference '{@link com.hangum.tadpole.rdb.model.Table#getUserCommentReference <em>User Comment Reference</em>}'.
@@ -1385,12 +1385,12 @@ public interface RdbPackage extends EPackage {
 		EAttribute TABLE__LOGICAL_NAME = eINSTANCE.getTable_LogicalName();
 
 		/**
-		 * The meta object literal for the '<em><b>Commant</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Comment</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TABLE__COMMANT = eINSTANCE.getTable_Commant();
+		EAttribute TABLE__COMMENT = eINSTANCE.getTable_Comment();
 
 		/**
 		 * The meta object literal for the '<em><b>User Comment Reference</b></em>' reference feature.

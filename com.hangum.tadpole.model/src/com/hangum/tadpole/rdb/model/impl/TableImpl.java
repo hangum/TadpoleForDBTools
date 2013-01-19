@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.TableImpl#getIncomingLinks <em>Incoming Links</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.TableImpl#getOutgoingLinks <em>Outgoing Links</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.TableImpl#getLogicalName <em>Logical Name</em>}</li>
- *   <li>{@link com.hangum.tadpole.rdb.model.impl.TableImpl#getCommant <em>Commant</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.impl.TableImpl#getComment <em>Comment</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.TableImpl#getUserCommentReference <em>User Comment Reference</em>}</li>
  * </ul>
  * </p>
@@ -142,24 +142,24 @@ public class TableImpl extends EObjectImpl implements Table {
 	protected String logicalName = LOGICAL_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getCommant() <em>Commant</em>}' attribute.
+	 * The default value of the '{@link #getComment() <em>Comment</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCommant()
+	 * @see #getComment()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String COMMANT_EDEFAULT = null;
+	protected static final String COMMENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getCommant() <em>Commant</em>}' attribute.
+	 * The cached value of the '{@link #getComment() <em>Comment</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCommant()
+	 * @see #getComment()
 	 * @generated
 	 * @ordered
 	 */
-	protected String commant = COMMANT_EDEFAULT;
+	protected String comment = COMMENT_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getUserCommentReference() <em>User Comment Reference</em>}' reference.
@@ -335,8 +335,8 @@ public class TableImpl extends EObjectImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getCommant() {
-		return commant;
+	public String getComment() {
+		return comment;
 	}
 
 	/**
@@ -344,11 +344,11 @@ public class TableImpl extends EObjectImpl implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setCommant(String newCommant) {
-		String oldCommant = commant;
-		commant = newCommant;
+	public void setComment(String newComment) {
+		String oldComment = comment;
+		comment = newComment;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RdbPackage.TABLE__COMMANT, oldCommant, commant));
+			eNotify(new ENotificationImpl(this, Notification.SET, RdbPackage.TABLE__COMMENT, oldComment, comment));
 	}
 
 	/**
@@ -468,8 +468,8 @@ public class TableImpl extends EObjectImpl implements Table {
 				return getOutgoingLinks();
 			case RdbPackage.TABLE__LOGICAL_NAME:
 				return getLogicalName();
-			case RdbPackage.TABLE__COMMANT:
-				return getCommant();
+			case RdbPackage.TABLE__COMMENT:
+				return getComment();
 			case RdbPackage.TABLE__USER_COMMENT_REFERENCE:
 				if (resolve) return getUserCommentReference();
 				return basicGetUserCommentReference();
@@ -510,8 +510,8 @@ public class TableImpl extends EObjectImpl implements Table {
 			case RdbPackage.TABLE__LOGICAL_NAME:
 				setLogicalName((String)newValue);
 				return;
-			case RdbPackage.TABLE__COMMANT:
-				setCommant((String)newValue);
+			case RdbPackage.TABLE__COMMENT:
+				setComment((String)newValue);
 				return;
 			case RdbPackage.TABLE__USER_COMMENT_REFERENCE:
 				setUserCommentReference((UserComment)newValue);
@@ -549,8 +549,8 @@ public class TableImpl extends EObjectImpl implements Table {
 			case RdbPackage.TABLE__LOGICAL_NAME:
 				setLogicalName(LOGICAL_NAME_EDEFAULT);
 				return;
-			case RdbPackage.TABLE__COMMANT:
-				setCommant(COMMANT_EDEFAULT);
+			case RdbPackage.TABLE__COMMENT:
+				setComment(COMMENT_EDEFAULT);
 				return;
 			case RdbPackage.TABLE__USER_COMMENT_REFERENCE:
 				setUserCommentReference((UserComment)null);
@@ -581,8 +581,8 @@ public class TableImpl extends EObjectImpl implements Table {
 				return outgoingLinks != null && !outgoingLinks.isEmpty();
 			case RdbPackage.TABLE__LOGICAL_NAME:
 				return LOGICAL_NAME_EDEFAULT == null ? logicalName != null : !LOGICAL_NAME_EDEFAULT.equals(logicalName);
-			case RdbPackage.TABLE__COMMANT:
-				return COMMANT_EDEFAULT == null ? commant != null : !COMMANT_EDEFAULT.equals(commant);
+			case RdbPackage.TABLE__COMMENT:
+				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
 			case RdbPackage.TABLE__USER_COMMENT_REFERENCE:
 				return userCommentReference != null;
 		}
@@ -605,8 +605,8 @@ public class TableImpl extends EObjectImpl implements Table {
 		result.append(constraints);
 		result.append(", logicalName: ");
 		result.append(logicalName);
-		result.append(", commant: ");
-		result.append(commant);
+		result.append(", comment: ");
+		result.append(comment);
 		result.append(')');
 		return result.toString();
 	}

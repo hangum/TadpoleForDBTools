@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.actions.erd;
+package com.hangum.tadpole.rdb.core.actions.erd.rdb;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -28,14 +28,14 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
-public class ERDDeleteAction implements IViewActionDelegate {
+public class RDBERDDeleteAction implements IViewActionDelegate {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ERDDeleteAction.class);
+	private static final Logger logger = Logger.getLogger(RDBERDDeleteAction.class);
 	private IStructuredSelection sel;
 	
-	public ERDDeleteAction() {
+	public RDBERDDeleteAction() {
 	}
 
 	@Override

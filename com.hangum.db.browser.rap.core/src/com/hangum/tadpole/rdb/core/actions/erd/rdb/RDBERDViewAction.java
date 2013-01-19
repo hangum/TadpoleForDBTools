@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.actions.erd;
+package com.hangum.tadpole.rdb.core.actions.erd.rdb;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -28,16 +28,16 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
-import com.hangum.tadpole.rdb.erd.core.editor.TadpoleEditorInput;
+import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditorInput;
 
-public class ERDViewAction implements IViewActionDelegate {
+public class RDBERDViewAction implements IViewActionDelegate {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ERDViewAction.class);
+	private static final Logger logger = Logger.getLogger(RDBERDViewAction.class);
 	private IStructuredSelection sel;
 
-	public ERDViewAction() {
+	public RDBERDViewAction() {
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class ERDViewAction implements IViewActionDelegate {
 	public void run(UserDBDAO userDB) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
+			TadpoleRDBEditorInput input = new TadpoleRDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
 			page.openEditor(input, TadpoleRDBEditor.ID, false);
 			
 		} catch (PartInitException e) {
@@ -65,7 +65,7 @@ public class ERDViewAction implements IViewActionDelegate {
 		UserDBDAO userDB = userDBErd.getParent();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDBErd);
+			TadpoleRDBEditorInput input = new TadpoleRDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDBErd);
 			page.openEditor(input, TadpoleRDBEditor.ID, false);
 			
 		} catch (PartInitException e) {

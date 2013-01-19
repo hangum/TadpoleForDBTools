@@ -19,7 +19,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
-import com.hangum.tadpole.rdb.erd.core.editor.TadpoleEditorInput;
+import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditorInput;
 
 /**
  * This workbench advisor creates the window advisor, and specifies
@@ -43,7 +43,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		
 		try {
 			UserDBDAO loginInfo = new UserDBDAO();
-			TadpoleEditorInput input = new TadpoleEditorInput("Standalone Test", loginInfo, true);
+			TadpoleRDBEditorInput input = new TadpoleRDBEditorInput("Standalone Test", loginInfo, true);
 			page.openEditor(input, TadpoleRDBEditor.ID, false);
 		} catch (PartInitException e) {
 			e.printStackTrace();

@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.erd.core.editor;
+package com.hangum.tadpole.mongodb.erd.core.editor;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -17,7 +17,7 @@ import org.eclipse.ui.IPersistableElement;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 
-public class TadpoleEditorInput implements IEditorInput {
+public class TadpoleMongoDBEditorInput implements IEditorInput {
 	private String name = null;
 	private UserDBDAO userDB;
 	private UserDBResourceDAO userDBERD;
@@ -30,7 +30,7 @@ public class TadpoleEditorInput implements IEditorInput {
 	 * @param userDB
 	 * @param allTable 모든 테이블 유무
 	 */
-	public TadpoleEditorInput(String name, UserDBDAO userDB, boolean allTable) {
+	public TadpoleMongoDBEditorInput(String name, UserDBDAO userDB, boolean allTable) {
 		this.name = name;
 		this.userDB = userDB;
 		this.allTable = allTable;
@@ -41,7 +41,7 @@ public class TadpoleEditorInput implements IEditorInput {
 	 * @param name
 	 * @param userDBErd
 	 */
-	public TadpoleEditorInput(String name, UserDBResourceDAO userDBErd) {
+	public TadpoleMongoDBEditorInput(String name, UserDBResourceDAO userDBErd) {
 		this.name = userDBErd.getFilename();
 		this.userDB = userDBErd.getParent();
 		this.userDBERD = userDBErd;
@@ -59,8 +59,8 @@ public class TadpoleEditorInput implements IEditorInput {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if( !(obj instanceof TadpoleEditorInput) ) return false;
-		return ((TadpoleEditorInput)obj).getName().equals(getName());
+		if( !(obj instanceof TadpoleMongoDBEditorInput) ) return false;
+		return ((TadpoleMongoDBEditorInput)obj).getName().equals(getName());
 	}
 
 	@Override

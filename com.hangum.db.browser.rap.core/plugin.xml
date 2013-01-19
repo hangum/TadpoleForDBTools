@@ -182,7 +182,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action"
@@ -195,7 +195,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDAllTableViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDAllTableViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action.all"
@@ -328,8 +328,7 @@
                      name="com.hangum.tadpole.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
-         </action>
-         <!--
+         </action>         
          <menu
                icon="resources/icons/erd.png"
                id="menu.nosql.erd"
@@ -339,7 +338,7 @@
             </groupMarker>
          </menu>
 		<action
-        class="com.hangum.tadpole.rdb.core.actions.erd.ERDDeleteAction"
+        class="com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDDeleteAction"
         enablesFor="1"
         icon="resources/icons/delete-relation.png"
         id="com.hangum.tadpole.erd.delete.action"
@@ -353,7 +352,7 @@
          </action>
     
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action"
@@ -366,7 +365,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDAllTableViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDAllTableViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action.all"
@@ -378,7 +377,6 @@
                </objectClass>
             </enablement>
          </action>
-         -->
          <!--
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"
@@ -405,7 +403,7 @@
             id="com.hangum.tadpole.rdb.core.objectContribution.resource"
             objectClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDDeleteAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDDeleteAction"
                enablesFor="1"
                icon="resources/icons/delete-relation.png"
                id="com.hangum.tadpole.rdb.core.action.deleteResource"

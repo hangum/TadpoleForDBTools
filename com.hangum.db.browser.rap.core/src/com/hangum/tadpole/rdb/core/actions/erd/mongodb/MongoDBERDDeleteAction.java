@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 Cho Hyun Jong.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,61 +8,53 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.actions.erd;
+package com.hangum.tadpole.rdb.core.actions.erd.mongodb;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
-import com.hangum.tadpole.rdb.erd.core.editor.TadpoleEditorInput;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
-/**
- * 전체 table의 erd를 그립니다.
- * 
- * @author hangum
- *
- */
-public class ERDAllTableViewAction implements IViewActionDelegate {
+public class MongoDBERDDeleteAction implements IViewActionDelegate {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ERDAllTableViewAction.class);
+	private static final Logger logger = Logger.getLogger(MongoDBERDDeleteAction.class);
 	private IStructuredSelection sel;
-
-	public ERDAllTableViewAction() {
+	
+	public MongoDBERDDeleteAction() {
 	}
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
+		UserDBResourceDAO userDB = (UserDBResourceDAO)sel.getFirstElement();
 		
-		run(userDB);
+		if(MessageDialog.openConfirm(null, Messages.ERDDeleteAction_0, Messages.ERDDeleteAction_1)) run(userDB);
 	}
 	
-	public void run(UserDBDAO userDB) {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
+	public void run(UserDBResourceDAO userDBErd) {
 		try {
-			TadpoleEditorInput input = new TadpoleEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, true); //$NON-NLS-1$ //$NON-NLS-2$
-			page.openEditor(input, TadpoleRDBEditor.ID, false);
+			TadpoleSystem_UserDBResource.delete(userDBErd);
 			
-		} catch (PartInitException e) {
-			logger.error("erd editor opend", e); //$NON-NLS-1$
-			
+			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
+			mv.deleteErd(userDBErd);
+		} catch (Exception e) {
+			logger.error(Messages.ERDDeleteAction_2, e);
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ERDAllTableViewAction_3, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ERDDeleteAction_3, errStatus); //$NON-NLS-1$
 		}
 	}
 
@@ -74,5 +66,4 @@ public class ERDAllTableViewAction implements IViewActionDelegate {
 	@Override
 	public void init(IViewPart view) {
 	}
-	
 }

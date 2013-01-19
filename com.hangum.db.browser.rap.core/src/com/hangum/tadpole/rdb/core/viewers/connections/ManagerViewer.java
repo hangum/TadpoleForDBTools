@@ -49,7 +49,8 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
-import com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction;
+import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
+import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
@@ -112,8 +113,15 @@ public class ManagerViewer extends ViewPart {
 					UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					
 					if( Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() ) ) {
-						ERDViewAction ea = new ERDViewAction();
-						ea.run(dao);
+						UserDBDAO userDB = dao.getParent();
+						
+						if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {							
+							MongoDBERDViewAction ea = new MongoDBERDViewAction();
+							ea.run(dao);
+						} else {
+							RDBERDViewAction ea = new RDBERDViewAction();
+							ea.run(dao);
+						}
 					} else {
 						QueryEditorAction qea = new QueryEditorAction();
 						qea.run(dao);

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.erd.core.utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,83 +70,75 @@ public enum TadpoleModelUtils {
 		db.setId(userDB.getUsers());
 		db.setUrl(userDB.getUrl());
 		
-//		try {
-			// 테이블목록
-			List<TableDAO> tables = getTables();
-			// 전체 참조 테이블 목록
-			Map<String, Table> mapDBTables = new HashMap<String, Table>();
+		// 테이블목록
+		List<TableDAO> tables = getTables();
+		// 전체 참조 테이블 목록
+		Map<String, Table> mapDBTables = new HashMap<String, Table>();
+		
+		// 
+		int count = 0;
+		Rectangle prevRectangle = null;
+		
+		int nextTableX = START_TABLE_WIDTH_POINT;
+		int nextTableY = START_TABLE_HIGHT_POINT;
+		
+		for(TableDAO table : tables) {
+			Table tableModel = factory.createTable();
+			tableModel.setDb(db);
+			tableModel.setName(table.getName());
+			mapDBTables.put(tableModel.getName(), tableModel);
 			
-			// 
-			int count = 0;
-			Rectangle prevRectangle = null;
-			
-			int nextTableX = START_TABLE_WIDTH_POINT;
-			int nextTableY = START_TABLE_HIGHT_POINT;
-			
-			for(TableDAO table : tables) {
-				Table tableModel = factory.createTable();
-				tableModel.setDb(db);
-				tableModel.setName(table.getName());
-				mapDBTables.put(tableModel.getName(), tableModel);
-				
-				// 첫번째 보여주는 항 
-				if(prevRectangle == null) {
-					prevRectangle = new Rectangle(START_TABLE_WIDTH_POINT, START_TABLE_HIGHT_POINT, END_TABLE_WIDTH_POINT, END_TABLE_HIGHT_POINT); 
-				} else {
-					// 테이블의 좌표를 잡아줍니다. 
-					prevRectangle = new Rectangle(nextTableX, 
-												nextTableY, 
-												END_TABLE_WIDTH_POINT, 
-												END_TABLE_HIGHT_POINT);
-				}
+			// 첫번째 보여주는 항 
+			if(prevRectangle == null) {
+				prevRectangle = new Rectangle(START_TABLE_WIDTH_POINT, START_TABLE_HIGHT_POINT, END_TABLE_WIDTH_POINT, END_TABLE_HIGHT_POINT); 
+			} else {
+				// 테이블의 좌표를 잡아줍니다. 
+				prevRectangle = new Rectangle(nextTableX, 
+											nextTableY, 
+											END_TABLE_WIDTH_POINT, 
+											END_TABLE_HIGHT_POINT);
+			}
 //				logger.debug("###########################################################################################################################");
 //				logger.debug("###########################################################################################################################");
 //				logger.debug("###########################################################################################################################");
 //				logger.debug(prevRectangle.toString());
 //				logger.debug("###########################################################################################################################");
 //				logger.debug("###########################################################################################################################");
-				tableModel.setConstraints(prevRectangle);
-				
-				// column add
-				List<TableColumnDAO> columnList = getColumns(userDB.getDb(), table.getName());
-				for (TableColumnDAO columnDAO : columnList) {
-					
-					Column column = factory.createColumn();
-					column.setDefault(columnDAO.getDefault());
-					column.setExtra(columnDAO.getExtra());
-					column.setField(columnDAO.getField());
-					column.setNull(columnDAO.getNull());
-					column.setKey(columnDAO.getKey());
-					column.setType(columnDAO.getType());
-					
-					column.setTable(tableModel);
-					tableModel.getColumns().add(column);
-				}
-				
-				// 화면 출력하기 위해
-				count++;
-				
-				// 행을 더해주고 열을 초기화 해줍니다. 
-				if(count == (WIDTH_COUNT+1)) {
-					count = 0;
-					
-					nextTableX = START_TABLE_WIDTH_POINT;
-					nextTableY = prevRectangle.getBottomLeft().y + GAP_HIGHT;
-				} else {
-					nextTableX = prevRectangle.getTopRight().x + GAP_WIDTH;
-				}
-				
-			}	// end table list
-		
-			// 관계를 만듭니다.
-			RelationUtil.calRelation(userDB, mapDBTables, db);
+			tableModel.setConstraints(prevRectangle);
 			
-//		} catch(Exception e) {
-//			logger.error("all table initialize error", e); //$NON-NLS-1$
-//			
-//			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
-//		}
+			// column add
+			List<TableColumnDAO> columnList = getColumns(userDB.getDb(), table.getName());
+			for (TableColumnDAO columnDAO : columnList) {
+				
+				Column column = factory.createColumn();
+				column.setDefault(columnDAO.getDefault());
+				column.setExtra(columnDAO.getExtra());
+				column.setField(columnDAO.getField());
+				column.setNull(columnDAO.getNull());
+				column.setKey(columnDAO.getKey());
+				column.setType(columnDAO.getType());
+				
+				column.setTable(tableModel);
+				tableModel.getColumns().add(column);
+			}
+			
+			// 화면 출력하기 위해
+			count++;
+			
+			// 행을 더해주고 열을 초기화 해줍니다. 
+			if(count == (WIDTH_COUNT+1)) {
+				count = 0;
+				
+				nextTableX = START_TABLE_WIDTH_POINT;
+				nextTableY = prevRectangle.getBottomLeft().y + GAP_HIGHT;
+			} else {
+				nextTableX = prevRectangle.getTopRight().x + GAP_WIDTH;
+			}
+			
+		}	// end table list
+	
+		// 관계를 만듭니다.
+		RelationUtil.calRelation(userDB, mapDBTables, db);
 		
 		return db;
 	}
@@ -157,27 +148,8 @@ public enum TadpoleModelUtils {
 	 * table 정보를 가져옵니다.
 	 */
 	public List<TableDAO> getTables() throws Exception {
-		List<TableDAO> showTables = new ArrayList<TableDAO>();
-		
-//		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			return sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-			
-//		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-//			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-//			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-//			
-//			for (String col : mongoDB.getCollectionNames()) {
-//				TableDAO dao = new TableDAO();
-//				dao.setName(col);
-//				
-//				showTables.add(dao);
-//			}
-//			
-//			return showTables;
-//		}
-		
-//		return showTables;
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		return sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 	}
 	
 	
@@ -189,26 +161,13 @@ public enum TadpoleModelUtils {
 	 * @throws Exception
 	 */
 	public List<TableColumnDAO> getColumns(String db, String strTBName) throws Exception {
-//		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			
-			Map<String, String> param = new HashMap<String, String>();
-			param.put("db", db);
-			param.put("table", strTBName);
-			
-			return sqlClient.queryForList("tableColumnList", param);
-//		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-//			
-//			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-//			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-//			DBCollection coll = mongoDB.getCollection(strTBName);
-//										
-//			return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
-//		} 
-//		
-//		return null;
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("db", db);
+		param.put("table", strTBName);
+		
+		return sqlClient.queryForList("tableColumnList", param);
 	}
-	
-	
 	
 }

@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.hangum.tadpole.rdb.model.Table#getIncomingLinks <em>Incoming Links</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.Table#getOutgoingLinks <em>Outgoing Links</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.Table#getLogicalName <em>Logical Name</em>}</li>
- *   <li>{@link com.hangum.tadpole.rdb.model.Table#getCommant <em>Commant</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.Table#getComment <em>Comment</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.Table#getUserCommentReference <em>User Comment Reference</em>}</li>
  * </ul>
  * </p>
@@ -194,30 +194,30 @@ public interface Table extends EObject {
 	void setLogicalName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Commant</b></em>' attribute.
+	 * Returns the value of the '<em><b>Comment</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Commant</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Comment</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Commant</em>' attribute.
-	 * @see #setCommant(String)
-	 * @see com.hangum.tadpole.rdb.model.RdbPackage#getTable_Commant()
+	 * @return the value of the '<em>Comment</em>' attribute.
+	 * @see #setComment(String)
+	 * @see com.hangum.tadpole.rdb.model.RdbPackage#getTable_Comment()
 	 * @model
 	 * @generated
 	 */
-	String getCommant();
+	String getComment();
 
 	/**
-	 * Sets the value of the '{@link com.hangum.tadpole.rdb.model.Table#getCommant <em>Commant</em>}' attribute.
+	 * Sets the value of the '{@link com.hangum.tadpole.rdb.model.Table#getComment <em>Comment</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Commant</em>' attribute.
-	 * @see #getCommant()
+	 * @param value the new value of the '<em>Comment</em>' attribute.
+	 * @see #getComment()
 	 * @generated
 	 */
-	void setCommant(String value);
+	void setComment(String value);
 
 	/**
 	 * Returns the value of the '<em><b>User Comment Reference</b></em>' reference.

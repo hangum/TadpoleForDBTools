@@ -25,7 +25,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingLinks" upperBound="-1"
         eType="#//Relation" eOpposite="#//Relation/source"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="logicalName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="commant" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="UserCommentReference" eType="#//UserComment"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Column">

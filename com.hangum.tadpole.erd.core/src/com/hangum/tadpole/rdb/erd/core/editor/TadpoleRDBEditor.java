@@ -265,7 +265,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	 * @param input
 	 */
 	private void loadDBRsource(IEditorInput input) {
-		TadpoleEditorInput erdInput = (TadpoleEditorInput)input;
+		TadpoleRDBEditorInput erdInput = (TadpoleRDBEditorInput)input;
 		userDB = erdInput.getUserDBDAO();
 		isAllTable = erdInput.isAllTable();
 		

@@ -320,7 +320,7 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTable_Commant() {
+	public EAttribute getTable_Comment() {
 		return (EAttribute)tableEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -658,7 +658,7 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 		createEReference(tableEClass, TABLE__INCOMING_LINKS);
 		createEReference(tableEClass, TABLE__OUTGOING_LINKS);
 		createEAttribute(tableEClass, TABLE__LOGICAL_NAME);
-		createEAttribute(tableEClass, TABLE__COMMANT);
+		createEAttribute(tableEClass, TABLE__COMMENT);
 		createEReference(tableEClass, TABLE__USER_COMMENT_REFERENCE);
 
 		columnEClass = createEClass(COLUMN);
@@ -752,7 +752,7 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 		initEReference(getTable_IncomingLinks(), this.getRelation(), this.getRelation_Target(), "incomingLinks", null, 0, -1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTable_OutgoingLinks(), this.getRelation(), this.getRelation_Source(), "outgoingLinks", null, 0, -1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTable_LogicalName(), ecorePackage.getEString(), "logicalName", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTable_Commant(), ecorePackage.getEString(), "commant", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTable_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTable_UserCommentReference(), this.getUserComment(), null, "UserCommentReference", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(columnEClass, Column.class, "Column", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
