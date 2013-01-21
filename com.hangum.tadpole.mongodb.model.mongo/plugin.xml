@@ -12,7 +12,7 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://tadpole/1.0"
+            uri="http://tadpole/mongodb/1.0"
             class="tadpole.TadpolePackage"
             genModel="model/tadpole.genmodel"/>
    </extension>
