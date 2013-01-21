@@ -74,7 +74,7 @@ public class RelationUtil {
 			for (Column column : listColumn) {
 				String strField = column.getField();
 				
-				if("org.bson.types.ObjectId".equals(column.getType()) && 
+				if("ObjectId".equals(column.getType()) && 
 						!StringUtils.startsWith(strField, "_id") && 
 						StringUtils.endsWith(strField, "_id")) {
 					
@@ -111,7 +111,7 @@ public class RelationUtil {
 			for (Column column : listColumn) {
 				String strField = column.getField();
 				
-				if("org.bson.types.ObjectId".equals(column.getType()) && 
+				if("ObjectId".equals(column.getType()) && 
 						!StringUtils.startsWith(strField, "_id") && 
 						StringUtils.endsWith(strField, "_id")) {
 					
