@@ -22,3 +22,4 @@ VM Argument
   -Dosgi.noShutdown=true 
   -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000	: standalone 모드 일 경우 http request객체 처리(http 공격을 받을때 일 경우)
   -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1 : standalone 모드 일 경우 http request 객체의 사이즈를 무한대로 받을수 있도록 합니다.
+  -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer : jetty server multi tab enable
