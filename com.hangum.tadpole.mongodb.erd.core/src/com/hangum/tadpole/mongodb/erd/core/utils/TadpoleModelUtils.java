@@ -58,7 +58,7 @@ public enum TadpoleModelUtils {
 	public static final int GAP_HIGHT =  300;
 	public static final int GAP_WIDTH =  300;
 		
-	private MongodbFactory factory = MongodbFactory.eINSTANCE;
+	private MongodbFactory tadpoleFactory = MongodbFactory.eINSTANCE;
 	
 	/**
 	 * logindb의  모든 테이블 정보를 리턴합니다.
@@ -68,7 +68,7 @@ public enum TadpoleModelUtils {
 	 */
 	public DB getDBAllTable(UserDBDAO userDB) throws Exception {
 		this.userDB = userDB;
-		DB db = factory.createDB();
+		DB db = tadpoleFactory.createDB();
 		db.setDbType(userDB.getTypes());
 		db.setId(userDB.getUsers());
 		db.setUrl(userDB.getUrl());
@@ -86,7 +86,7 @@ public enum TadpoleModelUtils {
 		int nextTableY = START_TABLE_HIGHT_POINT;
 		
 		for(TableDAO table : tables) {
-			Table tableModel = factory.createTable();
+			Table tableModel = tadpoleFactory.createTable();
 			tableModel.setDb(db);
 			tableModel.setName(table.getName());
 			mapDBTables.put(tableModel.getName(), tableModel);
@@ -113,13 +113,42 @@ public enum TadpoleModelUtils {
 			List<CollectionFieldDAO> columnList = getColumns(userDB.getDb(), table.getName());
 			for (CollectionFieldDAO columnDAO : columnList) {
 				
-				Column column = factory.createColumn();
-				column.setField(columnDAO.getField());
-				column.setKey(columnDAO.getKey());
-				column.setType(columnDAO.getType());
-				
-				column.setTable(tableModel);
-				tableModel.getColumns().add(column);
+//				Column column = factory.createColumn();
+//				column.setField(columnDAO.getField());
+//				column.setKey(columnDAO.getKey());
+//				column.setType(columnDAO.getType());
+//				
+//				column.setTable(tableModel);
+//				tableModel.getColumns().add(column);
+//				if("BasicDBObject".equals(columnDAO.getType())) {
+//					SubDocument subDoc = factory.createSubDocument();
+//					subDoc.setName(columnDAO.getField());
+//					
+//					List<CollectionFieldDAO> listFiels = columnDAO.getChildren();
+//					for (CollectionFieldDAO collectionFieldDAO : listFiels) {
+//						Column column = factory.createColumn();
+//						
+//						column.setField(collectionFieldDAO.getField());
+//						column.setKey(collectionFieldDAO.getKey());
+//						column.setType(collectionFieldDAO.getType());
+//						
+//						column.setSubDocument(subDoc);	
+//					}
+//											
+//					tableModel.getSubDoc().add(subDoc);						
+//				} else {
+					Column column = tadpoleFactory.createColumn();
+					
+					column.setField(columnDAO.getField());
+					column.setKey(columnDAO.getKey());
+					column.setType(columnDAO.getType());
+					if("BasicDBObject".equals(columnDAO.getType())) {
+						makeSubDoc(column, columnDAO);
+					}
+					
+					column.setTable(tableModel);
+					tableModel.getColumns().add(column);
+//				}
 			}
 			
 			// 화면 출력하기 위해
@@ -143,6 +172,24 @@ public enum TadpoleModelUtils {
 		return db;
 	}
 	
+	/**
+	 * add sub document
+	 * 
+	 * @param columnDAO
+	 */
+	private void makeSubDoc(Column parentColumn, CollectionFieldDAO columnDAO) {
+		
+		for (CollectionFieldDAO cfDAO : columnDAO.getChildren()) {
+			Column column = tadpoleFactory.createColumn();					
+			column.setField(cfDAO.getField());
+			column.setKey(cfDAO.getKey());
+			column.setType(cfDAO.getType());
+			if("BasicDBObject".equals(cfDAO.getType())) {
+				makeSubDoc(column, cfDAO);
+			}						
+			parentColumn.getSubDoc().add(column);
+		}
+	}
 	
 	/**
 	 * table 정보를 가져옵니다.

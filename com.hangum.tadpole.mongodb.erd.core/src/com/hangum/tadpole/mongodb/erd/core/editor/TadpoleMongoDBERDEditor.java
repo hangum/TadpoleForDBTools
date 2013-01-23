@@ -120,19 +120,11 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 						if(isAllTable) {
 							db = TadpoleModelUtils.INSTANCE.getDBAllTable(userDB);
 							db.setDbType(db.getDbType() + " (" + userDB.getDisplay_name() + ", " + userDB.getUrl() + ")");
-//							db.setUrl("");
-//							db.setId("");
-							
-							// update action을 날려준다.
-							
-
 						// 부분 테이블 정보를 처리한다.
 						} else {
 							MongodbFactory factory = MongodbFactory.eINSTANCE;
 							db = factory.createDB();
 							db.setDbType(userDB.getTypes() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
-//							db.setId("");//userDB.getDisplay_name());
-//							db.setUrl("");//userDB.getUrl());
 						}
 					}
 					
@@ -306,6 +298,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 			setPartName(isAllTable?"All " + userDB.getDisplay_name():userDB.getDisplay_name());
 			setTitleToolTip(userDB.getDisplay_name());
 		}
+		
 	}
 	
 //	@Override

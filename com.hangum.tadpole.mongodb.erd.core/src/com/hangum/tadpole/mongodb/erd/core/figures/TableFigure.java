@@ -11,66 +11,59 @@
 package com.hangum.tadpole.mongodb.erd.core.figures;
 
 import org.apache.log4j.Logger;
-import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.geometry.Insets;
+
+import com.hangum.tadpole.mongodb.erd.core.figures.others.ColumnLayoutFigure;
 
 public class TableFigure extends Figure {
 	private static final Logger logger = Logger.getLogger(TableFigure.class);
-	private Label tableName = new Label();
+	protected Label tableName = new Label();
 	
 	/** column type */
 	public static enum COLUMN_TYPE{KEY, NAME, TYPE, NULL}; 
-	private ColumnLayoutFigure columnFigure;// = new ColumnLayoutFigure();
+	protected ColumnLayoutFigure columnFigure;// = new ColumnLayoutFigure();
 	
-	private ColumnDetailFigure colKeyFigure;
-	private ColumnDetailFigure colNameFigure;
-	private ColumnDetailFigure colTypeFigure;
-	private ColumnDetailFigure colNullFigure;
+	protected ColumnDetailFigure colKeyFigure;
+	protected ColumnDetailFigure colNameFigure;
+	protected ColumnDetailFigure colTypeFigure;
 	
-	private ConnectionAnchor connectionAnchor;
+	protected ConnectionAnchor connectionAnchor;
 	
 	public TableFigure() {
 		this.tableName = new Label();
 		this.tableName.setBorder(new MarginBorder(2, 2, 0, 2));
 		this.tableName.setForegroundColor(ColorConstants.blue);
 
-		this.columnFigure = new ColumnLayoutFigure();
 		// key
 		this.colKeyFigure = new ColumnDetailFigure();
 		this.colKeyFigure.setForegroundColor(ColorConstants.red);
-		// name
+		// name 
 		this.colNameFigure = new ColumnDetailFigure();
 		this.colNameFigure.setForegroundColor(ColorConstants.black);
 		// type
 		this.colTypeFigure = new ColumnDetailFigure();
 		this.colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
-		// null 
-		this.colNullFigure = new ColumnDetailFigure();
-		this.colNullFigure.setForegroundColor(ColorConstants.black);
 
-		ToolbarLayout layout = new ToolbarLayout();
-		setLayoutManager(layout);
-//		setBackgroundColor(new Color(Display.getDefault(), 255, 255, 206));
-		setBorder(new LineBorder(ColorConstants.black, 1));
-		setOpaque(true);
-
-		add(this.tableName);
-		add(this.columnFigure);
-
+		this.columnFigure = new ColumnLayoutFigure();
 		this.columnFigure.add(colKeyFigure);
 		this.columnFigure.add(colNameFigure);
 		this.columnFigure.add(colTypeFigure);
-		this.columnFigure.add(colNullFigure);
+		
+		setLayoutManager(new ToolbarLayout());
+//		setBackgroundColor(new Color(Display.getDefault(), 255, 255, 206));
+		setBorder(new LineBorder(ColorConstants.black, 1));
+		setOpaque(true);
+		
+		add(this.tableName);
+		add(this.columnFigure);
 	}
 	
 	public void setTableName(String tableName){
@@ -91,54 +84,43 @@ public class TableFigure extends Figure {
 				colNameFigure.add(figure);
 			} else if(COLUMN_TYPE.TYPE == tmpFigure.getColumnType()) {
 				colTypeFigure.add(figure);
-			} else if(COLUMN_TYPE.NULL == tmpFigure.getColumnType()) {
-				colNullFigure.add(figure);
 			}
 		} else {
 			super.add(figure, constraint, index);
 		}
 	}
 
-	public void remove(IFigure figure) {
-		if(figure instanceof  ColumnFigure){
+	public void remove(IFigure figure) {		
+		if(figure instanceof ColumnFigure){
 			colKeyFigure.remove(figure);
 			colNameFigure.remove(figure);
 			colTypeFigure.remove(figure);
-			colNullFigure.remove(figure);
 		} else {
 			super.remove(figure);
 		}
 	}
 
 	public void removeAllColumns(){
+		logger.debug("[TableFigure figure remove all]");
+		
 		colKeyFigure.removeAll();
 		colNameFigure.removeAll();
 		colTypeFigure.removeAll();
-		colNullFigure.removeAll();
+		
+
+//		List<Figure> listFigure = getChildren();
+//		for (Figure figure : listFigure) {
+//			if(figure instanceof SubTableFigure) {
+//				SubTableFigure stFigure = (SubTableFigure)figure;
+//				stFigure.removeAllColumns();	
+//				
+//				stFigure.removeAll();
+//			}
+//		}
 	}
 	
 	public ConnectionAnchor getConnectionAnchor() {
 		if(connectionAnchor == null) connectionAnchor = new ChopboxAnchor(this);
 		return connectionAnchor;
-	}
-	
-	private class ColumnLayoutFigure extends Figure {
-		public ColumnLayoutFigure(){
-			ToolbarLayout layout = new ToolbarLayout(true);
-			layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
-			layout.setStretchMinorAxis(true);
-			layout.setSpacing(2);
-			setLayoutManager(layout);
-			setBorder(new CompartmentFigureBorder());
-		}
-	}
-
-	public class CompartmentFigureBorder extends AbstractBorder {
-		public Insets getInsets(IFigure figure) {
-			return new Insets(5, 5, 5, 5);
-		}
-		public void paint(IFigure figure, Graphics graphics, Insets insets) {
-			graphics.drawLine(getPaintRectangle(figure, insets).getTopLeft(), tempRect.getTopRight());
-		}
 	}
 }

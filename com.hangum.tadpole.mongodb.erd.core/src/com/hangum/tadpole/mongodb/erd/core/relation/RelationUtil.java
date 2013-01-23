@@ -24,6 +24,7 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.mysql.ReferencedTableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.erd.core.dnd.TableTransferDropTargetListener;
+import com.hangum.tadpole.mongodb.erd.core.utils.MongodbUtils;
 import com.hangum.tadpole.mongodb.model.Column;
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.MongodbFactory;
@@ -74,10 +75,7 @@ public class RelationUtil {
 			for (Column column : listColumn) {
 				String strField = column.getField();
 				
-				if("ObjectId".equals(column.getType()) && 
-						!StringUtils.startsWith(strField, "_id") && 
-						StringUtils.endsWith(strField, "_id")) {
-					
+				if(MongodbUtils.isReferenceKey(column.getType(), strField)) {					
 					ReferencedTableDAO refTableDao = new ReferencedTableDAO();
 					refTableDao.setTable_name(table.getName());
 					refTableDao.setColumn_name(strField);
@@ -111,10 +109,7 @@ public class RelationUtil {
 			for (Column column : listColumn) {
 				String strField = column.getField();
 				
-				if("ObjectId".equals(column.getType()) && 
-						!StringUtils.startsWith(strField, "_id") && 
-						StringUtils.endsWith(strField, "_id")) {
-					
+				if(MongodbUtils.isReferenceKey(column.getType(), strField)) {					
 					ReferencedTableDAO refTableDao = new ReferencedTableDAO();
 					refTableDao.setTable_name(table.getName());
 					refTableDao.setColumn_name(strField);

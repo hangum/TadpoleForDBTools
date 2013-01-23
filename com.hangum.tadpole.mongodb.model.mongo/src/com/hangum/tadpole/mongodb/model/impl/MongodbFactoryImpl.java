@@ -67,7 +67,6 @@ public class MongodbFactoryImpl extends EFactoryImpl implements MongodbFactory {
 			case MongodbPackage.VIEW: return createView();
 			case MongodbPackage.ERD_INFO: return createERDInfo();
 			case MongodbPackage.USER_COMMENT: return createUserComment();
-			case MongodbPackage.TEST: return createtest();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -186,16 +185,6 @@ public class MongodbFactoryImpl extends EFactoryImpl implements MongodbFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public test createtest() {
-		testImpl test = new testImpl();
-		return test;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public RelationKind createRelationKindFromString(EDataType eDataType, String initialValue) {
 		RelationKind result = RelationKind.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -214,37 +203,85 @@ public class MongodbFactoryImpl extends EFactoryImpl implements MongodbFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Rectangle createRectangleFromString(EDataType eDataType, String initialValue) {
-		return (Rectangle)super.createFromString(eDataType, initialValue);
+		if(initialValue == null) {
+			return null;
+		}
+		
+//		initialValue.replaceAll("\\s", "");
+		String[] values = initialValue.split(",");
+		if(values.length != 4) {
+			return null;
+		}
+
+		Rectangle rect = new Rectangle();
+		try {
+			rect.setLocation(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+			rect.setSize(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+		} catch(NumberFormatException e) {
+			EcorePlugin.INSTANCE.log(e);
+			rect = null;
+		}
+
+		return rect;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public String convertRectangleToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		if(instanceValue == null) {
+			return null;
+		}
+
+		Rectangle rect = (Rectangle) instanceValue;
+		return rect.x+","+rect.y+","+rect.width+","+rect.height;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Point createPointFromString(EDataType eDataType, String initialValue) {
-		return (Point)super.createFromString(eDataType, initialValue);
+		if(initialValue == null) {
+			return null;
+		}
+		
+//		initialValue.replaceAll("\\s", "");
+		String[] values = initialValue.split(",");
+		if(values.length != 2) {
+			return null;
+		}
+
+		Point point = new Point();
+		try {
+			point.setLocation(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+			
+		} catch(NumberFormatException e) {
+			EcorePlugin.INSTANCE.log(e);
+			point = null;
+		}
+
+		return point;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public String convertPointToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		if(instanceValue == null) {
+			return null;
+		}
+
+		Point point = (Point) instanceValue;
+		return point.x+","+point.y;
 	}
 
 	/**

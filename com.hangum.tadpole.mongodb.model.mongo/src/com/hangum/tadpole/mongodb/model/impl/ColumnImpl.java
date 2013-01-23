@@ -2,20 +2,21 @@
  */
 package com.hangum.tadpole.mongodb.model.impl;
 
-import com.hangum.tadpole.mongodb.model.Column;
-import com.hangum.tadpole.mongodb.model.MongodbPackage;
-import com.hangum.tadpole.mongodb.model.Table;
+import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import com.hangum.tadpole.mongodb.model.Column;
+import com.hangum.tadpole.mongodb.model.MongodbPackage;
+import com.hangum.tadpole.mongodb.model.Table;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,6 +32,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  *   <li>{@link com.hangum.tadpole.mongodb.model.impl.ColumnImpl#getLogicalField <em>Logical Field</em>}</li>
  *   <li>{@link com.hangum.tadpole.mongodb.model.impl.ColumnImpl#getKey <em>Key</em>}</li>
  *   <li>{@link com.hangum.tadpole.mongodb.model.impl.ColumnImpl#getComment <em>Comment</em>}</li>
+ *   <li>{@link com.hangum.tadpole.mongodb.model.impl.ColumnImpl#getSubDoc <em>Sub Doc</em>}</li>
  * </ul>
  * </p>
  *
@@ -156,6 +158,16 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 * @ordered
 	 */
 	protected String comment = COMMENT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSubDoc() <em>Sub Doc</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSubDoc()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Column> subDoc;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -348,6 +360,18 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Column> getSubDoc() {
+		if (subDoc == null) {
+			subDoc = new EObjectResolvingEList<Column>(Column.class, this, MongodbPackage.COLUMN__SUB_DOC);
+		}
+		return subDoc;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -409,6 +433,8 @@ public class ColumnImpl extends EObjectImpl implements Column {
 				return getKey();
 			case MongodbPackage.COLUMN__COMMENT:
 				return getComment();
+			case MongodbPackage.COLUMN__SUB_DOC:
+				return getSubDoc();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -418,6 +444,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -441,6 +468,10 @@ public class ColumnImpl extends EObjectImpl implements Column {
 				return;
 			case MongodbPackage.COLUMN__COMMENT:
 				setComment((String)newValue);
+				return;
+			case MongodbPackage.COLUMN__SUB_DOC:
+				getSubDoc().clear();
+				getSubDoc().addAll((Collection<? extends Column>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -475,6 +506,9 @@ public class ColumnImpl extends EObjectImpl implements Column {
 			case MongodbPackage.COLUMN__COMMENT:
 				setComment(COMMENT_EDEFAULT);
 				return;
+			case MongodbPackage.COLUMN__SUB_DOC:
+				getSubDoc().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -501,6 +535,8 @@ public class ColumnImpl extends EObjectImpl implements Column {
 				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
 			case MongodbPackage.COLUMN__COMMENT:
 				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
+			case MongodbPackage.COLUMN__SUB_DOC:
+				return subDoc != null && !subDoc.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

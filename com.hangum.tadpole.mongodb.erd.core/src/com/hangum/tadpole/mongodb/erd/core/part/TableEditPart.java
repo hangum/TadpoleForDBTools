@@ -27,12 +27,19 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import com.hangum.tadpole.mongodb.erd.core.figures.ColumnFigure;
+import com.hangum.tadpole.mongodb.erd.core.figures.SubTableFigure;
 import com.hangum.tadpole.mongodb.erd.core.figures.TableFigure;
 import com.hangum.tadpole.mongodb.erd.core.figures.TableFigure.COLUMN_TYPE;
 import com.hangum.tadpole.mongodb.erd.core.policies.TableComponentEditPolicy;
 import com.hangum.tadpole.mongodb.model.Column;
 import com.hangum.tadpole.mongodb.model.Table;
 
+/**
+ * table edit part
+ * 
+ * @author hangum
+ *
+ */
 public class TableEditPart extends AbstractGraphicalEditPart implements NodeEditPart {
 	private static final Logger logger = Logger.getLogger(TableEditPart.class);
 	
@@ -60,41 +67,70 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 		Table table = (Table)getModel();
 		DBEditPart parent = (DBEditPart)getParent();
 
-		super.refreshVisuals();
+		//super.refreshVisuals();
 		updateFigure((TableFigure)getFigure());
 		refreshChildren();
 		
 		parent.setLayoutConstraint(this, figure, table.getConstraints());
 	}
 	
-	private void updateFigure(TableFigure figure) {
+	private void updateFigure(TableFigure tableFigure) {
 		Table tableModel = (Table)getModel();
 		
-		figure.setTableName(tableModel.getName());
-		figure.removeAllColumns();
+		tableFigure.setTableName(tableModel.getName());
+		tableFigure.removeAllColumns();
 
 		EList<Column> columns = tableModel.getColumns();
 		for (Column column : columns) {
-			ColumnFigure[] figures = createColumnFigure(tableModel, column);
-			figure.add(figures[0]);
-			figure.add(figures[1]);
-			figure.add(figures[2]);
-			figure.add(figures[3]);
-		}
+			if("BasicDBObject".equals(column.getType())) {
+				createSubDocument(tableFigure, column);				
+			} else {				
+				createColumnFigure(tableFigure, column);
+			}
+		}		
 	}
 	
-	private ColumnFigure[] createColumnFigure(Table tableModel, Column model){
-		ColumnFigure labelKey = new ColumnFigure(COLUMN_TYPE.KEY);
-		ColumnFigure labelName = new ColumnFigure(COLUMN_TYPE.NAME);
-		ColumnFigure labelType = new ColumnFigure(COLUMN_TYPE.TYPE);
-		ColumnFigure labelNotNull = new ColumnFigure(COLUMN_TYPE.NULL);
+	/**
+	 * Add sub document and column 
+	 * 
+	 * @param parentTableFigure
+	 * @param columnParent
+	 */
+	private void createSubDocument(TableFigure parentTableFigure, Column columnParent) {
+		SubTableFigure subDocFigure = new SubTableFigure();
+		subDocFigure.setTableName(columnParent.getField());
 		
+		EList<Column> sucColumns = columnParent.getSubDoc();
+		for (Column column : sucColumns) {
+			if("BasicDBObject".equals(column.getType())) {				
+				createSubDocument(subDocFigure, column);
+			} else {				
+				createColumnFigure(subDocFigure, column);
+			}			
+		}
+		
+		parentTableFigure.add(subDocFigure);
+	}	
+	
+	/**
+	 * create column figure
+	 * 
+	 * @param tableFigure
+	 * @param model
+	 */
+	private void createColumnFigure(TableFigure tableFigure, Column model){
+		ColumnFigure labelKey = new ColumnFigure(COLUMN_TYPE.KEY);
 		labelKey.setText( StringUtils.substring(model.getKey(), 0, 1));
+		
+		ColumnFigure labelName = new ColumnFigure(COLUMN_TYPE.NAME);
 		labelName.setText(model.getField());
+		
+		ColumnFigure labelType = new ColumnFigure(COLUMN_TYPE.TYPE);
 		labelType.setText(model.getType());
-//		labelNotNull.setText(StringUtils.substring(model.getNull(), 0, 1));
 
-		return new ColumnFigure[]{labelKey, labelName, labelType, labelNotNull};
+		tableFigure.add(labelKey);
+		tableFigure.add(labelName);
+		tableFigure.add(labelType);
 	}
 	
 	@Override
@@ -149,9 +185,6 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 
 		@Override
 		public void notifyChanged(Notification notification) {
-//			Table tableModel = (Table)getModel();
-//			logger.debug("\t\t ######################## [table] " + tableModel.getName());
-			
 			refreshVisuals();
 			refreshSourceConnections();
 			refreshTargetConnections();
@@ -170,7 +203,5 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 		public boolean isAdapterForType(Object type) {
 			return type.equals(Table.class);
 		}
-
 	}
-
 }

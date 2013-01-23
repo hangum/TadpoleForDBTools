@@ -17,6 +17,12 @@ import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.Relation;
 import com.hangum.tadpole.mongodb.model.Table;
 
+/**
+ * editpart factory
+ * 
+ * @author hangum
+ *
+ */
 public class TadpoleEditPartFactory implements EditPartFactory {
 
 	@Override

@@ -2,6 +2,16 @@
  */
 package com.hangum.tadpole.mongodb.model.impl;
 
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import com.hangum.tadpole.mongodb.model.Column;
 import com.hangum.tadpole.mongodb.model.ERDInfo;
 import com.hangum.tadpole.mongodb.model.MongodbFactory;
@@ -11,19 +21,6 @@ import com.hangum.tadpole.mongodb.model.RelationKind;
 import com.hangum.tadpole.mongodb.model.Table;
 import com.hangum.tadpole.mongodb.model.UserComment;
 import com.hangum.tadpole.mongodb.model.View;
-import com.hangum.tadpole.mongodb.model.test;
-
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -80,13 +77,6 @@ public class MongodbPackageImpl extends EPackageImpl implements MongodbPackage {
 	 * @generated
 	 */
 	private EClass userCommentEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass testEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -418,6 +408,15 @@ public class MongodbPackageImpl extends EPackageImpl implements MongodbPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getColumn_SubDoc() {
+		return (EReference)columnEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getRelation() {
 		return relationEClass;
 	}
@@ -589,15 +588,6 @@ public class MongodbPackageImpl extends EPackageImpl implements MongodbPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass gettest() {
-		return testEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EEnum getRelationKind() {
 		return relationKindEEnum;
 	}
@@ -677,6 +667,7 @@ public class MongodbPackageImpl extends EPackageImpl implements MongodbPackage {
 		createEAttribute(columnEClass, COLUMN__LOGICAL_FIELD);
 		createEAttribute(columnEClass, COLUMN__KEY);
 		createEAttribute(columnEClass, COLUMN__COMMENT);
+		createEReference(columnEClass, COLUMN__SUB_DOC);
 
 		relationEClass = createEClass(RELATION);
 		createEReference(relationEClass, RELATION__SOURCE);
@@ -700,8 +691,6 @@ public class MongodbPackageImpl extends EPackageImpl implements MongodbPackage {
 
 		userCommentEClass = createEClass(USER_COMMENT);
 		createEAttribute(userCommentEClass, USER_COMMENT__COMMENT);
-
-		testEClass = createEClass(TEST);
 
 		// Create enums
 		relationKindEEnum = createEEnum(RELATION_KIND);
@@ -772,6 +761,7 @@ public class MongodbPackageImpl extends EPackageImpl implements MongodbPackage {
 		initEAttribute(getColumn_LogicalField(), ecorePackage.getEString(), "logicalField", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getColumn_Key(), ecorePackage.getEString(), "key", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getColumn_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getColumn_SubDoc(), this.getColumn(), null, "subDoc", null, 0, -1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(relationEClass, Relation.class, "Relation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRelation_Source(), this.getTable(), this.getTable_OutgoingLinks(), "source", null, 0, 1, Relation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -795,8 +785,6 @@ public class MongodbPackageImpl extends EPackageImpl implements MongodbPackage {
 
 		initEClass(userCommentEClass, UserComment.class, "UserComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getUserComment_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, UserComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(testEClass, test.class, "test", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
 		initEEnum(relationKindEEnum, RelationKind.class, "RelationKind");

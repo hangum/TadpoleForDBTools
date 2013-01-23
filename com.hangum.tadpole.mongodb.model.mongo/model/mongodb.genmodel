@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.hangum.tadpole.mongodb.model.mongo/src" modelPluginID="com.hangum.tadpole.mongodb.model.mongo"
-    modelName="Mongodb" editPluginClass="com.hangum.tadpole.mongodb.provider.MongodbEditPlugin"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.hangum.tadpole.mongodb.model/src" editDirectory="/com.hangum.tadpole.mongodb.model.edit/src"
+    editorDirectory="/com.hangum.tadpole.mongodb.model.editor/src" modelPluginID="com.hangum.tadpole.mongodb.model"
+    redirection="" modelName="Mongodb" editPluginClass="com.hangum.tadpole.mongodb.provider.MongodbEditPlugin"
     editorPluginClass="com.hangum.tadpole.mongodb.presentation.MongodbEditorPlugin"
     testSuiteClass="com.hangum.tadpole.mongodb.tests.MongodbAllTests" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="7.0" copyrightFields="false">
+    complianceLevel="7.0" copyrightFields="false" editPluginID="com.hangum.tadpole.mongodb.model.edit"
+    editorPluginID="com.hangum.tadpole.mongodb.model.editor">
   <foreignModel>mongodb.ecore</foreignModel>
   <genPackages prefix="Mongodb" basePackage="com.hangum.tadpole" disposableProviderFactory="true"
       interfacePackageSuffix="model" metaDataPackageSuffix="model" classPackageSuffix="model.impl"
@@ -36,15 +38,14 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/incomingLinks"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/outgoingLinks"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Table/logicalName"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Table/commant"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Table/comment"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/UserCommentReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/subDoc"/>
     </genClasses>
     <genClasses ecoreClass="mongodb.ecore#//Column">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/field"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/null"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/default"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/extra"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference mongodb.ecore#//Column/table"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/logicalField"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/key"/>
@@ -68,9 +69,15 @@
     <genClasses ecoreClass="mongodb.ecore#//ERDInfo">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//ERDInfo/autoLayout"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//ERDInfo/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//ERDInfo/autoLayout_type"/>
     </genClasses>
     <genClasses ecoreClass="mongodb.ecore#//UserComment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//UserComment/comment"/>
+    </genClasses>
+    <genClasses ecoreClass="mongodb.ecore#//test"/>
+    <genClasses ecoreClass="mongodb.ecore#//SubDocument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//SubDocument/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference mongodb.ecore#//SubDocument/sucDocTable"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

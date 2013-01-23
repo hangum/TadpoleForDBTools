@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 Cho Hyun Jong.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,22 +8,33 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.mongodb.core.define;
+package com.hangum.tadpole.mongodb.erd.core.utils;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
- * mongodb defien class
+ * MongoDB Utils
  * 
  * @author hangum
  *
  */
-public class MongoDBDefine {
+public class MongodbUtils {
 
 	/**
-	 * ObjectID
+	 * Is mongodb reference key
+	 * 
+	 * @param type
+	 * @param field
+	 * @return
 	 */
-	public static final int PRIMARY_ID_KEY = 99999;
-	public static final String PRIMARY_ID_STRING = "__object_id__";
-	
-	public static final String[] SYSTEM_COLLECTION = {};//"system.namespaces", "system.indexes", "system.profile", "system.users"}; 
+	public static boolean isReferenceKey(String type, String field) {
+		if("ObjectId".equals(type) && 
+				!StringUtils.startsWith(field, "_id") && 
+				StringUtils.endsWith(field, "_id")) {
+			return true;			
+		}
+		
+		return false;
+	}
 	
 }

@@ -395,13 +395,22 @@ public interface MongodbPackage extends EPackage {
 	int COLUMN__COMMENT = 6;
 
 	/**
+	 * The feature id for the '<em><b>Sub Doc</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COLUMN__SUB_DOC = 7;
+
+	/**
 	 * The number of structural features of the '<em>Column</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COLUMN_FEATURE_COUNT = 7;
+	int COLUMN_FEATURE_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl <em>Relation</em>}' class.
@@ -650,25 +659,6 @@ public interface MongodbPackage extends EPackage {
 	int USER_COMMENT_FEATURE_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link com.hangum.tadpole.mongodb.model.impl.testImpl <em>test</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see com.hangum.tadpole.mongodb.model.impl.testImpl
-	 * @see com.hangum.tadpole.mongodb.model.impl.MongodbPackageImpl#gettest()
-	 * @generated
-	 */
-	int TEST = 7;
-
-	/**
-	 * The number of structural features of the '<em>test</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEST_FEATURE_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.mongodb.model.RelationKind <em>Relation Kind</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -676,7 +666,7 @@ public interface MongodbPackage extends EPackage {
 	 * @see com.hangum.tadpole.mongodb.model.impl.MongodbPackageImpl#getRelationKind()
 	 * @generated
 	 */
-	int RELATION_KIND = 8;
+	int RELATION_KIND = 7;
 
 	/**
 	 * The meta object id for the '<em>Rectangle</em>' data type.
@@ -686,7 +676,7 @@ public interface MongodbPackage extends EPackage {
 	 * @see com.hangum.tadpole.mongodb.model.impl.MongodbPackageImpl#getRectangle()
 	 * @generated
 	 */
-	int RECTANGLE = 9;
+	int RECTANGLE = 8;
 
 	/**
 	 * The meta object id for the '<em>Point</em>' data type.
@@ -696,7 +686,7 @@ public interface MongodbPackage extends EPackage {
 	 * @see com.hangum.tadpole.mongodb.model.impl.MongodbPackageImpl#getPoint()
 	 * @generated
 	 */
-	int POINT = 10;
+	int POINT = 9;
 
 
 	/**
@@ -994,6 +984,17 @@ public interface MongodbPackage extends EPackage {
 	EAttribute getColumn_Comment();
 
 	/**
+	 * Returns the meta object for the reference list '{@link com.hangum.tadpole.mongodb.model.Column#getSubDoc <em>Sub Doc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Sub Doc</em>'.
+	 * @see com.hangum.tadpole.mongodb.model.Column#getSubDoc()
+	 * @see #getColumn()
+	 * @generated
+	 */
+	EReference getColumn_SubDoc();
+
+	/**
 	 * Returns the meta object for class '{@link com.hangum.tadpole.mongodb.model.Relation <em>Relation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1197,16 +1198,6 @@ public interface MongodbPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getUserComment_Comment();
-
-	/**
-	 * Returns the meta object for class '{@link com.hangum.tadpole.mongodb.model.test <em>test</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>test</em>'.
-	 * @see com.hangum.tadpole.mongodb.model.test
-	 * @generated
-	 */
-	EClass gettest();
 
 	/**
 	 * Returns the meta object for enum '{@link com.hangum.tadpole.mongodb.model.RelationKind <em>Relation Kind</em>}'.
@@ -1485,6 +1476,14 @@ public interface MongodbPackage extends EPackage {
 		EAttribute COLUMN__COMMENT = eINSTANCE.getColumn_Comment();
 
 		/**
+		 * The meta object literal for the '<em><b>Sub Doc</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COLUMN__SUB_DOC = eINSTANCE.getColumn_SubDoc();
+
+		/**
 		 * The meta object literal for the '{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl <em>Relation</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1643,16 +1642,6 @@ public interface MongodbPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute USER_COMMENT__COMMENT = eINSTANCE.getUserComment_Comment();
-
-		/**
-		 * The meta object literal for the '{@link com.hangum.tadpole.mongodb.model.impl.testImpl <em>test</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see com.hangum.tadpole.mongodb.model.impl.testImpl
-		 * @see com.hangum.tadpole.mongodb.model.impl.MongodbPackageImpl#gettest()
-		 * @generated
-		 */
-		EClass TEST = eINSTANCE.gettest();
 
 		/**
 		 * The meta object literal for the '{@link com.hangum.tadpole.mongodb.model.RelationKind <em>Relation Kind</em>}' enum.

@@ -85,15 +85,6 @@ public interface MongodbFactory extends EFactory {
 	UserComment createUserComment();
 
 	/**
-	 * Returns a new object of class '<em>test</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>test</em>'.
-	 * @generated
-	 */
-	test createtest();
-
-	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

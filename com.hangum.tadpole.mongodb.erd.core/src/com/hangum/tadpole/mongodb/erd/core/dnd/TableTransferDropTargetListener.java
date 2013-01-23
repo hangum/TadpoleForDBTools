@@ -126,15 +126,18 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			
 			try {
 				// 컬럼 모델 생성
-				for (CollectionFieldDAO columnDAO : getColumns(tableName)) {
-					Column column = tadpoleFactory.createColumn();
-					
+				for (CollectionFieldDAO columnDAO : getColumns(tableName)) {										
+					Column column = tadpoleFactory.createColumn();					
 					column.setField(columnDAO.getField());
 					column.setKey(columnDAO.getKey());
 					column.setType(columnDAO.getType());
+					if("BasicDBObject".equals(columnDAO.getType())) {
+//						logger.debug("[columnDAO.getType()]" + columnDAO.getType());
+						makeSubDoc(column, columnDAO);
+					}						
 					
 					column.setTable(tableModel);
-					tableModel.getColumns().add(column);
+//					tableModel.getColumns().add(column);
 				}
 				mapDBTables.put(tableName, tableModel);
 				RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);//RelationUtil.getReferenceTable(userDB, refTableNames));
@@ -155,6 +158,25 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	}
 	
 	/**
+	 * add sub document
+	 * 
+	 * @param columnDAO
+	 */
+	private void makeSubDoc(Column parentColumn, CollectionFieldDAO columnDAO) {
+		
+		for (CollectionFieldDAO cfDAO : columnDAO.getChildren()) {
+			Column column = tadpoleFactory.createColumn();					
+			column.setField(cfDAO.getField());
+			column.setKey(cfDAO.getKey());
+			column.setType(cfDAO.getType());
+			if("BasicDBObject".equals(cfDAO.getType())) {
+				makeSubDoc(column, cfDAO);
+			}						
+			parentColumn.getSubDoc().add(column);
+		}
+	}
+	
+	/**
 	 * table의 컬럼 정보를 가져옵니다.
 	 * 
 	 * @param strTBName
@@ -167,7 +189,6 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 		DBCollection coll = mongoDB.getCollection(strTBName);
 									
 		return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
-
 	}
 
 }

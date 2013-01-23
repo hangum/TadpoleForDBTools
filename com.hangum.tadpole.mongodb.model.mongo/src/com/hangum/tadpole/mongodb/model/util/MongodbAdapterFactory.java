@@ -96,10 +96,6 @@ public class MongodbAdapterFactory extends AdapterFactoryImpl {
 				return createUserCommentAdapter();
 			}
 			@Override
-			public Adapter casetest(test object) {
-				return createtestAdapter();
-			}
-			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -214,20 +210,6 @@ public class MongodbAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUserCommentAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link com.hangum.tadpole.mongodb.model.test <em>test</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see com.hangum.tadpole.mongodb.model.test
-	 * @generated
-	 */
-	public Adapter createtestAdapter() {
 		return null;
 	}
 

@@ -2,6 +2,7 @@
  */
 package com.hangum.tadpole.mongodb.model;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -19,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.hangum.tadpole.mongodb.model.Column#getLogicalField <em>Logical Field</em>}</li>
  *   <li>{@link com.hangum.tadpole.mongodb.model.Column#getKey <em>Key</em>}</li>
  *   <li>{@link com.hangum.tadpole.mongodb.model.Column#getComment <em>Comment</em>}</li>
+ *   <li>{@link com.hangum.tadpole.mongodb.model.Column#getSubDoc <em>Sub Doc</em>}</li>
  * </ul>
  * </p>
  *
@@ -210,5 +212,21 @@ public interface Column extends EObject {
 	 * @generated
 	 */
 	void setComment(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Sub Doc</b></em>' reference list.
+	 * The list contents are of type {@link com.hangum.tadpole.mongodb.model.Column}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Sub Doc</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Sub Doc</em>' reference list.
+	 * @see com.hangum.tadpole.mongodb.model.MongodbPackage#getColumn_SubDoc()
+	 * @model
+	 * @generated
+	 */
+	EList<Column> getSubDoc();
 
 } // Column
