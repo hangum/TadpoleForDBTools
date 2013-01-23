@@ -867,7 +867,8 @@ public class MainEditor extends EditorPart {
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 							if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 									executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-										executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+									executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
+									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							} else {
 								listStrExecuteQuery.add(executeLastSQL);
 							}
@@ -880,7 +881,8 @@ public class MainEditor extends EditorPart {
 						// 마지막 쿼리가 select 문일 경우에 execute batch insert 후에 select 문을 호출합니다.
 						if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
+								executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
 							pageNumber = 1;	
 							runSQLExecuteBatch(listStrExecuteQuery);
@@ -914,7 +916,8 @@ public class MainEditor extends EditorPart {
 						
 						if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
+								executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
 							pageNumber = 1;							
 							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1082,6 +1085,7 @@ public class MainEditor extends EditorPart {
 		
 		if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
+				executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
 					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			
 			btnPrev.setEnabled(false);
@@ -1128,6 +1132,7 @@ public class MainEditor extends EditorPart {
 	private void setResultTable() {
 		if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
 				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
+				executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
 					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			
 			// table data를 생성한다.
@@ -1708,3 +1713,4 @@ public class MainEditor extends EditorPart {
 		}
 	}
 }
+
