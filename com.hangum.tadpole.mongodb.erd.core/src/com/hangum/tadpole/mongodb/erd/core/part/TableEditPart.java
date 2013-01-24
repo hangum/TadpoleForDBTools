@@ -67,7 +67,7 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 		Table table = (Table)getModel();
 		DBEditPart parent = (DBEditPart)getParent();
 
-		//super.refreshVisuals();
+		super.refreshVisuals();
 		updateFigure((TableFigure)getFigure());
 		refreshChildren();
 		
@@ -83,9 +83,9 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 		EList<Column> columns = tableModel.getColumns();
 		for (Column column : columns) {
 			if("BasicDBObject".equals(column.getType())) {
-				createSubDocument(tableFigure, column);				
+				addSubDocument(tableFigure, column);				
 			} else {				
-				createColumnFigure(tableFigure, column);
+				addColumnFigure(tableFigure, column);
 			}
 		}		
 	}
@@ -96,16 +96,16 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 	 * @param parentTableFigure
 	 * @param columnParent
 	 */
-	private void createSubDocument(TableFigure parentTableFigure, Column columnParent) {
+	private void addSubDocument(TableFigure parentTableFigure, Column columnParent) {
 		SubTableFigure subDocFigure = new SubTableFigure();
 		subDocFigure.setTableName(columnParent.getField());
 		
 		EList<Column> sucColumns = columnParent.getSubDoc();
 		for (Column column : sucColumns) {
 			if("BasicDBObject".equals(column.getType())) {				
-				createSubDocument(subDocFigure, column);
+				addSubDocument(subDocFigure, column);
 			} else {				
-				createColumnFigure(subDocFigure, column);
+				addColumnFigure(subDocFigure, column);
 			}			
 		}
 		
@@ -118,7 +118,7 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 	 * @param tableFigure
 	 * @param model
 	 */
-	private void createColumnFigure(TableFigure tableFigure, Column model){
+	private void addColumnFigure(TableFigure tableFigure, Column model){
 		ColumnFigure labelKey = new ColumnFigure(COLUMN_TYPE.KEY);
 		labelKey.setText( StringUtils.substring(model.getKey(), 0, 1));
 		

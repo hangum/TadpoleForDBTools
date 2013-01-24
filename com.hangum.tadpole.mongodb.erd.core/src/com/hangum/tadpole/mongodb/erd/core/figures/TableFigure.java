@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.erd.core.figures;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
@@ -22,6 +24,7 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 
 import com.hangum.tadpole.mongodb.erd.core.figures.others.ColumnLayoutFigure;
+import com.swtdesigner.SWTResourceManager;
 
 public class TableFigure extends Figure {
 	private static final Logger logger = Logger.getLogger(TableFigure.class);
@@ -57,13 +60,13 @@ public class TableFigure extends Figure {
 		this.columnFigure.add(colNameFigure);
 		this.columnFigure.add(colTypeFigure);
 		
-		setLayoutManager(new ToolbarLayout());
-//		setBackgroundColor(new Color(Display.getDefault(), 255, 255, 206));
-		setBorder(new LineBorder(ColorConstants.black, 1));
-		setOpaque(true);
+		this.setLayoutManager(new ToolbarLayout());
+//		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
+		this.setBorder(new LineBorder(ColorConstants.black, 1));
+		this.setOpaque(true);
 		
-		add(this.tableName);
-		add(this.columnFigure);
+		this.add(this.tableName);
+		this.add(this.columnFigure);
 	}
 	
 	public void setTableName(String tableName){
@@ -101,22 +104,21 @@ public class TableFigure extends Figure {
 	}
 
 	public void removeAllColumns(){
-		logger.debug("[TableFigure figure remove all]");
+//		logger.debug("[TableFigure figure remove all]");
 		
 		colKeyFigure.removeAll();
 		colNameFigure.removeAll();
 		colTypeFigure.removeAll();
 		
-
-//		List<Figure> listFigure = getChildren();
-//		for (Figure figure : listFigure) {
-//			if(figure instanceof SubTableFigure) {
-//				SubTableFigure stFigure = (SubTableFigure)figure;
-//				stFigure.removeAllColumns();	
-//				
-//				stFigure.removeAll();
-//			}
-//		}
+		List<Figure> listFigure = getChildren();
+		for (Figure figure : listFigure) {
+			if(figure instanceof SubTableFigure) {
+				SubTableFigure stFigure = (SubTableFigure)figure;
+				stFigure.removeAllColumns();	
+				
+				stFigure.removeAll();
+			}
+		}
 	}
 	
 	public ConnectionAnchor getConnectionAnchor() {

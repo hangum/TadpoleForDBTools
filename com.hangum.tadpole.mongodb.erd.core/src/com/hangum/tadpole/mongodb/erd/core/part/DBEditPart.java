@@ -30,6 +30,12 @@ import com.hangum.tadpole.mongodb.erd.core.policies.TableXYLayoutPolicy;
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.Table;
 
+/**
+ * DB edit part
+ * 
+ * @author hangum
+ *
+ */
 public class DBEditPart extends AbstractGraphicalEditPart implements LayerConstants  {
 	private static final Logger logger = Logger.getLogger(DBEditPart.class);
 	private  DBAdapter adapter;
@@ -69,7 +75,7 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 	protected List<Table> getModelChildren() {
 		List<Table> retVal = new ArrayList<Table>();
 
-		DB db = (DB) getModel();
+		DB db = (DB)getModel();
 		retVal.addAll(db.getTables());
 
 		return retVal;
@@ -97,12 +103,11 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 	 * @author hangum
 	 *
 	 */
-	public class DBAdapter implements Adapter {
-		
+	public class DBAdapter implements Adapter {		
 
 		@Override
 		public void notifyChanged(Notification notification) {
-			DB db = (DB) getModel();
+//			DB db = (DB) getModel();
 //			logger.debug("\t ######################## [DB] " + db.getSid());
 			
 			refreshVisuals();
@@ -121,8 +126,6 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		@Override
 		public boolean isAdapterForType(Object type) {
 			return type.equals(DB.class);
-		}
-		
-	}
-	
+		}		
+	}	
 }

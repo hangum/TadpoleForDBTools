@@ -10,17 +10,15 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.erd.core.figures;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 
 import com.hangum.tadpole.mongodb.erd.core.figures.others.ColumnLayoutFigure;
 import com.hangum.tadpole.mongodb.erd.core.figures.others.SubTableFigureBorder;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * SubDocument figure
@@ -51,31 +49,31 @@ public class SubTableFigure extends TableFigure {
 		this.columnFigure.add(colNameFigure);
 		this.columnFigure.add(colTypeFigure);
 
-
-		setLayoutManager(new ToolbarLayout());
-		setBorder(new SubTableFigureBorder());
-		setOpaque(false);
+		this.setLayoutManager(new ToolbarLayout());
+		this.setBackgroundColor(SWTResourceManager.getColor(0, 206, 206));
+		this.setBorder(new SubTableFigureBorder());
+		this.setOpaque(false);
 		
-		add(this.tableName);
-		add(this.columnFigure);
+		this.add(this.tableName);
+		this.add(this.columnFigure);
 	}
 	
-	public void removeAllColumns(){
-		colKeyFigure.removeAll();
-		colNameFigure.removeAll();
-		colTypeFigure.removeAll();
-		
-		List<Figure> listFigure = getChildren();
-		for (Figure figure : listFigure) {
-//			logger.debug(getClass().getName() + ":" + figure.toString());
-			
-			if(figure instanceof SubTableFigure) {
-				SubTableFigure stFigure = (SubTableFigure)figure;
-				stFigure.removeAllColumns();	
-				
-				stFigure.removeAll();			
-			}
-		}
-	}
+//	public void removeAllColumns(){
+//		colKeyFigure.removeAll();
+//		colNameFigure.removeAll();
+//		colTypeFigure.removeAll();
+//		
+//		List<Figure> listFigure = getChildren();
+//		for (Figure figure : listFigure) {
+////			logger.debug(getClass().getName() + ":" + figure.toString());
+//			
+//			if(figure instanceof SubTableFigure) {
+//				SubTableFigure stFigure = (SubTableFigure)figure;
+//				stFigure.removeAllColumns();	
+//				
+//				stFigure.removeAll();			
+//			}
+//		}
+//	}
 	
 }
