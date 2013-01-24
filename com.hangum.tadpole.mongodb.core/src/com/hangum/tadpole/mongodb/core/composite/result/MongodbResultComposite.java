@@ -64,6 +64,7 @@ import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
+import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
@@ -301,8 +302,13 @@ public class MongodbResultComposite extends Composite {
 				if(!iss.isEmpty()) {
 					HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)iss.getFirstElement();
 					String jsonString = rsResult.get(MongoDBDefine.PRIMARY_ID_KEY).toString();
-					TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, collectionName, JSONUtil.getPretty(jsonString));					 //$NON-NLS-1$ //$NON-NLS-2$
+					
+					DBObject dbObject = (DBObject)rsResult.get(MongoDBDefine.PRIMARY_ID_KEY);
+					
+					FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName, dbObject);
 					dlg.open();
+//					TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, collectionName, JSONUtil.getPretty(jsonString));					 //$NON-NLS-1$ //$NON-NLS-2$
+//					dlg.open();
 				}
 			}
 		});
