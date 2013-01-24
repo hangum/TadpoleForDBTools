@@ -245,30 +245,6 @@
     <element xmi:type="ecore:EClass" href="mongodb.ecore#//UserComment"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_skgwYmTlEeKiZr03XC0lYA" x="585" y="505"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_xE7OQGTqEeKiZr03XC0lYA" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_xE71UGTqEeKiZr03XC0lYA" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_xE71UWTqEeKiZr03XC0lYA" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_yWHwYGTqEeKiZr03XC0lYA" type="2001">
-        <element xmi:type="ecore:EAttribute" href="mongodb.ecore#//Indexes/name"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_yWHwYWTqEeKiZr03XC0lYA"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_0sa5YGTqEeKiZr03XC0lYA" type="2001">
-        <element xmi:type="ecore:EAttribute" href="mongodb.ecore#//Indexes/comment"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_0sa5YWTqEeKiZr03XC0lYA"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_xE71UmTqEeKiZr03XC0lYA"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_xE71U2TqEeKiZr03XC0lYA"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_xE71VGTqEeKiZr03XC0lYA"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_xE71VWTqEeKiZr03XC0lYA" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_xE71VmTqEeKiZr03XC0lYA"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_xE71V2TqEeKiZr03XC0lYA"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_xE71WGTqEeKiZr03XC0lYA"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_xE7OQWTqEeKiZr03XC0lYA" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="mongodb.ecore#//Indexes"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xE7OQmTqEeKiZr03XC0lYA" x="753" y="104"/>
-  </children>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_skQRsWTlEeKiZr03XC0lYA"/>
   <element xmi:type="ecore:EPackage" href="mongodb.ecore#/"/>
   <edges xmi:type="notation:Edge" xmi:id="_skilkGTlEeKiZr03XC0lYA" type="3002" source="_skbQ0GTlEeKiZr03XC0lYA" target="_skb37GTlEeKiZr03XC0lYA">
@@ -446,32 +422,5 @@
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cCLps2TpEeKiZr03XC0lYA" points="[2, 0, 12, -34]$[71, 0, 81, -34]$[71, 120, 81, 86]$[-2, 120, 8, 86]$[-2, 36, 8, 2]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cCNe4GTpEeKiZr03XC0lYA" id="(0.9867549668874173,0.7352941176470589)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cCNe4WTpEeKiZr03XC0lYA" id="(0.9205298013245033,0.9852941176470589)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_3XNrsGTqEeKiZr03XC0lYA" type="3002" source="_skb37GTlEeKiZr03XC0lYA" target="_xE7OQGTqEeKiZr03XC0lYA">
-    <children xmi:type="notation:Node" xmi:id="_3XOSwGTqEeKiZr03XC0lYA" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_3XOSwWTqEeKiZr03XC0lYA" x="-10" y="-10"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_3XOSwmTqEeKiZr03XC0lYA" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_3XOSw2TqEeKiZr03XC0lYA" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_3XNrsWTqEeKiZr03XC0lYA" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_3XNrsmTqEeKiZr03XC0lYA" fontColor="4210752" fontName="맑은 고딕" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="mongodb.ecore#//Table/indexes"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_3XNrs2TqEeKiZr03XC0lYA" points="[8, -9, -118, 153]$[196, -164, 70, -2]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_3XQH8GTqEeKiZr03XC0lYA" id="(0.8862275449101796,0.09803921568627451)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_6sp9gGTqEeKiZr03XC0lYA" type="3002" source="_xE7OQGTqEeKiZr03XC0lYA" target="_skcfAWTlEeKiZr03XC0lYA">
-    <children xmi:type="notation:Node" xmi:id="_6sqkkGTqEeKiZr03XC0lYA" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_6sqkkWTqEeKiZr03XC0lYA" x="-10" y="-10"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_6sqkkmTqEeKiZr03XC0lYA" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_6sqkk2TqEeKiZr03XC0lYA" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_6sp9gWTqEeKiZr03XC0lYA" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_6sp9gmTqEeKiZr03XC0lYA" fontColor="4210752" fontName="맑은 고딕" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="mongodb.ecore#//Indexes/columns"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_6sp9g2TqEeKiZr03XC0lYA" points="[14, 14, -96, -94]$[111, 94, 1, -14]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_6suO8GTqEeKiZr03XC0lYA" id="(0.6950354609929078,0.7941176470588235)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_6suO8WTqEeKiZr03XC0lYA" id="(0.23178807947019867,0.11029411764705882)"/>
   </edges>
 </notation:Diagram>

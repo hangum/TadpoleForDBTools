@@ -11,7 +11,6 @@
 package com.hangum.tadpole.mongodb.erd.core.relation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +22,6 @@ import org.eclipse.emf.common.util.EList;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.mysql.ReferencedTableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.mongodb.erd.core.dnd.TableTransferDropTargetListener;
 import com.hangum.tadpole.mongodb.erd.core.utils.MongodbUtils;
 import com.hangum.tadpole.mongodb.model.Column;
 import com.hangum.tadpole.mongodb.model.DB;
@@ -75,13 +73,15 @@ public class RelationUtil {
 			for (Column column : listColumn) {
 				String strField = column.getField();
 				
-				if(MongodbUtils.isReferenceKey(column.getType(), strField)) {					
+				if(MongodbUtils.isReferenceKey(column.getType(), strField)) {
+					String strRefName = StringUtils.remove(strField, "_id");
+					
 					ReferencedTableDAO refTableDao = new ReferencedTableDAO();
 					refTableDao.setTable_name(table.getName());
-					refTableDao.setColumn_name(strField);
-					refTableDao.setReferenced_table_name(StringUtils.remove(strField, "_id"));
-					refTableDao.setReferenced_column_name(strField);
-					refTableDao.setConstraint_name(strField);
+					refTableDao.setColumn_name(strRefName);
+					refTableDao.setReferenced_table_name(strRefName);
+					refTableDao.setReferenced_column_name(table.getName());
+					refTableDao.setConstraint_name(strRefName);
 					
 					listRealRefTableDAO.add(refTableDao);
 				}

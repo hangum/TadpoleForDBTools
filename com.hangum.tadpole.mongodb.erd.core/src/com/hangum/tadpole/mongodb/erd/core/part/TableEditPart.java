@@ -64,14 +64,14 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 	
 	@Override
 	protected void refreshVisuals() {
-		Table table = (Table)getModel();
+		Table tableModel = (Table)getModel();
 		DBEditPart parent = (DBEditPart)getParent();
 
 		super.refreshVisuals();
 		updateFigure((TableFigure)getFigure());
 		refreshChildren();
 		
-		parent.setLayoutConstraint(this, figure, table.getConstraints());
+		parent.setLayoutConstraint(this, figure, tableModel.getConstraints());
 	}
 	
 	private void updateFigure(TableFigure tableFigure) {
@@ -120,7 +120,7 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 	 */
 	private void addColumnFigure(TableFigure tableFigure, Column model){
 		ColumnFigure labelKey = new ColumnFigure(COLUMN_TYPE.KEY);
-		labelKey.setText( StringUtils.substring(model.getKey(), 0, 1));
+		labelKey.setText(StringUtils.substring(model.getKey(), 0, 1));
 		
 		ColumnFigure labelName = new ColumnFigure(COLUMN_TYPE.NAME);
 		labelName.setText(model.getField());

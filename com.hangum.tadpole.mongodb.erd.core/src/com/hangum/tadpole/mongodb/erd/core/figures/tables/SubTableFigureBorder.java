@@ -9,18 +9,13 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.rap.swt.SWT;
 
 public class SubTableFigureBorder extends AbstractBorder {
-//		public Insets getInsets(IFigure figure) {
-//			return new Insets(5, 5, 5, 5);
-//		}
 
 	public static final int FOLD = 10;
 	public Insets getInsets(IFigure figure) {
-		return new Insets(1, 2, 2, 2); // top,left,bottom,right
+		return new Insets(0, 4, 0, 4); // top,left,bottom,right
 	}
 
 	public void paint(IFigure figure, Graphics graphics, Insets insets) {
-//			graphics.drawLine(getPaintRectangle(figure, insets).getTopLeft(), tempRect.getTopRight());
-//		}
 		Rectangle r = figure.getBounds().getCopy();
 		r.crop(insets);
 		graphics.setLineWidth(1);
@@ -34,8 +29,7 @@ public class SubTableFigureBorder extends AbstractBorder {
 		graphics.drawLine(r.x, r.y + FOLD, r.x + FOLD, r.y + FOLD);
 		// gray small triangle
 		graphics.setBackgroundColor(ColorConstants.lightGray);
-		graphics.fillPolygon(new int[] { r.x, r.y + FOLD, r.x + FOLD,
-		r.y, r.x + FOLD, r.y + FOLD });
+		graphics.fillPolygon(new int[] { r.x, r.y + FOLD, r.x + FOLD, r.y, r.x + FOLD, r.y + FOLD });
 		// dotted short diagonal line
 		graphics.setLineStyle(SWT.LINE_DOT);
 		graphics.drawLine(r.x, r.y + FOLD, r.x + FOLD, r.y);

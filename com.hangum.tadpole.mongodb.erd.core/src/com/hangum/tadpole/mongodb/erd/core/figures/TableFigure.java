@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -28,11 +29,11 @@ import com.swtdesigner.SWTResourceManager;
 
 public class TableFigure extends Figure {
 	private static final Logger logger = Logger.getLogger(TableFigure.class);
-	protected Label tableName = new Label();
+	protected Label tableName;
 	
 	/** column type */
 	public static enum COLUMN_TYPE{KEY, NAME, TYPE, NULL}; 
-	protected ColumnLayoutFigure columnFigure;// = new ColumnLayoutFigure();
+	protected ColumnLayoutFigure columnFigure;
 	
 	protected ColumnDetailFigure colKeyFigure;
 	protected ColumnDetailFigure colNameFigure;
@@ -44,6 +45,8 @@ public class TableFigure extends Figure {
 		this.tableName = new Label();
 		this.tableName.setBorder(new MarginBorder(2, 2, 0, 2));
 		this.tableName.setForegroundColor(ColorConstants.blue);
+//		this.tableName.setBackgroundColor(ColorConstants.lightGray);
+//		this.tableName.setOpaque(true);
 
 		// key
 		this.colKeyFigure = new ColumnDetailFigure();
@@ -55,14 +58,14 @@ public class TableFigure extends Figure {
 		this.colTypeFigure = new ColumnDetailFigure();
 		this.colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
 
-		this.columnFigure = new ColumnLayoutFigure();
+		this.columnFigure = new ColumnLayoutFigure(this);
 		this.columnFigure.add(colKeyFigure);
 		this.columnFigure.add(colNameFigure);
 		this.columnFigure.add(colTypeFigure);
 		
 		this.setLayoutManager(new ToolbarLayout());
 		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
-		this.setBorder(new LineBorder(ColorConstants.black, 1));
+		this.setBorder(new CompoundBorder(new LineBorder(ColorConstants.black, 0), new MarginBorder(4, 4, 4, 4)));
 		this.setOpaque(true);
 		
 		this.add(this.tableName);
@@ -112,8 +115,7 @@ public class TableFigure extends Figure {
 		for (Figure figure : listFigure) {
 			if(figure instanceof SubTableFigure) {
 				SubTableFigure stFigure = (SubTableFigure)figure;
-				stFigure.removeAllColumns();	
-				
+//				stFigure.removeAllColumns();
 				stFigure.removeAll();
 			}
 		}

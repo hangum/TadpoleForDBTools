@@ -90,7 +90,7 @@ public class AutoLayoutAction extends SelectionAction {
 					EntityNode node = new EntityNode();
 					node.model = model;
 					node.width = editPart.getFigure().getSize().width;
-					node.height = editPart.getFigure().getSize().height;
+					node.height = editPart.getFigure().getSize().height + 40;
 					graphNodes.add(node);
 				}
 			}
