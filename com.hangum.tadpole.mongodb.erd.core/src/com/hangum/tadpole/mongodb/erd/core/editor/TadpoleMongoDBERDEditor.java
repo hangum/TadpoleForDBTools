@@ -173,7 +173,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 				});	// end display.asyncExec
 			}	// end done
 			
-		});	// end job
+		});	// end job0
 		
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);

@@ -1,4 +1,4 @@
-package com.hangum.tadpole.mongodb.erd.core.figures.others;
+package com.hangum.tadpole.mongodb.erd.core.figures.tables;
 
 import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.Graphics;

@@ -16,6 +16,7 @@
             defaultEntrypointId="com.hangum.tadpole.erd.stanalone.Application"
             id="com.hangum.tadpole.erd.core.branding"
             servletName="mongodb-erd"
+            themeId="org.eclipse.rap.design.example.business.theme"
             title="mongodb">
       </branding>
    </extension>

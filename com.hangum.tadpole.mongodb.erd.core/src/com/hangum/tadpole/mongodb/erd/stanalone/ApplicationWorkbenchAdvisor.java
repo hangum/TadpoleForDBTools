@@ -43,6 +43,11 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		
 		try {
 			UserDBDAO loginInfo = new UserDBDAO();
+			loginInfo.setDisplay_name("newdb");
+			loginInfo.setUrl("127.0.0.1:27017");
+			loginInfo.setHost("127.0.0.1:27017");
+			loginInfo.setDb("newdb");
+			
 			TadpoleMongoDBEditorInput input = new TadpoleMongoDBEditorInput("Standalone Test", loginInfo, true);
 			page.openEditor(input, TadpoleMongoDBERDEditor.ID, false);
 		} catch (PartInitException e) {

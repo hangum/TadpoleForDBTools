@@ -16,8 +16,8 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 
-import com.hangum.tadpole.mongodb.erd.core.figures.others.ColumnLayoutFigure;
-import com.hangum.tadpole.mongodb.erd.core.figures.others.SubTableFigureBorder;
+import com.hangum.tadpole.mongodb.erd.core.figures.tables.ColumnLayoutFigure;
+import com.hangum.tadpole.mongodb.erd.core.figures.tables.SubTableFigureBorder;
 import com.swtdesigner.SWTResourceManager;
 
 /**

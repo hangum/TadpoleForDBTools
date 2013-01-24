@@ -24,6 +24,8 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Insets;
 
+import com.swtdesigner.SWTResourceManager;
+
 public class TableFigure extends Figure {
 	private static final Logger logger = Logger.getLogger(TableFigure.class);
 	private Label tableName = new Label();
@@ -59,13 +61,13 @@ public class TableFigure extends Figure {
 		this.colNullFigure.setForegroundColor(ColorConstants.black);
 
 		ToolbarLayout layout = new ToolbarLayout();
-		setLayoutManager(layout);
-//		setBackgroundColor(new Color(Display.getDefault(), 255, 255, 206));
-		setBorder(new LineBorder(ColorConstants.black, 1));
-		setOpaque(true);
+		this.setLayoutManager(layout);
+		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
+		this.setBorder(new LineBorder(ColorConstants.black, 1));
+		this.setOpaque(true);
 
-		add(this.tableName);
-		add(this.columnFigure);
+		this.add(this.tableName);
+		this.add(this.columnFigure);
 
 		this.columnFigure.add(colKeyFigure);
 		this.columnFigure.add(colNameFigure);

@@ -23,7 +23,7 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 
-import com.hangum.tadpole.mongodb.erd.core.figures.others.ColumnLayoutFigure;
+import com.hangum.tadpole.mongodb.erd.core.figures.tables.ColumnLayoutFigure;
 import com.swtdesigner.SWTResourceManager;
 
 public class TableFigure extends Figure {
@@ -61,7 +61,7 @@ public class TableFigure extends Figure {
 		this.columnFigure.add(colTypeFigure);
 		
 		this.setLayoutManager(new ToolbarLayout());
-//		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
+		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
 		this.setBorder(new LineBorder(ColorConstants.black, 1));
 		this.setOpaque(true);
 		
@@ -104,8 +104,6 @@ public class TableFigure extends Figure {
 	}
 
 	public void removeAllColumns(){
-//		logger.debug("[TableFigure figure remove all]");
-		
 		colKeyFigure.removeAll();
 		colNameFigure.removeAll();
 		colTypeFigure.removeAll();
