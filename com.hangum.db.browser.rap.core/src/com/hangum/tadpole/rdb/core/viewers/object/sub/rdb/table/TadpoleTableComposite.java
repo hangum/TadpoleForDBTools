@@ -234,11 +234,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 
 			public int getToolTipDisplayDelayTime(Object object) {
-				return 3000;
+				return 5000;
 			}
 
 			public int getToolTipTimeDisplayed(Object object) {
-				return 2000;
+				return 1000;
 			}
 
 			public void update(ViewerCell cell) {
