@@ -11,6 +11,7 @@
 package com.hangum.tadpole.util.tables;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -63,14 +64,14 @@ public class TableUtil {
 	}
 	
 	public static void packTable(Table table) {
-		AutoResizeTableLayout layout = new AutoResizeTableLayout(table);
-		table.setLayout(layout);
+		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(table);
+		table.setLayout(layoutColumnLayout);
 		
 		TableColumn[] columns = table.getColumns();		
 		for (int i = 0; i < columns.length; i++) {			
 			columns[i].pack();
 			
-			layout.addColumnData(new ColumnWeightData(columns[i].getWidth()));
+			layoutColumnLayout.addColumnData(new ColumnWeightData(columns[i].getWidth()));
 			
 //			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
 //			if(columns.length >= 3) {

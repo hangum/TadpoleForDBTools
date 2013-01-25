@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.viewers.object.sub;
 
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 
 /**
  * Object explorer composite
@@ -180,13 +182,18 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * table table column
 	 */
 	protected void createTableColumne(TableViewer tv) {
+//		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tv.getTable());
+//		tv.getTable().setLayout(layoutColumnLayout);
+		
 		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
-		int[] size = {120, 70, 50, 100, 50, 50, 50};
+		int[] size = {120, 90, 50, 100, 50, 50, 50};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
+			
+//			layoutColumnLayout.addColumnData(new ColumnWeightData(size[i]));
 		}
 	}
 	

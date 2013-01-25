@@ -32,6 +32,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -101,6 +103,7 @@ import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.util.UnicodeUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
+import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.util.tables.DefaultViewerSorter;
 import com.hangum.tadpole.util.tables.SQLHistoryLabelProvider;
 import com.hangum.tadpole.util.tables.SQLHistorySorter;
@@ -558,18 +561,24 @@ public class MainEditor extends EditorPart {
 		tableSQLHistory.setBounds(0, 0, 85, 85);
 		tableSQLHistory.setSortDirection(SWT.DOWN);
 		
+		// auto column layout
+		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tableViewerSQLHistory.getTable());
+		tableViewerSQLHistory.getTable().setLayout(layoutColumnLayout);
+		
 		SQLHistorySorter sorterHistory = new SQLHistorySorter();
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerSQLHistory, SWT.NONE);
 		TableColumn tblclmnDate = tableViewerColumn.getColumn();
-		tblclmnDate.setWidth(140);
+		tblclmnDate.setWidth(160);
 		tblclmnDate.setText(Messages.MainEditor_14);
 		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerSQLHistory, sorterHistory, tblclmnDate, 0));
+		layoutColumnLayout.addColumnData(new ColumnPixelData(160));
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerSQLHistory, SWT.NONE);
 		TableColumn tblclmnSql = tableViewerColumn_1.getColumn();
 		tblclmnSql.setWidth(500);
 		tblclmnSql.setText(Messages.MainEditor_15);
 		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerSQLHistory, sorterHistory, tblclmnSql, 1));
+		layoutColumnLayout.addColumnData(new ColumnWeightData(500));
 		
 		tableViewerSQLHistory.setLabelProvider(new SQLHistoryLabelProvider());
 		tableViewerSQLHistory.setContentProvider(new ArrayContentProvider());
@@ -660,18 +669,24 @@ public class MainEditor extends EditorPart {
 		tableMessage.setBounds(0, 0, 85, 85);
 		tableMessage.setSortDirection(SWT.DOWN);
 		
+		// auto column layout
+		AutoResizeTableLayout layoutColumnLayoutMsg = new AutoResizeTableLayout(tableViewerMessage.getTable());
+		tableViewerMessage.getTable().setLayout(layoutColumnLayoutMsg);
+		
 		SQLHistorySorter sorterMessage = new SQLHistorySorter();
 		tableViewerColumn = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		tblclmnDate = tableViewerColumn.getColumn();
 		tblclmnDate.setWidth(140);
 		tblclmnDate.setText(Messages.MainEditor_14);
 		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 0));
+		layoutColumnLayoutMsg.addColumnData(new ColumnPixelData(160));
 				
 		tableViewerColumn_1 = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		tblclmnSql = tableViewerColumn_1.getColumn();
 		tblclmnSql.setWidth(500);
 		tblclmnSql.setText("Message"); //$NON-NLS-1$
 		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnSql, 1));
+		layoutColumnLayoutMsg.addColumnData(new ColumnWeightData(500));
 		
 		tableViewerMessage.setLabelProvider(new SQLHistoryLabelProvider());
 		tableViewerMessage.setContentProvider(new ArrayContentProvider());

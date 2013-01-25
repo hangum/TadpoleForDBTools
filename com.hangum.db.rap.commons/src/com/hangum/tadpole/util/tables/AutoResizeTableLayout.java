@@ -8,10 +8,6 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-/**
-* Original implementation by Dan Rubel & Eric Clayberg Authors: "Eclipse: Building Commercial Quality Plug-ins" Addison-Wesley, June 2004, ISBN: 0321228472
-* http://www.qualityeclipse.com/. Used with permission.
-*/
 package com.hangum.tadpole.util.tables;
 
 import java.util.ArrayList;
@@ -29,8 +25,8 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * table column auto layout
  * 
- * http://www.cct.lsu.edu/~rguidry/eclipse-doc36/src-html/org/eclipse/ptp/internal/rm/ui/util/AutoResizeTableLayout.html
- * 참고.
+ * Original implementation by Dan Rubel & Eric Clayberg Authors: "Eclipse: Building Commercial Quality Plug-ins" Addison-Wesley, June 2004, ISBN: 0321228472
+ * http://www.qualityeclipse.com/. Used with permission
  * 
  * @author hangum
  * 
@@ -52,15 +48,15 @@ public class AutoResizeTableLayout extends TableLayout implements ControlListene
 	}
 
 	public void controlResized(ControlEvent e) {
-//		if (autosizing)
-//			return;
-//
-//		autosizing = true;
-//		try {
+		if (autosizing)
+			return;
+
+		autosizing = true;
+		try {
 			autoSizeColumns();
-//		} finally {
-//			autosizing = false;
-//		}
+		} finally {
+			autosizing = false;
+		}
 	}
 
 	private void autoSizeColumns() {

@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -74,6 +75,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer.CHANGE_TYPE;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -205,10 +207,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// sorter
 		tableComparator = new TableComparator();
 		tableListViewer.setSorter(tableComparator);
+		
+		// auto table layout
+		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tableListViewer.getTable());
+		tableListViewer.getTable().setLayout(layoutColumnLayout);
 
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();
-		tbName.setWidth(150);
+		tbName.setWidth(100);
 		tbName.setText("Name"); //$NON-NLS-1$
 		tbName.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbName, 0));
 		tvColName.setLabelProvider(new ColumnLabelProvider() {
@@ -219,6 +225,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 		});
 		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
+		layoutColumnLayout.addColumnData(new ColumnWeightData(100));
 		
 		// table column tooltip
 		ColumnViewerToolTipSupport.enableFor(tableListViewer);
@@ -249,7 +256,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		TableViewerColumn tvColComment = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbComment = tvColComment.getColumn();
-		tbComment.setWidth(400);
+		tbComment.setWidth(200);
 		tbComment.setText("Comment"); //$NON-NLS-1$
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
 //		tvColComment.setLabelProvider(new ColumnLabelProvider() {
@@ -261,6 +268,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 //		});
 		tvColComment.setLabelProvider(labelProvider);
 		tvColComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
+		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
 
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
