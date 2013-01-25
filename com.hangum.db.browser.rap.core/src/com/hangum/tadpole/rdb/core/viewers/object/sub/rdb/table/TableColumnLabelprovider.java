@@ -32,7 +32,6 @@ public class TableColumnLabelprovider extends LabelProvider implements ITableLab
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		TableColumnDAO tc = (TableColumnDAO) element;
-		
 			
 			switch(columnIndex) {
 			case 0: return tc.getField();

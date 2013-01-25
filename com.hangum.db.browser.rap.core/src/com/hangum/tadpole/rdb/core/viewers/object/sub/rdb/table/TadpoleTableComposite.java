@@ -22,7 +22,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -31,12 +33,14 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -197,7 +201,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		Table tableTableList = tableListViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
-
+		
 		// sorter
 		tableComparator = new TableComparator();
 		tableListViewer.setSorter(tableComparator);
@@ -215,19 +219,47 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 		});
 		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
+		
+		// table column tooltip
+		ColumnViewerToolTipSupport.enableFor(tableListViewer);
+		CellLabelProvider labelProvider = new CellLabelProvider() {
+
+			public String getToolTipText(Object element) {
+				TableDAO table = (TableDAO) element;
+				return table.getComment();
+			}
+
+			public Point getToolTipShift(Object object) {
+				return new Point(5, 5);
+			}
+
+			public int getToolTipDisplayDelayTime(Object object) {
+				return 3000;
+			}
+
+			public int getToolTipTimeDisplayed(Object object) {
+				return 2000;
+			}
+
+			public void update(ViewerCell cell) {
+				TableDAO table = (TableDAO)cell.getElement();
+				cell.setText(table.getComment());
+			}
+		};
 
 		TableViewerColumn tvColComment = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbComment = tvColComment.getColumn();
 		tbComment.setWidth(400);
 		tbComment.setText("Comment"); //$NON-NLS-1$
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
-		tvColComment.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				TableDAO table = (TableDAO) element;
-				return table.getComment();
-			}
-		});
+//		tvColComment.setLabelProvider(new ColumnLabelProvider() {
+//			@Override
+//			public String getText(Object element) {
+//				TableDAO table = (TableDAO) element;
+//				return table.getComment();
+//			}
+//		});
+		tvColComment.setLabelProvider(labelProvider);
 		tvColComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
 
 		tableListViewer.setContentProvider(new ArrayContentProvider());
