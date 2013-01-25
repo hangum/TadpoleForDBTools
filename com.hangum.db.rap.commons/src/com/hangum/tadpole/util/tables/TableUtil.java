@@ -11,6 +11,7 @@
 package com.hangum.tadpole.util.tables;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -51,6 +52,7 @@ public class TableUtil {
 			column.getColumn().setText(header[i]);
 			column.getColumn().setResizable(true);
 			column.getColumn().setMoveable(true);
+			
 			column.setLabelProvider(new ColumnLabelProvider() {
 				@Override
 				public String getText(Object element) {
@@ -61,10 +63,14 @@ public class TableUtil {
 	}
 	
 	public static void packTable(Table table) {
+		AutoResizeTableLayout layout = new AutoResizeTableLayout(table);
+		table.setLayout(layout);
 		
 		TableColumn[] columns = table.getColumns();		
-		for (int i = 0; i < columns.length; i++) {
+		for (int i = 0; i < columns.length; i++) {			
 			columns[i].pack();
+			
+			layout.addColumnData(new ColumnWeightData(columns[i].getWidth()));
 			
 //			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
 //			if(columns.length >= 3) {
@@ -72,8 +78,6 @@ public class TableUtil {
 //				else if(columns[i].getWidth() >=  300) columns[i].setWidth(300);
 //			}
 		}
-		
-		AutoResizeTableLayout layout = new AutoResizeTableLayout(table);
-		table.setLayout(layout);
+
 	}
 }
