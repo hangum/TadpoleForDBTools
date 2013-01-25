@@ -67,6 +67,7 @@ import com.hangum.tadpole.mongodb.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.mongodb.erd.stanalone.Activator;
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.MongodbFactory;
+import com.hangum.tadpole.mongodb.model.MongodbPackage;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
 /**
@@ -274,7 +275,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 				 */
 				ResourceSet resourceSet = new ResourceSetImpl();
 				if(resourceSet.getPackageRegistry().get("http://com.hangum.tadpole.mongodb.model.ERDInfo") == null) {
-					resourceSet.getPackageRegistry().put("http://com.hangum.tadpole.mongodb.model.ERDInfo", MongodbFactory.eINSTANCE.getClass());
+					resourceSet.getPackageRegistry().put("http://com.hangum.tadpole.mongodb.model.ERDInfo", MongodbPackage.eINSTANCE.getClass());
 				}
 				
 				// 

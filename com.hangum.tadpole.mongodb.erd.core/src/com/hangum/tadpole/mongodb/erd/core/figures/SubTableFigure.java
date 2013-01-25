@@ -16,6 +16,7 @@ import org.eclipse.draw2d.ToolbarLayout;
 
 import com.hangum.tadpole.mongodb.erd.core.figures.tables.ColumnLayoutFigure;
 import com.hangum.tadpole.mongodb.erd.core.figures.tables.SubTableFigureBorder;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * SubDocument figure
@@ -47,8 +48,9 @@ public class SubTableFigure extends TableFigure {
 		this.columnFigure.add(colTypeFigure);
 
 		this.setLayoutManager(new ToolbarLayout());
+		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
 		this.setBorder(new SubTableFigureBorder());
-		this.setOpaque(false);
+		this.setOpaque(true);
 		
 		this.add(this.tableName);
 		this.add(this.columnFigure);

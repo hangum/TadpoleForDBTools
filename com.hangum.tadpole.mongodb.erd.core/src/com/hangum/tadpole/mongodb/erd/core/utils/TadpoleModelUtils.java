@@ -113,42 +113,17 @@ public enum TadpoleModelUtils {
 			List<CollectionFieldDAO> columnList = getColumns(userDB.getDb(), table.getName());
 			for (CollectionFieldDAO columnDAO : columnList) {
 				
-//				Column column = factory.createColumn();
-//				column.setField(columnDAO.getField());
-//				column.setKey(columnDAO.getKey());
-//				column.setType(columnDAO.getType());
-//				
-//				column.setTable(tableModel);
-//				tableModel.getColumns().add(column);
-//				if("BasicDBObject".equals(columnDAO.getType())) {
-//					SubDocument subDoc = factory.createSubDocument();
-//					subDoc.setName(columnDAO.getField());
-//					
-//					List<CollectionFieldDAO> listFiels = columnDAO.getChildren();
-//					for (CollectionFieldDAO collectionFieldDAO : listFiels) {
-//						Column column = factory.createColumn();
-//						
-//						column.setField(collectionFieldDAO.getField());
-//						column.setKey(collectionFieldDAO.getKey());
-//						column.setType(collectionFieldDAO.getType());
-//						
-//						column.setSubDocument(subDoc);	
-//					}
-//											
-//					tableModel.getSubDoc().add(subDoc);						
-//				} else {
-					Column column = tadpoleFactory.createColumn();
-					
-					column.setField(columnDAO.getField());
-					column.setKey(columnDAO.getKey());
-					column.setType(columnDAO.getType());
-					if("BasicDBObject".equals(columnDAO.getType())) {
-						makeSubDoc(column, columnDAO);
-					}
-					
-					column.setTable(tableModel);
-					tableModel.getColumns().add(column);
-//				}
+				Column column = tadpoleFactory.createColumn();
+				
+				column.setField(columnDAO.getField());
+				column.setKey(columnDAO.getKey());
+				column.setType(columnDAO.getType());
+				if("BasicDBObject".equals(columnDAO.getType())) {
+					makeSubDoc(tableModel, column, columnDAO);
+				}
+				
+				column.setTable(tableModel);
+				tableModel.getColumns().add(column);
 			}
 			
 			// 화면 출력하기 위해
@@ -177,7 +152,7 @@ public enum TadpoleModelUtils {
 	 * 
 	 * @param columnDAO
 	 */
-	private void makeSubDoc(Column parentColumn, CollectionFieldDAO columnDAO) {
+	private void makeSubDoc(Table tableModel, Column parentColumn, CollectionFieldDAO columnDAO) {
 		
 		for (CollectionFieldDAO cfDAO : columnDAO.getChildren()) {
 			Column column = tadpoleFactory.createColumn();					
@@ -185,8 +160,10 @@ public enum TadpoleModelUtils {
 			column.setKey(cfDAO.getKey());
 			column.setType(cfDAO.getType());
 			if("BasicDBObject".equals(cfDAO.getType())) {
-				makeSubDoc(column, cfDAO);
-			}						
+				makeSubDoc(tableModel, column, cfDAO);
+			}
+			column.setTable(tableModel);
+			
 			parentColumn.getSubDoc().add(column);
 		}
 	}
@@ -227,7 +204,5 @@ public enum TadpoleModelUtils {
 									
 		return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
 	}
-	
-	
 	
 }

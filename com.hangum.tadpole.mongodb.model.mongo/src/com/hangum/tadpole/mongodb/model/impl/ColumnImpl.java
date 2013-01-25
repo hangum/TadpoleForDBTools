@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.hangum.tadpole.mongodb.model.Column;
+import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.MongodbPackage;
 import com.hangum.tadpole.mongodb.model.Table;
 

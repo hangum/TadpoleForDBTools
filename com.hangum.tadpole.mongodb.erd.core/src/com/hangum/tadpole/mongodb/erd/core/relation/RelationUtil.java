@@ -189,30 +189,6 @@ public class RelationUtil {
 				relation.setColumn_name(refTabDAO.getColumn_name());
 				relation.setReferenced_column_name(refTabDAO.getReferenced_column_name());
 			
-//				/*
-//				 * 위의 경우의 수를 이용하여 릴레이션을 생성합니다.
-//				 */
-//				Map<String, Column> sourceColumnsMap = new HashMap<String, Column>();
-//				Map<String, Column> targetColumnMap = new HashMap<String, Column>();
-//				for (Column column : soTabMod.getColumns()) sourceColumnsMap.put(column.getField(), column);
-//				for (Column column : tarTabMod.getColumns()) targetColumnMap.put(column.getField(), column);
-//				
-//				// source 컬럼 정보
-//				Column col = sourceColumnsMap.get(refTabDAO.getColumn_name());
-//				
-//				// target 컬럼 정보
-//				Column colR = targetColumnMap.get(refTabDAO.getReferenced_column_name());
-//				if(logger.isDebugEnabled()) {
-//					if(col == null || colR == null) {
-//						logger.debug("###[table index]###############################################################################");
-//						logger.debug(db.getUrl() + ":" + refTabDAO.toString());
-//						logger.debug("###[table index]###############################################################################");
-//					}
-//				}
-//				if(col == null || colR == null) continue;
-				
-//				logger.debug("\t [source ]" + col.getField() + " [key]" + col.getKey());
-//				logger.debug("\t [target ]" + colR.getField() + " [key]" + colR.getKey());
 				relation.setSource_kind( RelationKind.ONLY_ONE );
 				relation.setTarget_kind( RelationKind.ONLY_ONE );
 					
@@ -228,64 +204,6 @@ public class RelationUtil {
 		}	// for
 	}
 
-
-//	/**
-//	 * 키 컬럼의의 조건을 relational type을 분석합니다.
-//	 * 
-//	 * 상대방 컬럼이 NULL을 허용하면 자신은 없을수도 있음.
-//	 * 
-//	 * @param soCol source table
-//	 * @rapap taCol target table
-//	 * @return
-//	 */
-//	public static RelationKind calcRelationCol(Column soCol, Column taCol) {
-////		if("YES".equals( taCol.getNull() ) || "YES".equals( soCol.getNull() )) {
-////			
-////			if( Define.isPK( soCol.getKey() )) return RelationKind.ZERO_OR_ONE;
-////			else return RelationKind.ZERO_OR_MANY;
-////		
-////		} else {
-////		
-////			if( Define.isPK( soCol.getKey() )) return RelationKind.ONLY_ONE;
-////			else return RelationKind.ONE_OR_MANY;
-////			
-////		}
-//		return RelationKind.ONLY_ONE;
-//	}
-//	
-//	/**
-//	 * sqlite 참조용 테이블
-//	 * @param userDB
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static List<SQLiteRefTableDAO> getSQLiteRefTbl(UserDBDAO userDB) throws Exception {
-//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//		return sqlClient.queryForList("referencedTableListALL");
-//	}
-//	
-//	/**
-//	 * sqlite 참조용 테이블
-//	 * @param userDB
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static List<SQLiteRefTableDAO> getSQLiteRefTbl(UserDBDAO userDB, String tableName) throws Exception {
-//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//		return sqlClient.queryForList("referencedTableList", tableName);
-//	}
-//	
-//	/**
-//	 * 테이블의 참조 목록 정보를 리턴합니다.
-//	 * 
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static List<ReferencedTableDAO> getReferenceTable(UserDBDAO userDB, String tableName) throws Exception {
-//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//		return sqlClient.queryForList("referencedTableList", tableName);
-//	}
-	
 	/**
 	 * 테이블의 참조 목록 정보를 리턴합니다.
 	 * 

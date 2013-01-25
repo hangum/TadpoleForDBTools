@@ -45,8 +45,8 @@ public class TableFigure extends Figure {
 		this.tableName = new Label();
 		this.tableName.setBorder(new MarginBorder(2, 2, 0, 2));
 		this.tableName.setForegroundColor(ColorConstants.blue);
-//		this.tableName.setBackgroundColor(ColorConstants.lightGray);
-//		this.tableName.setOpaque(true);
+//		this.tableName.setBackgroundColor(SWTResourceManager.getColor(255, 255, 50));
+		this.tableName.setOpaque(true);
 
 		// key
 		this.colKeyFigure = new ColumnDetailFigure();
@@ -64,7 +64,7 @@ public class TableFigure extends Figure {
 		this.columnFigure.add(colTypeFigure);
 		
 		this.setLayoutManager(new ToolbarLayout());
-		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
+		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 163));
 		this.setBorder(new CompoundBorder(new LineBorder(ColorConstants.black, 0), new MarginBorder(4, 4, 4, 4)));
 		this.setOpaque(true);
 		

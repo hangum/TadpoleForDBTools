@@ -29,6 +29,9 @@ import com.mongodb.util.JSON;
  * 
  */
 public class MongoTestReferenceCollection {
+	public static String REF_1 = "TEST_REF1";
+	public static String REF_2 = "TEST_REF2";
+			
 
 	/**
 	 * @param args
@@ -40,11 +43,11 @@ public class MongoTestReferenceCollection {
 		DB db = mongo.getDB("test");
 		
 		DBObject colInformation = (DBObject) JSON.parse("{capped:true, size:100000}");
-		DBCollection ref1Coll  = db.getCollection("ref1");
+		DBCollection ref1Coll  = db.getCollection(REF_1);
 		if(ref1Coll != null) ref1Coll.drop(); 
-		ref1Coll = db.createCollection("ref1", colInformation);		
+		ref1Coll = db.createCollection(REF_1, colInformation);		
 		
-		DBObject dbObjRef1 = (DBObject) JSON.parse("{'names': {'First': 'Gonza', 'Last': 'Vieira'}}");
+		DBObject dbObjRef1 = (DBObject) JSON.parse("{ 'name' : 'cho'}");//"{'names': {'First': 'Gonza', 'Last': 'Vieira'}}");
 		WriteResult wr = ref1Coll.insert(dbObjRef1);
 		
 		DBObject retDBObj = ref1Coll.findOne();
@@ -56,12 +59,12 @@ public class MongoTestReferenceCollection {
 	
 	public static void createRef1Collection(DB db, Object objId) {
 		DBObject colInformation = (DBObject) JSON.parse("{capped:true, size:100000}");
-		DBCollection ref2Coll  = db.getCollection("ref2");
+		DBCollection ref2Coll  = db.getCollection(REF_2);
 		if(ref2Coll != null) ref2Coll.drop();
-		ref2Coll = db.createCollection("ref2", colInformation);
+		ref2Coll = db.createCollection(REF_2, colInformation);
 		
 		BasicDBObject insertObj = new BasicDBObject();
-		insertObj.put("ref1_id", objId);
+		insertObj.put(REF_1 + "_id", objId);
 		
 		DBObject addField = new BasicDBObject();
 		addField.put("name", "Reference id");

@@ -132,12 +132,10 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 					column.setKey(columnDAO.getKey());
 					column.setType(columnDAO.getType());
 					if("BasicDBObject".equals(columnDAO.getType())) {
-//						logger.debug("[columnDAO.getType()]" + columnDAO.getType());
-						makeSubDoc(column, columnDAO);
+						makeSubDoc(tableModel, column, columnDAO);
 					}						
 					
 					column.setTable(tableModel);
-//					tableModel.getColumns().add(column);
 				}
 				mapDBTables.put(tableName, tableModel);
 				RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);//RelationUtil.getReferenceTable(userDB, refTableNames));
@@ -160,19 +158,23 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	/**
 	 * add sub document
 	 * 
+	 * @param tableModel
+	 * @param parentColumn
 	 * @param columnDAO
 	 */
-	private void makeSubDoc(Column parentColumn, CollectionFieldDAO columnDAO) {
+	private void makeSubDoc(Table tableModel, Column parentColumn, CollectionFieldDAO columnDAO) {
 		
 		for (CollectionFieldDAO cfDAO : columnDAO.getChildren()) {
-			Column column = tadpoleFactory.createColumn();					
+			Column column = tadpoleFactory.createColumn();
+			
 			column.setField(cfDAO.getField());
 			column.setKey(cfDAO.getKey());
 			column.setType(cfDAO.getType());
 			if("BasicDBObject".equals(cfDAO.getType())) {
-				makeSubDoc(column, cfDAO);
+				makeSubDoc(tableModel, column, cfDAO);
 			}						
-			parentColumn.getSubDoc().add(column);
+			column.setTable(tableModel);
+			parentColumn.getSubDoc().add(column);			
 		}
 	}
 	
