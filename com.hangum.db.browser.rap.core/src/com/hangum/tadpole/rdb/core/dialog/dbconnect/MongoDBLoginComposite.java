@@ -24,6 +24,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.connection.MongoDBNotFoundException;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -157,11 +158,19 @@ public class MongoDBLoginComposite extends MySQLLoginComposite {
 
 			// db가 정상적인지 채크해본다 
 			try {
-				DB mongoDB = MongoConnectionManager.getInstance(userDB);
+				MongoConnectionManager.getInstance(userDB);
 			} catch(MongoDBNotFoundException mdbfe) {
 				
 				if(MessageDialog.openConfirm(null, "Confirm", userDB.getDb() + Messages.MongoDBLoginComposite_9)) { //$NON-NLS-1$
-					return true;
+					try {
+						MongoDBQuery.createDB(userDB);
+					} catch (Exception e) {
+						logger.error("MongoDB Connection error", e); //$NON-NLS-1$
+						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
+						
+						return false;
+					}
 				} else {
 					return false;
 				}
