@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -19,8 +21,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -52,7 +52,7 @@ public class MongoDBImportEditor extends EditorPart {
 	/** 모두 선택 눌렀는지 */
 	private boolean isSelectAll = false;
 	
-	private TabFolder tabFolderQuery;
+	private CTabFolder tabFolderQuery;
 
 	private UserDBDAO userDB = null;
 	private Text textQuery;
@@ -95,7 +95,12 @@ public class MongoDBImportEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout(1, false));
+		GridLayout gl_parent = new GridLayout(1, false);
+		gl_parent.marginHeight = 2;
+		gl_parent.verticalSpacing = 2;
+		gl_parent.horizontalSpacing = 2;
+		gl_parent.marginWidth = 2;
+		parent.setLayout(gl_parent);
 		
 		Composite compositeHead = new Composite(parent, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -135,10 +140,10 @@ public class MongoDBImportEditor extends EditorPart {
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		tabFolderQuery = new TabFolder(compositeBody, SWT.NONE);
+		tabFolderQuery = new CTabFolder(compositeBody, SWT.NONE);
 		tabFolderQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		TabItem tabItemTable = new TabItem(tabFolderQuery, SWT.NONE);
+		CTabItem tabItemTable = new CTabItem(tabFolderQuery, SWT.NONE);
 		tabItemTable.setText("Table"); //$NON-NLS-1$
 		
 		tableColumnListComposite = new TableColumnLIstComposite(tabFolderQuery, SWT.NONE);
@@ -160,7 +165,7 @@ public class MongoDBImportEditor extends EditorPart {
 		});
 		btnSelectAll.setText("Select All"); //$NON-NLS-1$
 		
-		TabItem tabItemQuery = new TabItem(tabFolderQuery, SWT.NONE);
+		CTabItem tabItemQuery = new CTabItem(tabFolderQuery, SWT.NONE);
 		tabItemQuery.setText("Query"); //$NON-NLS-1$
 		
 		Composite compositeQuery = new Composite(tabFolderQuery, SWT.NONE);
@@ -198,6 +203,8 @@ public class MongoDBImportEditor extends EditorPart {
 	 * 화면을 초기화 합니다.
 	 */
 	private void initEditor() {
+		tabFolderQuery.setSelection(0);
+		
 		try {
 			int visibleItemCount = 0;
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
