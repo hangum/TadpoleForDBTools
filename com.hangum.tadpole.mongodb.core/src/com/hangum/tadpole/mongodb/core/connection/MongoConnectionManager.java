@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.connection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -22,6 +24,7 @@ import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.Mongo;
 import com.mongodb.MongoOptions;
+import com.mongodb.ServerAddress;
 
 /**
  * mongo db connection
@@ -63,7 +66,22 @@ public class MongoConnectionManager {
 					MongoOptions options = new MongoOptions();
 					options.connectionsPerHost = 20;
 					
-					mongo = new Mongo(new DBAddress(userDB.getUrl()), options);
+					String strReplcaSet = userDB.getExt1();
+					if("".equals(strReplcaSet)) {
+						mongo = new Mongo(new DBAddress(userDB.getUrl()), options);	
+					} else {
+						List<ServerAddress> listServerList = new ArrayList<ServerAddress>();
+						listServerList.add(new ServerAddress(userDB.getHost(), Integer.parseInt(userDB.getPort())));
+						
+						String[] urls = StringUtils.split(strReplcaSet, ",");
+						for (String ipPort : urls) {
+							String[] strIpPort = StringUtils.split(ipPort, ":");
+							
+							listServerList.add(new ServerAddress(strIpPort[0], Integer.parseInt(strIpPort[1])));
+						}
+						
+						mongo = new Mongo(listServerList, options);	
+					}
 					List<String> listDB = mongo.getDatabaseNames();
 					
 					boolean isDB = false;

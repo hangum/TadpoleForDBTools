@@ -88,6 +88,9 @@ CREATE TABLE user_db (
      users		 VARCHAR(100) 	,
      create_time DATE DEFAULT (datetime('now','localtime')),
      delYn CHAR(3) DEFAULT 'NO',
+     ext1 VARCHAR(2000),
+     ext2 VARCHAR(2000), 
+     ext3 VARCHAR(2000),  
      FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
      FOREIGN KEY (ext_seq) REFERENCES ext_account (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )

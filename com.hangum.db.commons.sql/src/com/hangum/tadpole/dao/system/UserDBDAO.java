@@ -39,6 +39,10 @@ public class UserDBDAO {
 	protected String users;
 	protected Date create_time;
 	protected String delYn;
+	
+	protected String ext1 = "";
+	protected String ext2 = ""; 
+	protected String ext3 = "";
     
     protected ManagerListDTO parent;
     protected List<UserDBResourceDAO> listUserDBErd;
@@ -190,6 +194,30 @@ public class UserDBDAO {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+	
+	public String getExt1() {
+		return ext1;
+	}
+
+	public void setExt1(String ext1) {
+		this.ext1 = ext1;
+	}
+
+	public String getExt2() {
+		return ext2;
+	}
+
+	public void setExt2(String ext2) {
+		this.ext2 = ext2;
+	}
+
+	public String getExt3() {
+		return ext3;
+	}
+
+	public void setExt3(String ext3) {
+		this.ext3 = ext3;
 	}
 
 	@Override

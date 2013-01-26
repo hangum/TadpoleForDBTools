@@ -298,6 +298,8 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_trclmnNewColumn_text;
 	public static String MainEditor_tltmExecute_toolTipText;
 	public static String MainEditor_tltmExecute_toolTipText_1;
+	public static String MongoDBLoginComposite_2;
+	public static String MongoDBLoginComposite_4;
 	public static String MongoDBLoginComposite_9;
 	public static String SQLToStringDialog_lblVariable_text;
 	public static String SQLToStringDialog_btnNewButton_text;
@@ -308,6 +310,9 @@ public class Messages extends NLS {
 	public static String ServerSideJavaScriptEditor_tbtmTadpoleMessage_text;
 	public static String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text;
 	public static String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1;
+	public static String MongoDBLoginComposite_lblReplicaSet_text;
+	public static String MongoDBLoginComposite_text_text;
+	public static String MongoDBLoginComposite_lblExLocalhostlocalhost_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

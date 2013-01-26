@@ -229,8 +229,8 @@
 </select>
 
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
-	INSERT INTO user_db(seq, user_seq, types, url, db, group_name, display_name, host, port, locale, passwd, users)
-	VALUES( (select max(seq) from user_db)+1 , #user_seq#, #types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#)
+	INSERT INTO user_db(seq, user_seq, types, url, db, group_name, display_name, host, port, locale, passwd, users, ext1, ext2, ext3)
+	VALUES( (select max(seq) from user_db)+1 , #user_seq#, #types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, #ext1#, #ext2#, #ext3#)
 </insert>
 
 <!--
@@ -238,8 +238,7 @@
 	types 		= #types#,
  -->
 <update id="userDBUpdate" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
-	UPDATE user_db SET
-		 
+	UPDATE user_db SET		 
 		url 		= #url#, 
 		db			= #db#,  
 		group_name 	= #group_name#, 
@@ -248,7 +247,10 @@
 		port			= #port#, 
 		locale			= #locale#, 
 		passwd			= #passwd#,  
-		users			= #users#
+		users			= #users#,
+		ext1			= #ext1#,
+		ext2			= #ext2#,
+		ext3			= #ext3#
 	WHERE seq = #seq#
 	
 </update>
