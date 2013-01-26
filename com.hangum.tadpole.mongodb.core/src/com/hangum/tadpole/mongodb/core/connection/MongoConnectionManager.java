@@ -106,49 +106,4 @@ public class MongoConnectionManager {
 	private static String getKey(UserDBDAO userDB) {
 		return userDB.getTypes()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd();
 	}
-//	/**
-//	 * mongo db connection
-//	 * 
-//	 * @param userDB
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static DB connection(UserDBDAO userDB) throws Exception {
-//		Mongo mongo = null;
-//		try {
-//			MongoOptions options = new MongoOptions();
-//			options.connectionsPerHost = 20;
-//			
-//			mongo = new Mongo(new DBAddress(userDB.getUrl()), options);
-//			List<String> listDB = mongo.getDatabaseNames();
-//			
-//			boolean isDB = false;
-//			for (String dbName : listDB) if(userDB.getDatabase().equals(dbName)) isDB = true;						
-//			if(!isDB) {
-//				throw new Exception(userDB.getDatabase() + Messages.MongoDBConnection_0);
-//			}
-//			
-//			// password 검색
-//			DB db = mongo.getDB(userDB.getDatabase());
-//			if(!"".equals(userDB.getUser())) { //$NON-NLS-1$
-//				boolean auth = db.authenticate(userDB.getUser(), userDB.getPasswd().toCharArray() );
-//				if(!auth) {
-//					throw new Exception(Messages.MongoDBConnection_3);
-//				}
-//			}
-//			
-//			return db;
-//			
-//		} catch (UnknownHostException e) {
-//			logger.error("mongo db connection", e); //$NON-NLS-1$
-//			
-//			throw new Exception(Messages.MongoDBConnection_2);
-//		} catch (MongoException e) {
-//			logger.error("monodb exception", e); //$NON-NLS-1$
-//			throw new Exception(Messages.MongoDBConnection_4 + e.getMessage());
-////		} finally {
-////			mongo.close();
-//		}
-//		
-//	}
 }

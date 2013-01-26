@@ -45,9 +45,14 @@ public class FindOneDetailComposite extends Composite {
 	
 	private String collectionName;
 	private DBObject dbResultObject;
+	private boolean isTypeShowing;
 
 	private List<MongodbTreeViewDTO> listTrees;
 	private TreeViewer treeViewerMongo;
+	
+	public FindOneDetailComposite(Composite parent, String collectionName, DBObject dbResultObject) {
+		this(parent, collectionName, dbResultObject, true);
+	}
 
 	/**
 	 * Create the composite.
@@ -56,7 +61,7 @@ public class FindOneDetailComposite extends Composite {
 	 * @param collectionName
 	 * @param dbResultObject 
 	 */
-	public FindOneDetailComposite(Composite parent, String collectionName, DBObject dbResultObject) {
+	public FindOneDetailComposite(Composite parent, String collectionName, DBObject dbResultObject, boolean isTypeShowing) {
 		super(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 1;
@@ -67,6 +72,7 @@ public class FindOneDetailComposite extends Composite {
 		
 		this.collectionName = collectionName;
 		this.dbResultObject = dbResultObject;
+		this.isTypeShowing = isTypeShowing;
 		
 		treeViewerMongo = new TreeViewer(this, SWT.BORDER | SWT.VIRTUAL | SWT.FULL_SELECTION);		
 		Tree tree = treeViewerMongo.getTree();
@@ -88,12 +94,12 @@ public class FindOneDetailComposite extends Composite {
 	private void initData() {
 		listTrees = new ArrayList<MongodbTreeViewDTO>();
 		try {
-			MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbResultObject, "", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbResultObject, collectionName, "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			parserTreeObject(dbResultObject, treeDto, dbResultObject);
 			listTrees.add(treeDto);
 			
 			treeViewerMongo.setInput(listTrees);			
-			treeViewerMongo.expandToLevel(2);
+			treeViewerMongo.expandToLevel(3);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -191,10 +197,12 @@ public class FindOneDetailComposite extends Composite {
 	 */
 	private void createTreeColumn() {
 		String[] columnName = {"Key", "Value", "Type"};  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		int[] columnSize = {140, 200, 140};
+		int[] columnSize = {170, 200, 140};
 		
 		try {
-			for(int i=0; i<columnName.length; i++) {
+			int columnViewCnt = 2;
+			if(isTypeShowing) columnViewCnt = 3;
+			for(int i=0; i<columnViewCnt; i++) {
 				final TreeViewerColumn tableColumn = new TreeViewerColumn(treeViewerMongo, SWT.LEFT);
 				tableColumn.getColumn().setText( columnName[i] );
 				tableColumn.getColumn().setWidth( columnSize[i] );

@@ -40,6 +40,8 @@ public class MongoDBTableColumn {
 	public static Map<Integer, String> getTabelColumnView(DBObject dbObject) {
 		Map<Integer, String> map = new HashMap<Integer, String>();
 		
+		if(dbObject == null) return map;
+		
 		int i=0;
 		Set<String> names = dbObject.keySet();		
 		for (String name : names) {

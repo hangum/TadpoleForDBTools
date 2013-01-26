@@ -472,7 +472,8 @@ public class MongoDBQuery {
 	}
 	
 	/**
-	 * Server status
+	 * Server status, return to String
+	 * 
 	 * @param userDB
 	 * @throws Exception
 	 */
@@ -486,6 +487,19 @@ public class MongoDBQuery {
 		} else {
 			throw cr.getException();
 		}
+	}
+	
+	/**
+	 * Server status return to CommandResult
+	 * 
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static CommandResult serverStatusCommandResult(UserDBDAO userDB) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		
+		DBObject queryObj = new BasicDBObject("serverStatus", 1);
+		return mongoDB.command(queryObj);		
 	}
 	
 	/**

@@ -395,7 +395,6 @@ public class MongodbResultComposite extends Composite {
 		
 		lblTableViewCount = new Label(compositeTail, SWT.NONE);
 		
-		
 		CTabItem tbtmTextView = new CTabItem(tabFolderMongoDB, SWT.NONE);
 		tbtmTextView.setText("Text View"); //$NON-NLS-1$
 		
