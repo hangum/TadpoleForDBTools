@@ -57,7 +57,6 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.ResourceManager;
-import com.swtdesigner.SWTResourceManager;
 
 /**
  * Login dialog
@@ -90,22 +89,10 @@ public class DBLoginDialog extends Dialog {
 
 	// 결과셋으로 사용할 logindb
 	private UserDBDAO retuserDb;
-	public enum WORK_TYPE {INSERT, MODIFY, DELETE};
-	public WORK_TYPE thisWorkType = WORK_TYPE.INSERT;
 	
 	// delete button id
 	public final int DELETE_BTN_ID = 99999;
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param parentShell
-	 * @wbp.parser.constructor
-	 */
-	public DBLoginDialog(Shell parentShell) {
-		super(parentShell);
-	}
-	
 	public DBLoginDialog(Shell paShell, String selGroupName) {
 		super(paShell);
 		
@@ -146,7 +133,7 @@ public class DBLoginDialog extends Dialog {
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
-				thisWorkType = WORK_TYPE.INSERT;				
+//				thisWorkType = WORK_TYPE.INSERT;				
 				initDBWidget(null);
 			}
 		});
@@ -242,8 +229,6 @@ public class DBLoginDialog extends Dialog {
 				if(userDB != null) {
 					comboDBList.setText(userDB.getTypes());
 					initDBWidget(userDB);
-					
-					thisWorkType = WORK_TYPE.MODIFY;
 				}
 			}
 		});
@@ -372,9 +357,6 @@ public class DBLoginDialog extends Dialog {
 							
 							TadpoleSystem_UserDBQuery.removeUserDB(userDb.getSeq());							
 							makeHistoryData();
-
-							thisWorkType = WORK_TYPE.DELETE;
-							
 						} catch(Exception e) {
 							logger.error(Messages.DBLoginDialog_32, e);
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -397,14 +379,6 @@ public class DBLoginDialog extends Dialog {
 	 */
 	public List<String> getGroupName() {
 		return groupName;
-	}
-	
-	/**
-	 * 사용자 작업타입.
-	 * @return
-	 */
-	public WORK_TYPE getWorkType() {
-		return thisWorkType;
 	}
 
 	/**

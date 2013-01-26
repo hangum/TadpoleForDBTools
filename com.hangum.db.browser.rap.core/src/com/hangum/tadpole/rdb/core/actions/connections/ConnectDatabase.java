@@ -22,7 +22,6 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.dao.ManagerListDTO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog.WORK_TYPE;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 
 /**
@@ -54,25 +53,19 @@ public class ConnectDatabase implements IViewActionDelegate {
 	
 	public void run() {
 		final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selGroupName);
-		int ret = dialog.open();
+		final int ret = dialog.open();
+
+		final UserDBDAO userDB = dialog.getDTO();
+		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
 		
-		if(ret == Dialog.OK || ret == dialog.DELETE_BTN_ID) {
-			final UserDBDAO userDB = dialog.getDTO();
-			final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
-			final WORK_TYPE workType = dialog.getWorkType();
-			
-			Display.getCurrent().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					// 입력
-					if(WORK_TYPE.INSERT == workType) {
-						managerView.addUserDB(userDB, true);
-					} else {
-						managerView.init();
-					}
-				}
-			});	// end display
-		}	// end if
+		Display.getCurrent().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				if(ret == Dialog.OK) managerView.addUserDB(userDB, true);
+				else managerView.init();
+			}
+		});	// end display
+
 	}
 	
 
