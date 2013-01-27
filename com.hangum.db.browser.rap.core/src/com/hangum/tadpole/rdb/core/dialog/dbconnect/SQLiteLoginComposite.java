@@ -127,7 +127,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 			
 			textDisplayName.setText("Sample SQLite 3.7.2");			
-			textFile.setText("C:/tadpole-test.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
+			textFile.setText("./tadpole-test.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
 		}
 		
 		if(comboGroup.getItems().length == 0) {
