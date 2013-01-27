@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -33,12 +34,6 @@ public class InstanceInformationComposite extends Composite {
 	
 	private Text textHost;
 	private Text textVersion;
-	private Text textProcess;
-	private Text textPid;
-	private Text textUpTime;
-	private Text textUptimeMillis;
-	private Text textUptimeEstimate;
-	private Text textLocalTime;
 
 	/**
 	 * Create the composite.
@@ -83,48 +78,6 @@ public class InstanceInformationComposite extends Composite {
 		textVersion.setEditable(false);
 		textVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblProcess = new Label(compositeInstance, SWT.NONE);
-		lblProcess.setText("Process");
-		
-		textProcess = new Text(compositeInstance, SWT.BORDER);
-		textProcess.setEditable(false);
-		textProcess.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblPid = new Label(compositeInstance, SWT.NONE);
-		lblPid.setText("PID");
-		
-		textPid = new Text(compositeInstance, SWT.BORDER);
-		textPid.setEditable(false);
-		textPid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblUpTime = new Label(compositeInstance, SWT.NONE);
-		lblUpTime.setText("Uptime");
-		
-		textUpTime = new Text(compositeInstance, SWT.BORDER);
-		textUpTime.setEditable(false);
-		textUpTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblUpTimeMillis = new Label(compositeInstance, SWT.NONE);
-		lblUpTimeMillis.setText("Uptime Millis");
-		
-		textUptimeMillis = new Text(compositeInstance, SWT.BORDER);
-		textUptimeMillis.setEditable(false);
-		textUptimeMillis.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblUptimeEstimate = new Label(compositeInstance, SWT.NONE);
-		lblUptimeEstimate.setText("Uptime Estimate");
-		
-		textUptimeEstimate = new Text(compositeInstance, SWT.BORDER);
-		textUptimeEstimate.setEditable(false);
-		textUptimeEstimate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblLocalTime = new Label(compositeInstance, SWT.NONE);
-		lblLocalTime.setText("Local Time");
-		
-		textLocalTime = new Text(compositeInstance, SWT.BORDER);
-		textLocalTime.setEditable(false);
-		textLocalTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		Group grpMemory = new Group(compositeServerStatus, SWT.NONE);
 		grpMemory.setLayout(new GridLayout(2, false));
 		grpMemory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
@@ -163,23 +116,17 @@ public class InstanceInformationComposite extends Composite {
 	}
 	
 	public void initData() {
-		String strHost 	= commandResult.getString("host");
-		String version 	= commandResult.getString("version");
-		String process 	= commandResult.getString("process");
-		String pid 		= commandResult.getString("pid");
-		String uptime 	= commandResult.getString("uptime");
-		String uptimeMillis = commandResult.getString("uptimeMillis");
-		String uptimeEstimate 	= commandResult.getString("uptimeEstimate");
-		String localTime 		= commandResult.getString("localTime");
+		String strHost 	= StringUtils.trimToEmpty(commandResult.getString("host"));
+		String version 	= StringUtils.trimToEmpty(commandResult.getString("version"));
+//		String process 	= commandResult.getString("process");
+//		String pid 		= commandResult.getString("pid");
+//		String uptime 	= commandResult.getString("uptime");
+//		String uptimeMillis = commandResult.getString("uptimeMillis");
+//		String uptimeEstimate 	= commandResult.getString("uptimeEstimate");
+//		String localTime 		= commandResult.getString("localTime");
 		
 		textHost.setText(strHost);
 		textVersion.setText(version);
-		textProcess.setText(process);
-		textPid.setText(pid);
-		textUpTime.setText(uptime);
-		textUptimeMillis.setText(uptimeMillis);
-		textUptimeEstimate.setText(uptimeEstimate);
-		textLocalTime.setText(localTime);
 	}
 
 	@Override
