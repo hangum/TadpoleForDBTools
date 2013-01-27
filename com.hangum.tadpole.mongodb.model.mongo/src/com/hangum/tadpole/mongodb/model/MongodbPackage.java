@@ -395,7 +395,7 @@ public interface MongodbPackage extends EPackage {
 	int COLUMN__COMMENT = 6;
 
 	/**
-	 * The feature id for the '<em><b>Sub Doc</b></em>' reference list.
+	 * The feature id for the '<em><b>Sub Doc</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -984,10 +984,10 @@ public interface MongodbPackage extends EPackage {
 	EAttribute getColumn_Comment();
 
 	/**
-	 * Returns the meta object for the reference list '{@link com.hangum.tadpole.mongodb.model.Column#getSubDoc <em>Sub Doc</em>}'.
+	 * Returns the meta object for the containment reference list '{@link com.hangum.tadpole.mongodb.model.Column#getSubDoc <em>Sub Doc</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Sub Doc</em>'.
+	 * @return the meta object for the containment reference list '<em>Sub Doc</em>'.
 	 * @see com.hangum.tadpole.mongodb.model.Column#getSubDoc()
 	 * @see #getColumn()
 	 * @generated
@@ -1476,7 +1476,7 @@ public interface MongodbPackage extends EPackage {
 		EAttribute COLUMN__COMMENT = eINSTANCE.getColumn_Comment();
 
 		/**
-		 * The meta object literal for the '<em><b>Sub Doc</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Sub Doc</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

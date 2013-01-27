@@ -11,9 +11,11 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.emf.ecore.util.InternalEList;
 import com.hangum.tadpole.mongodb.model.Column;
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.MongodbPackage;
@@ -161,7 +163,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	protected String comment = COMMENT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getSubDoc() <em>Sub Doc</em>}' reference list.
+	 * The cached value of the '{@link #getSubDoc() <em>Sub Doc</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getSubDoc()
@@ -363,7 +365,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 */
 	public EList<Column> getSubDoc() {
 		if (subDoc == null) {
-			subDoc = new EObjectResolvingEList<Column>(Column.class, this, MongodbPackage.COLUMN__SUB_DOC);
+			subDoc = new EObjectContainmentEList<Column>(Column.class, this, MongodbPackage.COLUMN__SUB_DOC);
 		}
 		return subDoc;
 	}
@@ -394,6 +396,8 @@ public class ColumnImpl extends EObjectImpl implements Column {
 		switch (featureID) {
 			case MongodbPackage.COLUMN__TABLE:
 				return basicSetTable(null, msgs);
+			case MongodbPackage.COLUMN__SUB_DOC:
+				return ((InternalEList<?>)getSubDoc()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}

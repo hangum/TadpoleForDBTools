@@ -214,7 +214,7 @@ public interface Column extends EObject {
 	void setComment(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Sub Doc</b></em>' reference list.
+	 * Returns the value of the '<em><b>Sub Doc</b></em>' containment reference list.
 	 * The list contents are of type {@link com.hangum.tadpole.mongodb.model.Column}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -222,9 +222,9 @@ public interface Column extends EObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Sub Doc</em>' reference list.
+	 * @return the value of the '<em>Sub Doc</em>' containment reference list.
 	 * @see com.hangum.tadpole.mongodb.model.MongodbPackage#getColumn_SubDoc()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Column> getSubDoc();

@@ -173,8 +173,15 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			if("BasicDBObject".equals(cfDAO.getType())) {
 				makeSubDoc(tableModel, column, cfDAO);
 			}						
-			column.setTable(tableModel);
-			parentColumn.getSubDoc().add(column);			
+			
+			//
+			//	column.setTable(tableModel); 
+			// 위의 커럼안에 테이블이 존재하면 서브 컬럼마다 테이블이 중복으로 표시된다.
+			// 그러나 위의 코드를 삭제하면 The object 'com.hangum.tadpole.mongodb.model.impl.ColumnImpl@b98167 (field: serverStatus, type: Integer, default: null, logicalField: null, key: NO, comment: null)' is not contained in a resource.
+			// 오류가 발생하고
+			//  참고합니다 (http://andy.ekiwi.de/?p=1006)
+			
+			parentColumn.getSubDoc().add(column);
 		}
 	}
 	
