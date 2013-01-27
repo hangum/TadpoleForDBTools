@@ -32,6 +32,14 @@
 </select>
 
 <!-- 
+	UPDATE System version 
+ -->
+<update id="update_system" parameterClass="com.hangum.tadpole.dao.system.TadpoleSystemDAO">
+    UPDATE tadpole_system SET
+		major_version = #major_version#, sub_version = #sub_version# 
+</update>
+
+<!-- 
 	신규 시스템 정보를 입력합니다.
  -->
 <insert id="newSystem" parameterClass="com.hangum.tadpole.dao.system.TadpoleSystemDAO">

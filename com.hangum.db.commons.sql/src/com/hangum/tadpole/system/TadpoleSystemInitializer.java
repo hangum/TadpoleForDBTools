@@ -142,7 +142,7 @@ public class TadpoleSystemInitializer {
 			return true;
 		} else {
 			logger.info("System migration start....");
-			SystemMigrationSR9TOSR10.migration();
+			SystemMigrationSR9TOSR10.migration(SystemDefine.MAJOR_VERSION, "10");
 			
 			logger.info("System migration end....");
 			
