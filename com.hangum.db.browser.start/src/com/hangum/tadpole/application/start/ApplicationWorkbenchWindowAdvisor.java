@@ -80,10 +80,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         
        	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
     	try {
-    		boolean isInit = TadpoleSystemInitializer.initSystem();
-    		if(!isInit) {
-    			// 어떻게 어떻게 초기화 합니다.
-    		}
+    		TadpoleSystemInitializer.initSystem();
+    		
     	} catch(Exception e) {
     		logger.error("System initialize", e);
     		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

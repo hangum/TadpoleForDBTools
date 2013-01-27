@@ -28,6 +28,7 @@ import com.hangum.tadpole.dao.system.TadpoleSystemDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.preference.define.SystemDefine;
+import com.hangum.tadpole.system.internal.migration.SystemMigrationSR9TOSR10;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -140,7 +141,12 @@ public class TadpoleSystemInitializer {
 		if(SystemDefine.MAJOR_VERSION.equals(tsdao.getMajor_version()) && SystemDefine.SUB_VERSION.equals(tsdao.getSub_version())) {
 			return true;
 		} else {
-			return false;
+			logger.info("System migration start....");
+			SystemMigrationSR9TOSR10.migration();
+			
+			logger.info("System migration end....");
+			
+			return true;
 		}
 	}
 
