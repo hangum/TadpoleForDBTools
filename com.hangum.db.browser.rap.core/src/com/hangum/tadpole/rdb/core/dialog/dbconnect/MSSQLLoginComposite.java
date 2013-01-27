@@ -181,7 +181,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
-			textDisplayName.setText("MSSQL Server v2000 ~ Default"); //$NON-NLS-1$
+			textDisplayName.setText("Sample MSSQL 2000"); //$NON-NLS-1$
 			
 			textHost.setText("192.168.61.130"); //$NON-NLS-1$
 			textPort.setText("1433"); //$NON-NLS-1$

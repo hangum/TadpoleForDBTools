@@ -126,7 +126,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			textDisplayName.setText(oldUserDB.getDisplay_name());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 			
-			textDisplayName.setText("SQLite v3.7.2 ~ Default");			
+			textDisplayName.setText("Sample SQLite 3.7.2");			
 			textFile.setText("C:/tadpole-test.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
 		}
 		

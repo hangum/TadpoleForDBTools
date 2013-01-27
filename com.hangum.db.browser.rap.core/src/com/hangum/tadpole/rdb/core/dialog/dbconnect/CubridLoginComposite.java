@@ -67,7 +67,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
-			textDisplayName.setText("Cubrid v8.4 ~ Default");
+			textDisplayName.setText("Sample Cubrid 8.4");
 			
 			textHost.setText("127.0.0.1");
 			textUser.setText("dba");

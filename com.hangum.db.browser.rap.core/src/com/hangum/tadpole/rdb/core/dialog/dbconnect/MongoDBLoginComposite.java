@@ -207,7 +207,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			textReplicaSet.setText(oldUserDB.getExt1()==null?"":oldUserDB.getExt1());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
-			textDisplayName.setText("MongoDB v2.0.5 ~ Default"); //$NON-NLS-1$
+			textDisplayName.setText("Sample MongoDB 2.0.2"); //$NON-NLS-1$
 			
 			textHost.setText("127.0.0.1"); //$NON-NLS-1$
 			textUser.setText(""); //$NON-NLS-1$

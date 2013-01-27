@@ -64,7 +64,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
-			textDisplayName.setText("PostgreSQL v9.1 ~ Default");
+			textDisplayName.setText("Sample PostgreSQL 9.1");
 			
 			textHost.setText("127.0.0.1");
 			textUser.setText("tadpole");

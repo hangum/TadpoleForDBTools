@@ -34,7 +34,6 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
@@ -206,7 +205,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
-			textDisplayName.setText("Oracle v10g ~ Default");
+			textDisplayName.setText("Sample Oracle 10g");
 			
 			textHost.setText(Messages.OracleLoginComposite_0);
 			textUser.setText(Messages.OracleLoginComposite_1);

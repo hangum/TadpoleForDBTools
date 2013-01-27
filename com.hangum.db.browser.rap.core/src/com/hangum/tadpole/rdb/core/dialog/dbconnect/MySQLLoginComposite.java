@@ -182,7 +182,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 			
-			textDisplayName.setText("MySQL v5.4 ~ Default");
+			textDisplayName.setText("Sample MySQL 5.4");
 			
 			textHost.setText(Messages.DBLoginDialog_16);
 			textUser.setText(Messages.DBLoginDialog_17);
