@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.preference.define.SystemDefine;
 import com.swtdesigner.ResourceManager;
 
 public class AboutDialog extends Dialog {
@@ -78,7 +79,13 @@ public class AboutDialog extends Dialog {
 //		안녕하세요. 사용해 주셔서 감사합니다.
 //		  버그나 질문은 메일(<a href=\"mailto:adi.tadpole@gmail.com\">tadpole</a>), 
 		Label lblNewLabel = new Label(composite_1, SWT.NONE);
-		lblNewLabel.setText(Messages.AboutAction_3);
+		lblNewLabel.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION);
+		
+		Label lblReleaseDate = new Label(composite_1, SWT.NONE);
+		lblReleaseDate.setText(Messages.AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE);
+		
+		Label label = new Label(composite_1, SWT.NONE);
+		
 		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
 		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
