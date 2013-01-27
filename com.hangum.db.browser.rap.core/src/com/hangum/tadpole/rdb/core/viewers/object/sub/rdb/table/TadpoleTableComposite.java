@@ -210,11 +210,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// auto table layout
 		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tableListViewer.getTable());
-		tableListViewer.getTable().setLayout(layoutColumnLayout);
 
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();
-		tbName.setWidth(100);
+		tbName.setWidth(170);
 		tbName.setText("Name"); //$NON-NLS-1$
 		tbName.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbName, 0));
 		tvColName.setLabelProvider(new ColumnLabelProvider() {
@@ -225,7 +224,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 		});
 		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
-		layoutColumnLayout.addColumnData(new ColumnWeightData(100));
+		layoutColumnLayout.addColumnData(new ColumnWeightData(170));
 		
 		// table column tooltip
 		ColumnViewerToolTipSupport.enableFor(tableListViewer);
@@ -269,6 +268,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tvColComment.setLabelProvider(labelProvider);
 		tvColComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
+		
+		tableListViewer.getTable().setLayout(layoutColumnLayout);
 
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);

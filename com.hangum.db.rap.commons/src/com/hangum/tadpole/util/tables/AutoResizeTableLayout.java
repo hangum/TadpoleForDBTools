@@ -35,7 +35,7 @@ public class AutoResizeTableLayout extends TableLayout implements ControlListene
 
 	private final Table table;
 	private List columns = new ArrayList();
-	private boolean autosizing = false;
+//	private boolean autosizing = false;
 
 	public AutoResizeTableLayout(Table table) {
 		super();
@@ -48,15 +48,15 @@ public class AutoResizeTableLayout extends TableLayout implements ControlListene
 	}
 
 	public void controlResized(ControlEvent e) {
-		if (autosizing)
-			return;
-
-		autosizing = true;
-		try {
+//		if (autosizing)
+//			return;
+//
+//		autosizing = true;
+//		try {
 			autoSizeColumns();
-		} finally {
-			autosizing = false;
-		}
+//		} finally {
+//			autosizing = false;
+//		}
 	}
 
 	private void autoSizeColumns() {

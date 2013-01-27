@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.define.Define.DB_ACTION;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
@@ -54,8 +55,16 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			
 			// others db
 			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+				
 				CreateTableAction cta = new CreateTableAction();
-				cta.run(userDB, actionType);
+				
+				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
+				if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.SQLite_DEFAULT) {
+					TableDAO tc = (TableDAO)sel.getFirstElement();
+					cta.run(userDB, tc.getComment());
+				} else {				
+					cta.run(userDB, actionType);
+				}
 				
 			// moongodb
 			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {				
