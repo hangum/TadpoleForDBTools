@@ -148,7 +148,7 @@ public class MongoDBTableEditor extends EditorPart {
 				}
 			}
 		});
-		textBasicFind.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
+		textBasicField.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textBasicField.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		

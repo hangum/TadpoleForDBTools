@@ -126,7 +126,7 @@ public class DBLoginDialog extends Dialog {
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setBounds(0, 0, 56, 15);
-		lblNewLabel.setText(Messages.DBLoginDialog_0);
+		lblNewLabel.setText("DB Type");
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboDBList.setVisibleItemCount(7);

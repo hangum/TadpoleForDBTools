@@ -107,9 +107,9 @@ public class InstanceInformationComposite extends Composite {
 		Group grpExtraInfo = new Group(compositeServerStatus, SWT.NONE);
 		grpExtraInfo.setLayout(new GridLayout(1, false));
 		grpExtraInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpExtraInfo.setText("Extra Info");
+		grpExtraInfo.setText("Extra Information");
 		
-		Composite compositeExtraInfo = new FindOneDetailComposite(grpExtraInfo, "ExtraInfo", (DBObject)commandResult.get("extra_info"), false);
+		Composite compositeExtraInfo = new FindOneDetailComposite(grpExtraInfo, "Extra Information", (DBObject)commandResult.get("extra_info"), false);
 		compositeExtraInfo.setLayout(new GridLayout(1, false));
 		compositeExtraInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		

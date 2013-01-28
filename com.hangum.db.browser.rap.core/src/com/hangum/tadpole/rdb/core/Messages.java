@@ -311,7 +311,6 @@ public class Messages extends NLS {
 	public static String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text;
 	public static String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1;
 	public static String MongoDBLoginComposite_lblReplicaSet_text;
-	public static String MongoDBLoginComposite_text_text;
 	public static String MongoDBLoginComposite_lblExLocalhostlocalhost_text;
 	static {
 		// initialize resource bundle

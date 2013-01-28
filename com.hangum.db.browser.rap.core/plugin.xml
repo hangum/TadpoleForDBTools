@@ -249,7 +249,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbProfillingAction"
                icon="resources/icons/profile.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.profilling"
-               label="Profilling"
+               label="Profiling"
                menubarPath="additions">
             <enablement>
                <objectClass
