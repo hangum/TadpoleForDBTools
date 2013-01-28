@@ -68,7 +68,7 @@ public class LockComposite extends Composite {
 		compositeLocalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeLocalLocks.setLayout(new GridLayout(1, false));
 		
-		Composite compositeGlobalLocks = new FindOneDetailComposite(grpReplicaSet, "GlobalLock Locks", (DBObject)commandResult.get("globalLock"), false);
+		Composite compositeGlobalLocks = new FindOneDetailComposite(grpReplicaSet, "Global Locks", (DBObject)commandResult.get("globalLock"), false);
 		compositeGlobalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeGlobalLocks.setLayout(new GridLayout(1, false));
 	}
