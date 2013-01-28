@@ -51,7 +51,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
@@ -326,7 +325,10 @@ public class TableViewerEditPart extends EditorPart {
 			
 			// 컬럼 중에 키 컬럼이 있는지 검사합니다.
 			for(int i=0; i<mapColumns.size(); i++) {
-				if(primaryKEYListString.get( mapColumns.get(i) )) {
+				
+				if(primaryKEYListString.get(mapColumns.get(i)) == null) continue;
+				
+				if(primaryKEYListString.get(mapColumns.get(i))) {
 					primaryKeyListIndex.add(i);
 					primaryKEYIntStrList.put(i, mapColumns.get(i));
 				}
