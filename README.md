@@ -21,7 +21,7 @@ It enables you to handle typical DB over the World Wide Web
 * Generate SQL Statement (Select, Insert, Update, Delete, Table, View, Index, Procedure, Function, Trigger)
 * Generate ER Diagram (Auto Layout)
 
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1330247183579/home/tadpole-erd.png?height=400&width=365)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1333501091536/home/tadpole-screen-sql.png?height=400&width=349)
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544319131/home/RDB-ERD-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544341191/home/RDB-SQL-EDITOR.png?height=339&width=400)
 
 2.MongoDB Feature
 -
@@ -37,9 +37,11 @@ It enables you to handle typical DB over the World Wide Web
 * Web Console
 * Current, Kill Operation
 * Query Profiling
+* ServerSide JavaScript
+* MapReduce
 * Generate ER Diagram (Auto Layout)
 
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1340699960549/home/mongodbAllCollections.png?height=400&width=342)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1340699986205/home/mongodb%20editor.png?height=328&width=400)
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544395340/home/mongodb-erd.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544427527/home/MONGODB-INSTANCE.png?height=339&width=400)
 
 Environment
 -
