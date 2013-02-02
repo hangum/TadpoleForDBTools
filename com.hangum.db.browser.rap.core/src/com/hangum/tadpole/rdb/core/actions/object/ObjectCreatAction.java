@@ -61,7 +61,8 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
 				if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.SQLite_DEFAULT) {
 					TableDAO tc = (TableDAO)sel.getFirstElement();
-					cta.run(userDB, tc.getComment());
+					if(tc == null) cta.run(userDB, actionType);
+					else cta.run(userDB, tc.getComment());
 				} else {				
 					cta.run(userDB, actionType);
 				}
