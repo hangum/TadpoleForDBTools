@@ -19,6 +19,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -48,7 +49,9 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 	@Override
 	public void run() {
 		if(null != this.sel) {
-			String originalName = this.sel.getFirstElement().toString();
+//			String originalName = this.sel.getFirstElement().toString();
+			TableDAO table = (TableDAO) this.sel.getFirstElement();
+			String originalName = table.getName();
 			String newName = "";
 			
 			InputDialog inputDialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Rename Collection", "Enter new collection name", originalName, new LengthValidator());
