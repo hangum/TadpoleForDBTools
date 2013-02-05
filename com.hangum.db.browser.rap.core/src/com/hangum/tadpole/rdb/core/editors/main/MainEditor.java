@@ -695,7 +695,7 @@ public class MainEditor extends EditorPart {
 		
 		Composite compositeMessageSub = new Composite(compositeMessage, SWT.NONE);
 		compositeMessageSub.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeMessageSub.setLayout(new GridLayout(1, false));
+		compositeMessageSub.setLayout(new GridLayout(3, false));
 		
 		Button btnExportMessage = new Button(compositeMessageSub, SWT.NONE);
 		btnExportMessage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -713,6 +713,19 @@ public class MainEditor extends EditorPart {
 			}
 		});
 		btnExportMessage.setText(Messages.MainEditor_43);
+		
+		Label labelMsgDumy = new Label(compositeMessageSub, SWT.NONE);
+		labelMsgDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Button btnClear = new Button(compositeMessageSub, SWT.NONE);
+		btnClear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				listMessage.clear();
+				tableViewerMessage.refresh();
+			}
+		});
+		btnClear.setText(Messages.MainEditor_btnClear_text);
 		/////////////////////// end tap item /////////////////////////////////////////////
 		
 		sashForm.setWeights(new int[] {65, 35});
