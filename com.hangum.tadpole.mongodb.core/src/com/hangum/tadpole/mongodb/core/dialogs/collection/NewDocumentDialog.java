@@ -16,10 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -33,12 +30,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.util.JSONUtil;
-import com.hangum.tadpole.util.TadpoleWidgetUtils;
 
 /**
  * 신규 document 를 생성합니다.
@@ -51,12 +48,13 @@ public class NewDocumentDialog extends Dialog {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(NewDocumentDialog.class);
+	private static int FORMAT_BTN_ID = 999;
 
 	protected UserDBDAO userDB;
 	protected String collectionName;
 	
 	protected Text textName;
-	protected Text textContent;
+	protected TadpoleOrionHubEditor textContent;
 
 	/**
 	 * Create the dialog.
@@ -97,18 +95,8 @@ public class NewDocumentDialog extends Dialog {
 		lblDataStructure.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblDataStructure.setText("JSON Type Document"); //$NON-NLS-1$
 		
-		textContent = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);		
+		textContent = new TadpoleOrionHubEditor(container, SWT.BORDER);// | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);		
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		textContent.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textContent.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textContent.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		textContent.setFocus();
 		
@@ -147,10 +135,9 @@ public class NewDocumentDialog extends Dialog {
 	 * Create contents of the button bar.
 	 * @param parent
 	 */
-	private static int FORMAT_ID = 999;
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {		
-		Button button = createButton(parent, FORMAT_ID, "Format", false); //$NON-NLS-1$
+		Button button = createButton(parent, FORMAT_BTN_ID, "Format", false); //$NON-NLS-1$
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

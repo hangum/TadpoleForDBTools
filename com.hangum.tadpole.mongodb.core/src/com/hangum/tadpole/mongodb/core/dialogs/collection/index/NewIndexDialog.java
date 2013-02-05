@@ -30,6 +30,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -43,9 +44,7 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.util.JSONUtil;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
-import org.eclipse.swt.widgets.Combo;
 
 /**
  * 몽고디비 인덱스 생성
@@ -66,7 +65,6 @@ public class NewIndexDialog extends Dialog {
 	
 	private CTabFolder tabFolder;
 	private Text textIndexName;
-	private Text textJSON;
 	private Button btnUnique;
 	
 	private TreeViewer treeColumnViewer;
@@ -124,21 +122,6 @@ public class NewIndexDialog extends Dialog {
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));		
 		
-		CTabItem tbtmJson = new CTabItem(tabFolder, SWT.BORDER);
-		tbtmJson.setText("JSON");
-		
-		Composite compositeJSON = new Composite(tabFolder, SWT.NONE);
-		tbtmJson.setControl(compositeJSON);
-		GridLayout gl_compositeJSON = new GridLayout(1, false);
-		gl_compositeJSON.verticalSpacing = 1;
-		gl_compositeJSON.horizontalSpacing = 1;
-		gl_compositeJSON.marginHeight = 1;
-		gl_compositeJSON.marginWidth = 1;
-		compositeJSON.setLayout(gl_compositeJSON);
-		
-		textJSON = new Text(compositeJSON, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textJSON.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
 		CTabItem tbtmUi = new CTabItem(tabFolder, SWT.NONE);
 		tbtmUi.setText("UI");
 		
@@ -169,7 +152,7 @@ public class NewIndexDialog extends Dialog {
 	 * UI를 초기화합니다.
 	 */
 	private void initUI() {
-		tabFolder.setSelection(1);
+		tabFolder.setSelection(0);
 		
 		try {
 			List<String> listCollFields = MongoDBQuery.listCollection(userDB);
@@ -239,65 +222,46 @@ public class NewIndexDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if(tabFolder.getSelectionIndex() == 0) {		
-			if("".equals(textJSON.getText().trim()) || "".equals(textIndexName.getText().trim())) { //$NON-NLS-1$				
-				textJSON.setFocus();
-				MessageDialog.openError(null, Messages.NewDocumentDialog_3, Messages.NewDocumentDialog_4);
-				return;
-			}
-	
-			try {
-				MongoDBQuery.crateIndex(userDB, comboColName.getText().trim(), textIndexName.getText().trim(), textJSON.getText().trim(), btnUnique.getSelection());
-			} catch (Exception e) {
-				logger.error("mongodb create index", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Create index Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-				
-				return;
-			}
-		} else {
-			
-			if("".equals(textIndexName.getText().trim())) { //$NON-NLS-1$				
-				textIndexName.setFocus();
-				MessageDialog.openError(null, Messages.NewDocumentDialog_3, "Please enter Index name");
-				return;
-			}
-			
-			List<String> listFullIndex = new ArrayList<String>();
-			List<CollectionFieldDAO> listColFieldDao = (List)treeColumnViewer.getInput();
-			for (CollectionFieldDAO dao : listColFieldDao) {
-				if(!dao.getNewIndex().equals("")) {
-					listFullIndex.add(getMakeIndexString(dao.getField(), dao.getNewIndex()));
-				}
-				
-				if(!dao.getChildren().isEmpty()) {
-					findSelectIndex(dao.getChildren(), dao.getField(), listFullIndex);
-				}
-			}
-			String fullIndex = "";
-			for (int i=0; i<listFullIndex.size(); i++) {
-				if(i == listFullIndex.size()-1) {
-					fullIndex += listFullIndex.get(i);
-				} else {
-					fullIndex += listFullIndex.get(i) + ",";
-				}
-			}
-			
-			if(logger.isDebugEnabled()) {
-				logger.debug("[select index]" + fullIndex);
-			}
-			
-			try {
-				MongoDBQuery.crateIndex(userDB, comboColName.getText().trim(), textIndexName.getText().trim(), "{" + fullIndex + "}",  btnUnique.getSelection());
-			} catch (Exception e) {
-				logger.error("mongodb create index", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Create index Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-				
-				return;
-			}
-			
+		
+		if("".equals(textIndexName.getText().trim())) { //$NON-NLS-1$				
+			textIndexName.setFocus();
+			MessageDialog.openError(null, Messages.NewDocumentDialog_3, "Please enter Index name");
+			return;
 		}
+		
+		List<String> listFullIndex = new ArrayList<String>();
+		List<CollectionFieldDAO> listColFieldDao = (List)treeColumnViewer.getInput();
+		for (CollectionFieldDAO dao : listColFieldDao) {
+			if(!dao.getNewIndex().equals("")) {
+				listFullIndex.add(getMakeIndexString(dao.getField(), dao.getNewIndex()));
+			}
+			
+			if(!dao.getChildren().isEmpty()) {
+				findSelectIndex(dao.getChildren(), dao.getField(), listFullIndex);
+			}
+		}
+		String fullIndex = "";
+		for (int i=0; i<listFullIndex.size(); i++) {
+			if(i == listFullIndex.size()-1) {
+				fullIndex += listFullIndex.get(i);
+			} else {
+				fullIndex += listFullIndex.get(i) + ",";
+			}
+		}
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("[select index]" + fullIndex);
+		}
+		
+		try {
+			MongoDBQuery.crateIndex(userDB, comboColName.getText().trim(), textIndexName.getText().trim(), "{" + fullIndex + "}",  btnUnique.getSelection());
+		} catch (Exception e) {
+			logger.error("mongodb create index", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Create index Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			return;
+		}			
 		
 		super.okPressed();
 	}
@@ -349,17 +313,8 @@ public class NewIndexDialog extends Dialog {
 	 * Create contents of the button bar.
 	 * @param parent
 	 */
-	private static int FORMAT_ID = 999;
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {		
-		Button button = createButton(parent, FORMAT_ID, "Format", false); //$NON-NLS-1$
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				textJSON.setText( JSONUtil.getPretty(textJSON.getText()) );
-			}
-		});
-		
 		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
 		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
 	}

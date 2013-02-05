@@ -29,6 +29,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.Messages;
@@ -55,7 +56,7 @@ public class MongoDBImportEditor extends EditorPart {
 	private CTabFolder tabFolderQuery;
 
 	private UserDBDAO userDB = null;
-	private Text textQuery;
+	private TadpoleOrionHubEditor textQuery;
 	private Text textCollectionName;
 	
 	private Combo comboDBList;
@@ -172,7 +173,7 @@ public class MongoDBImportEditor extends EditorPart {
 		tabItemQuery.setControl(compositeQuery);
 		compositeQuery.setLayout(new GridLayout(1, false));
 		
-		textQuery = new Text(compositeQuery, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textQuery = new TadpoleOrionHubEditor(compositeQuery, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeQueryTail = new Composite(compositeQuery, SWT.NONE);
@@ -203,7 +204,7 @@ public class MongoDBImportEditor extends EditorPart {
 	 * 화면을 초기화 합니다.
 	 */
 	private void initEditor() {
-		tabFolderQuery.setSelection(0);
+		tabFolderQuery.setSelection(1);
 		
 		try {
 			int visibleItemCount = 0;

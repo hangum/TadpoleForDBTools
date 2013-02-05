@@ -55,8 +55,6 @@ import org.eclipse.swt.widgets.Tree;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.Define;
-import com.hangum.tadpole.dialogs.message.TadpoleMessageDialog;
-import com.hangum.tadpole.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -64,6 +62,8 @@ import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
+import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleMessageDialog;
+import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -150,8 +150,8 @@ public class MongodbResultComposite extends Composite {
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
 
-	private Text textTextView;
-	private Label lblTextViewCnt;
+//	private TadpoleOrionHubEditor textTextView;
+//	private Label lblTextViewCnt;
 	
 	/** query 의 결과 데이터  -- table의 데이터를 표시하는 용도 <column index, Data> */
 	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
@@ -395,65 +395,65 @@ public class MongodbResultComposite extends Composite {
 		
 		lblTableViewCount = new Label(compositeTail, SWT.NONE);
 		
-		CTabItem tbtmTextView = new CTabItem(tabFolderMongoDB, SWT.NONE);
-		tbtmTextView.setText("Text View"); //$NON-NLS-1$
-		
-		Composite compositeTextView = new Composite(tabFolderMongoDB, SWT.NONE);
-		tbtmTextView.setControl(compositeTextView);
-		GridLayout gl_compositeTextView = new GridLayout(1, false);
-		gl_compositeTextView.verticalSpacing = 2;
-		gl_compositeTextView.horizontalSpacing = 2;
-		gl_compositeTextView.marginHeight = 2;
-		gl_compositeTextView.marginWidth = 2;
-		compositeTextView.setLayout(gl_compositeTextView);
-		
-		textTextView = new Text(compositeTextView, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI | SWT.VIRTUAL);
-		textTextView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		Composite compositeTextJson = new Composite(compositeTextView, SWT.NONE);
-		compositeTextJson.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeTextJson.setLayout(new GridLayout(6, false));
-		
-		if(isUserAction) {
-			Button btnInsertTextDocument = new Button(compositeTextJson, SWT.NONE);
-			btnInsertTextDocument.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					newDocument();
-				}
-			});
-			btnInsertTextDocument.setText("Insert Document");
-			
-			Button btnTextCreateIndex = new Button(compositeTextJson, SWT.NONE);
-			btnTextCreateIndex.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					createIndex();
-				}
-			});
-			btnTextCreateIndex.setText("Add Index");
-			
-			Label labelTextDumy = new Label(compositeTextJson, SWT.NONE);
-			GridData gd_labelTextDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-			gd_labelTextDumy.widthHint = 5;
-			labelTextDumy.setLayoutData(gd_labelTextDumy);
-		}
-		
-		Button btnExportJson = new Button(compositeTextJson, SWT.NONE);
-		btnExportJson.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				downloadServiceHandler.setName(userDB.getDisplay_name() + "_JSONExport.json"); //$NON-NLS-1$
-				downloadServiceHandler.setByteContent(textTextView.getText().getBytes());
-				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
-			}
-		});
-		btnExportJson.setText("Export JSON"); //$NON-NLS-1$
-		
-		Label labelTextViewDumy = new Label(compositeTextJson, SWT.NONE);
-		labelTextViewDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		lblTextViewCnt = new Label(compositeTextJson, SWT.NONE);
+//		CTabItem tbtmTextView = new CTabItem(tabFolderMongoDB, SWT.NONE);
+//		tbtmTextView.setText("Text View"); //$NON-NLS-1$
+//		
+//		Composite compositeTextView = new Composite(tabFolderMongoDB, SWT.NONE);
+//		tbtmTextView.setControl(compositeTextView);
+//		GridLayout gl_compositeTextView = new GridLayout(1, false);
+//		gl_compositeTextView.verticalSpacing = 2;
+//		gl_compositeTextView.horizontalSpacing = 2;
+//		gl_compositeTextView.marginHeight = 2;
+//		gl_compositeTextView.marginWidth = 2;
+//		compositeTextView.setLayout(gl_compositeTextView);
+//		
+//		textTextView = new TadpoleOrionHubEditor(compositeTextView, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI | SWT.VIRTUAL);
+//		textTextView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		
+//		Composite compositeTextJson = new Composite(compositeTextView, SWT.NONE);
+//		compositeTextJson.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		compositeTextJson.setLayout(new GridLayout(6, false));
+//		
+//		if(isUserAction) {
+//			Button btnInsertTextDocument = new Button(compositeTextJson, SWT.NONE);
+//			btnInsertTextDocument.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					newDocument();
+//				}
+//			});
+//			btnInsertTextDocument.setText("Insert Document");
+//			
+//			Button btnTextCreateIndex = new Button(compositeTextJson, SWT.NONE);
+//			btnTextCreateIndex.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					createIndex();
+//				}
+//			});
+//			btnTextCreateIndex.setText("Add Index");
+//			
+//			Label labelTextDumy = new Label(compositeTextJson, SWT.NONE);
+//			GridData gd_labelTextDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+//			gd_labelTextDumy.widthHint = 5;
+//			labelTextDumy.setLayoutData(gd_labelTextDumy);
+//		}
+//		
+//		Button btnExportJson = new Button(compositeTextJson, SWT.NONE);
+//		btnExportJson.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				downloadServiceHandler.setName(userDB.getDisplay_name() + "_JSONExport.json"); //$NON-NLS-1$
+//				downloadServiceHandler.setByteContent(textTextView.getText().getBytes());
+//				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
+//			}
+//		});
+//		btnExportJson.setText("Export JSON"); //$NON-NLS-1$
+//		
+//		Label labelTextViewDumy = new Label(compositeTextJson, SWT.NONE);
+//		labelTextViewDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//		lblTextViewCnt = new Label(compositeTextJson, SWT.NONE);
 		
 		// tabpole message
 		CTabItem tbtmTadpoleMessage = new CTabItem(tabFolderMongoDB, SWT.NONE);
@@ -501,7 +501,7 @@ public class MongodbResultComposite extends Composite {
 		
 		Composite composite = new Composite(compositeTadpoleMsg, SWT.NONE);		
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(1, false));
+		composite.setLayout(new GridLayout(3, false));
 		
 		Button btnExportTadpoleMessage = new Button(composite, SWT.NONE);
 		btnExportTadpoleMessage.addSelectionListener(new SelectionAdapter() {
@@ -520,8 +520,20 @@ public class MongodbResultComposite extends Composite {
 		});
 		btnExportTadpoleMessage.setText("Export Tadpole Message"); //$NON-NLS-1$
 		
-		registerServiceHandler();
+		Label label = new Label(composite, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Button btnClear = new Button(composite, SWT.NONE);
+		btnClear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				listMessage.clear();
+				tableViewerMessage.refresh();
+			}
+		});
+		btnClear.setText("Clear");
+		
+		registerServiceHandler();		
 		firstTabInit();
 	}
 	
@@ -827,11 +839,11 @@ public class MongodbResultComposite extends Composite {
 		resultTableViewer.setInput(tmpTable);
 		resultTableViewer.refresh();
 		
-		textTextView.setText("");
+//		textTextView.setText("");
 		
 		lblTreeViewCount.setText("");
 		lblTableViewCount.setText("");
-		lblTextViewCnt.setText("");
+//		lblTextViewCnt.setText("");
 		
 		// 
 		if(tabFolderMongoDB.getSelectionIndex() == 3) {
@@ -852,7 +864,6 @@ public class MongodbResultComposite extends Composite {
 	 */
 	private void selectData() {
 		int selectionIndex = tabFolderMongoDB.getSelectionIndex();
-//		logger.debug("[session tab]" + tabFolderMongoDB.getSelectionIndex());
 		
 		// tree view
 		if(selectionIndex == 0) {
@@ -880,18 +891,18 @@ public class MongodbResultComposite extends Composite {
 			
 			TableUtil.packTable(resultTableViewer.getTable());
 			
-		// text view
-		} else if(selectionIndex == 2) {
-			
-			StringBuffer sbJsonStr = new StringBuffer();		
-			for(int i=0; i<sourceDataList.size(); i++) {
-				sbJsonStr.append("/* " + i + " */" + Define.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
-				sbJsonStr.append(sourceDataList.get(i).get(MongoDBDefine.PRIMARY_ID_KEY) + Define.LINE_SEPARATOR);
-			}
-			textTextView.setText(JSONUtil.getPretty(sbJsonStr.toString()));
-			
-			lblTextViewCnt.setText(txtCnt);
-			lblTextViewCnt.getParent().layout();
+//		// text view
+//		} else if(selectionIndex == 2) {
+//			
+//			StringBuffer sbJsonStr = new StringBuffer();		
+//			for(int i=0; i<sourceDataList.size(); i++) {
+//				sbJsonStr.append("/* " + i + " */" + Define.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
+//				sbJsonStr.append(sourceDataList.get(i).get(MongoDBDefine.PRIMARY_ID_KEY) + Define.LINE_SEPARATOR);
+//			}
+//			textTextView.setText(JSONUtil.getPretty(sbJsonStr.toString()));
+//			
+//			lblTextViewCnt.setText(txtCnt);
+//			lblTextViewCnt.getParent().layout();
 		}
 	}
 	
@@ -1009,7 +1020,8 @@ public class MongodbResultComposite extends Composite {
 	}
 	
 	/**
-	 * tablecolumn adapter
+	 * table column adapter
+	 * 
 	 * @param column
 	 * @param index
 	 * @return
@@ -1080,16 +1092,6 @@ public class MongodbResultComposite extends Composite {
 		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
 	}
 	
-//	/**
-//	 * console에 text 추가합니다.
-//	 * 
-//	 * @param msg
-//	 * @deprecated
-//	 */
-//	public void appendConsole() {
-//		tabInit();
-//	}
-	
 	/**
 	 * append tadpole message 
 	 * 
@@ -1109,7 +1111,7 @@ public class MongodbResultComposite extends Composite {
 	 * error console
 	 */
 	public void consoleError() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " Error", sbConsoleErrorMsg.toString());
+		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " Server Message", sbConsoleErrorMsg.toString());
 		dialog.open();
 	}
 
@@ -1120,6 +1122,4 @@ public class MongodbResultComposite extends Composite {
 		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " Execute Plan", sbConsoleExecuteMsg.toString());
 		dialog.open();
 	}
-
-
 }

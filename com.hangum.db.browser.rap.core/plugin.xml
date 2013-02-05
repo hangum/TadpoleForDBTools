@@ -435,12 +435,5 @@
          </adapter>
       </factory>
    </extension>
-   <extension
-         point="org.eclipse.equinox.http.registry.resources">
-      <resource
-            alias="/orion"
-            base-name="/orion">
-      </resource>
-   </extension>
 
 </plugin>

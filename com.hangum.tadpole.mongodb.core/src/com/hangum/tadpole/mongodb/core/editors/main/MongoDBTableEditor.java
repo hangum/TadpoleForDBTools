@@ -16,7 +16,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -38,6 +37,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -70,9 +70,9 @@ public class MongoDBTableEditor extends EditorPart {
 	/** 쿼리 결과 출력 */
 	private MongodbResultComposite compositeResult ;
 
-	private Text textBasicFind;
-	private Text textBasicField;
-	private Text textBasicSort;
+	private TadpoleOrionHubEditor textBasicFind;
+	private TadpoleOrionHubEditor textBasicField;
+	private TadpoleOrionHubEditor textBasicSort;
 	private Text textBasicSkip;
 	private Text textBasicLimit;
 	
@@ -121,52 +121,19 @@ public class MongoDBTableEditor extends EditorPart {
 		lblfind.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 2));
 		lblfind.setText("{Find}"); //$NON-NLS-1$
 		
-		textBasicFind = new Text(compositeBasicHead, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textBasicFind.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicFind.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textBasicFind.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
-		textBasicFind.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		textBasicFind = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
 		Label lblfield = new Label(compositeBasicHead, SWT.NONE);
 		lblfield.setText("{Field}"); //$NON-NLS-1$
 		
-		textBasicField = new Text(compositeBasicHead, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textBasicField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicField.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textBasicField.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
-		textBasicField.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		textBasicField = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblsort = new Label(compositeBasicHead, SWT.NONE);
 		lblsort.setText("{Sort}"); //$NON-NLS-1$
 		
-		textBasicSort = new Text(compositeBasicHead, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textBasicSort.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textBasicSort.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textBasicSort.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
-		textBasicSort.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		textBasicSort = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBasicSearch = new Composite(compositeBasic, SWT.NONE);
@@ -276,15 +243,19 @@ public class MongoDBTableEditor extends EditorPart {
 			tabFolderSearchPanel.setSelection(0);
 		}
 		
-		findBasic();
+//		findBasic();
+		compositeResult.find("", "", "", getCntSkip(), getCntLimit());
+		
+
+		textBasicFind.setFocus();
 	}
 	
 	/**
 	 * 검색 기본
 	 */
-	public void findBasic() {
-		final String strBasicField = textBasicField.getText().trim();
+	private void findBasic() {
 		final String strBasicFind = textBasicFind.getText().trim();
+		final String strBasicField = textBasicField.getText().trim();
 		final String strBasicSort = textBasicSort.getText().trim();
 		final int cntSkip = getCntSkip();
 		final int cntLimit = getCntLimit();

@@ -17,11 +17,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -38,6 +35,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
@@ -73,15 +71,15 @@ public class MapReduceEditor extends EditorPart {
 	private UserDBDAO userDB;
 	private String initColName = "";
 	
-	private Text textMap;
-	private Text textReduce;
-	private Text textFinalize;
+	private TadpoleOrionHubEditor textMap;
+	private TadpoleOrionHubEditor textReduce;
+	private TadpoleOrionHubEditor textFinalize;
 	
 	// output
 	private Combo comboOutputType;
-	private Text textQuery;
+	private TadpoleOrionHubEditor textQuery;
 	private Text textLimit;
-	private Text textSort;
+	private TadpoleOrionHubEditor textSort;
 	private Text textOutputTarget;
 	
 	private Button btnSharded;
@@ -127,18 +125,18 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpMap.marginWidth = 1;
 		grpMap.setLayout(gl_grpMap);
 		
-		textMap = new Text(grpMap, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMap = new TadpoleOrionHubEditor(grpMap, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMap.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textMap.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textMap.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textMap.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
+//		textMap.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//			
+//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
+//					textMap.insert(TadpoleWidgetUtils.TAB_CONETNT);
+//				}
+//			}
+//		});
+//		textMap.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		Group grpReduce = new Group(sashFormMRF, SWT.NONE);
 		grpReduce.setText("Reduce");
@@ -149,18 +147,18 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpReduce.marginWidth = 1;
 		grpReduce.setLayout(gl_grpReduce);
 		
-		textReduce = new Text(grpReduce, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textReduce = new TadpoleOrionHubEditor(grpReduce, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textReduce.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textReduce.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textReduce.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textReduce.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
+//		textReduce.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//			
+//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
+//					textReduce.insert(TadpoleWidgetUtils.TAB_CONETNT);
+//				}
+//			}
+//		});
+//		textReduce.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		Group grpFinalize = new Group(sashFormMRF, SWT.NONE);
 		grpFinalize.setText("Finalize");
@@ -171,18 +169,18 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpFinalize.marginWidth = 1;
 		grpFinalize.setLayout(gl_grpFinalize);
 		
-		textFinalize = new Text(grpFinalize, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textFinalize = new TadpoleOrionHubEditor(grpFinalize, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textFinalize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textFinalize.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textFinalize.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textFinalize.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
+//		textFinalize.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//			
+//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
+//					textFinalize.insert(TadpoleWidgetUtils.TAB_CONETNT);
+//				}
+//			}
+//		});
+//		textFinalize.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		sashFormMRF.setWeights(new int[] {4, 4, 2});
 		
@@ -210,35 +208,35 @@ public class MapReduceEditor extends EditorPart {
 		lblQuery.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblQuery.setText("Query");
 		
-		textQuery = new Text(grpInput, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textQuery = new TadpoleOrionHubEditor(grpInput, SWT.BORDER);// | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textQuery.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textQuery.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textQuery.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
+//		textQuery.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//			
+//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
+//					textQuery.insert(TadpoleWidgetUtils.TAB_CONETNT);
+//				}
+//			}
+//		});
+//		textQuery.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		Label lblSort = new Label(grpInput, SWT.NONE);
 		lblSort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSort.setText("Sort");
 		
-		textSort = new Text(grpInput, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
+		textSort = new TadpoleOrionHubEditor(grpInput, SWT.BORDER);// | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
 		textSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textSort.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-			
-				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-					textSort.insert(TadpoleWidgetUtils.TAB_CONETNT);
-				}
-			}
-		});
-		textSort.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
+//		textSort.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//			
+//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
+//					textSort.insert(TadpoleWidgetUtils.TAB_CONETNT);
+//				}
+//			}
+//		});
+//		textSort.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		Label lblLimit = new Label(grpInput, SWT.NONE);
 		lblLimit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
