@@ -125,18 +125,8 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpMap.marginWidth = 1;
 		grpMap.setLayout(gl_grpMap);
 		
-		textMap = new TadpoleOrionHubEditor(grpMap, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMap = new TadpoleOrionHubEditor(grpMap, SWT.BORDER);
 		textMap.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		textMap.addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//			
-//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-//					textMap.insert(TadpoleWidgetUtils.TAB_CONETNT);
-//				}
-//			}
-//		});
-//		textMap.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		Group grpReduce = new Group(sashFormMRF, SWT.NONE);
 		grpReduce.setText("Reduce");
@@ -147,18 +137,8 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpReduce.marginWidth = 1;
 		grpReduce.setLayout(gl_grpReduce);
 		
-		textReduce = new TadpoleOrionHubEditor(grpReduce, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textReduce = new TadpoleOrionHubEditor(grpReduce, SWT.BORDER);
 		textReduce.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		textReduce.addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//			
-//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-//					textReduce.insert(TadpoleWidgetUtils.TAB_CONETNT);
-//				}
-//			}
-//		});
-//		textReduce.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		Group grpFinalize = new Group(sashFormMRF, SWT.NONE);
 		grpFinalize.setText("Finalize");
@@ -169,18 +149,8 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpFinalize.marginWidth = 1;
 		grpFinalize.setLayout(gl_grpFinalize);
 		
-		textFinalize = new TadpoleOrionHubEditor(grpFinalize, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textFinalize = new TadpoleOrionHubEditor(grpFinalize, SWT.BORDER);
 		textFinalize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		textFinalize.addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//			
-//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-//					textFinalize.insert(TadpoleWidgetUtils.TAB_CONETNT);
-//				}
-//			}
-//		});
-//		textFinalize.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		sashFormMRF.setWeights(new int[] {4, 4, 2});
 		
@@ -208,35 +178,15 @@ public class MapReduceEditor extends EditorPart {
 		lblQuery.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblQuery.setText("Query");
 		
-		textQuery = new TadpoleOrionHubEditor(grpInput, SWT.BORDER);// | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textQuery = new TadpoleOrionHubEditor(grpInput, SWT.BORDER);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		textQuery.addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//			
-//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-//					textQuery.insert(TadpoleWidgetUtils.TAB_CONETNT);
-//				}
-//			}
-//		});
-//		textQuery.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		Label lblSort = new Label(grpInput, SWT.NONE);
 		lblSort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSort.setText("Sort");
 		
-		textSort = new TadpoleOrionHubEditor(grpInput, SWT.BORDER);// | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
+		textSort = new TadpoleOrionHubEditor(grpInput, SWT.BORDER);
 		textSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		textSort.addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//			
-//				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
-//					textSort.insert(TadpoleWidgetUtils.TAB_CONETNT);
-//				}
-//			}
-//		});
-//		textSort.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		
 		Label lblLimit = new Label(grpInput, SWT.NONE);
 		lblLimit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -434,9 +384,9 @@ public class MapReduceEditor extends EditorPart {
 	 * ui초기화 작업을 합니다.
 	 */
 	private void initUI() {
-		textMap.setText(TEMPLATE_MAP_SRC);
-		textReduce.setText(TEMPLATE_REDUCE_SRC);
-		textFinalize.setText(TEMPLATE_FINALIZE_SRC);
+//		textMap.setText(TEMPLATE_MAP_SRC);
+//		textReduce.setText(TEMPLATE_REDUCE_SRC);
+//		textFinalize.setText(TEMPLATE_FINALIZE_SRC);
 		
 		textMap.setFocus();
 	}
