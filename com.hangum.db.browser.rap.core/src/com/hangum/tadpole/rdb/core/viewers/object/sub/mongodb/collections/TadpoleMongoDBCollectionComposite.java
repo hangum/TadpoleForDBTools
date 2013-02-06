@@ -63,6 +63,7 @@ import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLSelectAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbGroupAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbMapReduceAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbReIndexAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbRenameAction;
@@ -105,6 +106,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private ObjectMongodbRenameAction 	renameColAction;
 	private ObjectMongodbReIndexAction 	reIndexColAction;
 	private ObjectMongodbMapReduceAction mapReduceAction;
+	private ObjectMongodbGroupAction 	groupAction;
 	
 	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(partSite, tabFolderObject, userDB);
@@ -277,7 +279,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 
 		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
 		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");
-		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "MapReduce Collection");
+		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "MapReduce");
+		groupAction			= new ObjectMongodbGroupAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Group");
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -298,6 +301,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(mapReduceAction);
+					manager.add(groupAction);
 				}
 			}
 		});
@@ -320,6 +324,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		renameColAction.setUserDB(getUserDB());
 		reIndexColAction.setUserDB(getUserDB());
 		mapReduceAction.setUserDB(getUserDB());
+		groupAction.setUserDB(getUserDB());
 	}
 
 	public TableViewer getCollectionListViewer() {

@@ -704,6 +704,20 @@ public class MongodbResultComposite extends Composite {
 	 * @param intTotalCnt
 	 * @throws Exception
 	 */
+	public void refreshDBView(DBObject dbObject, int intTotalCnt) throws Exception {
+		List<DBObject> listIte = new ArrayList<DBObject>();
+		listIte.add(dbObject);
+		
+		refreshDBView(listIte, intTotalCnt);
+	}
+	
+	/**
+	 * 결과셋을 출력합니다.
+	 * 
+	 * @param iteResult
+	 * @param intTotalCnt
+	 * @throws Exception
+	 */
 	public void refreshDBView(Iterable<DBObject> iteResult, int intTotalCnt) throws Exception {
 		int totCnt = 0;
 		

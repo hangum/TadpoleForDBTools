@@ -246,12 +246,12 @@ public class MapReduceEditor extends EditorPart {
 				} catch (Exception e1) {
 					logger.error("MapReduce Error", e1); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(null, "Error", "MapReduce execute exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+					ExceptionDetailsErrorDialog.openError(null, "Error", "MapReduce Search exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		});
 		btnExecute.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnExecute.setText("Execute");
+		btnExecute.setText("Search");
 		
 		sashForm.setWeights(new int[] {1, 1});
 		
@@ -312,7 +312,7 @@ public class MapReduceEditor extends EditorPart {
 	CommandResult 	cmdResult = null;
 //	MapReduceOutput mrOutput = null;
 	private void goMapReduce(final DBCollection dbCol, final BasicDBObject basicObj, final MapReduceCommand.OutputType mrOType) {
-		Job job = new Job("SQL execute job") { //$NON-NLS-1$
+		Job job = new Job("MapReduce search job") { //$NON-NLS-1$
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Starting JSON query...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
@@ -332,8 +332,8 @@ public class MapReduceEditor extends EditorPart {
 						}
 					
 				} catch (Exception e) {
-					logger.error("find basic collection exception", e); //$NON-NLS-1$
-					return new Status(Status.WARNING,Activator.PLUGIN_ID, "findBasic " + e.getMessage()); //$NON-NLS-1$
+					logger.error("mapreduce exception", e); //$NON-NLS-1$
+					return new Status(Status.WARNING,Activator.PLUGIN_ID, "mapreduce " + e.getMessage()); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
@@ -369,7 +369,7 @@ public class MapReduceEditor extends EditorPart {
 		
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
-		job.schedule();		
+		job.schedule();
 	}
 	
 	private int getLimit() {
