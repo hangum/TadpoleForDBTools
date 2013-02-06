@@ -29,6 +29,7 @@ import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.CollectionInfor
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.InstanceInformationComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.LockComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.ReplicaSetComposite;
+import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.ShardingComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.mongodb.CommandResult;
 
@@ -72,7 +73,6 @@ public class MongoDBInfosEditor extends EditorPart {
 		try {
 			commandResult = MongoDBQuery.serverStatusCommandResult(userDB);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -107,11 +107,17 @@ public class MongoDBInfosEditor extends EditorPart {
 		compositeLock.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmReplicaInformation = new CTabItem(tabFolder, SWT.NONE);
-		tbtmReplicaInformation.setText("Replica Set");
-		
+		tbtmReplicaInformation.setText("Replica Set");		
 		ReplicaSetComposite compositeReplicaSet = new ReplicaSetComposite(tabFolder, SWT.NONE, commandResult);
 		tbtmReplicaInformation.setControl(compositeReplicaSet);
 		compositeReplicaSet.setLayout(gl_compositeCollectionSummary);
+		
+		CTabItem tbtmShardingInformation = new CTabItem(tabFolder, SWT.NONE);
+		tbtmShardingInformation.setText("Sharding");
+		
+		ShardingComposite compositeSharding = new ShardingComposite(tabFolder, SWT.NONE, userDB);
+		tbtmShardingInformation.setControl(compositeSharding);
+		compositeSharding.setLayout(gl_compositeCollectionSummary);
 
 		tabFolder.setSelection(1);
 		initData();

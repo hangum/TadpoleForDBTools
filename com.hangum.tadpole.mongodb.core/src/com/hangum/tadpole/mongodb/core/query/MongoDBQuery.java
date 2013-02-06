@@ -75,6 +75,18 @@ public class MongoDBQuery {
 	}
 	
 	/**
+	 * get admin mongodb
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static DB getAdminMongoDB(UserDBDAO userDB) throws Exception {
+		Mongo mongo = new Mongo(userDB.getHost(), Integer.parseInt(userDB.getPort()));
+		return mongo.getDB("admin");
+	}
+	
+	/**
 	 * collection list
 	 * 
 	 * System collections(http://docs.mongodb.org/manual/reference/system-collections/)을 제외한 collection list를 리턴합니다.
