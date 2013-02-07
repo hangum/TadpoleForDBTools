@@ -45,17 +45,17 @@ public enum TadpoleModelUtils {
 	private UserDBDAO userDB;
 	
 	/** 한 행에 테이블을 표시하는 갯수 */
-	public static final int WIDTH_COUNT = 5;
+	public static final int ROW_COUNT = 5;
 	
 	/** 테이블의 시작 포인트 */
-	public static final int START_TABLE_WIDTH_POINT = 50;
-	public static final int START_TABLE_HIGHT_POINT = 50;
+	public static final int START_TABLE_WIDTH = 50;
+	public static final int START_TABLE_HIGHT = 50;
 	
-	public static final int END_TABLE_WIDTH_POINT = -1;
-	public static final int END_TABLE_HIGHT_POINT = -1;
+	public static final int END_TABLE_WIDTH = -1;
+	public static final int END_TABLE_HIGHT = -1;
 	
 	/** 다음 테이블의 간격 */
-	public static final int GAP_HIGHT =  300;
+	public static final int GAP_HIGHT =  40;
 	public static final int GAP_WIDTH =  300;
 		
 	private MongodbFactory tadpoleFactory = MongodbFactory.eINSTANCE;
@@ -82,8 +82,8 @@ public enum TadpoleModelUtils {
 		int count = 0;
 		Rectangle prevRectangle = null;
 		
-		int nextTableX = START_TABLE_WIDTH_POINT;
-		int nextTableY = START_TABLE_HIGHT_POINT;
+		int nextTableX = START_TABLE_WIDTH;
+		int nextTableY = START_TABLE_HIGHT;
 		
 		for(TableDAO table : tables) {
 			Table tableModel = tadpoleFactory.createTable();
@@ -93,13 +93,13 @@ public enum TadpoleModelUtils {
 			
 			// 첫번째 보여주는 항 
 			if(prevRectangle == null) {
-				prevRectangle = new Rectangle(START_TABLE_WIDTH_POINT, START_TABLE_HIGHT_POINT, END_TABLE_WIDTH_POINT, END_TABLE_HIGHT_POINT); 
+				prevRectangle = new Rectangle(START_TABLE_WIDTH, START_TABLE_HIGHT, END_TABLE_WIDTH, END_TABLE_HIGHT); 
 			} else {
 				// 테이블의 좌표를 잡아줍니다. 
 				prevRectangle = new Rectangle(nextTableX, 
 											nextTableY, 
-											END_TABLE_WIDTH_POINT, 
-											END_TABLE_HIGHT_POINT);
+											END_TABLE_WIDTH, 
+											END_TABLE_HIGHT);
 			}
 //				logger.debug("###########################################################################################################################");
 //				logger.debug("###########################################################################################################################");
@@ -126,17 +126,21 @@ public enum TadpoleModelUtils {
 				tableModel.getColumns().add(column);
 			}
 			
+			// 테이블 hehght를 계산합니다.
+			// row count * 컬럼높이 * 테이블명 높이
+			int columnsHeight = tableModel.getColumns().size() * 18 + 30;
+			
 			// 화면 출력하기 위해
 			count++;
 			
 			// 행을 더해주고 열을 초기화 해줍니다. 
-			if(count == (WIDTH_COUNT+1)) {
+			if(count == ROW_COUNT) {
 				count = 0;
 				
-				nextTableX = START_TABLE_WIDTH_POINT;
-				nextTableY = prevRectangle.getBottomLeft().y + GAP_HIGHT;
-			} else {
 				nextTableX = prevRectangle.getTopRight().x + GAP_WIDTH;
+				nextTableY = START_TABLE_WIDTH;
+			} else {
+				nextTableY = prevRectangle.getBottomLeft().y + columnsHeight + GAP_HIGHT;
 			}
 			
 		}	// end table list

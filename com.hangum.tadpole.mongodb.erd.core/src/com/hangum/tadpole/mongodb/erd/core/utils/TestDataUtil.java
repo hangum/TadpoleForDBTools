@@ -40,7 +40,7 @@ public enum TestDataUtil {
 		Table tableCity = factory.createTable();
 		tableCity.setDb(db);
 		tableCity.setName("city");
-		tableCity.setConstraints(new Rectangle(10, 300, TadpoleModelUtils.END_TABLE_WIDTH_POINT, TadpoleModelUtils.END_TABLE_HIGHT_POINT));
+		tableCity.setConstraints(new Rectangle(10, 300, TadpoleModelUtils.END_TABLE_WIDTH, TadpoleModelUtils.END_TABLE_HIGHT));
 		db.getTables().add(tableCity);
 		
 		// 컬럼 추가
@@ -72,7 +72,7 @@ public enum TestDataUtil {
 		Table tableSolo = factory.createTable();
 		tableSolo.setDb(db);
 		tableSolo.setName("Solo");
-		tableSolo.setConstraints(new Rectangle(10, 150, TadpoleModelUtils.END_TABLE_WIDTH_POINT, TadpoleModelUtils.END_TABLE_HIGHT_POINT));
+		tableSolo.setConstraints(new Rectangle(10, 150, TadpoleModelUtils.END_TABLE_WIDTH, TadpoleModelUtils.END_TABLE_HIGHT));
 		db.getTables().add(tableSolo);
 		
 		Column columnSolo = factory.createColumn();
@@ -86,7 +86,7 @@ public enum TestDataUtil {
 		Table tableCarInfo = factory.createTable();
 		tableCarInfo.setDb(db);
 		tableCarInfo.setName("Car Info");
-		tableCarInfo.setConstraints(new Rectangle(10, 10, TadpoleModelUtils.END_TABLE_WIDTH_POINT, TadpoleModelUtils.END_TABLE_HIGHT_POINT));
+		tableCarInfo.setConstraints(new Rectangle(10, 10, TadpoleModelUtils.END_TABLE_WIDTH, TadpoleModelUtils.END_TABLE_HIGHT));
 		
 		Column colCarName = factory.createColumn();
 		colCarName.setField("name");
@@ -104,7 +104,7 @@ public enum TestDataUtil {
 		Table tableAddress = factory.createTable();
 		tableAddress.setDb(db);
 		tableAddress.setName("Address");
-		tableAddress.setConstraints(new Rectangle(50, 50, TadpoleModelUtils.END_TABLE_WIDTH_POINT, TadpoleModelUtils.END_TABLE_HIGHT_POINT));
+		tableAddress.setConstraints(new Rectangle(50, 50, TadpoleModelUtils.END_TABLE_WIDTH, TadpoleModelUtils.END_TABLE_HIGHT));
 		db.getTables().add(tableAddress);
 		
 		// 컬럼
@@ -137,7 +137,7 @@ public enum TestDataUtil {
 		Table tablePerson = factory.createTable();
 		tablePerson.setDb(db);
 		tablePerson.setName("Person");
-		tablePerson.setConstraints(new Rectangle(150, 150, TadpoleModelUtils.END_TABLE_WIDTH_POINT, TadpoleModelUtils.END_TABLE_HIGHT_POINT));
+		tablePerson.setConstraints(new Rectangle(150, 150, TadpoleModelUtils.END_TABLE_WIDTH, TadpoleModelUtils.END_TABLE_HIGHT));
 		db.getTables().add(tablePerson);
 		
 		Column columnPersonId = factory.createColumn();
