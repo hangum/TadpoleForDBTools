@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -53,6 +54,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	protected Combo comboGroup;
 	protected Text textFile;
 	protected Text textDisplayName;
+	protected Combo comboOperationType;
 	
 	protected Button btnSavePreference;
 	
@@ -83,6 +85,17 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		
+		Label lblOperationType = new Label(compositeBody, SWT.NONE);
+		lblOperationType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOperationType.setText(Messages.MySQLLoginComposite_lblOperationType_text);
+		
+		comboOperationType = new Combo(compositeBody, SWT.READ_ONLY);
+		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for (DBOperationType opType : DBOperationType.values()) {
+			comboOperationType.add(opType.getTypeName());
+		}
+		comboOperationType.select(1);
 		
 		Label lblGroup = new Label(compositeBody, SWT.NONE);
 		lblGroup.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -124,6 +137,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			selGroupName = oldUserDB.getGroup_name();
 			textFile.setText(oldUserDB.getDb());
 			textDisplayName.setText(oldUserDB.getDisplay_name());
+			comboOperationType.setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 			
 			textDisplayName.setText("Sample SQLite 3.7.2");			
@@ -171,6 +185,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		userDB.setDb(textFile.getText());
 		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
+		userDB.setOperation_type( DBOperationType.getNameToType(comboOperationType.getText()).toString() );
 		userDB.setPasswd(""); //$NON-NLS-1$
 		userDB.setUsers(""); //$NON-NLS-1$
 		

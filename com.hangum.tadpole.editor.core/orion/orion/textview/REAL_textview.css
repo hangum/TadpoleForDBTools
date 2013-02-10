@@ -1,0 +1,24 @@
+.textview {
+	background-color: white;
+	padding: 1px 2px;
+}
+
+.textviewContainer {
+	background-color: red;
+	font-family: monospace;
+	font-size: 9pt;
+	min-width: 50px;
+	min-height: 50px;
+}
+
+.textviewContent {
+  cursor: auto;
+}
+
+.textviewLeftRuler {
+  border-right: 1px solid #eaeaea;
+}
+
+.textviewRightRuler {
+  border-left: 1px solid #eaeaea;
+}

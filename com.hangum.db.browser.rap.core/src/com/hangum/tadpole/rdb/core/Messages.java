@@ -313,6 +313,7 @@ public class Messages extends NLS {
 	public static String MongoDBLoginComposite_lblReplicaSet_text;
 	public static String MongoDBLoginComposite_lblExLocalhostlocalhost_text;
 	public static String MainEditor_btnClear_text;
+	public static String MySQLLoginComposite_lblOperationType_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

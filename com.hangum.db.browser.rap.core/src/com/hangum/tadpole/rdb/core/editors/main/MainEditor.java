@@ -81,6 +81,7 @@ import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.dialogs.message.TadpoleSimpleMessageDialog;
@@ -210,6 +211,7 @@ public class MainEditor extends EditorPart {
 
 	///[browser editor]/////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static final String URL = "orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
+	private static final String REAL_URL = "orion/tadpole/editor/REAL_RDBEmbeddededitor.html"; //$NON-NLS-1$
 	private Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */
 	private EditorBrowserFunctionService editorService;
@@ -397,7 +399,11 @@ public class MainEditor extends EditorPart {
 	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	    
 //	    browserQueryEditor.setText("about:blank"); //$NON-NLS-1$
-	    browserQueryEditor.setUrl(URL);
+	    if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.REAL) {
+	    	browserQueryEditor.setUrl(REAL_URL);
+	    } else {
+	    	browserQueryEditor.setUrl(URL);
+	    }
 	    addBrowserHandler();
 		
 		createStatusLine();
@@ -913,7 +919,7 @@ public class MainEditor extends EditorPart {
 								executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							
 							pageNumber = 1;	
-							runSQLExecuteBatch(listStrExecuteQuery);
+//							runSQLExecuteBatch(listStrExecuteQuery);
 							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
 						// create 로 시작하는 쿼리.
 						} else {

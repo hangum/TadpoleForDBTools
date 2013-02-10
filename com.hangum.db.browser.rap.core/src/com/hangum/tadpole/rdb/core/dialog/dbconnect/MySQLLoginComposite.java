@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -49,6 +50,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	
 	protected Combo comboGroup;
 	protected Text textDisplayName;
+	protected Combo comboOperationType;
 	
 	protected Text textHost;
 	protected Text textUser;
@@ -77,6 +79,17 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		
+		Label lblOperationType = new Label(compositeBody, SWT.NONE);
+		lblOperationType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOperationType.setText(Messages.MySQLLoginComposite_lblOperationType_text);
+		
+		comboOperationType = new Combo(compositeBody, SWT.READ_ONLY);
+		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for (DBOperationType opType : DBOperationType.values()) {
+			comboOperationType.add(opType.getTypeName());
+		}
+		comboOperationType.select(1);
 		
 		Label lblGroupName = new Label(compositeBody, SWT.NONE);
 		lblGroupName.setText(Messages.MySQLLoginComposite_lblGroupName_text);
@@ -174,6 +187,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			textDisplayName.setText(oldUserDB.getDisplay_name());
+			comboOperationType.setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textHost.setText(oldUserDB.getHost());
 			textUser.setText(oldUserDB.getUsers());
@@ -231,6 +245,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setDb(textDatabase.getText());
 		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
+		userDB.setOperation_type( DBOperationType.getNameToType(comboOperationType.getText()).toString() );
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());
 		userDB.setPort(textPort.getText());

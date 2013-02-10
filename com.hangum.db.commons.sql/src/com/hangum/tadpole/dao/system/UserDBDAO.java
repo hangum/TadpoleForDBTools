@@ -27,6 +27,13 @@ public class UserDBDAO {
 	protected int user_seq;
     
 	protected String group_name = "";
+	
+	/** db type 
+	* 000 :	운영 
+	* 001 : 개발 
+	* 002 :	기타  
+	 */
+	protected String operation_type = "001";
     
 	protected String types;
 	protected String url;
@@ -43,6 +50,12 @@ public class UserDBDAO {
 	protected String ext1 = "";
 	protected String ext2 = ""; 
 	protected String ext3 = "";
+	
+	protected String is_profile = "NO";
+    protected int profile_select_mill = -1;
+    
+    // 운영서버일 경우 DML 문 실행시 YES, NO 묻기
+    protected String questionDML = "YES";
     
     protected ManagerListDTO parent;
     protected List<UserDBResourceDAO> listUserDBErd;
@@ -218,6 +231,38 @@ public class UserDBDAO {
 
 	public void setExt3(String ext3) {
 		this.ext3 = ext3;
+	}
+	
+	public String getOperation_type() {
+		return operation_type;
+	}
+
+	public void setOperation_type(String operation_type) {
+		this.operation_type = operation_type;
+	}
+
+	public String getIs_profile() {
+		return is_profile;
+	}
+
+	public void setIs_profile(String is_profile) {
+		this.is_profile = is_profile;
+	}
+
+	public int getProfile_select_mill() {
+		return profile_select_mill;
+	}
+
+	public void setProfile_select_mill(int profile_select_mill) {
+		this.profile_select_mill = profile_select_mill;
+	}
+
+	public String getQuestionDML() {
+		return questionDML;
+	}
+
+	public void setQuestionDML(String questionDML) {
+		this.questionDML = questionDML;
 	}
 
 	@Override
