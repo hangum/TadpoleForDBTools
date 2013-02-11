@@ -75,6 +75,8 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer.CHANGE_TYPE;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -320,8 +322,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
-					manager.add(creatAction_Table);
-					manager.add(deleteAction_Table);
+					if(PermissionChecks.isShow(strUserType, userDB)) {
+						manager.add(creatAction_Table);
+						manager.add(deleteAction_Table);
+					}					
 					manager.add(refreshAction_Table);
 
 					// 현재는 oracle db만 데이터 수정 모드..
@@ -331,11 +335,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					}
 
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
 					manager.add(selectStmtAction);
-					manager.add(insertStmtAction);
-					manager.add(updateStmtAction);
-					manager.add(deleteStmtAction);
+					
+					if(PermissionChecks.isShow(strUserType, userDB)) {
+						manager.add(insertStmtAction);
+						manager.add(updateStmtAction);
+						manager.add(deleteStmtAction);
+					}
 				}
 			}
 		});

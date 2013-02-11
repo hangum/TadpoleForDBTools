@@ -73,6 +73,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 
 /**
  * Mongodb Collection composite
@@ -290,14 +291,19 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
 					manager.add(creatAction_Table);
-					manager.add(deleteAction_Table);
+					if(PermissionChecks.isShow(strUserType, userDB)) {
+						manager.add(deleteAction_Table);
+					}
 					manager.add(refreshAction_Table);
 
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(insertStmtAction);
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(renameColAction);
-					manager.add(reIndexColAction);
+					
+					if(PermissionChecks.isShow(strUserType, userDB)) {
+						manager.add(renameColAction);
+						manager.add(reIndexColAction);
+					}
 					
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(mapReduceAction);

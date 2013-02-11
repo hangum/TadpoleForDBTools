@@ -43,6 +43,7 @@ import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -137,8 +138,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(creatAction_Index);
-				manager.add(deleteAction_Index);
+				if(PermissionChecks.isShow(strUserType, userDB)) {
+					manager.add(creatAction_Index);
+					manager.add(deleteAction_Index);
+				}
 				manager.add(refreshAction_Index);
 			}
 		});

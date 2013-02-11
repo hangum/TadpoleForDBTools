@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 
 /**
@@ -34,6 +35,8 @@ import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
  */
 public abstract class AbstractObjectComposite extends Composite {
 	protected IWorkbenchPartSite site;
+	protected final String strUserType = SessionManager.getLoginType();
+	
 	protected UserDBDAO userDB;
 	protected int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
 	

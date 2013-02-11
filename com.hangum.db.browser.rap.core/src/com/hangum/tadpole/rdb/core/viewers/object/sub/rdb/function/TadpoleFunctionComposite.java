@@ -44,6 +44,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionLabelProvicer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionViewFilter;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -131,8 +132,10 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(creatAction_Function);
-				manager.add(deleteAction_Function);
+				if(PermissionChecks.isShow(strUserType, userDB)) {
+					manager.add(creatAction_Function);
+					manager.add(deleteAction_Function);
+				}
 				manager.add(refreshAction_Function);
 			}
 		});
