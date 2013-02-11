@@ -75,7 +75,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer.CHANGE_TYPE;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.permission.PermissionChecks;
 import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -151,18 +150,20 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
-				if (null != is) {
-					TableDAO tableDAO = (TableDAO) is.getFirstElement();
-
-					DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
-					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					try {
-						page.openEditor(mei, TableViewerEditPart.ID);
-					} catch (PartInitException e) {
-						logger.error("Load the table data", e); //$NON-NLS-1$
-
-						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", Messages.ExplorerViewer_39, errStatus); //$NON-NLS-1$
+				if(PermissionChecks.isShow(strUserType, userDB)) {
+					if (null != is) {
+						TableDAO tableDAO = (TableDAO) is.getFirstElement();
+	
+						DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
+						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+						try {
+							page.openEditor(mei, TableViewerEditPart.ID);
+						} catch (PartInitException e) {
+							logger.error("Load the table data", e); //$NON-NLS-1$
+	
+							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", Messages.ExplorerViewer_39, errStatus); //$NON-NLS-1$
+						}
 					}
 				}
 			}
