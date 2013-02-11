@@ -18,8 +18,7 @@ import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.define.Define;
 
 /**
- * 사용자가 쿼리를 실행해도 되는지 권한을 검사합니다.
- * 1. 검사 후에 쿼리를 실행 유무를 리턴하고, 실행 쿼리를 저장하도록 합니다.
+ * 사용자 혹은 사용자 쿼리의 권한을 검사합니다.
  * 
  * @author hangum
  *
@@ -75,5 +74,58 @@ public class PermissionChecks {
 		
 		return boolReturn;
 	}
+
+	/**
+	 * 로그인타입에 따른 보여주어도 되는지
+	 * 
+	 * @param strUserType
+	 * @return
+	 */
+	public static boolean isShow(String strUserType) {
+		boolean boolReturn = false;
+		
+		if(Define.USER_TYPE.ADMIN.toString().equals(strUserType) || 
+				Define.USER_TYPE.MANAGER.toString().equals(strUserType) ||
+				Define.USER_TYPE.DBA.toString().equals(strUserType)) return true;
+		
+		return boolReturn;
+	}
+	
+	/**
+	 * 사용자가에 보여 주어도 되는 정보 인지 검사합니다.
+	 * 
+	 * @param strUserType
+	 * @param userDB
+	 * @return
+	 */
+	public static boolean isShow(String strUserType, UserDBDAO userDB) {
+		boolean boolReturn = false;
+		
+		DBOperationType opType = DBOperationType.valueOf(userDB.getOperation_type());
+		// real db가 아니면 모든 사용 권한을 얻습니다.
+		if(opType != DBOperationType.REAL) {
+			return true;
+		
+		// real db라면 
+		} else {
+			if(Define.USER_TYPE.ADMIN.toString().equals(strUserType) || 
+					Define.USER_TYPE.MANAGER.toString().equals(strUserType) ||
+					Define.USER_TYPE.DBA.toString().equals(strUserType)) return true;
+		}
+		
+		return boolReturn;
+	}
+	
+	/**
+	 * 사용자가 action을 취할 수 있는지 
+	 * 
+	 * @param strUserType
+	 * @param userDB
+	 * @return
+	 */
+	public static boolean isAction(String strUserType, UserDBDAO userDB) {
+		return isShow(strUserType, userDB);
+	}
+
 }
  

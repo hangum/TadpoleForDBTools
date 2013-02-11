@@ -58,6 +58,7 @@ import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 
 /**
  * connection manager 정보를 
@@ -128,8 +129,10 @@ public class ManagerViewer extends ViewPart {
 					}
 				// manager
 				} else if (selElement instanceof ManagerListDTO) {
-					ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
-					cda.runConnectionDialog(is);
+					if(PermissionChecks.isShow(SessionManager.getLoginType())) {
+						ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
+						cda.runConnectionDialog(is);
+					}
 				}
 				
 				
