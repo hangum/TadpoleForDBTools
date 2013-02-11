@@ -99,6 +99,7 @@ import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 import com.hangum.tadpole.util.RequestInfoUtils;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.util.UnicodeUtils;
@@ -134,6 +135,12 @@ public class MainEditor extends EditorPart {
 	
 	/** resource 정보. */
 	private UserDBResourceDAO dBResource;
+	
+	/** session에서 사용자 정보를 가져다 놓습니다.
+	 * No context available outside of the request service lifecycle.
+	 */
+	private final String strUserEMail = SessionManager.getEMAIL();
+	private final String strUserType = SessionManager.getLoginType();
 	
 	/** save mode */
 	private boolean isFirstLoad = false;
@@ -270,7 +277,6 @@ public class MainEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.verticalSpacing = 0;
@@ -899,10 +905,7 @@ public class MainEditor extends EditorPart {
 							executeLastSQL = SQLUtil.executeQuery(strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
-							if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
-									executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-									executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
-									executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							if(SQLUtil.isStatment(executeLastSQL)) {
 							} else {
 								listStrExecuteQuery.add(executeLastSQL);
 							}
@@ -913,13 +916,12 @@ public class MainEditor extends EditorPart {
 						monitor.setTaskName(executeLastSQL);
 						
 						// 마지막 쿼리가 select 문일 경우에 execute batch insert 후에 select 문을 호출합니다.
-						if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
-								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-								executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
-								executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						if(SQLUtil.isStatment(executeLastSQL)) {
 							
 							pageNumber = 1;	
-//							runSQLExecuteBatch(listStrExecuteQuery);
+							if(listStrExecuteQuery.size() != 0) {
+								runSQLExecuteBatch(listStrExecuteQuery);
+							}
 							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
 						// create 로 시작하는 쿼리.
 						} else {
@@ -948,11 +950,7 @@ public class MainEditor extends EditorPart {
 						monitor.subTask(executeLastSQL);
 						monitor.setTaskName(executeLastSQL);
 						
-						if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
-								executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-								executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
-								executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-							
+						if(SQLUtil.isStatment(strSQL)) {							
 							pageNumber = 1;							
 							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
 						// create 로 시작하는 쿼리.
@@ -1008,12 +1006,154 @@ public class MainEditor extends EditorPart {
 	}
 	
 	/**
+	 * select문을 실행합니다.
+	 * 
+	 * @param requestQuery
+	 * @param startResultPos
+	 * @param endResultPos
+	 */
+	private void runSQLSelect(String requestQuery) throws Exception {		
+		
+		if(!PermissionChecks.isExecute(strUserType, userDB, executeLastSQL)) {
+			throw new Exception("사용자 권한을 확인하세요.");
+		}
+		
+		ResultSet rs = null;
+		java.sql.Connection javaConn = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			javaConn = client.getDataSource().getConnection();
+			
+			if(Define.QUERY_MODE.DEFAULT == queryMode) {
+				
+				if( requestQuery.toUpperCase().startsWith("SELECT") ) { //$NON-NLS-1$
+					requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, queryResultCount);
+					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + requestQuery); //$NON-NLS-1$
+				}
+				
+				stmt = javaConn.prepareStatement(requestQuery);
+				//  환경설정에서 원하는 조건을 입력하였을 경우.
+				rs = stmt.executeQuery();//Query( selText );
+				
+			// explain
+			}  else if(Define.QUERY_MODE.EXPLAIN_PLAN == queryMode) {
+				
+				// 큐브리드 디비이면 다음과 같아야 합니다.
+				if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.CUBRID_DEFAULT) {
+					
+					String cubridQueryPlan = CubridExecutePlanUtils.plan(userDB, requestQuery);
+					mapColumns = CubridExecutePlanUtils.getMapColumns();
+					sourceDataList = CubridExecutePlanUtils.getMakeData(cubridQueryPlan);
+					
+					return;
+					
+				} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
+					
+					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
+					stmt = javaConn.prepareStatement("select * from " + planTableName);
+					rs = stmt.executeQuery();
+					
+				} else {
+				
+					stmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, requestQuery));
+					rs = stmt.executeQuery();
+					
+				}
+			}
+
+			//////////////////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////////////////
+//			// table column을 생성한다.
+			ResultSetMetaData  rsm = rs.getMetaData();
+//			int columnCount = rs.getMetaData().getColumnCount();
+//			
+//			logger.debug("### [Table] [start ]### [column count]" + rsm.getColumnCount() + "#####################################################################################################");
+			for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
+//				logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
+//				logger.debug("\tColumnLabel  		:  " 	+ rsm.getColumnLabel(i+1));
+				
+//				logger.debug("\t AutoIncrement  	:  " 	+ rsm.isAutoIncrement(i+1));
+//				logger.debug("\t Nullable		  	:  " 	+ rsm.isNullable(i+1));
+//				logger.debug("\t CaseSensitive  	:  " 	+ rsm.isCaseSensitive(i+1));
+//				logger.debug("\t Currency		  	:  " 	+ rsm.isCurrency(i+1));
+//				
+//				logger.debug("\t DefinitelyWritable :  " 	+ rsm.isDefinitelyWritable(i+1));
+//				logger.debug("\t ReadOnly		  	:  " 	+ rsm.isReadOnly(i+1));
+//				logger.debug("\t Searchable		  	:  " 	+ rsm.isSearchable(i+1));
+//				logger.debug("\t Signed			  	:  " 	+ rsm.isSigned(i+1));
+////				logger.debug("\t Currency		  	:  " 	+ rsm.isWrapperFor(i+1));
+//				logger.debug("\t Writable		  	:  " 	+ rsm.isWritable(i+1));
+//				
+//				logger.debug("\t ColumnClassName  	:  " 	+ rsm.getColumnClassName(i+1));
+//				logger.debug("\t CatalogName  		:  " 	+ rsm.getCatalogName(i+1));
+//				logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
+//				logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
+//				logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
+				mapColumnType.put(i, rsm.getColumnType(i+1));
+				
+//				logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
+//				logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
+//				logger.debug("\t SchemaName		 	:  " 	+ rsm.getSchemaName(i+1));
+//				logger.debug("\t TableName		 	:  " 	+ rsm.getTableName(i+1));
+//				logger.debug("\t ==[column end]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
+			}
+//			
+//			logger.debug("#### [Table] [end ] ########################################################################################################");
+			
+			////////////////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			// rs set의 결과를 테이블에 출력하기 위해 입력한다.
+			sourceDataList = new ArrayList<HashMap<Integer, Object>>();
+			HashMap<Integer, Object> tmpRs = null;
+			
+			// 
+			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
+			// 
+			// table metadata를 얻습니다.
+			mapColumns = SQLUtil.mataDataToMap(rs);
+			
+			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
+			while(rs.next()) {
+				tmpRs = new HashMap<Integer, Object>();
+				
+				for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
+					try {
+						tmpRs.put(i, rs.getString(i+1) == null ?"":prettyData(i, rs.getObject(i+1)));
+					} catch(Exception e) {
+						logger.error("ResutSet fetch error", e);
+						tmpRs.put(i, "");
+					}
+				}
+				
+				sourceDataList.add(tmpRs);
+				
+				// 쿼리 검색 결과 만큼만 결과셋을 받습니다. 
+				if(queryResultCount == rs.getRow()) break;
+			}
+			
+		} finally {
+			try { stmt.close(); } catch(Exception e) {}
+			try { rs.close(); } catch(Exception e) {}
+			try { javaConn.close(); } catch(Exception e){}
+		}
+	}
+	
+	/**
 	 * select문의 execute 쿼리를 수행합니다.
 	 * 
 	 * @param listQuery
 	 * @throws Exception
 	 */
 	private void runSQLExecuteBatch(List<String> listQuery) throws Exception {
+		if(!PermissionChecks.isExecute(strUserType, userDB, listQuery)) {
+			throw new Exception("사용자 권한을 확인하세요.");
+		}
+		
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
 		
@@ -1046,6 +1186,10 @@ public class MainEditor extends EditorPart {
 	 * @param selText
 	 */
 	private void runSQLOther(String selText) throws Exception {
+		if(!PermissionChecks.isExecute(strUserType, userDB, selText)) {
+			throw new Exception("사용자 권한을 확인하세요.");
+		}
+		
 		java.sql.Connection javaConn = null;
 		
 		try {
@@ -1117,11 +1261,7 @@ public class MainEditor extends EditorPart {
 	private void executeFinish() {
 		setFilter();
 		
-		if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
-				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-				executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
-					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			
+		if(SQLUtil.isStatment(executeLastSQL)) {			
 			btnPrev.setEnabled(false);
 			if( sourceDataList.size() < queryPageCount ) btnNext.setEnabled(false);
 			else btnNext.setEnabled(true);
@@ -1164,11 +1304,7 @@ public class MainEditor extends EditorPart {
 	 * 쿼리의 결과를 화면에 출력하거나 정리 합니다.
 	 */
 	private void setResultTable() {
-		if(executeLastSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
-				executeLastSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-				executeLastSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
-					executeLastSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			
+		if(SQLUtil.isStatment(executeLastSQL)) {			
 			// table data를 생성한다.
 			sqlSorter = new SQLResultSorter(-999);
 			
@@ -1312,151 +1448,7 @@ public class MainEditor extends EditorPart {
 		sqlFilter.setFilter(textFilter.getText());
 		sqlResultTableViewer.addFilter( sqlFilter );
 	}
-//	
-//	/**
-//	 * 쿼리를 요청합니다.
-//	 * 
-//	 * @param selText
-//	 * @throws Exception
-//	 */
-//	private void runSQLSelect(String selText) throws Exception {
-//		runSQLSelect(selText, pageNumber);
-//	}
-	
-	/**
-	 * select문을 실행합니다.
-	 * 
-	 * @param requestQuery
-	 * @param startResultPos
-	 * @param endResultPos
-	 */
-	private void runSQLSelect(String requestQuery) throws Exception {
-		
-		ResultSet rs = null;
-		java.sql.Connection javaConn = null;
-		PreparedStatement stmt = null;
-		
-		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
-			
-			if(Define.QUERY_MODE.DEFAULT == queryMode) {
-				
-				if( requestQuery.toUpperCase().startsWith("SELECT") ) { //$NON-NLS-1$
-					requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, queryResultCount);
-					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + requestQuery); //$NON-NLS-1$
-				}
-				
-				stmt = javaConn.prepareStatement(requestQuery);
-				//  환경설정에서 원하는 조건을 입력하였을 경우.
-				rs = stmt.executeQuery();//Query( selText );
-				
-			// explain
-			}  else if(Define.QUERY_MODE.EXPLAIN_PLAN == queryMode) {
-				
-				// 큐브리드 디비이면 다음과 같아야 합니다.
-				if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.CUBRID_DEFAULT) {
-					
-					String cubridQueryPlan = CubridExecutePlanUtils.plan(userDB, requestQuery);
-					mapColumns = CubridExecutePlanUtils.getMapColumns();
-					sourceDataList = CubridExecutePlanUtils.getMakeData(cubridQueryPlan);
-					
-					return;
-					
-				} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
-					
-					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
-					stmt = javaConn.prepareStatement("select * from " + planTableName);
-					rs = stmt.executeQuery();
-					
-				} else {
-				
-					stmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, requestQuery));
-					rs = stmt.executeQuery();
-					
-				}
-			}
 
-			//////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-//			// table column을 생성한다.
-			ResultSetMetaData  rsm = rs.getMetaData();
-//			int columnCount = rs.getMetaData().getColumnCount();
-//			
-//			logger.debug("### [Table] [start ]### [column count]" + rsm.getColumnCount() + "#####################################################################################################");
-			for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
-//				logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
-//				logger.debug("\tColumnLabel  		:  " 	+ rsm.getColumnLabel(i+1));
-				
-//				logger.debug("\t AutoIncrement  	:  " 	+ rsm.isAutoIncrement(i+1));
-//				logger.debug("\t Nullable		  	:  " 	+ rsm.isNullable(i+1));
-//				logger.debug("\t CaseSensitive  	:  " 	+ rsm.isCaseSensitive(i+1));
-//				logger.debug("\t Currency		  	:  " 	+ rsm.isCurrency(i+1));
-//				
-//				logger.debug("\t DefinitelyWritable :  " 	+ rsm.isDefinitelyWritable(i+1));
-//				logger.debug("\t ReadOnly		  	:  " 	+ rsm.isReadOnly(i+1));
-//				logger.debug("\t Searchable		  	:  " 	+ rsm.isSearchable(i+1));
-//				logger.debug("\t Signed			  	:  " 	+ rsm.isSigned(i+1));
-////				logger.debug("\t Currency		  	:  " 	+ rsm.isWrapperFor(i+1));
-//				logger.debug("\t Writable		  	:  " 	+ rsm.isWritable(i+1));
-//				
-//				logger.debug("\t ColumnClassName  	:  " 	+ rsm.getColumnClassName(i+1));
-//				logger.debug("\t CatalogName  		:  " 	+ rsm.getCatalogName(i+1));
-//				logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
-//				logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
-//				logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
-				mapColumnType.put(i, rsm.getColumnType(i+1));
-				
-//				logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
-//				logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
-//				logger.debug("\t SchemaName		 	:  " 	+ rsm.getSchemaName(i+1));
-//				logger.debug("\t TableName		 	:  " 	+ rsm.getTableName(i+1));
-//				logger.debug("\t ==[column end]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
-			}
-//			
-//			logger.debug("#### [Table] [end ] ########################################################################################################");
-			
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			
-			// rs set의 결과를 테이블에 출력하기 위해 입력한다.
-			sourceDataList = new ArrayList<HashMap<Integer, Object>>();
-			HashMap<Integer, Object> tmpRs = null;
-			
-			// 
-			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
-			// 
-			// table metadata를 얻습니다.
-			mapColumns = SQLUtil.mataDataToMap(rs);
-			
-			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-			while(rs.next()) {
-				tmpRs = new HashMap<Integer, Object>();
-				
-				for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
-					try {
-						tmpRs.put(i, rs.getString(i+1) == null ?"":prettyData(i, rs.getObject(i+1)));
-					} catch(Exception e) {
-						logger.error("ResutSet fetch error", e);
-						tmpRs.put(i, "");
-					}
-				}
-				
-				sourceDataList.add(tmpRs);
-				
-				// 쿼리 검색 결과 만큼만 결과셋을 받습니다. 
-				if(queryResultCount == rs.getRow()) break;
-			}
-			
-		} finally {
-			try { stmt.close(); } catch(Exception e) {}
-			try { rs.close(); } catch(Exception e) {}
-			try { javaConn.close(); } catch(Exception e){}
-		}
-	}
-	
 	/**
 	 * 숫자일 경우 ,를 찍어보여줍니다.
 	 * 
@@ -1602,7 +1594,7 @@ public class MainEditor extends EditorPart {
 					monitor.setCanceled(true);
 				}
 			} catch(SWTException e) {
-				logger.error(RequestInfoUtils.requestInfo("doSave exception", SessionManager.getEMAIL()), e); //$NON-NLS-1$
+				logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
 				monitor.setCanceled(true);
 			}	
 		}
@@ -1701,7 +1693,7 @@ public class MainEditor extends EditorPart {
 		try {
 			browserQueryEditor.evaluate(command);
 		} catch(Exception e) {
-			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", SessionManager.getEMAIL()), e); //$NON-NLS-1$ //$NON-NLS-2$
+			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", strUserEMail), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
@@ -1747,4 +1739,3 @@ public class MainEditor extends EditorPart {
 		}
 	}
 }
-

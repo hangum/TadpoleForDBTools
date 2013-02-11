@@ -33,6 +33,23 @@ public class SQLUtil {
 	 */
 	private static final Logger logger = Logger.getLogger(SQLUtil.class);
 	
+	/**
+	 * 쿼리 실행시 prestatment로 실행 할 것인지, 아니면 execute나 executebatch로 실행할 것인지 검사합니다.
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static boolean isStatment(String strSQL) {
+		if(strSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
+				strSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
+				strSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
+				strSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return true;
+		}
+		
+		return false;
+	}
+	
 	
 	/**
 	 * metadata를 바탕으로 결과를 컬럼 정보를 수집힌다.

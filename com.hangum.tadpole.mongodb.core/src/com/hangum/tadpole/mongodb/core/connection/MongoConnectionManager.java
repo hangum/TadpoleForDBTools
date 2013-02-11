@@ -63,8 +63,12 @@ public class MongoConnectionManager {
 				Mongo mongo = dbManager.get( searchKey );
 				
 				if(mongo == null) {
-					MongoOptions options = new MongoOptions();
+					final MongoOptions options = new MongoOptions();
 					options.connectionsPerHost = 20;
+					options.threadsAllowedToBlockForConnectionMultiplier = 5;
+					options.maxWaitTime = 120000;
+					options.autoConnectRetry = false;
+					options.safe = true;
 					
 					String strReplcaSet = userDB.getExt1();
 					if("".equals(strReplcaSet)) {

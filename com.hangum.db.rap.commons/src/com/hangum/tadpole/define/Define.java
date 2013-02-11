@@ -31,7 +31,7 @@ public class Define {
 	public static final String SELECT_ERD_TABLE = "SELECT_ERD_TABLE_RESOURE";
 	
 	/** USER TYPE */
-	public static enum USER_TYPE {ADMIN, MANAGER, USER, GUEST};
+	public static enum USER_TYPE {ADMIN, MANAGER, DBA, USER, GUEST};
 	
 	/** 에디터를 열때 오픈하는 타입을 적습니다. */
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
