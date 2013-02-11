@@ -71,7 +71,7 @@ public class TableUtil {
 		for (int i = 0; i < columns.length; i++) {			
 			columns[i].pack();
 			
-			layoutColumnLayout.addColumnData(new ColumnPixelData(columns[i].getWidth()));
+			layoutColumnLayout.addColumnData(new ColumnPixelData(columns[i].getWidth() + 5));
 			
 //			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
 //			if(columns.length >= 3) {

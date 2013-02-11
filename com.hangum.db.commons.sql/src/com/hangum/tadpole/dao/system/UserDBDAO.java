@@ -28,12 +28,7 @@ public class UserDBDAO {
     
 	protected String group_name = "";
 	
-	/** db type 
-	* 000 :	운영 
-	* 001 : 개발 
-	* 002 :	기타  
-	 */
-	protected String operation_type = "001";
+	protected String operation_type = "";
     
 	protected String types;
 	protected String url;
