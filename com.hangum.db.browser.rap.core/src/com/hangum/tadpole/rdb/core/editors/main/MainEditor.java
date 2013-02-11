@@ -164,7 +164,7 @@ public class MainEditor extends EditorPart {
 	/** oracle plan table 이름 */
 	private String planTableName 	= GetPreferenceGeneral.getPlanTableName();
 	/** export delimit */
-	private String exportDelimit = GetPreferenceGeneral.getExportDelimit().toLowerCase().equals("tab")?"	":GetPreferenceGeneral.getExportDelimit();
+	private String exportDelimit = GetPreferenceGeneral.getExportDelimit().toLowerCase().equals("tab")?"	":GetPreferenceGeneral.getExportDelimit(); //$NON-NLS-1$ //$NON-NLS-2$
 	
 	/** query의 히스토리를 보여줍니다. */
 	private List<String> listQueryHistory = new ArrayList<String>();
@@ -298,13 +298,13 @@ public class MainEditor extends EditorPart {
 		toolBar.setToolTipText(Messages.MainEditor_toolBar_toolTipText);
 		
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
+		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.SQLite_DEFAULT ) {
 			String fileName = new File(userDB.getDb()).getName();			
-			tltmConnectURL.setText("Connect [ " + fileName + " ]"); //$NON-NLS-1$
+			tltmConnectURL.setText("Connect [ " + fileName + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getUsers() + " ]"); //$NON-NLS-1$
+			tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getUsers() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -318,7 +318,7 @@ public class MainEditor extends EditorPart {
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.setToolTipText(Messages.MainEditor_tltmExecute_toolTipText_1);
-		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png"));
+		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png")); //$NON-NLS-1$
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -330,7 +330,7 @@ public class MainEditor extends EditorPart {
 		
 		ToolItem tltmExecuteAll = new ToolItem(toolBar, SWT.NONE);
 		tltmExecuteAll.setToolTipText(Messages.MainEditor_tltmExecuteAll_text);
-		tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query-all.png"));
+		tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query-all.png")); //$NON-NLS-1$
 		tltmExecuteAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -341,7 +341,7 @@ public class MainEditor extends EditorPart {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExplainPlanctrl = new ToolItem(toolBar, SWT.NONE);
-		tltmExplainPlanctrl.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/execute_plan.png"));
+		tltmExplainPlanctrl.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/execute_plan.png")); //$NON-NLS-1$
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -353,7 +353,7 @@ public class MainEditor extends EditorPart {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
-		tltmSort.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/query_format.png"));
+		tltmSort.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/query_format.png")); //$NON-NLS-1$
 		tltmSort.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -365,7 +365,7 @@ public class MainEditor extends EditorPart {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSQLToApplication = new ToolItem(toolBar, SWT.NONE);
-		tltmSQLToApplication.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql_to_applications.png"));
+		tltmSQLToApplication.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql_to_applications.png")); //$NON-NLS-1$
 		tltmSQLToApplication.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -377,7 +377,7 @@ public class MainEditor extends EditorPart {
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
-		tltmDownload.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/download_query.png"));
+		tltmDownload.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/download_query.png")); //$NON-NLS-1$
 		tltmDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -389,7 +389,7 @@ public class MainEditor extends EditorPart {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
-		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
+		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
 		tltmHelp.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -532,7 +532,7 @@ public class MainEditor extends EditorPart {
 					sbExportData.append(Define.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadExtFile(userDB.getDisplay_name() + "_ResultSetExport.csv", sbExportData.toString());
+				downloadExtFile(userDB.getDisplay_name() + "_ResultSetExport.csv", sbExportData.toString()); //$NON-NLS-1$
 			}
 		});
 		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);
@@ -646,7 +646,7 @@ public class MainEditor extends EditorPart {
 					sbExportData.append( dao.getStrSQLText() ).append(Define.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadExtFile(userDB.getDisplay_name() + "_ReCallSQLExport.txt", sbExportData.toString());
+				downloadExtFile(userDB.getDisplay_name() + "_ReCallSQLExport.txt", sbExportData.toString()); //$NON-NLS-1$
 			}
 		});
 		btnSetEditor.setText(Messages.MainEditor_17);
@@ -720,7 +720,7 @@ public class MainEditor extends EditorPart {
 					sbExportData.append( dao.getStrMessage() ).append(Define.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadExtFile(userDB.getDisplay_name() + "_Message.txt", sbExportData.toString());
+				downloadExtFile(userDB.getDisplay_name() + "_Message.txt", sbExportData.toString()); //$NON-NLS-1$
 				
 			}
 		});
@@ -776,7 +776,7 @@ public class MainEditor extends EditorPart {
 					registerBrowserFunctions();
 					browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
 				} catch(Exception e) {
-					logger.error("set register browser function and content initialize", e);
+					logger.error("set register browser function and content initialize", e); //$NON-NLS-1$
 				}
 			}
 			public void changed( ProgressEvent event ) {}
@@ -869,13 +869,13 @@ public class MainEditor extends EditorPart {
 				try {
 					int intOrionEditorCursorPosition 	= getOrionEditorCursorPosition();
 					if(logger.isDebugEnabled()) {
-						logger.debug("#[execute query][start]###################################################################################");
-						if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) logger.debug("\t[execute type] ALL Querey");
+						logger.debug("#[execute query][start]###################################################################################"); //$NON-NLS-1$
+						if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) logger.debug("\t[execute type] ALL Querey"); //$NON-NLS-1$
 						else {
-							logger.debug("\t [execute type] part Query");
-							logger.debug("\t [cursor position]" + intOrionEditorCursorPosition);
+							logger.debug("\t [execute type] part Query"); //$NON-NLS-1$
+							logger.debug("\t [cursor position]" + intOrionEditorCursorPosition); //$NON-NLS-1$
 						}
-						logger.debug("#[execute query][end]###################################################################################");
+						logger.debug("#[execute query][end]###################################################################################"); //$NON-NLS-1$
 					}
 					
 					String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
@@ -1015,7 +1015,7 @@ public class MainEditor extends EditorPart {
 	private void runSQLSelect(String requestQuery) throws Exception {		
 		
 		if(!PermissionChecks.isExecute(strUserType, userDB, executeLastSQL)) {
-			throw new Exception("사용자 권한을 확인하세요.");
+			throw new Exception(Messages.MainEditor_21);
 		}
 		
 		ResultSet rs = null;
@@ -1052,7 +1052,7 @@ public class MainEditor extends EditorPart {
 				} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
 					
 					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
-					stmt = javaConn.prepareStatement("select * from " + planTableName);
+					stmt = javaConn.prepareStatement("select * from " + planTableName); //$NON-NLS-1$
 					rs = stmt.executeQuery();
 					
 				} else {
@@ -1123,10 +1123,10 @@ public class MainEditor extends EditorPart {
 				
 				for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
 					try {
-						tmpRs.put(i, rs.getString(i+1) == null ?"":prettyData(i, rs.getObject(i+1)));
+						tmpRs.put(i, rs.getString(i+1) == null ?"":prettyData(i, rs.getObject(i+1))); //$NON-NLS-1$
 					} catch(Exception e) {
-						logger.error("ResutSet fetch error", e);
-						tmpRs.put(i, "");
+						logger.error("ResutSet fetch error", e); //$NON-NLS-1$
+						tmpRs.put(i, ""); //$NON-NLS-1$
 					}
 				}
 				
@@ -1151,7 +1151,7 @@ public class MainEditor extends EditorPart {
 	 */
 	private void runSQLExecuteBatch(List<String> listQuery) throws Exception {
 		if(!PermissionChecks.isExecute(strUserType, userDB, listQuery)) {
-			throw new Exception("사용자 권한을 확인하세요.");
+			throw new Exception(Messages.MainEditor_21);
 		}
 		
 		java.sql.Connection javaConn = null;
@@ -1165,14 +1165,14 @@ public class MainEditor extends EditorPart {
 			javaConn.setAutoCommit(false);
 			
 			for (String strQuery : listQuery) {
-				if(StringUtils.startsWith(strQuery.trim().toUpperCase(), "CREATE TABLE")) {
-					strQuery = StringUtils.replaceOnce(strQuery, "(", " (");
+				if(StringUtils.startsWith(strQuery.trim().toUpperCase(), "CREATE TABLE")) { //$NON-NLS-1$
+					strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				statement.addBatch(strQuery);
 			}
 			statement.executeBatch();
 		} catch(Exception e) {
-			logger.error("Execute batch update", e);
+			logger.error("Execute batch update", e); //$NON-NLS-1$
 			throw e;
 		} finally {
 			try { statement.close();} catch(Exception e) {}
@@ -1187,7 +1187,7 @@ public class MainEditor extends EditorPart {
 	 */
 	private void runSQLOther(String selText) throws Exception {
 		if(!PermissionChecks.isExecute(strUserType, userDB, selText)) {
-			throw new Exception("사용자 권한을 확인하세요.");
+			throw new Exception(Messages.MainEditor_21);
 		}
 		
 		java.sql.Connection javaConn = null;
@@ -1199,8 +1199,8 @@ public class MainEditor extends EditorPart {
 			Statement stmt = javaConn.createStatement();
 			
 			// mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
-			if(StringUtils.startsWith(selText.trim().toUpperCase(), "CREATE TABLE")) {
-				selText = StringUtils.replaceOnce(selText, "(", " (");
+			if(StringUtils.startsWith(selText.trim().toUpperCase(), "CREATE TABLE")) { //$NON-NLS-1$
+				selText = StringUtils.replaceOnce(selText, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
 			}			
 			boolean boolResult = stmt.execute( selText );
 			
@@ -1319,9 +1319,9 @@ public class MainEditor extends EditorPart {
 			else if(readCount > queryPageCount) readCount = queryPageCount;
 			
 			if(logger.isDebugEnabled()) {
-				logger.debug("====[first][start]=================================================================");
-				logger.debug("[total count]" + sourceDataList.size() + "[first][readCount]" + readCount);
-				logger.debug("====[first][stop]=================================================================");
+				logger.debug("====[first][start]================================================================="); //$NON-NLS-1$
+				logger.debug("[total count]" + sourceDataList.size() + "[first][readCount]" + readCount); //$NON-NLS-1$ //$NON-NLS-2$
+				logger.debug("====[first][stop]================================================================="); //$NON-NLS-1$
 			}
 				
 			for(int i=0; i<readCount; i++) {
@@ -1362,7 +1362,7 @@ public class MainEditor extends EditorPart {
 		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
 		int startCount 	= queryPageCount * pageNumber;
 		int endCount 	= queryPageCount * (pageNumber+1);
-		if(logger.isDebugEnabled()) logger.debug("btnNext ======> [start point]" + startCount + "\t [endCount]" + endCount);
+		if(logger.isDebugEnabled()) logger.debug("btnNext ======> [start point]" + startCount + "\t [endCount]" + endCount); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		//  
 		if(endCount >= (sourceDataList.size()+1)) {
@@ -1400,7 +1400,7 @@ public class MainEditor extends EditorPart {
 		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
 		int startCount 	= queryPageCount * (pageNumber-2);
 		int endCount 	= queryPageCount * (pageNumber-1);
-		if(logger.isDebugEnabled()) logger.debug("btnPrev ======> [start point]" + startCount + "\t [endCount]" + endCount);
+		if(logger.isDebugEnabled()) logger.debug("btnPrev ======> [start point]" + startCount + "\t [endCount]" + endCount); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if(startCount <= 0) {
 			startCount = 0;
@@ -1464,7 +1464,7 @@ public class MainEditor extends EditorPart {
 				
 				return val;
 			} catch(Exception e){
-				logger.error("pretty data", e);
+				logger.error("pretty data", e); //$NON-NLS-1$
 			}			
 		} 
 
