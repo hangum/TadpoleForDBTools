@@ -275,8 +275,8 @@
 	============================================================================================================================
  -->
 <insert id="userDbResourceInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
-	INSERT INTO user_db_resource(seq, user_seq, types, db_seq, filename)
-	VALUES( (select max(seq) from user_db_resource)+1, #user_seq#, #types#, #db_seq#, #filename#)
+	INSERT INTO user_db_resource(seq, user_seq, types, db_seq, filename, duration_mill, execution_result)
+	VALUES( (select max(seq) from user_db_resource)+1, #user_seq#, #types#, #db_seq#, #filename#, #duration_mill#, #execution_result#)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
 		SELECT * 

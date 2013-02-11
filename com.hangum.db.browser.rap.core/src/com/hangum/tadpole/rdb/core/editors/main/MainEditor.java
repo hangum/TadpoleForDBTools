@@ -1013,10 +1013,12 @@ public class MainEditor extends EditorPart {
 	 * @param endResultPos
 	 */
 	private void runSQLSelect(String requestQuery) throws Exception {		
-		
 		if(!PermissionChecks.isExecute(strUserType, userDB, executeLastSQL)) {
 			throw new Exception(Messages.MainEditor_21);
 		}
+		
+		// 쿼리 시작 초.
+		long startQueryMill = System.currentTimeMillis();
 		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
@@ -1140,6 +1142,16 @@ public class MainEditor extends EditorPart {
 			try { stmt.close(); } catch(Exception e) {}
 			try { rs.close(); } catch(Exception e) {}
 			try { javaConn.close(); } catch(Exception e){}
+			
+			// 쿼리 시작 초.
+			long endQueryMill = System.currentTimeMillis();
+			
+			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
+				if( (userDB.getProfile_select_mill() == -1) || ((endQueryMill - startQueryMill) > userDB.getProfile_select_mill()) ) {
+					int durationMillis = Integer.parseInt(""+(endQueryMill - startQueryMill));
+					dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), requestQuery, durationMillis);
+				}
+			}
 		}
 	}
 	
@@ -1177,6 +1189,12 @@ public class MainEditor extends EditorPart {
 		} finally {
 			try { statement.close();} catch(Exception e) {}
 			try { javaConn.close(); } catch(Exception e) {}
+			
+			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
+				for(String sql : listQuery) {
+					dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), sql);
+				}
+			}
 		}
 	}
 
@@ -1226,6 +1244,10 @@ public class MainEditor extends EditorPart {
 			}
 		} finally {
 			try { javaConn.close(); } catch(Exception e){}
+			
+			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
+				dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), selText);
+			}
 		}		
 	}
 

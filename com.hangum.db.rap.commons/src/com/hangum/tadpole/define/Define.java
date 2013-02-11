@@ -37,7 +37,7 @@ public class Define {
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
 	/** save resource type */
-	public static enum RESOURCE_TYPE { ERD, SQL };
+	public static enum RESOURCE_TYPE { ERD, SQL, USER_EXECUTE_QUERY };
 	
 	/** 라인 분리자 */
 	public static final String LINE_SEPARATOR = "\r\n";

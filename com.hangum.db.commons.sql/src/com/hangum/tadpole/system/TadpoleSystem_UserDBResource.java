@@ -38,12 +38,13 @@ public class TadpoleSystem_UserDBResource {
 	 * @param filename
 	 * @throws Exception
 	 */
-	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
+	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents, int duration_mill) throws Exception {
 		UserDBResourceDAO resourceDao = new UserDBResourceDAO();
 		resourceDao.setUser_seq(userDB.getUser_seq());
 		resourceDao.setTypes(type.toString());
 		resourceDao.setDb_seq(userDB.getSeq());
 		resourceDao.setFilename(filename);
+		resourceDao.setDuration_mill(duration_mill);
 		
 		// 기존에 등록 되어 있는지 검사한다
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -53,6 +54,17 @@ public class TadpoleSystem_UserDBResource {
 		insertResourceData(userDBResource, contents);
 		
 		return userDBResource;
+	}
+	
+	/**
+	 * 저장 
+	 * 
+	 * @param userDB
+	 * @param filename
+	 * @throws Exception
+	 */
+	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
+		return saveResource(userDB, type, filename, contents, 0);
 	}
 	
 	/**
