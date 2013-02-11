@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -867,21 +868,11 @@ public class MainEditor extends EditorPart {
 				monitor.beginTask(Messages.MainEditor_46, IProgressMonitor.UNKNOWN);
 				
 				try {
-					int intOrionEditorCursorPosition 	= getOrionEditorCursorPosition();
-					if(logger.isDebugEnabled()) {
-						logger.debug("#[execute query][start]###################################################################################"); //$NON-NLS-1$
-						if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) logger.debug("\t[execute type] ALL Querey"); //$NON-NLS-1$
-						else {
-							logger.debug("\t [execute type] part Query"); //$NON-NLS-1$
-							logger.debug("\t [cursor position]" + intOrionEditorCursorPosition); //$NON-NLS-1$
-						}
-						logger.debug("#[execute query][end]###################################################################################"); //$NON-NLS-1$
-					}
-					
 					String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
 					if("".equals(tmpStrSelText)) return Status.OK_STATUS; //$NON-NLS-1$
 					
 					// cursor 위치가 ALL_QUERY_EXECUTE 이면 전체 쿼리 실행이다.
+					int intOrionEditorCursorPosition = getOrionEditorCursorPosition();
 					if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
 						tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
 						String[] strArrySQLS = tmpStrSelText.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
@@ -1016,6 +1007,11 @@ public class MainEditor extends EditorPart {
 		if(!PermissionChecks.isExecute(strUserType, userDB, executeLastSQL)) {
 			throw new Exception(Messages.MainEditor_21);
 		}
+//		// 실행해도 되는지 묻는다.
+//		if(Define.YES_NO.YES.toString().equals(userDB.getQuestionDML())) {
+//			if(!MessageDialog.openConfirm(null, "Confirm", "쿼리를 실행하시겠습니까?")) return;
+//		}
+//		
 		
 		// 쿼리 시작 초.
 		long startQueryMill = System.currentTimeMillis();
