@@ -293,6 +293,7 @@
 	WHERE
 		user_seq = #user_seq# and
 		db_seq = #seq#  AND
+		types in ('ERD', 'SQL') AND
 		delYn = 'NO'		
 	ORDER BY filename
 </select>

@@ -69,7 +69,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	 */
 	public void testSaveResource() {
 		try {
-			UserDBResourceDAO userDBResource = TadpoleSystem_UserDBResource.saveResource(userDb, Define.RESOURCE_TYPE.SQL, "junit", "junit content");
+			UserDBResourceDAO userDBResource = TadpoleSystem_UserDBResource.saveResource(userDb.getUser_seq(), userDb, Define.RESOURCE_TYPE.SQL, "junit", "junit content");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("SaveResouece");

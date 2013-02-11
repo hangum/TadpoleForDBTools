@@ -38,9 +38,9 @@ public class TadpoleSystem_UserDBResource {
 	 * @param filename
 	 * @throws Exception
 	 */
-	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents, int duration_mill) throws Exception {
+	public static UserDBResourceDAO saveResource(int user_seq, UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents, int duration_mill) throws Exception {
 		UserDBResourceDAO resourceDao = new UserDBResourceDAO();
-		resourceDao.setUser_seq(userDB.getUser_seq());
+		resourceDao.setUser_seq(user_seq);
 		resourceDao.setTypes(type.toString());
 		resourceDao.setDb_seq(userDB.getSeq());
 		resourceDao.setFilename(filename);
@@ -63,8 +63,8 @@ public class TadpoleSystem_UserDBResource {
 	 * @param filename
 	 * @throws Exception
 	 */
-	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
-		return saveResource(userDB, type, filename, contents, 0);
+	public static UserDBResourceDAO saveResource(int user_seq, UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
+		return saveResource(user_seq, userDB, type, filename, contents, 0);
 	}
 	
 	/**

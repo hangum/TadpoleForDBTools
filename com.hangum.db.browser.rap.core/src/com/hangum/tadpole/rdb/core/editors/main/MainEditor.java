@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -142,6 +141,7 @@ public class MainEditor extends EditorPart {
 	 */
 	private final String strUserEMail = SessionManager.getEMAIL();
 	private final String strUserType = SessionManager.getLoginType();
+	private final int user_seq = SessionManager.getSeq();
 	
 	/** save mode */
 	private boolean isFirstLoad = false;
@@ -861,6 +861,14 @@ public class MainEditor extends EditorPart {
 	private void execute() {
 		listQueryHistory = new ArrayList<String>();
 		
+//		// 실행해도 되는지 묻는다.
+//		if(Define.YES_NO.YES.toString().equals(userDB.getQuestion_dml())) {
+//			if(!MessageDialog.openConfirm(null, "Confirm", "쿼리를 실행하시겠습니까?")) return;
+//		}
+//		사용자에게 쿼리 실행을 물어야 하는데?? 어떻게 물어야 할지?
+//		예를 들어 에디터 상의 모든 쿼리를 실행할때 SELECT 문 이외의 문장이 하나라도 오면 물을지?
+//		아니면 모든 쿼리에 실행 유무를 물을지?
+
 		// job
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
@@ -1007,11 +1015,6 @@ public class MainEditor extends EditorPart {
 		if(!PermissionChecks.isExecute(strUserType, userDB, executeLastSQL)) {
 			throw new Exception(Messages.MainEditor_21);
 		}
-//		// 실행해도 되는지 묻는다.
-//		if(Define.YES_NO.YES.toString().equals(userDB.getQuestionDML())) {
-//			if(!MessageDialog.openConfirm(null, "Confirm", "쿼리를 실행하시겠습니까?")) return;
-//		}
-//		
 		
 		// 쿼리 시작 초.
 		long startQueryMill = System.currentTimeMillis();
@@ -1145,7 +1148,7 @@ public class MainEditor extends EditorPart {
 			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
 				if( (userDB.getProfile_select_mill() == -1) || ((endQueryMill - startQueryMill) > userDB.getProfile_select_mill()) ) {
 					int durationMillis = Integer.parseInt(""+(endQueryMill - startQueryMill));
-					dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), requestQuery, durationMillis);
+					dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), requestQuery, durationMillis);
 				}
 			}
 		}
@@ -1188,7 +1191,7 @@ public class MainEditor extends EditorPart {
 			
 			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
 				for(String sql : listQuery) {
-					dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), sql);
+					dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), sql);
 				}
 			}
 		}
@@ -1242,7 +1245,7 @@ public class MainEditor extends EditorPart {
 			try { javaConn.close(); } catch(Exception e){}
 			
 			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
-				dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), selText);
+				dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), selText);
 			}
 		}		
 	}
@@ -1642,7 +1645,7 @@ public class MainEditor extends EditorPart {
 				
 				try {
 					// db 저장
-					dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.SQL, saveFileName, newContents);
+					dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.SQL, saveFileName, newContents);
 					dBResource.setParent(userDB);
 					
 					// title 수정

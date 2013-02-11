@@ -51,11 +51,11 @@ public class UserDBDAO {
 	protected String ext2 = ""; 
 	protected String ext3 = "";
 	
-	protected String is_profile = "NO";
+	protected String is_profile = "";
     protected int profile_select_mill = -1;
     
     // 운영서버일 경우 DML 문 실행시 YES, NO 묻기
-    protected String questionDML = "YES";
+    protected String question_dml = "";
     
     protected ManagerListDTO parent;
     protected List<UserDBResourceDAO> listUserDBErd;
@@ -257,21 +257,28 @@ public class UserDBDAO {
 		this.profile_select_mill = profile_select_mill;
 	}
 
-	public String getQuestionDML() {
-		return questionDML;
+	public String getQuestion_dml() {
+		return question_dml;
 	}
 
-	public void setQuestionDML(String questionDML) {
-		this.questionDML = questionDML;
+	public void setQuestion_dml(String question_dml) {
+		this.question_dml = question_dml;
 	}
 
 	@Override
 	public String toString() {
-		return "UserDBDAO [seq=" + seq + ", user_seq=" + user_seq + ", types="
-				+ types + ", url=" + url + ", db=" + db + ", display_name="
-				+ display_name + ", host=" + host + ", port=" + port
-				+ ", locale=" + locale + ", users=" + users + ", create_time="
-				+ create_time + "]";
+		return "UserDBDAO [seq=" + seq + ", user_seq=" + user_seq
+				+ ", group_name=" + group_name + ", operation_type="
+				+ operation_type + ", types=" + types + ", url=" + url
+				+ ", db=" + db + ", display_name=" + display_name + ", host="
+				+ host + ", port=" + port + ", locale=" + locale + ", passwd="
+				+ passwd + ", users=" + users + ", create_time=" + create_time
+				+ ", delYn=" + delYn + ", ext1=" + ext1 + ", ext2=" + ext2
+				+ ", ext3=" + ext3 + ", is_profile=" + is_profile
+				+ ", profile_select_mill=" + profile_select_mill
+				+ ", question_dml=" + question_dml + ", parent=" + parent
+				+ ", listUserDBErd=" + listUserDBErd + ", version=" + version
+				+ ", listUserDBGroup=" + listUserDBGroup + "]";
 	}
-	
+
 }

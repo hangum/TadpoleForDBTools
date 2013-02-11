@@ -68,6 +68,7 @@ import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.RdbPackage;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
 /**
@@ -82,6 +83,9 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleRDBEditor.class);
+	
+	/** 사용자 seq */
+	private final int user_seq = SessionManager.getSeq();
 	
 	/** first init data */
 	private DB db;
@@ -331,7 +335,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 				
 				try {
 					// erd 정보 디비저장
-					userDBErd = TadpoleSystem_UserDBResource.saveResource(userDB, Define.RESOURCE_TYPE.ERD, erdDetailFileName, createResourceToString());
+					userDBErd = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.ERD, erdDetailFileName, createResourceToString());
 					userDBErd.setParent(userDB);
 					
 					// command stack 초기화
