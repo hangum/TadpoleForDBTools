@@ -36,10 +36,22 @@ public class MongoTestShardInformation {
 		CommandResult cr = db.command(queryObj);
 		if(cr.ok()) {
 			System.out.println(cr.toString());
-		} else {
-			
+		} else {			
 			System.out.println( cr.getException());
 		}
+		
+		// shard key는 인덱스가 생성 되어 있어야 합니당.
+		final BasicDBObject shardKey = new BasicDBObject("TrackId", 1);		
+		final BasicDBObject cmd = new BasicDBObject("shardcollection", "test.Track");
+        cmd.put("key", shardKey);
+        CommandResult result4 = mongo.getDB("admin").command(cmd);
+
+        System.out.println("====>" + result4);
+	}
+	
+	
+	private static void shardCollection() {
+		
 	}
 
 }
