@@ -11,6 +11,7 @@
 package com.hangum.tadpole.util.tables;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -22,6 +23,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * SQLResult의 LabelProvider
@@ -49,7 +51,10 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	/**
 	 * table의 Column을 생성한다.
 	 */
-	public static void createTableColumn(final TableViewer tableViewer, final HashMap<Integer, String> mapColumns, final SQLResultSorter tableSorter) {
+	public static void createTableColumn(final TableViewer tableViewer, 
+										final HashMap<Integer, String> mapColumns, 
+										final Map<Integer, Integer> mapColumnType, 
+										final SQLResultSorter tableSorter) {
 		// 기존 column을 삭제한다.
 		Table table = tableViewer.getTable();
 		int columnCount = table.getColumnCount();
@@ -57,28 +62,33 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			table.getColumn(0).dispose();
 		}
 		
-		try {
-			
+		try {			
 			for(int i=0; i<mapColumns.size(); i++) {
 				final int index = i;
-				final TableViewerColumn tableColumn = new TableViewerColumn(tableViewer, SWT.LEFT);
-				tableColumn.getColumn().setText( mapColumns.get(i) );
-				tableColumn.getColumn().setResizable(true);
-				tableColumn.getColumn().setMoveable(true);
 				
-				tableColumn.getColumn().addSelectionListener(new SelectionAdapter() {
+				final TableViewerColumn tv = new TableViewerColumn(tableViewer, SWT.NONE);
+				final TableColumn tc = tv.getColumn();
+				tc.setText( mapColumns.get(i) );
+				
+//				int aligment = SQLTypeUtils.isNumberType(mapColumnType.get(i))?SWT.RIGHT:SWT.LEFT;
+////				logger.debug("[column name]" + mapColumns.get(i) + "\t [type]" + mapColumnType.get(i) + " [aligment] " + (SQLTypeUtils.isNumberType(mapColumnType.get(i))?"RIGHT":"LEFT"));
+//				tc.setAlignment(aligment);
+				
+				tc.setResizable(true);
+				tc.setMoveable(true);
+				
+				tc.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						tableSorter.setColumn(index);
 						int dir = tableViewer.getTable().getSortDirection();
-						if (tableViewer.getTable().getSortColumn() == tableColumn.getColumn()) {
+						if (tableViewer.getTable().getSortColumn() == tc) {
 							dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
 						} else {
-
 							dir = SWT.DOWN;
 						}
 						tableViewer.getTable().setSortDirection(dir);
-						tableViewer.getTable().setSortColumn(tableColumn.getColumn());
+						tableViewer.getTable().setSortColumn(tc);
 						tableViewer.refresh();
 					}
 				});
@@ -121,7 +131,8 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			
 		} catch(Exception e) { 
 			logger.error("SQLResult TableViewer", e);
-		}
-		
+		}		
 	}
+	
+	
 }

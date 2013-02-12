@@ -21,6 +21,23 @@ import org.apache.commons.lang.StringUtils;
  *
  */
 public class NumberFormatUtils {
+	
+	/**
+	 * 데이터를 표현합니다.
+	 * @param value
+	 * @return
+	 */
+	public static String commaFormat(String value) {
+		if(null == value) return "";
+		
+		try {
+			return commaFormat(new Double(value));
+		} catch(NumberFormatException nfe) {
+			return value;
+		}
+	}
+	
+	
 	/**
 	 * ,로만 찍도로.
 	 * @param value

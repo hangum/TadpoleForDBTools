@@ -42,8 +42,6 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);
-		
-//		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override

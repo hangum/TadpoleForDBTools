@@ -13,16 +13,16 @@ package com.hangum.tadpole.rdb.core.editors.intro;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -30,10 +30,15 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.rdb.core.Activator;
+import com.swtdesigner.ResourceManager;
 
 /**
- * 기본 intro
+ * 기본 introduction
+ * 
+ * - 홈페이지에 PLAN정보기술 홈페이지와 올챙이 홈을 랜덤하게 표시되도록 수정합니다. (http://www.pitmongo.co.kr/)
+ * - 도네이션 회사들은 어떻게 하지?
  * 
  * @author hangum
  *
@@ -43,6 +48,12 @@ public class IntroEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.intor";
 	private Text textURL;
 	private Browser browser;
+	
+	/** default main home */
+	public static String[] ARRAY_DEFAULT_MAIN_HOME_PAGE = {PreferenceDefine.DEFAULT_HOME_PAGE_VALUE, "http://www.pitmongo.co.kr/"};
+	
+	/** default dona home */
+	public static String[] ARRAY_DONATION_HOME_PAGE = {"http://www.cubrid.org/", "www.osci.kr"};
 
 	public IntroEditor() {
 		super();
@@ -80,15 +91,16 @@ public class IntroEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout(1, false));
+		GridLayout gl_parent = new GridLayout(1, false);
+		gl_parent.verticalSpacing = 1;
+		gl_parent.horizontalSpacing = 1;
+		gl_parent.marginHeight = 1;
+		gl_parent.marginWidth = 1;
+		parent.setLayout(gl_parent);
 		
 		Composite compositeHead = new Composite(parent, SWT.NONE);
-		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeHead = new GridLayout(3, false);
-		gl_compositeHead.verticalSpacing = 2;
-		gl_compositeHead.horizontalSpacing = 2;
-		gl_compositeHead.marginWidth = 2;
-		compositeHead.setLayout(gl_compositeHead);
+		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		compositeHead.setLayout(new GridLayout(2, false));
 		
 		Label lblUrl = new Label(compositeHead, SWT.NONE);
 		lblUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -104,33 +116,48 @@ public class IntroEditor extends EditorPart {
 			}
 		});
 		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textURL.setText(GetPreferenceGeneral.getDefaultHomePage());
 		
-		Button btnGo = new Button(compositeHead, SWT.NONE);
-		btnGo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				setBrowserURL(textURL.getText());
-			}
-		});
-		btnGo.setText("go");
+		Composite compositeBody = new Composite(parent, SWT.BORDER);
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setLayout(new GridLayout(1, false));
 		
-		Composite composite = new Composite(parent, SWT.BORDER);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		composite.setLayout(new GridLayout(1, false));
-		
-		browser = new Browser(composite, SWT.NONE);
+		browser = new Browser(compositeBody, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		logger.debug("home page : " + GetPreferenceGeneral.getDefaultHomePage());
-		setBrowserURL(GetPreferenceGeneral.getDefaultHomePage());
+		Group grpDonor = new Group(parent, SWT.BORDER);
+		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		grpDonor.setText("Donor");
+		grpDonor.setLayout(new GridLayout(2, false));
 		
+		CLabel lblWwwcubridorg = new CLabel(grpDonor, SWT.BORDER);
+		lblWwwcubridorg.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		lblWwwcubridorg.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/CUBRID.png"));
+		lblWwwcubridorg.setText("<a href=\"http://www.cubrid.org\" target=\"_blank\">http://www.cubrid.org</a>");
+		
+		
+		CLabel lblOpenSourceCunsulting = new CLabel(grpDonor, SWT.BORDER);
+		lblOpenSourceCunsulting.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		lblOpenSourceCunsulting.setText("<a href=\"http://www.osci.kr\" target=\"_blank\">www.osci.kr</a>");
+		lblOpenSourceCunsulting.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/OpenSourceConsulting.png"));
+		
+		setBrowserURL();		
 	}
 	
 	/**
 	 * broswer set
+	 */
+	private void setBrowserURL() {
+		int selectRandom = (int)(Math.random() * ARRAY_DEFAULT_MAIN_HOME_PAGE.length);
+		logger.info("[select home]" + ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
+		browser.setUrl(ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
+		
+		textURL.setText(ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
+
+	}
+	
+	/**
+	 * set the user browser
 	 * 
-	 * https://sites.google.com/site/tadpolefordb/home
 	 * @param url
 	 */
 	private void setBrowserURL(String url) {
@@ -142,4 +169,5 @@ public class IntroEditor extends EditorPart {
 	@Override
 	public void setFocus() {
 	}
+	
 }

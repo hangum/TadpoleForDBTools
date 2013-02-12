@@ -20,6 +20,7 @@ import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.TadpoleRuntimeException;
+import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -58,7 +59,7 @@ public class TadpoleSystem_UserQuery {
 	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, String type, String approvalYn) throws Exception {
 		UserDAO loginDAO = new UserDAO(groupSeq, email, passwd, name, type, approvalYn);
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
 	
 		if(isUser.size() == 0) {
@@ -73,13 +74,21 @@ public class TadpoleSystem_UserQuery {
 	
 	/**
 	 * 신규 유저를 등록합니다.
+	 * 
 	 * @param email
 	 * @param pass
 	 * @param name
 	 * @param type user-type
 	 */
 	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, String type) throws Exception {
-		return newUser(groupSeq, email, passwd, name, type, Define.YES_NO.NO.toString());
+		//
+		// 테스트모드 일 경우 관리자의 허락이 필요치 않도록 수정합니다.
+		// 
+		if(ApplicationArgumentUtils.isTestMode()) {
+			return newUser(groupSeq, email, passwd, name, type, Define.YES_NO.YES.toString());
+		} else {
+			return newUser(groupSeq, email, passwd, name, type, Define.YES_NO.NO.toString());
+		}
 	}
 	
 	
@@ -92,7 +101,7 @@ public class TadpoleSystem_UserQuery {
 	 */
 	public static boolean isDuplication(String email) throws Exception {
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
 	
 		if(isUser.size() == 0) {
@@ -113,7 +122,7 @@ public class TadpoleSystem_UserQuery {
 	public static UserDAO login(String email, String passwd) throws Exception {
 		UserDAO login = new UserDAO(email, passwd);
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$
 	
 		if(null == userInfo) {
@@ -133,7 +142,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static UserDAO getGroupManager(int groupSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (UserDAO)sqlClient.queryForObject("groupManager", groupSeq); //$NON-NLS-1$
 	}
 	
@@ -144,7 +153,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static UserDAO loginUserCount() throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		Integer isUser = (Integer)sqlClient.queryForObject("loginUserCount"); //$NON-NLS-1$
 	
 		if(isUser == 1) {
@@ -161,7 +170,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static List<UserGroupAUserDAO> getUserListPermission() throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("userListPermissions"); //$NON-NLS-1$
 	}
 	
@@ -172,7 +181,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static List<UserGroupAUserDAO> getUserListPermission(int groupSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("userListGroup", groupSeq); //$NON-NLS-1$
 	}
 	
@@ -182,7 +191,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static void updateUserData(UserDAO user) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPermission", user); //$NON-NLS-1$
 	}
 	
@@ -192,7 +201,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static void updateUserPassword(UserDAO user) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
 	}
 	

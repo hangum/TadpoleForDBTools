@@ -21,7 +21,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction;
+import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -51,7 +51,7 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 	public void run() {
 		UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
 		
-		ERDViewAction qea = new ERDViewAction();
+		RDBERDViewAction qea = new RDBERDViewAction();
 		qea.run(userDB);
 	}
 	

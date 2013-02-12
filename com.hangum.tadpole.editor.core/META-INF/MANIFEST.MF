@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core
+Bundle-SymbolicName: com.hangum.tadpole.editor.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.hangum.tadpole.editor.core.Activator
+Bundle-Vendor: HANGUM
+Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.1",
+ org.eclipse.core.runtime,
+ org.eclipse.equinox.http.registry;bundle-version="1.1.200",
+ com.hangum.tadpole.commons.libs;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: com.hangum.tadpole.editor.core.widgets.editor

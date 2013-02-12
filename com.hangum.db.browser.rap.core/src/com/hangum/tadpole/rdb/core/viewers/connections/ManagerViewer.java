@@ -49,7 +49,8 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
-import com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction;
+import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
+import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
@@ -57,6 +58,7 @@ import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 
 /**
  * connection manager 정보를 
@@ -80,7 +82,7 @@ public class ManagerViewer extends ViewPart {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		
-		treeViewer = new TreeViewer(composite, SWT.BORDER);
+		treeViewer = new TreeViewer(composite, SWT.VIRTUAL | SWT.BORDER);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				
@@ -89,6 +91,10 @@ public class ManagerViewer extends ViewPart {
 				
 				if(selElement instanceof UserDBDAO) {
 					addUserResouceData((UserDBDAO)selElement);
+					
+					getViewSite().getActionBars().getStatusLineManager().setMessage(((UserDBDAO)selElement).getDb());
+				} else {
+					getViewSite().getActionBars().getStatusLineManager().setMessage("");
 				}
 				
 			}
@@ -108,16 +114,25 @@ public class ManagerViewer extends ViewPart {
 					UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					
 					if( Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() ) ) {
-						ERDViewAction ea = new ERDViewAction();
-						ea.run(dao);
+						UserDBDAO userDB = dao.getParent();
+						
+						if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {							
+							MongoDBERDViewAction ea = new MongoDBERDViewAction();
+							ea.run(dao);
+						} else {
+							RDBERDViewAction ea = new RDBERDViewAction();
+							ea.run(dao);
+						}
 					} else {
 						QueryEditorAction qea = new QueryEditorAction();
 						qea.run(dao);
 					}
 				// manager
 				} else if (selElement instanceof ManagerListDTO) {
-					ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
-					cda.runConnectionDialog(is);
+					if(PermissionChecks.isShow(SessionManager.getLoginType())) {
+						ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
+						cda.runConnectionDialog(is);
+					}
 				}
 				
 				
@@ -173,7 +188,7 @@ public class ManagerViewer extends ViewPart {
 		}
 
 		treeViewer.refresh();
-		treeViewer.expandToLevel(1);
+		treeViewer.expandToLevel(2);
 	}
 
 	/**

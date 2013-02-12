@@ -28,6 +28,9 @@ public class UserDBResourceDAO {
 	Date create_time;
 	String delYn;
 	
+	int duration_mill;
+	String execution_result;
+	
 	// db object tree 표현을 위해
 	UserDBDAO parent;
 	
@@ -90,8 +93,6 @@ public class UserDBResourceDAO {
 		this.parent = parent;
 	}
 	
-	
-
 	public String getDelYn() {
 		return delYn;
 	}
@@ -100,4 +101,20 @@ public class UserDBResourceDAO {
 		this.delYn = delYn;
 	}
 
+	public int getDuration_mill() {
+		return duration_mill;
+	}
+
+	public void setDuration_mill(int duration_mill) {
+		this.duration_mill = duration_mill;
+	}
+
+	public String getExecution_result() {
+		return execution_result;
+	}
+
+	public void setExecution_result(String execution_result) {
+		this.execution_result = execution_result;
+	}
+	
 }

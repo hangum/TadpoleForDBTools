@@ -51,6 +51,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -58,7 +59,6 @@ import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.main.PartQueryUtil;
 import com.hangum.tadpole.rdb.core.editors.main.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.editors.table.TbUtils.TABLE_MOD_TYPE;
 import com.hangum.tadpole.util.XMLUtils;
@@ -179,7 +179,7 @@ public class TableViewerEditPart extends EditorPart {
 					String[] querys = SQLTextUtil.delLineChar(getChangeQuery()).split(";"); //$NON-NLS-1$
 					for(int i=0; i<querys.length; i++) {
 						
-						logger.info("exe query [" + querys[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+					//	logger.info("exe query [" + querys[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 						
 						lastExeQuery = querys[i] ;
 						stmt.execute(querys[i] );
@@ -270,7 +270,7 @@ public class TableViewerEditPart extends EditorPart {
 		});
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		sqlResultTableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		sqlResultTableViewer = new TableViewer(compositeBody, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		sqlResultTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if(primaryKeyListIndex.size() >= 1) tltmDelete.setEnabled(true);
@@ -325,7 +325,10 @@ public class TableViewerEditPart extends EditorPart {
 			
 			// 컬럼 중에 키 컬럼이 있는지 검사합니다.
 			for(int i=0; i<mapColumns.size(); i++) {
-				if(primaryKEYListString.get( mapColumns.get(i) )) {
+				
+				if(primaryKEYListString.get(mapColumns.get(i)) == null) continue;
+				
+				if(primaryKEYListString.get(mapColumns.get(i))) {
 					primaryKeyListIndex.add(i);
 					primaryKEYIntStrList.put(i, mapColumns.get(i));
 				}
@@ -364,7 +367,17 @@ public class TableViewerEditPart extends EditorPart {
 		if(!"".equals( whereSQL )) { //$NON-NLS-1$
 			requestQuery += " where " + whereSQL; //$NON-NLS-1$
 		}
-		requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, 500);
+		
+		// 임시코드를 넣습니다.
+		//
+		//
+		//
+		//
+//		if(DBDefine.MSSQL_DEFAULT != DBDefine.getDBDefine(userDB.getTypes())) {
+			requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, 500);
+//		} else {
+//			requestQuery = requestQuery + " top 500";
+//		}
 		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
@@ -399,8 +412,13 @@ public class TableViewerEditPart extends EditorPart {
 				/** column modify info */
 				tmpRs.put(0, TbUtils.COLUMN_MOD_TYPE.NONE.toString());
 				
-				for(int i=1;i<columnCount+1; i++) {
-					tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i)));
+				for(int i=1;i<columnCount+1; i++) {					
+					try {
+						tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i) == null?"":rs.getString(i)));
+					} catch(Exception e) {
+						logger.error("ResutSet fetch error", e);
+						tmpRs.put(i, "");
+					}
 				}
 				
 				tableDataList.add(tmpRs);

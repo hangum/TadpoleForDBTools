@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -85,10 +86,11 @@ public class ManagerLabelProvider extends LabelProvider {
 			UserDBDAO dao = (UserDBDAO)element;
 			
 			// 자신의 디비만 보이도록 수정
+			String retText = "[" + StringUtils.substring(dao.getOperation_type(), 0, 1) + "] ";
 			if(dao.getUser_seq() == SessionManager.getSeq()) {
-				return dao.getDisplay_name() + " (" + dao.getUsers() + "@" + dao.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return retText + dao.getDisplay_name() + " (" + dao.getUsers() + "@" + dao.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
-				return dao.getDisplay_name() + " (not visible)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return retText + dao.getDisplay_name(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;

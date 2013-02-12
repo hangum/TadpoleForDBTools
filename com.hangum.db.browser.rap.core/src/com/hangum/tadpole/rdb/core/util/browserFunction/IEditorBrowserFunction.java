@@ -10,15 +10,15 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util.browserFunction;
 
+import com.hangum.tadpold.commons.libs.core.browser.TadpoleBrowserFunction;
+
 /**
  * editor browser function 정의 
  * 
  * @author hangum
  *
  */
-public interface IEditorBrowserFunction {
-	/** 오리온허브 에디터에서 사용하는 딜리미터 */
-	public static final String CARET_QUERY_DELIMIT = "-tadpole-del-";
+public interface IEditorBrowserFunction extends TadpoleBrowserFunction {
 	
 	public static final int DIRTY_CHANGED 			= 1;
 //	public static final int GET_CONTENT_NAME 		= 5;

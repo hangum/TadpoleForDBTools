@@ -134,7 +134,7 @@ public class UserManagerDialog extends Dialog {
 		grpUserList.setText("User List"); //$NON-NLS-1$
 		grpUserList.setLayout(new GridLayout(1, false));
 		
-		tableViewerUser = new TableViewer(grpUserList, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewerUser = new TableViewer(grpUserList, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewerUser.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		table.setLinesVisible(true);
@@ -261,8 +261,8 @@ public class UserManagerDialog extends Dialog {
 			}
 		});
 		
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
 	}
 
 	/**

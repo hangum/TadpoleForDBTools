@@ -22,7 +22,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.erd.ERDDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDDeleteAction;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -53,7 +53,7 @@ public class DeleteResourceAction extends Action implements ISelectionListener, 
 		UserDBResourceDAO userResourceDB = (UserDBResourceDAO)iss.getFirstElement();
 		if(!MessageDialog.openConfirm(window.getShell(), Messages.DeleteResourceAction_3, userResourceDB.getFilename() + Messages.DeleteResourceAction_4)) return;
 		
-		ERDDeleteAction erdDelete = new ERDDeleteAction();
+		RDBERDDeleteAction erdDelete = new RDBERDDeleteAction();
 		erdDelete.run(userResourceDB);
 	}
 	

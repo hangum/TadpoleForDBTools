@@ -12,11 +12,11 @@ package com.hangum.tadpole.manager.core.dialogs.auth;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -84,22 +84,22 @@ public class UserManagementEditor extends EditorPart {
 		gl_composite.marginWidth = 3;
 		compositeMain.setLayout(gl_composite);
 
-		TabFolder tabFolder = new TabFolder(compositeMain, SWT.NONE);
+		CTabFolder tabFolder = new CTabFolder(compositeMain, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		TabItem tbtmItem = null;
+		CTabItem tbtmItem = null;
 		if(Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
-			tbtmItem = new TabItem(tabFolder, SWT.NONE);
+			tbtmItem = new CTabItem(tabFolder, SWT.NONE);
 			tbtmItem.setText("Manager");
 		} else {
-			tbtmItem = new TabItem(tabFolder, SWT.NONE);
+			tbtmItem = new CTabItem(tabFolder, SWT.NONE);
 			tbtmItem.setText("Admin");			
 		}
+		tabFolder.setSelection(0);
 
 		Composite composite = new AdminComposite(tabFolder, SWT.NONE);
 		tbtmItem.setControl(composite);
 		composite.setLayout(new GridLayout(1, false));
-
 	}
 
 	@Override

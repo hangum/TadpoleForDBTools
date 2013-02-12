@@ -18,7 +18,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * data export util
+ * file download util
  * 
  * @author hangum
  *

@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -56,6 +57,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		if(oldUserDB != null) {
 			selGroupName = oldUserDB.getGroup_name();
 			textDisplayName.setText(oldUserDB.getDisplay_name());
+			comboOperationType.setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textHost.setText(oldUserDB.getHost());
 			textUser.setText(oldUserDB.getUsers());
@@ -64,7 +66,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
-			textDisplayName.setText("PostgreSQL v9.1 ~ Default");
+			textDisplayName.setText("Sample PostgreSQL 9.1");
 			
 			textHost.setText("127.0.0.1");
 			textUser.setText("tadpole");
@@ -102,6 +104,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		userDB.setDb(textDatabase.getText());
 		userDB.setGroup_name(comboGroup.getText().trim());
 		userDB.setDisplay_name(textDisplayName.getText());
+		userDB.setOperation_type( DBOperationType.getNameToType(comboOperationType.getText()).toString() );
 		userDB.setHost(textHost.getText());
 		userDB.setPasswd(textPassword.getText());
 		userDB.setPort(textPort.getText());

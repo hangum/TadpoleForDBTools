@@ -63,7 +63,7 @@ public class MongoDBEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return collectionName;
+		return this.userDB.getDisplay_name() + "@ [" + collectionName + "]";
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class MongoDBEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return userDB.getDb() + "[" + collectionName + "]";
+		return this.userDB.getDisplay_name() + "@ [" + collectionName + "]";
 	}
 
 	public UserDBDAO getUserDB() {
@@ -82,5 +82,9 @@ public class MongoDBEditorInput implements IEditorInput {
 	
 	public List getShowTableColumns() {
 		return showTableColumns;
+	}
+	
+	public String getCollectionName() {
+		return collectionName;
 	}
 }

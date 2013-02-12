@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
-import com.hangum.tadpole.system.TadpoleSystemConnector;
+import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
 
@@ -59,7 +59,7 @@ public class TadpoleSystem_UserDBQueryTest extends TestCase {
 	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBQuery#newUserDB(UserDBDAO) UserDB등록 테스트}
 	 */
 	public void testNewUserDB() {
-		UserDBDAO userDb2 = TadpoleSystemConnector.getUserDB();
+		UserDBDAO userDb2 = TadpoleSystemInitializer.getUserDB();
 		userDb2.setDisplay_name("junit testName");
 		
 		try {			

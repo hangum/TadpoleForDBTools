@@ -16,11 +16,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.define.Define.DB_ACTION;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
+import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
+import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
@@ -44,8 +47,6 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText("Create " + title);
-		
-//		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override
@@ -54,11 +55,20 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			
 			// others db
 			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-				CreateTableAction cta = new CreateTableAction();
-				cta.run(userDB, actionType);
-			// moongodb
-			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
 				
+				CreateTableAction cta = new CreateTableAction();
+				
+				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
+				if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.SQLite_DEFAULT) {
+					TableDAO tc = (TableDAO)sel.getFirstElement();
+					if(tc == null) cta.run(userDB, actionType);
+					else cta.run(userDB, tc.getComment());
+				} else {				
+					cta.run(userDB, actionType);
+				}
+				
+			// moongodb
+			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {				
 				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == ncd.open() ) {
 					refreshTable();
@@ -69,8 +79,16 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
 		} else if(actionType == DB_ACTION.INDEXES) {
-			CreateIndexAction cia = new CreateIndexAction();
-			cia.run(userDB, actionType);
+			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+				CreateIndexAction cia = new CreateIndexAction();
+				cia.run(userDB, actionType);
+			// moongodb
+			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+				NewIndexDialog nid = new NewIndexDialog(Display.getCurrent().getActiveShell(), userDB);
+				if(Dialog.OK == nid.open()) {
+					refreshIndexes();
+				}
+			}
 		} else if(actionType == DB_ACTION.PROCEDURES) {
 			CreateProcedureAction cia = new CreateProcedureAction();
 			cia.run(userDB, actionType);
@@ -80,6 +98,9 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		} else if(actionType == DB_ACTION.TRIGGERS) {
 			CreateTriggerAction cia = new CreateTriggerAction();
 			cia.run(userDB, actionType);
+		} else if(actionType == DB_ACTION.JAVASCRIPT) {
+			CreateJavaScriptAction csa = new CreateJavaScriptAction();
+			csa.run(userDB, actionType);
 		}
 	}
 	

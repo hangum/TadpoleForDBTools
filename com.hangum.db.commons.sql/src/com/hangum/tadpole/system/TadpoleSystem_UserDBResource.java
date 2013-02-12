@@ -38,21 +38,33 @@ public class TadpoleSystem_UserDBResource {
 	 * @param filename
 	 * @throws Exception
 	 */
-	public static UserDBResourceDAO saveResource(UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
+	public static UserDBResourceDAO saveResource(int user_seq, UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents, int duration_mill) throws Exception {
 		UserDBResourceDAO resourceDao = new UserDBResourceDAO();
-		resourceDao.setUser_seq(userDB.getUser_seq());
+		resourceDao.setUser_seq(user_seq);
 		resourceDao.setTypes(type.toString());
 		resourceDao.setDb_seq(userDB.getSeq());
 		resourceDao.setFilename(filename);
+		resourceDao.setDuration_mill(duration_mill);
 		
 		// 기존에 등록 되어 있는지 검사한다
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDBResourceDAO userDBResource =  (UserDBResourceDAO)sqlClient.insert("userDbResourceInsert", resourceDao); //$NON-NLS-1$
 		
 		// content data를 저장합니다.
 		insertResourceData(userDBResource, contents);
 		
 		return userDBResource;
+	}
+	
+	/**
+	 * 저장 
+	 * 
+	 * @param userDB
+	 * @param filename
+	 * @throws Exception
+	 */
+	public static UserDBResourceDAO saveResource(int user_seq, UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
+		return saveResource(user_seq, userDB, type, filename, contents, 0);
 	}
 	
 	/**
@@ -63,7 +75,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws Exception
 	 */
 	public static void updateResource(UserDBResourceDAO userDBResource, String contents) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.delete("userDbResourceDataDelete", userDBResource.getSeq()); //$NON-NLS-1$
 		
 		insertResourceData(userDBResource, contents);
@@ -77,7 +89,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws Exception
 	 */
 	private static void insertResourceData(UserDBResourceDAO userDBResource, String contents) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		// content data를 저장합니다.
 		UserDBResourceDataDAO dataDao = new UserDBResourceDataDAO();
@@ -97,7 +109,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws Exception
 	 */
 	public static List<UserDBResourceDAO> userDbErdTree(UserDBDAO userDB) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (List<UserDBResourceDAO>)sqlClient.queryForList("userDbResourceTree", userDB); //$NON-NLS-1$
 	}
 	
@@ -117,7 +129,7 @@ public class TadpoleSystem_UserDBResource {
 		erd.setDb_seq(db_seq);
 		erd.setFilename(filename);
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("userDBResourceDuplication", erd).size()  == 0; //$NON-NLS-1$
 	}
 	
@@ -129,7 +141,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws Exception
 	 */
 	public static void delete(UserDBResourceDAO userDBErd) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 //		sqlClient.delete("userDbResourceDataDelete", userDBErd.getSeq()); //$NON-NLS-1$
 		sqlClient.update("userDBResourceDelete", userDBErd); //$NON-NLS-1$
@@ -142,7 +154,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws Exception
 	 */
 	public static String getResourceData(UserDBResourceDAO userDBResource) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBResourceDataDAO> datas =  (List<UserDBResourceDataDAO>)sqlClient.queryForList("userDBResourceData", userDBResource); //$NON-NLS-1$
 		
 		StringBuffer retData = new StringBuffer();

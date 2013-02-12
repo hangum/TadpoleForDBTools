@@ -43,6 +43,8 @@ public enum DBDefine {
 	/** USER DB */
 	ORACLE_DEFAULT,
 	MSSQL_DEFAULT,
+	MSSQL_8_LE_DEFAULT,
+	
 	MYSQL_DEFAULT,
 	SQLite_DEFAULT,
 	CUBRID_DEFAULT,
@@ -68,6 +70,8 @@ public enum DBDefine {
 			
 			case ORACLE_DEFAULT:	return prefix + "OracleConfig.xml";
 			case MSSQL_DEFAULT:		return prefix + "MSSQLConfig.xml";
+			case MSSQL_8_LE_DEFAULT: return prefix + "MSSQLConfig_8_LE.xml";
+			
 			case MYSQL_DEFAULT:		return prefix + "MySQLConfig.xml";
 			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
@@ -88,7 +92,10 @@ public enum DBDefine {
 		if(type.equals("TadpoleSystem_CUBRID")) 	return TADPOLE_SYSTEM_CUBRID_DEFAULT;
 		
 		else if(type.equals("Oracle")) 		return ORACLE_DEFAULT;
+		
 		else if(type.equals("MSSQL")) 		return MSSQL_DEFAULT;
+		else if(type.equals("MSSQL_8_LE"))	return MSSQL_8_LE_DEFAULT;
+		
 		else if(type.equals("MySQL")) 		return MYSQL_DEFAULT;
 		else if(type.equals("SQLite"))		return SQLite_DEFAULT;
 		else if(type.equals("CUBRID"))		return CUBRID_DEFAULT;
@@ -110,7 +117,10 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";
 			
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
+			
 			case MSSQL_DEFAULT:		return "jdbc:jtds:sqlserver://%s:%s/%s";
+			case MSSQL_8_LE_DEFAULT: return "jdbc:jtds:sqlserver://%s:%s/%s";
+			
 			case MYSQL_DEFAULT:		return "jdbc:mysql://%s:%s/%s";
 			case SQLite_DEFAULT:	return "jdbc:sqlite:/%s";
 			case CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";
@@ -130,7 +140,10 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_CUBRID_DEFAULT: return "TadpoleSystem_CUBRID";
 		
 			case ORACLE_DEFAULT:	return "Oracle";
-			case MSSQL_DEFAULT:		return "MSSQL";
+			
+			case MSSQL_DEFAULT:			return "MSSQL";
+			case MSSQL_8_LE_DEFAULT:	return "MSSQL_8_LE";
+			
 			case MYSQL_DEFAULT:		return "MySQL";
 			case SQLite_DEFAULT:	return "SQLite";
 			case CUBRID_DEFAULT:	return "CUBRID";
@@ -153,7 +166,8 @@ public enum DBDefine {
 		supportDb.add(MONGODB_DEFAULT);
 		
 		supportDb.add(MYSQL_DEFAULT);		
-		supportDb.add(MSSQL_DEFAULT);						
+		supportDb.add(MSSQL_DEFAULT);		
+		
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);		

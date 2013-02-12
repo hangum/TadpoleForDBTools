@@ -22,10 +22,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.CubridLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.MSSQLLoginComposite;
@@ -36,8 +38,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.PostgresLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.SQLiteLoginComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
-
-import org.eclipse.swt.widgets.Label;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 
 /**
  * DB 정보를 보여 주는 다이얼로그
@@ -118,16 +119,28 @@ public class DBInformationDialog extends Dialog {
 		
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText("Name: ");
-
-		Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
-		lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblNameValue.setText(SessionManager.getName());
+		new Label(grpOtherInformation, SWT.NONE);
 		
-		compositeBody = new Composite(container, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(1, false));
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-				
-		initDBWidget();
+		if(PermissionChecks.isShow(SessionManager.getLoginType(), userDB)) {
+			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
+			lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			lblNameValue.setText(SessionManager.getName());
+			
+			compositeBody = new Composite(container, SWT.NONE);
+			compositeBody.setLayout(new GridLayout(1, false));
+			compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+					
+			initDBWidget();
+		} else {
+			Group grpDetail = new Group(container, SWT.NONE);
+			grpDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			grpDetail.setText("Detail");
+			grpDetail.setLayout(new GridLayout(1, false));
+			
+			Label lblNewLabel = new Label(grpDetail, SWT.NONE);
+			lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			lblNewLabel.setText(Messages.MainEditor_21);
+		}
 		
 		return container;
 	}
@@ -171,7 +184,7 @@ public class DBInformationDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, "Close", true);
-//		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+//		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
 	}
 
 	/**
@@ -179,7 +192,7 @@ public class DBInformationDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(452, 510);
+		return new Point(452, 530);
 	}
 
 }
