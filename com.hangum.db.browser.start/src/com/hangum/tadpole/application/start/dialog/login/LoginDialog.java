@@ -33,7 +33,7 @@ import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystemConnector;
+import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.swtdesigner.ResourceManager;
@@ -152,20 +152,21 @@ public class LoginDialog extends Dialog {
 				return;
 		 } else if(buttonId == IDialogConstants.OK_ID) {
 			 okPressed();
+			 
 		 } else {
 			String userId = "", password = "";
 			
 			if(buttonId == ID_GUEST_USER) {
-				userId = TadpoleSystemConnector.GUEST_EMAIL;
-				password = TadpoleSystemConnector.GUEST_PASSWD;
+				userId = TadpoleSystemInitializer.GUEST_EMAIL;
+				password = TadpoleSystemInitializer.GUEST_PASSWD;
 			
 			} else if(buttonId == ID_ADMIN_USER) {
-				userId = TadpoleSystemConnector.ADMIN_EMAIL;
-				password = TadpoleSystemConnector.ADMIN_PASSWD;
+				userId = TadpoleSystemInitializer.ADMIN_EMAIL;
+				password = TadpoleSystemInitializer.ADMIN_PASSWD;
 				
 			} else if(buttonId == ID_MANAGER_USER) {
-				userId = TadpoleSystemConnector.MANAGER_EMAIL;
-				password = TadpoleSystemConnector.MANAGER_PASSWD;
+				userId = TadpoleSystemInitializer.MANAGER_EMAIL;
+				password = TadpoleSystemInitializer.MANAGER_PASSWD;
 			}
 			
 			// 정상이면 session에 로그인 정보를 입력하고 
@@ -179,6 +180,7 @@ public class LoginDialog extends Dialog {
 					SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), -1);
 				}
 				
+				init();
 			} catch (Exception e) {
 				logger.error("demo mode user login", e);
 				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
@@ -248,7 +250,7 @@ public class LoginDialog extends Dialog {
 		
 		return true;
 	}
-
+	
 	/**
 	 * Create contents of the button bar.
 	 * @param parent

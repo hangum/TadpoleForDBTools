@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
  com.hangum.tadpole.rap.commons;bundle-version="1.0.0",
  com.hangum.tadpole.commons.sql;bundle-version="1.0.0",
- com.hangum.tadpole.preference;bundle-version="1.0.0"
+ com.hangum.tadpole.preference;bundle-version="1.0.0",
+ com.hangum.tadpole.editor.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
@@ -19,10 +20,14 @@ Export-Package: com.hangum.tadpole.mongodb.core,
  com.hangum.tadpole.mongodb.core.connection,
  com.hangum.tadpole.mongodb.core.define,
  com.hangum.tadpole.mongodb.core.dialogs.collection,
+ com.hangum.tadpole.mongodb.core.dialogs.collection.index,
+ com.hangum.tadpole.mongodb.core.dialogs.resultview,
  com.hangum.tadpole.mongodb.core.dialogs.users,
  com.hangum.tadpole.mongodb.core.dto,
  com.hangum.tadpole.mongodb.core.editors.dbInfos,
+ com.hangum.tadpole.mongodb.core.editors.group,
  com.hangum.tadpole.mongodb.core.editors.main,
+ com.hangum.tadpole.mongodb.core.editors.mapreduce,
  com.hangum.tadpole.mongodb.core.query,
  com.hangum.tadpole.mongodb.core.test,
  com.hangum.tadpole.mongodb.core.utils

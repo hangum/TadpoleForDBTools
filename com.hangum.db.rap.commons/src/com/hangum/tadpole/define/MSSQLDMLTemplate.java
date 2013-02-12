@@ -20,7 +20,7 @@ public class MSSQLDMLTemplate {
 	/**  
 	 * mssql 을 수행할때 preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.
 	 */	
-	public static final String TMP_GET_PARTDATA = "select * from ( %s ) _res__ult_ limit %s,%s";
+	public static final String TMP_GET_PARTDATA = "%s WHERE RowNum BETWEEN %s AND %s";//"select * from ( %s ) _res__ult_ limit %s,%s";
 //	"select * from ( %s ) where ROWNUM > %s and ROWNUM <= %s";
 	
 	

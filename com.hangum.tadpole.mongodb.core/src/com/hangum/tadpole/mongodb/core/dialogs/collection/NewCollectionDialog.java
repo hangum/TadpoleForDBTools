@@ -16,7 +16,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,6 +35,7 @@ import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.util.JSONUtil;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.mongodb.DBCollection;
 
 /**
@@ -94,6 +98,18 @@ public class NewCollectionDialog extends Dialog {
 		textContent = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textContent.setText(JSONUtil.getPretty(Messages.NewCollectionDialog_2));
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		textContent.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+			
+				if(e.stateMask == 0 && e.keyCode == SWT.TAB) {
+					textContent.insert(TadpoleWidgetUtils.TAB_CONETNT);
+				}
+			}
+		});
+		textContent.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
+		
+		textName.setFocus();
 		
 		return container;
 	}
@@ -151,8 +167,8 @@ public class NewCollectionDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);	 //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);	 //$NON-NLS-1$
 	}
 
 	/**

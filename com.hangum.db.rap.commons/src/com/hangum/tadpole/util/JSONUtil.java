@@ -10,11 +10,22 @@
  ******************************************************************************/
 package com.hangum.tadpole.util;
 
+import org.apache.log4j.Logger;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 /**
  * json util
  * 
  */
 public class JSONUtil {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(JSONUtil.class);
 	
 	/**
 	 * json normal string to pretty string
@@ -25,39 +36,16 @@ public class JSONUtil {
 	public static String getPretty(String jsonString) {
 		if(jsonString == null) return "";
 
-		final String INDENT = "    ";
-		StringBuffer prettyJsonSb = new StringBuffer();
-
-		int indentDepth = 0;
-		String targetString = null;
-		for (int i = 0; i < jsonString.length(); i++) {
-			targetString = jsonString.substring(i, i + 1);
-			if (targetString.equals("{") || targetString.equals("[")) {
-				prettyJsonSb.append(targetString).append("\n");
-				indentDepth++;
-				for (int j = 0; j < indentDepth; j++) {
-					prettyJsonSb.append(INDENT);
-				}
-			} else if (targetString.equals("}") || targetString.equals("]")) {
-				prettyJsonSb.append("\n");
-				indentDepth--;
-				for (int j = 0; j < indentDepth; j++) {
-					prettyJsonSb.append(INDENT);
-				}
-				prettyJsonSb.append(targetString);
-			} else if (targetString.equals(",")) {
-				prettyJsonSb.append(targetString);
-				prettyJsonSb.append("\n");
-				for (int j = 0; j < indentDepth; j++) {
-					prettyJsonSb.append(INDENT);
-				}
-			} else {
-				prettyJsonSb.append(targetString);
-			}
-
+		try {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			JsonParser jp = new JsonParser();
+			JsonElement je = jp.parse(jsonString);
+			return gson.toJson(je);
+		} catch(Exception e) {
+			logger.error("pretty json", e);
 		}
 
-		return prettyJsonSb.toString();
+		return jsonString;
 
 	}
 }

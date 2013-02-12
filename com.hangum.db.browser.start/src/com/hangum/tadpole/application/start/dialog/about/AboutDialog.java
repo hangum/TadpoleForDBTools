@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.preference.define.SystemDefine;
 import com.swtdesigner.ResourceManager;
 
 public class AboutDialog extends Dialog {
@@ -40,7 +41,7 @@ public class AboutDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("About Tadpole for DB Tools");
+		newShell.setText("About");
 	}
 
 	/**
@@ -78,7 +79,13 @@ public class AboutDialog extends Dialog {
 //		안녕하세요. 사용해 주셔서 감사합니다.
 //		  버그나 질문은 메일(<a href=\"mailto:adi.tadpole@gmail.com\">tadpole</a>), 
 		Label lblNewLabel = new Label(composite_1, SWT.NONE);
-		lblNewLabel.setText(Messages.AboutAction_3);
+		lblNewLabel.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION);
+		
+		Label lblReleaseDate = new Label(composite_1, SWT.NONE);
+		lblReleaseDate.setText(Messages.AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE);
+		
+		Label label = new Label(composite_1, SWT.NONE);
+		
 		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
 		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -86,7 +93,7 @@ public class AboutDialog extends Dialog {
 
 		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
 		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel2.setText("HOME : <a href=\"https://sites.google.com/site/tadpolefordb\" target=\"_blank\">https://sites.google.com/site/tadpolefordb</a>");//Messages.AboutAction_4);
+		lblNewLabel2.setText("HOME : <a href=\"https://github.com/hangum/TadpoleForDBTools\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools</a>");//Messages.AboutAction_4);
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -105,7 +112,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID, "Ok", true);
 	}
 
 	/**

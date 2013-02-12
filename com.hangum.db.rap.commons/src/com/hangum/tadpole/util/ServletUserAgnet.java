@@ -65,7 +65,7 @@ public class ServletUserAgnet {
      * 
      * @param req
      */
-    public  void detect(HttpServletRequest req) {
+    public void detect(HttpServletRequest req) {
     	String userAgent = req.getHeader("User-Agent");
     	
     	OS_Type = detectedOS(userAgent);

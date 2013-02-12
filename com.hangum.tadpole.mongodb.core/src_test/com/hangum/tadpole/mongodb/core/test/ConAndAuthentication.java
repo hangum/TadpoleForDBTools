@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Set;
 
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -38,14 +38,15 @@ public class ConAndAuthentication {
 		Mongo mongo = testMongoCls.connection(serverurl, port);
 		if (mongo != null) {
 			DB testDB = mongo.getDB("test");
-//			Set<String> collectionNames = testMongoCls.getCollectionNames(testDB);
-//			for (String collection : collectionNames) {
-				testMongoCls.getCollectionInfo(testDB, "city1");
-//			}
+			// Set<String> collectionNames =
+			// testMongoCls.getCollectionNames(testDB);
+			// for (String collection : collectionNames) {
+			testMongoCls.getCollectionInfo(testDB, "store");
+			// }
 		}
 		mongo.close();
 	}
-	
+
 	/**
 	 * mongo db를 호출합니다.
 	 * 
@@ -104,41 +105,61 @@ public class ConAndAuthentication {
 
 		// index list
 		List<DBObject> listIndex = coll.getIndexInfo();
-		List<TableColumnDAO> columnInfo = MongoDBTableColumn.tableColumnInfo(listIndex, db.getCollection(collection).findOne());
-
-		//
-		StringBuffer sbJson = new StringBuffer();
-
-		DBCursor cursor = coll.find();
-		while (cursor.hasNext()) {
-			DBObject dbObj = cursor.next();			
-			String jsonData = dbObj.toString();
-			System.out.println("[data] \t" + jsonData);
-
-			sbJson.append(jsonData);
+		List<CollectionFieldDAO> columnInfo = MongoDBTableColumn.tableColumnInfo(listIndex, db.getCollection(collection).findOne());
+		for (CollectionFieldDAO collectionFieldDAO : columnInfo) {
+			System.out.println("[field]" + collectionFieldDAO.getField() );
+			
+			if(!collectionFieldDAO.getChildren().isEmpty()) {
+				List<CollectionFieldDAO> childColl = collectionFieldDAO.getChildren();
+				for (CollectionFieldDAO collectionFieldDAO2 : childColl) {
+					System.out.println("\t [child field]" + collectionFieldDAO2.getField());
+					
+					if(!collectionFieldDAO2.getChildren().isEmpty()) {
+						List<CollectionFieldDAO> childColl2 = collectionFieldDAO2.getChildren();
+						for (CollectionFieldDAO collectionFieldDAO3 : childColl2) {
+							System.out.println("\t\t [child field]" + collectionFieldDAO3.getField());	
+						}
+						
+					}	
+				}
+				
+			}
 		}
 
-		System.out.println("#####[fully text]#########################################################");
-
-//		System.out.println("\t\t ******[detail data][start]*******************************************");
-//		ObjectMapper om = new ObjectMapper();
-//		try {
-//			Map<String, Object> mapObj = om.readValue(sbJson.toString(), 
-//																	new TypeReference<Map<String, Object>>() {});
-//			System.out.println("[json to object]" + mapObj);
-//		
-//			Set<String> keys = mapObj.keySet();
-//			for (String key : keys) System.out.print(key + "\t:\t");
-//			System.out.println();
-//			
-//		
-//		} catch (JsonParseException e) {
-//			e.printStackTrace();
-//		} catch (JsonMappingException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
+//		//
+//		StringBuffer sbJson = new StringBuffer();
+//
+//		DBCursor cursor = coll.find();
+//		while (cursor.hasNext()) {
+//			DBObject dbObj = cursor.next();
+//			String jsonData = dbObj.toString();
+//			System.out.println("[data] \t" + jsonData);
+//
+//			sbJson.append(jsonData);
 //		}
+//
+//		System.out
+//				.println("#####[fully text]#########################################################");
+
+		// System.out.println("\t\t ******[detail data][start]*******************************************");
+		// ObjectMapper om = new ObjectMapper();
+		// try {
+		// Map<String, Object> mapObj = om.readValue(sbJson.toString(),
+		// new TypeReference<Map<String, Object>>() {});
+		// System.out.println("[json to object]" + mapObj);
+		//
+		// Set<String> keys = mapObj.keySet();
+		// for (String key : keys) System.out.print(key + "\t:\t");
+		// System.out.println();
+		//
+		//
+		// } catch (JsonParseException e) {
+		// e.printStackTrace();
+		// } catch (JsonMappingException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 
 		System.out
 				.println("\t\t ******[detail data][end]*******************************************");

@@ -34,6 +34,8 @@ public class Messages extends NLS {
 	public static String LoginDialog_8;
 	public static String BugIssueAction_0;
 	public static String LoginDialog_lblPleaseSignIn_text;
+	public static String AboutDialog_lblMajorversion_text;
+	public static String AboutDialog_lblReleaseDate_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

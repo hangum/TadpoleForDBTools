@@ -29,7 +29,6 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
-import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
@@ -38,6 +37,7 @@ import com.hangum.tadpole.rdb.core.actions.global.OpenQueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.global.PreferenceAction;
 import com.hangum.tadpole.rdb.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.permission.PermissionChecks;
 
 /**
  * 올챙이에서 사용하려는 workbench의 action과 toolbar, menu를 생성합니다.
@@ -140,8 +140,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void fillCoolBar(ICoolBarManager coolBar) {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main"));
-        toolbar.add(connectAction);
-        toolbar.add(new Separator());
+        
+        if(PermissionChecks.isShow(SessionManager.getLoginType())) {
+	        toolbar.add(connectAction);
+	        toolbar.add(new Separator());
+        }
         
         toolbar.add(saveAction);
 //        toolbar.add(saveAsAction);
@@ -154,10 +157,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(deleteResourceAction);
         toolbar.add(new Separator());
         
-        if(Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )
-        		||
-        		Define.USER_TYPE.ADMIN.toString().equals( SessionManager.getLoginType() )
-        ) {
+        if(PermissionChecks.isShow(SessionManager.getLoginType())) {
         	toolbar.add(userPermissionAction);
             toolbar.add(new Separator());        	
         }

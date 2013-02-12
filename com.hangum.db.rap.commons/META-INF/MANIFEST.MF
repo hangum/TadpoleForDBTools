@@ -4,15 +4,22 @@ Bundle-Name: Commons
 Bundle-SymbolicName: com.hangum.tadpole.rap.commons
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.rap.commons.Activator
-Bundle-Vendor: SINSIWAY
+Bundle-Vendor: hangum
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.4.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- libs/org.apache.log4j_1.2.13.v200806030600.jar
-Export-Package: com.hangum.tadpole.define,
+ libs/org.apache.log4j_1.2.13.v200806030600.jar,
+ libs/gson-2.2.2.jar
+Export-Package: com.google.gson,
+ com.google.gson.annotations,
+ com.google.gson.internal,
+ com.google.gson.internal.bind,
+ com.google.gson.reflect,
+ com.google.gson.stream,
+ com.hangum.tadpole.define,
  com.hangum.tadpole.dialogs.message,
  com.hangum.tadpole.dialogs.message.dao,
  com.hangum.tadpole.exception,

@@ -20,6 +20,8 @@ import com.mongodb.Mongo;
 /**
  * server status example
  * 
+ * http://docs.mongodb.org/manual/reference/server-status-index/
+ * 
  * @author hangum
  * 
  */
@@ -35,12 +37,31 @@ public class MongoTestServerStatus {
 		
 		DBObject queryObj = new BasicDBObject("serverStatus", 0);
 		CommandResult cr = db.command(queryObj);
+		
+		String strHost = cr.getString("host");
+		String version = cr.getString("version");
+		String process = cr.getString("process");
+		String pid = cr.getString("pid");
+		String uptime = cr.getString("uptime");
+		String uptimeMillis = cr.getString("uptimeMillis");
+		String uptimeEstimate = cr.getString("uptimeEstimate");
+		String localTime = cr.getString("localTime");
+		
+		System.out.println("[strHost]\t " + strHost);
+		System.out.println("[version]\t " + version);
+
+		System.out.println("[process]\t " + process);
+		System.out.println("[pid]\t " + pid);
+		System.out.println("[uptime]\t " + uptime);
+		System.out.println("[uptimeMillis]\t " + uptimeMillis);
+		System.out.println("[uptimeEstimate]\t " + uptimeEstimate);
+		System.out.println("[localTime]\t " + localTime);
+		
 			
 		System.out.println("[ok]" + cr.ok() );
 		if(!cr.ok()) System.out.println("[Exception ]" + cr.getException().toString());
 		System.out.println("[toString]" + cr.toString() );
-		System.out.println("[size]" + cr.size() );
-		
+		System.out.println("[size]" + cr.size() );		
 
 		mongo.close();
 	}

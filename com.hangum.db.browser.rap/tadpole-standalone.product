@@ -7,16 +7,17 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-standalone -debuglog -test</programArgs>
-      <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000</vmArgs>
+      <programArgs>-standalone -test -debuglog</programArgs>
+      <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1 -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer</vmArgs>
       <vmArgsMac>-d32</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/com.hangum.tadpole.applicaion.start/resources/icons/TadpoleForDBTools.png"/>
+   <windowImages/>
 
    <launcher name="tadpole-standalone">
+      <macosx icon="/com.hangum.tadpole.application/icons/TadpoleForDBTools.icns"/>
       <solaris/>
-      <win useIco="true">
+      <win useIco="false">
          <ico path="/com.hangum.tadpole.application/icons/TadpoleForDBTools.ico"/>
          <bmp/>
       </win>
@@ -24,6 +25,7 @@
 
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
+      <windows include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</windows>
    </vm>
 
    <plugins>
@@ -31,15 +33,19 @@
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.sql"/>
-      <plugin id="com.hangum.tadpole.erd.core"/>
+      <plugin id="com.hangum.tadpole.editor.core"/>
+      <plugin id="com.hangum.tadpole.importdb"/>
       <plugin id="com.hangum.tadpole.manager.core"/>
-      <plugin id="com.hangum.tadpole.model"/>
       <plugin id="com.hangum.tadpole.mongodb.core"/>
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
+      <plugin id="com.hangum.tadpole.mongodb.erd.core"/>
+      <plugin id="com.hangum.tadpole.mongodb.model"/>
       <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.hangum.tadpole.rap.commons"/>
       <plugin id="com.hangum.tadpole.rdb.core"/>
       <plugin id="com.hangum.tadpole.rdb.core.ext"/>
+      <plugin id="com.hangum.tadpole.rdb.erd.core"/>
+      <plugin id="com.hangum.tadpole.rdb.model"/>
       <plugin id="com.hangum.tadpole.sql.parser2"/>
       <plugin id="com.ibm.icu.base"/>
       <plugin id="javax.servlet"/>
@@ -96,6 +102,7 @@
       <plugin id="org.eclipse.rap.draw2d"/>
       <plugin id="org.eclipse.rap.draw2d.compatibility"/>
       <plugin id="org.eclipse.rap.gef"/>
+      <plugin id="org.eclipse.rap.jettycustomizer" fragment="true"/>
       <plugin id="org.eclipse.rap.jface"/>
       <plugin id="org.eclipse.rap.jface.databinding"/>
       <plugin id="org.eclipse.rap.rwt"/>
@@ -116,15 +123,19 @@
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.erd.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.editor.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.importdb" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rap.commons" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core.ext" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.rdb.erd.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.rdb.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.sql.parser2" autoStart="true" startLevel="0" />
       <plugin id="com.ibm.icu.base" autoStart="true" startLevel="0" />
       <plugin id="javax.servlet" autoStart="true" startLevel="0" />

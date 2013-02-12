@@ -75,41 +75,7 @@ public class MainEditorInput implements IEditorInput {
 		this.OPEN_TYPE = Define.EDITOR_OPEN_TYPE.FILE;
 		
 		this.defaultStr = TadpoleSystem_UserDBResource.getResourceData(dao);
-		
-//		try {
-//			this.defaultStr = fileLoad(Define.SQL_FILE_LOCATION + resourceDAO.getFilepath() + resourceDAO.getFilename() + ".sql"); //$NON-NLS-1$
-//		} catch(Exception e) {
-//			logger.error("file load", e); //$NON-NLS-1$
-//			
-//		}
 	}
-	
-//	/**
-//	 * 초기 파일을 로드
-//	 * @return
-//	 */
-//	private String fileLoad(String fileName) throws Exception {
-//		StringBuffer sb = new StringBuffer();
-//		FileReader fr = null;
-//		BufferedReader br = null;
-//		try {
-//			fr = new FileReader(new File(fileName));
-//			br = new BufferedReader(fr);
-//		    String eachLine = br.readLine();
-//
-//		    while (eachLine != null) {
-//		      sb.append(eachLine);
-//		      sb.append("\n"); //$NON-NLS-1$
-//		      eachLine = br.readLine();
-//		    }
-//			
-//		} finally {
-//			try { br.close(); } catch(Exception e) {}
-//			try { fr.close(); } catch(Exception e) {}
-//		}
-//		
-//		return sb.toString();
-//	}
 	
 	/**
 	 * query창에 action 타입에 따른 기본 텍스트 출력

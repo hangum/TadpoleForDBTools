@@ -47,7 +47,7 @@ public class SQLToStringDialog extends Dialog {
 	private String languageType = ""; //$NON-NLS-1$
 	private String sql = ""; //$NON-NLS-1$
 	
-	Text textConvert;
+	private Text textConvert;
 	private Text textVariable;
 
 	/**
@@ -189,7 +189,7 @@ public class SQLToStringDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
 	}
 
 	/**

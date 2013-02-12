@@ -34,8 +34,6 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText("Refresh " + title);
-		
-//		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override
@@ -52,7 +50,9 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 			refreshFunction();
 		} else if(actionType == DB_ACTION.TRIGGERS) {
 			refreshTrigger();
-		} 
+		} else if(actionType == DB_ACTION.JAVASCRIPT) {
+			refreshJS();
+		}
 	}
-	
+
 }

@@ -45,7 +45,7 @@ public class TadpoleSystem_UserDBQuery {
 		queryMap.put("url", 	url);
 		queryMap.put("users", 	users);
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<Object> listUserDB = sqlClient.queryForList("isAlreadyExistDB", queryMap);
 		
 		if(listUserDB.size() == 0) return false;
@@ -60,7 +60,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws Exception
 	 */
 	public static List<String> getUserGroup(int userSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (List<String>)sqlClient.queryForList("userDBGroup", userSeq); //$NON-NLS-1$
 	}
 	
@@ -73,7 +73,7 @@ public class TadpoleSystem_UserDBQuery {
 		userDb.setUser_seq(userSeq);
 		
 		// 기존에 등록 되어 있는지 검사한다
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> isUserDB = (List<UserDBDAO>)sqlClient.queryForList("isUserDB", userDb); //$NON-NLS-1$
 		
 		// 존재하
@@ -106,7 +106,7 @@ public class TadpoleSystem_UserDBQuery {
 		newUserDb.setUser_seq(userSeq);
 		newUserDb.setSeq(oldUserDb.getSeq());
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBUpdate", newUserDb); //$NON-NLS-1$
 		
 		return newUserDb;
@@ -120,7 +120,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws Exception
 	 */
 	public static List<UserDBDAO> getUserDB(int userSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> userDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", userSeq);//SessionManager.getSeq()); //$NON-NLS-1$
 		
 		// user가 manager 일 경우 (session에 넣을때 부터..)
@@ -149,7 +149,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws Exception
 	 */
 	public static List<UserDBDAO> getSpecificUserDB(int userSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return  (List<UserDBDAO>)sqlClient.queryForList("userDB", userSeq); //$NON-NLS-1$
 	}
 	
@@ -159,7 +159,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws Exception
 	 */
 	public static void removeUserDB(int seq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		sqlClient.update("userDBDelete", seq); //$NON-NLS-1$		
 	}

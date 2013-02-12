@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.connection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -22,6 +24,7 @@ import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.Mongo;
 import com.mongodb.MongoOptions;
+import com.mongodb.ServerAddress;
 
 /**
  * mongo db connection
@@ -50,7 +53,7 @@ public class MongoConnectionManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static DB getInstance(UserDBDAO userDB) throws Exception {
+	public static DB getInstance(UserDBDAO userDB) throws MongoDBNotFoundException, Exception {
 		DB db = null;
 		
 		synchronized (dbManager) {
@@ -60,16 +63,35 @@ public class MongoConnectionManager {
 				Mongo mongo = dbManager.get( searchKey );
 				
 				if(mongo == null) {
-					MongoOptions options = new MongoOptions();
+					final MongoOptions options = new MongoOptions();
 					options.connectionsPerHost = 20;
+					options.threadsAllowedToBlockForConnectionMultiplier = 5;
+					options.maxWaitTime = 120000;
+					options.autoConnectRetry = false;
+					options.safe = true;
 					
-					mongo = new Mongo(new DBAddress(userDB.getUrl()), options);
+					String strReplcaSet = userDB.getExt1();
+					if("".equals(strReplcaSet)) {
+						mongo = new Mongo(new DBAddress(userDB.getUrl()), options);	
+					} else {
+						List<ServerAddress> listServerList = new ArrayList<ServerAddress>();
+						listServerList.add(new ServerAddress(userDB.getHost(), Integer.parseInt(userDB.getPort())));
+						
+						String[] urls = StringUtils.split(strReplcaSet, ",");
+						for (String ipPort : urls) {
+							String[] strIpPort = StringUtils.split(ipPort, ":");
+							
+							listServerList.add(new ServerAddress(strIpPort[0], Integer.parseInt(strIpPort[1])));
+						}
+						
+						mongo = new Mongo(listServerList, options);	
+					}
 					List<String> listDB = mongo.getDatabaseNames();
 					
 					boolean isDB = false;
 					for (String dbName : listDB) if(userDB.getDb().equals(dbName)) isDB = true;						
 					if(!isDB) {
-						throw new Exception(userDB.getDb() + Messages.MongoDBConnection_0);
+						throw new MongoDBNotFoundException(userDB.getDb() + Messages.MongoDBConnection_0);
 					}
 					
 					// password 검색
@@ -106,49 +128,4 @@ public class MongoConnectionManager {
 	private static String getKey(UserDBDAO userDB) {
 		return userDB.getTypes()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd();
 	}
-//	/**
-//	 * mongo db connection
-//	 * 
-//	 * @param userDB
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static DB connection(UserDBDAO userDB) throws Exception {
-//		Mongo mongo = null;
-//		try {
-//			MongoOptions options = new MongoOptions();
-//			options.connectionsPerHost = 20;
-//			
-//			mongo = new Mongo(new DBAddress(userDB.getUrl()), options);
-//			List<String> listDB = mongo.getDatabaseNames();
-//			
-//			boolean isDB = false;
-//			for (String dbName : listDB) if(userDB.getDatabase().equals(dbName)) isDB = true;						
-//			if(!isDB) {
-//				throw new Exception(userDB.getDatabase() + Messages.MongoDBConnection_0);
-//			}
-//			
-//			// password 검색
-//			DB db = mongo.getDB(userDB.getDatabase());
-//			if(!"".equals(userDB.getUser())) { //$NON-NLS-1$
-//				boolean auth = db.authenticate(userDB.getUser(), userDB.getPasswd().toCharArray() );
-//				if(!auth) {
-//					throw new Exception(Messages.MongoDBConnection_3);
-//				}
-//			}
-//			
-//			return db;
-//			
-//		} catch (UnknownHostException e) {
-//			logger.error("mongo db connection", e); //$NON-NLS-1$
-//			
-//			throw new Exception(Messages.MongoDBConnection_2);
-//		} catch (MongoException e) {
-//			logger.error("monodb exception", e); //$NON-NLS-1$
-//			throw new Exception(Messages.MongoDBConnection_4 + e.getMessage());
-////		} finally {
-////			mongo.close();
-//		}
-//		
-//	}
 }

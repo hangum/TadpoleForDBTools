@@ -40,6 +40,7 @@ import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.util.ApplicationArgumentUtils;
 
 /**
  * 신규 유저 등록
@@ -245,7 +246,9 @@ public class NewUserDialog extends Dialog {
 		try {
 			UserDAO loginDAO = TadpoleSystem_UserQuery.newUser(groupSeq, strEmail, passwd, name, userType);
 			
-			MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
+			if(!ApplicationArgumentUtils.isTestMode()) {
+				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
+			}
 			
 //			// 정상이면 session에 로그인 정보를 입력하고 
 //			SessionManager.newLogin(loginDAO.getSeq(), strEmail, name, loginDAO.getUser_type());

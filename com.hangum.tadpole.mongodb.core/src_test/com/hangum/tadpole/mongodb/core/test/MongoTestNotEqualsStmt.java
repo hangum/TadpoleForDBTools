@@ -33,12 +33,16 @@ public class MongoTestNotEqualsStmt {
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
 		
-		DBCollection myColl = db.getCollection("rental");
+		DBCollection myColl = db.getCollection("test_table");
 		
-		BasicDBObject myAndQuery = new BasicDBObject();
-		myAndQuery.append("rental_id", new BasicDBObject("$ne", 1));		
+//		BasicDBObject myAndQuery = new BasicDBObject();
+//		myAndQuery.append("rental_id", new BasicDBObject("$ne", 1));
 		
-		DBCursor myCursor = myColl.find(myAndQuery);		
+		BasicDBObject basicFields = new BasicDBObject();
+		BasicDBObject basicWhere = new BasicDBObject();
+		BasicDBObject basicSort = new BasicDBObject();
+		
+		DBCursor myCursor = myColl.find(basicFields, basicWhere).sort(basicSort).limit(999);		
 		while (myCursor.hasNext()) {
 			System.out.println(myCursor.next());
 		}

@@ -11,6 +11,8 @@
 package com.hangum.tadpole.util.tables;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -51,6 +53,7 @@ public class TableUtil {
 			column.getColumn().setText(header[i]);
 			column.getColumn().setResizable(true);
 			column.getColumn().setMoveable(true);
+			
 			column.setLabelProvider(new ColumnLabelProvider() {
 				@Override
 				public String getText(Object element) {
@@ -61,16 +64,21 @@ public class TableUtil {
 	}
 	
 	public static void packTable(Table table) {
-		TableColumn[] columns = table.getColumns();
+		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(table);
+		table.setLayout(layoutColumnLayout);
 		
-		for (int i = 0; i < columns.length; i++) {
+		TableColumn[] columns = table.getColumns();		
+		for (int i = 0; i < columns.length; i++) {			
 			columns[i].pack();
 			
-			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
-			if(columns.length >= 3) {
-				if(columns[i].getWidth() < 50) columns[i].setWidth(50);
-				else if(columns[i].getWidth() >=  300) columns[i].setWidth(300);
-			}
+			layoutColumnLayout.addColumnData(new ColumnPixelData(columns[i].getWidth() + 5));
+			
+//			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
+//			if(columns.length >= 3) {
+//				if(columns[i].getWidth() < 50) columns[i].setWidth(50);
+//				else if(columns[i].getWidth() >=  300) columns[i].setWidth(300);
+//			}
 		}
+
 	}
 }

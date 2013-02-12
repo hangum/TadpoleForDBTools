@@ -24,8 +24,8 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.mongodb.core.ext.editors.Profilling.ProfillingEditor;
-import com.hangum.tadpole.mongodb.core.ext.editors.Profilling.ProfillingEditorInput;
+import com.hangum.tadpole.mongodb.core.ext.editors.Profilling.ProfilingEditor;
+import com.hangum.tadpole.mongodb.core.ext.editors.Profilling.ProfilingEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
 
 /**
@@ -51,8 +51,8 @@ public class MongodbProfillingAction implements IViewActionDelegate {
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			ProfillingEditorInput input = new ProfillingEditorInput(userDB);
-			page.openEditor(input, ProfillingEditor.ID, false);
+			ProfilingEditorInput input = new ProfilingEditorInput(userDB);
+			page.openEditor(input, ProfilingEditor.ID, false);
 			
 		} catch (PartInitException e) {
 			logger.error("Mongodb profilling", e);

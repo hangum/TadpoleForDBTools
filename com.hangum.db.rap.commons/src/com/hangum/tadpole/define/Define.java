@@ -10,9 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.define;
 
-import org.eclipse.core.runtime.Platform;
 
-
+/**
+ * Tadpole System Define
+ * 
+ * @author hangum
+ *
+ */
 public class Define {
 	/** 올챙이가 지원 하는 디비 타입을 정의 합니다  */
 	public enum DB_TYPE {DB, NOSQL};
@@ -27,13 +31,13 @@ public class Define {
 	public static final String SELECT_ERD_TABLE = "SELECT_ERD_TABLE_RESOURE";
 	
 	/** USER TYPE */
-	public static enum USER_TYPE {ADMIN, MANAGER, USER, GUEST};
+	public static enum USER_TYPE {ADMIN, MANAGER, DBA, USER, GUEST};
 	
 	/** 에디터를 열때 오픈하는 타입을 적습니다. */
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
 	/** save resource type */
-	public static enum RESOURCE_TYPE { ERD, SQL };
+	public static enum RESOURCE_TYPE { ERD, SQL, USER_EXECUTE_QUERY };
 	
 	/** 라인 분리자 */
 	public static final String LINE_SEPARATOR = "\r\n";
@@ -42,7 +46,16 @@ public class Define {
 	public static final String SQL_DILIMITER = ";";
 	
 	/** objec explorer에서 정의한 action */
-	public static enum DB_ACTION {TABLES, VIEWS, INDEXES, PROCEDURES, FUNCTIONS, TRIGGERS};
+	public static enum DB_ACTION {
+		TABLES, 
+		VIEWS, 
+		INDEXES, 
+		PROCEDURES, 
+		FUNCTIONS, 
+		TRIGGERS,
+		COLLECTIONS,
+		JAVASCRIPT
+	};
 	
 	/** query editor에서 실행 모드 */
 	public static enum QUERY_MODE {DEFAULT, EXPLAIN_PLAN};
@@ -81,6 +94,16 @@ public class Define {
 		return false;
 	}
 	
-	/**  ERD 파일 저장위치 */
-	public static final String ERD_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/erd/";// //$NON-NLS-1$
+	/** tadpole url */
+	public static String TADPOLE_URL = "http://127.0.0.1:%s/db?startup=tadpole";
+	
+	/**
+	 * tadpole url
+	 * 
+	 * @return
+	 */
+	public static String getTadpoleUrl() {
+		String tadpolePort = System.getProperty("org.osgi.service.http.port", "10081");
+		return String.format(TADPOLE_URL, tadpolePort);
+	}
 }

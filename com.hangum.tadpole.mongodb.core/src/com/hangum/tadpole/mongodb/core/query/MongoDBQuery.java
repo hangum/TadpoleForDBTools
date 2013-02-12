@@ -12,16 +12,24 @@ package com.hangum.tadpole.mongodb.core.query;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.dao.mongodb.MongoDBIndexFieldDAO;
+import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
+import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
@@ -29,6 +37,8 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoOptions;
 import com.mongodb.WriteResult;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -48,6 +58,56 @@ public class MongoDBQuery {
 	private static final Logger logger = Logger.getLogger(MongoDBQuery.class);
 	
 	/**
+	 * create database
+	 * 
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static void createDB(UserDBDAO userDB) throws Exception {
+		MongoOptions options = new MongoOptions();
+		options.connectionsPerHost = 20;		
+		Mongo mongo = new Mongo(userDB.getHost(), Integer.parseInt(userDB.getPort()));
+		DB db = mongo.getDB(userDB.getDb());
+		Set<String> listColNames = db.getCollectionNames();
+		for (String string : listColNames) {
+			System.out.println("[collection name]" + string);
+		}
+	}
+	
+	/**
+	 * get admin mongodb
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static DB getAdminMongoDB(UserDBDAO userDB) throws Exception {
+		Mongo mongo = new Mongo(userDB.getHost(), Integer.parseInt(userDB.getPort()));
+		return mongo.getDB("admin");
+	}
+	
+	/**
+	 * collection list
+	 * 
+	 * System collections(http://docs.mongodb.org/manual/reference/system-collections/)을 제외한 collection list를 리턴합니다.
+	 * 
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> listCollection(UserDBDAO userDB) throws Exception {
+		List<String> listReturn = new ArrayList<String>();
+		
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
+		for (String col : mongoDB.getCollectionNames()) {
+			if(!isSystemCollection(col)) listReturn.add(col);
+		}
+		
+		return listReturn;
+	}
+	
+	/**
 	 * collection column list
 	 * 
 	 * @param userDB
@@ -55,7 +115,7 @@ public class MongoDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<TableColumnDAO> collectionColumn(UserDBDAO userDB, String colName) throws Exception {
+	public static List<CollectionFieldDAO> collectionColumn(UserDBDAO userDB, String colName) throws Exception {
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		DBCollection coll = mongoDB.getCollection(colName);
 									
@@ -128,6 +188,39 @@ public class MongoDBQuery {
 		return collection.findOne(queryObj);
 	}
 	
+//	/**
+//	 * explain
+//	 * 
+//	 * @param userDB
+//	 * @param colName
+//	 * @param jsonStr
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static String explain(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
+//		DBCollection collection = findCollection(userDB, colName);
+//		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
+//		
+//		DBObject explainDBObject = collection.find(dbObject).explain();
+//		return JSONUtil.getPretty(explainDBObject.toString());		
+//	}
+//	
+//	/**
+//	 * find query
+//	 * 
+//	 * @param userDB
+//	 * @param colName
+//	 * @param jsonStr
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static DBCursor findQuery(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
+//		DBCollection collection = findCollection(userDB, colName);
+//		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
+//		
+//		return collection.find(dbObject);	
+//	}
+	
 	/**
 	 * insert document
 	 * 
@@ -150,6 +243,30 @@ public class MongoDBQuery {
 	}
 	
 	/**
+	 * insert document
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @param dbObject
+	 * @throws Exception
+	 */
+	public static void insertDocument(UserDBDAO userDB, String colName, DBObject[] dbObject) throws Exception {
+		if(dbObject.length == 0) return;
+		
+		DBCollection collection = findCollection(userDB, colName);		
+		WriteResult wr = collection.insert(dbObject);
+		if(logger.isDebugEnabled()) {
+			try {
+				logger.debug( "[writer document]" + wr!=null?wr.toString():"" );
+				logger.debug( "[wr error]" + wr!=null?wr.getError():"" );		
+				logger.debug("[n]" + wr!=null?wr.getN():"" );
+			} catch(Exception e) {
+				logger.error("저장중에", e);
+			}
+		}
+	}
+	
+	/**
 	 * delete document
 	 * 
 	 * @param userDB
@@ -159,12 +276,17 @@ public class MongoDBQuery {
 	 */
 	public static void deleteDocument(UserDBDAO userDB, String colName, DBObject dbObject) throws Exception {
 		DBCollection collection = findCollection(userDB, colName);
-//		DBObject query = new BasicDBObject("_id", new ObjectId(objectId));
 		WriteResult wr = collection.remove(dbObject);
+		
 		if(logger.isDebugEnabled()) {
 			logger.debug( "[writer document]" + wr.toString() );
 			logger.debug( wr.getError() );		
 			logger.debug("[n]" + wr.getN() );
+		}
+		
+		// 외부 참조키가 있어 삭제 되지 않는 경우
+		if(wr.getN() == 0 && !"".equals(wr.getError())) {
+			throw new Exception(wr.getError());
 		}
 	}
 	
@@ -195,13 +317,15 @@ public class MongoDBQuery {
 	 * 
 	 * @param userDB
 	 * @param colName
-	 * @param object
+	 * @param strIndexName
+	 * @param jsonStr
+	 * @param unique	 
 	 */
-	public static void crateIndex(UserDBDAO userDB, String colName, String jsonStr) throws Exception {
+	public static void crateIndex(UserDBDAO userDB, String colName, String strIndexName, String jsonStr,  boolean unique) throws Exception {
 		DBObject dbObject = (DBObject) JSON.parse(jsonStr);
 		
 		DBCollection collection = findCollection(userDB, colName);
-		collection.ensureIndex(dbObject);		
+		collection.ensureIndex(dbObject, strIndexName, unique);
 	}
 	
 	/**
@@ -235,7 +359,132 @@ public class MongoDBQuery {
 	}
 	
 	/**
-	 * Server status
+	 * list index
+	 * 
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static List<MongoDBIndexDAO> listAllIndex(UserDBDAO userDB) throws Exception {
+		List<MongoDBIndexDAO> listReturnIndex = new ArrayList<MongoDBIndexDAO>();
+		
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
+		for (String col : mongoDB.getCollectionNames()) {
+			
+			if(!isSystemCollection(col)) {
+				List<DBObject> listIndexObj = mongoDB.getCollection(col).getIndexInfo();
+				for (DBObject dbObject : listIndexObj) {
+					MongoDBIndexDAO indexDao = new MongoDBIndexDAO();
+					
+					indexDao.setV(dbObject.get("v").toString());
+					Map<String, Object> objMap = (Map)dbObject.get("key");
+					for (String strKey : objMap.keySet()) {
+						indexDao.getListIndexField().add(new MongoDBIndexFieldDAO(strKey, objMap.get(strKey).toString()));
+					}
+					
+					if(dbObject.containsField("unique")) {
+						indexDao.setUnique( Boolean.valueOf(dbObject.get("unique").toString()) );
+					}
+					String strNs = dbObject.get("ns").toString();
+					strNs = StringUtils.substringAfter(strNs, userDB.getDb() + ".");
+					
+					indexDao.setNs(strNs);
+					indexDao.setName(dbObject.get("name").toString());				
+
+					listReturnIndex.add(indexDao);
+				}
+			}
+		}
+		
+		return listReturnIndex;
+	}
+	
+	/**
+	 * all Server Side Java Script
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static List<MongoDBServerSideJavaScriptDAO> listAllJavaScript(UserDBDAO userDB) throws Exception {
+		List<MongoDBServerSideJavaScriptDAO> listReturn = new ArrayList<MongoDBServerSideJavaScriptDAO>();
+		
+		DBCursor dbCursor = findDB(userDB).getCollection("system.js").find();
+		List<DBObject> lsitCursor = dbCursor.toArray();
+		for (DBObject dbObject : lsitCursor) {
+			listReturn.add(new MongoDBServerSideJavaScriptDAO(dbObject.get("_id").toString(), dbObject.get("value").toString()));
+		}
+		
+		return listReturn;
+	}
+
+	/**
+	 * save java script
+	 * 
+	 * @param userDB
+	 * @param javaScriptDAO
+	 * @throws Exception
+	 */
+	public static void insertJavaScript(UserDBDAO userDB, MongoDBServerSideJavaScriptDAO javaScriptDAO) throws Exception {
+		DBObject dbObject = (DBObject) JSON.parse("{'_id':'" + javaScriptDAO.getName() + "', 'value':'" +  javaScriptDAO.getContent() + "'}");
+		findDB(userDB).getCollection("system.js").save(dbObject);
+	}
+	
+	/**
+	 * update java script
+	 * 
+	 * @param userDB
+	 * @param _id
+	 * @param content
+	 * @throws Exception
+	 */
+	public static void updateJavaScript(UserDBDAO userDB, String _id, String content) throws Exception {
+		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + _id + "'}");
+		DBObject dbUpdateObject = (DBObject) JSON.parse("{'_id':'" + _id + "', 'value':'" + content +"'}");
+		
+		findDB(userDB).getCollection("system.js").findAndModify(dbFindObject, dbUpdateObject);
+	}
+	
+	/**
+	 * remove javascript
+	 * 
+	 * @param userDB
+	 * @param _id
+	 * @throws Exception
+	 */
+	public static void deleteJavaScirpt(UserDBDAO userDB, String _id) throws Exception {
+		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + _id + "'}");
+		findDB(userDB).getCollection("system.js").remove(dbFindObject);
+	}
+	
+	/**
+	 * execute eval
+	 * 
+	 * @param userDB
+	 * @param content
+	 * @param inputArray
+	 * @return
+	 * @throws Exception
+	 */
+	public static Object executeEval(UserDBDAO userDB, String content, Object[] inputArray) throws Exception {
+		Object dbObject = findDB(userDB).eval(content, inputArray);
+		
+		return dbObject;
+	}
+	
+	/**
+	 * is system collection
+	 * @param colName
+	 * @return
+	 */
+	public static boolean isSystemCollection(String colName) {
+		for(String sysColl : MongoDBDefine.SYSTEM_COLLECTION) {
+			if(colName.equals(sysColl)) return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Server status, return to String
+	 * 
 	 * @param userDB
 	 * @throws Exception
 	 */
@@ -249,6 +498,19 @@ public class MongoDBQuery {
 		} else {
 			throw cr.getException();
 		}
+	}
+	
+	/**
+	 * Server status return to CommandResult
+	 * 
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static CommandResult serverStatusCommandResult(UserDBDAO userDB) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		
+		DBObject queryObj = new BasicDBObject("serverStatus", 1);
+		return mongoDB.command(queryObj);		
 	}
 	
 	/**
@@ -437,6 +699,48 @@ public class MongoDBQuery {
 	}
 	
 	/**
+	 * bucket list 정보를 리턴합니다.
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> getGridFSBucketList(UserDBDAO userDB) throws Exception {
+		List<String> listStr = new ArrayList<String>();
+		
+		DB mongoDb = findDB(userDB);
+		Set<String> colNames = mongoDb.getCollectionNames();
+		for (String name : colNames) {
+			if(StringUtils.contains(name, ".chunks")) listStr.add(StringUtils.removeEnd(name, ".chunks"));			
+		}
+		
+		return listStr;
+	}
+	
+	/**
+	 * GridFS chunck detail information
+	 * 
+	 * @param userDB
+	 * @param objectId
+	 * @return
+	 * @throws Exception
+	 */
+	public static DBCursor getGridFSChunckDetail(UserDBDAO userDB, String searchChunkName, String objectId) throws Exception {
+		DBCollection col = findCollection(userDB, searchChunkName);
+		
+		// 
+		DBObject queryObj = new BasicDBObject();
+		queryObj.put("files_id", new ObjectId(objectId));
+		
+		// field
+		DBObject fieldObj = new BasicDBObject();
+		fieldObj.put("files_id", 1);
+		fieldObj.put("n", 1);
+		
+		return col.find(queryObj, fieldObj);
+	}
+	
+	/**
 	 * get gridfs data
 	 * 
 	 * @param userDB
@@ -499,5 +803,16 @@ public class MongoDBQuery {
 		}
 		
 	}
+
+	/**
+	 * index를 삭제합니다.
+	 * 
+	 * @param userDB
+	 * @param name
+	 */
+	public static void dropIndex(UserDBDAO userDB, String colName, String name) throws Exception {
+		findCollection(userDB, colName).dropIndex(name);		
+	}
+	
 	
 }

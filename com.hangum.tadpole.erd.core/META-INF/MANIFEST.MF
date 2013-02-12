@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core
-Bundle-SymbolicName: com.hangum.tadpole.erd.core; singleton:=true
+Bundle-SymbolicName: com.hangum.tadpole.rdb.erd.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.hangum.tadpole.erd.stanalone.Activator
+Bundle-Activator: com.hangum.tadpole.rdb.erd.stanalone.Activator
 Bundle-Vendor: HANGUM
 Require-Bundle: org.eclipse.rap.ui,
- com.hangum.tadpole.model;bundle-version="1.0.0",
+ com.hangum.tadpole.rdb.model;bundle-version="1.0.0",
  org.eclipse.rap.gef;bundle-version="1.5.0",
  org.eclipse.rap.draw2d;bundle-version="1.5.0",
  org.eclipse.rap.draw2d.compatibility;bundle-version="1.5.0",
@@ -14,9 +14,8 @@ Require-Bundle: org.eclipse.rap.ui,
  com.hangum.tadpole.rap.commons;bundle-version="1.0.0",
  org.eclipse.rap.ui.views;bundle-version="1.4.1",
  org.eclipse.emf.ecore.xmi;bundle-version="2.7.0",
- com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
- com.hangum.tadpole.mongodb.core;bundle-version="1.0.0"
+ com.hangum.tadpole.commons.libs;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.servlet;version="2.4.0",javax.servlet.http;version="2.4.0"
-Export-Package: com.hangum.tadpole.erd.core.editor
+Export-Package: com.hangum.tadpole.rdb.erd.core.editor

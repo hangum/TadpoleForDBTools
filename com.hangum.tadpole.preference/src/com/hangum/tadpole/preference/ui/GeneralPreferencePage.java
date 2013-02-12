@@ -74,7 +74,6 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		lblHomePage.setText(Messages.GeneralPreferencePage_lblHomePage_text);
 		
 		textHomePage = new Text(container, SWT.BORDER);
-		textHomePage.setText(Messages.GeneralPreferencePage_text_text_1);
 		textHomePage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(container, SWT.NONE);
 		

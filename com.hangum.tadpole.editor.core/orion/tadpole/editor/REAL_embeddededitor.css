@@ -1,0 +1,38 @@
+@import "../../orion/editor/REAL_editor.css";
+
+body {
+	margin: 0;
+	padding: 0;
+	font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
+}
+
+a {
+	cursor: hand;
+	text-decoration: none;
+	color: #ffffff;
+}
+
+a:hover {
+	cursor: hand;
+	text-decoration: underline;
+	color: #ffffff;
+}
+
+.contentassist {
+	display: none;
+	background-color: #ffffff;
+	padding: 2px;
+	position: fixed;
+	top: 100px;
+	left: 100px;
+	border: 1px solid #cccccc;
+	z-index:10;
+	cursor: default;
+	overflow: auto;
+	height: 150px;
+	width: 200px;
+}
+
+.contentassist .selected {
+	background-color: #dddddd;
+}

@@ -20,7 +20,7 @@
             id="com.hangum.tadpole.browser.rap.branding"
             servletName="db"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="Tadpole for DB Tools - 0.0.8 SR6">
+            title="Tadpole for DB Tools - 0.0.8 SR10">
       </branding>
    </extension>
    <extension
@@ -40,10 +40,6 @@
          <property
                name="appName"
                value="tadpole-standalone">
-         </property>
-         <property
-               name="windowImages"
-               value="platform:/plugin/com.hangum.tadpole.applicaion.start/resources/icons/TadpoleForDBTools.png">
          </property>
       </product>
    </extension>

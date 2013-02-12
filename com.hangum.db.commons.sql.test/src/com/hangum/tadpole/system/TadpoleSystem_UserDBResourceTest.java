@@ -18,7 +18,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
 import com.hangum.tadpole.define.Define;
-import com.hangum.tadpole.system.TadpoleSystemConnector;
+import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
@@ -51,7 +51,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 				}
 			}
 			
-			UserDBDAO userDb2 = TadpoleSystemConnector.getUserDB();
+			UserDBDAO userDb2 = TadpoleSystemInitializer.getUserDB();
 			userDb2.setDisplay_name("junit testName2");			
 			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, groupSeq);
 			
@@ -69,7 +69,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	 */
 	public void testSaveResource() {
 		try {
-			UserDBResourceDAO userDBResource = TadpoleSystem_UserDBResource.saveResource(userDb, Define.RESOURCE_TYPE.SQL, "junit", "junit content");
+			UserDBResourceDAO userDBResource = TadpoleSystem_UserDBResource.saveResource(userDb.getUser_seq(), userDb, Define.RESOURCE_TYPE.SQL, "junit", "junit content");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("SaveResouece");

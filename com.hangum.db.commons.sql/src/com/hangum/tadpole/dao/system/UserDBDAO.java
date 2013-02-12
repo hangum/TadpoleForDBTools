@@ -27,6 +27,8 @@ public class UserDBDAO {
 	protected int user_seq;
     
 	protected String group_name = "";
+	
+	protected String operation_type = "";
     
 	protected String types;
 	protected String url;
@@ -39,6 +41,16 @@ public class UserDBDAO {
 	protected String users;
 	protected Date create_time;
 	protected String delYn;
+	
+	protected String ext1 = "";
+	protected String ext2 = ""; 
+	protected String ext3 = "";
+	
+	protected String is_profile = "";
+    protected int profile_select_mill = -1;
+    
+    // 운영서버일 경우 DML 문 실행시 YES, NO 묻기
+    protected String question_dml = "";
     
     protected ManagerListDTO parent;
     protected List<UserDBResourceDAO> listUserDBErd;
@@ -191,14 +203,77 @@ public class UserDBDAO {
 	public void setVersion(String version) {
 		this.version = version;
 	}
+	
+	public String getExt1() {
+		return ext1;
+	}
+
+	public void setExt1(String ext1) {
+		this.ext1 = ext1;
+	}
+
+	public String getExt2() {
+		return ext2;
+	}
+
+	public void setExt2(String ext2) {
+		this.ext2 = ext2;
+	}
+
+	public String getExt3() {
+		return ext3;
+	}
+
+	public void setExt3(String ext3) {
+		this.ext3 = ext3;
+	}
+	
+	public String getOperation_type() {
+		return operation_type;
+	}
+
+	public void setOperation_type(String operation_type) {
+		this.operation_type = operation_type;
+	}
+
+	public String getIs_profile() {
+		return is_profile;
+	}
+
+	public void setIs_profile(String is_profile) {
+		this.is_profile = is_profile;
+	}
+
+	public int getProfile_select_mill() {
+		return profile_select_mill;
+	}
+
+	public void setProfile_select_mill(int profile_select_mill) {
+		this.profile_select_mill = profile_select_mill;
+	}
+
+	public String getQuestion_dml() {
+		return question_dml;
+	}
+
+	public void setQuestion_dml(String question_dml) {
+		this.question_dml = question_dml;
+	}
 
 	@Override
 	public String toString() {
-		return "UserDBDAO [seq=" + seq + ", user_seq=" + user_seq + ", types="
-				+ types + ", url=" + url + ", db=" + db + ", display_name="
-				+ display_name + ", host=" + host + ", port=" + port
-				+ ", locale=" + locale + ", users=" + users + ", create_time="
-				+ create_time + "]";
+		return "UserDBDAO [seq=" + seq + ", user_seq=" + user_seq
+				+ ", group_name=" + group_name + ", operation_type="
+				+ operation_type + ", types=" + types + ", url=" + url
+				+ ", db=" + db + ", display_name=" + display_name + ", host="
+				+ host + ", port=" + port + ", locale=" + locale + ", passwd="
+				+ passwd + ", users=" + users + ", create_time=" + create_time
+				+ ", delYn=" + delYn + ", ext1=" + ext1 + ", ext2=" + ext2
+				+ ", ext3=" + ext3 + ", is_profile=" + is_profile
+				+ ", profile_select_mill=" + profile_select_mill
+				+ ", question_dml=" + question_dml + ", parent=" + parent
+				+ ", listUserDBErd=" + listUserDBErd + ", version=" + version
+				+ ", listUserDBGroup=" + listUserDBGroup + "]";
 	}
-	
+
 }

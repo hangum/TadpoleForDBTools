@@ -135,6 +135,16 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, actionType));
 	}
 	
+	/**
+	 * 특정 쿼리를 생성합니다.
+	 * 
+	 * @param userDB
+	 * @param actionType
+	 */
+	public void run(UserDBDAO userDB, String strSql) {
+		FindEditorAndWriteQueryUtil.run(userDB, strSql);
+	}
+	
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {

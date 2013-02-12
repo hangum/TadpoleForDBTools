@@ -85,6 +85,7 @@ public class Messages extends NLS {
 	public static String MainEditor_19;
 	public static String MainEditor_2;
 	public static String MainEditor_20;
+	public static String MainEditor_21;
 	public static String MainEditor_22;
 	public static String MainEditor_25;
 	public static String MainEditor_26;
@@ -175,6 +176,7 @@ public class Messages extends NLS {
 	public static String ObjectDeleteAction_39;
 	public static String ObjectDeleteAction_4;
 	public static String ObjectDeleteAction_40;
+	public static String ObjectDeleteAction_42;
 	public static String ObjectDeleteAction_5;
 	public static String ObjectDeleteAction_6;
 	public static String ObjectDeleteAction_7;
@@ -297,8 +299,22 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_trclmnNewColumn_text;
 	public static String MainEditor_tltmExecute_toolTipText;
 	public static String MainEditor_tltmExecute_toolTipText_1;
+	public static String MongoDBLoginComposite_2;
+	public static String MongoDBLoginComposite_4;
+	public static String MongoDBLoginComposite_9;
 	public static String SQLToStringDialog_lblVariable_text;
 	public static String SQLToStringDialog_btnNewButton_text;
+	public static String OracleLoginComposite_lblDatabase_text;
+	public static String ServerSideJavaScriptEditor_tbtmResult_text;
+	public static String ServerSideJavaScriptEditor_tbtmResult_text_1;
+	public static String ServerSideJavaScriptEditor_tbtmUserJavascript_text;
+	public static String ServerSideJavaScriptEditor_tbtmTadpoleMessage_text;
+	public static String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text;
+	public static String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1;
+	public static String MongoDBLoginComposite_lblReplicaSet_text;
+	public static String MongoDBLoginComposite_lblExLocalhostlocalhost_text;
+	public static String MainEditor_btnClear_text;
+	public static String MySQLLoginComposite_lblOperationType_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

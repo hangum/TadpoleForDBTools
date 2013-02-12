@@ -46,13 +46,20 @@
             id="com.hangum.tadpole.rdb.core.editors.table.edit"
             name="Table Data Editor">
       </editor>
+      <editor
+            class="com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor"
+            default="false"
+            icon="resources/icons/mongodb-add.png"
+            id="com.hangum.tadpole.mongodb.core.ext.editor.javascript"
+            name="Server Side Java Script">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="com.hangum.tadpole.rdb.core.viewerContribution.connect.manager"
             targetID="com.hangum.tadpole.rdb.core.view.connection.manager">
-            
+            <!--
             <action
                class="com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase"
                icon="resources/icons/connect.png"
@@ -60,6 +67,7 @@
                label="Connect Database"
                menubarPath="additions">
          </action>
+         -->
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.ConnectionManagerRefreshAction"
                icon="resources/icons/refresh.png"
@@ -175,7 +183,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action"
@@ -188,7 +196,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDAllTableViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDAllTableViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action.all"
@@ -227,10 +235,22 @@
             id="com.hangum.tadpole.rdb.core.objectContribution.nosql"
             objectClass="com.hangum.tadpole.dao.system.UserDBDAO">
          <action
+               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongoDBImportAction"
+               icon="resources/icons/db_import.png"
+               id="com.hangum.tadpole.rdb.core.action.import"
+               label="Import"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbProfillingAction"
                icon="resources/icons/profile.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.profilling"
-               label="Profilling"
+               label="Profiling"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -309,7 +329,7 @@
                      name="com.hangum.tadpole.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
-         </action>
+         </action>         
          <menu
                icon="resources/icons/erd.png"
                id="menu.nosql.erd"
@@ -319,7 +339,7 @@
             </groupMarker>
          </menu>
 		<action
-        class="com.hangum.tadpole.rdb.core.actions.erd.ERDDeleteAction"
+        class="com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDDeleteAction"
         enablesFor="1"
         icon="resources/icons/delete-relation.png"
         id="com.hangum.tadpole.erd.delete.action"
@@ -333,7 +353,7 @@
          </action>
     
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action"
@@ -346,7 +366,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDAllTableViewAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDAllTableViewAction"
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action.all"
@@ -384,7 +404,7 @@
             id="com.hangum.tadpole.rdb.core.objectContribution.resource"
             objectClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.ERDDeleteAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDDeleteAction"
                enablesFor="1"
                icon="resources/icons/delete-relation.png"
                id="com.hangum.tadpole.rdb.core.action.deleteResource"
@@ -415,13 +435,6 @@
                type="org.eclipse.ui.IActionFilter">
          </adapter>
       </factory>
-   </extension>
-   <extension
-         point="org.eclipse.equinox.http.registry.resources">
-      <resource
-            alias="/orion"
-            base-name="/orion">
-      </resource>
    </extension>
 
 </plugin>

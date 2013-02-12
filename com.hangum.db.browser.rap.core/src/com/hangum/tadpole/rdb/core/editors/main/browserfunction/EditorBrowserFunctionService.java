@@ -18,12 +18,11 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.define.Define;
-import com.hangum.tadpole.rdb.core.dialog.editor.ShortcutHelpDialog;
+import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.util.browserFunction.IEditorBrowserFunction;
 import com.hangum.tadpole.sql.parser.format.FormatSQL;
-import com.hangum.tadpole.sql.parser.format.ParserDefine;
 
 /**
  * query editor browser function
@@ -201,7 +200,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			editor.setOrionText(queryStruct[1]);
-			editor.setOrionTestPostion(new Integer(queryStruct[0]));
+			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
 			
 			editor.executeCommand(Define.QUERY_MODE.DEFAULT);
 		}
@@ -214,7 +213,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			editor.setOrionText(queryStruct[1]);
-			editor.setOrionTestPostion(MainEditor.ALL_QUERY_EXECUTE);
+			editor.setOrionEditorCursorPostion(MainEditor.ALL_QUERY_EXECUTE);
 			
 			editor.executeCommand(Define.QUERY_MODE.DEFAULT);
 		}
@@ -227,7 +226,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			editor.setOrionText(queryStruct[1]);
-			editor.setOrionTestPostion(new Integer(queryStruct[0]));
+			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
 			
 			editor.executeCommand(Define.QUERY_MODE.EXPLAIN_PLAN);
 		}
@@ -237,7 +236,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 		String newContents = (String) arguments[1];
 		
 		try {
-			newContents = FormatSQL.format(ParserDefine.DB_TYPE.MYSQL, newContents );
+			newContents = FormatSQL.format(newContents );
 			
 			return newContents;						
 		} catch (Exception e) {
@@ -272,7 +271,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			String newContents = (String) arguments[1];
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
-			editor.downloadSQL(queryStruct[1]);
+			editor.downloadExtFile(editor.getUserDB().getDisplay_name()+".sql", queryStruct[1]);
 		}
 	}
 	
@@ -287,7 +286,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 	 * help popup
 	 */
 	private void helpPopup() {
-		ShortcutHelpDialog dialog = new ShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+		RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
 		dialog.open();
 	}
 }
