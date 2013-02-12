@@ -71,7 +71,9 @@ public class TableUtil {
 		for (int i = 0; i < columns.length; i++) {			
 			columns[i].pack();
 			
-			layoutColumnLayout.addColumnData(new ColumnPixelData(columns[i].getWidth() + 5));
+			
+			// 10의 숫자는 경험치이고 컬럼이 적었을 경우 좀더 편하게 보이는듯합니다. 
+			layoutColumnLayout.addColumnData(new ColumnPixelData(columns[i].getWidth() + 10));
 			
 //			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
 //			if(columns.length >= 3) {
