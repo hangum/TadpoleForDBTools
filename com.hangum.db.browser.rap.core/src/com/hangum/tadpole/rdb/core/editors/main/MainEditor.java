@@ -854,34 +854,35 @@ public class MainEditor extends EditorPart {
 	 * 
 	 */
 	private void execute() {
-		// 쿼리 내용이 존재 하지 않으면 수행하지 않도록 수행합니다.
 		String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
 		if("".equals(tmpStrSelText)) return;		
 		
-		// query의 히스토리를 보여줍니다.
+		// query의 히스토리를 보여 주기위한 변수 정의
 		final List<String> listQueryHistory = new ArrayList<String>();
 		
-		// 실행할 쿼리를 등록합니다.
+		// execute batch 처리를 위한 변수 정의
 		final List<String> listStrExecuteQuery = new ArrayList<String>();
+		
+		// select 문 처리를 위한 변수 정의
 		String executeLastSQL  = ""; //$NON-NLS-1$
 		
-		// cursor 위치가 ALL_QUERY_EXECUTE 이면 전체 쿼리 실행이다.
+		// 현재 실행 할 쿼리의 형태(전체 실행, 부분 쿼리 실행)인지
 		final int intExecuteQueryType = getOrionEditorCursorPosition();
 
-		if(intExecuteQueryType == ALL_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
+		// 전체 실행이면..
+		if(intExecuteQueryType == ALL_QUERY_EXECUTE) {						
 			tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
 			
-			String[] strArrySQLS = tmpStrSelText.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
-			
-			for (String strSQL : strArrySQLS) {							
+			// 분리자 만큼 돌려면 실행 할 쿼리를 모읍니다.
+			for (String strSQL : tmpStrSelText.split(Define.SQL_DILIMITER)) {							
 
-				// 히스토리 데이터에 실행된 쿼리를 남긴다.
+				// 히스토리 데이터에 실행된 쿼리 저장
 				listQueryHistory.add(strSQL);						
 				
-				// 구분자 ;를 제거 합니다.
+				// 구분자 ;를 제거 합니다.(특정 디비에서는 ;가 있으면 오류)
 				strSQL = StringUtils.removeEnd(strSQL, Define.SQL_DILIMITER);
 				
-				// 쿼리 텍스트에 쿼리 이외의 특수 문자를 제거해 줍니다.
+				// 쿼리 텍스트에 쿼리 이외의 특수 문자를 제거
 				executeLastSQL = SQLUtil.executeQuery(strSQL);
 				
 				// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
@@ -894,10 +895,10 @@ public class MainEditor extends EditorPart {
 		} else {				
 			String strSQL = SQLTextUtil.executeQuery(tmpStrSelText, intExecuteQueryType);
 
-			// 히스토리 데이터에 실행된 쿼리를 남긴다.
-			listQueryHistory.add(strSQL);
+			// 히스토리 데이터에 실행된 쿼리 저장
+			listQueryHistory.add(strSQL);						
 			
-			// 구분자 ;를 제거 합니다.
+			// 구분자 ;를 제거 합니다.(특정 디비에서는 ;가 있으면 오류)
 			strSQL = StringUtils.removeEnd(strSQL, Define.SQL_DILIMITER);
 			
 			// 쿼리를 수행할수 있도록 가공합니다.
@@ -926,18 +927,18 @@ public class MainEditor extends EditorPart {
 					pageNumber = 1;	
 					
 					if(intExecuteQueryType == ALL_QUERY_EXECUTE) {
-						// select 문 이외의 실행문이면 실행
+						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
 							runSQLExecuteBatch(listStrExecuteQuery);
 						}
 						
-						// 마지막 문장이 select 이면 실행
+						// select 문장 실행
 						if(!"".equals(finalExecuteSQL)) {
-							runSQLSelect(finalExecuteSQL); //$NON-NLS-1$ //$NON-NLS-2$
+							runSQLSelect(finalExecuteSQL);
 						}
 					} else {
 						if(SQLUtil.isStatment(finalExecuteSQL)) {							
-							runSQLSelect(finalExecuteSQL); //$NON-NLS-1$ //$NON-NLS-2$
+							runSQLSelect(finalExecuteSQL);
 						} else {
 							runSQLOther(finalExecuteSQL);
 						}
