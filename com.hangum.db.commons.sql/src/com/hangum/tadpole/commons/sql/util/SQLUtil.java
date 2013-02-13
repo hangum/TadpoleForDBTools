@@ -101,7 +101,7 @@ public class SQLUtil {
 	}
 	
 	/**
-	 * tadpole에서 실행할 쿼리로 구문을 만듭니다.
+	 * 쿼리 텍스트에 쿼리 이외의 특수 문자를 제거해 줍니다.
 	 * 
 	 * @param exeSQL
 	 * @return
@@ -171,7 +171,7 @@ public class SQLUtil {
 		int cutsize = 1998;
 		String[] tmpRetArryStr = new String[2000];
 		byte[] byteSqlText = resourceContent.getBytes();
-
+		
 		int isEndTextHangul = 0;
 		int workCnt = 0;
 
