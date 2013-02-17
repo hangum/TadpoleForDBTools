@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="tadpole-rap-1.5.0-emf-standalone" sequenceNumber="94">
+<?pde version="3.8"?><target name="tadpole-rap-1.5.0-emf-standalone" sequenceNumber="95">
 <locations>
 <location path="${git-tadpole}/targetProject/multiTab" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -11,5 +11,6 @@
 <location path="${git-tadpole}/targetProject/fileupload" type="Directory"/>
 <location path="${git-tadpole}/targetProject/rap-2.0.0-R-20130205-1849" type="Directory"/>
 <location path="${git-tadpole}/targetProject/ext${build_files}${build_files}" type="Directory"/>
+<location path="${git-tadpole}/targetProject/rap-gef-port-2.0" type="Directory"/>
 </locations>
 </target>
