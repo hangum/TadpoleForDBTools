@@ -33,8 +33,10 @@ public class TadpoleOrionHubEditor extends Composite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleOrionHubEditor.class);
 	
+	/** editor url resource */
 	private static final String EDITOR_URL = "orion/tadpole/editor/jsonEmbeddededitor.html";
 	
+	/** 초기설정 텍스트 */
 	private String initContent;
 	
 	/**
@@ -85,22 +87,22 @@ public class TadpoleOrionHubEditor extends Composite {
 		
 		browserOrionEditor = new Browser(compositeServerStatus, SWT.NONE);
 		browserOrionEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		browserOrionEditor.setUrl(EDITOR_URL);
-	    addBrowserHandler();
+		addBrowserHandler();
+		browserOrionEditor.setUrl(EDITOR_URL);	    
 	}
 	
 	/**
-	 * brower handler
+	 * browser handler
 	 */
 	private void addBrowserHandler() {
+		registerBrowserFunctions();
+		
 		browserOrionEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					registerBrowserFunctions();
 					browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);
 				} catch(Exception e) {
-					e.printStackTrace();
-//					logger.error("set register browser function and content initialize", e);
+					logger.error("set register browser function and content initialize", e);
 				}
 			}
 			public void changed( ProgressEvent event ) {}
@@ -113,14 +115,7 @@ public class TadpoleOrionHubEditor extends Composite {
 	 *  @param command brower command
 	 */
 	public Object browserEvaluate(String command) throws Exception {
-//		try {
-			return browserOrionEditor.evaluate(command);
-//		} catch(Exception e) {
-////			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", SessionManager.getEMAIL()), e); //$NON-NLS-1$ //$NON-NLS-2$
-//			throw new ILLe
-//		}
-//		
-//		return "";
+		return browserOrionEditor.evaluate(command);
 	}
 	
 	/**
@@ -129,6 +124,7 @@ public class TadpoleOrionHubEditor extends Composite {
 	 * @return
 	 */
 	public String getInitContent() {
+		checkWidget();
 		return initContent;
 	}
 	
@@ -138,11 +134,12 @@ public class TadpoleOrionHubEditor extends Composite {
 	 * @return
 	 */
 	public String getText() {
+		checkWidget();
 		try {			
 			Object obj = browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);					
 			return obj.toString();
 		} catch(Exception e) {
-			logger.error("setText error", e);
+			logger.error("getText error", e);
 			
 			return "";
 		}
@@ -155,6 +152,7 @@ public class TadpoleOrionHubEditor extends Composite {
 	 * @param text
 	 */
 	public void setText(String text) {
+		checkWidget();
 		try {
 			this.initContent = text;
 			browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_RE_NEW_TEXT);

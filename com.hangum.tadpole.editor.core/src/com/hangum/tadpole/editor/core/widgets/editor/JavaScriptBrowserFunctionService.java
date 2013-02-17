@@ -35,12 +35,13 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	
 	@Override
 	public Object function(Object[] arguments) {
-		super.function(arguments);
-		
-		if (arguments.length == 0 || !(arguments[0] instanceof Double)) {
-			return null;
-		}
-		int action = ((Double) arguments[0]).intValue();
+//		super.function(arguments);
+//		
+//		if (arguments.length == 0 || !(arguments[0] instanceof Double)) {
+//			return null;
+//		}
+		int action = Integer.parseInt(arguments[0].toString());//((Double) arguments[0]).intValue();
+//		logger.debug("Java Script Browser function Action type is " + action);
 	
 		switch (action) {
 			case DIRTY_CHANGED:
@@ -86,7 +87,6 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	 * @return
 	 */
 	private Object reNewText(Object[] arguments) {
-		System.out.println("=========== re new text==> " + editor.getInitContent());
 		return editor.getInitContent();
 	}
 
@@ -97,8 +97,8 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	 * @return
 	 */
 	private Object doGetInitialContent(Object[] arguments) {
-//		if("".equals(editor.getInputFileName())) return "mongojavascript.js"+ ":ext:" + editor.getInputDefaultContent();
-		return editor.getInputFileName() + ".js" + ":ext:" + editor.getInitContent();// + editor.getInputDefaultContent();
+//		if(logger.isDebugEnabled()) logger.debug(editor.getInputFileName() + "[doGetInitialContent]===>]" + editor.getInitContent() + "[end text]");
+		return editor.getInputFileName() + ".js" + ":ext:" + editor.getInitContent();
 	}
 	
 	/**

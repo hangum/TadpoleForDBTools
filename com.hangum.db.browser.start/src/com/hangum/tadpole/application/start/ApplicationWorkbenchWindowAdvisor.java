@@ -14,13 +14,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.service.ISessionStore;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
@@ -156,13 +157,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 * session을 설정합니다.
 	 */
 	private void initSession() {
-		ISessionStore iss = RWT.getSessionStore();
+		HttpSession iss = RWT.getRequest().getSession();
 		
 		int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
 		if(sessionTimeOut <= 0) {
-			iss.getHttpSession().setMaxInactiveInterval( 60 * 60 * 24 );
+			iss.setMaxInactiveInterval( 60 * 60 * 24 );
 		} else {
-			iss.getHttpSession().setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
+			iss.setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
 		}
 	}	// end method
     

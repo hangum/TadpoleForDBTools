@@ -6,7 +6,7 @@
       <entrypoint
             class="com.hangum.tadpole.rdb.erd.stanalone.Application"
             id="com.hangum.tadpole.rdb.erd.stanalone.Application"
-            parameter="rdb-erd">
+            path="/rdb-erd">
       </entrypoint>
    </extension>
 

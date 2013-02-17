@@ -11,8 +11,7 @@
 package com.hangum.tadpole.util.download;
 
 
-import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.service.IServiceHandler;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -30,9 +29,9 @@ public class DownloadUtils {
 		StringBuilder url = new StringBuilder();
 		url.append(RWT.getRequest().getContextPath());
 		url.append(RWT.getRequest().getServletPath());
-		url.append("?");
-		url.append(IServiceHandler.REQUEST_PARAM);
-		url.append("=" + id);
+//		url.append("?");
+//		url.append(ServiceHandler.REQUEST_PARAM);
+//		url.append("=" + id);
 		String encodedURL = RWT.getResponse().encodeURL(url.toString());
 		return encodedURL;
 	}

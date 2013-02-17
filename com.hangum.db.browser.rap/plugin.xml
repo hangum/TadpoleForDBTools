@@ -5,9 +5,10 @@
    <extension
          point="org.eclipse.rap.ui.entrypoint">
       <entrypoint
+            brandingId="com.hangum.tadpole.browser.rap.branding"
             class="com.hangum.tadpole.application.Application"
-            parameter="tadpole"
-            id="com.hangum.tadpole.browser.rap.Application">
+            id="com.hangum.tadpole.browser.rap.Application"
+            path="/tadpole">
       </entrypoint>
    </extension>
    <extension
@@ -20,7 +21,7 @@
             id="com.hangum.tadpole.browser.rap.branding"
             servletName="db"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="Tadpole for DB Tools - 0.0.8 SR10">
+            title="Tadpole for DB Tools - 0.0.8 SR12">
       </branding>
    </extension>
    <extension

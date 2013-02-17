@@ -12,7 +12,7 @@ package com.hangum.tadpole.util;
 
 import java.util.Locale;
 
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 
 /**
  * 

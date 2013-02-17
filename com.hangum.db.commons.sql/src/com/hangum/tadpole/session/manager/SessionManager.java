@@ -10,13 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.session.manager;
 
-import org.apache.log4j.Logger;
-
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.eclipse.rwt.RWT;
+import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
@@ -55,7 +54,7 @@ public class SessionManager {
 	 * @param managerSeq
 	 */
 	public static void newLogin(int groupSeq, int seq, String email, String password, String name, String userType, int managerSeq) {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		
 		String groupName = "";
 		try {
@@ -75,12 +74,12 @@ public class SessionManager {
 	}
 	
 	public static int getGroupSeq() {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		return (Integer)sStore.getAttribute(SESSEION_NAME.GROUP_SEQ.toString());
 	}
 	
 	public static int getSeq() {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		Object obj = sStore.getAttribute(SESSEION_NAME.SEQ.toString());
 		
 		if(obj == null) return 0;
@@ -88,32 +87,32 @@ public class SessionManager {
 	}
 	
 	public static String getGroupName() {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(SESSEION_NAME.GROUP_NAME.toString());
 	}
 	
 	public static String getEMAIL() {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(SESSEION_NAME.LOGIN_EMAIL.toString());
 	}
 	
 	public static String getPassword() {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(SESSEION_NAME.LOGIN_PASSWORD.toString());
 	}
 	
 	public static String getName() {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(SESSEION_NAME.LOGIN_NAME.toString());
 	}
 	
 	public static String getLoginType() {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(SESSEION_NAME.LOGIN_TYPE.toString());
 	}
 	
 	public static int getManagerSeq() {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		return (Integer)sStore.getAttribute(SESSEION_NAME.MANAGER_SEQ.toString());
 	}
 
@@ -121,7 +120,7 @@ public class SessionManager {
 	 * 초기 접속시 프리퍼런스 정보를 로드합니다.
 	 */
 	public static void setUserInfos(Map<String, Object> mapUserInfo) {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		sStore.setAttribute(SESSEION_NAME.USER_INFO_DATA.toString(), mapUserInfo);		
 	}
 	
@@ -131,7 +130,7 @@ public class SessionManager {
 	 * @param obj
 	 */
 	public static void setUserInfo(String key, String obj) {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(SESSEION_NAME.USER_INFO_DATA.toString());
 		UserInfoDataDAO userInfoDataDAO = (UserInfoDataDAO)mapUserInfoData.get(key);
 		if(userInfoDataDAO == null) {
@@ -161,7 +160,7 @@ public class SessionManager {
 	 * @return
 	 */
 	public static UserInfoDataDAO getUserInfo(String key) {
-		HttpSession sStore = RWT.getSessionStore().getHttpSession();
+		HttpSession sStore = RWT.getRequest().getSession();
 		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(SESSEION_NAME.USER_INFO_DATA.toString());
 		
 		return (UserInfoDataDAO)mapUserInfoData.get(key);
@@ -172,7 +171,7 @@ public class SessionManager {
 	 */
 	public static void logout() {
 		try {
-			HttpSession sStore = RWT.getSessionStore().getHttpSession();
+			HttpSession sStore = RWT.getRequest().getSession();
 			sStore.invalidate();
 		} catch(Exception e) {
 			// ignor exception

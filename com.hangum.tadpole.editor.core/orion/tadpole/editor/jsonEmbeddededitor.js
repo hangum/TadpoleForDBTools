@@ -220,32 +220,30 @@ function initEmbeddedEditor(){
 		});		
 		editor.installTextView();
 		
-		try {
-			editorService.getInitialContent();
-		} catch(err) {
-//			console.log("[error msg]" + err);
-		}
-		
-		contentAssist.addEventListener("Activating", function() {
-			contentAssist.setProviders([sqlContentAssistProvider]);
-		});
+//		try {
+//			editorService.getInitialContent();
+//		} catch(err) {
+////			console.log("[error msg]" + err);
+//		}
+//		
+//		contentAssist.addEventListener("Activating", function() {
+//			contentAssist.setProviders([sqlContentAssistProvider]);
+//		});
 		
 		// end of code to run when content changes.
 //		console.log('====== end ==== ');
 
 	});
 }
-
-dojo.addOnLoad(function() {
 	
-	// Install functions for servicing Eclipse Workbench hosted applications
-	function installWorkbenchHooks() {
-		
-		// Register a function that will be called by the editor when the editor's dirty state changes
-		editorService.dirtyChanged = function(dirty) {
-			// This is a function created in Eclipse and registered with the page.
-			editorServiceHandler(editorService.DIRTY_CHANGED, dirty);
-		};
+// Install functions for servicing Eclipse Workbench hosted applications
+function installWorkbenchHooks() {
+	
+	// Register a function that will be called by the editor when the editor's dirty state changes
+	editorService.dirtyChanged = function(dirty) {
+		// This is a function created in Eclipse and registered with the page.
+		editorServiceHandler(editorService.DIRTY_CHANGED, dirty);
+	};
 
 //		// Register a getContentName implementation
 //		editorService.getContentName = function() {
@@ -253,78 +251,83 @@ dojo.addOnLoad(function() {
 //			// This is a function created in Eclipse and registered with the page.
 //			return editorServiceHandler(editorService.GET_CONTENT_NAME);
 //		};
-		
-		// Register an implementation that can return initial content for the editor
-		editorService.getInitialContent = function() {
-			try {
-				var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
-				
-				var idxExt = content.indexOf(":ext:");
-				var varExt = content.substring(0, idxExt);
-				var varCon = content.substring(idxExt+5, content.length);
-				
-				editor.setInput(varExt, null, varCon);
 	
-				syntaxHighlighter.highlight(varExt, editor);
-				editor.highlightAnnotations();
-				
-				editor.setTextFocus();
-			} catch(err) {
-				console.log(err);
-			}
-		};
-		
-		// Register an implementation that should run when the editors status changes.
-		editorService.statusChanged = function(message, isError) {
-			// This is a function created in Eclipse and registered with the page.
+	// Register an implementation that can return initial content for the editor
+	editorService.getInitialContent = function() {
+		try {
+			var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
+			
+			var idxExt = content.indexOf(":ext:");
+			
+			var varExt = content.substring(0, idxExt);
+			
+			var varCon = content.substring(idxExt+5, content.length);
+			
+			editor.setInput(varExt, null, varCon);
+			
+			syntaxHighlighter.highlight(varExt, editor);
+			
+			editor.highlightAnnotations();
+			
+			editor.setTextFocus();
+		} catch(err) {
+			console.log(err);
+		}
+	};
+	
+	// Register an implementation that should run when the editors status changes.
+	editorService.statusChanged = function(message, isError) {
+		// This is a function created in Eclipse and registered with the page.
 //			
-			// 리소스를 너무 많이 잡아 먹는 것으로 파악되어 주석 처리 합니다. 향후 봐서 ...
+		// 리소스를 너무 많이 잡아 먹는 것으로 파악되어 주석 처리 합니다. 향후 봐서 ...
 //			editorServiceHandler(editorService.STATUS_CHANGED, message);
-		};
+	};
 
-		// Register an implementation that can save the editors contents.		
-		editorService.save = function() {
-			// This is a function created in Eclipse and registered with the page.
-			var result = editorServiceHandler(editorService.SAVE, editor.getContents());
-		
+	// Register an implementation that can save the editors contents.		
+	editorService.save = function() {
+		// This is a function created in Eclipse and registered with the page.
+		var result = editorServiceHandler(editorService.SAVE, editor.getContents());
+	
 //			if (result) {
 //				editor.setInput(null, null, null, true);
 //			}
-			
-			return result;
-		};
 		
-		// append query text
-		editorService.appendQueryText = function() {
-		
-			var sql = editorServiceHandler(editorService.APPEND_QUERY_TEXT, '');
-			
-			editor.appendQueryText(sql);
-			editor.setTextFocus();
-		};
-		
-		// re new query text
-		editorService.reNewText = function() {
-			var sql = editorServiceHandler(editorService.RE_NEW_TEXT, '');
-			
-			editor.setText(sql);
-			editor.setTextFocus();
-		};
-		
-		// text set focus
-		editorService.setTextFocus = function() {
-			editor.setTextFocus();
-		};
-		
-		// all text clean
-		editorService.allClearText = function() {
-			editor.setText("");
-		};
-	}
-
-	// install editor hooks
-	installWorkbenchHooks();
+		return result;
+	};
 	
-	// Initialize the editor
-	initEmbeddedEditor();
-});
+	// append query text
+	editorService.appendQueryText = function() {
+	
+		var sql = editorServiceHandler(editorService.APPEND_QUERY_TEXT, '');
+		
+		editor.appendQueryText(sql);
+		editor.setTextFocus();
+	};
+	
+	// re new query text
+	editorService.reNewText = function() {
+		var sql = editorServiceHandler(editorService.RE_NEW_TEXT, '');
+		
+		editor.setText(sql);
+		editor.setTextFocus();
+	};
+	
+	// text set focus
+	editorService.setTextFocus = function() {
+		editor.setTextFocus();
+	};
+	
+	// all text clean
+	editorService.allClearText = function() {
+		editor.setText("");
+	};
+}
+
+// install editor hooks
+installWorkbenchHooks();
+
+// Initialize the editor
+initEmbeddedEditor();
+	
+//// initialize the editor input
+//editorService.getInitialContent();

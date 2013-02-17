@@ -73,7 +73,6 @@ var sqlContentAssistProvider;
 //var jsContentAssistProvider;
 
 function initEmbeddedEditor(){
-//	console.log(" v2 [console log] initEmbeddedEditor start..................");
 	
 	define([
 		"require", 
@@ -243,173 +242,176 @@ function initEmbeddedEditor(){
 		});		
 		editor.installTextView();
 		
-		try {
-			editorService.getInitialContent();
-		} catch(err) {
-//			console.log("[error msg]" + err);
-		}
+//		try {
+//			editorService.getInitialContent();
+//		} catch(err) {
+////			console.log("[error msg]" + err);
+//		}
 		
-		contentAssist.addEventListener("Activating", function() {
-			contentAssist.setProviders([sqlContentAssistProvider]);
-		});
+//		contentAssist.addEventListener("Activating", function() {
+//			contentAssist.setProviders([sqlContentAssistProvider]);
+//		});
+		
+		console.log("[editor]" + editor);
 		
 		// end of code to run when content changes.
 //		console.log('====== end ==== ');
 
 	});
 }
-
-dojo.addOnLoad(function() {
 	
-	// Install functions for servicing Eclipse Workbench hosted applications
-	function installWorkbenchHooks() {
-		
-		// Register a function that will be called by the editor when the editor's dirty state changes
-		editorService.dirtyChanged = function(dirty) {
-			// This is a function created in Eclipse and registered with the page.
-			editorServiceHandler(editorService.DIRTY_CHANGED, dirty);
-		};
-
+// Install functions for servicing Eclipse Workbench hosted applications
+function installWorkbenchHooks() {
+	
+	// Register a function that will be called by the editor when the editor's dirty state changes
+	editorService.dirtyChanged = function(dirty) {
+		// This is a function created in Eclipse and registered with the page.
+		editorServiceHandler(editorService.DIRTY_CHANGED, dirty);
+	};
+	
 //		// Register a getContentName implementation
 //		editorService.getContentName = function() {
 //			console.log("=======> editorService.getContentName = function() ");
 //			// This is a function created in Eclipse and registered with the page.
 //			return editorServiceHandler(editorService.GET_CONTENT_NAME);
 //		};
-		
-		// Register an implementation that can return initial content for the editor
-		editorService.getInitialContent = function() {
-			try {
-				var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
-				
-				var idxExt = content.indexOf(":ext:");
-				var varExt = content.substring(0, idxExt);
-				var varCon = content.substring(idxExt+5, content.length);
-				
-				editor.setInput(varExt, null, varCon);
 	
-				syntaxHighlighter.highlight(varExt, editor);
-				editor.highlightAnnotations();
-				
-				editor.setTextFocus();
-			} catch(err) {
-				console.log(err);
-			}
-		};
-		
-		// Register an implementation that should run when the editors status changes.
-		editorService.statusChanged = function(message, isError) {
-			// This is a function created in Eclipse and registered with the page.
+	// Register an implementation that can return initial content for the editor
+	editorService.getInitialContent = function() {
+		try {
+			var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
 			
-			// 리소스를 너무 많이 잡아 먹는 것으로 파악되어 주석 처리 합니다. 향후 봐서 ...
+			var idxExt = content.indexOf(":ext:");
+			var varExt = content.substring(0, idxExt);
+			var varCon = content.substring(idxExt+5, content.length);
+			
+			editor.setInput(varExt, null, varCon);
+
+			syntaxHighlighter.highlight(varExt, editor);
+			
+			editor.highlightAnnotations();
+			
+			editor.setTextFocus();
+		} catch(err) {
+			console.log(err);
+		}
+	};
+	
+	// Register an implementation that should run when the editors status changes.
+	editorService.statusChanged = function(message, isError) {
+		// This is a function created in Eclipse and registered with the page.
+		
+		// 리소스를 너무 많이 잡아 먹는 것으로 파악되어 주석 처리 합니다. 향후 봐서 ...
 //			editorServiceHandler(editorService.STATUS_CHANGED, message);
-		};
+	};
 
-		// Register an implementation that can save the editors contents.		
-		editorService.save = function() {
-			// This is a function created in Eclipse and registered with the page.
-			var result = editorServiceHandler(editorService.SAVE, editor.getContents());
-			
-			if (result) {
-				editor.setInput(null, null, null, true);
-			}
-			
-			return result;
-		};
+	// Register an implementation that can save the editors contents.		
+	editorService.save = function() {
+		// This is a function created in Eclipse and registered with the page.
+		var result = editorServiceHandler(editorService.SAVE, editor.getContents());
 		
-		// Register an implementation that can save the editors contents.		
-		editorService.saveS = function() {
-			var result = editorServiceHandler(editorService.SAVE_S, editor.getContents());
-			
-			if (result) {
-				editor.setInput(null, null, null, true);
-			}
-			return result;
-		};
+		if (result) {
+			editor.setInput(null, null, null, true);
+		}
 		
-		// query
-		editorService.executeQuery = function() {
-			editorServiceHandler(editorService.EXECUTE_QUERY, editor.getEditorText());//CaretOffsetAndContent());
-			editor.setTextFocus();
-		};
-		
-		editorService.executeAllQuery = function() {
-			editorServiceHandler(editorService.EXECUTE_ALL_QUERY, editor.getCaretOffsetAndContent());
-			editor.setTextFocus();
-		};
-		
-		// query plan
-		editorService.executePlan = function() {
-			editorServiceHandler(editorService.EXECUTE_PLAN, editor.getCaretOffsetAndContent());
-			editor.setTextFocus();
-		};
-		
-		// query format
-		editorService.executeFormat = function() {
-			var sql = editorServiceHandler(editorService.EXECUTE_FORMAT, editor.getContents());
-
-			editor.setText(sql);
-			editor.setTextFocus();
-		};
-		
-		// append query text
-		editorService.appendQueryText = function() {
-			var sql = editorServiceHandler(editorService.APPEND_QUERY_TEXT, '');
-			
-			editor.appendQueryText(sql);
-			editor.setTextFocus();
-		};
-		
-		// re new query text
-		editorService.reNewText = function() {
-			var sql = editorServiceHandler(editorService.RE_NEW_TEXT, '');
-			editor.onInputChange(null, null, sql, false);
-		};
-		
-		// sql to application string 
-		editorService.sqlToApplication = function() {
-			editorServiceHandler(editorService.SQL_TO_APPLICATION, editor.getCaretOffsetAndContent());
-		};
-		
-		// download sql 
-		editorService.downloadSQL = function() {
-			editorServiceHandler(editorService.DOWNLOAD_SQL, editor.getCaretOffsetAndContent());
-		};
-		
-		// move history page
-		editorService.moveHistoryPage = function() {
-			editorServiceHandler(editorService.MOVE_HISTORY_PAGE, '');
-		};
-		
-		// to upper case text
-		editorService.upperCaseText = function() {
-			editor.upperCaseText();
-		};
-		
-		// to low case text
-		editorService.lowCaseText = function() {
-			editor.lowCaseText();
-		};
+		return result;
+	};
 	
-		// text set focus
-		editorService.setTextFocus = function() {
-			editor.setTextFocus();
-		};
+	// Register an implementation that can save the editors contents.		
+	editorService.saveS = function() {
+		var result = editorServiceHandler(editorService.SAVE_S, editor.getContents());
 		
-		// help popup
-		editorService.helpPopup = function() {
-			editorServiceHandler(editorService.HELP_POPUP, '');
-		};
-		
-		// all text clean
-		editorService.allClearText = function() {
-			editor.setText("");
-		};
-	}
-
-	// install editor hooks
-	installWorkbenchHooks();
+		if (result) {
+			editor.setInput(null, null, null, true);
+		}
+		return result;
+	};
 	
-	// Initialize the editor
-	initEmbeddedEditor();
-});
+	// query
+	editorService.executeQuery = function() {
+		editorServiceHandler(editorService.EXECUTE_QUERY, editor.getEditorText());//CaretOffsetAndContent());
+		editor.setTextFocus();
+	};
+	
+	editorService.executeAllQuery = function() {
+		editorServiceHandler(editorService.EXECUTE_ALL_QUERY, editor.getCaretOffsetAndContent());
+		editor.setTextFocus();
+	};
+	
+	// query plan
+	editorService.executePlan = function() {
+		editorServiceHandler(editorService.EXECUTE_PLAN, editor.getCaretOffsetAndContent());
+		editor.setTextFocus();
+	};
+	
+	// query format
+	editorService.executeFormat = function() {
+		var sql = editorServiceHandler(editorService.EXECUTE_FORMAT, editor.getContents());
+
+		editor.setText(sql);
+		editor.setTextFocus();
+	};
+	
+	// append query text
+	editorService.appendQueryText = function() {
+		var sql = editorServiceHandler(editorService.APPEND_QUERY_TEXT, '');
+		
+		editor.appendQueryText(sql);
+		editor.setTextFocus();
+	};
+	
+	// re new query text
+	editorService.reNewText = function() {
+		var sql = editorServiceHandler(editorService.RE_NEW_TEXT, '');
+		editor.onInputChange(null, null, sql, false);
+	};
+	
+	// sql to application string 
+	editorService.sqlToApplication = function() {
+		editorServiceHandler(editorService.SQL_TO_APPLICATION, editor.getCaretOffsetAndContent());
+	};
+	
+	// download sql 
+	editorService.downloadSQL = function() {
+		editorServiceHandler(editorService.DOWNLOAD_SQL, editor.getCaretOffsetAndContent());
+	};
+	
+	// move history page
+	editorService.moveHistoryPage = function() {
+		editorServiceHandler(editorService.MOVE_HISTORY_PAGE, '');
+	};
+	
+	// to upper case text
+	editorService.upperCaseText = function() {
+		editor.upperCaseText();
+	};
+	
+	// to low case text
+	editorService.lowCaseText = function() {
+		editor.lowCaseText();
+	};
+
+	// text set focus
+	editorService.setTextFocus = function() {
+		editor.setTextFocus();
+	};
+	
+	// help popup
+	editorService.helpPopup = function() {
+		editorServiceHandler(editorService.HELP_POPUP, '');
+	};
+	
+	// all text clean
+	editorService.allClearText = function() {
+		editor.setText("");
+	};
+}
+
+// install editor hooks
+installWorkbenchHooks();
+
+// Initialize the editor
+initEmbeddedEditor();
+	
+//	// initialize the editor input
+//	editorService.getInitialContent();

@@ -40,7 +40,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
@@ -96,6 +96,7 @@ import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
+import com.hangum.tadpole.rdb.core.util.browserFunction.IEditorBrowserFunction;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
@@ -397,18 +398,19 @@ public class MainEditor extends EditorPart {
 		
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
+	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
-	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	    
 	    
-//	    browserQueryEditor.setText("about:blank"); //$NON-NLS-1$
+	    addBrowserHandler();
 	    if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.REAL) {
 	    	browserQueryEditor.setUrl(REAL_URL);
 	    } else {
 	    	browserQueryEditor.setUrl(URL);
 	    }
-	    addBrowserHandler();
-		
+	    
 		createStatusLine();
+	    ////// orion editor end /////////////////////////////////////////////////////////////////////////////
 		
 		Composite compositeResult = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_compositeResult = new GridLayout(1, false);
@@ -763,22 +765,26 @@ public class MainEditor extends EditorPart {
 	}
 	
 	/**
-	 * brower handler
+	 * browser handler
 	 */
 	private void addBrowserHandler() {
+		registerBrowserFunctions();
+		
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					registerBrowserFunctions();
-					browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
+					browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
 				} catch(Exception e) {
-					logger.error("set register browser function and content initialize", e); //$NON-NLS-1$
+					logger.error("set register browser function and content initialize", e);
 				}
 			}
 			public void changed( ProgressEvent event ) {}
 		});
 	}
 	
+	/**
+	 * register browser function
+	 */
 	private void registerBrowserFunctions() {
 		editorService = new EditorBrowserFunctionService(browserQueryEditor, EditorBrowserFunctionService.EDITOR_SERVICE_HANDLER, this);
 	}

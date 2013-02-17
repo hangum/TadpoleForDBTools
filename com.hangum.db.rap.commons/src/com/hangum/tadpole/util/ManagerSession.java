@@ -10,11 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.util;
 
-import org.apache.log4j.Logger;
-
 import javax.servlet.ServletContext;
 
-import org.eclipse.rwt.RWT;
+import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
 
 /**
  * session 관리

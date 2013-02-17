@@ -12,7 +12,7 @@ package com.hangum.tadpole.application.start.dialog.about;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -35,7 +35,7 @@ public class AboutDialog extends Dialog {
 	 */
 	public AboutDialog(Shell parentShell) {
 		super(parentShell);
-		// Tadpole for DB Tools - 뒷다리 나오기 프로젝트 (2012/04/01)
+		// Tadpole for DB Tools - �룸떎由��섏삤湲��꾨줈�앺듃 (2012/04/01)
 	}
 	
 	@Override
@@ -76,8 +76,8 @@ public class AboutDialog extends Dialog {
 		composite_1.setLayout(new GridLayout(1, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-//		안녕하세요. 사용해 주셔서 감사합니다.
-//		  버그나 질문은 메일(<a href=\"mailto:adi.tadpole@gmail.com\">tadpole</a>), 
+//		�덈뀞�섏꽭�� �ъ슜��二쇱뀛��媛먯궗�⑸땲��
+//		  踰꾧렇��吏덈Ц��硫붿씪(<a href=\"mailto:adi.tadpole@gmail.com\">tadpole</a>), 
 		Label lblNewLabel = new Label(composite_1, SWT.NONE);
 		lblNewLabel.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION);
 		
