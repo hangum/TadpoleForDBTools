@@ -252,7 +252,7 @@ function initEmbeddedEditor(){
 //			contentAssist.setProviders([sqlContentAssistProvider]);
 //		});
 		
-		console.log("[editor]" + editor);
+//		console.log("[editor]" + editor);
 		
 		// end of code to run when content changes.
 //		console.log('====== end ==== ');

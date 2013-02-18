@@ -127,8 +127,6 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 			extension = editor.getEditorInput().getName() + ".postgresql";
 		}
 		
-		logger.debug("====================================> [editor.getOrionText()]" + extension + ":ext:" + editor.getOrionText());
-		
 		return extension + ":ext:" + editor.getOrionText();
 	}
 	

@@ -117,8 +117,7 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	}
 	
 	private String appendQueryText(Object[] arguments) {
-		System.out.println("append query text is called##################");
-		
+//		System.out.println("append query text is called##################");		
 		return editor.getAppendQueryText();
 	}
 }
