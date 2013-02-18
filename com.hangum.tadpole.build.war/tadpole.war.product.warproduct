@@ -42,6 +42,7 @@
       <plugin id="org.eclipse.equinox.http.servletbridge"/>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.equinox.servletbridge"/>
       <plugin id="org.eclipse.equinox.servletbridge.extensionbundle" fragment="true"/>
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.osgi"/>
@@ -101,6 +102,7 @@
       <plugin id="org.eclipse.equinox.http.servletbridge" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.preferences" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.registry" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.servletbridge" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.help" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="0" />
