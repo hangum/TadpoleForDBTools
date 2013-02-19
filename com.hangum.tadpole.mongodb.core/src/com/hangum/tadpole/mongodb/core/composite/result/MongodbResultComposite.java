@@ -170,13 +170,27 @@ public class MongodbResultComposite extends Composite {
 	 */
 	public MongodbResultComposite(Composite parent, int style, final UserDBDAO userDB, final String collectionName, final boolean isUserAction) {
 		super(parent, style);
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 1;
+		gridLayout.horizontalSpacing = 1;
+		gridLayout.marginHeight = 1;
+		gridLayout.marginWidth = 1;
+		setLayout(gridLayout);
 		
 		this.userDB = userDB;
 		this.collectionName = collectionName;
 		this.isUserAction = isUserAction;
 		
-		tabFolderMongoDB = new CTabFolder(parent, SWT.NONE);
+		Composite compositeResult = new Composite(this, SWT.NONE);
+		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridLayout gl_compositeResult = new GridLayout(1, false);
+		gl_compositeResult.verticalSpacing = 1;
+		gl_compositeResult.horizontalSpacing = 1;
+		gl_compositeResult.marginHeight = 1;
+		gl_compositeResult.marginWidth = 1;
+		compositeResult.setLayout(gl_compositeResult);
+		
+		tabFolderMongoDB = new CTabFolder(compositeResult, SWT.NONE);
 		tabFolderMongoDB.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
