@@ -282,6 +282,11 @@ function installWorkbenchHooks() {
 			editor.setTextFocus();
 		} catch(err) {
 			console.log(err);
+			
+			editor.setInput("js", null, "");
+			syntaxHighlighter.highlight("js", editor);			
+			editor.highlightAnnotations();			
+			editor.setTextFocus();
 		}
 	};
 	

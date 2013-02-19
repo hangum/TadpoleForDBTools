@@ -294,6 +294,11 @@ function installWorkbenchHooks() {
 			editor.setTextFocus();
 		} catch(err) {
 			console.log(err);
+			
+			editor.setInput("mysql", null, "");
+			syntaxHighlighter.highlight("mysql", editor);			
+			editor.highlightAnnotations();			
+			editor.setTextFocus();
 		}
 	};
 	
