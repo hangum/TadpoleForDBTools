@@ -1294,7 +1294,7 @@ public class MainEditor extends EditorPart {
 		TadpoleMessageDAO message = new TadpoleMessageDAO(new Date(), msg);
 		listMessage.add(message);
 		
-		tableViewerMessage.refresh(listMessage);
+		tableViewerMessage.refresh();
 		resultFolderSel(RESULT_TAB_NAME.TADPOLE_MESSAGE);
 		
 		setOrionTextFocus();
@@ -1303,10 +1303,10 @@ public class MainEditor extends EditorPart {
 	/**
 	 * tab을 선택합니다.
 	 * 
-	 * @param TAB
+	 * @param selectTab
 	 */
-	private void resultFolderSel(final RESULT_TAB_NAME TAB) {
-		int index = (Integer)tabFolderResult.getData(TAB.toString());
+	private void resultFolderSel(final RESULT_TAB_NAME selectTab) {
+		int index = (Integer)tabFolderResult.getData(selectTab.toString());
 		if(tabFolderResult.getSelectionIndex() != index) {
 			tabFolderResult.setSelection(index);
 		}
