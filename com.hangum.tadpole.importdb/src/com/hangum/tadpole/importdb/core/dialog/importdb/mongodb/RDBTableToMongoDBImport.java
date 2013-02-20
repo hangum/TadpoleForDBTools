@@ -73,7 +73,7 @@ public class RDBTableToMongoDBImport {
 						
 						// collection is exist on delete.
 						String strNewColName = modTableDAO.getReName().trim().equals("")?modTableDAO.getName():modTableDAO.getReName();
-						if(modTableDAO.isExistOnDelete()) MongoDBQuery.existOnDelete(exportUserDB, strNewColName);
+						if(modTableDAO.isExistOnDelete()) MongoDBQuery.existOnDelete(importUserDB, modTableDAO.getName());
 						
 						// insert
 						insertMongoDB(modTableDAO, exportUserDB, strNewColName);

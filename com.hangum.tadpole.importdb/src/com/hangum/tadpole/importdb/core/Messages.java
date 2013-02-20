@@ -4,7 +4,6 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.importdb.core.messages"; //$NON-NLS-1$
-	public static String MongoDBImportEditor_0;
 	public static String MongoDBImportEditor_1;
 	public static String MongoDBImportEditor_11;
 	public static String MongoDBImportEditor_12;

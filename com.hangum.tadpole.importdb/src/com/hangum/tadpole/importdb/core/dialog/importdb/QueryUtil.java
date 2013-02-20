@@ -49,7 +49,7 @@ public class QueryUtil {
 	private HashMap<Integer, String> tableDataTypeList = new HashMap<Integer, String>();
 	
 	private boolean isFirst = true;
-	private int startPoint = 0;
+	private int startPoint = -1;
 	private int nextPoint = 0;
 	
 	public QueryUtil(UserDBDAO userDB, String requestQuery) {

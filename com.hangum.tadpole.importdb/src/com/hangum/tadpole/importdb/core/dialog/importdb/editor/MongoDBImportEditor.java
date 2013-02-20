@@ -253,7 +253,7 @@ public class MongoDBImportEditor extends EditorPart {
 		if(tabFolderQuery.getSelectionIndex() == 0) {			
 			if(tableColumnListComposite.getSelectListTables().isEmpty()) return;
 		} else if(tabFolderQuery.getSelectionIndex() == 1) {			
-			if(Messages.MongoDBImportEditor_0.equals(textCollectionName.getText().trim())) {
+			if("".equals(textCollectionName.getText().trim())) {
 				MessageDialog.openError(null, "Confirm", Messages.MongoDBImportEditor_3);
 				return;
 			}

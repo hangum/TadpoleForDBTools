@@ -77,7 +77,7 @@ public class QueryToMongoDBImport {
 				try {
 					monitor.subTask(userQuery + " table importing..."); //$NON-NLS-1$
 					
-					if(isExistOnDelete) MongoDBQuery.existOnDelete(exportUserDB, colName);
+					if(isExistOnDelete) MongoDBQuery.existOnDelete(importUserDB, colName);
 					
 					insertMongoDB();
 				} catch(Exception e) {
