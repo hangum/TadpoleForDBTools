@@ -104,16 +104,19 @@ public abstract class AbstractLoginComposite extends Group {
 	 * @param host
 	 * @param port
 	 * @return
+	 * @deprecated 서버에따라 핑 서비스를 막아 놓는 경우도 있어, 막아 놓습니다.
 	 */
 	public boolean isPing(String host, String port) throws NumberFormatException {
 		
-		// TO DO db가 드릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
-		int stats = PingTest.ping(host, Integer.parseInt(port), 2500);
-		if(PingTest.SUCCESS == stats) {
-			return true;
-		} else {
-			return false;
-		}
+//		TO DO db가 드릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
+//		int stats = PingTest.ping(host, Integer.parseInt(port), 2500);
+//		if(PingTest.SUCCESS == stats) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		
+		return true;
 	}
 	
 	/**
