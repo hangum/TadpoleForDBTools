@@ -386,7 +386,7 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 598);
+		return new Point(500, 640);
 	}
 }
 
