@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.importdb.core.dialog.importdb.composite;
+package com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -19,15 +19,15 @@ import org.eclipse.swt.SWT;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
 
 /**
- * 수정 컬럼의 에디터 유무
+ * 데이터 임포트 할것인지.
  * 
  * @author hangum
  *
  */
-public class ModifyEditingSupport extends EditingSupport {
+public class ExistOnDeleteColumnEditingSupport extends EditingSupport {
 	private final TableViewer viewer;
 	
-	public ModifyEditingSupport(TableViewer viewer) {
+	public ExistOnDeleteColumnEditingSupport(TableViewer viewer) {
 		super(viewer);
 		
 		this.viewer = viewer;
@@ -46,13 +46,13 @@ public class ModifyEditingSupport extends EditingSupport {
 	@Override
 	protected Object getValue(Object element) {
 		ModTableDAO modDao = (ModTableDAO)element;
-		return modDao.isModify();
+		return modDao.isExistOnDelete();
 	}
 
 	@Override
 	protected void setValue(Object element, Object value) {
 		ModTableDAO modDao = (ModTableDAO)element;
-		modDao.setModify((Boolean)value);
+		modDao.setExistOnDelete((Boolean)value);
 		
 		viewer.update(element, null);
 	}

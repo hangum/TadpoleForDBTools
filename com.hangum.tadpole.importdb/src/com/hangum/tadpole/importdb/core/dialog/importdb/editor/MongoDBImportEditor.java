@@ -2,6 +2,7 @@ package com.hangum.tadpole.importdb.core.dialog.importdb.editor;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,6 +38,7 @@ import com.hangum.tadpole.importdb.core.dialog.importdb.composite.TableColumnLIs
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.QueryToMongoDBImport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.RDBTableToMongoDBImport;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 
 /**
  * mongodb import
@@ -61,6 +63,7 @@ public class MongoDBImportEditor extends EditorPart {
 	
 	private Combo comboDBList;
 	private TableColumnLIstComposite tableColumnListComposite;
+	private Button btnExistOnDelete;
 
 	public MongoDBImportEditor() {
 		super();
@@ -103,9 +106,14 @@ public class MongoDBImportEditor extends EditorPart {
 		gl_parent.marginWidth = 2;
 		parent.setLayout(gl_parent);
 		
-		Composite compositeHead = new Composite(parent, SWT.NONE);
+		Composite compositeHead = new Composite(parent, SWT.BORDER);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(3, false));
+		GridLayout gl_compositeHead = new GridLayout(3, false);
+		gl_compositeHead.verticalSpacing = 2;
+		gl_compositeHead.horizontalSpacing = 2;
+		gl_compositeHead.marginHeight = 2;
+		gl_compositeHead.marginWidth = 2;
+		compositeHead.setLayout(gl_compositeHead);
 		
 		Label lblSource = new Label(compositeHead, SWT.NONE);
 		lblSource.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -132,16 +140,23 @@ public class MongoDBImportEditor extends EditorPart {
 		btnImport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				importData();
+				importData(); //$NON-NLS-1$
 			}
 		});
 		btnImport.setText("Import"); //$NON-NLS-1$
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 1;
+		gl_compositeBody.horizontalSpacing = 1;
+		gl_compositeBody.marginHeight = 1;
+		gl_compositeBody.marginWidth = 1;
+		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		tabFolderQuery = new CTabFolder(compositeBody, SWT.NONE);
+		tabFolderQuery.setBorderVisible(false);		
+		tabFolderQuery.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		tabFolderQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		CTabItem tabItemTable = new CTabItem(tabFolderQuery, SWT.NONE);
@@ -187,7 +202,9 @@ public class MongoDBImportEditor extends EditorPart {
 		
 		textCollectionName = new Text(compositeQueryTail, SWT.BORDER);
 		textCollectionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeQueryTail, SWT.NONE);
+		
+		btnExistOnDelete = new Button(compositeQueryTail, SWT.CHECK);
+		btnExistOnDelete.setText("Exist on delete");
 		
 //		Button btnPreview = new Button(compositeQueryTail, SWT.NONE);
 //		btnPreview.setText("Preview");
@@ -232,20 +249,33 @@ public class MongoDBImportEditor extends EditorPart {
 	 * data import
 	 */
 	private void importData() {
-		final UserDBDAO exportDBDAO = (UserDBDAO)comboDBList.getData(comboDBList.getText());
-		Job job = null;
-		
-		if(tabFolderQuery.getSelectionIndex() == 0) {
-			RDBTableToMongoDBImport importData = new RDBTableToMongoDBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
-			job = importData.workTableImport();
-			if(job == null) return;
-			
-		} else if(tabFolderQuery.getSelectionIndex() == 1) {
-			QueryToMongoDBImport importData = new QueryToMongoDBImport(userDB, textCollectionName.getText(), textQuery.getText(), exportDBDAO);
-			job = importData.workTableImport();
-			if(job == null) return;			
+		// 예외케이스를 리턴합니다.
+		if(tabFolderQuery.getSelectionIndex() == 0) {			
+			if(tableColumnListComposite.getSelectListTables().isEmpty()) return;
+		} else if(tabFolderQuery.getSelectionIndex() == 1) {			
+			if(Messages.MongoDBImportEditor_0.equals(textCollectionName.getText().trim())) {
+				MessageDialog.openError(null, "Confirm", Messages.MongoDBImportEditor_3);
+				return;
+			}
 		}
 		
+		// job make
+		final UserDBDAO exportDBDAO = (UserDBDAO)comboDBList.getData(comboDBList.getText());
+		Job job = null;		
+		if(MessageDialog.openConfirm(null, "Confirm", Messages.MongoDBImportEditor_1)) {	 //$NON-NLS-1$
+			if(tabFolderQuery.getSelectionIndex() == 0) {				
+					RDBTableToMongoDBImport importData = new RDBTableToMongoDBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
+					job = importData.workTableImport();
+					if(job == null) return;
+				
+			} else if(tabFolderQuery.getSelectionIndex() == 1) {			
+					QueryToMongoDBImport importData = new QueryToMongoDBImport(userDB, textCollectionName.getText(), textQuery.getText(), exportDBDAO, btnExistOnDelete.getSelection());
+					job = importData.workTableImport();
+					if(job == null) return;
+			}
+		} else return;
+		
+		// job listener
 		job.addJobChangeListener(new JobChangeAdapter() {			
 			public void done(IJobChangeEvent event) {
 				final IJobChangeEvent jobEvent = event; 

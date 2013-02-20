@@ -45,12 +45,14 @@ public class QueryToMongoDBImport {
 	private String colName;
 	private String userQuery; 
 	private UserDBDAO exportUserDB;
+	private boolean isExistOnDelete;
 	
-	public QueryToMongoDBImport(UserDBDAO importUserDB, String colName,  String userQuery, UserDBDAO exportUserDB) {
+	public QueryToMongoDBImport(UserDBDAO importUserDB, String colName,  String userQuery, UserDBDAO exportUserDB, boolean isExistOnDelete) {
 		this.importUserDB = importUserDB;
 		this.colName = colName;
 		this.userQuery = userQuery;
 		this.exportUserDB = exportUserDB;
+		this.isExistOnDelete = isExistOnDelete;
 	}
 	
 	/**
@@ -74,6 +76,9 @@ public class QueryToMongoDBImport {
 				
 				try {
 					monitor.subTask(userQuery + " table importing..."); //$NON-NLS-1$
+					
+					if(isExistOnDelete) MongoDBQuery.existOnDelete(exportUserDB, colName);
+					
 					insertMongoDB();
 				} catch(Exception e) {
 					logger.error("press ok button", e);						 //$NON-NLS-1$

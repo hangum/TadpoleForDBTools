@@ -159,6 +159,19 @@ public class MongoDBQuery {
 	}
 	
 	/**
+	 * exist on delete
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @throws Exception
+	 */
+	public static void existOnDelete(UserDBDAO userDB, String colName) throws Exception {
+		if(findDB(userDB).collectionExists(colName)) {
+			dropCollection(userDB, colName);
+		}
+	}
+	
+	/**
 	 * collection 생성.
 	 * 
 	 * @param userDB

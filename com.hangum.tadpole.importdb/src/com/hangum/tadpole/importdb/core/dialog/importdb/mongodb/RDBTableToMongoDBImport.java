@@ -68,9 +68,15 @@ public class RDBTableToMongoDBImport {
 				
 				try {
 					for (ModTableDAO modTableDAO : listModeTable) {
+
 						monitor.subTask(modTableDAO.getName() + " importing...");
 						
-						insertMongoDB(modTableDAO, exportUserDB);
+						// collection is exist on delete.
+						String strNewColName = modTableDAO.getReName().trim().equals("")?modTableDAO.getName():modTableDAO.getReName();
+						if(modTableDAO.isExistOnDelete()) MongoDBQuery.existOnDelete(exportUserDB, strNewColName);
+						
+						// insert
+						insertMongoDB(modTableDAO, exportUserDB, strNewColName);
 					}			
 
 				} catch(Exception e) {
@@ -94,7 +100,7 @@ public class RDBTableToMongoDBImport {
 	 * @param userDBDAO
 	 * @throws Exception
 	 */
-	private void insertMongoDB(ModTableDAO modTableDAO, UserDBDAO userDBDAO) throws Exception {
+	private void insertMongoDB(ModTableDAO modTableDAO, UserDBDAO userDBDAO, String strNewColName) throws Exception {
 		String workTable = modTableDAO.getName();		
 		if(logger.isDebugEnabled()) logger.debug("[work table]" + workTable);			
 		
@@ -123,9 +129,9 @@ public class RDBTableToMongoDBImport {
 				
 				arrayDBObject[i] = insertObject;
 			}	// end for
-			logger.debug("[work table]" + workTable + " size is " + arrayDBObject.length);
+			logger.debug("[work table]" + strNewColName + " size is " + arrayDBObject.length);
 		
-			MongoDBQuery.insertDocument(importUserDB, workTable, arrayDBObject);
+			MongoDBQuery.insertDocument(importUserDB, strNewColName, arrayDBObject);
 		}
 	}
 }
