@@ -92,9 +92,9 @@ public class ManagerViewer extends ViewPart {
 				if(selElement instanceof UserDBDAO) {
 					addUserResouceData((UserDBDAO)selElement);
 					
-					getViewSite().getActionBars().getStatusLineManager().setMessage(((UserDBDAO)selElement).getDb());
-				} else {
-					getViewSite().getActionBars().getStatusLineManager().setMessage("");
+//					getViewSite().getActionBars().getStatusLineManager().setMessage(((UserDBDAO)selElement).getDb());
+//				} else {
+//					getViewSite().getActionBars().getStatusLineManager().setMessage("");
 				}
 				
 			}
@@ -147,7 +147,7 @@ public class ManagerViewer extends ViewPart {
 		getSite().setSelectionProvider(treeViewer);
 		
 		createPopupMenu();
-		getViewSite().getActionBars().getStatusLineManager().setMessage("Done"); //$NON-NLS-1$
+//		getViewSite().getActionBars().getStatusLineManager().setMessage("Done"); //$NON-NLS-1$
 		
 		init();
 		

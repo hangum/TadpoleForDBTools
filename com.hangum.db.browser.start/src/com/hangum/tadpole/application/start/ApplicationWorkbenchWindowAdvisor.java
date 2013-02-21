@@ -26,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -70,16 +71,23 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();        
         configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
         configurer.setShowCoolBar(true);
-        configurer.setShowStatusLine(true);
+        configurer.setShowStatusLine(false);
         
-        configurer.setShowProgressIndicator(true);
+        configurer.setShowProgressIndicator(false);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION);
         
         // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(false);
         
-       	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
+        initSystem();
+    }
+    
+    /**
+     * 시스템 초기화 
+     */
+    private void initSystem() {
+    	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
     	try {
     		TadpoleSystemInitializer.initSystem();
     		

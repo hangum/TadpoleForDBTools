@@ -409,7 +409,7 @@ public class MainEditor extends EditorPart {
 	    	browserQueryEditor.setUrl(URL);
 	    }
 	    
-		createStatusLine();
+//		createStatusLine();
 	    ////// orion editor end /////////////////////////////////////////////////////////////////////////////
 		
 		Composite compositeResult = new Composite(sashForm, SWT.NONE);
@@ -740,7 +740,7 @@ public class MainEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {65, 35});
 		
-		getEditorSite().getActionBars().getStatusLineManager().setMessage(Messages.MainEditor_18);
+//		getEditorSite().getActionBars().getStatusLineManager().setMessage(Messages.MainEditor_18);
 		initEditor();
 	}
 	

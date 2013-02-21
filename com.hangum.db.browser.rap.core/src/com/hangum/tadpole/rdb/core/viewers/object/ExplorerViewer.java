@@ -241,7 +241,7 @@ public class ExplorerViewer extends ViewPart {
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 			createTable();
-			getViewSite().getActionBars().getStatusLineManager().setMessage("");
+//			getViewSite().getActionBars().getStatusLineManager().setMessage("");
 		}
 	}
 	
@@ -484,8 +484,8 @@ public class ExplorerViewer extends ViewPart {
 	
 	@Override
 	public void setFocus() {
-		if(userDB != null) getViewSite().getActionBars().getStatusLineManager().setMessage(userDB.getDb());
-		else getViewSite().getActionBars().getStatusLineManager().setMessage("");
+//		if(userDB != null) getViewSite().getActionBars().getStatusLineManager().setMessage(userDB.getDb());
+//		else getViewSite().getActionBars().getStatusLineManager().setMessage("");
 	}
 
 }

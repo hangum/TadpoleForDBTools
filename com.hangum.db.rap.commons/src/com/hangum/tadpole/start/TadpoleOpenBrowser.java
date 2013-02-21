@@ -32,7 +32,7 @@ public class TadpoleOpenBrowser  implements Runnable {
 		if(logger.isDebugEnabled()) logger.debug("start open browser");
 		
 		try {
-			// 시스템 속도가 느려서 워크벤치가 정상적으로 동작하지 못했을 경우에 대비하여 기다립니다.
+			// TODO 시스템 속도가 느려서 워크벤치가 정상적으로 동작하지 못했을 경우에 대비하여 기다립니다.
 			try { Thread.sleep(3000); } catch(Exception e) {};
 			
 			// window
