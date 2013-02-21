@@ -97,7 +97,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		Label lblOperationType = new Label(compositeBody, SWT.NONE);
-		lblOperationType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOperationType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		lblOperationType.setText(Messages.MySQLLoginComposite_lblOperationType_text);
 		
 		comboOperationType = new Combo(compositeBody, SWT.READ_ONLY);
