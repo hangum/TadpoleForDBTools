@@ -22,11 +22,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.ExitConfirmation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -79,7 +79,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(false);
-        
+    
+        // 시스템 종료 메시지 출력시킬 것인지.
+        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
+    	service.setMessage( "Do you really wanna leave the party?" );
+    
         initSystem();
     }
     
@@ -186,8 +190,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    		shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 	    	}
 	    	shell.setMaximized(true);
-//        }
-	    
+//        }	    
     }
     
 //
