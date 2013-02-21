@@ -108,15 +108,13 @@ public abstract class AbstractLoginComposite extends Group {
 	 */
 	public boolean isPing(String host, String port) throws NumberFormatException {
 		
-//		TO DO db가 드릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
-//		int stats = PingTest.ping(host, Integer.parseInt(port), 2500);
-//		if(PingTest.SUCCESS == stats) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-		
-		return true;
+//		TODO db가 드릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
+		int stats = PingTest.ping(host, Integer.parseInt(port), 2500);
+		if(PingTest.SUCCESS == stats) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
