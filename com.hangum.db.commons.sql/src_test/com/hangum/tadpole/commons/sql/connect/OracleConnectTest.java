@@ -1,4 +1,4 @@
-package com.hangum.tadpole.commons.sql;
+package com.hangum.tadpole.commons.sql.connect;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +16,7 @@ public class OracleConnectTest {
 
 	public static void main(String args[]) {
 		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
 			String url = "jdbc:oracle:thin:@192.168.61.129:1521:XE";
 	
 			Properties props = new Properties();

@@ -1,4 +1,4 @@
-package com.hangum.tadpole.commons.sql;
+package com.hangum.tadpole.commons.sql.connect;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

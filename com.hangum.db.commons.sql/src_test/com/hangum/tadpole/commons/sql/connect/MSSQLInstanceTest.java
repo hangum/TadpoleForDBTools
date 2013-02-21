@@ -1,31 +1,38 @@
-package com.hangum.tadpole.commons.sql;
+package com.hangum.tadpole.commons.sql.connect;
 
 import com.hangum.tadpole.define.Define;
 
-public class MSSQLTest {
+public class MSSQLInstanceTest {
 	private java.sql.Connection con = null;
 	private final String url = "jdbc:jtds:sqlserver://";
-	private final String serverName = "172.16.31.133";
+	private final String serverName = "192.168.61.130";
 	private final String portNumber = "1433";
-	private final String databaseName = "testdb";
+	private final String databaseName = "northwind";
 	private final String userName = "sa";
-	private final String password = "1234";
+	private final String password = "tadpole";
 	// Informs the driver to use server a side-cursor,
 	// which permits more than one active statement
 	// on a connection.
 //	private final String selectMethod = "cursor";
 
 	// Constructor
-	public MSSQLTest() {
+	public MSSQLInstanceTest() {
 	}
-
+//	hangum-8ec868b1/Northwin
 	private String getConnectionUrl() {
-		return url + serverName + ":" + portNumber + "/"+ databaseName;// + ";selectMethod=" + selectMethod + Define.SQL_DILIMITER;
+//		return url + serverName + ":" + portNumber + "/"+ databaseName + ";instance=inst";
+		
+//		hangum-8ec868b1/Northwin
+//		HANGUM-8EC868B1\SQLEXPRESS
+		return url + "HANGUM-8EC868B1/Northwin;instance=SQLEXPRESS";
 	}
 
 	private java.sql.Connection getConnection() {
 		try {
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
+			
+			System.out.println(getConnectionUrl());
+			
 			con = java.sql.DriverManager.getConnection(getConnectionUrl(), userName, password);
 			if (con != null)
 				System.out.println("Connection Successful!");
@@ -85,7 +92,7 @@ public class MSSQLTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-		MSSQLTest myDbTest = new MSSQLTest();
+		MSSQLInstanceTest myDbTest = new MSSQLInstanceTest();
 		myDbTest.displayDbProperties();
 	}
 }
