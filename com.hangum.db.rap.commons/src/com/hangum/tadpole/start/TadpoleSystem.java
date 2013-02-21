@@ -48,7 +48,7 @@ public class TadpoleSystem {
 					openURL();
 					
 					// browser 뛰우는 시간을 벌기위해 잠시 멈춥니다.
-					try { Thread.sleep(1000); } catch(Exception e) {};
+					try { Thread.sleep(5000); } catch(Exception e) {};
 					
 					// 프로젝트 이미 실행되어 있는지 검사합니다.
 					System.exit(-1);
@@ -58,6 +58,8 @@ public class TadpoleSystem {
 				
 			} catch (Exception e) {
 				logger.error("Tadpole System start error", e);
+				
+				openURL();
 			}
 			
 		}
