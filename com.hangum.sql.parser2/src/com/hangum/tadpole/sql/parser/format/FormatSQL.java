@@ -11,7 +11,9 @@
 package com.hangum.tadpole.sql.parser.format;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.pretty.Formatter;
+
+import blanco.commons.sql.format.BlancoSqlFormatter;
+import blanco.commons.sql.format.BlancoSqlRule;
 
 
 /**
@@ -33,12 +35,14 @@ public class FormatSQL {
 	public static String format(String lowSQL) throws Exception {
 		String retStr = "";
 		
+		BlancoSqlRule rule = new BlancoSqlRule();
+		rule.setKeywordCase(BlancoSqlRule.KEYWORD_NONE);
+		BlancoSqlFormatter formatter = new BlancoSqlFormatter(rule);
+		
 		String[] arraySQL = StringUtils.split(lowSQL, ";");
 		for(int i=0; i<arraySQL.length; i++) {
-			Formatter formatter = new Formatter(arraySQL[i]);		
-			
 			// formatter에서 첫 부분에 \n을 넘겨 주어서.. 제거 합니다.
-			String tmpSql = StringUtils.removeStart(formatter.format(), "\n");
+			String tmpSql = StringUtils.removeStart(formatter.format(arraySQL[i]), "\n");
 			
 			if(i == (arraySQL.length-1)) retStr += tmpSql + ";";
 			else retStr += tmpSql + ";\n\n";
