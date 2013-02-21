@@ -57,6 +57,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.ResourceManager;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 
 /**
  * Login dialog
@@ -220,8 +222,8 @@ public class DBLoginDialog extends Dialog {
 		composite.setLayout(tcl_composite);
 		
 		treeViewerLoginData = new TreeViewer(composite, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
-		treeViewerLoginData.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
+		treeViewerLoginData.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
 				// 선택이 될때마다 로그인창의 화면에 정보를 출력합니다.
 				IStructuredSelection iss = (IStructuredSelection)event.getSelection();
 				UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
