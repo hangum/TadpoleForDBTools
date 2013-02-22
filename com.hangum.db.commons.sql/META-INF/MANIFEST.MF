@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
 Bundle-ClassPath: libs/ibatis-2.3.4.726.jar,
  .
 Export-Package: com.hangum.tadpole.commons.sql,
+ com.hangum.tadpole.commons.sql.connect,
  com.hangum.tadpole.commons.sql.define,
  com.hangum.tadpole.commons.sql.map,
  com.hangum.tadpole.commons.sql.util,

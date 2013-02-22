@@ -6,7 +6,7 @@
       <entrypoint
             class="com.hangum.tadpole.mongodb.erd.stanalone.Application"
             id="com.hangum.tadpole.erd.stanalone.Application"
-            parameter="mongodb-erd">
+            path="/mongodb-erd">
       </entrypoint>
    </extension>
 

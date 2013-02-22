@@ -40,7 +40,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
@@ -96,6 +96,7 @@ import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
+import com.hangum.tadpole.rdb.core.util.browserFunction.IEditorBrowserFunction;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
@@ -167,11 +168,6 @@ public class MainEditor extends EditorPart {
 	/** export delimit */
 	private String exportDelimit = GetPreferenceGeneral.getExportDelimit().toLowerCase().equals("tab")?"	":GetPreferenceGeneral.getExportDelimit(); //$NON-NLS-1$ //$NON-NLS-2$
 	
-	/** query의 히스토리를 보여줍니다. */
-	private List<String> listQueryHistory = new ArrayList<String>();
-
-	/** 마지막으로 실행한 query */
-	private String executeLastSQL = ""; //$NON-NLS-1$
 	/** query 결과의 컬럼 정보 HashMap -- table의 헤더를 생성하는 용도 <column index, Data> */
 	private HashMap<Integer, String> mapColumns = null;
 	/** query 결과 column, type 정보를 가지고 있습니다 */
@@ -402,18 +398,19 @@ public class MainEditor extends EditorPart {
 		
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
+	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
-	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	    
 	    
-//	    browserQueryEditor.setText("about:blank"); //$NON-NLS-1$
+	    addBrowserHandler();
 	    if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.REAL) {
 	    	browserQueryEditor.setUrl(REAL_URL);
 	    } else {
 	    	browserQueryEditor.setUrl(URL);
 	    }
-	    addBrowserHandler();
-		
-		createStatusLine();
+	    
+//		createStatusLine();
+	    ////// orion editor end /////////////////////////////////////////////////////////////////////////////
 		
 		Composite compositeResult = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_compositeResult = new GridLayout(1, false);
@@ -743,7 +740,7 @@ public class MainEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {65, 35});
 		
-		getEditorSite().getActionBars().getStatusLineManager().setMessage(Messages.MainEditor_18);
+//		getEditorSite().getActionBars().getStatusLineManager().setMessage(Messages.MainEditor_18);
 		initEditor();
 	}
 	
@@ -768,22 +765,26 @@ public class MainEditor extends EditorPart {
 	}
 	
 	/**
-	 * brower handler
+	 * browser handler
 	 */
 	private void addBrowserHandler() {
+		registerBrowserFunctions();
+		
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					registerBrowserFunctions();
-					browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);//EditorBrowserFunctionService.JAVA_SCRIPT_INIT_EMBEDDED_EDITOR); //$NON-NLS-1$
+					browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
 				} catch(Exception e) {
-					logger.error("set register browser function and content initialize", e); //$NON-NLS-1$
+					logger.error("set register browser function and content initialize", e);
 				}
 			}
 			public void changed( ProgressEvent event ) {}
 		});
 	}
 	
+	/**
+	 * register browser function
+	 */
 	private void registerBrowserFunctions() {
 		editorService = new EditorBrowserFunctionService(browserQueryEditor, EditorBrowserFunctionService.EDITOR_SERVICE_HANDLER, this);
 	}
@@ -859,7 +860,56 @@ public class MainEditor extends EditorPart {
 	 * 
 	 */
 	private void execute() {
-		listQueryHistory = new ArrayList<String>();
+		String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
+		if("".equals(tmpStrSelText)) return;		
+		
+		// query의 히스토리를 보여 주기위한 변수 정의
+		final List<String> listQueryHistory = new ArrayList<String>();
+		
+		// execute batch 처리를 위한 변수 정의
+		final List<String> listStrExecuteQuery = new ArrayList<String>();
+		
+		// select 문 처리를 위한 변수 정의
+		String executeLastSQL  = ""; //$NON-NLS-1$
+		
+		// 현재 실행 할 쿼리의 형태(전체 실행, 부분 쿼리 실행)인지
+		final int intExecuteQueryType = getOrionEditorCursorPosition();
+
+		// 전체 실행이면..
+		if(intExecuteQueryType == ALL_QUERY_EXECUTE) {						
+			tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
+			
+			// 분리자 만큼 돌려면 실행 할 쿼리를 모읍니다.
+			for (String strSQL : tmpStrSelText.split(Define.SQL_DILIMITER)) {							
+
+				// 히스토리 데이터에 실행된 쿼리 저장
+				listQueryHistory.add(strSQL);						
+				
+				// 구분자 ;를 제거 합니다.(특정 디비에서는 ;가 있으면 오류)
+				strSQL = StringUtils.removeEnd(strSQL, Define.SQL_DILIMITER);
+				
+				// 쿼리 텍스트에 쿼리 이외의 특수 문자를 제거
+				executeLastSQL = SQLUtil.executeQuery(strSQL);
+				
+				// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
+				if(!SQLUtil.isStatment(executeLastSQL)) {
+					listStrExecuteQuery.add(executeLastSQL);
+					executeLastSQL = "";
+				}
+			}
+		// 블럭 쿼리를 실행하였으면 쿼리를 분리자로 나누지 않고 전체를 수행합니다.
+		} else {				
+			String strSQL = SQLTextUtil.executeQuery(tmpStrSelText, intExecuteQueryType);
+
+			// 히스토리 데이터에 실행된 쿼리 저장
+			listQueryHistory.add(strSQL);						
+			
+			// 구분자 ;를 제거 합니다.(특정 디비에서는 ;가 있으면 오류)
+			strSQL = StringUtils.removeEnd(strSQL, Define.SQL_DILIMITER);
+			
+			// 쿼리를 수행할수 있도록 가공합니다.
+			executeLastSQL = SQLUtil.executeQuery(strSQL);
+		}
 		
 //		// 실행해도 되는지 묻는다.
 //		if(Define.YES_NO.YES.toString().equals(userDB.getQuestion_dml())) {
@@ -869,6 +919,9 @@ public class MainEditor extends EditorPart {
 //		예를 들어 에디터 상의 모든 쿼리를 실행할때 SELECT 문 이외의 문장이 하나라도 오면 물을지?
 //		아니면 모든 쿼리에 실행 유무를 물을지?
 
+			
+		final String finalExecuteSQL = executeLastSQL;
+
 		// job
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
@@ -876,90 +929,28 @@ public class MainEditor extends EditorPart {
 				monitor.beginTask(Messages.MainEditor_46, IProgressMonitor.UNKNOWN);
 				
 				try {
-					String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
-					if("".equals(tmpStrSelText)) return Status.OK_STATUS; //$NON-NLS-1$
+					// 페이지를 초기화 합니다.
+					pageNumber = 1;	
 					
-					// cursor 위치가 ALL_QUERY_EXECUTE 이면 전체 쿼리 실행이다.
-					int intOrionEditorCursorPosition = getOrionEditorCursorPosition();
-					if(intOrionEditorCursorPosition == ALL_QUERY_EXECUTE) {//"".equals(tmpStrSelText.trim())) { //$NON-NLS-1$						
-						tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
-						String[] strArrySQLS = tmpStrSelText.split(Define.SQL_DILIMITER); 	//$NON-NLS-1$
-						List<String> listStrExecuteQuery = new ArrayList<String>();
-						
-						for (String strSQL : strArrySQLS) {							
-							if(monitor.isCanceled()) {
-								monitor.done();
-								return Status.CANCEL_STATUS;
-							}
-	
-							// 구분자 ;로 여러개의 쿼리를 실행했으면
-							if(strSQL.endsWith( Define.SQL_DILIMITER )) { 				//$NON-NLS-1$
-								strSQL = strSQL.substring(0, strSQL.length()-1);
-							}
-							
-							// 히스토리 데이터에 실행된 쿼리를 남긴다.
-							listQueryHistory.add(strSQL);						
-							
-							// 쿼리를 수행할수 있도록 가공합니다.
-							executeLastSQL = SQLUtil.executeQuery(strSQL);
-							
-							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
-							if(SQLUtil.isStatment(executeLastSQL)) {
-							} else {
-								listStrExecuteQuery.add(executeLastSQL);
-							}
-						}
-						
-						// 프로그래스바 정보.
-						monitor.subTask(executeLastSQL);
-						monitor.setTaskName(executeLastSQL);
-						
-						// 마지막 쿼리가 select 문일 경우에 execute batch insert 후에 select 문을 호출합니다.
-						if(SQLUtil.isStatment(executeLastSQL)) {
-							
-							pageNumber = 1;	
-							if(listStrExecuteQuery.size() != 0) {
-								runSQLExecuteBatch(listStrExecuteQuery);
-							}
-							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
-						// create 로 시작하는 쿼리.
-						} else {
+					if(intExecuteQueryType == ALL_QUERY_EXECUTE) {
+						// select 이외의 쿼리 실행
+						if(!listStrExecuteQuery.isEmpty()) {
 							runSQLExecuteBatch(listStrExecuteQuery);
-						}					
-					
-					// 블럭 쿼리를 실행하였으면 쿼리를 분리자로 나누지 않고 전체를 수행합니다.
+						}
+						
+						// select 문장 실행
+						if(!"".equals(finalExecuteSQL)) {
+							runSQLSelect(finalExecuteSQL);
+						}
 					} else {
-						if(monitor.isCanceled()) {
-							monitor.done();
-							return Status.CANCEL_STATUS;
-						}
-						
-						String strSQL = SQLTextUtil.executeQuery(tmpStrSelText, intOrionEditorCursorPosition);
-						if(strSQL.endsWith( Define.SQL_DILIMITER )) { 				//$NON-NLS-1$
-							strSQL = strSQL.substring(0, strSQL.length()-1);
-						}
-						
-						// 히스토리 데이터에 실행된 쿼리를 남긴다.
-						listQueryHistory.add(strSQL);						
-						
-						// 쿼리를 수행할수 있도록 가공합니다.
-						executeLastSQL = SQLUtil.executeQuery(strSQL);
-
-						// 프로그래스바 정보.
-						monitor.subTask(executeLastSQL);
-						monitor.setTaskName(executeLastSQL);
-						
-						if(SQLUtil.isStatment(strSQL)) {							
-							pageNumber = 1;							
-							runSQLSelect(executeLastSQL); //$NON-NLS-1$ //$NON-NLS-2$
-						// create 로 시작하는 쿼리.
+						if(SQLUtil.isStatment(finalExecuteSQL)) {							
+							runSQLSelect(finalExecuteSQL);
 						} else {
-							runSQLOther(executeLastSQL);
+							runSQLOther(finalExecuteSQL);
 						}
 					}
-					
 				} catch(Exception e) {
-					logger.error(Messages.MainEditor_50 + executeLastSQL, e);
+					logger.error(Messages.MainEditor_50 + finalExecuteSQL, e);
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
 				} finally {
@@ -983,7 +974,7 @@ public class MainEditor extends EditorPart {
 							for (String strQuery : listQueryHistory) sqlHistory(strQuery);
 							
 							// table에 데이터 표시
-							executeFinish();
+							executeFinish(finalExecuteSQL);
 							
 							// 쿼리 실행후에 결과 테이블에 포커스가 가도록
 							setOrionTextFocus();
@@ -1012,7 +1003,7 @@ public class MainEditor extends EditorPart {
 	 * @param endResultPos
 	 */
 	private void runSQLSelect(String requestQuery) throws Exception {		
-		if(!PermissionChecks.isExecute(strUserType, userDB, executeLastSQL)) {
+		if(!PermissionChecks.isExecute(strUserType, userDB, requestQuery)) {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
@@ -1173,7 +1164,7 @@ public class MainEditor extends EditorPart {
 			javaConn = client.getDataSource().getConnection();
 			statement = javaConn.createStatement();
 			
-			javaConn.setAutoCommit(false);
+//			javaConn.setAutoCommit(true);
 			
 			for (String strQuery : listQuery) {
 				if(StringUtils.startsWith(strQuery.trim().toUpperCase(), "CREATE TABLE")) { //$NON-NLS-1$
@@ -1279,10 +1270,10 @@ public class MainEditor extends EditorPart {
 	 * 
 	 * @param lastQuery 실행된 마지막 쿼리
 	 */
-	private void executeFinish() {
+	private void executeFinish(String finalExecuteSQL) {
 		setFilter();
 		
-		if(SQLUtil.isStatment(executeLastSQL)) {			
+		if(SQLUtil.isStatment(finalExecuteSQL)) {			
 			btnPrev.setEnabled(false);
 			if( sourceDataList.size() < queryPageCount ) btnNext.setEnabled(false);
 			else btnNext.setEnabled(true);
@@ -1292,7 +1283,7 @@ public class MainEditor extends EditorPart {
 		}
 		
 		// 쿼리의 결과를 화면에 출력합니다.
-		setResultTable();
+		setResultTable(finalExecuteSQL);
 	}
 	
 	/**
@@ -1303,7 +1294,7 @@ public class MainEditor extends EditorPart {
 		TadpoleMessageDAO message = new TadpoleMessageDAO(new Date(), msg);
 		listMessage.add(message);
 		
-		tableViewerMessage.refresh(listMessage);
+		tableViewerMessage.refresh();
 		resultFolderSel(RESULT_TAB_NAME.TADPOLE_MESSAGE);
 		
 		setOrionTextFocus();
@@ -1312,10 +1303,10 @@ public class MainEditor extends EditorPart {
 	/**
 	 * tab을 선택합니다.
 	 * 
-	 * @param TAB
+	 * @param selectTab
 	 */
-	private void resultFolderSel(final RESULT_TAB_NAME TAB) {
-		int index = (Integer)tabFolderResult.getData(TAB.toString());
+	private void resultFolderSel(final RESULT_TAB_NAME selectTab) {
+		int index = (Integer)tabFolderResult.getData(selectTab.toString());
 		if(tabFolderResult.getSelectionIndex() != index) {
 			tabFolderResult.setSelection(index);
 		}
@@ -1324,8 +1315,8 @@ public class MainEditor extends EditorPart {
 	/**
 	 * 쿼리의 결과를 화면에 출력하거나 정리 합니다.
 	 */
-	private void setResultTable() {
-		if(SQLUtil.isStatment(executeLastSQL)) {			
+	private void setResultTable(String finalExecuteSQL) {
+		if(SQLUtil.isStatment(finalExecuteSQL)) {			
 			// table data를 생성한다.
 			sqlSorter = new SQLResultSorter(-999);
 			

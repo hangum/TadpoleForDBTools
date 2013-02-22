@@ -10,7 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.secret.util;
 
-import org.eclipse.rwt.lifecycle.IEntryPoint;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,7 +33,7 @@ import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
  * @author hangum
  *
  */
-public class TadpoleEngineEncryptFile implements IEntryPoint {
+public class TadpoleEngineEncryptFile implements IApplication {
 	private static String defaultContent = "DB=CUBRID \r\n" + 
 			"ip=127.0.0.1 \r\n" +
 			"port=33000 \r\n" +
@@ -41,11 +42,17 @@ public class TadpoleEngineEncryptFile implements IEntryPoint {
 			"password=";
 	private Text txtOriginal;
 	private Text textEncrypt;
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public int createUI() {
+	public Object start(IApplicationContext context) throws Exception {
 		Display display = new Display ();
 		Shell shellSecret = new Shell (display);
 		shellSecret.setText("Tadpole cfg Encrypt");
@@ -140,6 +147,5 @@ public class TadpoleEngineEncryptFile implements IEntryPoint {
 			ee.printStackTrace();
 		}
 	}
-
 
 }

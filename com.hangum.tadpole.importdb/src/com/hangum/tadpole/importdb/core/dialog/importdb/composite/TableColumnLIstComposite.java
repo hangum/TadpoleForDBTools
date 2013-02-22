@@ -31,6 +31,9 @@ import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.Messages;
+import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.ExistOnDeleteColumnEditingSupport;
+import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.ImportColumnEditingSupport;
+import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.RenameColumnEditingSupport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
@@ -75,7 +78,8 @@ public class TableColumnLIstComposite extends Composite {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		final TableViewerColumn tableColumn = new TableViewerColumn(tableViewer, SWT.LEFT);
-		tableColumn.getColumn().setWidth(30);
+		tableColumn.getColumn().setText("Is Import"); //$NON-NLS-1$
+		tableColumn.getColumn().setWidth(70);
 		tableColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -92,11 +96,11 @@ public class TableColumnLIstComposite extends Composite {
 				}
 			}
 		});
-		tableColumn.setEditingSupport(new ModifyEditingSupport(tableViewer));
+		tableColumn.setEditingSupport(new ImportColumnEditingSupport(tableViewer));
 		
 		final TableViewerColumn tableColumnName = new TableViewerColumn(tableViewer, SWT.LEFT);
 		tableColumnName.getColumn().setText("Table Name"); //$NON-NLS-1$
-		tableColumnName.getColumn().setWidth(400);
+		tableColumnName.getColumn().setWidth(200);
 		tableColumnName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -104,6 +108,39 @@ public class TableColumnLIstComposite extends Composite {
 				return modDao.getName();						
 			}
 		});
+		
+		final TableViewerColumn tableColumnExistOnDelete = new TableViewerColumn(tableViewer, SWT.LEFT);
+		tableColumnExistOnDelete.getColumn().setText("Exist on delete"); //$NON-NLS-1$
+		tableColumnExistOnDelete.getColumn().setWidth(100);
+		tableColumnExistOnDelete.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return null;
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				ModTableDAO modDao = (ModTableDAO)element;
+				if (modDao.isExistOnDelete()) {
+					return CHECKED;
+				} else {
+					return UNCHECKED;
+				}
+			}
+		});
+		tableColumnExistOnDelete.setEditingSupport(new ExistOnDeleteColumnEditingSupport(tableViewer));
+		
+		final TableViewerColumn tableColumnRename = new TableViewerColumn(tableViewer, SWT.LEFT);
+		tableColumnRename.getColumn().setText("Rename"); //$NON-NLS-1$
+		tableColumnRename.getColumn().setWidth(200);
+		tableColumnRename.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				ModTableDAO modDao = (ModTableDAO)element;
+				return modDao.getReName();						
+			}
+		});
+		tableColumnRename.setEditingSupport(new RenameColumnEditingSupport(tableViewer));
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setInput(listTables);		

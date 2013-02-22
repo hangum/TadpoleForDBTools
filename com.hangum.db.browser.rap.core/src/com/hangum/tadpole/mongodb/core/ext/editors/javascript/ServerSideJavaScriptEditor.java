@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
@@ -187,8 +187,8 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		
 		browserQueryEditor = new Browser(compositeBody, SWT.BORDER);
 		browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		browserQueryEditor.setUrl(URL);
 		addBrowserHandler();
+		browserQueryEditor.setUrl(URL);
 		
 		Composite compositeTail = new Composite(sashForm, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -337,10 +337,11 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 * browser initialize 
 	 */
 	private void addBrowserHandler() {
+		registerBrowserFunctions();
+		
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					registerBrowserFunctions();
 					browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);
 				} catch(Exception e) {
 					logger.error("set register browser function and content initialize", e);

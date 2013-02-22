@@ -11,7 +11,7 @@
 package com.hangum.tadpole.application.start.action;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.rwt.widgets.ExternalBrowser;
+import org.eclipse.rap.rwt.widgets.ExternalBrowser;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.application.start.BrowserActivator;

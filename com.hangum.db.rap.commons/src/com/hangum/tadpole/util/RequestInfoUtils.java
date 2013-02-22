@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.util;
 
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 
 /**
  * <pre>

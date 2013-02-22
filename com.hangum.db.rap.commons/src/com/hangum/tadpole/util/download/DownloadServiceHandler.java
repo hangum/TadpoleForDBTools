@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.service.IServiceHandler;
+import org.eclipse.rap.rwt.service.ServiceHandler;
 
 import com.hangum.tadpole.define.Define;
 
@@ -28,7 +28,7 @@ import com.hangum.tadpole.define.Define;
  * @author hangum
  * 
  */
-public class DownloadServiceHandler implements IServiceHandler {
+public class DownloadServiceHandler implements ServiceHandler {
 	public static final String ID = "com.hangum.db.browser.rap.core.editors.main.internals.DownloadServiceHandler";
 	private static final Logger logger = Logger
 			.getLogger(DownloadServiceHandler.class);
@@ -37,9 +37,8 @@ public class DownloadServiceHandler implements IServiceHandler {
 	private byte[] byteContent;
 
 	@Override
-	public void service() throws IOException, ServletException {
-		HttpServletResponse resp = RWT.getResponse();
-		makeHtmlFile(resp);
+	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		makeHtmlFile(response);
 	}
 
 	private void makeHtmlFile(HttpServletResponse resp) {

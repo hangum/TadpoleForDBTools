@@ -14,13 +14,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.service.ISessionStore;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.ExitConfirmation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
@@ -69,16 +71,27 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();        
         configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
         configurer.setShowCoolBar(true);
-        configurer.setShowStatusLine(true);
+        configurer.setShowStatusLine(false);
         
-        configurer.setShowProgressIndicator(true);
+        configurer.setShowProgressIndicator(false);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION);
         
         // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(false);
-        
-       	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
+    
+        // 시스템 종료 메시지 출력시킬 것인지.
+        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
+    	service.setMessage( "Do you really wanna leave the party?" );
+    
+        initSystem();
+    }
+    
+    /**
+     * 시스템 초기화 
+     */
+    private void initSystem() {
+    	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
     	try {
     		TadpoleSystemInitializer.initSystem();
     		
@@ -156,13 +169,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 * session을 설정합니다.
 	 */
 	private void initSession() {
-		ISessionStore iss = RWT.getSessionStore();
+		HttpSession iss = RWT.getRequest().getSession();
 		
 		int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
 		if(sessionTimeOut <= 0) {
-			iss.getHttpSession().setMaxInactiveInterval( 60 * 60 * 24 );
+			iss.setMaxInactiveInterval( 60 * 60 * 24 );
 		} else {
-			iss.getHttpSession().setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
+			iss.setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
 		}
 	}	// end method
     
@@ -177,8 +190,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    		shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 	    	}
 	    	shell.setMaximized(true);
-//        }
-	    
+//        }	    
     }
     
 //

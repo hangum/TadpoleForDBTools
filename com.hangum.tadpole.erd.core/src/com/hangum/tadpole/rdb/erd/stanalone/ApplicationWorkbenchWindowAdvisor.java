@@ -35,7 +35,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setInitialSize(new Point(1200, 1000));
 		configurer.setShowCoolBar(true);
 		configurer.setShowMenuBar(false);
-		configurer.setShowStatusLine(false);
+//		configurer.setShowStatusLine(false);
 		configurer.setTitle("Tadpole ERD RAP");
 		configurer.setShellStyle(SWT.TITLE | SWT.RESIZE);
 	}

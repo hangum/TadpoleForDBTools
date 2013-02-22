@@ -13,6 +13,8 @@ package com.hangum.tadpole.util;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
+
 /**
  * IP, PORT에 ping test 합니다.
  * 
@@ -20,7 +22,8 @@ import java.net.Socket;
  *
  */
 public class PingTest implements Runnable {
-
+	private static final Logger logger = Logger.getLogger(PingTest.class);
+	
 	public static final int HOST_NOT_FOUND = 0;
 	public static final int CANNOT_CONNECT = 1;
 	public static final int SUCCESS = 2;
@@ -77,7 +80,7 @@ public class PingTest implements Runnable {
 			t.join(maxWait);
 			
 		} catch (InterruptedException ie) {
-			//ignor exception
+			logger.error("pint test faile", ie);
 		}
 		
 		return ping.status;

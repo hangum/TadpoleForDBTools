@@ -11,14 +11,14 @@
 package com.hangum.tadpole.util.download;
 
 
-import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.service.IServiceHandler;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.service.ServiceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * file download util
+ * file download utils
  * 
  * @author hangum
  *
@@ -27,14 +27,10 @@ public class DownloadUtils {
 
 	/** download url */
 	private static String createDownloadUrl(String id) {
-		StringBuilder url = new StringBuilder();
-		url.append(RWT.getRequest().getContextPath());
-		url.append(RWT.getRequest().getServletPath());
-		url.append("?");
-		url.append(IServiceHandler.REQUEST_PARAM);
-		url.append("=" + id);
-		String encodedURL = RWT.getResponse().encodeURL(url.toString());
-		return encodedURL;
+		ServiceManager manager = RWT.getServiceManager();
+		String url = manager.getServiceHandlerUrl( id );
+		
+		return url;
 	}
 
 	/**

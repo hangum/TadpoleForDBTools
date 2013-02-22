@@ -19,6 +19,8 @@ package com.hangum.tadpole.importdb.core.dialog.importdb.dao;
 public class ModTableDAO {
 	boolean isModify = false;
 	String name;
+	boolean isExistOnDelete = false;
+	String reName = "";
 	
 	public ModTableDAO() {
 	}
@@ -42,5 +44,22 @@ public class ModTableDAO {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public boolean isExistOnDelete() {
+		return isExistOnDelete;
+	}
+
+	public void setExistOnDelete(boolean isExistOnDelete) {
+		this.isExistOnDelete = isExistOnDelete;
+	}
+
+	public String getReName() {
+		return reName;
+	}
+
+	public void setReName(String reName) {
+		this.reName = reName;
+	}
+	
 	
 }

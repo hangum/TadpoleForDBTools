@@ -101,15 +101,20 @@ public class SQLUtil {
 	}
 	
 	/**
-	 * tadpole에서 실행할 쿼리로 구문을 만듭니다.
+	 * 쿼리 텍스트에 쿼리 이외의 특수 문자를 제거해 줍니다.
 	 * 
 	 * @param exeSQL
 	 * @return
 	 */
 	public static String executeQuery(String exeSQL) {
 		try {
-			// 문장의 -- 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
-			exeSQL = delComment(exeSQL, "--");
+//			
+//			https://github.com/hangum/TadpoleForDBTools/issues/140 오류로 불럭지정하였습니다.
+//			TO DO 특정 쿼리에서는 주석이 있으면 오류인데..DB에서 쿼리를 실행받는 다양한 조건을 고려할 필요가 있습니다. 
+			
+//			// 문장의 -- 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
+//			exeSQL = delComment(exeSQL, "--");
+			
 			// 문장 의 // 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
 			exeSQL = delComment(exeSQL, "//");
 			
@@ -171,7 +176,7 @@ public class SQLUtil {
 		int cutsize = 1998;
 		String[] tmpRetArryStr = new String[2000];
 		byte[] byteSqlText = resourceContent.getBytes();
-
+		
 		int isEndTextHangul = 0;
 		int workCnt = 0;
 
