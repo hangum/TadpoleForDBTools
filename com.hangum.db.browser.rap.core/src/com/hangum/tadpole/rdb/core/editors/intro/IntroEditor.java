@@ -50,7 +50,7 @@ public class IntroEditor extends EditorPart {
 	private Browser browser;
 	
 	/** default main home */
-	public static String[] ARRAY_DEFAULT_MAIN_HOME_PAGE = {PreferenceDefine.DEFAULT_HOME_PAGE_VALUE, "http://www.pitmongo.co.kr/"};
+	public static String[] ARRAY_DEFAULT_MAIN_HOME_PAGE = {PreferenceDefine.DEFAULT_HOME_PAGE_VALUE};//, "http://www.pitmongo.co.kr/"};
 	
 	/** default dona home */
 	public static String[] ARRAY_DONATION_HOME_PAGE = {"http://www.cubrid.org/", "www.osci.kr"};
