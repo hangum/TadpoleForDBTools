@@ -209,17 +209,14 @@ public class MongoDBGroupEditor extends EditorPart {
 		});
 		btnSearch.setText("Search");
 		
-		Composite compositeResult2 = new Composite(sashForm, SWT.NONE);
+		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, initColName, false);
+		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
-		gl_compositeResult.verticalSpacing = 1;
-		gl_compositeResult.horizontalSpacing = 1;
-		gl_compositeResult.marginHeight = 1;
-		gl_compositeResult.marginWidth = 1;
-		compositeResult2.setLayout(gl_compositeResult);
-		
-		compositeResult = new MongodbResultComposite(compositeResult2, SWT.NONE, userDB, initColName, false);
-		compositeResult.setLayout(new GridLayout(1, false));
-		
+		gl_compositeResult.verticalSpacing = 0;
+		gl_compositeResult.horizontalSpacing = 0;
+		gl_compositeResult.marginHeight = 0;
+		gl_compositeResult.marginWidth = 0;
+		compositeResult.setLayout(gl_compositeResult);
 		
 		sashForm.setWeights(new int[] {7, 3});
 	}

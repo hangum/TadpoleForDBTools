@@ -34,7 +34,7 @@ public class SQLTextUtil {
 	 * @param cursorPosition
 	 * @return
 	 */
-	public static String executeQuery(String query, int cursorPosition) throws Exception {
+	public static String executeQuery(String query, int cursorPosition) {//throws Exception {
 		if( query.split(Define.SQL_DILIMITER).length == 1 || query.indexOf(Define.SQL_DILIMITER) == -1) {
 			return StringUtils.trimToEmpty(query);
 		}

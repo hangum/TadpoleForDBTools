@@ -68,10 +68,10 @@ public class MongoDBQuery {
 		options.connectionsPerHost = 20;		
 		Mongo mongo = new Mongo(userDB.getHost(), Integer.parseInt(userDB.getPort()));
 		DB db = mongo.getDB(userDB.getDb());
-		Set<String> listColNames = db.getCollectionNames();
-		for (String string : listColNames) {
-			System.out.println("[collection name]" + string);
-		}
+//		Set<String> listColNames = db.getCollectionNames();
+//		for (String string : listColNames) {
+//			System.out.println("[collection name]" + string);
+//		}
 	}
 	
 	/**
@@ -156,6 +156,19 @@ public class MongoDBQuery {
 	 */
 	public static DB findDB(UserDBDAO userDB) throws Exception {
 		return MongoConnectionManager.getInstance(userDB);
+	}
+	
+	/**
+	 * exist on delete
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @throws Exception
+	 */
+	public static void existOnDelete(UserDBDAO userDB, String colName) throws Exception {
+		if(findDB(userDB).collectionExists(colName)) {
+			dropCollection(userDB, colName);
+		}
 	}
 	
 	/**

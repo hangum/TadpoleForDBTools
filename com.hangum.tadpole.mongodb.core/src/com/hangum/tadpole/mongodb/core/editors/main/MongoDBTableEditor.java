@@ -96,6 +96,7 @@ public class MongoDBTableEditor extends EditorPart {
 		parent.setLayout(gl_parent);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+		sashForm.setSashWidth(1);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		tabFolderSearchPanel = new CTabFolder(sashForm, SWT.NONE);
@@ -219,16 +220,14 @@ public class MongoDBTableEditor extends EditorPart {
 		});
 		btnBasicSearch.setText("Search"); //$NON-NLS-1$
 		
-		Composite composite = new Composite(sashForm, SWT.NONE);
-		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.horizontalSpacing = 0;
-		gl_composite.verticalSpacing = 0;
-		gl_composite.marginHeight = 0;
-		gl_composite.marginWidth = 0;
-		composite.setLayout(gl_composite);
-		
-		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName, true);
-		compositeResult.setLayout(new GridLayout(1, false));
+		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, initColName, true);
+		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridLayout gl_compositeResult = new GridLayout(1, false);
+		gl_compositeResult.verticalSpacing = 0;
+		gl_compositeResult.horizontalSpacing = 0;
+		gl_compositeResult.marginHeight = 0;
+		gl_compositeResult.marginWidth = 0;
+		compositeResult.setLayout(gl_compositeResult);
 		
 		sashForm.setWeights(new int[] {40, 60});
 		

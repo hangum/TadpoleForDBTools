@@ -24,6 +24,7 @@ import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.Mongo;
 import com.mongodb.MongoOptions;
+import com.mongodb.ReadPreference;
 import com.mongodb.ServerAddress;
 
 /**
@@ -84,7 +85,10 @@ public class MongoConnectionManager {
 							listServerList.add(new ServerAddress(strIpPort[0], Integer.parseInt(strIpPort[1])));
 						}
 						
+//						options.setReadPreference(ReadPreference.primary());
+						
 						mongo = new Mongo(listServerList, options);	
+						
 					}
 					List<String> listDB = mongo.getDatabaseNames();
 					

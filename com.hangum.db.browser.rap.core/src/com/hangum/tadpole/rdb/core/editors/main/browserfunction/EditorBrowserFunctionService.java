@@ -42,12 +42,13 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 	
 	@Override
 	public Object function(Object[] arguments) {
-		super.function(arguments);
 		
-		if (arguments.length == 0 || !(arguments[0] instanceof Double)) {
-			return null;
-		}
-		int action = ((Double) arguments[0]).intValue();
+//		super.function(arguments);
+//		
+//		if (arguments.length == 0 || !(arguments[0] instanceof Double)) {
+//			return null;
+//		}
+		int action = Integer.parseInt(arguments[0].toString());//((Double) arguments[0]).intValue();
 		
 		switch (action) {
 			case DIRTY_CHANGED:

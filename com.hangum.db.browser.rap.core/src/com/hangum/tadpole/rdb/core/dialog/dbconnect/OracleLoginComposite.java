@@ -71,7 +71,6 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 //	protected Combo comboLocale;
 	
 	protected Button btnSavePreference;
-	private Label lblDatabase;
 	
 	/**
 	 * Create the composite.
@@ -98,7 +97,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		Label lblOperationType = new Label(compositeBody, SWT.NONE);
-		lblOperationType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOperationType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		lblOperationType.setText(Messages.MySQLLoginComposite_lblOperationType_text);
 		
 		comboOperationType = new Combo(compositeBody, SWT.READ_ONLY);
@@ -135,15 +134,12 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		textPort = new Text(compositeBody, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeBody, SWT.NONE);
+		new Label(compositeBody, SWT.NONE);
 		
 		comboConnType = new Combo(compositeBody, SWT.READ_ONLY);
-		comboConnType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboConnType.add("SID");
 		comboConnType.add("Service Name");
 		comboConnType.select(0);
-		
-		lblDatabase = new Label(compositeBody, SWT.NONE);
-		lblDatabase.setText(Messages.OracleLoginComposite_lblDatabase_text);
 		
 		textDatabase = new Text(compositeBody, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));		
@@ -198,7 +194,6 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		btnSavePreference = new Button(compositeBody, SWT.CHECK);
 		btnSavePreference.setText(Messages.MySQLLoginComposite_btnSavePreference_text);
 		btnSavePreference.setSelection(true);
-		new Label(compositeBody, SWT.NONE);
 
 		init();
 	}

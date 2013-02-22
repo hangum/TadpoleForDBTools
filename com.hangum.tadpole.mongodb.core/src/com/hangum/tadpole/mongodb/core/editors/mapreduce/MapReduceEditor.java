@@ -255,16 +255,14 @@ public class MapReduceEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {1, 1});
 		
-		Composite composite = new Composite(sashFormMain, SWT.NONE);
-		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.horizontalSpacing = 0;
-		gl_composite.verticalSpacing = 0;
-		gl_composite.marginHeight = 0;
-		gl_composite.marginWidth = 0;
-		composite.setLayout(gl_composite);
-		
-		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName, false);
-		compositeResult.setLayout(new GridLayout(1, false));
+		compositeResult = new MongodbResultComposite(sashFormMain, SWT.NONE, userDB, initColName, false);
+		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridLayout gl_compositeResult = new GridLayout(1, false);
+		gl_compositeResult.verticalSpacing = 0;
+		gl_compositeResult.horizontalSpacing = 0;
+		gl_compositeResult.marginHeight = 0;
+		gl_compositeResult.marginWidth = 0;
+		compositeResult.setLayout(gl_compositeResult);
 		
 		sashFormMain.setWeights(new int[] {40, 30, 30});
 		

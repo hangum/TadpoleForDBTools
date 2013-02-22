@@ -95,7 +95,7 @@ public class Define {
 	}
 	
 	/** tadpole url */
-	public static String TADPOLE_URL = "http://127.0.0.1:%s/db?startup=tadpole";
+	public static String TADPOLE_URL = "http://127.0.0.1:%s/tadpole";//db?startup=tadpole";
 	
 	/**
 	 * tadpole url

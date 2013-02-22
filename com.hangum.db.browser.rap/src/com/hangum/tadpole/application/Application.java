@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application;
 
-import org.eclipse.rwt.lifecycle.IEntryPoint;
+import org.eclipse.rap.rwt.application.IEntryPoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -24,11 +24,16 @@ import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
  */
 public class Application implements IEntryPoint {
 
+//	public Object start(IApplicationContext context) throws Exception {
 	public int createUI() {
-
 		Display display = PlatformUI.createDisplay();
 		WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
 		return PlatformUI.createAndRunWorkbench( display, advisor );
 	}
+	
+//	@Override
+//	public void stop() {
+//		// TODO Auto-generated method stub
+//	}
 	
 }
