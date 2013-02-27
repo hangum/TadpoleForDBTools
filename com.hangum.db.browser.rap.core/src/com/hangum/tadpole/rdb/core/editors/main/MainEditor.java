@@ -45,6 +45,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.custom.CTabFolder;
@@ -214,8 +216,8 @@ public class MainEditor extends EditorPart {
 	private List<TadpoleMessageDAO> listMessage = new ArrayList<TadpoleMessageDAO>();
 
 	///[browser editor]/////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static final String URL = "orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
-	private static final String REAL_URL = "orion/tadpole/editor/REAL_RDBEmbeddededitor.html"; //$NON-NLS-1$
+	private static final String DEV_DB_URL = "orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
+	private static final String REAL_DB_URL = "orion/tadpole/editor/REAL_RDBEmbeddededitor.html"; //$NON-NLS-1$
 	private Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */
 	private EditorBrowserFunctionService editorService;
@@ -402,11 +404,12 @@ public class MainEditor extends EditorPart {
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
 	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	    
 	    
+	    browserQueryEditor.addLocationListener(getLocationListener());
 	    addBrowserHandler();
 	    if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.REAL) {
-	    	browserQueryEditor.setUrl(REAL_URL);
+	    	browserQueryEditor.setUrl(REAL_DB_URL);
 	    } else {
-	    	browserQueryEditor.setUrl(URL);
+	    	browserQueryEditor.setUrl(DEV_DB_URL);
 	    }
 	    
 //		createStatusLine();
@@ -762,6 +765,19 @@ public class MainEditor extends EditorPart {
 			}
 		};
 		return selectionAdapter;
+	}
+	
+	private LocationListener getLocationListener() {
+		return new LocationListener() {
+			public void changing(LocationEvent event) {
+			}
+			
+			public void changed(LocationEvent event) {				
+				if(StringUtils.containsIgnoreCase(event.location, "embeddededitor.html")) {
+					registerBrowserFunctions();
+				}
+			}
+		};
 	}
 	
 	/**
