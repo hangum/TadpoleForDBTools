@@ -10,10 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.parser.format;
 
-import org.apache.commons.lang.StringUtils;
+import kry.sql.format.ISqlFormat;
+import kry.sql.format.SqlFormat;
+import kry.sql.format.SqlFormatRule;
+import kry.sql.util.StringUtil;
 
-import blanco.commons.sql.format.BlancoSqlFormatter;
-import blanco.commons.sql.format.BlancoSqlRule;
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 
 
 /**
@@ -23,43 +27,79 @@ import blanco.commons.sql.format.BlancoSqlRule;
  *
  */
 public class FormatSQL {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(FormatSQL.class);
 	
 	/**
 	 * sql formatting 합니다.
 	 * 
 	 * @param dbType
-	 * @param lowSQL
+	 * @param strOriginalSQL
 	 * @return
 	 * @throws Exception
 	 */
-	public static String format(String lowSQL) throws Exception {
-		String retStr = "";
+	public static String format(String strOriginalSQL) throws Exception {
 		
-		BlancoSqlRule rule = new BlancoSqlRule();
-		rule.setKeywordCase(BlancoSqlRule.KEYWORD_NONE);
-		BlancoSqlFormatter formatter = new BlancoSqlFormatter(rule);
+		SqlFormatRule rule = new SqlFormatRule();
+		rule.setRemoveEmptyLine(true);
+		int tabSize = Integer.parseInt(GetPreferenceGeneral.getDefaultTabSize());
+		boolean optDecode = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatDecode());// true;
+		boolean optIn = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn());//false;
+
+		String leftpad = "";
+		rule.setIndentString(StringUtil.padLeft(leftpad, tabSize, ' '));
+		rule.setDecodeSpecialFormat(!optDecode);
+		rule.setInSpecialFormat(optIn);
+		rule.setOutSqlSeparator(SqlFormatRule.SQL_SEPARATOR_SEMICOLON);
 		
-		String[] arraySQL = StringUtils.split(lowSQL, ";");
-		for(int i=0; i<arraySQL.length; i++) {
-			// formatter에서 첫 부분에 \n을 넘겨 주어서.. 제거 합니다.
-			String tmpSql = StringUtils.removeStart(formatter.format(arraySQL[i]), "\n");
+		try {
+			ISqlFormat formatter = new SqlFormat(rule);
+			return formatter.format(strOriginalSQL, 2);
+		} catch (Exception e) {
+			logger.error("sql format exception", e);
 			
-			if(i == (arraySQL.length-1)) retStr += tmpSql + ";";
-			else retStr += tmpSql + ";\n\n";
+			return strOriginalSQL;
 		}
-		
-		return retStr;
 	}
 
 	 public static void main(String args[]) {
 		 String sql = "select * from tab;";
-		 sql += "Select aa From aTest";
+		 sql += "Select aa From aTest;";
+		 sql +=  
+				 "select Distinct ID, max(FM), max(Univ3), max(Major), max(Average), max(Cfull), max(Post1), max(Post12), max(Place1), max(Test1), max(Score1), max(Cert1), max(Status), max(Bohun)"+ 
+				 "from "+
+				 "("+
+				 "select ID, FM, '', Major, '', '', '', '', '', '', '', '', '', Bohun"+
+				 "from PersoninfoTbl where 조건"+
+				 "union "+
+				 "select ID, '', Univ3, '', Average, Cfull, '', '', '', '', '', '', '', ''"+
+				 "from SchoollingTbl where 조건"+
+				 "union "+
+				 "select ID, '', '', '', '', '', Post1, Post12, Place1, '', '', '', '', ''"+
+				 "from JobApplyTbl where 조건"+
+				 "union "+
+				 "select ID, '', '', '', '', '', '', '', '', Test1, Score1, '', '', ''"+
+				 "from LanguageinfoTbl where 조건"+
+				 "union "+
+				 "select ID, '', '', '', '', '', '', '', '', '', '',  Cert1, '', ''"+
+				 "from CertificationinfoTbl where 조건"+
+				 "union"+
+				 "select ID, '', '', '', '', '', '', '', '', '', '', '', Status, ''"+
+				 "from MilitaryinfoTbl where 조건"+
+				 ");";
+		 sql += 
+				 "CREATE TABLE   sample_table   ("+ 
+				 "id INTEGER NOT NULL,  "+
+				 "name char(60) default NULL,"+ 
+				 "PRIMARY KEY (id) "+
+				 ");";	
 		 
 		 try {
 			String retSql = FormatSQL.format(sql);
 			System.out.println(retSql);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -45,6 +45,18 @@ public class PreferenceDefine {
 	/** select 결과를 페이지에 출력 최대 값 */
 	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 200;
 	
+	//SQLFormatterPreferencePage 
+		/** default tab size */
+		public static final String DEFAULT_TAB_SIZE_PREFERENCE = "DEFAULT_TAB_SIZE_PREFERENCE";
+		public static final String DEFAULT_TAB_SIZE_PREFERENCE_VALUE = "2";
+		
+		public static final String SQL_FORMATTER_DECODE_PREFERENCE = "SQL_FORMATTER_DECODE_PREFERENCE";
+		public static final String SQL_FORMATTER_DECODE_PREFERENCE_VALUE = "true";
+		
+		public static final String SQL_FORMATTER_IN_PREFERENCE = "SQL_FORMATTER_IN_PREFERENCE";
+		public static final String SQL_FORMATTER_IN_PREFERENCE_VALUE = "true";
+	
+	
 	/** SESSION TIME OUT */
 	public static final String SESSION_DFEAULT_PREFERENCE = "SESSION_DFEAULT_PREFERENCE";
 	/** SESSION SERVER TIME OUT */
