@@ -93,7 +93,7 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		
 		// 테이블에 저장 
 		try {
-			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtTabSize, txtNoInsertDecode, txtNoInsertIn);
+			TadpoleSystem_UserInfoData.updateSQLFormatterInfoData(txtTabSize, txtNoInsertDecode, txtNoInsertIn);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE, txtTabSize);
