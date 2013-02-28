@@ -48,8 +48,7 @@ public class FormatSQL {
 		boolean optDecode = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatDecode());// true;
 		boolean optIn = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn());//false;
 
-		String leftpad = "";
-		rule.setIndentString(StringUtil.padLeft(leftpad, tabSize, ' '));
+		rule.setIndentString(StringUtil.padLeft("", tabSize, ' '));
 		rule.setDecodeSpecialFormat(!optDecode);
 		rule.setInSpecialFormat(optIn);
 		rule.setOutSqlSeparator(SqlFormatRule.SQL_SEPARATOR_SEMICOLON);
