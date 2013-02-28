@@ -695,6 +695,7 @@ function(messages, mUndoStack, mKeyBinding, mRulers, mAnnotations, mTooltip, mTe
 			}.bind(this));
 		
 			// Block comment operations
+			// comment 를 //에서 -- 로 수정합니다. - hangum 2013.02.27
 			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(191, true), "toggleLineComment"); //$NON-NLS-0$
 			this.textView.setAction("toggleLineComment", function() { //$NON-NLS-0$
 				var editor = this.editor;
@@ -706,7 +707,7 @@ function(messages, mUndoStack, mKeyBinding, mRulers, mAnnotations, mTooltip, mTe
 				for (var i = firstLine; i <= lastLine; i++) {
 					lineText = model.getLine(i, true);
 					lines.push(lineText);
-					if (!uncomment || (index = lineText.indexOf("//")) === -1) { //$NON-NLS-0$
+					if (!uncomment || (index = lineText.indexOf("--")) === -1) { //$NON-NLS-0$
 						uncomment = false;
 					} else {
 						if (index !== 0) {
@@ -727,7 +728,7 @@ function(messages, mUndoStack, mKeyBinding, mRulers, mAnnotations, mTooltip, mTe
 				if (uncomment) {
 					for (var k = 0; k < lines.length; k++) {
 						lineText = lines[k];
-						index = lineText.indexOf("//"); //$NON-NLS-0$
+						index = lineText.indexOf("--"); //$NON-NLS-0$
 						lines[k] = lineText.substring(0, index) + lineText.substring(index + 2);
 					}
 					text = lines.join("");
@@ -736,12 +737,13 @@ function(messages, mUndoStack, mKeyBinding, mRulers, mAnnotations, mTooltip, mTe
 					selEnd = selection.end - (2 * (lastLine - firstLine + 1)) + (selection.end === lastLineStart+1 ? 2 : 0);
 				} else {
 					lines.splice(0, 0, "");
-					text = lines.join("//"); //$NON-NLS-0$
+					text = lines.join("--"); //$NON-NLS-0$
 					selStart = lineStart === selection.start ? selection.start : selection.start + 2;
 					selEnd = selection.end + (2 * (lastLine - firstLine + 1));
 				}
 				editor.setText(text, lineStart, lineEnd);
-				editor.setSelection(selStart, selEnd);
+//				block - hangum
+//				editor.setSelection(selStart, selEnd);
 				return true;
 			}.bind(this), {name: messages.toggleLineComment});
 			
