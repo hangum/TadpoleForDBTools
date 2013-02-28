@@ -189,7 +189,6 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		
 		browserQueryEditor = new Browser(compositeBody, SWT.BORDER);
 		browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		browserQueryEditor.addLocationListener(getLocationListener());
 		addBrowserHandler();
 		browserQueryEditor.setUrl(URL);
 		
@@ -336,24 +335,24 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		return false;
 	}
 	
-	private LocationListener getLocationListener() {
-		return new LocationListener() {
-			public void changing(LocationEvent event) {
-			}
-			
-			public void changed(LocationEvent event) {				
-				if(StringUtils.containsIgnoreCase(event.location, "embeddededitor.html")) {
-					registerBrowserFunctions();
-				}
-			}
-		};
-	}
+//	private LocationListener getLocationListener() {
+//		return new LocationListener() {
+//			public void changing(LocationEvent event) {
+//			}
+//			
+//			public void changed(LocationEvent event) {				
+//				if(StringUtils.containsIgnoreCase(event.location, "embeddededitor.html")) {
+//					registerBrowserFunctions();
+//				}
+//			}
+//		};
+//	}
 	
 	/**
 	 * browser initialize 
 	 */
 	private void addBrowserHandler() {
-//		registerBrowserFunctions();
+		registerBrowserFunctions();
 		
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {

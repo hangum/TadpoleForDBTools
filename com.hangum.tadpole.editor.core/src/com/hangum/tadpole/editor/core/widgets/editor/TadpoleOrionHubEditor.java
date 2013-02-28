@@ -90,29 +90,15 @@ public class TadpoleOrionHubEditor extends Composite {
 		
 		browserOrionEditor = new Browser(compositeServerStatus, SWT.NONE);
 		browserOrionEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		browserOrionEditor.addLocationListener(getLocationListener());
 		addBrowserHandler();
-		browserOrionEditor.setUrl(EDITOR_URL);	    
-	}
-	
-	private LocationListener getLocationListener() {
-		return new LocationListener() {
-			public void changing(LocationEvent event) {
-			}
-			
-			public void changed(LocationEvent event) {				
-				if(StringUtils.containsIgnoreCase(event.location, "embeddededitor.html")) {
-					registerBrowserFunctions();
-				}
-			}
-		};
+		browserOrionEditor.setUrl(EDITOR_URL);
 	}
 	
 	/**
 	 * browser handler
 	 */
 	private void addBrowserHandler() {
-//		registerBrowserFunctions();
+		registerBrowserFunctions();
 		
 		browserOrionEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {

@@ -404,8 +404,7 @@ public class MainEditor extends EditorPart {
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
 	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	    
 	    
-	    browserQueryEditor.addLocationListener(getLocationListener());
-	    addBrowserHandler();
+	    addBrowserHandler();	    
 	    if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.REAL) {
 	    	browserQueryEditor.setUrl(REAL_DB_URL);
 	    } else {
@@ -743,7 +742,6 @@ public class MainEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {65, 35});
 		
-//		getEditorSite().getActionBars().getStatusLineManager().setMessage(Messages.MainEditor_18);
 		initEditor();
 	}
 	
@@ -767,18 +765,25 @@ public class MainEditor extends EditorPart {
 		return selectionAdapter;
 	}
 	
-	private LocationListener getLocationListener() {
-		return new LocationListener() {
-			public void changing(LocationEvent event) {
-			}
-			
-			public void changed(LocationEvent event) {				
-				if(StringUtils.containsIgnoreCase(event.location, "embeddededitor.html")) {
-					registerBrowserFunctions();
-				}
-			}
-		};
-	}
+//	private LocationListener getLocationListener() {
+//		registerBrowserFunctions();
+//		
+//		return new LocationListener() {
+//			public void changing(LocationEvent event) {
+//			}
+//			
+//			public void changed(LocationEvent event) {				
+////				if(StringUtils.containsIgnoreCase(event.location, "embeddededitor.html")) {
+//					
+//					try {
+//						browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
+//					} catch(Exception e) {
+//						logger.error("set register browser function and content initialize", e);
+//					}
+////				}
+//			}
+//		};
+//	}
 	
 	/**
 	 * browser handler
@@ -786,7 +791,7 @@ public class MainEditor extends EditorPart {
 	private void addBrowserHandler() {
 		registerBrowserFunctions();
 		
-		browserQueryEditor.addProgressListener( new ProgressListener() {
+		browserQueryEditor.addProgressListener(new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
 					browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
@@ -794,7 +799,7 @@ public class MainEditor extends EditorPart {
 					logger.error("set register browser function and content initialize", e);
 				}
 			}
-			public void changed( ProgressEvent event ) {}
+			public void changed( ProgressEvent event ) {}			
 		});
 	}
 	
