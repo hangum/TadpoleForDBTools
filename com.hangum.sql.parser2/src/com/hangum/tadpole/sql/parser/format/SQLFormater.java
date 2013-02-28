@@ -26,11 +26,11 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
  * @author hangumNote
  *
  */
-public class FormatSQL {
+public class SQLFormater {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(FormatSQL.class);
+	private static final Logger logger = Logger.getLogger(SQLFormater.class);
 	
 	/**
 	 * sql formatting 합니다.
@@ -55,7 +55,7 @@ public class FormatSQL {
 		
 		try {
 			ISqlFormat formatter = new SqlFormat(rule);
-			return formatter.format(strOriginalSQL, 2);
+			return formatter.format(strOriginalSQL, 0);
 		} catch (Exception e) {
 			logger.error("sql format exception", e);
 			
@@ -96,7 +96,7 @@ public class FormatSQL {
 				 ");";	
 		 
 		 try {
-			String retSql = FormatSQL.format(sql);
+			String retSql = SQLFormater.format(sql);
 			System.out.println(retSql);
 		} catch (Exception e) {
 			e.printStackTrace();
