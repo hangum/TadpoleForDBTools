@@ -765,26 +765,6 @@ public class MainEditor extends EditorPart {
 		return selectionAdapter;
 	}
 	
-//	private LocationListener getLocationListener() {
-//		registerBrowserFunctions();
-//		
-//		return new LocationListener() {
-//			public void changing(LocationEvent event) {
-//			}
-//			
-//			public void changed(LocationEvent event) {				
-////				if(StringUtils.containsIgnoreCase(event.location, "embeddededitor.html")) {
-//					
-//					try {
-//						browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
-//					} catch(Exception e) {
-//						logger.error("set register browser function and content initialize", e);
-//					}
-////				}
-//			}
-//		};
-//	}
-	
 	/**
 	 * browser handler
 	 */

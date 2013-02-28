@@ -13,6 +13,7 @@ package com.hangum.tadpole.commons.sql.util;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -34,16 +35,18 @@ public class SQLUtil {
 	private static final Logger logger = Logger.getLogger(SQLUtil.class);
 	
 	/**
+	 * pattern statement 
+	 */
+	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile("^SELECT.*|^SHOW.*|^DESCRIBE.*|^DESC.*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	
+	/**
 	 * 쿼리 실행시 prestatment로 실행 할 것인지, 아니면 execute나 executebatch로 실행할 것인지 검사합니다.
 	 * 
 	 * @param strSQL
 	 * @return
 	 */
 	public static boolean isStatment(String strSQL) {
-		if(strSQL.toUpperCase().startsWith("SHOW") ||  //$NON-NLS-1$
-				strSQL.toUpperCase().startsWith("SELECT") ||  //$NON-NLS-1$
-				strSQL.toUpperCase().startsWith("DESC") ||  //$NON-NLS-1$
-				strSQL.toUpperCase().startsWith("DESCRIBE") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
 			return true;
 		}
 		
@@ -116,7 +119,7 @@ public class SQLUtil {
 //			exeSQL = delComment(exeSQL, "--");
 			
 			// 문장 의 // 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
-			exeSQL = delComment(exeSQL, "//");
+			exeSQL = delComment(exeSQL, "--");
 			
 			// 마지막 쿼리를 재 사용하기위해
 //			exeSQL = StringUtils.replace(exeSQL, "\r", " ");
