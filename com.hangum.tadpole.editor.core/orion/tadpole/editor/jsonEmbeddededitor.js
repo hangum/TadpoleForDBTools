@@ -272,11 +272,6 @@ function installWorkbenchHooks() {
 			editor.setTextFocus();
 		} catch(err) {
 			console.log(err);
-			
-			editor.setInput("js", null, "");
-			syntaxHighlighter.highlight("js", editor);			
-			editor.highlightAnnotations();			
-			editor.setTextFocus();
 		}
 	};
 	
@@ -328,11 +323,8 @@ function installWorkbenchHooks() {
 	};
 }
 
+//Initialize the editor
+initEmbeddedEditor();
+
 // install editor hooks
 installWorkbenchHooks();
-
-// Initialize the editor
-initEmbeddedEditor();
-	
-//// initialize the editor input
-//editorService.getInitialContent();

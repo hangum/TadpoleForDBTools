@@ -87,28 +87,45 @@ public class GetPreferenceGeneral {
 		return userInfo.getValue0();
 	}
 	
+	///////////////// sql formatter 설정 ////////////////////////////////////////////////////////////////////////////
+		/** tab size */	
+		public static String getDefaultTabSize() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE);
+			return userInfo.getValue0();
+		}
+		
+		public static String getSQLFormatDecode() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE);
+			return userInfo.getValue0();
+		}
+		
+		public static String getSQLFormatIn() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
+			return userInfo.getValue0();
+		}
+	
 	///////////////// mongodb 설정 ////////////////////////////////////////////////////////////////////////////
-	/** preference mongodb default limit */
-	public static String getMongoDefaultLimit() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_LIMIT);
-		return userInfo.getValue0();		
-	}
-	
-	/** preference mongodb default max count */
-	public static int getMongoDefaultMaxCount() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
-		return Integer.parseInt( userInfo.getValue0() );
-	}
-	
-	/** preference mongodb default find page */
-	public static String getMongoDefaultFindPage() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_FIND);
-		return userInfo.getValue0();
-	}
-	
-	/** preference mongodb default result page */
-	public static String getMongoDefaultResultPage() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_RESULT);
-		return userInfo.getValue0();
-	}
+		/** preference mongodb default limit */
+		public static String getMongoDefaultLimit() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_LIMIT);
+			return userInfo.getValue0();		
+		}
+		
+		/** preference mongodb default max count */
+		public static int getMongoDefaultMaxCount() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
+			return Integer.parseInt( userInfo.getValue0() );
+		}
+		
+		/** preference mongodb default find page */
+		public static String getMongoDefaultFindPage() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_FIND);
+			return userInfo.getValue0();
+		}
+		
+		/** preference mongodb default result page */
+		public static String getMongoDefaultResultPage() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_RESULT);
+			return userInfo.getValue0();
+		}
 }

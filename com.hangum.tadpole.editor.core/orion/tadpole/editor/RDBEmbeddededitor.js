@@ -73,6 +73,7 @@ var sqlContentAssistProvider;
 //var jsContentAssistProvider;
 
 function initEmbeddedEditor(){
+	console.log('set initEmbedded editor');
 	
 	define([
 		"require", 
@@ -252,7 +253,7 @@ function initEmbeddedEditor(){
 //			contentAssist.setProviders([sqlContentAssistProvider]);
 //		});
 		
-//		console.log("[editor]" + editor);
+		console.log("[editor]" + editor);
 		
 		// end of code to run when content changes.
 //		console.log('====== end ==== ');
@@ -262,6 +263,7 @@ function initEmbeddedEditor(){
 	
 // Install functions for servicing Eclipse Workbench hosted applications
 function installWorkbenchHooks() {
+	console.log('set installWorkbench hooks');
 	
 	// Register a function that will be called by the editor when the editor's dirty state changes
 	editorService.dirtyChanged = function(dirty) {
@@ -279,12 +281,15 @@ function installWorkbenchHooks() {
 	// Register an implementation that can return initial content for the editor
 	editorService.getInitialContent = function() {
 		try {
+			console.log("0. start get content");
 			var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
+			console.log("1. success get content");
 			
 			var idxExt = content.indexOf(":ext:");
 			var varExt = content.substring(0, idxExt);
 			var varCon = content.substring(idxExt+5, content.length);
 			
+			console.log("2. set editor content" + varExt);
 			editor.setInput(varExt, null, varCon);
 
 			syntaxHighlighter.highlight(varExt, editor);
@@ -294,11 +299,6 @@ function installWorkbenchHooks() {
 			editor.setTextFocus();
 		} catch(err) {
 			console.log(err);
-			
-			editor.setInput("mysql", null, "");
-			syntaxHighlighter.highlight("mysql", editor);			
-			editor.highlightAnnotations();			
-			editor.setTextFocus();
 		}
 	};
 	
@@ -412,11 +412,11 @@ function installWorkbenchHooks() {
 	};
 }
 
+//Initialize the editor
+initEmbeddedEditor();
+
 // install editor hooks
 installWorkbenchHooks();
 
-// Initialize the editor
-initEmbeddedEditor();
-	
 //	// initialize the editor input
 //	editorService.getInitialContent();

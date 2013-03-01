@@ -45,6 +45,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.custom.CTabFolder;
@@ -214,8 +216,8 @@ public class MainEditor extends EditorPart {
 	private List<TadpoleMessageDAO> listMessage = new ArrayList<TadpoleMessageDAO>();
 
 	///[browser editor]/////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static final String URL = "orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
-	private static final String REAL_URL = "orion/tadpole/editor/REAL_RDBEmbeddededitor.html"; //$NON-NLS-1$
+	private static final String DEV_DB_URL = "orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
+	private static final String REAL_DB_URL = "orion/tadpole/editor/REAL_RDBEmbeddededitor.html"; //$NON-NLS-1$
 	private Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */
 	private EditorBrowserFunctionService editorService;
@@ -402,11 +404,11 @@ public class MainEditor extends EditorPart {
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
 	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	    
 	    
-	    addBrowserHandler();
+	    addBrowserHandler();	    
 	    if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.REAL) {
-	    	browserQueryEditor.setUrl(REAL_URL);
+	    	browserQueryEditor.setUrl(REAL_DB_URL);
 	    } else {
-	    	browserQueryEditor.setUrl(URL);
+	    	browserQueryEditor.setUrl(DEV_DB_URL);
 	    }
 	    
 //		createStatusLine();
@@ -740,7 +742,6 @@ public class MainEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {65, 35});
 		
-//		getEditorSite().getActionBars().getStatusLineManager().setMessage(Messages.MainEditor_18);
 		initEditor();
 	}
 	
@@ -770,7 +771,7 @@ public class MainEditor extends EditorPart {
 	private void addBrowserHandler() {
 		registerBrowserFunctions();
 		
-		browserQueryEditor.addProgressListener( new ProgressListener() {
+		browserQueryEditor.addProgressListener(new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
 					browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
@@ -778,7 +779,7 @@ public class MainEditor extends EditorPart {
 					logger.error("set register browser function and content initialize", e);
 				}
 			}
-			public void changed( ProgressEvent event ) {}
+			public void changed( ProgressEvent event ) {}			
 		});
 	}
 	

@@ -28,7 +28,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
-import com.hangum.tadpole.sql.parser.format.FormatSQL;
+import com.hangum.tadpole.sql.parser.format.SQLFormater;
 
 /**
  * 쿼리 생성관련 유틸입니다.

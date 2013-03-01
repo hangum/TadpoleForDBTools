@@ -10,11 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.editor.core.widgets.editor;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.layout.GridData;
@@ -88,7 +91,7 @@ public class TadpoleOrionHubEditor extends Composite {
 		browserOrionEditor = new Browser(compositeServerStatus, SWT.NONE);
 		browserOrionEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		addBrowserHandler();
-		browserOrionEditor.setUrl(EDITOR_URL);	    
+		browserOrionEditor.setUrl(EDITOR_URL);
 	}
 	
 	/**

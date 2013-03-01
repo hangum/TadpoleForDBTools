@@ -82,7 +82,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
         // 시스템 종료 메시지 출력시킬 것인지.
         ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
-    	service.setMessage( "Do you really wanna leave the party?" );
+    	service.setMessage("Do you really wanna leave the Tadpole for DB Tools?");
     
         initSystem();
     }
