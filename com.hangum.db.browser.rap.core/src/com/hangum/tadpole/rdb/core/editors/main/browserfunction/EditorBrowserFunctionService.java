@@ -22,7 +22,7 @@ import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.util.browserFunction.IEditorBrowserFunction;
-import com.hangum.tadpole.sql.parser.format.FormatSQL;
+import com.hangum.tadpole.sql.parser.format.SQLFormater;
 
 /**
  * query editor browser function
@@ -237,7 +237,7 @@ public class EditorBrowserFunctionService extends BrowserFunction implements IEd
 		String newContents = (String) arguments[1];
 		
 		try {
-			newContents = FormatSQL.format(newContents );
+			newContents = SQLFormater.format(newContents );
 			
 			return newContents;						
 		} catch (Exception e) {

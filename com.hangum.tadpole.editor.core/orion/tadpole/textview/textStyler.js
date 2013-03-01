@@ -491,19 +491,30 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 				var c = this._read(), result;
 				switch (c) {
 					case -1: return null;
-					case 47:	// SLASH -> comment
-						c = this._read();
-						if (!this.isCSS) {
-							if (c === 47) { // SLASH -> single line
-								while (true) {
-									c = this._read();
-									if ((c === -1) || (c === 10) || (c === 13)) {
-										this._unread(c);
-										return SINGLELINE_COMMENT;
-									}
-								}
+					// [start] -- comment add - hangum
+					case 45:
+						while (true) {
+							c = this._read();
+							if ((c === -1) || (c === 10) || (c === 13)) {
+								this._unread(c);
+								return SINGLELINE_COMMENT;
 							}
 						}
+						break;
+					// [start] -- comment add - hangum						
+					case 47:	// SLASH -> comment
+						c = this._read();
+//						if (!this.isCSS) {
+//							if (c === 47) { // SLASH -> single line
+//								while (true) {
+//									c = this._read();
+//									if ((c === -1) || (c === 10) || (c === 13)) {
+//										this._unread(c);
+//										return SINGLELINE_COMMENT;
+//									}
+//								}
+//							}
+//						}
 						if (c === 42) { // STAR -> multi line 
 							c = this._read();
 							var token = MULTILINE_COMMENT;

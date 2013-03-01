@@ -178,6 +178,32 @@ public class TadpoleSystem_UserInfoData {
 	}
 	
 	/**
+	 * update SQLFormatter
+	 * 
+	 * @param userdb
+	 * @param tabSize
+	 * @param resultSelect
+	 * @param sqlFormatIn
+	 */
+	public static void updateSQLFormatterInfoData(String tabSize, String sqlFormatDecode, String sqlFormatIn) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB()); 
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(SessionManager.getSeq());
+		
+		userInfoData.setName(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE);
+		userInfoData.setValue0(tabSize);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE);
+		userInfoData.setValue0(sqlFormatDecode);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
+		userInfoData.setValue0(sqlFormatIn);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+	}
+	
+	/**
 	 * mongodb update
 	 * 
 	 * @param txtLimitCount
@@ -276,6 +302,20 @@ public class TadpoleSystem_UserInfoData {
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_RESULT);
 		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		
+		
+		// SQLFormatter
+				userInfoData.setName(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE);
+				userInfoData.setValue0(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE_VALUE);
+				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+				
+				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE);
+				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE_VALUE);
+				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+				
+				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
+				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE_VALUE);
+				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 	}
 	

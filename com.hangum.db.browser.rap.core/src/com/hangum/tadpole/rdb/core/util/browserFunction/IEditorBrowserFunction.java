@@ -52,7 +52,7 @@ public interface IEditorBrowserFunction extends TadpoleBrowserFunction {
     public static final String EDITOR_SERVICE_HANDLER = "editorServiceHandler";
     
     /** 자바 스크립트 초기화 */
-    public static final String JAVA_SCRIPT_INIT_EMBEDDED_EDITOR = "initEmbeddedEditor()";
+    public static final String JAVA_SCRIPT_INIT_EMBEDDED_EDITOR =  "initEmbeddedEditor()";
     
     /** init container */
     public static final String JAVA_SCRIPT_GET_INITCONTAINER = EDITOR_SERVICE_MAP + ".getInitialContent()";

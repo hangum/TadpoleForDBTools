@@ -136,12 +136,16 @@ public class RDBShortcutHelpDialog extends Dialog {
 	 * 단축키 데이터
 	 */
 	private void initData() {
+		listShortcut.add( new ShortcutHelpDAO("Add Block Comment", 	"Ctrl + Shift + /"));
+		
 //		listShortcut.add( new ShortcutHelpDAO("Save", 			"Ctrl + S") 		);
 		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"Ctrl + enter") 	);
 		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"F5") 				);
 		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	"Ctrl + E") 		);
 		listShortcut.add( new ShortcutHelpDAO("Query Format", 	"Ctrl + Shift + F") );
 		listShortcut.add( new ShortcutHelpDAO("Query History", 	"Ctrl + H") 		);
+		
+		listShortcut.add( new ShortcutHelpDAO("Go to Line", 	"Ctrl + L") 		);
 		
 		listShortcut.add( new ShortcutHelpDAO("To Lower case", 	"Ctrl + Shift + Y") );
 		listShortcut.add( new ShortcutHelpDAO("To Upper case", 	"Ctrl + Shift + X") );
