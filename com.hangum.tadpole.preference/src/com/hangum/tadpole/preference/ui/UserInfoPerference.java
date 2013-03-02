@@ -58,8 +58,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblGroupName = new Label(container, SWT.NONE);
-		lblGroupName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblGroupName.setText("Group Name"); //$NON-NLS-1$
+		lblGroupName.setText(Messages.UserInfoPerference_1);
 		
 		textGroupName = new Text(container, SWT.BORDER);
 		textGroupName.setEnabled(false);
@@ -68,8 +67,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		textGroupName.setText(SessionManager.getGroupName());
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText("email"); //$NON-NLS-1$
+		lblEmail.setText(Messages.UserInfoPerference_2);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setEnabled(false);
@@ -78,24 +76,21 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		textEmail.setText(SessionManager.getEMAIL());
 		
 		Label lblPassword = new Label(container, SWT.NONE);
-		lblPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblPassword.setText("password"); //$NON-NLS-1$
+		lblPassword.setText(Messages.UserInfoPerference_3);
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textPassword.setText(SessionManager.getPassword());
 		
 		Label lblRePassword = new Label(container, SWT.NONE);
-		lblRePassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblRePassword.setText("re password"); //$NON-NLS-1$
+		lblRePassword.setText(Messages.UserInfoPerference_4);
 		
 		textRePassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textRePassword.setText(SessionManager.getPassword());
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText("Name"); //$NON-NLS-1$
+		lblName.setText(Messages.UserInfoPerference_5);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setEnabled(false);

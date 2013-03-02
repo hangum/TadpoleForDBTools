@@ -57,14 +57,12 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText(Messages.DefaultPreferencePage_0);
 		
 		textSelectLimit = new Text(container, SWT.BORDER);
 		textSelectLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_1.setText(Messages.DefaultPreferencePage_other_labelText_1);
 		
 		textResultPage = new Text(container, SWT.BORDER);		
@@ -75,7 +73,6 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		label.setText(""); //$NON-NLS-1$
 		
 		Label lblNewLabel_2 = new Label(container, SWT.NONE);
-		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_2.setText(Messages.DefaultPreferencePage_other_labelText);
 		
 		textOraclePlan = new Text(container, SWT.BORDER);

@@ -31,6 +31,6 @@ public class BugIssueAction extends Action {
 	}
 	
 	public void run() {
-		ExternalBrowser.open( Messages.BugIssueAction_3, "https://github.com/hangum/TadpoleForDBTools/issues", ExternalBrowser.LOCATION_BAR | ExternalBrowser.NAVIGATION_BAR | ExternalBrowser.STATUS ); //$NON-NLS-2$
+		ExternalBrowser.open(Messages.BugIssueAction_3, "https://github.com/hangum/TadpoleForDBTools/issues", ExternalBrowser.LOCATION_BAR | ExternalBrowser.NAVIGATION_BAR | ExternalBrowser.STATUS ); //$NON-NLS-2$
 	}
 }

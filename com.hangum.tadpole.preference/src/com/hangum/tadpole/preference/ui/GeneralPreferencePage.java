@@ -55,14 +55,12 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText(Messages.DefaultPreferencePage_2);
 		
 		textSessionTime = new Text(container, SWT.BORDER);
 		textSessionTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblExportDilimit = new Label(container, SWT.NONE);
-		lblExportDilimit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblExportDilimit.setText(Messages.GeneralPreferencePage_lblExportDilimit_text);
 		
 		textExportDelimit = new Text(container, SWT.BORDER);
@@ -70,7 +68,6 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		textExportDelimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblHomePage = new Label(container, SWT.NONE);
-		lblHomePage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblHomePage.setText(Messages.GeneralPreferencePage_lblHomePage_text);
 		
 		textHomePage = new Text(container, SWT.BORDER);
