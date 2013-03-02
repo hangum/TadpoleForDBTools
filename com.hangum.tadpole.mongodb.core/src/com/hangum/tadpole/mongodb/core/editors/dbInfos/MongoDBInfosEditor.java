@@ -32,6 +32,7 @@ import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.LockComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.ReplicaSetComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.ShardingComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.mongodb.CommandResult;
 
 /**
@@ -79,6 +80,8 @@ public class MongoDBInfosEditor extends EditorPart {
 		
 		CTabFolder tabFolder = new CTabFolder(parent, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setBorderVisible(false);		
+		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
 		CTabItem tbtmServerStatus = new CTabItem(tabFolder, SWT.NONE);
 		tbtmServerStatus.setText(Messages.MongoDBInfosEditor_0);
