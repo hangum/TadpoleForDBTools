@@ -182,7 +182,7 @@ public class LoginDialog extends Dialog {
 				
 				init();
 			} catch (Exception e) {
-				logger.error("demo mode user login", e);
+				logger.error(Messages.LoginDialog_9, e);
 				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
 				return;
 			}	
@@ -213,7 +213,7 @@ public class LoginDialog extends Dialog {
 				SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), -1);
 			}
 		} catch (Exception e) {
-			logger.error("login", e);
+			logger.error("login", e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
 			return;
 		}	
@@ -261,11 +261,11 @@ public class LoginDialog extends Dialog {
 		
 		// -test 일 경우만 ..
 		if(ApplicationArgumentUtils.isTestMode()) {
-			createButton(parent, ID_MANAGER_USER, "Manager", false);
-			createButton(parent, ID_GUEST_USER, "Guest", false);
+			createButton(parent, ID_MANAGER_USER, Messages.LoginDialog_12, false);
+			createButton(parent, ID_GUEST_USER, Messages.LoginDialog_13, false);
 		}
 		
-		createButton(parent, ID_NEW_USER, "New", false);
+		createButton(parent, ID_NEW_USER, Messages.LoginDialog_16, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
 

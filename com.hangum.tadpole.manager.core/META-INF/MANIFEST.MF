@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Core
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.hangum.tadpole.manager.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.manager.core.Activator
-Bundle-Vendor: HANGUM
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  org.eclipse.core.runtime,
  com.hangum.tadpole.commons.sql;bundle-version="1.0.0",
