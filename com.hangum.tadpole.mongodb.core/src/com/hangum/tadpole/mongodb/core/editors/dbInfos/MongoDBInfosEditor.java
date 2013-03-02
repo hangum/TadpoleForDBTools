@@ -25,6 +25,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.CollectionInformationComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.InstanceInformationComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.LockComposite;
@@ -80,7 +81,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		CTabItem tbtmServerStatus = new CTabItem(tabFolder, SWT.NONE);
-		tbtmServerStatus.setText("Instance Information");
+		tbtmServerStatus.setText(Messages.MongoDBInfosEditor_0);
 		
 		compositeServerStatus = new InstanceInformationComposite(tabFolder, SWT.NONE, commandResult);
 		tbtmServerStatus.setControl(compositeServerStatus);
@@ -88,7 +89,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		new Label(compositeServerStatus, SWT.NONE);
 		
 		CTabItem tbtmCollectionSummary = new CTabItem(tabFolder, SWT.NONE);
-		tbtmCollectionSummary.setText("Collection Summary");
+		tbtmCollectionSummary.setText(Messages.MongoDBInfosEditor_1);
 		
 		compositeCollectionSummary = new CollectionInformationComposite(tabFolder, SWT.NONE);
 		tbtmCollectionSummary.setControl(compositeCollectionSummary);
@@ -100,20 +101,20 @@ public class MongoDBInfosEditor extends EditorPart {
 		compositeCollectionSummary.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmLocaks = new CTabItem(tabFolder, SWT.NONE);
-		tbtmLocaks.setText("Locks");
+		tbtmLocaks.setText(Messages.MongoDBInfosEditor_2);
 		
 		LockComposite compositeLock = new LockComposite(tabFolder, SWT.NONE, commandResult);
 		tbtmLocaks.setControl(compositeLock);
 		compositeLock.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmReplicaInformation = new CTabItem(tabFolder, SWT.NONE);
-		tbtmReplicaInformation.setText("Replica Set");		
+		tbtmReplicaInformation.setText(Messages.MongoDBInfosEditor_3);		
 		ReplicaSetComposite compositeReplicaSet = new ReplicaSetComposite(tabFolder, SWT.NONE, commandResult);
 		tbtmReplicaInformation.setControl(compositeReplicaSet);
 		compositeReplicaSet.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmShardingInformation = new CTabItem(tabFolder, SWT.NONE);
-		tbtmShardingInformation.setText("Sharding");
+		tbtmShardingInformation.setText(Messages.MongoDBInfosEditor_4);
 		
 		ShardingComposite compositeSharding = new ShardingComposite(tabFolder, SWT.NONE, userDB);
 		tbtmShardingInformation.setControl(compositeSharding);

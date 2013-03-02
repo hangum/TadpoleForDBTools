@@ -117,7 +117,7 @@ public class MongoDBImportEditor extends EditorPart {
 		
 		Label lblSource = new Label(compositeHead, SWT.NONE);
 		lblSource.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSource.setText("Source"); //$NON-NLS-1$
+		lblSource.setText(Messages.MongoDBImportEditor_0);
 		
 		comboDBList = new Combo(compositeHead, SWT.READ_ONLY);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
@@ -130,7 +130,7 @@ public class MongoDBImportEditor extends EditorPart {
 		comboDBList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblTarget = new Label(compositeHead, SWT.NONE);
-		lblTarget.setText("Target"); //$NON-NLS-1$
+		lblTarget.setText(Messages.MongoDBImportEditor_2);
 		
 		Label lblTargetDB = new Label(compositeHead, SWT.NONE);
 		lblTargetDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -140,10 +140,10 @@ public class MongoDBImportEditor extends EditorPart {
 		btnImport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				importData(); //$NON-NLS-1$
+				importData();
 			}
 		});
-		btnImport.setText("Import"); //$NON-NLS-1$
+		btnImport.setText(Messages.MongoDBImportEditor_4);
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -160,7 +160,7 @@ public class MongoDBImportEditor extends EditorPart {
 		tabFolderQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		CTabItem tabItemTable = new CTabItem(tabFolderQuery, SWT.NONE);
-		tabItemTable.setText("Table"); //$NON-NLS-1$
+		tabItemTable.setText(Messages.MongoDBImportEditor_5);
 		
 		tableColumnListComposite = new TableColumnLIstComposite(tabFolderQuery, SWT.NONE);
 		tabItemTable.setControl(tableColumnListComposite);
@@ -179,10 +179,10 @@ public class MongoDBImportEditor extends EditorPart {
 				}
 			}
 		});
-		btnSelectAll.setText("Select All"); //$NON-NLS-1$
+		btnSelectAll.setText(Messages.MongoDBImportEditor_6);
 		
 		CTabItem tabItemQuery = new CTabItem(tabFolderQuery, SWT.NONE);
-		tabItemQuery.setText("Query"); //$NON-NLS-1$
+		tabItemQuery.setText(Messages.MongoDBImportEditor_7);
 		
 		Composite compositeQuery = new Composite(tabFolderQuery, SWT.NONE);
 		tabItemQuery.setControl(compositeQuery);
@@ -198,13 +198,13 @@ public class MongoDBImportEditor extends EditorPart {
 		Label lblCollectionName = new Label(compositeQueryTail, SWT.NONE);
 		lblCollectionName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCollectionName.setBounds(0, 0, 56, 15);
-		lblCollectionName.setText("Collection Name"); //$NON-NLS-1$
+		lblCollectionName.setText(Messages.MongoDBImportEditor_9);
 		
 		textCollectionName = new Text(compositeQueryTail, SWT.BORDER);
 		textCollectionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnExistOnDelete = new Button(compositeQueryTail, SWT.CHECK);
-		btnExistOnDelete.setText("Exist on delete");
+		btnExistOnDelete.setText(Messages.MongoDBImportEditor_10);
 		
 //		Button btnPreview = new Button(compositeQueryTail, SWT.NONE);
 //		btnPreview.setText("Preview");
@@ -253,8 +253,8 @@ public class MongoDBImportEditor extends EditorPart {
 		if(tabFolderQuery.getSelectionIndex() == 0) {			
 			if(tableColumnListComposite.getSelectListTables().isEmpty()) return;
 		} else if(tabFolderQuery.getSelectionIndex() == 1) {			
-			if("".equals(textCollectionName.getText().trim())) {
-				MessageDialog.openError(null, "Confirm", Messages.MongoDBImportEditor_3);
+			if("".equals(textCollectionName.getText().trim())) { //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.MongoDBImportEditor_14, Messages.MongoDBImportEditor_3);
 				return;
 			}
 		}

@@ -128,7 +128,7 @@ public class NewDocumentDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("MongoDB New Document Dialog"); //$NON-NLS-1$
+		newShell.setText(Messages.NewDocumentDialog_0);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class NewDocumentDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {		
-		Button button = createButton(parent, FORMAT_BTN_ID, "Format", false); //$NON-NLS-1$
+		Button button = createButton(parent, FORMAT_BTN_ID, Messages.NewDocumentDialog_1, false);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -145,8 +145,8 @@ public class NewDocumentDialog extends Dialog {
 			}
 		});
 		
-		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.NewDocumentDialog_2, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.NewDocumentDialog_5, false);
 	}
 
 	/**

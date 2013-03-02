@@ -119,7 +119,6 @@ public class DBInformationDialog extends Dialog {
 		
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText(Messages.DBInformationDialog_4);
-		new Label(grpOtherInformation, SWT.NONE);
 		
 		if(PermissionChecks.isShow(SessionManager.getLoginType(), userDB)) {
 			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);

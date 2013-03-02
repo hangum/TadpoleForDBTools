@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
@@ -37,10 +38,16 @@ public class JSONUtil {
 		if(jsonString == null) return "";
 
 		try {
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(jsonString);
-			return gson.toJson(je);
+			
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			String strGson = gson.toJson(je);
+			System.out.println(StringUtils.trimToEmpty(strGson));
+			
+			if(strGson == null || "null".equals(strGson)) strGson = "";
+			
+			return strGson;
 		} catch(Exception e) {
 			logger.error("pretty json", e);
 		}

@@ -113,9 +113,9 @@ public class MongodbResultComposite extends Composite {
 	private boolean isUserAction;
 	
 	/** 기본 검색 조건 */
-	String strBasicField 	= "";
-	String strBasicFind 	= "";
-	String strBasicSort 	= "";
+	String strBasicField 	= ""; //$NON-NLS-1$
+	String strBasicFind 	= ""; //$NON-NLS-1$
+	String strBasicSort 	= ""; //$NON-NLS-1$
 	int cntSkip 			= 0;
 	int cntLimit 			= 0;
 	
@@ -201,7 +201,7 @@ public class MongodbResultComposite extends Composite {
 		tabFolderMongoDB.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolderMongoDB.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		CTabItem tbtmTreeView = new CTabItem(tabFolderMongoDB, SWT.NONE);
-		tbtmTreeView.setText("Tree View"); //$NON-NLS-1$
+		tbtmTreeView.setText(Messages.MongodbResultComposite_3);
 		
 		Composite compositeTreeView = new Composite(tabFolderMongoDB, SWT.NONE);
 		tbtmTreeView.setControl(compositeTreeView);
@@ -247,7 +247,7 @@ public class MongodbResultComposite extends Composite {
 					newDocument();
 				}
 			});
-			btnTreeInsertDocument.setText("Insert Document"); //$NON-NLS-1$
+			btnTreeInsertDocument.setText(Messages.MongodbResultComposite_4);
 			
 	//		Button btnTreeModifyDocument = new Button(compositeTreeViewTail, SWT.NONE);
 	//		btnTreeModifyDocument.addSelectionListener(new SelectionAdapter() {
@@ -264,7 +264,7 @@ public class MongodbResultComposite extends Composite {
 					deleteDocumentTree();
 				}
 			});
-			btnTreeDeleteDocument.setText("Delete Document"); //$NON-NLS-1$
+			btnTreeDeleteDocument.setText(Messages.MongodbResultComposite_5);
 			
 			Button btnTreeCreateIndex = new Button(compositeTreeViewTail, SWT.NONE);
 			btnTreeCreateIndex.addSelectionListener(new SelectionAdapter() {
@@ -273,17 +273,17 @@ public class MongodbResultComposite extends Composite {
 					createIndex();
 				}
 			});
-			btnTreeCreateIndex.setText("Add Index");
+			btnTreeCreateIndex.setText(Messages.MongodbResultComposite_6);
 		
 			Label labelTreeViewDumy = new Label(compositeTreeViewTail, SWT.NONE);
 			labelTreeViewDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		}
 		
 		lblTreeViewCount = new Label(compositeTreeViewTail, SWT.NONE);
-		lblTreeViewCount.setText("Count");
+		lblTreeViewCount.setText(Messages.MongodbResultComposite_7);
 		
 		CTabItem tbtmTableView = new CTabItem(tabFolderMongoDB, SWT.NONE);
-		tbtmTableView.setText("Table View"); //$NON-NLS-1$
+		tbtmTableView.setText(Messages.MongodbResultComposite_8);
 		
 		sashFormCollectionResult = new SashForm(tabFolderMongoDB, SWT.VERTICAL);
 		tbtmTableView.setControl(sashFormCollectionResult);
@@ -298,7 +298,7 @@ public class MongodbResultComposite extends Composite {
 		
 		Label lblFilter = new Label(compositeBodyTable, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText("Filter"); //$NON-NLS-1$
+		lblFilter.setText(Messages.MongodbResultComposite_11);
 		
 		textFilter = new Text(compositeBodyTable, SWT.BORDER);
 		textFilter.addKeyListener(new KeyAdapter() {
@@ -345,7 +345,7 @@ public class MongodbResultComposite extends Composite {
 					newDocument();
 				}
 			});
-			btnInsertDocument.setText("Insert Document"); //$NON-NLS-1$
+			btnInsertDocument.setText(Messages.MongodbResultComposite_13);
 			
 			Button btnDeleteDocument = new Button(compositeTail, SWT.NONE);
 			btnDeleteDocument.addSelectionListener(new SelectionAdapter() {
@@ -354,7 +354,7 @@ public class MongodbResultComposite extends Composite {
 					deleteDocumentTable();
 				}
 			});
-			btnDeleteDocument.setText("Delete Document"); //$NON-NLS-1$
+			btnDeleteDocument.setText(Messages.MongodbResultComposite_14);
 			
 			Button btnCreateIndex = new Button(compositeTail, SWT.NONE);
 			btnCreateIndex.addSelectionListener(new SelectionAdapter() {
@@ -363,7 +363,7 @@ public class MongodbResultComposite extends Composite {
 					 createIndex();
 				}
 			});
-			btnCreateIndex.setText("Add Index");
+			btnCreateIndex.setText(Messages.MongodbResultComposite_15);
 		
 			Label labelTableDumy = new Label(compositeTail, SWT.NONE);
 			GridData gd_labelTableDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -398,7 +398,7 @@ public class MongodbResultComposite extends Composite {
 				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
 			}
 		});
-		btnExportCSV.setText("Export CSV"); //$NON-NLS-1$
+		btnExportCSV.setText(Messages.MongodbResultComposite_16);
 		
 		compositeExternal = new Composite(compositeTail, SWT.NONE);
 		compositeExternal.setLayout(new GridLayout(1, false));
@@ -471,7 +471,7 @@ public class MongodbResultComposite extends Composite {
 		
 		// tabpole message
 		CTabItem tbtmTadpoleMessage = new CTabItem(tabFolderMongoDB, SWT.NONE);
-		tbtmTadpoleMessage.setText("Tadpole Message"); //$NON-NLS-1$
+		tbtmTadpoleMessage.setText(Messages.MongodbResultComposite_17);
 		
 		Composite compositeTadpoleMsg = new Composite(tabFolderMongoDB, SWT.NONE);
 		tbtmTadpoleMessage.setControl(compositeTadpoleMsg);
@@ -499,13 +499,13 @@ public class MongodbResultComposite extends Composite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		TableColumn tblclmnDate = tableViewerColumn.getColumn();
 		tblclmnDate.setWidth(140);
-		tblclmnDate.setText("Date"); //$NON-NLS-1$
+		tblclmnDate.setText(Messages.MongodbResultComposite_18);
 		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 0));
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		TableColumn tblclmnSql = tableViewerColumn_1.getColumn();
 		tblclmnSql.setWidth(500);
-		tblclmnSql.setText("Message"); //$NON-NLS-1$
+		tblclmnSql.setText(Messages.MongodbResultComposite_19);
 		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnSql, 1));
 		
 		tableViewerMessage.setLabelProvider(new SQLHistoryLabelProvider());
@@ -532,7 +532,7 @@ public class MongodbResultComposite extends Composite {
 				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
 			}
 		});
-		btnExportTadpoleMessage.setText("Export Tadpole Message"); //$NON-NLS-1$
+		btnExportTadpoleMessage.setText(Messages.MongodbResultComposite_20);
 		
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -545,7 +545,7 @@ public class MongodbResultComposite extends Composite {
 				tableViewerMessage.refresh();
 			}
 		});
-		btnClear.setText("Clear");
+		btnClear.setText(Messages.MongodbResultComposite_21);
 		
 		registerServiceHandler();		
 		firstTabInit();
@@ -664,7 +664,7 @@ public class MongodbResultComposite extends Composite {
 			
 //			"검색 수가 " + defaultMaxCount + "를 넘을수 없습니다. Prefernece에서 값을 조절하십시오."
 //			Search can not exceed the number 5. Set in Perference.
-			throw new Exception(String.format(Messages.MongoDBTableEditor_0, ""+defaultMaxCount));  //$NON-NLS-2$
+			throw new Exception(String.format(Messages.MongoDBTableEditor_0, ""+defaultMaxCount));  //$NON-NLS-2$ //$NON-NLS-1$
 		}
 		
 		DB mongoDB = MongoDBQuery.findDB(userDB);		
@@ -869,8 +869,8 @@ public class MongodbResultComposite extends Composite {
 		
 //		textTextView.setText("");
 		
-		lblTreeViewCount.setText("");
-		lblTableViewCount.setText("");
+		lblTreeViewCount.setText(""); //$NON-NLS-1$
+		lblTableViewCount.setText(""); //$NON-NLS-1$
 //		lblTextViewCnt.setText("");
 		
 		// 
@@ -1139,7 +1139,7 @@ public class MongodbResultComposite extends Composite {
 	 * error console
 	 */
 	public void consoleError() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " Server Message", sbConsoleErrorMsg.toString());
+		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " " + Messages.MongodbResultComposite_25, sbConsoleErrorMsg.toString());
 		dialog.open();
 	}
 
@@ -1147,7 +1147,7 @@ public class MongodbResultComposite extends Composite {
 	 * execute plan console
 	 */
 	public void consoleExecutePlan() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " Execute Plan", sbConsoleExecuteMsg.toString());
+		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName  + " " +  Messages.MongodbResultComposite_26, sbConsoleExecuteMsg.toString());
 		dialog.open();
 	}
 }
