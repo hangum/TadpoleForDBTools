@@ -81,7 +81,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	private MongoDBServerSideJavaScriptDAO javascriptDAO;
 	
 	/** save field */
-	private boolean isFirstLoad = false;
+//	private boolean isFirstLoad = false;
 	private boolean isDirty = false;
 	
 	private static final String URL = "orion/tadpole/editor/mongoDBEmbeddededitor.html"; //$NON-NLS-1$
@@ -322,7 +322,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		if(this.javascriptDAO != null) {
 			setPartName(qei.getName());
 		}
-		isFirstLoad = true;
+//		isFirstLoad = true;
 	}
 	
 	@Override
@@ -334,19 +334,6 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
-	
-//	private LocationListener getLocationListener() {
-//		return new LocationListener() {
-//			public void changing(LocationEvent event) {
-//			}
-//			
-//			public void changed(LocationEvent event) {				
-//				if(StringUtils.containsIgnoreCase(event.location, "embeddededitor.html")) {
-//					registerBrowserFunctions();
-//				}
-//			}
-//		};
-//	}
 	
 	/**
 	 * browser initialize 
@@ -458,14 +445,14 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 * @param boolean1
 	 */
 	public void setDirty(Boolean boolean1) {
-		if(!isFirstLoad) {
+//		if(!isFirstLoad) {
 			if(isDirty != boolean1) {
 				isDirty = boolean1;
 				firePropertyChange(PROP_DIRTY);
 			}
-		}
-		
-		isFirstLoad = false;
+//		} else {
+//			isFirstLoad = false;			
+//		}		
 	}
 
 	/**
