@@ -31,7 +31,7 @@
             default="false"
             icon="resources/icons/information-white.png"
             id="com.hangum.tadpole.rdb.core.editor.intor"
-            name="Home">
+            name="%editor.name.1">
       </editor>
       <editor
             class="com.hangum.tadpole.rdb.core.editors.main.MainEditor"
@@ -44,14 +44,14 @@
             class="com.hangum.tadpole.rdb.core.editors.table.TableViewerEditPart"
             icon="resources/icons/database_table.png"
             id="com.hangum.tadpole.rdb.core.editors.table.edit"
-            name="Table Data Editor">
+            name="%editor.name.2">
       </editor>
       <editor
             class="com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor"
             default="false"
             icon="resources/icons/mongodb-add.png"
             id="com.hangum.tadpole.mongodb.core.ext.editor.javascript"
-            name="Server Side Java Script">
+            name="%editor.name.3">
       </editor>
    </extension>
    <extension
@@ -72,7 +72,7 @@
                class="com.hangum.tadpole.rdb.core.actions.connections.ConnectionManagerRefreshAction"
                icon="resources/icons/refresh.png"
                id="com.hangum.tadpole.rdb.core.action.refresh"
-               label="Refersh"
+               label="%action.label.3"
                menubarPath="additions">
          </action>
       </viewerContribution>
@@ -83,7 +83,7 @@
          <menu
                icon="resources/icons/create-dml.png"
                id="menu.create"
-               label="Create DML">
+               label="%menu.label">
             <groupMarker
                   name="dml">
             </groupMarker>
@@ -91,7 +91,7 @@
          <menu
                icon="resources/icons/erd.png"
                id="menu.erd"
-               label="ERD">
+               label="%menu.label.0">
             <groupMarker
                   name="erd">
             </groupMarker>
@@ -100,7 +100,7 @@
                 class="com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction"
                 enablesFor="1"
                 id="com.hangum.tadpole.rdb.core.action.creatTrigger"
-                label="Creat Trigger"
+                label="%action.label.4"
                 menubarPath="menu.create/dml">
             <enablement>
                <objectClass
@@ -112,7 +112,7 @@
                class="com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction"
                enablesFor="1"
                id="com.hangum.tadpole.rdb.core.action.creatFunction"
-               label="Creat Functiontion"
+               label="%action.label.5"
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
@@ -124,7 +124,7 @@
                class="com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction"
                enablesFor="1"
                id="com.hangum.tadpole.rdb.core.action.creatProcedure"
-               label="Creat Procedure"
+               label="%action.label.6"
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
@@ -136,7 +136,7 @@
                class="com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction"
                enablesFor="1"
                id="com.hangum.tadpole.rdb.core.action.createIndex"
-               label="Creat Index"
+               label="%action.label.7"
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
@@ -174,7 +174,7 @@
                enablesFor="1"
                icon="resources/icons/sql-query.png"
                id="com.hangum.tadpole.rdb.core.action.query"
-               label="Edit SQL"
+               label="%action.label.8"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -187,7 +187,7 @@
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action"
-               label="Create ERD Diagram"
+               label="%action.label.9"
                menubarPath="menu.erd/erd">
             <enablement>
                <objectClass
@@ -200,7 +200,7 @@
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action.all"
-               label="All Table ERD"
+               label="%action.label.10"
                menubarPath="menu.erd/erd">
             <enablement>
                <objectClass
@@ -238,7 +238,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongoDBImportAction"
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import"
-               label="Import"
+               label="%action.label.11"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -250,7 +250,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbProfillingAction"
                icon="resources/icons/profile.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.profilling"
-               label="Profiling"
+               label="%action.label.12"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -262,7 +262,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbCurrentOpAction"
                icon="resources/icons/current-operation.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.currentop"
-               label="Current Operation"
+               label="%action.label.13"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -274,7 +274,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbWebConsoleAction"
                icon="resources/icons/web-management.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.monogodb.top"
-               label="Web Console"
+               label="%action.label.14"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -286,7 +286,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbTopAction"
                icon="resources/icons/go-top.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.monogodb.top"
-               label="Top"
+               label="%action.label.15"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -298,7 +298,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbDBStatusAction"
                icon="resources/icons/db_status.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.monogodb.serverstatus"
-               label="Server Status"
+               label="%action.label.16"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -310,7 +310,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbGridFSAction"
                icon="resources/icons/GridFS.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.gridfs"
-               label="GridFS"
+               label="%action.label.17"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -322,7 +322,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbUserManagerAction"
                icon="resources/icons/add_user.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.adduser"
-               label="User Manager"
+               label="%action.label.18"
                menubarPath="additions">
             <enablement>
                <objectClass
@@ -333,7 +333,7 @@
          <menu
                icon="resources/icons/erd.png"
                id="menu.nosql.erd"
-               label="ERD">
+               label="%menu.label.1">
             <groupMarker
                   name="erd">
             </groupMarker>
@@ -343,7 +343,7 @@
         enablesFor="1"
         icon="resources/icons/delete-relation.png"
         id="com.hangum.tadpole.erd.delete.action"
-        label="Delete Resource"
+        label="%action.label.19"
         menubarPath="menu.nosql.erd/erd">
             <enablement>
                <objectClass
@@ -357,7 +357,7 @@
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action"
-               label="Create ERD Diagram"
+               label="%action.label.20"
                menubarPath="menu.nosql.erd/erd">
             <enablement>
                <objectClass
@@ -370,7 +370,7 @@
                enablesFor="1"
                icon="resources/icons/erd.png"
                id="com.hangum.tadpole.erd.action.all"
-               label="All Table ERD"
+               label="%action.label.21"
                menubarPath="menu.nosql.erd/erd">
             <enablement>
                <objectClass
@@ -408,7 +408,7 @@
                enablesFor="1"
                icon="resources/icons/delete-relation.png"
                id="com.hangum.tadpole.rdb.core.action.deleteResource"
-               label="Delete Resource"
+               label="%action.label.22"
                menubarPath="additions">
          </action>
          <visibility>

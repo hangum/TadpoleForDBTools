@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.mongodb.BasicDBList;
@@ -71,16 +72,16 @@ public class ShardingComposite extends Composite {
 		gl_grpReplicaSet.marginWidth = 0;
 		grpReplicaSet.setLayout(gl_grpReplicaSet);
 		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		grpReplicaSet.setText("Sharding Information");
+		grpReplicaSet.setText(Messages.ShardingComposite_0);
 		
 		try {
-			CommandResult res = MongoDBQuery.getAdminMongoDB(userDB).command("listShards");
-			shards = (BasicDBList)res.get("shards");
+			CommandResult res = MongoDBQuery.getAdminMongoDB(userDB).command("listShards"); //$NON-NLS-1$
+			shards = (BasicDBList)res.get("shards"); //$NON-NLS-1$
 		} catch(Exception e) {
-			logger.error("listShards", e);
+			logger.error("listShards", e); //$NON-NLS-1$
 		}
 	    
-		Composite compositeLocalLocks = new FindOneDetailComposite(grpReplicaSet, "List Shards", shards, false);
+		Composite compositeLocalLocks = new FindOneDetailComposite(grpReplicaSet, Messages.ShardingComposite_4, shards, false);
 		compositeLocalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeLocalLocks.setLayout(new GridLayout(1, false));
 	}

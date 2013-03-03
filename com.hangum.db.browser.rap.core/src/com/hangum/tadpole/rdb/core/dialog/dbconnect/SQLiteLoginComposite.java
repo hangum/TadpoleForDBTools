@@ -56,8 +56,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	protected Text textDisplayName;
 	protected Combo comboOperationType;
 	
-	protected Button btnSavePreference;
-	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -121,10 +119,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		textFile = new Text(compositeBody, SWT.BORDER);
 		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeBody, SWT.NONE);
-		
-		btnSavePreference = new Button(compositeBody, SWT.CHECK);
-		btnSavePreference.setText(Messages.SQLiteLoginComposite_btnSavePreference_text);
-		btnSavePreference.setSelection(true);
 		
 		init();
 	}
@@ -210,19 +204,15 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			// 이미 연결한 것인지 검사한다.
 			if(!connectValidate(userDB)) return false;
 			
-			// preference에 save합니다.
-			if(btnSavePreference.getSelection()) {
-				try {
-					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-				} catch (Exception e) {
-					logger.error(Messages.SQLiteLoginComposite_8, e);
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-					
-					return false;
-				}
-			}
-			
+			try {
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error(Messages.SQLiteLoginComposite_8, e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}			
 		}
 		
 		return true;		

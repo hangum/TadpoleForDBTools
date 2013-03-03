@@ -28,6 +28,13 @@ public class Messages extends NLS {
 	public static String TableEditPart_9;
 	public static String ConnectDatabaseAction_1;
 	public static String ConnectDatabaseAction_2;
+	public static String DBInformationDialog_0;
+	public static String DBInformationDialog_1;
+	public static String DBInformationDialog_2;
+	public static String DBInformationDialog_3;
+	public static String DBInformationDialog_4;
+	public static String DBInformationDialog_5;
+	public static String DBInformationDialog_6;
 	public static String DBLoginDialog_0;
 	public static String DBLoginDialog_1;
 	public static String DBLoginDialog_10;
@@ -57,8 +64,12 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_32;
 	public static String DBLoginDialog_33;
 	public static String DBLoginDialog_34;
+	public static String DBLoginDialog_35;
 	public static String DBLoginDialog_36;
+	public static String DBLoginDialog_37;
+	public static String DBLoginDialog_39;
 	public static String DBLoginDialog_4;
+	public static String DBLoginDialog_40;
 	public static String DBLoginDialog_5;
 	public static String DBLoginDialog_6;
 	public static String DBLoginDialog_7;
@@ -87,10 +98,12 @@ public class Messages extends NLS {
 	public static String MainEditor_20;
 	public static String MainEditor_21;
 	public static String MainEditor_22;
+	public static String MainEditor_23;
 	public static String MainEditor_25;
 	public static String MainEditor_26;
 	public static String MainEditor_28;
 	public static String MainEditor_3;
+	public static String MainEditor_31;
 	public static String MainEditor_32;
 	public static String MainEditor_33;
 	public static String MainEditor_4;
@@ -297,6 +310,9 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_trclmnType_text;
 	public static String DBLoginDialog_trclmnDisplayName_text;
 	public static String DBLoginDialog_trclmnNewColumn_text;
+	public static String IntroEditor_0;
+	public static String IntroEditorInput_0;
+	public static String IntroEditorInput_1;
 	public static String MainEditor_tltmExecute_toolTipText;
 	public static String MainEditor_tltmExecute_toolTipText_1;
 	public static String MongoDBLoginComposite_2;
@@ -315,6 +331,9 @@ public class Messages extends NLS {
 	public static String MongoDBLoginComposite_lblExLocalhostlocalhost_text;
 	public static String MainEditor_btnClear_text;
 	public static String MySQLLoginComposite_lblOperationType_text;
+	public static String IntroEditor_label_text;
+	public static String IntroEditor_lblWwwcubridorg_text;
+	public static String IntroEditor_label_1_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

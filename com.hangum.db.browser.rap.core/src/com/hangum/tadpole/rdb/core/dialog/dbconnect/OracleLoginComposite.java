@@ -68,9 +68,6 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	protected Text textPassword;
 	protected Text textDatabase;
 	protected Text textPort;
-//	protected Combo comboLocale;
-	
-	protected Button btnSavePreference;
 	
 	/**
 	 * Create the composite.
@@ -190,10 +187,6 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			}
 		});
 		btnPing.setText(Messages.DBLoginDialog_btnPing_text);
-		
-		btnSavePreference = new Button(compositeBody, SWT.CHECK);
-		btnSavePreference.setText(Messages.MySQLLoginComposite_btnSavePreference_text);
-		btnSavePreference.setSelection(true);
 
 		init();
 	}
@@ -297,15 +290,12 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 				return false;
 			}
 			
-			// preference에 save합니다.
-			if(btnSavePreference.getSelection()) {
-				try {
-					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-				} catch (Exception e) {
-					logger.error("Oracle db info save", e);
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_11, errStatus); //$NON-NLS-1$
-				}
+			try {
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error("Oracle db info save", e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_11, errStatus); //$NON-NLS-1$
 			}
 		}
 		

@@ -64,8 +64,6 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	protected Text textDatabase;
 	protected Text textPort;
 	
-	protected Button btnSavePreference;
-	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -172,10 +170,6 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			}
 		});
 		btnPing.setText(Messages.DBLoginDialog_btnPing_text);
-		
-		btnSavePreference = new Button(compositeBody, SWT.CHECK);
-		btnSavePreference.setText(Messages.MySQLLoginComposite_btnSavePreference_text);
-		btnSavePreference.setSelection(true);
 
 		init();
 	}
@@ -342,19 +336,16 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 				return false;
 			}
 			
-			// preference에 save합니다.
-			if(btnSavePreference.getSelection()) {
-				try {
-					if(intVersion <= 8) {
-						userDB.setTypes(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
-					}
-					
-					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-				} catch (Exception e) {
-					logger.error("MSSQL", e); //$NON-NLS-1$
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
+			try {
+				if(intVersion <= 8) {
+					userDB.setTypes(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
 				}
+				
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error("MSSQL", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
 			}
 		}
 		

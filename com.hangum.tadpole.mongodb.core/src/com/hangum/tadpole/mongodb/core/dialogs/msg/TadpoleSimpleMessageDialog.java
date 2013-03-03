@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import com.hangum.tadpole.mongodb.core.Messages;
 
 /**
  * tadpole message dialog
@@ -36,7 +37,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	
 	String title;
 	String message;
-	private Label lblMessage;
+//	private Label lblMessage;
 	
 	/**
 	 * Create the dialog.
@@ -53,7 +54,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Tadpole Dialog"); //$NON-NLS-1$
+		newShell.setText(Messages.TadpoleSimpleMessageDialog_2);
 	}
 
 	/**
@@ -63,15 +64,10 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setMessage(title);
-		setTitle("Tadpole Message");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		lblMessage = new Label(container, SWT.NONE);
-		lblMessage.setText("Message");
-		new Label(container, SWT.NONE);
 		
 		textMessage = new TadpoleOrionHubEditor(container, SWT.BORDER, message);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
@@ -85,7 +81,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.TadpoleSimpleMessageDialog_1, true);
 	}
 
 	/**

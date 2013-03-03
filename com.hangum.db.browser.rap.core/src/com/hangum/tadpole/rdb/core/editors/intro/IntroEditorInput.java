@@ -14,6 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.rdb.core.Messages;
+
 public class IntroEditorInput implements IEditorInput {
 
 	@Override
@@ -33,7 +35,7 @@ public class IntroEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Home";
+		return Messages.IntroEditorInput_0;
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class IntroEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "User Home";
+		return Messages.IntroEditorInput_1;
 	}
 
 }

@@ -8,7 +8,7 @@
             default="false"
             icon="resources/icons/user.png"
             id="com.hangum.tadpole.manager.core.editor.usermanagement"
-            name="User Management">
+            name="%editor.name">
       </editor>
    </extension>
 

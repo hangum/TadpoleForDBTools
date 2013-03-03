@@ -143,17 +143,13 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 				return false;
 			}
 			
-			// preference에 save합니다.
-			if(btnSavePreference.getSelection()) {
-				try {
-					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-				} catch (Exception e) {
-					logger.error("PostgreSQL db preference save", e);
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getShell(), "Error", "PostgreSQL Connection Exception", errStatus); //$NON-NLS-1$
-				}
+			try {
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error("PostgreSQL db preference save", e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "PostgreSQL Connection Exception", errStatus); //$NON-NLS-1$
 			}
-			
 		}
 		
 		return true;

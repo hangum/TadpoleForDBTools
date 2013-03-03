@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import com.hangum.tadpole.mongodb.core.Messages;
 
 /**
  * tadpole message dialog
@@ -58,7 +59,7 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Tadpole Dialog"); //$NON-NLS-1$
+		newShell.setText(Messages.TadpoleMessageDialog_0);
 	}
 
 	/**
@@ -68,7 +69,6 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setMessage(title);
-		setTitle("Tadpole Message");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
@@ -76,14 +76,14 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 		
 		lblDate = new Label(container, SWT.NONE);
 		lblDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDate.setText("Date");
+		lblDate.setText(Messages.TadpoleMessageDialog_1);
 		
 		text = new Text(container, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		text.setText(head);
 		
 		lblMessage = new Label(container, SWT.NONE);
-		lblMessage.setText("Message");
+		lblMessage.setText(Messages.TadpoleMessageDialog_2);
 		new Label(container, SWT.NONE);
 		
 		textMessage = new TadpoleOrionHubEditor(container, SWT.BORDER, message);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -98,7 +98,7 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.TadpoleMessageDialog_3, true);
 	}
 
 	/**

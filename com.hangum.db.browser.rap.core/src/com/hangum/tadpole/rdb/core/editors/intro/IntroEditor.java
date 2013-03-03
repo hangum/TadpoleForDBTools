@@ -33,6 +33,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * 기본 introduction
@@ -45,7 +46,7 @@ import com.swtdesigner.ResourceManager;
  */
 public class IntroEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(IntroEditor.class);
-	public static final String ID = "com.hangum.tadpole.rdb.core.editor.intor";
+	public static final String ID = "com.hangum.tadpole.rdb.core.editor.intor"; //$NON-NLS-1$
 	private Text textURL;
 	private Browser browser;
 	
@@ -53,7 +54,7 @@ public class IntroEditor extends EditorPart {
 	public static String[] ARRAY_DEFAULT_MAIN_HOME_PAGE = {PreferenceDefine.DEFAULT_HOME_PAGE_VALUE};//, "http://www.pitmongo.co.kr/"};
 	
 	/** default dona home */
-	public static String[] ARRAY_DONATION_HOME_PAGE = {"http://www.cubrid.org/", "www.osci.kr"};
+	public static String[] ARRAY_DONATION_HOME_PAGE = {"http://www.cubrid.org/", "www.osci.kr"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public IntroEditor() {
 		super();
@@ -104,7 +105,7 @@ public class IntroEditor extends EditorPart {
 		
 		Label lblUrl = new Label(compositeHead, SWT.NONE);
 		lblUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblUrl.setText("URL  ");
+		lblUrl.setText("URL  "); //$NON-NLS-1$
 		
 		textURL = new Text(compositeHead, SWT.BORDER);
 		textURL.addKeyListener(new KeyAdapter() {
@@ -126,19 +127,23 @@ public class IntroEditor extends EditorPart {
 		
 		Group grpDonor = new Group(parent, SWT.BORDER);
 		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		grpDonor.setText("Donor");
+		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.IntroEditor_0);
 		grpDonor.setLayout(new GridLayout(2, false));
 		
 		CLabel lblWwwcubridorg = new CLabel(grpDonor, SWT.BORDER);
 		lblWwwcubridorg.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblWwwcubridorg.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/CUBRID.png"));
-		lblWwwcubridorg.setText("<a href=\"http://www.cubrid.org\" target=\"_blank\">http://www.cubrid.org</a>");
-		
-		
+		lblWwwcubridorg.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/CUBRID.png")); //$NON-NLS-1$
+
 		CLabel lblOpenSourceCunsulting = new CLabel(grpDonor, SWT.BORDER);
-		lblOpenSourceCunsulting.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblOpenSourceCunsulting.setText("<a href=\"http://www.osci.kr\" target=\"_blank\">www.osci.kr</a>");
-		lblOpenSourceCunsulting.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/OpenSourceConsulting.png"));
+		lblOpenSourceCunsulting.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/OpenSourceConsulting.png")); //$NON-NLS-1$
+		
+		CLabel label_1 = new CLabel(grpDonor, SWT.NONE);
+		label_1.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		label_1.setText(Messages.IntroEditor_label_text);
+		
+		CLabel label = new CLabel(grpDonor, SWT.NONE);
+		label.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		label.setText(Messages.IntroEditor_label_1_text);
 		
 		setBrowserURL();		
 	}
@@ -148,7 +153,7 @@ public class IntroEditor extends EditorPart {
 	 */
 	private void setBrowserURL() {
 		int selectRandom = (int)(Math.random() * ARRAY_DEFAULT_MAIN_HOME_PAGE.length);
-		logger.info("[select home]" + ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
+		logger.info("[select home]" + ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]); //$NON-NLS-1$
 		browser.setUrl(ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
 		
 		textURL.setText(ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
@@ -161,9 +166,9 @@ public class IntroEditor extends EditorPart {
 	 * @param url
 	 */
 	private void setBrowserURL(String url) {
-		boolean boolStartHttp = StringUtils.startsWith(url, "http");
+		boolean boolStartHttp = StringUtils.startsWith(url, "http"); //$NON-NLS-1$
 		if(boolStartHttp) browser.setUrl(url);
-		else browser.setUrl("http://" + url);
+		else browser.setUrl("http://" + url); //$NON-NLS-1$
 	}
 
 	@Override

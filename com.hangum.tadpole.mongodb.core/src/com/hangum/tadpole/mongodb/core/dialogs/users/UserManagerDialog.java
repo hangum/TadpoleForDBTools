@@ -100,22 +100,19 @@ public class UserManagerDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblId = new Label(container, SWT.NONE);
-		lblId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblId.setText("ID"); //$NON-NLS-1$
+		lblId.setText(Messages.UserManagerDialog_0);
 		
 		textID = new Text(container, SWT.BORDER);
 		textID.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(container, SWT.NONE);
-		lblPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblPassword.setText("Password"); //$NON-NLS-1$
+		lblPassword.setText(Messages.UserManagerDialog_1);
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblRePassword = new Label(container, SWT.NONE);
-		lblRePassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblRePassword.setText("Re Password"); //$NON-NLS-1$
+		lblRePassword.setText(Messages.UserManagerDialog_2);
 		
 		textRePassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -123,7 +120,7 @@ public class UserManagerDialog extends Dialog {
 		
 		btnReadOnly = new Button(container, SWT.CHECK);
 		btnReadOnly.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		btnReadOnly.setText("Read Only"); //$NON-NLS-1$
+		btnReadOnly.setText(Messages.UserManagerDialog_3);
 		
 		composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -131,7 +128,7 @@ public class UserManagerDialog extends Dialog {
 		
 		Group grpUserList = new Group(composite, SWT.NONE);
 		grpUserList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpUserList.setText("User List"); //$NON-NLS-1$
+		grpUserList.setText(Messages.UserManagerDialog_5);
 		grpUserList.setLayout(new GridLayout(1, false));
 		
 		tableViewerUser = new TableViewer(grpUserList, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -143,12 +140,12 @@ public class UserManagerDialog extends Dialog {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerUser, SWT.NONE);
 		TableColumn tblclmnId = tableViewerColumn.getColumn();
 		tblclmnId.setWidth(162);
-		tblclmnId.setText("ID"); //$NON-NLS-1$
+		tblclmnId.setText(Messages.UserManagerDialog_0);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerUser, SWT.NONE);
 		TableColumn tblclmnReadOnly = tableViewerColumn_1.getColumn();
 		tblclmnReadOnly.setWidth(100);
-		tblclmnReadOnly.setText("Read Only"); //$NON-NLS-1$
+		tblclmnReadOnly.setText(Messages.UserManagerDialog_3);
 		
 		tableViewerUser.setContentProvider(new ArrayContentProvider());
 		tableViewerUser.setLabelProvider(new UserListLabelProvider());
@@ -235,7 +232,7 @@ public class UserManagerDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button button = createButton(parent, DELETE_ID, "Delete", false); //$NON-NLS-1$
+		Button button = createButton(parent, DELETE_ID, Messages.UserManagerDialog_4, false);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -261,8 +258,8 @@ public class UserManagerDialog extends Dialog {
 			}
 		});
 		
-		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.UserManagerDialog_6, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.UserManagerDialog_7, false);
 	}
 
 	/**
