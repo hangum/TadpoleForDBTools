@@ -188,7 +188,7 @@ public class MongoDBImportEditor extends EditorPart {
 		tabItemQuery.setControl(compositeQuery);
 		compositeQuery.setLayout(new GridLayout(1, false));
 		
-		textQuery = new TadpoleOrionHubEditor(compositeQuery, SWT.BORDER);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textQuery = new TadpoleOrionHubEditor(compositeQuery, SWT.BORDER);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeQueryTail = new Composite(compositeQuery, SWT.NONE);
