@@ -124,7 +124,6 @@
    <warConfiguration webXml="/com.hangum.tadpole.build.war/WEB-INF/web.xml" launchIni="/com.hangum.tadpole.build.war/WEB-INF/launch.ini">
    <libraries>
       <library path="org.eclipse.equinox.servletbridge_1.2.200.v20120522-2049.jar" fromTarget="true"/>
-      <library path="/com.hangum.tadpole.build.war/libs/urlrewritefilter-4.0.3.jar" fromTarget="false"/>
    </libraries>
    </warConfiguration>
 </product>

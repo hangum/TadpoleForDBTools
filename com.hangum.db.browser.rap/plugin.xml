@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <!--extension
+   <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
-            alias="db?startup=tadpole"
+            alias="/"
             class="com.hangum.tadpole.application.internal.redirect.RedirectServlet"
             load-on-startup="true">
       </servlet>
-   </extension-->
+   </extension>
 
    <extension
          point="org.eclipse.rap.ui.entrypoint">
