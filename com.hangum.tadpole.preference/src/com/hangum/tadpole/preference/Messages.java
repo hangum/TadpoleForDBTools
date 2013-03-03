@@ -20,6 +20,16 @@ public class Messages extends NLS {
 	public static String DefaultPreferencePage_2;
 
 	public static String UserInfoPerference_0;
+
+	public static String UserInfoPerference_1;
+
+	public static String UserInfoPerference_2;
+
+	public static String UserInfoPerference_3;
+
+	public static String UserInfoPerference_4;
+
+	public static String UserInfoPerference_5;
 	public static String UserInfoPerference_6;
 	public static String UserInfoPerference_8;
 	
@@ -43,6 +53,36 @@ public class Messages extends NLS {
 	public static String GeneralPreferencePage_lblHomePageUse_text;
 	public static String GeneralPreferencePage_btnCheckButton_text;
 	public static String GeneralPreferencePage_lblStandalonePort_text;
+
+	public static String MongoDBPreferencePage_0;
+
+	public static String MongoDBPreferencePage_1;
+
+	public static String MongoDBPreferencePage_10;
+
+	public static String MongoDBPreferencePage_11;
+
+	public static String MongoDBPreferencePage_12;
+
+	public static String MongoDBPreferencePage_13;
+
+	public static String MongoDBPreferencePage_2;
+
+	public static String MongoDBPreferencePage_3;
+
+	public static String MongoDBPreferencePage_4;
+
+	public static String MongoDBPreferencePage_5;
+
+	public static String MongoDBPreferencePage_6;
+
+	public static String MongoDBPreferencePage_7;
+
+	public static String SQLFormatterPreferencePage_0;
+
+	public static String SQLFormatterPreferencePage_3;
+
+	public static String SQLFormatterPreferencePage_4;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

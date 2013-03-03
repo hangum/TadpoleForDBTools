@@ -51,6 +51,7 @@ import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.dto.MongoDBCollectionInfoDTO;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBCollectionComparator;
@@ -108,7 +109,7 @@ public class CollectionInformationComposite extends Composite {
 		
 		Label lblName = new Label(compositeHead, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText("Name Filter"); //$NON-NLS-1$
+		lblName.setText(Messages.CollectionInformationComposite_0);
 		
 		textFilter = new Text(compositeHead, SWT.BORDER);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -126,7 +127,7 @@ public class CollectionInformationComposite extends Composite {
 				initData(userDB);
 			}
 		});
-		btnRefresh.setText("Refresh");
+		btnRefresh.setText(Messages.CollectionInformationComposite_1);
 		
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -197,7 +198,7 @@ public class CollectionInformationComposite extends Composite {
 		Group grpSummary = new Group(this, SWT.NONE);
 		grpSummary.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpSummary.setSize(590, 45);
-		grpSummary.setText("Summary"); //$NON-NLS-1$
+		grpSummary.setText(Messages.CollectionInformationComposite_2);
 		grpSummary.setLayout(new GridLayout(4, false));
 		
 		lblCollection = new Label(grpSummary, SWT.BORDER);
@@ -210,11 +211,11 @@ public class CollectionInformationComposite extends Composite {
 		lblStorages.setText("Storages"); //$NON-NLS-1$
 		
 		lblIndex = new Label(grpSummary, SWT.BORDER);
-		lblIndex.setText("Index");
+		lblIndex.setText("Index"); //$NON-NLS-1$
 	}
 	
 	private void createTableColumn() {
-		String[] columnName = {"Name", "Count", "Size", "Storage", "Index", "Last Extent Size", "AvgObj","Padding" };  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		String[] columnName = {"Name", "Count", "Size", "Storage", "Index", "Last Extent Size", "AvgObj","Padding" };  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 		int[] columnSize = {200, 100, 100, 100, 100, 100, 100, 100 };
 		
 		try {

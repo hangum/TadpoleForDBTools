@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -44,7 +45,6 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 	// result page
 	private Button btnTreeView;
 	private Button btnTableView;
-	private Button btnTextView;
 	
 	public MongoDBPreferencePage() {
 	}
@@ -60,52 +60,47 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText("Limit Count");
+		lblNewLabel.setText(Messages.MongoDBPreferencePage_0);
 		
 		textLimitCount = new Text(container, SWT.BORDER);
 		textLimitCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_1.setText("Max Count");
+		lblNewLabel_1.setText(Messages.MongoDBPreferencePage_1);
 		
 		textMaxCount = new Text(container, SWT.BORDER);
 		textMaxCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel_2 = new Label(container, SWT.NONE);
-		lblNewLabel_2.setText("Find Page");
+		lblNewLabel_2.setText(Messages.MongoDBPreferencePage_2);
 		
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnBasicSearch = new Button(composite, SWT.RADIO);
-		btnBasicSearch.setText("Basic Search");
+		btnBasicSearch.setText(Messages.MongoDBPreferencePage_3);
 		btnBasicSearch.setData(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC);
+		new Label(composite, SWT.NONE);
 		
 //		btnExtendSearch = new Button(composite, SWT.RADIO);
 //		btnExtendSearch.setText("Extend Search");
 //		btnExtendSearch.setData(PreferenceDefine.MONGO_DEFAULT_FIND_EXTEND);
 		
 		Label lblResultPage = new Label(container, SWT.NONE);
-		lblResultPage.setText("view result page");
+		lblResultPage.setText(Messages.MongoDBPreferencePage_4);
 		
 		Composite composite_1 = new Composite(container, SWT.NONE);
-		composite_1.setLayout(new GridLayout(3, false));
+		composite_1.setLayout(new GridLayout(2, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnTreeView = new Button(composite_1, SWT.RADIO);
-		btnTreeView.setText("Tree View");
+		btnTreeView.setText(Messages.MongoDBPreferencePage_5);
 		btnTreeView.setData(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE);
 		
 		btnTableView = new Button(composite_1, SWT.RADIO);
-		btnTableView.setText("Table View");
+		btnTableView.setText(Messages.MongoDBPreferencePage_6);
 		btnTableView.setData(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE);
-		
-		btnTextView = new Button(composite_1, SWT.RADIO);
-		btnTextView.setText("Text View");
-		btnTextView.setData(PreferenceDefine.MONGO_DEFAULT_RESULT_TEXT);
 		
 		initDefaultValue();
 		
@@ -117,19 +112,19 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 
 		String txtLimitCount = textLimitCount.getText();
 		String txtMacCount = textMaxCount.getText();
-		String txtFindPage = "";
-		String txtResultPage = "";
+		String txtFindPage = ""; //$NON-NLS-1$
+		String txtResultPage = ""; //$NON-NLS-1$
 		
 		try {
 			Integer.parseInt(txtLimitCount);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", "Limit Count는 숫자이어야 합니다.");			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.MongoDBPreferencePage_10);			 //$NON-NLS-1$
 			return false;
 		}
 		try {
 			Integer.parseInt(txtMacCount);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", "Max Count는 숫자이어야 합니다.");			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.MongoDBPreferencePage_11);			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -143,8 +138,6 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 			txtResultPage = btnTreeView.getData().toString();
 		} else if(btnTableView.getSelection()) {
 			txtResultPage = btnTableView.getData().toString();
-		} else {
-			txtResultPage = btnTextView.getData().toString();
 		}
 		
 		// 테이블에 저장 
@@ -159,7 +152,7 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 		} catch(Exception e) {
 			e.printStackTrace();
 			
-			MessageDialog.openError(getShell(), "Confirm", "데이터를 수정하는 중에 오류가 발생했습니다.\n" + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.MongoDBPreferencePage_12, Messages.MongoDBPreferencePage_13 + e.getMessage());
 			return false;
 		}
 		
@@ -195,10 +188,9 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 //		btnExtendSearch.setSelection(false);
 		btnTreeView.setSelection(false);
 		btnTableView.setSelection(false);
-		btnTextView.setSelection(false);
 		
-		textLimitCount.setText( "" + GetPreferenceGeneral.getMongoDefaultLimit() );
-		textMaxCount.setText( "" + GetPreferenceGeneral.getMongoDefaultMaxCount() );
+		textLimitCount.setText( "" + GetPreferenceGeneral.getMongoDefaultLimit() ); //$NON-NLS-1$
+		textMaxCount.setText( "" + GetPreferenceGeneral.getMongoDefaultMaxCount() ); //$NON-NLS-1$
 //		if(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC.equals( GetPreferenceGeneral.getMongoDefaultFindPage() )) {
 			btnBasicSearch.setSelection(true);
 //		} else {
@@ -209,8 +201,6 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 			btnTreeView.setSelection(true);
 		} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals(GetPreferenceGeneral.getMongoDefaultResultPage() )) {
 			btnTableView.setSelection(true);
-		} else {
-			btnTextView.setSelection(true);
 		}
 		
 	}

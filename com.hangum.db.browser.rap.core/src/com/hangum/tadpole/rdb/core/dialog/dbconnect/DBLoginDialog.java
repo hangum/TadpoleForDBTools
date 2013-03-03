@@ -128,7 +128,7 @@ public class DBLoginDialog extends Dialog {
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setBounds(0, 0, 56, 15);
-		lblNewLabel.setText("DB Type");
+		lblNewLabel.setText(Messages.DBLoginDialog_35);
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboDBList.setVisibleItemCount(7);
@@ -256,7 +256,7 @@ public class DBLoginDialog extends Dialog {
 		TreeViewerColumn tvcUser = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
 		TreeColumn trclmnUSer = tvcUser.getColumn();
 		tcl_composite.setColumnData(trclmnUSer, new ColumnPixelData(100, true, true));
-		trclmnUSer.setText("User");
+		trclmnUSer.setText(Messages.DBLoginDialog_37);
 		
 		treeViewerLoginData.setContentProvider(new LoginContentProvider());
 		treeViewerLoginData.setLabelProvider(new LoginLabelProvider());
@@ -297,7 +297,7 @@ public class DBLoginDialog extends Dialog {
 			}
 			
 		} catch (Exception e) {
-			logger.error("initialize DBLogin", e);
+			logger.error("initialize DBLogin", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
@@ -368,7 +368,7 @@ public class DBLoginDialog extends Dialog {
 					
 				}	// end if 자신의 등록한 것
 				else {
-					MessageDialog.openInformation(null, "Confirm", "You can just delete their registered.");//자신이 등록한 것만 삭제 할수 있습니다.");
+					MessageDialog.openInformation(null, Messages.DBLoginDialog_39, Messages.DBLoginDialog_40);//자신이 등록한 것만 삭제 할수 있습니다.");
 				}
 			}	// end select
 		}	// end delete button
@@ -467,7 +467,7 @@ class LoginLabelProvider extends LabelProvider implements ITableLabelProvider {
 		case 3: return dto.getUsers();
 		}
 		
-		return "*** not set column ***";
+		return "*** not set column ***"; //$NON-NLS-1$
 	}
 	
 }

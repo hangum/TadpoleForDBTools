@@ -24,6 +24,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.define.Define;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.util.TadpoleWidgetUtils;
 
 /**
  * 사용자 관리 에디터
@@ -86,6 +87,8 @@ public class UserManagementEditor extends EditorPart {
 
 		CTabFolder tabFolder = new CTabFolder(compositeMain, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setBorderVisible(false);		
+		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
 		CTabItem tbtmItem = null;
 		if(Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {

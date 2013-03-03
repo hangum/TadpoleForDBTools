@@ -38,12 +38,7 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	
 	@Override
 	public Object function(Object[] arguments) {
-		super.function(arguments);
-		
-		if (arguments.length == 0 || !(arguments[0] instanceof Double)) {
-			return null;
-		}
-		int action = ((Double) arguments[0]).intValue();
+		int action = Integer.parseInt(arguments[0].toString());
 		
 		switch (action) {
 			case DIRTY_CHANGED:
@@ -84,10 +79,10 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	}
 	
 	private Object doGetInitialContent(Object[] arguments) {
-		if("".equals(editor.getInputJavaScriptName())) {
-			return "mongojavascript.js"+ ":ext: ";
-		}
-		return editor.getInputJavaScriptName() + ".js" + ":ext:" + editor.getInputJavaScriptContent();
+//		if("".equals(editor.getInputJavaScriptName())) {
+//			return "mongojavascript.js"+ ":ext: ";
+//		}
+		return "mongojavascript.js" + ":ext:" + editor.getInputJavaScriptContent();
 	}
 	
 //	private Object doGetContentName(Object[] arguments) {

@@ -74,7 +74,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowStatusLine(false);
         
         configurer.setShowProgressIndicator(false);
-        configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION);
+        configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
         
         // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
@@ -82,7 +82,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
         // 시스템 종료 메시지 출력시킬 것인지.
         ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
-    	service.setMessage("Do you really wanna leave the Tadpole for DB Tools?");
+    	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
     
         initSystem();
     }
@@ -96,7 +96,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     		TadpoleSystemInitializer.initSystem();
     		
     	} catch(Exception e) {
-    		logger.error("System initialize", e);
+    		logger.error("System initialize", e); //$NON-NLS-1$
     		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
     		
@@ -126,7 +126,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					
 					initSession();
 				} catch (Exception e) {
-					logger.error("demo mode user login", e);
+					logger.error("demo mode user login", e); //$NON-NLS-1$
 					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
 					return;
 				}	
@@ -145,7 +145,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					initSession();
 					
 	    		} catch(Exception e) {
-	    			logger.error("session set", e);
+	    			logger.error("session set", e); //$NON-NLS-1$
 	    		}
 	    	}
     	} 
@@ -161,7 +161,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			cd.run();
     		}    		
     	} catch(Exception e) {
-    		logger.error("list user db", e);
+    		logger.error("list user db", e); //$NON-NLS-1$
     	}    	
     }
     

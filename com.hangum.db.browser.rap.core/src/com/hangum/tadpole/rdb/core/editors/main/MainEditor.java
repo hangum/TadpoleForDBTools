@@ -45,8 +45,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
-import org.eclipse.swt.browser.LocationEvent;
-import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.custom.CTabFolder;
@@ -776,7 +774,7 @@ public class MainEditor extends EditorPart {
 				try {
 					browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
 				} catch(Exception e) {
-					logger.error("set register browser function and content initialize", e);
+					logger.error(Messages.MainEditor_23, e);
 				}
 			}
 			public void changed( ProgressEvent event ) {}			
@@ -862,7 +860,7 @@ public class MainEditor extends EditorPart {
 	 */
 	private void execute() {
 		String tmpStrSelText= StringUtils.trimToEmpty(getOrionText());
-		if("".equals(tmpStrSelText)) return;		
+		if("".equals(tmpStrSelText)) return;		 //$NON-NLS-1$
 		
 		// query의 히스토리를 보여 주기위한 변수 정의
 		final List<String> listQueryHistory = new ArrayList<String>();
@@ -895,7 +893,7 @@ public class MainEditor extends EditorPart {
 				// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 				if(!SQLUtil.isStatment(executeLastSQL)) {
 					listStrExecuteQuery.add(executeLastSQL);
-					executeLastSQL = "";
+					executeLastSQL = ""; //$NON-NLS-1$
 				}
 			}
 		// 블럭 쿼리를 실행하였으면 쿼리를 분리자로 나누지 않고 전체를 수행합니다.
@@ -940,7 +938,7 @@ public class MainEditor extends EditorPart {
 						}
 						
 						// select 문장 실행
-						if(!"".equals(finalExecuteSQL)) {
+						if(!"".equals(finalExecuteSQL)) { //$NON-NLS-1$
 							runSQLSelect(finalExecuteSQL);
 						}
 					} else {
@@ -1139,8 +1137,8 @@ public class MainEditor extends EditorPart {
 			
 			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
 				if( (userDB.getProfile_select_mill() == -1) || ((endQueryMill - startQueryMill) > userDB.getProfile_select_mill()) ) {
-					int durationMillis = Integer.parseInt(""+(endQueryMill - startQueryMill));
-					dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), requestQuery, durationMillis);
+					int durationMillis = Integer.parseInt(""+(endQueryMill - startQueryMill)); //$NON-NLS-1$
+					dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, Messages.MainEditor_31 + System.currentTimeMillis(), requestQuery, durationMillis);
 				}
 			}
 		}
@@ -1183,7 +1181,7 @@ public class MainEditor extends EditorPart {
 			
 			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
 				for(String sql : listQuery) {
-					dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), sql);
+					dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, Messages.MainEditor_31 + System.currentTimeMillis(), sql);
 				}
 			}
 		}
@@ -1237,7 +1235,7 @@ public class MainEditor extends EditorPart {
 			try { javaConn.close(); } catch(Exception e){}
 			
 			if(Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
-				dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, "SQL" + System.currentTimeMillis(), selText);
+				dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, Messages.MainEditor_31 + System.currentTimeMillis(), selText);
 			}
 		}		
 	}

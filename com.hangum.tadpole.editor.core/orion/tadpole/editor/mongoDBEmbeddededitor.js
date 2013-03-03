@@ -255,6 +255,7 @@ function installWorkbenchHooks() {
 	// Register a function that will be called by the editor when the editor's dirty state changes
 	editorService.dirtyChanged = function(dirty) {
 		// This is a function created in Eclipse and registered with the page.
+		
 		editorServiceHandler(editorService.DIRTY_CHANGED, dirty);
 	};
 
@@ -268,14 +269,19 @@ function installWorkbenchHooks() {
 	// Register an implementation that can return initial content for the editor
 	editorService.getInitialContent = function() {
 		try {
+			console.log('set init text');
 			var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
+			
+			console.log('get data is ' + content);
 			
 			var idxExt = content.indexOf(":ext:");
 			var varExt = content.substring(0, idxExt);
 			var varCon = content.substring(idxExt+5, content.length);
 			
+			console.log('setting value is ' + varCon);
 			editor.setInput(varExt, null, varCon);
 
+			console.log('set highlight');
 			syntaxHighlighter.highlight(varExt, editor);
 			editor.highlightAnnotations();
 			

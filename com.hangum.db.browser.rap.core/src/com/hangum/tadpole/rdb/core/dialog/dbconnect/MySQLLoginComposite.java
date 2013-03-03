@@ -59,8 +59,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	protected Text textPort;
 	protected Combo comboLocale;
 	
-	protected Button btnSavePreference;
-	
 	public MySQLLoginComposite(DBDefine selectDB, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
 		super(selectDB, parent, style, listGroupName, selGroupName, userDB);
 		setText(selectDB.getDBToString());
@@ -172,10 +170,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			}
 		});
 		btnPing.setText(Messages.DBLoginDialog_btnPing_text);
-		
-		btnSavePreference = new Button(compositeBody, SWT.CHECK);
-		btnSavePreference.setText(Messages.MySQLLoginComposite_btnSavePreference_text);
-		btnSavePreference.setSelection(true);
 
 		init();
 	}
@@ -274,15 +268,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			// 이미 연결한 것인지 검사한다.
 			if(!connectValidate(userDB)) return false;
 			
-			// preference에 save합니다.
-			if(btnSavePreference.getSelection()) {
-				try {
-					TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-				} catch (Exception e) {
-					logger.error(Messages.MySQLLoginComposite_0, e);
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
-				}
+			try {
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error(Messages.MySQLLoginComposite_0, e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
 			}
 			
 			return true;

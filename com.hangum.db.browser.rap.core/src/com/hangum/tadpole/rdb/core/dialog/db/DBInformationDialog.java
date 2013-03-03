@@ -73,7 +73,7 @@ public class DBInformationDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Database Information"); //$NON-NLS-1$
+		newShell.setText(Messages.DBInformationDialog_0);
 	}
 
 	/**
@@ -101,25 +101,24 @@ public class DBInformationDialog extends Dialog {
 		Group grpOtherInformation = new Group(compositeTail, SWT.NONE);
 		grpOtherInformation.setLayout(new GridLayout(2, false));
 		grpOtherInformation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		grpOtherInformation.setText("User");
+		grpOtherInformation.setText(Messages.DBInformationDialog_1);
 		
 		Label lblGroupName = new Label(grpOtherInformation, SWT.NONE);
-		lblGroupName.setText("Group: ");
+		lblGroupName.setText(Messages.DBInformationDialog_2);
 		
 		Label lblGroupValue = new Label(grpOtherInformation, SWT.NONE);
 		lblGroupValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblGroupValue.setText(SessionManager.getGroupName());
 		
 		Label lblEmail = new Label(grpOtherInformation, SWT.NONE);
-		lblEmail.setText("email: ");
+		lblEmail.setText(Messages.DBInformationDialog_3);
 		
 		Label lblEmailValue = new Label(grpOtherInformation, SWT.NONE);
 		lblEmailValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblEmailValue.setText(SessionManager.getEMAIL());
 		
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
-		lblName.setText("Name: ");
-		new Label(grpOtherInformation, SWT.NONE);
+		lblName.setText(Messages.DBInformationDialog_4);
 		
 		if(PermissionChecks.isShow(SessionManager.getLoginType(), userDB)) {
 			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
@@ -134,7 +133,7 @@ public class DBInformationDialog extends Dialog {
 		} else {
 			Group grpDetail = new Group(container, SWT.NONE);
 			grpDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-			grpDetail.setText("Detail");
+			grpDetail.setText(Messages.DBInformationDialog_5);
 			grpDetail.setLayout(new GridLayout(1, false));
 			
 			Label lblNewLabel = new Label(grpDetail, SWT.NONE);
@@ -183,7 +182,7 @@ public class DBInformationDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Close", true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.DBInformationDialog_6, true);
 //		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
 	}
 

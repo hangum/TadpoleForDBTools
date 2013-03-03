@@ -64,21 +64,21 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		
 		Label lblTabSize = new Label(container, SWT.NONE);
 		lblTabSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTabSize.setText("Tab size");
+		lblTabSize.setText(Messages.SQLFormatterPreferencePage_0);
 		
 		comboTabsize = new Combo(container, SWT.READ_ONLY);
 		comboTabsize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboTabsize.add("2");
-		comboTabsize.add("4");
+		comboTabsize.add("2"); //$NON-NLS-1$
+		comboTabsize.add("4"); //$NON-NLS-1$
 		comboTabsize.select(0);
 		
 		btnNoInsertNewDecode = new Button(container, SWT.CHECK);
 		btnNoInsertNewDecode.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnNoInsertNewDecode.setText("No insert new line into DECODE");
+		btnNoInsertNewDecode.setText(Messages.SQLFormatterPreferencePage_3);
 		
 		btnNoInsertNewIn = new Button(container, SWT.CHECK);
 		btnNoInsertNewIn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnNoInsertNewIn.setText("No insert new line into IN");
+		btnNoInsertNewIn.setText(Messages.SQLFormatterPreferencePage_4);
 		
 		initDefaultValue();
 
@@ -88,8 +88,8 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 	@Override
 	public boolean performOk() {
 		String txtTabSize = comboTabsize.getText();
-		String txtNoInsertDecode = ""+btnNoInsertNewDecode.getSelection();
-		String txtNoInsertIn = ""+btnNoInsertNewIn.getSelection();
+		String txtNoInsertDecode = ""+btnNoInsertNewDecode.getSelection(); //$NON-NLS-1$
+		String txtNoInsertIn = ""+btnNoInsertNewIn.getSelection(); //$NON-NLS-1$
 		
 		// 테이블에 저장 
 		try {

@@ -76,10 +76,20 @@ public class AdminComposite extends Composite {
 	 */
 	public AdminComposite(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 2;
+		gridLayout.horizontalSpacing = 2;
+		gridLayout.marginHeight = 2;
+		gridLayout.marginWidth = 2;
+		setLayout(gridLayout);
 		
 		Composite compositeHead = new Composite(this, SWT.NONE);
-		compositeHead.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeHead = new GridLayout(2, false);
+		gl_compositeHead.verticalSpacing = 2;
+		gl_compositeHead.horizontalSpacing = 2;
+		gl_compositeHead.marginHeight = 2;
+		gl_compositeHead.marginWidth = 2;
+		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
@@ -132,7 +142,12 @@ public class AdminComposite extends Composite {
 		});
 		
 		Composite compositeBody = new Composite(this, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		treeViewerAdmin = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
