@@ -334,7 +334,6 @@ public class Messages extends NLS {
 	public static String IntroEditor_label_text;
 	public static String IntroEditor_lblWwwcubridorg_text;
 	public static String IntroEditor_label_1_text;
-	public static String IntroEditor_lblOpenSourceCunsulting_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
