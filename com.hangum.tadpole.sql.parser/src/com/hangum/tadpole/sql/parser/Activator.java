@@ -8,7 +8,7 @@
  * Contributors:
  *     Cho Hyun Jong - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.parser2;
+package com.hangum.tadpole.sql.parser;
 
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.Platform;
