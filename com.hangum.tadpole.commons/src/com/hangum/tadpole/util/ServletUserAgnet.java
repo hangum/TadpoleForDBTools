@@ -55,7 +55,7 @@ public class ServletUserAgnet {
         UNKNOWN
     }
 
-    private  OS_TYPE 		OS_Type 		= OS_TYPE.UNKNOWN;
+//    private  OS_TYPE 		OS_Type 		= OS_TYPE.UNKNOWN;
     private  OS_SIMPLE_TYPE OS_Simple_Type 	= OS_SIMPLE_TYPE.UNKNOWN;
 	private  BROWSER_TYPE 	Browser_Type 	= BROWSER_TYPE.UNKNOWN;
     private  int 			majorVersion	= 0;
@@ -69,7 +69,7 @@ public class ServletUserAgnet {
     public void detect(HttpServletRequest req) {
     	String userAgent = req.getHeader("User-Agent");
     	
-    	OS_Type = detectedOS(userAgent);
+//    	OS_Type = detectedOS(userAgent);
     	OS_Simple_Type = detectedOSSimple(userAgent);
     	detectBrowser(userAgent);
     }
@@ -87,34 +87,34 @@ public class ServletUserAgnet {
         return OS_SIMPLE_TYPE.UNKNOWN;
     }
 
-    private OS_TYPE detectedOS(String userAgent) {
-        if (null == userAgent) {
-            return OS_TYPE.UNKNOWN;
-        } else if(userAgent.contains("Android")) {
-            return OS_TYPE.ANDROID;
-        } else if(userAgent.contains("J2ME")) {
-            return OS_TYPE.JAVA_ME;
-        } else if(userAgent.contains("iPhone") || userAgent.contains("iPod") || userAgent.contains("iPad")) {
-            return OS_TYPE.IOS;
-        } else if(userAgent.contains("Mac OS X")) {
-            return OS_TYPE.MACOSX;
-        } else if (userAgent.contains("Windows NT 5.0")) {
-            return OS_TYPE.WIN2K;
-        } else if (userAgent.contains("Windows NT 5.1") || userAgent.contains("Windows NT 5.2") || userAgent.contains("Windows XP")) {
-            return OS_TYPE.WINXP;
-        } else if (userAgent.contains("Windows NT 6.0")) {
-            return OS_TYPE.WINVISTA;
-        } else if (userAgent.contains("Windows NT 6.1")) {
-            return OS_TYPE.WIN7;
-        } else if (userAgent.contains("Windows NT 6.2")) {
-            return OS_TYPE.WIN8;
-        } else if (userAgent.contains("Windows NT")) {
-            return OS_TYPE.WINNT;
-        } else if (userAgent.contains("Linux")) {
-            return OS_TYPE.LINUX;
-        }
-        return OS_TYPE.UNKNOWN;
-    }
+//    private OS_TYPE detectedOS(String userAgent) {
+//        if (null == userAgent) {
+//            return OS_TYPE.UNKNOWN;
+//        } else if(userAgent.contains("Android")) {
+//            return OS_TYPE.ANDROID;
+//        } else if(userAgent.contains("J2ME")) {
+//            return OS_TYPE.JAVA_ME;
+//        } else if(userAgent.contains("iPhone") || userAgent.contains("iPod") || userAgent.contains("iPad")) {
+//            return OS_TYPE.IOS;
+//        } else if(userAgent.contains("Mac OS X")) {
+//            return OS_TYPE.MACOSX;
+//        } else if (userAgent.contains("Windows NT 5.0")) {
+//            return OS_TYPE.WIN2K;
+//        } else if (userAgent.contains("Windows NT 5.1") || userAgent.contains("Windows NT 5.2") || userAgent.contains("Windows XP")) {
+//            return OS_TYPE.WINXP;
+//        } else if (userAgent.contains("Windows NT 6.0")) {
+//            return OS_TYPE.WINVISTA;
+//        } else if (userAgent.contains("Windows NT 6.1")) {
+//            return OS_TYPE.WIN7;
+//        } else if (userAgent.contains("Windows NT 6.2")) {
+//            return OS_TYPE.WIN8;
+//        } else if (userAgent.contains("Windows NT")) {
+//            return OS_TYPE.WINNT;
+//        } else if (userAgent.contains("Linux")) {
+//            return OS_TYPE.LINUX;
+//        }
+//        return OS_TYPE.UNKNOWN;
+//    }
 
     public void detectBrowser(String userAgentStr) {
         if (null != userAgentStr) {
@@ -153,9 +153,9 @@ public class ServletUserAgnet {
         }
     }
 
-    public OS_TYPE getOsType() {
-        return OS_Type;
-    }
+//    public OS_TYPE getOsType() {
+//        return OS_Type;
+//    }
     
     public OS_SIMPLE_TYPE getOSSimpleType() {
     	return OS_Simple_Type;

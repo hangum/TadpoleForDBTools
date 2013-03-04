@@ -40,7 +40,7 @@ public class RequestInfoUtils {
 		
 		ServletUserAgnet sua = new ServletUserAgnet();
 		sua.detect(RWT.getRequest());
-		String strOs = sua.getOsType().toString();
+		String strOs = sua.getOSSimpleType().toString();
 		String strBrowser = sua.getBrowserType().toString();
 		String strFullVersion = sua.getFullVersion() + sua.getMajorVersion();
 		
