@@ -52,6 +52,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableColumnLabelprovider;
 import com.hangum.tadpole.system.permission.PermissionChecks;
+import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -125,6 +126,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 						viewColumnViewer.setInput(showViewColumns);
 						viewColumnViewer.refresh();
+						TableUtil.packTable(viewColumnViewer.getTable());
 					}
 
 				} catch (Exception e) {
