@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole for DB Tools parse and formatter core
+Bundle-Name: Tadpole for DB Tools SQL parser and formatter core
 Bundle-SymbolicName: com.hangum.tadpole.sql.parser
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.sql.parser2.Activator
