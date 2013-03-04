@@ -28,10 +28,10 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
 		
-		IFolderLayout leftFolder = layout.createFolder("id"+ManagerViewer.ID, IPageLayout.LEFT, 0.25f, editorArea);
+		IFolderLayout leftFolder = layout.createFolder("id"+ManagerViewer.ID, IPageLayout.LEFT, 0.30f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
 		
-		IFolderLayout leftUnderFolder = layout.createFolder("id"+ExplorerViewer.ID, IPageLayout.BOTTOM, 0.25f, "id"+ManagerViewer.ID);		
+		IFolderLayout leftUnderFolder = layout.createFolder("id"+ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id"+ManagerViewer.ID);		
 		leftUnderFolder.addView(ExplorerViewer.ID);
 	}
 }
