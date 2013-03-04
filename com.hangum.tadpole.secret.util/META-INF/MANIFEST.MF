@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole secret Util
+Bundle-Name: Tadpole for DB Tools secret Util
 Bundle-SymbolicName: com.hangum.tadpole.secret.util
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.secret.util.Activator
-Bundle-Vendor: HANGUM
+Bundle-Vendor: hangum.com
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.5.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",

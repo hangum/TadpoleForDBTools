@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: tadpole commons Sql
+Bundle-Name: Tadpole for DB Tools commons Sql
 Bundle-SymbolicName: com.hangum.tadpole.commons.sql;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Vendor: hangum
+Bundle-Vendor: hangum.com
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  org.eclipse.core.runtime;bundle-version="3.5.0",

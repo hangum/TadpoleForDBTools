@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole for DB Tools Application Start
+Bundle-Name: Tadpole Application Start
 Bundle-SymbolicName: com.hangum.tadpole.applicaion.start;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: hangum.com
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",

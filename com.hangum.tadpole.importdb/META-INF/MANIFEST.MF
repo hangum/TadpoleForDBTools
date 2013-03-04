@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Importdb
+Bundle-Name: Tadpole for DB Tools Importdb
 Bundle-SymbolicName: com.hangum.tadpole.importdb;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.importdb.Activator
 Bundle-Vendor: hangum.com
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",

@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: orion editor Core
+Bundle-Name: Tadpole for DB Tools editor
 Bundle-SymbolicName: com.hangum.tadpole.editor.core;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.editor.core.Activator
-Bundle-Vendor: HANGUM
+Bundle-Vendor: hangum.com
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.1",
  org.eclipse.core.runtime,
  org.eclipse.equinox.http.registry;bundle-version="1.1.200",

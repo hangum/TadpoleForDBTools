@@ -2,8 +2,8 @@
 <feature
       id="com.hangum.tadpole.feature"
       label="Tadpole for DB Tools Feature"
-      version="1.0.0.qualifier"
-      provider-name="HANGUM">
+      version="2.0.0.qualifier"
+      provider-name="hangum.com">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
