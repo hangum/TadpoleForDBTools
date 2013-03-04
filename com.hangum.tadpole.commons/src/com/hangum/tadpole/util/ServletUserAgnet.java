@@ -38,6 +38,7 @@ public class ServletUserAgnet {
         WINXP,
         WINVISTA,
         WIN7,
+        WIN8,
         LINUX,
         IOS,
         ANDROID,
@@ -105,6 +106,8 @@ public class ServletUserAgnet {
             return OS_TYPE.WINVISTA;
         } else if (userAgent.contains("Windows NT 6.1")) {
             return OS_TYPE.WIN7;
+        } else if (userAgent.contains("Windows NT 6.2")) {
+            return OS_TYPE.WIN8;
         } else if (userAgent.contains("Windows NT")) {
             return OS_TYPE.WINNT;
         } else if (userAgent.contains("Linux")) {
