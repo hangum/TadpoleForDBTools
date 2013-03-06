@@ -19,9 +19,9 @@ package com.hangum.tadpole.preference.define;
 public class SystemDefine {
 	
 	public static final String NAME = "Tadpole for DB Tools";
-	public static final String MAJOR_VERSION = "0.0.8";
-	public static final String SUB_VERSION = "12";	
-	public static final String RELEASE_DATE = "2013.03.1";
+	public static final String MAJOR_VERSION = "1.0.0";
+	public static final String SUB_VERSION = "Beta";	
+	public static final String RELEASE_DATE = "2013.03.7";
 	public static final String INFORMATION = "https://github.com/hangum/TadpoleForDBTools";
 	
 	public static final String ADMIN_EMAIL = "adi.tadpole@gmail.com";
