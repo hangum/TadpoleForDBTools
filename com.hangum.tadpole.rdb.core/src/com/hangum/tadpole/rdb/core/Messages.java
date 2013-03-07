@@ -80,7 +80,6 @@ public class Messages extends NLS {
 	public static String GenerateSQLSelectAction_8;
 	public static String DBLoginDialog_btnCheckButton_text;
 	public static String DBLoginDialog_lblNewLabel_1_text;
-	public static String DBLoginDialog_lblNewLabel_2_text;
 	public static String DBLoginDialog_textPassword_text;
 	public static String MainEditor_0;
 	public static String MainEditor_1;
