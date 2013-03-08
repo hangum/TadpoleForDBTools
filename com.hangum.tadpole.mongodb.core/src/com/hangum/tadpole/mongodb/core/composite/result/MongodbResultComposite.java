@@ -1024,13 +1024,13 @@ public class MongodbResultComposite extends Composite {
 		try {
 			// reset column 
 			for(int i=0; i<columnName.length; i++) {
-				final TreeViewerColumn tableColumn = new TreeViewerColumn(treeViewerMongo, SWT.LEFT);
-				tableColumn.getColumn().setText( columnName[i] );
-				tableColumn.getColumn().setWidth( columnSize[i] );
-				tableColumn.getColumn().setResizable(true);
-				tableColumn.getColumn().setMoveable(false);
+				final TreeViewerColumn treeColumn = new TreeViewerColumn(treeViewerMongo, SWT.LEFT);
+				treeColumn.getColumn().setText( columnName[i] );
+				treeColumn.getColumn().setWidth( columnSize[i] );
+				treeColumn.getColumn().setResizable(true);
+				treeColumn.getColumn().setMoveable(false);
 				if(isUserAction) {
-					if(i == 1) tableColumn.setEditingSupport(new TreeViewerEditingSupport(userDB, collectionName, treeViewerMongo));
+					if(i == 1) treeColumn.setEditingSupport(new TreeViewerEditingSupport(userDB, collectionName, treeViewerMongo));
 				}
 			}	// end for
 			

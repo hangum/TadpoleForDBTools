@@ -12,7 +12,6 @@ package com.hangum.tadpole.util.tables;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -71,15 +70,8 @@ public class TableUtil {
 		for (int i = 0; i < columns.length; i++) {			
 			columns[i].pack();
 			
-			
-			// 10의 숫자는 경험치이고 컬럼이 적었을 경우 좀더 편하게 보이는듯합니다. 
+			// 10의 숫자는 경험치이고 컬럼이 적었을 경우 좀더 편하게 보이는듯합니다.
 			layoutColumnLayout.addColumnData(new ColumnPixelData(columns[i].getWidth() + 10));
-			
-//			// column이 2개 이하일 경우 자신의 size만큼 표시해준다
-//			if(columns.length >= 3) {
-//				if(columns[i].getWidth() < 50) columns[i].setWidth(50);
-//				else if(columns[i].getWidth() >=  300) columns[i].setWidth(300);
-//			}
 		}
 
 	}

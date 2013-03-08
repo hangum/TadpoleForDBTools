@@ -70,10 +70,6 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				final TableColumn tc = tv.getColumn();
 				tc.setText( mapColumns.get(i) );
 				
-//				int aligment = SQLTypeUtils.isNumberType(mapColumnType.get(i))?SWT.RIGHT:SWT.LEFT;
-////				logger.debug("[column name]" + mapColumns.get(i) + "\t [type]" + mapColumnType.get(i) + " [aligment] " + (SQLTypeUtils.isNumberType(mapColumnType.get(i))?"RIGHT":"LEFT"));
-//				tc.setAlignment(aligment);
-				
 				tc.setResizable(true);
 				tc.setMoveable(true);
 				
@@ -92,39 +88,6 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 						tableViewer.refresh();
 					}
 				});
-				
-//				tableColumn.setLabelProvider(new StyledCellLabelProvider() {
-//					@Override
-//					public void update(ViewerCell cell) {
-//						String search = searchText.getText();
-//						Person person = (Person) cell.getElement();
-//						String cellText = person.getFirstName();
-//						cell.setText(cellText);
-//						if (search != null && search.length() > 0) {
-//							int intRangesCorrectSize[] = SearchUtil
-//									.getSearchTermOccurrences(search, cellText);
-//							List<StyleRange> styleRange = new ArrayList<StyleRange>();
-//							for (int i = 0; i < intRangesCorrectSize.length / 2; i++) {
-//								int start = intRangesCorrectSize[i];
-//								int length = intRangesCorrectSize[++i];
-//								StyleRange myStyledRange = new StyleRange(start,
-//										length, null, colorYellow);
-//
-//								styleRange.add(myStyledRange);
-//							}
-//							cell.setStyleRanges(styleRange
-//									.toArray(new StyleRange[styleRange.size()]));
-//						} else {
-//							cell.setStyleRanges(null);
-//						}
-//
-//						super.update(cell);
-//
-//					}
-//				});
-				
-				
-//				tableColumn.setEditingSupport(new TextEditingSupport(i, tableViewer));
 				
 			}	// end for
 			
