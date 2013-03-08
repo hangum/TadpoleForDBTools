@@ -118,84 +118,11 @@ function initEmbeddedEditor(){
 		
 		var annotationFactory = new mEditorFeatures.AnnotationFactory();		
 		var keyBindingFactory = function(editor, keyModeStack, undoStack, contentAssist) {
-//			
-//			// Create keybindings for generic editing
-//			var genericBindings = new mEditorFeatures.TextActions(editor, undoStack);
-//			keyModeStack.push(genericBindings);
-//			
-//			// create keybindings for source editing
-//			var codeBindings = new mEditorFeatures.SourceCodeActions(editor, undoStack, contentAssist);
-//			keyModeStack.push(codeBindings);
-//			
-//			// save(ctrl + s)
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(83, true), "save");
-//			editor.getTextView().setAction("save", function(){
-//				editorService.saveS(editor);
-//				return true;
-//			});
-//			
-			// getEditorData
-			// f5
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(116), "getEditorData");
-			
-			// ctrl + enter
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(13, true), "getEditorData");
-//			editor.getTextView().setAction("getEditorData", function(){
-//				return editorService.getEditorData(editor);
-//			});
-			
-//			// execute plan(ctrl + e)
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(69, true), "executePlan");
-//			editor.getTextView().setAction("executePlan", function(){
-//				editorService.executePlan(editor);
-//				return true;
-//			});
-//			
-//			// 쿼리 정렬 (ctrl + shift + f)
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(70, true, true), "executeFormat");
-//			editor.getTextView().setAction("executeFormat", function(){
-//				editorService.executeFormat(editor);
-//				return true;
-//			});
-//			
-//			// 히스토리페이지(ctrl + h)
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(72, true), "moveHistoryPage");
-//			editor.getTextView().setAction("moveHistoryPage", function(){
-//				editorService.moveHistoryPage(editor);
-//				return true;
-//			});
-//			
-//			// to low case(ctrl + shift + y)
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(89, true, true), "lowCaseText");
-//			editor.getTextView().setAction("lowCaseText", function(){
-//				editorService.lowCaseText(editor);
-//				return true;
-//			});
-//			
-//			// to upper case(ctrl + shift + x)
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(88, true, true), "upperCaseText");
-//			editor.getTextView().setAction("upperCaseText", function(){
-//				editorService.upperCaseText(editor);
-//				return true;
-//			});
-//			
-//			// 에디터 도움말(ctrl + shift + l)
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(76, true, true), "helpPopup");
-//			editor.getTextView().setAction("helpPopup", function(){
-//				editorService.helpPopup(editor);
-//				return true;
-//			});
-//			
-//			// 화면 모두 clear(f7)
-//			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(118), "allClearText");
-//			editor.getTextView().setAction("allClearText", function(){
-//				editorService.allClearText(editor);
-//				return true;
-//			});
-			
+			// empty key binding
 		};
 			
 		var statusReporter = function(message, isError) {
+			// empty status report
 		};
 		
 		editor = new mEditor.Editor({
@@ -268,8 +195,7 @@ function installWorkbenchHooks() {
 			syntaxHighlighter.highlight(varExt, editor);
 			
 			editor.highlightAnnotations();
-			
-			editor.setTextFocus();
+//			editor.setTextFocus();
 		} catch(err) {
 			console.log(err);
 		}
