@@ -59,6 +59,7 @@ import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.ResourceManager;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.swt.custom.SashForm;
 
 /**
  * Login dialog
@@ -97,7 +98,7 @@ public class DBLoginDialog extends Dialog {
 
 	public DBLoginDialog(Shell paShell, String selGroupName) {
 		super(paShell);
-		
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		this.selGroupName = selGroupName;
 	}
 
@@ -120,9 +121,17 @@ public class DBLoginDialog extends Dialog {
 		gridLayout.horizontalSpacing = 3;
 		gridLayout.marginHeight = 3;
 		gridLayout.marginWidth = 3;
+		
+		SashForm sashFormContainer = new SashForm(container, SWT.VERTICAL);
+		sashFormContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite compositeHead = new Composite(container, SWT.NONE);
-		compositeHead.setLayout(new GridLayout(2, false));
+		Composite compositeHead = new Composite(sashFormContainer, SWT.NONE);
+		GridLayout gl_compositeHead = new GridLayout(2, false);
+		gl_compositeHead.verticalSpacing = 3;
+		gl_compositeHead.horizontalSpacing = 3;
+		gl_compositeHead.marginHeight = 3;
+		gl_compositeHead.marginWidth = 3;
+		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
@@ -147,11 +156,16 @@ public class DBLoginDialog extends Dialog {
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
 		}
 		comboDBList.select(1);
-
+				
 		// combo에서 선택된 디비의 콤포짖
-		compositeBody = new Composite(container, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(1, false));
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		compositeBody = new Composite(compositeHead, SWT.NONE);
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 		
 		// db groupData 
 		try {
@@ -163,7 +177,8 @@ public class DBLoginDialog extends Dialog {
 		createDBWidget(null);
 
 		// history .....................................
-		createHistory(container);
+		createHistory(sashFormContainer);
+		sashFormContainer.setWeights(new int[] {73, 27});
 
 		return container;
 	}
@@ -174,10 +189,8 @@ public class DBLoginDialog extends Dialog {
 	 */
 	private void initDBWidget(UserDBDAO userDB) {
 		if (loginComposite != null)loginComposite.dispose();
-//		grpLoginHistory.dispose();
 
 		createDBWidget(userDB);
-//		createHistory(container);
 		compositeBody.layout();
 		container.layout();
 	}
@@ -216,12 +229,12 @@ public class DBLoginDialog extends Dialog {
 		grpLoginHistory.setText(Messages.DBLoginDialog_grpHistory_text);
 		grpLoginHistory.setLayout(new GridLayout(1, false));
 		
-		Composite composite = new Composite(grpLoginHistory, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		TreeColumnLayout tcl_composite = new TreeColumnLayout();
-		composite.setLayout(tcl_composite);
+		Composite compositeHistory = new Composite(grpLoginHistory, SWT.NONE);
+		compositeHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		TreeColumnLayout tcl_compositeHistory = new TreeColumnLayout();
+		compositeHistory.setLayout(tcl_compositeHistory);
 		
-		treeViewerLoginData = new TreeViewer(composite, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		treeViewerLoginData = new TreeViewer(compositeHistory, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		treeViewerLoginData.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				// 선택이 될때마다 로그인창의 화면에 정보를 출력합니다.
@@ -240,22 +253,22 @@ public class DBLoginDialog extends Dialog {
 		
 		TreeViewerColumn tvcGroup = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
 		TreeColumn trclmnGroupName = tvcGroup.getColumn();
-		tcl_composite.setColumnData(trclmnGroupName, new ColumnPixelData(106, true, true));
+		tcl_compositeHistory.setColumnData(trclmnGroupName, new ColumnPixelData(106, true, true));
 		trclmnGroupName.setText(Messages.DBLoginDialog_trclmnGroupName_text);
 		
 		TreeViewerColumn tvcDisplayName = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
 		TreeColumn trclmnDisplayName = tvcDisplayName.getColumn();
-		tcl_composite.setColumnData(trclmnDisplayName, new ColumnPixelData(111, true, true));
+		tcl_compositeHistory.setColumnData(trclmnDisplayName, new ColumnPixelData(111, true, true));
 		trclmnDisplayName.setText(Messages.DBLoginDialog_trclmnDisplayName_text);
 		
 		TreeViewerColumn tvcURL = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
 		TreeColumn trclmnURL = tvcURL.getColumn();
-		tcl_composite.setColumnData(trclmnURL, new ColumnPixelData(240, true, true));
+		tcl_compositeHistory.setColumnData(trclmnURL, new ColumnPixelData(240, true, true));
 		trclmnURL.setText(Messages.DBLoginDialog_trclmnNewColumn_text);
 		
 		TreeViewerColumn tvcUser = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
 		TreeColumn trclmnUSer = tvcUser.getColumn();
-		tcl_composite.setColumnData(trclmnUSer, new ColumnPixelData(100, true, true));
+		tcl_compositeHistory.setColumnData(trclmnUSer, new ColumnPixelData(100, true, true));
 		trclmnUSer.setText(Messages.DBLoginDialog_37);
 		
 		treeViewerLoginData.setContentProvider(new LoginContentProvider());
@@ -388,7 +401,7 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 640);
+		return new Point(500, 670);
 	}
 }
 
