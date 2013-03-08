@@ -266,8 +266,8 @@ public class MongoDBQuery {
 	 * @param dbObject
 	 * @throws Exception
 	 */
-	public static void insertDocument(UserDBDAO userDB, String colName, DBObject[] dbObject) throws Exception {
-		if(dbObject.length == 0) return;
+	public static void insertDocument(UserDBDAO userDB, String colName, List<DBObject> dbObject) throws Exception {
+		if(dbObject.size() == 0) return;
 		
 		DBCollection collection = findCollection(userDB, colName);		
 		WriteResult wr = collection.insert(dbObject);
@@ -277,7 +277,7 @@ public class MongoDBQuery {
 				logger.debug( "[wr error]" + wr!=null?wr.getError():"" );		
 				logger.debug("[n]" + wr!=null?wr.getN():"" );
 			} catch(Exception e) {
-				logger.error("저장중에", e);
+				logger.error("insert document", e);
 			}
 		}
 	}

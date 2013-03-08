@@ -312,8 +312,7 @@ public class MongoDBTableEditor extends EditorPart {
 		for (int i=0; i<moInput.getShowTableColumns().size(); i++) {
 			CollectionFieldDAO tcDAO = (CollectionFieldDAO)moInput.getShowTableColumns().get(i);
 			columnInfo.put(tcDAO.getField(), tcDAO);
-		
-//			if(!tcDAO.getType().equals("com.mongodb.BasicDBObject")) 
+
 			strColumns += tcDAO.getField() + ", "; //$NON-NLS-1$
 		}
 		strColumns = StringUtils.chompLast(strColumns, ", "); //$NON-NLS-1$

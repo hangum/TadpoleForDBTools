@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.importdb.core.dialog.importdb;
+package com.hangum.tadpole.importdb.core.dialog.importdb.utils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,15 +26,15 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * query util
+ * sql query util
  * 
  * @author hangum
  */
-public class QueryUtil {
+public class SQLQueryUtil {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(QueryUtil.class);
+	private static final Logger logger = Logger.getLogger(SQLQueryUtil.class);
 	
 	private int DATA_COUNT = 1000;
 	
@@ -48,11 +48,12 @@ public class QueryUtil {
 	/** 데이터의 데이터 타입 */
 	private HashMap<Integer, String> tableDataTypeList = new HashMap<Integer, String>();
 	
+	/** 처음한번은 반듯이 동작해야 하므로 */
 	private boolean isFirst = true;
-	private int startPoint = -1;
-	private int nextPoint = 0;
+	private int startPoint = 0;
+	private int nextPoint = -1;
 	
-	public QueryUtil(UserDBDAO userDB, String requestQuery) {
+	public SQLQueryUtil(UserDBDAO userDB, String requestQuery) {
 		this.userDB = userDB;
 		this.requestQuery = requestQuery;
 	}

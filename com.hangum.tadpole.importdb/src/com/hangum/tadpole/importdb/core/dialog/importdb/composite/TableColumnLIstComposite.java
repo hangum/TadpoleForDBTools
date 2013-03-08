@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.Activator;
@@ -35,6 +36,7 @@ import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.ImportColumnEditingSupport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.RenameColumnEditingSupport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
@@ -154,13 +156,20 @@ public class TableColumnLIstComposite extends Composite {
 		}
 		listTables.clear();
 		this.userDB = userDB;
-		
+
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-			for (TableDAO tableDAO : showTables) {
-				listTables.add( new ModTableDAO(tableDAO.getName()) );
-			}			
+			if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+				List<String> listCollection = MongoDBQuery.listCollection(userDB);
+				for (String strColl : listCollection) {
+					listTables.add( new ModTableDAO(strColl) );
+				}
+			} else {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+				for (TableDAO tableDAO : showTables) {
+					listTables.add( new ModTableDAO(tableDAO.getName()) );
+				}			
+			}
 		} catch (Exception e) {
 			logger.error("DB Connecting... ", e); //$NON-NLS-1$
 			MessageDialog.openError(null, "Data Import", e.getMessage()); //$NON-NLS-1$
