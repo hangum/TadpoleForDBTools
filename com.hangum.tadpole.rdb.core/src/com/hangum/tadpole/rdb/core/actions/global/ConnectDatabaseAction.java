@@ -57,7 +57,7 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 	}
 	
 	public void runConnectionDialog(IStructuredSelection sel) {
-		String selGroupName = null;
+		String selGroupName = "";
 		
 		if(sel != null) {
 			if(sel.getFirstElement() instanceof ManagerListDTO) {
