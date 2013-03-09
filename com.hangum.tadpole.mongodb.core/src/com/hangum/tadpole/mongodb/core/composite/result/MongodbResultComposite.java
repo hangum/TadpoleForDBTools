@@ -100,9 +100,9 @@ public class MongodbResultComposite extends Composite {
 	private static Logger logger = Logger.getLogger(MongodbResultComposite.class);
 	
 	/** 결과 텝창의 정보를 상수로정의 */
-	private static final int TAB_POSITION_TREE_VIEW = 1;
-	private static final int TAB_POSITION_TABLE_VIEW = 2;
-	private static final int TAB_POSITION_MESSAGE_VIEW = 3;
+	private static final int TAB_POSITION_TREE_VIEW = 0;
+	private static final int TAB_POSITION_TABLE_VIEW = 1;
+	private static final int TAB_POSITION_MESSAGE_VIEW = 2;
 	
 	/** preference default max count */
 	private int defaultMaxCount = GetPreferenceGeneral.getMongoDefaultMaxCount();
