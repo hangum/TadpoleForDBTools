@@ -11,6 +11,7 @@
 package com.hangum.tadpole.importdb.core.dialog.importdb.mongodb;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.Messages;
-import com.hangum.tadpole.importdb.core.dialog.importdb.QueryUtil;
+import com.hangum.tadpole.importdb.core.dialog.importdb.utils.SQLQueryUtil;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -35,23 +36,21 @@ import com.mongodb.DBObject;
  * @author hangum
  *
  */
-public class QueryToMongoDBImport {
+public class QueryToMongoDBImport extends DBImport {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(QueryToMongoDBImport.class);
 	
-	private UserDBDAO importUserDB;
 	private String colName;
 	private String userQuery; 
-	private UserDBDAO exportUserDB;
 	private boolean isExistOnDelete;
 	
 	public QueryToMongoDBImport(UserDBDAO importUserDB, String colName,  String userQuery, UserDBDAO exportUserDB, boolean isExistOnDelete) {
-		this.importUserDB = importUserDB;
+		super(importUserDB, exportUserDB);
+		
 		this.colName = colName;
 		this.userQuery = userQuery;
-		this.exportUserDB = exportUserDB;
 		this.isExistOnDelete = isExistOnDelete;
 	}
 	
@@ -102,14 +101,14 @@ public class QueryToMongoDBImport {
 	 * @throws Exception
 	 */
 	private void insertMongoDB() throws Exception {
-		QueryUtil qu = new QueryUtil(exportUserDB, userQuery);
+		SQLQueryUtil qu = new SQLQueryUtil(exportUserDB, userQuery);
 		while(qu.hasNext()) {
 			qu.nextQuery();
 			HashMap<Integer, String> mapCNameToIndex = qu.getMapColumns();
 			List<HashMap<Integer, Object>> listTableData = qu.getTableDataList();
 			
 			// row 단위
-			DBObject[] arrayDBObject = new DBObject[listTableData.size()];
+			List<DBObject> listDBObject = new ArrayList<DBObject>();
 			for (int i=0; i<listTableData.size(); i++) {
 				HashMap<Integer, Object> resultMap = listTableData.get(i);					
 				
@@ -125,10 +124,10 @@ public class QueryToMongoDBImport {
 					}						
 				}
 				
-				arrayDBObject[i] = insertObject;
+				listDBObject.add(insertObject);
 			}	// end for
 		
-			MongoDBQuery.insertDocument(importUserDB, colName, arrayDBObject);
+			MongoDBQuery.insertDocument(importUserDB, colName, listDBObject);
 		}
 	}
 }

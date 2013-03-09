@@ -24,7 +24,6 @@ import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.Mongo;
 import com.mongodb.MongoOptions;
-import com.mongodb.ReadPreference;
 import com.mongodb.ServerAddress;
 
 /**

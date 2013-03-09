@@ -11,6 +11,7 @@
 package com.hangum.tadpole.importdb.core.dialog.importdb.mongodb;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,8 +24,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.Activator;
-import com.hangum.tadpole.importdb.core.dialog.importdb.QueryUtil;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
+import com.hangum.tadpole.importdb.core.dialog.importdb.utils.SQLQueryUtil;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -35,20 +36,17 @@ import com.mongodb.DBObject;
  * @author hangum
  *
  */
-public class RDBTableToMongoDBImport {
+public class RDBTableToMongoDBImport extends DBImport {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(RDBTableToMongoDBImport.class);
 	
-	private UserDBDAO importUserDB;
 	private List<ModTableDAO> listModeTable; 
-	private UserDBDAO exportUserDB;
 	
 	public RDBTableToMongoDBImport(UserDBDAO importUserDB, List<ModTableDAO> listModeTable, UserDBDAO exportUserDB) {
-		this.importUserDB = importUserDB;
+		super(importUserDB, exportUserDB);
 		this.listModeTable = listModeTable;
-		this.exportUserDB = exportUserDB;
 	}
 
 	/**
@@ -104,14 +102,14 @@ public class RDBTableToMongoDBImport {
 		String workTable = modTableDAO.getName();		
 		if(logger.isDebugEnabled()) logger.debug("[work table]" + workTable);			
 		
-		QueryUtil qu = new QueryUtil(userDBDAO, "SELECT * FROM " + workTable);
+		SQLQueryUtil qu = new SQLQueryUtil(userDBDAO, "SELECT * FROM " + workTable);
 		while(qu.hasNext()) {
 			qu.nextQuery();
 			HashMap<Integer, String> mapCNameToIndex = qu.getMapColumns();
 			List<HashMap<Integer, Object>> listTableData = qu.getTableDataList();
 			
 			// row 단위
-			DBObject[] arrayDBObject = new DBObject[listTableData.size()];
+			List<DBObject> listDBObject = new ArrayList<DBObject>();
 			for (int i=0; i<listTableData.size(); i++) {
 				HashMap<Integer, Object> resultMap = listTableData.get(i);					
 				
@@ -127,11 +125,11 @@ public class RDBTableToMongoDBImport {
 					}						
 				}
 				
-				arrayDBObject[i] = insertObject;
+				listDBObject.add(insertObject);
 			}	// end for
-			logger.debug("[work table]" + strNewColName + " size is " + arrayDBObject.length);
+			logger.debug("[work table]" + strNewColName + " size is " + listDBObject.size());
 		
-			MongoDBQuery.insertDocument(importUserDB, strNewColName, arrayDBObject);
+			MongoDBQuery.insertDocument(importUserDB, strNewColName, listDBObject);
 		}
 	}
 }

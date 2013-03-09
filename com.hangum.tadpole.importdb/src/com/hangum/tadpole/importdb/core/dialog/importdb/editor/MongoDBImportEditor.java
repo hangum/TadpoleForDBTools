@@ -2,7 +2,6 @@ package com.hangum.tadpole.importdb.core.dialog.importdb.editor;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -35,6 +34,8 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.TableColumnLIstComposite;
+import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.DBImport;
+import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.MongoDBCollectionToMongodBImport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.QueryToMongoDBImport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.RDBTableToMongoDBImport;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
@@ -227,7 +228,8 @@ public class MongoDBImportEditor extends EditorPart {
 			int visibleItemCount = 0;
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : userDBS) {
-				if (DBDefine.getDBDefine(userDBDAO.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+				// 임포트 하려는 자신은 제외 
+				if(userDB.getSeq() != userDBDAO.getSeq()) {
 					comboDBList.add(userDBDAO.getDisplay_name());
 					comboDBList.setData(userDBDAO.getDisplay_name(), userDBDAO);
 					visibleItemCount++;
@@ -263,15 +265,27 @@ public class MongoDBImportEditor extends EditorPart {
 		final UserDBDAO exportDBDAO = (UserDBDAO)comboDBList.getData(comboDBList.getText());
 		Job job = null;		
 		if(MessageDialog.openConfirm(null, "Confirm", Messages.MongoDBImportEditor_1)) {	 //$NON-NLS-1$
-			if(tabFolderQuery.getSelectionIndex() == 0) {				
-					RDBTableToMongoDBImport importData = new RDBTableToMongoDBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
-					job = importData.workTableImport();
-					if(job == null) return;
+			if(tabFolderQuery.getSelectionIndex() == 0) {
 				
-			} else if(tabFolderQuery.getSelectionIndex() == 1) {			
+				DBImport dbImport = null;
+				if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+					dbImport = new MongoDBCollectionToMongodBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
+				} else {
+					dbImport = new RDBTableToMongoDBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
+				}
+				job = dbImport.workTableImport();
+				if(job == null) return;
+				
+				
+			} else if(tabFolderQuery.getSelectionIndex() == 1) {	
+				if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+					MessageDialog.openInformation(null, "Confirm", "Not support MongoDB.");
+					return;
+				} else {
 					QueryToMongoDBImport importData = new QueryToMongoDBImport(userDB, textCollectionName.getText(), textQuery.getText(), exportDBDAO, btnExistOnDelete.getSelection());
 					job = importData.workTableImport();
 					if(job == null) return;
+				}
 			}
 		} else return;
 		
@@ -298,8 +312,6 @@ public class MongoDBImportEditor extends EditorPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

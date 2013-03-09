@@ -68,10 +68,13 @@ public class MongoDBQuery {
 		options.connectionsPerHost = 20;		
 		Mongo mongo = new Mongo(userDB.getHost(), Integer.parseInt(userDB.getPort()));
 		DB db = mongo.getDB(userDB.getDb());
-//		Set<String> listColNames = db.getCollectionNames();
-//		for (String string : listColNames) {
-//			System.out.println("[collection name]" + string);
-//		}
+		
+		// 
+		// 신규는 다음과 같은 작업을 해주지 않으면 디비가 생성되지 않습니다.
+		// 
+		Set<String> listColNames = db.getCollectionNames();
+		for (String stringColName : listColNames) {}
+		//
 	}
 	
 	/**
@@ -263,8 +266,8 @@ public class MongoDBQuery {
 	 * @param dbObject
 	 * @throws Exception
 	 */
-	public static void insertDocument(UserDBDAO userDB, String colName, DBObject[] dbObject) throws Exception {
-		if(dbObject.length == 0) return;
+	public static void insertDocument(UserDBDAO userDB, String colName, List<DBObject> dbObject) throws Exception {
+		if(dbObject.size() == 0) return;
 		
 		DBCollection collection = findCollection(userDB, colName);		
 		WriteResult wr = collection.insert(dbObject);
@@ -274,7 +277,7 @@ public class MongoDBQuery {
 				logger.debug( "[wr error]" + wr!=null?wr.getError():"" );		
 				logger.debug("[n]" + wr!=null?wr.getN():"" );
 			} catch(Exception e) {
-				logger.error("저장중에", e);
+				logger.error("insert document", e);
 			}
 		}
 	}
