@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.hangum.tadpole.feature.site"
-      label="tadpole feature Site"
-      version="1.0.0.qualifier"
-      provider-name="HANGUM">
+      label="Tadpole for DB Tools feature Site"
+      version="2.0.0.qualifier"
+      provider-name="hangum.com">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]

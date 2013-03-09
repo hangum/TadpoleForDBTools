@@ -5,6 +5,7 @@
    <plugins>
       <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
+      <plugin id="com.hangum.tadpole.commons"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.sql"/>
       <plugin id="com.hangum.tadpole.editor.core"/>
@@ -15,12 +16,11 @@
       <plugin id="com.hangum.tadpole.mongodb.erd.core"/>
       <plugin id="com.hangum.tadpole.mongodb.model"/>
       <plugin id="com.hangum.tadpole.preference"/>
-      <plugin id="com.hangum.tadpole.rap.commons"/>
       <plugin id="com.hangum.tadpole.rdb.core"/>
       <plugin id="com.hangum.tadpole.rdb.core.ext"/>
       <plugin id="com.hangum.tadpole.rdb.erd.core"/>
       <plugin id="com.hangum.tadpole.rdb.model"/>
-      <plugin id="com.hangum.tadpole.sql.parser2"/>
+      <plugin id="com.hangum.tadpole.sql.parser"/>
       <plugin id="com.ibm.icu.base"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>
@@ -65,6 +65,7 @@
    <configurations>
       <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.editor.core" autoStart="true" startLevel="0" />
@@ -75,12 +76,11 @@
       <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.rap.commons" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core.ext" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.model" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.sql.parser2" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.sql.parser" autoStart="true" startLevel="0" />
       <plugin id="com.ibm.icu.base" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.fileupload" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.io" autoStart="true" startLevel="0" />
