@@ -285,21 +285,21 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		} else {		
 			dbUrl = String.format(
 					DBDefine.MSSQL_DEFAULT.getDB_URL_INFO(), 
-					textHost.getText(), textPort.getText(), textDatabase.getText());
+					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
 		}
 		if(logger.isDebugEnabled()) logger.debug("[db url]" + dbUrl);
 
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.MSSQL_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDb(textDatabase.getText());
+		userDB.setDb(textDatabase.getText().trim());
 		userDB.setGroup_name(comboGroup.getText().trim());
-		userDB.setDisplay_name(textDisplayName.getText());
+		userDB.setDisplay_name(textDisplayName.getText().trim());
 		userDB.setOperation_type( DBOperationType.getNameToType(comboOperationType.getText()).toString() );
-		userDB.setHost(textHost.getText());
-		userDB.setPasswd(textPassword.getText());
-		userDB.setPort(textPort.getText());
-		userDB.setUsers(textUser.getText());
+		userDB.setHost(textHost.getText().trim());
+		userDB.setPasswd(textPassword.getText().trim());
+		userDB.setPort(textPort.getText().trim());
+		userDB.setUsers(textUser.getText().trim());
 		
 		// 기존 데이터 업데이트
 		if(oldUserDB != null) {

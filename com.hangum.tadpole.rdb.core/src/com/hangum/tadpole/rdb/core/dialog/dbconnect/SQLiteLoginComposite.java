@@ -21,7 +21,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -175,10 +174,10 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		userDB = new UserDBDAO();
 		userDB.setTypes(DBDefine.SQLite_DEFAULT.getDBToString());
-		userDB.setUrl(String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), textFile.getText()));
-		userDB.setDb(textFile.getText());
+		userDB.setUrl(String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), textFile.getText().trim()));
+		userDB.setDb(textFile.getText().trim());
 		userDB.setGroup_name(comboGroup.getText().trim());
-		userDB.setDisplay_name(textDisplayName.getText());
+		userDB.setDisplay_name(textDisplayName.getText().trim());
 		userDB.setOperation_type( DBOperationType.getNameToType(comboOperationType.getText()).toString() );
 		userDB.setPasswd(""); //$NON-NLS-1$
 		userDB.setUsers(""); //$NON-NLS-1$
