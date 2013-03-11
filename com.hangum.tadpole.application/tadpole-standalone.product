@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
+<product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" version="2.0.0" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -115,7 +115,7 @@
    </plugins>
 
    <features>
-      <feature id="com.hangum.tadpole.feature" version="1.0.0.qualifier"/>
+      <feature id="com.hangum.tadpole.feature" version="2.0.0.qualifier"/>
    </features>
 
    <configurations>
@@ -124,11 +124,13 @@
       <plugin id="com.hangum.tadpole.commons" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.sql.test" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.editor.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.importdb" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.core.test" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
@@ -136,6 +138,7 @@
       <plugin id="com.hangum.tadpole.rdb.core.ext" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.model" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.secret.util" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.sql.parser" autoStart="true" startLevel="0" />
       <plugin id="com.ibm.icu.base" autoStart="true" startLevel="0" />
       <plugin id="javax.servlet" autoStart="true" startLevel="0" />
@@ -160,6 +163,7 @@
       <plugin id="org.eclipse.equinox.http.jetty" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.http.registry" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.http.servlet" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.launcher" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.preferences" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.registry" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.help" autoStart="true" startLevel="0" />
@@ -178,6 +182,8 @@
       <plugin id="org.eclipse.rap.gef" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.jface" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.jface.databinding" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.junit" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.junit.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.rwt" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.rwt.osgi" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.rwt.supplemental.filedialog" autoStart="true" startLevel="0" />
@@ -185,6 +191,7 @@
       <plugin id="org.eclipse.rap.ui" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.views" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.workbench" autoStart="true" startLevel="0" />
+      <plugin id="org.junit" autoStart="true" startLevel="0" />
    </configurations>
 
 </product>
