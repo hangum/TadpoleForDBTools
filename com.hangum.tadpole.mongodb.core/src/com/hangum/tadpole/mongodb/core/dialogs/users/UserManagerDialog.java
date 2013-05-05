@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.dialogs.users;
 
@@ -64,6 +64,7 @@ public class UserManagerDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(UserManagerDialog.class);
 	
 	private static int DELETE_ID = 999;
+	private static int APPEND_USER_ID = 998;
 	
 	private UserDBDAO userDB;
 	private Text textID;
@@ -187,43 +188,69 @@ public class UserManagerDialog extends Dialog {
 		
 	}
 	
-	@Override
-	protected void okPressed() {
-		String id = textID.getText().trim();
-		String passwd = textPassword.getText().trim();
-		String passwd2 = textRePassword.getText().trim();
-		boolean isReadOnly = btnReadOnly.getSelection();
-		
-		if("".equals(id)) { //$NON-NLS-1$
-			MessageDialog.openError(null, "Error", Messages.UserManagerDialog_11); //$NON-NLS-1$
-			textID.setFocus();
-			return;
-		} else if("".equals(passwd)) { //$NON-NLS-1$
-			MessageDialog.openError(null, "Error", Messages.UserManagerDialog_14); //$NON-NLS-1$
-			textPassword.setFocus();
-			return;
-		} else if("".equals(passwd2)) { //$NON-NLS-1$
-			MessageDialog.openError(null, "Error", Messages.UserManagerDialog_17); //$NON-NLS-1$
-			textRePassword.setFocus();
-			return;
-		} else if(!passwd.equals(passwd2)) {
-			MessageDialog.openError(null, "Error", Messages.UserManagerDialog_19); //$NON-NLS-1$
-			textPassword.setFocus();
-			return;
-		}
-		
-		try {
-			MongoDBQuery.addUser(userDB, id, passwd2, isReadOnly);
-		} catch (Exception e) {
-			logger.error("mongodb add user", e); //$NON-NLS-1$
+	protected void buttonPressed(int buttonId) {
+		if(APPEND_USER_ID == buttonId) {
+			String id = textID.getText().trim();
+			String passwd = textPassword.getText().trim();
+			String passwd2 = textRePassword.getText().trim();
+			boolean isReadOnly = btnReadOnly.getSelection();
 			
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Add User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			if("".equals(id)) { //$NON-NLS-1$
+				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_11); //$NON-NLS-1$
+				textID.setFocus();
+				return;
+			} else if("".equals(passwd)) { //$NON-NLS-1$
+				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_14); //$NON-NLS-1$
+				textPassword.setFocus();
+				return;
+			} else if("".equals(passwd2)) { //$NON-NLS-1$
+				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_17); //$NON-NLS-1$
+				textRePassword.setFocus();
+				return;
+			} else if(!passwd.equals(passwd2)) {
+				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_19); //$NON-NLS-1$
+				textPassword.setFocus();
+				return;
+			}
+			
+			try {
+				MongoDBQuery.addUser(userDB, id, passwd2, isReadOnly);
+				
+				initTable();
+			} catch (Exception e) {
+				logger.error("mongodb add user", e); //$NON-NLS-1$
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "Add User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 
-			return;
+				return;
+			}
+		} else if(buttonId == DELETE_ID) {
+			IStructuredSelection is = (IStructuredSelection)tableViewerUser.getSelection();
+			Object selElement = is.getFirstElement();
+			
+			if(selElement instanceof UserDTO) {
+				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserManagerDialog_22)) { //$NON-NLS-1$
+					UserDTO user = (UserDTO)selElement;
+					try {
+						MongoDBQuery.deleteUser(userDB, user.getId());
+						
+						listUser.remove(user);
+						tableViewerUser.refresh();
+					} catch (Exception e1) {
+						logger.error("mongodb delete user", e1); //$NON-NLS-1$
+						
+						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(null, "Error", "Delete User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				}
+			} else {
+				MessageDialog.openError(null, "Confirm", "삭제 할 사용자를 선택하여 주세요.");
+			}
+		} else if(buttonId == IDialogConstants.CANCEL_ID) {
+			super.cancelPressed();
 		}
 		
-		super.okPressed();
 	}
 
 	/**
@@ -232,33 +259,9 @@ public class UserManagerDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button button = createButton(parent, DELETE_ID, Messages.UserManagerDialog_4, false);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection is = (IStructuredSelection)tableViewerUser.getSelection();
-				Object selElement = is.getFirstElement();
-				
-				if(selElement instanceof UserDTO) {
-					if(MessageDialog.openConfirm(null, "Confirm", Messages.UserManagerDialog_22)) { //$NON-NLS-1$
-						UserDTO user = (UserDTO)selElement;
-						try {
-							MongoDBQuery.deleteUser(userDB, user.getId());
-							
-							listUser.remove(user);
-							tableViewerUser.refresh();
-						} catch (Exception e1) {
-							logger.error("mongodb delete user", e1); //$NON-NLS-1$
-							
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, "Error", "Delete User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-					}
-				}
-			}
-		});
-		
-		createButton(parent, IDialogConstants.OK_ID, Messages.UserManagerDialog_6, true);
+		createButton(parent, DELETE_ID, Messages.UserManagerDialog_4, false);
+		createButton(parent, APPEND_USER_ID, "Add User", true);
+//		createButton(parent, IDialogConstants.OK_ID, Messages.UserManagerDialog_6, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.UserManagerDialog_7, false);
 	}
 

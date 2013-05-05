@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util;
 
@@ -15,8 +15,18 @@ import java.sql.ResultSetMetaData;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import kry.sql.format.SqlFormatRule;
+import kry.sql.util.StringUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import zigen.sql.parser.INode;
+import zigen.sql.parser.ISqlParser;
+import zigen.sql.parser.SqlParser;
+import zigen.sql.parser.ast.ASTRoot;
+import zigen.sql.parser.ast.ASTSelectStatement;
+import zigen.sql.parser.ast.ASTStatement;
 
 /**
  * <pre>
@@ -36,23 +46,110 @@ public class SQLUtil {
 	
 	/**
 	 * pattern statement 
+	 * 
+	 * <PRE>
+	 * 		CHECK는 MYSQL의 CHECK TABLE VIEW_TABLE_NAME; 명령으로 VIEW의 정보를 볼수 있습니다.
+	 * </PRE>
 	 */
-	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile("^SELECT.*|^SHOW.*|^DESCRIBE.*|^DESC.*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	private static final String PATTERN_STATEMENT = "^SELECT.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*";
+	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile(PATTERN_STATEMENT, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	
+	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
+	private static final String PATTERN_EXECUTE_UPDATE = "^INSERT.*|^UPDATE.*|^DELETET.*|^MERGE.*|^COMMIT.*|^ROLLBACK.*|^SAVEPOINT.*";
+	private static final String PATTERN_EXECUTE_CREATE = "^CREATE.*|^DECLARE.*";
+	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE + PATTERN_EXECUTE_UPDATE + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 	/**
-	 * 쿼리 실행시 prestatment로 실행 할 것인지, 아니면 execute나 executebatch로 실행할 것인지 검사합니다.
+	 * 쿼리의 패턴이 <code>PATTERN_STATEMENT</code>인지?
 	 * 
 	 * @param strSQL
 	 * @return
 	 */
-	public static boolean isStatment(String strSQL) {
+	public static boolean isStatement(String strSQL) {
+		boolean isStatement = false;
 		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
+			return true;
+		} else {
+			ASTStatement st = findStatement(parserSql(strSQL));
+			if(st instanceof ASTSelectStatement) {
+				isStatement = true;
+			}
+		}
+		
+		return isStatement;
+	}
+	
+	/**
+	 * 쿼리가 execute문인지 검사합니다.
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static boolean isNoStatement(String strSQL) {
+		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
 			return true;
 		}
 		
 		return false;
 	}
 	
+	/**
+	 * parser sql
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	public static INode parserSql(String sql) {
+		INode node = new ASTRoot();
+		ISqlParser parser = null;
+		
+		try {
+			parser = new SqlParser(sql, getSqlFormatRule());
+			parser.parse(node);
+		} catch(Exception e) {
+			logger.error("SQL Parser exeception", e);
+		} finally {
+			if(parser != null) parser = null;
+		}
+		
+		return node;
+	}
+	
+	/**
+	 * find statement
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public static ASTStatement findStatement(INode root) {
+		int size = root.getChildrenSize();
+		for (int i = 0; i < root.getChildrenSize(); i++) {
+			INode n = root.getChild(i);
+			if (n instanceof ASTStatement) {
+				return (ASTStatement) n;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * get user sql rule
+	 * @return
+	 */
+	private static SqlFormatRule getSqlFormatRule() {
+		SqlFormatRule rule = new SqlFormatRule();
+		rule.setRemoveEmptyLine(true);
+		int tabSize = 4;
+		boolean optDecode = true;
+		boolean optIn = false;
+
+		rule.setIndentString(StringUtil.padLeft("", tabSize, ' '));
+		rule.setDecodeSpecialFormat(!optDecode);
+		rule.setInSpecialFormat(optIn);
+		rule.setOutSqlSeparator(SqlFormatRule.SQL_SEPARATOR_SEMICOLON);
+		
+		return rule;
+	}
 	
 	/**
 	 * metadata를 바탕으로 결과를 컬럼 정보를 수집힌다.

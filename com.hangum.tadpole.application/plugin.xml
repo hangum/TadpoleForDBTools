@@ -25,11 +25,11 @@
             body="html/body.html"
             defaultEntrypointId="com.hangum.tadpole.browser.rap.Application"
             exitConfirmationClass="com.hangum.tadpole.application.exit.ExitConfirm"
-            favicon="icons/old_TadpoleForDBTools.ico"
+            favicon="icons/old_TadpoleDBHub.ico"
             id="com.hangum.tadpole.browser.rap.branding"
             servletName="db"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="Tadpole for DB Tools - 1.0.0">
+            title="Tadpole DB Hub - 1.0.0">
       </branding>
    </extension>
    <extension

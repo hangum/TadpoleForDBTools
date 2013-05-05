@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2013 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.ext.editors.javascript;
 
@@ -23,8 +23,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
-import org.eclipse.swt.browser.LocationEvent;
-import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.custom.CTabFolder;
@@ -45,8 +43,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
@@ -55,7 +55,6 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.editor.MongoDBShortcutHelpDialog;
-import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.util.FindTadpoleViewerOrEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -322,7 +321,6 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		if(this.javascriptDAO != null) {
 			setPartName(qei.getName());
 		}
-//		isFirstLoad = true;
 	}
 	
 	@Override
@@ -344,10 +342,19 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);
+					browserQueryEditor.evaluate("getEditor();");
 				} catch(Exception e) {
-					logger.error("set register browser function and content initialize", e);
+					e.printStackTrace();
 				}
+				
+				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
+				String strInitContent = StringUtils.replace(getInputJavaScriptContent(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
+				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n");
+				String callCommand = "setInitialContent(\"" + "mapreduce.js" + "\", \"" + strInitContent + "\" );";
+				
+				if(logger.isDebugEnabled()) logger.debug(callCommand);
+				
+				browserEvaluate(callCommand);
 			}
 			public void changed( ProgressEvent event ) {}
 		});

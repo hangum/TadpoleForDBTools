@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.composite.result;
 
@@ -53,8 +53,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -294,7 +295,7 @@ public class MongodbResultComposite extends Composite {
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFilter.setText(Messages.MongodbResultComposite_11);
 		
-		textFilter = new Text(compositeBodyTable, SWT.BORDER);
+		textFilter = new Text(compositeBodyTable, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -376,7 +377,7 @@ public class MongodbResultComposite extends Composite {
 				for (TableColumn tableColumn : tcs) {
 					sbExportData.append( tableColumn.getText()).append(","); //$NON-NLS-1$
 				}
-				sbExportData.append(Define.LINE_SEPARATOR); //$NON-NLS-1$
+				sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				
 				// column 데이터 추가 
 				for(int i=0; i<sourceDataList.size(); i++) {
@@ -384,7 +385,7 @@ public class MongodbResultComposite extends Composite {
 					for(int j=0; j<mapColumns.size(); j++) {
 						sbExportData.append(mapColumns.get(j)).append(","); //$NON-NLS-1$
 					}
-					sbExportData.append(Define.LINE_SEPARATOR); //$NON-NLS-1$
+					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_ResultSetExport.csv"); //$NON-NLS-1$
@@ -458,7 +459,7 @@ public class MongodbResultComposite extends Composite {
 				StringBuffer sbExportData = new StringBuffer();
 				
 				for(TadpoleMessageDAO dao : listMessage) {
-					sbExportData.append( dao.getStrMessage() ).append(Define.LINE_SEPARATOR); //$NON-NLS-1$
+					sbExportData.append( dao.getStrMessage() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_Message.txt"); //$NON-NLS-1$

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  Copyright (c) 2012 Cho Hyun Jong.
+  Copyright (c) 2013 hangum.
   All rights reserved. This program and the accompanying materials
-  are made available under the terms of the Eclipse Public License v1.0
+  are made available under the terms of the GNU Lesser Public License v2.1
   which accompanies this distribution, and is available at
-  http://www.eclipse.org/legal/epl-v10.html
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
   
   Contributors:
-      Cho Hyun Jong - initial API and implementation
+      hangum - initial API and implementation
 -->
-
 <!DOCTYPE sqlMap      
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
@@ -218,13 +217,13 @@
 	2) 저장 후 seq가져오는 용도로 사용
  -->
 <select id="isUserDB" resultClass="com.hangum.tadpole.dao.system.UserDBDAO" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
-	SELECT * FROM user_db 
+	SELECT * FROM user_db a
 	WHERE 
 		user_seq = #user_seq# and 
 		db = #db# and 
 		group_name = #group_name# and
-		display_name = #display_name#
-	ORDER BY display_name
+		display_name = #display_name# and
+		delYn = 'NO'
 </select>
 
 <!--  UserDB의 리스트 -->
@@ -237,8 +236,18 @@
 </select>
 
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
-	INSERT INTO user_db(seq, user_seq, operation_type, types, url, db, group_name, display_name, host, port, locale, passwd, users, ext1, ext2, ext3)
-	VALUES( (select max(seq) from user_db)+1 , #user_seq#, #operation_type#, #types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, #ext1#, #ext2#, #ext3#)
+	INSERT INTO user_db(seq, 
+	user_seq, operation_type, types, url, db, group_name, display_name, host, port, locale, passwd, users, 
+	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocmmit,
+	is_table_filter, table_filter_include, table_filter_exclude, 
+	ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10
+	)
+	VALUES( (select max(seq) from user_db)+1 , 
+	#user_seq#, #operation_type#, #types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
+	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocmmit#,
+	#is_table_filter#, #table_filter_include#, #table_filter_exclude#,
+	#ext1#, #ext2#, #ext3#, #ext4#, #ext5#, #ext6#, #ext7#, #ext8#, #ext9#, #ext10#
+	)
 </insert>
 
 <!--
@@ -284,7 +293,8 @@
 		WHERE user_seq = #user_seq# AND 
 			types = #types# AND 
 			db_seq = #db_seq# AND 
-			filename = #filename#
+			filename = #filename# AND
+			delYn = 'NO'
 	</selectKey>
 </insert>
 
@@ -395,4 +405,35 @@
 		name = #name#
 </update>
 
+<!-- 
+	=========================================================================================================
+	executed_sql_resource 정보를 설정합니다.
+	=========================================================================================================
+ -->
+<insert id="userExecuteSQLResourceInsert" parameterClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDAO">
+	INSERT INTO executed_sql_resource(seq, user_seq, db_seq, types, startDateExecute, endDateExecute, row, result, message)
+	VALUES((select max(seq) from executed_sql_resource)+1, #user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #row#, #result#, #message#)
+	
+	<selectKey resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDAO">
+		SELECT * 
+		FROM executed_sql_resource 
+		WHERE user_seq = #user_seq# AND 
+			types = #types# AND 
+			db_seq = #db_seq# AND 
+			startDateExecute = #startDateExecute# AND
+			delYn = 'NO'
+	</selectKey>
+</insert>
+
+
+<!-- 
+	execute sql resource data를 저장합니다.
+ -->
+<insert id="userExecuteSQLResourceDataInsert" parameterClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDataDAO">
+	INSERT INTO executed_sql_resource_data(seq, executed_sql_resource_seq, datas)
+	VALUES( (select max(seq) from executed_sql_resource_data)+1, #executed_sql_resource_seq#, #datas#)
+</insert>
+
+<select id="findExecuteSQL" resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDataDAO" parameterClass="java.util.Map"></select>
+	
 </sqlMap>

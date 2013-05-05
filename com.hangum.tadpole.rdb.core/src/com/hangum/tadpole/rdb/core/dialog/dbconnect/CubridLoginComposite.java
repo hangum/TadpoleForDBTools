@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 
@@ -16,15 +16,18 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
@@ -49,8 +52,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	 * @param style
 	 */
 	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super(DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
-		setText(DBDefine.CUBRID_DEFAULT.getDBToString());
+		super("Sample Cubrid 8.4", DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override
@@ -59,8 +61,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 		 if(oldUserDB != null) {
 			
 			selGroupName = oldUserDB.getGroup_name();
-			textDisplayName.setText(oldUserDB.getDisplay_name());
-			comboOperationType.setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
+			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
+			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textHost.setText(oldUserDB.getHost());
 			textUser.setText(oldUserDB.getUsers());
@@ -69,16 +71,18 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
-			textDisplayName.setText("Sample Cubrid 8.4");
+			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("127.0.0.1");
+			textHost.setText("cloud.cubrid.org");
 			textUser.setText("dba");
 			textPassword.setText("");
-			textDatabase.setText("demodb");
+			textDatabase.setText("db_aditadpole");
+			textPort.setText("33001");
+		} else {
 			textPort.setText("33000");
-
 		}
 		
+		 Combo comboGroup = preDBInfo.getComboGroup();
 		if(comboGroup.getItems().length == 0) {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
@@ -99,21 +103,32 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 		if(!isValidate()) return false;
 		
 		final String dbUrl = String.format(
-				DBDefine.CUBRID_DEFAULT.getDB_URL_INFO(), 
+				getSelectDB().getDB_URL_INFO(), 
 				textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText()).trim();
 
 		userDB = new UserDBDAO();
-		userDB.setTypes(DBDefine.CUBRID_DEFAULT.getDBToString());
+		userDB.setTypes(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText().trim());
-		userDB.setGroup_name(comboGroup.getText().trim());
-		userDB.setDisplay_name(textDisplayName.getText().trim());
-		userDB.setOperation_type( DBOperationType.getNameToType(comboOperationType.getText()).toString() );
+		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
+		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		userDB.setHost(textHost.getText().trim());
 		userDB.setPasswd(textPassword.getText().trim());
 		userDB.setPort(textPort.getText().trim());
 		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setUsers(textUser.getText().trim());
+		
+		// others connection 정보를 입력합니다.
+		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setIs_autocmmit(otherConnectionDAO.isAutoCommit()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+		
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
 		
 		// 기존 데이터 업데이트
 		if(oldUserDB != null) {

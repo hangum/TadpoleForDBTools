@@ -1,65 +1,38 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.layout.TreeColumnLayout;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
-import com.swtdesigner.ResourceManager;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.swt.custom.SashForm;
 
 /**
  * Login dialog
@@ -74,7 +47,8 @@ public class DBLoginDialog extends Dialog {
 	private static final long serialVersionUID = 1327678815994219469L;
 	private static final Logger logger = Logger.getLogger(DBLoginDialog.class);
 	
-	Composite container;
+	/** main composite */
+	private Composite container;
 	
 	/** group name */
 	protected List<String> groupName;
@@ -85,16 +59,16 @@ public class DBLoginDialog extends Dialog {
 	private Composite compositeBody;
 
 	private AbstractLoginComposite loginComposite;
-	private Group grpLoginHistory;
-	
-	private List<UserDBDAO> listTreeData = new ArrayList<UserDBDAO>();
-	private TreeViewer treeViewerLoginData;
+//	private Group grpLoginHistory;
+//	
+//	private List<UserDBDAO> listTreeData = new ArrayList<UserDBDAO>();
+//	private TreeViewer treeViewerLoginData;
 
 	// 결과셋으로 사용할 logindb
 	private UserDBDAO retuserDb;
 	
-	// delete button id
-	public final int DELETE_BTN_ID = 99999;
+//	// delete button id
+//	public final int DELETE_BTN_ID = 99999;
 
 	public DBLoginDialog(Shell paShell, String selGroupName) {
 		super(paShell);
@@ -130,17 +104,16 @@ public class DBLoginDialog extends Dialog {
 		gl_compositeHead.verticalSpacing = 3;
 		gl_compositeHead.horizontalSpacing = 3;
 		gl_compositeHead.marginHeight = 3;
-		gl_compositeHead.marginWidth = 3;
+		gl_compositeHead.marginWidth = 2;
 		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setBounds(0, 0, 56, 15);
 		lblNewLabel.setText(Messages.DBLoginDialog_35);
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
-		comboDBList.setVisibleItemCount(7);
+		comboDBList.setVisibleItemCount(8);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
@@ -177,8 +150,9 @@ public class DBLoginDialog extends Dialog {
 		createDBWidget(null);
 
 		// history .....................................
-		createHistory(sashFormContainer);
-		sashFormContainer.setWeights(new int[] {73, 27});
+//		createHistory(sashFormContainer);
+//		sashFormContainer.setWeights(new int[] {73, 27});
+		sashFormContainer.setWeights(new int[] {1});
 
 		return container;
 	}
@@ -202,7 +176,9 @@ public class DBLoginDialog extends Dialog {
 		
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(DBDefine.MYSQL_DEFAULT, compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+		} else if (dbDefine == DBDefine.MARIADB_DEFAULT) {	
+			loginComposite = new MariaDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
 			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.SQLite_DEFAULT) {
@@ -218,118 +194,118 @@ public class DBLoginDialog extends Dialog {
 		}
 	}
 
-	/**
-	 * login history
-	 * 
-	 * @param container
-	 */
-	private void createHistory(Composite container) {
-		grpLoginHistory = new Group(container, SWT.NONE);
-		grpLoginHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpLoginHistory.setText(Messages.DBLoginDialog_grpHistory_text);
-		grpLoginHistory.setLayout(new GridLayout(1, false));
-		
-		Composite compositeHistory = new Composite(grpLoginHistory, SWT.NONE);
-		compositeHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		TreeColumnLayout tcl_compositeHistory = new TreeColumnLayout();
-		compositeHistory.setLayout(tcl_compositeHistory);
-		
-		treeViewerLoginData = new TreeViewer(compositeHistory, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
-		treeViewerLoginData.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				// 선택이 될때마다 로그인창의 화면에 정보를 출력합니다.
-				IStructuredSelection iss = (IStructuredSelection)event.getSelection();
-				UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
-			
-				if(userDB != null) {
-					comboDBList.setText(userDB.getTypes());
-					initDBWidget(userDB);
-				}
-			}
-		});
-		Tree tree = treeViewerLoginData.getTree();
-		tree.setHeaderVisible(true);
-		tree.setLinesVisible(true);
-		
-		TreeViewerColumn tvcGroup = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
-		TreeColumn trclmnGroupName = tvcGroup.getColumn();
-		tcl_compositeHistory.setColumnData(trclmnGroupName, new ColumnPixelData(106, true, true));
-		trclmnGroupName.setText(Messages.DBLoginDialog_trclmnGroupName_text);
-		
-		TreeViewerColumn tvcDisplayName = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
-		TreeColumn trclmnDisplayName = tvcDisplayName.getColumn();
-		tcl_compositeHistory.setColumnData(trclmnDisplayName, new ColumnPixelData(111, true, true));
-		trclmnDisplayName.setText(Messages.DBLoginDialog_trclmnDisplayName_text);
-		
-		TreeViewerColumn tvcURL = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
-		TreeColumn trclmnURL = tvcURL.getColumn();
-		tcl_compositeHistory.setColumnData(trclmnURL, new ColumnPixelData(240, true, true));
-		trclmnURL.setText(Messages.DBLoginDialog_trclmnNewColumn_text);
-		
-		TreeViewerColumn tvcUser = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
-		TreeColumn trclmnUSer = tvcUser.getColumn();
-		tcl_compositeHistory.setColumnData(trclmnUSer, new ColumnPixelData(100, true, true));
-		trclmnUSer.setText(Messages.DBLoginDialog_37);
-		
-		treeViewerLoginData.setContentProvider(new LoginContentProvider());
-		treeViewerLoginData.setLabelProvider(new LoginLabelProvider());
-		makeHistoryData();
-	}
+//	/**
+//	 * login history
+//	 * 
+//	 * @param container
+//	 */
+//	private void createHistory(Composite container) {
+//		grpLoginHistory = new Group(container, SWT.NONE);
+//		grpLoginHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		grpLoginHistory.setText(Messages.DBLoginDialog_grpHistory_text);
+//		grpLoginHistory.setLayout(new GridLayout(1, false));
+//		
+//		Composite compositeHistory = new Composite(grpLoginHistory, SWT.NONE);
+//		compositeHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		TreeColumnLayout tcl_compositeHistory = new TreeColumnLayout();
+//		compositeHistory.setLayout(tcl_compositeHistory);
+//		
+//		treeViewerLoginData = new TreeViewer(compositeHistory, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+//		treeViewerLoginData.addDoubleClickListener(new IDoubleClickListener() {
+//			public void doubleClick(DoubleClickEvent event) {
+//				// 선택이 될때마다 로그인창의 화면에 정보를 출력합니다.
+//				IStructuredSelection iss = (IStructuredSelection)event.getSelection();
+//				UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
+//			
+//				if(userDB != null) {
+//					comboDBList.setText(userDB.getTypes());
+//					initDBWidget(userDB);
+//				}
+//			}
+//		});
+//		Tree tree = treeViewerLoginData.getTree();
+//		tree.setHeaderVisible(true);
+//		tree.setLinesVisible(true);
+//		
+//		TreeViewerColumn tvcGroup = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
+//		TreeColumn trclmnGroupName = tvcGroup.getColumn();
+//		tcl_compositeHistory.setColumnData(trclmnGroupName, new ColumnPixelData(106, true, true));
+//		trclmnGroupName.setText(Messages.DBLoginDialog_trclmnGroupName_text);
+//		
+//		TreeViewerColumn tvcDisplayName = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
+//		TreeColumn trclmnDisplayName = tvcDisplayName.getColumn();
+//		tcl_compositeHistory.setColumnData(trclmnDisplayName, new ColumnPixelData(111, true, true));
+//		trclmnDisplayName.setText(Messages.DBLoginDialog_trclmnDisplayName_text);
+//		
+//		TreeViewerColumn tvcURL = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
+//		TreeColumn trclmnURL = tvcURL.getColumn();
+//		tcl_compositeHistory.setColumnData(trclmnURL, new ColumnPixelData(240, true, true));
+//		trclmnURL.setText(Messages.DBLoginDialog_trclmnNewColumn_text);
+//		
+//		TreeViewerColumn tvcUser = new TreeViewerColumn(treeViewerLoginData, SWT.NONE);
+//		TreeColumn trclmnUSer = tvcUser.getColumn();
+//		tcl_compositeHistory.setColumnData(trclmnUSer, new ColumnPixelData(100, true, true));
+//		trclmnUSer.setText(Messages.DBLoginDialog_37);
+//		
+//		treeViewerLoginData.setContentProvider(new LoginContentProvider());
+//		treeViewerLoginData.setLabelProvider(new LoginLabelProvider());
+//		makeHistoryData();
+//	}
 
-	/**
-	 * 입력된 디비 정보 가공
-	 * 
-	 * @return
-	 */
-	private void makeHistoryData() {
-		listTreeData.clear();
-		
-		try {
-			// groupName 기준으로 그룹을 만든다.
-			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
-			List<UserDBDAO> listUserDB = TadpoleSystem_UserDBQuery.getUserDB();
-			Map<String, List<UserDBDAO>> mapGroupUserDB = new HashMap<String, List<UserDBDAO>>();
-			
-			for(String groupName: groupNames) {
-				List listGrp = new ArrayList<UserDBDAO>();
-				mapGroupUserDB.put(groupName, listGrp);
-				
-				for (UserDBDAO userDB : listUserDB) {
-					if(groupName.equals(userDB.getGroup_name())) listGrp.add(userDB);
-				}	// end for
-			}
-			
-			// listTreeData에 그룹을 넣는다.
-			for(String groupName: groupNames) {
-				List<UserDBDAO> calcUserDB = mapGroupUserDB.get(groupName);
-				UserDBDAO groupHead = calcUserDB.get(0);
-				for(int i=1; i<calcUserDB.size(); i++) {
-					groupHead.getListUserDBGroup().add(calcUserDB.get(i));
-				}				
-				listTreeData.add(groupHead);
-			}
-			
-		} catch (Exception e) {
-			logger.error("initialize DBLogin", e); //$NON-NLS-1$
-			
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
-		}
-		
-		treeViewerLoginData.setInput(listTreeData);
-	}
-	
-	/**
-	 * 
-	 * @param userDb
-	 */
-	private void selectDatabase(UserDBDAO userDb) {
-//		if (loginComposite.connectValite(userDb, userDb.getDb())) {
-			this.retuserDb = userDb;
-
-			super.okPressed();
+//	/**
+//	 * 입력된 디비 정보 가공
+//	 * 
+//	 * @return
+//	 */
+//	private void makeHistoryData() {
+//		listTreeData.clear();
+//		
+//		try {
+//			// groupName 기준으로 그룹을 만든다.
+//			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
+//			List<UserDBDAO> listUserDB = TadpoleSystem_UserDBQuery.getUserDB();
+//			Map<String, List<UserDBDAO>> mapGroupUserDB = new HashMap<String, List<UserDBDAO>>();
+//			
+//			for(String groupName: groupNames) {
+//				List listGrp = new ArrayList<UserDBDAO>();
+//				mapGroupUserDB.put(groupName, listGrp);
+//				
+//				for (UserDBDAO userDB : listUserDB) {
+//					if(groupName.equals(userDB.getGroup_name())) listGrp.add(userDB);
+//				}	// end for
+//			}
+//			
+//			// listTreeData에 그룹을 넣는다.
+//			for(String groupName: groupNames) {
+//				List<UserDBDAO> calcUserDB = mapGroupUserDB.get(groupName);
+//				UserDBDAO groupHead = calcUserDB.get(0);
+//				for(int i=1; i<calcUserDB.size(); i++) {
+//					groupHead.getListUserDBGroup().add(calcUserDB.get(i));
+//				}				
+//				listTreeData.add(groupHead);
+//			}
+//			
+//		} catch (Exception e) {
+//			logger.error("initialize DBLogin", e); //$NON-NLS-1$
+//			
+//			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
 //		}
-	}
+//		
+//		treeViewerLoginData.setInput(listTreeData);
+//	}
+//	
+//	/**
+//	 * 
+//	 * @param userDb
+//	 */
+//	private void selectDatabase(UserDBDAO userDb) {
+////		if (loginComposite.connectValite(userDb, userDb.getDb())) {
+//			this.retuserDb = userDb;
+//
+//			super.okPressed();
+////		}
+//	}
 
 	@Override
 	protected void okPressed() {
@@ -350,42 +326,42 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, DELETE_BTN_ID, Messages.DBLoginDialog_button_text, false);
+//		createButton(parent, DELETE_BTN_ID, Messages.DBLoginDialog_button_text, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_6, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLoginDialog_7, false);
 	}
 	
-	@Override
-	protected void buttonPressed(int buttonId) {
-		super.buttonPressed(buttonId);
-		
-		if(buttonId == DELETE_BTN_ID) {
-			IStructuredSelection ss = (IStructuredSelection) treeViewerLoginData.getSelection();
-			if(!ss.isEmpty()) {
-				UserDBDAO userDb = (UserDBDAO) ss.getFirstElement();
-				
-				// 자신이 등록한 것만 삭제하도록
-				if(SessionManager.getSeq() == userDb.getUser_seq()) {
-					
-					if(MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.DBLoginDialog_9, Messages.DBLoginDialog_28)) {
-						try {
-							
-							TadpoleSystem_UserDBQuery.removeUserDB(userDb.getSeq());							
-							makeHistoryData();
-						} catch(Exception e) {
-							logger.error(Messages.DBLoginDialog_32, e);
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.DBLoginDialog_29, errStatus); //$NON-NLS-1$
-						}						
-					}	// end confirm
-					
-				}	// end if 자신의 등록한 것
-				else {
-					MessageDialog.openInformation(null, Messages.DBLoginDialog_39, Messages.DBLoginDialog_40);//자신이 등록한 것만 삭제 할수 있습니다.");
-				}
-			}	// end select
-		}	// end delete button
-	}
+//	@Override
+//	protected void buttonPressed(int buttonId) {
+//		super.buttonPressed(buttonId);
+//		
+//		if(buttonId == DELETE_BTN_ID) {
+//			IStructuredSelection ss = (IStructuredSelection) treeViewerLoginData.getSelection();
+//			if(!ss.isEmpty()) {
+//				UserDBDAO userDb = (UserDBDAO) ss.getFirstElement();
+//				
+//				// 자신이 등록한 것만 삭제하도록
+//				if(SessionManager.getSeq() == userDb.getUser_seq()) {
+//					
+//					if(MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.DBLoginDialog_9, Messages.DBLoginDialog_28)) {
+//						try {
+//							
+//							TadpoleSystem_UserDBQuery.removeUserDB(userDb.getSeq());							
+//							makeHistoryData();
+//						} catch(Exception e) {
+//							logger.error(Messages.DBLoginDialog_32, e);
+//							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//							ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.DBLoginDialog_29, errStatus); //$NON-NLS-1$
+//						}						
+//					}	// end confirm
+//					
+//				}	// end if 자신의 등록한 것
+//				else {
+//					MessageDialog.openInformation(null, Messages.DBLoginDialog_39, Messages.DBLoginDialog_40);//자신이 등록한 것만 삭제 할수 있습니다.");
+//				}
+//			}	// end select
+//		}	// end delete button
+//	}
 	
 	/**
 	 * group name
@@ -401,86 +377,86 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 670);
+		return new Point(410, 530);
 	}
 }
 
-/**
- * login data content provider
- * @author hangum
- *
- */
-class LoginContentProvider extends ArrayContentProvider implements ITreeContentProvider {
-
-	@Override
-	public Object[] getChildren(Object parentElement) {
-		UserDBDAO listUserDBDAO = (UserDBDAO)parentElement;
-		return listUserDBDAO.getListUserDBGroup().toArray();
-	}
-
-	@Override
-	public Object getParent(Object element) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean hasChildren(Object element) {
-		UserDBDAO groupDao = (UserDBDAO)element;
-		return groupDao.getListUserDBGroup().size() > 0;				
-	}	
-}
-
-/**
- * login data label provider
- * @author hangum
- *
- */
-class LoginLabelProvider extends LabelProvider implements ITableLabelProvider {
-
-	@Override
-	public Image getColumnImage(Object element, int columnIndex) {
-		if(columnIndex == 1) {
-			UserDBDAO dto = (UserDBDAO)element;
-			DBDefine dbType = DBDefine.getDBDefine(dto.getTypes());
-			
-			if(DBDefine.MYSQL_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.ORACLE_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.SQLite_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.MSSQL_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.CUBRID_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.MONGODB_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
-		}
-		
-		return null;
-	}
-
-	@Override
-	public String getColumnText(Object element, int columnIndex) {
-		UserDBDAO dto = (UserDBDAO)element;
-		
-		switch(columnIndex) {
-		case 0: return dto.getGroup_name();
-		case 1: return dto.getDisplay_name();
-		case 2: return dto.getUrl();
-		case 3: return dto.getUsers();
-		}
-		
-		return "*** not set column ***"; //$NON-NLS-1$
-	}
-	
-}
+///**
+// * login data content provider
+// * @author hangum
+// *
+// */
+//class LoginContentProvider extends ArrayContentProvider implements ITreeContentProvider {
+//
+//	@Override
+//	public Object[] getChildren(Object parentElement) {
+//		UserDBDAO listUserDBDAO = (UserDBDAO)parentElement;
+//		return listUserDBDAO.getListUserDBGroup().toArray();
+//	}
+//
+//	@Override
+//	public Object getParent(Object element) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public boolean hasChildren(Object element) {
+//		UserDBDAO groupDao = (UserDBDAO)element;
+//		return groupDao.getListUserDBGroup().size() > 0;				
+//	}	
+//}
+//
+///**
+// * login data label provider
+// * @author hangum
+// *
+// */
+//class LoginLabelProvider extends LabelProvider implements ITableLabelProvider {
+//
+//	@Override
+//	public Image getColumnImage(Object element, int columnIndex) {
+//		if(columnIndex == 1) {
+//			UserDBDAO dto = (UserDBDAO)element;
+//			DBDefine dbType = DBDefine.getDBDefine(dto.getTypes());
+//			
+//			if(DBDefine.MYSQL_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.ORACLE_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.SQLite_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.MSSQL_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.CUBRID_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.MONGODB_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
+//		}
+//		
+//		return null;
+//	}
+//
+//	@Override
+//	public String getColumnText(Object element, int columnIndex) {
+//		UserDBDAO dto = (UserDBDAO)element;
+//		
+//		switch(columnIndex) {
+//		case 0: return dto.getGroup_name();
+//		case 1: return dto.getDisplay_name();
+//		case 2: return dto.getUrl();
+//		case 3: return dto.getUsers();
+//		}
+//		
+//		return "*** not set column ***"; //$NON-NLS-1$
+//	}
+//	
+//}

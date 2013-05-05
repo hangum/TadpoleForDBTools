@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.editor;
 
@@ -138,10 +138,11 @@ public class RDBShortcutHelpDialog extends Dialog {
 	private void initData() {
 		listShortcut.add( new ShortcutHelpDAO("Add Block Comment", 	"Ctrl + Shift + /"));
 		
-//		listShortcut.add( new ShortcutHelpDAO("Save", 			"Ctrl + S") 		);
+		listShortcut.add( new ShortcutHelpDAO("Save", 			"Ctrl + S") 		);
 		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"Ctrl + enter") 	);
 		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"F5") 				);
 		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	"Ctrl + E") 		);
+		listShortcut.add( new ShortcutHelpDAO("Delete Line", 	"Ctrl + D") 		);
 		listShortcut.add( new ShortcutHelpDAO("Query Format", 	"Ctrl + Shift + F") );
 		listShortcut.add( new ShortcutHelpDAO("Query History", 	"Ctrl + H") 		);
 		
@@ -157,7 +158,6 @@ public class RDBShortcutHelpDialog extends Dialog {
 		listShortcut.add( new ShortcutHelpDAO("Copy text", 		"Ctrl + C") 		);
 		listShortcut.add( new ShortcutHelpDAO("Past text", 		"Ctrl + V") 		);
 		
-		listShortcut.add( new ShortcutHelpDAO("Delete Line",	"Ctrl + D") 		);		
 		tableViewer.refresh(listShortcut);		
 	}
 	

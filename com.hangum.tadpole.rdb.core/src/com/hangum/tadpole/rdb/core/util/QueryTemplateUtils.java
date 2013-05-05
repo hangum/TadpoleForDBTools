@@ -1,19 +1,19 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.CubridDMLTemplate;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.define.MySQLDMLTemplate;
 import com.hangum.tadpole.define.PostgreDMLTemplate;
 import com.hangum.tadpole.define.SQLiteDMLTemplate;
@@ -33,65 +33,65 @@ public class QueryTemplateUtils {
 	 * @param initAction
 	 * @return
 	 */
-	public static String getQuery(UserDBDAO userDB, Define.DB_ACTION initAction) {
+	public static String getQuery(UserDBDAO userDB, DB_Define.DB_ACTION initAction) {
 		String defaultStr = "";
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) ||
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) || DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) ||
 				DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) ||
 				DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getTypes()) 				
 			) {
 			
-			if(initAction == Define.DB_ACTION.TABLES) {
+			if(initAction == DB_Define.DB_ACTION.TABLES) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TABLE_STMT;
-			} else if(initAction == Define.DB_ACTION.VIEWS) {
+			} else if(initAction == DB_Define.DB_ACTION.VIEWS) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_VIEW_STMT;
-			} else if(initAction == Define.DB_ACTION.INDEXES) {
+			} else if(initAction == DB_Define.DB_ACTION.INDEXES) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_INDEX_STMT;
-			} else if(initAction == Define.DB_ACTION.PROCEDURES) {
+			} else if(initAction == DB_Define.DB_ACTION.PROCEDURES) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
-			} else if(initAction == Define.DB_ACTION.FUNCTIONS) {
+			} else if(initAction == DB_Define.DB_ACTION.FUNCTIONS) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_FUNCTION_STMT;
-			} else if(initAction == Define.DB_ACTION.TRIGGERS) {
+			} else if(initAction == DB_Define.DB_ACTION.TRIGGERS) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
 		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getTypes())) {
 			
-			if(initAction == Define.DB_ACTION.TABLES) {
+			if(initAction == DB_Define.DB_ACTION.TABLES) {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TABLE_STMT;
-			} else if(initAction == Define.DB_ACTION.VIEWS) {
+			} else if(initAction == DB_Define.DB_ACTION.VIEWS) {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_VIEW_STMT;
-			} else if(initAction == Define.DB_ACTION.INDEXES) {
+			} else if(initAction == DB_Define.DB_ACTION.INDEXES) {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_INDEX_STMT;
-			} else if(initAction == Define.DB_ACTION.TRIGGERS) {
+			} else if(initAction == DB_Define.DB_ACTION.TRIGGERS) {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
 		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
-			if(initAction == Define.DB_ACTION.TABLES) {
+			if(initAction == DB_Define.DB_ACTION.TABLES) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TABLE_STMT;
-			} else if(initAction == Define.DB_ACTION.VIEWS) {
+			} else if(initAction == DB_Define.DB_ACTION.VIEWS) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_VIEW_STMT;
-			} else if(initAction == Define.DB_ACTION.INDEXES) {
+			} else if(initAction == DB_Define.DB_ACTION.INDEXES) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_INDEX_STMT;
-			} else if(initAction == Define.DB_ACTION.PROCEDURES) {
+			} else if(initAction == DB_Define.DB_ACTION.PROCEDURES) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
-			} else if(initAction == Define.DB_ACTION.FUNCTIONS) {
+			} else if(initAction == DB_Define.DB_ACTION.FUNCTIONS) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_FUNCTION_STMT;
-			} else if(initAction == Define.DB_ACTION.TRIGGERS) {
+			} else if(initAction == DB_Define.DB_ACTION.TRIGGERS) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
-			if(initAction == Define.DB_ACTION.TABLES) {
+			if(initAction == DB_Define.DB_ACTION.TABLES) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TABLE_STMT;
-			} else if(initAction == Define.DB_ACTION.VIEWS) {
+			} else if(initAction == DB_Define.DB_ACTION.VIEWS) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_VIEW_STMT;
-			} else if(initAction == Define.DB_ACTION.INDEXES) {
+			} else if(initAction == DB_Define.DB_ACTION.INDEXES) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_INDEX_STMT;
-			} else if(initAction == Define.DB_ACTION.PROCEDURES) {
+			} else if(initAction == DB_Define.DB_ACTION.PROCEDURES) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
-			} else if(initAction == Define.DB_ACTION.FUNCTIONS) {
+			} else if(initAction == DB_Define.DB_ACTION.FUNCTIONS) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_FUNCTION_STMT;
-			} else if(initAction == Define.DB_ACTION.TRIGGERS) {
+			} else if(initAction == DB_Define.DB_ACTION.TRIGGERS) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 		}

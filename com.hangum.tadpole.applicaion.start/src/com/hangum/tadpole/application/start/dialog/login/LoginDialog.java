@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.dao.system.UserDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystemInitializer;
@@ -172,7 +172,7 @@ public class LoginDialog extends Dialog {
 			// 정상이면 session에 로그인 정보를 입력하고 
 			try {
 				UserDAO login = TadpoleSystem_UserQuery.login(userId, password);
-				if(!Define.USER_TYPE.MANAGER.toString().equals(login.getUser_type())) {
+				if(!DB_Define.USER_TYPE.MANAGER.toString().equals(login.getUser_type())) {
 					UserDAO groupManagerUser =  TadpoleSystem_UserQuery.getGroupManager(login.getGroup_seq());
 					
 					SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), groupManagerUser.getSeq());
@@ -203,7 +203,7 @@ public class LoginDialog extends Dialog {
 		try {
 			UserDAO login = TadpoleSystem_UserQuery.login(strEmail, strPass);
 			
-			if(Define.USER_TYPE.USER.toString().equals(login.getUser_type())) {
+			if(DB_Define.USER_TYPE.USER.toString().equals(login.getUser_type())) {
 				// 그룹의 manager 정보
 				UserDAO groupManagerUser = TadpoleSystem_UserQuery.getGroupManager(login.getGroup_seq());
 				

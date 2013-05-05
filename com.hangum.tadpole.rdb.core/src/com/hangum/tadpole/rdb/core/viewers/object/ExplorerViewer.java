@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
@@ -36,7 +36,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
@@ -114,39 +114,39 @@ public class ExplorerViewer extends ViewPart {
 		lblNewLabel.setText(Messages.ExplorerViewer_0);
 
 		// filter를 설정합니다.
-		textSearch = new Text(compositeSearch, SWT.BORDER);
+		textSearch = new Text(compositeSearch, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				String strSelectTab = tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getText();
 				String strSearchText = textSearch.getText();
 				
-				if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.COLLECTIONS.toString())) {
+				if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.COLLECTIONS.toString())) {
 					mongoCollectionComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.TABLES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.TABLES.toString())) {
 					tableCompost.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.VIEWS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.VIEWS.toString())) {
 					viewComposite.filter(strSearchText);					
 				
-				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.INDEXES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.INDEXES.toString())) {
 					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
 						mongoIndexComposite.filter(strSearchText);
 					} else {
 						indexComposite.filter(strSearchText);
 					}					
 				
-				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.PROCEDURES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.PROCEDURES.toString())) {
 					procedureComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.FUNCTIONS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.FUNCTIONS.toString())) {
 					functionCompostite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.TRIGGERS.toString())) {
 					triggerComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(Define.DB_ACTION.JAVASCRIPT.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.JAVASCRIPT.toString())) {
 					mongoJavaScriptComposite.filter(strSearchText);
 				}
 			}
@@ -189,7 +189,7 @@ public class ExplorerViewer extends ViewPart {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 
-				if (event.getProperty() == Define.SELECT_ERD_TABLE) {
+				if (event.getProperty() == DB_Define.SELECT_ERD_TABLE) {
 					String tableName = event.getNewValue().toString();
 					if (tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
 
@@ -220,7 +220,7 @@ public class ExplorerViewer extends ViewPart {
 	 * 
 	 * @param selectElement
 	 */
-	private void initObjectHead(Object selectElement) {
+	public void initObjectHead(Object selectElement) {
 		if (selectElement instanceof UserDBDAO || selectElement instanceof UserDBResourceDAO) {
 			UserDBDAO selectUserDb = null;
 			if (selectElement instanceof UserDBDAO) selectUserDb = (UserDBDAO)selectElement;
@@ -241,7 +241,6 @@ public class ExplorerViewer extends ViewPart {
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 			createTable();
-//			getViewSite().getActionBars().getStatusLineManager().setMessage("");
 		}
 	}
 	
@@ -318,17 +317,17 @@ public class ExplorerViewer extends ViewPart {
 //			refreshTable();
 //			System.out.println("\t =========== refresh table=-");
 //		} else 
-		if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.VIEWS.toString())) {
+		if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.VIEWS.toString())) {
 			refreshView(false);
-		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.INDEXES.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.INDEXES.toString())) {
 			refreshIndexes(false);
-		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.PROCEDURES.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.PROCEDURES.toString())) {
 			refreshProcedure(false);
-		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.FUNCTIONS.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.FUNCTIONS.toString())) {
 			refreshFunction(false);
-		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.TRIGGERS.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.TRIGGERS.toString())) {
 			refreshTrigger(false);
-		} else if (strSelectItemText.equalsIgnoreCase(Define.DB_ACTION.JAVASCRIPT.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.JAVASCRIPT.toString())) {
 			refreshJS(false);
 		}
 	}

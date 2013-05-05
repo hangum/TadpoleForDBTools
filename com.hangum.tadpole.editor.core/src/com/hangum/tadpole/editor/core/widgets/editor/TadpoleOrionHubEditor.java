@@ -1,15 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2013  Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.editor.core.widgets.editor;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -19,6 +20,8 @@ import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * code editor
@@ -87,21 +90,32 @@ public class TadpoleOrionHubEditor extends Composite {
 		browserOrionEditor = new Browser(compositeServerStatus, SWT.NONE);
 		browserOrionEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		addBrowserHandler();
-		browserOrionEditor.setUrl(EDITOR_URL);
 	}
 	
 	/**
 	 * browser handler
 	 */
 	private void addBrowserHandler() {
+		browserOrionEditor.setUrl(EDITOR_URL);
+		
 		registerBrowserFunctions();
 		
 		browserOrionEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_GET_INITCONTAINER);
+					browserEvaluate("getEditor();");
 				} catch(Exception e) {
-					logger.error("set register browser function and content initialize", e);
+					logger.error("javascript execute exception", e);
+				}
+				
+				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
+				String strInitContent = StringUtils.replace(getInitContent(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
+				strInitContent = StringUtils.replace(strInitContent, "\"", "'");
+				String callCommand = "setInitialContent(\"" + "test.json"+ "\", \"" + strInitContent + "\" );";
+				try {
+					browserEvaluate(callCommand);
+				} catch(Exception e) {
+					logger.error("javascript execut exception", e);
 				}
 			}
 			public void changed( ProgressEvent event ) {}

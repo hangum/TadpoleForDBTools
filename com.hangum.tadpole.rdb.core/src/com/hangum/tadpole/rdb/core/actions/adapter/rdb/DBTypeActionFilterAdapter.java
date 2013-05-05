@@ -1,19 +1,22 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.adapter.rdb;
+
+import org.apache.log4j.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.ui.IActionFilter;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * rdb db popup
@@ -21,24 +24,40 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
  * @author hangum
  *
  */
-public class DBTypeActionFilterAdapter implements IActionFilter {	
+public class DBTypeActionFilterAdapter implements IActionFilter {
+//	/**
+//	 * Logger for this class
+//	 */
+//	private static final Logger logger = Logger.getLogger(DBTypeActionFilterAdapter.class);
+	
 	private static final String DB_TYPE = "db_type";
+	private static final String USER_TYPE = "user_type";
 	
 	@Override
 	public boolean testAttribute(Object target, String name, String value) {
 		UserDBDAO userDB = null;
 		
 		if (target instanceof UserDBDAO) {
-			userDB = (UserDBDAO) target;
+			userDB = (UserDBDAO)target;
 			
+			// db 종류에 따라.
 			if(DB_TYPE.equals(name)) {
 				String[] dbTypes = StringUtils.split(value, ",");
 				for (String dbType : dbTypes) {
 					if(userDB.getTypes().toLowerCase().equals(dbType)) {
 						return true;
 					}
-				}				
-			}			
+				}
+				
+			// 사용자 권한에 따라.
+			} else if(USER_TYPE.equals(name)) {
+				String[] userTypes = StringUtils.split(value, ",");
+				for (String userType : userTypes) {
+					if(SessionManager.getLoginType().toLowerCase().equals(userType)) {
+						return true;
+					}
+				}
+			}
 		}
 		
 		return false;

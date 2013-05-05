@@ -4,11 +4,17 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="com.hangum.tadpole.manager.core.dialogs.auth.UserManagementEditor"
+            class="com.hangum.tadpole.manager.core.editor.auth.UserManagementEditor"
             default="false"
             icon="resources/icons/user.png"
             id="com.hangum.tadpole.manager.core.editor.usermanagement"
             name="%editor.name">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor"
+            default="false"
+            id="com.hangum.tadpole.manager.core.editor.manager.executed_sql"
+            name="실행한 쿼리">
       </editor>
    </extension>
 

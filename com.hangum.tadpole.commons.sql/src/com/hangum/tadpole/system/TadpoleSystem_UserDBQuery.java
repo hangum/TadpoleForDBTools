@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -72,6 +73,8 @@ public class TadpoleSystem_UserDBQuery {
 	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
 		userDb.setUser_seq(userSeq);
 		
+		userDb.setPasswd( EncryptiDecryptUtil.encryption(userDb.getPasswd()) );
+		
 		// 기존에 등록 되어 있는지 검사한다
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> isUserDB = (List<UserDBDAO>)sqlClient.queryForList("isUserDB", userDb); //$NON-NLS-1$
@@ -105,6 +108,8 @@ public class TadpoleSystem_UserDBQuery {
 	public static UserDBDAO updateUserDB(UserDBDAO newUserDb, UserDBDAO oldUserDb, int userSeq) throws Exception {
 		newUserDb.setUser_seq(userSeq);
 		newUserDb.setSeq(oldUserDb.getSeq());
+		
+		newUserDb.setPasswd( EncryptiDecryptUtil.encryption(newUserDb.getPasswd()) );
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBUpdate", newUserDb); //$NON-NLS-1$

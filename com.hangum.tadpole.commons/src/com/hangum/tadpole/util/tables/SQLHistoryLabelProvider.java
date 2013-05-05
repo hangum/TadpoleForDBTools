@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.util.tables;
 
@@ -30,7 +30,6 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -40,9 +39,14 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 			SQLHistoryDAO historyDAO = (SQLHistoryDAO)element;
 			
 			switch(columnIndex) {
-				case 0: return dateToStr(historyDAO.getDateExecute());
+				case 0: return dateToStr(historyDAO.getStartDateExecute());
 				// 쿼리에 개행 문자가 있으면 테이블에 개행 문자 이후 쿼리가 보이지 않으므로 보여줄 때는 개행 문자를 제거합니다.
 				case 1: return StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", " ");
+				case 2: 
+					return ""+(historyDAO.getEndDateExecute().getTime() - historyDAO.getStartDateExecute().getTime());
+				case 3: return ""+historyDAO.getRows();
+				case 4: return historyDAO.getResult();
+				case 5: return historyDAO.getMesssage();
 			}
 		} else if(element instanceof TadpoleMessageDAO) {
 			TadpoleMessageDAO messageDAO = (TadpoleMessageDAO)element;

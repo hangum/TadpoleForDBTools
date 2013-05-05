@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- 
-	CUBRID Database
-	현재는 8.4.1.2032 버전 기준으로 작업.	 - 12.08.07
-
-	@author hangum	
- -->
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
 <!DOCTYPE sqlMap      
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
@@ -187,6 +191,16 @@
 		event,
 	 	condition AS statement
 	FROM db_trigger
+</select>
+
+<!-- 
+	table information
+ -->
+<select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	SELECT class_name name
+	FROM DB_CLASS
+	WHERE  is_system_class = 'NO' AND class_type = 'CLASS'
+	ORDER BY  class_name 
 </select>
 
 </sqlMap>

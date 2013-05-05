@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
@@ -26,7 +26,7 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.TadpoleSystemDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.preference.define.SystemDefine;
 import com.hangum.tadpole.system.internal.migration.SystemMigrationSR9TOSR10;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
@@ -209,6 +209,17 @@ public class TadpoleSystemInitializer {
 				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data);
 				logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
+				// execute_sql_resource_create data
+				createMsg = "TadpoleSystemConnector_execute_sql_resource_create Tables [" + Messages.TadpoleSystemConnector_execute_sql_resource_create + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_execute_sql_resource_create	);
+				logger.info("execute_sql_resource Tables" + (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
+				// 	executed_sql_resource_data
+				createMsg = "TadpoleSystemConnector_execute_sql_resource_date_create Tables [" + Messages.TadpoleSystemConnector_execute_sql_resource_date_create + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_execute_sql_resource_date_create	);
+				logger.info("executed_sql_resource_data Tables" + (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
+				
 			// default is cubrid
 			} else {
 				createMsg = "System Table create [" + Messages.TadpoleSystemConnector_system_info_create_CUBRID  + "]"; 
@@ -263,11 +274,11 @@ public class TadpoleSystemInitializer {
 			
 			// 기본 유저 저장
 			createMsg = ADMIN_EMAIL + " user creating....";
-			TadpoleSystem_UserQuery.newUser(seqAdm, ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, Define.USER_TYPE.ADMIN.toString(), Define.YES_NO.YES.toString());
+			TadpoleSystem_UserQuery.newUser(seqAdm, ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, DB_Define.USER_TYPE.ADMIN.toString(), DB_Define.YES_NO.YES.toString());
 			createMsg = MANAGER_EMAIL + " user creating....";
-			TadpoleSystem_UserQuery.newUser(seqTest, MANAGER_EMAIL, MANAGER_PASSWD, MANAGER_NAME, Define.USER_TYPE.MANAGER.toString(), Define.YES_NO.YES.toString());
+			TadpoleSystem_UserQuery.newUser(seqTest, MANAGER_EMAIL, MANAGER_PASSWD, MANAGER_NAME, DB_Define.USER_TYPE.MANAGER.toString(), DB_Define.YES_NO.YES.toString());
 			createMsg = GUEST_EMAIL + " user creating....";
-			TadpoleSystem_UserQuery.newUser(seqTest, GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, Define.USER_TYPE.GUEST.toString(), Define.YES_NO.YES.toString());
+			TadpoleSystem_UserQuery.newUser(seqTest, GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, DB_Define.USER_TYPE.GUEST.toString(), DB_Define.YES_NO.YES.toString());
 			
 		} catch(Exception e) {
 			logger.error(createMsg, e);

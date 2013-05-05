@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.define;
 
@@ -46,6 +46,7 @@ public enum DBDefine {
 	MSSQL_8_LE_DEFAULT,
 	
 	MYSQL_DEFAULT,
+	MARIADB_DEFAULT,
 	SQLite_DEFAULT,
 	CUBRID_DEFAULT,
 	POSTGRE_DEFAULT,
@@ -73,6 +74,8 @@ public enum DBDefine {
 			case MSSQL_8_LE_DEFAULT: return prefix + "MSSQLConfig_8_LE.xml";
 			
 			case MYSQL_DEFAULT:		return prefix + "MySQLConfig.xml";
+			case MARIADB_DEFAULT:		return prefix + "MariaDBConfig.xml";
+			
 			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
 			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
@@ -97,6 +100,8 @@ public enum DBDefine {
 		else if(type.equals("MSSQL_8_LE"))	return MSSQL_8_LE_DEFAULT;
 		
 		else if(type.equals("MySQL")) 		return MYSQL_DEFAULT;
+		else if(type.equals("MARIADB")) 	return MARIADB_DEFAULT;
+		
 		else if(type.equals("SQLite"))		return SQLite_DEFAULT;
 		else if(type.equals("CUBRID"))		return CUBRID_DEFAULT;
 		else if(type.equals("POSTGRE"))		return POSTGRE_DEFAULT;
@@ -122,6 +127,8 @@ public enum DBDefine {
 			case MSSQL_8_LE_DEFAULT: return "jdbc:jtds:sqlserver://%s:%s/%s";
 			
 			case MYSQL_DEFAULT:		return "jdbc:mysql://%s:%s/%s";
+			case MARIADB_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
+			
 			case SQLite_DEFAULT:	return "jdbc:sqlite:/%s";
 			case CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";
 			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
@@ -145,6 +152,8 @@ public enum DBDefine {
 			case MSSQL_8_LE_DEFAULT:	return "MSSQL_8_LE";
 			
 			case MYSQL_DEFAULT:		return "MySQL";
+			case MARIADB_DEFAULT:	return "MARIADB";
+			
 			case SQLite_DEFAULT:	return "SQLite";
 			case CUBRID_DEFAULT:	return "CUBRID";
 			case POSTGRE_DEFAULT:	return "POSTGRE";
@@ -165,6 +174,7 @@ public enum DBDefine {
 		
 		supportDb.add(MONGODB_DEFAULT);
 		
+		supportDb.add(MARIADB_DEFAULT);
 		supportDb.add(MYSQL_DEFAULT);		
 		supportDb.add(MSSQL_DEFAULT);		
 		

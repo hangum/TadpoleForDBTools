@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2013 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites;
 
@@ -111,7 +111,7 @@ public class CollectionInformationComposite extends Composite {
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText(Messages.CollectionInformationComposite_0);
 		
-		textFilter = new Text(compositeHead, SWT.BORDER);
+		textFilter = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textFilter.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
@@ -215,14 +215,15 @@ public class CollectionInformationComposite extends Composite {
 	}
 	
 	private void createTableColumn() {
-		String[] columnName = {"Name", "Count", "Size", "Storage", "Index", "Last Extent Size", "AvgObj","Padding" };  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+		String[] columnName = {"Name", "Rows", "Size", "Storage", "Index", "Last Extent Size", "AvgObj","Padding" };  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 		int[] columnSize = {200, 100, 100, 100, 100, 100, 100, 100 };
+		int[] align = {SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT};
 		
 		try {
 			// reset column 
 			for(int i=0; i<columnName.length; i++) {
 				final int index = i;
-				final TreeViewerColumn tableColumn = new TreeViewerColumn(treeViewerCollections, SWT.LEFT);
+				final TreeViewerColumn tableColumn = new TreeViewerColumn(treeViewerCollections, align[i]);
 				tableColumn.getColumn().setText( columnName[i] );
 				tableColumn.getColumn().setWidth( columnSize[i] );
 				tableColumn.getColumn().setResizable(true);

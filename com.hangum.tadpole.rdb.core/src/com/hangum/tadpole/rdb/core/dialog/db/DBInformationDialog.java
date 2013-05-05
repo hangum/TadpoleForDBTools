@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.db;
 
@@ -31,6 +31,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.CubridLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.MSSQLLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.MariaDBLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.MongoDBLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.MySQLLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.OracleLoginComposite;
@@ -38,7 +39,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.PostgresLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.SQLiteLoginComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.system.permission.PermissionChecks;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
  * DB 정보를 보여 주는 다이얼로그
@@ -120,7 +121,7 @@ public class DBInformationDialog extends Dialog {
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText(Messages.DBInformationDialog_4);
 		
-		if(PermissionChecks.isShow(SessionManager.getLoginType(), userDB)) {
+		if(PermissionChecker.isShow(SessionManager.getLoginType(), userDB)) {
 			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
 			lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			lblNameValue.setText(SessionManager.getName());
@@ -148,7 +149,6 @@ public class DBInformationDialog extends Dialog {
 	 * db widget
 	 */
 	private void initDBWidget() {
-		// db groupData 
 		try {
 			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
 		} catch (Exception e1) {
@@ -158,7 +158,9 @@ public class DBInformationDialog extends Dialog {
 		
 		DBDefine dbDefine = DBDefine.getDBDefine(userDB.getTypes());
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(DBDefine.MYSQL_DEFAULT, compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+		} else if (dbDefine == DBDefine.MARIADB_DEFAULT) {
+			loginComposite = new MariaDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
 			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.SQLite_DEFAULT) {
@@ -183,7 +185,6 @@ public class DBInformationDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, Messages.DBInformationDialog_6, true);
-//		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
 	}
 
 	/**

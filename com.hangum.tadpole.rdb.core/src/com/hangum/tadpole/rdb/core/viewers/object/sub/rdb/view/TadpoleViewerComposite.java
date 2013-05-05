@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view;
 
@@ -41,17 +41,17 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableColumnLabelprovider;
-import com.hangum.tadpole.system.permission.PermissionChecks;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -77,6 +77,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_View;
 	private ObjectDeleteAction deleteAction_View;
 	private ObjectRefreshAction refreshAction_View;
+//	private ObjectModifyAction modifyAction_View;
 
 	/**
 	 * 
@@ -106,7 +107,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		viewListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		viewListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		viewListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				// 테이블의 컬럼 목록을 출력합니다.
@@ -183,9 +185,10 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		deleteAction_View = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		deleteAction_View = new ObjectDeleteAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+//		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.VIEWS, "View");
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -193,9 +196,10 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecks.isShow(strUserType, userDB)) {
+				if(PermissionChecker.isShow(strUserType, userDB)) {
 					manager.add(creatAction_View);
 					manager.add(deleteAction_View);
+//					manager.add(modifyAction_View);
 				}
 				manager.add(refreshAction_View);
 			}
@@ -251,6 +255,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		creatAction_View.setUserDB(getUserDB());
 		deleteAction_View.setUserDB(getUserDB());
 		refreshAction_View.setUserDB(getUserDB());		
+//		modifyAction_View.setUserDB(getUserDB());
 	}
 	
 	/**

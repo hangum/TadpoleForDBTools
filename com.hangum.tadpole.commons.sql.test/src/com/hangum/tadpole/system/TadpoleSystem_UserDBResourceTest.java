@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
@@ -65,11 +65,11 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#saveResource(UserDBDAO, com.hangum.tadpole.define.Define.RESOURCE_TYPE, String, String) 시스템 리소스 저장 테스트}
+	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#saveResource(UserDBDAO, com.hangum.tadpole.define.DB_Define.RESOURCE_TYPE, String, String) 시스템 리소스 저장 테스트}
 	 */
 	public void testSaveResource() {
 		try {
-			UserDBResourceDAO userDBResource = TadpoleSystem_UserDBResource.saveResource(userDb.getUser_seq(), userDb, Define.RESOURCE_TYPE.SQL, "junit", "junit content");
+			UserDBResourceDAO userDBResource = TadpoleSystem_UserDBResource.saveResource(userDb.getUser_seq(), userDb, DB_Define.RESOURCE_TYPE.SQL, "junit", "junit content");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("SaveResouece");
@@ -106,11 +106,11 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#userDBResourceDuplication(com.hangum.tadpole.define.Define.RESOURCE_TYPE, int, int, String) 시스템 리소스 중복 테스트}
+	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#userDBResourceDuplication(com.hangum.tadpole.define.DB_Define.RESOURCE_TYPE, int, int, String) 시스템 리소스 중복 테스트}
 	 */
 	public void testUserDBResourceDuplication() {
 		try {
-			boolean bool = TadpoleSystem_UserDBResource.userDBResourceDuplication(Define.RESOURCE_TYPE.SQL, userDb.getUser_seq(), userDb.getSeq(), "junit");
+			boolean bool = TadpoleSystem_UserDBResource.userDBResourceDuplication(DB_Define.RESOURCE_TYPE.SQL, userDb.getUser_seq(), userDb.getSeq(), "junit");
 			
 			assertEquals(!bool, true);
 		} catch (Exception e) {

@@ -1,22 +1,28 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -41,6 +47,8 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -57,25 +65,26 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLInsertAction;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLSelectAction;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLUpdateAction;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSampleDataAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
-import com.hangum.tadpole.rdb.core.editors.table.DBTableEditorInput;
-import com.hangum.tadpole.rdb.core.editors.table.TableViewerEditPart;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLInsertAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLSelectAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLUpdateAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSampleDataAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
+import com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer.CHANGE_TYPE;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.system.permission.PermissionChecks;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -96,12 +105,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 	// table info
 	private TableViewer tableListViewer;
-	private List showTables;
+	private List<TableDAO> showTables = new ArrayList<TableDAO>();
 	private ObjectComparator tableComparator;
 	private TableFilter tableFilter;
 	
 	// column info
 	private TableViewer tableColumnViewer;
+	private ObjectComparator tableColumnComparator;
 	private List showTableColumns;
 	
 	private ObjectCreatAction creatAction_Table;
@@ -146,19 +156,20 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		tableListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);// SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
-				if(PermissionChecks.isShow(strUserType, userDB)) {
+				if(PermissionChecker.isShow(strUserType, userDB)) {
 					if (null != is) {
 						TableDAO tableDAO = (TableDAO) is.getFirstElement();
 	
 						DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 						try {
-							page.openEditor(mei, TableViewerEditPart.ID);
+							page.openEditor(mei, TableInformationEditor.ID);
 						} catch (PartInitException e) {
 							logger.error("Load the table data", e); //$NON-NLS-1$
 	
@@ -263,13 +274,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tbComment.setWidth(200);
 		tbComment.setText("Comment"); //$NON-NLS-1$
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
-//		tvColComment.setLabelProvider(new ColumnLabelProvider() {
-//			@Override
-//			public String getText(Object element) {
-//				TableDAO table = (TableDAO) element;
-//				return table.getComment();
-//			}
-//		});
 		tvColComment.setLabelProvider(labelProvider);
 		tvColComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
@@ -292,6 +296,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		Table tableTableColumn = tableColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
+		
+		tableColumnComparator = new TableColumnComparator();
+		tableColumnViewer.setSorter(tableColumnComparator);
 
 		createTableColumne(tableColumnViewer);
 
@@ -303,20 +310,58 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	/**
+	 * table table column
+	 */
+	protected void createTableColumne(final TableViewer tv) {
+		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
+		int[] size = {120, 90, 50, 100, 50, 50, 50};
+
+		for (int i=0; i<name.length; i++) {
+			
+			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
+			
+			tableColumn.getColumn().setText(name[i]);
+			tableColumn.getColumn().setWidth(size[i]);
+			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tableColumn, i));
+		}
+	}
+	/**
+	 * selection adapter
+	 * 
+	 * @param tableColumn
+	 * @param i
+	 * @return
+	 */
+	private SelectionAdapter getSelectionAdapter(final TableViewerColumn tableColumn, final int index) {
+		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableColumnComparator.setColumn(index);
+				
+				tableColumnViewer.getTable().setSortDirection(tableColumnComparator.getDirection());
+				tableColumnViewer.getTable().setSortColumn(tableColumn.getColumn());
+				tableColumnViewer.refresh();
+			}
+		};
+		
+		return selectionAdapter;
+	}
+
+	/**
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 
 		// generation sample data
-		generateSampleData = new GenerateSampleDataAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		generateSampleData = new GenerateSampleDataAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 
-		selectStmtAction = new GenerateSQLSelectAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
-		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
-		updateStmtAction = new GenerateSQLUpdateAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
-		deleteStmtAction = new GenerateSQLDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
+		selectStmtAction = new GenerateSQLSelectAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
+		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
+		updateStmtAction = new GenerateSQLUpdateAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
+		deleteStmtAction = new GenerateSQLDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -325,7 +370,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
-					if(PermissionChecks.isShow(strUserType, userDB)) {
+					if(PermissionChecker.isShow(strUserType, userDB)) {
 						manager.add(creatAction_Table);
 						manager.add(deleteAction_Table);
 					}					
@@ -340,7 +385,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(selectStmtAction);
 					
-					if(PermissionChecks.isShow(strUserType, userDB)) {
+					if(PermissionChecker.isShow(strUserType, userDB)) {
 						manager.add(insertStmtAction);
 						manager.add(updateStmtAction);
 						manager.add(deleteStmtAction);
@@ -359,25 +404,99 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	public void refreshTable(final UserDBDAO selectUserDb, boolean boolRefresh) {
 		if(!boolRefresh) if(selectUserDb == null) return;
-
 		this.userDB = selectUserDb;
-
-		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		
+		Job job = new Job(Messages.MainEditor_45) {
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN);
+				
+				try {
+					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+					showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+					
+					/** filter 정보가 있으면 처리합니다. */
+					filter();
+					
+				} catch(Exception e) {
+					logger.error("Table Referesh", e);
+					
+					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
+				} finally {
+					monitor.done();
+				}
+				
+				/////////////////////////////////////////////////////////////////////////////////////////
+				return Status.OK_STATUS;
+			}
+		};
+		
+		// job의 event를 처리해 줍니다.
+		job.addJobChangeListener(new JobChangeAdapter() {
 			
-			tableListViewer.setInput(showTables);
-			tableListViewer.refresh();
-
-		} catch (Exception e) {
-			logger.error("Table Referesh", e);
-
-			if (showTables != null) showTables.clear();
-			tableListViewer.setInput(showTables);
-			tableListViewer.refresh();
-
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
+			public void done(IJobChangeEvent event) {
+				final IJobChangeEvent jobEvent = event; 
+				
+				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if(jobEvent.getResult().isOK()) {
+							tableListViewer.setInput(showTables);
+							tableListViewer.refresh();
+						} else {
+							if (showTables != null) showTables.clear();
+							tableListViewer.setInput(showTables);
+							tableListViewer.refresh();
+							
+							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
+						}
+					}
+				});	// end display.asyncExec
+			}	// end done
+			
+		});	// end job
+		
+		job.setName(userDB.getDisplay_name());
+		job.setUser(true);
+		job.schedule();
+	}
+	
+	/**
+	 * 디비 등록시 설정한 filter 정보를 적용한다.
+	 */
+	private void filter() {
+		if("YES".equals(userDB.getIs_table_filter())){
+			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
+			
+			String includeFilter = userDB.getTable_filter_include();
+			if("".equals(includeFilter)) {
+				tmpShowTables.addAll(showTables);					
+			} else {
+				for (TableDAO tableDao : showTables) {
+					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
+					for (String strFilter : strArryFilters) {
+						if(tableDao.getName().matches(strFilter)) {
+							tmpShowTables.add(tableDao);
+						}
+					}
+				}
+			}
+			
+			String excludeFilter = userDB.getTable_filter_exclude();
+			if(!"".equals(excludeFilter)) {
+				for (TableDAO tableDao : tmpShowTables) {
+					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
+					for (String strFilter : strArryFilters) {
+						if(tableDao.getName().matches(strFilter)) {
+							tmpShowTables.remove(tableDao);
+						}
+					}
+				}
+			}
+			
+			// add table list array
+			showTables.clear();
+			showTables.addAll(tmpShowTables);
 		}
 	}
 	

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditorInput;
@@ -27,8 +28,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
-import com.hangum.tadpole.rdb.core.editors.main.browserfunction.EditorBrowserFunctionService;
-import com.hangum.tadpole.sql.parser.format.SQLFormater;
+import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**
  * 쿼리 생성관련 유틸입니다.
@@ -67,7 +67,7 @@ public class FindEditorAndWriteQueryUtil {
 			
 //			포멧팅 한것이 잘 보이지 않아서 우선 블럭 해 놓습니다.
 //			try {
-//				lowSQL = FormatSQL.format(lowSQL);
+//				lowSQL = SQLFormater.format(lowSQL);
 //			} catch(Exception e) {}
 			
 			if(reference == null) {				
@@ -80,7 +80,7 @@ public class FindEditorAndWriteQueryUtil {
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 					ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 				}				
-			} else {				
+			} else {
 				try {
 					MainEditor editor = (MainEditor)reference.getEditor(false);
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);

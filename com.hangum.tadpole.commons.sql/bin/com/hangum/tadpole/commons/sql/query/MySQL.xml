@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  Copyright (c) 2012 Cho Hyun Jong.
+  Copyright (c) 2013 hangum.
   All rights reserved. This program and the accompanying materials
-  are made available under the terms of the Eclipse Public License v1.0
+  are made available under the terms of the GNU Lesser Public License v2.1
   which accompanies this distribution, and is available at
-  http://www.eclipse.org/legal/epl-v10.html
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
   
   Contributors:
-      Cho Hyun Jong - initial API and implementation
+      hangum - initial API and implementation
 -->
 <!DOCTYPE sqlMap      
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
@@ -55,7 +55,6 @@
 	FROM information_schema.columns
 	WHERE table_schema = #db# AND 
 		table_name = #table#
-	order by ordinal_position
 </select>
 
 <!-- 
@@ -135,5 +134,36 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 <select id="triggerList" resultClass="com.hangum.tadpole.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	SHOW TRIGGERS 
 </select>
+
+<!-- 
+	SESSION LIST
+ -->
+<select id="sessionList" resultClass="com.hangum.tadpole.dao.mysql.SessionListDAO">
+	SHOW PROCESSLIST
+</select>
+
+<!-- 
+	process kill
+ -->
+<select id="killProcess" parameterClass="java.lang.String">
+	kill #pid#
+</select>
+
+<!-- 
+	table information
+ -->
+<select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	SELECT
+    TABLE_NAME, ENGINE, TABLE_ROWS, AUTO_INCREMENT, TABLE_COMMENT, TABLE_COLLATION, CREATE_TIME
+  FROM
+    INFORMATION_SCHEMA.TABLES
+  WHERE
+    TABLE_SCHEMA = #db#
+    AND TABLE_TYPE = 'BASE TABLE'
+  ORDER BY
+    TABLE_NAME
+</select>
+
+
 
 </sqlMap>

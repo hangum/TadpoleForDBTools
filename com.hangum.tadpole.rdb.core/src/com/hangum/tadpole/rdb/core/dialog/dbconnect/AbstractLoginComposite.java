@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 
@@ -18,13 +18,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.PingTest;
@@ -36,17 +37,29 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public abstract class AbstractLoginComposite extends Group {
+public abstract class AbstractLoginComposite extends Composite {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3434604591881525231L;
 	private static final Logger logger = Logger.getLogger(AbstractLoginComposite.class);
 	
+	protected String displayName = "";
+	
+	protected PreConnectionInfoGroup preDBInfo;
+	protected OthersConnectionRDBGroup othersConnectionInfo;
+	
 	protected String strOtherGroupName = "Other Group"; //$NON-NLS-1$
 	protected String selGroupName = ""; //$NON-NLS-1$
 	
 	protected List<String> listGroupName = new ArrayList<String>();
+	
+	
+	// start table filters define
+	protected boolean isTableFilter = false;
+	protected String strTableFilterInclude = "";
+	protected String strTableFilterExclude = "";
+	// end table filters define
 
 	/** 기존에 접속한 user db */
 	protected UserDBDAO oldUserDB = null;
@@ -56,11 +69,14 @@ public abstract class AbstractLoginComposite extends Group {
 	
 	/**
 	 * Create the composite.
+	 * @param displayName 
 	 * @param parent
 	 * @param style
 	 */
-	public AbstractLoginComposite(DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO oldUserDB) {
+	public AbstractLoginComposite(String displayName, DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO oldUserDB) {
 		super(parent, style);
+		
+		this.displayName = displayName;
 		this.selectDB = dbDefine;
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
@@ -203,4 +219,57 @@ public abstract class AbstractLoginComposite extends Group {
 		return true;
 	}
 
+	/**
+	 * @return the isTableFilter
+	 */
+	public boolean isTableFilter() {
+		return isTableFilter;
+	}
+
+	/**
+	 * @param isTableFilter the isTableFilter to set
+	 */
+	public void setTableFilter(boolean isTableFilter) {
+		this.isTableFilter = isTableFilter;
+	}
+
+	/**
+	 * @return the strTableFilterInclude
+	 */
+	public String getStrTableFilterInclude() {
+		return strTableFilterInclude;
+	}
+
+	/**
+	 * @param strTableFilterInclude the strTableFilterInclude to set
+	 */
+	public void setStrTableFilterInclude(String strTableFilterInclude) {
+		this.strTableFilterInclude = strTableFilterInclude;
+	}
+
+	/**
+	 * @return the strTableFilterExclude
+	 */
+	public String getStrTableFilterExclude() {
+		return strTableFilterExclude;
+	}
+
+	/**
+	 * @param strTableFilterExclude the strTableFilterExclude to set
+	 */
+	public void setStrTableFilterExclude(String strTableFilterExclude) {
+		this.strTableFilterExclude = strTableFilterExclude;
+	}
+	
+	/**
+	 * display name
+	 * @return
+	 */
+	public String getDisplayName() {
+		return displayName;
+	}
+	
+	public DBDefine getSelectDB() {
+		return selectDB;
+	}
 }

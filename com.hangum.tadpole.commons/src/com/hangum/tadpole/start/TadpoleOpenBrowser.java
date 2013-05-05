@@ -1,18 +1,18 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.start;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * standalone 모드로 시스템이 시작할 때 디폴트 브라우저를 오픈하여 주도록 합니다. 
@@ -37,11 +37,11 @@ public class TadpoleOpenBrowser  implements Runnable {
 			
 			// window
 			if (s1.indexOf("windows") >= 0) {
-				runtime.exec(new String[] { "rundll32", "url.dll,FileProtocolHandler", Define.getTadpoleUrl() });
+				runtime.exec(new String[] { "rundll32", "url.dll,FileProtocolHandler", PublicTadpoleDefine.getTadpoleUrl() });
 			
 			// mac
 			} else if (s1.indexOf("mac") >= 0) {
-				Runtime.getRuntime().exec(new String[] { "open", Define.getTadpoleUrl() });
+				Runtime.getRuntime().exec(new String[] { "open", PublicTadpoleDefine.getTadpoleUrl() });
 			
 			// linux
 			} else {
@@ -56,7 +56,7 @@ public class TadpoleOpenBrowser  implements Runnable {
 					if (i >= as.length)
 						break;
 					try {
-						runtime.exec(new String[] { as[i], Define.getTadpoleUrl() });
+						runtime.exec(new String[] { as[i], PublicTadpoleDefine.getTadpoleUrl() });
 						isSuccess = true;
 						break;
 					} catch (Exception exception) {

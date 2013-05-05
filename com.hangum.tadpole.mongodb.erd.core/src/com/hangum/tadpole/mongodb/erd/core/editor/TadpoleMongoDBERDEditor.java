@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.erd.core.editor;
 
@@ -55,7 +55,7 @@ import org.xml.sax.InputSource;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.erd.core.Messages;
 import com.hangum.tadpole.mongodb.erd.core.actions.AutoLayoutAction;
@@ -327,7 +327,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 				
 				try {
 					// erd 정보 디비저장
-					userDBErd = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.ERD, erdDetailFileName, createResourceToString());
+					userDBErd = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, DB_Define.RESOURCE_TYPE.ERD, erdDetailFileName, createResourceToString());
 					userDBErd.setParent(userDB);
 					
 					// command stack 초기화
@@ -339,7 +339,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 					// managerView tree refresh
 					// 뒤에 시간을붙인것은 한번 저장한 db_seq는 업데이지 않는 오류를 방지하기위해...
 					//
-					PlatformUI.getPreferenceStore().setValue(Define.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					PlatformUI.getPreferenceStore().setValue(DB_Define.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					
 				} catch (Exception e) {
 					logger.error(Messages.TadpoleEditor_9, e);
@@ -410,7 +410,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 			int len = newText.length();
 			if(len < 5) return Messages.TadpoleEditor_13;
 			try {
-				if(!TadpoleSystem_UserDBResource.userDBResourceDuplication(Define.RESOURCE_TYPE.ERD, userDB.getUser_seq(), userDB.getSeq(), newText)) {
+				if(!TadpoleSystem_UserDBResource.userDBResourceDuplication(DB_Define.RESOURCE_TYPE.ERD, userDB.getUser_seq(), userDB.getSeq(), newText)) {
 					return Messages.TadpoleEditor_14;
 				}
 			} catch (Exception e) {

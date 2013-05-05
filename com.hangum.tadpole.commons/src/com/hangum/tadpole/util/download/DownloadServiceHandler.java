@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.util.download;
 
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.service.ServiceHandler;
 
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * 쿼리결과, 히스토리 다운로드 서비스
@@ -49,7 +49,7 @@ public class DownloadServiceHandler implements ServiceHandler {
 			// Set response headers
 			resp.setContentType(contentType);
 			resp.setContentLength(getByteContent().length);
-			resp.setHeader("Content-Disposition", "attachment; filename=" + "\"" + getName() + "\"" + Define.SQL_DILIMITER);
+			resp.setHeader("Content-Disposition", "attachment; filename=" + "\"" + getName() + "\"" + PublicTadpoleDefine.SQL_DILIMITER);
 			resp.flushBuffer();
 			// Copy documentation to responce's output stream.
 			os = resp.getOutputStream();

@@ -80,7 +80,8 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 		 "text", "time", "timestamp", "tinyint", "tinytext", "tinyblob",
 		 "varbinary", "varchar", "varying",
 		 "=", "-", "+", "\\", "*", ">", "<", "<=", ">=",
-		 "sqlstate"		 
+		 "sqlstate",
+		 "commit", "rollback"
 		 ];
 
 	// 기존 mysql 키워드 중에 auto_increment를 autoincrement로 바꾼것입니다.
@@ -150,7 +151,8 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 		 "text", "time", "timestamp", "tinyint", "tinytext", "tinyblob",
 		 "varbinary", "varchar", "varying",
 		 "=", "-", "+", "\\", "*", ">", "<", "<=", ">=",
-		 "sqlstate"		 
+		 "sqlstate"	,
+		 "commit", "rollback"	 
 		 ];
 
 	var ORACLE_KEYWORDS =
@@ -211,7 +213,8 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 		 "natural", "naturaln", "nchar", "nclob", "number", "numeric", "nvarchar2", 
 		 "real", "rowtype", 
 		 "signtype", "smallint", "string", 
-		 "varchar", "varchar2"
+		 "varchar", "varchar2",
+		 "commit", "rollback"
 		 ];
 		 
 	var MSSQL_KEYWORDS =
@@ -351,7 +354,8 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 		"xp_trace_setobjidfilter", "xp_trace_setqueryhistory", "xp_trace_setqueueautostart", "xp_trace_setqueuecreateinfo", "xp_trace_setqueuedestination", "xp_trace_setreadfilter", 
 		"xp_trace_setserverfilter", "xp_trace_setseverityfilter", "xp_trace_setspidfilter", "xp_trace_settextfilter", "xp_trace_setuserfilter", "xp_trace_setwritefilter", "xp_trace_startconsumer", 
 		"xp_trace_toeventlogconsumer", "xp_trace_tofileconsumer", "xp_unc_to_drive", "xp_unload_dummy_handlers", "xp_updatecolvbm", "xp_updatelineage", "xp_varbintohexstr", "xp_writesqlinfo",
-		"LIKE"
+		"LIKE",
+		 "commit", "rollback"
 		 ];
 
 	// Scanner constants

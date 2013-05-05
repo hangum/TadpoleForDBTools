@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
@@ -18,7 +18,7 @@ import com.hangum.tadpole.Messages;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -41,7 +41,7 @@ public class TadpoleSystem_UserQuery {
 	 * @param name
 	 * @throws Exception
 	 */
-	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, Define.USER_TYPE userType) throws Exception {
+	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, DB_Define.USER_TYPE userType) throws Exception {
 		return newUser(groupSeq, email, passwd, name, userType.toString());
 	}
 	
@@ -85,9 +85,9 @@ public class TadpoleSystem_UserQuery {
 		// 테스트모드 일 경우 관리자의 허락이 필요치 않도록 수정합니다.
 		// 
 		if(ApplicationArgumentUtils.isTestMode()) {
-			return newUser(groupSeq, email, passwd, name, type, Define.YES_NO.YES.toString());
+			return newUser(groupSeq, email, passwd, name, type, DB_Define.YES_NO.YES.toString());
 		} else {
-			return newUser(groupSeq, email, passwd, name, type, Define.YES_NO.NO.toString());
+			return newUser(groupSeq, email, passwd, name, type, DB_Define.YES_NO.NO.toString());
 		}
 	}
 	

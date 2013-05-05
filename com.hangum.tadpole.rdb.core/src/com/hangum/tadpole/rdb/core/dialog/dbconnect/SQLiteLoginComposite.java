@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 
@@ -23,15 +23,20 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBWithoutTunnelingGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
@@ -47,13 +52,10 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 * 
 	 */
 	private static final long serialVersionUID = -444340316081961365L;
-
 	private static final Logger logger = Logger.getLogger(SQLiteLoginComposite.class);
 	
-	protected Combo comboGroup;
+	protected OthersConnectionRDBWithoutTunnelingGroup othersConnectionInfo;
 	protected Text textFile;
-	protected Text textDisplayName;
-	protected Combo comboOperationType;
 	
 	/**
 	 * Create the composite.
@@ -61,63 +63,41 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 * @param style
 	 */
 	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super(DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
-		setText(Messages.SQLiteLoginComposite_0);
+		super("Sample SQLite 3.7.2", DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override
 	protected void crateComposite() {
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 2;
+		gridLayout.horizontalSpacing = 2;
+		gridLayout.marginHeight = 2;
+		gridLayout.marginWidth = 2;
+		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite container = new Composite(this, SWT.NONE);
-		GridLayout gl_container = new GridLayout(1, false);
-		gl_container.verticalSpacing = 3;
-		gl_container.horizontalSpacing = 3;
-		gl_container.marginHeight = 3;
-		gl_container.marginWidth = 3;
-		container.setLayout(gl_container);
-		container.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		
-		Composite compositeBody = new Composite(container, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(2, false));
+		Composite compositeBody = new Composite(this, SWT.NONE);
+		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
-		Label lblOperationType = new Label(compositeBody, SWT.NONE);
-		lblOperationType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		lblOperationType.setText(Messages.MySQLLoginComposite_lblOperationType_text);
+		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
+		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
+		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
-		comboOperationType = new Combo(compositeBody, SWT.READ_ONLY);
-		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (DBOperationType opType : DBOperationType.values()) {
-			comboOperationType.add(opType.getTypeName());
-		}
-		comboOperationType.select(1);
+		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
+		grpConnectionType.setLayout(new GridLayout(2, false));
+		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		grpConnectionType.setText(Messages.MSSQLLoginComposite_grpConnectionType_text);
 		
-		Label lblGroup = new Label(compositeBody, SWT.NONE);
-		lblGroup.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		lblGroup.setText(Messages.SQLiteLoginComposite_lblGroup_text);
-		
-		comboGroup = new Combo(compositeBody, SWT.NONE);
-		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (String strGroup : listGroupName) comboGroup.add(strGroup);
-		
-		Label lblDisplayName = new Label(compositeBody, SWT.NONE);
-		lblDisplayName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		lblDisplayName.setText(Messages.SQLiteLoginComposite_2);
-		
-		textDisplayName = new Text(compositeBody, SWT.BORDER);
-		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeBody, SWT.NONE);
-		new Label(compositeBody, SWT.NONE);
-		
-		Label lblDbFile = new Label(compositeBody, SWT.NONE);
+		Label lblDbFile = new Label(grpConnectionType, SWT.NONE);
 		lblDbFile.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		lblDbFile.setText(Messages.SQLiteLoginComposite_1);
 		
-		textFile = new Text(compositeBody, SWT.BORDER);
+		textFile = new Text(grpConnectionType, SWT.BORDER);
 		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeBody, SWT.NONE);
+		
+		othersConnectionInfo = new OthersConnectionRDBWithoutTunnelingGroup(this, SWT.NONE);
+		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		init();
 	}
@@ -129,14 +109,15 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			textFile.setText(oldUserDB.getDb());
-			textDisplayName.setText(oldUserDB.getDisplay_name());
-			comboOperationType.setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
+			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
+			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 			
-			textDisplayName.setText("Sample SQLite 3.7.2");			
+			preDBInfo.setTextDisplayName(getDisplayName());			
 			textFile.setText("./tadpole-test.db");//Messages.SQLiteLoginComposite_3); //$NON-NLS-1$
 		}
 		
+		Combo comboGroup = preDBInfo.getComboGroup();
 		if(comboGroup.getItems().length == 0) {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
@@ -157,13 +138,13 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	protected boolean connection() {
 		String strFile = StringUtils.trimToEmpty(textFile.getText());
 		
-		if("".equals(comboGroup.getText().trim())) {
+		if("".equals(preDBInfo.getComboGroup().getText().trim())) {
 			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "Group" + Messages.MySQLLoginComposite_10);
 			return false;
-		} else if("".equals( strFile ) ) { //$NON-NLS-1$
+		} else if("".equals(strFile) ) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_7);
 			return false;
-		} else if("".equals(StringUtils.trimToEmpty(textDisplayName.getText()))) { //$NON-NLS-1$
+		} else if("".equals(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_12 );
 			return false;
 		}
@@ -173,14 +154,25 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		}
 		
 		userDB = new UserDBDAO();
-		userDB.setTypes(DBDefine.SQLite_DEFAULT.getDBToString());
-		userDB.setUrl(String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), textFile.getText().trim()));
+		userDB.setTypes(getSelectDB().getDBToString());
+		userDB.setUrl(String.format(getSelectDB().getDB_URL_INFO(), textFile.getText().trim()));
 		userDB.setDb(textFile.getText().trim());
-		userDB.setGroup_name(comboGroup.getText().trim());
-		userDB.setDisplay_name(textDisplayName.getText().trim());
-		userDB.setOperation_type( DBOperationType.getNameToType(comboOperationType.getText()).toString() );
+		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
+		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
 		userDB.setPasswd(""); //$NON-NLS-1$
 		userDB.setUsers(""); //$NON-NLS-1$
+		
+		// others connection 정보를 입력합니다.
+		OthersConnectionInfoDAO otherConnectionDAO = othersConnectionInfo.getOthersConnectionInfo();
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setIs_autocmmit(otherConnectionDAO.isAutoCommit()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+		
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
 		
 		// 기존 데이터 업데이트
 		if(oldUserDB != null) {

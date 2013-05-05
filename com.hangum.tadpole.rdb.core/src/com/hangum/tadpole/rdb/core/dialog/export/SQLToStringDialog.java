@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export;
 
@@ -30,7 +30,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.application.SQLToJavaConvert;
 
@@ -103,7 +104,7 @@ public class SQLToStringDialog extends Dialog {
 			}
 		});
 		comboLanguageType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for(Define.SQL_TO_APPLICATION app : Define.SQL_TO_APPLICATION.values()) {
+		for(DB_Define.SQL_TO_APPLICATION app : DB_Define.SQL_TO_APPLICATION.values()) {
 			comboLanguageType.add(app.toString());
 			comboLanguageType.setData(app.toString(), app);
 		}
@@ -160,7 +161,7 @@ public class SQLToStringDialog extends Dialog {
 		StringBuffer sbStr = new StringBuffer();
 		String[] sqls = parseSQL();
 		
-		SQLToLanguageConvert slt = new SQLToLanguageConvert( (Define.SQL_TO_APPLICATION)comboLanguageType.getData(comboLanguageType.getText()) );
+		SQLToLanguageConvert slt = new SQLToLanguageConvert( (DB_Define.SQL_TO_APPLICATION)comboLanguageType.getData(comboLanguageType.getText()) );
 		for(int i=0; i < sqls.length; i++) {
 			if("".equals(StringUtils.trimToEmpty(sqls[i]))) continue;
 			
@@ -175,7 +176,7 @@ public class SQLToStringDialog extends Dialog {
 	}
 	
 	private String[] parseSQL() {
-		String[] arry = sql.split(Define.SQL_DILIMITER); //$NON-NLS-1$
+		String[] arry = sql.split(PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
 		 if( arry.length == 1) {
 			 String ars[] = { sql };
 			 return ars;

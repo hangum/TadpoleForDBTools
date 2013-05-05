@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.application.start;
 
@@ -29,15 +29,16 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
+import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
+import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenDBRelationAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenQueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.global.PreferenceAction;
-import com.hangum.tadpole.rdb.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.permission.PermissionChecks;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
  * 올챙이에서 사용하려는 workbench의 action과 toolbar, menu를 생성합니다.
@@ -55,7 +56,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction dbRelationOpenAction;
     private IAction deleteResourceAction;
     
+    /** 사용자 권한 */
     private IAction userPermissionAction;
+    /** 실행된 sql */
+//    private IAction executedSQLAction;
     
     private IAction preferenceAction;
     private IAction aboutAction;
@@ -88,11 +92,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	userPermissionAction = new UserPermissionAction(window);
     	register(userPermissionAction);
+    	
+//    	executedSQLAction = new ExecutedSQLAction(window);
+//    	register(executedSQLAction);
 
         exitAction = new ExitAction(window);
         register(exitAction);
         
-        preferenceAction = new PreferenceAction(window);//ActionFactory.PREFERENCES.create(window);
+        preferenceAction = new PreferenceAction(window);
         register(preferenceAction);        
         
         aboutAction = new AboutAction(window);
@@ -141,7 +148,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main"));
         
-        if(PermissionChecks.isShow(SessionManager.getLoginType())) {
+        if(PermissionChecker.isShow(SessionManager.getLoginType())) {
 	        toolbar.add(connectAction);
 	        toolbar.add(new Separator());
         }
@@ -157,8 +164,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(deleteResourceAction);
         toolbar.add(new Separator());
         
-        if(PermissionChecks.isShow(SessionManager.getLoginType())) {
+        if(PermissionChecker.isShow(SessionManager.getLoginType())) {
         	toolbar.add(userPermissionAction);
+//        	toolbar.add(executedSQLAction);
             toolbar.add(new Separator());        	
         }
         

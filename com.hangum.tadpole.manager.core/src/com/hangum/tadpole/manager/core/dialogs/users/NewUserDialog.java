@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
@@ -226,12 +226,12 @@ public class NewUserDialog extends Dialog {
 		
 		// user 입력시 
 		int groupSeq = 0;
-		Define.USER_TYPE userType = Define.USER_TYPE.USER;
+		DB_Define.USER_TYPE userType = DB_Define.USER_TYPE.USER;
 		if(btnUser.getSelection()) {
 			groupSeq = (Integer)comboUserGroup.getData(comboUserGroup.getText());
 		} else {
 			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
-			userType = Define.USER_TYPE.MANAGER;
+			userType = DB_Define.USER_TYPE.MANAGER;
 			// 그룹 등록
 			try {
 				groupSeq = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);

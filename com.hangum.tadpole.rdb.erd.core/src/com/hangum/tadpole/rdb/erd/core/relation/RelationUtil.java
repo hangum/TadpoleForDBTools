@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.erd.core.relation;
 
@@ -23,7 +23,7 @@ import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.ReferencedTableDAO;
 import com.hangum.tadpole.dao.sqlite.SQLiteRefTableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferDropTargetListener;
 import com.hangum.tadpole.rdb.model.Column;
 import com.hangum.tadpole.rdb.model.DB;
@@ -284,12 +284,12 @@ public class RelationUtil {
 	public static RelationKind calcRelationCol(Column soCol, Column taCol) {
 		if("YES".equals( taCol.getNull() ) || "YES".equals( soCol.getNull() )) {
 			
-			if( Define.isPK( soCol.getKey() )) return RelationKind.ZERO_OR_ONE;
+			if( DB_Define.isPK( soCol.getKey() )) return RelationKind.ZERO_OR_ONE;
 			else return RelationKind.ZERO_OR_MANY;
 		
 		} else {
 		
-			if( Define.isPK( soCol.getKey() )) return RelationKind.ONLY_ONE;
+			if( DB_Define.isPK( soCol.getKey() )) return RelationKind.ONLY_ONE;
 			else return RelationKind.ONE_OR_MANY;
 			
 		}

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
@@ -18,7 +18,8 @@ import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.ManagerListDTO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DBOperationType;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -30,6 +31,13 @@ import com.swtdesigner.ResourceManager;
  *
  */
 public class ManagerLabelProvider extends LabelProvider {
+	/** production markup start tag */
+	public static String PRODUCTION_SERVER_START_TAG = "<em style='color:rgb(255, 0, 0)'>"; //$NON-NLS-1$
+	/** development markup start tag */
+	public static String DEVELOPMENT_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
+	
+	/** Markup end tag */
+	public static String END_TAG = "</em>"; //$NON-NLS-1$
 	
 	@Override
 	public Image getImage(Object element) {
@@ -45,6 +53,9 @@ public class ManagerLabelProvider extends LabelProvider {
 			
 			if(DBDefine.MYSQL_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MARIADB_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
 			
 			else if(DBDefine.ORACLE_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
@@ -64,9 +75,12 @@ public class ManagerLabelProvider extends LabelProvider {
 			else if(DBDefine.MONGODB_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
 			
+			else
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/database-add.png"); //$NON-NLS-1$
+			
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
-			if(Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() )) {
+			if(DB_Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() )) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/erd.png"); //$NON-NLS-1$
 			} else {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sql-query.png"); //$NON-NLS-1$
@@ -75,7 +89,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		
 		return super.getImage(element);
 	}
-
+	
 	@Override
 	public String getText(Object element) {
 		if(element instanceof ManagerListDTO) {
@@ -85,13 +99,21 @@ public class ManagerLabelProvider extends LabelProvider {
 		} else if(element instanceof UserDBDAO) {
 			UserDBDAO dao = (UserDBDAO)element;
 			
-			// 자신의 디비만 보이도록 수정
-			String retText = "[" + StringUtils.substring(dao.getOperation_type(), 0, 1) + "] ";
-			if(dao.getUser_seq() == SessionManager.getSeq()) {
-				return retText + dao.getDisplay_name() + " (" + dao.getUsers() + "@" + dao.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			String retText = "";
+			if(DBOperationType.PRODUCTION.toString().equals(dao.getOperation_type())) {
+				retText = PRODUCTION_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 1) + "] " + END_TAG;
 			} else {
-				return retText + dao.getDisplay_name(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				retText = DEVELOPMENT_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 1) + "] " + END_TAG;
 			}
+			
+			// 자신의 디비만 보이도록 수정
+			if(dao.getUser_seq() == SessionManager.getSeq()) {
+				retText += dao.getDisplay_name() + " (" + dao.getUsers() + "@" + dao.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			} else {
+				retText += dao.getDisplay_name(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+			
+			return retText;
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			

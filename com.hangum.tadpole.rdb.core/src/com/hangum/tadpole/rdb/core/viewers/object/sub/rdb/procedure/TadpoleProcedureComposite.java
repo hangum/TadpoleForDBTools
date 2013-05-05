@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure;
 
@@ -33,16 +33,17 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectExecuteProcedureAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.system.permission.PermissionChecks;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -65,6 +66,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Procedure;
 	private ObjectDeleteAction deleteAction_Procedure;
 	private ObjectRefreshAction refreshAction_Procedure;
+	private ObjectExecuteProcedureAction executeAction_Procedure;
 
 	/**
 	 * procedure 
@@ -95,8 +97,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		// procedure table viewer
-		tableViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
@@ -120,9 +122,10 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
-		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
-		deleteAction_Procedure = new ObjectDeleteAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
-		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
+		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
+		deleteAction_Procedure = new ObjectDeleteAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
+		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -130,11 +133,12 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecks.isShow(strUserType, userDB)) {
+				if(PermissionChecker.isShow(strUserType, userDB)) {
 					manager.add(creatAction_Procedure);
 					manager.add(deleteAction_Procedure);
 				}
 				manager.add(refreshAction_Procedure);
+				manager.add(executeAction_Procedure);
 			}
 		});
 
@@ -164,6 +168,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		creatAction_Procedure.setUserDB(getUserDB());
 		deleteAction_Procedure.setUserDB(getUserDB());
 		refreshAction_Procedure.setUserDB(getUserDB());
+		executeAction_Procedure.setUserDB(getUserDB());
 	}
 	
 	/**

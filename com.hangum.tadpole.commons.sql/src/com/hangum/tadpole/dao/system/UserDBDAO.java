@@ -1,12 +1,12 @@
 /*******************************************************************************
-\ * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.dao.system;
 
@@ -15,9 +15,19 @@ import java.util.Date;
 import java.util.List;
 
 import com.hangum.tadpole.dao.ManagerListDTO;
+import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 
 /**
  * 사용자 디비
+
+   ps)
+   특이 password의 get메소드는 다음이어야 합니다. 
+   이유는, 디비에 암호화된 패스워드가 들어 있기 때문에 그렇고..
+   
+ 	public String getPasswd() {
+		return EncryptiDecryptUtil.decryption(passwd);
+	}
+
  * 
  * @author hangum
  *
@@ -45,9 +55,24 @@ public class UserDBDAO {
 	protected String ext1 = "";
 	protected String ext2 = ""; 
 	protected String ext3 = "";
+	protected String ext4 = "";
+	protected String ext5 = "";
+	protected String ext6 = "";
+	protected String ext7 = "";
+	protected String ext8 = "";
+	protected String ext9 = "";
+	protected String ext10 = "";
 	
 	protected String is_profile = "";
     protected int profile_select_mill = -1;
+    
+    protected String is_readOnlyConnect = "";
+	protected String is_autocmmit = "";
+	
+	protected String is_table_filter = "";
+
+	protected String table_filter_include = "";
+	protected String table_filter_exclude = "";
     
     // 운영서버일 경우 DML 문 실행시 YES, NO 묻기
     protected String question_dml = "";
@@ -128,6 +153,10 @@ public class UserDBDAO {
 		this.locale = locale;
 	}
 
+	/**
+	 * some special code
+	 * @return
+	 */
 	public String getPasswd() {
 		return passwd;
 	}
@@ -258,6 +287,114 @@ public class UserDBDAO {
 
 	public void setQuestion_dml(String question_dml) {
 		this.question_dml = question_dml;
+	}
+
+	
+	public String getExt4() {
+		return ext4;
+	}
+
+	public void setExt4(String ext4) {
+		this.ext4 = ext4;
+	}
+
+	public String getExt5() {
+		return ext5;
+	}
+
+	public void setExt5(String ext5) {
+		this.ext5 = ext5;
+	}
+
+	public String getExt6() {
+		return ext6;
+	}
+
+	public void setExt6(String ext6) {
+		this.ext6 = ext6;
+	}
+
+	public String getExt7() {
+		return ext7;
+	}
+
+	public void setExt7(String ext7) {
+		this.ext7 = ext7;
+	}
+
+	public String getExt8() {
+		return ext8;
+	}
+
+	public void setExt8(String ext8) {
+		this.ext8 = ext8;
+	}
+
+	public String getExt9() {
+		return ext9;
+	}
+
+	public void setExt9(String ext9) {
+		this.ext9 = ext9;
+	}
+
+	public String getExt10() {
+		return ext10;
+	}
+
+	public void setExt10(String ext10) {
+		this.ext10 = ext10;
+	}
+
+
+	public String getIs_readOnlyConnect() {
+		return is_readOnlyConnect;
+	}
+
+	public void setIs_readOnlyConnect(String is_readOnlyConnect) {
+		this.is_readOnlyConnect = is_readOnlyConnect;
+	}
+
+	public String getIs_autocmmit() {
+		return is_autocmmit;
+	}
+
+	public void setIs_autocmmit(String is_autocmmit) {
+		this.is_autocmmit = is_autocmmit;
+	}
+
+	public String getTable_filter_include() {
+		return table_filter_include;
+	}
+
+	public void setTable_filter_include(String table_filter_include) {
+		this.table_filter_include = table_filter_include;
+	}
+
+	public String getTable_filter_exclude() {
+		return table_filter_exclude;
+	}
+
+	public void setTable_filter_exclude(String table_filter_exclude) {
+		this.table_filter_exclude = table_filter_exclude;
+	}
+
+	public void setListUserDBGroup(List<UserDBDAO> listUserDBGroup) {
+		this.listUserDBGroup = listUserDBGroup;
+	}
+	
+	/**
+	 * @return the is_table_filter
+	 */
+	public String getIs_table_filter() {
+		return is_table_filter;
+	}
+
+	/**
+	 * @param is_table_filter the is_table_filter to set
+	 */
+	public void setIs_table_filter(String is_table_filter) {
+		this.is_table_filter = is_table_filter;
 	}
 
 	@Override

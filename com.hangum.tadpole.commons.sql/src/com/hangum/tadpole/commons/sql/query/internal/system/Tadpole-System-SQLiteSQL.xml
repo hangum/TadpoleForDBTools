@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  Copyright (c) 2012 Cho Hyun Jong.
+  Copyright (c) 2013 hangum.
   All rights reserved. This program and the accompanying materials
-  are made available under the terms of the Eclipse Public License v1.0
+  are made available under the terms of the GNU Lesser Public License v2.1
   which accompanies this distribution, and is available at
-  http://www.eclipse.org/legal/epl-v10.html
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
   
   Contributors:
-      Cho Hyun Jong - initial API and implementation
+      hangum - initial API and implementation
 -->
-
 <!--
 - 시스템 사용자 정보 디비
 CREATE TABLE tadpole_system (
@@ -85,16 +84,28 @@ CREATE TABLE user_db (
      host		 VARCHAR(50) 	,
      port		 VARCHAR(10) ,
      locale	VARCHAR(10)		,
-     passwd		 VARCHAR(100)  	,
+     passwd		 VARCHAR(500)  	,
      users		 VARCHAR(100) 	,
      is_profile VARCHAR(3) NOT NULL DEFAULT 'YES',
      profile_select_mill INTEGER(3) NOT NULL DEFAULT -1,
      question_dml VARCHAR(3) NOT NULL DEFAULT 'NO',
+     is_readOnlyConnect VARCHAR(3) NOT NULL DEFAULT 'NO',
+	 is_autocmmit VARCHAR(3) NOT NULL DEFAULT 'NO',
+	 is_table_filter VARCHAR(3) NOT NULL DEFAULT 'NO',
+	 table_filter_include VARCHAR(2000),
+	 table_filter_exclude VARCHAR(2000),
      create_time DATE DEFAULT (datetime('now','localtime')),
      delYn CHAR(3) DEFAULT 'NO',
      ext1 VARCHAR(2000),
      ext2 VARCHAR(2000), 
      ext3 VARCHAR(2000),  
+     ext4 VARCHAR(2000),  
+     ext5 VARCHAR(2000),  
+     ext6 VARCHAR(2000),  
+     ext7 VARCHAR(2000),  
+     ext8 VARCHAR(2000),  
+     ext9 VARCHAR(2000),  
+     ext10 VARCHAR(2000),  
      FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
      FOREIGN KEY (ext_seq) REFERENCES ext_account (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
@@ -137,6 +148,31 @@ CREATE TABLE user_info_data (
     value5 VARCHAR(2000),
     FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+
+- 사용자 쿼리 정보.
+CREATE TABLE executed_sql_resource (
+	 seq INTEGER PRIMARY KEY AUTOINCREMENT ,
+     user_seq INTEGER NOT NULL,
+     db_seq INTEGER  NOT NULL,
+	 types VARCHAR(10) NOT NULL,
+     startDateExecute DATE DEFAULT (datetime('now','localtime')),
+     endDateExecute DATE DEFAULT (datetime('now','localtime')),
+     row int default 0,
+     result CHAR(3) DEFAULT 'YES',
+     message VARCHAR(2000),
+     create_time DATE DEFAULT (datetime('now','localtime')),
+     delYn CHAR(3) DEFAULT 'NO',
+     FOREIGN KEY (user_seq) REFERENCES users (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     FOREIGN KEY (db_seq) REFERENCES user_db (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
+
+- 사용자 쿼리 내용.
+CREATE TABLE executed_sql_resource_data (
+     seq INTEGER PRIMARY KEY AUTOINCREMENT ,
+     executed_sql_resource_seq INTEGER NOT NULL,
+     datas VARCHAR(2000)  NOT NULL,
+     FOREIGN KEY (executed_sql_resource_seq) REFERENCES executed_sql_resource (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
  -->
 <!DOCTYPE sqlMap      

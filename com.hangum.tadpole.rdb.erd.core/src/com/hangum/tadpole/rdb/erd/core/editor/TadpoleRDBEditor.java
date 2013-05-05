@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.erd.core.editor;
 
@@ -55,7 +55,7 @@ import org.xml.sax.InputSource;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
@@ -162,9 +162,18 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 				getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(!jobEvent.getResult().isOK()) {
-							Exception e = new Exception(jobEvent.getResult().getException());
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+							
+							// 아래의 try문은 이슈 169의 오류를 검증하기 위한 코드입니다.
+							// https://github.com/hangum/TadpoleForDBTools/issues/169
+							//  근본적인 에러는 해결안됨.  그러나 프로그램에서 에러나고 죽는 그런 경우는 해결.
+							//
+							try {
+								Exception e = new Exception(jobEvent.getResult().getException());
+								Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+								ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+							} catch(Exception e) {
+								logger.error("https://github.com/hangum/TadpoleForDBTools/issues/169 검증오류...", e);
+							}
 							
 							// 오류가 발생했을때는 기본 정보로 
 							RdbFactory factory = RdbFactory.eINSTANCE;
@@ -172,10 +181,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 							db.setDbType(userDB.getTypes());
 							db.setId(userDB.getUsers());
 							db.setUrl(userDB.getUrl());
-//						} else {
-//							logger.debug("###change event object strat #####################################");
-//							commandStackChanged(new EventObject(""));
-//							logger.debug("###change event object end #####################################");
+							
 						}
 						getGraphicalViewer().setContents(db);
 						
@@ -335,7 +341,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 				
 				try {
 					// erd 정보 디비저장
-					userDBErd = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, Define.RESOURCE_TYPE.ERD, erdDetailFileName, createResourceToString());
+					userDBErd = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, DB_Define.RESOURCE_TYPE.ERD, erdDetailFileName, createResourceToString());
 					userDBErd.setParent(userDB);
 					
 					// command stack 초기화
@@ -347,7 +353,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 					// managerView tree refresh
 					// 뒤에 시간을붙인것은 한번 저장한 db_seq는 업데이지 않는 오류를 방지하기위해...
 					//
-					PlatformUI.getPreferenceStore().setValue(Define.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					PlatformUI.getPreferenceStore().setValue(DB_Define.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					
 				} catch (Exception e) {
 					logger.error(Messages.TadpoleEditor_9, e);
@@ -418,7 +424,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 			int len = newText.length();
 			if(len < 5) return Messages.TadpoleEditor_13;
 			try {
-				if(!TadpoleSystem_UserDBResource.userDBResourceDuplication(Define.RESOURCE_TYPE.ERD, userDB.getUser_seq(), userDB.getSeq(), newText)) {
+				if(!TadpoleSystem_UserDBResource.userDBResourceDuplication(DB_Define.RESOURCE_TYPE.ERD, userDB.getUser_seq(), userDB.getSeq(), newText)) {
 					return Messages.TadpoleEditor_14;
 				}
 			} catch (Exception e) {

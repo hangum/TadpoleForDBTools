@@ -1,14 +1,3 @@
-/*******************************************************************************
- * @license
- * Copyright (c) 2010, 2011 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
- * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
 /*global examples orion:true window define*/
 /*jslint browser:true devel:true*/
 
@@ -73,7 +62,7 @@ var sqlContentAssistProvider;
 //var jsContentAssistProvider;
 
 function initEmbeddedEditor(){
-//	console.log('set initEmbedded editor');
+	console.log('set initEmbedded editor');
 	
 	define([
 		"require", 
@@ -234,62 +223,27 @@ function initEmbeddedEditor(){
 			
 		editor.addEventListener("DirtyChanged", function(evt) {
 			if (editor.isDirty()) {
-//				dirtyIndicator = "*";
 				editorServiceHandler(editorService.DIRTY_CHANGED, true);
-			} else {
-//				dirtyIndicator = "";
-//				console.log("[2]dirty changed event saved");
 			}
 		});		
 		editor.installTextView();
 		
-//		try {
-//			editorService.getInitialContent();
-//		} catch(err) {
-////			console.log("[error msg]" + err);
-//		}
-		
-//		contentAssist.addEventListener("Activating", function() {
-//			contentAssist.setProviders([sqlContentAssistProvider]);
-//		});
-		
-		console.log("[editor]" + editor);
-		
-		// end of code to run when content changes.
-//		console.log('====== end ==== ');
-
+		console.log('editor is ' + editor);
 	});
 }
 	
 // Install functions for servicing Eclipse Workbench hosted applications
 function installWorkbenchHooks() {
-	console.log('set installWorkbench hooks');
+//	console.log('set installWorkbench hooks');
 	
-	// Register a function that will be called by the editor when the editor's dirty state changes
-	editorService.dirtyChanged = function(dirty) {
-		// This is a function created in Eclipse and registered with the page.
-		editorServiceHandler(editorService.DIRTY_CHANGED, dirty);
-	};
+	getEditor = function() {
+		return editor;
+	}
 	
-//		// Register a getContentName implementation
-//		editorService.getContentName = function() {
-//			console.log("=======> editorService.getContentName = function() ");
-//			// This is a function created in Eclipse and registered with the page.
-//			return editorServiceHandler(editorService.GET_CONTENT_NAME);
-//		};
-	
-	// Register an implementation that can return initial content for the editor
-	editorService.getInitialContent = function() {
+	// set initialize content
+	setInitialContent = function(varExt, varCon) {
+		console.log(varExt + ":" + varCon)
 		try {
-			console.log("0. start get content");
-			var content = editorServiceHandler(editorService.GET_INITIAL_CONTENT);
-			console.log("1. success get content");
-			
-			var idxExt = content.indexOf(":ext:");
-			var varExt = content.substring(0, idxExt);
-			var varCon = content.substring(idxExt+5, content.length);
-			
-			console.log("2. set editor content" + varExt);
 			editor.setInput(varExt, null, varCon);
 
 			syntaxHighlighter.highlight(varExt, editor);
@@ -302,12 +256,14 @@ function installWorkbenchHooks() {
 		}
 	};
 	
+	// Register a function that will be called by the editor when the editor's dirty state changes
+	editorService.dirtyChanged = function(dirty) {
+		// This is a function created in Eclipse and registered with the page.
+		editorServiceHandler(editorService.DIRTY_CHANGED, dirty);
+	};
+	
 	// Register an implementation that should run when the editors status changes.
 	editorService.statusChanged = function(message, isError) {
-		// This is a function created in Eclipse and registered with the page.
-		
-		// 리소스를 너무 많이 잡아 먹는 것으로 파악되어 주석 처리 합니다. 향후 봐서 ...
-//			editorServiceHandler(editorService.STATUS_CHANGED, message);
 	};
 
 	// Register an implementation that can save the editors contents.		
@@ -412,11 +368,8 @@ function installWorkbenchHooks() {
 	};
 }
 
-//Initialize the editor
+////Initialize the editor
 initEmbeddedEditor();
-
-// install editor hooks
+//
+//// install editor hooks
 installWorkbenchHooks();
-
-//	// initialize the editor input
-//	editorService.getInitialContent();

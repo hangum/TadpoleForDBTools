@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
@@ -19,7 +19,7 @@ import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDataDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -38,7 +38,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @param filename
 	 * @throws Exception
 	 */
-	public static UserDBResourceDAO saveResource(int user_seq, UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents, int duration_mill) throws Exception {
+	public static UserDBResourceDAO saveResource(int user_seq, UserDBDAO userDB, DB_Define.RESOURCE_TYPE type, String filename, String contents, int duration_mill) throws Exception {
 		UserDBResourceDAO resourceDao = new UserDBResourceDAO();
 		resourceDao.setUser_seq(user_seq);
 		resourceDao.setTypes(type.toString());
@@ -63,7 +63,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @param filename
 	 * @throws Exception
 	 */
-	public static UserDBResourceDAO saveResource(int user_seq, UserDBDAO userDB, Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
+	public static UserDBResourceDAO saveResource(int user_seq, UserDBDAO userDB, DB_Define.RESOURCE_TYPE type, String filename, String contents) throws Exception {
 		return saveResource(user_seq, userDB, type, filename, contents, 0);
 	}
 	
@@ -122,7 +122,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean userDBResourceDuplication(Define.RESOURCE_TYPE type, int user_seq, int db_seq, String filename) throws Exception {
+	public static boolean userDBResourceDuplication(DB_Define.RESOURCE_TYPE type, int user_seq, int db_seq, String filename) throws Exception {
 		UserDBResourceDAO erd = new UserDBResourceDAO();
 		erd.setTypes(type.toString());
 		erd.setUser_seq(user_seq);
@@ -164,5 +164,5 @@ public class TadpoleSystem_UserDBResource {
 	
 		return retData.toString();
 	}
-	
+
 }

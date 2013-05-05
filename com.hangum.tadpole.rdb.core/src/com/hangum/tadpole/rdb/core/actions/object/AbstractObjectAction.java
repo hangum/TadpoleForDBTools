@@ -1,16 +1,18 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -21,7 +23,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
@@ -39,7 +44,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	protected UserDBDAO userDB = null;
 	protected IWorkbenchWindow window;				  
 	protected IStructuredSelection sel;
-	protected Define.DB_ACTION actionType;
+	protected DB_Define.DB_ACTION actionType;
 	
 	/**
 	 * 
@@ -47,7 +52,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * @param actionType view의 작업 타입
 	 * @param userDB
 	 */
-	public AbstractObjectAction(IWorkbenchWindow window, Define.DB_ACTION actionType) {
+	public AbstractObjectAction(IWorkbenchWindow window, DB_Define.DB_ACTION actionType) {
 		this.window = window;
 		this.actionType = actionType;
 		
@@ -65,6 +70,17 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 		} catch(Exception e) {
 			return null;
 		}
+	}
+	
+	/**
+	 * delete message
+	 *  
+	 * @param msgHead
+	 * @param e
+	 */
+	protected void exeMessage(String msgHead, Exception e) {
+		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+		ExceptionDetailsErrorDialog.openError(null, "Error", msgHead + Messages.ObjectDeleteAction_25, errStatus); //$NON-NLS-1$
 	}
 	
 	/**

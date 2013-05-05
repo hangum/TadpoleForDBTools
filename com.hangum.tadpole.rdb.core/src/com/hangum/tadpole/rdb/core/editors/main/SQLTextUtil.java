@@ -1,19 +1,19 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * sql text util
@@ -35,14 +35,11 @@ public class SQLTextUtil {
 	 * @return
 	 */
 	public static String executeQuery(String query, int cursorPosition) {//throws Exception {
-		if( query.split(Define.SQL_DILIMITER).length == 1 || query.indexOf(Define.SQL_DILIMITER) == -1) {
+		if( query.split(PublicTadpoleDefine.SQL_DILIMITER).length == 1 || query.indexOf(PublicTadpoleDefine.SQL_DILIMITER) == -1) {
 			return StringUtils.trimToEmpty(query);
 		}
 
-		String[] querys = StringUtils.split(query, Define.SQL_DILIMITER);	
-//		if(logger.isDebugEnabled()) {
-//			logger.debug("=====[query]" + query + " =====[mouse point]" + cursorPoint);
-//		}
+		String[] querys = StringUtils.split(query, PublicTadpoleDefine.SQL_DILIMITER);	
 
 		int queryBeforeCount = 0;
 		for(int i=0; i<querys.length; i++) {
@@ -68,27 +65,5 @@ public class SQLTextUtil {
 	 */
 	public static String delLineChar(String query) {
 		return query.replaceAll("(\r\n|\n|\r)", "");
-	}
-	
-	public static void main(String[] args) {
-		String query = " SELECT store_id, manager_staff_id, address_id, last_update "+
-" FROM store;"+
-" "+
-""+
-""+
-" SELECT staff_id, first_name, last_name, address_id, picture, email, store_id, active, username, password, last_update"+ 
-" FROM staff;"+
-""+
-" SELECT city_id, city, country_id, last_update"+ 
-" FROM city;"; 
- 
-		try {
-			String exeQuery = SQLTextUtil.executeQuery(query, 30);
-			System.out.println(exeQuery);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		
 	}
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,7 +45,7 @@ import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.ManagerListDTO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -58,7 +59,7 @@ import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.system.permission.PermissionChecks;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
  * connection manager 정보를 
@@ -84,19 +85,14 @@ public class ManagerViewer extends ViewPart {
 		
 		treeViewer = new TreeViewer(composite, SWT.VIRTUAL | SWT.BORDER);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
 			public void selectionChanged(SelectionChangedEvent event) {
-				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				Object selElement = is.getFirstElement();
 				
 				if(selElement instanceof UserDBDAO) {
 					addUserResouceData((UserDBDAO)selElement);
-					
-//					getViewSite().getActionBars().getStatusLineManager().setMessage(((UserDBDAO)selElement).getDb());
-//				} else {
-//					getViewSite().getActionBars().getStatusLineManager().setMessage("");
 				}
-				
 			}
 		});
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -113,7 +109,7 @@ public class ManagerViewer extends ViewPart {
 				} else if(selElement instanceof UserDBResourceDAO) {
 					UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					
-					if( Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() ) ) {
+					if( DB_Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() ) ) {
 						UserDBDAO userDB = dao.getParent();
 						
 						if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {							
@@ -129,7 +125,7 @@ public class ManagerViewer extends ViewPart {
 					}
 				// manager
 				} else if (selElement instanceof ManagerListDTO) {
-					if(PermissionChecks.isShow(SessionManager.getLoginType())) {
+					if(PermissionChecker.isShow(SessionManager.getLoginType())) {
 						ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
 						cda.runConnectionDialog(is);
 					}
@@ -140,6 +136,7 @@ public class ManagerViewer extends ViewPart {
 		});
 		Tree tree = treeViewer.getTree();
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tree.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		
 		treeViewer.setContentProvider(new ManagerContentProvider());
 		treeViewer.setLabelProvider(new ManagerLabelProvider());
@@ -155,7 +152,7 @@ public class ManagerViewer extends ViewPart {
 		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty() ==  Define.SAVE_FILE) {
+				if (event.getProperty() ==  DB_Define.SAVE_FILE) {
 					addResource(Integer.parseInt( event.getNewValue().toString().split(":")[0] )); //$NON-NLS-1$
 				}
 			}
@@ -291,7 +288,6 @@ public class ManagerViewer extends ViewPart {
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_6, errStatus); //$NON-NLS-1$
 			}
 		}
-
 	}
 	
 	/**
@@ -336,9 +332,9 @@ public class ManagerViewer extends ViewPart {
 		IEditorReference iEditorReference = null;
 		
 		// 열린화면 검색
-		if(userDBResource.getTypes().equals(Define.RESOURCE_TYPE.SQL.toString())) {
+		if(userDBResource.getTypes().equals(DB_Define.RESOURCE_TYPE.SQL.toString())) {
 			iEditorReference = EditorUtils.findSQLEditor(userDBResource);
-		} else if(userDBResource.getTypes().equals(Define.RESOURCE_TYPE.ERD.toString())) {
+		} else if(userDBResource.getTypes().equals(DB_Define.RESOURCE_TYPE.ERD.toString())) {
 			iEditorReference = EditorUtils.findERDEditor(userDBResource);
 		}
 		

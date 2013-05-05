@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.application.internal.redirect;
 
@@ -41,10 +41,9 @@ public class RedirectServlet extends HttpServlet {
 		redirect(request, response);
 	}
 
-	
 	private static void redirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// tomcat에서 실행했는지.. 아니면 standalone모드인지...
 		
+		// tomcat에서 실행했는지.. 아니면 standalone모드인지...
 		if(!isStandardalone()) {			
 			response.sendRedirect(response.encodeRedirectURL("/tadpole/tadpole"));
 		} else {

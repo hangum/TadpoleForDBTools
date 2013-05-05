@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/mongodb/mongo-2.10.1.jar" sourcepath="/mongo-java-driver"/>
-	<classpathentry exported="true" kind="lib" path="libs/jasypt-1.7.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/commons-io-2.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/commons-fileupload-1.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/sql/parser/blancosqlformatter-0.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/sql/parser/zigen.sql.parser.1.0.4.v20101009.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/org.apache.log4j_1.2.13.v200806030600.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/postgreSQL/postgresql-9.1-902.jdbc4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-fileupload-1.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-io-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-lang-2.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/cubrid/JDBC-8.4.1.2032-cubrid.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/oracle/ojdbc6.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/mssql/jtds-1.2.5.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/sqlite/sqlite-jdbc-3.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/sql/formatter/kry.sql.format_1.0.0.v20101023.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/sqlite/sqlite-jdbc-3.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/postgreSQL/postgresql-9.1-902.jdbc4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/mysql/mysql-connector-java-5.1.22-bin.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/mssql/jtds-1.2.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-2.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/cubrid/JDBC-8.4.1.2032-cubrid.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/dbcp/commons-dbcp-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/dbcp/commons-pool-1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/security/jasypt-1.7.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src_test"/>
-	<classpathentry exported="true" kind="lib" path="libs/commons-dbcp-1.2.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/commons-lang-2.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/commons-pool-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

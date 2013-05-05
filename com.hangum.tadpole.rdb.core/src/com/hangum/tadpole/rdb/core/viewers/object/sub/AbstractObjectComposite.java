@@ -1,17 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub;
 
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -20,12 +18,12 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 
 /**
  * Object explorer composite
@@ -127,11 +125,11 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createProcedureFunctionColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {"Name", "Type", "Definer", "Modified", "Created",
+		String[] name = {"Name", "Definer", "Modified", "Created",
 						"Security_type", "Comment", "character_set_client", "collation_connection", "Database", 
 						"Collation"
 		};
-		int[] size = {120, 70, 70, 70, 70,
+		int[] size = {120, 70, 70, 70,
 						70, 70, 70, 70, 70, 
 						70
 		};
@@ -182,25 +180,6 @@ public abstract class AbstractObjectComposite extends Composite {
 	}
 	
 	/**
-	 * table table column
-	 */
-	protected void createTableColumne(TableViewer tv) {
-//		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tv.getTable());
-//		tv.getTable().setLayout(layoutColumnLayout);
-		
-		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
-		int[] size = {120, 90, 50, 100, 50, 50, 50};
-
-		for (int i=0; i<name.length; i++) {
-			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
-			tableColumn.getColumn().setText(name[i]);
-			tableColumn.getColumn().setWidth(size[i]);
-			
-//			layoutColumnLayout.addColumnData(new ColumnWeightData(size[i]));
-		}
-	}
-	
-	/**
 	 * table sorter
 	 * 
 	 * @param comparator
@@ -214,8 +193,7 @@ public abstract class AbstractObjectComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				comparator.setColumn(index);
-				int dir = comparator.getDirection();
-				viewer.getTable().setSortDirection(dir);
+				viewer.getTable().setSortDirection(comparator.getDirection());
 				viewer.getTable().setSortColumn(column);
 				viewer.refresh();
 			}

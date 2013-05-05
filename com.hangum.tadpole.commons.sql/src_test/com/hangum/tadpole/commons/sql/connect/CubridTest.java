@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.commons.sql.connect;
 
 import java.sql.Connection;
@@ -20,7 +30,7 @@ public class CubridTest {
 			System.out.println("Start cubrid...............................");
 
 			Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-			conn = DriverManager.getConnection("jdbc:CUBRID:127.0.0.1:33000:demodb:::", "dba", "");
+			conn = DriverManager.getConnection("jdbc:CUBRID:192.168.32.128:33000:demodb:::charset=utf-8", "dba", "");
 
 			String sql = "select name, players from event";
 			System.out.println("success cubrid connect");

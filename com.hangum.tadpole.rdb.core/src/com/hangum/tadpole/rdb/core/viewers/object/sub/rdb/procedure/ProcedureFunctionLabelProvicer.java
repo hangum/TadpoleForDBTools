@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure;
 
@@ -35,17 +35,16 @@ public class ProcedureFunctionLabelProvicer extends LabelProvider implements ITa
 
 		switch(columnIndex) {
 		case 0: return tc.getName();
-		case 1: return tc.getType();
-		case 2: return tc.getDefiner();
-		case 3: return tc.getModified();
-		case 4: return tc.getCreated();
-		case 5: return tc.getSecurity_type();
+		case 1: return tc.getDefiner();
+		case 2: return tc.getModified();
+		case 3: return tc.getCreated();
+		case 4: return tc.getSecurity_type();
 		
-		case 6: return tc.getComment();
-		case 7: return tc.getCharacter_set_client();
-		case 8: return tc.getCollation_connection();
-		case 9: return tc.getDatabase();
-		case 10: return tc.getCollation();
+		case 5: return tc.getComment();
+		case 6: return tc.getCharacter_set_client();
+		case 7: return tc.getCollation_connection();
+		case 8: return tc.getDatabase();
+		case 9: return tc.getCollation();
 		}
 		
 		return "** not set column **";

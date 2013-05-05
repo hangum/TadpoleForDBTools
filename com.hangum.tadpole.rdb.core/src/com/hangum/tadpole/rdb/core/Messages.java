@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core;
 
@@ -125,6 +125,7 @@ public class Messages extends NLS {
 	public static String MainEditor_lblFilter_text;
 	public static String MainEditor_tltmDropdownItem_text;
 	public static String DBLoginDialog_btnPing_text;
+	public static String DeleteDBAction_1;
 	public static String DeleteResourceAction_0;
 	public static String DeleteResourceAction_3;
 	public static String DeleteResourceAction_4;
@@ -320,6 +321,23 @@ public class Messages extends NLS {
 	public static String SQLToStringDialog_lblVariable_text;
 	public static String SQLToStringDialog_btnNewButton_text;
 	public static String OracleLoginComposite_lblDatabase_text;
+	public static String OthersConnectionMongoDBGroup_0;
+	public static String OthersConnectionMongoDBGroup_1;
+	public static String OthersConnectionMongoDBGroup_2;
+	public static String OthersConnectionMongoDBGroup_3;
+	public static String OthersConnectionRDBGroup_0;
+	public static String OthersConnectionRDBGroup_1;
+	public static String OthersConnectionRDBGroup_2;
+	public static String OthersConnectionRDBGroup_3;
+	public static String OthersConnectionRDBGroup_4;
+	public static String OthersConnectionRDBGroup_5;
+	public static String OthersConnectionRDBGroup_6;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_0;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_1;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_2;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_3;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_4;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_5;
 	public static String ServerSideJavaScriptEditor_tbtmResult_text;
 	public static String ServerSideJavaScriptEditor_tbtmResult_text_1;
 	public static String ServerSideJavaScriptEditor_tbtmUserJavascript_text;
@@ -331,8 +349,12 @@ public class Messages extends NLS {
 	public static String MainEditor_btnClear_text;
 	public static String MySQLLoginComposite_lblOperationType_text;
 	public static String IntroEditor_label_text;
-	public static String IntroEditor_lblWwwcubridorg_text;
 	public static String IntroEditor_label_1_text;
+	public static String PreDBInfoComposite_this_text;
+	public static String MSSQLLoginComposite_grpConnectionType_text;
+	public static String MSSQLLoginComposite_preDBInfo_text;
+	public static String TableDirectEditorComposite_tltmDdlSourceView_text;
+	public static String TableDirectEditorComposite_btnDdlSourceView_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

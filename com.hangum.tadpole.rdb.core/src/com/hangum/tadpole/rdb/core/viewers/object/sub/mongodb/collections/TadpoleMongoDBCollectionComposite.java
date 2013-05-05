@@ -1,21 +1,26 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -51,29 +56,29 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.Define;
+import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLInsertAction;
-import com.hangum.tadpole.rdb.core.actions.object.GenerateSQLSelectAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbGroupAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbMapReduceAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbReIndexAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbRenameAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLInsertAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLSelectAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
-import com.hangum.tadpole.system.permission.PermissionChecks;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
  * Mongodb Collection composite
@@ -92,7 +97,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 
 	// table info
 	private TableViewer tableListViewer;
-	private List showTables;
+	private List<TableDAO> showTables;
 	private ObjectComparator tableComparator;
 	private TableFilter tableFilter;
 	
@@ -132,7 +137,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		tableListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
@@ -273,15 +279,15 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table 	= new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		deleteAction_Table 	= new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		insertStmtAction 	= new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		creatAction_Table 	= new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		deleteAction_Table 	= new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		insertStmtAction 	= new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 
-		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Rename Collection");
-		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "ReIndex Collection");
-		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "MapReduce");
-		groupAction			= new ObjectMongodbGroupAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Define.DB_ACTION.TABLES, "Group");
+		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Rename Collection");
+		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "ReIndex Collection");
+		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "MapReduce");
+		groupAction			= new ObjectMongodbGroupAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Group");
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -291,7 +297,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
 					manager.add(creatAction_Table);
-					if(PermissionChecks.isShow(strUserType, userDB)) {
+					if(PermissionChecker.isShow(strUserType, userDB)) {
 						manager.add(deleteAction_Table);
 					}
 					manager.add(refreshAction_Table);
@@ -300,7 +306,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					manager.add(insertStmtAction);
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					
-					if(PermissionChecks.isShow(strUserType, userDB)) {
+					if(PermissionChecker.isShow(strUserType, userDB)) {
 						manager.add(renameColAction);
 						manager.add(reIndexColAction);
 					}
@@ -337,35 +343,115 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		return tableListViewer;
 	}
 
+	/**
+	 * refresh mongodb collection
+	 * 
+	 * @param selectUserDb
+	 * @param boolRefresh
+	 */
 	public void refreshTable(final UserDBDAO selectUserDb, boolean boolRefresh) {
 		if(!boolRefresh) if(selectUserDb == null) return;
-
 		this.userDB = selectUserDb;
 
-		try {
-			if (showTables != null) showTables.clear();
-			else showTables = new ArrayList<TableDAO>();
-			
-			List<String> listCollection = MongoDBQuery.listCollection(userDB);
-			for (String strColl : listCollection) {
-				TableDAO dao = new TableDAO();
-				dao.setName(strColl);
+		Job job = new Job(Messages.MainEditor_45) {
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN);
+				
+				try {
+					if (showTables != null) showTables.clear();
+					else showTables = new ArrayList<TableDAO>();
+					
+					List<String> listCollection = MongoDBQuery.listCollection(userDB);
+					for (String strColl : listCollection) {
+						TableDAO dao = new TableDAO();
+						dao.setName(strColl);
 
-				showTables.add(dao);
+						showTables.add(dao);
+					}
+					
+					/** filter 정보가 있으면 처리합니다. */
+					filter();
+					
+				} catch(Exception e) {
+					logger.error("Table Referesh", e);
+					
+					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
+				} finally {
+					monitor.done();
+				}
+				
+				/////////////////////////////////////////////////////////////////////////////////////////
+				return Status.OK_STATUS;
 			}
+		};
+		
+		// job의 event를 처리해 줍니다.
+		job.addJobChangeListener(new JobChangeAdapter() {
+			
+			public void done(IJobChangeEvent event) {
+				final IJobChangeEvent jobEvent = event; 
+				
+				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if(jobEvent.getResult().isOK()) {
+							tableListViewer.setInput(showTables);
+							tableListViewer.refresh();
+						} else {
+							if (showTables != null) showTables.clear();
+							tableListViewer.setInput(showTables);
+							tableListViewer.refresh();
 
-			tableListViewer.setInput(showTables);
-			tableListViewer.refresh();
-
-		} catch (Exception e) {
-			logger.error("Table Referesh", e);
-
-			if (showTables != null) showTables.clear();
-			tableListViewer.setInput(showTables);
-			tableListViewer.refresh();
-
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
+						}
+					}
+				});	// end display.asyncExec
+			}	// end done
+			
+		});	// end job
+		
+		job.setName(userDB.getDisplay_name());
+		job.setUser(true);
+		job.schedule();
+	}
+	
+	/**
+	 * 디비 등록시 설정한 filter 정보를 적용한다.
+	 */
+	private void filter() {
+		if("YES".equals(userDB.getIs_table_filter())){
+			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
+			
+			String includeFilter = userDB.getTable_filter_include();
+			if("".equals(includeFilter)) {
+				tmpShowTables.addAll(showTables);					
+			} else {
+				for (TableDAO tableDao : showTables) {
+					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
+					for (String strFilter : strArryFilters) {
+						if(tableDao.getName().matches(strFilter)) {
+							tmpShowTables.add(tableDao);
+						}
+					}
+				}
+			}
+			
+			String excludeFilter = userDB.getTable_filter_exclude();
+			if(!"".equals(excludeFilter)) {
+				for (TableDAO tableDao : tmpShowTables) {
+					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
+					for (String strFilter : strArryFilters) {
+						if(tableDao.getName().matches(strFilter)) {
+							tmpShowTables.remove(tableDao);
+						}
+					}
+				}
+			}
+			
+			// add table list array
+			showTables.clear();
+			showTables.addAll(tmpShowTables);
 		}
 	}
 

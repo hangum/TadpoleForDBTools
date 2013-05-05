@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Cho Hyun Jong.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     Cho Hyun Jong - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.intro;
 
@@ -54,7 +54,7 @@ public class IntroEditor extends EditorPart {
 	public static String[] ARRAY_DEFAULT_MAIN_HOME_PAGE = {PreferenceDefine.DEFAULT_HOME_PAGE_VALUE};//, "http://www.pitmongo.co.kr/"};
 	
 	/** default dona home */
-	public static String[] ARRAY_DONATION_HOME_PAGE = {"http://www.cubrid.org/", "www.osci.kr"}; //$NON-NLS-1$ //$NON-NLS-2$
+	public static String[] ARRAY_DONATION_HOME_PAGE = {"http://www.cubrid.org/", "www.osci.kr", "http://www.xenonix.com"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public IntroEditor() {
 		super();
@@ -128,7 +128,7 @@ public class IntroEditor extends EditorPart {
 		Group grpDonor = new Group(parent, SWT.BORDER);
 		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.IntroEditor_0);
-		grpDonor.setLayout(new GridLayout(2, false));
+		grpDonor.setLayout(new GridLayout(3, false));
 		
 		CLabel lblWwwcubridorg = new CLabel(grpDonor, SWT.BORDER);
 		lblWwwcubridorg.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -137,13 +137,20 @@ public class IntroEditor extends EditorPart {
 		CLabel lblOpenSourceCunsulting = new CLabel(grpDonor, SWT.BORDER);
 		lblOpenSourceCunsulting.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/OpenSourceConsulting.png")); //$NON-NLS-1$
 		
-		CLabel label_1 = new CLabel(grpDonor, SWT.NONE);
-		label_1.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		label_1.setText(Messages.IntroEditor_label_text);
+		CLabel lblXenonix = new CLabel(grpDonor, SWT.BORDER);
+		lblXenonix.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/xenonix_logo.png")); //$NON-NLS-1$
 		
-		CLabel label = new CLabel(grpDonor, SWT.NONE);
-		label.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		label.setText(Messages.IntroEditor_label_1_text);
+		CLabel labelCubrid = new CLabel(grpDonor, SWT.NONE);
+		labelCubrid.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		labelCubrid.setText(Messages.IntroEditor_label_text);
+		
+		CLabel labelOsci = new CLabel(grpDonor, SWT.NONE);
+		labelOsci.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		labelOsci.setText(Messages.IntroEditor_label_1_text);
+		
+		CLabel labelXenonix = new CLabel(grpDonor, SWT.NONE);
+		labelXenonix.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		labelXenonix.setText("<a href='http://www.xenonix.com' target='_blank'>http://www.xenonix.com</a>");
 		
 		setBrowserURL();		
 	}
