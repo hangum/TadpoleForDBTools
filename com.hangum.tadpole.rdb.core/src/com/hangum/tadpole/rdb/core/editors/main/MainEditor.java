@@ -343,7 +343,7 @@ public class MainEditor extends EditorExtension {
 		
 		tltmAutoCommit = new ToolItem(toolBar, SWT.CHECK);
 		tltmAutoCommit.setSelection(false);
-		tltmAutoCommit.setText("Auto Commit");
+		tltmAutoCommit.setText("Auto Commit"); //$NON-NLS-1$
 		tltmAutoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -353,11 +353,11 @@ public class MainEditor extends EditorExtension {
 		
 		tltmAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tltmAutoCommitCommit.setSelection(false);
-		tltmAutoCommitCommit.setText("Commit");
+		tltmAutoCommitCommit.setText("Commit"); //$NON-NLS-1$
 		tltmAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(logger.isDebugEnabled()) logger.debug("[set commit][user id]" + strUserEMail + "[[user id]" + userDB);
+				if(logger.isDebugEnabled()) logger.debug("[set commit][user id]" + strUserEMail + "[[user id]" + userDB); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				TadpoleSQLTransactionManager.commit(strUserEMail, userDB);
 			}
@@ -365,11 +365,11 @@ public class MainEditor extends EditorExtension {
 		
 		tltmAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tltmAutoCommitRollback.setSelection(false);
-		tltmAutoCommitRollback.setText("Rollback");
+		tltmAutoCommitRollback.setText("Rollback"); //$NON-NLS-1$
 		tltmAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(logger.isDebugEnabled()) logger.debug("[set rollback][user id]" + strUserEMail + "[[user id]" + userDB);
+				if(logger.isDebugEnabled()) logger.debug("[set rollback][user id]" + strUserEMail + "[[user id]" + userDB); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				TadpoleSQLTransactionManager.rollback(strUserEMail, userDB);
 			}
@@ -715,7 +715,7 @@ public class MainEditor extends EditorExtension {
 				if (event.getProperty() == DB_Define.AUTOCOMMIT_USE) {
 					String strAutoCommit_seq = event.getNewValue().toString();
 					// UserDB.seq || auto commit ture or false 
-					String[] arryVal = StringUtils.split(strAutoCommit_seq, "||");
+					String[] arryVal = StringUtils.split(strAutoCommit_seq, "||"); //$NON-NLS-1$
 					int seq = Integer.parseInt(arryVal[0]);
 					boolean boolUseAutocommit = Boolean.parseBoolean(arryVal[1]);
 
@@ -723,11 +723,11 @@ public class MainEditor extends EditorExtension {
 						if(seq == userDB.getSeq()) {
 							tltmAutoCommit.setSelection(boolUseAutocommit);
 							if(!boolUseAutocommit) {
-								tltmAutoCommit.setToolTipText("Auto Commit true");
+								tltmAutoCommit.setToolTipText("Auto Commit true"); //$NON-NLS-1$
 								tltmAutoCommitCommit.setEnabled(false);
 								tltmAutoCommitRollback.setEnabled(false);
 							} else {
-								tltmAutoCommit.setToolTipText("Auto Commit false");
+								tltmAutoCommit.setToolTipText("Auto Commit false"); //$NON-NLS-1$
 								tltmAutoCommitCommit.setEnabled(true);
 								tltmAutoCommitRollback.setEnabled(true);
 							}
@@ -755,15 +755,15 @@ public class MainEditor extends EditorExtension {
 			public void completed( ProgressEvent event ) {
 				
 				try {
-					browserQueryEditor.evaluate("getEditor();");
+					browserQueryEditor.evaluate("getEditor();"); //$NON-NLS-1$
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
 				
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
-				String strInitContent = StringUtils.replace(getInitDefaultEditorStr(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
-				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n");
-				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\" );";
+				String strInitContent = StringUtils.replace(getInitDefaultEditorStr(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n"); //$NON-NLS-1$
+				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\" );"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				browserEvaluate(callCommand);
 				
 			}
@@ -783,7 +783,7 @@ public class MainEditor extends EditorExtension {
 	 * initialize editor
 	 */
 	private void initEditor() {
-		if("YES".equals(userDB.getIs_autocmmit())) {
+		if("YES".equals(userDB.getIs_autocmmit())) { //$NON-NLS-1$
 			tltmAutoCommit.setSelection(false);
 		} else {
 			tltmAutoCommit.setSelection(true);
@@ -806,11 +806,11 @@ public class MainEditor extends EditorExtension {
 	 */
 	private void initAutoCommitAction(boolean isRiseEvent) {
 		if(isAutoCommit()) {
-			tltmAutoCommit.setToolTipText("Auto Commit true");
+			tltmAutoCommit.setToolTipText("Auto Commit true"); //$NON-NLS-1$
 			tltmAutoCommitCommit.setEnabled(false);
 			tltmAutoCommitRollback.setEnabled(false);
 		} else {
-			tltmAutoCommit.setToolTipText("Auto Commit false");
+			tltmAutoCommit.setToolTipText("Auto Commit false"); //$NON-NLS-1$
 			tltmAutoCommitCommit.setEnabled(true);
 			tltmAutoCommitRollback.setEnabled(true);
 		}
@@ -870,7 +870,7 @@ public class MainEditor extends EditorExtension {
 		// execute batch 처리를 위한 변수 정의
 		final List<String> listStrExecuteQuery = new ArrayList<String>();
 		// TODO array 쿼리인 경우 history 정보를 저장하기 위해 변수를 사용합니다.
-		String tmpArayExecuteQuery = "";
+		String tmpArayExecuteQuery = ""; //$NON-NLS-1$
 		
 		// select 문 처리를 위한 변수 정의
 		String executeLastSQL  = ""; //$NON-NLS-1$
@@ -926,7 +926,7 @@ public class MainEditor extends EditorExtension {
 			if(!SQLUtil.isStatement(executeLastSQL)) isDML = true;
 			
 			if(isDML) {
-				if(!MessageDialog.openConfirm(null, "Confirm", "쿼리를 실행하시겠습니까?")) return;
+				if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) return; //$NON-NLS-1$
 			}
 		}
 
@@ -960,7 +960,7 @@ public class MainEditor extends EditorExtension {
 							runSQLExecuteBatch(listStrExecuteQuery, isAutoCommit);
 						}
 						executingSQLHistoryDAO.setEndDateExecute(new Date());
-						executingSQLHistoryDAO.setResult("Success");
+						executingSQLHistoryDAO.setResult("Success"); //$NON-NLS-1$
 						listExecutingSqltHistoryDao.add(executingSQLHistoryDAO);
 						
 						// select 문장 실행
@@ -982,11 +982,11 @@ public class MainEditor extends EditorExtension {
 						}
 					}
 					
-					executingSQLHistoryDAO.setResult("Success");
+					executingSQLHistoryDAO.setResult("Success"); //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + finalExecuteSQL, e);
 					
-					executingSQLHistoryDAO.setResult("Fail");
+					executingSQLHistoryDAO.setResult("Fail"); //$NON-NLS-1$
 					executingSQLHistoryDAO.setMesssage(e.getMessage());
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
@@ -1043,7 +1043,7 @@ public class MainEditor extends EditorExtension {
 			try {
 				TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(user_seq, userDB, DB_Define.EXECUTE_SQL_TYPE.EDITOR, listExecutingSqltHistoryDao);
 			} catch(Exception e) {
-				logger.error("save the user query", e);
+				logger.error("save the user query", e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -1075,12 +1075,12 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private boolean transactionQuery(String query) {
-		if(StringUtils.startsWith(query, "commit")) {
+		if(StringUtils.startsWith(query, "commit")) { //$NON-NLS-1$
 			TadpoleSQLTransactionManager.commit(strUserEMail, userDB);
 			return true;
 		}
 		// 
-		if(StringUtils.startsWith(query, "rollback")) {
+		if(StringUtils.startsWith(query, "rollback")) { //$NON-NLS-1$
 			TadpoleSQLTransactionManager.rollback(strUserEMail, userDB);
 			return true;
 		}
@@ -1583,7 +1583,7 @@ public class MainEditor extends EditorExtension {
 			}			
 		} 
 
-		return value==null?"":value.toString();
+		return value==null?"":value.toString(); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -1782,21 +1782,21 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	public String getInitExt() {
-		String extension = "tadpole_edit";
+		String extension = "tadpole_edit"; //$NON-NLS-1$
 		DBDefine userDBDefine = DBDefine.getDBDefine(getUserDB().getTypes());
 		
 		if(userDBDefine == DBDefine.MYSQL_DEFAULT || userDBDefine == DBDefine.MARIADB_DEFAULT) {
-			extension += ".mysql";
+			extension += ".mysql"; //$NON-NLS-1$
 		} else if(userDBDefine == DBDefine.ORACLE_DEFAULT) {
-			extension += ".oracle";
+			extension += ".oracle"; //$NON-NLS-1$
 		} else if(userDBDefine == DBDefine.MSSQL_DEFAULT) {
-			extension += ".mssql";
+			extension += ".mssql"; //$NON-NLS-1$
 		} else if(userDBDefine == DBDefine.SQLite_DEFAULT) {
-			extension += ".sqlite";
+			extension += ".sqlite"; //$NON-NLS-1$
 		} else if(userDBDefine == DBDefine.CUBRID_DEFAULT) {
-			extension += ".mysql";
+			extension += ".mysql"; //$NON-NLS-1$
 		} else {
-			extension += ".postgresql";
+			extension += ".postgresql"; //$NON-NLS-1$
 		}
 		
 		return extension;
