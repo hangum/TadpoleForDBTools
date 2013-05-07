@@ -1,4 +1,4 @@
-Tadpole For DB Tools
+Tadpole DB Hub
 ==
 Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases. 
 It enables you to handle typical DB over the World Wide Web
@@ -86,9 +86,9 @@ Contacts
 
 Contributor
 -
-* jeongjaehong@gmail.com
-* suhyunjun@gmail.com
-* hangum@gmail.com 
+* nilriri (jeongjaehong@gmail.com)
+* 디벨로 (suhyunjun@gmail.com)
+* hangum (hangum@gmail.com)
 * darkcanol@gmail.com
 
 Donation

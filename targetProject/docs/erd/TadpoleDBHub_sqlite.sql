@@ -8,7 +8,7 @@ CREATE TABLE tadpole_system (
 	sub_version VARCHAR(50) NOT NULL,	
 	information VARCHAR(2000) NOT NULL,
 	create_time DATE DEFAULT (datetime('now','localtime'))
-)
+);
 
 --
 -- user_group
