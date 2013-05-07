@@ -1,3 +1,6 @@
+--
+-- tadpole system information table
+--
 CREATE TABLE tadpole_system (
 	seq INTEGER PRIMARY KEY AUTOINCREMENT,
 	name		VARCHAR(100) NOT NULL,
@@ -31,19 +34,18 @@ CREATE TABLE user (
 	DELYN       CHAR(3)     NOT NULL DEFAULT 'NO' -- 삭제여부
 );
 
--- 사용자리소스
-CREATE TABLE user_db_resource (
-	RESOURCE_ID    INTEGER PRIMARY KEY AUTOINCREMENT, -- 사용자순번
-	RESOURCE_TYPES VARCHAR(10)   NOT NULL, -- 유형
-	USER_SEQ       INT           NOT NULL, -- 사용자순번
-	DB_SEQ         INT           NOT NULL, -- DB아이디
-	GROUP_SEQ      INT           NOT NULL, -- 그룹순번
-	NAME           VARCHAR(50)   NULL,     -- 이름
-	SHARED_TYPE    VARCHAR(7)    NOT NULL DEFAULT 'PRIVATE', -- 공유종류
-	DESCRIPTION    VARCHAR(2000) NULL,     -- 설명
-	CREATE_TIME 	DATE DEFAULT (datetime('now','localtime')), -- 생성일
-	DELYN          CHAR(3)       NOT NULL DEFAULT 'NO' -- 삭제여부
+-- 사용자역활
+CREATE TABLE user_role (
+	SEQ       INTEGER PRIMARY KEY AUTOINCREMENT, -- 역활순번
+	GROUP_SEQ INT         NOT NULL, -- 그룹순번
+	USER_SEQ  INT         NOT NULL, -- 사용자순번
+	ROLE_TYPE VARCHAR(20) NOT NULL DEFAULT '00', -- 사용자유형
+	NAME      VARCHAR(50) NULL,     -- 역활명
+	DELYN     CHAR(3)     NOT NULL DEFAULT 'NO', -- 삭제여부
+	FOREIGN KEY (GROUP_SEQ) REFERENCES user_group (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
+
 
 -- 데이터베이스
 CREATE TABLE user_db (
@@ -68,7 +70,9 @@ CREATE TABLE user_db (
 	IS_READONLYCONNECT  CHAR(3)       NULL     DEFAULT 'NO', -- 읽기전용접속
 	IS_AUTOCOMMIT       CHAR(3)       NULL     DEFAULT 'NO', -- 자동커밋
 	CREATE_TIME 	DATE DEFAULT (datetime('now','localtime')), -- 생성일
-	DELYN               CHAR(3)       NULL     DEFAULT 'NO' -- 삭제여부
+	DELYN               CHAR(3)       NULL     DEFAULT 'NO', -- 삭제여부
+	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY (GROUP_SEQ) REFERENCES user_group (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 	
 -- 사용자정보
@@ -82,7 +86,9 @@ CREATE TABLE user_info_data (
 	VALUE2   VARCHAR(2000) NULL,     -- 값2
 	VALUE3   VARCHAR(2000) NULL,     -- 값3
 	VALUE4   VARCHAR(2000) NULL,     -- 값4
-	VALUE5   VARCHAR(2000) NULL      -- 값5
+	VALUE5   VARCHAR(2000) NULL,      -- 값5
+	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY (DB_SEQ) REFERENCES user_db (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 -- 실행SQL
@@ -97,23 +103,18 @@ CREATE TABLE executed_sql_resource (
 	RESULT           CHAR(3)       NULL,     -- 결과코드
 	MESSAGE          VARCHAR(2000) NULL,     -- 결과메시지
 	CREATE_TIME 	DATE DEFAULT (datetime('now','localtime')), -- 생성일
-	DELYN            CHAR(3)       NOT NULL DEFAULT 'N' -- 삭제여부
-);
-
--- 리소스내용
-CREATE TABLE user_db_resource_data (
-	SEQ                  INTEGER PRIMARY KEY AUTOINCREMENT, -- 자료순번
-	USER_DB_RESOURCE_SEQ INT           NOT NULL, -- 리소스순번
-	DATAS                VARCHAR(2000) NULL      -- 리소스내용
+	DELYN            CHAR(3)       NOT NULL DEFAULT 'N', -- 삭제여부
+	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY (DB_SEQ) REFERENCES user_db (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 -- 실행SQL내용
 CREATE TABLE executed_sql_resource_data (
 	SEQ                       INTEGER PRIMARY KEY AUTOINCREMENT, -- 내용순번
 	EXECUTED_SQL_RESOURCE_SEQ INT           NOT NULL, -- 리소스순번
-	DATAS                     VARCHAR(2000) NULL      -- SQL내용
+	DATAS                     VARCHAR(2000) NULL,      -- SQL내용
+	FOREIGN KEY (EXECUTED_SQL_RESOURCE_SEQ) REFERENCES executed_sql_resource  (seq) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
-
 
 -- 계정추가정보
 CREATE TABLE account_ext (
@@ -133,8 +134,9 @@ CREATE TABLE account_ext (
 	VALUE9      VARCHAR(1000) NULL,     -- 속성값9
 	SUCCESS     VARCHAR(10)   NULL,     -- 성공
 	MESSAGE     VARCHAR(1000) NULL,     -- 메시지
-	DELYN       CHAR(3)       NOT NULL DEFAULT 'NO' -- 삭제여부
+	DELYN       CHAR(3)       NOT NULL DEFAULT 'NO', -- 삭제여부
 	CREATE_TIME DATE DEFAULT (datetime('now','localtime')), -- 생성일시
+	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 -- 테이블필터
@@ -160,6 +162,17 @@ CREATE TABLE user_db_ext (
 	EXT10  VARCHAR(10) NULL      -- 확장속성10
 );
 
+
+-- 클래스 목록
+CREATE TABLE security_class (
+	SEQ         INTEGER PRIMARY KEY AUTOINCREMENT, -- 순번
+	GROUP_SEQ  INT           NOT NULL, -- 그룹순번
+	CLASS_NAME VARCHAR(255)  NOT NULL, -- 클래스명
+	CLASS_DESC VARCHAR(2000) NULL ,     -- 클래스설명
+	FOREIGN KEY (GROUP_SEQ) REFERENCES user_group (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+
 -- 데이터보안정보
 CREATE TABLE data_security (
 	SEQ         INTEGER PRIMARY KEY AUTOINCREMENT, -- 순번
@@ -169,18 +182,32 @@ CREATE TABLE data_security (
 	TABLE_ID    VARCHAR(30) NOT NULL, -- 테이블명
 	COLUMN_ID   VARCHAR(30) NOT NULL, -- 컬럼명
 	CREATE_TIME DATE DEFAULT (datetime('now','localtime')), -- 생성일시
-	DELYN       CHAR(3)     NOT NULL DEFAULT 'NO' -- 삭제여부
+	DELYN       CHAR(3)     NOT NULL DEFAULT 'NO', -- 삭제여부
+	FOREIGN KEY (DB_SEQ) REFERENCES security_class  (seq) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY (DB_SEQ) REFERENCES user_db (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 
--- 클래스 목록
-CREATE TABLE security_class (
-	SEQ         INTEGER PRIMARY KEY AUTOINCREMENT, -- 순번
-	GROUP_SEQ  INT           NOT NULL, -- 그룹순번
-	CLASS_NAME VARCHAR(255)  NOT NULL, -- 클래스명
-	CLASS_DESC VARCHAR(2000) NULL      -- 클래스설명
+-- 사용자리소스
+CREATE TABLE user_db_resource (
+	RESOURCE_ID    INTEGER PRIMARY KEY AUTOINCREMENT, -- 사용자순번
+	RESOURCE_TYPES VARCHAR(10)   NOT NULL, -- 유형
+	USER_SEQ       INT           NOT NULL, -- 사용자순번
+	DB_SEQ         INT           NOT NULL, -- DB아이디
+	GROUP_SEQ      INT           NOT NULL, -- 그룹순번
+	NAME           VARCHAR(50)   NULL,     -- 이름
+	SHARED_TYPE    VARCHAR(7)    NOT NULL DEFAULT 'PRIVATE', -- 공유종류
+	DESCRIPTION    VARCHAR(2000) NULL,     -- 설명
+	CREATE_TIME 	DATE DEFAULT (datetime('now','localtime')), -- 생성일
+	DELYN          CHAR(3)       NOT NULL DEFAULT 'NO', -- 삭제여부
+	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY (DB_SEQ) REFERENCES user_db (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
-
-
+-- 리소스내용
+CREATE TABLE user_db_resource_data (
+	SEQ                  INTEGER PRIMARY KEY AUTOINCREMENT, -- 자료순번
+	USER_DB_RESOURCE_SEQ INT           NOT NULL, -- 리소스순번
+	DATAS                VARCHAR(2000) NULL,      -- 리소스내용
+	FOREIGN KEY (USER_DB_RESOURCE_SEQ) REFERENCES user_db_resource (RESOURCE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
