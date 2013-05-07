@@ -1,4 +1,9 @@
 --
+--  mysql로 작업된 스키마를 sqlite로 수정하여 작
+--  2013/05/04 마지막 회의 
+--
+
+--
 -- tadpole system information table
 --
 CREATE TABLE tadpole_system (

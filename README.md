@@ -87,7 +87,7 @@ Contacts
 Contributor
 -
 * nilriri (jeongjaehong@gmail.com)
-* 디벨로 (suhyunjun@gmail.com)
+* develo (suhyunjun@gmail.com)
 * hangum (hangum@gmail.com)
 * darkcanol@gmail.com
 
