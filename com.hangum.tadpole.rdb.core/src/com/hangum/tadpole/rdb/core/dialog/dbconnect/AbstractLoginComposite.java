@@ -145,7 +145,11 @@ public abstract class AbstractLoginComposite extends Composite {
 		try {
 			// 이미 등록된 디비 인지 검사합니다.
 			if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), loginInfo.getUrl(), loginInfo.getUsers())) {
-				MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2);
+//				MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2);
+				// 중복 디비 등록시 사용자의 의견을 묻습니다.
+				if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {
+					return true;
+				} 
 				
 				return false;
 			}
