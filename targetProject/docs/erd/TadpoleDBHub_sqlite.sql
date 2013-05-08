@@ -56,7 +56,7 @@ CREATE TABLE user_role (
 CREATE TABLE user_db (
 	SEQ                 INTEGER PRIMARY KEY AUTOINCREMENT, -- 사용자순번
 	USER_SEQ            INT           NOT NULL, -- 사용자순번
-	EXT_SEQ             INT           NOT NULL, -- 추가정보아이디
+	EXT_SEQ             INT           NULL, -- 추가정보아이디
 	GROUP_SEQ           INT           NOT NULL, -- 그룹순번
 	OPERATION_TYPE      VARCHAR(10)   NULL,     -- 운영타입
 	DBMS_TYPES          VARCHAR(50)   NULL,     -- 종류
@@ -78,6 +78,32 @@ CREATE TABLE user_db (
 	DELYN               CHAR(3)       NULL     DEFAULT 'NO', -- 삭제여부
 	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION,
 	FOREIGN KEY (GROUP_SEQ) REFERENCES user_group (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+
+-- 테이블필터
+CREATE TABLE user_db_filter (
+	SEQ                  INTEGER PRIMARY KEY AUTOINCREMENT, -- DB아이디
+	IS_TABLE_FILTER      CHAR(3)       NOT NULL DEFAULT 'NO', -- 테이블필터여부
+	TABLE_FILTER_INCLUDE VARCHAR(2000) NULL,     -- 포함테이블
+	TABLE_FILTER_EXCLUDE VARCHAR(2000) NULL      -- 제외테이블
+);
+
+-- 데이터베이스확장속성
+-- ext1항목을 특정 디비 이름으로 하게되어 추가하게 되면 테이블이 바뀔때마다 java의 dao가 바뀌고, 그러면 오히려 더 혼란스러울듯
+-- 하여 기존과 같은 방법을 사용하고 장기적으로 고민합니다.
+CREATE TABLE user_db_ext (
+	SEQ    INTEGER PRIMARY KEY AUTOINCREMENT, -- DB아이디
+	EXT1 	VARCHAR(10)        NULL,     -- 오라클
+	EXT2  	VARCHAR(10)        NULL,     -- 몽고
+	EXT3   VARCHAR(10)        NULL,     -- 확장속성3
+	EXT4   VARCHAR(10) NULL,     -- 확장속성4
+	EXT5   VARCHAR(10) NULL,     -- 확장속성5
+	EXT6   VARCHAR(10) NULL,     -- 확장속성6
+	EXT7   VARCHAR(10) NULL,     -- 확장속성7
+	EXT8   VARCHAR(10) NULL,     -- 확장속성8
+	EXT9   VARCHAR(10) NULL,     -- 확장속성9
+	EXT10  VARCHAR(10) NULL      -- 확장속성10
 );
 	
 -- 사용자정보
@@ -144,29 +170,6 @@ CREATE TABLE account_ext (
 	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
--- 테이블필터
-CREATE TABLE user_db_filter (
-	SEQ                  INTEGER PRIMARY KEY AUTOINCREMENT, -- DB아이디
-	IS_TABLE_FILTER      CHAR(3)       NOT NULL DEFAULT 'NO', -- 테이블필터여부
-	TABLE_FILTER_INCLUDE VARCHAR(2000) NULL,     -- 포함테이블
-	TABLE_FILTER_EXCLUDE VARCHAR(2000) NULL      -- 제외테이블
-);
-
--- 데이터베이스확장속성
-CREATE TABLE user_db_ext (
-	SEQ    INTEGER PRIMARY KEY AUTOINCREMENT, -- DB아이디
-	ORACLE VARCHAR(10)        NULL,     -- 오라클
-	MONGO  VARCHAR(10)        NULL,     -- 몽고
-	EXT3   VARCHAR(10)        NULL,     -- 확장속성3
-	EXT4   VARCHAR(10) NULL,     -- 확장속성4
-	EXT5   VARCHAR(10) NULL,     -- 확장속성5
-	EXT6   VARCHAR(10) NULL,     -- 확장속성6
-	EXT7   VARCHAR(10) NULL,     -- 확장속성7
-	EXT8   VARCHAR(10) NULL,     -- 확장속성8
-	EXT9   VARCHAR(10) NULL,     -- 확장속성9
-	EXT10  VARCHAR(10) NULL      -- 확장속성10
-);
-
 
 -- 클래스 목록
 CREATE TABLE security_class (
@@ -195,7 +198,7 @@ CREATE TABLE data_security (
 
 -- 사용자리소스
 CREATE TABLE user_db_resource (
-	RESOURCE_ID    INTEGER PRIMARY KEY AUTOINCREMENT, -- 사용자순번
+	RESOURCE_SEQ    INTEGER PRIMARY KEY AUTOINCREMENT, -- 사용자순번
 	RESOURCE_TYPES VARCHAR(10)   NOT NULL, -- 유형
 	USER_SEQ       INT           NOT NULL, -- 사용자순번
 	DB_SEQ         INT           NOT NULL, -- DB아이디

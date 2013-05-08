@@ -1,5 +1,8 @@
 Tadpole DB Hub
 ==
+
+**We start new version.** [future 1.0](http://www.slideshare.net/hangum/tadpole-db-hub-100), [demo video](http://www.youtube.com/watch?v=EKCtH6gY62Q&feature=youtu.be)
+
 Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases. 
 It enables you to handle typical DB over the World Wide Web
 ![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1344090383946/home/TadpoleForDBToolsArch.png?height=359&width=420)
