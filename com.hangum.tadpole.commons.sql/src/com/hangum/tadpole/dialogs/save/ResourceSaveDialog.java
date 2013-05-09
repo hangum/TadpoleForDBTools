@@ -159,7 +159,7 @@ public class ResourceSaveDialog extends Dialog {
 	 * @return
 	 */
 	public String isValid() {
-		int len = textName.getText().length();
+		int len = textName.getText().trim().length();
 		if(len < 5) return "The name must enter at least 5 characters.";
 		
 		try {
