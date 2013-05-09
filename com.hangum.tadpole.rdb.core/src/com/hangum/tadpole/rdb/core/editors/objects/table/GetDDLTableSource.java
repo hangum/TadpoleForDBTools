@@ -31,7 +31,7 @@ public class GetDDLTableSource {
 	 */
 	public static String getSource(UserDBDAO userDB, String tableName) throws Exception {
 		
-		if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.SQLite_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			return ""+client.queryForObject("getTableScript", tableName);
 		} else {

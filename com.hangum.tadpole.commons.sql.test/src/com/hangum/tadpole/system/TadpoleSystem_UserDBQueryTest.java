@@ -63,7 +63,7 @@ public class TadpoleSystem_UserDBQueryTest extends TestCase {
 		userDb2.setDisplay_name("junit testName");
 		
 		try {			
-			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, groupSeq);			
+			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, groupSeq, userDb2.getUser_seq());			
 			
 			assertNotNull(userDb);
 		} catch (Exception e) {

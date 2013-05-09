@@ -90,7 +90,7 @@
  -->
 <select id="isUser" resultClass="java.lang.String" parameterClass="java.lang.String">
 	SELECT email 
-	FROM users 
+	FROM user 
 	WHERE 
 		email = #email#
 </select>
@@ -99,11 +99,11 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.dao.system.UserDAO">
-	INSERT INTO users(group_seq, email, passwd, name, user_type, approval_yn)
-	VALUES( #group_seq#, #email#, #passwd#, #name#, #user_type#, #approval_yn#)
+	INSERT INTO user(email, passwd, name, language)
+	VALUES( #email#, #passwd#, #name#, #language#)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.UserDAO">
-		select * from users where email = #email# 
+		select * from user where email = #email# 
 	</selectKey>
 </insert>
 
@@ -112,7 +112,7 @@
  -->
 <select id="login" resultClass="com.hangum.tadpole.dao.system.UserDAO" parameterClass="com.hangum.tadpole.dao.system.UserDAO">
 	SELECT * 
-	FROM users 
+	FROM user 
 	WHERE 
 		email = #email# AND 
 		passwd = #passwd#
@@ -120,7 +120,7 @@
 
 <!-- userDB의 manager 권한 리스트 -->
 <select id="groupManager" resultClass="com.hangum.tadpole.dao.system.UserDAO" parameterClass="java.lang.Integer">
-	select * from users
+	select * from user
 	where group_seq = #group_seq#
 	and user_type='MANAGER'
 </select>
@@ -131,11 +131,11 @@
  -->
 <select id="loginUserCount" resultClass="java.lang.Integer">
 	SELECT count(*)
-	FROM users
+	FROM user
 </select>
 <select id="onlyOnUser" resultClass="com.hangum.tadpole.dao.system.UserDAO" parameterClass="com.hangum.tadpole.dao.system.UserDAO">
 	SELECT * 
-	FROM users 
+	FROM user 
 </select>
 
 <!-- 
@@ -143,16 +143,16 @@
  -->
  <select id="userListPermissions" resultClass="com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO">
  SELECT a.name user_group_name, 
- 	b.seq, group_seq, email, passwd, b.name, user_type, approval_yn, b.delYn, b.create_time 
- FROM user_group a, users b
+ 	b.seq, group_seq, email, passwd, b.name, user_type, b.delYn, b.create_time 
+ FROM user_group a, user b
  WHERE a.seq = b.group_seq
  ORDER BY email
  </select>
  
  <select id="userListGroup" resultClass="com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO" parameterClass="java.lang.Integer">
  SELECT a.name user_group_name, 
- 	b.seq, group_seq, email, passwd, b.name, user_type, approval_yn, b.delYn, b.create_time 
- FROM user_group a, users b
+ 	b.seq, group_seq, email, passwd, b.name, user_type, b.delYn, b.create_time 
+ FROM user_group a, user b
  WHERE a.seq = b.group_seq
  	AND b.group_seq = #group_seq#
  ORDER BY email
@@ -162,8 +162,8 @@
 	유저의 권한 데이터를 수정합니다.
  -->
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.dao.system.UserDAO">
-	UPDATE users SET
-		approval_yn = #approval_yn#, delYn = #delYn#
+	UPDATE user SET
+		 delYn = #delYn#
 	WHERE seq = #seq#
 </update>
 
@@ -171,7 +171,7 @@
 	유저의 패스워드 번경
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.dao.system.UserDAO">
-	UPDATE users SET
+	UPDATE user SET
 		passwd = #passwd#
 	WHERE seq = #seq#
 </update>
@@ -180,7 +180,7 @@
 	유저를 삭제합니다.
  -->
 <delete id="deleteUser" parameterClass="com.hangum.tadpole.dao.system.UserDAO">
-	DELETE FROM users WHERE email = #email#
+	DELETE FROM user WHERE email = #email#
 </delete>
 
 <!-- 
@@ -235,19 +235,50 @@
 	ORDER BY group_name
 </select>
 
+<!-- 
+	add user_db
+ -->
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
 	INSERT INTO user_db(seq, 
-	user_seq, operation_type, types, url, db, group_name, display_name, host, port, locale, passwd, users, 
-	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocmmit,
-	is_table_filter, table_filter_include, table_filter_exclude, 
-	ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10
+	user_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
+	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit
 	)
 	VALUES( (select max(seq) from user_db)+1 , 
-	#user_seq#, #operation_type#, #types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
-	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocmmit#,
-	#is_table_filter#, #table_filter_include#, #table_filter_exclude#,
-	#ext1#, #ext2#, #ext3#, #ext4#, #ext5#, #ext6#, #ext7#, #ext8#, #ext9#, #ext10#
+	#user_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
+	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#
 	)
+	
+	<selectKey resultClass="com.hangum.tadpole.dao.system.UserDBDAO">
+		SELECT * 
+		FROM user_db 
+		WHERE user_seq = #user_seq# AND 
+			group_seq = #group_seq# AND 
+			operation_type = #operation_type# AND 
+			dbms_types = #dbms_types# AND
+			group_name = #group_name# AND
+			display_name = #display_name# AND
+			delYn = 'NO'
+	</selectKey>
+</insert>
+
+<!-- 
+	add user_db_filter
+ -->
+ <insert id="userDBFilterInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
+	INSERT INTO user_db_filter
+		(seq, is_table_filter, table_filter_include, table_filter_exclude)
+	VALUES
+		(#seq#, #is_table_filter#, #table_filter_include#, #table_filter_exclude#)
+</insert>
+ 
+ <!-- 
+	add user_db_filter
+ -->
+ <insert id="userDBEXTInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
+	INSERT INTO user_db_ext
+		(seq, ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10)
+	VALUES
+		(#seq#, #ext1#, #ext2#, #ext3#, #ext4#, #ext5#, #ext6#, #ext7#, #ext8#, #ext9#, #ext10#)
 </insert>
 
 <!--
@@ -284,16 +315,17 @@
 	============================================================================================================================
  -->
 <insert id="userDbResourceInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
-	INSERT INTO user_db_resource(seq, user_seq, types, db_seq, filename, duration_mill, execution_result)
-	VALUES( (select max(seq) from user_db_resource)+1, #user_seq#, #types#, #db_seq#, #filename#, #duration_mill#, #execution_result#)
+	INSERT INTO user_db_resource(resource_seq, resource_types, user_seq, db_seq, group_seq, name, shared_type, description)
+	VALUES( (select max(resource_seq) from user_db_resource)+1, #resource_types#, #user_seq#, #db_seq#, #group_seq#, #name#, #shared_type#, #description#)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
 		SELECT * 
 		FROM user_db_resource 
 		WHERE user_seq = #user_seq# AND 
-			types = #types# AND 
+			resource_types = #resource_types# AND 
 			db_seq = #db_seq# AND 
-			filename = #filename# AND
+			group_seq = #group_seq# AND
+			name = #name# AND
 			delYn = 'NO'
 	</selectKey>
 </insert>
@@ -303,15 +335,15 @@
 	WHERE
 		user_seq = #user_seq# and
 		db_seq = #seq#  AND
-		types in ('ERD', 'SQL') AND
+		resource_types in ('ERD', 'SQL') AND
 		delYn = 'NO'		
-	ORDER BY filename
+	ORDER BY name
 </select>
 
 <select id="userDbResource" resultClass="com.hangum.tadpole.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource
 	WHERE
-		seq = #seq#
+		resource_seq = #resource_seq#
 </select>
 
 <!-- 
@@ -321,16 +353,16 @@
 <select id="userDBResourceDuplication" resultClass="com.hangum.tadpole.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource
 	WHERE
-		types = #types# 			and
+		resource_types = #resource_types# 			and
 		user_seq = #user_seq# 	and
 		db_seq = #db_seq# 		and
-		filename = #filename#
+		name = #name#
 </select>
 
 <update id="userDBResourceDelete" parameterClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
 	UPDATE user_db_resource SET
 		delYn = 'YES'
-	WHERE seq = #seq#
+	WHERE resource_seq = #resource_seq#
 </update>
 
 <!-- 
@@ -339,7 +371,7 @@
 <select id="userDBResourceData" resultClass="com.hangum.tadpole.dao.system.UserDBResourceDataDAO" parameterClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource_data
 	WHERE
-		user_db_resource_seq = #seq#
+		user_db_resource_seq = #resource_seq#
 	ORDER BY seq
 </select>
 
@@ -417,9 +449,9 @@
 	<selectKey resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDAO">
 		SELECT * 
 		FROM executed_sql_resource 
-		WHERE user_seq = #user_seq# AND 
-			types = #types# AND 
+		WHERE user_seq = #user_seq# AND
 			db_seq = #db_seq# AND 
+			types = #types# AND 
 			startDateExecute = #startDateExecute# AND
 			delYn = 'NO'
 	</selectKey>
@@ -435,5 +467,26 @@
 </insert>
 
 <select id="findExecuteSQL" resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDataDAO" parameterClass="java.util.Map"></select>
+
+
+<!-- 
+	=========================================================================================================
+	user_rol 정보를 설정합니다.
+	=========================================================================================================
+ -->
+<insert id="userUserRoleInsert" parameterClass="com.hangum.tadpole.dao.system.UserRoleDAO">
+	INSERT INTO user_role(seq, group_seq, user_seq, role_type, name)
+	VALUES((select max(seq) from user_role)+1, #group_seq#, #user_seq#, #role_type#, #name#)
+	
+	<selectKey resultClass="com.hangum.tadpole.dao.system.UserRoleDAO">
+		SELECT * 
+		FROM user_role 
+		WHERE group_seq = #group_seq# AND 
+			user_seq = #user_seq# AND 
+			role_type = #role_type# AND 
+			name = #name# AND
+			delYn = 'NO'
+	</selectKey>
+</insert>
 	
 </sqlMap>

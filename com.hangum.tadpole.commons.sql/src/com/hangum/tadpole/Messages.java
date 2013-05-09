@@ -14,6 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.messages"; //$NON-NLS-1$
+	public static String TadpoleSystemConnector_user_role_table_create;
 	public static String TadpoleSystem_UserDBQuery_11;
 	public static String TadpoleSystem_UserDBQuery_4;
 	public static String TadpoleSystem_UserDBQuery_7;
@@ -49,17 +50,21 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_user_info_data;
 	public static String TadpoleSystemConnector_user_external_account;
 
-	public static String TadpoleSystemConnector_system_info_create_CUBRID;
-	public static String TadpoleSystemConnector_group_create_CUBRID;
-	public static String TadpoleSystemConnector_user_db_resource_create_CUBRID;
-	public static String TadpoleSystemConnector_user_db_resource_data_create_CUBRID;
-	public static String TadpoleSystemConnector_user_db_table_create_CUBRID;
-	public static String TadpoleSystemConnector_user_table_create_CUBRID;
-	public static String TadpoleSystemConnector_user_info_data_CUBRID;
-	public static String TadpoleSystemConnector_user_external_account_CUBRID;
+//	public static String TadpoleSystemConnector_system_info_create_CUBRID;
+//	public static String TadpoleSystemConnector_group_create_CUBRID;
+//	public static String TadpoleSystemConnector_user_db_resource_create_CUBRID;
+//	public static String TadpoleSystemConnector_user_db_resource_data_create_CUBRID;
+//	public static String TadpoleSystemConnector_user_db_table_create_CUBRID;
+//	public static String TadpoleSystemConnector_user_table_create_CUBRID;
+//	public static String TadpoleSystemConnector_user_info_data_CUBRID;
+//	public static String TadpoleSystemConnector_user_external_account_CUBRID;
 	
 	public static String TadpoleSystemConnector_execute_sql_resource_create;
 	public static String TadpoleSystemConnector_execute_sql_resource_date_create;
+	public static String TadpoleSystemConnector_user_db_filter;
+	public static String TadpoleSystemConnector_user_db_ext;
+	public static String TadpoleSystemConnector_security_class;
+	public static String TadpoleSystemConnector_data_security;
 	
 	static {
 		// initialize resource bundle

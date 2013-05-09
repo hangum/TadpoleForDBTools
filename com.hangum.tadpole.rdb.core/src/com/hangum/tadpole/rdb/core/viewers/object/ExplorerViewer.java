@@ -33,10 +33,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
@@ -121,32 +121,32 @@ public class ExplorerViewer extends ViewPart {
 				String strSelectTab = tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getText();
 				String strSearchText = textSearch.getText();
 				
-				if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.COLLECTIONS.toString())) {
+				if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString())) {
 					mongoCollectionComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.TABLES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
 					tableCompost.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.VIEWS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 					viewComposite.filter(strSearchText);					
 				
-				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.INDEXES.toString())) {
-					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
+					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 						mongoIndexComposite.filter(strSearchText);
 					} else {
 						indexComposite.filter(strSearchText);
 					}					
 				
-				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.PROCEDURES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
 					procedureComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.FUNCTIONS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
 					functionCompostite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.TRIGGERS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.toString())) {
 					triggerComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(DB_Define.DB_ACTION.JAVASCRIPT.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.toString())) {
 					mongoJavaScriptComposite.filter(strSearchText);
 				}
 			}
@@ -189,7 +189,7 @@ public class ExplorerViewer extends ViewPart {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 
-				if (event.getProperty() == DB_Define.SELECT_ERD_TABLE) {
+				if (event.getProperty() == PublicTadpoleDefine.SELECT_ERD_TABLE) {
 					String tableName = event.getNewValue().toString();
 					if (tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
 
@@ -234,7 +234,7 @@ public class ExplorerViewer extends ViewPart {
 			
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
-			initObjectDetail(DBDefine.getDBDefine(userDB.getTypes()));
+			initObjectDetail(DBDefine.getDBDefine(userDB.getDbms_types()));
 		} else {
 			userDB = null;
 
@@ -317,17 +317,17 @@ public class ExplorerViewer extends ViewPart {
 //			refreshTable();
 //			System.out.println("\t =========== refresh table=-");
 //		} else 
-		if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.VIEWS.toString())) {
+		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 			refreshView(false);
-		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.INDEXES.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
 			refreshIndexes(false);
-		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.PROCEDURES.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
 			refreshProcedure(false);
-		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.FUNCTIONS.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
 			refreshFunction(false);
-		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.TRIGGERS.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.toString())) {
 			refreshTrigger(false);
-		} else if (strSelectItemText.equalsIgnoreCase(DB_Define.DB_ACTION.JAVASCRIPT.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.toString())) {
 			refreshJS(false);
 		}
 	}
@@ -417,7 +417,7 @@ public class ExplorerViewer extends ViewPart {
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshIndexes(boolean boolRefresh) {
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 			mongoIndexComposite.refreshIndexes(userDB, boolRefresh);
 		} else {
 			indexComposite.refreshIndexes(getUserDB(), boolRefresh);
@@ -449,7 +449,7 @@ public class ExplorerViewer extends ViewPart {
 	 * table 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshTable(boolean boolRefresh) {
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {		
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {		
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
 		} else {
 			tableCompost.refreshTable(userDB, boolRefresh);

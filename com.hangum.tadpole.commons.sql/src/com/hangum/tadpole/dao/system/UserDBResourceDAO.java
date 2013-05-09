@@ -1,4 +1,5 @@
 /*******************************************************************************
+
  * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
@@ -19,17 +20,18 @@ import java.util.Date;
  *
  */
 public class UserDBResourceDAO {
-	int seq;
+	int resource_seq;
 	/** sql, erd */
-	String types;
+	String resource_types;
 	int user_seq;
 	int db_seq;
-	String filename;
+	int group_seq;
+	String name;
+	String shared_type;
+	String description;
+	
 	Date create_time;
 	String delYn;
-	
-	int duration_mill;
-	String execution_result;
 	
 	// db object tree 표현을 위해
 	UserDBDAO parent;
@@ -37,50 +39,114 @@ public class UserDBResourceDAO {
 	public UserDBResourceDAO() {
 	}
 
-	public int getSeq() {
-		return seq;
+	/**
+	 * @return the resource_seq
+	 */
+	public int getResource_seq() {
+		return resource_seq;
 	}
 
-	public void setSeq(int seq) {
-		this.seq = seq;
+	/**
+	 * @param resource_seq the resource_seq to set
+	 */
+	public void setResource_seq(int resource_seq) {
+		this.resource_seq = resource_seq;
 	}
 
-	public String getTypes() {
-		return types;
+	/**
+	 * @return the resource_types
+	 */
+	public String getResource_types() {
+		return resource_types;
 	}
 
-	public void setTypes(String types) {
-		this.types = types;
+	/**
+	 * @param resource_types the resource_types to set
+	 */
+	public void setResource_types(String resource_types) {
+		this.resource_types = resource_types;
 	}
 
+	/**
+	 * @return the user_seq
+	 */
 	public int getUser_seq() {
 		return user_seq;
 	}
 
+	/**
+	 * @param user_seq the user_seq to set
+	 */
 	public void setUser_seq(int user_seq) {
 		this.user_seq = user_seq;
 	}
 
+	/**
+	 * @return the db_seq
+	 */
 	public int getDb_seq() {
 		return db_seq;
 	}
 
+	/**
+	 * @param db_seq the db_seq to set
+	 */
 	public void setDb_seq(int db_seq) {
 		this.db_seq = db_seq;
 	}
 
-	public String getFilename() {
-		return filename;
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
+	/**
+	 * @return the shared_type
+	 */
+	public String getShared_type() {
+		return shared_type;
+	}
+
+	/**
+	 * @param shared_type the shared_type to set
+	 */
+	public void setShared_type(String shared_type) {
+		this.shared_type = shared_type;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the create_time
+	 */
 	public Date getCreate_time() {
 		return create_time;
 	}
 
+	/**
+	 * @param create_time the create_time to set
+	 */
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
@@ -101,20 +167,19 @@ public class UserDBResourceDAO {
 		this.delYn = delYn;
 	}
 
-	public int getDuration_mill() {
-		return duration_mill;
+	/**
+	 * @return the group_seq
+	 */
+	public int getGroup_seq() {
+		return group_seq;
 	}
 
-	public void setDuration_mill(int duration_mill) {
-		this.duration_mill = duration_mill;
+	/**
+	 * @param group_seq the group_seq to set
+	 */
+	public void setGroup_seq(int group_seq) {
+		this.group_seq = group_seq;
 	}
 
-	public String getExecution_result() {
-		return execution_result;
-	}
 
-	public void setExecution_result(String execution_result) {
-		this.execution_result = execution_result;
-	}
-	
 }

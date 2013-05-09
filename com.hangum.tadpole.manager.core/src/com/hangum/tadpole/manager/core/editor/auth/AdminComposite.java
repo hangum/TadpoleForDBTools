@@ -40,14 +40,13 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 
@@ -205,7 +204,7 @@ public class AdminComposite extends Composite {
 			// 데이터 수집 시작
 			List<UserGroupAUserDAO> listUserGroup = new ArrayList<UserGroupAUserDAO>();
 			// 로그인 타입에 따른 유저 수정
-			if(DB_Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
+			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
 				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeq());				
 			// admin 
 			} else {
@@ -214,33 +213,31 @@ public class AdminComposite extends Composite {
 			// 데이터 수집 종료			
 			
 			// Manager 추가
-			UserGroupAUserDAO managerGroupAUserDAO = null;
-			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-				if(DB_Define.USER_TYPE.MANAGER.toString().equals(userGroupAUserDAO.getUser_type())) {
-					rootUserGroup.child.add(userGroupAUserDAO);
-					groupHash.put(userGroupAUserDAO.getGroup_seq(), userGroupAUserDAO);
-					managerGroupAUserDAO = userGroupAUserDAO;
-				}								
-			}
-			
-			// 그룹에 속한 디비를 추가한다.
-			List<UserDBDAO> userDBs = TadpoleSystem_UserDBQuery.getSpecificUserDB(managerGroupAUserDAO.getSeq());
-			for (UserDBDAO userDBDAO : userDBs) {
-				rootUserGroup.child.add(userDBDAO);							
-			}
-			
-//			// 메니저 권한만 유저 정보를 표시한다.
-//			if(DB_Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
-				// use 추가
-				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-					if(DB_Define.USER_TYPE.USER.toString().equals(userGroupAUserDAO.getUser_type())) {
-						UserGroupAUserDAO groupUserDAO = groupHash.get(userGroupAUserDAO.getGroup_seq());
-	
-						userGroupAUserDAO.setParent(groupUserDAO);
-						groupUserDAO.child.add(userGroupAUserDAO);
-					}								
-				}
+//			UserGroupAUserDAO managerGroupAUserDAO = null;
+//			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
+//				if(DB_Define.USER_TYPE.MANAGER.toString().equals(userGroupAUserDAO.getUser_type())) {
+//					rootUserGroup.child.add(userGroupAUserDAO);
+//					groupHash.put(userGroupAUserDAO.getGroup_seq(), userGroupAUserDAO);
+//					managerGroupAUserDAO = userGroupAUserDAO;
+//				}								
 //			}
+//			
+//			// 그룹에 속한 디비를 추가한다.
+//			List<UserDBDAO> userDBs = TadpoleSystem_UserDBQuery.getSpecificUserDB(managerGroupAUserDAO.getSeq());
+//			for (UserDBDAO userDBDAO : userDBs) {
+//				rootUserGroup.child.add(userDBDAO);							
+//			}
+//			
+////			// 메니저 권한만 유저 정보를 표시한다.
+//				// use 추가
+//				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
+//					if(DB_Define.USER_TYPE.USER.toString().equals(userGroupAUserDAO.getUser_type())) {
+//						UserGroupAUserDAO groupUserDAO = groupHash.get(userGroupAUserDAO.getGroup_seq());
+//	
+//						userGroupAUserDAO.setParent(groupUserDAO);
+//						groupUserDAO.child.add(userGroupAUserDAO);
+//					}								
+//				}
 
 			return rootUserGroup;
 		} catch (Exception e) {
@@ -333,7 +330,7 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 			UserDBDAO userDB = (UserDBDAO)element;
 			switch(columnIndex) {
 			case 0: return "";
-			case 1: return userDB.getTypes();
+			case 1: return userDB.getDbms_types();
 			case 2: return userDB.getDisplay_name();
 			case 3:
 				if(userDB.getHost() == null) return "";
@@ -347,21 +344,21 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 			
 			UserGroupAUserDAO user = (UserGroupAUserDAO)element;
 			
-			switch(columnIndex) {
-			case 0:
-				if(DB_Define.USER_TYPE.MANAGER.toString().equals(user.getUser_type())) {
-					return user.getUser_group_name();	
-				} else {
-					return "";
-				}
-				
-			case 1: return user.getUser_type();
-			case 2: return user.getEmail();
-			case 3: return user.getName();
-			case 4: return user.getApproval_yn();
-			case 5: return user.getDelYn();
-			case 6: return user.getCreate_time();
-			}
+//			switch(columnIndex) {
+//			case 0:
+//				if(DB_Define.USER_TYPE.MANAGER.toString().equals(user.getUser_type())) {
+//					return user.getUser_group_name();	
+//				} else {
+//					return "";
+//				}
+//				
+//			case 1: return user.getUser_type();
+//			case 2: return user.getEmail();
+//			case 3: return user.getName();
+//			case 4: return user.getApproval_yn();
+//			case 5: return user.getDelYn();
+//			case 6: return user.getCreate_time();
+//			}
 		}
 		
 		return "*** not set column ***";
@@ -391,21 +388,21 @@ class AdminCompFilter extends ViewerFilter {
 		
 		if(element instanceof UserDBDAO) {
 			UserDBDAO userDB = (UserDBDAO)element;
-			if(userDB.getTypes().matches(searchString)) return true;
+			if(userDB.getDbms_types().matches(searchString)) return true;
 			if(userDB.getDisplay_name().matches(searchString)) return true;
 			if(userDB.getHost() != null) if(userDB.getHost().matches(searchString)) return true;
 			if(userDB.getPort() != null)  if(userDB.getPort().matches(searchString)) return true;
 			
 		} else if(element instanceof UserGroupAUserDAO) {
 			
-			UserGroupAUserDAO user = (UserGroupAUserDAO)element;
-			if(user.getUser_group_name().matches(searchString)) return true;
-			if(user.getUser_type().matches(searchString)) return true;
-			
-			if(user.getUser_type().matches(searchString)) return true;
-			if(user.getEmail().matches(searchString)) return true;
-			if(user.getName().matches(searchString)) return true;
-			if(user.getApproval_yn().matches(searchString)) return true;
+//			UserGroupAUserDAO user = (UserGroupAUserDAO)element;
+//			if(user.getUser_group_name().matches(searchString)) return true;
+//			if(user.getUser_type().matches(searchString)) return true;
+//			
+//			if(user.getUser_type().matches(searchString)) return true;
+//			if(user.getEmail().matches(searchString)) return true;
+//			if(user.getName().matches(searchString)) return true;
+//			if(user.getApproval_yn().matches(searchString)) return true;
 		}
 		
 		return false;

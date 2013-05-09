@@ -36,10 +36,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
 import com.hangum.tadpole.dao.mongodb.MongoDBIndexFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -201,9 +201,9 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

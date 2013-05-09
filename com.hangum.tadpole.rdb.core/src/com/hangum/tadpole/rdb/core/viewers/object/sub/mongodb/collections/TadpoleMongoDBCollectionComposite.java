@@ -54,9 +54,9 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
@@ -279,15 +279,15 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table 	= new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		deleteAction_Table 	= new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		insertStmtAction 	= new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		creatAction_Table 	= new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		deleteAction_Table 	= new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		insertStmtAction 	= new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 
-		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Rename Collection");
-		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "ReIndex Collection");
-		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "MapReduce");
-		groupAction			= new ObjectMongodbGroupAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Group");
+		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Rename Collection");
+		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "ReIndex Collection");
+		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "MapReduce");
+		groupAction			= new ObjectMongodbGroupAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Group");
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

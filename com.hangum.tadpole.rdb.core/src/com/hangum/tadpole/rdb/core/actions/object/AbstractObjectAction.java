@@ -22,8 +22,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -44,7 +44,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	protected UserDBDAO userDB = null;
 	protected IWorkbenchWindow window;				  
 	protected IStructuredSelection sel;
-	protected DB_Define.DB_ACTION actionType;
+	protected PublicTadpoleDefine.DB_ACTION actionType;
 	
 	/**
 	 * 
@@ -52,7 +52,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * @param actionType view의 작업 타입
 	 * @param userDB
 	 */
-	public AbstractObjectAction(IWorkbenchWindow window, DB_Define.DB_ACTION actionType) {
+	public AbstractObjectAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType) {
 		this.window = window;
 		this.actionType = actionType;
 		

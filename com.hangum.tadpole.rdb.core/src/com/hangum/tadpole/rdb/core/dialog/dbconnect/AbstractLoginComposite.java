@@ -171,7 +171,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 */
 	protected boolean checkDatabase(UserDBDAO loginInfo) {
-		if(DBDefine.getDBDefine(loginInfo.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(loginInfo.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			try {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
 				List showTables = sqlClient.queryForList("tableList", loginInfo.getDb()); //$NON-NLS-1$

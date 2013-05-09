@@ -18,25 +18,21 @@ package com.hangum.tadpole.dao.system;
  */
 public class UserDAO {
 	int seq;
-	int group_seq;
 	String email;
 	String passwd;
 	String name;
-	String user_type;
-	String approval_yn;
+	String language;
 	String delYn;
 	String create_time;
 	
 	public UserDAO() {
 	}
 	
-	public UserDAO(int groupSeq, String email, String passwd, String name, String user_type, String approval_yn) {
-		this.group_seq = groupSeq;
+	public UserDAO(String email, String passwd, String name, String language) {
 		this.email = email;
 		this.passwd = passwd;
 		this.name = name;
-		this.user_type = user_type;
-		this.approval_yn = approval_yn;
+		this.language = language;
 	}
 
 	public UserDAO(String email, String passwd) {
@@ -76,28 +72,18 @@ public class UserDAO {
 		this.name = name;
 	}
 
-	public String getUser_type() {
-		return user_type;
+	/**
+	 * @return the language
+	 */
+	public String getLanguage() {
+		return language;
 	}
 
-	public void setUser_type(String user_type) {
-		this.user_type = user_type;
-	}
-
-	public int getGroup_seq() {
-		return group_seq;
-	}
-
-	public void setGroup_seq(int group_seq) {
-		this.group_seq = group_seq;
-	}
-
-	public String getApproval_yn() {
-		return approval_yn;
-	}
-
-	public void setApproval_yn(String approval_yn) {
-		this.approval_yn = approval_yn;
+	/**
+	 * @param language the language to set
+	 */
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public String getDelYn() {

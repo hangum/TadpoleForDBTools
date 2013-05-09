@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.define.DB_Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.mongodb.erd.core.part.TableEditPart;
 import com.hangum.tadpole.mongodb.model.Table;
 
@@ -58,7 +58,7 @@ public class TableSelectionAction extends SelectionAction {
 				TableEditPart tablePart = (TableEditPart)is.getFirstElement();
 				Table tableModel = (Table)tablePart.getModel();
 
-				PlatformUI.getPreferenceStore().setValue(DB_Define.SELECT_ERD_TABLE, tableModel.getName()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SELECT_ERD_TABLE, tableModel.getName()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		

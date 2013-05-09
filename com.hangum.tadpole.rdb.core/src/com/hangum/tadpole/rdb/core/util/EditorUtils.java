@@ -87,12 +87,12 @@ public class EditorUtils {
 					MainEditor editor = (MainEditor)iEditorReference.getEditor(true);
 					if(editor.getdBResource() == null) continue;
 					
-					if(editor.getdBResource().getSeq() == dao.getSeq()) return iEditorReference;
+					if(editor.getdBResource().getResource_seq() == dao.getResource_seq()) return iEditorReference;
 				} else if(ier instanceof TadpoleRDBEditor) {
 					TadpoleRDBEditor editor = (TadpoleRDBEditor)iEditorReference.getEditor(true);
 					if(editor.getUserDBErd() == null) continue;
 					
-					if(editor.getUserDBErd().getSeq() == dao.getSeq()) return iEditorReference;
+					if(editor.getUserDBErd().getResource_seq() == dao.getResource_seq()) return iEditorReference;
 				}
 			}
 		}

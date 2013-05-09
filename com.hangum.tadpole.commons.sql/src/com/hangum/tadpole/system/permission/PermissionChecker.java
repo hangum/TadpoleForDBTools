@@ -12,10 +12,10 @@ package com.hangum.tadpole.system.permission;
 
 import java.util.List;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.define.DB_Define;
 
 /**
  * 사용자 혹은 사용자 쿼리의 권한을 검사합니다.
@@ -58,7 +58,7 @@ public class PermissionChecker {
 		DBOperationType opType = DBOperationType.valueOf(userDB.getOperation_type());
 		
 		// 디비권한이 read only connection 옵션이 선택되었으면 statement문만 권한을 허락합니다.
-		if(DB_Define.YES_NO.YES.toString().equals(userDB.getIs_readOnlyConnect())) {
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_readOnlyConnect())) {
 			if(!SQLUtil.isStatement(strSQL)) return false;
 		}
 		
@@ -69,9 +69,9 @@ public class PermissionChecker {
 			return true;
 		// real db라면 
 		} else {
-			if(DB_Define.USER_TYPE.ADMIN.toString().equals(strUserType) || 
-					DB_Define.USER_TYPE.MANAGER.toString().equals(strUserType) ||
-					DB_Define.USER_TYPE.DBA.toString().equals(strUserType)) return true;
+			if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
+					PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType) ||
+					PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) return true;
 			
 			// GUEST USER인 경우 SELECT 만 허락합니다.
 			if(SQLUtil.isStatement(strSQL)) return true;
@@ -89,9 +89,9 @@ public class PermissionChecker {
 	public static boolean isShow(String strUserType) {
 		boolean boolReturn = false;
 		
-		if(DB_Define.USER_TYPE.ADMIN.toString().equals(strUserType) || 
-				DB_Define.USER_TYPE.MANAGER.toString().equals(strUserType) ||
-				DB_Define.USER_TYPE.DBA.toString().equals(strUserType)) return true;
+		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
+				PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType) ||
+				PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) return true;
 		
 		return boolReturn;
 	}
@@ -107,7 +107,7 @@ public class PermissionChecker {
 		boolean boolReturn = false;
 		
 		// 디비의 권한이 db type이 read only인 경우 보이지 않도록 합니다.
-		if(DB_Define.YES_NO.YES.toString().equals(userDB.getIs_readOnlyConnect())) return false;
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_readOnlyConnect())) return false;
 		
 		// 유저의 권한를 검사합니다.
 		DBOperationType opType = DBOperationType.valueOf(userDB.getOperation_type());
@@ -117,9 +117,9 @@ public class PermissionChecker {
 		
 		// real db라면 
 		} else {
-			if(DB_Define.USER_TYPE.ADMIN.toString().equals(strUserType) || 
-					DB_Define.USER_TYPE.MANAGER.toString().equals(strUserType) ||
-					DB_Define.USER_TYPE.DBA.toString().equals(strUserType)) return true;
+			if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
+					PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType) ||
+					PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) return true;
 		}
 		
 		return boolReturn;

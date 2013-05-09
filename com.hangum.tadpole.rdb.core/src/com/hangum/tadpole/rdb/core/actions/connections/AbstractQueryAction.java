@@ -22,10 +22,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.DB_Define.DB_ACTION;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBInfosEditor;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBInfosInput;
@@ -66,7 +66,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 	public void run(UserDBDAO userDB) {
 		
 		// mongodb인지 검사하여..
-		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			MainEditorInput mei = new MainEditorInput(userDB);
 			
 			try {
@@ -77,7 +77,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
-		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
 			MongoDBInfosInput mongoInput = new MongoDBInfosInput(userDB);
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mongoInput, MongoDBInfosEditor.ID);
@@ -131,7 +131,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 	 * @param userDB
 	 * @param actionType
 	 */
-	public void run(UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
 		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, actionType));
 	}
 	

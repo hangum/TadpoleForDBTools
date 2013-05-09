@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Tree;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;

@@ -15,12 +15,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.system.ExecutedSqlResourceDAO;
 import com.hangum.tadpole.dao.system.ExecutedSqlResourceDataDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.dialogs.message.dao.SQLHistoryDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -53,7 +53,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * save resource 
 	 * @param listExecutingSqltHistoryDao
 	 */
-	public static void saveExecuteSQUeryResource(int user_seq, UserDBDAO userDB, DB_Define.EXECUTE_SQL_TYPE sqlType, List<SQLHistoryDAO> listExecutingSqltHistoryDao) throws Exception {
+	public static void saveExecuteSQUeryResource(int user_seq, UserDBDAO userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE sqlType, List<SQLHistoryDAO> listExecutingSqltHistoryDao) throws Exception {
 
 		for (SQLHistoryDAO sqlHistoryDAO : listExecutingSqltHistoryDao) {
 			ExecutedSqlResourceDAO executeSQLResourceDao = new ExecutedSqlResourceDAO();

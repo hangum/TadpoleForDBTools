@@ -15,7 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.define.DB_Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
@@ -86,7 +86,7 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 			editor.setOrionText(queryStruct[1]);
 			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
 			
-			editor.executeCommand(DB_Define.QUERY_MODE.DEFAULT);
+			editor.executeCommand(PublicTadpoleDefine.QUERY_MODE.DEFAULT);
 		}
 	}
 	
@@ -100,7 +100,7 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 			editor.setOrionText(queryStruct[1]);
 			editor.setOrionEditorCursorPostion(MainEditor.ALL_QUERY_EXECUTE);
 			
-			editor.executeCommand(DB_Define.QUERY_MODE.DEFAULT);
+			editor.executeCommand(PublicTadpoleDefine.QUERY_MODE.DEFAULT);
 		}
 	}
 	
@@ -117,7 +117,7 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 			editor.setOrionText(queryStruct[1]);
 			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
 			
-			editor.executeCommand(DB_Define.QUERY_MODE.EXPLAIN_PLAN);
+			editor.executeCommand(PublicTadpoleDefine.QUERY_MODE.EXPLAIN_PLAN);
 		}
 	}
 	
@@ -160,7 +160,7 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			// dialog open
-			SQLToStringDialog dialog = new SQLToStringDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DB_Define.SQL_TO_APPLICATION.Java_StringBuffer.toString(), queryStruct[1]);
+			SQLToStringDialog dialog = new SQLToStringDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), PublicTadpoleDefine.SQL_TO_APPLICATION.Java_StringBuffer.toString(), queryStruct[1]);
 			dialog.open();
 			
 		}

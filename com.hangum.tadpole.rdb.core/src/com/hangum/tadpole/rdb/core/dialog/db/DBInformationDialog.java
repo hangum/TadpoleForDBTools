@@ -156,7 +156,7 @@ public class DBInformationDialog extends Dialog {
 		}
 		selGroupName = userDB.getGroup_name();
 		
-		DBDefine dbDefine = DBDefine.getDBDefine(userDB.getTypes());
+		DBDefine dbDefine = DBDefine.getDBDefine(userDB.getDbms_types());
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
 			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.MARIADB_DEFAULT) {

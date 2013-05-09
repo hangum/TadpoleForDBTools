@@ -13,8 +13,7 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import com.hangum.tadpole.define.DB_Define;
-import com.hangum.tadpole.define.DB_Define.DB_ACTION;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 
 /**
@@ -31,7 +30,7 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.refresh";
 
-	public ObjectRefreshAction(IWorkbenchWindow window, DB_Define.DB_ACTION actionType, String title) {
+	public ObjectRefreshAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText("Refresh " + title);
@@ -39,19 +38,19 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 
 	@Override
 	public void run() {
-		if(actionType == DB_ACTION.TABLES) {
+		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			refreshTable();
-		} else if(actionType == DB_ACTION.VIEWS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
 			refreshView();
-		} else if(actionType == DB_ACTION.INDEXES) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			refreshIndexes();
-		} else if(actionType == DB_ACTION.PROCEDURES) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
 			refreshProcedure();
-		} else if(actionType == DB_ACTION.FUNCTIONS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 			refreshFunction();
-		} else if(actionType == DB_ACTION.TRIGGERS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 			refreshTrigger();
-		} else if(actionType == DB_ACTION.JAVASCRIPT) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
 			refreshJS();
 		}
 	}

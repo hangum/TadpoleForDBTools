@@ -42,7 +42,7 @@ public class TadpoleRDBEditorInput implements IEditorInput {
 	 * @param userDBErd
 	 */
 	public TadpoleRDBEditorInput(String name, UserDBResourceDAO userDBErd) {
-		this.name = userDBErd.getFilename();
+		this.name = userDBErd.getName();
 		this.userDB = userDBErd.getParent();
 		this.userDBERD = userDBErd;
 	}

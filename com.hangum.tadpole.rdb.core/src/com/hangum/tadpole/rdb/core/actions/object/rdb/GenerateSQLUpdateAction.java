@@ -23,8 +23,6 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.define.DB_Define;
-import com.hangum.tadpole.define.DB_Define.DB_ACTION;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -38,7 +36,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 	private static final Logger logger = Logger.getLogger(GenerateSQLUpdateAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateSQLUpdateAction"; //$NON-NLS-1$
 
-	public GenerateSQLUpdateAction(IWorkbenchWindow window, DB_ACTION actionType, String title) {
+	public GenerateSQLUpdateAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType, title);
 	}
 	
@@ -69,7 +67,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 			int cnt = 0;
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
-				if(DB_Define.isKEY(dao.getKey())) {
+				if(PublicTadpoleDefine.isKEY(dao.getKey())) {
 					if(cnt == 0) sbSQL.append("\t" + dao.getField() + " = ? " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
 					else sbSQL.append("\tAND " + dao.getField() + " = ? "); //$NON-NLS-1$ //$NON-NLS-2$
 					cnt++;

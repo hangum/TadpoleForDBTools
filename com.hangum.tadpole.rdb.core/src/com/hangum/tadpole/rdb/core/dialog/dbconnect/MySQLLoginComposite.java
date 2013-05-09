@@ -29,10 +29,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -232,7 +232,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		}
 		
 		userDB = new UserDBDAO();
-		userDB.setTypes(getSelectDB().getDBToString());
+		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText().trim());
 		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
@@ -246,14 +246,14 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
-		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
-		userDB.setIs_autocmmit(otherConnectionDAO.isAutoCommit()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
-		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
 		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
 		
-		userDB.setIs_profile(otherConnectionDAO.isProfiling()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
-		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?DB_Define.YES_NO.YES.toString():DB_Define.YES_NO.NO.toString());
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
 		// 기존 데이터 업데이트
 		if(oldUserDB != null) {
@@ -278,7 +278,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			if(!connectValidate(userDB)) return false;
 			
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getGroupSeq(), SessionManager.getSeq());
 			} catch (Exception e) {
 				logger.error(Messages.MySQLLoginComposite_0, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

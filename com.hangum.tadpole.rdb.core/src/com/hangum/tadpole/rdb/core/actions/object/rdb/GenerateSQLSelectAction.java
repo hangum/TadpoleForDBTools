@@ -26,7 +26,6 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.define.DB_Define.DB_ACTION;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -48,7 +47,7 @@ public class GenerateSQLSelectAction extends AbstractObjectAction {
 	private static final Logger logger = Logger.getLogger(GenerateSQLSelectAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateSQLSelectAction"; //$NON-NLS-1$
 	
-	public GenerateSQLSelectAction(IWorkbenchWindow window, DB_ACTION actionType, String title) {
+	public GenerateSQLSelectAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 	
 		setId(ID + actionType.toString());

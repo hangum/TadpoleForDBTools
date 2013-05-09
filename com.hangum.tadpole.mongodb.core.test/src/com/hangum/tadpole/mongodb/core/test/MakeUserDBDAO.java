@@ -28,7 +28,7 @@ public class MakeUserDBDAO {
 				"127.0.0.1", "27017", "Sample MondogoDB");
 		
 		
-		userDB.setTypes(DBDefine.MONGODB_DEFAULT.getDBToString());
+		userDB.setDbms_types(DBDefine.MONGODB_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb("test");
 		userDB.setDisplay_name("Sample MondogoDB");

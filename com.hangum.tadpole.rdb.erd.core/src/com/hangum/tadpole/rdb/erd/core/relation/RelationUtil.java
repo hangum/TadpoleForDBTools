@@ -18,13 +18,12 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.ReferencedTableDAO;
 import com.hangum.tadpole.dao.sqlite.SQLiteRefTableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
-import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferDropTargetListener;
 import com.hangum.tadpole.rdb.model.Column;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
@@ -64,11 +63,11 @@ public class RelationUtil {
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db, String refTableNames) throws Exception {
 			
 		// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
+		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getDbms_types() )) {
 			
 			calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 			
-		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
+		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getDbms_types() )) {
 			
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
 			
@@ -89,11 +88,11 @@ public class RelationUtil {
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db)  throws Exception {
 		
 		// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
+		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getDbms_types() )) {
 			 
 			calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 			
-		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getTypes() )) {
+		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getDbms_types() )) {
 			
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
 			
@@ -284,12 +283,12 @@ public class RelationUtil {
 	public static RelationKind calcRelationCol(Column soCol, Column taCol) {
 		if("YES".equals( taCol.getNull() ) || "YES".equals( soCol.getNull() )) {
 			
-			if( DB_Define.isPK( soCol.getKey() )) return RelationKind.ZERO_OR_ONE;
+			if( PublicTadpoleDefine.isPK( soCol.getKey() )) return RelationKind.ZERO_OR_ONE;
 			else return RelationKind.ZERO_OR_MANY;
 		
 		} else {
 		
-			if( DB_Define.isPK( soCol.getKey() )) return RelationKind.ONLY_ONE;
+			if( PublicTadpoleDefine.isPK( soCol.getKey() )) return RelationKind.ONLY_ONE;
 			else return RelationKind.ONE_OR_MANY;
 			
 		}

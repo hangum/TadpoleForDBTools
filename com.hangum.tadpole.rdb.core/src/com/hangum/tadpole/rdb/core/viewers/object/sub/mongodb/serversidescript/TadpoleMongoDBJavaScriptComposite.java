@@ -38,9 +38,9 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditorInput;
@@ -176,9 +176,9 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
-		deleteActionJS = new ObjectDeleteAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
-		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
+		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
+		deleteActionJS = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
+		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

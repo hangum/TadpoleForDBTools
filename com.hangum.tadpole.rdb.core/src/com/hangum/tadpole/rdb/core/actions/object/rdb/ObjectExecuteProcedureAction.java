@@ -13,8 +13,8 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.IWorkbenchWindow;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 
@@ -34,7 +34,7 @@ public class ObjectExecuteProcedureAction extends AbstractObjectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.execute.procedure";
 
-	public ObjectExecuteProcedureAction(IWorkbenchWindow window, DB_Define.DB_ACTION actionType, String title) {
+	public ObjectExecuteProcedureAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText("Execute "  + title);

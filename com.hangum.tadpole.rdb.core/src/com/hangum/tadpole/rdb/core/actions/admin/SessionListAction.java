@@ -56,7 +56,7 @@ public class SessionListAction implements IViewActionDelegate {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
 		// 
-		if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MYSQL_DEFAULT) {
+		if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT) {
 			
 			try {
 				SessionListEditorInput sleInput = new SessionListEditorInput(userDB);

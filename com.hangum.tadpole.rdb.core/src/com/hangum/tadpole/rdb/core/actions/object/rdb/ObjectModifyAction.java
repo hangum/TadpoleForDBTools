@@ -16,10 +16,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.define.DB_Define;
-import com.hangum.tadpole.define.DB_Define.DB_ACTION;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
@@ -44,7 +43,7 @@ public class ObjectModifyAction extends AbstractObjectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.modify"; //$NON-NLS-1$
 
-	public ObjectModifyAction(IWorkbenchWindow window, DB_Define.DB_ACTION actionType, String title) {
+	public ObjectModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText("Alert " + title); //$NON-NLS-1$
@@ -64,12 +63,12 @@ public class ObjectModifyAction extends AbstractObjectAction {
 
 	@Override
 	public void run() {
-		if(actionType == DB_ACTION.TABLES) {
+		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			
 			CreateTableAction cta = new CreateTableAction();
 			
 			// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
-			if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.SQLite_DEFAULT) {
+			if(DBDefine.getDBDefine(userDB.getDelYn()) == DBDefine.SQLite_DEFAULT) {
 				TableDAO tc = (TableDAO)sel.getFirstElement();
 				if(tc == null) cta.run(userDB, actionType);
 				else cta.run(userDB, tc.getComment());
@@ -78,22 +77,22 @@ public class ObjectModifyAction extends AbstractObjectAction {
 			}
 				
 			
-		} else if(actionType == DB_ACTION.VIEWS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
-		} else if(actionType == DB_ACTION.INDEXES) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			CreateIndexAction cia = new CreateIndexAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == DB_ACTION.PROCEDURES) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
 			CreateProcedureAction cia = new CreateProcedureAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == DB_ACTION.FUNCTIONS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 			CreateFunctionAction cia = new CreateFunctionAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == DB_ACTION.TRIGGERS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 			CreateTriggerAction cia = new CreateTriggerAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == DB_ACTION.JAVASCRIPT) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
 			CreateJavaScriptAction csa = new CreateJavaScriptAction();
 			csa.run(userDB, actionType);
 		}

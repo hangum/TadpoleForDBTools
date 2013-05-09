@@ -41,11 +41,8 @@ import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -53,9 +50,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.xml.sax.InputSource;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.DB_Define;
+import com.hangum.tadpole.dialogs.save.ResourceSaveDialog;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
@@ -103,9 +101,6 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	/** dnd */
 	TableTransferFactory tableTransFactory = new TableTransferFactory();
 	
-	/** save root directory */
-	private String erdDetailFileName 	= ""; //$NON-NLS-1$
-
 	public TadpoleRDBEditor() {
 		setEditDomain(new DefaultEditDomain(this));
 	}
@@ -135,7 +130,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 						} else {
 							RdbFactory factory = RdbFactory.eINSTANCE;
 							db = factory.createDB();
-							db.setDbType(userDB.getTypes() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
+							db.setDbType(userDB.getDbms_types() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
 //							db.setId("");//userDB.getDisplay_name());
 //							db.setUrl("");//userDB.getUrl());
 						}
@@ -178,7 +173,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 							// 오류가 발생했을때는 기본 정보로 
 							RdbFactory factory = RdbFactory.eINSTANCE;
 							db = factory.createDB();
-							db.setDbType(userDB.getTypes());
+							db.setDbType(userDB.getDbms_types());
 							db.setId(userDB.getUsers());
 							db.setUrl(userDB.getUrl());
 							
@@ -283,7 +278,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		if(null != erdInput.getUserDBERD()) { 
 			userDBErd = erdInput.getUserDBERD();
 			
-//			// load resouce
+			// load resouce
 			try {
 				String xmlString = TadpoleSystem_UserDBResource.getResourceData(userDBErd);
 				
@@ -307,11 +302,9 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		        
 		        Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_0, errStatus); //$NON-NLS-1$
-			} finally {
-//				if(fos != null) try{ fos.close(); } catch(Exception e) {}
 			}
 			
-			setPartName(isAllTable?"All " + userDBErd.getFilename():userDBErd.getFilename());
+			setPartName(isAllTable?"All " + userDBErd.getName():userDBErd.getName());
 			setTitleToolTip(userDB.getDisplay_name());
 		} else {
 			setPartName(isAllTable?"All " + userDB.getDisplay_name():userDB.getDisplay_name());
@@ -336,24 +329,24 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		if(userDBErd == null) {
 			
 			// file 이름 dialog
-			InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "Save", Messages.TadpoleEditor_4, userDB.getDisplay_name(), new FileNameValidator()); //$NON-NLS-1$
-			if (dlg.open() == Window.OK) {
+			ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.ERD);
+			if (rsDialog.open() == Window.OK) {
 				
 				try {
 					// erd 정보 디비저장
-					userDBErd = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, DB_Define.RESOURCE_TYPE.ERD, erdDetailFileName, createResourceToString());
+					userDBErd = TadpoleSystem_UserDBResource.saveResource(userDB, rsDialog.getRetResourceDao(), createResourceToString());
 					userDBErd.setParent(userDB);
 					
 					// command stack 초기화
 					getCommandStack().markSaveLocation();
 					
 					// title 수정
-					setPartName(erdDetailFileName);
+					setPartName(userDBErd.getName());
 
 					// managerView tree refresh
 					// 뒤에 시간을붙인것은 한번 저장한 db_seq는 업데이지 않는 오류를 방지하기위해...
 					//
-					PlatformUI.getPreferenceStore().setValue(DB_Define.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					
 				} catch (Exception e) {
 					logger.error(Messages.TadpoleEditor_9, e);
@@ -410,38 +403,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		
 		return super.getAdapter(type);
 	}
-	
-	/**
-	 * 파일 중복 되었는지, 혹은 너무 짧은지 validator
-	 * 
-	 * @author hangum
-	 *
-	 */
-	protected class FileNameValidator implements IInputValidator {
 
-		@Override
-		public String isValid(String newText) {
-			int len = newText.length();
-			if(len < 5) return Messages.TadpoleEditor_13;
-			try {
-				if(!TadpoleSystem_UserDBResource.userDBResourceDuplication(DB_Define.RESOURCE_TYPE.ERD, userDB.getUser_seq(), userDB.getSeq(), newText)) {
-					return Messages.TadpoleEditor_14;
-				}
-			} catch (Exception e) {
-				logger.error(Messages.TadpoleEditor_15, e);
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_2, errStatus); //$NON-NLS-1$
-			}
-			
-			erdDetailFileName = newText;
-					
-			// input must be ok
-			return null;
-		}
-		
-	}
-	
 	public UserDBResourceDAO getUserDBErd() {
 		return userDBErd;
 	}

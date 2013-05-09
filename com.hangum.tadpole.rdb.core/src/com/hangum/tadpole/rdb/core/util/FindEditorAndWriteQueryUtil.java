@@ -50,7 +50,7 @@ public class FindEditorAndWriteQueryUtil {
 	 */
 	public static void run(UserDBDAO userDB, String lowSQL) {
 		
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 			try {
 				ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB);

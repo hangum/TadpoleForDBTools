@@ -124,15 +124,15 @@ public class TablesComposite extends Composite {
 	 * table column head를 생성합니다.
 	 */
 	private void createColumn() {
-		if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MYSQL_DEFAULT ||
-			DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MARIADB_DEFAULT
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
+			DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT
 		) {
 			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "collation", "Created", "Comment"};
 			int[] size = {120, 70, 70, 100, 120, 120, 220};
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
-		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
 			String[] name = {"Name", "Rows", "Lock"};
 			int[] size = {120, 70, 70};
 			int[] align = {SWT.LEFT, SWT.RIGHT, SWT.LEFT};
@@ -205,8 +205,8 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 	public String getColumnText(Object element, int columnIndex) {
 		Map resultMap = (HashMap)element;
 		
-		if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MARIADB_DEFAULT
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
+				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT
 		) {
 			switch(columnIndex) {
 			case 0: return ""+resultMap.get("TABLE_NAME");
@@ -217,7 +217,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 5: return ""+resultMap.get("CREATE_TIME");
 			case 6: return ""+resultMap.get("TABLE_COMMENT");
 			}
-		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
 			switch(columnIndex) {
 			case 0: return ""+resultMap.get("TABLE_NAME");
 			case 1: return NumberFormatUtils.commaFormat(""+resultMap.get("NUM_ROWS"));

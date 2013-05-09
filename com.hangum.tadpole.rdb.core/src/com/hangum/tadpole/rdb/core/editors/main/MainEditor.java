@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -81,11 +80,11 @@ import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
+import com.hangum.tadpole.dialogs.save.ResourceSaveDialog;
 import com.hangum.tadpole.editor.core.rdb.texteditor.EditorExtension;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -98,6 +97,7 @@ import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.system.permission.PermissionChecker;
@@ -142,6 +142,8 @@ public class MainEditor extends EditorExtension {
 	
 	/** resource 정보. */
 	private UserDBResourceDAO dBResource;
+	/** first save UserDBResource object */
+	private UserDBResourceDAO userSetDBResource; //$NON-NLS-1$
 	
 	/** save mode */
 	private boolean isFirstLoad = false;
@@ -151,7 +153,7 @@ public class MainEditor extends EditorExtension {
 	private DownloadServiceHandler downloadServiceHandler;
 	
 	/** 현 쿼리의 실행모드. */
-	private DB_Define.QUERY_MODE queryMode = DB_Define.QUERY_MODE.DEFAULT;
+	private PublicTadpoleDefine.QUERY_MODE queryMode = PublicTadpoleDefine.QUERY_MODE.DEFAULT;
 	
 	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
 	private String initDefaultEditorStr;
@@ -217,8 +219,8 @@ public class MainEditor extends EditorExtension {
 		if(dBResource == null) {
 			setPartName(qei.getName());
 		} else {
-			setPartName(dBResource.getFilename());
-			saveFileName = dBResource.getFilename();
+			setPartName(dBResource.getName());
+//			saveFileName = dBResource.getName();
 			isFirstLoad = true;
 		}
 		
@@ -260,7 +262,7 @@ public class MainEditor extends EditorExtension {
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
-		if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.SQLite_DEFAULT ) {
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT ) {
 			String fileName = new File(userDB.getDb()).getName();			
 			tltmConnectURL.setText("Connect [ " + fileName + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
@@ -712,7 +714,7 @@ public class MainEditor extends EditorExtension {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 
-				if (event.getProperty() == DB_Define.AUTOCOMMIT_USE) {
+				if (event.getProperty() == PublicTadpoleDefine.AUTOCOMMIT_USE) {
 					String strAutoCommit_seq = event.getNewValue().toString();
 					// UserDB.seq || auto commit ture or false 
 					String[] arryVal = StringUtils.split(strAutoCommit_seq, "||"); //$NON-NLS-1$
@@ -772,7 +774,7 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/** Define.QUERY_MODE 명령을 내립니다 */
-	public void executeCommand(DB_Define.QUERY_MODE mode) {
+	public void executeCommand(PublicTadpoleDefine.QUERY_MODE mode) {
 		queryMode = mode;
 		execute();
 		
@@ -783,7 +785,7 @@ public class MainEditor extends EditorExtension {
 	 * initialize editor
 	 */
 	private void initEditor() {
-		if("YES".equals(userDB.getIs_autocmmit())) { //$NON-NLS-1$
+		if("YES".equals(userDB.getIs_autocommit())) { //$NON-NLS-1$
 			tltmAutoCommit.setSelection(false);
 		} else {
 			tltmAutoCommit.setSelection(true);
@@ -817,7 +819,7 @@ public class MainEditor extends EditorExtension {
 		
 		if(isRiseEvent) {
 			// auto commit의 실행버튼을 동일한 db를 열고 있는 에디터에서 공유합니다.
-			PlatformUI.getPreferenceStore().setValue(DB_Define.AUTOCOMMIT_USE, userDB.getSeq() + "||" + tltmAutoCommit.getSelection() + "||" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.AUTOCOMMIT_USE, userDB.getSeq() + "||" + tltmAutoCommit.getSelection() + "||" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -916,7 +918,7 @@ public class MainEditor extends EditorExtension {
 		}
 		
 		// 실행해도 되는지 묻는다.
-		if(DB_Define.YES_NO.YES.toString().equals(userDB.getQuestion_dml())) {
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getQuestion_dml())) {
 			boolean isDML = false;
 			// 여러개 쿼리를 실행했을 경우.
 			for (String strQuery : listStrExecuteQuery) {
@@ -1039,9 +1041,9 @@ public class MainEditor extends EditorExtension {
 	 * @param listExecutingSqltHistoryDao
 	 */
 	private void saveExecuteSQLData(List<SQLHistoryDAO> listExecutingSqltHistoryDao) {
-		if(DB_Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
 			try {
-				TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(user_seq, userDB, DB_Define.EXECUTE_SQL_TYPE.EDITOR, listExecutingSqltHistoryDao);
+				TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(user_seq, userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, listExecutingSqltHistoryDao);
 			} catch(Exception e) {
 				logger.error("save the user query", e); //$NON-NLS-1$
 			}
@@ -1114,7 +1116,7 @@ public class MainEditor extends EditorExtension {
 				javaConn = TadpoleSQLTransactionManager.getInstance(strUserEMail, userDB, isAutoCommit);
 			}
 			
-			if(DB_Define.QUERY_MODE.DEFAULT == queryMode) {
+			if(PublicTadpoleDefine.QUERY_MODE.DEFAULT == queryMode) {
 				
 				if( requestQuery.toUpperCase().startsWith("SELECT") ) { //$NON-NLS-1$
 					requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, queryResultCount);
@@ -1126,10 +1128,10 @@ public class MainEditor extends EditorExtension {
 				rs = stmt.executeQuery();//Query( selText );
 				
 			// explain
-			}  else if(DB_Define.QUERY_MODE.EXPLAIN_PLAN == queryMode) {
+			}  else if(PublicTadpoleDefine.QUERY_MODE.EXPLAIN_PLAN == queryMode) {
 				
 				// 큐브리드 디비이면 다음과 같아야 합니다.
-				if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.CUBRID_DEFAULT) {
+				if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.CUBRID_DEFAULT) {
 					
 					String cubridQueryPlan = CubridExecutePlanUtils.plan(userDB, requestQuery);
 					mapColumns = CubridExecutePlanUtils.getMapColumns();
@@ -1137,7 +1139,7 @@ public class MainEditor extends EditorExtension {
 					
 					return;
 					
-				} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
+				} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
 					
 					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
 					stmt = javaConn.prepareStatement("select * from " + planTableName); //$NON-NLS-1$
@@ -1629,64 +1631,65 @@ public class MainEditor extends EditorExtension {
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
+		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
 		if(dBResource == null) {
-			FileNameValidator fv = new FileNameValidator(userDB);
-			InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", Messages.MainEditor_68, userDB.getDisplay_name(), fv); //$NON-NLS-1$
-			if (dlg.open() == Window.OK) {
-				saveFileName = fv.getFileName();
+			ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
+			if(rsDialog.open() == Window.OK) {
+				userSetDBResource = rsDialog.getRetResourceDao();
+			} else {
+				return;
 			}
 		}
 		
-		// 파일 명이 있으면... 
-		if(!"".equals(saveFileName)) { //$NON-NLS-1$
-			try {
-				Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
-				if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
-					monitor.setCanceled(true);
-				}
-			} catch(SWTException e) {
-				logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
+		// 저장을 호출합니다.
+		try {
+			Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
+			if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
 				monitor.setCanceled(true);
-			}	
-		}
-	}
+			}
+		} catch(SWTException e) {
+			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
+			monitor.setCanceled(true);
+		}	
 
+	}
+	
 	/**
 	 * save
 	 * 
 	 * @param newContents
 	 * @return
 	 */
-	String saveFileName = ""; //$NON-NLS-1$
 	public boolean performSave(String newContents) {
+		// null은 단축키를 바로 눌렀을 경우에 호출되어 집니다.
 		if(dBResource == null) {
 			// editor가 저장 가능 상태인지 검사합니다.
-			if(!isDirty()) return  false; 
+			if(!isDirty()) return false; 
 			
-			FileNameValidator fv = new FileNameValidator(userDB);
-			InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", Messages.MainEditor_68, userDB.getDisplay_name(), fv); //$NON-NLS-1$
+			if(userSetDBResource == null) {
+				ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
+				if(rsDialog.open() != Window.OK) return false;
+				else userSetDBResource = rsDialog.getRetResourceDao();
+			}
 			
-			if (dlg.open() == Window.OK) {
-				saveFileName = fv.getFileName();
-				try {
-					// db 저장
-					dBResource = TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, DB_Define.RESOURCE_TYPE.SQL, saveFileName, newContents);
-					dBResource.setParent(userDB);
-					
-					// title 수정
-					setPartName(saveFileName);
-					
-					// tree 갱신
-					PlatformUI.getPreferenceStore().setValue(DB_Define.SAVE_FILE, ""+dBResource.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					setDirty(false);
-				} catch (Exception e) {
-					logger.error("save file", e); //$NON-NLS-1$
+			try {
+				// db 저장
+				dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, userSetDBResource, newContents);
+				dBResource.setParent(userDB);
+				
+				// title 수정
+				setPartName(userSetDBResource.getName());
+				
+				// tree 갱신
+				PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+dBResource.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				setDirty(false);
+			} catch (Exception e) {
+				logger.error("save file", e); //$NON-NLS-1$
 
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
-					
-					return false;
-				}
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+				
+				return false;
 			}
 			
 		} else {
@@ -1783,7 +1786,7 @@ public class MainEditor extends EditorExtension {
 	 */
 	public String getInitExt() {
 		String extension = "tadpole_edit"; //$NON-NLS-1$
-		DBDefine userDBDefine = DBDefine.getDBDefine(getUserDB().getTypes());
+		DBDefine userDBDefine = DBDefine.getDBDefine(getUserDB().getDbms_types());
 		
 		if(userDBDefine == DBDefine.MYSQL_DEFAULT || userDBDefine == DBDefine.MARIADB_DEFAULT) {
 			extension += ".mysql"; //$NON-NLS-1$

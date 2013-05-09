@@ -33,9 +33,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.dao.system.UserDAO;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
@@ -226,12 +225,12 @@ public class NewUserDialog extends Dialog {
 		
 		// user 입력시 
 		int groupSeq = 0;
-		DB_Define.USER_TYPE userType = DB_Define.USER_TYPE.USER;
+		PublicTadpoleDefine.USER_TYPE userType = PublicTadpoleDefine.USER_TYPE.USER;
 		if(btnUser.getSelection()) {
 			groupSeq = (Integer)comboUserGroup.getData(comboUserGroup.getText());
 		} else {
 			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
-			userType = DB_Define.USER_TYPE.MANAGER;
+			userType = PublicTadpoleDefine.USER_TYPE.MANAGER;
 			// 그룹 등록
 			try {
 				groupSeq = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
@@ -244,7 +243,7 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		try {
-			UserDAO loginDAO = TadpoleSystem_UserQuery.newUser(groupSeq, strEmail, passwd, name, userType);
+//			UserDAO loginDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, userType);
 			
 			if(!ApplicationArgumentUtils.isTestMode()) {
 				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);

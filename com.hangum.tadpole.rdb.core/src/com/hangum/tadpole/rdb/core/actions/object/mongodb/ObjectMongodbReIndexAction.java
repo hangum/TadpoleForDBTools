@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.define.DB_Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -38,7 +38,7 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.reIndex"; //$NON-NLS-1$
 	
-	public ObjectMongodbReIndexAction(IWorkbenchWindow window, DB_Define.DB_ACTION actionType, String title) {
+	public ObjectMongodbReIndexAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);

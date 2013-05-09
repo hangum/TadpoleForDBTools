@@ -61,11 +61,11 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -351,17 +351,17 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 
 		// generation sample data
-		generateSampleData = new GenerateSampleDataAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		generateSampleData = new GenerateSampleDataAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 
-		selectStmtAction = new GenerateSQLSelectAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
-		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
-		updateStmtAction = new GenerateSQLUpdateAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
-		deleteStmtAction = new GenerateSQLDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_Define.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
+		selectStmtAction = new GenerateSQLSelectAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
+		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
+		updateStmtAction = new GenerateSQLUpdateAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
+		deleteStmtAction = new GenerateSQLDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -377,7 +377,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					manager.add(refreshAction_Table);
 
 					// 현재는 oracle db만 데이터 수정 모드..
-					if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
+					if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						manager.add(generateSampleData);
 					}

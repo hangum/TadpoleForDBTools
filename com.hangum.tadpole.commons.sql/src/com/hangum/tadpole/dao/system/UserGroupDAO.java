@@ -20,6 +20,7 @@ public class UserGroupDAO {
 	int seq;
 	String name;
 	String delYn;
+	String create_time;
 	
 	public UserGroupDAO() {
 	}
@@ -47,7 +48,19 @@ public class UserGroupDAO {
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
 	}
-	
-	
+
+	/**
+	 * @return the create_time
+	 */
+	public String getCreate_time() {
+		return create_time;
+	}
+
+	/**
+	 * @param create_time the create_time to set
+	 */
+	public void setCreate_time(String create_time) {
+		this.create_time = create_time;
+	}
 	
 }

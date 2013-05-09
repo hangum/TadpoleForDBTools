@@ -67,32 +67,29 @@ public class TadpoleSystem_UserDBQuery {
 	
 	/**
 	 * 신규 유저디비를 등록합니다.
+	 * 
 	 * @param userDb
+	 * @param groupSeq
 	 * @param userSeq
 	 */
-	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
+	public static UserDBDAO newUserDB(UserDBDAO userDb, int groupSeq, int userSeq) throws Exception {
 		userDb.setUser_seq(userSeq);
-		
 		userDb.setPasswd( EncryptiDecryptUtil.encryption(userDb.getPasswd()) );
 		
-		// 기존에 등록 되어 있는지 검사한다
+//		// 기존에 등록 되어 있는지 검사한다
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<UserDBDAO> isUserDB = (List<UserDBDAO>)sqlClient.queryForList("isUserDB", userDb); //$NON-NLS-1$
-		
-		// 존재하
-		if(isUserDB.size() >= 1) {
-			return userDb;
-		}
 
-//		// 신규 유저를 등록합니다.
-//		userDb.setUser_seq(userSeq);
+		// user_db등록
+		UserDBDAO insertedUserDB = (UserDBDAO)sqlClient.insert("userDBInsert", userDb); //$NON-NLS-1$
 		
-		sqlClient.insert("userDBInsert", userDb); //$NON-NLS-1$
+		userDb.setSeq(insertedUserDB.getSeq());
 		
-		// 저장한 seq를 리턴합니다.
-		UserDBDAO insertSeq = (UserDBDAO)sqlClient.queryForObject("isUserDB", userDb); //$NON-NLS-1$
-		userDb.setSeq(insertSeq.getSeq());
-			
+		// table_filter 등록
+		sqlClient.insert("userDBFilterInsert", userDb);
+		
+		// 데이터베이스 확장속성 등록
+		sqlClient.insert("userDBEXTInsert", userDb);
+		
 		return userDb;
 	}
 	

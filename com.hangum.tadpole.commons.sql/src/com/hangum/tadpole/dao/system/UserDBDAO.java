@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.hangum.tadpole.dao.ManagerListDTO;
-import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 
 /**
  * 사용자 디비
@@ -35,12 +34,13 @@ import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 public class UserDBDAO {
 	protected int seq;
 	protected int user_seq;
+	protected int group_seq;
     
 	protected String group_name = "";
 	
 	protected String operation_type = "";
     
-	protected String types;
+	protected String dbms_types;
 	protected String url;
 	protected String db;
 	protected String display_name;
@@ -67,7 +67,7 @@ public class UserDBDAO {
     protected int profile_select_mill = -1;
     
     protected String is_readOnlyConnect = "";
-	protected String is_autocmmit = "";
+	protected String is_autocommit = "";
 	
 	protected String is_table_filter = "";
 
@@ -88,6 +88,22 @@ public class UserDBDAO {
     
     public UserDBDAO() {
 	}
+    
+	/**
+	 * @return the group_seq
+	 */
+	public int getGroup_seq() {
+		return group_seq;
+	}
+
+	/**
+	 * @param group_seq the group_seq to set
+	 */
+	public void setGroup_seq(int group_seq) {
+		this.group_seq = group_seq;
+	}
+
+
 
 	public int getSeq() {
 		return seq;
@@ -197,12 +213,19 @@ public class UserDBDAO {
 		this.delYn = delYn;
 	}
 
-	public String getTypes() {
-		return types;
+
+	/**
+	 * @return the dbms_types
+	 */
+	public String getDbms_types() {
+		return dbms_types;
 	}
 
-	public void setTypes(String types) {
-		this.types = types;
+	/**
+	 * @param dbms_types the dbms_types to set
+	 */
+	public void setDbms_types(String dbms_types) {
+		this.dbms_types = dbms_types;
 	}
 
 	public String getDb() {
@@ -355,12 +378,18 @@ public class UserDBDAO {
 		this.is_readOnlyConnect = is_readOnlyConnect;
 	}
 
-	public String getIs_autocmmit() {
-		return is_autocmmit;
+	/**
+	 * @return the is_autocommit
+	 */
+	public String getIs_autocommit() {
+		return is_autocommit;
 	}
 
-	public void setIs_autocmmit(String is_autocmmit) {
-		this.is_autocmmit = is_autocmmit;
+	/**
+	 * @param is_autocommit the is_autocommit to set
+	 */
+	public void setIs_autocommit(String is_autocommit) {
+		this.is_autocommit = is_autocommit;
 	}
 
 	public String getTable_filter_include() {
@@ -396,21 +425,4 @@ public class UserDBDAO {
 	public void setIs_table_filter(String is_table_filter) {
 		this.is_table_filter = is_table_filter;
 	}
-
-	@Override
-	public String toString() {
-		return "UserDBDAO [seq=" + seq + ", user_seq=" + user_seq
-				+ ", group_name=" + group_name + ", operation_type="
-				+ operation_type + ", types=" + types + ", url=" + url
-				+ ", db=" + db + ", display_name=" + display_name + ", host="
-				+ host + ", port=" + port + ", locale=" + locale + ", passwd="
-				+ passwd + ", users=" + users + ", create_time=" + create_time
-				+ ", delYn=" + delYn + ", ext1=" + ext1 + ", ext2=" + ext2
-				+ ", ext3=" + ext3 + ", is_profile=" + is_profile
-				+ ", profile_select_mill=" + profile_select_mill
-				+ ", question_dml=" + question_dml + ", parent=" + parent
-				+ ", listUserDBErd=" + listUserDBErd + ", version=" + version
-				+ ", listUserDBGroup=" + listUserDBGroup + "]";
-	}
-
 }

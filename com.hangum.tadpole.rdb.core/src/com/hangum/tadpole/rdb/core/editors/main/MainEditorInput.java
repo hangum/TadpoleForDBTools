@@ -15,9 +15,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
@@ -31,10 +31,10 @@ public class MainEditorInput implements IEditorInput {
 	private static final Logger logger = Logger.getLogger(MainEditorInput.class);
 	
 	/** 에디터의 오픈 타입 정의 */
-	private DB_Define.EDITOR_OPEN_TYPE OPEN_TYPE = DB_Define.EDITOR_OPEN_TYPE.NONE;
+	private PublicTadpoleDefine.EDITOR_OPEN_TYPE OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.NONE;
 	
 	private UserDBDAO userDB;
-	private DB_Define.DB_ACTION action;
+	private PublicTadpoleDefine.DB_ACTION action;
 	private String defaultStr = ""; //$NON-NLS-1$
 	private UserDBResourceDAO resourceDAO;
 	
@@ -46,7 +46,7 @@ public class MainEditorInput implements IEditorInput {
 	public MainEditorInput(UserDBDAO userDB) {
 		this.userDB = userDB;
 		
-		this.OPEN_TYPE = DB_Define.EDITOR_OPEN_TYPE.NONE;
+		this.OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.NONE;
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class MainEditorInput implements IEditorInput {
 		this.userDB = userDB;
 		this.defaultStr = defaultStr;
 		
-		this.OPEN_TYPE = DB_Define.EDITOR_OPEN_TYPE.STRING;
+		this.OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.STRING;
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class MainEditorInput implements IEditorInput {
 		this.userDB = dao.getParent();
 		this.resourceDAO = dao;
 		
-		this.OPEN_TYPE = DB_Define.EDITOR_OPEN_TYPE.FILE;
+		this.OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.FILE;
 		
 		this.defaultStr = TadpoleSystem_UserDBResource.getResourceData(dao);
 	}
@@ -81,12 +81,12 @@ public class MainEditorInput implements IEditorInput {
 	 * @param userDB
 	 * @param action
 	 */
-	public MainEditorInput(UserDBDAO userDB, DB_Define.DB_ACTION initAction) {
+	public MainEditorInput(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION initAction) {
 		this.userDB = userDB;
 		this.action = initAction;
 		this.defaultStr = QueryTemplateUtils.getQuery(userDB, initAction);
 		
-		this.OPEN_TYPE = DB_Define.EDITOR_OPEN_TYPE.STRING;
+		this.OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.STRING;
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class MainEditorInput implements IEditorInput {
 		return defaultStr;
 	}
 	
-	public DB_Define.EDITOR_OPEN_TYPE getOPEN_TYPE() {
+	public PublicTadpoleDefine.EDITOR_OPEN_TYPE getOPEN_TYPE() {
 		return OPEN_TYPE;
 	}
 

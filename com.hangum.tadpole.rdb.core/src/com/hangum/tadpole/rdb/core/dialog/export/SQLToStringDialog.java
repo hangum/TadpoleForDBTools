@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.application.SQLToJavaConvert;
 
@@ -104,7 +103,7 @@ public class SQLToStringDialog extends Dialog {
 			}
 		});
 		comboLanguageType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for(DB_Define.SQL_TO_APPLICATION app : DB_Define.SQL_TO_APPLICATION.values()) {
+		for(PublicTadpoleDefine.SQL_TO_APPLICATION app : PublicTadpoleDefine.SQL_TO_APPLICATION.values()) {
 			comboLanguageType.add(app.toString());
 			comboLanguageType.setData(app.toString(), app);
 		}
@@ -161,7 +160,7 @@ public class SQLToStringDialog extends Dialog {
 		StringBuffer sbStr = new StringBuffer();
 		String[] sqls = parseSQL();
 		
-		SQLToLanguageConvert slt = new SQLToLanguageConvert( (DB_Define.SQL_TO_APPLICATION)comboLanguageType.getData(comboLanguageType.getText()) );
+		SQLToLanguageConvert slt = new SQLToLanguageConvert( (PublicTadpoleDefine.SQL_TO_APPLICATION)comboLanguageType.getData(comboLanguageType.getText()) );
 		for(int i=0; i < sqls.length; i++) {
 			if("".equals(StringUtils.trimToEmpty(sqls[i]))) continue;
 			

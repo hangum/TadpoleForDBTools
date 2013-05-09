@@ -179,6 +179,6 @@ public class TadpoleSQLTransactionManager {
 	 * @return
 	 */
 	private static String getKey(final String userId, final UserDBDAO userDB) {
-		return userId + userDB.getSeq() + userDB.getTypes()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
+		return userId + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
 	}
 }

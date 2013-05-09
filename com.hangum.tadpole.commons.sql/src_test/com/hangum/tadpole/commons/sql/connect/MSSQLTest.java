@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.connect;
 
-import com.hangum.tadpole.define.DB_Define;
 
 public class MSSQLTest {
 	private java.sql.Connection con = null;

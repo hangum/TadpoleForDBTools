@@ -88,13 +88,13 @@ public class RDBInformationComposite extends Composite {
 		listInfo.add(new KeyValueDAO("Display Name", 	userDB.getDisplay_name()));
 		
 		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getUrl()));
-		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.SQLite_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost() + "/" + userDB.getPort()));
 		}
 		
 		listInfo.add(new KeyValueDAO("Database", 		userDB.getDb()));
 		
-		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.SQLite_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers()));
 		}
 		
@@ -106,8 +106,8 @@ public class RDBInformationComposite extends Composite {
 		}
 		
 		// 몽고디비는 없으므로.. 
-		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-			listInfo.add(new KeyValueDAO("Auto Commit",		userDB.getIs_autocmmit()));
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+			listInfo.add(new KeyValueDAO("Auto Commit",		userDB.getIs_autocommit()));
 			listInfo.add(new KeyValueDAO("Profile", 		userDB.getIs_profile()));
 			listInfo.add(new KeyValueDAO("Select문 이외 문자 실행시 묻기", 	userDB.getQuestion_dml()));
 		}

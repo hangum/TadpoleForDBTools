@@ -26,9 +26,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.dialog.ddl.DDLSourceComposite;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 
@@ -77,7 +77,7 @@ public class TableInformationEditor extends EditorPart {
 		initTableNameStr = qei.getName();
 		columnList = qei.getShowTableColumns();
 		for (TableColumnDAO columnDAO : columnList) {
-			if(DB_Define.isPK(columnDAO.getKey())) {
+			if(PublicTadpoleDefine.isPK(columnDAO.getKey())) {
 				primaryKEYListString.put(columnDAO.getField(), true);
 			} else {
 				primaryKEYListString.put(columnDAO.getField(), false);

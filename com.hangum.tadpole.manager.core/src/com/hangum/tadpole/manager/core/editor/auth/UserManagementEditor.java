@@ -22,7 +22,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.define.DB_Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 
@@ -91,7 +91,7 @@ public class UserManagementEditor extends EditorPart {
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
 		CTabItem tbtmItem = null;
-		if(DB_Define.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
+		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
 			tbtmItem = new CTabItem(tabFolder, SWT.NONE);
 			tbtmItem.setText("Manager");
 		} else {

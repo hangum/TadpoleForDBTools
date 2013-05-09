@@ -14,13 +14,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.Messages;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.TadpoleRuntimeException;
-import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -41,8 +40,8 @@ public class TadpoleSystem_UserQuery {
 	 * @param name
 	 * @throws Exception
 	 */
-	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, DB_Define.USER_TYPE userType) throws Exception {
-		return newUser(groupSeq, email, passwd, name, userType.toString());
+	public static UserDAO newUser(String email, String passwd, String name, String language) throws Exception {
+		return newUser(email, passwd, name, language, PublicTadpoleDefine.YES_NO.NO.toString());
 	}
 	
 	/**
@@ -51,13 +50,12 @@ public class TadpoleSystem_UserQuery {
 	 * @param email
 	 * @param passwd
 	 * @param name
-	 * @param type
 	 * @param approvalYn
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, String type, String approvalYn) throws Exception {
-		UserDAO loginDAO = new UserDAO(groupSeq, email, passwd, name, type, approvalYn);
+	public static UserDAO newUser(String email, String passwd, String name, String language, String yesNo) throws Exception {
+		UserDAO loginDAO = new UserDAO(email, passwd, name, language);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
@@ -72,24 +70,24 @@ public class TadpoleSystem_UserQuery {
 		}
 	}
 	
-	/**
-	 * 신규 유저를 등록합니다.
-	 * 
-	 * @param email
-	 * @param pass
-	 * @param name
-	 * @param type user-type
-	 */
-	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, String type) throws Exception {
-		//
-		// 테스트모드 일 경우 관리자의 허락이 필요치 않도록 수정합니다.
-		// 
-		if(ApplicationArgumentUtils.isTestMode()) {
-			return newUser(groupSeq, email, passwd, name, type, DB_Define.YES_NO.YES.toString());
-		} else {
-			return newUser(groupSeq, email, passwd, name, type, DB_Define.YES_NO.NO.toString());
-		}
-	}
+//	/**
+//	 * 신규 유저를 등록합니다.
+//	 * 
+//	 * @param email
+//	 * @param pass
+//	 * @param name
+//	 * @param type user-type
+//	 */
+//	public static UserDAO newUserIsTest(String email, String passwd, String name, String type) throws Exception {
+//		//
+//		// 테스트모드 일 경우 관리자의 허락이 필요치 않도록 수정합니다.
+//		// 
+//		if(ApplicationArgumentUtils.isTestMode()) {
+//			return newUser(email, passwd, name, type, DB_Define.YES_NO.YES.toString());
+//		} else {
+//			return newUser(email, passwd, name, type, DB_Define.YES_NO.NO.toString());
+//		}
+//	}
 	
 	
 	/**
@@ -127,8 +125,8 @@ public class TadpoleSystem_UserQuery {
 	
 		if(null == userInfo) {
 			throw new Exception(Messages.TadpoleSystem_UserQuery_9);
-		} else if("NO".equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
-			throw new Exception(Messages.TadpoleSystem_UserQuery_1);
+//		} else if("NO".equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
+//			throw new Exception(Messages.TadpoleSystem_UserQuery_1);
 		}
 	
 		return userInfo;

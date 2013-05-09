@@ -31,9 +31,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -120,9 +120,9 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
-		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
-		deleteAction_Trigger = new ObjectDeleteAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
-		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), DB_Define.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
+		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
+		deleteAction_Trigger = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
+		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

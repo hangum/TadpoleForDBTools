@@ -134,7 +134,7 @@ CREATE TABLE executed_sql_resource (
 	RESULT           CHAR(3)       NULL,     -- 결과코드
 	MESSAGE          VARCHAR(2000) NULL,     -- 결과메시지
 	CREATE_TIME 	DATE DEFAULT (datetime('now','localtime')), -- 생성일
-	DELYN            CHAR(3)       NOT NULL DEFAULT 'N', -- 삭제여부
+	DELYN            CHAR(3)       NOT NULL DEFAULT 'NO', -- 삭제여부
 	FOREIGN KEY (USER_SEQ) REFERENCES user (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION,
 	FOREIGN KEY (DB_SEQ) REFERENCES user_db (SEQ) ON DELETE NO ACTION ON UPDATE NO ACTION
 );

@@ -159,44 +159,44 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	private void initData() {
 		textGroupName.setText(userDAO.getUser_group_name());
-		textGroupType.setText(userDAO.getUser_type());
+//		textGroupType.setText(userDAO.getUser_type());
 		textEmail.setText(userDAO.getEmail());
 		textName.setText(userDAO.getName());
 		textCreateDate.setText(userDAO.getCreate_time());
 		
-		comboApproval.setText(userDAO.getApproval_yn());
-		comboDel.setText(userDAO.getDelYn());		
+//		comboApproval.setText(userDAO.getApproval_yn());
+//		comboDel.setText(userDAO.getDelYn());		
 	}
 	
 	@Override
 	protected void okPressed() {
-		if(MessageDialog.openConfirm(getShell(), Messages.ModifyUserDialog_12, Messages.ModifyUserDialog_13)) {
-			UserDAO user = new UserDAO();
-			user.setApproval_yn(comboApproval.getText());
-			user.setDelYn(comboDel.getText());
-			user.setSeq(userDAO.getSeq());
-			
-			// 사용자의 권한을 no로 만들면 session에서 삭제 하도록 합니다.
-			if("YES".equals(user.getDelYn()) || "YES".equals(user.getApproval_yn())) {
-				String sessionId = SessionManagerListener.getSessionIds(user.getEmail());
-				logger.debug("[session id]" + sessionId);
-			}
-			
-			try {
-				TadpoleSystem_UserQuery.updateUserData(user);
-			} catch (Exception e) {
-				logger.error("data update", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "User Info update", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-				
-				return;
-			}
-			
-			super.okPressed();	
-		} else {
-			return;
-		}		
+//		if(MessageDialog.openConfirm(getShell(), Messages.ModifyUserDialog_12, Messages.ModifyUserDialog_13)) {
+//			UserDAO user = new UserDAO();
+//			user.setApproval_yn(comboApproval.getText());
+//			user.setDelYn(comboDel.getText());
+//			user.setSeq(userDAO.getSeq());
+//			
+//			// 사용자의 권한을 no로 만들면 session에서 삭제 하도록 합니다.
+//			if("YES".equals(user.getDelYn()) || "YES".equals(user.getApproval_yn())) {
+//				String sessionId = SessionManagerListener.getSessionIds(user.getEmail());
+//				logger.debug("[session id]" + sessionId);
+//			}
+//			
+//			try {
+//				TadpoleSystem_UserQuery.updateUserData(user);
+//			} catch (Exception e) {
+//				logger.error("data update", e); //$NON-NLS-1$
+//				
+//				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "User Info update", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+//				
+//				return;
+//			}
+//			
+//			super.okPressed();	
+//		} else {
+//			return;
+//		}		
 	}
 
 	/**

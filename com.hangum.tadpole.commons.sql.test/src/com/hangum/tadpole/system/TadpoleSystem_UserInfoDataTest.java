@@ -12,11 +12,6 @@ package com.hangum.tadpole.system;
 
 import junit.framework.TestCase;
 
-import com.hangum.tadpole.dao.system.UserDAO;
-import com.hangum.tadpole.define.DB_Define;
-import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
-
 /**
  * {@link com.hangum.tadpole.system.TadpoleSystem_UserInfoData 기본정보 테스트}
  * 

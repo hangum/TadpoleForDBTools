@@ -278,7 +278,7 @@ public class MongoDBImportEditor extends EditorPart {
 			if(tabFolderQuery.getSelectionIndex() == 0) {
 				
 				DBImport dbImport = null;
-				if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+				if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 					dbImport = new MongoDBCollectionToMongodBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
 				} else {
 					dbImport = new RDBTableToMongoDBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
@@ -288,7 +288,7 @@ public class MongoDBImportEditor extends EditorPart {
 				
 				
 			} else if(tabFolderQuery.getSelectionIndex() == 1) {	
-				if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+				if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 					MessageDialog.openInformation(null, "Confirm", "Not support MongoDB.");
 					return;
 				} else {

@@ -158,7 +158,7 @@ public class TableColumnLIstComposite extends Composite {
 		this.userDB = userDB;
 
 		try {
-			if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {
+			if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 				List<String> listCollection = MongoDBQuery.listCollection(userDB);
 				for (String strColl : listCollection) {
 					listTables.add( new ModTableDAO(strColl) );

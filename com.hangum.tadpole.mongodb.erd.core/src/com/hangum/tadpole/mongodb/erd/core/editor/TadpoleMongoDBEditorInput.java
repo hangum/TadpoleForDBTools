@@ -42,7 +42,7 @@ public class TadpoleMongoDBEditorInput implements IEditorInput {
 	 * @param userDBErd
 	 */
 	public TadpoleMongoDBEditorInput(String name, UserDBResourceDAO userDBErd) {
-		this.name = userDBErd.getFilename();
+		this.name = userDBErd.getName();
 		this.userDB = userDBErd.getParent();
 		this.userDBERD = userDBErd;
 	}

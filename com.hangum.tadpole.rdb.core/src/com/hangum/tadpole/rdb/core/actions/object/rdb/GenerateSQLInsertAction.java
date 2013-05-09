@@ -25,7 +25,6 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.define.DB_Define.DB_ACTION;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -40,7 +39,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	private static final Logger logger = Logger.getLogger(GenerateSQLInsertAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateSQLInsertAction"; //$NON-NLS-1$
 
-	public GenerateSQLInsertAction(IWorkbenchWindow window, DB_ACTION actionType, String title) {
+	public GenerateSQLInsertAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType, title);
 	}
 	
@@ -48,7 +47,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	public void run() {
 		TableDAO tableDAO = (TableDAO)sel.getFirstElement();
 		
-		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			StringBuffer sbSQL = new StringBuffer();
 			try {
 				Map<String, String> parameter = new HashMap<String, String>();
@@ -83,7 +82,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLInsertAction_0, errStatus); //$NON-NLS-1$
 			}
 		// mongo db
-		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
 			
 			NewDocumentDialog dialog = new NewDocumentDialog(Display.getCurrent().getActiveShell(), userDB, tableDAO.getName());
 			dialog.open();

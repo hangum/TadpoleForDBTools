@@ -51,7 +51,7 @@ public class SQLMap {
 	 * @throws Exception
 	 */
 	private static String getConfig(UserDBDAO dbInfo) throws Exception {
-		String config = getFileToString(DBDefine.getDBDefine(dbInfo.getTypes()).getLocation());
+		String config = getFileToString(DBDefine.getDBDefine(dbInfo.getDbms_types()).getLocation());
 		
 		// url chnage
 		config = config.replace(URL, StringEscapeUtils.escapeXml( dbInfo.getUrl() ));			

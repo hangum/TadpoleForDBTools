@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export;
 
-import com.hangum.tadpole.define.DB_Define;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.rdb.core.dialog.export.application.SQLToJavaConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.application.SQLToPHPConvert;
 
@@ -21,16 +21,16 @@ import com.hangum.tadpole.rdb.core.dialog.export.application.SQLToPHPConvert;
  *
  */
 public class SQLToLanguageConvert {
-	private DB_Define.SQL_TO_APPLICATION application ;
+	private PublicTadpoleDefine.SQL_TO_APPLICATION application ;
 
-	public SQLToLanguageConvert(DB_Define.SQL_TO_APPLICATION application) {
+	public SQLToLanguageConvert(PublicTadpoleDefine.SQL_TO_APPLICATION application) {
 		this.application = application;
 	}
 	
 	public String sqlToString(String name, String sql) {
-		if(application == DB_Define.SQL_TO_APPLICATION.PHP) {
+		if(application == PublicTadpoleDefine.SQL_TO_APPLICATION.PHP) {
 			return SQLToPHPConvert.sqlToString(name, sql);
-		} else if(application == DB_Define.SQL_TO_APPLICATION.Java_StringBuffer) {
+		} else if(application == PublicTadpoleDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
 			return SQLToJavaConvert.sqlToString(name, sql);
 		}
 		

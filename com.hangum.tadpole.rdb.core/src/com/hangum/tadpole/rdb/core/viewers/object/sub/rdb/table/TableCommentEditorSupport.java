@@ -73,7 +73,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 		
 		if(column == 1) {
 //			userDB = explorer.getUserDB();
-			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT) {
 				return true;
 			} else {
 				return false;
@@ -131,13 +131,13 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.ORACLE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
 				query.append(" COMMENT ON TABLE ").append(dao.getName()).append(" IS '").append(dao.getComment()).append("'");
 
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.executeQuery();
 
-			} else if (DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MSSQL_DEFAULT) {
+			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers()).append(" ,'table' ").append(" , '").append(dao.getName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {

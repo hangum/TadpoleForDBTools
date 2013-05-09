@@ -14,14 +14,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
-import com.hangum.tadpole.define.DB_Define;
-import com.hangum.tadpole.system.TadpoleSystemInitializer;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
 
 /**
  * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource 시스템 리소스 테스트}
@@ -53,7 +49,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 			
 			UserDBDAO userDb2 = TadpoleSystemInitializer.getUserDB();
 			userDb2.setDisplay_name("junit testName2");			
-			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, groupSeq);
+			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, groupSeq, userDb2.getUser_seq());
 			
 		} catch (Exception e) {
 			fail("fail user group" + e.getMessage());
@@ -65,15 +61,15 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#saveResource(UserDBDAO, com.hangum.tadpole.define.DB_Define.RESOURCE_TYPE, String, String) 시스템 리소스 저장 테스트}
+	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#saveResource(UserDBDAO, com.hangum.tadpole.define.PublicTadpoleDefine.RESOURCE_TYPE, String, String) 시스템 리소스 저장 테스트}
 	 */
 	public void testSaveResource() {
-		try {
-			UserDBResourceDAO userDBResource = TadpoleSystem_UserDBResource.saveResource(userDb.getUser_seq(), userDb, DB_Define.RESOURCE_TYPE.SQL, "junit", "junit content");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("SaveResouece");
-		}
+//		try {
+//			UserDBResourceDAO userDBResource = TadpoleSystem_UserDBResource.saveResource(userDb.getUser_seq(), userDb, PublicTadpoleDefine.RESOURCE_TYPE.SQL, "junit", "junit content");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			fail("SaveResouece");
+//		}
 	}
 
 	/**
@@ -106,11 +102,11 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#userDBResourceDuplication(com.hangum.tadpole.define.DB_Define.RESOURCE_TYPE, int, int, String) 시스템 리소스 중복 테스트}
+	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#userDBResourceDuplication(com.hangum.tadpole.define.PublicTadpoleDefine.RESOURCE_TYPE, int, int, String) 시스템 리소스 중복 테스트}
 	 */
 	public void testUserDBResourceDuplication() {
 		try {
-			boolean bool = TadpoleSystem_UserDBResource.userDBResourceDuplication(DB_Define.RESOURCE_TYPE.SQL, userDb.getUser_seq(), userDb.getSeq(), "junit");
+			boolean bool = TadpoleSystem_UserDBResource.userDBResourceDuplication(PublicTadpoleDefine.RESOURCE_TYPE.SQL, userDb.getUser_seq(), userDb.getSeq(), "junit");
 			
 			assertEquals(!bool, true);
 		} catch (Exception e) {

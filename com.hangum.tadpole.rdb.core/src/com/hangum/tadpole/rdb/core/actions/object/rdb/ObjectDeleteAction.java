@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
@@ -24,8 +25,6 @@ import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
-import com.hangum.tadpole.define.DB_Define;
-import com.hangum.tadpole.define.DB_Define.DB_ACTION;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
@@ -45,7 +44,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 	private static final Logger logger = Logger .getLogger(ObjectDeleteAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.delete"; //$NON-NLS-1$
 
-	public ObjectDeleteAction(IWorkbenchWindow window, DB_Define.DB_ACTION actionType, String title) {
+	public ObjectDeleteAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		
 		setId(ID + actionType);
@@ -67,10 +66,10 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 	@Override
 	public void run() {
 		
-		if(actionType == DB_ACTION.TABLES) {
+		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			TableDAO dao = (TableDAO)sel.getFirstElement();
 
-			if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+			if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {
 					try {
 						TadpoleSystemCommons.executSQL(getUserDB(), "drop table " + dao.getName()); //$NON-NLS-1$
@@ -81,7 +80,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					}
 				}
 
-			} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
+			} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {
 					try {
 						MongoDBQuery.dropCollection(getUserDB(), dao.getName());
@@ -92,7 +91,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					}
 				}
 			}
-		} else if(actionType == DB_ACTION.VIEWS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
 			
 			String viewName = (String)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_8, viewName + Messages.ObjectDeleteAction_9)) {
@@ -105,13 +104,13 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					exeMessage(Messages.ObjectDeleteAction_1, e);
 				}
 			}
-		} else if(actionType == DB_ACTION.INDEXES) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			if(sel.getFirstElement() instanceof InformationSchemaDAO) {			
 				InformationSchemaDAO indexDAO = (InformationSchemaDAO)sel.getFirstElement();
 				if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_14, indexDAO.getTABLE_NAME()+ Messages.ObjectDeleteAction_15 + indexDAO.getINDEX_NAME() + Messages.ObjectDeleteAction_16)) {
 					
 					try {
-						if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.POSTGRE_DEFAULT) {
+						if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.POSTGRE_DEFAULT) {
 							TadpoleSystemCommons.executSQL(getUserDB(), "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							TadpoleSystemCommons.executSQL(getUserDB(), "drop index " + indexDAO.getINDEX_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -135,7 +134,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					}
 				}
 			}
-		} else if(actionType == DB_ACTION.PROCEDURES) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
 			ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_23, procedureDAO.getName() + Messages.ObjectDeleteAction_24)) {
 				try {
@@ -147,7 +146,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					exeMessage(Messages.ObjectDeleteAction_10, e);
 				}
 			}
-		} else if(actionType == DB_ACTION.FUNCTIONS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 			ProcedureFunctionDAO functionDAO = (ProcedureFunctionDAO)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_29, functionDAO.getName() + Messages.ObjectDeleteAction_30)) {
 				try {
@@ -159,7 +158,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					exeMessage(Messages.ObjectDeleteAction_17, e);
 				}
 			}
-		} else if(actionType == DB_ACTION.TRIGGERS) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 			TriggerDAO triggerDAO = (TriggerDAO)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_35,  triggerDAO.getTrigger() + Messages.ObjectDeleteAction_36)) {
 				try {
@@ -171,7 +170,7 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 					exeMessage(Messages.ObjectDeleteAction_18, e);
 				}
 			}
-		} else if(actionType == DB_ACTION.JAVASCRIPT) {
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
 			MongoDBServerSideJavaScriptDAO jsDAO = (MongoDBServerSideJavaScriptDAO)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_35,  jsDAO.getName() + Messages.ObjectDeleteAction_42)) {
 				try {

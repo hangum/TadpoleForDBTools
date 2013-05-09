@@ -41,11 +41,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.ManagerListDTO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -109,10 +109,10 @@ public class ManagerViewer extends ViewPart {
 				} else if(selElement instanceof UserDBResourceDAO) {
 					UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					
-					if( DB_Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() ) ) {
+					if( PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
 						UserDBDAO userDB = dao.getParent();
 						
-						if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getTypes())) {							
+						if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {							
 							MongoDBERDViewAction ea = new MongoDBERDViewAction();
 							ea.run(dao);
 						} else {
@@ -152,7 +152,7 @@ public class ManagerViewer extends ViewPart {
 		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty() ==  DB_Define.SAVE_FILE) {
+				if (event.getProperty() ==  PublicTadpoleDefine.SAVE_FILE) {
 					addResource(Integer.parseInt( event.getNewValue().toString().split(":")[0] )); //$NON-NLS-1$
 				}
 			}
@@ -332,9 +332,9 @@ public class ManagerViewer extends ViewPart {
 		IEditorReference iEditorReference = null;
 		
 		// 열린화면 검색
-		if(userDBResource.getTypes().equals(DB_Define.RESOURCE_TYPE.SQL.toString())) {
+		if(userDBResource.getResource_types().equals(PublicTadpoleDefine.RESOURCE_TYPE.SQL.toString())) {
 			iEditorReference = EditorUtils.findSQLEditor(userDBResource);
-		} else if(userDBResource.getTypes().equals(DB_Define.RESOURCE_TYPE.ERD.toString())) {
+		} else if(userDBResource.getResource_types().equals(PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString())) {
 			iEditorReference = EditorUtils.findERDEditor(userDBResource);
 		}
 		
@@ -380,7 +380,7 @@ public class ManagerViewer extends ViewPart {
 		treeViewer.setSelection(new StructuredSelection(dto), true);
 		
 		// mongodb 일경우 열지 않는다.
-		if(DBDefine.getDBDefine(dto.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(dto.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			MainEditorInput mei = new MainEditorInput(dto);		
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {

@@ -14,12 +14,12 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.ManagerListDTO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.define.DB_Define;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -49,7 +49,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		} else if(element instanceof UserDBDAO) {
 			
 			UserDBDAO dto = (UserDBDAO)element;
-			DBDefine dbType = DBDefine.getDBDefine(dto.getTypes());
+			DBDefine dbType = DBDefine.getDBDefine(dto.getDbms_types());
 			
 			if(DBDefine.MYSQL_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
@@ -80,7 +80,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
-			if(DB_Define.RESOURCE_TYPE.ERD.toString().equals( dao.getTypes() )) {
+			if(PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals( dao.getResource_types())) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/erd.png"); //$NON-NLS-1$
 			} else {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sql-query.png"); //$NON-NLS-1$
@@ -117,7 +117,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			
-			return dao.getFilename();
+			return dao.getName();
 		}
 		
 		return "## not set ##"; //$NON-NLS-1$
