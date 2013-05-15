@@ -109,8 +109,17 @@ public class ResourceSaveDialog extends Dialog {
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		initUI();
 
 		return container;
+	}
+	
+	/**
+	 * initialize ui
+	 */
+	private void initUI() {
+		textName.setFocus();
 	}
 	
 	@Override
