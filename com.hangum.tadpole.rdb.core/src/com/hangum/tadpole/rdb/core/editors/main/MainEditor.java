@@ -97,7 +97,6 @@ import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.system.permission.PermissionChecker;
@@ -220,7 +219,6 @@ public class MainEditor extends EditorExtension {
 			setPartName(qei.getName());
 		} else {
 			setPartName(dBResource.getName());
-//			saveFileName = dBResource.getName();
 			isFirstLoad = true;
 		}
 		
@@ -239,21 +237,23 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.verticalSpacing = 0;
-		gl_composite.marginHeight = 0;
-		composite.setLayout(gl_composite);
+		GridLayout gl_parent = new GridLayout(1, false);
+		gl_parent.verticalSpacing = 2;
+		gl_parent.horizontalSpacing = 2;
+		gl_parent.marginHeight = 2;
+		gl_parent.marginWidth = 2;
+		parent.setLayout(gl_parent);
 		
-		SashForm sashForm = new SashForm(composite, SWT.NONE);
-		sashForm.setOrientation(SWT.VERTICAL);
+		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+		sashForm.setSashWidth(1);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		sashForm.setBounds(0, 0, 64, 64);
 		
 		final Composite compositeEditor = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_compositeEditor = new GridLayout(1, false);
 		gl_compositeEditor.verticalSpacing = 0;
+		gl_compositeEditor.horizontalSpacing = 0;
 		gl_compositeEditor.marginHeight = 0;
+		gl_compositeEditor.marginWidth = 0;
 		compositeEditor.setLayout(gl_compositeEditor);
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.BORDER | SWT.FLAT | SWT.RIGHT);
