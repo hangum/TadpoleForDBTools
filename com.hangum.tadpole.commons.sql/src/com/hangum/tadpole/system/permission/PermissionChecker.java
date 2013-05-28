@@ -91,7 +91,7 @@ public class PermissionChecker {
 		
 		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
 				PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType) ||
-				PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) return true;
+				PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) boolReturn = true;
 		
 		return boolReturn;
 	}

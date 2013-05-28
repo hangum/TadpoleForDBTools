@@ -162,7 +162,7 @@ public class LoginDialog extends Dialog {
 //				}
 				
 				// template code
-				SessionManager.newLogin(0, login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), -1);
+				SessionManager.newLogin(1, login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), -1);
 				
 				
 			} catch (Exception e) {

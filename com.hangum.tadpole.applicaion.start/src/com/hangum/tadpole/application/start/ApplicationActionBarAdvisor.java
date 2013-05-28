@@ -29,7 +29,6 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
-import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;

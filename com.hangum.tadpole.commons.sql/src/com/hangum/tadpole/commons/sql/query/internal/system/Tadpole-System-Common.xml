@@ -149,13 +149,31 @@
  ORDER BY email
  </select>
  
+ <!-- 
+ 	사용자 그룹별 유저 리스트 
+  -->
  <select id="userListGroup" resultClass="com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO" parameterClass="java.lang.Integer">
- SELECT a.name user_group_name, 
- 	b.seq, group_seq, email, passwd, b.name, user_type, b.delYn, b.create_time 
- FROM user_group a, user b
- WHERE a.seq = b.group_seq
- 	AND b.group_seq = #group_seq#
- ORDER BY email
+ SELECT
+    a.name user_group_name
+    ,b.seq user_seq
+    ,a.seq group_seq
+    ,email
+    ,passwd
+    ,b.name
+    ,c.role_type role_type
+    ,b.delYn
+    ,b.create_time
+  FROM
+    user_group a
+    ,user b
+    ,user_role c
+  WHERE
+ 	   a.seq = c.group_seq
+    AND a.seq = #gruop_seq#
+  GROUP BY
+  	user_group_name, user_seq, group_seq
+  ORDER BY
+    email
  </select>
  
 <!-- 
@@ -299,8 +317,7 @@
 		ext1			= #ext1#,
 		ext2			= #ext2#,
 		ext3			= #ext3#
-	WHERE seq = #seq#
-	
+	WHERE seq = #seq#	
 </update>
 
 <update id="userDBDelete" parameterClass="java.lang.Integer">

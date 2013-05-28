@@ -67,7 +67,6 @@ public class AdminComposite extends Composite {
 	private AdminCompFilter filter;
 	private Text textSearch;
 	
-
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -194,6 +193,10 @@ public class AdminComposite extends Composite {
 	
 	/**
 	 * 데이터를 초기화 합니다.
+	 * 
+	 * 1. 사용자 계정 중에 어드민 계정이 있는 지 검색 합니다.
+	 * 	1.1) 어드민 계정이 있다면 계정을 표시합니다.
+	 * 
 	 * @return
 	 */
 	private UserGroupAUserDAO initData() {
