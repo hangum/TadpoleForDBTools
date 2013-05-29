@@ -19,7 +19,7 @@ import com.hangum.tadpole.dao.mysql.TriggerDAO;
 /**
  * Trigger 의 컬럼 정보
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class TriggerLabelProvicer extends LabelProvider implements ITableLabelProvider {

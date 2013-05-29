@@ -19,7 +19,7 @@ import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 /**
  * TABLE, VIEW의 컬럼 정보
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class TableColumnLabelprovider extends LabelProvider implements ITableLabelProvider {

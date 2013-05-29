@@ -18,7 +18,7 @@ import com.hangum.tadpole.util.TadpoleViewrFilter;
 /**
  * Trigger의 FILTER
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class TriggerViewFilter extends TadpoleViewrFilter {

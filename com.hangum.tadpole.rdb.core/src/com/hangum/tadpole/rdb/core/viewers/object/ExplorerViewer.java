@@ -54,7 +54,7 @@ import com.hangum.tadpole.viewsupport.SelectionProviderMediator;
 /**
  * object viewer
  * 
- * @author hangumNote
+ * @author hangum
  * 
  */
 public class ExplorerViewer extends ViewPart {

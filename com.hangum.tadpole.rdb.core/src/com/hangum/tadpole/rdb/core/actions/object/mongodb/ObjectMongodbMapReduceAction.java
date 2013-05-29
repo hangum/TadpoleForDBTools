@@ -29,7 +29,7 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 /**
  * Object Explorer에서 사용하는 Mongodb MapReduce
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ObjectMongodbMapReduceAction extends AbstractObjectAction {

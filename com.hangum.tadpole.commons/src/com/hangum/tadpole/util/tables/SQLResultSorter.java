@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * sql select의 sorter
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class SQLResultSorter extends ViewerSorter {

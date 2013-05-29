@@ -33,7 +33,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 /**
  * database disconnect
  * 
- * @author hangumNote
+ * @author hangum
  * @deprecated
  */
 public class DisconnectDBAction implements IViewActionDelegate {

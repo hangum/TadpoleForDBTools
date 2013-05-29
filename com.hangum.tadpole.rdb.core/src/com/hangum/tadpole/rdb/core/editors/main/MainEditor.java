@@ -124,7 +124,7 @@ import com.swtdesigner.SWTResourceManager;
  * 
  * 에디터는 org.eclipse.orion.client-20120810-1752 로 작업.
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class MainEditor extends EditorExtension {
@@ -256,7 +256,7 @@ public class MainEditor extends EditorExtension {
 		gl_compositeEditor.marginWidth = 0;
 		compositeEditor.setLayout(gl_compositeEditor);
 		
-		ToolBar toolBar = new ToolBar(compositeEditor, SWT.BORDER | SWT.FLAT | SWT.RIGHT);
+		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		toolBar.setToolTipText(Messages.MainEditor_toolBar_toolTipText);
 		
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
@@ -359,7 +359,7 @@ public class MainEditor extends EditorExtension {
 		tltmAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(logger.isDebugEnabled()) logger.debug("[set commit][user id]" + strUserEMail + "[[user id]" + userDB); //$NON-NLS-1$ //$NON-NLS-2$
+				if(logger.isDebugEnabled()) logger.debug("[set commit][user id]" + strUserEMail + "[user id]" + userDB); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				TadpoleSQLTransactionManager.commit(strUserEMail, userDB);
 			}
@@ -371,7 +371,7 @@ public class MainEditor extends EditorExtension {
 		tltmAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(logger.isDebugEnabled()) logger.debug("[set rollback][user id]" + strUserEMail + "[[user id]" + userDB); //$NON-NLS-1$ //$NON-NLS-2$
+				if(logger.isDebugEnabled()) logger.debug("[set rollback][user id]" + strUserEMail + "[user id]" + userDB); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				TadpoleSQLTransactionManager.rollback(strUserEMail, userDB);
 			}
@@ -404,12 +404,13 @@ public class MainEditor extends EditorExtension {
 		Composite compositeResult = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 0;
+		gl_compositeResult.horizontalSpacing = 0;
 		gl_compositeResult.marginHeight = 0;
+		gl_compositeResult.marginWidth = 0;
 		compositeResult.setLayout(gl_compositeResult);
 		
 		tabFolderResult = new CTabFolder(compositeResult, SWT.NONE);
 		tabFolderResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tabFolderResult.setBounds(0, 0, 124, 43);
 		tabFolderResult.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());		
 		
 		// tab 의 index를 설정한다.
@@ -520,7 +521,7 @@ public class MainEditor extends EditorExtension {
 					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadExtFile(userDB.getDisplay_name() + "_ResultSetExport.csv", sbExportData.toString()); //$NON-NLS-1$
+				downloadExtFile(userDB.getDisplay_name() + "_SQLResultExport.csv", sbExportData.toString()); //$NON-NLS-1$
 			}
 		});
 		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);
@@ -559,7 +560,6 @@ public class MainEditor extends EditorExtension {
 		tableSQLHistory.setLinesVisible(true);
 		tableSQLHistory.setHeaderVisible(true);
 		tableSQLHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableSQLHistory.setBounds(0, 0, 85, 85);
 		tableSQLHistory.setSortDirection(SWT.DOWN);
 		
 		// auto column layout
@@ -623,7 +623,7 @@ public class MainEditor extends EditorExtension {
 					sbExportData.append( dao.getStrSQLText() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadExtFile(userDB.getDisplay_name() + "_ReCallSQLExport.txt", sbExportData.toString()); //$NON-NLS-1$
+				downloadExtFile(userDB.getDisplay_name() + "_RecallSQLExport.txt", sbExportData.toString()); //$NON-NLS-1$
 			}
 		});
 		btnSetEditor.setText(Messages.MainEditor_17);
@@ -656,7 +656,6 @@ public class MainEditor extends EditorExtension {
 		tableMessage.setLinesVisible(true);
 		tableMessage.setHeaderVisible(true);
 		tableMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableMessage.setBounds(0, 0, 85, 85);
 		tableMessage.setSortDirection(SWT.DOWN);
 		
 		// auto column layout

@@ -19,7 +19,7 @@ import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 /**
  * index의 컬럼 정보
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class IndexesLabelProvicer extends LabelProvider implements ITableLabelProvider {

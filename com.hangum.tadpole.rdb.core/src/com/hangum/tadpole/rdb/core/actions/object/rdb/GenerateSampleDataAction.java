@@ -25,7 +25,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 /**
  * Object Explorer에서 사용하는 공통 action
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class GenerateSampleDataAction extends AbstractObjectAction {

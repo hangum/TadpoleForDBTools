@@ -18,7 +18,7 @@ import com.hangum.tadpole.util.TadpoleViewrFilter;
 /**
  * Procedure Function 의 FILTER
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ProcedureFunctionViewFilter extends TadpoleViewrFilter {

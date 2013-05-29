@@ -18,7 +18,7 @@ import com.hangum.tadpole.util.TadpoleViewrFilter;
 /**
  * Mongo ServerSide javascript
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class MongoJavaScriptViewFilter extends TadpoleViewrFilter {

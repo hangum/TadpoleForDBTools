@@ -19,7 +19,7 @@ import com.hangum.tadpole.util.TadpoleViewrFilter;
 /**
  * TABLE의 FILTER
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class TableFilter extends TadpoleViewrFilter {

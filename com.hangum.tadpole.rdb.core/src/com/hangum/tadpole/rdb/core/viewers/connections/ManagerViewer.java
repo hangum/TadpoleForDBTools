@@ -64,7 +64,7 @@ import com.hangum.tadpole.system.permission.PermissionChecker;
 /**
  * connection manager 정보를 
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ManagerViewer extends ViewPart {

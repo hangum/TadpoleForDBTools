@@ -23,7 +23,7 @@ import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
  * 
  *  Procedure를 실행합니다.
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ObjectExecuteProcedureAction extends AbstractObjectAction {

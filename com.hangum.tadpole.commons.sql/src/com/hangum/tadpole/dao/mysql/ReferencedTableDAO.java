@@ -15,7 +15,7 @@ package com.hangum.tadpole.dao.mysql;
  * 현재는 테이블 관계에서 참조 테이블 목록을 표현해 주는 목적으로 사용합니다.
  * (erd 관계 테이블 목록)
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ReferencedTableDAO {

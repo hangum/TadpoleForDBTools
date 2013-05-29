@@ -34,7 +34,7 @@ import com.hangum.tadpole.system.TadpoleSystemCommons;
 /**
  * Object Explorer에서 사용하는 공통 action
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ObjectDeleteAction extends AbstractObjectAction {

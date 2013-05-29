@@ -27,7 +27,7 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 /**
  * Object Explorer에서 사용하는 Mongodb reIndex
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ObjectMongodbReIndexAction extends AbstractObjectAction {

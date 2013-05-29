@@ -21,7 +21,7 @@ import com.hangum.tadpole.sql.rule.SQLFormatRule;
 /**
  * SQL을 포메팅합니다.
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class SQLFormater {

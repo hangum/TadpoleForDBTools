@@ -32,7 +32,7 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 /**
  * Object Explorer에서 사용하는 공통 action
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ObjectCreatAction extends AbstractObjectAction {

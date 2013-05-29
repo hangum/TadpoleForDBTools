@@ -18,7 +18,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 /**
  * manager server list
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ManagerListDTO {

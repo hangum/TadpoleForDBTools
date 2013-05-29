@@ -21,7 +21,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 
 /**
  * TableEditor의 input
- * @author hangumNote
+ * @author hangum
  *
  */
 public class DBTableEditorInput implements IEditorInput {

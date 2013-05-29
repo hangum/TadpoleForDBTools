@@ -19,7 +19,7 @@ import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 /**
  * ServerSide Javascript 컬럼 정보
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ServerSideJavascriptLabelPrivider extends LabelProvider implements ITableLabelProvider {

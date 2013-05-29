@@ -19,7 +19,7 @@ import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
 /**
  * index의 컬럼 정보
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class MongoDBIndexesLabelProvicer extends LabelProvider implements ITableLabelProvider {

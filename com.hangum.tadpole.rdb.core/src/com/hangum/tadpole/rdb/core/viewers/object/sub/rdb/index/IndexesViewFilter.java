@@ -18,7 +18,7 @@ import com.hangum.tadpole.util.TadpoleViewrFilter;
 /**
  * Indexes의 FILTER
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class IndexesViewFilter extends TadpoleViewrFilter {

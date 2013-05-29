@@ -17,7 +17,7 @@ import com.hangum.tadpole.util.TadpoleViewrFilter;
 /**
  * VIEW의 FILTER
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class RDBViewFilter extends TadpoleViewrFilter {

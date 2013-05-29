@@ -26,7 +26,7 @@ import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 
 /**
  * db 연결 action
- * @author hangumNote
+ * @author hangum
  *
  */
 public class ConnectDatabase implements IViewActionDelegate {

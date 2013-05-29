@@ -20,7 +20,7 @@ import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
 /**
  * index 생성 action
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class CreateIndexAction extends AbstractQueryAction {

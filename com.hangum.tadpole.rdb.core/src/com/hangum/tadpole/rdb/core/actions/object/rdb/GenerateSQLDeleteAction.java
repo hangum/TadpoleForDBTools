@@ -32,7 +32,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 /**
  * generate sql statement     
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {

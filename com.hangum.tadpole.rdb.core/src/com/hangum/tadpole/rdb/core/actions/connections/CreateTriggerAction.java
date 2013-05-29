@@ -20,7 +20,7 @@ import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
 /**
  * trigger 생성 action
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class CreateTriggerAction extends AbstractQueryAction {

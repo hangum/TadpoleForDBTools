@@ -22,7 +22,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 /**
  * table의 컬럼의 0번째 값을 소스로 설정합니다. 
  * 
- * @author hangumNote
+ * @author hangum
  */
 public class DragListener implements DragSourceListener {
 	private UserDBDAO userDB;

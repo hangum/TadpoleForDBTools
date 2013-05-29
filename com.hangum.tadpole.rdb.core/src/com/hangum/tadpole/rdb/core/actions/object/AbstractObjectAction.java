@@ -32,7 +32,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 /**
  * Object view를 컨트롤 하기위한 Abstract action
  * 
- * @author hangumNote
+ * @author hangum
  * 
  */
 public abstract class AbstractObjectAction extends Action implements ISelectionListener, IWorkbenchAction {

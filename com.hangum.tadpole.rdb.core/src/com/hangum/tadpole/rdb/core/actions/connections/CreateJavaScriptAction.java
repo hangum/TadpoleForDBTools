@@ -18,7 +18,7 @@ import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 /**
  * mongodb javascript action
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class CreateJavaScriptAction extends AbstractQueryAction {

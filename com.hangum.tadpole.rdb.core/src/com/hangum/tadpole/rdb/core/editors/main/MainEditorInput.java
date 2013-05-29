@@ -24,7 +24,7 @@ import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 /**
  * main editor의 input
  * 
- * @author hangumNote
+ * @author hangum
  *
  */
 public class MainEditorInput implements IEditorInput {
