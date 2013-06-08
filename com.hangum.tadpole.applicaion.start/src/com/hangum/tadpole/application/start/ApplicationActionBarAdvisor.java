@@ -110,37 +110,37 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
     
     protected void fillMenuBar(IMenuManager menuBar) {
-        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
-        MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
-        MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
-        
-        menuBar.add(fileMenu);
-        
-        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-        menuBar.add(windowMenu);
-        
-        // Add a group marker indicating where action set menus will appear.
-        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-        menuBar.add(helpMenu);
-        
-        // File
-        fileMenu.add(new Separator());
-        fileMenu.add(saveAction);
-//        fileMenu.add(saveAsAction);
-        fileMenu.add(new Separator());
-        fileMenu.add(connectAction);
-        fileMenu.add(new Separator());
-        fileMenu.add(queryOpenAction);
-        fileMenu.add(dbRelationOpenAction);
-        fileMenu.add(deleteResourceAction);
-        fileMenu.add(new Separator());
-//        fileMenu.add(exitAction);
-        
-        windowMenu.add(preferenceAction);        
-        //        
-        // Help
-        helpMenu.add(bugIssueAction);
-        helpMenu.add(aboutAction);
+//        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
+//        MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
+//        MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
+//        
+//        menuBar.add(fileMenu);
+//        
+//        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+//        menuBar.add(windowMenu);
+//        
+//        // Add a group marker indicating where action set menus will appear.
+//        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+//        menuBar.add(helpMenu);
+//        
+//        // File
+//        fileMenu.add(new Separator());
+//        fileMenu.add(saveAction);
+////        fileMenu.add(saveAsAction);
+//        fileMenu.add(new Separator());
+//        fileMenu.add(connectAction);
+//        fileMenu.add(new Separator());
+//        fileMenu.add(queryOpenAction);
+//        fileMenu.add(dbRelationOpenAction);
+//        fileMenu.add(deleteResourceAction);
+//        fileMenu.add(new Separator());
+////        fileMenu.add(exitAction);
+//        
+//        windowMenu.add(preferenceAction);        
+//        //        
+//        // Help
+//        helpMenu.add(bugIssueAction);
+//        helpMenu.add(aboutAction);
     }
     
     protected void fillCoolBar(ICoolBarManager coolBar) {
