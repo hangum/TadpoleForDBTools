@@ -10,17 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start;
 
-import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -109,6 +106,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
     }
     
+    /**
+     * Comment at 2.1 RC3 has error(https://bugs.eclipse.org/bugs/show_bug.cgi?id=410260) 
+     * 
+     * 
+     */
     protected void fillMenuBar(IMenuManager menuBar) {
 //        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
 //        MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
