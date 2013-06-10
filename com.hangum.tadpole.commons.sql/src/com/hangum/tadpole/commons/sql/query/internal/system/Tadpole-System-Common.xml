@@ -59,14 +59,15 @@
 </select>
 
 <!-- 
-	신규 유저 등록
+	신규 그룹 등록.
  -->
 <insert id="newGroup" parameterClass="com.hangum.tadpole.dao.system.UserGroupDAO">
 	INSERT INTO user_group (seq, name)
 	VALUES((select max(seq) from user_group)+1,  #name#)
 	
 	<selectKey keyProperty="seq" resultClass="int">
-		select max(seq) from user_group 
+		select seq from user_group
+		where name = #name# 
 	</selectKey>
 </insert>
 

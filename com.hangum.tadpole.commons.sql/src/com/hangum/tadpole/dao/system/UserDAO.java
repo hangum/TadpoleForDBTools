@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.dao.system;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * user 정보 정의
  * 
@@ -101,5 +103,4 @@ public class UserDAO {
 	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
-
 }

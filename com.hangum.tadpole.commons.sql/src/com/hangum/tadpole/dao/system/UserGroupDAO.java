@@ -24,7 +24,12 @@ public class UserGroupDAO {
 	
 	public UserGroupDAO() {
 	}
-
+	
+	public UserGroupDAO(int seq, String name) {
+		this.seq = seq;
+		this.name = name;
+	}
+	
 	public int getSeq() {
 		return seq;
 	}

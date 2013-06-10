@@ -35,16 +35,13 @@ public class TadpoleSystem_UserGroupQueryTest extends TestCase {
 		try {
 			boolean isGroup = TadpoleSystem_UserGroupQuery.isUserGroup(groupName);
 			if(!isGroup) {
-				
-				int group = TadpoleSystem_UserGroupQuery.newUserGroup(groupName);
-				
+				TadpoleSystem_UserGroupQuery.newUserGroup(groupName);
 			}
 			
 		} catch (Exception e) {
 			fail("fail new user group" + e.getMessage());
 			e.printStackTrace();
 		}
-		
 	}
 
 	/**

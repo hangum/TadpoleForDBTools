@@ -279,7 +279,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			}
 			
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getGroupSeq(), SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {
 				logger.error("Oracle db info save", e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

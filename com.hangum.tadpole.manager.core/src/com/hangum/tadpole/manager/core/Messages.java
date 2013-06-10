@@ -53,6 +53,7 @@ public class Messages extends NLS {
 	public static String NewUserDialog_btnManager_text_1;
 	public static String NewUserDialog_btnUser_text;
 	public static String NewUserDialog_lblNewLabel_text;
+	public static String NewUserDialog_lblLanguage_text;
 	
 	static {
 		// initialize resource bundle

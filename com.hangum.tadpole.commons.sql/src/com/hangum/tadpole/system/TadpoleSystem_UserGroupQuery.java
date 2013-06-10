@@ -56,23 +56,24 @@ public class TadpoleSystem_UserGroupQuery {
 	 * 신규 유저그룹를 등록합니다.
 	 * @param name
 	 */
-	public static int newUserGroup(String name) throws Exception {
-		UserGroupDAO group = new UserGroupDAO();
-		group.setName(name);
+	public static UserGroupDAO newUserGroup(String name) throws Exception {
+		UserGroupDAO groupDao = new UserGroupDAO();
+		groupDao.setName(name);
 		
 		// 기존에 등록 되어 있는지 검사한다
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<UserGroupDAO> isUserDB = (List<UserGroupDAO>)sqlClient.queryForList("isUserGroup", group); //$NON-NLS-1$
+		List<UserGroupDAO> isUserDB = (List<UserGroupDAO>)sqlClient.queryForList("isUserGroup", groupDao); //$NON-NLS-1$
 		
 		// 존재하
 		if(isUserDB.size() >= 1) {
-			return -999;
+			throw new Exception("Already Group exists.");
 		}
 
 		// 신규 유저를 등록합니다.
-		Integer seq = (Integer)sqlClient.insert("newGroup", group); //$NON-NLS-1$
+		Integer seq = (Integer)sqlClient.insert("newGroup", groupDao); //$NON-NLS-1$
+		groupDao.setSeq(seq);
 		
-		return seq.intValue();
+		return groupDao;
 	}
 	
 	/**

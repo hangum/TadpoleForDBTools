@@ -34,11 +34,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.system.TadpoleSystem_UserRole;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 
 /**
@@ -65,6 +67,7 @@ public class NewUserDialog extends Dialog {
 	private Text textRePasswd;
 	private Text textName;
 	
+	private Combo comboLanguage;
 	
 	/**
 	 * Create the dialog.
@@ -95,7 +98,6 @@ public class NewUserDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblUserType = new Label(container, SWT.NONE);
-		lblUserType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblUserType.setText(Messages.NewUserDialog_lblUserType_text);
 		
 		Composite composite = new Composite(container, SWT.NONE);
@@ -122,40 +124,50 @@ public class NewUserDialog extends Dialog {
 		btnUser.setSelection(true);
 		
 		Label lblGroupName = new Label(container, SWT.NONE);
-		lblGroupName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblGroupName.setText(Messages.NewUserDialog_lblNewLabel_text);
 		
 		compositeUserGroup = new Composite(container, SWT.NONE);
-		compositeUserGroup.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeUserGroup = new GridLayout(1, false);
+		gl_compositeUserGroup.verticalSpacing = 0;
+		gl_compositeUserGroup.horizontalSpacing = 0;
+		gl_compositeUserGroup.marginHeight = 1;
+		gl_compositeUserGroup.marginWidth = 0;
+		compositeUserGroup.setLayout(gl_compositeUserGroup);
 		compositeUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblIdemail = new Label(container, SWT.NONE);
-		lblIdemail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblIdemail.setText(Messages.NewUserDialog_1);
 		
 		textEMail = new Text(container, SWT.BORDER);
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(container, SWT.NONE);
-		lblPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPassword.setText(Messages.NewUserDialog_2);
 		
 		textPasswd = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblRePassword = new Label(container, SWT.NONE);
-		lblRePassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblRePassword.setText(Messages.NewUserDialog_3);
 		
 		textRePasswd = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText(Messages.NewUserDialog_4);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblLanguage = new Label(container, SWT.NONE);
+		lblLanguage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblLanguage.setText(Messages.NewUserDialog_lblLanguage_text);
+		
+		comboLanguage = new Combo(container, SWT.READ_ONLY);
+		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboLanguage.add("ko");
+		comboLanguage.add("en_us");
+		comboLanguage.select(0);
 
 		textEMail.setFocus();
 		
@@ -201,6 +213,8 @@ public class NewUserDialog extends Dialog {
 					
 				}
 				comboUserGroup.select(0);
+				
+				comboUserGroup.setFocus();
 			} catch (Exception e) {
 				logger.error("initUserGroup", e); //$NON-NLS-1$
 			}
@@ -208,6 +222,8 @@ public class NewUserDialog extends Dialog {
 		} else {
 			textUserGroup = new Text(compositeUserGroup, SWT.BORDER);
 			textUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			
+			textUserGroup.setFocus();
 		}
 		
 		compositeUserGroup.layout();
@@ -215,35 +231,37 @@ public class NewUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		
+		String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText()); 
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String passwd = StringUtils.trimToEmpty(textPasswd.getText());
 		String rePasswd = StringUtils.trimToEmpty(textRePasswd.getText());
 		String name = StringUtils.trimToEmpty(textName.getText());
 		
-		if(!validation(strEmail, passwd, rePasswd, name)) return;
+		if(!validation(strGroupName, strEmail, passwd, rePasswd, name)) return;
 		
 		// user 입력시 
-		int groupSeq = 0;
+		UserGroupDAO groupDAO = new UserGroupDAO();
 		PublicTadpoleDefine.USER_TYPE userType = PublicTadpoleDefine.USER_TYPE.USER;
 		if(btnUser.getSelection()) {
-			groupSeq = (Integer)comboUserGroup.getData(comboUserGroup.getText());
+			groupDAO.setSeq( (Integer)comboUserGroup.getData(strGroupName) );
 		} else {
-			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
+			
 			userType = PublicTadpoleDefine.USER_TYPE.MANAGER;
 			// 그룹 등록
 			try {
-				groupSeq = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
+				groupDAO = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
 			} catch(Exception e) {
 				logger.error(Messages.NewUserDialog_8, e);
 				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_16 + e.getMessage());
 				return;
 			}
-			
 		}
 		
 		try {
-//			UserDAO loginDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, userType);
+			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText());
+			
+			// user_role 입력.
+			TadpoleSystem_UserRole.newUserRole(groupDAO.getSeq(), newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 			
 			if(!ApplicationArgumentUtils.isTestMode()) {
 				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
@@ -263,12 +281,19 @@ public class NewUserDialog extends Dialog {
 	/**
 	 * validation
 	 * 
+	 * @param strGroupName
 	 * @param strEmail
 	 * @param strPass
+	 * @param rePasswd
+	 * @param name
 	 */
-	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
-		// validation
-		if("".equals(strEmail)) { //$NON-NLS-1$
+	private boolean validation(String strGroupName, String strEmail, String strPass, String rePasswd, String name) {
+
+		if("".equals(strGroupName)) { //$NON-NLS-1$
+			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, "그룹 명이 공백 입니다.");
+			textEMail.setFocus();
+			return false;
+		} else if("".equals(strEmail)) { //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_7);
 			textEMail.setFocus();
 			return false;
@@ -294,13 +319,7 @@ public class NewUserDialog extends Dialog {
 		
 		//  신규 그룹 입력시 오류 검증
 		if(!btnUser.getSelection()) {
-			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
-			if("".equals(strGroupName)) { //$NON-NLS-1$
-				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_24);
-				textUserGroup.setFocus();
-				return false;
-			}
-			
+						
 			// 동일한 그룹명이 있는 지 검증한다.
 			if(TadpoleSystem_UserGroupQuery.isUserGroup(strGroupName)) {
 				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_25);
@@ -331,7 +350,7 @@ public class NewUserDialog extends Dialog {
 	 * @param email
 	 * @return
 	 */
-	public static boolean isEmail(String email) {
+	private static boolean isEmail(String email) {
 		Pattern p = Pattern.compile("^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$"); //$NON-NLS-1$
 		Matcher m = p.matcher(email);
 		return m.matches();
@@ -343,7 +362,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button button = createButton(parent, IDialogConstants.OK_ID, Messages.NewUserDialog_19,	true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.NewUserDialog_19,	true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.NewUserDialog_20, false);
 	}
 
@@ -352,7 +371,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 265);
+		return new Point(450, 272);
 	}
 
 }

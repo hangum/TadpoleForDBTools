@@ -28,6 +28,7 @@ import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
  */
 public class TadpoleSystem_UserDBQueryTest extends TestCase {
 	public UserDBDAO userDb = null;
+	public UserGroupDAO userGroup = null;
 	public int groupSeq = 0;
 	
 	@Override
@@ -36,12 +37,12 @@ public class TadpoleSystem_UserDBQueryTest extends TestCase {
 			// group information
 			boolean isGroup = TadpoleSystem_UserGroupQuery.isUserGroup(TadpoleSystem_UserGroupQueryTest.groupName);
 			if(!isGroup) {				
-				groupSeq = TadpoleSystem_UserGroupQuery.newUserGroup(TadpoleSystem_UserGroupQueryTest.groupName);				
+				userGroup = TadpoleSystem_UserGroupQuery.newUserGroup(TadpoleSystem_UserGroupQueryTest.groupName);				
 			} else {
 				List<UserGroupDAO> listGroup = TadpoleSystem_UserGroupQuery.getGroup();
 				for (UserGroupDAO userGroupDAO : listGroup) {
 					if(TadpoleSystem_UserGroupQueryTest.groupName.equals(userGroupDAO.getName())) {
-						groupSeq = userGroupDAO.getSeq();
+//						groupSeq = userGroupDAO.getSeq();
 					}
 				}
 			}
@@ -63,7 +64,7 @@ public class TadpoleSystem_UserDBQueryTest extends TestCase {
 		userDb2.setDisplay_name("junit testName");
 		
 		try {			
-			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, groupSeq, userDb2.getUser_seq());			
+			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, userDb2.getUser_seq());			
 			
 			assertNotNull(userDb);
 		} catch (Exception e) {

@@ -18,8 +18,10 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.Messages;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDAO;
+import com.hangum.tadpole.dao.system.UserGroupDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.exception.TadpoleRuntimeException;
+import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -32,21 +34,20 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class TadpoleSystem_UserQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserQuery.class);
 	
-	/**
-	 * 신규 user를 추가합니다.
-	 * 
-	 * @param email
-	 * @param passwd
-	 * @param name
-	 * @throws Exception
-	 */
-	public static UserDAO newUser(String email, String passwd, String name, String language) throws Exception {
-		return newUser(email, passwd, name, language, PublicTadpoleDefine.YES_NO.NO.toString());
-	}
+//	/**
+//	 * 신규 user를 추가합니다.
+//	 * 
+//	 * @param email
+//	 * @param passwd
+//	 * @param name
+//	 * @throws Exception
+//	 */
+//	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, String language) throws Exception {
+//		return newUser(groupSeq, email, passwd, name, language, PublicTadpoleDefine.YES_NO.NO.toString());
+//	}
 	
 	/**
 	 * 신규 유저를 등록합니다.
-	 * @param groupSeq
 	 * @param email
 	 * @param passwd
 	 * @param name
@@ -70,24 +71,25 @@ public class TadpoleSystem_UserQuery {
 		}
 	}
 	
-//	/**
-//	 * 신규 유저를 등록합니다.
-//	 * 
-//	 * @param email
-//	 * @param pass
-//	 * @param name
-//	 * @param type user-type
-//	 */
-//	public static UserDAO newUserIsTest(String email, String passwd, String name, String type) throws Exception {
-//		//
-//		// 테스트모드 일 경우 관리자의 허락이 필요치 않도록 수정합니다.
-//		// 
-//		if(ApplicationArgumentUtils.isTestMode()) {
-//			return newUser(email, passwd, name, type, DB_Define.YES_NO.YES.toString());
-//		} else {
-//			return newUser(email, passwd, name, type, DB_Define.YES_NO.NO.toString());
-//		}
-//	}
+	/**
+	 * 신규 유저를 등록합니다.
+	 * 
+	 * @param email
+	 * @param pass
+	 * @param name
+	 * @param type user-type
+	 */
+	public static UserDAO newUser(String email, String passwd, String name, String language) throws Exception {
+		
+		//
+		// 테스트모드 일 경우 관리자의 허락이 필요치 않도록 수정합니다.
+		// 
+		if(ApplicationArgumentUtils.isTestMode()) {
+			return newUser(email, passwd, name, language, PublicTadpoleDefine.YES_NO.YES.toString());
+		} else {
+			return newUser(email, passwd, name, language, PublicTadpoleDefine.YES_NO.NO.toString());
+		}
+	}
 	
 	
 	/**

@@ -196,14 +196,14 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			if(!connectValidate(userDB)) return false;
 			
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getGroupSeq(), SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {
 				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
 				
 				return false;
-			}			
+			}
 		}
 		
 		return true;		

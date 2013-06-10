@@ -69,10 +69,9 @@ public class TadpoleSystem_UserDBQuery {
 	 * 신규 유저디비를 등록합니다.
 	 * 
 	 * @param userDb
-	 * @param groupSeq
 	 * @param userSeq
 	 */
-	public static UserDBDAO newUserDB(UserDBDAO userDb, int groupSeq, int userSeq) throws Exception {
+	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
 		userDb.setUser_seq(userSeq);
 		userDb.setPasswd( EncryptiDecryptUtil.encryption(userDb.getPasswd()) );
 		

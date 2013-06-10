@@ -29,6 +29,7 @@ import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.TadpoleSystemDAO;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserGroupDAO;
 import com.hangum.tadpole.system.internal.migration.SystemMigrationSR9TOSR10;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
@@ -297,9 +298,10 @@ public class TadpoleSystemInitializer {
 			
 			// add basic group
 			createMsg = "AdminGroup crateing....";
-			int seqAdm = TadpoleSystem_UserGroupQuery.newUserGroup("AdminGroup");
+			UserGroupDAO groupAdmin = TadpoleSystem_UserGroupQuery.newUserGroup("AdminGroup");
+			
 			createMsg = "TestGroup crateing....";
-			int seqTest = TadpoleSystem_UserGroupQuery.newUserGroup("TestGroup");
+			UserGroupDAO groupTest = TadpoleSystem_UserGroupQuery.newUserGroup("TestGroup");
 			
 			// add basic user
 			createMsg = ADMIN_EMAIL + " user creating....";
@@ -312,9 +314,9 @@ public class TadpoleSystemInitializer {
 			UserDAO gusetUser = TadpoleSystem_UserQuery.newUser(GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, "en_us");
 			
 			// add group_role
-			TadpoleSystem_UserRole.newUserRole(seqAdm, adminUser.getSeq(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
-			TadpoleSystem_UserRole.newUserRole(seqAdm, managerUser.getSeq(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
-			TadpoleSystem_UserRole.newUserRole(seqAdm, gusetUser.getSeq(), PublicTadpoleDefine.USER_TYPE.GUEST.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
+			TadpoleSystem_UserRole.newUserRole(groupAdmin.getSeq(), adminUser.getSeq(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
+			TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), managerUser.getSeq(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
+			TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), gusetUser.getSeq(), PublicTadpoleDefine.USER_TYPE.GUEST.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 		
 		} catch(Exception e) {
 			logger.error(createMsg, e);

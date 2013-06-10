@@ -31,25 +31,25 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
-		int groupSeq = 0;
+		UserGroupDAO userGroup = new UserGroupDAO();
 		
 		try {
 			// group information
 			boolean isGroup = TadpoleSystem_UserGroupQuery.isUserGroup(TadpoleSystem_UserGroupQueryTest.groupName);
 			if(!isGroup) {				
-				groupSeq = TadpoleSystem_UserGroupQuery.newUserGroup(TadpoleSystem_UserGroupQueryTest.groupName);				
+				userGroup = TadpoleSystem_UserGroupQuery.newUserGroup(TadpoleSystem_UserGroupQueryTest.groupName);				
 			} else {
 				List<UserGroupDAO> listGroup = TadpoleSystem_UserGroupQuery.getGroup();
 				for (UserGroupDAO userGroupDAO : listGroup) {
 					if(TadpoleSystem_UserGroupQueryTest.groupName.equals(userGroupDAO.getName())) {
-						groupSeq = userGroupDAO.getSeq();
+//						groupSeq = userGroupDAO.getSeq();
 					}
 				}
 			}
 			
 			UserDBDAO userDb2 = TadpoleSystemInitializer.getUserDB();
 			userDb2.setDisplay_name("junit testName2");			
-			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, groupSeq, userDb2.getUser_seq());
+			userDb = TadpoleSystem_UserDBQuery.newUserDB(userDb2, userDb2.getUser_seq());
 			
 		} catch (Exception e) {
 			fail("fail user group" + e.getMessage());
