@@ -165,8 +165,8 @@ public class NewUserDialog extends Dialog {
 		
 		comboLanguage = new Combo(container, SWT.READ_ONLY);
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboLanguage.add("ko");
-		comboLanguage.add("en_us");
+		comboLanguage.add("ko"); //$NON-NLS-1$
+		comboLanguage.add("en_us"); //$NON-NLS-1$
 		comboLanguage.select(0);
 
 		textEMail.setFocus();
@@ -231,7 +231,7 @@ public class NewUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		String strGroupName = ""; 
+		String strGroupName = "";  //$NON-NLS-1$
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String passwd = StringUtils.trimToEmpty(textPasswd.getText());
 		String rePasswd = StringUtils.trimToEmpty(textRePasswd.getText());
@@ -294,7 +294,7 @@ public class NewUserDialog extends Dialog {
 
 		if(btnManager.getSelection()) {
 			if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
-				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, "그룹 명이 공백 입니다.");
+				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_23);
 				textUserGroup.setFocus();
 				return false;
 			}
