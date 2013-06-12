@@ -157,6 +157,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(String.format(getSelectDB().getDB_URL_INFO(), textFile.getText().trim()));
 		userDB.setDb(textFile.getText().trim());
+		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
 		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
 		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());

@@ -125,7 +125,9 @@ public class ManagerViewer extends ViewPart {
 					}
 				// manager
 				} else if (selElement instanceof ManagerListDTO) {
-					if(PermissionChecker.isShow(SessionManager.getLoginType())) {
+					ManagerListDTO managerDto = (ManagerListDTO)selElement;
+					
+					if(PermissionChecker.isShow(SessionManager.representRole())) {
 						ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
 						cda.runConnectionDialog(is);
 					}
@@ -166,7 +168,7 @@ public class ManagerViewer extends ViewPart {
 		treeList.clear();
 		
 		try {
-			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
+			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
 			for (String groupName : groupNames) {
 				ManagerListDTO parent = new ManagerListDTO(groupName);
 				treeList.add(parent);

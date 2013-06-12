@@ -142,7 +142,7 @@ public class DBLoginDialog extends Dialog {
 		
 		// db groupData 
 		try {
-			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
+			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}

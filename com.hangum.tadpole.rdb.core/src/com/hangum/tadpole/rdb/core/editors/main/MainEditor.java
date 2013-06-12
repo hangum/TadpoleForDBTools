@@ -97,6 +97,7 @@ import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.system.permission.PermissionChecker;
@@ -213,6 +214,7 @@ public class MainEditor extends EditorExtension {
 		
 		MainEditorInput qei = (MainEditorInput)input;
 		userDB = qei.getUserDB();
+		strRoleType = SessionManager.getRoleType(userDB.getGroup_seq());
 		
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) {
@@ -1096,7 +1098,7 @@ public class MainEditor extends EditorExtension {
 	 * @param isAutoCommit
 	 */
 	private void runSQLSelect(String requestQuery, final boolean isAutoCommit) throws Exception {		
-		if(!PermissionChecker.isExecute(strUserType, userDB, requestQuery)) {
+		if(!PermissionChecker.isExecute(getUserType(), userDB, requestQuery)) {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
@@ -1243,7 +1245,7 @@ public class MainEditor extends EditorExtension {
 	 * @throws Exception
 	 */
 	private void runSQLExecuteBatch(List<String> listQuery, final boolean isAutoCommit) throws Exception {
-		if(!PermissionChecker.isExecute(strUserType, userDB, listQuery)) {
+		if(!PermissionChecker.isExecute(getUserType(), userDB, listQuery)) {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
@@ -1291,7 +1293,7 @@ public class MainEditor extends EditorExtension {
 	 * @exception
 	 */
 	private void runSQLOther(String sqlQuery, final boolean isAutoCommit) throws Exception {
-		if(!PermissionChecker.isExecute(strUserType, userDB, sqlQuery)) {
+		if(!PermissionChecker.isExecute(getUserType(), userDB, sqlQuery)) {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		

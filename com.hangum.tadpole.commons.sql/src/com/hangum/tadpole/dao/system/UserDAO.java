@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.dao.system;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-
 /**
  * user 정보 정의
  * 

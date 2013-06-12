@@ -27,10 +27,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
-import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystemInitializer;
@@ -93,7 +91,6 @@ public class LoginDialog extends Dialog {
 		lblEmail.setText(Messages.LoginDialog_1);
 		
 		textEMail = new Text(container, SWT.BORDER);
-//		textEMail.setText("adi.tadpole@gmail.com");
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblLoginImage = new Label(container, SWT.NONE);
@@ -114,7 +111,6 @@ public class LoginDialog extends Dialog {
 			}
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
 		textEMail.setFocus();
 	
 		return container;
@@ -152,18 +148,8 @@ public class LoginDialog extends Dialog {
 			
 			// 정상이면 session에 로그인 정보를 입력하고 
 			try {
-				UserDAO login = TadpoleSystem_UserQuery.login(userId, password);
-//				if(!DB_Define.USER_TYPE.MANAGER.toString().equals(login.getUser_type())) {
-//					UserDAO groupManagerUser =  TadpoleSystem_UserQuery.getGroupManager(login.getGroup_seq());
-//					
-//					SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), groupManagerUser.getSeq());
-//				}  else {
-//					SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), -1);
-//				}
-				
 				// template code
-				SessionManager.newLogin(1, login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), -1);
-				
+				SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
 				
 			} catch (Exception e) {
 				logger.error(Messages.LoginDialog_9, e);
@@ -172,7 +158,6 @@ public class LoginDialog extends Dialog {
 			}	
 			
 			super.okPressed();
-			
 		}
 	}
 	
@@ -185,17 +170,8 @@ public class LoginDialog extends Dialog {
 		
 		// 신규 사용자 등록이면 
 		try {
-			UserDAO login = TadpoleSystem_UserQuery.login(strEmail, strPass);
-			
-//			if(DB_Define.USER_TYPE.USER.toString().equals(login.getUser_type())) {
-//				// 그룹의 manager 정보
-//				UserDAO groupManagerUser = TadpoleSystem_UserQuery.getGroupManager(login.getGroup_seq());
-//				
-//				// 정상이면 session에 로그인 정보를 입력하고 
-//				SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), groupManagerUser.getSeq());
-//			} else {
-//				SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), -1);
-//			}
+			SessionManager.addSession(TadpoleSystem_UserQuery.login(strEmail, strPass));
+
 		} catch (Exception e) {
 			logger.error("login", e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());

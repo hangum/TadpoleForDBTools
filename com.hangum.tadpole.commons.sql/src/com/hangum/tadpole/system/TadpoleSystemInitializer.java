@@ -315,8 +315,8 @@ public class TadpoleSystemInitializer {
 			
 			// add group_role
 			TadpoleSystem_UserRole.newUserRole(groupAdmin.getSeq(), adminUser.getSeq(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
-			TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), managerUser.getSeq(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
-			TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), gusetUser.getSeq(), PublicTadpoleDefine.USER_TYPE.GUEST.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
+			TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), managerUser.getSeq(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString());
+			TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), gusetUser.getSeq(), PublicTadpoleDefine.USER_TYPE.USER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.USER.toString());
 		
 		} catch(Exception e) {
 			logger.error(createMsg, e);

@@ -33,7 +33,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
  */
 public abstract class AbstractObjectComposite extends Composite {
 	protected IWorkbenchPartSite site;
-	protected final String strUserType = SessionManager.getLoginType();
+//	protected final String strUserType = SessionManager.getRoleType();
 	
 	protected UserDBDAO userDB;
 	protected int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
@@ -62,6 +62,10 @@ public abstract class AbstractObjectComposite extends Composite {
 	 */
 	protected UserDBDAO getUserDB() {
 		return userDB;
+	}
+	
+	protected String getUserRoleType() {
+		return SessionManager.getRoleType(getUserDB().getGroup_seq());
 	}
 	
 	/**

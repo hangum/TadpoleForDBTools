@@ -18,7 +18,6 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.Messages;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDAO;
-import com.hangum.tadpole.dao.system.UserGroupDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;

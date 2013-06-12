@@ -207,7 +207,7 @@ public class AdminComposite extends Composite {
 			// 데이터 수집 시작
 			List<UserGroupAUserDAO> listUserGroup = new ArrayList<UserGroupAUserDAO>();
 			// 로그인 타입에 따른 유저 수정
-			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
+			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals( SessionManager.representRole() )) {
 				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeq());				
 			// admin 
 			} else {

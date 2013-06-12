@@ -56,13 +56,13 @@ public class TadpoleSystem_UserDBQuery {
 	/**
 	 * group의 그룹명을 리턴합니다.
 	 * 
-	 * @param userSeq
+	 * @param groupSeqs
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<String> getUserGroup(int userSeq) throws Exception {
+	public static List<String> getUserGroup(String groupSeqs) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (List<String>)sqlClient.queryForList("userDBGroup", userSeq); //$NON-NLS-1$
+		return (List<String>)sqlClient.queryForList("userDBGroup", groupSeqs); //$NON-NLS-1$
 	}
 	
 	/**
@@ -120,15 +120,16 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserDBDAO> getUserDB(int userSeq) throws Exception {
+	public static List<UserDBDAO> getUserDB(String groupSeqs) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<UserDBDAO> userDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", userSeq);//SessionManager.getSeq()); //$NON-NLS-1$
-		
-		// user가 manager 일 경우 (session에 넣을때 부터..)
-		if(SessionManager.getManagerSeq() != -1) {
-			List<UserDBDAO> userManagerDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getManagerSeq()); //$NON-NLS-1$
-			userDB.addAll(userManagerDB);
-		}
+		List<UserDBDAO> userDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", groupSeqs);//SessionManager.getSeq()); //$NON-NLS-1$
+	
+//		TODO 이 로직이 왜 쓰이는지 몰라서 블럭 처리 - hangum.0613
+//		// user가 manager 일 경우 (session에 넣을때 부터..)
+//		if(SessionManager.getManagerSeq() != -1) {
+//			List<UserDBDAO> userManagerDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getManagerSeq()); //$NON-NLS-1$
+//			userDB.addAll(userManagerDB);
+//		}
 		
 		return userDB;
 	}
@@ -141,7 +142,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws Exception
 	 */
 	public static List<UserDBDAO> getUserDB() throws Exception {
-		return getUserDB(SessionManager.getSeq());
+		return getUserDB(SessionManager.getGroupSeqs());
 	}
 	
 	/**

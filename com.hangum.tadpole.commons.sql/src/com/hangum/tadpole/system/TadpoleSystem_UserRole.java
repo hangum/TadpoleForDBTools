@@ -1,6 +1,9 @@
 package com.hangum.tadpole.system;
 
+import java.util.List;
+
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserRoleDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -37,5 +40,18 @@ public class TadpoleSystem_UserRole {
 		return groupRole;
 	}
 	
+	/**
+	 * 사용자 user_role중에 admin, dab, manager 롤을 찾습니다.
+	 * 
+	 * @param loginUserDao
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserRoleDAO> findUserRole(UserDAO loginUserDao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserRoleDAO> groupRoles = (List<UserRoleDAO>)sqlClient.queryForList("findUserRole", loginUserDao.getSeq()); //$NON-NLS-1$
+		
+		return groupRoles;
+	}
 	
 }

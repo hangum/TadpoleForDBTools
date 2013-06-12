@@ -222,11 +222,11 @@
  <!-- 
  	유저디비 그룹정보를 가져옵니다.
   -->
- <select id="userDBGroup" resultClass="java.lang.String" parameterClass="java.lang.Integer">
+ <select id="userDBGroup" resultClass="java.lang.String" parameterClass="java.lang.String">
  	SELECT group_name
  	FROM user_db
  	WHERE 
-		user_seq = #user_seq# AND
+		group_seq in (#group_seqs#) AND
 		delYn = 'NO'
  	group by group_name 
  </select>
@@ -246,10 +246,10 @@
 </select>
 
 <!--  UserDB의 리스트 -->
-<select id="userDB" resultClass="com.hangum.tadpole.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
+<select id="userDB" resultClass="com.hangum.tadpole.dao.system.UserDBDAO" parameterClass="java.lang.String">
 	SELECT * FROM user_db 
 	WHERE 
-		user_seq = #user_seq# AND
+		group_seq in (#group_seqs#) AND
 		delYn = 'NO'
 	ORDER BY group_name
 </select>
@@ -506,5 +506,15 @@
 			delYn = 'NO'
 	</selectKey>
 </insert>
+	
+<!-- 
+	사용자 정보를 가져온다. 
+ -->
+<select id="findUserRole" resultClass="com.hangum.tadpole.dao.system.UserRoleDAO" parameterClass="java.lang.Integer">
+	SELECT * FROM user_role
+	WHERE
+		user_seq = #user_seq# AND
+		delyn = 'NO'
+</select>
 	
 </sqlMap>

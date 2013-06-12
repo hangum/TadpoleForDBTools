@@ -53,7 +53,7 @@ public class DBTypeActionFilterAdapter implements IActionFilter {
 			} else if(USER_TYPE.equals(name)) {
 				String[] userTypes = StringUtils.split(value, ",");
 				for (String userType : userTypes) {
-					if(SessionManager.getLoginType().toLowerCase().equals(userType)) {
+					if(SessionManager.getRoleType(userDB.getGroup_seq()).toLowerCase().equals(userType)) {
 						return true;
 					}
 				}

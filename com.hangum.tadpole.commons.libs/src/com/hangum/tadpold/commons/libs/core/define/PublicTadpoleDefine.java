@@ -58,7 +58,7 @@ public class PublicTadpoleDefine {
 	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE";
 	
 	/** USER TYPE */
-	public static enum USER_TYPE {ADMIN, DBA, MANAGER, USER, GUEST};
+	public static enum USER_TYPE {ADMIN, DBA, MANAGER, USER/*, GUEST*/};
 	
 	/** 에디터를 열때 오픈하는 타입을 적습니다. */
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};

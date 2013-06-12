@@ -162,7 +162,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
-				if(PermissionChecker.isShow(strUserType, userDB)) {
+				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					if (null != is) {
 						TableDAO tableDAO = (TableDAO) is.getFirstElement();
 	
@@ -370,7 +370,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
-					if(PermissionChecker.isShow(strUserType, userDB)) {
+					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(creatAction_Table);
 						manager.add(deleteAction_Table);
 					}					
@@ -385,7 +385,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(selectStmtAction);
 					
-					if(PermissionChecker.isShow(strUserType, userDB)) {
+					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(insertStmtAction);
 						manager.add(updateStmtAction);
 						manager.add(deleteStmtAction);

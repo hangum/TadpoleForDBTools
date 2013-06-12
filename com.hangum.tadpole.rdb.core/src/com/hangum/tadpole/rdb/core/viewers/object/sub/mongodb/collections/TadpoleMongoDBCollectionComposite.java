@@ -297,7 +297,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
 					manager.add(creatAction_Table);
-					if(PermissionChecker.isShow(strUserType, userDB)) {
+					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(deleteAction_Table);
 					}
 					manager.add(refreshAction_Table);
@@ -306,7 +306,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					manager.add(insertStmtAction);
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					
-					if(PermissionChecker.isShow(strUserType, userDB)) {
+					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(renameColAction);
 						manager.add(reIndexColAction);
 					}

@@ -132,7 +132,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecker.isShow(strUserType, userDB)) {
+				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Function);
 					manager.add(deleteAction_Function);
 				}

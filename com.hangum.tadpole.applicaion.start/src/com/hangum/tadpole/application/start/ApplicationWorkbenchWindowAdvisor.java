@@ -115,15 +115,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
 				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
 		    	try {
-					UserDAO login = TadpoleSystem_UserQuery.login(userId, password);
-//					if(!DB_Define.USER_TYPE.MANAGER.toString().equals(login.getUser_type())) {
-//						UserDAO groupManagerUser =  TadpoleSystem_UserQuery.getGroupManager(login.getGroup_seq());
-//						
-//						SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), groupManagerUser.getSeq());
-//					}  else {
-//						SessionManager.newLogin(login.getGroup_seq(), login.getSeq(), login.getEmail(), login.getPasswd(), login.getName(), login.getUser_type(), -1);
-//					}
-					
+					SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
 					initSession();
 				} catch (Exception e) {
 					logger.error("demo mode user login", e); //$NON-NLS-1$
@@ -136,8 +128,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
 					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-//						if(logger.isDebugEnabled()) logger.debug("[userInfoDataDAO] " + userInfoDataDAO.getName() + ":" + userInfoDataDAO);
-						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
 					SessionManager.setUserInfos(mapUserInfoData);

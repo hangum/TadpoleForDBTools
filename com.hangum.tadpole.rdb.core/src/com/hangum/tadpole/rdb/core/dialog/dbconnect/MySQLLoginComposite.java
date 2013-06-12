@@ -235,6 +235,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText().trim());
+		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
 		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
 		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());

@@ -91,7 +91,7 @@ public class UserManagementEditor extends EditorPart {
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
 		CTabItem tbtmItem = null;
-		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals( SessionManager.getLoginType() )) {
+		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals( SessionManager.representRole() )) {
 			tbtmItem = new CTabItem(tabFolder, SWT.NONE);
 			tbtmItem.setText("Manager");
 		} else {

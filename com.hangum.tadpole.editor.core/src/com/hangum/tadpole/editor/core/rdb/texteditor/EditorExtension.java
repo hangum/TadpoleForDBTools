@@ -46,7 +46,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 * No context available outside of the request service lifecycle.
 	 */
 	protected final String strUserEMail = SessionManager.getEMAIL();
-	protected final String strUserType = SessionManager.getLoginType();
+	protected String strRoleType = "";
 	protected final int user_seq = SessionManager.getSeq();
 	
 	/** 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */
@@ -101,6 +101,15 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 		} catch(Exception e) {
 			// ignore exception
 		}
+	}
+	
+	/**
+	 * 사용자 role_type을 리턴한다.
+	 * 
+	 * @return
+	 */
+	protected String getUserType() {
+		return strRoleType;
 	}
 	
 //	/**

@@ -107,9 +107,9 @@ public class DBInformationDialog extends Dialog {
 		Label lblGroupName = new Label(grpOtherInformation, SWT.NONE);
 		lblGroupName.setText(Messages.DBInformationDialog_2);
 		
-		Label lblGroupValue = new Label(grpOtherInformation, SWT.NONE);
-		lblGroupValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblGroupValue.setText(SessionManager.getGroupName());
+//		Label lblGroupValue = new Label(grpOtherInformation, SWT.NONE);
+//		lblGroupValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		lblGroupValue.setText(SessionManager.getGroupName());
 		
 		Label lblEmail = new Label(grpOtherInformation, SWT.NONE);
 		lblEmail.setText(Messages.DBInformationDialog_3);
@@ -121,7 +121,7 @@ public class DBInformationDialog extends Dialog {
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText(Messages.DBInformationDialog_4);
 		
-		if(PermissionChecker.isShow(SessionManager.getLoginType(), userDB)) {
+		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB.getGroup_seq()), userDB)) {
 			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
 			lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			lblNameValue.setText(SessionManager.getName());
@@ -150,7 +150,7 @@ public class DBInformationDialog extends Dialog {
 	 */
 	private void initDBWidget() {
 		try {
-			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
+			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}

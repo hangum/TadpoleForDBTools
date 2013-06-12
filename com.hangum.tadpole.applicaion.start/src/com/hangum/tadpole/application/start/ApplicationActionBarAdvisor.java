@@ -149,7 +149,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main"));
         
-        if(PermissionChecker.isShow(SessionManager.getLoginType())) {
+        if(PermissionChecker.isShow(SessionManager.representRole())) {
 	        toolbar.add(connectAction);
 	        toolbar.add(new Separator());
         }
@@ -165,7 +165,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(deleteResourceAction);
         toolbar.add(new Separator());
         
-        if(PermissionChecker.isShow(SessionManager.getLoginType())) {
+        if(PermissionChecker.isShow(SessionManager.representRole())) {
         	toolbar.add(userPermissionAction);
 //        	toolbar.add(executedSQLAction);
             toolbar.add(new Separator());        	

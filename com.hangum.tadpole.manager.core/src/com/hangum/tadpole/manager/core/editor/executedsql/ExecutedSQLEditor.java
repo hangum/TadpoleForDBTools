@@ -189,7 +189,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		
 		// db groupData combo
 		try {
-			List<String> groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getSeq());
+			List<String> groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
 			for (String string : groupName) comboGroup.add(string);
 			comboGroup.select(0);
 		} catch (Exception e1) {
