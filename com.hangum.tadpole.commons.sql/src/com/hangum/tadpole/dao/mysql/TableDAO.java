@@ -22,6 +22,11 @@ public class TableDAO {
 	
 	public TableDAO() {
 	}
+	
+	public TableDAO(String name, String comment) {
+		this.name = name;
+		this.comment = comment;
+	}
 
 	public String getName() {
 		return name;

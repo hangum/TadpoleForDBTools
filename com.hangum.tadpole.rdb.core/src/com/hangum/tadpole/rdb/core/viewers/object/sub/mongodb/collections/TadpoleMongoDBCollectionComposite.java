@@ -141,6 +141,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
+				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
 				if (null != is) {
@@ -161,6 +163,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		});
 		tableListViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
+				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
@@ -284,10 +288,10 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 		insertStmtAction 	= new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 
-		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Rename Collection");
-		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "ReIndex Collection");
-		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "MapReduce");
-		groupAction			= new ObjectMongodbGroupAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Group");
+		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Rename Collection"); //$NON-NLS-1$
+		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "ReIndex Collection"); //$NON-NLS-1$
+		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "MapReduce"); //$NON-NLS-1$
+		groupAction			= new ObjectMongodbGroupAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Group"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -354,12 +358,19 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		this.userDB = selectUserDb;
 		
 		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
-		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) return;
+		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) {
+			showTables.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, "")); //$NON-NLS-2$
+			
+			tableListViewer.setInput(showTables);
+			tableListViewer.refresh();
+			
+			return;
+		}
 
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN);
+				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 				
 				try {
 					if (showTables != null) showTables.clear();
@@ -377,7 +388,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					filter();
 					
 				} catch(Exception e) {
-					logger.error("Table Referesh", e);
+					logger.error("Table Referesh", e); //$NON-NLS-1$
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
 				} finally {
@@ -423,15 +434,15 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * 디비 등록시 설정한 filter 정보를 적용한다.
 	 */
 	private void filter() {
-		if("YES".equals(userDB.getIs_table_filter())){
+		if("YES".equals(userDB.getIs_table_filter())){ //$NON-NLS-1$
 			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
 			
 			String includeFilter = userDB.getTable_filter_include();
-			if("".equals(includeFilter)) {
+			if("".equals(includeFilter)) { //$NON-NLS-1$
 				tmpShowTables.addAll(showTables);					
 			} else {
 				for (TableDAO tableDao : showTables) {
-					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
+					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ","); //$NON-NLS-1$
 					for (String strFilter : strArryFilters) {
 						if(tableDao.getName().matches(strFilter)) {
 							tmpShowTables.add(tableDao);
@@ -441,9 +452,9 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			}
 			
 			String excludeFilter = userDB.getTable_filter_exclude();
-			if(!"".equals(excludeFilter)) {
+			if(!"".equals(excludeFilter)) { //$NON-NLS-1$
 				for (TableDAO tableDao : tmpShowTables) {
-					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
+					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ","); //$NON-NLS-1$
 					for (String strFilter : strArryFilters) {
 						if(tableDao.getName().matches(strFilter)) {
 							tmpShowTables.remove(tableDao);

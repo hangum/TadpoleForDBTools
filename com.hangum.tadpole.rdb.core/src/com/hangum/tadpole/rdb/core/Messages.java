@@ -249,6 +249,7 @@ public class Messages extends NLS {
 	public static String TadpoleMessageDialog_0;
 	public static String TadpoleMessageDialog_1;
 	public static String TadpoleMessageDialog_2;
+	public static String TadpoleMongoDBCollectionComposite_4;
 	public static String DBLoginDialog_tblclmnName_text;
 	public static String DBLoginDialog_tblclmnNewColumn_text;
 	public static String DBLoginDialog_tblclmnInfo_text;
