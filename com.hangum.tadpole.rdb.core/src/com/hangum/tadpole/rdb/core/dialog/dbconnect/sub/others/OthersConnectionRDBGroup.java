@@ -26,6 +26,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilter
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.SSHTunnelingDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * Others connection info
@@ -45,6 +46,7 @@ public class OthersConnectionRDBGroup extends Group {
 	private Button btnTunneling;
 	private Button btnProfiler;
 	private Button btnExecuteQuestionDml;
+	private Button btnShowTables;
 
 	/**
 	 * Create the composite.
@@ -100,9 +102,17 @@ public class OthersConnectionRDBGroup extends Group {
 		btnProfiler = new Button(this, SWT.CHECK);
 		btnProfiler.setText(Messages.OthersConnectionRDBGroup_5);
 		
+		btnShowTables = new Button(this, SWT.CHECK);
+		btnShowTables.setSelection(true);
+		btnShowTables.setText(Messages.OthersConnectionRDBGroup_btnShowTables_text);
+		
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
-		btnExecuteQuestionDml.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+		btnExecuteQuestionDml.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBGroup_6);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
 	}
 	
 	/**
@@ -113,6 +123,7 @@ public class OthersConnectionRDBGroup extends Group {
 	public OthersConnectionInfoDAO getOthersConnectionInfo() {
 		otherConnectionDAO.setReadOnlyConnection(getBtnReadOnlyConnection());
 		otherConnectionDAO.setAutoCommit(getBtnAutoCommit());
+		otherConnectionDAO.setShowTables(getBtnShowTables());
 		
 		otherConnectionDAO.setProfiling(getBtnProfiler());
 		otherConnectionDAO.setDMLStatement(getBtnExecuteQuestionDml());
@@ -149,6 +160,20 @@ public class OthersConnectionRDBGroup extends Group {
 		return btnProfiler.getSelection();
 	}
 
+	/**
+	 * @param btnShowTables
+	 */
+	public void setBtnShowTables(boolean btnShowTables) {
+		this.btnShowTables.setSelection(btnShowTables);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean getBtnShowTables() {
+		return btnShowTables.getSelection();
+	}
 
 	@Override
 	protected void checkSubclass() {

@@ -356,6 +356,9 @@ public class Messages extends NLS {
 	public static String MSSQLLoginComposite_preDBInfo_text;
 	public static String TableDirectEditorComposite_tltmDdlSourceView_text;
 	public static String TableDirectEditorComposite_btnDdlSourceView_text;
+	public static String OthersConnectionMongoDBGroup_btnShowTables_text;
+	public static String OthersConnectionRDBGroup_btnShowTables_text;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

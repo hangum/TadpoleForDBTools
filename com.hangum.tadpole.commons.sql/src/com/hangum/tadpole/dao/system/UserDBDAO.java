@@ -68,6 +68,7 @@ public class UserDBDAO {
     
     protected String is_readOnlyConnect = "";
 	protected String is_autocommit = "";
+	protected String is_showtables = "";
 	
 	protected String is_table_filter = "";
 
@@ -417,6 +418,20 @@ public class UserDBDAO {
 	 */
 	public String getIs_table_filter() {
 		return is_table_filter;
+	}
+
+	/**
+	 * @return the is_showtables
+	 */
+	public String getIs_showtables() {
+		return is_showtables;
+	}
+
+	/**
+	 * @param is_showtables the is_showtables to set
+	 */
+	public void setIs_showtables(String is_showtables) {
+		this.is_showtables = is_showtables;
 	}
 
 	/**

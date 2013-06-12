@@ -260,11 +260,11 @@
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
 	INSERT INTO user_db(seq, 
 	user_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
-	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit
+	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables
 	)
 	VALUES( (select max(seq) from user_db)+1 , 
 	#user_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
-	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#
+	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables# 
 	)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.UserDBDAO">

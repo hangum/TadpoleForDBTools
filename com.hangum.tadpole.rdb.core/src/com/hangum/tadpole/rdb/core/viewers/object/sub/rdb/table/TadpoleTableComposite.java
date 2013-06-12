@@ -406,6 +406,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		if(!boolRefresh) if(selectUserDb == null) return;
 		this.userDB = selectUserDb;
 		
+		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
+		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) return;
+		
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {

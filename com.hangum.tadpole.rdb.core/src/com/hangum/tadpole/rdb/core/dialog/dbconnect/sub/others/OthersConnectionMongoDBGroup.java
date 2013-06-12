@@ -44,6 +44,7 @@ public class OthersConnectionMongoDBGroup extends Group {
 	private Button btnTableFilters;
 	private Button btnReadOnlyConnection;
 	private Button btnTunneling;
+	private Button btnShowTables;
 
 	/**
 	 * Create the composite.
@@ -53,7 +54,7 @@ public class OthersConnectionMongoDBGroup extends Group {
 	public OthersConnectionMongoDBGroup(Composite parent, int style) {
 		super(parent, style);
 		setText(Messages.OthersConnectionMongoDBGroup_0);
-		GridLayout gridLayout = new GridLayout(3, false);
+		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -62,6 +63,10 @@ public class OthersConnectionMongoDBGroup extends Group {
 		
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setText(Messages.OthersConnectionMongoDBGroup_1);
+		
+		btnShowTables = new Button(this, SWT.CHECK);
+		btnShowTables.setSelection(true);
+		btnShowTables.setText(Messages.OthersConnectionMongoDBGroup_btnShowTables_text);
 		
 		btnTableFilters = new Button(this, SWT.NONE);
 		btnTableFilters.addSelectionListener(new SelectionAdapter() {
@@ -79,7 +84,7 @@ public class OthersConnectionMongoDBGroup extends Group {
 		});
 		btnTableFilters.setText(Messages.OthersConnectionMongoDBGroup_2);
 		
-		Button btnTunneling = new Button(this, SWT.NONE);
+		btnTunneling = new Button(this, SWT.NONE);
 		btnTunneling.setEnabled(false);
 		btnTunneling.setText(Messages.OthersConnectionMongoDBGroup_3);
 		btnTunneling.addSelectionListener(new SelectionAdapter() {
@@ -98,6 +103,7 @@ public class OthersConnectionMongoDBGroup extends Group {
 	 */
 	public OthersConnectionInfoDAO getOthersConnectionInfo() {
 		otherConnectionDAO.setReadOnlyConnection(getBtnReadOnlyConnection());
+		otherConnectionDAO.setShowTables(getBtnShowTables());
 		
 		return otherConnectionDAO;
 	}
@@ -114,6 +120,21 @@ public class OthersConnectionMongoDBGroup extends Group {
 	 */
 	public void setBtnReadOnlyConnection(boolean btnReadOnlyConnection) {
 		this.btnReadOnlyConnection.setSelection(btnReadOnlyConnection);
+	}
+	
+	/**
+	 * @param btnShowTables
+	 */
+	public void setBtnShowTables(boolean btnShowTables) {
+		this.btnShowTables.setSelection(btnShowTables);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean getBtnShowTables() {
+		return btnShowTables.getSelection();
 	}
 
 	@Override

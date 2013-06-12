@@ -14,6 +14,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -25,7 +26,6 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilter
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
 
 /**
  * Others connection info
@@ -43,6 +43,7 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 	private Button btnAutoCommit;
 	private Button btnProfiler;
 	private Button btnExecuteQuestionDml;
+	private Button btnShowTables;
 
 	/**
 	 * Create the composite.
@@ -52,7 +53,7 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 	public OthersConnectionRDBWithoutTunnelingGroup(Composite parent, int style) {
 		super(parent, style);
 		setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_0);
-		GridLayout gridLayout = new GridLayout(4, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -84,14 +85,18 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 			}
 		});
 		btnTableFilters.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_3);
-		new Label(this, SWT.NONE);
 		
 		btnProfiler = new Button(this, SWT.CHECK);
 		btnProfiler.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_4);
 		
+		btnShowTables = new Button(this, SWT.CHECK);
+		btnShowTables.setSelection(true);
+		btnShowTables.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text);
+		
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
-		btnExecuteQuestionDml.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_5);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		
 	}
@@ -104,6 +109,7 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 	public OthersConnectionInfoDAO getOthersConnectionInfo() {
 		otherConnectionDAO.setReadOnlyConnection(getBtnReadOnlyConnection());
 		otherConnectionDAO.setAutoCommit(getBtnAutoCommit());
+		otherConnectionDAO.setShowTables(getBtnShowTables());
 		
 		otherConnectionDAO.setProfiling(getBtnProfiler());
 		otherConnectionDAO.setDMLStatement(getBtnExecuteQuestionDml());
@@ -131,6 +137,21 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 	
 	public boolean getBtnExecuteQuestionDml() {
 		return btnExecuteQuestionDml.getSelection();
+	}
+	
+	/**
+	 * @param btnShowTables
+	 */
+	public void setBtnShowTables(boolean btnShowTables) {
+		this.btnShowTables.setSelection(btnShowTables);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean getBtnShowTables() {
+		return btnShowTables.getSelection();
 	}
 
 	@Override

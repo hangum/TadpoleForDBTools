@@ -20,6 +20,7 @@ public class OthersConnectionInfoDAO {
 	
 	boolean isReadOnlyConnection = false;
 	boolean isAutoCommit = false;
+	boolean isShowTables = false;
 	
 	boolean isProfiling = false;
 	boolean isDMLStatement = false;
@@ -129,5 +130,18 @@ public class OthersConnectionInfoDAO {
 		this.isDMLStatement = isDMLStatement;
 	}
 
+	/**
+	 * @return the isShowTables
+	 */
+	public boolean isShowTables() {
+		return isShowTables;
+	}
+
+	/**
+	 * @param isShowTables the isShowTables to set
+	 */
+	public void setShowTables(boolean isShowTables) {
+		this.isShowTables = isShowTables;
+	}
 	
 }
