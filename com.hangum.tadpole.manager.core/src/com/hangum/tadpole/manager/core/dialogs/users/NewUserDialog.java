@@ -231,20 +231,23 @@ public class NewUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText()); 
+		String strGroupName = ""; 
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String passwd = StringUtils.trimToEmpty(textPasswd.getText());
 		String rePasswd = StringUtils.trimToEmpty(textRePasswd.getText());
 		String name = StringUtils.trimToEmpty(textName.getText());
 		
-		if(!validation(strGroupName, strEmail, passwd, rePasswd, name)) return;
+		if(!validation(strEmail, passwd, rePasswd, name)) return;
 		
 		// user 입력시 
 		UserGroupDAO groupDAO = new UserGroupDAO();
 		PublicTadpoleDefine.USER_TYPE userType = PublicTadpoleDefine.USER_TYPE.USER;
 		if(btnUser.getSelection()) {
+			strGroupName = comboUserGroup.getText();
+			
 			groupDAO.setSeq( (Integer)comboUserGroup.getData(strGroupName) );
 		} else {
+			strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			
 			userType = PublicTadpoleDefine.USER_TYPE.MANAGER;
 			// 그룹 등록
@@ -287,13 +290,17 @@ public class NewUserDialog extends Dialog {
 	 * @param rePasswd
 	 * @param name
 	 */
-	private boolean validation(String strGroupName, String strEmail, String strPass, String rePasswd, String name) {
+	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
 
-		if("".equals(strGroupName)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, "그룹 명이 공백 입니다.");
-			textEMail.setFocus();
-			return false;
-		} else if("".equals(strEmail)) { //$NON-NLS-1$
+		if(btnManager.getSelection()) {
+			if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
+				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, "그룹 명이 공백 입니다.");
+				textUserGroup.setFocus();
+				return false;
+			}
+		}
+		
+		if("".equals(strEmail)) { //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_7);
 			textEMail.setFocus();
 			return false;
@@ -319,7 +326,7 @@ public class NewUserDialog extends Dialog {
 		
 		//  신규 그룹 입력시 오류 검증
 		if(!btnUser.getSelection()) {
-						
+			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			// 동일한 그룹명이 있는 지 검증한다.
 			if(TadpoleSystem_UserGroupQuery.isUserGroup(strGroupName)) {
 				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_25);
