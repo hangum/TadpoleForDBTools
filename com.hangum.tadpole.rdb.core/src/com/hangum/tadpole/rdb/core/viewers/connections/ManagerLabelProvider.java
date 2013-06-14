@@ -116,8 +116,9 @@ public class ManagerLabelProvider extends LabelProvider {
 			return retText;
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
+			String strComment = "".equals(dao.getDescription())?"":" (" + dao.getDescription() + ")";
 			
-			return dao.getName();
+			return "[" + dao.getShared_type() + "] " + dao.getName() + strComment;
 		}
 		
 		return "## not set ##"; //$NON-NLS-1$
