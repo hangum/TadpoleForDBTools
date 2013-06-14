@@ -22,8 +22,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 
 /**
@@ -40,12 +38,10 @@ public class UserManagementEditor extends EditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-
 	}
 
 	@Override
 	public void doSaveAs() {
-
 	}
 
 	@Override
@@ -79,35 +75,38 @@ public class UserManagementEditor extends EditorPart {
 		Composite compositeMain = new Composite(parent, SWT.NONE);
 		compositeMain.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.marginHeight = 3;
-		gl_composite.verticalSpacing = 3;
-		gl_composite.horizontalSpacing = 3;
-		gl_composite.marginWidth = 3;
+		gl_composite.marginHeight = 0;
+		gl_composite.verticalSpacing = 0;
+		gl_composite.horizontalSpacing = 0;
+		gl_composite.marginWidth = 0;
 		compositeMain.setLayout(gl_composite);
 
 		CTabFolder tabFolder = new CTabFolder(compositeMain, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolder.setBorderVisible(false);		
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
-		
-		CTabItem tbtmItem = null;
-		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals( SessionManager.representRole() )) {
-			tbtmItem = new CTabItem(tabFolder, SWT.NONE);
-			tbtmItem.setText("Manager");
-		} else {
-			tbtmItem = new CTabItem(tabFolder, SWT.NONE);
-			tbtmItem.setText("Admin");			
-		}
-		tabFolder.setSelection(0);
 
-		Composite composite = new AdminComposite(tabFolder, SWT.NONE);
-		tbtmItem.setControl(composite);
-		composite.setLayout(new GridLayout(1, false));
+		// Users
+		CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
+		tbtmItem.setText("Users");
+
+		Composite compositeUserList = new UserListComposite(tabFolder, SWT.NONE);
+		tbtmItem.setControl(compositeUserList);
+		compositeUserList.setLayout(new GridLayout(1, false));
+		
+		// DBs
+		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
+		tbtmDB.setText("DB");
+		
+		Composite compositeDBList = new DBListComposite(tabFolder, SWT.NONE);
+		tbtmDB.setControl(compositeDBList);
+		compositeDBList.setLayout(new GridLayout(1, false));
+		
+		tabFolder.setSelection(0);
 	}
 
 	@Override
 	public void setFocus() {
-		
 	}
 
 }

@@ -51,16 +51,16 @@ import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 
 /**
- * 어드민 관리 페이지 ui
+ * 어드민, 메니저, DBA가 사용하는 DB List composite
  * 
  * @author hangum
  *
  */
-public class AdminComposite extends Composite {
+public class DBListComposite extends Composite {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(AdminComposite.class);
+	private static final Logger logger = Logger.getLogger(DBListComposite.class);
 	private TreeViewer treeViewerAdmin;
 	private Tree treeAdmin;
 	
@@ -72,7 +72,7 @@ public class AdminComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public AdminComposite(Composite parent, int style) {
+	public DBListComposite(Composite parent, int style) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 2;
@@ -160,15 +160,15 @@ public class AdminComposite extends Composite {
 		
 		TreeViewerColumn colUserType = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
 		colUserType.getColumn().setWidth(100);
-		colUserType.getColumn().setText("User/DB Type");
+		colUserType.getColumn().setText("DB Type");
 		
 		TreeViewerColumn colEmail = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
 		colEmail.getColumn().setWidth(200);
-		colEmail.getColumn().setText("email/DB Name");
+		colEmail.getColumn().setText("DB Name");
 		
 		TreeViewerColumn colName = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
 		colName.getColumn().setWidth(150);
-		colName.getColumn().setText("Name/DB Info");
+		colName.getColumn().setText("DB Info");
 		
 		TreeViewerColumn colApproval = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
 		colApproval.getColumn().setWidth(60);

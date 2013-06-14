@@ -21,6 +21,9 @@ import org.eclipse.ui.IPersistableElement;
  *
  */
 public class UserManagementEditorInput implements IEditorInput {
+	
+	public UserManagementEditorInput() {
+	}
 
 	@Override
 	public Object getAdapter(Class adapter) {
@@ -29,12 +32,12 @@ public class UserManagementEditorInput implements IEditorInput {
 
 	@Override
 	public boolean exists() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		return null;
+		return ImageDescriptor.getMissingImageDescriptor();
 	}
 
 	@Override
