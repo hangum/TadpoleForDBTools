@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -41,8 +40,6 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnect
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
-import com.hangum.tadpole.util.RequestInfoUtils;
-import com.hangum.tadpole.util.ServletUserAgnet;
 
 /**
  * sqlite login composite
@@ -119,7 +116,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
 			// os타입별 기본 디렉토리를서정합니다.
-			String defaultDir = System.getenv("HOME") + "/tadpole-test.db";
+			String defaultDir = System.getProperty("user.home") + "/tadpole-test.db";
 			textFile.setText(defaultDir);
 		}
 		
