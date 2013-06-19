@@ -32,8 +32,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.util.RequestInfoUtils;
-import com.hangum.tadpole.util.ServletUserAgnet;
 import com.hangum.tadpole.util.ShortcutPrefixUtils;
 
 /**

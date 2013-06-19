@@ -15,9 +15,9 @@ public class ShortcutPrefixUtils {
 	 * @return
 	 */
 	public static String getCtrlShortcut() {
-		ServletUserAgnet.OS_SIMPLE_TYPE osSimpleType = RequestInfoUtils.findOSSimpleType();
+		ServletUserAgent.OS_SIMPLE_TYPE osSimpleType = RequestInfoUtils.findOSSimpleType();
 		String prefixOSShortCut = "Ctrl ";
-		if(osSimpleType == ServletUserAgnet.OS_SIMPLE_TYPE.MACOSX) prefixOSShortCut = "Command ";
+		if(osSimpleType == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) prefixOSShortCut = "Command ";
 		
 		return prefixOSShortCut;
 	}

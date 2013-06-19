@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author hangum
  *
  */
-public class ServletUserAgnet {
+public class ServletUserAgent {
 	/** tadpole가 지원하는 시스템만 */
 	public enum OS_SIMPLE_TYPE {
         MACOSX,

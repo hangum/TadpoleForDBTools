@@ -38,7 +38,7 @@ public class RequestInfoUtils {
 	public static String requestInfo(String prefixMsg, String email) {
 		StringBuffer retMsg = new StringBuffer(prefixMsg + "\r\n");
 		
-		ServletUserAgnet sua = new ServletUserAgnet();
+		ServletUserAgent sua = new ServletUserAgent();
 		sua.detect(RWT.getRequest());
 		String strOs = sua.getOSSimpleType().toString();
 		String strBrowser = sua.getBrowserType().toString();
@@ -55,8 +55,8 @@ public class RequestInfoUtils {
 	 * 
 	 * @return
 	 */
-	public static ServletUserAgnet.OS_SIMPLE_TYPE findOSSimpleType() {
-		ServletUserAgnet sua = new ServletUserAgnet();
+	public static ServletUserAgent.OS_SIMPLE_TYPE findOSSimpleType() {
+		ServletUserAgent sua = new ServletUserAgent();
 		sua.detect(RWT.getRequest());
 		
 		return sua.getOSSimpleType();
