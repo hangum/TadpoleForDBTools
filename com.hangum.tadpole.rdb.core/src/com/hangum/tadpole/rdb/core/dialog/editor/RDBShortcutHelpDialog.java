@@ -32,6 +32,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.util.RequestInfoUtils;
+import com.hangum.tadpole.util.ServletUserAgnet;
+import com.hangum.tadpole.util.ShortcutPrefixUtils;
+
 /**
  * sql editor 단축키 도움말.
  * 
@@ -136,32 +140,32 @@ public class RDBShortcutHelpDialog extends Dialog {
 	 * 단축키 데이터
 	 */
 	private void initData() {
-		listShortcut.add( new ShortcutHelpDAO("Add Block Comment", 	"Ctrl + Shift + /"));
+		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
 		
-		listShortcut.add( new ShortcutHelpDAO("Save", 			"Ctrl + S") 		);
-		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"Ctrl + enter") 	);
+		listShortcut.add( new ShortcutHelpDAO("Add Block Comment", 	prefixOSShortcut +"+ /"));
+		
+		listShortcut.add( new ShortcutHelpDAO("Save", 			prefixOSShortcut + "+ S") 		);
+		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	prefixOSShortcut + "+ enter") 	);
 		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"F5") 				);
-		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	"Ctrl + E") 		);
-		listShortcut.add( new ShortcutHelpDAO("Delete Line", 	"Ctrl + D") 		);
-		listShortcut.add( new ShortcutHelpDAO("Query Format", 	"Ctrl + Shift + F") );
-		listShortcut.add( new ShortcutHelpDAO("Query History", 	"Ctrl + H") 		);
+		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	prefixOSShortcut + "+ E") 		);
+		listShortcut.add( new ShortcutHelpDAO("Delete Line", 	prefixOSShortcut + "+ D") 		);
+		listShortcut.add( new ShortcutHelpDAO("Query Format", 	prefixOSShortcut + "+ Shift + F") );
+		listShortcut.add( new ShortcutHelpDAO("Query History", 	prefixOSShortcut + "+ H") 		);
 		
-		listShortcut.add( new ShortcutHelpDAO("Go to Line", 	"Ctrl + L") 		);
+		listShortcut.add( new ShortcutHelpDAO("Go to Line", 	prefixOSShortcut + "+ L") 		);
 		
-		listShortcut.add( new ShortcutHelpDAO("To Lower case", 	"Ctrl + Shift + Y") );
-		listShortcut.add( new ShortcutHelpDAO("To Upper case", 	"Ctrl + Shift + X") );
-		listShortcut.add( new ShortcutHelpDAO("Shortcut Help", 	"Ctrl + Shift + L") );
+		listShortcut.add( new ShortcutHelpDAO("To Lower case", 	prefixOSShortcut + "+ Shift + Y") );
+		listShortcut.add( new ShortcutHelpDAO("To Upper case", 	prefixOSShortcut + "+ Shift + X") );
+		listShortcut.add( new ShortcutHelpDAO("Shortcut Help", 	prefixOSShortcut + "+ Shift + L") );
 		
 		listShortcut.add( new ShortcutHelpDAO("Clear page", 	"F7") 				);
-		listShortcut.add( new ShortcutHelpDAO("Select All", 	"Ctrl + A") 		);
-		listShortcut.add( new ShortcutHelpDAO("Go to Line", 	"Ctrl + L") 		);
-		listShortcut.add( new ShortcutHelpDAO("Copy text", 		"Ctrl + C") 		);
-		listShortcut.add( new ShortcutHelpDAO("Past text", 		"Ctrl + V") 		);
+		listShortcut.add( new ShortcutHelpDAO("Select All", 	prefixOSShortcut + "+ A") 		);
+		listShortcut.add( new ShortcutHelpDAO("Go to Line", 	prefixOSShortcut + "+ L") 		);
+		listShortcut.add( new ShortcutHelpDAO("Copy text", 		prefixOSShortcut + "+ C") 		);
+		listShortcut.add( new ShortcutHelpDAO("Past text", 		prefixOSShortcut + "+ V") 		);
 		
 		tableViewer.refresh(listShortcut);		
 	}
-	
-	
 }
 
 /**

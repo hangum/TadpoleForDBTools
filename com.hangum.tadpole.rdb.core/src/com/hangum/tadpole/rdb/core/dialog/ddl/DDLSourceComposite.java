@@ -16,6 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * Table summary composite
@@ -25,6 +26,7 @@ import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
  */
 public class DDLSourceComposite extends Composite {
 	
+	private Label labelTable;
 	private TadpoleOrionHubEditor ddlSource;
 
 	/**
@@ -32,13 +34,22 @@ public class DDLSourceComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public DDLSourceComposite(Composite parent, int style, String initDDL) {
+	public DDLSourceComposite(Composite parent, int style, String tableName, String initDDL) {
 		super(parent, style);
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		setLayout(gridLayout);
 		
 		Composite compositeBasic = new Composite(this, SWT.NONE);
 		compositeBasic.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBasic.setLayout(new GridLayout(1, false));
+		
+		labelTable = new Label(compositeBasic, SWT.NONE);
+		labelTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		labelTable.setText(tableName);
 		
 		ddlSource = new TadpoleOrionHubEditor(compositeBasic, SWT.BORDER, initDDL);
 		ddlSource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));

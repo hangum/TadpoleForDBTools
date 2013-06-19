@@ -52,7 +52,7 @@ public class DDLSourceViewerDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(tableName);
+		newShell.setText("Table Schema");
 	}
 
 	/**
@@ -63,12 +63,12 @@ public class DDLSourceViewerDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
-		gridLayout.verticalSpacing = 2;
-		gridLayout.horizontalSpacing = 2;
-		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
 		
-		ddlSourceComposite = new DDLSourceComposite(container, SWT.NONE, ddlSource);
+		ddlSourceComposite = new DDLSourceComposite(container, SWT.NONE, tableName, ddlSource);
 		ddlSourceComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		ddlSourceComposite.setLayout(new GridLayout(1, false));
 

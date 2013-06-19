@@ -36,7 +36,7 @@ public class RequestInfoUtils {
 	 * @return
 	 */
 	public static String requestInfo(String prefixMsg, String email) {
-		StringBuffer errMsg = new StringBuffer(prefixMsg + "\r\n");
+		StringBuffer retMsg = new StringBuffer(prefixMsg + "\r\n");
 		
 		ServletUserAgnet sua = new ServletUserAgnet();
 		sua.detect(RWT.getRequest());
@@ -44,9 +44,22 @@ public class RequestInfoUtils {
 		String strBrowser = sua.getBrowserType().toString();
 		String strFullVersion = sua.getFullVersion() + sua.getMajorVersion();
 		
-		errMsg.append("[email]" + email + "[ip]" + RWT.getRequest().getLocalAddr() + "\r\n");
-		errMsg.append("[os]" + strOs + "[browser]" + strBrowser + "[full version]" + strFullVersion);
+		retMsg.append("[email]" + email + "[ip]" + RWT.getRequest().getLocalAddr() + "\r\n");
+		retMsg.append("[os]" + strOs + "[browser]" + strBrowser + "[full version]" + strFullVersion);
 		
-		return errMsg.toString();
+		return retMsg.toString();
 	}
+	
+	/**
+	 * 사용자의 os를 얻습니다.
+	 * 
+	 * @return
+	 */
+	public static ServletUserAgnet.OS_SIMPLE_TYPE findOSSimpleType() {
+		ServletUserAgnet sua = new ServletUserAgnet();
+		sua.detect(RWT.getRequest());
+		
+		return sua.getOSSimpleType();
+	}
+	
 }
