@@ -39,7 +39,8 @@ public class SQLToJavaConvert {
 		for (String part : splists) {
 			
 			if(!"".equals( StringUtils.trimToEmpty(part) )) {
-				sbSQL.append(name + ".append(\"" + SQLTextUtil.delLineChar(part) + "\"); " + PublicTadpoleDefine.LINE_SEPARATOR);
+				// https://github.com/hangum/TadpoleForDBTools/issues/181 fix
+				sbSQL.append(name + ".append(\" " + SQLTextUtil.delLineChar(part) + " \"); " + PublicTadpoleDefine.LINE_SEPARATOR);
 			}			
 		}
 		
