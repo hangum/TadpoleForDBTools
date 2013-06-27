@@ -3,6 +3,7 @@
 
 <product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" version="2.0.0" useFeatures="false" includeLaunchers="true">
 
+
    <configIni use="default">
    </configIni>
 
@@ -17,13 +18,14 @@
    <splash
       location="com.hangum.tadpole.application" />
    <launcher name="tadpole-standalone">
-      <macosx icon="/com.hangum.tadpole.application/icons/TadpoleForDBTools.icns"/>
+      <macosx icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.icns"/>
       <solaris/>
       <win useIco="false">
          <ico path="/com.hangum.tadpole.application/icons/TadpoleForDBTools.ico"/>
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
@@ -76,7 +78,7 @@
       <plugin id="org.eclipse.equinox.launcher.cocoa.macosx.x86_64" fragment="true"/>
       <plugin id="org.eclipse.equinox.launcher.gtk.aix.ppc" fragment="true"/>
       <plugin id="org.eclipse.equinox.launcher.gtk.aix.ppc64" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.gtk.hpux.ia64_32" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.hpux.ia64" fragment="true"/>
       <plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc" fragment="true"/>
       <plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc64" fragment="true"/>
       <plugin id="org.eclipse.equinox.launcher.gtk.linux.s390" fragment="true"/>

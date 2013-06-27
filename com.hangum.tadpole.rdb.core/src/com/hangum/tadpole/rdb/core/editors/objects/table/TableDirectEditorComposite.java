@@ -28,6 +28,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -44,7 +45,6 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.ddl.DDLSourceViewerDialog;
 import com.hangum.tadpole.rdb.core.editors.main.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.editors.objects.table.TbUtils.TABLE_MOD_TYPE;
 import com.hangum.tadpole.util.XMLUtils;
@@ -54,7 +54,6 @@ import com.hangum.tadpole.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.util.tables.SQLResultSorter;
 import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import org.eclipse.swt.widgets.Button;
 
 /**
  * Table data direct editor
@@ -132,7 +131,7 @@ public class TableDirectEditorComposite extends Composite {
 		GridLayout gl_compositeBase = new GridLayout(1, false);
 		gl_compositeBase.verticalSpacing = 2;
 		gl_compositeBase.horizontalSpacing = 2;
-		gl_compositeBase.marginHeight = 2;
+		gl_compositeBase.marginHeight = 0;
 		gl_compositeBase.marginWidth = 2;
 		compositeBase.setLayout(gl_compositeBase);
 		
@@ -221,7 +220,12 @@ public class TableDirectEditorComposite extends Composite {
 		sqlFilter.setTable(tableResult);
 		
 		compositeTail = new Composite(compositeBase, SWT.NONE);
-		compositeTail.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeTail = new GridLayout(1, false);
+		gl_compositeTail.verticalSpacing = 2;
+		gl_compositeTail.horizontalSpacing = 2;
+		gl_compositeTail.marginHeight = 2;
+		gl_compositeTail.marginWidth = 2;
+		compositeTail.setLayout(gl_compositeTail);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnDdlSourceView = new Button(compositeTail, SWT.NONE);
@@ -231,8 +235,8 @@ public class TableDirectEditorComposite extends Composite {
 				try {
 					String ddlSource = GetDDLTableSource.getSource(userDB, initTableNameStr);
 					
-					DDLSourceViewerDialog dialog = new DDLSourceViewerDialog(null, initTableNameStr,  ddlSource);
-					dialog.open();
+//					DDLSourceViewerDialog dialog = new DDLSourceViewerDialog(null, initTableNameStr,  ddlSource);
+//					dialog.open();
 					
 				} catch(Exception ee) {
 					MessageDialog.openError(null, "Confirm", "Not support this function.");

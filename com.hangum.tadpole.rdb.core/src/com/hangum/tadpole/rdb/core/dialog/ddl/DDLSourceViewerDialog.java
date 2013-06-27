@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
  * DDL Source viewer dialog
  * 
  * @author hangum
- *
+ * @deprecated 가끔 소스가 제대로 표시안될때가 있어서.. 전체 에디터를 공통으로 사용하는 것으로 수정.
  */
 public class DDLSourceViewerDialog extends Dialog {
 	/**
@@ -84,14 +84,14 @@ public class DDLSourceViewerDialog extends Dialog {
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
 	}
 
-	/**
-	 * set ddl text
-	 * 
-	 * @param ddlText
-	 */
-	public void setDDLText(String ddlText) {
-		ddlSourceComposite.setDdlSource(ddlText);
-	}
+//	/**
+//	 * set ddl text
+//	 * 
+//	 * @param ddlText
+//	 */
+//	public void setDDLText(String ddlText) {
+//		ddlSourceComposite.setDdlSource(ddlText);
+//	}
 
 	/**
 	 * Return the initial size of the dialog.
