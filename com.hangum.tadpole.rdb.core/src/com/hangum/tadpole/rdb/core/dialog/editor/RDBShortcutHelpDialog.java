@@ -86,8 +86,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 	 */
 	public void createContents() {
 		shlEditorShortcutDialog = new Shell(getParent(), SWT.CLOSE | SWT.APPLICATION_MODAL);
-		shlEditorShortcutDialog.setSize(240, 300);
-//		shlEditorShortcutDialog.setText("Editor Shortcut Dialog");
+		shlEditorShortcutDialog.setSize(280, 300);
 		shlEditorShortcutDialog.setLayout(new GridLayout(1, false));
 
 		// shell을 오른쪽 하단에 놓을수 있도록 합니다.
@@ -96,7 +95,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 		int y = mainShell.getSize().y;
 		
 		// 현재 shell location
-		shlEditorShortcutDialog.setLocation(x - 240, y - 300);
+		shlEditorShortcutDialog.setLocation(x - 280, y - 300);
 		
 		tableViewer = new TableViewer(shlEditorShortcutDialog, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();

@@ -36,7 +36,7 @@ public class TriggerLabelProvicer extends LabelProvider implements ITableLabelPr
 		switch(columnIndex) {
 		case 0: return tc.getTrigger();
 		case 1: return tc.getEvent();
-		case 2: return tc.getTable();
+		case 2: return tc.getTable_name();
 		case 3: return tc.getStatement();
 		case 4: return tc.getTiming();
 		case 5: return tc.getCreated();

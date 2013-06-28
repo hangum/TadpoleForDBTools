@@ -13,7 +13,7 @@ package com.hangum.tadpole.dao.mysql;
 public class TriggerDAO {
 	String Trigger;	
 	String Event;
-	String Table;	
+	String Table_name;	
 	String Statement;	
 	String Timing;	
 	String Created;	
@@ -24,10 +24,9 @@ public class TriggerDAO {
 	String Database; 
 	String Collation;
 	
-	/** mssql, cubrid은 name->trigger */
+	/** sqlite, mssql, cubrid은 name->trigger */
 	String name;
 	/** msslq, cubrid은 db->database */
-	
 	String db;
 	
 	public TriggerDAO() {
@@ -49,12 +48,18 @@ public class TriggerDAO {
 		Event = event;
 	}
 
-	public String getTable() {
-		return Table;
+	/**
+	 * @return the table_name
+	 */
+	public String getTable_name() {
+		return Table_name;
 	}
 
-	public void setTable(String table) {
-		Table = table;
+	/**
+	 * @param table_name the table_name to set
+	 */
+	public void setTable_name(String table_name) {
+		Table_name = table_name;
 	}
 
 	public String getStatement() {

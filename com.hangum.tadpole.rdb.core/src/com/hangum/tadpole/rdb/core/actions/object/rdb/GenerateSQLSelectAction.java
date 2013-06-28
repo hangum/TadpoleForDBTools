@@ -81,7 +81,6 @@ public class GenerateSQLSelectAction extends AbstractObjectAction {
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getName() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			//
-//			QueryEditorAction qea = new QueryEditorAction();
 			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLSelectAction_8, e);

@@ -25,8 +25,9 @@ public class SQLTextUtil {
 	private static final Logger logger = Logger.getLogger(SQLTextUtil.class);
 	
 	/**
-	 * 경우의 수
+	 * 쿼리의 현재 포지션을 분리자로 나누어 현재 실행되어야 하는 쿼리를 추출하는 메소드. 
 	 * 
+	 * 경우의 수
 	 * 1. 키워드(Define.SQL_DILIMITER(;)) 또는 라인피드가 하나만 있거나 하나도 없을 경우는 =>  모든 텍스트를 쿼리본다.
 	 * 2. 현재 커서의 포인트와 쿼리 불럭의 포인트를 비교합니다. 
 	 *   
@@ -55,6 +56,16 @@ public class SQLTextUtil {
 		
 		if(logger.isDebugEnabled()) logger.debug("[last find execute query]" + StringUtils.trim(querys[querys.length-1]));
 		return StringUtils.trim(querys[querys.length-1]);
+	}
+	
+	/**
+	 * 쿼리를 분리자로 나누지 않고 전체 쿼리를 수행할때 처리하는 메소드
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public static String executeQuery(String query) {
+		return StringUtils.trim(query);
 	}
 	
 	/**

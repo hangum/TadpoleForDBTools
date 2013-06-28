@@ -60,6 +60,8 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	
 	/** 에디터의 모든 쿼리를 수행합니다. */
 	public static int ALL_QUERY_EXECUTE 	= -998;
+	/** 부분 쿼리 블럭을 수행합니다 */
+	public static int BLOCK_QUERY_EXECUTE 	= -999;
 
     /** 에디터의 텍스트 */
     protected String queryText = ""; //$NON-NLS-1$

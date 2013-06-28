@@ -47,6 +47,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.editors.objects.table.TbUtils.TABLE_MOD_TYPE;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.util.XMLUtils;
 import com.hangum.tadpole.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.util.tables.SQLResultFilter;
@@ -232,12 +233,10 @@ public class TableDirectEditorComposite extends Composite {
 		btnDdlSourceView.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+
 				try {
-					String ddlSource = GetDDLTableSource.getSource(userDB, initTableNameStr);
-					
-//					DDLSourceViewerDialog dialog = new DDLSourceViewerDialog(null, initTableNameStr,  ddlSource);
-//					dialog.open();
-					
+					String ddlSource = GetDDLTableSource.getSource(userDB, PublicTadpoleDefine.DB_ACTION.TABLES,initTableNameStr);
+					FindEditorAndWriteQueryUtil.run(userDB, ddlSource);
 				} catch(Exception ee) {
 					MessageDialog.openError(null, "Confirm", "Not support this function.");
 				}

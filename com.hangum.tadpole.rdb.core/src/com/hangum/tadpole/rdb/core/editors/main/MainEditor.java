@@ -905,7 +905,19 @@ public class MainEditor extends EditorExtension {
 				}
 			}
 		// 블럭 쿼리를 실행하였으면 쿼리를 분리자로 나누지 않고 전체를 수행합니다.
-		} else {				
+		} else if(intExecuteQueryType == BLOCK_QUERY_EXECUTE) {	
+			String strSQL = SQLTextUtil.executeQuery(tmpStrSelText);
+
+			// 히스토리 데이터에 실행된 쿼리 저장
+			listQueryHistory.add(strSQL);						
+			
+			// 구분자 ;를 제거 합니다.(특정 디비에서는 ;가 있으면 오류)
+			strSQL = StringUtils.removeEnd(strSQL, PublicTadpoleDefine.SQL_DILIMITER);
+			
+			// 쿼리를 수행할수 있도록 가공합니다.
+			executeLastSQL = SQLUtil.executeQuery(strSQL);
+		// 일반 적인 쿼리 실행.
+		} else {
 			String strSQL = SQLTextUtil.executeQuery(tmpStrSelText, intExecuteQueryType);
 
 			// 히스토리 데이터에 실행된 쿼리 저장

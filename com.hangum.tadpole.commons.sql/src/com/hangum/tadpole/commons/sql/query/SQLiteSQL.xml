@@ -104,11 +104,12 @@ SELECT name as function_name,
 	show triggers
  -->
 <select id="triggerList" resultClass="com.hangum.tadpole.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
-	SELECT name as trigger_name,
- 		tbl_name as db_name
+	SELECT name as trigger,
+ 		tbl_name as table_name,
+ 		sql as statement
 	FROM sqlite_master
 	WHERE type = 'trigger'
-	ORDER BY name  
+	ORDER BY trigger  
 </select>
 
 <!-- 
@@ -133,13 +134,34 @@ SELECT name as function_name,
 </select>
 
 <!-- 
-	Table ddl script
+	Table DDL Script
  -->
 <select id="getTableScript" resultClass="java.lang.String" parameterClass="java.lang.String">
 	SELECT sql
 	FROM sqlite_master
-	WHERE name = #table#	
+	WHERE name = #table# AND
+		type = 'table'	
 </select>
- 
+
+<!-- 
+	View DDL Script
+ -->
+<select id="getViewScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT sql
+	FROM sqlite_master
+	WHERE name = #table#  AND
+		type = 'view'		
+</select>
+
+<!-- 
+	INDEX DDL Script
+ -->
+<select id="getIndexScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+	SELECT sql
+	FROM sqlite_master
+	WHERE name = #index_name#  AND
+		tbl_name = #table_name# AND
+		type = 'index'		
+</select>
 
 </sqlMap>
