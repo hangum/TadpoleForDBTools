@@ -366,5 +366,89 @@ ORDER BY 1, 2
 	from user_tables
 </select>
 
+<!-- 
+	Table DDL Script
+ -->
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+
+
+SELECT C.TABLE_NAME
+     , C.COLUMN_NAME
+     , C.DATA_TYPE
+     , C.DATA_TYPE_MOD
+     , C.DATA_TYPE_OWNER
+     , DECODE(C.DATA_TYPE, 'CHAR', C.CHAR_LENGTH,
+                         'VARCHAR', C.CHAR_LENGTH,
+                         'VARCHAR2', C.CHAR_LENGTH,
+                         'NCHAR', C.CHAR_LENGTH,
+                         'NVARCHAR', C.CHAR_LENGTH,
+                         'NVARCHAR2', C.CHAR_LENGTH,
+                         C.DATA_LENGTH) DATA_LENGTH
+      , C.DATA_PRECISION
+      , C.DATA_SCALE
+      , C.NULLABLE
+      , C.CHAR_USED
+      , USER OWNER
+      , C.DATA_DEFAULT
+FROM SYS.USER_TAB_COLUMNS C
+WHERE 1=1
+AND C.TABLE_NAME = UPPER(#table_name#)
+ORDER BY C.TABLE_NAME, C.COLUMN_ID
+
+
+</select>
+
+<!-- 
+	Table DDL Script => Primary key list
+ -->
+ 
+<select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+  SELECT C.CONSTRAINT_NAME, CC.COLUMN_NAME
+    FROM SYS.DBA_CONS_COLUMNS CC, SYS.DBA_CONSTRAINTS C
+   WHERE     C.OWNER = CC.OWNER
+         AND C.CONSTRAINT_NAME = CC.CONSTRAINT_NAME
+         AND C.TABLE_NAME = CC.TABLE_NAME
+         AND C.OWNER = USER
+         AND C.TABLE_NAME = UPPER(#table_name#)
+         AND C.CONSTRAINT_TYPE = 'P'
+ORDER BY CC.POSITION
+
+</select>
+
+<!-- 
+	Table DDL Script => Table, Column Comment Script
+ -->
+ 
+<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.lang.String">
+
+SELECT    'COMMENT ON TABLE '
+       || C.OWNER
+       || '.'
+       || C.TABLE_NAME
+       || ' IS '''
+       || C.COMMENTS
+       || ''';'
+          AS COMMENT_TEXT
+  FROM SYS.DBA_TAB_COMMENTS C
+ WHERE     C.OWNER = USER
+       AND C.COMMENTS IS NOT NULL
+       AND C.TABLE_NAME = UPPER(#table_name#)
+UNION ALL
+SELECT    'COMMENT ON COLUMN '
+       || C.OWNER
+       || '.'
+       || C.TABLE_NAME
+       || '.'
+       || C.COLUMN_NAME
+       || ' IS '''
+       || C.COMMENTS
+       || ''';'
+  FROM SYS.DBA_COL_COMMENTS C
+ WHERE     C.OWNER = USER
+       AND C.COMMENTS IS NOT NULL
+       AND C.TABLE_NAME = UPPER(#table_name#)
+  
+</select>
+       
 
 </sqlMap>
