@@ -10,15 +10,20 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.procedure;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectExecuteProcedureAction;
 
 /**
  * procedure 실행 다이얼로그.
@@ -27,21 +32,27 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
  *
  */
 public class ExecuteProcedureDialog extends Dialog {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(ExecuteProcedureDialog.class);
+	
+	private Composite compositeHead;
 
-	UserDBDAO userDB;
-	ProcedureFunctionDAO pfd;
+	private UserDBDAO userDB;
+	private ProcedureFunctionDAO procedureDAO;
 	
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 * @param userDB
-	 * @param pfd
+	 * @param procedureDAO
 	 */
-	public ExecuteProcedureDialog(Shell parentShell, UserDBDAO userDB, ProcedureFunctionDAO pfd) {
+	public ExecuteProcedureDialog(Shell parentShell, UserDBDAO userDB, ProcedureFunctionDAO procedureDAO) {
 		super(parentShell);
 		
 		this.userDB = userDB;
-		this.pfd = pfd;
+		this.procedureDAO = procedureDAO;
 	}
 
 	/**
@@ -51,9 +62,20 @@ public class ExecuteProcedureDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-		
+		GridLayout gridLayout = (GridLayout) container.getLayout();
+		gridLayout.verticalSpacing = 2;
+		gridLayout.horizontalSpacing = 2;
+		gridLayout.marginHeight = 2;
+		gridLayout.marginWidth = 2;
+
 		// input value가 몇개가 되어야 하는지 조사하여 입력값으로 보여줍니다.
+		Composite compositeHead = new Composite(container, SWT.NONE);
+		compositeHead.setLayout(new GridLayout(1, false));
+		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Composite compositeBody = new Composite(container, SWT.NONE);
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setLayout(new GridLayout(1, false));
 		
 
 		return container;
@@ -73,7 +95,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(900, 600);
 	}
 
 }

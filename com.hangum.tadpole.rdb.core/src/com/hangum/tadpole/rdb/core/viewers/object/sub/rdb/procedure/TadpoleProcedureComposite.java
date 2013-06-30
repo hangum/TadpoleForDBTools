@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -29,7 +30,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
@@ -37,6 +40,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectExecuteProcedureAction;
@@ -66,6 +70,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Procedure;
 	private ObjectDeleteAction deleteAction_Procedure;
 	private ObjectRefreshAction refreshAction_Procedure;
+	
+	private GenerateViewDDLAction viewDDLAction;
+	
 	private ObjectExecuteProcedureAction executeAction_Procedure;
 
 	/**
@@ -125,6 +132,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 		deleteAction_Procedure = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
+		
+		viewDDLAction = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "View"); //$NON-NLS-1$
+		
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 
 		// menu
@@ -136,8 +146,13 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Procedure);
 					manager.add(deleteAction_Procedure);
+					manager.add(refreshAction_Procedure);
+					
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					manager.add(viewDDLAction);
 				}
-				manager.add(refreshAction_Procedure);
+				
+				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(executeAction_Procedure);
 			}
 		});
@@ -169,6 +184,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		deleteAction_Procedure.setUserDB(getUserDB());
 		refreshAction_Procedure.setUserDB(getUserDB());
 		executeAction_Procedure.setUserDB(getUserDB());
+		
+		viewDDLAction.setUserDB(getUserDB());
 	}
 	
 	/**
