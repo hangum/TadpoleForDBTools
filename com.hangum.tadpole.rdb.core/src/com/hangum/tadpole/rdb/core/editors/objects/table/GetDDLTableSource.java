@@ -64,7 +64,7 @@ public class GetDDLTableSource {
 				
 				
 				StringBuilder result = new StringBuilder("");
-				result.append("/* DROP TABLE " + objectName + " CASCADE CONSTRAINT */ \n\n");
+				result.append("/* DROP TABLE " + objectName + " CASCADE CONSTRAINT; */ \n\n");
 				result.append("CREATE TABLE " + objectName + "( \n");
 				for (int i=0; i<srcList.size(); i++){
 					HashMap<String, Object> source =  srcList.get(i);
@@ -147,7 +147,22 @@ public class GetDDLTableSource {
 				return result.toString();
 				
 			} else if(PublicTadpoleDefine.DB_ACTION.VIEWS == actionType) {
-				return ""+client.queryForObject("getViewScript", objectName);
+				//return ""+client.queryForObject("getViewScript", objectName);
+				
+				
+				StringBuilder result = new StringBuilder("");
+				result.append("/* DROP VIEW " + objectName + "; */ \n\n");
+
+				List<String> srcViewHeadList = client.queryForList("getViewScript.head", objectName);				
+				for (int i=0; i<srcViewHeadList.size(); i++){
+					result.append( srcViewHeadList.get(i)+"\n");
+				}
+				List<String> srcViewBodyList = client.queryForList("getViewScript.body", objectName);				
+				for (int i=0; i<srcViewBodyList.size(); i++){
+					result.append( srcViewBodyList.get(i)+"\n");
+				}
+				
+				return result.toString();				
 			}
 			
 			throw new Exception("Not support Database");
