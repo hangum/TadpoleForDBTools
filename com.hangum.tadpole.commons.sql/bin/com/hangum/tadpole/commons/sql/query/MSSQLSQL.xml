@@ -35,9 +35,16 @@
 	select substring(convert(varchar(100), SERVERPROPERTY('ProductVersion')), 1, charindex('.', convert(varchar(100), SERVERPROPERTY('ProductVersion')) )-1) as version
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.dao.mysql.TableDAO" parameterClass="java.lang.String">
-	select name from sys.tables
-	order by name
-	
+SELECT
+    tbl.name AS name
+    ,p.value AS comment
+  FROM
+    sys.tables AS tbl
+      LEFT JOIN sys.extended_properties AS p
+        ON p.major_id = tbl.object_id
+        AND p.minor_id = 0
+        AND p.class = 1
+  ORDER BY tbl.name ;	
 </select>
 
 <!-- 
@@ -51,10 +58,12 @@ SELECT  b.name field,
         CASE WHEN b.isnullable = 0  then 'NO' 
              ELSE 'YES' 
         END notnull, 
-        d.keyno mskey
+        d.keyno mskey,
+        p.value as comment
 FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
 	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	LEFT JOIN sys.extended_properties AS p         ON p.major_id = a.id        AND p.minor_id = b.colid       AND p.class = 1
 WHERE 
 		a.name = #table#
 ORDER BY a.id, b.colid

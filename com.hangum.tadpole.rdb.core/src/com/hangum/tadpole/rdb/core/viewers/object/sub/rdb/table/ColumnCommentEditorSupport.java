@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     hangum - initial API and implementation
+ *     nilriri - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
@@ -15,22 +15,24 @@ import java.sql.PreparedStatement;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * table comment editor
+ * column comment editor
  * 
- * @author hangum
+ * @author nilriri
  *
  */
-public class TableCommentEditorSupport extends EditingSupport {
+public class ColumnCommentEditorSupport extends EditingSupport {
 
 	/**
 	 * 
@@ -40,8 +42,9 @@ public class TableCommentEditorSupport extends EditingSupport {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TableCommentEditorSupport.class);
+	private static final Logger logger = Logger.getLogger(ColumnCommentEditorSupport.class);
 
+	private final TableViewer tableviewer;
 	private final TableViewer viewer;
 	private UserDBDAO userDB;
 	private int column;
@@ -51,9 +54,10 @@ public class TableCommentEditorSupport extends EditingSupport {
 	 * @param viewer
 	 * @param explorer
 	 */
-	public TableCommentEditorSupport(TableViewer viewer, UserDBDAO userDB, int column) {
+	public ColumnCommentEditorSupport(TableViewer tableviewer, TableViewer viewer, UserDBDAO userDB, int column) {
 		super(viewer);
 		
+		this.tableviewer = tableviewer;
 		this.viewer = viewer;
 		this.userDB = userDB;
 		this.column = column;
@@ -61,18 +65,13 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		if(column == 1) return new TextCellEditor(viewer.getTable());
+		if(column == 3) return new TextCellEditor(viewer.getTable());
 		else return null;
 	}
 
 	@Override
 	protected boolean canEdit(Object element) {
-		// TODO : ORACLE과 MSSQL일때만 처리한다.
-		// 다른 DBMS들은 코멘트를 저장할 수 있는 테이블을 직접 만들어 주면 안될까?
-		// Tadpole_Props 이런식으로...^^;
-		
-		if(column == 1) {
-//			userDB = explorer.getUserDB();
+		if(column == 3) {
 			logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB.getDbms_types()));
 			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || 
 					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ||
@@ -89,7 +88,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 	@Override
 	protected Object getValue(Object element) {
 		try {
-			TableDAO dao = (TableDAO) element;
+			TableColumnDAO dao = (TableColumnDAO) element;
 			String comment = dao.getComment();
 			return comment == null ? "" : comment;
 		} catch (Exception e) {
@@ -102,10 +101,14 @@ public class TableCommentEditorSupport extends EditingSupport {
 	protected void setValue(Object element, Object value) {
 		String comment = "";
 		try {
-			TableDAO dao = (TableDAO) element;
+			logger.debug("element.getClass().toString() is " + element.getClass().toString());
+
+			TableColumnDAO dao = (TableColumnDAO) element;
 
 			comment = (String) (value == null ? "" : value);
-
+			
+			logger.debug("dao column name is " + dao.getField());
+			
 			// 기존 코멘트와 다를때만 db에 반영한다.
 			if (!(comment.equals(dao.getComment()))) {
 				dao.setComment(comment);
@@ -119,7 +122,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 		viewer.update(element, null);
 	}
 
-	private void ApplyComment(TableDAO dao) {
+	private void ApplyComment(TableColumnDAO dao) {
 		// TODO : DBMS별 처리를 위해 별도의 Class로 분리해야 하지 않을까? 
 
 		java.sql.Connection javaConn = null;
@@ -132,16 +135,25 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 			javaConn = client.getDataSource().getConnection();
 
+			IStructuredSelection is = (IStructuredSelection) tableviewer.getSelection();
+			
+			TableDAO tableDAO = (TableDAO)is.getFirstElement();
+
 			StringBuffer query = new StringBuffer();
 
 			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
-				query.append(" COMMENT ON TABLE ").append(dao.getName()).append(" IS '").append(dao.getComment()).append("'");
+				
+				query.append(" COMMENT ON COLUMN ").append(tableDAO.getName()+".").append(dao.getField()).append(" IS '").append(dao.getComment()).append("'");
 
+				logger.debug("query is " + query.toString());
+				
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.executeQuery();
 
 			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT) {
-				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
+				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers());
+				query.append(",'table' , '").append(tableDAO.getName()).append("'");
+				query.append(",'column' , '").append(dao.getField()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
 					stmt.execute();
@@ -152,7 +164,9 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 				try {
 					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
+					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers());
+					query.append(",'table' , '").append(tableDAO.getName()).append("'");
+					query.append(",'column', '").append(dao.getField()).append("'");
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {
@@ -160,7 +174,9 @@ public class TableCommentEditorSupport extends EditingSupport {
 					logger.error("Comment add error ", e);
 				}
 			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
-				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo,'table' ").append(" , '").append(dao.getName()).append("'");
+				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo ");
+				query.append(",'table' , '").append(tableDAO.getName()).append("'");
+				query.append(",'column' , '").append(dao.getField()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
 					stmt.execute();
@@ -171,7 +187,9 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 				try {
 					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' , dbo ,'table' ").append(" , '").append(dao.getName()).append("'");
+					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' , dbo ");
+					query.append(",'table' , '").append(tableDAO.getName()).append("'");
+					query.append(",'column', '").append(dao.getField()).append("'");
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {

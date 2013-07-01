@@ -64,6 +64,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -74,10 +75,10 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLInsertAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLSelectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLUpdateAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSampleDataAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
 import com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer.CHANGE_TYPE;
@@ -276,13 +277,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 		};
 
-		TableViewerColumn tvColComment = new TableViewerColumn(tableListViewer, SWT.NONE);
-		TableColumn tbComment = tvColComment.getColumn();
+		TableViewerColumn tvTableComment = new TableViewerColumn(tableListViewer, SWT.NONE);
+		TableColumn tbComment = tvTableComment.getColumn();
 		tbComment.setWidth(200);
 		tbComment.setText("Comment"); //$NON-NLS-1$
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
-		tvColComment.setLabelProvider(labelProvider);
-		tvColComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
+		tvTableComment.setLabelProvider(labelProvider);
+		tvTableComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
 		
 		tableListViewer.getTable().setLayout(layoutColumnLayout);
@@ -324,12 +325,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		int[] size = {120, 90, 50, 100, 50, 50, 50};
 
 		for (int i=0; i<name.length; i++) {
-			
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
-			
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tableColumn, i));
+			tableColumn.setEditingSupport(new ColumnCommentEditorSupport(tableListViewer, tv, userDB, 3));
 		}
 	}
 	/**
@@ -347,6 +347,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				
 				tableColumnViewer.getTable().setSortDirection(tableColumnComparator.getDirection());
 				tableColumnViewer.getTable().setSortColumn(tableColumn.getColumn());
+				
+
+					
+					
+				
+				
+				
 				tableColumnViewer.refresh();
 			}
 		};
