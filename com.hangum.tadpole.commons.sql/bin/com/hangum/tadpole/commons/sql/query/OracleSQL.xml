@@ -454,25 +454,22 @@ SELECT    'COMMENT ON COLUMN '
 	Table DDL Script => View Header
  -->
  
-<select id="getTableScript.view.head" resultClass="java.lang.String" parameterClass="java.lang.String">
+<select id="getViewScript.head" resultClass="java.lang.String" parameterClass="java.lang.String">
 
 
   SELECT CASE
             WHEN COLUMN_ID = 1
             THEN
                'CREATE OR REPLACE VIEW ' || TABLE_NAME || ' ( ' || COLUMN_NAME
-            WHEN COLUMN_ID >= 1 AND COLUMN_ID < COUNT (COLUMN_ID) OVER ()
+            WHEN COLUMN_ID &gt;= 1 AND COLUMN_ID &lt; COUNT (COLUMN_ID) OVER ()
             THEN
                ', ' || COLUMN_NAME
             ELSE
                ', ' || COLUMN_NAME || ' ) AS '
-         END
-            AS SOURCE_TEXT
-        ,COLUMN_ID
-        ,COUNT (COLUMN_ID) OVER ()
+         END AS SOURCE_TEXT
     FROM SYS.USER_TAB_COLUMNS C
    WHERE 1 = 1 AND TABLE_NAME = UPPER(#view_name#)
-ORDER BY TABLE_NAME, COLUMN_ID;
+ORDER BY TABLE_NAME, COLUMN_ID
 
 </select>
 
@@ -480,19 +477,12 @@ ORDER BY TABLE_NAME, COLUMN_ID;
 	Table DDL Script => View body 
  -->
  
-<select id="getTableScript.view.body" resultClass="java.lang.String" parameterClass="java.lang.String">
-  SELECT V.VIEW_NAME
-        ,V.TEXT_LENGTH
-        ,V.TEXT
-        ,'VALID' STATUS
-        ,V.TYPE_TEXT
-        ,V.OID_TEXT
-        ,V.VIEW_TYPE_OWNER
-        ,V.VIEW_TYPE
-        ,SUPERVIEW_NAME
+<select id="getViewScript.body" resultClass="java.lang.String" parameterClass="java.lang.String">
+  SELECT V.TEXT AS SOURCE_TEXT
     FROM SYS.USER_VIEWS V
-   WHERE 1 = 1 AND V.VIEW_NAME = UPPER(#view_name#)
-ORDER BY VIEW_NAME;
+   WHERE 1 = 1 
+     AND V.VIEW_NAME = UPPER(#view_name#)
+ORDER BY VIEW_NAME
 
 </select>
 
