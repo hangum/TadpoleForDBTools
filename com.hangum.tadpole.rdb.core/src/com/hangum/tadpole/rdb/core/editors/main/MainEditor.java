@@ -1324,14 +1324,15 @@ public class MainEditor extends EditorExtension {
 			
 			statement = javaConn.createStatement();
 			
-			// mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
+			// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
 			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE TABLE")) { //$NON-NLS-1$
 				sqlQuery = StringUtils.replaceOnce(sqlQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
 			}			
 			boolean boolResult = statement.execute( sqlQuery );
 			
 			// create table, drop table이면 작동하도록			
-			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE TABLE") || StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP TABLE")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE TABLE") || 
+					StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP TABLE")) { //$NON-NLS-1$ //$NON-NLS-2$
 				
 				try {
 					ExplorerViewer.CHANGE_TYPE changeType = ExplorerViewer.CHANGE_TYPE.DEL;
@@ -1439,8 +1440,8 @@ public class MainEditor extends EditorExtension {
 			sqlSorter = new SQLResultSorter(-999);
 			
 			SQLResultLabelProvider.createTableColumn(sqlResultTableViewer, mapColumns, mapColumnType, sqlSorter);
-			sqlResultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
-			sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
+			sqlResultTableViewer.setLabelProvider(new SQLResultLabelProvider());
+			sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList));
 			
 			// 쿼리 결과를 사용자가 설정 한 만큼 보여준다. 
 			List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();

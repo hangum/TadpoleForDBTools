@@ -79,7 +79,7 @@ Download
  
 License
 -
-* EPL(Eclipse Public License)
+* LGPL(Lesser General Public License)
 
 Contacts
 -
