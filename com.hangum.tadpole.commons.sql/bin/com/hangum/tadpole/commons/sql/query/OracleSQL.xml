@@ -486,6 +486,90 @@ ORDER BY VIEW_NAME
 
 </select>
 
+<!-- 
+	Procedure Script 
+ -->
+ 
+<select id="getProcedureScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT
+    b.text AS source_text
+  FROM user_procedures a 
+      INNER JOIN user_source b ON a.object_name = b.name
+WHERE 1 = 1
+  AND a.object_name = UPPER(#object_name#)
+  AND b. TYPE = UPPER('PROCEDURE')
+ORDER BY b.line
+</select>
+
+<!-- 
+	Trigger Script 
+ -->
+ 
+<select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+
+  SELECT B.TEXT AS SOURCE_TEXT
+    FROM USER_TRIGGERS A INNER JOIN USER_SOURCE B ON A.TRIGGER_NAME = B.NAME
+   WHERE     1 = 1
+         AND A.TRIGGER_NAME = UPPER (#object_name#)
+         AND B.TYPE = UPPER ('TRIGGER')
+ORDER BY B.LINE
+
+</select>
+
+<!-- 
+	Trigger Script 
+ -->
+ 
+<select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+
+  SELECT B.TEXT AS SOURCE_TEXT
+    FROM USER_SOURCE B
+   WHERE     1 = 1
+         AND B.TYPE = UPPER ('FUNCTION')
+         AND B.NAME = UPPER (#object_name#)
+ORDER BY B.LINE
+
+</select>
+
+
+<!-- 
+	DDL Script object type 
+ -->
+<!-- 현재는 프로시져탭에서 프로시져와 패키지를 함께 다루고 있으므로 오브젝트 타입을 먼저 체크하기 위한 SQL --> 
+<select id="getSourceObjectType" resultClass="java.lang.String" parameterClass="java.lang.String">
+  SELECT B.TYPE 
+    FROM USER_SOURCE B
+   WHERE 1 = 1 
+      AND B.NAME = UPPER (#object_name#)
+      AND ROWNUM &lt;= 1
+</select>
+
+<!-- 
+	Package Header Script 
+ -->
+ 
+<select id="getPackageScript.head" resultClass="java.lang.String" parameterClass="java.lang.String">
+
+  SELECT B.TEXT AS SOURCE_TEXT
+    FROM USER_SOURCE B
+   WHERE 1 = 1 AND B.TYPE = UPPER ('PACKAGE') AND B.NAME = UPPER (#object_name#)
+ORDER BY B.LINE
+
+</select>
+
+<!-- 
+	Package Body Script 
+ -->
+ 
+<select id="getPackageScript.body" resultClass="java.lang.String" parameterClass="java.lang.String">
+
+  SELECT B.TEXT AS SOURCE_TEXT
+    FROM USER_SOURCE B
+   WHERE 1 = 1 AND B.TYPE = UPPER ('PACKAGE BODY') AND B.NAME = UPPER (#object_name#)
+ORDER BY B.LINE
+
+</select>
+
     
 
 </sqlMap>

@@ -22,7 +22,9 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -163,7 +165,7 @@ public class GetDDLTableSource {
 				}
 				
 				return result.toString();				
-			}
+			} 
 			
 			throw new Exception("Not support Database");
 		} else {
@@ -172,7 +174,158 @@ public class GetDDLTableSource {
 	}
 
 	/**
-	 * procedure source
+	 * DDL Source view
+	 * 
+	 * 	Trigger 소스.
+	 * 
+	 * @param userDB
+	 * @param actionType
+	 * @param objectName
+	 */
+	public static String getTriggerSource(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType, TriggerDAO triggerDAO) throws Exception {
+		
+		
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
+			
+			return triggerDAO.getStatement();
+			
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			String objectName = triggerDAO.getTrigger();
+			
+	        if(PublicTadpoleDefine.DB_ACTION.TRIGGERS == actionType) {
+
+				logger.debug("\n Trigger DDL Generation...");
+				
+				StringBuilder result = new StringBuilder("");
+				result.append("/* DROP TRIGGER " + objectName + "; */ \n\n");
+				result.append("CREATE OR REPLACE ");
+
+				List<String> srcScriptList = client.queryForList("getTriggerScript", objectName);				
+				for (int i=0; i<srcScriptList.size(); i++){
+					result.append( srcScriptList.get(i));
+				}
+				
+				return result.toString();				
+			}
+			
+			throw new Exception("Not support Database");
+		} else {
+			throw new Exception("Not Support Database");
+		}
+	}
+	
+	
+	/**
+	 * DDL Source view
+	 * 
+	 * 	Function 소스.
+	 * 
+	 * @param userDB
+	 * @param actionType
+	 * @param objectName
+	 */
+	public static String getFunctionSource(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType, String  objectName) throws Exception {
+		
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
+			
+			throw new Exception("Not support Database");
+			
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			
+	        if(PublicTadpoleDefine.DB_ACTION.FUNCTIONS == actionType) {
+
+				logger.debug("\n Function DDL Generation...");
+				
+				StringBuilder result = new StringBuilder("");
+				result.append("/* DROP FUNCTION " + objectName + "; */ \n\n");
+				result.append("CREATE OR REPLACE ");
+
+				List<String> srcScriptList = client.queryForList("getFunctionScript", objectName);				
+				for (int i=0; i<srcScriptList.size(); i++){
+					result.append( srcScriptList.get(i));
+				}
+				
+				return result.toString();				
+			}
+			
+			throw new Exception("Not support Database");
+		} else {
+			throw new Exception("Not Support Database");
+		}
+	}
+	
+		
+	/**
+	 * DDL Source view
+	 * 
+	 * 	Procedure 소스.
+	 * 
+	 * @param userDB
+	 * @param actionType
+	 * @param objectName
+	 */
+	public static String getProcedureSource(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType, String objectName) throws Exception {
+		
+		
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
+			
+			
+			throw new Exception("Not support Database");
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			
+	        if(PublicTadpoleDefine.DB_ACTION.PROCEDURES == actionType) {
+
+				logger.debug("\n Procedure DDL Generation...");
+				
+				StringBuilder result = new StringBuilder("");
+				
+				
+				String objType = (String)client.queryForObject("getSourceObjectType", objectName);				
+							
+				List<String> srcScriptList = null;
+				if (StringUtils.contains(objType, "PROCEDURE")){
+					result.append("/* DROP PROCEDURE " + objectName + "; */ \n\n");
+					result.append("CREATE OR REPLACE ");
+					srcScriptList = client.queryForList("getProcedureScript", objectName);				
+					for (int i=0; i<srcScriptList.size(); i++){
+						result.append( srcScriptList.get(i));
+					}
+				}else if (StringUtils.contains(objType, "PACKAGE")){
+					result.append("/* DROP PACKAGE BODY " + objectName + "; */ \n\n");
+					result.append("/* DROP PACKAGE " + objectName + "; */ \n\n");
+					
+					result.append("CREATE OR REPLACE ");
+					srcScriptList = client.queryForList("getPackageScript.head", objectName);				
+					for (int i=0; i<srcScriptList.size(); i++){
+						result.append( srcScriptList.get(i));
+					}
+					result.append(PublicTadpoleDefine.SQL_DILIMITER + "\n");
+					result.append("/ \n\n ");
+					result.append("CREATE OR REPLACE ");
+					srcScriptList = client.queryForList("getPackageScript.body", objectName);				
+					for (int i=0; i<srcScriptList.size(); i++){
+						result.append( srcScriptList.get(i));
+					}
+					
+					result.append(PublicTadpoleDefine.SQL_DILIMITER);
+					result.append("/ \n\n ");
+				}
+				
+				
+				return result.toString();				
+			} 
+			
+			throw new Exception("Not support Database");
+		} else {
+			throw new Exception("Not Support Database");
+		}
+	}
+	
+	/**
+	 * index source
 	 * 
 	 * @param userDB
 	 * @param actionType

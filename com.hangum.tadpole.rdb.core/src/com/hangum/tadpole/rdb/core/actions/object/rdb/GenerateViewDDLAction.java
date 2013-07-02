@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
@@ -48,6 +49,8 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 	 */
 	public GenerateViewDDLAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String target) {
 		super(window, actionType);
+		
+		logger.debug("GenerateViewDDLAction actionType is " + actionType + ", target is " + target);
 	
 		setId(ID + actionType.toString());
 		setText(target + " DDL" );
@@ -57,6 +60,8 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 	@Override
 	public void run() {
 		try {
+			
+			logger.debug("GenerateViewDDLAction RUN actionType is " + actionType);
 			
 			if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 				TableDAO tableDAO = (TableDAO)sel.getFirstElement();
@@ -68,13 +73,24 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 				InformationSchemaDAO indexDAO = (InformationSchemaDAO)sel.getFirstElement();
 				
 				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getIndexSource(userDB, actionType, indexDAO.getINDEX_NAME(), indexDAO.getTABLE_NAME()) + PublicTadpoleDefine.SQL_DILIMITER);
+			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
+				ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
+				
+				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getProcedureSource(userDB, actionType, procedureDAO.getName()));				
+			} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
+				logger.debug("select elements class is "+sel.getFirstElement().getClass().toString());
+				ProcedureFunctionDAO functionDAO = (ProcedureFunctionDAO)sel.getFirstElement();
+				
+				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getFunctionSource(userDB, actionType, functionDAO.getName()) + PublicTadpoleDefine.SQL_DILIMITER);				
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 				TriggerDAO triggerDAO = (TriggerDAO)sel.getFirstElement();
 				
-				FindEditorAndWriteQueryUtil.run(userDB, triggerDAO.getStatement() + PublicTadpoleDefine.SQL_DILIMITER);
+				//FindEditorAndWriteQueryUtil.run(userDB, triggerDAO.getStatement() + PublicTadpoleDefine.SQL_DILIMITER);				
+				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getTriggerSource(userDB, actionType, triggerDAO) + PublicTadpoleDefine.SQL_DILIMITER);				
 			}
 			
 		} catch(Exception ee) {
+			ee.printStackTrace();
 			MessageDialog.openError(null, "Confirm", "Not support this function.");
 		}
 	}

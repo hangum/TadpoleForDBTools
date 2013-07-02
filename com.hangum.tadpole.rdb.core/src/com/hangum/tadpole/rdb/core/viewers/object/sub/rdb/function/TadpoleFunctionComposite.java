@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -29,7 +30,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
@@ -37,6 +40,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
@@ -68,6 +72,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private ObjectDeleteAction deleteAction_Function;
 	private ObjectRefreshAction refreshAction_Function;
 
+	private GenerateViewDDLAction viewDDLAction;
 	/**
 	 * function composite
 	 * 
@@ -125,6 +130,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		creatAction_Function = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
 		deleteAction_Function = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
 		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+	
+		viewDDLAction = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "View"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -137,6 +144,9 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 					manager.add(deleteAction_Function);
 				}
 				manager.add(refreshAction_Function);
+				
+				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+				manager.add(viewDDLAction);
 			}
 		});
 
@@ -165,6 +175,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		creatAction_Function.setUserDB(getUserDB());
 		deleteAction_Function.setUserDB(getUserDB());
 		refreshAction_Function.setUserDB(getUserDB());
+		
+		viewDDLAction.setUserDB(getUserDB());
 	}
 	
 	/**
