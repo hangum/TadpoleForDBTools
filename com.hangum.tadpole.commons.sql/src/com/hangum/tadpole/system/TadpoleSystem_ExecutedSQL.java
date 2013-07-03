@@ -11,7 +11,9 @@
 package com.hangum.tadpole.system;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -36,6 +38,28 @@ public class TadpoleSystem_ExecutedSQL {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_ExecutedSQL.class);
+	
+	/**
+	 * 마지막 실행했떤 쿼리 100개를 리턴합니다.
+	 * 
+	 * @param user_seq
+	 * @param dbSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<ExecutedSqlResourceDataDAO> getExecuteQueryHistory(int user_seq, int dbSeq) throws Exception {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("user_seq",user_seq);
+		queryMap.put("dbSeq", 	dbSeq);
+		queryMap.put("count", 	100);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<ExecutedSqlResourceDataDAO> listResourceData =  sqlClient.queryForList("getExecuteQueryHistory", queryMap);
+		
+		
+		
+		return null;
+	}
 	
 	/**
 	 * find execute sql

@@ -539,6 +539,8 @@ public class MainEditor extends EditorExtension {
 		tbtmNewItem.setControl(compositeSQLHistory);
 		GridLayout gl_compositeSQLHistory = new GridLayout(1, false);
 		gl_compositeSQLHistory.marginHeight = 0;
+		gl_compositeSQLHistory.marginWidth = 0;
+		gl_compositeSQLHistory.marginBottom = 0;
 		compositeSQLHistory.setLayout(gl_compositeSQLHistory);
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
@@ -578,7 +580,7 @@ public class MainEditor extends EditorExtension {
 		
 		Composite compositeRecallBtn = new Composite(compositeSQLHistory, SWT.NONE);
 		compositeRecallBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeRecallBtn.setLayout(new GridLayout(3, false));
+		compositeRecallBtn.setLayout(new GridLayout(7, false));
 		
 		final Button btnExportHistory = new Button(compositeRecallBtn, SWT.NONE);
 		btnExportHistory.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -629,6 +631,28 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		btnSetEditor.setText(Messages.MainEditor_17);
+		
+		Label labelDumyRecal = new Label(compositeRecallBtn, SWT.NONE);
+		labelDumyRecal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Text textHistoryFilter = new Text(compositeRecallBtn, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+		textHistoryFilter.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		textHistoryFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		// refresh
+		Button btnRefresh = new Button(compositeRecallBtn, SWT.NONE);
+		btnRefresh.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		btnRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+			}
+		});
+		btnRefresh.setText("Refresh");
 		
 		///////////////////// tab Message //////////////////////////
 		CTabItem tbtmMessage = new CTabItem(tabFolderResult, SWT.NONE);
