@@ -486,6 +486,23 @@
 
 <select id="findExecuteSQL" resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDataDAO" parameterClass="java.util.Map"></select>
 
+<!-- 
+	쿼리의 실행 히스토리를 얻습니다.
+	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
+ -->
+<select id="getExecuteQueryHistory" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+	  SELECT b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.datas, a.row, a.result
+	 FROM 
+	 executed_sql_resource a,
+	 executed_sql_resource_data b
+	where a.user_seq = #user_seq# AND
+	  a.db_seq = #db_seq# AND 
+	  a.delyn = 'NO' AND
+	  a.seq = b.executed_sql_resource_seq AND
+	  b.datas like #filter#
+	order by a.create_time desc
+	limit #count#	
+</select>
 
 <!-- 
 	=========================================================================================================

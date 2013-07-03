@@ -10,8 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -36,6 +39,44 @@ public class TadpoleSystem_ExecutedSQL {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_ExecutedSQL.class);
+	
+	/**
+	 * 마지막 실행했떤 쿼리 100개를 리턴합니다.
+	 * 
+	 * @param user_seq
+	 * @param dbSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<SQLHistoryDAO> getExecuteQueryHistory(int user_seq, int dbSeq, String filter) throws Exception {
+		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
+		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("user_seq",user_seq);
+		queryMap.put("db_seq", 	dbSeq);
+		queryMap.put("filter", "%" + filter + "%");
+		queryMap.put("count", 	1000);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistory", queryMap);
+		
+		for (Map resultMap : listResourceData) {
+			int seq = (Integer)resultMap.get("EXECUTED_SQL_RESOURCE_SEQ");
+			
+			Long startdateexecute = (Long)resultMap.get("STARTDATEEXECUTE");
+			String strSQLText = (String)resultMap.get("DATAS");
+			Long enddateexecute = (Long)resultMap.get("ENDDATEEXECUTE");
+			
+			int row = (Integer)resultMap.get("ROW");
+			String result = (String)resultMap.get("RESULT");
+			
+			SQLHistoryDAO dao = new SQLHistoryDAO(new Date(startdateexecute), strSQLText, new Date(enddateexecute), row, result, "");
+			dao.setSeq(seq);
+			returnSQLHistory.add(dao);
+		}
+		
+		return returnSQLHistory;
+	}
 	
 	/**
 	 * find execute sql
