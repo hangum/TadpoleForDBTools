@@ -334,13 +334,80 @@ public class GetDDLTableSource {
 	 * @return
 	 */
 	public static String getIndexSource(UserDBDAO userDB, DB_ACTION actionType, String index_name, String table_name) throws Exception {
-		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		
-		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put("index_name", index_name);
-		paramMap.put("table_name", table_name);
-		
-		return ""+client.queryForObject("getIndexScript", paramMap);
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put("index_name", index_name);
+			paramMap.put("table_name", table_name);
+			
+			return ""+client.queryForObject("getIndexScript", paramMap);
+				
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			
+			StringBuilder result = new StringBuilder("");	
+			
+							
+			List<Map<String, String>> srcScriptList = (List<Map<String, String>>) client.queryForList("getIndexScript", index_name);
+			
+			result.append("/* DROP INDEX " + index_name + "; */ \n\n");
+			result.append("CREATE ");
+			
+			Map<String, String> indexMap = new HashMap<String, String>();
+			if (srcScriptList.size() > 0){
+				indexMap = srcScriptList.get(0);
+				if ("UNIQUE".equals(indexMap.get("UNIQUENESS"))) {
+					result.append(" UNIQUE INDEX ");
+				}else{
+					result.append(" INDEX ");
+				}
+				
+				result.append(indexMap.get("TABLE_OWNER")+".");
+				result.append(indexMap.get("INDEX_NAME")+" ON ");
+				result.append(indexMap.get("TABLE_OWNER")+".");
+				result.append(indexMap.get("TABLE_NAME")+"\n ( ");
+			
+				for (int i=0; i<srcScriptList.size(); i++){
+					indexMap = srcScriptList.get(i);
+					
+					if ("NORMAL".equals(indexMap.get("INDEX_TYPE")) && indexMap.get("COLUMN_EXPRESSION") == null) {
+						if (i>0) result.append(",");
+						result.append(indexMap.get("COLUMN_NAME"));
+					}else{
+						if (i>0) result.append(",");
+						result.append(indexMap.get("COLUMN_EXPRESSION"));
+					}					
+				}
+				result.append(" ) \n");
+				
+				if ("YES".equals(indexMap.get("LOGGING"))) {
+					result.append(" LOGGING \n");
+				}else{	
+					result.append(" NO LOGGING \n");
+				}
+				result.append(" TABLESPACE "+indexMap.get("TABLESPACE_NAME") + "\n");
+
+				result.append(" PCTFREE "+String.valueOf(indexMap.get("PCT_FREE")) + "\n");
+				result.append(" INITRANS "+String.valueOf(indexMap.get("INI_TRANS")) + "\n");
+				result.append(" MAXTRANS "+String.valueOf(indexMap.get("MAX_TRANS")) + "\n");
+				result.append(" STORAGE ( \n ");
+				result.append(" \t INITIAL "+String.valueOf(indexMap.get("INITIAL_EXTENT")) + "\n");
+				result.append(" \t MINEXTENTS "+String.valueOf(indexMap.get("MIN_EXTENTS")) + "\n");
+				result.append(" \t MAX_EXTENTS "+String.valueOf(indexMap.get("MAX_EXTENTS")) + "\n");
+				result.append(" \t PCTINCREASE "+String.valueOf(indexMap.get("PCT_INCREASE")) + "\n");
+				result.append(" \t BUFFER_POOL "+String.valueOf(indexMap.get("BUFFER_POOL")) + "\n");
+				result.append("\t ) \n ");
+				result.append(" COMPUTE STATISTICS \n ");
+				result.append(" ONLINE ");
+				
+				return result.toString();
+			}
+			
+			throw new Exception("Not support Database");
+		}else{
+			throw new Exception("Not support Database");
+		}
 	}
 
 }
