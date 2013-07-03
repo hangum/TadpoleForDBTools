@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -20,11 +21,17 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -36,6 +43,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -45,9 +53,11 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.IndexColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.system.permission.PermissionChecker;
+import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -62,11 +72,19 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleIndexesComposite.class);
 	
+	/** select table name */
+	private String selectIndexName = ""; //$NON-NLS-1$
+
 	// index
 	private TableViewer tableViewer;
 	private ObjectComparator indexComparator;
 	private List listIndexes;
 	private IndexesViewFilter indexFilter;
+
+	// column info
+	private TableViewer indexColumnViewer;
+	private ObjectComparator indexColumnComparator;
+	private List showIndexColumns;
 
 	private ObjectCreatAction creatAction_Index;
 	private ObjectDeleteAction deleteAction_Index;
@@ -105,6 +123,47 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+	
+		tableViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				
+				// 테이블의 컬럼 목록을 출력합니다.
+				try {
+					IStructuredSelection is = (IStructuredSelection) event.getSelection();
+					Object tableDAO = is.getFirstElement();
+
+					if (tableDAO != null) {
+						InformationSchemaDAO index = (InformationSchemaDAO) tableDAO;
+
+						if (selectIndexName.equals(index.getINDEX_NAME())) return;
+						selectIndexName = index.getINDEX_NAME();
+
+						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+						HashMap<String, String>paramMap = new HashMap<String, String>();
+						paramMap.put("table_schema", index.getTABLE_SCHEMA());
+						paramMap.put("table_name", index.getTABLE_NAME());
+						paramMap.put("index_name", index.getINDEX_NAME());
+						
+						showIndexColumns = sqlClient.queryForList("indexDetailList", paramMap); //$NON-NLS-1$
+
+					} else
+						showIndexColumns = null;
+
+					indexColumnViewer.setInput(showIndexColumns);
+					indexColumnViewer.refresh();
+					TableUtil.packTable(indexColumnViewer.getTable());
+
+				} catch (Exception e) {
+					logger.error("get table column", e); //$NON-NLS-1$
+
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+				}
+			}
+		});		
+		
+		
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
@@ -120,15 +179,68 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 
 		indexFilter = new IndexesViewFilter();
 		tableViewer.addFilter(indexFilter);
+		
+		
+		// columns
+		indexColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		Table tableTableColumn = indexColumnViewer.getTable();
+		tableTableColumn.setHeaderVisible(true);
+		tableTableColumn.setLinesVisible(true);
+		
+		indexColumnComparator = new IndexColumnComparator();
+		indexColumnViewer.setSorter(indexColumnComparator);
+
+		createIndexColumne(indexColumnViewer);
+
+		indexColumnViewer.setContentProvider(new ArrayContentProvider());
+		indexColumnViewer.setLabelProvider(new IndexColumnLabelprovider());
+		
 
 		createMenu();
 		// index detail column
 		
 
-		sashForm.setWeights(new int[] { 1 });
+		sashForm.setWeights(new int[] { 1, 1 });
 
 	}
 
+	/**
+	 * selection adapter
+	 * 
+	 * @param indexColumn
+	 * @param i
+	 * @return
+	 */
+	private SelectionAdapter getSelectionAdapter(final TableViewerColumn indexColumn, final int index) {
+		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				indexColumnComparator.setColumn(index);
+				
+				indexColumnViewer.getTable().setSortDirection(indexColumnComparator.getDirection());
+				indexColumnViewer.getTable().setSortColumn(indexColumn.getColumn());
+				
+				indexColumnViewer.refresh();
+			}
+		};
+		
+		return selectionAdapter;
+	}
+
+	/**
+	 * index column list
+	 */
+	protected void createIndexColumne(final TableViewer tv) {
+		String[] name = {"Seq", "Column", "Order"};
+		int[] size = {60, 300, 50};
+
+		for (int i=0; i<name.length; i++) {
+			TableViewerColumn indexColumn = new TableViewerColumn(tv, SWT.LEFT);
+			indexColumn.getColumn().setText(name[i]);
+			indexColumn.getColumn().setWidth(size[i]);
+			indexColumn.getColumn().addSelectionListener(getSelectionAdapter(indexColumn, i));
+		}
+	}
 	/**
 	 * create menu
 	 * 

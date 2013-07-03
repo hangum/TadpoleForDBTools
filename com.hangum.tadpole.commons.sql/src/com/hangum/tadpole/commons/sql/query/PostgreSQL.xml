@@ -168,6 +168,13 @@ FROM
 	    and n.nspname not in ('pg_catalog', 'pg_toast')
 	    and pg_catalog.pg_table_is_visible(c.oid)
 </select>
+<!-- 
+	index의 디테일 정보
+ -->
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ select * from pg_catalog.pg_class c
+ where 1=0
+</select>
 
 <!-- 
 	procedure 상세 내역

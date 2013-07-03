@@ -106,17 +106,33 @@
     #table_schema# AS table_schema
  -->
  <select id="indexList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+SELECT
+    a.class_name AS table_name
+    ,a.index_name
+    ,CASE WHEN a.is_primary_key =  'YES' THEN 'PK'
+         WHEN a.is_foreign_key = 'YES' THEN 'FK'
+         WHEN a.is_unique = 'YES' then 'UQ'
+        ELSE ' ' END as index_type
+  FROM db_index a
+  ORDER BY table_name
+</select>
+<!-- 
+	index의 디테일 정보
+ -->
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 	SELECT 
 		a.class_name AS table_name,
 		a.index_name,
 		b.key_attr_name AS column_name,
 		b.key_order AS column_position,
+		b.key_order AS seq_in_index,
 		b.key_prefix_length AS column_length
 	FROM 
-		db_index a, 
-		db_index_key b
-	WHERE  a.index_name = b.index_name
-	ORDER BY table_name
+		db_index a 
+		left join db_index_key b on  a.index_name = b.index_name
+	WHERE 1=1
+	      AND a.index_name = #index_name#
+	ORDER BY column_position desc;
 </select>
 
 <!-- 

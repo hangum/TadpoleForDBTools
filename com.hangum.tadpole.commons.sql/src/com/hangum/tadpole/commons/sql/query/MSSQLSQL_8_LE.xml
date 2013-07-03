@@ -149,12 +149,27 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 	index 정보, SHOW INDEX FROM $tableName$
  -->
  <select id="indexList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
-	SELECT table_name,
+SELECT 
+    i.table_schema 
+    , i.table_name
+    , i.constraint_schema as index_owner
+    , i.constraint_name as index_name
+    FROM information_schema.CONSTRAINT_TABLE_USAGE i
+    
+</select>
+
+<!-- 
+	index의 디테일 정보
+ -->
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+    	SELECT 
+    	 0 as seq_in_index,
+    	 table_name,
          constraint_name index_name,
          column_name,         
          table_catalog AS table_schema
     FROM information_schema.CONSTRAINT_COLUMN_USAGE
-    ORDER BY table_name     
+    WHERE constraint_name = #index_name#
 </select>
 
 <!-- 
