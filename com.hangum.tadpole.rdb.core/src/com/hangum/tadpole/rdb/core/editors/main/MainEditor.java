@@ -840,7 +840,6 @@ public class MainEditor extends EditorExtension {
 		setOrionText( initDefaultEditorStr );
 	}
 	
-	
 	/**
 	 * init auto commit button
 	 * 
@@ -1370,24 +1369,15 @@ public class MainEditor extends EditorExtension {
 			boolean boolResult = statement.execute( sqlQuery );
 			
 			// create table, drop table이면 작동하도록			
-			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE TABLE") || 
-					StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP TABLE")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") || 
+				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP")  ||
+				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "ALTER")) { 
+																					//$NON-NLS-1$ //$NON-NLS-2$
 				
 				try {
-					ExplorerViewer.CHANGE_TYPE changeType = ExplorerViewer.CHANGE_TYPE.DEL;
-					String changeTbName = ""; //$NON-NLS-1$
-					if(StringUtils.containsAny(sqlQuery, "CREATE TABLE")) { //$NON-NLS-1$
-						changeType = ExplorerViewer.CHANGE_TYPE.INS;
-						changeTbName = StringUtils.trimToEmpty(sqlQuery.substring(12));
-					} else {
-						changeTbName = StringUtils.trimToEmpty(sqlQuery.substring(10));
-					}
-					changeTbName = changeTbName.split(" ")[0]; //$NON-NLS-1$
-					if(logger.isDebugEnabled()) logger.debug("[change name]" + changeTbName); //$NON-NLS-1$
-				
-					refreshExplorerView(changeType, changeTbName);
+					refreshExplorerView();//changeType, changeTbName);
 				} catch(Exception e) {
-					logger.error("CREATE, DROP TABLE Query refersh error", e); //$NON-NLS-1$
+					logger.error("CREATE, DROP, ALTER Query refersh error", e); //$NON-NLS-1$
 				}
 			}
 		} finally {
@@ -1400,12 +1390,9 @@ public class MainEditor extends EditorExtension {
 	}
 
 	/**
-	 * ExplorerViewer view를 리프레쉬합니다.
-	 * 
-	 * @param changeType
-	 * @param changeTbName
+	 * CREATE, DROP, ALTER 문이 실행되어 ExplorerViewer view를 리프레쉬합니다.
 	 */
-	private void refreshExplorerView(final ExplorerViewer.CHANGE_TYPE changeType, final String changeTbName) {
+	private void refreshExplorerView() {
 
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 
@@ -1413,7 +1400,7 @@ public class MainEditor extends EditorExtension {
 			public void run() {
 				try {
 					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
-					ev.refreshCurrentTab(userDB, changeType, changeTbName);
+					ev.refreshCurrentTab(userDB);
 				} catch (PartInitException e) {
 					logger.error("ExplorerView show", e); //$NON-NLS-1$
 				}

@@ -74,6 +74,7 @@ public class ExplorerViewer extends ViewPart {
 	private CTabFolder tabFolderObject;
 	private Text textSearch;
 	
+	private String strSelectItem;
 	private Composite compositeBody;
 	private TadpoleTriggerComposite 	triggerComposite 	= null;
 	private TadpoleFunctionComposite 	functionCompostite 	= null;
@@ -171,7 +172,7 @@ public class ExplorerViewer extends ViewPart {
 			public void widgetSelected(SelectionEvent evt) {
 				if (userDB == null) return;
 				if(boolInitObjectHead) {
-					String strSelectItem = ((CTabItem)evt.item).getText();
+					strSelectItem = ((CTabItem)evt.item).getText();
 					refershSelectObject(strSelectItem);
 				}
 			}
@@ -268,6 +269,7 @@ public class ExplorerViewer extends ViewPart {
 			
 			refreshTable(false);
 			
+			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 		// mongodb
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
 			
@@ -283,7 +285,7 @@ public class ExplorerViewer extends ViewPart {
 				mongoJavaScriptComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, mongoCollectionComposite.getCollectionListViewer()));
-
+			strSelectItem = PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString();
 		// cubrid, mysql, oracle, postgre, mssql
 		} else {
 			createTable();
@@ -304,6 +306,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
 		
 			refreshTable(false);
+			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 		}
 	}
 	
@@ -313,11 +316,9 @@ public class ExplorerViewer extends ViewPart {
 	 * @param strSelectItemText TabItem text
 	 */
 	private void refershSelectObject(String strSelectItemText) {
-//		if (ti.getText().equalsIgnoreCase(Define.DB_ACTION.TABLES.toString())) {
-//			refreshTable();
-//			System.out.println("\t =========== refresh table=-");
-//		} else 
-		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
+		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
+			refreshTable(false);
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 			refreshView(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
 			refreshIndexes(false);
@@ -474,11 +475,11 @@ public class ExplorerViewer extends ViewPart {
 	 * @param changeType
 	 * @param changeTbName
 	 */
-	public void refreshCurrentTab(UserDBDAO chgUserDB, CHANGE_TYPE changeType, String changeTbName) {
+	public void refreshCurrentTab(UserDBDAO chgUserDB) {
 		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
 		if (tabFolderObject.getSelectionIndex() != 0)	return;
 
-		tableCompost.refreshTable(changeType, changeTbName);
+		refershSelectObject(strSelectItem);
 	}
 	
 	@Override

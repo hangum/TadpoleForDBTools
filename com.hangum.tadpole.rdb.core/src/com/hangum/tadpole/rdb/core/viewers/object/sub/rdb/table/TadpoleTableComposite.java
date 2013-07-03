@@ -578,25 +578,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 
 	/**
-	 * refresh tableviewer
-	 * @param changeType
-	 * @param changeTbName
-	 */
-	public void refreshTable(CHANGE_TYPE changeType, String changeTbName) {
-		TableDAO dao = new TableDAO();
-		dao.setName(changeTbName);
-		
-		if (CHANGE_TYPE.DEL == changeType) {
-			showTables.remove(dao);
-		} else if (CHANGE_TYPE.INS == changeType) {
-			showTables.add(dao);
-		}
-
-		tableListViewer.setInput(showTables);
-		tableListViewer.refresh(changeTbName, false, true);
-	}
-
-	/**
 	 * table search 
 	 * 
 	 * @param string
