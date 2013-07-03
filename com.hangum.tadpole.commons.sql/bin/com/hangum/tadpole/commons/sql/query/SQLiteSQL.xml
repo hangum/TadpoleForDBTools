@@ -79,6 +79,14 @@ and sql like '%FOREIGN KEY%'
 </select>
 
 <!-- 
+	index의 디테일 정보
+ -->
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+    SELECT *
+    FROM information_schema.CONSTRAINT_COLUMN_USAGE
+    WHERE 1=0
+</select>
+<!-- 
 	procedure list - sqlite는 없음.
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">

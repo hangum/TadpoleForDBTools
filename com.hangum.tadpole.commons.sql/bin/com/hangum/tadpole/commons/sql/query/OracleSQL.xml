@@ -192,25 +192,55 @@ ORDER BY 1
     #table_schema# AS table_schema
  -->
  <select id="indexList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+  SELECT i.table_name
+        ,i.index_name
+        ,i.uniqueness
+        ,i.table_owner
+        ,i.compression
+        ,i.tablespace_name
+        ,i.logging
+        ,i.pct_free
+        ,i.ini_trans
+        ,i.max_trans
+        ,i.initial_extent
+        ,i.min_extents
+        ,i.max_extents
+        ,i.pct_increase
+        ,i.buffer_pool
+        ,CASE
+            WHEN c.constraint_type = 'P' THEN 'PK'
+            WHEN i.uniqueness = 'UNIQUE' THEN 'UQ'
+            ELSE ''
+         END
+            AS index_type
+        ,c.status
+        ,#table_schema# AS table_schema
+    FROM    user_indexes i
+         LEFT JOIN
+            user_constraints c
+         ON     i.table_name = c.table_name
+            AND i.index_name = c.constraint_name
+            AND c.status = 'ENABLED'
+ORDER BY i.table_name, i.index_name
+</select>
+
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
   SELECT m.table_name,
          m.index_name,
          m.column_name,
-         m.column_position,
+         m.column_position as seq_in_index,
          m.column_length,
          m.char_length,
-         m.descend,
+         m.descend as "comment",
          i.uniqueness,
          i.table_owner,
-         c.constraint_type,
-         c.status,
-         #table_schema# AS table_schema
+         i.table_owner AS table_schema
     FROM user_ind_columns m
          LEFT JOIN user_indexes i
             ON m.table_name = i.table_name AND m.index_name = i.index_name
-         LEFT JOIN user_constraints c
-            ON i.table_name = c.table_name AND i.index_name = c.constraint_name
-   WHERE c.status = 'ENABLED'
-ORDER BY m.table_name, m.index_name, m.column_position        
+   WHERE 1=1
+     AND m.index_name = UPPER(#index_name#)
+ORDER BY m.column_position        
 </select>
 
 <!-- 
@@ -567,6 +597,49 @@ ORDER BY B.LINE
     FROM USER_SOURCE B
    WHERE 1 = 1 AND B.TYPE = UPPER ('PACKAGE BODY') AND B.NAME = UPPER (#object_name#)
 ORDER BY B.LINE
+
+</select>
+
+    
+<!-- 
+	Index Script 
+ -->
+ 
+<select id="getIndexScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+
+SELECT 
+    IC.COLUMN_POSITION
+  , I.INDEX_NAME
+  , I.TABLE_NAME
+  , I.INDEX_TYPE
+  , I.TABLE_OWNER
+  , I.UNIQUENESS
+  , I.COMPRESSION
+  , I.TABLESPACE_NAME
+  , I.LOGGING
+  , I.PCT_FREE
+  , I.INI_TRANS
+  , I.MAX_TRANS
+  , I.INITIAL_EXTENT
+  , I.MIN_EXTENTS
+  , I.MAX_EXTENTS
+  , NVL(I.PCT_INCREASE,0) AS PCT_INCREASE
+  , I.BUFFER_POOL
+  , IC.DESCEND
+  , IC.COLUMN_NAME
+  , IE.COLUMN_EXPRESSION
+FROM USER_INDEXES I
+INNER JOIN USER_IND_COLUMNS IC 
+      ON I.INDEX_NAME     = IC.INDEX_NAME
+   AND I.TABLE_NAME = IC.TABLE_NAME
+LEFT JOIN USER_IND_EXPRESSIONS IE
+      ON 1 = 1
+   AND IE.INDEX_NAME      = IC.INDEX_NAME
+   AND IE.TABLE_NAME      = IC.TABLE_NAME
+   AND IE.COLUMN_POSITION = IC.COLUMN_POSITION
+WHERE 1  = 1
+   AND IC.INDEX_NAME      = UPPER( #object_name# )
+ORDER BY IC.COLUMN_POSITION
 
 </select>
 
