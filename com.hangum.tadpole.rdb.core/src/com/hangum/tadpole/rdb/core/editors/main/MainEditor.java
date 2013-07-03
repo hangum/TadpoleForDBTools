@@ -194,6 +194,7 @@ public class MainEditor extends EditorExtension {
 	private TableViewer tableViewerSQLHistory;
 	private Table tableSQLHistory;
 	private List<SQLHistoryDAO> listSQLHistory = new ArrayList<SQLHistoryDAO>();
+	private Text textHistoryFilter;
 	
 	/** tadpole message */
 	private TableViewer tableViewerMessage;
@@ -635,10 +636,11 @@ public class MainEditor extends EditorExtension {
 		Label labelDumyRecal = new Label(compositeRecallBtn, SWT.NONE);
 		labelDumyRecal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Text textHistoryFilter = new Text(compositeRecallBtn, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+		textHistoryFilter = new Text(compositeRecallBtn, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textHistoryFilter.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) refreshSqlHistory();
 			}
 		});
 		textHistoryFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -649,7 +651,7 @@ public class MainEditor extends EditorExtension {
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+				refreshSqlHistory();
 			}
 		});
 		btnRefresh.setText("Refresh");
@@ -763,6 +765,19 @@ public class MainEditor extends EditorExtension {
 				} // end if(event.getProperty()
 			} //
 		}); // end property change
+	}
+	
+	/**
+	 * refresh sql history table 
+	 */
+	private void refreshSqlHistory() {
+		try {
+			listSQLHistory.clear();
+			listSQLHistory.addAll( TadpoleSystem_ExecutedSQL.getExecuteQueryHistory(user_seq, getUserDB().getSeq(), textHistoryFilter.getText().trim()) );
+			tableViewerSQLHistory.refresh();
+		} catch(Exception ee) {
+			logger.error("Executed SQL History call", ee);
+		}
 	}
 	
 	/**

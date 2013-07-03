@@ -19,6 +19,8 @@ import java.util.Date;
  *
  */
 public class SQLHistoryDAO {
+	int seq;
+	
 	/** 시작 시간 */
 	Date startDateExecute;
 	
@@ -42,6 +44,14 @@ public class SQLHistoryDAO {
 	public SQLHistoryDAO() {
 	}
 
+
+	public int getSeq() {
+		return seq;
+	}
+
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
 
 	public String getStrSQLText() {
 		return strSQLText;
