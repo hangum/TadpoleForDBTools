@@ -55,15 +55,12 @@ public class TadpoleSystem_ExecutedSQL {
 		queryMap.put("user_seq",user_seq);
 		queryMap.put("db_seq", 	dbSeq);
 		queryMap.put("filter", "%" + filter + "%");
-		queryMap.put("count", 	100);
+		queryMap.put("count", 	1000);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistory", queryMap);
 		
 		for (Map resultMap : listResourceData) {
-			
-			boolean bool  = resultMap.containsKey("EXECUTED_SQL_RESOURCE_SEQ");
-			
 			int seq = (Integer)resultMap.get("EXECUTED_SQL_RESOURCE_SEQ");
 			
 			Long startdateexecute = (Long)resultMap.get("STARTDATEEXECUTE");
@@ -72,7 +69,6 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			int row = (Integer)resultMap.get("ROW");
 			String result = (String)resultMap.get("RESULT");
-			
 			
 			SQLHistoryDAO dao = new SQLHistoryDAO(new Date(startdateexecute), strSQLText, new Date(enddateexecute), row, result, "");
 			dao.setSeq(seq);
