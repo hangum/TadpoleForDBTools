@@ -87,6 +87,7 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 		btnTableFilters.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_3);
 		
 		btnProfiler = new Button(this, SWT.CHECK);
+		btnProfiler.setSelection(true);
 		btnProfiler.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_4);
 		
 		btnShowTables = new Button(this, SWT.CHECK);

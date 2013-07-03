@@ -101,6 +101,7 @@ public class OthersConnectionRDBGroup extends Group {
 		
 		btnProfiler = new Button(this, SWT.CHECK);
 		btnProfiler.setText(Messages.OthersConnectionRDBGroup_5);
+		btnProfiler.setSelection(true);
 		
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
