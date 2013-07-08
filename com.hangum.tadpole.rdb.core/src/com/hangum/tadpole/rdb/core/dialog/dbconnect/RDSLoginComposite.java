@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -24,7 +25,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.aws.rds.commons.core.AmazonRDSUtsils;
+import com.hangum.tadpole.aws.rds.commons.core.utils.AmazonRDSUtsils;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
@@ -37,6 +38,8 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionR
 /**
  * Amazon RDS login composite.
  * 
+ * Amazon RDS Region(http://docs.aws.amazon.com/general/latest/gr/rande.html#rds_region)
+ * 
  * @author hangum
  *
  */
@@ -45,7 +48,7 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 	
 	private Text textAccesskey;
 	private Text textSecretKey;
-	private Text textEndpoint;
+	private Combo comboRegionName;
 	
 	private TableViewer tvRDS;
 	private List<AWSRDSUserDBDAO> listUserDB;
@@ -95,10 +98,25 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 		
 		Label lblEndpoint = new Label(groupLogin, SWT.NONE);
 		lblEndpoint.setSize(59, 14);
-		lblEndpoint.setText("Endpoint");
+		lblEndpoint.setText("Region");
 		
-		textEndpoint = new Text(groupLogin, SWT.BORDER);
-		textEndpoint.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboRegionName = new Combo(groupLogin, SWT.BORDER);
+		comboRegionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		List<String> listRegion = AmazonRDSUtsils.getRDSRegionList();
+		for (String strRegion : listRegion) {
+			comboRegionName.add(strRegion);
+		}
+		comboRegionName.setVisibleItemCount(listRegion.size());
+		comboRegionName.select(0);
+		
+//		textEndpoint.setData("US East (Northern Virginia) Region", "rds.us-east-1.amazonaws.com");
+//		textEndpoint.setData("US West (Oregon) Region", "rds.us-west-2.amazonaws.com");
+//		textEndpoint.setData("US West (Northern California) Region", "rds.us-west-1.amazonaws.com");
+//		textEndpoint.setData("EU (Ireland) Region", "rds.eu-west-1.amazonaws.com");
+//		textEndpoint.setData("Asia Pacific (Singapore) Region", "rds.ap-southeast-1.amazonaws.com");
+//		textEndpoint.setData("Asia Pacific (Sydney) Region", "rds.ap-southeast-2.amazonaws.com");
+//		textEndpoint.setData("Asia Pacific (Tokyo) Region", "rds.ap-northeast-1.amazonaws.com");
+//		textEndpoint.setData("South America (Sao Paulo) Region", "rds.sa-east-1.amazonaws.com");
 		
 		Button btnLogin = new Button(groupLogin, SWT.NONE);
 		btnLogin.addSelectionListener(new SelectionAdapter() {
@@ -142,20 +160,20 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 		
 		init();
 	}
+	
 	/**
 	 * db list
 	 */
 	private void findDBList() {
 		String strAccesskey = textAccesskey.getText().trim();
 		String strSecretkey = textSecretKey.getText().trim();
-		String strEndpoint = textEndpoint.getText().trim();
+		String strRegionName = comboRegionName.getText().trim();
 		
 		if(!checkTextCtl(textAccesskey, "Access key")) return;
-		if(!checkTextCtl(textSecretKey, "Access key")) return;
-		if(!checkTextCtl(textEndpoint, "Access key")) return;
+		if(!checkTextCtl(textSecretKey, "Secret key")) return;
 		
 		try {
-			listUserDB = AmazonRDSUtsils.getDBList(strAccesskey, strSecretkey, strEndpoint);
+			listUserDB = AmazonRDSUtsils.getDBList(strAccesskey, strSecretkey, strRegionName);
 			
 			tvRDS.setInput(listUserDB);
 			tvRDS.refresh();
@@ -172,8 +190,8 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 	 * create columns
 	 */
 	private void createColumns() {
-		String[] columnNames = {"", "Engine", "Zone", "Charset", "IP", "Port", "Instance", "User", "Password"};
-		int[] columnSize = {20, 50, 50, 30, 150, 50, 80, 50, 50};
+		String[] columnNames = {"", "Engine", "IP", "Port", "Instance", "Charset", "User", "Password"};
+		int[] columnSize = {20, 50, 200, 50, 50, 80, 50, 50};
 		
 		for(int i=0; i<columnNames.length; i++) {
 			String name = columnNames[i];
@@ -219,13 +237,12 @@ class RDSInfoLabelProvider extends LabelProvider implements ITableLabelProvider 
 		switch(columnIndex) {
 		case 0: return "";
 		case 1: return dto.getDbms_types();
-		case 2: return dto.getExt1();
-		case 3: return dto.getLocale();
-		case 4: return dto.getHost();
-		case 5: return dto.getPort();
-		case 6: return dto.getDb();
-		case 7: return dto.getUsers();
-		case 8: return dto.getPasswd();
+		case 2: return dto.getHost();
+		case 3: return dto.getPort();
+		case 4: return dto.getDb();
+		case 5: return dto.getLocale();
+		case 6: return dto.getUsers();
+		case 7: return dto.getPasswd();
 		}
 		
 		return "*** not set column ***"; //$NON-NLS-1$
