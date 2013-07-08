@@ -191,10 +191,10 @@ public class TadpoleSystemInitializer {
 				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_role_table_create );
 				logger.info( Messages.TadpoleSystemConnector_5 + (!boolResult?Messages.TadpoleSystemConnector_6:Messages.TadpoleSystemConnector_7));
 				
-//					// ext account
-//				createMsg = "external account table [" + Messages.TadpoleSystemConnector_user_external_account + "]";
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
-//				logger.info("external account table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+					// ext account
+				createMsg = "external account table [" + Messages.TadpoleSystemConnector_user_external_account + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account );
+				logger.info("external account table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 				// user db
 				createMsg = Messages.TadpoleSystemConnector_9 + "[" + Messages.TadpoleSystemConnector_user_db_table_create + "]";

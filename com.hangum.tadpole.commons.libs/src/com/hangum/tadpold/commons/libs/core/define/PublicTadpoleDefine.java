@@ -42,8 +42,11 @@ public class PublicTadpoleDefine {
 		return String.format(TADPOLE_URL, tadpolePort);
 	}
 	
-	/** 올챙이가 지원 하는 디비 타입을 정의 합니다  */
-	public enum DB_TYPE {DB, NOSQL};
+	/** 외부 계정으로 올챙이가 접속 할때의 외부 계정 리스트. 현재는 external_account 의 type에 사용. */
+	public enum EXTERNAL_ACCOUNT {AMAZONRDS};
+	
+//	/** 올챙이가 지원 하는 디비 타입을 정의 합니다  */
+//	public enum DB_TYPE {DB, NOSQL};
 
 	/** yes, no */
 	public static enum YES_NO {YES, NO}; 

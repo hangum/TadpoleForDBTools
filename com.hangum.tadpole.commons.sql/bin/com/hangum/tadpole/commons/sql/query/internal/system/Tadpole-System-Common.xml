@@ -259,11 +259,11 @@
  -->
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
 	INSERT INTO user_db(seq, 
-	user_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
+	user_seq, ext_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
 	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables
 	)
 	VALUES( (select max(seq) from user_db)+1 , 
-	#user_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
+	#user_seq#, #ext_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
 	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables# 
 	)
 	
@@ -271,6 +271,7 @@
 		SELECT * 
 		FROM user_db 
 		WHERE user_seq = #user_seq# AND 
+			ext_seq = #ext_seq# AND 
 			group_seq = #group_seq# AND 
 			operation_type = #operation_type# AND 
 			dbms_types = #dbms_types# AND

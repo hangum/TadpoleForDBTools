@@ -113,7 +113,7 @@ public class DBLoginDialog extends Dialog {
 		lblNewLabel.setText(Messages.DBLoginDialog_35);
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
-		comboDBList.setVisibleItemCount(8);
+		comboDBList.setVisibleItemCount(9);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
@@ -128,7 +128,7 @@ public class DBLoginDialog extends Dialog {
 			comboDBList.add(dbDefine.getDBToString());
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
 		}
-		comboDBList.select(1);
+		comboDBList.select(2);
 				
 		// combo에서 선택된 디비의 콤포짖
 		compositeBody = new Composite(compositeHead, SWT.NONE);
@@ -154,6 +154,9 @@ public class DBLoginDialog extends Dialog {
 //		sashFormContainer.setWeights(new int[] {73, 27});
 		sashFormContainer.setWeights(new int[] {1});
 
+		
+		comboDBList.setFocus();
+		
 		return container;
 	}
 	
@@ -191,6 +194,8 @@ public class DBLoginDialog extends Dialog {
 			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
 			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
+			loginComposite = new RDSLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		}
 	}
 

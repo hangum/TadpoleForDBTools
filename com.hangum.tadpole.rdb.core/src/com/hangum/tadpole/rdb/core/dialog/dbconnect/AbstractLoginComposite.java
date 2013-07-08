@@ -194,7 +194,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @param msg
 	 * @return
 	 */
-	protected boolean message(Text text, String msg) {
+	protected boolean checkTextCtl(Text text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
 			text.setFocus();
@@ -212,7 +212,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @param msg
 	 * @return
 	 */
-	protected boolean message(Combo text, String msg) {
+	protected boolean checkTextCtl(Combo text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
 			text.setFocus();

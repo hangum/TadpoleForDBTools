@@ -299,14 +299,14 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	 * @return
 	 */
 	public boolean isValidate() {
-		if(!message(preDBInfo.getComboGroup(), "Group")) return false;
-		if(!message(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
+		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
-		if(!message(textHost, "Host")) return false; //$NON-NLS-1$
-		if(!message(textPort, "Port")) return false; //$NON-NLS-1$
-		if(!message(textDatabase, "Database")) return false; //$NON-NLS-1$
-		if(!message(textUser, "User")) return false; //$NON-NLS-1$
-//		if(!message(textPassword, "Password")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textUser, "User")) return false; //$NON-NLS-1$
+//		if(!checkTextCtl(textPassword, "Password")) return false; //$NON-NLS-1$
 		
 		String host 	= StringUtils.trimToEmpty(textHost.getText());
 		String port 	= StringUtils.trimToEmpty(textPort.getText());

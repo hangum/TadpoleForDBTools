@@ -52,7 +52,10 @@ public enum DBDefine {
 	POSTGRE_DEFAULT,
 	
 	/** NO SQL */
-	MONGODB_DEFAULT
+	MONGODB_DEFAULT,
+	
+	/** Aamazon RDS */
+	AMAZONRDS_DEFAULT
 	;	
 	
 	/** 환경정보가 있는 상대 위치 */
@@ -91,22 +94,23 @@ public enum DBDefine {
 	 */
 	public static DBDefine getDBDefine(String type) {
 		
-		if(type.equals("TadpoleSystem")) 	return TADPOLE_SYSTEM_DEFAULT;
-		if(type.equals("TadpoleSystem_CUBRID")) 	return TADPOLE_SYSTEM_CUBRID_DEFAULT;
+		if(type.equalsIgnoreCase("TadpoleSystem")) 	return TADPOLE_SYSTEM_DEFAULT;
+		if(type.equalsIgnoreCase("TadpoleSystem_CUBRID")) 	return TADPOLE_SYSTEM_CUBRID_DEFAULT;
 		
-		else if(type.equals("Oracle")) 		return ORACLE_DEFAULT;
+		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
 		
-		else if(type.equals("MSSQL")) 		return MSSQL_DEFAULT;
-		else if(type.equals("MSSQL_8_LE"))	return MSSQL_8_LE_DEFAULT;
+		else if(type.equalsIgnoreCase("MSSQL")) 		return MSSQL_DEFAULT;
+		else if(type.equalsIgnoreCase("MSSQL_8_LE"))	return MSSQL_8_LE_DEFAULT;
 		
-		else if(type.equals("MySQL")) 		return MYSQL_DEFAULT;
-		else if(type.equals("MARIADB")) 	return MARIADB_DEFAULT;
+		else if(type.equalsIgnoreCase("MySQL")) 		return MYSQL_DEFAULT;
+		else if(type.equalsIgnoreCase("MARIADB")) 	return MARIADB_DEFAULT;
 		
-		else if(type.equals("SQLite"))		return SQLite_DEFAULT;
-		else if(type.equals("CUBRID"))		return CUBRID_DEFAULT;
-		else if(type.equals("POSTGRE"))		return POSTGRE_DEFAULT;
+		else if(type.equalsIgnoreCase("SQLite"))		return SQLite_DEFAULT;
+		else if(type.equalsIgnoreCase("CUBRID"))		return CUBRID_DEFAULT;
+		else if(type.equalsIgnoreCase("POSTGRE"))		return POSTGRE_DEFAULT;
 		
-		else if(type.equals("MONGODB"))		return MONGODB_DEFAULT;
+		else if(type.equalsIgnoreCase("MONGODB"))		return MONGODB_DEFAULT;
+		else if(type.equalsIgnoreCase("AmazonRDS")) return AMAZONRDS_DEFAULT;
 		else return null;
 	}
 	
@@ -159,6 +163,8 @@ public enum DBDefine {
 			case POSTGRE_DEFAULT:	return "POSTGRE";
 			
 			case MONGODB_DEFAULT :  return "MONGODB";
+			
+			case AMAZONRDS_DEFAULT: return "AmazonRDS";
 			default:
 				return "undefine db";
 		}
@@ -169,7 +175,9 @@ public enum DBDefine {
 	 * @return
 	 */
 	public static List<DBDefine> userDBValues() {
-		List<DBDefine> supportDb = new ArrayList<DBDefine>(); 
+		List<DBDefine> supportDb = new ArrayList<DBDefine>();
+		supportDb.add(AMAZONRDS_DEFAULT);
+		
 		supportDb.add(CUBRID_DEFAULT);
 		
 		supportDb.add(MONGODB_DEFAULT);

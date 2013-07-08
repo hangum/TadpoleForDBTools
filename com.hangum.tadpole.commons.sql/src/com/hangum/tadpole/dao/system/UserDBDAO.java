@@ -34,6 +34,8 @@ import com.hangum.tadpole.dao.ManagerListDTO;
 public class UserDBDAO {
 	protected int seq;
 	protected int user_seq;
+	/** 외부 시스템 seq 현재는 amamzon rds seq*/
+	protected int ext_seq = -999;
 	protected int group_seq;
     
 	protected String group_name = "";
@@ -104,8 +106,6 @@ public class UserDBDAO {
 		this.group_seq = group_seq;
 	}
 
-
-
 	public int getSeq() {
 		return seq;
 	}
@@ -120,6 +120,14 @@ public class UserDBDAO {
 
 	public void setUser_seq(int user_seq) {
 		this.user_seq = user_seq;
+	}
+
+	public int getExt_seq() {
+		return ext_seq;
+	}
+
+	public void setExt_seq(int ext_seq) {
+		this.ext_seq = ext_seq;
 	}
 
 	public String getGroup_name() {
