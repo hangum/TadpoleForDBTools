@@ -24,7 +24,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
  * @author hangum
  *
  */
-public abstract class RDBDDLScript {
+public abstract class AbstractRDBDDLScript {
 	protected UserDBDAO userDB;
 	protected DB_ACTION actionType;
 
@@ -34,7 +34,7 @@ public abstract class RDBDDLScript {
 	 * @param userDB
 	 * @param actionType
 	 */
-	public RDBDDLScript(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
+	public AbstractRDBDDLScript(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
 		this.userDB = userDB;
 		this.actionType = actionType;
 	}

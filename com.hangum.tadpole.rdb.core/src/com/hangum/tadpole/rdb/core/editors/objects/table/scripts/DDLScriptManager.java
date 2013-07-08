@@ -43,7 +43,7 @@ public class DDLScriptManager {
 		String retStr = "";
 		
 		// find DB
-		RDBDDLScript rdbScript = null;
+		AbstractRDBDDLScript rdbScript = null;
 		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
 			rdbScript = new SQLiteDDLScript(userDB, actionType);
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT ) {

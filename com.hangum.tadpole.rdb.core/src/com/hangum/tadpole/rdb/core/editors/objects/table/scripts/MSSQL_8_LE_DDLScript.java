@@ -31,7 +31,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class MSSQL_8_LE_DDLScript extends RDBDDLScript {
+public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 
 	/**
 	 * @param userDB
@@ -49,7 +49,6 @@ public class MSSQL_8_LE_DDLScript extends RDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		List<HashMap> srcList = client.queryForList("getTableScript", tableDAO.getName());
-		
 		
 		StringBuilder result = new StringBuilder("");
 		result.append("/* DROP TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");

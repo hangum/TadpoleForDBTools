@@ -18,7 +18,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class SQLiteDDLScript extends RDBDDLScript {
+public class SQLiteDDLScript extends AbstractRDBDDLScript {
 	
 	public SQLiteDDLScript(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
 		super(userDB, actionType);
