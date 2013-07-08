@@ -110,10 +110,6 @@ public class OthersConnectionRDBGroup extends Group {
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBGroup_6);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
 	}
 	
 	/**

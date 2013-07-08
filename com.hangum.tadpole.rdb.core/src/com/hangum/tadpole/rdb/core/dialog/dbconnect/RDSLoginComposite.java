@@ -3,6 +3,8 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -26,6 +28,10 @@ import com.hangum.tadpole.aws.rds.commons.core.AmazonRDSUtsils;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 
 /**
@@ -67,10 +73,6 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 		compositeRDS.setLayout(gl_compositeRDS);
 		compositeRDS.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-//		preDBInfo = new PreConnectionInfoGroup(compositeRDS, SWT.NONE, listGroupName);
-//		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
-//		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		
 		Group groupLogin = new Group(compositeRDS, SWT.NONE);
 		groupLogin.setText("Amazon User Information");
 		groupLogin.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -80,7 +82,6 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 		gl_compositeLogin.marginHeight = 1;
 		gl_compositeLogin.marginWidth = 1;
 		groupLogin.setLayout(gl_compositeLogin);
-
 
 		Label lblAccesskey = new Label(groupLogin, SWT.NONE);
 		lblAccesskey.setText("Access Key");
@@ -108,6 +109,12 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 		});
 		btnLogin.setText("Login");
 		
+		// 그룹조건 입력 폼..
+		preDBInfo = new PreConnectionInfoGroup(compositeRDS, SWT.NONE, listGroupName);
+		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
+		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		
+		// rds 입력 리스트..
 		Group compositeBody = new Group(compositeRDS, SWT.NONE);
 		compositeBody.setText("RDS List");
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -155,6 +162,9 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 			
 		} catch(Exception e) {
 			logger.error("Get AmazonRDS information", e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getShell(), "Error", "Get AmazonRDS information", errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -162,8 +172,8 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 	 * create columns
 	 */
 	private void createColumns() {
-		String[] columnNames = {"", "운영타입", "그룹", "이름", "Engine", "Ver", "Charset", "IP", "Port", "Instance", "User"};
-		int[] columnSize = {20, 52, 60, 60, 50, 50, 50, 100, 50, 80, 50};
+		String[] columnNames = {"", "Engine", "Zone", "Charset", "IP", "Port", "Instance", "User", "Password"};
+		int[] columnSize = {20, 50, 50, 30, 150, 50, 80, 50, 50};
 		
 		for(int i=0; i<columnNames.length; i++) {
 			String name = columnNames[i];
@@ -205,13 +215,17 @@ class RDSInfoLabelProvider extends LabelProvider implements ITableLabelProvider 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		AWSRDSUserDBDAO dto = (AWSRDSUserDBDAO)element;
-		
+
 		switch(columnIndex) {
 		case 0: return "";
-		case 1: return dto.getOperation_type();
-		case 2: return dto.getGroup_name();
-		case 3: return dto.getDisplay_name();
-		case 4: return dto.getExt1();
+		case 1: return dto.getDbms_types();
+		case 2: return dto.getExt1();
+		case 3: return dto.getLocale();
+		case 4: return dto.getHost();
+		case 5: return dto.getPort();
+		case 6: return dto.getDb();
+		case 7: return dto.getUsers();
+		case 8: return dto.getPasswd();
 		}
 		
 		return "*** not set column ***"; //$NON-NLS-1$

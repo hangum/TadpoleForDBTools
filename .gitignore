@@ -2,3 +2,5 @@
 
 # Package Files #
 *.ear
+
+bin/
