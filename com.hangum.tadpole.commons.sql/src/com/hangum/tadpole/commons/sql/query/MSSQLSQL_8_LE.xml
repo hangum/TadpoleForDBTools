@@ -221,4 +221,83 @@ SELECT
 		order by o.name 
 </select>
 
+<!-- 
+	Table DDL Script
+ -->
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	SELECT
+	    t.name AS TABLE_NAME
+	    ,c.name AS COLUMN_NAME
+	    ,d.name AS DATA_TYPE
+	    ,c.length AS DATA_LENGTH
+	    ,c.xprec AS DATA_PRECISION
+	    ,c.xscale AS DATA_SCALE
+	    ,(CASE WHEN c.isnullable = 0 THEN 'NO' ELSE 'YES' END ) AS NULLABLE
+	    ,USER AS OWNER
+	    ,NULL AS DATA_DEFAULT
+	  FROM sysobjects t 
+	      INNER JOIN syscolumns c ON t.id = c.id 
+	      INNER JOIN systypes d  ON c.xtype = d.xtype
+	    LEFT JOIN  dbo.sysindexkeys v ON (t.id =v.id and c.colid = v.colid and indid =1)     
+	WHERE  1 = 1
+	  AND t.name = 'test2'
+	ORDER BY c.colorder
+</select>
+
+<!-- 
+	Table DDL Script => Primary key list
+ -->
+ 
+<select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+SELECT  CONSTRAINT_CATALOG
+      ,CONSTRAINT_SCHEMA
+      ,CONSTRAINT_NAME
+      ,TABLE_CATALOG
+      ,TABLE_SCHEMA
+      ,TABLE_NAME
+      ,COLUMN_NAME
+      ,ORDINAL_POSITION
+  FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+  where table_name = #table#
+</select>
+
+<!-- 
+	Table DDL Script => Table, Column Comment Script
+ -->
+ 
+<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.lang.String">
+
+	SELECT 
+		'exec sp_addextendedproperty ''Caption'', ''' 
+		+ convert(varchar, c.value) 
+		+ ''', ''user'', dbo, ''table'', ''' 
+		+ convert(varchar, o.name) 
+		+ ''' ;'  as comment 
+	FROM sysobjects o
+	    LEFT JOIN sysproperties c on o.id = c.id	     
+	   	and c.type = '3'	
+	WHERE o.xtype = 'U' 
+	AND c.value &gt; ''
+	AND o.name = #table#
+	UNION ALL		
+	SELECT 	'exec sp_addextendedproperty ''Caption'', ''' 
+		+ convert(varchar, t.value) 
+		+ ''', ''user'', dbo, ''table'', ''' 
+		+ convert(varchar, a.name) 
+		+ ''', ''column'', ''' 
+		+ convert(varchar, b.name) 
+		+ ''' ;'  as comment 
+	FROM sysobjects a 
+	    INNER JOIN syscolumns b ON (a.id = b.id)
+		INNER JOIN systypes c ON (b.xusertype = c.xusertype)
+		LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	    LEFT JOIN sysproperties t on a.id = t.id and b.colid = t.smallid and t.type = '4'
+	        and t.name in ('ms_description', 'caption', 'comment')    	
+	WHERE 1=1
+	  AND a.name = #table#
+	  AND T.VALUE &gt; ''
+		
+  
+</select>
+
 </sqlMap>

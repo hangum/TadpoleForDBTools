@@ -218,4 +218,82 @@ SELECT
 	order by name 
 </select>
 
+<!-- 
+	Table DDL Script
+ -->
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	select t.name as TABLE_NAME
+	    , c.name as COLUMN_NAME
+		, d.name as DATA_TYPE
+		, c.max_length as DATA_LENGTH
+		, c.precision as DATA_PRECISION
+		, c.scale as DATA_SCALE
+		, (case when c.is_nullable = 0 then 'NO' else 'YES' end) as NULLABLE 
+		, USER as OWNER
+		, v.definition as DATA_DEFAULT
+	from sys.tables t 
+	   inner join sys.columns c on t.object_id = c.object_id
+	   inner join sys.types d on c.system_type_id = d.system_type_id
+	   left join sys.default_constraints v on v.parent_object_id = t.object_id and c.column_id = v.parent_column_id
+	 where 1=1
+	    and t.name = #table_name#
+	order by c.column_id
+</select>
+
+<!-- 
+	Table DDL Script => Primary key list
+ -->
+ 
+<select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	select p.name as CONSTRAINT_NAME
+	, tc.name as COLUMN_NAME 
+	, c.is_descending_key as DESCENDING
+	, p.type_desc as INDEX_TYPE
+	from sys.indexes p
+	  inner join sys.tables t on p.object_id = t.object_id
+	  inner join sys.index_columns c on t.object_id = c.object_id 
+	  inner join sys.all_columns tc on tc.object_id = t.object_id and c.column_id = tc.column_id
+	  where 1=1
+	  and t.name = #table_name#
+	order by c.key_ordinal
+
+</select>
+
+<!-- 
+	Table DDL Script => Table, Column Comment Script
+ -->
+ 
+<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT
+	'exec sp_addextendedproperty ''Caption'', ''' 
+		+ convert(varchar, p.value) 
+		+ ''', ''user'', dbo, ''table'', ''' 
+		+ convert(varchar, tbl.name) 
+		+ ''' ;'  as comment 
+  FROM sys.tables AS tbl
+      INNER JOIN sys.extended_properties AS p
+        ON p.major_id = tbl.object_id
+   WHERE 1=1
+        AND p.minor_id = 0
+        AND p.class = 1
+        AND tbl.name = #table#
+        AND p.value &gt; ''
+  UNION ALL
+SELECT  
+	'exec sp_addextendedproperty ''Caption'', ''' 
+		+ convert(varchar, p.value) 
+		+ ''', ''user'', dbo, ''table'', ''' 
+		+ convert(varchar, a.name) 
+		+ ''', ''column'', ''' 
+		+ convert(varchar, b.name) 
+		+ ''' ;'  as comment 
+FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
+	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
+	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	LEFT JOIN sys.extended_properties AS p ON p.major_id = a.id AND p.minor_id = b.colid AND p.class = 1
+WHERE 1=1
+  AND a.name = #table#
+  AND p.value &gt; ''
+  
+</select>
 </sqlMap>
