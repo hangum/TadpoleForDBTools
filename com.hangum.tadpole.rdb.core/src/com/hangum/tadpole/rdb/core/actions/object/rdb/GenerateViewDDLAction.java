@@ -18,12 +18,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
-import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
-import com.hangum.tadpole.rdb.core.editors.objects.table.GetDDLTableSource;
+import com.hangum.tadpole.rdb.core.editors.objects.table.scripts.DDLScriptManager;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
@@ -62,32 +58,8 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 		try {
 			
 			logger.debug("GenerateViewDDLAction RUN actionType is " + actionType);
-			
-			if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
-				TableDAO tableDAO = (TableDAO)sel.getFirstElement();
-				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getSource(userDB, actionType, tableDAO.getName()) + PublicTadpoleDefine.SQL_DILIMITER);				
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
-				
-				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getSource(userDB, actionType, (String)sel.getFirstElement()) + PublicTadpoleDefine.SQL_DILIMITER);
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
-				InformationSchemaDAO indexDAO = (InformationSchemaDAO)sel.getFirstElement();
-				
-				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getIndexSource(userDB, actionType, indexDAO.getINDEX_NAME(), indexDAO.getTABLE_NAME()) + PublicTadpoleDefine.SQL_DILIMITER);
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
-				ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
-				
-				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getProcedureSource(userDB, actionType, procedureDAO.getName()));				
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
-				logger.debug("select elements class is "+sel.getFirstElement().getClass().toString());
-				ProcedureFunctionDAO functionDAO = (ProcedureFunctionDAO)sel.getFirstElement();
-				
-				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getFunctionSource(userDB, actionType, functionDAO.getName()) + PublicTadpoleDefine.SQL_DILIMITER);				
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
-				TriggerDAO triggerDAO = (TriggerDAO)sel.getFirstElement();
-				
-				//FindEditorAndWriteQueryUtil.run(userDB, triggerDAO.getStatement() + PublicTadpoleDefine.SQL_DILIMITER);				
-				FindEditorAndWriteQueryUtil.run(userDB, GetDDLTableSource.getTriggerSource(userDB, actionType, triggerDAO) + PublicTadpoleDefine.SQL_DILIMITER);				
-			}
+			DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
+			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(sel.getFirstElement()));		
 			
 		} catch(Exception ee) {
 			ee.printStackTrace();

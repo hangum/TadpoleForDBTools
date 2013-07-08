@@ -41,12 +41,14 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.editors.objects.table.TbUtils.TABLE_MOD_TYPE;
+import com.hangum.tadpole.rdb.core.editors.objects.table.scripts.DDLScriptManager;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.util.XMLUtils;
 import com.hangum.tadpole.util.tables.SQLResultContentProvider;
@@ -235,10 +237,10 @@ public class TableDirectEditorComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 
 				try {
-					String ddlSource = GetDDLTableSource.getSource(userDB, PublicTadpoleDefine.DB_ACTION.TABLES,initTableNameStr);
-					FindEditorAndWriteQueryUtil.run(userDB, ddlSource);
+					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.TABLES);
+					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(new TableDAO(initTableNameStr, "")));
 				} catch(Exception ee) {
-					MessageDialog.openError(null, "Confirm", "Not support this function.");
+					MessageDialog.openError(null, "Confirm", ee.getMessage());
 				}
 			}
 		});
