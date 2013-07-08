@@ -498,7 +498,8 @@ SELECT    'COMMENT ON COLUMN '
                ', ' || COLUMN_NAME || ' ) AS '
          END AS SOURCE_TEXT
     FROM SYS.USER_TAB_COLUMNS C
-   WHERE 1 = 1 AND TABLE_NAME = UPPER(#view_name#)
+   WHERE 1 = 1 
+   AND TABLE_NAME = UPPER(#view_name#)
 ORDER BY TABLE_NAME, COLUMN_ID
 
 </select>
@@ -523,11 +524,11 @@ ORDER BY VIEW_NAME
 <select id="getProcedureScript" resultClass="java.lang.String" parameterClass="java.lang.String">
 SELECT
     b.text AS source_text
-  FROM user_procedures a 
+  FROM user_objects a 
       INNER JOIN user_source b ON a.object_name = b.name
 WHERE 1 = 1
   AND a.object_name = UPPER(#object_name#)
-  AND b. TYPE = UPPER('PROCEDURE')
+  AND a.object_type = 'PROCEDURE'
 ORDER BY b.line
 </select>
 
@@ -538,10 +539,10 @@ ORDER BY b.line
 <select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.lang.String">
 
   SELECT B.TEXT AS SOURCE_TEXT
-    FROM USER_TRIGGERS A INNER JOIN USER_SOURCE B ON A.TRIGGER_NAME = B.NAME
+    FROM user_objects A INNER JOIN USER_SOURCE B ON A.object_name = B.NAME AND a.object_type = b.type
    WHERE     1 = 1
-         AND A.TRIGGER_NAME = UPPER (#object_name#)
-         AND B.TYPE = UPPER ('TRIGGER')
+         AND A.object_name = UPPER (#object_name#)
+         AND B.TYPE = 'TRIGGER'
 ORDER BY B.LINE
 
 </select>
@@ -553,10 +554,10 @@ ORDER BY B.LINE
 <select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
 
   SELECT B.TEXT AS SOURCE_TEXT
-    FROM USER_SOURCE B
+    FROM user_objects A INNER JOIN USER_SOURCE B ON A.object_name = B.NAME AND a.object_type = b.type
    WHERE     1 = 1
-         AND B.TYPE = UPPER ('FUNCTION')
-         AND B.NAME = UPPER (#object_name#)
+         AND A.object_name = UPPER (#object_name#)
+         AND B.TYPE = 'FUNCTION'
 ORDER BY B.LINE
 
 </select>
@@ -567,10 +568,10 @@ ORDER BY B.LINE
  -->
 <!-- 현재는 프로시져탭에서 프로시져와 패키지를 함께 다루고 있으므로 오브젝트 타입을 먼저 체크하기 위한 SQL --> 
 <select id="getSourceObjectType" resultClass="java.lang.String" parameterClass="java.lang.String">
-  SELECT B.TYPE 
-    FROM USER_SOURCE B
+  SELECT B.object_type as TYPE 
+    FROM user_objects B
    WHERE 1 = 1 
-      AND B.NAME = UPPER (#object_name#)
+      AND B.object_name = UPPER (#object_name#)
       AND ROWNUM &lt;= 1
 </select>
 
@@ -581,8 +582,10 @@ ORDER BY B.LINE
 <select id="getPackageScript.head" resultClass="java.lang.String" parameterClass="java.lang.String">
 
   SELECT B.TEXT AS SOURCE_TEXT
-    FROM USER_SOURCE B
-   WHERE 1 = 1 AND B.TYPE = UPPER ('PACKAGE') AND B.NAME = UPPER (#object_name#)
+    FROM user_objects A INNER JOIN USER_SOURCE B ON A.object_name = B.NAME AND a.object_type = b.type
+   WHERE     1 = 1
+         AND A.object_name = UPPER (#object_name#)
+         AND B.TYPE = 'PACKAGE'
 ORDER BY B.LINE
 
 </select>
@@ -594,8 +597,10 @@ ORDER BY B.LINE
 <select id="getPackageScript.body" resultClass="java.lang.String" parameterClass="java.lang.String">
 
   SELECT B.TEXT AS SOURCE_TEXT
-    FROM USER_SOURCE B
-   WHERE 1 = 1 AND B.TYPE = UPPER ('PACKAGE BODY') AND B.NAME = UPPER (#object_name#)
+    FROM user_objects A INNER JOIN USER_SOURCE B ON A.object_name = B.NAME AND a.object_type = b.type
+   WHERE     1 = 1
+         AND A.object_name = UPPER (#object_name#)
+         AND B.TYPE = 'PACKAGE BODY'
 ORDER BY B.LINE
 
 </select>

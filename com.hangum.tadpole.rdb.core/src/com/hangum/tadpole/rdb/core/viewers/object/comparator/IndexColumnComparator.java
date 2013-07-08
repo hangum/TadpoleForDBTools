@@ -25,7 +25,7 @@ public  class IndexColumnComparator extends ObjectComparator  {
 	
 	public IndexColumnComparator() {
 		this.propertyIndex = 0;
-		direction = DESCENDING;
+		direction = ASCENDING;
 	}
 	
 	@Override

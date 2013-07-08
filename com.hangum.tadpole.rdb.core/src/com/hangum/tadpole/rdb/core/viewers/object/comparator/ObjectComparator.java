@@ -23,6 +23,7 @@ import org.eclipse.swt.SWT;
 public  class ObjectComparator extends ViewerSorter  {
 	protected int propertyIndex;
 	protected static final int DESCENDING = 1;
+	protected static final int ASCENDING = -1;
 	protected int direction = DESCENDING;
 	
 	public ObjectComparator() {
