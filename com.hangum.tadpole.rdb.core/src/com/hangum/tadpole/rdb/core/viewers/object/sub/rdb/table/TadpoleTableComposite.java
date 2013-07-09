@@ -329,7 +329,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tableColumn, i));
-			tableColumn.setEditingSupport(new ColumnCommentEditorSupport(tableListViewer, tv, userDB, 3));
+			tableColumn.setEditingSupport(new ColumnCommentEditorSupport(tableListViewer, tv, userDB, i));
 		}
 	}
 	/**
