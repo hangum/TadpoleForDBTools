@@ -16,6 +16,10 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
 	public static String AbstractLoginComposite_2;
 	public static String AbstractQueryAction_1;
+	public static String AWSRDSLoginComposite_0;
+	public static String AWSRDSLoginComposite_1;
+	public static String AWSRDSLoginComposite_2;
+	public static String AWSRDSLoginComposite_8;
 	public static String TableEditPart_0;
 	public static String TableEditPart_1;
 	public static String TableEditPart_10;

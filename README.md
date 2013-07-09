@@ -3,7 +3,7 @@ Tadpole DB Hub
 
 **We start new version.** [future 1.0](http://www.slideshare.net/hangum/tadpole-db-hub-100), [demo video](http://www.youtube.com/watch?v=EKCtH6gY62Q&feature=youtu.be)
 
-Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases. 
+Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases. 
 It enables you to handle typical DB over the World Wide Web
 ![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1366283796363/home/TadpoleDBHub.png?height=322&width=400)
 
@@ -11,7 +11,7 @@ It enables you to handle typical DB over the World Wide Web
 -
 * Intuitive web interface (Safari, Chrome, IE 9, Firefox, Opera) recommended IE
 * User Management (Admin, Manager, User)
-* Support CUBRID, MySQL, Oracle, SQLite, MSSQL, PostgreSQL Database
+* Support Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
 * Download query result 
 * SQL Syntax Highlighting

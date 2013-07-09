@@ -56,9 +56,6 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class OracleLoginComposite extends AbstractLoginComposite {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8245123047846049939L;
 	private static final Logger logger = Logger.getLogger(OracleLoginComposite.class);
 	
@@ -213,51 +210,11 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public boolean connection() {
-		if(!isValidate()) return false;
-		
-		String dbUrl = "";
-		if(comboConnType.getText().equals("SID")) {
-			dbUrl = String.format(
-					getSelectDB().getDB_URL_INFO(), 
-					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
-		} else if(comboConnType.getText().equals("Service Name")) {
-			dbUrl = String.format(
-					"jdbc:oracle:thin:@%s:%s/%s", 
-					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
-		}
-
-		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
-		userDB.setUrl(dbUrl);
-		userDB.setDb(textDatabase.getText().trim());
-		userDB.setGroup_seq(SessionManager.getGroupSeq());
-		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
-		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
-		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
-		userDB.setHost(textHost.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
-		userDB.setPort(textPort.getText().trim());
-//		userDB.setLocale(comboLocale.getText().trim());
-		userDB.setUsers(textUser.getText().trim());
-
-		// others connection 정보를 입력합니다.
-		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
-		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		
-		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
-		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
-		
-		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		if(!testConnection()) return false;
 		
 		// 기존 데이터 업데이트
 		if(getDalog_status() == DATA_STATUS.MODIFY) {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
-			if(!checkDatabase(userDB)) return false;
 			
 			try {
 				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
@@ -301,7 +258,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	 * 
 	 * @return
 	 */
-	public boolean isValidate() {
+	public boolean isValidateInput() {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -311,18 +268,52 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		if(!checkTextCtl(textUser, "User")) return false; //$NON-NLS-1$
 //		if(!checkTextCtl(textPassword, "Password")) return false; //$NON-NLS-1$
 		
-		String host 	= StringUtils.trimToEmpty(textHost.getText());
-		String port 	= StringUtils.trimToEmpty(textPort.getText());
+		return true;
+	}
 
-		try {
-			if(!isPing(host, port)) {
-				MessageDialog.openError(null, Messages.DBLoginDialog_14, Messages.MySQLLoginComposite_8);
-				return false;
-			}
-		} catch(NumberFormatException nfe) {
-			MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
-			return false;
+	@Override
+	public boolean testConnection() {
+		if(!isValidateInput()) return false;
+		
+		String dbUrl = "";
+		if(comboConnType.getText().equals("SID")) {
+			dbUrl = String.format(
+					getSelectDB().getDB_URL_INFO(), 
+					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
+		} else if(comboConnType.getText().equals("Service Name")) {
+			dbUrl = String.format(
+					"jdbc:oracle:thin:@%s:%s/%s", 
+					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
 		}
+
+		userDB = new UserDBDAO();
+		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setUrl(dbUrl);
+		userDB.setDb(textDatabase.getText().trim());
+		userDB.setGroup_seq(SessionManager.getGroupSeq());
+		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
+		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
+		userDB.setHost(textHost.getText().trim());
+		userDB.setPasswd(textPassword.getText().trim());
+		userDB.setPort(textPort.getText().trim());
+//		userDB.setLocale(comboLocale.getText().trim());
+		userDB.setUsers(textUser.getText().trim());
+
+		// others connection 정보를 입력합니다.
+		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+		
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+
+		if(!isValidateDatabase(userDB)) return false;
 		
 		return true;
 	}

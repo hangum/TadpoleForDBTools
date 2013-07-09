@@ -214,27 +214,15 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	 * 
 	 * @return
 	 */
-	public boolean isValidate() {
+	public boolean isValidateInput() {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
 		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$
+//		MSSQL은 인스턴스 이름이 없으면 마스터로 접속합니다. 해서 입력하지 않아도 접속하도록 수정합니다.
+//		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(textUser, "User")) return false; //$NON-NLS-1$
-		
-		String host 	= StringUtils.trimToEmpty(textHost.getText());
-		String port 	= StringUtils.trimToEmpty(textPort.getText());
-
-		try {
-			if(!isPing(host, port)) {
-				MessageDialog.openError(null, Messages.DBLoginDialog_14, Messages.MySQLLoginComposite_8);
-				return false;
-			}
-		} catch(NumberFormatException nfe) {
-			MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
-			return false;
-		}
 		
 		return true;
 	}
@@ -258,7 +246,60 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public boolean connection() {
-		if(!isValidate()) return false;
+		if(!testConnection()) return false;
+		
+		// 기존 데이터 업데이트
+		if(getDalog_status() == DATA_STATUS.MODIFY) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			
+			try {
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error(Messages.SQLiteLoginComposite_8, e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
+			
+		// 신규 데이터 저장.
+		} else {
+			
+			int intVersion = 0;
+			
+			try {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
+				// 디비 버전을 찾아옵니다.
+				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
+				intVersion = Integer.parseInt( StringUtils.substringBefore(dbInfo.getProductversion(), ".") );
+				
+			} catch (Exception e) {
+				logger.error("MSSQL Connection", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
+			
+			try {
+				if(intVersion <= 8) {
+					userDB.setDbms_types(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
+				}
+				
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error("MSSQL", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
+			}
+		}
+		
+		return true;
+	}
+
+	@Override
+	public boolean testConnection() {
+		if(!isValidateInput()) return false;
 		
 		String dbUrl = ""; 
 		String strHost = textHost.getText();
@@ -312,54 +353,8 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
-		// 기존 데이터 업데이트
-		if(getDalog_status() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
-			if(!checkDatabase(userDB)) return false;
-			
-			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.SQLiteLoginComposite_8, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
-		// 신규 데이터 저장.
-		} else {
-			
-			int intVersion = 0;
-			
-			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
-				// 디비 버전을 찾아옵니다.
-				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
-				intVersion = Integer.parseInt( StringUtils.substringBefore(dbInfo.getProductversion(), ".") );
-				
-			} catch (Exception e) {
-				logger.error("MSSQL Connection", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
-			try {
-				if(intVersion <= 8) {
-					userDB.setDbms_types(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
-				}
-				
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error("MSSQL", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
-			}
-		}
-		
+		if(!isValidateDatabase(userDB)) return false;
+
 		return true;
 	}
 

@@ -124,7 +124,15 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @throws Exception
 	 */
 	public abstract boolean connection();
-
+	
+	/**
+	 * test connection
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract boolean testConnection();
+	
 	/**
 	 * DB 가 정상 연결되었을때 객체
 	 * 
@@ -154,13 +162,26 @@ public abstract class AbstractLoginComposite extends Composite {
 	}
 	
 	/**
-	 * db 연결정보가 올바른지 검증합니다.
+	 * database의 중복 입력, 실제 연결할 수 있는지 검사합니다.
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	protected boolean isValidateDatabase(final UserDBDAO userDB) {
+		if(!checkDatabase(userDB)) return false;
+		if(!isAlreadExistDB(userDB)) return false;
+		
+		return true;
+	}
+	
+	/**
+	 * db가 이미 저장되어 있는지 검사합니다.
 	 * 
 	 * @param loginInfo
 	 * @param searchTable 디비의 테이블 검증을위한 쿼리 
 	 * @return
 	 */
-	protected boolean connectValidate(UserDBDAO loginInfo) {
+	private boolean isAlreadExistDB(UserDBDAO loginInfo) {
 		
 		try {
 			// 이미 등록된 디비 인지 검사합니다.
@@ -180,9 +201,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			return false;
 		}
 		
-		// 디비가 정상적인지 등록하려는 디비의 테이블 정보를 검사합니다.
-		if(checkDatabase(loginInfo)) return true;
-		else return false;
+		return true;
 	}
 	
 	/**
@@ -190,7 +209,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @param loginInfo
 	 * @return
 	 */
-	protected boolean checkDatabase(UserDBDAO loginInfo) {
+	private boolean checkDatabase(UserDBDAO loginInfo) {
 		if(DBDefine.getDBDefine(loginInfo.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			try {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);

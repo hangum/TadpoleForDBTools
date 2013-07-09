@@ -218,7 +218,57 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	public boolean connection() {
-		if(!isValidate()) return false;
+		if(!testConnection()) return false;
+		
+		// 기존 데이터 업데이트
+		if(getDalog_status() == DATA_STATUS.MODIFY) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			
+			try {
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error(Messages.SQLiteLoginComposite_8, e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
+			
+			return true;
+		// 신규 데이터 저장.
+		} else {
+			try {
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error(Messages.MySQLLoginComposite_0, e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+			}
+			
+			return true;
+		}
+	}
+	
+	/**
+	 * 화면에 값이 올바른지 검사합니다.
+	 * 
+	 * @return
+	 */
+	protected boolean isValidateInput() {
+		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
+		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
+		
+		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textUser, "User")) return false; //$NON-NLS-1$
+		
+		return true;
+	}
+
+	@Override
+	public boolean testConnection() {
+		if(!isValidateInput()) return false;
 
 		String dbUrl = "";
 		String locale = comboLocale.getText().trim();
@@ -261,68 +311,8 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
-		// 기존 데이터 업데이트
-		if(getDalog_status() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
-			if(!checkDatabase(userDB)) return false;
-			
-			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.SQLiteLoginComposite_8, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
-			return true;
-		// 신규 데이터 저장.
-		} else {
-			// 이미 연결한 것인지 검사한다.
-			if(!connectValidate(userDB)) return false;
-			
-			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.MySQLLoginComposite_0, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
-			}
-			
-			return true;
-		}
-	}
-	
-	/**
-	 * 화면에 값이 올바른지 검사합니다.
-	 * 
-	 * @return
-	 */
-	public boolean isValidate() {
-		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
-		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
-		
-		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textUser, "User")) return false; //$NON-NLS-1$
+		if(!isValidateDatabase(userDB)) return false;
 
-		
-		String host 	= StringUtils.trimToEmpty(textHost.getText());
-		String port 	= StringUtils.trimToEmpty(textPort.getText());
-
-		try {
-			if(!isPing(host, port)) {
-				MessageDialog.openError(null, Messages.DBLoginDialog_14, Messages.MySQLLoginComposite_8);
-				return false;
-			}
-		} catch(NumberFormatException nfe) {
-			MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
-			return false;
-		}
-		
 		return true;
 	}
 	

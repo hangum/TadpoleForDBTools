@@ -66,7 +66,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	private List<AWSRDSUserDBDAO> listUserDB;
 
 	public AWSRDSLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("AmazonRDS", DBDefine.AMAZONRDS_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("AmazonRDS", DBDefine.AMAZONRDS_DEFAULT, parent, style, listGroupName, selGroupName, userDB); //$NON-NLS-1$
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		compositeRDS.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group groupLogin = new Group(compositeRDS, SWT.NONE);
-		groupLogin.setText("Amazon User Information");
+		groupLogin.setText("Amazon User Information"); //$NON-NLS-1$
 		groupLogin.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		GridLayout gl_compositeLogin = new GridLayout(3, false);
 		gl_compositeLogin.verticalSpacing = 1;
@@ -104,13 +104,13 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		textAccesskey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblSecretKey = new Label(groupLogin, SWT.NONE);
-		lblSecretKey.setText("Secret key");
+		lblSecretKey.setText("Secret Key"); //$NON-NLS-1$
 		textSecretKey = new Text(groupLogin, SWT.BORDER | SWT.PASSWORD);
 		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblEndpoint = new Label(groupLogin, SWT.NONE);
 		lblEndpoint.setSize(59, 14);
-		lblEndpoint.setText("Region");
+		lblEndpoint.setText("Region"); //$NON-NLS-1$
 		
 		comboRegionName = new Combo(groupLogin, SWT.READ_ONLY);
 		comboRegionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -137,11 +137,11 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 				findDBList();
 			}
 		});
-		btnLogin.setText("Get DB Instance");
+		btnLogin.setText(Messages.AWSRDSLoginComposite_0);
 		
 		// rds 입력 리스트..
 		Group compositeBody = new Group(compositeRDS, SWT.NONE);
-		compositeBody.setText("RDS List");
+		compositeBody.setText(Messages.AWSRDSLoginComposite_1);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -174,7 +174,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 				addDatabase();
 			}
 		});
-		btnAddDatabase.setText("Add Database");
+		btnAddDatabase.setText(Messages.AWSRDSLoginComposite_2);
 		
 		init();
 	}
@@ -185,7 +185,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	private void addDatabase() {
 		StructuredSelection ss = (StructuredSelection)tvRDS.getSelection();
 		if(ss.isEmpty()) {
-			MessageDialog.openError(null, Messages.DBLoginDialog_14, "저장하려는 디비를 선택하여 주세요.");
+			MessageDialog.openError(null, Messages.DBLoginDialog_14, Messages.AWSRDSLoginComposite_8);
 		} else {
 			AWSRDSUserDBDAO amazonRDSDto = (AWSRDSUserDBDAO)ss.getFirstElement();
 			
@@ -204,8 +204,8 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		String strSecretkey = textSecretKey.getText().trim();
 		String strRegionName = comboRegionName.getText().trim();
 		
-		if(!checkTextCtl(textAccesskey, "Access key")) return;
-		if(!checkTextCtl(textSecretKey, "Secret key")) return;
+		if(!checkTextCtl(textAccesskey, "Access key")) return; //$NON-NLS-1$
+		if(!checkTextCtl(textSecretKey, "Secret Key")) return; //$NON-NLS-1$
 		
 		try {
 			listUserDB = AmazonRDSUtsils.getDBList(strAccesskey, strSecretkey, strRegionName);
@@ -214,10 +214,10 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 			tvRDS.refresh();
 			
 		} catch(Exception e) {
-			logger.error("Get AmazonRDS information", e);
+			logger.error("Get AmazonRDS information", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getShell(), "Error", "Get AmazonRDS information", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getShell(), "Error", "Get AmazonRDS information", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
@@ -225,7 +225,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	 * create columns
 	 */
 	private void createColumns() {
-		String[] columnNames = {"Engine", "IP", "Port", "Instance", "Charset", "User", "Password"};
+		String[] columnNames = {"Engine", "IP", "Port", "Instance", "Charset", "User", "Password"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 		int[] columnSize = {50, 200, 50, 100, 80, 80, 50};
 		
 		for(int i=0; i<columnNames.length; i++) {
@@ -242,11 +242,16 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	protected void init() {
-		// 
+		// no exist code
 	}
 
 	@Override
 	public boolean connection() {
+		return true;
+	}
+
+	@Override
+	public boolean testConnection() {
 		return true;
 	}
 

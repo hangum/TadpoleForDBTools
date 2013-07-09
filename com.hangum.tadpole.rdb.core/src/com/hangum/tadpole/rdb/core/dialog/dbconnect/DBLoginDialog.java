@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -56,6 +57,9 @@ public class DBLoginDialog extends Dialog {
 	 */
 	private static final long serialVersionUID = 1327678815994219469L;
 	private static final Logger logger = Logger.getLogger(DBLoginDialog.class);
+	
+	
+	public static final int TEST_CONNECTION_ID = 999;
 	
 	/** main composite */
 	private Composite container;
@@ -329,6 +333,16 @@ public class DBLoginDialog extends Dialog {
 		
 		super.okPressed();
 	}
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		super.buttonPressed(buttonId);
+		if(TEST_CONNECTION_ID == buttonId) {
+			if(loginComposite.testConnection()) {
+				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
+			}
+		}
+	}
 
 	public UserDBDAO getDTO() {
 		return retuserDb;
@@ -342,6 +356,8 @@ public class DBLoginDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 //		createButton(parent, DELETE_BTN_ID, Messages.DBLoginDialog_button_text, false);
+		
+		createButton(parent, TEST_CONNECTION_ID, "Test Connection", false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_6, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLoginDialog_7, false);
 	}

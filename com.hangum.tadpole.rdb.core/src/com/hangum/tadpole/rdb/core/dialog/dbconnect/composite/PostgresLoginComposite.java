@@ -99,44 +99,11 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	
 	@Override
 	public boolean connection() {
-		if(!isValidate()) return false;
-		
-		final String dbUrl = String.format(
-				getSelectDB().getDB_URL_INFO(), 
-				textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
-
-		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
-		userDB.setUrl(dbUrl);
-		userDB.setDb(textDatabase.getText().trim());
-		userDB.setGroup_seq(SessionManager.getGroupSeq());
-		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
-		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
-		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
-		userDB.setHost(textHost.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
-		userDB.setPort(textPort.getText().trim());
-		userDB.setLocale(comboLocale.getText().trim());
-		userDB.setUsers(textUser.getText().trim());
-		
-		// others connection 정보를 입력합니다.
-		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
-		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		
-		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
-		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
-		
-		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		if(!testConnection()) return false;
 	
 		// 기존 데이터 업데이트
 		if(getDalog_status() == DATA_STATUS.MODIFY) {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
-			if(!checkDatabase(userDB)) return false;
 			
 			try {
 				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
@@ -172,6 +139,46 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "PostgreSQL Connection Exception", errStatus); //$NON-NLS-1$
 			}
 		}
+		
+		return true;
+	}
+	
+	@Override
+	public boolean testConnection() {
+		if(!isValidateInput()) return false;
+		
+		final String dbUrl = String.format(
+				getSelectDB().getDB_URL_INFO(), 
+				textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
+
+		userDB = new UserDBDAO();
+		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setUrl(dbUrl);
+		userDB.setDb(textDatabase.getText().trim());
+		userDB.setGroup_seq(SessionManager.getGroupSeq());
+		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
+		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
+		userDB.setHost(textHost.getText().trim());
+		userDB.setPasswd(textPassword.getText().trim());
+		userDB.setPort(textPort.getText().trim());
+		userDB.setLocale(comboLocale.getText().trim());
+		userDB.setUsers(textUser.getText().trim());
+		
+		// others connection 정보를 입력합니다.
+		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+		
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		if(!isValidateDatabase(userDB)) return false;
 		
 		return true;
 	}

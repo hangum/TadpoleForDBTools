@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -140,6 +141,16 @@ public class SingleAddDBDialog extends Dialog {
 	public UserDBDAO getDTO() {
 		return retuserDb;
 	}
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		super.buttonPressed(buttonId);
+		if(DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
+			if(loginComposite.testConnection()) {
+				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
+			}
+		}
+	}
 
 	/**
 	 * Create contents of the button bar.
@@ -147,6 +158,7 @@ public class SingleAddDBDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, DBLoginDialog.TEST_CONNECTION_ID, "Test Connection", false);
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
 		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
 	}
