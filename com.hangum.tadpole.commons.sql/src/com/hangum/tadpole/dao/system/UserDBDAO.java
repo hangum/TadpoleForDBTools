@@ -32,7 +32,7 @@ import com.hangum.tadpole.dao.ManagerListDTO;
  *
  */
 public class UserDBDAO {
-	protected int seq;
+	protected int seq = -999;
 	protected int user_seq;
 	/** 외부 시스템 seq 현재는 amamzon rds seq*/
 	protected int ext_seq = -999;

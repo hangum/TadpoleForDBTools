@@ -276,4 +276,12 @@ public abstract class AbstractLoginComposite extends Composite {
 	public DBDefine getSelectDB() {
 		return selectDB;
 	}
+	
+	public List<String> getListGroupName() {
+		return listGroupName;
+	}
+	
+	public String getSelGroupName() {
+		return selGroupName;
+	}
 }

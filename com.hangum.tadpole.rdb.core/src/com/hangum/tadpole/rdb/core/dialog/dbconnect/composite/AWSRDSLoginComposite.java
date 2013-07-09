@@ -15,10 +15,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -32,10 +33,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.aws.rds.commons.core.utils.AmazonRDSUtsils;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
@@ -43,6 +44,8 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.SingleAddDBDialog;
 
 /**
  * Amazon RDS login composite.
@@ -180,12 +183,15 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	 * Add RDS to Tadpole
 	 */
 	private void addDatabase() {
-		ISelection selection = tvRDS.getSelection();
-		if(!selection.isEmpty()) {
-			
-			
+		StructuredSelection ss = (StructuredSelection)tvRDS.getSelection();
+		if(ss.isEmpty()) {
+			MessageDialog.openError(null, Messages.DBLoginDialog_14, "저장하려는 디비를 선택하여 주세요.");
 		} else {
+			AWSRDSUserDBDAO amazonRDSDto = (AWSRDSUserDBDAO)ss.getFirstElement();
 			
+			SingleAddDBDialog dialog = new SingleAddDBDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
+															amazonRDSDto, getListGroupName(), getSelGroupName());
+			dialog.open();
 		}
 		
 	}
@@ -241,8 +247,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	public boolean connection() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

@@ -22,6 +22,7 @@ import com.amazonaws.services.rds.model.DBInstance;
 import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
+import com.hangum.tadpole.define.DBOperationType;
 
 /**
  * AmazonRDS 를 사용하는 Utils
@@ -78,15 +79,26 @@ public class AmazonRDSUtsils {
 				rdsUserDB.setExt2(rdsDbInstance.getAvailabilityZone());
 				
 				// db information
-				rdsUserDB.setDbms_types(DBDefine.getDBDefine(rdsDbInstance.getEngine()).getDBToString());
-				rdsUserDB.setDisplay_name(rdsDbInstance.getDBName() + "." + rdsDbInstance.getAvailabilityZone());
-				rdsUserDB.setDb(rdsDbInstance.getDBName());
+				String strDBMStype = rdsDbInstance.getEngine();
+				if(strDBMStype.startsWith("sqlserver")) {
+					String strEngVer = rdsDbInstance.getEngineVersion();
+//					if(strEngVer.startsWith("11")) 
+//					else strDBMStype = "MSSQL_8_LE";
+					
+					strDBMStype = DBDefine.MSSQL_DEFAULT.getDBToString();
+				} else if(strDBMStype.startsWith("oracle")) {
+					strDBMStype = DBDefine.ORACLE_DEFAULT.getDBToString();
+				}
+				
+				rdsUserDB.setDbms_types(DBDefine.getDBDefine(strDBMStype).getDBToString());
+				rdsUserDB.setDisplay_name(rdsDbInstance.getDBInstanceIdentifier() + "." + rdsDbInstance.getAvailabilityZone());
+				rdsUserDB.setOperation_type(DBOperationType.DEVELOP.toString());
+				rdsUserDB.setDb(rdsDbInstance.getDBInstanceIdentifier());//getDBName());
 				rdsUserDB.setHost(rdsDbInstance.getEndpoint().getAddress());
 				rdsUserDB.setPort(""+rdsDbInstance.getEndpoint().getPort());
-				rdsUserDB.setLocale(rdsDbInstance.getCharacterSetName());
-				rdsUserDB.setUsers(rdsDbInstance.getDBName());
-				
-				rdsUserDB.setDbms_types(rdsDbInstance.getEngine());
+				rdsUserDB.setLocale(rdsDbInstance.getCharacterSetName()==null?"":rdsDbInstance.getCharacterSetName());
+				rdsUserDB.setUsers(rdsDbInstance.getMasterUsername());
+				rdsUserDB.setPasswd("");
 				
 				returnDBList.add(rdsUserDB);
 			}
@@ -97,6 +109,5 @@ public class AmazonRDSUtsils {
 		}
 		
 		return returnDBList;
-		
 	}
 }

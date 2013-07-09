@@ -233,6 +233,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 				}
 			}
 		}
+		
+		textHost.setFocus();
 	}
 	
 	public boolean isValidate() {
@@ -318,7 +320,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
 		// 기존 데이터 업데이트
-		if(oldUserDB != null) {
+		if(oldUserDB.getSeq() != -999) {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			if(!checkDatabase(userDB)) return false;
