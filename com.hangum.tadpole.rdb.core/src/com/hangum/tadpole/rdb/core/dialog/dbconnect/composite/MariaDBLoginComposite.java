@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.dbconnect;
+package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.List;
 

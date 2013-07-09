@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.dbconnect;
+package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.List;
 
@@ -34,10 +34,13 @@ import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
+import com.hangum.tadpole.mongodb.core.connection.MongoDBNotFoundException;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionMongoDBGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -45,13 +48,17 @@ import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 
 /**
- * mysql login composite
+ * oracle login composite
  * 
  * @author hangum
  *
  */
-public class MySQLLoginComposite extends AbstractLoginComposite {
-	private static final Logger logger = Logger.getLogger(MySQLLoginComposite.class);
+public class MongoDBLoginComposite extends AbstractLoginComposite {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8245123047846049939L;
+	private static final Logger logger = Logger.getLogger(MongoDBLoginComposite.class);
 	
 	protected Text textHost;
 	protected Text textUser;
@@ -60,32 +67,35 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	protected Text textPort;
 	protected Combo comboLocale;
 	
-	public MySQLLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample MySQL 5.4", DBDefine.MYSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	private Text textReplicaSet;
+	
+	protected OthersConnectionMongoDBGroup othersConnectionInfo;
+	
+	/**
+	 * Create the composite.
+	 * @param parent
+	 * @param style
+	 */
+	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+		super("Sample MongoDB 2.0.2", DBDefine.MONGODB_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
-
-	public MySQLLoginComposite(String strDisplayName, DBDefine selectDB,
-			Composite parent, int style, List<String> listGroupName,
-			String selGroupName, UserDBDAO userDB) {
-		super(strDisplayName, selectDB, parent, style, listGroupName, selGroupName, userDB);
-	}
-
+	
 	@Override
 	public void crateComposite() {
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 0;
+		gridLayout.marginWidth = 2;
 		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(1, false);
 		gl_compositeBody.verticalSpacing = 2;
-		gl_compositeBody.horizontalSpacing = 2;
 		gl_compositeBody.marginHeight = 2;
-		gl_compositeBody.marginWidth = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginWidth = 0;
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
@@ -135,6 +145,17 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		});
 		btnPing.setText(Messages.DBLoginDialog_btnPing_text);
 		
+		Label lblReplicaSet = new Label(grpConnectionType, SWT.NONE);
+		lblReplicaSet.setText(Messages.MongoDBLoginComposite_lblReplicaSet_text);
+		
+		textReplicaSet = new Text(grpConnectionType, SWT.BORDER);
+		textReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		new Label(grpConnectionType, SWT.NONE);
+		
+		Label lblExLocalhostlocalhost = new Label(grpConnectionType, SWT.NONE);
+		lblExLocalhostlocalhost.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		lblExLocalhostlocalhost.setText(Messages.MongoDBLoginComposite_lblExLocalhostlocalhost_text);
+		
 		Label lblNewLabelDatabase = new Label(grpConnectionType, SWT.NONE);
 		lblNewLabelDatabase.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
 		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
@@ -163,16 +184,16 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
 		comboLocale.setVisibleItemCount(12);
 		comboLocale.select(0);
-		
-		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE);
-		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE);
+		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		init();
 	}
 	
 	@Override
 	public void init() {
-		
+
 		if(oldUserDB != null) {
 			
 			selGroupName = oldUserDB.getGroup_name();
@@ -184,17 +205,19 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textPassword.setText(oldUserDB.getPasswd());
 			textDatabase.setText(oldUserDB.getDb());
 			textPort.setText(oldUserDB.getPort());
+			
+			textReplicaSet.setText(oldUserDB.getExt1()==null?"":oldUserDB.getExt1());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
+
+			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
-			preDBInfo.setTextDisplayName(getDisplayName());
-			
-			textHost.setText(Messages.DBLoginDialog_16);
-			textUser.setText(Messages.DBLoginDialog_17);
-			textPassword.setText(Messages.DBLoginDialog_18);
-			textDatabase.setText(Messages.DBLoginDialog_19);
-			textPort.setText(Messages.DBLoginDialog_20);			
+			textHost.setText("127.0.0.1"); //$NON-NLS-1$
+			textUser.setText(""); //$NON-NLS-1$
+			textPassword.setText(""); //$NON-NLS-1$
+			textDatabase.setText("test"); //$NON-NLS-1$
+			textPort.setText("27017");			 //$NON-NLS-1$
 		} else {
-			textPort.setText("3306");
+			textPort.setText("27017");			 //$NON-NLS-1$
 		}
 		
 		Combo comboGroup = preDBInfo.getComboGroup();
@@ -202,48 +225,84 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) {
+			if("".equals(selGroupName)) { //$NON-NLS-1$
 				comboGroup.setText(strOtherGroupName);
 			} else {
-				// 콤보 선택 
 				for(int i=0; i<comboGroup.getItemCount(); i++) {
-					if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+					if(comboGroup.getItem(i).equals(selGroupName)) comboGroup.select(i);
 				}
 			}
 		}
 	}
-
+	
+	public boolean isValidate() {
+		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
+		
+		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
+		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$		
+		
+		String host 	= StringUtils.trimToEmpty(textHost.getText());
+		String port 	= StringUtils.trimToEmpty(textPort.getText());
+		
+		// replica set
+		String strReplcaSet = textReplicaSet.getText();
+		String[] urls = StringUtils.split(strReplcaSet, ","); //$NON-NLS-1$
+		for (String ipPort : urls) {
+			String[] strIpPort = StringUtils.split(ipPort, ":"); //$NON-NLS-1$
+			
+			try {
+				if(!isPing(strIpPort[0], strIpPort[1])) {
+					MessageDialog.openError(null, Messages.DBLoginDialog_14, Messages.MongoDBLoginComposite_2 + strIpPort[0] + ":" + strIpPort[1]); //$NON-NLS-2$
+					return false;
+				}
+			} catch(NumberFormatException nfe) {
+				MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
+				return false;
+			} catch(ArrayIndexOutOfBoundsException aobe) {
+				MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MongoDBLoginComposite_4);
+				return false;
+			}
+		}
+		
+		try {
+			if(!isPing(host, port)) {
+				MessageDialog.openError(null, Messages.DBLoginDialog_14, Messages.MySQLLoginComposite_8);
+				return false;
+			}
+		} catch(NumberFormatException nfe) {
+			MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
+			return false;
+		}
+		
+		return true;
+	}
+	
 	@Override
 	public boolean connection() {
 		if(!isValidate()) return false;
-
-		String dbUrl = "";
-		String locale = comboLocale.getText().trim();
-		if(locale.equals("") || DBLocaleUtils.NONE_TXT.equals(locale)) {
-			dbUrl = String.format(
-					getSelectDB().getDB_URL_INFO(), 
-					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
-		} else {			
-			String selectLocale = StringUtils.substringBefore(comboLocale.getText().trim(), "|");			
-			
-			dbUrl = String.format(
-					getSelectDB().getDB_URL_INFO(), 
-					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim() + "?useUnicode=false&characterEncoding=" + selectLocale.trim());
-		}
 		
+		final String dbUrl = String.format(
+								getSelectDB().getDB_URL_INFO(), 
+								textHost.getText().trim(), 
+								textPort.getText().trim(), 
+								textDatabase.getText().trim());
+
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDb(textDatabase.getText().trim());
+		userDB.setDb(textDatabase.getText());
 		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
 		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
-		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
+		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		userDB.setHost(textHost.getText().trim());
 		userDB.setPasswd(textPassword.getText().trim());
 		userDB.setPort(textPort.getText().trim());
 		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setUsers(textUser.getText().trim());
+		userDB.setExt1(textReplicaSet.getText().trim());
 		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
@@ -274,53 +333,46 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 				return false;
 			}
 			
-			return true;
 		// 신규 데이터 저장.
 		} else {
-			// 이미 연결한 것인지 검사한다.
-			if(!connectValidate(userDB)) return false;
+
+			// db가 정상적인지 채크해본다 
+			try {
+				MongoConnectionManager.getInstance(userDB);
+			} catch(MongoDBNotFoundException mdbfe) {
+				
+				if(MessageDialog.openConfirm(null, "Confirm", userDB.getDb() + Messages.MongoDBLoginComposite_9)) { //$NON-NLS-1$
+					try {
+						MongoDBQuery.createDB(userDB);
+					} catch (Exception e) {
+						logger.error("MongoDB Connection error", e); //$NON-NLS-1$
+						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
+						
+						return false;
+					}
+				} else {
+					return false;
+				}
+				
+	
+			} catch (Exception e) {
+				logger.error("MongoDB Connection error", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
 			
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {
-				logger.error(Messages.MySQLLoginComposite_0, e);
+				logger.error("MongoDB info save", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "MongoDB", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			
-			return true;
 		}
-	}
-	
-	/**
-	 * 화면에 값이 올바른지 검사합니다.
-	 * 
-	 * @return
-	 */
-	public boolean isValidate() {
-		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
-		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
-		
-		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textUser, "User")) return false; //$NON-NLS-1$
-
-		
-		String host 	= StringUtils.trimToEmpty(textHost.getText());
-		String port 	= StringUtils.trimToEmpty(textPort.getText());
-
-		try {
-			if(!isPing(host, port)) {
-				MessageDialog.openError(null, Messages.DBLoginDialog_14, Messages.MySQLLoginComposite_8);
-				return false;
-			}
-		} catch(NumberFormatException nfe) {
-			MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
-			return false;
-		}
-		
 		return true;
 	}
-	
+
 }

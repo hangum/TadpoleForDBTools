@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.dbconnect;
+package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.io.File;
 import java.util.List;
@@ -138,7 +138,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	protected boolean connection() {
+	public boolean connection() {
 		String strFile = StringUtils.trimToEmpty(textFile.getText());
 		
 		if("".equals(preDBInfo.getComboGroup().getText().trim())) {

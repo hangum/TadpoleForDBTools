@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.dbconnect;
+package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.List;
 
@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
@@ -40,57 +39,54 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
+import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * oracle login composite
- * 
- * SID   jdbc:oracle:thin:@//hostname:port:sid
- * Service Name  jdbc:oracle:thin:@//hostname:port/serviceName
+ * mysql login composite
  * 
  * @author hangum
  *
  */
-public class OracleLoginComposite extends AbstractLoginComposite {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8245123047846049939L;
-	private static final Logger logger = Logger.getLogger(OracleLoginComposite.class);
+public class MySQLLoginComposite extends AbstractLoginComposite {
+	private static final Logger logger = Logger.getLogger(MySQLLoginComposite.class);
 	
-	/** sid, service name */
-	protected Combo comboConnType;
-
 	protected Text textHost;
 	protected Text textUser;
 	protected Text textPassword;
 	protected Text textDatabase;
 	protected Text textPort;
+	protected Combo comboLocale;
 	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
-	public OracleLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample Oracle 10g", DBDefine.ORACLE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public MySQLLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+		super("Sample MySQL 5.4", DBDefine.MYSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
-	
+
+	public MySQLLoginComposite(String strDisplayName, DBDefine selectDB,
+			Composite parent, int style, List<String> listGroupName,
+			String selGroupName, UserDBDAO userDB) {
+		super(strDisplayName, selectDB, parent, style, listGroupName, selGroupName, userDB);
+	}
+
 	@Override
 	public void crateComposite() {
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite compositeBody = new Composite(this, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
@@ -139,10 +135,9 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		});
 		btnPing.setText(Messages.DBLoginDialog_btnPing_text);
 		
-		comboConnType = new Combo(grpConnectionType, SWT.READ_ONLY);
-		comboConnType.add("SID");
-		comboConnType.add("Service Name");
-		comboConnType.select(0);
+		Label lblNewLabelDatabase = new Label(grpConnectionType, SWT.NONE);
+		lblNewLabelDatabase.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
+		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));		
@@ -159,6 +154,16 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
+		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
+		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
+		
+		comboLocale = new Combo(grpConnectionType, SWT.READ_ONLY);
+		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+			
+		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
+		comboLocale.setVisibleItemCount(12);
+		comboLocale.select(0);
+		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE);
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -172,7 +177,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
-			preDBInfo.getComboOperationType().setText(DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName());
+			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textHost.setText(oldUserDB.getHost());
 			textUser.setText(oldUserDB.getUsers());
@@ -180,16 +185,16 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			textDatabase.setText(oldUserDB.getDb());
 			textPort.setText(oldUserDB.getPort());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
-
+			
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("192.168.32.128");
-			textUser.setText(Messages.OracleLoginComposite_1);
-			textPassword.setText(Messages.OracleLoginComposite_2);
-			textDatabase.setText(Messages.OracleLoginComposite_3);
-			textPort.setText(Messages.OracleLoginComposite_4);
+			textHost.setText(Messages.DBLoginDialog_16);
+			textUser.setText(Messages.DBLoginDialog_17);
+			textPassword.setText(Messages.DBLoginDialog_18);
+			textDatabase.setText(Messages.DBLoginDialog_19);
+			textPort.setText(Messages.DBLoginDialog_20);			
 		} else {
-			textPort.setText(Messages.OracleLoginComposite_4);
+			textPort.setText("3306");
 		}
 		
 		Combo comboGroup = preDBInfo.getComboGroup();
@@ -207,22 +212,25 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean connection() {
 		if(!isValidate()) return false;
-		
+
 		String dbUrl = "";
-		if(comboConnType.getText().equals("SID")) {
+		String locale = comboLocale.getText().trim();
+		if(locale.equals("") || DBLocaleUtils.NONE_TXT.equals(locale)) {
 			dbUrl = String.format(
 					getSelectDB().getDB_URL_INFO(), 
 					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
-		} else if(comboConnType.getText().equals("Service Name")) {
+		} else {			
+			String selectLocale = StringUtils.substringBefore(comboLocale.getText().trim(), "|");			
+			
 			dbUrl = String.format(
-					"jdbc:oracle:thin:@%s:%s/%s", 
-					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
+					getSelectDB().getDB_URL_INFO(), 
+					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim() + "?useUnicode=false&characterEncoding=" + selectLocale.trim());
 		}
-
+		
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
@@ -234,9 +242,9 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		userDB.setHost(textHost.getText().trim());
 		userDB.setPasswd(textPassword.getText().trim());
 		userDB.setPort(textPort.getText().trim());
-//		userDB.setLocale(comboLocale.getText().trim());
+		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setUsers(textUser.getText().trim());
-
+		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
 		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
@@ -266,33 +274,24 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 				return false;
 			}
 			
+			return true;
 		// 신규 데이터 저장.
 		} else {
-			// db가 정상적인지 채크해본다 
-			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				List showTables = sqlClient.queryForList("tableList", textDatabase.getText());
-				
-			} catch (Exception e) {
-				logger.error(Messages.OracleLoginComposite_7, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
+			// 이미 연결한 것인지 검사한다.
+			if(!connectValidate(userDB)) return false;
 			
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {
-				logger.error("Oracle db info save", e);
+				logger.error(Messages.MySQLLoginComposite_0, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_11, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
 			}
+			
+			return true;
 		}
-		
-		return true;
 	}
-
+	
 	/**
 	 * 화면에 값이 올바른지 검사합니다.
 	 * 
@@ -306,7 +305,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(textUser, "User")) return false; //$NON-NLS-1$
-//		if(!checkTextCtl(textPassword, "Password")) return false; //$NON-NLS-1$
+
 		
 		String host 	= StringUtils.trimToEmpty(textHost.getText());
 		String port 	= StringUtils.trimToEmpty(textPort.getText());

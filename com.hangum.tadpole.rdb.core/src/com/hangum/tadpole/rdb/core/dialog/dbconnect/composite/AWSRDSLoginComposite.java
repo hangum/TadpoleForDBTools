@@ -1,4 +1,14 @@
-package com.hangum.tadpole.rdb.core.dialog.dbconnect;
+/*******************************************************************************
+ * Copyright (c) 2013 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
+package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.List;
 
@@ -6,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -21,6 +32,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -31,9 +43,6 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 
 /**
  * Amazon RDS login composite.
@@ -43,8 +52,8 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionR
  * @author hangum
  *
  */
-public class RDSLoginComposite extends AbstractLoginComposite {
-	private static final Logger logger = Logger.getLogger(RDSLoginComposite.class);
+public class AWSRDSLoginComposite extends AbstractLoginComposite {
+	private static final Logger logger = Logger.getLogger(AWSRDSLoginComposite.class);
 	
 	private Text textAccesskey;
 	private Text textSecretKey;
@@ -53,7 +62,7 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 	private TableViewer tvRDS;
 	private List<AWSRDSUserDBDAO> listUserDB;
 
-	public RDSLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+	public AWSRDSLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
 		super("AmazonRDS", DBDefine.AMAZONRDS_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 
@@ -100,7 +109,7 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 		lblEndpoint.setSize(59, 14);
 		lblEndpoint.setText("Region");
 		
-		comboRegionName = new Combo(groupLogin, SWT.BORDER);
+		comboRegionName = new Combo(groupLogin, SWT.READ_ONLY);
 		comboRegionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		List<String> listRegion = AmazonRDSUtsils.getRDSRegionList();
 		for (String strRegion : listRegion) {
@@ -125,12 +134,7 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 				findDBList();
 			}
 		});
-		btnLogin.setText("Login");
-		
-		// 그룹조건 입력 폼..
-		preDBInfo = new PreConnectionInfoGroup(compositeRDS, SWT.NONE, listGroupName);
-		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
-		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		btnLogin.setText("Get DB Instance");
 		
 		// rds 입력 리스트..
 		Group compositeBody = new Group(compositeRDS, SWT.NONE);
@@ -154,11 +158,36 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 		
 		tvRDS.setContentProvider(new ArrayContentProvider());
 		tvRDS.setLabelProvider(new RDSInfoLabelProvider());
+		tvRDS.setInput(listUserDB);
 		
-		othersConnectionInfo = new OthersConnectionRDBGroup(compositeRDS, SWT.NONE);
-		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Composite compositeTail = new Composite(compositeBody, SWT.NONE);
+		compositeTail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		compositeTail.setLayout(new GridLayout(1, false));
+		
+		Button btnAddDatabase = new Button(compositeTail, SWT.NONE);
+		btnAddDatabase.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addDatabase();
+			}
+		});
+		btnAddDatabase.setText("Add Database");
 		
 		init();
+	}
+	
+	/**
+	 * Add RDS to Tadpole
+	 */
+	private void addDatabase() {
+		ISelection selection = tvRDS.getSelection();
+		if(!selection.isEmpty()) {
+			
+			
+		} else {
+			
+		}
+		
 	}
 	
 	/**
@@ -190,8 +219,8 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 	 * create columns
 	 */
 	private void createColumns() {
-		String[] columnNames = {"", "Engine", "IP", "Port", "Instance", "Charset", "User", "Password"};
-		int[] columnSize = {20, 50, 200, 50, 50, 80, 50, 50};
+		String[] columnNames = {"Engine", "IP", "Port", "Instance", "Charset", "User", "Password"};
+		int[] columnSize = {50, 150, 50, 50, 80, 50, 50};
 		
 		for(int i=0; i<columnNames.length; i++) {
 			String name = columnNames[i];
@@ -207,11 +236,11 @@ public class RDSLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	protected void init() {
-		
+		// 
 	}
 
 	@Override
-	protected boolean connection() {
+	public boolean connection() {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -235,14 +264,13 @@ class RDSInfoLabelProvider extends LabelProvider implements ITableLabelProvider 
 		AWSRDSUserDBDAO dto = (AWSRDSUserDBDAO)element;
 
 		switch(columnIndex) {
-		case 0: return "";
-		case 1: return dto.getDbms_types();
-		case 2: return dto.getHost();
-		case 3: return dto.getPort();
-		case 4: return dto.getDb();
-		case 5: return dto.getLocale();
-		case 6: return dto.getUsers();
-		case 7: return dto.getPasswd();
+		case 0: return dto.getDbms_types();
+		case 1: return dto.getHost();
+		case 2: return dto.getPort();
+		case 3: return dto.getDb();
+		case 4: return dto.getLocale();
+		case 5: return dto.getUsers();
+		case 6: return dto.getPasswd();
 		}
 		
 		return "*** not set column ***"; //$NON-NLS-1$

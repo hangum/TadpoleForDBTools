@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.dbconnect;
+package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,14 +103,14 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 * @throws Exception
 	 */
-	protected abstract boolean connection();
+	public abstract boolean connection();
 
 	/**
 	 * DB 가 정상 연결되었을때 객체
 	 * 
 	 * @return
 	 */
-	protected UserDBDAO getDBDTO() {
+	public UserDBDAO getDBDTO() {
 		return userDB;
 	}
 	
@@ -124,7 +124,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	public boolean isPing(String host, String port) throws NumberFormatException {
 		
-//		TODO db가 드릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
+//		TODO system 네트웍 속도가 느릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
 		int stats = PingTest.ping(host, Integer.parseInt(port), 2500);
 		if(PingTest.SUCCESS == stats) {
 			return true;

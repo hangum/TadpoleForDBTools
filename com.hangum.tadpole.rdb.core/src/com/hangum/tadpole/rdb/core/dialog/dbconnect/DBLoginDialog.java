@@ -31,6 +31,16 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSRDSLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MSSQLLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MariaDBLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MongoDBLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MySQLLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 
@@ -195,7 +205,7 @@ public class DBLoginDialog extends Dialog {
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
 			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
-			loginComposite = new RDSLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		}
 	}
 
