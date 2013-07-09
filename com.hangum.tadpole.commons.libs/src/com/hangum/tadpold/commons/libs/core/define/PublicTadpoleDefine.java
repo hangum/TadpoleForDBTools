@@ -93,6 +93,9 @@ public class PublicTadpoleDefine {
 	/** sql을 각 언어로 컨버팅 해줍니다 */
 	public static enum SQL_TO_APPLICATION {Java_StringBuffer, PHP};
 	
+	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */
+	public static enum DATA_STATUS {NEW, MODIFY, DEL};
+	
 	/** 디비들의 키 이름을 정의합니다 */
 	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
 	public static boolean isPK(String key) {

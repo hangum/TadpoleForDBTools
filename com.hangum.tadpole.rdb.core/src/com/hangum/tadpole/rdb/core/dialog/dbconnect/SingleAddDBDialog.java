@@ -21,7 +21,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -36,6 +38,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MySQLLoginComposit
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 
 /**
  * Single DB ADD Dialog
@@ -70,7 +73,6 @@ public class SingleAddDBDialog extends Dialog {
 		this.amazonRDSDto = amazonRDSDto;
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
-		
 	}
 
 	@Override
@@ -130,6 +132,7 @@ public class SingleAddDBDialog extends Dialog {
 	protected void okPressed() {
 		if (!loginComposite.connection()) return;
 		this.retuserDb = loginComposite.getDBDTO();
+		refreshManagerView();
 		
 		super.okPressed();
 	}
@@ -155,5 +158,18 @@ public class SingleAddDBDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(450, 500);
 	}
-
+	
+	/**
+	 * refresh manager view
+	 */
+	protected void refreshManagerView() {
+		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
+		
+		Display.getCurrent().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				managerView.init();
+			}
+		});	// end display
+	}
 }

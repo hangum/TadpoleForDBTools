@@ -226,7 +226,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	 */
 	private void createColumns() {
 		String[] columnNames = {"Engine", "IP", "Port", "Instance", "Charset", "User", "Password"};
-		int[] columnSize = {50, 150, 50, 50, 80, 50, 50};
+		int[] columnSize = {50, 200, 50, 100, 80, 80, 50};
 		
 		for(int i=0; i<columnNames.length; i++) {
 			String name = columnNames[i];

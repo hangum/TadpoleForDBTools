@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -44,6 +45,8 @@ public abstract class AbstractLoginComposite extends Composite {
 	private static final long serialVersionUID = -3434604591881525231L;
 	private static final Logger logger = Logger.getLogger(AbstractLoginComposite.class);
 	
+	protected DATA_STATUS dalog_status = DATA_STATUS.NEW;
+	
 	protected String displayName = "";
 	
 	protected PreConnectionInfoGroup preDBInfo;
@@ -53,7 +56,6 @@ public abstract class AbstractLoginComposite extends Composite {
 	protected String selGroupName = ""; //$NON-NLS-1$
 	
 	protected List<String> listGroupName = new ArrayList<String>();
-	
 	
 	// start table filters define
 	protected boolean isTableFilter = false;
@@ -84,6 +86,24 @@ public abstract class AbstractLoginComposite extends Composite {
 		
 		crateComposite();
 	}
+	
+	/**
+	 * dialog 상태 신규데이터 인지 수정상태인지.
+	 * @return
+	 */
+	public DATA_STATUS getDalog_status() {
+		return dalog_status;
+	}
+	
+	/**
+	 * dialog 상태 신규데이터 인지 수정상태인지.
+	 * 
+	 * @param dalog_status
+	 */
+	public void setDalog_status(DATA_STATUS dalog_status) {
+		this.dalog_status = dalog_status;
+	}
+	
 
 	/**
 	 * 
@@ -284,4 +304,5 @@ public abstract class AbstractLoginComposite extends Composite {
 	public String getSelGroupName() {
 		return selGroupName;
 	}
+	
 }

@@ -61,7 +61,10 @@ public class ConnectDatabase implements IViewActionDelegate {
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if(ret == Dialog.OK) managerView.addUserDB(userDB, true);
+				if(ret == Dialog.OK) {
+					if(userDB == null) managerView.init();
+					else managerView.addUserDB(userDB, true);
+				}
 				else managerView.init();
 			}
 		});	// end display
@@ -72,7 +75,6 @@ public class ConnectDatabase implements IViewActionDelegate {
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		sel = (IStructuredSelection)selection;
-		
 	}
 
 	@Override

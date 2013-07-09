@@ -78,7 +78,10 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if(ret == Dialog.OK) managerView.addUserDB(userDB, true);
+				if(ret == Dialog.OK) {
+					if(userDB == null) managerView.init();
+					else managerView.addUserDB(userDB, true);
+				}
 				else managerView.init();
 			}
 		});	// end display
