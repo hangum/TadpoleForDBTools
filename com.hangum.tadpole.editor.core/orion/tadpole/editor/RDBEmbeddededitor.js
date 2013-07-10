@@ -250,6 +250,11 @@ function installWorkbenchHooks() {
 			
 			editor.highlightAnnotations();
 			
+			// context assist
+			contentAssist.addEventListener("Activating", function() {
+				contentAssist.setProviders([sqlContentAssistProvider]);
+			});
+			
 			editor.setTextFocus();
 		} catch(err) {
 			console.log(err);

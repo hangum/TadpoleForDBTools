@@ -15,12 +15,20 @@
 
 define("orion/editor/sqlContentAssist", [], function() {
 	var keywords = [
-	                 "SELECT * FROM table_name;",
-	                 "INSERT INTO table_name (column, column1, column2) VALUES ('column', 'column2', 'column3');",
-			         "UPDATE table_name SET column1 = 'change_value' WHERE column2 = 'value';",			         
-			         "DELETE FROM table_name WHERE column1 = 'value';"
+	                 "SELECT",
+	                 "INSERT",
+			         "UPDATE",			         
+			         "DELETE"
 			       ];
-
+	
+//	/**
+//	 * add new keyworkd
+//	 * @author hangum
+//	 */
+//	function addKeywords(newKeywords) {
+//		keywords = newKeywords;
+//	}
+	
 	function getSQLPrefix(buffer, offset) {
 		var index = offset;
 		while (index && /[A-Za-z\-]/.test(buffer.charAt(index - 1))) {
