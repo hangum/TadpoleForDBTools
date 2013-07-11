@@ -48,41 +48,51 @@ public class ApplicationLock {
 	 *            Unique application key
 	 */
 	private ApplicationLock(String key) throws Exception {
-		String tmp_dir = System.getProperty("java.io.tmpdir");
-		if (!tmp_dir.endsWith(System.getProperty("file.separator"))) {
-			tmp_dir += System.getProperty("file.separator");
-		}
-
-		// Acquire MD5
 		try {
-			java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-			md.reset();
-			String hash_text = new java.math.BigInteger(1, md.digest(key.getBytes())).toString(16);
-			// Как правило нули в начале строки урезаются этот код добавляет
-			// нули обратно
-			while (hash_text.length() < 32) {
-				hash_text = "0" + hash_text;
+			String tmp_dir = System.getProperty("java.io.tmpdir");
+			if (!tmp_dir.endsWith(System.getProperty("file.separator"))) {
+				tmp_dir += System.getProperty("file.separator");
 			}
-			lock_file = new File(tmp_dir + hash_text + ".app_lock");
-		} catch (Exception ex) {
-		}
-
-		// MD5 acquire fail
-		if (lock_file == null) {
-			lock_file = new File(tmp_dir + key + ".app_lock");
-		}
-
-		lock_stream = new FileOutputStream(lock_file);
-
-		String f_content = "Java AppLock Object\r\nLocked by key: " + key 	+ "\r\n";
-		lock_stream.write(f_content.getBytes());
-
-		lock_channel = lock_stream.getChannel();
-
-		lock = lock_channel.tryLock();
-
-		if (lock == null) {
-			throw new Exception("Can't create Lock");
+			
+			logger.debug("[java.io.tmpdir]" + System.getProperty("java.io.tmpdir"));
+			logger.debug("[file.separator]" + System.getProperty("file.separator"));
+	
+			// Acquire MD5
+			try {
+				java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+				md.reset();
+				String hash_text = new java.math.BigInteger(1, md.digest(key.getBytes())).toString(16);
+				
+				while (hash_text.length() < 32) {
+					hash_text = "0" + hash_text;
+				}
+				lock_file = new File(tmp_dir + hash_text + ".app_lock");
+			} catch (Exception ex) {
+				logger.error("lock_file", ex);
+			}
+			logger.debug("l1111111111111111111111111111111111111111111111");
+	
+			// MD5 acquire fail
+			if (lock_file == null) {
+				lock_file = new File(tmp_dir + key + ".app_lock");
+			}
+			logger.debug("2222222222222222222222222222222");
+	
+			lock_stream = new FileOutputStream(lock_file);
+	
+			String f_content = "Java AppLock Object\r\nLocked by key: " + key 	+ "\r\n";
+			lock_stream.write(f_content.getBytes());
+	
+			lock_channel = lock_stream.getChannel();
+	
+			lock = lock_channel.tryLock();
+	
+			if (lock == null) {
+				throw new Exception("Can't create Lock");
+			}
+		} catch(Exception e) {
+			logger.error("last error", e);
+			throw e;
 		}
 	}
 
