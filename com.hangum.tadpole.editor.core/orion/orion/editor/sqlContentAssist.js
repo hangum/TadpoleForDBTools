@@ -23,7 +23,7 @@ define("orion/editor/sqlContentAssist", [], function() {
 	
 	function getSQLPrefix(buffer, offset) {
 		var index = offset;
-		while (index && /[A-Za-z\-\_]/.test(buffer.charAt(index - 1))) {
+		while (index && /[A-Za-z\-\_\.]/.test(buffer.charAt(index - 1))) {
 			index--;
 		}
 		return index ? buffer.substring(index, offset) : "";
