@@ -19,8 +19,8 @@
    <launcher name="tadpole-standalone">
       <macosx icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.icns"/>
       <solaris/>
-      <win useIco="false">
-         <ico path="/com.hangum.tadpole.application/icons/TadpoleForDBTools.ico"/>
+      <win useIco="true">
+         <ico path="/com.hangum.tadpole.application/icons/TadpoleDBHub.ico"/>
          <bmp/>
       </win>
    </launcher>
