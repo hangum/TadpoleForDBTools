@@ -21,14 +21,6 @@ define("orion/editor/sqlContentAssist", [], function() {
 			         "DELETE"
 			       ];
 	
-//	/**
-//	 * add new keyworkd
-//	 * @author hangum
-//	 */
-//	function addKeywords(newKeywords) {
-//		keywords = newKeywords;
-//	}
-	
 	function getSQLPrefix(buffer, offset) {
 		var index = offset;
 		while (index && /[A-Za-z\-]/.test(buffer.charAt(index - 1))) {
@@ -39,9 +31,10 @@ define("orion/editor/sqlContentAssist", [], function() {
 
 	/**
 	 * @name orion.contentAssist.SQLContentAssistProvider
-	 * @class Provides content assist for CSS keywords.
+	 * @class Provides content assist for SQL keywords.
 	 */
 	function SQLContentAssistProvider() {
+		
 	}
 	SQLContentAssistProvider.prototype = /** @lends orion.editor.SQLContentAssistProvider.prototype */ {
 		/**
@@ -62,6 +55,13 @@ define("orion/editor/sqlContentAssist", [], function() {
 					}
 			}
 			return proposals;
+		},
+		/**
+		 * Initialize keywords
+		 * @author hangum 
+		 */
+		initKewords : function(newKeywords) {
+			keywords = newKeywords;
 		}
 	};
 

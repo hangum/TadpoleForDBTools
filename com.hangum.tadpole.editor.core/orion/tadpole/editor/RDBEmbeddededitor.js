@@ -97,7 +97,7 @@ function initEmbeddedEditor(){
 		};
 		sqlContentAssistProvider = new mSQLContentAssist.SQLContentAssistProvider();
 		
-		// Canned highlighters for js, java, and css. Grammar-based highlighter for html
+		// Canned highlighters for sql
 		syntaxHighlighter = {
 			styler: null, 
 			
@@ -241,14 +241,25 @@ function installWorkbenchHooks() {
 	}
 	
 	// set initialize content
-	setInitialContent = function(varExt, varCon) {
-		console.log(varExt + ":" + varCon)
+	setInitialContent = function(varExt, varCon, varAssistList) {
+		console.log(varExt + ":" + varCon + ":" + varAssistList)
 		try {
 			editor.setInput(varExt, null, varCon);
 
 			syntaxHighlighter.highlight(varExt, editor);
 			
 			editor.highlightAnnotations();
+			
+			// initialize keywords 
+			var keywords = varAssistList.split(","); 
+//				[
+//			                 "cho",
+//			                 "Kimsbirthday",
+//					         "UPDATE",			         
+//					         "DELETE",
+//					         "UPDB"
+//					       ];
+			sqlContentAssistProvider.initKewords(keywords);
 			
 			// context assist
 			contentAssist.addEventListener("Activating", function() {

@@ -78,6 +78,7 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.dialogs.message.TadpoleMessageDialog;
@@ -802,15 +803,46 @@ public class MainEditor extends EditorExtension {
 					e.printStackTrace();
 				}
 				
+				// 에디터에서 assist창에 보여줄 목록을 가져옵니다.
+				String strAssistList = getAssistList();
+				logger.debug("Assist list is " + strAssistList);
+				
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
 				String strInitContent = StringUtils.replace(getInitDefaultEditorStr(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n"); //$NON-NLS-1$
 				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\" );"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\", \"" + strAssistList + "\" );"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				browserEvaluate(callCommand);
 				
 			}
 			public void changed( ProgressEvent event ) {}			
 		});
+	}
+	
+	/**
+	 * 에디터에서 assist창에 보여줄 목록을 가져옵니다.
+	 * 
+	 * @return
+	 */
+	private String getAssistList() {
+		String strTablelist = "";
+		
+		try {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			
+//			/** filter 정보가 있으면 처리합니다. */
+//			filter();
+			
+			for (TableDAO tableDao : showTables) {
+				strTablelist += tableDao.getName() + ",";
+			}
+			strTablelist = StringUtils.removeEnd(strTablelist, ",");
+			
+		} catch(Exception e) {
+			logger.error("MainEditor get the table list", e);
+		}
+		
+		return strTablelist;
 	}
 	
 	/** Define.QUERY_MODE 명령을 내립니다 */
