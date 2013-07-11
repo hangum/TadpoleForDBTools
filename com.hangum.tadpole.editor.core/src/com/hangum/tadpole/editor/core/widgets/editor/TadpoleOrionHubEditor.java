@@ -42,6 +42,11 @@ public class TadpoleOrionHubEditor extends Composite {
 	private String initContent;
 	
 	/**
+	 * 초기 content assist 
+	 */
+	private String initAssist;
+	
+	/**
 	 * 에디터를 보여줄 browser
 	 */
 	private Browser browserOrionEditor;
@@ -51,22 +56,23 @@ public class TadpoleOrionHubEditor extends Composite {
 	 */
 	private JavaScriptBrowserFunctionService editorService;
 
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
-	public TadpoleOrionHubEditor(Composite parent, int style) {
-		this(parent, style, "");
-	}
+//	/**
+//	 * Create the composite.
+//	 * @param parent
+//	 * @param style
+//	 */
+//	public TadpoleOrionHubEditor(Composite parent, int style) {
+//		this(parent, style, "", "");
+//	}
 	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 * @param initContent
+	 * @param initAssist
 	 */
-	public TadpoleOrionHubEditor(Composite parent, int style, String initContent) {
+	public TadpoleOrionHubEditor(Composite parent, int style, String initContent, String initAssist) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 1;
@@ -77,6 +83,7 @@ public class TadpoleOrionHubEditor extends Composite {
 		setBackgroundMode(SWT.INHERIT_FORCE);
 		
 		this.initContent = initContent;
+		this.initAssist = initAssist;
 		
 		Composite compositeServerStatus = new Composite(this, SWT.NONE);
 		compositeServerStatus.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -111,7 +118,7 @@ public class TadpoleOrionHubEditor extends Composite {
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
 				String strInitContent = StringUtils.replace(getInitContent(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
 				strInitContent = StringUtils.replace(strInitContent, "\"", "'");
-				String callCommand = "setInitialContent(\"" + "test.json"+ "\", \"" + strInitContent + "\" );";
+				String callCommand = "setInitialContent(\"" + "test.json"+ "\", \"" + strInitContent + "\", \"" + initAssist + "\");";
 				try {
 					browserEvaluate(callCommand);
 				} catch(Exception e) {

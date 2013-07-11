@@ -27,6 +27,7 @@ import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
 import com.hangum.tadpole.dao.mongodb.MongoDBIndexFieldDAO;
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
@@ -99,15 +100,62 @@ public class MongoDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<String> listCollection(UserDBDAO userDB) throws Exception {
-		List<String> listReturn = new ArrayList<String>();
+	public static List<TableDAO> listCollection(UserDBDAO userDB) throws Exception {
+		List<TableDAO> listReturn = new ArrayList<TableDAO>();
 		
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
 		for (String col : mongoDB.getCollectionNames()) {
-			if(!isSystemCollection(col)) listReturn.add(col);
+			if(!isSystemCollection(col)) {
+				TableDAO dao = new TableDAO();
+				dao.setName(col);
+
+				listReturn.add(dao);
+			}
 		}
 		
-		return listReturn;
+		return filter(userDB, listReturn);
+	}
+	
+	/**
+	 * 디비 등록시 설정한 filter 정보를 적용한다.
+	 * 
+	 * @param userDB
+	 * @param listDAO
+	 */
+	public static List<TableDAO> filter(UserDBDAO userDB, List<TableDAO> listDAO) {
+		
+		if("YES".equals(userDB.getIs_table_filter())){
+			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
+			String includeFilter = userDB.getTable_filter_include();
+			if("".equals(includeFilter)) {
+				tmpShowTables.addAll(listDAO);					
+			} else {
+				for (TableDAO tableDao : listDAO) {
+					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
+					for (String strFilter : strArryFilters) {
+						if(tableDao.getName().matches(strFilter)) {
+							tmpShowTables.add(tableDao);
+						}
+					}
+				}
+			}
+			
+			String excludeFilter = userDB.getTable_filter_exclude();
+			if(!"".equals(excludeFilter)) {
+				for (TableDAO tableDao : tmpShowTables) {
+					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
+					for (String strFilter : strArryFilters) {
+						if(tableDao.getName().matches(strFilter)) {
+							tmpShowTables.remove(tableDao);
+						}
+					}
+				}
+			}
+			
+			return tmpShowTables;
+		}
+		
+		return listDAO;
 	}
 	
 	/**

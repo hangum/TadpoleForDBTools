@@ -244,14 +244,23 @@ function installWorkbenchHooks() {
 	}
 	
 	// set initialize content
-	setInitialContent = function(varExt, varCon) {
-		console.log(varExt + ":" + varCon)
+	setInitialContent = function(varExt, varCon, varAssistList) {
+//		console.log(varExt + ":" + varCon)
 		try {
 			editor.setInput(varExt, null, varCon);
 
 			syntaxHighlighter.highlight(varExt, editor);
 			
 			editor.highlightAnnotations();
+			
+			// initialize keywords 
+			var keywords = varAssistList.split(",");
+			sqlContentAssistProvider.initKewords(keywords);
+			
+			// context assist
+			contentAssist.addEventListener("Activating", function() {
+				contentAssist.setProviders([sqlContentAssistProvider]);
+			});
 			
 			editor.setTextFocus();
 		} catch(err) {

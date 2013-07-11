@@ -11,7 +11,6 @@
 package com.hangum.tadpole.mongodb.core.editors.group;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -20,10 +19,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -35,14 +38,10 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Mongodb Group Editor
@@ -125,7 +124,9 @@ public class MongoDBGroupEditor extends EditorPart {
 		grpKeys.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpKeys.setText("Keys");
 		
-		textKeys = new TadpoleOrionHubEditor(grpKeys, SWT.BORDER);
+		String strAssist = CollectionUtils.getAssistList(userDB);
+		
+		textKeys = new TadpoleOrionHubEditor(grpKeys, SWT.BORDER, "", strAssist);
 		textKeys.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpQuery = new Group(compositeSearch, SWT.NONE);
@@ -139,7 +140,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		gl_grpQuery.marginWidth = 1;
 		grpQuery.setLayout(gl_grpQuery);
 		
-		textQuery = new TadpoleOrionHubEditor(grpQuery, SWT.BORDER);
+		textQuery = new TadpoleOrionHubEditor(grpQuery, SWT.BORDER, "", strAssist);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpInitialValue = new Group(compositeSearch, SWT.NONE);
@@ -152,7 +153,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		gl_grpInitialValue.marginWidth = 1;
 		grpInitialValue.setLayout(gl_grpInitialValue);
 		
-		textInitialValue = new TadpoleOrionHubEditor(grpInitialValue, SWT.BORDER);
+		textInitialValue = new TadpoleOrionHubEditor(grpInitialValue, SWT.BORDER, "", strAssist);
 		textInitialValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeFunction = new Composite(compositeMainSearch, SWT.NONE);
@@ -174,7 +175,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		grpReductJavascriptFunction.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpReductJavascriptFunction.setText("Reduce JavaScript Function");
 		
-		textReduceFunction = new TadpoleOrionHubEditor(grpReductJavascriptFunction, SWT.BORDER);
+		textReduceFunction = new TadpoleOrionHubEditor(grpReductJavascriptFunction, SWT.BORDER, "", strAssist);
 		textReduceFunction.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpFinalizeJavascriptFunction = new Group(compositeFunction, SWT.NONE);
@@ -188,7 +189,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		grpFinalizeJavascriptFunction.setText("Finalize JavaScript Function");
 		grpFinalizeJavascriptFunction.setBounds(0, 0, 70, 82);
 		
-		textFinalizeFunction = new TadpoleOrionHubEditor(grpFinalizeJavascriptFunction, SWT.BORDER);
+		textFinalizeFunction = new TadpoleOrionHubEditor(grpFinalizeJavascriptFunction, SWT.BORDER, "", strAssist);
 		textFinalizeFunction.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBtn = new Composite(compositeMainSearch, SWT.NONE);
@@ -230,7 +231,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {7, 3});
 	}
-
+	
 	/**
 	 * 검색
 	 * 

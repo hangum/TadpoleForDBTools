@@ -86,7 +86,7 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 		lblMessage.setText(Messages.TadpoleMessageDialog_2);
 		new Label(container, SWT.NONE);
 		
-		textMessage = new TadpoleOrionHubEditor(container, SWT.BORDER, message);// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMessage = new TadpoleOrionHubEditor(container, SWT.BORDER, message, "");// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 		return area;

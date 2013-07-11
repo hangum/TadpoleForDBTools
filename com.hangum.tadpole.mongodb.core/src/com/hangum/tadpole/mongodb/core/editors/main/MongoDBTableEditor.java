@@ -40,6 +40,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
+import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
@@ -123,19 +124,21 @@ public class MongoDBTableEditor extends EditorPart {
 		lblfind.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 2));
 		lblfind.setText(Messages.MongoDBTableEditor_0);
 		
-		textBasicFind = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER);
+		String strAssist = CollectionUtils.getAssistList(userDB);
+		
+		textBasicFind = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
 		Label lblfield = new Label(compositeBasicHead, SWT.NONE);
 		lblfield.setText(Messages.MongoDBTableEditor_1);
 		
-		textBasicField = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER);
+		textBasicField = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblsort = new Label(compositeBasicHead, SWT.NONE);
 		lblsort.setText(Messages.MongoDBTableEditor_2);
 		
-		textBasicSort = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER);
+		textBasicSort = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBasicSearch = new Composite(compositeBasic, SWT.NONE);

@@ -95,7 +95,7 @@ public class NewDocumentDialog extends Dialog {
 		lblDataStructure.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblDataStructure.setText("JSON Type Document"); //$NON-NLS-1$
 		
-		textContent = new TadpoleOrionHubEditor(container, SWT.BORDER);// | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);		
+		textContent = new TadpoleOrionHubEditor(container, SWT.BORDER, "", "");		
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		textContent.setFocus();

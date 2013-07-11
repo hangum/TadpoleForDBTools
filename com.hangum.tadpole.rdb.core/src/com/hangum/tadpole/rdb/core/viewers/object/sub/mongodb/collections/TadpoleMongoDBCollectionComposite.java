@@ -13,7 +13,6 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -78,6 +77,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
@@ -373,19 +373,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 				
 				try {
-					if (showTables != null) showTables.clear();
-					else showTables = new ArrayList<TableDAO>();
-					
-					List<String> listCollection = MongoDBQuery.listCollection(userDB);
-					for (String strColl : listCollection) {
-						TableDAO dao = new TableDAO();
-						dao.setName(strColl);
-
-						showTables.add(dao);
-					}
-					
-					/** filter 정보가 있으면 처리합니다. */
-					filter();
+					showTables= MongoDBQuery.listCollection(userDB);
 					
 				} catch(Exception e) {
 					logger.error("Table Referesh", e); //$NON-NLS-1$
@@ -428,45 +416,6 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
 		job.schedule();
-	}
-	
-	/**
-	 * 디비 등록시 설정한 filter 정보를 적용한다.
-	 */
-	private void filter() {
-		if("YES".equals(userDB.getIs_table_filter())){ //$NON-NLS-1$
-			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
-			
-			String includeFilter = userDB.getTable_filter_include();
-			if("".equals(includeFilter)) { //$NON-NLS-1$
-				tmpShowTables.addAll(showTables);					
-			} else {
-				for (TableDAO tableDao : showTables) {
-					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ","); //$NON-NLS-1$
-					for (String strFilter : strArryFilters) {
-						if(tableDao.getName().matches(strFilter)) {
-							tmpShowTables.add(tableDao);
-						}
-					}
-				}
-			}
-			
-			String excludeFilter = userDB.getTable_filter_exclude();
-			if(!"".equals(excludeFilter)) { //$NON-NLS-1$
-				for (TableDAO tableDao : tmpShowTables) {
-					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ","); //$NON-NLS-1$
-					for (String strFilter : strArryFilters) {
-						if(tableDao.getName().matches(strFilter)) {
-							tmpShowTables.remove(tableDao);
-						}
-					}
-				}
-			}
-			
-			// add table list array
-			showTables.clear();
-			showTables.addAll(tmpShowTables);
-		}
 	}
 
 	public void filter(String textSearch) {

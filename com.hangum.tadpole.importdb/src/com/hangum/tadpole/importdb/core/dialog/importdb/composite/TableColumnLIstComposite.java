@@ -159,9 +159,9 @@ public class TableColumnLIstComposite extends Composite {
 
 		try {
 			if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
-				List<String> listCollection = MongoDBQuery.listCollection(userDB);
-				for (String strColl : listCollection) {
-					listTables.add( new ModTableDAO(strColl) );
+				List<TableDAO> listCollection = MongoDBQuery.listCollection(userDB);
+				for (TableDAO tableDao : listCollection) {
+					listTables.add( new ModTableDAO(tableDao.getName()) );
 				}
 			} else {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

@@ -824,15 +824,12 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private String getAssistList() {
-		String strTablelist = "";
+		String strTablelist = "";//"select,insert,update,delete,drop,alert,where,";
 		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-			
-//			/** filter 정보가 있으면 처리합니다. */
-//			filter();
-			
+
 			for (TableDAO tableDao : showTables) {
 				strTablelist += tableDao.getName() + ",";
 			}

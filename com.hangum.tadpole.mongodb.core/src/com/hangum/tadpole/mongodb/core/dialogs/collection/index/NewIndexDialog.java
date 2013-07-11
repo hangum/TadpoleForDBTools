@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -155,8 +156,8 @@ public class NewIndexDialog extends Dialog {
 		tabFolder.setSelection(0);
 		
 		try {
-			List<String> listCollFields = MongoDBQuery.listCollection(userDB);
-			for (String string : listCollFields) comboColName.add(string);
+			List<TableDAO> listCollFields = MongoDBQuery.listCollection(userDB);
+			for (TableDAO tableDao : listCollFields) comboColName.add(tableDao.getName());
 			
 			if(null != initCollectionName) {
 				comboColName.setText(initCollectionName);

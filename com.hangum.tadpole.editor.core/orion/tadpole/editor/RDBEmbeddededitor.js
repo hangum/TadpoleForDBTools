@@ -242,7 +242,7 @@ function installWorkbenchHooks() {
 	
 	// set initialize content
 	setInitialContent = function(varExt, varCon, varAssistList) {
-		console.log(varExt + ":" + varCon + ":" + varAssistList)
+//		console.log(varExt + ":" + varCon + ":" + varAssistList)
 		try {
 			editor.setInput(varExt, null, varCon);
 
@@ -251,14 +251,7 @@ function installWorkbenchHooks() {
 			editor.highlightAnnotations();
 			
 			// initialize keywords 
-			var keywords = varAssistList.split(","); 
-//				[
-//			                 "cho",
-//			                 "Kimsbirthday",
-//					         "UPDATE",			         
-//					         "DELETE",
-//					         "UPDB"
-//					       ];
+			var keywords = varAssistList.split(",");
 			sqlContentAssistProvider.initKewords(keywords);
 			
 			// context assist

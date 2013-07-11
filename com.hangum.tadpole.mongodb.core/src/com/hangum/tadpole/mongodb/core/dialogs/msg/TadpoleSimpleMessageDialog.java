@@ -69,7 +69,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		textMessage = new TadpoleOrionHubEditor(container, SWT.BORDER, message);
+		textMessage = new TadpoleOrionHubEditor(container, SWT.BORDER, message, "");
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 		return area;

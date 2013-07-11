@@ -346,12 +346,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				tableColumnViewer.getTable().setSortDirection(tableColumnComparator.getDirection());
 				tableColumnViewer.getTable().setSortColumn(tableColumn.getColumn());
 				
-
-					
-					
-				
-				
-				
 				tableColumnViewer.refresh();
 			}
 		};
@@ -439,11 +433,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN);
 				
 				try {
-					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-					showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-					
-					/** filter 정보가 있으면 처리합니다. */
-					filter();
+//					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+//					showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+//					
+//					/** filter 정보가 있으면 처리합니다. */
+//					filter();
+					showTables = getTableList(userDB);
 					
 				} catch(Exception e) {
 					logger.error("Table Referesh", e);
@@ -489,17 +484,35 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	/**
-	 * 디비 등록시 설정한 filter 정보를 적용한다.
+	 * 보여 주어야할 테이블 목록을 정의합니다.
+	 *
+	 * @param userDB
+	 * @return
+	 * @throws Exception
 	 */
-	private void filter() {
+	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		
+		/** filter 정보가 있으면 처리합니다. */
+		return filter(userDB, showTables);
+	}
+	
+	/**
+	 * 디비 등록시 설정한 filter 정보를 적용한다.
+	 * 
+	 * @param userDB
+	 * @param listDAO
+	 */
+	public static List<TableDAO> filter(UserDBDAO userDB, List<TableDAO> listDAO) {
+		
 		if("YES".equals(userDB.getIs_table_filter())){
 			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
-			
 			String includeFilter = userDB.getTable_filter_include();
 			if("".equals(includeFilter)) {
-				tmpShowTables.addAll(showTables);					
+				tmpShowTables.addAll(listDAO);					
 			} else {
-				for (TableDAO tableDao : showTables) {
+				for (TableDAO tableDao : listDAO) {
 					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
 					for (String strFilter : strArryFilters) {
 						if(tableDao.getName().matches(strFilter)) {
@@ -521,10 +534,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				}
 			}
 			
-			// add table list array
-			showTables.clear();
-			showTables.addAll(tmpShowTables);
+			return tmpShowTables;
 		}
+		
+		return listDAO;
 	}
 	
 	/**
