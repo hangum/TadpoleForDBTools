@@ -39,7 +39,7 @@ import com.mongodb.Mongo;
  */
 public enum TadpoleModelUtils {
 	INSTANCE;
-	
+	/** default logger */
 	private static final Logger logger = Logger.getLogger(TadpoleModelUtils.class);
 	
 	private UserDBDAO userDB;
@@ -73,9 +73,9 @@ public enum TadpoleModelUtils {
 		db.setId(userDB.getUsers());
 		db.setUrl(userDB.getUrl());
 		
-		// 테이블목록
+		// 테이블목록.
 		List<TableDAO> tables = getTables();
-		// 전체 참조 테이블 목록
+		// 전체 참조 테이블 목록.
 		Map<String, Table> mapDBTables = new HashMap<String, Table>();
 		
 		// 

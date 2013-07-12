@@ -29,7 +29,7 @@ package com.hangum.tadpole.dao.mysql;
  *
  */
 public class TableColumnDAO {
-	// MySQL, Oracle 사용하는 컬
+	// MySQL, Oracle 사용하는 컬럼.
 	String Field = "";
 	String Type= "";
 	String Null= "";
@@ -37,7 +37,7 @@ public class TableColumnDAO {
 	String Default= "";
 	String Extra= "";
 	
-	// SQLite에서 사용하는 컬
+	// SQLite에서 사용하는 컬럼.
 	String cid= "";
 	String name= "";
 //	String type= "";

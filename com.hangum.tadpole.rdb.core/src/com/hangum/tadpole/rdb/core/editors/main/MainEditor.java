@@ -509,7 +509,7 @@ public class MainEditor extends EditorExtension {
 				// 분리자 정보를 가져옵니다.
 				StringBuffer sbExportData = new StringBuffer();
 					
-				// column 헤더추
+				// column 헤더추가.
 				TableColumn[] tcs = sqlResultTableViewer.getTable().getColumns();
 				for (TableColumn tableColumn : tcs) {
 					sbExportData.append( tableColumn.getText()).append(exportDelimit);//","); //$NON-NLS-1$

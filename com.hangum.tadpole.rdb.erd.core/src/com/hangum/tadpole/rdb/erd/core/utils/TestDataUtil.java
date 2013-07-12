@@ -36,14 +36,14 @@ public enum TestDataUtil {
 		db.setId("root");
 		db.setUrl("");
 		
-		// 테이블
+		// add tables
 		Table tableCity = factory.createTable();
 		tableCity.setDb(db);
 		tableCity.setName("city");
 		tableCity.setConstraints(new Rectangle(10, 300, TadpoleModelUtils.END_TABLE_WIDTH, TadpoleModelUtils.END_TABLE_HIGHT));
 		db.getTables().add(tableCity);
 		
-		// 컬럼 추가
+		// add columns
 		Column columnCityId = factory.createColumn();
 		columnCityId.setField("city_id");
 		columnCityId.setType("String");

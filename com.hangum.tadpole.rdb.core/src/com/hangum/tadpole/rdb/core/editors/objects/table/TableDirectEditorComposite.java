@@ -649,7 +649,7 @@ public class TableDirectEditorComposite extends Composite {
 	}
 	
 	/**
-	 * update 문장 생성
+	 * update 문장 생성.
 	 * 
 	 * @param tmpRs
 	 * @return
@@ -659,7 +659,7 @@ public class TableDirectEditorComposite extends Composite {
 				" SET "; //$NON-NLS-1$
 		
 		// 수정된 컬럼의 값을 넣는다.
-		// 0 번째 컬럼은 데이터 수정 유무이므로
+		// 0 번째 컬럼은 데이터 수정 유무이므로 .
 		for(int i=1; i<tmpRs.size(); i++) {
 			if(TbUtils.isModifyData( tmpRs.get(i).toString() )) {
 				updateStmt += mapColumns.get(i-1) + " = '" + TbUtils.getOriginalData(tmpRs.get(i).toString()) + "', "; //$NON-NLS-1$ //$NON-NLS-2$
@@ -672,7 +672,8 @@ public class TableDirectEditorComposite extends Composite {
 	}
 	
 	/**
-	 * insert 문장 생성
+	 * insert 문장 생성.
+	 * 
 	 * @param tmpRs
 	 * @return
 	 */

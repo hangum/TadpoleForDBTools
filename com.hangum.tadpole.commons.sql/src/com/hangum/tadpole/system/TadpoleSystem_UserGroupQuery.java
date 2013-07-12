@@ -60,11 +60,11 @@ public class TadpoleSystem_UserGroupQuery {
 		UserGroupDAO groupDao = new UserGroupDAO();
 		groupDao.setName(name);
 		
-		// 기존에 등록 되어 있는지 검사한다
+		// 기존에 등록 되어 있는지 검사한다.
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserGroupDAO> isUserDB = (List<UserGroupDAO>)sqlClient.queryForList("isUserGroup", groupDao); //$NON-NLS-1$
 		
-		// 존재하
+		// 존재하면.
 		if(isUserDB.size() >= 1) {
 			throw new Exception("Already Group exists.");
 		}

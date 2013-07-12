@@ -371,14 +371,14 @@ public class MongodbResultComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				StringBuffer sbExportData = new StringBuffer();
 				
-				// column 헤더추
+				// column 헤더추가.
 				TableColumn[] tcs = resultTableViewer.getTable().getColumns();
 				for (TableColumn tableColumn : tcs) {
 					sbExportData.append( tableColumn.getText()).append(","); //$NON-NLS-1$
 				}
 				sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				
-				// column 데이터 추가 
+				// column 데이터 추가. 
 				for(int i=0; i<sourceDataList.size(); i++) {
 					HashMap<Integer, Object> mapColumns = sourceDataList.get(i);
 					for(int j=0; j<mapColumns.size(); j++) {

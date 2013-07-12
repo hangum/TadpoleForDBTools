@@ -101,11 +101,11 @@ public class ManagerViewer extends ViewPart {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				Object selElement = is.getFirstElement();
 				
-				// db object를 클릭하면 쿼리 창이 뜨도록하고
+				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if(selElement instanceof UserDBDAO) {
 					QueryEditorAction qea = new QueryEditorAction();
 					qea.run((UserDBDAO)selElement);
-				// erd를 클릭하면 erd가 오픈되도록 수정 
+				// erd를 클릭하면 erd가 오픈되도록 수정. 
 				} else if(selElement instanceof UserDBResourceDAO) {
 					UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					

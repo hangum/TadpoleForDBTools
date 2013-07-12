@@ -70,9 +70,9 @@ public enum TadpoleModelUtils {
 		db.setId(userDB.getUsers());
 		db.setUrl(userDB.getUrl());
 		
-		// 테이블목록
+		// 테이블목록.
 		List<TableDAO> tables = getTables();
-		// 전체 참조 테이블 목록
+		// 전체 참조 테이블 목록.
 		Map<String, Table> mapDBTables = new HashMap<String, Table>();
 		
 		// 
@@ -88,7 +88,7 @@ public enum TadpoleModelUtils {
 			tableModel.setName(table.getName());
 			mapDBTables.put(tableModel.getName(), tableModel);
 			
-			// 첫번째 보여주는 항 
+			// 첫번째 보여주는 항목.
 			if(prevRectangle == null) {
 				prevRectangle = new Rectangle(START_TABLE_WIDTH, START_TABLE_HIGHT, END_TABLE_WIDTH, END_TABLE_HIGHT); 
 			} else {
