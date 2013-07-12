@@ -47,7 +47,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	
 	protected DATA_STATUS dalog_status = DATA_STATUS.NEW;
 	
-	protected String displayName = "";
+	protected String displayName = ""; //$NON-NLS-1$
 	
 	protected PreConnectionInfoGroup preDBInfo;
 	protected OthersConnectionRDBGroup othersConnectionInfo;
@@ -59,8 +59,8 @@ public abstract class AbstractLoginComposite extends Composite {
 	
 	// start table filters define
 	protected boolean isTableFilter = false;
-	protected String strTableFilterInclude = "";
-	protected String strTableFilterExclude = "";
+	protected String strTableFilterInclude = ""; //$NON-NLS-1$
+	protected String strTableFilterExclude = Messages.AbstractLoginComposite_3;
 	// end table filters define
 
 	/** 기존에 접속한 user db */
@@ -177,16 +177,24 @@ public abstract class AbstractLoginComposite extends Composite {
 	/**
 	 * db가 이미 저장되어 있는지 검사합니다.
 	 * 
-	 * @param loginInfo
+	 * @param userDBDao
 	 * @param searchTable 디비의 테이블 검증을위한 쿼리 
 	 * @return
 	 */
-	private boolean isAlreadExistDB(UserDBDAO loginInfo) {
+	private boolean isAlreadExistDB(UserDBDAO userDBDao) {
 		
 		try {
+			// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
+			// 최소한 display_name이라도 틀려야 한다.
+			if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getSeq(), userDBDao)) {
+				MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
+				
+				return false;
+			}
+			
 			// 이미 등록된 디비 인지 검사합니다.
-			if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), loginInfo.getUrl(), loginInfo.getUsers())) {
-//				MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2);
+			if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), userDBDao)){
+				
 				// 중복 디비 등록시 사용자의 의견을 묻습니다.
 				if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {
 					return true;
