@@ -31,12 +31,6 @@ public class DBTableEditorInput implements IEditorInput {
 	List<TableColumnDAO> showTableColumns;
 	
 	public DBTableEditorInput(String tableName, UserDBDAO userDB, List showTableColumns) {
-		System.out.println("==========================================");
-		System.out.println(tableName);
-		
-		System.out.println("==========================================");
-		System.out.println("==========================================");
-		
 		this.tableName = tableName;
 		this.userDB = userDB;
 		this.showTableColumns = showTableColumns;
@@ -52,11 +46,11 @@ public class DBTableEditorInput implements IEditorInput {
 		return false;//(this.tableName != null);
 	}
 	
-//	@Override
-//	public boolean equals(Object obj) {
-//		if( !(obj instanceof DBTableEditorInput) ) return false;
-//		return ((DBTableEditorInput)obj).getName().equals(getName());
-//	}
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof DBTableEditorInput) ) return false;
+		return ((DBTableEditorInput)obj).getName().equals(getName());
+	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
