@@ -103,6 +103,7 @@ import com.hangum.tadpole.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.system.permission.PermissionChecker;
 import com.hangum.tadpole.util.RequestInfoUtils;
+import com.hangum.tadpole.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.util.UnicodeUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
@@ -260,8 +261,11 @@ public class MainEditor extends EditorExtension {
 		gl_compositeEditor.marginWidth = 0;
 		compositeEditor.setLayout(gl_compositeEditor);
 		
+		// Shortcut prefix
+		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
+		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
-		toolBar.setToolTipText(Messages.MainEditor_toolBar_toolTipText);
+		toolBar.setToolTipText(String.format(Messages.MainEditor_toolBar_toolTipText, prefixOSShortcut));
 		
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
@@ -282,7 +286,7 @@ public class MainEditor extends EditorExtension {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmExecute.setToolTipText(Messages.MainEditor_tltmExecute_toolTipText_1);
+		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, prefixOSShortcut));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png")); //$NON-NLS-1$
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -311,7 +315,7 @@ public class MainEditor extends EditorExtension {
 				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
 			}
 		});
-		tltmExplainPlanctrl.setToolTipText(Messages.MainEditor_3);
+		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, prefixOSShortcut));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
@@ -322,7 +326,7 @@ public class MainEditor extends EditorExtension {
 				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
 			}
 		});
-		tltmSort.setToolTipText(Messages.MainEditor_4);
+		tltmSort.setToolTipText(String.format(Messages.MainEditor_4, prefixOSShortcut));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSQLToApplication = new ToolItem(toolBar, SWT.NONE);
@@ -392,7 +396,7 @@ public class MainEditor extends EditorExtension {
 				dialog.open();
 			}
 		});
-		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
+		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, prefixOSShortcut));
 		
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
@@ -655,7 +659,7 @@ public class MainEditor extends EditorExtension {
 				refreshSqlHistory();
 			}
 		});
-		btnRefresh.setText("Refresh");
+		btnRefresh.setText(Messages.MainEditor_24);
 		
 		///////////////////// tab Message //////////////////////////
 		CTabItem tbtmMessage = new CTabItem(tabFolderResult, SWT.NONE);
@@ -777,7 +781,7 @@ public class MainEditor extends EditorExtension {
 			listSQLHistory.addAll( TadpoleSystem_ExecutedSQL.getExecuteQueryHistory(user_seq, getUserDB().getSeq(), textHistoryFilter.getText().trim()) );
 			tableViewerSQLHistory.refresh();
 		} catch(Exception ee) {
-			logger.error("Executed SQL History call", ee);
+			logger.error("Executed SQL History call", ee); //$NON-NLS-1$
 		}
 	}
 	
@@ -803,14 +807,10 @@ public class MainEditor extends EditorExtension {
 					e.printStackTrace();
 				}
 				
-				// 에디터에서 assist창에 보여줄 목록을 가져옵니다.
-				String strAssistList = getAssistList();
-				logger.debug("Assist list is " + strAssistList);
-				
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
 				String strInitContent = StringUtils.replace(getInitDefaultEditorStr(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n"); //$NON-NLS-1$
 				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\", \"" + strAssistList + "\" );"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\", \"" + getAssistList() + "\" );"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				browserEvaluate(callCommand);
 				
 			}
@@ -824,19 +824,19 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private String getAssistList() {
-		String strTablelist = "";//"select,insert,update,delete,drop,alert,where,";
+		String strTablelist = "";//"select,insert,update,delete,drop,alert,where,"; //$NON-NLS-1$
 		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 
 			for (TableDAO tableDao : showTables) {
-				strTablelist += tableDao.getName() + ",";
+				strTablelist += tableDao.getName() + ","; //$NON-NLS-1$
 			}
-			strTablelist = StringUtils.removeEnd(strTablelist, ",");
+			strTablelist = StringUtils.removeEnd(strTablelist, ","); //$NON-NLS-1$
 			
 		} catch(Exception e) {
-			logger.error("MainEditor get the table list", e);
+			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
 		}
 		
 		return strTablelist;
@@ -1398,9 +1398,9 @@ public class MainEditor extends EditorExtension {
 			boolean boolResult = statement.execute( sqlQuery );
 			
 			// create table, drop table이면 작동하도록			
-			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") || 
-				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP")  ||
-				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "ALTER")) { 
+			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
+				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP")  || //$NON-NLS-1$
+				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "ALTER")) {  //$NON-NLS-1$
 																					//$NON-NLS-1$ //$NON-NLS-2$
 				
 				try {
