@@ -101,7 +101,7 @@ public class MainEditorInput implements IEditorInput {
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		return null;
+		return ImageDescriptor.getMissingImageDescriptor();
 	}
 
 	@Override

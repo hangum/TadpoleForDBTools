@@ -69,6 +69,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLInsertAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLSelectAction;
@@ -78,6 +79,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.TableDataEditorAction;
 import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
 import com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -114,18 +116,20 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private ObjectComparator tableColumnComparator;
 	private List showTableColumns;
 	
-	private ObjectCreatAction creatAction_Table;
-	private ObjectDeleteAction deleteAction_Table;
-	private ObjectRefreshAction refreshAction_Table;
+	private AbstractObjectAction creatAction_Table;
+	private AbstractObjectAction deleteAction_Table;
+	private AbstractObjectAction refreshAction_Table;
 
-	private GenerateSampleDataAction generateSampleData;
+	private AbstractObjectAction generateSampleData;
 
 	private GenerateSQLSelectAction selectStmtAction;
 	private GenerateSQLSelectAction insertStmtAction;
 	private GenerateSQLSelectAction updateStmtAction;
 	private GenerateSQLSelectAction deleteStmtAction;
 	
-	private GenerateViewDDLAction viewDDLAction;
+	private AbstractObjectAction viewDDLAction;
+	
+	private AbstractObjectAction tableDataEditorAction;
 	
 	/**
 	 * Create the composite.
@@ -370,6 +374,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		deleteStmtAction = new GenerateSQLDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
 		
 		viewDDLAction = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "View"); //$NON-NLS-1$
+		
+		tableDataEditorAction = new TableDataEditorAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -400,6 +406,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						manager.add(viewDDLAction);
+						
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(tableDataEditorAction);
 					}
 				}
 			}
@@ -556,6 +565,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		deleteStmtAction.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
+		tableDataEditorAction.setUserDB(getUserDB());
 	}
 	
 	/**
