@@ -67,7 +67,8 @@ public class DBInformationDialog extends Dialog {
 	 * @param parentShell
 	 */
 	public DBInformationDialog(Shell parentShell, UserDBDAO userDB) {
-		super(parentShell);		
+		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		this.userDB = userDB;
 	}
 	
@@ -192,7 +193,7 @@ public class DBInformationDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(452, 530);
+		return new Point(450, 530);
 	}
 
 }
