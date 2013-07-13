@@ -1220,8 +1220,9 @@ public class MainEditor extends EditorExtension {
 					return;
 					
 				} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
-					
+					// 플랜결과를 디비에 저장합니다.
 					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
+					// 저장된 결과를 가져와서 보여줍니다.
 					stmt = javaConn.prepareStatement("select * from " + planTableName); //$NON-NLS-1$
 					rs = stmt.executeQuery();
 					
@@ -1404,7 +1405,7 @@ public class MainEditor extends EditorExtension {
 																					//$NON-NLS-1$ //$NON-NLS-2$
 				
 				try {
-					refreshExplorerView();//changeType, changeTbName);
+					refreshExplorerView();
 				} catch(Exception e) {
 					logger.error("CREATE, DROP, ALTER Query refersh error", e); //$NON-NLS-1$
 				}

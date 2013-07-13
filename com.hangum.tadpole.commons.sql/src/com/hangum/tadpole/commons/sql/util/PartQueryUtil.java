@@ -100,20 +100,18 @@ public class PartQueryUtil {
 	public static String makeExplainQuery(UserDBDAO userDB, String query) throws Exception {
 		String resultQuery = "";
 		
-		if(DBDefine.MYSQL_DEFAULT ==   DBDefine.getDBDefine(userDB.getDbms_types())) {
-			
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())
+				|| DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())
+		) {
 			resultQuery = MySQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.ORACLE_DEFAULT ==   DBDefine.getDBDefine(userDB.getDbms_types())) {
-
+		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getDbms_types())) {
-			
+		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 			resultQuery = SQLiteDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.CUBRID_DEFAULT ==  DBDefine.getDBDefine(userDB.getDbms_types())) {
-			
+		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 			resultQuery = query;
 			
 		} else {
