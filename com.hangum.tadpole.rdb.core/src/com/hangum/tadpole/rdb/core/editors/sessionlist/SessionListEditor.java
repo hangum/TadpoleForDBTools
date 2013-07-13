@@ -168,7 +168,12 @@ public class SessionListEditor extends EditorPart {
 				
 				StructuredSelection ss = (StructuredSelection)tableViewerSessionList.getSelection();
 				SessionListDAO sl = (SessionListDAO)ss.getFirstElement();
-				if(null != sl.getInfo()) textQuery.setText(sl.getInfo());
+				if(null != sl.getInfo()) {
+					textQuery.setText(sl.getInfo());
+					textQuery.setFocus();
+				} else {
+					textQuery.setText("");
+				}
 			}
 		});
 		Table tableSessionList = tableViewerSessionList.getTable();
