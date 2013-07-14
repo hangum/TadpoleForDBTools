@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectExecuteProcedureAction;
 
 /**
  * procedure 실행 다이얼로그.
@@ -50,6 +49,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	public ExecuteProcedureDialog(Shell parentShell, UserDBDAO userDB, ProcedureFunctionDAO procedureDAO) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.userDB = userDB;
 		this.procedureDAO = procedureDAO;
@@ -77,6 +77,8 @@ public class ExecuteProcedureDialog extends Dialog {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
+		// in out의 갯수 파악한다.
+		
 
 		return container;
 	}
@@ -88,6 +90,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false);
 	}
 
 	/**

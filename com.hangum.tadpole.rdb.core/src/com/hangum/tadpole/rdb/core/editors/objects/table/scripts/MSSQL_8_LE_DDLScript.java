@@ -22,6 +22,7 @@ import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.editors.objects.table.scripts.types.InOutParameter;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -192,6 +193,13 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 	public String getProcedureScript(ProcedureFunctionDAO procedureDAO)
 			throws Exception {
 		throw new Exception("Not Support Database");
+	}
+	
+	@Override
+	public List<InOutParameter> getProcedureParamter(
+			ProcedureFunctionDAO procedureDAO) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/* (non-Javadoc)

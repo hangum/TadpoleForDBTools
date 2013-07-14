@@ -1,6 +1,7 @@
 package com.hangum.tadpole.rdb.core.editors.objects.table.scripts;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -10,6 +11,7 @@ import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.editors.objects.table.scripts.types.InOutParameter;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -57,6 +59,13 @@ public class SQLiteDDLScript extends AbstractRDBDDLScript {
 		throw new Exception("Not support Database");
 	}
 
+	@Override
+	public List<InOutParameter> getProcedureParamter(
+			ProcedureFunctionDAO procedureDAO) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public String getTriggerScript(TriggerDAO triggerDAO) throws Exception {
 		return triggerDAO.getStatement();
