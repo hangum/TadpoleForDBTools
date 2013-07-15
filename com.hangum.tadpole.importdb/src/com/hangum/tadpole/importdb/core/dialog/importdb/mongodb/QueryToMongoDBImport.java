@@ -46,8 +46,8 @@ public class QueryToMongoDBImport extends DBImport {
 	private String userQuery; 
 	private boolean isExistOnDelete;
 	
-	public QueryToMongoDBImport(UserDBDAO importUserDB, String colName,  String userQuery, UserDBDAO exportUserDB, boolean isExistOnDelete) {
-		super(importUserDB, exportUserDB);
+	public QueryToMongoDBImport(UserDBDAO sourceUserDB, UserDBDAO targetUserDB, String colName,  String userQuery, boolean isExistOnDelete) {
+		super(sourceUserDB, targetUserDB);
 		
 		this.colName = colName;
 		this.userQuery = userQuery;
@@ -76,7 +76,7 @@ public class QueryToMongoDBImport extends DBImport {
 				try {
 					monitor.subTask(userQuery + " table importing..."); //$NON-NLS-1$
 					
-					if(isExistOnDelete) MongoDBQuery.existOnDelete(importUserDB, colName);
+					if(isExistOnDelete) MongoDBQuery.existOnDelete(getTargetUserDB(), colName);
 					
 					insertMongoDB();
 				} catch(Exception e) {
@@ -101,7 +101,7 @@ public class QueryToMongoDBImport extends DBImport {
 	 * @throws Exception
 	 */
 	private void insertMongoDB() throws Exception {
-		SQLQueryUtil qu = new SQLQueryUtil(exportUserDB, userQuery);
+		SQLQueryUtil qu = new SQLQueryUtil(getSourceUserDB(), userQuery);
 		while(qu.hasNext()) {
 			qu.nextQuery();
 			HashMap<Integer, String> mapCNameToIndex = qu.getMapColumns();
@@ -127,7 +127,7 @@ public class QueryToMongoDBImport extends DBImport {
 				listDBObject.add(insertObject);
 			}	// end for
 		
-			MongoDBQuery.insertDocument(importUserDB, colName, listDBObject);
+			MongoDBQuery.insertDocument(getTargetUserDB(), colName, listDBObject);
 		}
 	}
 }

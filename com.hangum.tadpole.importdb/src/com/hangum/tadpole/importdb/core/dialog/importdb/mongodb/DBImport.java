@@ -28,13 +28,43 @@ public abstract class DBImport {
 	 */
 	private static final Logger logger = Logger.getLogger(DBImport.class);
 	
-	protected UserDBDAO importUserDB;
-	protected UserDBDAO exportUserDB;
+	protected UserDBDAO targetUserDB;
+	protected UserDBDAO sourceUserDB;
 	
-	public DBImport(UserDBDAO importUserDB, UserDBDAO exportUserDB) {
-		this.importUserDB = importUserDB;
-		this.exportUserDB = exportUserDB;
+	public DBImport(UserDBDAO sourceUserDB, UserDBDAO targetUserDB) {
+		this.sourceUserDB = sourceUserDB;
+		this.targetUserDB = targetUserDB;
 	}
 
 	public abstract Job workTableImport();
+
+	/**
+	 * @return the targetUserDB
+	 */
+	public UserDBDAO getTargetUserDB() {
+		return targetUserDB;
+	}
+
+	/**
+	 * @param targetUserDB the targetUserDB to set
+	 */
+	public void setTargetUserDB(UserDBDAO targetUserDB) {
+		this.targetUserDB = targetUserDB;
+	}
+
+	/**
+	 * @return the sourceUserDB
+	 */
+	public UserDBDAO getSourceUserDB() {
+		return sourceUserDB;
+	}
+
+	/**
+	 * @param sourceUserDB the sourceUserDB to set
+	 */
+	public void setSourceUserDB(UserDBDAO sourceUserDB) {
+		this.sourceUserDB = sourceUserDB;
+	}
+	
+	
 }

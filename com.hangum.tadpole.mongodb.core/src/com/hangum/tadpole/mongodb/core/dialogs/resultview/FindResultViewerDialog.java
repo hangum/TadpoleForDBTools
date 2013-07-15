@@ -28,7 +28,6 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.mongodb.DBObject;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * MongoDB의 결과 result dialog
@@ -37,7 +36,7 @@ import org.eclipse.swt.widgets.Label;
  *
  */
 public class FindResultViewerDialog extends Dialog {
-	/**
+	/**Øß
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(FindResultViewerDialog.class);
@@ -46,8 +45,6 @@ public class FindResultViewerDialog extends Dialog {
 	private UserDBDAO userDB;
 	private String initColName;
 	
-	
-	private Label lblInfo;
 	/** 쿼리 결과 출력 */
 	private MongodbResultComposite compositeResult ;
 	
@@ -87,14 +84,21 @@ public class FindResultViewerDialog extends Dialog {
 		gridLayout.marginWidth = 1;
 		
 		Composite composite = new Composite(container, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
+		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.verticalSpacing = 2;
+		gl_composite.horizontalSpacing = 2;
+		gl_composite.marginHeight = 2;
+		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		lblInfo = new Label(composite, SWT.BORDER);
-		lblInfo.setText(strTitle);
-		
 		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName, false);
-		compositeResult.setLayout(new GridLayout(1, false));
+		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridLayout gl_compositeResult = new GridLayout(1, false);
+		gl_compositeResult.verticalSpacing = 2;
+		gl_compositeResult.horizontalSpacing = 2;
+		gl_compositeResult.marginHeight = 2;
+		gl_compositeResult.marginWidth = 2;
+		compositeResult.setLayout(gl_compositeResult);
 		
 		try {
 			compositeResult.refreshDBView(iteResult, 0);

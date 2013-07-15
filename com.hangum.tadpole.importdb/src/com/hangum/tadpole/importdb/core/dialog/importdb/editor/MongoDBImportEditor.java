@@ -68,7 +68,7 @@ public class MongoDBImportEditor extends EditorPart {
 	
 	private CTabFolder tabFolderQuery;
 
-	private UserDBDAO userDB = null;
+	private UserDBDAO targetDBDAO = null;
 	private TadpoleOrionHubEditor textQuery;
 	private Text textCollectionName;
 	
@@ -95,7 +95,7 @@ public class MongoDBImportEditor extends EditorPart {
 		setInput(input);
 		
 		MongoDBImportEditorInput qei = (MongoDBImportEditorInput)input;
-		userDB = qei.getUserDB();
+		targetDBDAO = qei.getUserDB();
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class MongoDBImportEditor extends EditorPart {
 		
 		Label lblTargetDB = new Label(compositeHead, SWT.NONE);
 		lblTargetDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblTargetDB.setText(userDB.getDisplay_name());
+		lblTargetDB.setText(targetDBDAO.getDisplay_name());
 		
 		Button btnImport = new Button(compositeHead, SWT.NONE);
 		btnImport.addSelectionListener(new SelectionAdapter() {
@@ -239,7 +239,7 @@ public class MongoDBImportEditor extends EditorPart {
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : userDBS) {
 				// 임포트 하려는 자신은 제외 
-				if(userDB.getSeq() != userDBDAO.getSeq()) {
+				if(targetDBDAO.getSeq() != userDBDAO.getSeq()) {
 					comboDBList.add(userDBDAO.getDisplay_name());
 					comboDBList.setData(userDBDAO.getDisplay_name(), userDBDAO);
 					visibleItemCount++;
@@ -266,33 +266,38 @@ public class MongoDBImportEditor extends EditorPart {
 			if(tableColumnListComposite.getSelectListTables().isEmpty()) return;
 		} else if(tabFolderQuery.getSelectionIndex() == 1) {			
 			if("".equals(textCollectionName.getText().trim())) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.MongoDBImportEditor_14, Messages.MongoDBImportEditor_3);
+				MessageDialog.openError(null, Messages.MongoDBImportEditor_14, Messages.QueryToMongoDBImport_5);
 				return;
+			}
+			
+			if("".equals(textQuery.getText().trim())) { //$NON-NLS-1$
+				MessageDialog.openInformation(null, Messages.QueryToMongoDBImport_1, Messages.QueryToMongoDBImport_2);			
+				return;		
 			}
 		}
 		
 		// job make
-		final UserDBDAO exportDBDAO = (UserDBDAO)comboDBList.getData(comboDBList.getText());
+		final UserDBDAO sourceDBDAO = (UserDBDAO)comboDBList.getData(comboDBList.getText());
 		Job job = null;		
 		if(MessageDialog.openConfirm(null, "Confirm", Messages.MongoDBImportEditor_1)) {	 //$NON-NLS-1$
 			if(tabFolderQuery.getSelectionIndex() == 0) {
 				
 				DBImport dbImport = null;
-				if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
-					dbImport = new MongoDBCollectionToMongodBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
+				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(sourceDBDAO.getDbms_types())) {
+					dbImport = new MongoDBCollectionToMongodBImport(sourceDBDAO, targetDBDAO, tableColumnListComposite.getSelectListTables());
 				} else {
-					dbImport = new RDBTableToMongoDBImport(userDB, tableColumnListComposite.getSelectListTables(), exportDBDAO);
+					dbImport = new RDBTableToMongoDBImport(sourceDBDAO, targetDBDAO, tableColumnListComposite.getSelectListTables());
 				}
 				job = dbImport.workTableImport();
 				if(job == null) return;
 				
 				
 			} else if(tabFolderQuery.getSelectionIndex() == 1) {	
-				if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(sourceDBDAO.getDbms_types())) {
 					MessageDialog.openInformation(null, "Confirm", "Not support MongoDB.");
 					return;
 				} else {
-					QueryToMongoDBImport importData = new QueryToMongoDBImport(userDB, textCollectionName.getText(), textQuery.getText(), exportDBDAO, btnExistOnDelete.getSelection());
+					QueryToMongoDBImport importData = new QueryToMongoDBImport(sourceDBDAO, targetDBDAO, textCollectionName.getText(), textQuery.getText(), btnExistOnDelete.getSelection());
 					job = importData.workTableImport();
 					if(job == null) return;
 				}
@@ -315,7 +320,7 @@ public class MongoDBImportEditor extends EditorPart {
 			}	// end done			
 		});	// end job
 		
-		job.setName(userDB.getDisplay_name());
+		job.setName(targetDBDAO.getDisplay_name());
 		job.setUser(true);
 		job.schedule();	
 	}

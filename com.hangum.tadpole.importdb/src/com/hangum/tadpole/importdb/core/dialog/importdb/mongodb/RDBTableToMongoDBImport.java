@@ -44,8 +44,8 @@ public class RDBTableToMongoDBImport extends DBImport {
 	
 	private List<ModTableDAO> listModeTable; 
 	
-	public RDBTableToMongoDBImport(UserDBDAO importUserDB, List<ModTableDAO> listModeTable, UserDBDAO exportUserDB) {
-		super(importUserDB, exportUserDB);
+	public RDBTableToMongoDBImport(UserDBDAO sourceUserDB, UserDBDAO targetUserDB, List<ModTableDAO> listModeTable) {
+		super(sourceUserDB, targetUserDB);
 		this.listModeTable = listModeTable;
 	}
 
@@ -71,10 +71,10 @@ public class RDBTableToMongoDBImport extends DBImport {
 						
 						// collection is exist on delete.
 						String strNewColName = modTableDAO.getReName().trim().equals("")?modTableDAO.getName():modTableDAO.getReName();
-						if(modTableDAO.isExistOnDelete()) MongoDBQuery.existOnDelete(importUserDB, modTableDAO.getName());
+						if(modTableDAO.isExistOnDelete()) MongoDBQuery.existOnDelete(getTargetUserDB(), modTableDAO.getName());
 						
 						// insert
-						insertMongoDB(modTableDAO, exportUserDB, strNewColName);
+						insertMongoDB(modTableDAO, strNewColName);
 					}			
 
 				} catch(Exception e) {
@@ -98,11 +98,11 @@ public class RDBTableToMongoDBImport extends DBImport {
 	 * @param userDBDAO
 	 * @throws Exception
 	 */
-	private void insertMongoDB(ModTableDAO modTableDAO, UserDBDAO userDBDAO, String strNewColName) throws Exception {
+	private void insertMongoDB(ModTableDAO modTableDAO, String strNewColName) throws Exception {
 		String workTable = modTableDAO.getName();		
 		if(logger.isDebugEnabled()) logger.debug("[work table]" + workTable);			
 		
-		SQLQueryUtil qu = new SQLQueryUtil(userDBDAO, "SELECT * FROM " + workTable);
+		SQLQueryUtil qu = new SQLQueryUtil(getSourceUserDB(), "SELECT * FROM " + workTable);
 		while(qu.hasNext()) {
 			qu.nextQuery();
 			HashMap<Integer, String> mapCNameToIndex = qu.getMapColumns();
@@ -129,7 +129,7 @@ public class RDBTableToMongoDBImport extends DBImport {
 			}	// end for
 			logger.debug("[work table]" + strNewColName + " size is " + listDBObject.size());
 		
-			MongoDBQuery.insertDocument(importUserDB, strNewColName, listDBObject);
+			MongoDBQuery.insertDocument(getTargetUserDB(), strNewColName, listDBObject);
 		}
 	}
 }

@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.importdb.core.dialog.importdb.mongodb;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -26,7 +24,6 @@ import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
 import com.hangum.tadpole.importdb.core.dialog.importdb.utils.MongoDBQueryUtil;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
@@ -45,12 +42,12 @@ public class MongoDBCollectionToMongodBImport extends DBImport {
 
 	/**
 	 * 
-	 * @param importUserDB
+	 * @param sourceUserDB
+	 * @param targetUserDB
 	 * @param listModeTable
-	 * @param exportUserDB
 	 */
-	public MongoDBCollectionToMongodBImport(UserDBDAO importUserDB, List<ModTableDAO> listModeTable, UserDBDAO exportUserDB) {
-		super(importUserDB, exportUserDB);
+	public MongoDBCollectionToMongodBImport(UserDBDAO sourceUserDB, UserDBDAO targetUserDB, List<ModTableDAO> listModeTable) {
+		super(sourceUserDB, targetUserDB);
 		
 		this.listModeTable = listModeTable;
 	}
@@ -78,10 +75,10 @@ public class MongoDBCollectionToMongodBImport extends DBImport {
 						
 						// collection is exist on delete.
 						String strNewColName = modTableDAO.getReName().trim().equals("")?modTableDAO.getName():modTableDAO.getReName();
-						if(modTableDAO.isExistOnDelete()) MongoDBQuery.existOnDelete(importUserDB, modTableDAO.getName());
+						if(modTableDAO.isExistOnDelete()) MongoDBQuery.existOnDelete(getSourceUserDB(), modTableDAO.getName());
 						
 						// insert
-						insertMongoDB(modTableDAO, exportUserDB, strNewColName);
+						insertMongoDB(modTableDAO, strNewColName);
 					}			
 
 				} catch(Exception e) {
@@ -105,11 +102,11 @@ public class MongoDBCollectionToMongodBImport extends DBImport {
 	 * @param userDBDAO
 	 * @throws Exception
 	 */
-	private void insertMongoDB(ModTableDAO modTableDAO, UserDBDAO userDBDAO, String strNewColName) throws Exception {
+	private void insertMongoDB(ModTableDAO modTableDAO, String strNewColName) throws Exception {
 		String workTable = modTableDAO.getName();		
 		if(logger.isDebugEnabled()) logger.debug("[work collection]" + workTable);			
 		
-		MongoDBQueryUtil qu = new MongoDBQueryUtil(userDBDAO, workTable);
+		MongoDBQueryUtil qu = new MongoDBQueryUtil(getSourceUserDB(), workTable);
 		while(qu.hasNext()) {
 			qu.nextQuery();
 			
@@ -117,7 +114,7 @@ public class MongoDBCollectionToMongodBImport extends DBImport {
 			List<DBObject> listDBObject = qu.getCollectionDataList();
 			logger.debug("[work table]" + strNewColName + " size is " + listDBObject.size());
 		
-			MongoDBQuery.insertDocument(importUserDB, strNewColName, listDBObject);
+			MongoDBQuery.insertDocument(getTargetUserDB(), strNewColName, listDBObject);
 		}
 	}
 }
