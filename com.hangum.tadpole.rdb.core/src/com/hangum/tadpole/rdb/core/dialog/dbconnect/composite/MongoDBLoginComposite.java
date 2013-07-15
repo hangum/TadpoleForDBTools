@@ -238,7 +238,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		textHost.setFocus();
 	}
 	
-	public boolean isValidateInput() {
+	protected boolean isValidateInput() {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -350,6 +350,18 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		if(!isValidateDatabase(userDB)) return false;
 		
 		return true;
+	}
+
+	@Override
+	public boolean validateConnection() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean makeUserDBDao() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

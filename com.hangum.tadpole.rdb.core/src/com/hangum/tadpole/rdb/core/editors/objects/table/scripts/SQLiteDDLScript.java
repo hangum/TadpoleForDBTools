@@ -10,8 +10,8 @@ import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.editors.objects.table.scripts.types.InOutParameter;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -60,7 +60,7 @@ public class SQLiteDDLScript extends AbstractRDBDDLScript {
 	}
 
 	@Override
-	public List<InOutParameter> getProcedureParamter(
+	public List<InOutParameterDAO> getProcedureParamter(
 			ProcedureFunctionDAO procedureDAO) throws Exception {
 		// TODO Auto-generated method stub
 		return null;

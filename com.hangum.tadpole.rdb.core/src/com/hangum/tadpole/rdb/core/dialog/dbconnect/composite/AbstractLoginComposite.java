@@ -60,7 +60,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	// start table filters define
 	protected boolean isTableFilter = false;
 	protected String strTableFilterInclude = ""; //$NON-NLS-1$
-	protected String strTableFilterExclude = Messages.AbstractLoginComposite_3;
+	protected String strTableFilterExclude = "";
 	// end table filters define
 
 	/** 기존에 접속한 user db */
@@ -126,12 +126,25 @@ public abstract class AbstractLoginComposite extends Composite {
 	public abstract boolean connection();
 	
 	/**
+	 * validate connection
+	 * 
+	 * @return
+	 */
+	public abstract boolean validateConnection();
+	
+	/**
 	 * test connection
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	public abstract boolean testConnection();
+	
+	/**
+	 * 1. input validation
+	 * 2. make UserDBDAO
+	 */
+	public abstract boolean makeUserDBDao();
 	
 	/**
 	 * DB 가 정상 연결되었을때 객체
@@ -192,7 +205,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				return false;
 			}
 			
-			// 이미 등록된 디비 인지 검사합니다.
+			// 이름은 틀리지만, 다른 정보는 같은 이미 등록된 디비 인지 검사합니다.
 			if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), userDBDao)){
 				
 				// 중복 디비 등록시 사용자의 의견을 묻습니다.

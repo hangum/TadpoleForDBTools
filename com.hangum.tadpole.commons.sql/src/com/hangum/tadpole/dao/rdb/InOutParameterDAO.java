@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.objects.table.scripts.types;
+package com.hangum.tadpole.dao.rdb;
 
 
 /**
@@ -17,7 +17,7 @@ package com.hangum.tadpole.rdb.core.editors.objects.table.scripts.types;
  * @author hangum
  *
  */
-public class InOutParameter {
+public class InOutParameterDAO {
 	/** input order */
 	int order;
 	/** rdb type */
@@ -27,7 +27,7 @@ public class InOutParameter {
 	/** variable name */
 	String name;
 	
-	public InOutParameter(int order, String rdbType, String name) {
+	public InOutParameterDAO(int order, String rdbType, String name) {
 		this.order = order;
 		this.rdbType = rdbType;
 		this.name = name;

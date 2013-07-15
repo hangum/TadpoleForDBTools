@@ -18,8 +18,8 @@ import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.editors.objects.table.scripts.types.InOutParameter;
 
 /**
  * 각 디비별 object script 를 가져오기 위한 클래스.
@@ -94,7 +94,7 @@ public abstract class AbstractRDBDDLScript {
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract List<InOutParameter> getProcedureParamter(ProcedureFunctionDAO procedureDAO) throws Exception;
+	public abstract List<InOutParameterDAO> getProcedureParamter(ProcedureFunctionDAO procedureDAO) throws Exception;
 	
 	/**
 	 * trigger script

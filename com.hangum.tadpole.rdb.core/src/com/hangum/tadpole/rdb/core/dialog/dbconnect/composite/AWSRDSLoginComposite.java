@@ -255,6 +255,16 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		return true;
 	}
 
+	@Override
+	public boolean makeUserDBDao() {
+		return true;
+	}
+
+	@Override
+	public boolean validateConnection() {
+		return true;
+	}
+
 }
 
 /**

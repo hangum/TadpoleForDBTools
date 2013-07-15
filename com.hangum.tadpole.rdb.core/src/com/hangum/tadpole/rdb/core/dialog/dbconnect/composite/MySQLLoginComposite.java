@@ -315,5 +315,17 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 
 		return true;
 	}
+
+	@Override
+	public boolean validateConnection() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean makeUserDBDao() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

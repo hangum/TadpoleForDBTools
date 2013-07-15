@@ -214,7 +214,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	 * 
 	 * @return
 	 */
-	public boolean isValidateInput() {
+	protected boolean isValidateInput() {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -356,6 +356,18 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		if(!isValidateDatabase(userDB)) return false;
 
 		return true;
+	}
+
+	@Override
+	public boolean validateConnection() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean makeUserDBDao() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

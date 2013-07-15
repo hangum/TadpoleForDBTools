@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -174,8 +173,21 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		return true;		
 	}
 	
+	
 	@Override
 	public boolean testConnection() {
+		if(!makeUserDBDao()) return false;
+		if(!isValidateDatabase(userDB)) return false;
+		
+		return true;
+	}
+	
+	/**
+	 * 화면에 값이 올바른지 검사합니다.
+	 * 
+	 * @return
+	 */
+	protected boolean isValidateInput() {
 		String strFile = StringUtils.trimToEmpty(textFile.getText());
 		
 		if("".equals(preDBInfo.getComboGroup().getText().trim())) {
@@ -189,10 +201,12 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			return false;
 		}
 		
-		if( !new File(strFile).exists() ) {
-			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "File doesn't exist.");
-			return false;
-		}
+		return true;
+	}
+
+	@Override
+	public boolean makeUserDBDao() {
+		if(!isValidateInput()) return false;
 		
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
@@ -218,9 +232,13 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
-		if(!isValidateDatabase(userDB)) return false;
-		
 		return true;
+	}
+
+	@Override
+	public boolean validateConnection() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
