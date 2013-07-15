@@ -11,6 +11,7 @@
 package com.hangum.tadpole.mongodb.core.dialogs.msg;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -19,11 +20,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
 import com.hangum.tadpole.mongodb.core.Messages;
+import com.hangum.tadpole.util.JSONUtil;
 
 /**
  * tadpole message dialog
@@ -31,30 +32,29 @@ import com.hangum.tadpole.mongodb.core.Messages;
  * @author hangum
  *
  */
-public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
+public class TadpoleSimpleMessageDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(TadpoleSimpleMessageDialog.class);
-	private TadpoleOrionHubEditor textMessage;
+	private TadpoleOrionHubEditor tadpoleEditor;
 	
 	String title;
-	String message;
-//	private Label lblMessage;
+	String content;
 	
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public TadpoleSimpleMessageDialog(Shell parentShell, String title, String message) {
+	public TadpoleSimpleMessageDialog(Shell parentShell, String title, String content) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.title = title;
-		this.message = message;
+		this.content = content;
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.TadpoleSimpleMessageDialog_2);
+		newShell.setText(title);//Messages.TadpoleSimpleMessageDialog_2);
 	}
 
 	/**
@@ -63,16 +63,31 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setMessage(title);
-		Composite area = (Composite) super.createDialogArea(parent);
-		Composite container = new Composite(area, SWT.NONE);
-		container.setLayout(new GridLayout(2, false));
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		Composite container = (Composite) super.createDialogArea(parent);
+		GridLayout gridLayout = (GridLayout) container.getLayout();
+		gridLayout.verticalSpacing = 2;
+		gridLayout.horizontalSpacing = 2;
+		gridLayout.marginHeight = 2;
+		gridLayout.marginWidth = 2;
 		
-		textMessage = new TadpoleOrionHubEditor(container, SWT.BORDER, message, "");
-		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		Composite compositeBody = new Composite(container, SWT.NONE);
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setLayout(new GridLayout(1, false));
+		
+		tadpoleEditor = new TadpoleOrionHubEditor(compositeBody, SWT.BORDER, "", "");
+		tadpoleEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		initUI();
 
-		return area;
+		return container;
+	}
+	
+	private void initUI() {
+		try {
+			tadpoleEditor.setText(JSONUtil.getPretty(content));
+		} catch(Exception e) {
+			logger.error("server status", e); //$NON-NLS-1$
+		}
 	}
 
 	/**

@@ -55,15 +55,6 @@ public class TadpoleOrionHubEditor extends Composite {
 	 * browser.browserFunction의 서비스 헨들러 
 	 */
 	private JavaScriptBrowserFunctionService editorService;
-
-//	/**
-//	 * Create the composite.
-//	 * @param parent
-//	 * @param style
-//	 */
-//	public TadpoleOrionHubEditor(Composite parent, int style) {
-//		this(parent, style, "", "");
-//	}
 	
 	/**
 	 * Create the composite.
@@ -116,9 +107,7 @@ public class TadpoleOrionHubEditor extends Composite {
 				}
 				
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
-				String strInitContent = StringUtils.replace(getInitContent(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
-				strInitContent = StringUtils.replace(strInitContent, "\"", "'");
-				String callCommand = "setInitialContent(\"" + "test.json"+ "\", \"" + strInitContent + "\", \"" + initAssist + "\");";
+				String callCommand = "setInitialContent(\"" + "test.json"+ "\", \"" + getInitContent() + "\", \"" + initAssist + "\");";
 				try {
 					browserEvaluate(callCommand);
 				} catch(Exception e) {
@@ -145,7 +134,10 @@ public class TadpoleOrionHubEditor extends Composite {
 	 */
 	public String getInitContent() {
 		checkWidget();
-		return initContent;
+		
+		String strInitContent = StringUtils.replace(initContent, PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
+		strInitContent = StringUtils.replace(strInitContent, "\"", "'");
+		return strInitContent;
 	}
 	
 	/**
@@ -177,7 +169,8 @@ public class TadpoleOrionHubEditor extends Composite {
 			this.initContent = text;
 			browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_RE_NEW_TEXT);
 		} catch(Exception e) {
-			logger.error("setText error", e);
+			
+			logger.error("setText TadpoleEditor error" + e.getMessage() + "\r\n[start]" + this.initContent + "\r\n[end]");
 		}
 	}	
 	
