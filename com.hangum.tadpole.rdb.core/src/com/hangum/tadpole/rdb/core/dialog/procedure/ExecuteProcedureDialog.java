@@ -35,6 +35,8 @@ import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecutor;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * procedure 실행 다이얼로그.
@@ -53,8 +55,11 @@ public class ExecuteProcedureDialog extends Dialog {
 
 	private UserDBDAO userDB;
 	private ProcedureFunctionDAO procedureDAO;
-
 	private List<InOutParameterDAO> parameterList = new ArrayList<InOutParameterDAO>();
+	
+	private Label[] labelInput;
+	private Text[] textInputs;
+	
 
 	/**
 	 * Create the dialog.
@@ -92,11 +97,35 @@ public class ExecuteProcedureDialog extends Dialog {
 		gridLayout.marginWidth = 2;
 
 		// input value가 몇개가 되어야 하는지 조사하여 입력값으로 보여줍니다.
-		Composite composite = new Composite(container, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Composite compositeInput = new Composite(container, SWT.NONE);
+		compositeInput.setLayout(new GridLayout(2, false));
+		compositeInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		try {
+			initProcedureInformation();
+		} catch(Exception e) {
+			MessageDialog.openError(null, "Error", procedureDAO.getName() + " 프로시저의 Parameter를 가져오는 중에 오류가 발생했습니다.");
+			
+			super.okPressed();
+		}
 
-		// in out의 갯수 파악한다.
+		//////[ input values ]////////////////////////////////////////////////////////////////////////
+		labelInput = new Label[parameterList.size()];
+		textInputs = new Text[parameterList.size()];
+		
+		for(int i=0; i<labelInput.length; i++) {
+			InOutParameterDAO inParameters = parameterList.get(i);
+				
+			labelInput[i] = new Label(compositeInput, SWT.NONE);
+			labelInput[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+			labelInput[i].setText(inParameters.getName());
+			
+			textInputs[i] = new Text(compositeInput, SWT.BORDER);
+			textInputs[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));			
+		}
+		
+		//////[ input values ]////////////////////////////////////////////////////////////////////////
+		
 		Group grpTables = new Group(container, SWT.NONE);
 		grpTables.setLayout(new GridLayout(1, false));
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -113,25 +142,15 @@ public class ExecuteProcedureDialog extends Dialog {
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ExecuteProcedureLabelProvider());
 
-		tableViewer.setInput(parameterList);
-
-		try {
-			/**
-			 * executor를 DB Type별로 따로 처리하도록 해야 할거 같은데..ㅡㅡ; DDL Script 뽑는것처럼...^^;
-			 * 
-			 * 
-			 */
-			executor = new ProcedureExecutor(this.getParentShell(), procedureDAO.getName(), parameterList, userDB);
-			this.parameterList = executor.getParameters();
-		} catch(Exception e) {
-			logger.error(procedureDAO.getName() + " Procedure in out parameter.", e);
-			
-			MessageDialog.openError(null, "Error", procedureDAO.getName() + " 프로시저의 Parameter를 가져오는 중에 오류가 발생했습니다.");
-		}
-
-		tableViewer.refresh();
-
 		return container;
+	}
+	
+	/**
+	 * initialize procedure information
+	 */
+	private void initProcedureInformation() throws Exception {
+		executor = new ProcedureExecutor(procedureDAO, userDB);
+		this.parameterList = executor.getParameters();
 	}
 
 	/**
@@ -170,7 +189,6 @@ public class ExecuteProcedureDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false);
 	}
 
 	/**

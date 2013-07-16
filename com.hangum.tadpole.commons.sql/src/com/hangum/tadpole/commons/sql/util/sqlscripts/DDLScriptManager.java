@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util.sqlscripts;
 
+import java.util.List;
+
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
@@ -21,6 +23,7 @@ import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 
 /**
@@ -33,21 +36,41 @@ public class DDLScriptManager {
 	protected UserDBDAO userDB;
 	protected DB_ACTION actionType;
 	
-	public DDLScriptManager(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
+	protected AbstractRDBDDLScript rdbScript = null;
+	
+	/**
+	 * get ddl script
+	 * 
+	 * @param userDB
+	 * @param actionType
+	 * @throws Exception
+	 */
+	public DDLScriptManager(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) throws Exception {
 		this.userDB = userDB;
 		this.actionType = actionType;
+		
+		initRDBScript();
 	}
 	
 	/**
+	 * get ddl script
 	 * 
-	 * @param obj
-	 * @return
+	 * @param userDB
+	 * @param actionType
+	 * @throws Exception
 	 */
-	public String getScript(Object obj) throws Exception {
-		String retStr = "";
+	public DDLScriptManager(UserDBDAO userDB) throws Exception {
+		this.userDB = userDB;
 		
-		// find DB
-		AbstractRDBDDLScript rdbScript = null;
+		initRDBScript();
+	}
+	
+	/**
+	 * select object db types
+	 * 
+	 * @throws Exception
+	 */
+	private void initRDBScript() throws Exception {
 		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
 			rdbScript = new SQLiteDDLScript(userDB, actionType);
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT ) {
@@ -58,6 +81,15 @@ public class DDLScriptManager {
 		} else {
 			throw new Exception("Not support Database");
 		}
+	}
+	
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public String getScript(Object obj) throws Exception {
+		String retStr = "";
 		
 		// find DDL Object
 		if(PublicTadpoleDefine.DB_ACTION.TABLES == actionType) {
@@ -77,5 +109,16 @@ public class DDLScriptManager {
 		}
 		
 		return retStr + PublicTadpoleDefine.SQL_DILIMITER;
+	}
+	
+	/**
+	 * Procedure Parameters
+	 * 
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	public List<InOutParameterDAO> getProcedureParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		return rdbScript.getProcedureParamter(procedureDAO);
 	}
 }

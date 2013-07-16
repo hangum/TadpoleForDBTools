@@ -16,36 +16,40 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
+import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * 
+ * rdb procedure executer.
  * 
  * @author hangum
  *
  */
 public class ProcedureExecutor {
-	private UserDBDAO userDB;
-	private List<InOutParameterDAO> listParamValues;
-	private String procedureName;
-	private Shell parentShell;
-
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ProcedureExecutor.class);
+	
+	private UserDBDAO userDB;
+	private List<InOutParameterDAO> listParamValues;
+	private ProcedureFunctionDAO procedureDAO;
 
-	public ProcedureExecutor(Shell parentShell, String procedureName, List<InOutParameterDAO> listParamValues, UserDBDAO userDB) {
-		this.listParamValues = listParamValues;
+	/**
+	 * procedure executor
+	 * 
+	 * @param procedureDAO
+	 * @param listParamValues
+	 * @param userDB
+	 */
+	public ProcedureExecutor(ProcedureFunctionDAO procedureDAO, UserDBDAO userDB) {
 		this.userDB = userDB;
-		this.procedureName = procedureName;
-		this.parentShell = parentShell;
-
+		this.procedureDAO = procedureDAO;
 	}
 
 	/**
@@ -54,13 +58,17 @@ public class ProcedureExecutor {
 	 * @return
 	 */
 	public List<InOutParameterDAO> getParameters() throws Exception {
-
-		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		listParamValues = client.queryForList("getProcedureParamter", procedureName);
+		DDLScriptManager ddlScriptManager = new DDLScriptManager(userDB);
+		listParamValues = ddlScriptManager.getProcedureParamter(procedureDAO);
 		
 		return listParamValues;
 	}
 
+	/**
+	 * exec procedure
+	 * 
+	 * @return
+	 */
 	public boolean exec() {
 
 		java.sql.Connection javaConn = null;
@@ -72,7 +80,7 @@ public class ProcedureExecutor {
 
 			javaConn = client.getDataSource().getConnection();
 
-			StringBuffer query = new StringBuffer("{call " + procedureName + "(");
+			StringBuffer query = new StringBuffer("{call " + procedureDAO.getName() + "(");
 			StringBuffer params = new StringBuffer();
 
 			for (int i = 0; i < listParamValues.size(); i++) {
@@ -114,13 +122,13 @@ public class ProcedureExecutor {
 				}
 			}
 
-			MessageDialog.openInformation(parentShell, "Information", "Execute Compete.");
+			MessageDialog.openInformation(null, "Information", "Execute Compete.");
 
 			return true;
 
 		} catch (Exception e) {
 			logger.error("ProcedureExecutor executing error", e);
-			MessageDialog.openError(parentShell, "Error", e.getMessage());
+			MessageDialog.openError(null, "Error", e.getMessage());
 			return false;
 		} finally {
 			try {

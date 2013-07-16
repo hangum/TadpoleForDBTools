@@ -286,10 +286,9 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 	}
 	
 	@Override
-	public List<InOutParameterDAO> getProcedureParamter(
-			ProcedureFunctionDAO procedureDAO) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<InOutParameterDAO> getProcedureParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		return client.queryForList("getProcedureParamter", procedureDAO.getName());
 	}
 
 	/* (non-Javadoc)
