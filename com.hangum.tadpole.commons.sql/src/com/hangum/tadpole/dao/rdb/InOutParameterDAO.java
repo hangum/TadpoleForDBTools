@@ -10,29 +10,36 @@
  ******************************************************************************/
 package com.hangum.tadpole.dao.rdb;
 
-
 /**
  * RDB variable type
  * 
  * @author hangum
- *
+ * 
  */
 public class InOutParameterDAO {
 	/** input order */
 	int order;
+
 	/** rdb type */
 	String rdbType;
-	/** java type*/
+
+	/** java type */
 	String javaType;
+
 	/** variable name */
 	String name;
+
+	/** parameter value length */
+	String length;
 	
-	public InOutParameterDAO(int order, String rdbType, String name) {
-		this.order = order;
-		this.rdbType = rdbType;
-		this.name = name;
+	/** parameter value */
+	String value;
+	
+	/** parameter in, out, inout type */
+	String type;
+
+	public InOutParameterDAO() {
 	}
-	
 
 	/**
 	 * @return the order
@@ -41,15 +48,13 @@ public class InOutParameterDAO {
 		return order;
 	}
 
-
-
 	/**
-	 * @param order the order to set
+	 * @param order
+	 *            the order to set
 	 */
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
 
 	/**
 	 * @return the rdbType
@@ -58,14 +63,13 @@ public class InOutParameterDAO {
 		return rdbType;
 	}
 
-
 	/**
-	 * @param rdbType the rdbType to set
+	 * @param rdbType
+	 *            the rdbType to set
 	 */
 	public void setRdbType(String rdbType) {
 		this.rdbType = rdbType;
 	}
-
 
 	/**
 	 * @return the name
@@ -75,12 +79,12 @@ public class InOutParameterDAO {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	/**
 	 * @return the javaType
@@ -89,12 +93,36 @@ public class InOutParameterDAO {
 		return javaType;
 	}
 
-
 	/**
-	 * @param javaType the javaType to set
+	 * @param javaType
+	 *            the javaType to set
 	 */
 	public void setJavaType(String javaType) {
 		this.javaType = javaType;
+	}
+
+	public String getLength() {
+		return this.length;
+	}
+
+	public void setLength(String length) {
+		this.length = length;
+	}
+
+	public String getValue() {
+		return this.value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

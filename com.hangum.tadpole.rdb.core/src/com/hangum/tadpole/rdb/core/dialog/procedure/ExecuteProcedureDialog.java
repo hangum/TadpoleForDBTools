@@ -10,39 +10,63 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.procedure;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataConsts;
+import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataEditingSupport;
+import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataGenerateExecutor;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.ColumnCommentEditorSupport;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * procedure 실행 다이얼로그.
  * 
  * @author hangum
- *
+ * 
  */
 public class ExecuteProcedureDialog extends Dialog {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ExecuteProcedureDialog.class);
-	
+	private ProcedureExecutor executor;
+
 	private Composite compositeHead;
+	private TableViewer tableViewer;
 
 	private UserDBDAO userDB;
 	private ProcedureFunctionDAO procedureDAO;
-	
+
+	private List<InOutParameterDAO> parameterList = new ArrayList<InOutParameterDAO>();
+	private Text textInsertCount;
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 * @param userDB
 	 * @param procedureDAO
@@ -50,13 +74,20 @@ public class ExecuteProcedureDialog extends Dialog {
 	public ExecuteProcedureDialog(Shell parentShell, UserDBDAO userDB, ProcedureFunctionDAO procedureDAO) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.userDB = userDB;
 		this.procedureDAO = procedureDAO;
 	}
 
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Excute Procedure");
+	}
+
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -69,22 +100,75 @@ public class ExecuteProcedureDialog extends Dialog {
 		gridLayout.marginWidth = 2;
 
 		// input value가 몇개가 되어야 하는지 조사하여 입력값으로 보여줍니다.
-		Composite compositeHead = new Composite(container, SWT.NONE);
-		compositeHead.setLayout(new GridLayout(1, false));
-		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Composite compositeBody = new Composite(container, SWT.NONE);
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeBody.setLayout(new GridLayout(1, false));
-		
+		Composite composite = new Composite(container, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
 		// in out의 갯수 파악한다.
+		Group grpTables = new Group(container, SWT.NONE);
+		grpTables.setLayout(new GridLayout(1, false));
+		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpTables.setText(procedureDAO.getName());
+
+		tableViewer = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		Table table = tableViewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		createTaleColumn();
+
+		tableViewer.setContentProvider(new ArrayContentProvider());
+		tableViewer.setLabelProvider(new ExecuteProcedureLabelProvider());
+
+		SqlMapClient client;
+		try {
+			client = TadpoleSQLManager.getInstance(userDB);
+			parameterList = client.queryForList("getProcedureParamter", procedureDAO.getName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		tableViewer.setInput(parameterList);
 		
+		executor = new ProcedureExecutor(this.getParentShell(), procedureDAO.getName(), parameterList, userDB);
+
+		tableViewer.refresh();
 
 		return container;
 	}
 
 	/**
+	 * create column
+	 */
+	private void createTaleColumn() {
+		String columnHeader[] = new String[] { "Seq", "Name", "Type", "ParamType", "Length", "Value" };
+
+		for (int i = 0; i < columnHeader.length; i++) {
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.LEFT);
+
+			TableColumn tblclmnColumnName = tableViewerColumn.getColumn();
+			tblclmnColumnName.setWidth(columnHeader[i].length() * 15);
+			tblclmnColumnName.setText(columnHeader[i]);
+
+			tableViewerColumn.setEditingSupport(new ExecuteProcParamInputSupport(tableViewer, i));
+		}
+	}
+
+	@Override
+	protected void okPressed() {
+		
+		boolean ret = executor.exec();
+
+		if (ret) {
+			this.close();
+		}
+
+	}
+
+	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

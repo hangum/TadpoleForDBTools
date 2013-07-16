@@ -648,6 +648,23 @@ ORDER BY IC.COLUMN_POSITION
 
 </select>
 
-    
+<!-- 
+	프로시져의 아규먼트 목록을 리턴한다.
+	
+ -->
+<select id="getProcedureParamter" resultClass="com.hangum.tadpole.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+
+  SELECT ua.position AS "order"
+        ,ua.argument_name AS name
+        ,DECODE (ua.data_type, 'REF CURSOR', 'SYS_REFCURSOR', ua.data_type) AS rdbtype
+        ,ua.in_out AS type
+        ,ua.data_length AS length
+        ,null as value
+    FROM user_arguments ua
+   WHERE 1=1
+   AND ua.object_name = UPPER (#object_name#)
+ORDER BY ua.object_name, ua.overload, ua.sequence
+  
+</select>    
 
 </sqlMap>
