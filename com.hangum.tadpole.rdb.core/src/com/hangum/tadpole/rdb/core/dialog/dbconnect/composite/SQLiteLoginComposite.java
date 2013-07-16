@@ -173,21 +173,13 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		return true;		
 	}
 	
-	
-	@Override
-	public boolean testConnection() {
-		if(!makeUserDBDao()) return false;
-		if(!isValidateDatabase(userDB)) return false;
-		
-		return true;
-	}
-	
 	/**
 	 * 화면에 값이 올바른지 검사합니다.
 	 * 
 	 * @return
 	 */
-	protected boolean isValidateInput() {
+	@Override
+	public boolean isValidateInput() {
 		String strFile = StringUtils.trimToEmpty(textFile.getText());
 		
 		if("".equals(preDBInfo.getComboGroup().getText().trim())) {
@@ -233,12 +225,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
 		return true;
-	}
-
-	@Override
-	public boolean validateConnection() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

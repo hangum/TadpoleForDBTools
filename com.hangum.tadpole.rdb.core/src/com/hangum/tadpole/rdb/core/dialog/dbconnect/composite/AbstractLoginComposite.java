@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -24,6 +26,11 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STAT
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
+import com.hangum.tadpole.mongodb.core.connection.MongoDBNotFoundException;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
@@ -60,7 +67,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	// start table filters define
 	protected boolean isTableFilter = false;
 	protected String strTableFilterInclude = ""; //$NON-NLS-1$
-	protected String strTableFilterExclude = "";
+	protected String strTableFilterExclude = Messages.AbstractLoginComposite_0;
 	// end table filters define
 
 	/** 기존에 접속한 user db */
@@ -126,11 +133,11 @@ public abstract class AbstractLoginComposite extends Composite {
 	public abstract boolean connection();
 	
 	/**
-	 * validate connection
+	 * input validation
 	 * 
 	 * @return
 	 */
-	public abstract boolean validateConnection();
+	public abstract boolean isValidateInput();
 	
 	/**
 	 * test connection
@@ -138,7 +145,12 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract boolean testConnection();
+	public boolean testConnection() {
+		if(!makeUserDBDao()) return false;
+		if(!isValidateDatabase(userDB)) return false;
+		
+		return true;
+	}
 	
 	/**
 	 * 1. input validation
@@ -238,7 +250,16 @@ public abstract class AbstractLoginComposite extends Composite {
 				
 			} catch (Exception e) {
 				logger.error("DB Connecting... ", e); //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.DBLoginDialog_27 + "\n" + e.getMessage()); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.AbstractLoginComposite_1);
+				
+				return false;
+			}
+		} else {
+			try {
+				MongoConnectionManager.getInstance(userDB);
+			} catch (Exception e) {
+				logger.error("MongoDB Connection error", e); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.AbstractLoginComposite_1);
 				
 				return false;
 			}

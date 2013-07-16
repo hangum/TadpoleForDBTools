@@ -238,7 +238,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		textHost.setFocus();
 	}
 	
-	protected boolean isValidateInput() {
+	@Override
+	public boolean isValidateInput() {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -310,7 +311,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	public boolean testConnection() {
+	public boolean makeUserDBDao() {
 		if(!isValidateInput()) return false;
 		
 		final String dbUrl = String.format(
@@ -347,21 +348,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
-		if(!isValidateDatabase(userDB)) return false;
-		
 		return true;
-	}
-
-	@Override
-	public boolean validateConnection() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean makeUserDBDao() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

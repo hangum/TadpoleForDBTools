@@ -233,7 +233,7 @@ public class MongoDBTableEditor extends EditorPart {
 		gl_compositeResult.marginWidth = 0;
 		compositeResult.setLayout(gl_compositeResult);
 		
-		sashForm.setWeights(new int[] {40, 60});
+		sashForm.setWeights(new int[] {50, 50});
 		
 		initCollection();
 	}

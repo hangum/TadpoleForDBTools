@@ -147,7 +147,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	}
 	
 	@Override
-	public boolean testConnection() {
+	public boolean makeUserDBDao() {
 		if(!isValidateInput()) return false;
 		
 		final String dbUrl = String.format(
@@ -180,8 +180,6 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 		
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		
-		if(!isValidateDatabase(userDB)) return false;
 		
 		return true;
 	}

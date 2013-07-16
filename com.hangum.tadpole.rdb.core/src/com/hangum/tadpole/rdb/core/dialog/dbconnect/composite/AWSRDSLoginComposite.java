@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -252,16 +253,32 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	public boolean testConnection() {
+		if(!makeUserDBDao()) return false;
+		return true;
+	}
+	
+	@Override
+	public boolean isValidateInput() {
+		String strAccesskey = textAccesskey.getText().trim();
+		String strSecretkey = textSecretKey.getText().trim();
+		
+		if("".equals(strAccesskey)) {
+			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "Please enter the Access Key");
+			textAccesskey.setFocus();
+			return false;
+		} else if("".equals(strSecretkey)) {
+			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "Please enter the Secret Key");
+			textSecretKey.setFocus();
+			return false;
+		}
+		
 		return true;
 	}
 
 	@Override
 	public boolean makeUserDBDao() {
-		return true;
-	}
-
-	@Override
-	public boolean validateConnection() {
+		if(!isValidateInput()) return false;
+		
 		return true;
 	}
 

@@ -14,6 +14,8 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
+	public static String AbstractLoginComposite_0;
+	public static String AbstractLoginComposite_1;
 	public static String AbstractLoginComposite_2;
 	public static String AbstractLoginComposite_4;
 	public static String AbstractQueryAction_1;
