@@ -124,7 +124,7 @@ public class MongoDBTableEditor extends EditorPart {
 		lblfind.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 2));
 		lblfind.setText(Messages.MongoDBTableEditor_0);
 		
-		String strAssist = CollectionUtils.getAssistList(userDB);
+		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
 		textBasicFind = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));

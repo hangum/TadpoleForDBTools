@@ -126,7 +126,7 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpMap.marginWidth = 1;
 		grpMap.setLayout(gl_grpMap);
 		
-		String strAssist = CollectionUtils.getAssistList(userDB);
+		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
 		textMap = new TadpoleOrionHubEditor(grpMap, SWT.BORDER, "", strAssist);
 		textMap.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

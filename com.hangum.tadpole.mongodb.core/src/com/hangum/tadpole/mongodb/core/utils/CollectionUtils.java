@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.dao.mysql.TableDAO;
+import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 
@@ -25,22 +25,49 @@ public class CollectionUtils {
 	 * get assist filter
 	 * 
 	 * @param userDB
+	 * @param strCollectionName
 	 * 
 	 * @return
 	 */
-	public static String getAssistList(final UserDBDAO userDB) {
-		String strTablelist = "";
+	public static String getAssistList(final UserDBDAO userDB, final String strCollectionName) {
+		String strAssistList = "";
 		
 		try {
-			List<TableDAO> listCollFields = MongoDBQuery.listCollection(userDB);
-			for (TableDAO tableDao : listCollFields) {
-				strTablelist += tableDao.getName() + ",";
+			List<CollectionFieldDAO> showTableColumns = MongoDBQuery.collectionColumn(userDB, strCollectionName);
+			for (CollectionFieldDAO collectionFieldDAO : showTableColumns) {
+				strAssistList += collectionFieldDAO.getField() + ",";
+				
+				if(collectionFieldDAO.getChildren().size() > 0) {
+					strAssistList = getChildFild(strAssistList, collectionFieldDAO.getField(), collectionFieldDAO.getChildren());
+				}
 			}
-			strTablelist = StringUtils.removeEnd(strTablelist, ",");
+
+			strAssistList = StringUtils.removeEnd(strAssistList, ",");
 		} catch(Exception e) {
 			logger.error("MongoDB groupeditor get the table list", e);
 		}
 		
-		return strTablelist;
+		return strAssistList;
+	}
+	
+	/**
+	 * child field
+	 * 
+	 * @param strAssistList
+	 * @param parentCollectionName
+	 * @param listCollection
+	 * @return
+	 */
+	private static String getChildFild(String strAssistList, final String parentCollectionName, final List<CollectionFieldDAO> listCollection) {
+		for (CollectionFieldDAO collectionFieldDAO : listCollection) {
+			strAssistList += parentCollectionName + "." + collectionFieldDAO.getField() + ",";
+			
+			if(collectionFieldDAO.getChildren().size() > 0) {
+				strAssistList = getChildFild(strAssistList, collectionFieldDAO.getField(), collectionFieldDAO.getChildren());
+			}
+		}
+		strAssistList = StringUtils.removeEnd(strAssistList, ",");
+		
+		return strAssistList;
 	}
 }

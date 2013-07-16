@@ -124,7 +124,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		grpKeys.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpKeys.setText("Keys");
 		
-		String strAssist = CollectionUtils.getAssistList(userDB);
+		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
 		textKeys = new TadpoleOrionHubEditor(grpKeys, SWT.BORDER, "", strAssist);
 		textKeys.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

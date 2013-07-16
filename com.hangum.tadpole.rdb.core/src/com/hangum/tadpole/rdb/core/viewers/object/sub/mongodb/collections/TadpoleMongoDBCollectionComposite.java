@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -77,7 +76,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
