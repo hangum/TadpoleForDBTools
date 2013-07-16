@@ -209,14 +209,15 @@
  -->
   <!-- 
  		신규디비 등록할 수 있는지 검사합니다.
+ 		
+- - 		url = #url# AND
+- - 		users = #users#  AND
   -->
  <select id="isNewDBValidate" resultClass="com.hangum.tadpole.dao.system.UserDBDAO" parameterClass="java.util.Map">
  	SELECT *
  	FROM user_db
  	WHERE user_seq = #user_seq# AND
  		display_name = #display_name# AND 
- 		url = #url# AND
- 		users = #users#  AND
 		delYn = 'NO'
  </select>
  

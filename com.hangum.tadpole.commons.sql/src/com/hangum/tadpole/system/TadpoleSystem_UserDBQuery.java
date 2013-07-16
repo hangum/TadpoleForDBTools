@@ -43,8 +43,8 @@ public class TadpoleSystem_UserDBQuery {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
 		queryMap.put("display_name", userDBDao.getDisplay_name());
-		queryMap.put("url", 	userDBDao.getUrl());
-		queryMap.put("users", 	userDBDao.getUsers());
+//		queryMap.put("url", 	userDBDao.getUrl());
+//		queryMap.put("users", 	userDBDao.getUsers());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<Object> listUserDB = sqlClient.queryForList("isNewDBValidate", queryMap);
