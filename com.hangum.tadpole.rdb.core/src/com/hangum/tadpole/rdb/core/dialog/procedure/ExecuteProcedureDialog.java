@@ -26,21 +26,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataConsts;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataEditingSupport;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataGenerateExecutor;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.ColumnCommentEditorSupport;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * procedure 실행 다이얼로그.
@@ -55,14 +47,12 @@ public class ExecuteProcedureDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ExecuteProcedureDialog.class);
 	private ProcedureExecutor executor;
 
-	private Composite compositeHead;
 	private TableViewer tableViewer;
 
 	private UserDBDAO userDB;
 	private ProcedureFunctionDAO procedureDAO;
 
 	private List<InOutParameterDAO> parameterList = new ArrayList<InOutParameterDAO>();
-	private Text textInsertCount;
 
 	/**
 	 * Create the dialog.
@@ -121,17 +111,13 @@ public class ExecuteProcedureDialog extends Dialog {
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ExecuteProcedureLabelProvider());
 
-		SqlMapClient client;
-		try {
-			client = TadpoleSQLManager.getInstance(userDB);
-			parameterList = client.queryForList("getProcedureParamter", procedureDAO.getName());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		tableViewer.setInput(parameterList);
-		
+
+		/**
+		 * executor를 DB Type별로 따로 처리하도록 해야 할거 같은데..ㅡㅡ; DDL Script 뽑는것처럼...^^;
+		 */
 		executor = new ProcedureExecutor(this.getParentShell(), procedureDAO.getName(), parameterList, userDB);
+		this.parameterList = executor.init();
 
 		tableViewer.refresh();
 
@@ -157,7 +143,7 @@ public class ExecuteProcedureDialog extends Dialog {
 
 	@Override
 	protected void okPressed() {
-		
+
 		boolean ret = executor.exec();
 
 		if (ret) {

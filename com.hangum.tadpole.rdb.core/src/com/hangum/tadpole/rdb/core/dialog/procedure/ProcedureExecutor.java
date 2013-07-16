@@ -22,7 +22,6 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.mysql.jdbc.CallableStatement;
 
 public class ProcedureExecutor {
 	private UserDBDAO userDB;
@@ -41,6 +40,19 @@ public class ProcedureExecutor {
 		this.procedureName = procedureName;
 		this.parentShell = parentShell;
 
+	}
+
+	public List<InOutParameterDAO> init() {
+
+		SqlMapClient client;
+		try {
+			client = TadpoleSQLManager.getInstance(userDB);
+			listParamValues = client.queryForList("getProcedureParamter", procedureName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listParamValues;
 	}
 
 	public boolean exec() {

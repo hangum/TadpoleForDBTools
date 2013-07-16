@@ -54,7 +54,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * RDB procedure composite
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	/**
@@ -70,13 +70,13 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Procedure;
 	private ObjectDeleteAction deleteAction_Procedure;
 	private ObjectRefreshAction refreshAction_Procedure;
-	
+
 	private GenerateViewDDLAction viewDDLAction;
-	
+
 	private ObjectExecuteProcedureAction executeAction_Procedure;
 
 	/**
-	 * procedure 
+	 * procedure
 	 * 
 	 * @param site
 	 * @param tabFolderObject
@@ -86,7 +86,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		super(site, tabFolderObject, userDB);
 		createWidget(tabFolderObject);
 	}
-	
+
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setText("Procedures"); //$NON-NLS-1$
@@ -104,7 +104,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
@@ -117,7 +117,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 		tableViewer.setLabelProvider(new ProcedureFunctionLabelProvicer());
 		tableViewer.setContentProvider(new ArrayContentProvider());
-//		tableViewer.setInput(showProcedure);
+		// tableViewer.setInput(showProcedure);
 
 		procedureFilter = new ProcedureFunctionViewFilter();
 		tableViewer.addFilter(procedureFilter);
@@ -127,14 +127,14 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		// creat action
 		createMenu();
 	}
-	
+
 	private void createMenu() {
 		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 		deleteAction_Procedure = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
-		
+
 		viewDDLAction = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "View"); //$NON-NLS-1$
-		
+
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 
 		// menu
@@ -143,15 +143,15 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Procedure);
 					manager.add(deleteAction_Procedure);
 					manager.add(refreshAction_Procedure);
-					
+
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(viewDDLAction);
 				}
-				
+
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(executeAction_Procedure);
 			}
@@ -176,7 +176,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	 * initialize action
 	 */
 	public void initAction() {
-		if (showProcedure != null) showProcedure.clear();
+		if (showProcedure != null)
+			showProcedure.clear();
 		tableViewer.setInput(showProcedure);
 		tableViewer.refresh();
 
@@ -184,17 +185,19 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		deleteAction_Procedure.setUserDB(getUserDB());
 		refreshAction_Procedure.setUserDB(getUserDB());
 		executeAction_Procedure.setUserDB(getUserDB());
-		
+
 		viewDDLAction.setUserDB(getUserDB());
 	}
-	
+
 	/**
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh) {
-		if(!boolRefresh) if(showProcedure != null) return;
+		if (!boolRefresh)
+			if (showProcedure != null)
+				return;
 		this.userDB = userDB;
-		
+
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
@@ -208,9 +211,10 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_71, errStatus); //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
 	 * get tableviewer
+	 * 
 	 * @return
 	 */
 	public TableViewer getTableViewer() {

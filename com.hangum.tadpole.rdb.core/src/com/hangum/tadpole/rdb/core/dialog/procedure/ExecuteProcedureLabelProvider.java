@@ -5,8 +5,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
-import com.hangum.tadpole.rdb.core.ext.sampledata.GenType;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataConsts;
 
 public class ExecuteProcedureLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -35,6 +33,4 @@ public class ExecuteProcedureLabelProvider extends LabelProvider implements ITab
 		}
 	}
 
-	
-	
 }
