@@ -14,6 +14,12 @@
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="CubridSQL_query">
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT class_name name FROM DB_CLASS WHERE 1 = 0 
+</select>
 
 <!-- 
 	db의 user table 이름

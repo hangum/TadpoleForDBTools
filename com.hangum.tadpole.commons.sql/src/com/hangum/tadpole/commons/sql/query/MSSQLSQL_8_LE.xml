@@ -21,6 +21,13 @@
  -->
 <sqlMap namespace="MsSQL_8_LE_query">
 
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT getdate()  
+</select>
+
 <!-- 
 	table 이름
 	
@@ -299,5 +306,7 @@ SELECT  CONSTRAINT_CATALOG
 		
   
 </select>
+
+
 
 </sqlMap>

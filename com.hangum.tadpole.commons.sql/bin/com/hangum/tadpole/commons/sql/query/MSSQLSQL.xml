@@ -29,6 +29,13 @@
 	SELECT SERVERPROPERTY('productversion') productversion, SERVERPROPERTY ('productlevel') productlevel, SERVERPROPERTY ('edition') edition;
 </select>
 
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT getdate()  
+</select>
+
 <!-- 
 	table 이름
 	

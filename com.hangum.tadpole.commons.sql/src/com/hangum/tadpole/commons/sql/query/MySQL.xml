@@ -21,6 +21,13 @@
  --> 
 <sqlMap namespace="MySQL_query">
 
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT TABLE_NAME name	FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0  
+</select>
+
 <!-- 
 	table 이름
  -->

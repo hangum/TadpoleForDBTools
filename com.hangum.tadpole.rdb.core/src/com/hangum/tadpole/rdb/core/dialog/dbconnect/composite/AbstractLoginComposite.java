@@ -240,7 +240,7 @@ public abstract class AbstractLoginComposite extends Composite {
 		if(DBDefine.getDBDefine(loginInfo.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			try {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
-				List showTables = sqlClient.queryForList("tableList", loginInfo.getDb()); //$NON-NLS-1$
+				Object temp = sqlClient.queryForObject("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$
 				
 			} catch (Exception e) {
 				logger.error("DB Connecting... ", e); //$NON-NLS-1$

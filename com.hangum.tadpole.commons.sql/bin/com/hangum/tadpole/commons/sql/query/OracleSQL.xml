@@ -23,6 +23,13 @@
 
 <sqlMap namespace="Oracle_query">
 
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT sysdate	FROM dual  
+</select>
+
 <!-- 
 	db의 모든 table 이름
 	

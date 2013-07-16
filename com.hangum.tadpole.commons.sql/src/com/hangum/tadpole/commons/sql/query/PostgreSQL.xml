@@ -21,6 +21,13 @@
  -->
 <sqlMap namespace="POSTGRESQL_query">
 
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT a.table_name "name" FROM information_schema.tables a where 1 = 0 
+</select>
+
 <!-- 
 	table 이름
 	테이블 코멘트 부분 처리를 못해서... 
