@@ -1,4 +1,4 @@
-package com.hangum.tadpole.rdb.core.editors.objects.table.scripts;
+package com.hangum.tadpole.commons.sql.util.sqlscripts.scripts;
 
 import java.util.HashMap;
 import java.util.List;

@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecutor;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -113,11 +115,19 @@ public class ExecuteProcedureDialog extends Dialog {
 
 		tableViewer.setInput(parameterList);
 
-		/**
-		 * executor를 DB Type별로 따로 처리하도록 해야 할거 같은데..ㅡㅡ; DDL Script 뽑는것처럼...^^;
-		 */
-		executor = new ProcedureExecutor(this.getParentShell(), procedureDAO.getName(), parameterList, userDB);
-		this.parameterList = executor.init();
+		try {
+			/**
+			 * executor를 DB Type별로 따로 처리하도록 해야 할거 같은데..ㅡㅡ; DDL Script 뽑는것처럼...^^;
+			 * 
+			 * 
+			 */
+			executor = new ProcedureExecutor(this.getParentShell(), procedureDAO.getName(), parameterList, userDB);
+			this.parameterList = executor.getParameters();
+		} catch(Exception e) {
+			logger.error(procedureDAO.getName() + " Procedure in out parameter.", e);
+			
+			MessageDialog.openError(null, "Error", procedureDAO.getName() + " 프로시저의 Parameter를 가져오는 중에 오류가 발생했습니다.");
+		}
 
 		tableViewer.refresh();
 

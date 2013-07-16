@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.objects.table.scripts;
+package com.hangum.tadpole.commons.sql.util.sqlscripts.scripts;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.dao.system.UserDBDAO;

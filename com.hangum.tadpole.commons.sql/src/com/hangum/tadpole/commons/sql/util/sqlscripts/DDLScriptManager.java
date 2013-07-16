@@ -8,11 +8,15 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.objects.table.scripts;
+package com.hangum.tadpole.commons.sql.util.sqlscripts;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
+import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.MSSQL_8_LE_DDLScript;
+import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.OracleDDLScript;
+import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.SQLiteDDLScript;
 import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;

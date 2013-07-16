@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.procedure;
+package com.hangum.tadpole.commons.sql.util.executer;
 
 import java.sql.Types;
 import java.util.List;
@@ -23,6 +23,12 @@ import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
+/**
+ * 
+ * 
+ * @author hangum
+ *
+ */
 public class ProcedureExecutor {
 	private UserDBDAO userDB;
 	private List<InOutParameterDAO> listParamValues;
@@ -42,16 +48,16 @@ public class ProcedureExecutor {
 
 	}
 
-	public List<InOutParameterDAO> init() {
+	/**
+	 * Get in, out parameter.
+	 * 
+	 * @return
+	 */
+	public List<InOutParameterDAO> getParameters() throws Exception {
 
-		SqlMapClient client;
-		try {
-			client = TadpoleSQLManager.getInstance(userDB);
-			listParamValues = client.queryForList("getProcedureParamter", procedureName);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		listParamValues = client.queryForList("getProcedureParamter", procedureName);
+		
 		return listParamValues;
 	}
 
