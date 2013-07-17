@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.dialog.procedure;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -35,6 +36,7 @@ import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecutor;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
@@ -62,8 +64,9 @@ public class ExecuteProcedureDialog extends Dialog {
 	
 	private Label[] labelInput;
 	private Text[] textInputs;
-	private Button btnExecute;
+	private Label[] labelType;
 	
+	private Button btnExecute;
 
 	/**
 	 * Create the dialog.
@@ -102,7 +105,7 @@ public class ExecuteProcedureDialog extends Dialog {
 
 		// input value가 몇개가 되어야 하는지 조사하여 입력값으로 보여줍니다.
 		Composite compositeInput = new Composite(container, SWT.NONE);
-		GridLayout gl_compositeInput = new GridLayout(2, false);
+		GridLayout gl_compositeInput = new GridLayout(3, false);
 		gl_compositeInput.verticalSpacing = 2;
 		gl_compositeInput.horizontalSpacing = 2;
 		gl_compositeInput.marginHeight = 2;
@@ -120,8 +123,9 @@ public class ExecuteProcedureDialog extends Dialog {
 		}
 
 		//////[ input values ]////////////////////////////////////////////////////////////////////////
-		labelInput = new Label[parameterList.size()];
-		textInputs = new Text[parameterList.size()];
+		labelInput 	= new Label[parameterList.size()];
+		textInputs 	= new Text[parameterList.size()];
+		labelType 	= new Label[parameterList.size()];
 		
 		for(int i=0; i<labelInput.length; i++) {
 			InOutParameterDAO inParameters = parameterList.get(i);
@@ -131,7 +135,13 @@ public class ExecuteProcedureDialog extends Dialog {
 			labelInput[i].setText(inParameters.getName());
 			
 			textInputs[i] = new Text(compositeInput, SWT.BORDER);
-			textInputs[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));			
+			textInputs[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			
+			labelType[i] = new Label(compositeInput, SWT.NONE);
+			labelType[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+			
+			String tmpLength = StringUtils.isEmpty(inParameters.getLength())?"" : "(" + inParameters.getLength() + ")";
+			labelType[i].setText(inParameters.getRdbType() + " " + tmpLength);
 		}
 		
 		Composite compositeBtn = new Composite(container, SWT.NONE);
