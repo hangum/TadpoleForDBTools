@@ -112,7 +112,6 @@ public class ExecuteProcedureDialog extends Dialog {
 		
 		try {
 			this.parameterList = getInParameter();
-			if(this.parameterList == null) parameterList = new ArrayList<InOutParameterDAO>();
 		} catch(Exception e) {
 			MessageDialog.openError(null, "Error", procedureDAO.getName() + " 프로시저의 Parameter를 가져오는 중에 오류가 발생했습니다.");
 			
