@@ -483,7 +483,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		
 		try {
 			Object objResult = MongoDBQuery.executeEval(getUserDB(), strJavaScript, arryArgs);			
-			textResultJavaScript.setText(objResult.toString());
+			textResultJavaScript.setText(objResult == null?"":objResult.toString());
 		} catch (Exception e) {
 			textResultJavaScript.setText("");
 			logger.error("execute javascript", e); //$NON-NLS-1$
