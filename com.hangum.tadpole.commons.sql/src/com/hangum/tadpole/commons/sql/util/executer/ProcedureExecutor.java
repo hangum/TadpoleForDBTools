@@ -11,6 +11,7 @@
 package com.hangum.tadpole.commons.sql.util.executer;
 
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -62,6 +63,7 @@ public class ProcedureExecutor {
 	public List<InOutParameterDAO> getInParameters() throws Exception {
 		DDLScriptManager ddlScriptManager = new DDLScriptManager(userDB);
 		listInParamValues = ddlScriptManager.getProcedureInParamter(procedureDAO);
+		if(listInParamValues == null) listInParamValues = new ArrayList<InOutParameterDAO>();
 		
 		return listInParamValues;
 	}
@@ -75,6 +77,7 @@ public class ProcedureExecutor {
 	public List<InOutParameterDAO> getOutParameters() throws Exception {
 		DDLScriptManager ddlScriptManager = new DDLScriptManager(userDB);
 		listOutParamValues = ddlScriptManager.getProcedureOutParamter(procedureDAO);
+		if(listOutParamValues == null) listOutParamValues = new ArrayList<InOutParameterDAO>();
 		
 		return listOutParamValues;
 	}
