@@ -285,12 +285,6 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		return result.toString();
 	}
 	
-	@Override
-	public List<InOutParameterDAO> getProcedureParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
-		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		return client.queryForList("getProcedureParamter", procedureDAO.getName());
-	}
-
 	/* (non-Javadoc)
 	 * @see com.hangum.tadpole.rdb.core.editors.objects.table.scripts.RDBDDLScript#getTriggerScript(com.hangum.tadpole.dao.mysql.TriggerDAO)
 	 */
@@ -311,6 +305,18 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		}
 		
 		return result.toString();				
+	}
+
+	@Override
+	public List<InOutParameterDAO> getProcedureInParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		return client.queryForList("getProcedureInParamter", procedureDAO.getName());
+	}
+
+	@Override
+	public List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		return client.queryForList("getProcedureOutParamter", procedureDAO.getName());
 	}
 
 }

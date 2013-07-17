@@ -303,4 +303,25 @@ WHERE 1=1
   AND p.value &gt; ''
   
 </select>
+
+<!-- 
+	View, Function, Procedure, Trigger Script 
+	
+    select text from syscomments where id = OBJECT_ID('mall_item_UP')
+ -->
+ 
+<select id="getViewScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+sp_helptext $object_name$
+</select>
+<select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+sp_helptext $object_name$
+</select>
+<select id="getProcedureScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+sp_helptext $object_name$
+</select>
+<select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+sp_helptext $object_name$
+</select>
+
+
 </sqlMap>

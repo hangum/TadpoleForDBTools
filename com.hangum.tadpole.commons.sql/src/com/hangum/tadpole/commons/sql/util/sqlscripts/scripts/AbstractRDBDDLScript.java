@@ -88,13 +88,22 @@ public abstract class AbstractRDBDDLScript {
 	public abstract String getProcedureScript(ProcedureFunctionDAO procedureDAO) throws Exception;
 	
 	/**
-	 * Define procedure in, out parameter
+	 * Define procedure in parameter
 	 * 
 	 * @param procedureDAO
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract List<InOutParameterDAO> getProcedureParamter(ProcedureFunctionDAO procedureDAO) throws Exception;
+	public abstract List<InOutParameterDAO> getProcedureInParamter(ProcedureFunctionDAO procedureDAO) throws Exception;
+	
+	/**
+	 * Define procedure  out parameter
+	 * 
+	 * @param procedureDAO
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception;
 	
 	/**
 	 * trigger script

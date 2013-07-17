@@ -37,6 +37,9 @@ import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * procedure 실행 다이얼로그.
@@ -59,6 +62,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	
 	private Label[] labelInput;
 	private Text[] textInputs;
+	private Button btnExecute;
 	
 
 	/**
@@ -79,7 +83,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Excute Procedure");
+		newShell.setText(procedureDAO.getName() + " Procedure");
 	}
 
 	/**
@@ -91,18 +95,23 @@ public class ExecuteProcedureDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
-		gridLayout.verticalSpacing = 2;
-		gridLayout.horizontalSpacing = 2;
-		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.verticalSpacing = 1;
+		gridLayout.horizontalSpacing = 1;
+		gridLayout.marginHeight = 1;
+		gridLayout.marginWidth = 1;
 
 		// input value가 몇개가 되어야 하는지 조사하여 입력값으로 보여줍니다.
 		Composite compositeInput = new Composite(container, SWT.NONE);
-		compositeInput.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeInput = new GridLayout(2, false);
+		gl_compositeInput.verticalSpacing = 2;
+		gl_compositeInput.horizontalSpacing = 2;
+		gl_compositeInput.marginHeight = 2;
+		gl_compositeInput.marginWidth = 2;
+		compositeInput.setLayout(gl_compositeInput);
 		compositeInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		try {
-			initProcedureInformation();
+			this.parameterList = getInParameter();
 		} catch(Exception e) {
 			MessageDialog.openError(null, "Error", procedureDAO.getName() + " 프로시저의 Parameter를 가져오는 중에 오류가 발생했습니다.");
 			
@@ -124,12 +133,39 @@ public class ExecuteProcedureDialog extends Dialog {
 			textInputs[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));			
 		}
 		
+		Composite compositeBtn = new Composite(container, SWT.NONE);
+		GridLayout gl_compositeBtn = new GridLayout(2, false);
+		gl_compositeBtn.verticalSpacing = 2;
+		gl_compositeBtn.horizontalSpacing = 2;
+		gl_compositeBtn.marginHeight = 2;
+		gl_compositeBtn.marginWidth = 2;
+		compositeBtn.setLayout(gl_compositeBtn);
+		compositeBtn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		
+		Button btnValidation = new Button(compositeBtn, SWT.NONE);
+		btnValidation.setEnabled(false);
+		btnValidation.setText("Validation");
+		
+		btnExecute = new Button(compositeBtn, SWT.NONE);
+		btnExecute.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				executeProcedure();
+			}
+		});
+		btnExecute.setText("Execute");
+		
 		//////[ input values ]////////////////////////////////////////////////////////////////////////
 		
 		Group grpTables = new Group(container, SWT.NONE);
-		grpTables.setLayout(new GridLayout(1, false));
+		GridLayout gl_grpTables = new GridLayout(1, false);
+		gl_grpTables.horizontalSpacing = 2;
+		gl_grpTables.verticalSpacing = 2;
+		gl_grpTables.marginHeight = 2;
+		gl_grpTables.marginWidth = 2;
+		grpTables.setLayout(gl_grpTables);
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpTables.setText(procedureDAO.getName());
+		grpTables.setText("Result");
 
 		tableViewer = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
 		Table table = tableViewer.getTable();
@@ -141,16 +177,41 @@ public class ExecuteProcedureDialog extends Dialog {
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ExecuteProcedureLabelProvider());
+		
+		initUI();
 
 		return container;
 	}
 	
 	/**
+	 * 프로시저를 실행합니다.
+	 * 
+	 */
+	private void executeProcedure() {
+		for(int i=0; i<parameterList.size(); i++) {
+			InOutParameterDAO inParam = parameterList.get(i);
+			inParam.setValue(textInputs[i].getText());
+		}
+		boolean ret = executor.exec(parameterList);
+	}
+	
+	/**
+	 * init ui
+	 */
+	private void initUI() {
+		if(textInputs != null && textInputs.length > 0) {
+			textInputs[0].setFocus();
+		} else {
+			btnExecute.setFocus();
+		}
+	}
+	
+	/**
 	 * initialize procedure information
 	 */
-	private void initProcedureInformation() throws Exception {
+	private List<InOutParameterDAO> getInParameter() throws Exception {
 		executor = new ProcedureExecutor(procedureDAO, userDB);
-		this.parameterList = executor.getParameters();
+		return executor.getInParameters();
 	}
 
 	/**
@@ -168,17 +229,6 @@ public class ExecuteProcedureDialog extends Dialog {
 
 			tableViewerColumn.setEditingSupport(new ExecuteProcParamInputSupport(tableViewer, i));
 		}
-	}
-
-	@Override
-	protected void okPressed() {
-
-		boolean ret = executor.exec();
-
-		if (ret) {
-			this.close();
-		}
-
 	}
 
 	/**

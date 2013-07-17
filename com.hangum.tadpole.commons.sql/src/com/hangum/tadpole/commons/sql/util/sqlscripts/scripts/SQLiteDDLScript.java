@@ -58,17 +58,20 @@ public class SQLiteDDLScript extends AbstractRDBDDLScript {
 			throws Exception {
 		throw new Exception("Not support Database");
 	}
-
-	@Override
-	public List<InOutParameterDAO> getProcedureParamter(
-			ProcedureFunctionDAO procedureDAO) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public String getTriggerScript(TriggerDAO triggerDAO) throws Exception {
 		return triggerDAO.getStatement();
+	}
+
+	@Override
+	public List<InOutParameterDAO> getProcedureInParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		throw new Exception("Not support Database");
+	}
+
+	@Override
+	public List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		throw new Exception("Not support Database");
 	}
 
 }

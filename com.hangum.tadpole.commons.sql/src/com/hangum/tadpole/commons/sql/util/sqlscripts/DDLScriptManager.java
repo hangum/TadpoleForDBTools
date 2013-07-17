@@ -112,13 +112,24 @@ public class DDLScriptManager {
 	}
 	
 	/**
-	 * Procedure Parameters
+	 * Procedure In Parameters
 	 * 
 	 * @param obj
 	 * @return
 	 * @throws Exception
 	 */
-	public List<InOutParameterDAO> getProcedureParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
-		return rdbScript.getProcedureParamter(procedureDAO);
+	public List<InOutParameterDAO> getProcedureInParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		return rdbScript.getProcedureInParamter(procedureDAO);
+	}
+	
+	/**
+	 * Procedure OUT Parameters
+	 * 
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	public List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		return rdbScript.getProcedureOutParamter(procedureDAO);
 	}
 }

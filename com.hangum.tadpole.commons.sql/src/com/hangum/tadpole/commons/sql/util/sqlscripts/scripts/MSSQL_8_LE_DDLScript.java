@@ -156,13 +156,9 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 		StringBuilder result = new StringBuilder("");
 		result.append("/* DROP VIEW " + strName + "; */ \n\n");
 
-		List<String> srcViewHeadList = client.queryForList("getViewScript.head", strName);				
-		for (int i=0; i<srcViewHeadList.size(); i++){
-			result.append( srcViewHeadList.get(i)+"\n");
-		}
-		List<String> srcViewBodyList = client.queryForList("getViewScript.body", strName);				
-		for (int i=0; i<srcViewBodyList.size(); i++){
-			result.append( srcViewBodyList.get(i)+"\n");
+		List<String> srcProcList = client.queryForList("getViewScript", strName);				
+		for (int i=0; i<srcProcList.size(); i++){
+			result.append(srcProcList.get(i));
 		}
 		
 		return result.toString();
@@ -181,18 +177,36 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 	 * @see com.hangum.tadpole.rdb.core.editors.objects.table.scripts.RDBDDLScript#getFunctionScript(com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO)
 	 */
 	@Override
-	public String getFunctionScript(ProcedureFunctionDAO functionDAO)
-			throws Exception {
-		throw new Exception("Not Support Database");
+	public String getFunctionScript(ProcedureFunctionDAO functionDAO) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		
+		StringBuilder result = new StringBuilder("");
+		result.append("/* DROP FUNCTION " + functionDAO.getName() + "; */ \n\n");
+
+		List<String> srcProcList = client.queryForList("getFunctionScript", functionDAO.getName());				
+		for (int i=0; i<srcProcList.size(); i++){
+			result.append(srcProcList.get(i));
+		}
+		
+		return result.toString();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.hangum.tadpole.rdb.core.editors.objects.table.scripts.RDBDDLScript#getProcedureScript(com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO)
 	 */
 	@Override
-	public String getProcedureScript(ProcedureFunctionDAO procedureDAO)
-			throws Exception {
-		throw new Exception("Not Support Database");
+	public String getProcedureScript(ProcedureFunctionDAO procedureDAO)	throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		
+		StringBuilder result = new StringBuilder("");
+		result.append("/* DROP PROCEDURE " + procedureDAO.getName() + "; */ \n\n");
+
+		List<String> srcProcList = client.queryForList("getProcedureScript", procedureDAO.getName());				
+		for (int i=0; i<srcProcList.size(); i++){
+			result.append(srcProcList.get(i));
+		}
+		
+		return result.toString();
 	}
 	
 	@Override
@@ -207,7 +221,17 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 	 */
 	@Override
 	public String getTriggerScript(TriggerDAO triggerDAO) throws Exception {
-		throw new Exception("Not Support Database");
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		
+		StringBuilder result = new StringBuilder("");
+		result.append("/* DROP PROCEDURE " + triggerDAO.getName() + "; */ \n\n");
+
+		List<String> srcProcList = client.queryForList("getTriggerScript", triggerDAO.getName());				
+		for (int i=0; i<srcProcList.size(); i++){
+			result.append(srcProcList.get(i));
+		}
+		
+		return result.toString();
 	}
 
 }
