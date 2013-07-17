@@ -210,7 +210,14 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 	}
 	
 	@Override
-	public List<InOutParameterDAO> getProcedureParamter(
+	public List<InOutParameterDAO> getProcedureInParamter(
+			ProcedureFunctionDAO procedureDAO) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public List<InOutParameterDAO> getProcedureOutParamter(
 			ProcedureFunctionDAO procedureDAO) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
