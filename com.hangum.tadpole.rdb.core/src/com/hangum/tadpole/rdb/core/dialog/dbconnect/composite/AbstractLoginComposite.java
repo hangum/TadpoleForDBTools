@@ -255,6 +255,9 @@ public abstract class AbstractLoginComposite extends Composite {
 			try {
 				MongoConnectionManager.getInstance(userDB);
 			} catch (Exception e) {
+				// If UserDBDao is not invalid, remove UserDBDao at internal cache
+				TadpoleSQLManager.removeInstance(loginInfo);
+				
 				logger.error("MongoDB Connection error", e); //$NON-NLS-1$
 				MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.AbstractLoginComposite_1);
 				
