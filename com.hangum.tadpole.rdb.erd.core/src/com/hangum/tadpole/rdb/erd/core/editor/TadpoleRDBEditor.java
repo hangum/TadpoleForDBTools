@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.erd.core.editor;
 
+import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.EventObject;
@@ -22,6 +23,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
@@ -33,6 +38,7 @@ import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
@@ -41,8 +47,15 @@ import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Drawable;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -320,6 +333,51 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 //	@Override
 //	public void doSaveAs() {
 //		super.doSaveAs();
+//	}
+	
+	
+	/**
+	 * export images
+	 * 
+	 * RAP currently, GC drawing is only supported on Canvas, but not on image.
+	 */
+//	public void exportImage() {
+//		try {
+//           IFigure figure = ((AbstractGraphicalEditPart)getGraphicalViewer().getRootEditPart()).getFigure();
+//           File file = new File ("/Users/hangum/Downloads/gefout.png");
+//           if (file.exists ()) {
+//               if (!MessageDialog.openQuestion(null, "prompted", "The file already exists. Want to re-cover it?")) {
+//                   return;
+//               }
+//           } else {
+//        	   file.createNewFile ();
+//           }
+//
+//           if (figure instanceof Viewport) {
+//	           ((Viewport)figure).setViewLocation(0, 0);
+//           }
+//
+//           Dimension size = figure.getPreferredSize ();
+//           Image image = new Image (Display.getDefault (), size.width, size.height);
+//           Drawable drawable = (Drawable)image;
+//           
+//           GC gc = new GC(image);
+//           SWTGraphics graphics = new SWTGraphics(gc);
+//           figure.paint (graphics);
+//
+//           ImageLoader loader = new ImageLoader ();
+//           loader.data = new ImageData []{image.getImageData ()};
+//           loader.save("/Users/hangum/Downloads/gefout.png", SWT.IMAGE_PNG);//FileFormat.FORMATS);
+//
+//           graphics.dispose();
+//           gc.dispose();
+//           image.dispose();
+//
+//        } catch (Exception e) {
+//        	e.printStackTrace();
+//	     } finally {
+//        }
+//		
 //	}
 
 	@Override
