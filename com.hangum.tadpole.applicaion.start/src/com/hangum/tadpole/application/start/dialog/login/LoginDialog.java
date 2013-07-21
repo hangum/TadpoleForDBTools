@@ -85,7 +85,6 @@ public class LoginDialog extends Dialog {
 		lblPleaseSignIn.setText(Messages.LoginDialog_lblPleaseSignIn_text);
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblEmail.setText(Messages.LoginDialog_1);
 		
 		textEMail = new Text(container, SWT.BORDER);
@@ -96,7 +95,6 @@ public class LoginDialog extends Dialog {
 //		lblLoginImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/LoginManager.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		Label lblPassword = new Label(container, SWT.NONE);
-		lblPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPassword.setText(Messages.LoginDialog_4);
 		
 		textPasswd = new Text(container, SWT.BORDER | SWT.PASSWORD);
