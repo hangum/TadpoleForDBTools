@@ -61,7 +61,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		if(column == 1) return new TextCellEditor(viewer.getTable());
+		if(column == 1) return new CommentCellEditor(column, viewer);
 		else return null;
 	}
 
