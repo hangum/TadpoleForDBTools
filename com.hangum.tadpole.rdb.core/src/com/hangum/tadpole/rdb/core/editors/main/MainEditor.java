@@ -804,7 +804,7 @@ public class MainEditor extends EditorExtension {
 				try {
 					browserQueryEditor.evaluate("getEditor();"); //$NON-NLS-1$
 				} catch(Exception e) {
-					e.printStackTrace();
+					logger.error(RequestInfoUtils.requestInfo("MainEditor browser init", strUserEMail), e); //$NON-NLS-1$
 				}
 				
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.

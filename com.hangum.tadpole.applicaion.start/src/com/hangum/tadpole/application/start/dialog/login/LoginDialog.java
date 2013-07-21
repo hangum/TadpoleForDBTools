@@ -27,14 +27,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
-import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * login dialog
@@ -48,10 +47,10 @@ import com.swtdesigner.ResourceManager;
 public class LoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
 	
-	private int ID_NEW_USER = 998;
-	private  int ID_GUEST_USER = 999;
-	private int ID_ADMIN_USER = 1000;
-	private int ID_MANAGER_USER = 1001;
+	private int ID_NEW_USER = IDialogConstants.CLIENT_ID 	+ 1;
+	private int ID_GUEST_USER = IDialogConstants.CLIENT_ID 	+ 2;
+	private int ID_ADMIN_USER = IDialogConstants.CLIENT_ID 	+ 3;
+	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID + 4;
 	
 	private Text textEMail;
 	private Text textPasswd;
@@ -79,12 +78,11 @@ public class LoginDialog extends Dialog {
 		gridLayout.horizontalSpacing = 5;
 		gridLayout.marginHeight = 5;
 		gridLayout.marginWidth = 5;
-		gridLayout.numColumns = 3;
+		gridLayout.numColumns = 2;
 		
 		Label lblPleaseSignIn = new Label(container, SWT.NONE);
 		lblPleaseSignIn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblPleaseSignIn.setText(Messages.LoginDialog_lblPleaseSignIn_text);
-		new Label(container, SWT.NONE);
 		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -93,9 +91,9 @@ public class LoginDialog extends Dialog {
 		textEMail = new Text(container, SWT.BORDER);
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblLoginImage = new Label(container, SWT.NONE);
-		lblLoginImage.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 2));
-		lblLoginImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/LoginManager.png")); //$NON-NLS-1$ //$NON-NLS-2$
+//		Label lblLoginImage = new Label(container, SWT.NONE);
+//		lblLoginImage.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 2));
+//		lblLoginImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/LoginManager.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		Label lblPassword = new Label(container, SWT.NONE);
 		lblPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -111,6 +109,12 @@ public class LoginDialog extends Dialog {
 			}
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		new Label(container, SWT.NONE);
+		Label lblRecommand = new Label(container, SWT.NONE);
+		lblRecommand.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		lblRecommand.setText(Messages.LoginDialog_lblNewLabel_text);
+		
 		textEMail.setFocus();
 	
 		return container;
@@ -234,7 +238,7 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(526, 222);
+		return new Point(526, 200);
 	}
 	
 }

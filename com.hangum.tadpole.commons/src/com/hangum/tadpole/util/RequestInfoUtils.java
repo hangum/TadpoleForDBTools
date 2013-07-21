@@ -29,6 +29,21 @@ import org.eclipse.rap.rwt.RWT;
 public class RequestInfoUtils {
 
 	/**
+	 * Get user browser and browser version information.
+	 * 
+	 * @return
+	 */
+	public static String getUserBrowser() {
+		ServletUserAgent sua = new ServletUserAgent();
+		sua.detect(RWT.getRequest());
+
+		String strBrowser = sua.getBrowserType().toString();
+		String strFullVersion = sua.getFullVersion() + sua.getMajorVersion();
+		
+		return strBrowser + " Ver " + strFullVersion;
+	}
+
+	/**
 	 * 사용자 인포
 	 * 
 	 * @param prefixMsg
