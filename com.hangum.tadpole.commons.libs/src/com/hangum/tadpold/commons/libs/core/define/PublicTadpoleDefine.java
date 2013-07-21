@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.define;
 
-
 /**
  * 올챙이 전역 정의 
  * 
@@ -59,6 +58,9 @@ public class PublicTadpoleDefine {
 	
 	/** auto commit 사용여부를 가립니다. */
 	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE";
+	
+	/** Tadpole support browser list  */
+	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI};
 	
 	/** USER TYPE */
 	public static enum USER_TYPE {ADMIN, DBA, MANAGER, USER/*, GUEST*/};

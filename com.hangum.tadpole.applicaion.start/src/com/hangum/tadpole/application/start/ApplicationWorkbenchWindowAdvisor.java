@@ -34,6 +34,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -47,6 +48,7 @@ import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.util.RequestInfoUtils;
 
 /**
  * Configures the initial size and appearance of a workbench window.
@@ -91,6 +93,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      * 시스템 초기화 
      */
     private void initSystem() {
+    	// 올챙이가 지원하지 않는 브라우저면 정보 다이얼로그를 보여준다.
+    	String isBrowser = RequestInfoUtils.isTadpoleRunning();
+    	if(!"".equals(isBrowser)) {
+    		UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), isBrowser);
+    		uiDialog.open();
+    	}
+    	
     	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
     	try {
     		TadpoleSystemInitializer.initSystem();

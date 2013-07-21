@@ -12,6 +12,8 @@ package com.hangum.tadpole.util;
 
 import org.eclipse.rap.rwt.RWT;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * <pre>
  * 사용자 정보를 보기 좋게
@@ -27,6 +29,23 @@ import org.eclipse.rap.rwt.RWT;
  *
  */
 public class RequestInfoUtils {
+	
+	/**
+	 * 올챙이가 동작 할 수 없는 브라우저라면, 사용자 브라우저 를 리턴합니다.
+	 * 
+	 * @return
+	 */
+	public static String isTadpoleRunning() {
+		ServletUserAgent sua = new ServletUserAgent();
+		sua.detect(RWT.getRequest());
+
+		String strBrowser = sua.getBrowserType().toString();
+		for(PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER supportBrowser: PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER.values()) {
+			if(strBrowser.equalsIgnoreCase(supportBrowser.toString())) return "";
+		}
+		
+		return strBrowser;
+	}
 
 	/**
 	 * Get user browser and browser version information.
@@ -40,7 +59,7 @@ public class RequestInfoUtils {
 		String strBrowser = sua.getBrowserType().toString();
 		String strFullVersion = sua.getFullVersion() + sua.getMajorVersion();
 		
-		return strBrowser + " Ver " + strFullVersion;
+		return strBrowser + " Ver" + strFullVersion;
 	}
 
 	/**

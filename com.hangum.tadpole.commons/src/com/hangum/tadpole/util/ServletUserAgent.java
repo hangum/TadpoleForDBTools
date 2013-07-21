@@ -130,7 +130,7 @@ public class ServletUserAgent {
                     fullVersion = userAgentStr.substring(userAgentStr.indexOf("Version/")+8);
                     fullVersion = fullVersion.substring(0, (fullVersion.indexOf(" ") > 0 ? fullVersion.indexOf(" ") : fullVersion.length())).trim();
                     majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
-                } else if (userAgentStr.contains("Opera ")) {
+                } else if (userAgentStr.contains("Opera ") || userAgentStr.contains("Opera/")) {
                     Browser_Type = BROWSER_TYPE.OPERA;
                     fullVersion = userAgentStr.substring(userAgentStr.indexOf("Opera ")+6);
                     fullVersion = fullVersion.substring(0, (fullVersion.indexOf(" ") > 0 ? fullVersion.indexOf(" ") : fullVersion.length())).trim();
