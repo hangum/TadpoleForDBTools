@@ -160,7 +160,7 @@ public class SingleAddDBDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, DBLoginDialog.TEST_CONNECTION_ID, "Test Connection", false);
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false);
 	}
 
 	/**

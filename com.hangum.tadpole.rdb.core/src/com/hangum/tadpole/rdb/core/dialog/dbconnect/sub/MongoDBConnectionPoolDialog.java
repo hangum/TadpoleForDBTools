@@ -78,7 +78,7 @@ public class MongoDBConnectionPoolDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Ok", true);
+		createButton(parent, IDialogConstants.OK_ID, "OK", true);
 		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false);
 	}
 

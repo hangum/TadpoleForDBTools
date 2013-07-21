@@ -26,8 +26,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -63,8 +61,8 @@ public class UserManagerDialog extends Dialog {
 	 */
 	private static final Logger logger = Logger.getLogger(UserManagerDialog.class);
 	
-	private static int DELETE_ID = 999;
-	private static int APPEND_USER_ID = 998;
+	private static int DELETE_ID = IDialogConstants.CLIENT_ID + 1;
+	private static int APPEND_USER_ID = IDialogConstants.CLIENT_ID + 2;
 	
 	private UserDBDAO userDB;
 	private Text textID;

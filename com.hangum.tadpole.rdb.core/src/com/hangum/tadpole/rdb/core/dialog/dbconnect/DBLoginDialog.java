@@ -59,7 +59,7 @@ public class DBLoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(DBLoginDialog.class);
 	
 	
-	public static final int TEST_CONNECTION_ID = 999;
+	public static final int TEST_CONNECTION_ID = IDialogConstants.CLIENT_ID + 1;
 	
 	/** main composite */
 	private Composite container;

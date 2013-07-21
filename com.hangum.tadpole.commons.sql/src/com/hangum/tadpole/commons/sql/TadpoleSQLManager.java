@@ -105,6 +105,6 @@ public class TadpoleSQLManager {
 	 * @return
 	 */
 	private static String getKey(UserDBDAO dbInfo) {
-		return dbInfo.getSeq() + dbInfo.getDbms_types()+dbInfo.getUrl()+dbInfo.getUsers();//+dbInfo.getPasswd();
+		return dbInfo.getSeq() + dbInfo.getDbms_types()+dbInfo.getUrl()+dbInfo.getUsers()+dbInfo.getPasswd();
 	}
 }

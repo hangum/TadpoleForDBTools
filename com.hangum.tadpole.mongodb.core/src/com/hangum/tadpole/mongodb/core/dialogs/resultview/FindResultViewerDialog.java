@@ -36,7 +36,7 @@ import com.mongodb.DBObject;
  *
  */
 public class FindResultViewerDialog extends Dialog {
-	/**Øß
+	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(FindResultViewerDialog.class);
