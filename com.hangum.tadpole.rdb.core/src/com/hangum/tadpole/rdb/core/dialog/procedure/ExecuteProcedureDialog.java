@@ -32,7 +32,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecutor;
+import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecuterManager;
+import com.hangum.tadpole.commons.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -114,6 +115,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		compositeInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		try {
+			initProcedureExecuter();
 			this.parameterList = getInParameter();
 		} catch(Exception e) {
 			logger.error("get in parameter", e);
@@ -195,6 +197,16 @@ public class ExecuteProcedureDialog extends Dialog {
 	}
 	
 	/**
+	 * initialize procedure executer
+	 * 
+	 * @throws Exception
+	 */
+	private void initProcedureExecuter() throws Exception {
+		ProcedureExecuterManager executorManager = new ProcedureExecuterManager(procedureDAO, userDB);
+		executor = executorManager.getExecuter();
+	}
+	
+	/**
 	 * 프로시저를 실행합니다.
 	 * 
 	 */
@@ -218,10 +230,9 @@ public class ExecuteProcedureDialog extends Dialog {
 	}
 	
 	/**
-	 * initialize procedure information
+	 * initialize procedure IN information
 	 */
 	private List<InOutParameterDAO> getInParameter() throws Exception {
-		executor = new ProcedureExecutor(procedureDAO, userDB);
 		return executor.getInParameters();
 	}
 
