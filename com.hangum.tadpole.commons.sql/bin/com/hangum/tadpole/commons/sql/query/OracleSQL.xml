@@ -175,7 +175,6 @@ GROUP BY t.table_name,
  -->
 <select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
 SELECT o.object_name AS "View Name"
-     , o.status
     FROM user_objects o
    WHERE o.object_type = 'VIEW'
 ORDER BY 1	
