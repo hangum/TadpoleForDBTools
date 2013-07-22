@@ -10,7 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util.executer.procedure;
 
+import java.sql.ResultSet;
 import java.util.List;
+
+import oracle.jdbc.internal.OracleCallableStatement;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,6 +32,30 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
+/**
+ * 
+ * @author nilriri
+ * 
+ * Procedure sample....
+ * 
+
+	CREATE OR REPLACE PROCEDURE p_add (rowcnt        IN     INT
+	                                  ,retcode          OUT INT
+	                                  ,retmsg           OUT VARCHAR2
+	                                  ,cursorParam      OUT SYS_REFCURSOR)
+	IS
+	BEGIN
+	   OPEN cursorParam FOR
+	      SELECT table_name
+	        FROM user_tables
+	       WHERE ROWNUM <= rowcnt;
+	
+	   retcode := SQLCODE;
+	   retmsg := SQLERRM;
+	END;
+ 
+ */
+
 public class OracleProcedureExecuter extends ProcedureExecutor {
 	/**
 	 * Logger for this class
@@ -65,6 +92,8 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			}
 			sbQuery.append(")}");
 			if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
+			
+			
 			cstmt = javaConn.prepareCall(sbQuery.toString());
 			
 			// Set input value
@@ -81,10 +110,13 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			for (int i = 0; i < listOutParamValues.size(); i++) {
 				InOutParameterDAO dao = listOutParamValues.get(i);
 				
-				if(logger.isDebugEnabled()) logger.debug("Out Parameter " + dao.getOrder() + " JavaType is " + dao.getJavaType());
+				if(logger.isDebugEnabled()) logger.debug("Out Parameter " + dao.getOrder() + " JavaType is " + RDBTypeToJavaTypeUtils.getJavaType(dao.getRdbType()));
 				
-				cstmt.registerOutParameter(dao.getOrder(), RDBTypeToJavaTypeUtils.getJavaType(dao.getRdbType() ));
+				cstmt.registerOutParameter(dao.getOrder(), RDBTypeToJavaTypeUtils.getJavaType(dao.getRdbType()));
+				
 			}
+			
+			
 
 			cstmt.execute();
 
@@ -95,8 +127,18 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				Object obj = cstmt.getObject(dao.getOrder());
 				// 실행결과가 String이 아닌경우 Type Cast가 필요함.... 현재는 무조건 String 으로...
 				if (obj!=null){
-					dao.setValue(obj.toString());
+					if ("SYS_REFCURSOR".equals(dao.getRdbType())){
+						ResultSet rs = (ResultSet)obj;
+						while(rs.next()){
+							logger.debug("Result Set = " + rs.getString(1));				
+						}
+					}else{
+						dao.setValue(obj.toString());
+					}
+					
 				}
+
+			
 			}
 			
 			
