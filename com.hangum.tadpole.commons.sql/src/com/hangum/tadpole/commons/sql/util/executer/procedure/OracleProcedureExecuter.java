@@ -1,13 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2013 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util.executer.procedure;
 
-import java.sql.Types;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -46,74 +55,44 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			javaConn = client.getDataSource().getConnection();
 			
 			// make the script
-			StringBuffer query = new StringBuffer("{call " + procedureDAO.getName() + "(");
-			StringBuffer params = new StringBuffer();
-
+			StringBuffer sbQuery = new StringBuffer("{call " + procedureDAO.getName() + "(");
 			// in script
-			for (int i = 0; i < listInParamValues.size(); i++) {
-				if (i == 0) {
-					params.append("?");
-				} else {
-					params.append(",?");
-				}
+			int intParamSize = listOutParamValues.size() + listInParamValues.size();
+			for (int i = 0; i < intParamSize; i++) {
+				if (i == 0) sbQuery.append("?");
+				else 		sbQuery.append(",?");
 			}
-
-			query.append(params.toString() + ")}");
-			cstmt = javaConn.prepareCall(query.toString());
+			sbQuery.append(")}");
+			if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
+			cstmt = javaConn.prepareCall(sbQuery.toString());
 			
-			if(logger.isDebugEnabled()) {
-				logger.debug("[make procedure query]" + query.toString());
-			}
-			
-			// set the value
+			// Set input value
 			for (InOutParameterDAO inOutParameterDAO : parameterList) {
 				cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue());
 			}
 
-			// Set the OUT Param
+			// Set the OUT Parameter
 			for (int i = 0; i < listOutParamValues.size(); i++) {
 				InOutParameterDAO dao = listInParamValues.get(i);
-
-//				if (StringUtils.equalsIgnoreCase(dao.getType(), "OUT")) {
-					cstmt.registerOutParameter(dao.getOrder(), Types.VARCHAR);
-//				} else if (StringUtils.equalsIgnoreCase(dao.getType(), "IN OUT")) {
-//					cstmt.setObject(dao.getOrder(), dao.getValue());
-//					cstmt.registerOutParameter(dao.getOrder(), Types.VARCHAR);
-//				} else {
-//					cstmt.setObject(dao.getOrder(), dao.getValue());
-//				}
+				cstmt.registerOutParameter(dao.getOrder(), RDBTypeToJavaTypeUtils.getJavaType(dao.getJavaType()));
 			}
 
-			logger.debug("Execute Procedure query is\t  " + query.toString());
-
 			cstmt.execute();
-			javaConn.commit();
 
 			for (int i = 0; i < listOutParamValues.size(); i++) {
 				InOutParameterDAO dao = listOutParamValues.get(i);
-
-				if (StringUtils.contains(dao.getType(), "OUT")) {
-					// dao.getType에 따라서 분리해야함.
-					logger.debug("Execute Procedure result " + dao.getName() + "=" + cstmt.getString(dao.getOrder()));
-				}
+				logger.debug("Execute Procedure result " + dao.getName() + "=" + cstmt.getString(dao.getOrder()));
 			}
 			MessageDialog.openInformation(null, "Information", "Execute Compete.");
 
 			return true;
-
 		} catch (Exception e) {
 			logger.error("ProcedureExecutor executing error", e);
 			MessageDialog.openError(null, "Error", e.getMessage());
 			return false;
 		} finally {
-			try {
-				cstmt.close();
-			} catch (Exception e) {
-			}
-			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
+			try { if(cstmt != null) cstmt.close(); } catch (Exception e) {  }
+			try { if(javaConn != null) javaConn.close(); } catch (Exception e) { }
 		}
 	}
 

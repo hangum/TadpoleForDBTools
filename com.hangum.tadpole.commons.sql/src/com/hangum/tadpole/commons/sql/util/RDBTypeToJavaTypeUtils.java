@@ -13,6 +13,8 @@ package com.hangum.tadpole.commons.sql.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 /**
  * RDB type to Java type mapping utils
  * 
@@ -20,7 +22,7 @@ import java.util.Map;
  * 
  */
 public class RDBTypeToJavaTypeUtils {
-
+	private static final Logger logger = Logger.getLogger(RDBTypeToJavaTypeUtils.class);
 	
 	private static Map<String, Integer> mapTypes = new HashMap<String, Integer>();
 	static {
@@ -39,6 +41,7 @@ public class RDBTypeToJavaTypeUtils {
 		mapTypes.put("DOUBLE", 		java.sql.Types.DOUBLE);
 		mapTypes.put("CHAR", 		java.sql.Types.CHAR);
 		mapTypes.put("VARCHAR", 	java.sql.Types.VARCHAR);
+		mapTypes.put("VARCHAR2", 	java.sql.Types.VARCHAR);
 		mapTypes.put("DATE", 		java.sql.Types.DATE);
 		mapTypes.put("TIME", 		java.sql.Types.TIME);
 		mapTypes.put("YEAR", 		java.sql.Types.DATE);
@@ -66,6 +69,7 @@ public class RDBTypeToJavaTypeUtils {
 	public static Integer getJavaType(String rdbType) {
 		Integer javaType = mapTypes.get(rdbType);
 		if(javaType == null) {
+			logger.info("SQL type to Java type not found is" + rdbType);
 			return java.sql.Types.VARCHAR;
 		}
 	
