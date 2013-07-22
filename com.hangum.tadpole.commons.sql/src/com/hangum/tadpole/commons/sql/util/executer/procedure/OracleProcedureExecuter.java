@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.TableViewer;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.util.RDBTypeToJavaTypeUtils;
@@ -44,7 +45,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 	}
 	
 	@Override
-	public boolean exec(List<InOutParameterDAO> parameterList) {
+	public boolean exec(TableViewer viewer, List<InOutParameterDAO> parameterList) {
 		java.sql.Connection javaConn = null;
 		java.sql.CallableStatement cstmt = null;
 
@@ -57,7 +58,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			// make the script
 			StringBuffer sbQuery = new StringBuffer("{call " + procedureDAO.getName() + "(");
 			// in script
-			int intParamSize = listOutParamValues.size() + listInParamValues.size();
+			int intParamSize = this.getParametersCount();// listOutParamValues.size() + listInParamValues.size();
 			for (int i = 0; i < intParamSize; i++) {
 				if (i == 0) sbQuery.append("?");
 				else 		sbQuery.append(",?");
@@ -68,13 +69,21 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			
 			// Set input value
 			for (InOutParameterDAO inOutParameterDAO : parameterList) {
+				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
+				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
+					MessageDialog.openError(null, "Error", inOutParameterDAO.getName() + " parameters are required.");
+					return false;
+				}
 				cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue());
 			}
 
 			// Set the OUT Parameter
 			for (int i = 0; i < listOutParamValues.size(); i++) {
-				InOutParameterDAO dao = listInParamValues.get(i);
-				cstmt.registerOutParameter(dao.getOrder(), RDBTypeToJavaTypeUtils.getJavaType(dao.getJavaType()));
+				InOutParameterDAO dao = listOutParamValues.get(i);
+				
+				if(logger.isDebugEnabled()) logger.debug("Out Parameter " + dao.getOrder() + " JavaType is " + dao.getJavaType());
+				
+				cstmt.registerOutParameter(dao.getOrder(), RDBTypeToJavaTypeUtils.getJavaType(dao.getRdbType() ));
 			}
 
 			cstmt.execute();
@@ -82,8 +91,22 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			for (int i = 0; i < listOutParamValues.size(); i++) {
 				InOutParameterDAO dao = listOutParamValues.get(i);
 				logger.debug("Execute Procedure result " + dao.getName() + "=" + cstmt.getString(dao.getOrder()));
+				
+				Object obj = cstmt.getObject(dao.getOrder());
+				// 실행결과가 String이 아닌경우 Type Cast가 필요함.... 현재는 무조건 String 으로...
+				if (obj!=null){
+					dao.setValue(obj.toString());
+				}
 			}
+			
+			
+			viewer.setInput(listOutParamValues);
+			
+			viewer.refresh();
+			
 			MessageDialog.openInformation(null, "Information", "Execute Compete.");
+			
+			
 
 			return true;
 		} catch (Exception e) {

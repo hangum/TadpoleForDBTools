@@ -138,6 +138,8 @@ public class ExecuteProcedureDialog extends Dialog {
 			
 			textInputs[i] = new Text(compositeInput, SWT.BORDER);
 			textInputs[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			// Parameter default value set.
+			textInputs[i].setText(inParameters.getValue());
 			
 			labelType[i] = new Label(compositeInput, SWT.NONE);
 			labelType[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
@@ -147,17 +149,13 @@ public class ExecuteProcedureDialog extends Dialog {
 		}
 		
 		Composite compositeBtn = new Composite(container, SWT.NONE);
-		GridLayout gl_compositeBtn = new GridLayout(2, false);
+		GridLayout gl_compositeBtn = new GridLayout(1, false);
 		gl_compositeBtn.verticalSpacing = 2;
 		gl_compositeBtn.horizontalSpacing = 2;
 		gl_compositeBtn.marginHeight = 2;
 		gl_compositeBtn.marginWidth = 2;
 		compositeBtn.setLayout(gl_compositeBtn);
 		compositeBtn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
-		
-		Button btnValidation = new Button(compositeBtn, SWT.NONE);
-		btnValidation.setEnabled(false);
-		btnValidation.setText("Validation");
 		
 		btnExecute = new Button(compositeBtn, SWT.NONE);
 		btnExecute.addSelectionListener(new SelectionAdapter() {
@@ -215,7 +213,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			InOutParameterDAO inParam = parameterList.get(i);
 			inParam.setValue(textInputs[i].getText());
 		}
-		boolean ret = executor.exec(parameterList);
+		boolean ret = executor.exec(tableViewer, parameterList);
 	}
 	
 	/**
@@ -241,12 +239,13 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	private void createTaleColumn() {
 		String columnHeader[] = new String[] { "Seq", "Name", "Type", "ParamType", "Length", "Value" };
+		int columnWidth[] = new int[] { 40, 180, 80, 100, 80, 350 };
 
 		for (int i = 0; i < columnHeader.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.LEFT);
 
 			TableColumn tblclmnColumnName = tableViewerColumn.getColumn();
-			tblclmnColumnName.setWidth(columnHeader[i].length() * 15);
+			tblclmnColumnName.setWidth(columnWidth[i]);
 			tblclmnColumnName.setText(columnHeader[i]);
 
 			tableViewerColumn.setEditingSupport(new ExecuteProcParamInputSupport(tableViewer, i));

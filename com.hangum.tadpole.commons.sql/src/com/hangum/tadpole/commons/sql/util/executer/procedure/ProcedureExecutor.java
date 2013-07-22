@@ -10,20 +10,16 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util.executer.procedure;
 
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.TableViewer;
 
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * rdb procedure executer.
@@ -83,11 +79,38 @@ public abstract class ProcedureExecutor {
 	}
 
 	/**
+	 * Get parameter Count.
+	 * 
+	 * @return
+	 */
+	public int getParametersCount(String type) throws Exception {
+		int cnt = 0;
+		
+		for(int i=0;i< this.listInParamValues.size();i++){
+			if (type.equals(listInParamValues.get(i).getType())) cnt++;
+		}
+		for(int i=0;i< this.listOutParamValues.size();i++){
+			if (type.equals(listOutParamValues.get(i).getType()) && "OUT".equals(listOutParamValues.get(i).getType())) cnt++;
+		}
+		
+		return cnt;
+	}
+	public int getParametersCount() throws Exception {
+		int cnt = this.listInParamValues.size();
+		
+		for(int i=0;i< this.listOutParamValues.size();i++){
+			if ("OUT".equals(listOutParamValues.get(i).getType())) cnt++;
+		}
+		
+		return cnt;
+	}
+
+	/**
 	 * executer
 	 * 
 	 * @param parameterList
 	 * @return
 	 */
-	public abstract boolean exec(List<InOutParameterDAO> parameterList);
+	public abstract boolean exec(TableViewer viewer, List<InOutParameterDAO> parameterList);
 
 }

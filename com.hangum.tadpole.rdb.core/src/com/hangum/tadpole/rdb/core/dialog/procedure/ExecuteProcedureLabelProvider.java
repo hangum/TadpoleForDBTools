@@ -25,9 +25,13 @@ public class ExecuteProcedureLabelProvider extends LabelProvider implements ITab
 		case 1:
 			return dao.getName();
 		case 2:
-			return dao.getRdbType();
+			return dao.getType();
 		case 3:
+			return dao.getRdbType();
+		case 4:
 			return dao.getLength();
+		case 5:
+			return dao.getValue();
 		default:
 			return null;
 		}

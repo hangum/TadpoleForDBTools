@@ -669,11 +669,11 @@ ORDER BY IC.COLUMN_POSITION
         ,DECODE (ua.data_type, 'REF CURSOR', 'SYS_REFCURSOR', ua.data_type) AS rdbtype
         ,ua.in_out AS type
         ,ua.data_length AS length
-        ,null as value
+        ,ua.default_value as value
     FROM user_arguments ua
    WHERE 1=1
    AND ua.object_name = UPPER (#object_name#)
-   AND ua.in_out in ('IN', 'IN/OUT')
+   AND ua.in_out in ('IN','IN/OUT')
 ORDER BY ua.object_name, ua.overload, ua.sequence
   
 </select>    

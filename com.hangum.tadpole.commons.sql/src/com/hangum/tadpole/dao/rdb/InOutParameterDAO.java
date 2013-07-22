@@ -110,7 +110,7 @@ public class InOutParameterDAO {
 	}
 
 	public String getValue() {
-		return this.value;
+		return this.value == null ? "" : this.value;
 	}
 
 	public void setValue(String value) {
