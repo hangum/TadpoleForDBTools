@@ -13,6 +13,8 @@ package com.hangum.tadpole.commons.sql.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import oracle.jdbc.OracleTypes;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -58,7 +60,9 @@ public class RDBTypeToJavaTypeUtils {
 		mapTypes.put("GEOMETRY", 	java.sql.Types.BINARY);
 		mapTypes.put("BINARY", 		java.sql.Types.BINARY);
 		mapTypes.put("VARBINARY", 	java.sql.Types.VARBINARY);
-	}
+		mapTypes.put("NUMBER", 	    java.sql.Types.DECIMAL);
+		mapTypes.put("SYS_REFCURSOR", OracleTypes.CURSOR);
+		}
 	
 	/**
 	 * rdb type to java 
