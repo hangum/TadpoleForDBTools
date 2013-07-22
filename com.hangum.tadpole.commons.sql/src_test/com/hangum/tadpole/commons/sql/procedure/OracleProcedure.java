@@ -10,11 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.procedure;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.Statement;
+
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * http://www.mkyong.com/oracle/oracle-stored-procedures-hello-world-examples/
@@ -27,19 +29,34 @@ public class OracleProcedure {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		String strQuery = "CREATE OR REPLACE PROCEDURE procOneINOUTParameter(genericParam IN OUT VARCHAR2) " +
+				 " IS " +
+				 "		BEGIN " +
+				 "		  genericParam := 'Hello World INOUT parameter ' || genericParam; " +
+				 "		END;";
+		
+		Connection conn = null;
+		Statement stmt  = null;
 		try {
-
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.32.128:1521:XE", "HR", "tadpole");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.32.128:1521:XE", "HR", "tadpole");
 
-			CallableStatement stat = conn.prepareCall("call procPrintHelloWorld()");
-			stat.execute();
+			stmt = conn.createStatement();
+	        int code = stmt.executeUpdate(strQuery);
+	        System.out.println("[result]" + code);
 
-			System.out.println(stat.getByte(2));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(stmt != null) stmt.close();
+				if(conn != null) conn.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

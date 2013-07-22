@@ -1392,11 +1392,22 @@ public class MainEditor extends EditorExtension {
 			
 			statement = javaConn.createStatement();
 			
+			final String checkSQL = sqlQuery.trim().toUpperCase();
 			// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
-			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE TABLE")) { //$NON-NLS-1$
+			if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
 				sqlQuery = StringUtils.replaceOnce(sqlQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
-			}			
-			boolean boolResult = statement.execute( sqlQuery );
+			
+			// 오라클의 경우 procedure, function, package, trigger의 경우 마지막에 ; 가 있어야 정상 프로시저로 인정됩니다. 
+			//
+			} else if(StringUtils.startsWith(checkSQL, "CREATE OR") ||
+					StringUtils.startsWith(checkSQL, "CREATE PROCEDURE") ||
+					StringUtils.startsWith(checkSQL, "CREATE FUNCTION") ||
+					StringUtils.startsWith(checkSQL, "CREATE PACKAGE") ||
+					StringUtils.startsWith(checkSQL, "CREATE TRIGGER")
+			) { //$NON-NLS-1$
+				sqlQuery += ";";
+			}
+			int boolResult = statement.executeUpdate( sqlQuery );
 			
 			// create table, drop table이면 작동하도록			
 			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
