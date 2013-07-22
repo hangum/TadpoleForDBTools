@@ -14,7 +14,10 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.rdb.core.Activator;
+import com.swtdesigner.ResourceManager;
 
 /**
  * Trigger 의 컬럼 정보
@@ -26,6 +29,17 @@ public class TriggerLabelProvicer extends LabelProvider implements ITableLabelPr
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
+		TriggerDAO triggerDao = (TriggerDAO) element;
+
+		switch(columnIndex) {
+		case 0: 
+			if (triggerDao.isValid()){
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/normalcy.png");
+			}else{
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/warning.png");
+			}
+		}
+		
 		return null;
 	}
 	

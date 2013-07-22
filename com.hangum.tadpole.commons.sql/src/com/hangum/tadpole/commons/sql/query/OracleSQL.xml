@@ -304,6 +304,7 @@ SELECT
         , s.object_type AS TYPE
         , #db_name#   AS db
         , s.created
+        , s.status
 FROM    user_objects s
 WHERE   s.object_type = 'FUNCTION'
 ORDER BY s.object_name 
@@ -333,6 +334,7 @@ SELECT
         , s.object_type AS TYPE
         , #db_name#   AS db
         , s.created
+        , s.status
 FROM    user_objects s
 WHERE   s.object_type = 'TRIGGER'
 ORDER BY s.object_name 
