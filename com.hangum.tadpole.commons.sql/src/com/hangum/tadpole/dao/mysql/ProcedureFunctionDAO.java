@@ -23,7 +23,16 @@ public class ProcedureFunctionDAO {
 	String collation_connection;
 	String Database;
 	String Collation;
+	String Status;
 	
+	public boolean isValid() {
+		return "VALID".equals(Status) || Status == null || "".equals(Status);
+	}
+
+	public void setStatus(String status) {
+		Status = status;
+	}
+
 	public ProcedureFunctionDAO() {
 	
 	}

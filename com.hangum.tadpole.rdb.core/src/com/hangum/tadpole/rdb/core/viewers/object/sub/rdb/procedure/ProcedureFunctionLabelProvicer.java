@@ -15,6 +15,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.rdb.core.Activator;
+import com.swtdesigner.ResourceManager;
 
 /**
  * procedure function 의 컬럼 정보
@@ -26,6 +28,17 @@ public class ProcedureFunctionLabelProvicer extends LabelProvider implements ITa
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
+		ProcedureFunctionDAO procDao = (ProcedureFunctionDAO) element;
+
+		switch(columnIndex) {
+		case 0: 
+			if (procDao.isValid()){
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/normalcy.png");
+			}else{
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/warning.png");
+			}
+		}
+		
 		return null;
 	}
 	
@@ -39,7 +52,6 @@ public class ProcedureFunctionLabelProvicer extends LabelProvider implements ITa
 		case 2: return tc.getModified();
 		case 3: return tc.getCreated();
 		case 4: return tc.getSecurity_type();
-		
 		case 5: return tc.getComment();
 		case 6: return tc.getCharacter_set_client();
 		case 7: return tc.getCollation_connection();

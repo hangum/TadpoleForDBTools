@@ -274,6 +274,7 @@ SELECT
         , s.object_type AS TYPE
         , #db_name#   AS db
         , s.created
+        , s.status
 FROM    user_objects s
 WHERE   s.object_type IN ('PROCEDURE', 'PACKAGE')
 ORDER BY s.object_type DESC, s.object_name 
