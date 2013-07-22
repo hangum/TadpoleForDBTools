@@ -20,6 +20,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -36,6 +39,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -45,6 +49,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.system.permission.PermissionChecker;
@@ -109,6 +114,19 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
+				if(!iss.isEmpty()) {
+					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)iss.getFirstElement();
+
+					if(procedureDAO.isValid()) {
+						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
+						epd.open();
+					}
+				}
+			}
+		});
 
 		procedureComparator = new ObjectComparator();
 		tableViewer.setSorter(procedureComparator);
