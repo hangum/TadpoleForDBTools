@@ -23,7 +23,16 @@ public class TriggerDAO {
 	String collation_connection;	
 	String Database; 
 	String Collation;
+	String Status;
 	
+	public boolean isValid() {
+		return "VALID".equals(Status) || "".equals(Status) || Status == null;
+	}
+
+	public void setStatus(String status) {
+		Status = status;
+	}
+
 	/** sqlite, mssql, cubrid은 name->trigger */
 	String name;
 	/** msslq, cubrid은 db->database */
