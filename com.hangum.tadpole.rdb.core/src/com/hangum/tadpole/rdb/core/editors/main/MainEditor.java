@@ -13,9 +13,7 @@ package com.hangum.tadpole.rdb.core.editors.main;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -77,6 +75,7 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
+import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.commons.sql.util.SQLUtil;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBResourceDAO;
@@ -116,7 +115,6 @@ import com.hangum.tadpole.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.util.tables.SQLResultFilter;
 import com.hangum.tadpole.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.util.tables.SQLResultSorter;
-import com.hangum.tadpole.util.tables.SQLTypeUtils;
 import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
@@ -161,12 +159,12 @@ public class MainEditor extends EditorExtension {
 	private String initDefaultEditorStr;
 	
 	/** query 결과의 컬럼 정보 HashMap -- table의 헤더를 생성하는 용도 <column index, Data> */
-	private HashMap<Integer, String> mapColumns = null;
+	private Map<Integer, String> mapColumns = null;
 	/** query 결과 column, type 정보를 가지고 있습니다 */
 	private Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
 	
 	/** query 의 결과 데이터  -- table의 데이터를 표시하는 용도 <column index, Data> */
-	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
+	private List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer, Object>>();
 		
 	/** 이전 버튼 */
 	private Button btnPrev;
@@ -522,7 +520,7 @@ public class MainEditor extends EditorExtension {
 				
 				// column 데이터 추가 
 				for(int i=0; i<sourceDataList.size(); i++) {
-					HashMap<Integer, Object> mapColumns = sourceDataList.get(i);
+					Map<Integer, Object> mapColumns = sourceDataList.get(i);
 					for(int j=0; j<mapColumns.size(); j++) {
 						sbExportData.append(mapColumns.get(j)).append(exportDelimit); //$NON-NLS-1$
 					}
@@ -1237,75 +1235,15 @@ public class MainEditor extends EditorExtension {
 			//////////////////////////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////////////////////////////////////
-//			// table column을 생성한다.
-			ResultSetMetaData  rsm = rs.getMetaData();
-//			int columnCount = rs.getMetaData().getColumnCount();
-//			
-//			logger.debug("### [Table] [start ]### [column count]" + rsm.getColumnCount() + "#####################################################################################################");
-			for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
-//				logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
-//				logger.debug("\tColumnLabel  		:  " 	+ rsm.getColumnLabel(i+1));
-				
-//				logger.debug("\t AutoIncrement  	:  " 	+ rsm.isAutoIncrement(i+1));
-//				logger.debug("\t Nullable		  	:  " 	+ rsm.isNullable(i+1));
-//				logger.debug("\t CaseSensitive  	:  " 	+ rsm.isCaseSensitive(i+1));
-//				logger.debug("\t Currency		  	:  " 	+ rsm.isCurrency(i+1));
-//				
-//				logger.debug("\t DefinitelyWritable :  " 	+ rsm.isDefinitelyWritable(i+1));
-//				logger.debug("\t ReadOnly		  	:  " 	+ rsm.isReadOnly(i+1));
-//				logger.debug("\t Searchable		  	:  " 	+ rsm.isSearchable(i+1));
-//				logger.debug("\t Signed			  	:  " 	+ rsm.isSigned(i+1));
-////				logger.debug("\t Currency		  	:  " 	+ rsm.isWrapperFor(i+1));
-//				logger.debug("\t Writable		  	:  " 	+ rsm.isWritable(i+1));
-//				
-//				logger.debug("\t ColumnClassName  	:  " 	+ rsm.getColumnClassName(i+1));
-//				logger.debug("\t CatalogName  		:  " 	+ rsm.getCatalogName(i+1));
-//				logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
-//				logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
-//				logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
-				mapColumnType.put(i, rsm.getColumnType(i+1));
-				
-//				logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
-//				logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
-//				logger.debug("\t SchemaName		 	:  " 	+ rsm.getSchemaName(i+1));
-//				logger.debug("\t TableName		 	:  " 	+ rsm.getTableName(i+1));
-//				logger.debug("\t ==[column end]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
-			}
-//			
-//			logger.debug("#### [Table] [end ] ########################################################################################################");
+			// column의 data type을 얻습니다.
+			mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData());
 			
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			
-			// rs set의 결과를 테이블에 출력하기 위해 입력한다.
-			sourceDataList = new ArrayList<HashMap<Integer, Object>>();
-			HashMap<Integer, Object> tmpRs = null;
-			
-			// 
+			// column name을 얻습니다. 
 			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
-			// 
-			// table metadata를 얻습니다.
-			mapColumns = SQLUtil.mataDataToMap(rs);
+			mapColumns = ResultSetUtils.getColumnName(rs);
 			
 			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-			while(rs.next()) {
-				tmpRs = new HashMap<Integer, Object>();
-				
-				for(int i=0;i<rs.getMetaData().getColumnCount(); i++) {
-					try {
-						tmpRs.put(i, rs.getString(i+1) == null ?"":prettyData(i, rs.getObject(i+1))); //$NON-NLS-1$
-					} catch(Exception e) {
-						logger.error("ResutSet fetch error", e); //$NON-NLS-1$
-						tmpRs.put(i, ""); //$NON-NLS-1$
-					}
-				}
-				
-				sourceDataList.add(tmpRs);
-				
-				// 쿼리 검색 결과 만큼만 결과셋을 받습니다. 
-				if(queryResultCount == rs.getRow()) break;
-			}
+			sourceDataList = ResultSetUtils.getResultToList(rs, queryResultCount, true);
 			
 		} finally {
 			try { stmt.close(); } catch(Exception e) {}
@@ -1511,7 +1449,7 @@ public class MainEditor extends EditorExtension {
 			sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList));
 			
 			// 쿼리 결과를 사용자가 설정 한 만큼 보여준다. 
-			List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();
+			List<Map<Integer, Object>>  showList = new ArrayList<Map<Integer,Object>>();
 			int readCount = (sourceDataList.size()+1) - queryPageCount;
 			if(readCount < -1) readCount = sourceDataList.size();
 			else if(readCount > queryPageCount) readCount = queryPageCount;
@@ -1555,7 +1493,7 @@ public class MainEditor extends EditorExtension {
 		// table data를 생성한다.
 		sqlSorter = new SQLResultSorter(-999);
 		
-		List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();
+		List<Map<Integer, Object>>  showList = new ArrayList<Map<Integer,Object>>();
 		
 		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
 		int startCount 	= queryPageCount * pageNumber;
@@ -1593,7 +1531,7 @@ public class MainEditor extends EditorExtension {
 	private void btnPrev() {
 		// table data를 생성한다.
 		sqlSorter = new SQLResultSorter(-999);		
-		List<HashMap<Integer, Object>>  showList = new ArrayList<HashMap<Integer,Object>>();
+		List<Map<Integer, Object>>  showList = new ArrayList<Map<Integer,Object>>();
 		
 		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
 		int startCount 	= queryPageCount * (pageNumber-2);
@@ -1629,14 +1567,13 @@ public class MainEditor extends EditorExtension {
 	 */
 	private void resultTableInit() {
 		// rs set의 결과를 테이블에 출력하기 위해 입력한다.
-		sourceDataList = new ArrayList<HashMap<Integer, Object>>();
+		sourceDataList = new ArrayList<Map<Integer, Object>>();
 		
 		// 마지막 쿼리에 데이터를 정리 합니다.
 		sqlResultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
 		sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
 		sqlResultTableViewer.setInput(sourceDataList);			
 		sqlResultStatusLabel.setText(Messages.MainEditor_28 );
-		
 	}
 	
 	/**
@@ -1647,28 +1584,6 @@ public class MainEditor extends EditorExtension {
 		sqlResultTableViewer.addFilter( sqlFilter );
 	}
 
-	/**
-	 * 숫자일 경우 ,를 찍어보여줍니다.
-	 * 
-	 * @param index
-	 * @param value
-	 * @return
-	 */
-	private String prettyData(int index, Object value) {
-		if(SQLTypeUtils.isNumberType(mapColumnType.get(index))) {
-			try{
-				NumberFormat pf = NumberFormat.getNumberInstance();
-				String val = pf.format(value);
-				
-				return val;
-			} catch(Exception e){
-				logger.error("pretty data", e); //$NON-NLS-1$
-			}			
-		} 
-
-		return value==null?"":value.toString(); //$NON-NLS-1$
-	}
-	
 	@Override
 	public void setFocus() {
 //		setOrionTextFocus();

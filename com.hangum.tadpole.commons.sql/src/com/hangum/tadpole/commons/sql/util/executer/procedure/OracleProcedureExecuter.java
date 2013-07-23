@@ -13,8 +13,6 @@ package com.hangum.tadpole.commons.sql.util.executer.procedure;
 import java.sql.ResultSet;
 import java.util.List;
 
-import oracle.jdbc.internal.OracleCallableStatement;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
@@ -29,15 +27,9 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 /**
  * oracle procedure executer
  * 
- * @author hangum
- *
- */
-/**
- * 
- * @author nilriri
+ * <pre>
  * 
  * Procedure sample....
- * 
 
 	CREATE OR REPLACE PROCEDURE p_add (rowcnt        IN     INT
 	                                  ,retcode          OUT INT
@@ -53,7 +45,11 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 	   retcode := SQLCODE;
 	   retmsg := SQLERRM;
 	END;
- 
+	</pre>
+ * 
+ * @author hangum
+ * @author nilriri
+ * 
  */
 
 public class OracleProcedureExecuter extends ProcedureExecutor {
@@ -115,9 +111,6 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				cstmt.registerOutParameter(dao.getOrder(), RDBTypeToJavaTypeUtils.getJavaType(dao.getRdbType()));
 				
 			}
-			
-			
-
 			cstmt.execute();
 
 			for (int i = 0; i < listOutParamValues.size(); i++) {
@@ -135,21 +128,13 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 					}else{
 						dao.setValue(obj.toString());
 					}
-					
 				}
-
-			
 			}
 			
-			
 			viewer.setInput(listOutParamValues);
-			
 			viewer.refresh();
-			
 			MessageDialog.openInformation(null, "Information", "Execute Compete.");
 			
-			
-
 			return true;
 		} catch (Exception e) {
 			logger.error("ProcedureExecutor executing error", e);

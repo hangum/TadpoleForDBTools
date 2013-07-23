@@ -156,7 +156,7 @@ public class MongodbResultComposite extends Composite {
 	private DownloadServiceHandler downloadServiceHandler;
 
 	/** query 의 결과 데이터  -- table의 데이터를 표시하는 용도 <column index, Data> */
-	private List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
+	private List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer, Object>>();
 	private Map<Integer, String> mapColumns = new HashMap<Integer, String>();
 	private List<MongodbTreeViewDTO> listTrees;
 	
@@ -380,7 +380,7 @@ public class MongodbResultComposite extends Composite {
 				
 				// column 데이터 추가. 
 				for(int i=0; i<sourceDataList.size(); i++) {
-					HashMap<Integer, Object> mapColumns = sourceDataList.get(i);
+					Map<Integer, Object> mapColumns = sourceDataList.get(i);
 					for(int j=0; j<mapColumns.size(); j++) {
 						sbExportData.append(mapColumns.get(j)).append(","); //$NON-NLS-1$
 					}
@@ -669,7 +669,7 @@ public class MongodbResultComposite extends Composite {
 		int totCnt = 0;
 		
 		mapColumns = new HashMap<Integer, String>();
-		sourceDataList = new ArrayList<HashMap<Integer, Object>>();
+		sourceDataList = new ArrayList<Map<Integer, Object>>();
 		listTrees = new ArrayList<MongodbTreeViewDTO>();
 		
 		for(DBObject dbObject : iteResult) {

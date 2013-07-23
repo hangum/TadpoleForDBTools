@@ -52,7 +52,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * table의 Column을 생성한다.
 	 */
 	public static void createTableColumn(final TableViewer tableViewer, 
-										final HashMap<Integer, String> mapColumns, 
+										final Map<Integer, String> mapColumns, 
 										final Map<Integer, Integer> mapColumnType, 
 										final SQLResultSorter tableSorter) {
 		// 기존 column을 삭제한다.

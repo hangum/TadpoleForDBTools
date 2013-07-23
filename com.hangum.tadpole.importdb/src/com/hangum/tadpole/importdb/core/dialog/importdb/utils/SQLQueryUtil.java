@@ -16,12 +16,13 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
-import com.hangum.tadpole.commons.sql.util.SQLUtil;
+import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -42,7 +43,7 @@ public class SQLQueryUtil {
 	private String requestQuery;
 	
 	/** query  HashMap -- table 컬럼의 정보 다음과 같습니다. <column index, Data> */
-	private HashMap<Integer, String> mapColumns = null;
+	private Map<Integer, String> mapColumns = null;
 	/** query 의 결과  -- table의 데이터는 다음과 같습니다. <column index, Data> */
 	private List<HashMap<Integer, Object>> tableDataList = new ArrayList<HashMap<Integer, Object>>();
 	/** 데이터의 데이터 타입 */
@@ -96,7 +97,7 @@ public class SQLQueryUtil {
 			tableDataList = new ArrayList<HashMap<Integer, Object>>();
 			HashMap<Integer, Object> tmpRs = null;
 			
-			mapColumns = SQLUtil.mataDataToMap(rs);
+			mapColumns = ResultSetUtils.getColumnName(rs);
 			
 			while(rs.next()) {
 				tmpRs = new HashMap<Integer, Object>();
@@ -127,7 +128,7 @@ public class SQLQueryUtil {
 		return true;		
 	}
 	
-	public HashMap<Integer, String> getMapColumns() {
+	public Map<Integer, String> getMapColumns() {
 		return mapColumns;
 	}
 	public List<HashMap<Integer, Object>> getTableDataList() {

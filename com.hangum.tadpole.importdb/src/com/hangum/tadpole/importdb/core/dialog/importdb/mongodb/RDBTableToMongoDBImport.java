@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -105,7 +106,7 @@ public class RDBTableToMongoDBImport extends DBImport {
 		SQLQueryUtil qu = new SQLQueryUtil(getSourceUserDB(), "SELECT * FROM " + workTable);
 		while(qu.hasNext()) {
 			qu.nextQuery();
-			HashMap<Integer, String> mapCNameToIndex = qu.getMapColumns();
+			Map<Integer, String> mapCNameToIndex = qu.getMapColumns();
 			List<HashMap<Integer, Object>> listTableData = qu.getTableDataList();
 			
 			// row 단위

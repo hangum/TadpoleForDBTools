@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -109,8 +110,8 @@ public class CubridExecutePlanUtils {
 	 * @param data
 	 * @return
 	 */
-	public static List<HashMap<Integer, Object>> getMakeData(String data) {
-		List<HashMap<Integer, Object>> sourceDataList = new ArrayList<HashMap<Integer, Object>>();
+	public static List<Map<Integer, Object>> getMakeData(String data) {
+		List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer, Object>>();
 		
 		HashMap<Integer, Object> tmpRs = new HashMap<Integer, Object>();
 		tmpRs.put(0, data);		

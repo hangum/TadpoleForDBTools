@@ -11,8 +11,7 @@
 package com.hangum.tadpole.commons.sql.util;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import kry.sql.format.SqlFormatRule;
@@ -152,24 +151,6 @@ public class SQLUtil {
 	}
 	
 	/**
-	 * metadata를 바탕으로 결과를 컬럼 정보를 수집힌다.
-	 * 
-	 * @param rs
-	 * @return index순번에 컬럼명
-	 */
-	public static HashMap<Integer, String> mataDataToMap(ResultSet rs) throws Exception {
-		HashMap<Integer, String> map = new HashMap<Integer, String>();
-		
-		ResultSetMetaData  rsm = rs.getMetaData();
-		int columnCount = rsm.getColumnCount();
-		for(int i=0; i<columnCount; i++) {
-			map.put(i, rsm.getColumnLabel(i+1));
-		}
-		
-		return map;
-	}
-	
-	/**
 	 * INSERT 문을 생성합니다.
 	 * 
 	 * @param tableName
@@ -180,7 +161,7 @@ public class SQLUtil {
 	public static String makeInsertStatment(String tableName, ResultSet rs) throws Exception {
 		StringBuffer result = new StringBuffer("INSERT INTO " + tableName + "(");
 		
-		HashMap<Integer, String> mapTable = mataDataToMap(rs);
+		Map<Integer, String> mapTable = ResultSetUtils.getColumnName(rs);
 		for( int i=0 ;i<mapTable.size(); i++ ) {
 			if( i != (mapTable.size()-1) ) result.append( mapTable.get(i) + ",");
 			else result.append( mapTable.get(i));

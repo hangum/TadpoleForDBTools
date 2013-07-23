@@ -10,8 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.util.tables;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -25,9 +25,9 @@ import org.eclipse.jface.viewers.Viewer;
  */ // ILazyContentProvider{ //,
 public class SQLResultContentProvider implements  IStructuredContentProvider {
 
-	List<HashMap<Integer, Object>> sourceDataList;
+	List<Map<Integer, Object>> sourceDataList;
 	
-	public SQLResultContentProvider(List<HashMap<Integer, Object>> sourceDataList) {
+	public SQLResultContentProvider(List<Map<Integer, Object>> sourceDataList) {
 		this.sourceDataList = sourceDataList;
 	}
 
@@ -39,7 +39,7 @@ public class SQLResultContentProvider implements  IStructuredContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		this.sourceDataList = (List<HashMap<Integer, Object>>) newInput;
+		this.sourceDataList = (List<Map<Integer, Object>>) newInput;
 	}
 	
 	public void updateElement(int index) {

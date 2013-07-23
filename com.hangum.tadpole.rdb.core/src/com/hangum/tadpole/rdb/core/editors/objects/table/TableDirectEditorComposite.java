@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
-import com.hangum.tadpole.commons.sql.util.SQLUtil;
+import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
@@ -99,11 +99,11 @@ public class TableDirectEditorComposite extends Composite {
 	private SQLResultSorter sqlSorter;
 	
 	/** query  HashMap -- table 컬럼의 정보 다음과 같습니다. <column index, Data> */
-	private HashMap<Integer, String> mapColumns = null;
+	private Map<Integer, String> mapColumns = null;
 	/** query 의 결  -- table의 데이터는 다음과 같습니다. <column index, Data> */
-	private List<HashMap<Integer, Object>> tableDataList = new ArrayList<HashMap<Integer, Object>>();
+	private List<Map<Integer, Object>> tableDataList = new ArrayList<Map<Integer, Object>>();
 	/** 원본 데이터를 가지고 있습니다 */
-	private List<HashMap<Integer, Object>> originalDataList = new ArrayList<HashMap<Integer, Object>>();
+	private List<Map<Integer, Object>> originalDataList = new ArrayList<Map<Integer, Object>>();
 	/** 데이터의 데이터 타입 */
 	private HashMap<Integer, String> tableDataTypeList = new HashMap<Integer, String>();
 	
@@ -370,11 +370,11 @@ public class TableDirectEditorComposite extends Composite {
 			}
 			
 			// rs set의 데이터 정
-			tableDataList = new ArrayList<HashMap<Integer, Object>>();
-			originalDataList = new ArrayList<HashMap<Integer, Object>>();
+			tableDataList = new ArrayList<Map<Integer, Object>>();
+			originalDataList = new ArrayList<Map<Integer, Object>>();
 			HashMap<Integer, Object> tmpRs = null;
 			
-			mapColumns = SQLUtil.mataDataToMap(rs);
+			mapColumns = ResultSetUtils.getColumnName(rs);
 			
 			while(rs.next()) {
 				tmpRs = new HashMap<Integer, Object>();
@@ -393,7 +393,7 @@ public class TableDirectEditorComposite extends Composite {
 				
 				tableDataList.add(tmpRs);
 				// 원본을 보존하여 update where 로 활용합니다.
-				HashMap<Integer, Object> clondRs = (HashMap<Integer, Object>)tmpRs.clone();
+				Map<Integer, Object> clondRs = (Map<Integer, Object>)tmpRs.clone();
 				originalDataList.add(clondRs);
 			}
 
@@ -436,7 +436,7 @@ public class TableDirectEditorComposite extends Composite {
 	/**
 	 * table의 Column을 생성한다.
 	 */
-	public void createTableColumn(final TableViewer tableViewer, final HashMap<Integer, String> mapColumns, final SQLResultSorter tableSorter) {
+	public void createTableColumn(final TableViewer tableViewer, final Map<Integer, String> mapColumns, final SQLResultSorter tableSorter) {
 		// 기존 column을 삭제한다.
 		Table table = tableViewer.getTable();
 		int columnCount = table.getColumnCount();
@@ -605,7 +605,7 @@ public class TableDirectEditorComposite extends Composite {
 		// 전체 데이터 건수를 돌면서...
 		for(int i=0; i<tableDataList.size(); i++) {
 			
-			HashMap<Integer, Object> tmpRs = tableDataList.get(i);
+			Map<Integer, Object> tmpRs = tableDataList.get(i);
 			// 0번째 컬럼 중에 update, delete, insert 인 것을 찾는다.
 			if(TbUtils.isDelete( tmpRs.get(0).toString() )) {
 				sbQuery.append(makeDelete(i, tmpRs));
@@ -633,7 +633,7 @@ public class TableDirectEditorComposite extends Composite {
 		String stmt = ""; //$NON-NLS-1$
 		
 		// original data
-		HashMap<Integer, Object> orgRs = originalDataList.get(rowSeq);
+		Map<Integer, Object> orgRs = originalDataList.get(rowSeq);
 		
 		for(int i=0; i<primaryKeyListIndex.size(); i++) {
 			int keyIndex = primaryKeyListIndex.get(i);
@@ -651,7 +651,7 @@ public class TableDirectEditorComposite extends Composite {
 	 * @param tmpRs
 	 * @return
 	 */
-	private String makeDelete(int rowSeq, HashMap<Integer, Object> tmpRs) {
+	private String makeDelete(int rowSeq, Map<Integer, Object> tmpRs) {
 		String deleteStmt = "DELETE FROM " + initTableNameStr + " \r\n WHERE "; //$NON-NLS-1$ //$NON-NLS-2$
 		deleteStmt += getWhereMake(rowSeq)  + PublicTadpoleDefine.SQL_DILIMITER; //$NON-NLS-1$
 		
@@ -664,7 +664,7 @@ public class TableDirectEditorComposite extends Composite {
 	 * @param tmpRs
 	 * @return
 	 */
-	private String makeUpdate(int rowSeq, HashMap<Integer, Object> tmpRs) {
+	private String makeUpdate(int rowSeq, Map<Integer, Object> tmpRs) {
 		String updateStmt = "UPDATE " + initTableNameStr +   //$NON-NLS-1$ //$NON-NLS-2$
 				" SET "; //$NON-NLS-1$
 		
@@ -687,7 +687,7 @@ public class TableDirectEditorComposite extends Composite {
 	 * @param tmpRs
 	 * @return
 	 */
-	private String makeInsert(HashMap<Integer, Object> tmpRs) {
+	private String makeInsert(Map<Integer, Object> tmpRs) {
 		String insertStmt = "INSERT INTO " + initTableNameStr + "("; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		// 수정된 컬럼 리스트를 나열한다.

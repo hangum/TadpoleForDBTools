@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,6 +79,28 @@ public class RDBTypeToJavaTypeUtils {
 		}
 	
 		return javaType;
+	}
+	
+	/**
+	 * 숫자 컬럼인지
+	 * 
+	 * @param sqlType
+	 * @return
+	 */
+	public static boolean isNumberType(int sqlType) {
+		switch(sqlType) {
+		case Types.BIGINT:
+		case Types.DECIMAL:
+		case Types.DOUBLE:
+		case Types.FLOAT:
+		case Types.INTEGER:
+		case Types.NUMERIC:
+		case Types.SMALLINT:
+		case Types.TINYINT:
+			return true;
+		}
+		
+		return false;
 	}
 
 }
