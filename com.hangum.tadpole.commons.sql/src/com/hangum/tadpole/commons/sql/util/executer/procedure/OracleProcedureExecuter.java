@@ -11,14 +11,18 @@
 package com.hangum.tadpole.commons.sql.util.executer.procedure;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.TableViewer;
 
+import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
+import com.hangum.tadpold.commons.libs.core.sql.utils.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -68,7 +72,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 	}
 	
 	@Override
-	public boolean exec(TableViewer viewer, List<InOutParameterDAO> parameterList) {
+	public boolean exec(List<InOutParameterDAO> parameterList)  throws Exception {
 		java.sql.Connection javaConn = null;
 		java.sql.CallableStatement cstmt = null;
 
@@ -81,7 +85,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			// make the script
 			StringBuffer sbQuery = new StringBuffer("{call " + procedureDAO.getName() + "(");
 			// in script
-			int intParamSize = this.getParametersCount();// listOutParamValues.size() + listInParamValues.size();
+			int intParamSize = this.getParametersCount();
 			for (int i = 0; i < intParamSize; i++) {
 				if (i == 0) sbQuery.append("?");
 				else 		sbQuery.append(",?");
@@ -89,7 +93,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			sbQuery.append(")}");
 			if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
 			
-			
+			// set prepare call
 			cstmt = javaConn.prepareCall(sbQuery.toString());
 			
 			// Set input value
@@ -109,11 +113,17 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				if(logger.isDebugEnabled()) logger.debug("Out Parameter " + dao.getOrder() + " JavaType is " + RDBTypeToJavaTypeUtils.getJavaType(dao.getRdbType()));
 				
 				cstmt.registerOutParameter(dao.getOrder(), RDBTypeToJavaTypeUtils.getJavaType(dao.getRdbType()));
-				
 			}
 			cstmt.execute();
-
-			for (int i = 0; i < listOutParamValues.size(); i++) {
+			
+			//
+			// 결과 set
+			//
+			// 결과가 cursor가 아닌경우 결과를 담기위한 list
+			
+			// boolean is cursor
+			boolean isCursor = false;
+			for (int i = 0; i < listOutParamValues.size(); i++) {				
 				InOutParameterDAO dao = listOutParamValues.get(i);
 				logger.debug("Execute Procedure result " + dao.getName() + "=" + cstmt.getString(dao.getOrder()));
 				
@@ -121,25 +131,42 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				// 실행결과가 String이 아닌경우 Type Cast가 필요함.... 현재는 무조건 String 으로...
 				if (obj!=null){
 					if ("SYS_REFCURSOR".equals(dao.getRdbType())){
+						isCursor = true;
 						ResultSet rs = (ResultSet)obj;
-						while(rs.next()){
-							logger.debug("Result Set = " + rs.getString(1));				
-						}
+						setResultCursor(rs);
+						// cursor의 결과 리턴은 항상 1개입니다.
 					}else{
 						dao.setValue(obj.toString());
 					}
 				}
+				
 			}
 			
-			viewer.setInput(listOutParamValues);
-			viewer.refresh();
-			MessageDialog.openInformation(null, "Information", "Execute Compete.");
+			if(!isCursor) {
+				List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer,Object>>();
+				Map<Integer, Object> tmpRow = null;
+
+				for (int i = 0; i < listOutParamValues.size(); i++) {
+					InOutParameterDAO dao = listOutParamValues.get(i);
+					tmpRow = new HashMap<Integer, Object>();
+					
+					tmpRow.put(0, ""+dao.getOrder());
+					tmpRow.put(1, ""+dao.getName());
+					tmpRow.put(2, ""+dao.getType());
+					tmpRow.put(3, ""+dao.getRdbType());
+					tmpRow.put(4, ""+dao.getLength());
+					tmpRow.put(5, ""+dao.getValue());
+					
+					sourceDataList.add(tmpRow);
+				}
+				
+				setResultNoCursor(sourceDataList);
+			}
 			
 			return true;
 		} catch (Exception e) {
 			logger.error("ProcedureExecutor executing error", e);
-			MessageDialog.openError(null, "Error", e.getMessage());
-			return false;
+			throw e;
 		} finally {
 			try { if(cstmt != null) cstmt.close(); } catch (Exception e) {  }
 			try { if(javaConn != null) javaConn.close(); } catch (Exception e) { }

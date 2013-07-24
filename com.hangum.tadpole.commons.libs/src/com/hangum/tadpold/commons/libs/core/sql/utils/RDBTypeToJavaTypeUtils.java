@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.commons.sql.util;
+package com.hangum.tadpold.commons.libs.core.sql.utils;
 
 import java.sql.Types;
 import java.util.HashMap;

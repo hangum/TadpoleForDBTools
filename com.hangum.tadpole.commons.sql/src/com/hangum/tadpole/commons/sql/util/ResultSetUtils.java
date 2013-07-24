@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.sql.utils.RDBTypeToJavaTypeUtils;
+
 /**
  * ResultSet utils
  * 

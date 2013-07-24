@@ -10,12 +10,16 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util.executer.procedure;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.TableViewer;
 
+import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
+import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
@@ -33,11 +37,17 @@ public abstract class ProcedureExecutor {
 	 */
 	private static final Logger logger = Logger.getLogger(ProcedureExecutor.class);
 	
+//	/** Result Max row count */
+//	protected int queryResultCount 	= GetPreferenceGeneral.getQueryResultCount();
+	
 	protected UserDBDAO userDB;
 	protected List<InOutParameterDAO> listInParamValues;
 	protected List<InOutParameterDAO> listOutParamValues;
 	
 	protected ProcedureFunctionDAO procedureDAO;
+	
+	/** result dao */
+	protected ResultSetTableViewerDAO resultDAO;
 
 	/**
 	 * procedure executor
@@ -104,6 +114,67 @@ public abstract class ProcedureExecutor {
 		
 		return cnt;
 	}
+	
+	/**
+	 * 프로시저 결과가 cursor일때 결과를 담아줍니다.
+	 * 
+	 * @param rs
+	 * @throws Exception
+	 */
+	protected void setResultCursor(ResultSet rs) throws Exception {
+		Map<Integer, String> mapColumns = ResultSetUtils.getColumnName(rs);
+		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
+		List<Map<Integer, Object>> sourceDataList = ResultSetUtils.getResultToList(rs, 1000, true);
+
+		ResultSetTableViewerDAO resultSet = new ResultSetTableViewerDAO(mapColumns, mapColumnType, sourceDataList);
+		setResultDAO(resultSet);
+	}
+	
+	/**
+	 * 프로시저 결과가 cursor가 아닐 경우 결과를 설정합니다.
+	 * 
+	 * 	결과 set이 cursor이 아닌 경우에는 테이블에 데이터를 출력하기 위해 다음 3가지가 필요합니다. 
+		column 이름.
+		column 정렬 순서.
+		결과 데이터 셋.
+	 *  "Seq", "Name", "Type", "ParamType", "Length", "Value"
+	 *  
+	 *  @param List<Map<Integer, Object>> sourceDataList
+	 */
+	protected void setResultNoCursor(List<Map<Integer, Object>> sourceDataList) throws Exception {
+		Map<Integer, String> mapColumns = new HashMap<Integer, String>();
+		mapColumns.put(0, "Seq");
+		mapColumns.put(1, "Name");
+		mapColumns.put(2, "Type");
+		mapColumns.put(3, "ParamType");
+		mapColumns.put(4, "Length");
+		mapColumns.put(5, "Value");
+		
+		Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
+		mapColumnType.put(0, java.sql.Types.VARCHAR);
+		mapColumnType.put(1, java.sql.Types.VARCHAR);
+		mapColumnType.put(2, java.sql.Types.VARCHAR);
+		mapColumnType.put(3, java.sql.Types.VARCHAR);
+		mapColumnType.put(4, java.sql.Types.DOUBLE);
+		mapColumnType.put(5, java.sql.Types.VARCHAR);
+		
+		ResultSetTableViewerDAO resultSet = new ResultSetTableViewerDAO(mapColumns, mapColumnType, sourceDataList);
+		setResultDAO(resultSet);
+	}
+	
+	/**
+	 * @return the resultDAO
+	 */
+	public ResultSetTableViewerDAO getResultDAO() {
+		return resultDAO;
+	}
+
+	/**
+	 * @param resultDAO the resultDAO to set
+	 */
+	public void setResultDAO(ResultSetTableViewerDAO resultDAO) {
+		this.resultDAO = resultDAO;
+	}
 
 	/**
 	 * executer
@@ -111,6 +182,6 @@ public abstract class ProcedureExecutor {
 	 * @param parameterList
 	 * @return
 	 */
-	public abstract boolean exec(TableViewer viewer, List<InOutParameterDAO> parameterList);
+	public abstract boolean exec(List<InOutParameterDAO> parameterList) throws Exception ;
 
 }

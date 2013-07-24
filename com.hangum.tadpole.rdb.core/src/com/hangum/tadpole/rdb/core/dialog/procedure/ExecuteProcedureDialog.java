@@ -22,27 +22,31 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
 import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import com.hangum.tadpole.util.tables.SQLResultContentProvider;
+import com.hangum.tadpole.util.tables.SQLResultLabelProvider;
+import com.hangum.tadpole.util.tables.SQLResultSorter;
+import com.hangum.tadpole.util.tables.TableUtil;
 
 /**
  * procedure 실행 다이얼로그.
@@ -55,9 +59,10 @@ public class ExecuteProcedureDialog extends Dialog {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ExecuteProcedureDialog.class);
-	private ProcedureExecutor executor;
+	private ProcedureExecutor procedureExecutor;
 
-	private TableViewer tableViewer;
+	private TableViewer sqlResultTableViewer;
+	private SQLResultSorter sqlSorter;
 
 	private UserDBDAO userDB;
 	private ProcedureFunctionDAO procedureDAO;
@@ -178,17 +183,12 @@ public class ExecuteProcedureDialog extends Dialog {
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpTables.setText("Result");
 
-		tableViewer = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
-		Table table = tableViewer.getTable();
+		sqlResultTableViewer = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		Table table = sqlResultTableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		createTaleColumn();
-
-		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setLabelProvider(new ExecuteProcedureLabelProvider());
-		
 		initUI();
 
 		return container;
@@ -201,7 +201,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	private void initProcedureExecuter() throws Exception {
 		ProcedureExecuterManager executorManager = new ProcedureExecuterManager(procedureDAO, userDB);
-		executor = executorManager.getExecuter();
+		procedureExecutor = executorManager.getExecuter();
 	}
 	
 	/**
@@ -213,7 +213,26 @@ public class ExecuteProcedureDialog extends Dialog {
 			InOutParameterDAO inParam = parameterList.get(i);
 			inParam.setValue(textInputs[i].getText());
 		}
-		boolean ret = executor.exec(tableViewer, parameterList);
+		
+		try {
+			boolean ret = procedureExecutor.exec(parameterList);
+			if(ret) {
+				
+				ResultSetTableViewerDAO resultDao = procedureExecutor.getResultDAO();
+				sqlSorter = new SQLResultSorter(-999);
+				
+				SQLResultLabelProvider.createTableColumn(sqlResultTableViewer, resultDao.getMapColumns(), resultDao.getMapColumnType(), sqlSorter);
+				sqlResultTableViewer.setLabelProvider(new SQLResultLabelProvider());
+				sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(resultDao.getSourceDataList()));
+				
+				sqlResultTableViewer.setInput(resultDao.getSourceDataList());
+				sqlResultTableViewer.setSorter(sqlSorter);
+				
+				TableUtil.packTable(sqlResultTableViewer.getTable());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -231,25 +250,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 * initialize procedure IN information
 	 */
 	private List<InOutParameterDAO> getInParameter() throws Exception {
-		return executor.getInParameters();
-	}
-
-	/**
-	 * create column
-	 */
-	private void createTaleColumn() {
-		String columnHeader[] = new String[] { "Seq", "Name", "Type", "ParamType", "Length", "Value" };
-		int columnWidth[] = new int[] { 40, 180, 80, 100, 80, 350 };
-
-		for (int i = 0; i < columnHeader.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.LEFT);
-
-			TableColumn tblclmnColumnName = tableViewerColumn.getColumn();
-			tblclmnColumnName.setWidth(columnWidth[i]);
-			tblclmnColumnName.setText(columnHeader[i]);
-
-			tableViewerColumn.setEditingSupport(new ExecuteProcParamInputSupport(tableViewer, i));
-		}
+		return procedureExecutor.getInParameters();
 	}
 
 	/**
