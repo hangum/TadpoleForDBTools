@@ -171,6 +171,40 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
     TABLE_NAME
 </select>
 
+<!-- 
+	Table DDL Script
+ -->
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ show create table $object_name$
+</select>
 
+<!-- 
+	View DDL Script
+ -->
+<select id="getViewScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ show create view $object_name$
+</select>
+
+<!-- 
+	Function DDL Script
+ -->
+<select id="getFunctionScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ show create function $object_name$
+</select>
+
+<!-- 
+	Procedure DDL Script
+ -->
+<select id="getProcedureScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ show create procedure $object_name$
+</select>
+
+
+<!-- 
+	Trigger DDL Script
+ -->
+<select id="getTriggerScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ show create trigger $object_name$
+</select>
 
 </sqlMap>

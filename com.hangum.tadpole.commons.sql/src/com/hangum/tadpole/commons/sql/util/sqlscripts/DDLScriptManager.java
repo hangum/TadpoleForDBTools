@@ -17,6 +17,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.MSSQL_8_LE_DDLScript;
+import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.MySqlDDLScript;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.OracleDDLScript;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.scripts.SQLiteDDLScript;
 import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
@@ -78,6 +79,8 @@ public class DDLScriptManager {
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ||
 				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ) {
+			rdbScript = new MySqlDDLScript(userDB, actionType);
 		} else {
 			throw new Exception("Not support Database");
 		}
