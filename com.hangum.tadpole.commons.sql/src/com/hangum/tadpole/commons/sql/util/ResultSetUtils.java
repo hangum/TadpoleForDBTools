@@ -44,12 +44,13 @@ public class ResultSetUtils {
 	public static List<Map<Integer, Object>> getResultToList(final ResultSet rs, final int limitCount, final boolean isPretty) throws SQLException {
 		List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer, Object>>();
 		Map<Integer, Object> tmpRow = null;
-		
+
+		int columnCount = rs.getMetaData().getColumnCount();
 		// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
 		while(rs.next()) {
 			tmpRow = new HashMap<Integer, Object>();
 			
-			for(int i=0; i<rs.getMetaData().getColumnCount(); i++) {
+			for(int i=0; i<columnCount; i++) {
 				final int intColIndex = i+1;
 				try {
 					String colValue = rs.getString(intColIndex) == null ?"":rs.getString(intColIndex); //$NON-NLS-1$
@@ -103,7 +104,8 @@ public class ResultSetUtils {
 	public static Map<Integer, Integer> getColumnType(ResultSetMetaData rsm) throws SQLException {
 		Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
 		
-		for(int i=0;i<rsm.getColumnCount(); i++) {
+		int intColumnCnt = rsm.getColumnCount();
+		for(int i=0;i<intColumnCnt; i++) {
 //			logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
 //			logger.debug("\tColumnLabel  		:  " 	+ rsm.getColumnLabel(i+1));
 			
