@@ -70,6 +70,8 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 	
 	@Override
 	public boolean exec(List<InOutParameterDAO> parameterList)  throws Exception {
+		initResult();
+		
 		java.sql.Connection javaConn = null;
 		java.sql.CallableStatement cstmt = null;
 

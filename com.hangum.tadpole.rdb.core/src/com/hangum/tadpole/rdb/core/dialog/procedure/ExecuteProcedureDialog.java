@@ -58,7 +58,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ExecuteProcedureDialog.class);
 	private ProcedureExecutor procedureExecutor;
 
-	private TableViewer sqlResultTableViewer;
+	private TableViewer[] sqlResultTableViewer;
 	private SQLResultSorter sqlSorter;
 
 	private UserDBDAO userDB;
@@ -68,6 +68,8 @@ public class ExecuteProcedureDialog extends Dialog {
 	private Label[] labelInput;
 	private Text[] textInputs;
 	private Label[] labelType;
+	
+	private Group grpTables;
 	
 	private Button btnExecute;
 
@@ -170,7 +172,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		
 		//////[ input values ]////////////////////////////////////////////////////////////////////////
 		
-		Group grpTables = new Group(container, SWT.NONE);
+		grpTables = new Group(container, SWT.NONE);
 		GridLayout gl_grpTables = new GridLayout(1, false);
 		gl_grpTables.horizontalSpacing = 2;
 		gl_grpTables.verticalSpacing = 2;
@@ -178,14 +180,8 @@ public class ExecuteProcedureDialog extends Dialog {
 		gl_grpTables.marginWidth = 2;
 		grpTables.setLayout(gl_grpTables);
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpTables.setText("Result");
-
-		sqlResultTableViewer = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
-		Table table = sqlResultTableViewer.getTable();
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
+		grpTables.setText("Result Set view");
+		
 		initUI();
 
 		return container;
@@ -206,6 +202,13 @@ public class ExecuteProcedureDialog extends Dialog {
 	 * 
 	 */
 	private void executeProcedure() {
+//		if(sqlResultTableViewer != null) {
+//			for(int i=0; i<sqlResultTableViewer.length; i++) {
+//				TableViewer tv = sqlResultTableViewer[0];
+//				tv.getControl().dispose();
+//			}
+//		}
+		
 		for(int i=0; i<parameterList.size(); i++) {
 			InOutParameterDAO inParam = parameterList.get(i);
 			inParam.setValue(textInputs[i].getText());
@@ -214,21 +217,38 @@ public class ExecuteProcedureDialog extends Dialog {
 		try {
 			boolean ret = procedureExecutor.exec(parameterList);
 			if(ret) {
+				List<ResultSetTableViewerDAO> listResultDao = procedureExecutor.getResultDAO();
+				sqlResultTableViewer = new TableViewer[listResultDao.size()];
 				
-				ResultSetTableViewerDAO resultDao = procedureExecutor.getResultDAO();
-				sqlSorter = new SQLResultSorter(-999);
-				
-				SQLResultLabelProvider.createTableColumn(sqlResultTableViewer, resultDao.getMapColumns(), resultDao.getMapColumnType(), sqlSorter);
-				sqlResultTableViewer.setLabelProvider(new SQLResultLabelProvider());
-				sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(resultDao.getSourceDataList()));
-				
-				sqlResultTableViewer.setInput(resultDao.getSourceDataList());
-				sqlResultTableViewer.setSorter(sqlSorter);
-				
-				TableUtil.packTable(sqlResultTableViewer.getTable());
+				for(int i=0; i<listResultDao.size(); i++) {
+					ResultSetTableViewerDAO resultDao = listResultDao.get(i);
+//					
+//					Label labelType = new Label(grpTables, SWT.NONE);
+//					labelType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+//					labelType.setText("aa");
+					
+					sqlResultTableViewer[i] = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION);
+					Table table = sqlResultTableViewer[i].getTable();
+					table.setHeaderVisible(true);
+					table.setLinesVisible(true);
+					table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+					
+					sqlSorter = new SQLResultSorter(-999);
+					
+					SQLResultLabelProvider.createTableColumn(sqlResultTableViewer[i], resultDao.getMapColumns(), resultDao.getMapColumnType(), sqlSorter);
+					sqlResultTableViewer[i].setLabelProvider(new SQLResultLabelProvider());
+					sqlResultTableViewer[i].setContentProvider(new SQLResultContentProvider(resultDao.getSourceDataList()));
+					
+					sqlResultTableViewer[i].setInput(resultDao.getSourceDataList());
+					sqlResultTableViewer[i].setSorter(sqlSorter);
+					
+					TableUtil.packTable(sqlResultTableViewer[i].getTable());
+				}
 			}
+			
+			grpTables.layout();
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("Result view", e);
 		}
 	}
 	

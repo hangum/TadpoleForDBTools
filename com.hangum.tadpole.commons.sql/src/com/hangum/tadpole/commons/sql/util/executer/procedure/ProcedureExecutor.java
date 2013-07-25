@@ -47,7 +47,7 @@ public abstract class ProcedureExecutor {
 	protected ProcedureFunctionDAO procedureDAO;
 	
 	/** result dao */
-	protected ResultSetTableViewerDAO resultDAO;
+	protected List<ResultSetTableViewerDAO> resultDAO = new ArrayList<ResultSetTableViewerDAO>();
 
 	/**
 	 * procedure executor
@@ -146,7 +146,7 @@ public abstract class ProcedureExecutor {
 		List<Map<Integer, Object>> sourceDataList = ResultSetUtils.getResultToList(rs, 1000, true);
 
 		ResultSetTableViewerDAO resultSet = new ResultSetTableViewerDAO(mapColumns, mapColumnType, sourceDataList);
-		setResultDAO(resultSet);
+		addResultDAO(resultSet);
 	}
 	
 	/**
@@ -178,21 +178,25 @@ public abstract class ProcedureExecutor {
 		mapColumnType.put(5, java.sql.Types.VARCHAR);
 		
 		ResultSetTableViewerDAO resultSet = new ResultSetTableViewerDAO(mapColumns, mapColumnType, sourceDataList);
-		setResultDAO(resultSet);
+		addResultDAO(resultSet);
+	}
+	
+	protected void initResult() {
+		this.resultDAO.clear();
 	}
 	
 	/**
 	 * @return the resultDAO
 	 */
-	public ResultSetTableViewerDAO getResultDAO() {
+	public List<ResultSetTableViewerDAO> getResultDAO() {
 		return resultDAO;
 	}
 
 	/**
 	 * @param resultDAO the resultDAO to set
 	 */
-	public void setResultDAO(ResultSetTableViewerDAO resultDAO) {
-		this.resultDAO = resultDAO;
+	public void addResultDAO(ResultSetTableViewerDAO resultDAO) {
+		this.resultDAO.add(resultDAO);
 	}
 
 	/**

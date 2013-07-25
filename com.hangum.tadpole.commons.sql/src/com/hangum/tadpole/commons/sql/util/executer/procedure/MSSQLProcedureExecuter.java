@@ -79,6 +79,8 @@ public class MSSQLProcedureExecuter extends ProcedureExecutor {
 	
 	@Override
 	public boolean exec(List<InOutParameterDAO> parameterList)  throws Exception {
+		initResult();
+		
 		java.sql.Connection javaConn = null;
 		java.sql.CallableStatement cstmt = null;
 
@@ -136,10 +138,7 @@ public class MSSQLProcedureExecuter extends ProcedureExecutor {
 				
 				// mssql은 result set이 여러개 리턴될 수 있음.
 				while(cstmt.getMoreResults()){
-					
-					logger.error("***************************** MSSQL Procedure has more ResultSet***************");
-					logger.error("***************************** MSSQL Procedure has more ResultSet***************");
-					logger.error("***************************** MSSQL Procedure has more ResultSet***************");
+					setResultCursor(cstmt.getResultSet());
 				}
 			}else{
 				for (int i = 0; i < listOutParamValues.size(); i++) {				
