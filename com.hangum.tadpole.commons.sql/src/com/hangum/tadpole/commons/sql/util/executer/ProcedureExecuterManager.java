@@ -42,11 +42,9 @@ public class ProcedureExecuterManager {
 	public ProcedureExecutor getExecuter() throws Exception {
 		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT ) {
 			return new OracleProcedureExecuter(procedureDAO, userDB);
-		}else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT) {
-			return new MSSQLProcedureExecuter(procedureDAO, userDB);
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ||
 				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
-			return new OracleProcedureExecuter(procedureDAO, userDB);
+			return new MSSQLProcedureExecuter(procedureDAO, userDB);
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
 				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
 			return new MySqlProcedureExecuter(procedureDAO, userDB);
