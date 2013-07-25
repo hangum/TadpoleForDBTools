@@ -136,7 +136,9 @@ public class MSSQLProcedureExecuter extends ProcedureExecutor {
 				
 				// mssql은 result set이 여러개 리턴될 수 있음.
 				while(cstmt.getMoreResults()){
-					logger.debug("********has more ResultSet***************");
+					logger.error("***************************** MSSQL Procedure has more ResultSet***************");
+					logger.error("***************************** MSSQL Procedure has more ResultSet***************");
+					logger.error("***************************** MSSQL Procedure has more ResultSet***************");
 				}
 			}else{
 				for (int i = 0; i < listOutParamValues.size(); i++) {				
