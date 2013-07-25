@@ -11,6 +11,7 @@
 package com.hangum.tadpole.commons.sql.util.executer;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.commons.sql.util.executer.procedure.MySqlProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.OracleProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
@@ -41,6 +42,8 @@ public class ProcedureExecuterManager {
 		
 		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT ) {
 			return new OracleProcedureExecuter(procedureDAO, userDB);
+		}else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ) {
+			return new MySqlProcedureExecuter(procedureDAO, userDB);
 		} else {
 			throw new Exception("Not Support database");
 		}

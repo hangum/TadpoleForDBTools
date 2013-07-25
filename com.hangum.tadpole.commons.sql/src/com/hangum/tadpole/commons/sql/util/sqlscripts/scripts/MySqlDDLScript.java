@@ -160,17 +160,15 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	}
 
 	@Override
-	public List<InOutParameterDAO> getProcedureInParamter(
-			ProcedureFunctionDAO procedureDAO) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<InOutParameterDAO> getProcedureInParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		return client.queryForList("getProcedureInParamter", procedureDAO.getName());
 	}
 	
 	@Override
-	public List<InOutParameterDAO> getProcedureOutParamter(
-			ProcedureFunctionDAO procedureDAO) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		return client.queryForList("getProcedureOutParamter", procedureDAO.getName());
 	}
 }
 
