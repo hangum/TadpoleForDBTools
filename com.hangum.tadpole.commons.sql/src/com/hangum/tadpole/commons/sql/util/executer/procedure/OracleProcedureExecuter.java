@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpold.commons.libs.core.sql.utils.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;

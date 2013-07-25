@@ -81,7 +81,8 @@ public class DDLScriptManager {
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ||
 				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ) {
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
+				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
 			rdbScript = new MySqlDDLScript(userDB, actionType);
 		} else {
 			throw new Exception("Not support Database");

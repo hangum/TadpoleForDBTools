@@ -44,7 +44,8 @@ public class ProcedureExecuterManager {
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ||
 				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
 			return new OracleProcedureExecuter(procedureDAO, userDB);
-		}else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ) {
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
+				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
 			return new MySqlProcedureExecuter(procedureDAO, userDB);
 		} else {
 			throw new Exception("Not Support database");
