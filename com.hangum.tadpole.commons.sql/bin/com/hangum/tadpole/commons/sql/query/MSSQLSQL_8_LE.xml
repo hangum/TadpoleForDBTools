@@ -201,7 +201,7 @@ SELECT
 	   #db_name# as db,
 	   crdate as created
     FROM     sysobjects s
-	WHERE    s.TYPE = 'F'
+	WHERE    s.TYPE = 'FN'
 	ORDER BY s.name
 </select>
 

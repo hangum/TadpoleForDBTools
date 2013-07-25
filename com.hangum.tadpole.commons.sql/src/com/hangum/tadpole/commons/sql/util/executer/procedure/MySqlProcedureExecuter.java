@@ -19,8 +19,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
 import com.hangum.tadpold.commons.libs.core.sql.utils.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -33,20 +35,16 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 
  * Procedure sample....
 
-	CREATE OR REPLACE PROCEDURE p_add (rowcnt        IN     INT
-	                                  ,retcode          OUT INT
-	                                  ,retmsg           OUT VARCHAR2
-	                                  ,cursorParam      OUT SYS_REFCURSOR)
-	IS
-	BEGIN
-	   OPEN cursorParam FOR
-	      SELECT table_name
-	        FROM user_tables
-	       WHERE ROWNUM <= rowcnt;
-	
-	   retcode := SQLCODE;
-	   retmsg := SQLERRM;
-	END;
+create procedure p_calc2(in pram1  int, in param2  int, inout param3 int, out ret  float) 
+begin
+  set @ret =   @param1 / @param2;
+end;
+
+create procedure p_calc3(in pram1  int, in param2  int, inout param3 int, out ret  float) 
+begin
+   select * from information_schema.tables;
+end;
+
 	</pre>
  * 
  * @author hangum
@@ -54,18 +52,18 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 
  */
 
-public class OracleProcedureExecuter extends ProcedureExecutor {
+public class MySqlProcedureExecuter extends ProcedureExecutor {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(OracleProcedureExecuter.class);
+	private static final Logger logger = Logger.getLogger(MySqlProcedureExecuter.class);
 
 	/**
 	 * 
 	 * @param procedureDAO
 	 * @param userDB
 	 */
-	public OracleProcedureExecuter(ProcedureFunctionDAO procedureDAO, UserDBDAO userDB) {
+	public MySqlProcedureExecuter(ProcedureFunctionDAO procedureDAO, UserDBDAO userDB) {
 		super(procedureDAO, userDB);
 	}
 	
@@ -81,18 +79,26 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			javaConn = client.getDataSource().getConnection();
 			
 			// make the script
-			String strExecuteScript = getMakeExecuteScript();
+			StringBuffer sbQuery = new StringBuffer("{call " + procedureDAO.getName() + "(");
+			// in script
+			int intParamSize = this.getParametersCount();
+			for (int i = 0; i < intParamSize; i++) {
+				if (i == 0) sbQuery.append("?");
+				else 		sbQuery.append(",?");
+			}
+			sbQuery.append(")}");
+			if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
 			
 			// set prepare call
-			cstmt = javaConn.prepareCall(strExecuteScript);
+			cstmt = javaConn.prepareCall(sbQuery.toString());
 			
 			// Set input value
 			for (InOutParameterDAO inOutParameterDAO : parameterList) {
-//				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
-//				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
-//					MessageDialog.openError(null, "Error", inOutParameterDAO.getName() + " parameters are required.");
-//					return false;
-//				}
+				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
+				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
+					MessageDialog.openError(null, "Error", inOutParameterDAO.getName() + " parameters are required.");
+					return false;
+				}
 				cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue());
 			}
 
@@ -131,6 +137,12 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				}
 				
 			}
+			
+			if (cstmt.getResultSet()!=null){
+				setResultCursor(cstmt.getResultSet());
+				isCursor = true;
+			}
+
 			
 			if(!isCursor) {
 				List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer,Object>>();

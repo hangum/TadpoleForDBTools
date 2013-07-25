@@ -46,8 +46,6 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 	public GenerateViewDDLAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String target) {
 		super(window, actionType);
 		
-		logger.debug("GenerateViewDDLAction actionType is " + actionType + ", target is " + target);
-	
 		setId(ID + actionType.toString());
 		setText(target + " DDL" );
 		window.getSelectionService().addSelectionListener(this);
@@ -56,13 +54,10 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 	@Override
 	public void run() {
 		try {
-			
-			logger.debug("GenerateViewDDLAction RUN actionType is " + actionType);
 			DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
 			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(sel.getFirstElement()));		
-			
-		} catch(Exception ee) {
-			ee.printStackTrace();
+		} catch(Exception e) {
+			logger.error("view ddl", e);
 			MessageDialog.openError(null, "Confirm", "Not support this function.");
 		}
 	}

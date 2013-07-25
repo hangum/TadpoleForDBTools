@@ -87,6 +87,25 @@ public abstract class ProcedureExecutor {
 		
 		return listOutParamValues;
 	}
+	
+	/**
+	 * make execut script
+	 * @return
+	 * @throws Exception
+	 */
+	protected String getMakeExecuteScript() throws Exception {
+		StringBuffer sbQuery = new StringBuffer("{call " + procedureDAO.getName() + "(");
+		// in script
+		int intParamSize = getParametersCount();
+		for (int i = 0; i < intParamSize; i++) {
+			if (i == 0) sbQuery.append("?");
+			else 		sbQuery.append(",?");
+		}
+		sbQuery.append(")}");
+		if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
+		
+		return sbQuery.toString();
+	}
 
 	/**
 	 * Get parameter Count.
