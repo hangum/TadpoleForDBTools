@@ -92,11 +92,11 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 			
 			// Set input value
 			for (InOutParameterDAO inOutParameterDAO : parameterList) {
-				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
-				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
-					MessageDialog.openError(null, "Error", inOutParameterDAO.getName() + " parameters are required.");
-					return false;
-				}
+//				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
+//				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
+//					MessageDialog.openError(null, "Error", inOutParameterDAO.getName() + " parameters are required.");
+//					return false;
+//				}
 				cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue());
 			}
 

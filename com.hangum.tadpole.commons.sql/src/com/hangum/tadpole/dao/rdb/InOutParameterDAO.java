@@ -33,7 +33,7 @@ public class InOutParameterDAO {
 	String length;
 	
 	/** parameter value */
-	String value;
+	String value = "";
 	
 	/** parameter in, out, inout type */
 	String type;
