@@ -12,6 +12,8 @@ package com.hangum.tadpole.commons.sql.util.sqlscripts;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
@@ -79,7 +81,8 @@ public class DDLScriptManager {
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ||
 				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ) {
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
+				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
 			rdbScript = new MySqlDDLScript(userDB, actionType);
 		} else {
 			throw new Exception("Not support Database");
@@ -111,7 +114,12 @@ public class DDLScriptManager {
 			throw new Exception("Not support Database");
 		}
 		
-		return retStr + PublicTadpoleDefine.SQL_DILIMITER;
+		// 마지막 ; 문자가 포함되어있을 경우.
+		if(StringUtils.endsWith(StringUtils.trim(retStr), PublicTadpoleDefine.SQL_DILIMITER)) {
+			return retStr;
+		} else {
+			return retStr + PublicTadpoleDefine.SQL_DILIMITER;
+		}
 	}
 	
 	/**

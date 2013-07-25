@@ -18,9 +18,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,7 +32,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
@@ -92,7 +89,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(procedureDAO.getName() + " Procedure");
+		newShell.setText(procedureDAO.getName() + " Procedure Dialog");
 	}
 
 	/**
@@ -124,7 +121,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			this.parameterList = getInParameter();
 		} catch(Exception e) {
 			logger.error("get in parameter", e);
-			MessageDialog.openError(null, "Error", procedureDAO.getName() + " 프로시저의 Parameter를 가져오는 중에 오류가 발생했습니다.");
+			MessageDialog.openError(null, "Error", e.getMessage());
 			
 			super.okPressed();
 		}

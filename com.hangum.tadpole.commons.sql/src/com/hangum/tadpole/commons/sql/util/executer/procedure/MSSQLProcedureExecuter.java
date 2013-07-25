@@ -17,9 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
 import com.hangum.tadpold.commons.libs.core.sql.utils.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -28,43 +31,49 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 /**
  * oracle procedure executer
  * 
- * <pre>
- * 
- * Procedure sample....
+<pre>
+Procedure sample....
 
-	CREATE OR REPLACE PROCEDURE p_add (rowcnt        IN     INT
-	                                  ,retcode          OUT INT
-	                                  ,retmsg           OUT VARCHAR2
-	                                  ,cursorParam      OUT SYS_REFCURSOR)
-	IS
-	BEGIN
-	   OPEN cursorParam FOR
-	      SELECT table_name
-	        FROM user_tables
-	       WHERE ROWNUM <= rowcnt;
-	
-	   retcode := SQLCODE;
-	   retmsg := SQLERRM;
-	END;
-	</pre>
+create procedure p_test1( @param1   int ,@param2    int  = 2 OUTPUT, @ret   float out) as
+   begin
+      SET @ret = @param1 / @param2;
+   END;
+
+create procedure p_test2( @param1   int ,@param2    int  = 2 OUTPUT, @ret   float out) as
+   begin      
+      select * from sysobjects;      
+   END;
+
+CREATE PROCEDURE p_test3(@param1  INT,@param2 INT = 2 OUTPUT, @ret FLOAT OUT) AS
+BEGIN
+   SELECT    *      from sysobjects;      
+   SELECT    *      FROM sysobjects;
+end;
+
+CREATE PROCEDURE p_test4 AS
+BEGIN
+   SELECT    *      from sysobjects;      
+end;
+
+</pre>
  * 
  * @author hangum
  * @author nilriri
  * 
  */
 
-public class OracleProcedureExecuter extends ProcedureExecutor {
+public class MSSQLProcedureExecuter extends ProcedureExecutor {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(OracleProcedureExecuter.class);
+	private static final Logger logger = Logger.getLogger(MSSQLProcedureExecuter.class);
 
 	/**
 	 * 
 	 * @param procedureDAO
 	 * @param userDB
 	 */
-	public OracleProcedureExecuter(ProcedureFunctionDAO procedureDAO, UserDBDAO userDB) {
+	public MSSQLProcedureExecuter(ProcedureFunctionDAO procedureDAO, UserDBDAO userDB) {
 		super(procedureDAO, userDB);
 	}
 	
@@ -80,18 +89,26 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			javaConn = client.getDataSource().getConnection();
 			
 			// make the script
-			String strExecuteScript = getMakeExecuteScript();
+			StringBuffer sbQuery = new StringBuffer("{call " + procedureDAO.getName() + "(");
+			// in script
+			int intParamSize = this.getParametersCount();
+			for (int i = 0; i < intParamSize; i++) {
+				if (i == 0) sbQuery.append("?");
+				else 		sbQuery.append(",?");
+			}
+			sbQuery.append(")}");
+			if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
 			
 			// set prepare call
-			cstmt = javaConn.prepareCall(strExecuteScript);
+			cstmt = javaConn.prepareCall(sbQuery.toString());
 			
 			// Set input value
 			for (InOutParameterDAO inOutParameterDAO : parameterList) {
-//				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
-//				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
-//					MessageDialog.openError(null, "Error", inOutParameterDAO.getName() + " parameters are required.");
-//					return false;
-//				}
+				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
+				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
+					MessageDialog.openError(null, "Error", inOutParameterDAO.getName() + " parameters are required.");
+					return false;
+				}
 				cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue());
 			}
 
@@ -112,25 +129,28 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			
 			// boolean is cursor
 			boolean isCursor = false;
-			for (int i = 0; i < listOutParamValues.size(); i++) {				
-				InOutParameterDAO dao = listOutParamValues.get(i);
-				logger.debug("Execute Procedure result " + dao.getName() + "=" + cstmt.getString(dao.getOrder()));
+			ResultSet rs = cstmt.getResultSet();
+			if (rs != null){
+				setResultCursor(rs);
+				isCursor = true;
 				
-				Object obj = cstmt.getObject(dao.getOrder());
-				// 실행결과가 String이 아닌경우 Type Cast가 필요함.... 현재는 무조건 String 으로...
-				if (obj!=null){
-					if ("SYS_REFCURSOR".equals(dao.getRdbType())){
-						isCursor = true;
-						ResultSet rs = (ResultSet)obj;
-						setResultCursor(rs);
-						// cursor의 결과 리턴은 항상 1개입니다.
-					}else{
+				// mssql은 result set이 여러개 리턴될 수 있음.
+				while(cstmt.getMoreResults()){
+					logger.debug("********has more ResultSet***************");
+				}
+			}else{
+				for (int i = 0; i < listOutParamValues.size(); i++) {				
+					InOutParameterDAO dao = listOutParamValues.get(i);
+					
+					Object obj = cstmt.getObject(dao.getOrder());
+					// 실행결과가 String이 아닌경우 Type Cast가 필요함.... 현재는 무조건 String 으로...
+					if (obj!=null){
 						dao.setValue(obj.toString());
 					}
+					
 				}
-				
 			}
-			
+				
 			if(!isCursor) {
 				List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer,Object>>();
 				Map<Integer, Object> tmpRow = null;

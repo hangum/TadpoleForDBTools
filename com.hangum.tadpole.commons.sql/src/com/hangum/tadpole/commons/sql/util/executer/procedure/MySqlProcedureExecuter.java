@@ -19,10 +19,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 
-import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
 import com.hangum.tadpold.commons.libs.core.sql.utils.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -118,6 +116,7 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 			// 결과가 cursor가 아닌경우 결과를 담기위한 list
 			
 			// boolean is cursor
+		
 			boolean isCursor = false;
 			for (int i = 0; i < listOutParamValues.size(); i++) {				
 				InOutParameterDAO dao = listOutParamValues.get(i);

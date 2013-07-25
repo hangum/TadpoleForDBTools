@@ -11,6 +11,7 @@
 package com.hangum.tadpole.commons.sql.util.executer;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.commons.sql.util.executer.procedure.MSSQLProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.MySqlProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.OracleProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.ProcedureExecutor;
@@ -39,16 +40,35 @@ public class ProcedureExecuterManager {
 	 * @throws Exception
 	 */
 	public ProcedureExecutor getExecuter() throws Exception {
-		
 		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT ) {
 			return new OracleProcedureExecuter(procedureDAO, userDB);
-		}else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ) {
+		}else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT) {
+			return new MSSQLProcedureExecuter(procedureDAO, userDB);
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ||
+				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
+			return new OracleProcedureExecuter(procedureDAO, userDB);
+		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
+				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
 			return new MySqlProcedureExecuter(procedureDAO, userDB);
 		} else {
 			throw new Exception("Not Support database");
 		}
 	}
 	
+	/**
+	 * DB is that it supports?
+	 * 
+	 * @return
+	 */
+	public boolean isSupport() {
+		try {
+			getExecuter();
+			
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
+	}
 	
 	
 }
