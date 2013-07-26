@@ -202,12 +202,12 @@ public class ExecuteProcedureDialog extends Dialog {
 	 * 
 	 */
 	private void executeProcedure() {
-//		if(sqlResultTableViewer != null) {
-//			for(int i=0; i<sqlResultTableViewer.length; i++) {
-//				TableViewer tv = sqlResultTableViewer[0];
-//				tv.getControl().dispose();
-//			}
-//		}
+		if(sqlResultTableViewer != null) {
+			for(int i=0; i<sqlResultTableViewer.length; i++) {
+				TableViewer tv = sqlResultTableViewer[0];
+				tv.getControl().dispose();
+			}
+		}
 		
 		for(int i=0; i<parameterList.size(); i++) {
 			InOutParameterDAO inParam = parameterList.get(i);
@@ -222,10 +222,6 @@ public class ExecuteProcedureDialog extends Dialog {
 				
 				for(int i=0; i<listResultDao.size(); i++) {
 					ResultSetTableViewerDAO resultDao = listResultDao.get(i);
-//					
-//					Label labelType = new Label(grpTables, SWT.NONE);
-//					labelType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-//					labelType.setText("aa");
 					
 					sqlResultTableViewer[i] = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION);
 					Table table = sqlResultTableViewer[i].getTable();
