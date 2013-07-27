@@ -54,6 +54,7 @@ public class NewUserDialog extends Dialog {
 	
 	private Button btnManager;
 	private Button btnUser;
+	private Button btnDBA;
 	
 	private Composite compositeUserGroup;
 	/** user group combo로 기 존재하는 그룹 정보  */
@@ -102,7 +103,7 @@ public class NewUserDialog extends Dialog {
 		
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(2, false));
+		composite.setLayout(new GridLayout(3, false));
 		
 		btnManager = new Button(composite, SWT.RADIO);
 		btnManager.addSelectionListener(new SelectionAdapter() {
@@ -112,6 +113,15 @@ public class NewUserDialog extends Dialog {
 			}
 		});
 		btnManager.setText(Messages.NewUserDialog_btnManager_text_1);
+		
+		btnDBA = new Button(composite, SWT.RADIO);
+		btnDBA.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initUserGroup();
+			}
+		});
+		btnDBA.setText("DBA");
 		
 		btnUser = new Button(composite, SWT.RADIO);
 		btnUser.addSelectionListener(new SelectionAdapter() {
@@ -182,7 +192,7 @@ public class NewUserDialog extends Dialog {
 		if(textUserGroup != null) textUserGroup.dispose();
 		
 		// user를 선택하면 그룹을 입력하도록 합니다.
-		if(btnUser.getSelection()) {
+		if(btnUser.getSelection() || btnDBA.getSelection()) {
 			comboUserGroup = new Combo(compositeUserGroup, SWT.READ_ONLY);
 			comboUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			
@@ -241,11 +251,13 @@ public class NewUserDialog extends Dialog {
 		
 		// user 입력시 
 		UserGroupDAO groupDAO = new UserGroupDAO();
+		strGroupName = comboUserGroup.getText();
 		PublicTadpoleDefine.USER_TYPE userType = PublicTadpoleDefine.USER_TYPE.USER;
 		if(btnUser.getSelection()) {
-			strGroupName = comboUserGroup.getText();
-			
 			groupDAO.setSeq( (Integer)comboUserGroup.getData(strGroupName) );
+		} else if(btnDBA.getSelection()) {
+			groupDAO.setSeq( (Integer)comboUserGroup.getData(strGroupName) );
+			userType = PublicTadpoleDefine.USER_TYPE.DBA;
 		} else {
 			strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			
@@ -325,7 +337,7 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		//  신규 그룹 입력시 오류 검증
-		if(!btnUser.getSelection()) {
+		if(btnManager.getSelection()) {
 			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			// 동일한 그룹명이 있는 지 검증한다.
 			if(TadpoleSystem_UserGroupQuery.isUserGroup(strGroupName)) {
