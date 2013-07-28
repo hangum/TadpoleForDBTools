@@ -482,8 +482,8 @@
 	=========================================================================================================
  -->
 <insert id="userExecuteSQLResourceInsert" parameterClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDAO">
-	INSERT INTO executed_sql_resource(seq, user_seq, db_seq, types, startDateExecute, endDateExecute, row, result, message)
-	VALUES((select max(seq) from executed_sql_resource)+1, #user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #row#, #result#, #message#)
+	INSERT INTO executed_sql_resource(seq, user_seq, db_seq, types, startDateExecute, endDateExecute, duration, row, result, message)
+	VALUES((select max(seq) from executed_sql_resource)+1, #user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #duration#, #row#, #result#, #message#)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDAO">
 		SELECT * 
@@ -505,8 +505,6 @@
 	VALUES( (select max(seq) from executed_sql_resource_data)+1, #executed_sql_resource_seq#, #datas#)
 </insert>
 
-<select id="findExecuteSQL" resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDataDAO" parameterClass="java.util.Map"></select>
-
 <!-- 
 	쿼리의 실행 히스토리를 얻습니다.
 	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
@@ -523,7 +521,7 @@
 	  a.seq = b.executed_sql_resource_seq AND
 	  a.startdateexecute >= #startTime# AND  
       a.enddateexecute <= #endTime# AND
-      a.message >= #duration#
+      a.duration >= #duration#
 	order by a.create_time desc
 	limit #count#	
 ]]>

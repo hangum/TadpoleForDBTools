@@ -26,6 +26,7 @@ public class ExecutedSqlResourceDAO {
 	 String types;
      Date startDateExecute;
      Date endDateExecute;
+     int duration;
      int row;
      String result;
      String message;
@@ -189,6 +190,19 @@ public class ExecutedSqlResourceDAO {
 	public void setRow(int row) {
 		this.row = row;
 	}
-	
+
+	/**
+	 * @return the duration
+	 */
+	public int getDuration() {
+		return duration;
+	}
+
+	/**
+	 * @param duration the duration to set
+	 */
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
 	
 }

@@ -121,18 +121,6 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		return returnSQLHistory;
 	}
-	
-	/**
-	 * find execute sql
-	 * 
-	 * @return
-	 */
-	public static List<SQLHistoryDAO> findExecuteSQL(String operationType, String groupName, String displayName, Date executeTime, int duration) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		
-		
-		return null;
-	}
 
 	/**
 	 * save resource 
@@ -148,6 +136,9 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			executeSQLResourceDao.setStartDateExecute(sqlHistoryDAO.getStartDateExecute());
 			executeSQLResourceDao.setEndDateExecute(sqlHistoryDAO.getEndDateExecute());
+			long duration = sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime();
+			executeSQLResourceDao.setDuration(Integer.parseInt(""+duration));
+			
 			executeSQLResourceDao.setRow(sqlHistoryDAO.getRows());
 			executeSQLResourceDao.setResult(sqlHistoryDAO.getResult());
 			executeSQLResourceDao.setMessage(""+(sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()));
