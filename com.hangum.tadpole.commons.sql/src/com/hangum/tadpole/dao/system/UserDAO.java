@@ -24,6 +24,7 @@ public class UserDAO {
 	String language;
 	String delYn;
 	String create_time;
+	String approval_yn;
 	
 	public UserDAO() {
 	}
@@ -101,4 +102,19 @@ public class UserDAO {
 	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
+
+	/**
+	 * @return the approval_yn
+	 */
+	public String getApproval_yn() {
+		return approval_yn;
+	}
+
+	/**
+	 * @param approval_yn the approval_yn to set
+	 */
+	public void setApproval_yn(String approval_yn) {
+		this.approval_yn = approval_yn;
+	}
+	
 }

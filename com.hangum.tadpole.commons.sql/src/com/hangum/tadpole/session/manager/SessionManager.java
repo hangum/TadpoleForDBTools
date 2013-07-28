@@ -198,7 +198,7 @@ public class SessionManager {
 	 * 
 	 * @return
 	 */
-	public static String representRole() {
+	public static String getRepresentRole() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		
 		return (String)sStore.getAttribute(SESSEION_NAME.REPRESENT_ROLE_TYPE.toString());

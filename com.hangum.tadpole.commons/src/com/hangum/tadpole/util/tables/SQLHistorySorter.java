@@ -23,8 +23,10 @@ public class SQLHistorySorter extends DefaultViewerSorter {
 	@Override
 	public COLUMN_TYPE getColumnType(int propertyIndex) {
 		switch(propertyIndex) {
-		case 0 :
-			return COLUMN_TYPE.Date;
+		case 0 : return COLUMN_TYPE.Date;
+		case 1 : return COLUMN_TYPE.String;
+		case 2 : 
+		case 3 : return COLUMN_TYPE.Double;
 		default:				
 			return COLUMN_TYPE.String;
 		}

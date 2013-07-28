@@ -41,6 +41,50 @@ public class TadpoleSystem_ExecutedSQL {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_ExecutedSQL.class);
 	
 	/**
+	 * 쿼리 실행 히스토리 디테일 창을 얻습니다.
+	 * 
+	 * @param user_seq
+	 * @param dbSeq
+	 * @param executeTime
+	 * @param durationLimit
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(int user_seq, int dbSeq, long executeTime, int duringExecute) throws Exception {
+		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
+		
+		long endTime = executeTime + (24 * 60 * 60 * 1000);
+		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("user_seq",user_seq);
+		queryMap.put("db_seq", 	dbSeq);
+		queryMap.put("startTime",  executeTime);
+		queryMap.put("endTime", endTime);
+		queryMap.put("duration", duringExecute);
+		queryMap.put("count", 	1000);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
+		
+		for (Map resultMap : listResourceData) {
+			int seq = (Integer)resultMap.get("EXECUTED_SQL_RESOURCE_SEQ");
+			
+			Long startdateexecute = (Long)resultMap.get("STARTDATEEXECUTE");
+			String strSQLText = (String)resultMap.get("DATAS");
+			Long enddateexecute = (Long)resultMap.get("ENDDATEEXECUTE");
+			
+			int row = (Integer)resultMap.get("ROW");
+			String result = (String)resultMap.get("RESULT");
+			
+			SQLHistoryDAO dao = new SQLHistoryDAO(new Date(startdateexecute), strSQLText, new Date(enddateexecute), row, result, "");
+			dao.setSeq(seq);
+			returnSQLHistory.add(dao);
+		}
+		
+		return returnSQLHistory;
+	}
+	
+	/**
 	 * 마지막 실행했떤 쿼리 100개를 리턴합니다.
 	 * 
 	 * @param user_seq
@@ -106,12 +150,11 @@ public class TadpoleSystem_ExecutedSQL {
 			executeSQLResourceDao.setEndDateExecute(sqlHistoryDAO.getEndDateExecute());
 			executeSQLResourceDao.setRow(sqlHistoryDAO.getRows());
 			executeSQLResourceDao.setResult(sqlHistoryDAO.getResult());
-			executeSQLResourceDao.setMessage(""+sqlHistoryDAO.getRows());
+			executeSQLResourceDao.setMessage(""+(sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()));
 			
 			// 기존에 등록 되어 있는지 검사한다
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 			ExecutedSqlResourceDAO executeSQL =  (ExecutedSqlResourceDAO)sqlClient.insert("userExecuteSQLResourceInsert", executeSQLResourceDao); //$NON-NLS-1$
-			logger.debug("[return seq] " + executeSQL.toString());
 			
 			insertResourceData(executeSQL, sqlHistoryDAO.getStrSQLText());
 		}

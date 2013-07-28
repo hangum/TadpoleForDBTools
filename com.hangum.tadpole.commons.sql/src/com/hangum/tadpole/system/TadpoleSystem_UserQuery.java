@@ -25,7 +25,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 
 
 /**
- * tadpole system query를 정의 합니다.
+ * Define User query.
  * 
  * @author hangum
  *
@@ -172,7 +172,7 @@ public class TadpoleSystem_UserQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("userListPermissions"); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * group의 사용자를 리턴한다.
 	 * @param groupSeq

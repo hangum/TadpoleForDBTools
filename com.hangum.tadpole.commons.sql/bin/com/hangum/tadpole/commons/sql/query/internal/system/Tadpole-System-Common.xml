@@ -143,11 +143,14 @@
 	권한별 유저 리스트
  -->
  <select id="userListPermissions" resultClass="com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO">
- SELECT a.name user_group_name, 
- 	b.seq, group_seq, email, passwd, b.name, user_type, b.delYn, b.create_time 
+ SELECT 
+ 	a.name user_group_name, 
+ 	,b.seq user_seq
+    ,a.seq group_seq
+ 	email, passwd, b.name, b.delYn, b.create_time 
  FROM user_group a, user b
  WHERE a.seq = b.group_seq
- ORDER BY email
+ ORDER BY user_group_name, email
  </select>
  
  <!-- 
@@ -164,17 +167,19 @@
     ,c.role_type role_type
     ,b.delYn
     ,b.create_time
+    ,b.approval_yn
   FROM
     user_group a
     ,user b
     ,user_role c
   WHERE
  	   a.seq = c.group_seq
-    AND a.seq = #gruop_seq#
+    AND c.user_seq = b.seq
+    AND c.group_seq = #group_seq#
   GROUP BY
   	user_group_name, user_seq, group_seq
   ORDER BY
-    email
+    user_group_name, email
  </select>
  
 <!-- 
@@ -182,7 +187,8 @@
  -->
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.dao.system.UserDAO">
 	UPDATE user SET
-		 delYn = #delYn#
+		 delYn = #delYn#,
+		 approval_yn = #approval_yn#
 	WHERE seq = #seq#
 </update>
 
@@ -500,6 +506,28 @@
 </insert>
 
 <select id="findExecuteSQL" resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDataDAO" parameterClass="java.util.Map"></select>
+
+<!-- 
+	쿼리의 실행 히스토리를 얻습니다.
+	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
+ -->
+<select id="getExecuteQueryHistoryDetail" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+<![CDATA[
+ 	SELECT b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.datas, a.row, a.result
+	 FROM 
+	 executed_sql_resource a,
+	 executed_sql_resource_data b
+	where a.user_seq = #user_seq# AND
+	  a.db_seq = #db_seq# AND 
+	  a.delyn = 'NO' AND
+	  a.seq = b.executed_sql_resource_seq AND
+	  a.startdateexecute >= #startTime# AND  
+      a.enddateexecute <= #endTime# AND
+      a.message >= #duration#
+	order by a.create_time desc
+	limit #count#	
+]]>
+</select>
 
 <!-- 
 	쿼리의 실행 히스토리를 얻습니다.

@@ -22,6 +22,11 @@ import com.hangum.tadpole.dao.system.UserDAO;
 public class UserGroupAUserDAO extends UserDAO {
 	/** treeview로 처리하기 위한 */
 	public UserGroupAUserDAO parent;
+
+	private int group_seq;
+	private int user_seq;
+	private String role_type = "";
+	
 	/** treeviewe로 처리하기위한*/
 	public ArrayList child = new ArrayList();
 	
@@ -46,5 +51,50 @@ public class UserGroupAUserDAO extends UserDAO {
 	public void setParent(UserGroupAUserDAO parent) {
 		this.parent = parent;
 	}
+
+	/**
+	 * @return the role_type
+	 */
+	public String getRole_type() {
+		return role_type;
+	}
+
+	/**
+	 * @param role_type the role_type to set
+	 */
+	public void setRole_type(String role_type) {
+		this.role_type = role_type;
+	}
+
+	/**
+	 * @return the group_seq
+	 */
+	public int getGroup_seq() {
+		return group_seq;
+	}
+
+	/**
+	 * @param group_seq the group_seq to set
+	 */
+	public void setGroup_seq(int group_seq) {
+		this.group_seq = group_seq;
+	}
+
+	/**
+	 * @return the user_seq
+	 */
+	public int getUser_seq() {
+		return user_seq;
+	}
+
+	/**
+	 * @param user_seq the user_seq to set
+	 */
+	public void setUser_seq(int user_seq) {
+		this.user_seq = user_seq;
+		
+		super.setSeq(user_seq);
+	}
+	
 	
 }

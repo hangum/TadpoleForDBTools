@@ -251,13 +251,16 @@ public class NewUserDialog extends Dialog {
 		
 		// user 입력시 
 		UserGroupDAO groupDAO = new UserGroupDAO();
-		strGroupName = comboUserGroup.getText();
 		PublicTadpoleDefine.USER_TYPE userType = PublicTadpoleDefine.USER_TYPE.USER;
 		if(btnUser.getSelection()) {
+			strGroupName = comboUserGroup.getText();
 			groupDAO.setSeq( (Integer)comboUserGroup.getData(strGroupName) );
+			
 		} else if(btnDBA.getSelection()) {
+			strGroupName = comboUserGroup.getText();
 			groupDAO.setSeq( (Integer)comboUserGroup.getData(strGroupName) );
 			userType = PublicTadpoleDefine.USER_TYPE.DBA;
+			
 		} else {
 			strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			

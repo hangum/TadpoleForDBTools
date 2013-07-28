@@ -580,7 +580,7 @@ public class MainEditor extends EditorExtension {
 		tableViewerSQLHistory.setLabelProvider(new SQLHistoryLabelProvider());
 		tableViewerSQLHistory.setContentProvider(new ArrayContentProvider());
 		tableViewerSQLHistory.setInput(listSQLHistory);
-		tableViewerSQLHistory.setComparator(sorterHistory);
+		tableViewerSQLHistory.setSorter(sorterHistory);
 		
 		Composite compositeRecallBtn = new Composite(compositeSQLHistory, SWT.NONE);
 		compositeRecallBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

@@ -42,19 +42,19 @@ public class SQLHistoryCreateColumn {
 		layoutColumnLayout.addColumnData(new ColumnWeightData(300));
 		
 		// duration
-		TableViewerColumn tableViewerColumnDuration = new TableViewerColumn(tv, SWT.NONE);
+		TableViewerColumn tableViewerColumnDuration = new TableViewerColumn(tv, SWT.RIGHT);
 		TableColumn tblclmnDuration = tableViewerColumnDuration.getColumn();
 		tblclmnDuration.setWidth(85);
 		tblclmnDuration.setText("Duration");
-		tblclmnDuration.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDuration, 1));
+		tblclmnDuration.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDuration, 2));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(85));
 		
 		// rows
-		TableViewerColumn tableViewerColumnRows = new TableViewerColumn(tv, SWT.NONE);
+		TableViewerColumn tableViewerColumnRows = new TableViewerColumn(tv, SWT.RIGHT);
 		TableColumn tblclmnRows = tableViewerColumnRows.getColumn();
 		tblclmnRows.setWidth(60);
 		tblclmnRows.setText("Rows");
-		tblclmnRows.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnRows, 1));
+		tblclmnRows.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnRows, 3));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(60));
 		
 		// result
@@ -62,21 +62,23 @@ public class SQLHistoryCreateColumn {
 		TableColumn tblclmnResult = tableViewerColumnResult.getColumn();
 		tblclmnResult.setWidth(90);
 		tblclmnResult.setText("Result");
-		tblclmnResult.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnResult, 1));
+		tblclmnResult.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnResult, 4));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(90));
 		
 		TableViewerColumn tableViewerColumnMessage = new TableViewerColumn(tv, SWT.NONE);
 		TableColumn tblclmnMessage = tableViewerColumnMessage.getColumn();
 		tblclmnMessage.setWidth(250);
 		tblclmnMessage.setText("Message");
-		tblclmnMessage.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnMessage, 1));
+		tblclmnMessage.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnMessage, 4));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(250));
 	}
 	
 	/**
 	 * tablecolumn adapter
+	 * @param viewer
+	 * @param comparator
 	 * @param column
-	 * @param index
+	 * @param index sort index
 	 * @return
 	 */
 	private static SelectionAdapter getSelectionAdapter(final TableViewer viewer, final DefaultViewerSorter comparator, final TableColumn column, final int index) {

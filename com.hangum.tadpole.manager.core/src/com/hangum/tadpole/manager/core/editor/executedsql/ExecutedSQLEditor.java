@@ -11,6 +11,7 @@
 package com.hangum.tadpole.manager.core.editor.executedsql;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -18,6 +19,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -32,20 +35,23 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.DBOperationType;
+import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.util.tables.SQLHistoryLabelProvider;
 import com.hangum.tadpole.util.tables.SQLHistorySorter;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * 실행한 쿼리.
+ * 
+ * 1. Name 콤보에 보여줄때는 사람을 기준으로 보여줄
  * 
  * @author hangum
  *
@@ -58,8 +64,9 @@ public class ExecutedSQLEditor extends EditorPart {
 
 	public static String ID = "com.hangum.tadpole.manager.core.editor.manager.executed_sql";
 	
-	private Combo comboOperationType;
-	private Combo comboGroup;
+	private UserDAO userDao = null;
+	
+	private Combo comboUserName;
 	private Combo comboDisplayName;
 	
 	private DateTime dateTimeSearch;
@@ -97,24 +104,20 @@ public class ExecutedSQLEditor extends EditorPart {
 		
 		Label lblOperationType = new Label(compositeHead, SWT.NONE);
 		lblOperationType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblOperationType.setText("Operation Type");
+		lblOperationType.setText("User Name");
 		
-		comboOperationType = new Combo(compositeHead, SWT.NONE);
-		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		
-		Label lblGroup = new Label(compositeHead, SWT.NONE);
-		lblGroup.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblGroup.setText("Group");
-		
-		comboGroup = new Combo(compositeHead, SWT.NONE);
-		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboUserName = new Combo(compositeHead, SWT.READ_ONLY);
+		comboUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		Label lblName = new Label(compositeHead, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText("Name");
+		lblName.setText("DB Name");
 		
-		comboDisplayName = new Combo(compositeHead, SWT.BORDER);
+		comboDisplayName = new Combo(compositeHead, SWT.READ_ONLY);
 		comboDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		new Label(compositeHead, SWT.NONE);
+		new Label(compositeHead, SWT.NONE);
 		
 		Label lblExecuteTime = new Label(compositeHead, SWT.NONE);
 		lblExecuteTime.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -165,6 +168,8 @@ public class ExecutedSQLEditor extends EditorPart {
 		tvList.setComparator(sorterHistory);
 		
 		initUIData();
+		
+		search();
 	}
 	
 	/**
@@ -173,34 +178,47 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void search() {
 		listSQLHistory.clear();
 		
+		int user_seq = (Integer)comboUserName.getData(comboUserName.getText());
+		int db_seq = (Integer)comboDisplayName.getData(comboDisplayName.getText());
 		
+		Calendar cal = Calendar.getInstance();
+		cal.set(dateTimeSearch.getYear(), dateTimeSearch.getMonth(), dateTimeSearch.getDay(), 0, 0, 0);
+		long startTime = cal.getTimeInMillis();
+		int duringExecute = Integer.parseInt(textMillis.getText());
+		
+		try {
+			listSQLHistory = TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(user_seq, db_seq, startTime, duringExecute);
+			tvList.setInput(listSQLHistory);
+			tvList.refresh();
+		} catch(Exception ee) {
+			logger.error("Executed SQL History call", ee); //$NON-NLS-1$
+		}
 	}
 	
 	/**
 	 * 데이터를 초기 로드합니다.
 	 */
 	private void initUIData() {
-		
-		// operation type combo
-		for (DBOperationType opType : DBOperationType.values()) {
-			comboOperationType.add(opType.getTypeName());
-		}
-		comboOperationType.select(1);
-		
-		// db groupData combo
+
 		try {
-			List<String> groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
-			for (String string : groupName) comboGroup.add(string);
-			comboGroup.select(0);
-		} catch (Exception e1) {
-			logger.error("get group info", e1); //$NON-NLS-1$
-		}
-		
-		// database name combo
-		try {
+			// user information
+			List<UserGroupAUserDAO> listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeq());
+			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
+				String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
+				comboUserName.add(name);
+				comboUserName.setData(name, userGroupAUserDAO.getSeq());
+			}
+			if(userDao == null) {
+				comboUserName.select(0);
+			} else {
+				comboUserName.setText(userDao.getName() + " (" + userDao.getEmail() + ")");
+			}
+
+			// database name combo			
 			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : listUserDBDAO) {
 				comboDisplayName.add(userDBDAO.getDisplay_name());
+				comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO.getSeq());
 			}
 			comboDisplayName.select(0);
 		} catch(Exception e) {
@@ -224,6 +242,8 @@ public class ExecutedSQLEditor extends EditorPart {
 		
 		ExecutedSQLEditorInput esqli = (ExecutedSQLEditorInput)input;
 		setPartName(esqli.getName());
+		
+		this.userDao = esqli.getUserDAO();
 	}
 
 	@Override

@@ -14,7 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserDAO;
 
 /**
  * Executed SQL Editor input
@@ -23,7 +23,12 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
  *
  */
 public class ExecutedSQLEditorInput implements IEditorInput {
+	private UserDAO userDAO;
 
+	public ExecutedSQLEditorInput(UserDAO selectUserDAO) {
+		this.userDAO = selectUserDAO;
+	}
+	
 	public ExecutedSQLEditorInput() {
 	}
 
@@ -55,6 +60,10 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 	@Override
 	public String getToolTipText() {
 		return "Executed SQL Management";
+	}
+	
+	public UserDAO getUserDAO() {
+		return userDAO;
 	}
 
 }

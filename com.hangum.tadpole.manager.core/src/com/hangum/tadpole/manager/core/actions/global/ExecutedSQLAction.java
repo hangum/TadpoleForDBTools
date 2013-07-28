@@ -74,7 +74,5 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 	@Override
 	public void dispose() {
 	}
-	
-	
 
 }
