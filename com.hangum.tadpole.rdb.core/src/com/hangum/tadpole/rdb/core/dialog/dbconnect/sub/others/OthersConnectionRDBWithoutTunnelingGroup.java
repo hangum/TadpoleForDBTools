@@ -96,9 +96,6 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 		
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_5);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
 		
 	}
 	
