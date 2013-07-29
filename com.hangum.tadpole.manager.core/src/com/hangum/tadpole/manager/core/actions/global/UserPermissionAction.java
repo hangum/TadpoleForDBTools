@@ -49,8 +49,8 @@ public class UserPermissionAction extends Action implements ISelectionListener, 
 		this.window = window;
 		
 		setId(ID);
-		setText("User Manager");
-		setToolTipText("User Manager");
+		setText("User And DB Manager");
+		setToolTipText("User And DB Manager");
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png"));
 		setEnabled(true);
 	}

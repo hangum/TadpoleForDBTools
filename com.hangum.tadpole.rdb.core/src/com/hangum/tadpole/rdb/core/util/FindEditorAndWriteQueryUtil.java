@@ -66,9 +66,9 @@ public class FindEditorAndWriteQueryUtil {
 			IEditorReference reference = EditorUtils.findSQLEditor(userDB);
 			
 //			포멧팅 한것이 잘 보이지 않아서 우선 블럭 해 놓습니다.
-//			try {
-//				lowSQL = SQLFormater.format(lowSQL);
-//			} catch(Exception e) {}
+			try {
+				lowSQL = SQLFormater.format(lowSQL);
+			} catch(Exception e) {}
 			
 			if(reference == null) {				
 				try {

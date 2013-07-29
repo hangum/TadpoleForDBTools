@@ -17,6 +17,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -35,10 +38,12 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
@@ -47,6 +52,8 @@ import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.util.tables.SQLHistoryLabelProvider;
 import com.hangum.tadpole.util.tables.SQLHistorySorter;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * 실행한 쿼리.
@@ -63,8 +70,12 @@ public class ExecutedSQLEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(ExecutedSQLEditor.class);
 
 	public static String ID = "com.hangum.tadpole.manager.core.editor.manager.executed_sql";
+	/** 마지막 검색시 사용하는 UserDBDAO */
+	private UserDBDAO searchUserDBDAO = null;
 	
-	private UserDAO userDao = null;
+	/** 제일 처음 설정 될때 사용하는 dao */
+	private UserDAO userDAO;
+	private UserDBDAO userDBDAO;
 	
 	private Combo comboUserName;
 	private Combo comboDisplayName;
@@ -74,6 +85,7 @@ public class ExecutedSQLEditor extends EditorPart {
 	private TableViewer tvList;
 	
 	private Button btnSearch;
+	private Button btnShowQueryEditor;
 	
 	/** result list */
 	private List<SQLHistoryDAO> listSQLHistory = new ArrayList<SQLHistoryDAO>();
@@ -103,14 +115,12 @@ public class ExecutedSQLEditor extends EditorPart {
 		compositeHead.setLayout(gl_compositeHead);
 		
 		Label lblOperationType = new Label(compositeHead, SWT.NONE);
-		lblOperationType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblOperationType.setText("User Name");
 		
 		comboUserName = new Combo(compositeHead, SWT.READ_ONLY);
 		comboUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		Label lblName = new Label(compositeHead, SWT.NONE);
-		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText("DB Name");
 		
 		comboDisplayName = new Combo(compositeHead, SWT.READ_ONLY);
@@ -120,17 +130,15 @@ public class ExecutedSQLEditor extends EditorPart {
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblExecuteTime = new Label(compositeHead, SWT.NONE);
-		lblExecuteTime.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblExecuteTime.setText("Execute Time");
 		
 		dateTimeSearch = new DateTime(compositeHead, SWT.BORDER);
 		
 		Label lblExecuteMills = new Label(compositeHead, SWT.NONE);
-		lblExecuteMills.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblExecuteMills.setText("during execute");
 		
 		textMillis = new Text(compositeHead, SWT.BORDER);
-		textMillis.setText("100");
+		textMillis.setText("50");
 		textMillis.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblmillis = new Label(compositeHead, SWT.NONE);
@@ -147,9 +155,24 @@ public class ExecutedSQLEditor extends EditorPart {
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 		
 		tvList = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		tvList.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				btnShowQueryEditor.setEnabled(true);
+			}
+		});
+		tvList.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				showQueryEditor();
+			}
+		});
 		Table table = tvList.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -167,9 +190,44 @@ public class ExecutedSQLEditor extends EditorPart {
 		tvList.setInput(listSQLHistory);
 		tvList.setComparator(sorterHistory);
 		
+		Composite compositeTail = new Composite(compositeBody, SWT.NONE);
+		compositeTail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeTail = new GridLayout(1, false);
+		gl_compositeTail.verticalSpacing = 2;
+		gl_compositeTail.horizontalSpacing = 2;
+		gl_compositeTail.marginHeight = 2;
+		gl_compositeTail.marginWidth = 2;
+		compositeTail.setLayout(gl_compositeTail);
+		
+		btnShowQueryEditor = new Button(compositeTail, SWT.NONE);
+		btnShowQueryEditor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				showQueryEditor();
+			}
+		});
+		btnShowQueryEditor.setEnabled(false);
+		btnShowQueryEditor.setText("Show Query Editor");
+		
 		initUIData();
 		
 		search();
+	}
+	
+	/**
+	 * show query editor
+	 */
+	private void showQueryEditor() {
+		IStructuredSelection ss = (IStructuredSelection)tvList.getSelection();
+		if(!ss.isEmpty()) {
+			SQLHistoryDAO sqlHistoryDAO = (SQLHistoryDAO)ss.getFirstElement();
+			
+			try {
+				FindEditorAndWriteQueryUtil.run(searchUserDBDAO, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DILIMITER);
+			} catch(Exception e) {
+				logger.error("find editor and write query", e);
+			}
+		}
 	}
 	
 	/**
@@ -179,7 +237,8 @@ public class ExecutedSQLEditor extends EditorPart {
 		listSQLHistory.clear();
 		
 		int user_seq = (Integer)comboUserName.getData(comboUserName.getText());
-		int db_seq = (Integer)comboDisplayName.getData(comboDisplayName.getText());
+		searchUserDBDAO = (UserDBDAO)comboDisplayName.getData(comboDisplayName.getText());
+		int db_seq = searchUserDBDAO.getSeq();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(dateTimeSearch.getYear(), dateTimeSearch.getMonth(), dateTimeSearch.getDay(), 0, 0, 0);
@@ -208,19 +267,23 @@ public class ExecutedSQLEditor extends EditorPart {
 				comboUserName.add(name);
 				comboUserName.setData(name, userGroupAUserDAO.getSeq());
 			}
-			if(userDao == null) {
+			if(userDAO == null) {
 				comboUserName.select(0);
 			} else {
-				comboUserName.setText(userDao.getName() + " (" + userDao.getEmail() + ")");
+				comboUserName.setText(userDAO.getName() + " (" + userDAO.getEmail() + ")");
 			}
 
 			// database name combo			
 			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : listUserDBDAO) {
 				comboDisplayName.add(userDBDAO.getDisplay_name());
-				comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO.getSeq());
+				comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
 			}
-			comboDisplayName.select(0);
+			if(userDBDAO == null) {
+				comboDisplayName.select(0);
+			} else {
+				comboDisplayName.setText(userDBDAO.getDisplay_name());
+			}
 		} catch(Exception e) {
 			logger.error("get db list", e);
 		}
@@ -243,7 +306,8 @@ public class ExecutedSQLEditor extends EditorPart {
 		ExecutedSQLEditorInput esqli = (ExecutedSQLEditorInput)input;
 		setPartName(esqli.getName());
 		
-		this.userDao = esqli.getUserDAO();
+		this.userDAO = esqli.getUserDAO();
+		this.userDBDAO = esqli.getUserDBDAO();
 	}
 
 	@Override

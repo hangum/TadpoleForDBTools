@@ -27,6 +27,7 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.swtdesigner.ResourceManager;
 
 /**
  * 실행된 sql action
@@ -48,9 +49,9 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 		this.window = window;
 		
 		setId(ID);
-		setText("ExecutedSQL Management");
-		setToolTipText("ExecutedSQL Management");
-//		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png"));
+		setText("Query History");
+		setToolTipText("Query History");
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/queryhistory.png"));
 		setEnabled(true);
 	}
 	

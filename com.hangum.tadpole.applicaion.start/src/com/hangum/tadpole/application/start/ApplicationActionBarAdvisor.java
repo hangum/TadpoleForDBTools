@@ -26,6 +26,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
+import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
@@ -55,7 +56,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     /** 사용자 권한 */
     private IAction userPermissionAction;
     /** 실행된 sql */
-//    private IAction executedSQLAction;
+    private IAction executedSQLAction;
     
     private IAction preferenceAction;
     private IAction aboutAction;
@@ -89,8 +90,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	userPermissionAction = new UserPermissionAction(window);
     	register(userPermissionAction);
     	
-//    	executedSQLAction = new ExecutedSQLAction(window);
-//    	register(executedSQLAction);
+    	executedSQLAction = new ExecutedSQLAction(window);
+    	register(executedSQLAction);
 
         exitAction = new ExitAction(window);
         register(exitAction);
@@ -167,8 +168,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
         	toolbar.add(userPermissionAction);
-//        	toolbar.add(executedSQLAction);
-            toolbar.add(new Separator());        	
+        	toolbar.add(new Separator());
+        	toolbar.add(executedSQLAction);
+            toolbar.add(new Separator());
         }
         
         toolbar.add(preferenceAction);
@@ -177,11 +179,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(bugIssueAction);
         toolbar.add(aboutAction);
         
-//        if(ApplicationArgumentUtils.isStandaloneMode()) {
-        	toolbar.add(new Separator());
-        	toolbar.add(exitAction);
-//        }
-        
+    	toolbar.add(new Separator());
+    	toolbar.add(exitAction);
     }
     
 }

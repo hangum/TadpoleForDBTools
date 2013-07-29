@@ -15,6 +15,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.dao.system.UserDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 
 /**
  * Executed SQL Editor input
@@ -24,12 +25,17 @@ import com.hangum.tadpole.dao.system.UserDAO;
  */
 public class ExecutedSQLEditorInput implements IEditorInput {
 	private UserDAO userDAO;
+	private UserDBDAO userDBDAO;
 
 	public ExecutedSQLEditorInput(UserDAO selectUserDAO) {
 		this.userDAO = selectUserDAO;
 	}
 	
 	public ExecutedSQLEditorInput() {
+	}
+
+	public ExecutedSQLEditorInput(UserDBDAO userDBDAO) {
+		this.userDBDAO = userDBDAO;
 	}
 
 	@Override
@@ -64,6 +70,10 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 	
 	public UserDAO getUserDAO() {
 		return userDAO;
+	}
+	
+	public UserDBDAO getUserDBDAO() {
+		return userDBDAO;
 	}
 
 }

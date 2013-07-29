@@ -55,6 +55,8 @@ import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 사용자리스트 화면
@@ -155,7 +157,7 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmQuery.setEnabled(false);
-		tltmQuery.setText("View query History");
+		tltmQuery.setText("Query History");
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -180,6 +182,11 @@ public class UserListComposite extends Composite {
 		compositeBody.setLayout(gl_compositeBody);
 		
 		userListViewer = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		userListViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				viewQueryHistory();
+			}
+		});
 		userListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				tltmModify.setEnabled(true);
@@ -379,7 +386,7 @@ class UserCompFilter extends ViewerFilter {
 	String searchString;
 	
 	public void setSearchString(String s) {
-		this.searchString = ".*" + s + ".*";
+		this.searchString = ".*" + s.toLowerCase() + ".*";
 	}
 
 	@Override
@@ -389,11 +396,11 @@ class UserCompFilter extends ViewerFilter {
 		}
 			
 		UserGroupAUserDAO user = (UserGroupAUserDAO)element;
-		if(user.getUser_group_name().matches(searchString)) return true;
-		if(user.getEmail().matches(searchString)) return true;
-		if(user.getName().matches(searchString)) return true;
-		if(user.getRole_type().matches(searchString)) return true;
-		if(user.getApproval_yn().matches(searchString)) return true;
+		if(user.getUser_group_name().toLowerCase().matches(searchString)) return true;
+		if(user.getEmail().toLowerCase().matches(searchString)) return true;
+		if(user.getName().toLowerCase().matches(searchString)) return true;
+		if(user.getRole_type().toLowerCase().matches(searchString)) return true;
+		if(user.getApproval_yn().toLowerCase().matches(searchString)) return true;
 		
 		return false;
 	}

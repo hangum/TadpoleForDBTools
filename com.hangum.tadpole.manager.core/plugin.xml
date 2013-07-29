@@ -13,6 +13,7 @@
       <editor
             class="com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor"
             default="false"
+            icon="resources/icons/queryhistory.png"
             id="com.hangum.tadpole.manager.core.editor.manager.executed_sql"
             name="실행한 쿼리">
       </editor>

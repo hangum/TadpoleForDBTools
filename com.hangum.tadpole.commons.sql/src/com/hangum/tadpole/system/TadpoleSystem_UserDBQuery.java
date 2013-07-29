@@ -171,9 +171,9 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserDBDAO> getSpecificUserDB(int userSeq) throws Exception {
+	public static List<UserDBDAO> getAllUserDB(int userSeq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return  (List<UserDBDAO>)sqlClient.queryForList("userDB", userSeq); //$NON-NLS-1$
+		return  (List<UserDBDAO>)sqlClient.queryForList("userDB", ""+userSeq); //$NON-NLS-1$
 	}
 	
 	/**
