@@ -27,7 +27,7 @@ import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
  *
  */
 public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabelProvider {
-
+	
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;

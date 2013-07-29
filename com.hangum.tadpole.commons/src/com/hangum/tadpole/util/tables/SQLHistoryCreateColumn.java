@@ -19,6 +19,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.hangum.tadpole.Messages;
+
 /**
  * SQL history create column
  * 
@@ -36,49 +38,49 @@ public class SQLHistoryCreateColumn {
 	 */
 	public static void createTableHistoryColumn(TableViewer tv, SQLHistorySorter sorterHistory, AutoResizeTableLayout layoutColumnLayout) {
 		// time
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(tv, SWT.NONE);
-		TableColumn tblclmnDate = tableViewerColumn.getColumn();
+		TableViewerColumn tvcDate = new TableViewerColumn(tv, SWT.NONE);
+		TableColumn tblclmnDate = tvcDate.getColumn();
 		tblclmnDate.setWidth(150);
-		tblclmnDate.setText("Date");
+		tblclmnDate.setText(Messages.SQLHistoryCreateColumn_0);
 		tblclmnDate.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDate, 0));
 		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
 		
 		// sql
-		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tv, SWT.NONE);
-		TableColumn tblclmnSql = tableViewerColumn_1.getColumn();
+		TableViewerColumn tvcSQL = new TableViewerColumn(tv, SWT.NONE);
+		TableColumn tblclmnSql = tvcSQL.getColumn();
 		tblclmnSql.setWidth(300);
-		tblclmnSql.setText("SQL");
+		tblclmnSql.setText(Messages.SQLHistoryCreateColumn_1);
 		tblclmnSql.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnSql, 1));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(300));
 		
 		// duration
-		TableViewerColumn tableViewerColumnDuration = new TableViewerColumn(tv, SWT.RIGHT);
-		TableColumn tblclmnDuration = tableViewerColumnDuration.getColumn();
+		TableViewerColumn tvcDuration = new TableViewerColumn(tv, SWT.RIGHT);
+		TableColumn tblclmnDuration = tvcDuration.getColumn();
 		tblclmnDuration.setWidth(85);
-		tblclmnDuration.setText("Duration");
+		tblclmnDuration.setText(Messages.SQLHistoryCreateColumn_2);
 		tblclmnDuration.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDuration, 2));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(85));
 		
 		// rows
-		TableViewerColumn tableViewerColumnRows = new TableViewerColumn(tv, SWT.RIGHT);
-		TableColumn tblclmnRows = tableViewerColumnRows.getColumn();
+		TableViewerColumn tvcRows = new TableViewerColumn(tv, SWT.RIGHT);
+		TableColumn tblclmnRows = tvcRows.getColumn();
 		tblclmnRows.setWidth(60);
-		tblclmnRows.setText("Rows");
+		tblclmnRows.setText(Messages.SQLHistoryCreateColumn_3);
 		tblclmnRows.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnRows, 3));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(60));
 		
 		// result
-		TableViewerColumn tableViewerColumnResult = new TableViewerColumn(tv, SWT.NONE);
-		TableColumn tblclmnResult = tableViewerColumnResult.getColumn();
+		TableViewerColumn tvcResult = new TableViewerColumn(tv, SWT.NONE);
+		TableColumn tblclmnResult = tvcResult.getColumn();
 		tblclmnResult.setWidth(90);
-		tblclmnResult.setText("Result");
+		tblclmnResult.setText(Messages.SQLHistoryCreateColumn_4);
 		tblclmnResult.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnResult, 4));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(90));
 		
-		TableViewerColumn tableViewerColumnMessage = new TableViewerColumn(tv, SWT.NONE);
-		TableColumn tblclmnMessage = tableViewerColumnMessage.getColumn();
+		TableViewerColumn tvcMessage = new TableViewerColumn(tv, SWT.NONE);
+		TableColumn tblclmnMessage = tvcMessage.getColumn();
 		tblclmnMessage.setWidth(250);
-		tblclmnMessage.setText("Message");
+		tblclmnMessage.setText(Messages.SQLHistoryCreateColumn_5);
 		tblclmnMessage.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnMessage, 4));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(250));
 	}
