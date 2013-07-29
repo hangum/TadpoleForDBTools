@@ -163,7 +163,7 @@ public class UserListComposite extends Composite {
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSearch.setText("Search");
 		
-		textSearch = new Text(compositeHead, SWT.BORDER);
+		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {

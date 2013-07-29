@@ -19,9 +19,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -50,10 +54,9 @@ import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.util.tables.SQLHistoryCreateColumn;
+import com.hangum.tadpole.util.tables.SQLHistoryFilter;
 import com.hangum.tadpole.util.tables.SQLHistoryLabelProvider;
 import com.hangum.tadpole.util.tables.SQLHistorySorter;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * 실행한 쿼리.
@@ -89,6 +92,8 @@ public class ExecutedSQLEditor extends EditorPart {
 	
 	/** result list */
 	private List<SQLHistoryDAO> listSQLHistory = new ArrayList<SQLHistoryDAO>();
+	private Text textSearch;
+	private SQLHistoryFilter filter;
 	
 	/**
 	 * 
@@ -153,6 +158,28 @@ public class ExecutedSQLEditor extends EditorPart {
 		});
 		btnSearch.setText("Search");
 		
+		Composite compositeSearch = new Composite(parent, SWT.NONE);
+		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeSearch = new GridLayout(2, false);
+		gl_compositeSearch.verticalSpacing = 1;
+		gl_compositeSearch.horizontalSpacing = 1;
+		gl_compositeSearch.marginWidth = 1;
+		compositeSearch.setLayout(gl_compositeSearch);
+		
+		Label lblSearch = new Label(compositeSearch, SWT.NONE);
+		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSearch.setText("Search");
+		
+		textSearch = new Text(compositeSearch, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+		textSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				filter.setSearchString(textSearch.getText());
+				tvList.refresh();
+			}
+		});
+		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -189,6 +216,9 @@ public class ExecutedSQLEditor extends EditorPart {
 		tvList.setContentProvider(new ArrayContentProvider());
 		tvList.setInput(listSQLHistory);
 		tvList.setComparator(sorterHistory);
+		
+		filter = new SQLHistoryFilter();
+		tvList.addFilter(filter);
 		
 		Composite compositeTail = new Composite(compositeBody, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
