@@ -129,25 +129,28 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmRefresh.setText("Refresh");
+	
+		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())) {
+			ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+			tltmAdd.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					addUser();
+				}
+			});
+			tltmAdd.setText("Add");
 		
-		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
-		tltmAdd.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addUser();
-			}
-		});
-		tltmAdd.setText("Add");
 		
-		tltmModify = new ToolItem(toolBar, SWT.NONE);
-		tltmModify.setEnabled(false);
-		tltmModify.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				modifyUser();
-			}
-		});
-		tltmModify.setText("Modify");
+			tltmModify = new ToolItem(toolBar, SWT.NONE);
+			tltmModify.setEnabled(false);
+			tltmModify.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					modifyUser();
+				}
+			});
+			tltmModify.setText("Modify");
+		}
 		
 		tltmQuery = new ToolItem(toolBar, SWT.NONE);
 		tltmQuery.addSelectionListener(new SelectionAdapter() {
@@ -189,7 +192,7 @@ public class UserListComposite extends Composite {
 		});
 		userListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				tltmModify.setEnabled(true);
+				if(tltmModify != null) tltmModify.setEnabled(true);
 				tltmQuery.setEnabled(true);
 			}
 		});
@@ -251,8 +254,10 @@ public class UserListComposite extends Composite {
 		listUserGroup.clear();
 		
 		try {
-			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals( SessionManager.getRepresentRole() )) {	// manager
-				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeq());
+			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
+				|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())
+			) {	// manager, dba
+				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
 			} else {	// admin 
 				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission();
 			}

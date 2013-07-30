@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -44,12 +45,14 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 
@@ -108,14 +111,21 @@ public class DBListComposite extends Composite {
 		});
 		tltmRefresh.setText("Refresh");
 		
-		final ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
-		tltmAdd.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
-			}
-		});
-		tltmAdd.setText("Add");
+		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())) {
+			final ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+			tltmAdd.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "");
+					final int ret = dialog.open();
+					
+					if(ret == Dialog.OK) {
+						treeViewerAdmin.setInput(initData());
+					}
+				}
+			});
+			tltmAdd.setText("Add");
+		}
 		
 //		tltmModify = new ToolItem(toolBar, SWT.NONE);
 //		tltmModify.addSelectionListener(new SelectionAdapter() {
@@ -239,7 +249,7 @@ public class DBListComposite extends Composite {
 	private List<UserDBDAO> initData() {
 		
 		try {
-			listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB(SessionManager.getGroupSeq());
+			listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB(SessionManager.getGroupSeqs());
 		} catch (Exception e) {
 			logger.error("user list", e);
 		}

@@ -144,11 +144,16 @@
  -->
  <select id="userListPermissions" resultClass="com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO">
  SELECT 
- 	a.name user_group_name, 
+ 	a.name user_group_name
  	,b.seq user_seq
     ,a.seq group_seq
- 	email, passwd, b.name, b.delYn, b.create_time 
- FROM user_group a, user b
+ 	,email 
+ 	,passwd 
+ 	,b.name 
+ 	,b.delYn 
+ 	,b.create_time 
+ FROM 
+ 	user_group a, user b
  WHERE a.seq = b.group_seq
  ORDER BY user_group_name, email
  </select>
@@ -156,7 +161,7 @@
  <!-- 
  	사용자 그룹별 유저 리스트 
   -->
- <select id="userListGroup" resultClass="com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO" parameterClass="java.lang.Integer">
+ <select id="userListGroup" resultClass="com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO" parameterClass="java.lang.String">
  SELECT
     a.name user_group_name
     ,b.seq user_seq
@@ -175,7 +180,7 @@
   WHERE
  	   a.seq = c.group_seq
     AND c.user_seq = b.seq
-    AND c.group_seq = #group_seq#
+    AND c.group_seq in (#group_seq#)
   GROUP BY
   	user_group_name, user_seq, group_seq
   ORDER BY

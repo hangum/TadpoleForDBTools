@@ -296,7 +296,7 @@ public class ExecutedSQLEditor extends EditorPart {
 
 		try {
 			// user information
-			List<UserGroupAUserDAO> listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeq());
+			List<UserGroupAUserDAO> listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
 			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
 				String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
 				comboUserName.add(name);

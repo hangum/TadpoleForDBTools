@@ -163,7 +163,7 @@ public class TadpoleSystem_UserQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserGroupAUserDAO> getUserListPermission(int groupSeq) throws Exception {
+	public static List<UserGroupAUserDAO> getUserListPermission(String groupSeq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("userListGroup", groupSeq); //$NON-NLS-1$
 	}
