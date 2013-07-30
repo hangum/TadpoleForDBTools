@@ -54,8 +54,13 @@ public class TadpoleSystem_UserQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDAO newUser(String email, String passwd, String name, String language, String yesNo) throws Exception {
-		UserDAO loginDAO = new UserDAO(email, passwd, name, language);
+	public static UserDAO newUser(String email, String passwd, String name, String language, String approvalYn) throws Exception {
+		UserDAO loginDAO = new UserDAO(email, passwd, name, language, approvalYn);
+		
+		// Is test mode?
+		if(ApplicationArgumentUtils.isTestMode()) {
+			loginDAO.setApproval_yn(PublicTadpoleDefine.YES_NO.YES.toString());
+		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
@@ -69,27 +74,6 @@ public class TadpoleSystem_UserQuery {
 			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_2);
 		}
 	}
-	
-	/**
-	 * 신규 유저를 등록합니다.
-	 * 
-	 * @param email
-	 * @param pass
-	 * @param name
-	 * @param type user-type
-	 */
-	public static UserDAO newUser(String email, String passwd, String name, String language) throws Exception {
-		
-		//
-		// 테스트모드 일 경우 관리자의 허락이 필요치 않도록 수정합니다.
-		// 
-		if(ApplicationArgumentUtils.isTestMode()) {
-			return newUser(email, passwd, name, language, PublicTadpoleDefine.YES_NO.YES.toString());
-		} else {
-			return newUser(email, passwd, name, language, PublicTadpoleDefine.YES_NO.NO.toString());
-		}
-	}
-	
 	
 	/**
 	 * 이메일이 중복된 사용자가 있는지 검사합니다.
@@ -126,8 +110,8 @@ public class TadpoleSystem_UserQuery {
 	
 		if(null == userInfo) {
 			throw new Exception(Messages.TadpoleSystem_UserQuery_9);
-//		} else if("NO".equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
-//			throw new Exception(Messages.TadpoleSystem_UserQuery_1);
+		} else if("NO".equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
+			throw new Exception(Messages.TadpoleSystem_UserQuery_1);
 		}
 	
 		return userInfo;

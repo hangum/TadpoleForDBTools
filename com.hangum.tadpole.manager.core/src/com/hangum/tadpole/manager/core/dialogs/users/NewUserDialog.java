@@ -70,12 +70,18 @@ public class NewUserDialog extends Dialog {
 	
 	private Combo comboLanguage;
 	
+	/** 자동 허용유무 */
+	private PublicTadpoleDefine.YES_NO approvalYn;
+	
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public NewUserDialog(Shell parentShell) {
+	public NewUserDialog(Shell parentShell, PublicTadpoleDefine.YES_NO approvalYn) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		this.approvalYn = approvalYn;
 	}
 
 	@Override
@@ -105,14 +111,16 @@ public class NewUserDialog extends Dialog {
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		composite.setLayout(new GridLayout(3, false));
 		
-		btnManager = new Button(composite, SWT.RADIO);
-		btnManager.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				initUserGroup();
-			}
-		});
-		btnManager.setText(Messages.NewUserDialog_btnManager_text_1);
+		if(!SessionManager.isLogin()) {
+			btnManager = new Button(composite, SWT.RADIO);
+			btnManager.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					initUserGroup();
+				}
+			});
+			btnManager.setText(Messages.NewUserDialog_btnManager_text_1);
+		}
 		
 		btnDBA = new Button(composite, SWT.RADIO);
 		btnDBA.addSelectionListener(new SelectionAdapter() {
@@ -170,7 +178,6 @@ public class NewUserDialog extends Dialog {
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblLanguage = new Label(container, SWT.NONE);
-		lblLanguage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblLanguage.setText(Messages.NewUserDialog_lblLanguage_text);
 		
 		comboLanguage = new Combo(container, SWT.READ_ONLY);
@@ -179,8 +186,6 @@ public class NewUserDialog extends Dialog {
 		comboLanguage.add("en_us"); //$NON-NLS-1$
 		comboLanguage.select(0);
 
-		textEMail.setFocus();
-		
 		initUserGroup();
 		
 		return container;
@@ -196,33 +201,26 @@ public class NewUserDialog extends Dialog {
 			comboUserGroup = new Combo(compositeUserGroup, SWT.READ_ONLY);
 			comboUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			
+			// 사용자가 로그인 중일때.
+			int groupSeq = -99;
+			String groupName = "";
+			if(SessionManager.isLogin()) groupSeq = SessionManager.getGroupSeq();
+			
 			try {
 				List<UserGroupDAO> listUserGroup = TadpoleSystem_UserGroupQuery.getGroup();
 				for (UserGroupDAO userGroupDAO : listUserGroup) {
 					
-					// admin group에는 등록이 되지 않도록 합니다.
-					if(1 != userGroupDAO.getSeq() ) {
-						
-						// 처음 로그인일 경우에...
-						int groupSeq = -1;
-						try {
-							// 이미 로그인 했을 경우 다이얼로그인창
-							groupSeq = SessionManager.getGroupSeq();
-						} catch(Exception e) {};
-						
-						if(userGroupDAO.getSeq() == groupSeq) {
-							comboUserGroup.add(userGroupDAO.getName());
-							comboUserGroup.setData(userGroupDAO.getName(), userGroupDAO.getSeq());
-							
-							comboUserGroup.setEnabled(false);
-						} else {
-							comboUserGroup.add(userGroupDAO.getName());
-							comboUserGroup.setData(userGroupDAO.getName(), userGroupDAO.getSeq());
-						}
-					}
-					
+					if(groupSeq == userGroupDAO.getSeq()) groupName = userGroupDAO.getName();
+					comboUserGroup.add(userGroupDAO.getName());
+					comboUserGroup.setData(userGroupDAO.getName(), userGroupDAO.getSeq());
 				}
-				comboUserGroup.select(0);
+				
+				if(SessionManager.isLogin()) {
+					comboUserGroup.setText(groupName);
+					comboUserGroup.setEnabled(false);
+				} else {
+					comboUserGroup.select(0);
+				}
 				
 				comboUserGroup.setFocus();
 			} catch (Exception e) {
@@ -276,7 +274,7 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		try {
-			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText());
+			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn.toString());
 			
 			// user_role 입력.
 			TadpoleSystem_UserRole.newUserRole(groupDAO.getSeq(), newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
@@ -307,7 +305,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
 
-		if(btnManager.getSelection()) {
+		if(btnManager != null && btnManager.getSelection()) {
 			if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
 				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_23);
 				textUserGroup.setFocus();
@@ -340,7 +338,7 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		//  신규 그룹 입력시 오류 검증
-		if(btnManager.getSelection()) {
+		if(btnManager != null && btnManager.getSelection()) {
 			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			// 동일한 그룹명이 있는 지 검증한다.
 			if(TadpoleSystem_UserGroupQuery.isUserGroup(strGroupName)) {
@@ -393,7 +391,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 272);
+		return new Point(450, 300);
 	}
 
 }

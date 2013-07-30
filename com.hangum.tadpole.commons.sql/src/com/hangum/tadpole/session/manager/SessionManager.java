@@ -54,6 +54,16 @@ public class SessionManager {
 										/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
 										/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
 																USER_INFO_DATA}
+
+	/**
+	 * is login?
+	 * 
+	 * @return
+	 */
+	public static boolean isLogin() {
+		if(getSeq() == 0) return false;
+		else return true;
+	}
 	
 	/**
 	 * 사용자를 session에 등록
@@ -84,7 +94,7 @@ public class SessionManager {
 				} else if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepManagerRole = PublicTadpoleDefine.USER_TYPE.MANAGER.toString();
 					
-					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getSeq());
+					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepDBARole = PublicTadpoleDefine.USER_TYPE.DBA.toString();
 				} else if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(userRoleDAO.getRole_type())) {

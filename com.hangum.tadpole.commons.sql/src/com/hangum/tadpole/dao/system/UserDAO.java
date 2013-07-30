@@ -29,11 +29,12 @@ public class UserDAO {
 	public UserDAO() {
 	}
 	
-	public UserDAO(String email, String passwd, String name, String language) {
+	public UserDAO(String email, String passwd, String name, String language, String approval_yn) {
 		this.email = email;
 		this.passwd = passwd;
 		this.name = name;
 		this.language = language;
+		this.approval_yn = approval_yn;
 	}
 
 	public UserDAO(String email, String passwd) {

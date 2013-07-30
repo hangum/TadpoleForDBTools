@@ -269,7 +269,7 @@ public class UserListComposite extends Composite {
 	 * add user
 	 */
 	private void addUser() {
-		NewUserDialog dialog = new NewUserDialog(getShell());
+		NewUserDialog dialog = new NewUserDialog(getShell(), PublicTadpoleDefine.YES_NO.YES);
 		if(Dialog.OK == dialog.open()) {
 			initUI();
 		}

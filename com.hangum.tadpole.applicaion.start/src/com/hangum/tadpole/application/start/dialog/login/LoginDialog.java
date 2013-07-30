@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -119,7 +120,7 @@ public class LoginDialog extends Dialog {
 	}
 
 	private void newUser() {
-		NewUserDialog newUser = new NewUserDialog(getParentShell());
+		NewUserDialog newUser = new NewUserDialog(getParentShell(), PublicTadpoleDefine.YES_NO.NO);
 		newUser.open();
 	}
 	
@@ -187,7 +188,7 @@ public class LoginDialog extends Dialog {
 	public boolean close() {
 		// 로그인이 안되었을 경우 로그인 창이 남아 있도록...
 		// https://github.com/hangum/TadpoleForDBTools/issues/31
-		if( SessionManager.getSeq() == 0) return false;
+		if(!SessionManager.isLogin()) return false;
 		
 		return super.close();
 	}
