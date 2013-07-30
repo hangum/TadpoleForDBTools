@@ -143,19 +143,27 @@
 	권한별 유저 리스트
  -->
  <select id="userListPermissions" resultClass="com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO">
- SELECT 
- 	a.name user_group_name
- 	,b.seq user_seq
+ SELECT
+    a.name user_group_name
+    ,b.seq user_seq
     ,a.seq group_seq
- 	,email 
- 	,passwd 
- 	,b.name 
- 	,b.delYn 
- 	,b.create_time 
- FROM 
- 	user_group a, user b
- WHERE a.seq = b.group_seq
- ORDER BY user_group_name, email
+    ,email
+    ,passwd
+    ,b.name
+    ,c.role_type role_type
+    ,b.delYn
+    ,b.create_time
+    ,b.approval_yn
+  FROM
+    user_group a
+    ,USER b
+    ,user_role c
+  WHERE
+    a.seq = c.group_seq
+    AND c.user_seq = b.seq
+  ORDER BY
+    user_group_name
+    ,email
  </select>
  
  <!-- 
@@ -181,8 +189,6 @@
  	   a.seq = c.group_seq
     AND c.user_seq = b.seq
     AND c.group_seq in (#group_seq#)
-  GROUP BY
-  	user_group_name, user_seq, group_seq
   ORDER BY
     user_group_name, email
  </select>
@@ -268,6 +274,14 @@
 		group_name = #group_name# and
 		display_name = #display_name# and
 		delYn = 'NO'
+</select>
+
+<!-- 모든 userDB를 리스트업 합니다. -->
+<select id="userDBPermissions" resultClass="com.hangum.tadpole.dao.system.UserDBDAO" parameterClass="java.lang.String">
+	SELECT * FROM user_db 
+	WHERE 
+		delYn = 'NO'
+	ORDER BY group_name
 </select>
 
 <!--  UserDB의 리스트 -->

@@ -91,6 +91,8 @@ public class SessionManager {
 				
 				if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepAdminRole = PublicTadpoleDefine.USER_TYPE.ADMIN.toString();
+					
+					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepManagerRole = PublicTadpoleDefine.USER_TYPE.MANAGER.toString();
 					

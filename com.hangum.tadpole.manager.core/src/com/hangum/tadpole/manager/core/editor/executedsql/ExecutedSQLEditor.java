@@ -273,6 +273,9 @@ public class ExecutedSQLEditor extends EditorPart {
 		
 		int user_seq = (Integer)comboUserName.getData(comboUserName.getText());
 		searchUserDBDAO = (UserDBDAO)comboDisplayName.getData(comboDisplayName.getText());
+		
+		// Is user DB empty.
+		if(searchUserDBDAO == null) return;
 		int db_seq = searchUserDBDAO.getSeq();
 		
 		Calendar cal = Calendar.getInstance();

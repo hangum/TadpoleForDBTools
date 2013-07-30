@@ -55,6 +55,7 @@ import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 DB List composite
@@ -67,13 +68,13 @@ public class DBListComposite extends Composite {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(DBListComposite.class);
+
 	private TreeViewer treeViewerAdmin;
-	List<UserDBDAO> listUserDBs = new ArrayList<UserDBDAO>();
+	private List<UserDBDAO> listUserDBs = new ArrayList<UserDBDAO>();
 	
 	private AdminCompFilter filter;
 	private Text textSearch;
 	
-//	private ToolItem tltmModify;
 	private ToolItem tltmQueryHistory;
 	
 	/**
@@ -127,15 +128,6 @@ public class DBListComposite extends Composite {
 			tltmAdd.setText("Add");
 		}
 		
-//		tltmModify = new ToolItem(toolBar, SWT.NONE);
-//		tltmModify.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//			}
-//		});
-//		tltmModify.setEnabled(false);
-//		tltmModify.setText("Modify");
-		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
 		tltmQueryHistory.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -171,7 +163,6 @@ public class DBListComposite extends Composite {
 		treeViewerAdmin = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
 		treeViewerAdmin.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-//				tltmModify.setEnabled(true);
 				tltmQueryHistory.setEnabled(true);
 			}
 		});
@@ -249,7 +240,13 @@ public class DBListComposite extends Composite {
 	private List<UserDBDAO> initData() {
 		
 		try {
-			listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB(SessionManager.getGroupSeqs());
+			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
+					|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())
+			) {	// manager, dba
+				listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB(SessionManager.getGroupSeqs());
+			} else {	// admin 
+				listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB();
+			}
 		} catch (Exception e) {
 			logger.error("user list", e);
 		}

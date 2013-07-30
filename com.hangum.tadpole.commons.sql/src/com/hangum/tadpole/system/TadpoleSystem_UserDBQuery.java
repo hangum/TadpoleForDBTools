@@ -167,6 +167,16 @@ public class TadpoleSystem_UserDBQuery {
 	}
 	
 	/**
+	 * 모든 유저의 디비를 보여 줍니다.
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDBDAO> getAllUserDB() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return  (List<UserDBDAO>)sqlClient.queryForList("userDBPermissions"); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 유저의 디비를 보여 줍니다.
 	 * @return
 	 * @throws Exception

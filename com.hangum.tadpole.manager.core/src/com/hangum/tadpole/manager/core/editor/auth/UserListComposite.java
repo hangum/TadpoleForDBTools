@@ -72,10 +72,6 @@ public class UserListComposite extends Composite {
 	 */
 	private static final Logger logger = Logger.getLogger(UserListComposite.class);
 	
-	/** Login user email */
-	protected final String strUserEMail = SessionManager.getEMAIL();
-	protected final String strRepresentRole = SessionManager.getRepresentRole();
-	
 	/** toolbar button */
 	private ToolItem tltmModify;
 	private ToolItem tltmQuery;
