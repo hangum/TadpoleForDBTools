@@ -340,7 +340,7 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 
 /**
  * admin composite filter
- * 
+ *  
  * @author hangum
  *
  */
