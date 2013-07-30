@@ -239,7 +239,7 @@ public class DBListComposite extends Composite {
 	private List<UserDBDAO> initData() {
 		
 		try {
-			listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB(SessionManager.getSeq());
+			listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB(SessionManager.getGroupSeq());
 		} catch (Exception e) {
 			logger.error("user list", e);
 		}
@@ -340,7 +340,7 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 
 /**
  * admin composite filter
- *  
+ * 
  * @author hangum
  *
  */
