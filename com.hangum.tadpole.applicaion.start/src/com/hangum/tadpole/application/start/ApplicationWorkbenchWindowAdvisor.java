@@ -36,7 +36,6 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
-import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -93,6 +92,16 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      * 시스템 초기화 
      */
     private void initSystem() {
+//    	try {
+//	    	// Add HttpListener(사용자 정보를 수집하기.
+//			System.out.println("================= start add session ==========================");
+//			TadpoleSessionListener listener = new TadpoleSessionListener();
+//			RWT.getUISession().getHttpSession().getServletContext().addListener(listener);//"com.hangum.tadpole.application.start.sessions.TadpoleSessionListener");
+//			System.out.println("================= end add session ==========================");
+//    	} catch(Exception e) {
+//    		e.printStackTrace();
+//    	}
+    			
     	// 올챙이가 지원하지 않는 브라우저면 정보 다이얼로그를 보여준다.
     	String isBrowser = RequestInfoUtils.isTadpoleRunning();
     	if(!"".equals(isBrowser)) {

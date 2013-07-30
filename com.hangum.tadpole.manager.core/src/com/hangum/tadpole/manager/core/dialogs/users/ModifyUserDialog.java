@@ -32,6 +32,7 @@ import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.session.manager.SessionManagerListener;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.util.ManagerSession;
@@ -170,6 +171,8 @@ public class ModifyUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
+		SessionManager.invalidate(11);
+		
 		if(MessageDialog.openConfirm(getShell(), Messages.ModifyUserDialog_12, Messages.ModifyUserDialog_13)) {
 			UserDAO user = new UserDAO();
 			user.setApproval_yn(comboApproval.getText());

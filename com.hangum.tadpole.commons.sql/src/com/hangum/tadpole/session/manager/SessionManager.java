@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.session.manager;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -291,6 +293,29 @@ public class SessionManager {
 			sStore.invalidate();
 		} catch(Exception e) {
 			// ignor exception
+		}
+	}
+	
+	
+	/**
+	 * 사용자 session을 invalidate시킵니다.
+	 */
+	public static void invalidate(int userSeq) {
+		try {
+			HttpSession sStore = RWT.getRequest().getSession();
+			
+			
+			HttpSessionContext hsc = sStore.getSessionContext();
+			Enumeration ids = hsc.getIds();
+			while(ids.hasMoreElements()) {
+				String id = (String)ids.nextElement();
+				
+				logger.debug("==========================> " + hsc.getSession(id));
+			}
+			
+		} catch(Exception e) {
+			logger.error("user session invalidate", e);
+			
 		}
 	}
 }

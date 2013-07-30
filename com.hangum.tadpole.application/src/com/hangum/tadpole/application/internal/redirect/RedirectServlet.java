@@ -42,7 +42,6 @@ public class RedirectServlet extends HttpServlet {
 	}
 
 	private static void redirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
 		// tomcat에서 실행했는지.. 아니면 standalone모드인지...
 		if(!isStandardalone()) {			
 			response.sendRedirect(response.encodeRedirectURL("/tadpole/tadpole"));
