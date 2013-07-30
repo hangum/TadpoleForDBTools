@@ -17,21 +17,17 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -47,7 +43,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
@@ -119,6 +114,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		Composite compositeHead = new Composite(parent, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeHead = new GridLayout(6, false);
+		gl_compositeHead.verticalSpacing = 2;
 		gl_compositeHead.marginHeight = 2;
 		gl_compositeHead.horizontalSpacing = 2;
 		gl_compositeHead.marginWidth = 2;
@@ -134,10 +130,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		lblName.setText("DB Name");
 		
 		comboDisplayName = new Combo(compositeHead, SWT.READ_ONLY);
-		comboDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		new Label(compositeHead, SWT.NONE);
-		new Label(compositeHead, SWT.NONE);
+		comboDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Label lblExecuteTime = new Label(compositeHead, SWT.NONE);
 		lblExecuteTime.setText("Execute Time");
@@ -271,11 +264,12 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void search() {
 		listSQLHistory.clear();
 		
+		// Is user DB empty.
+		if("".equals(comboUserName.getText()) || "".equals(comboDisplayName.getText())) return;
+		
 		int user_seq = (Integer)comboUserName.getData(comboUserName.getText());
 		searchUserDBDAO = (UserDBDAO)comboDisplayName.getData(comboDisplayName.getText());
 		
-		// Is user DB empty.
-		if(searchUserDBDAO == null) return;
 		int db_seq = searchUserDBDAO.getSeq();
 		
 		Calendar cal = Calendar.getInstance();

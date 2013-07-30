@@ -126,7 +126,9 @@ public class UserListComposite extends Composite {
 		});
 		tltmRefresh.setText("Refresh");
 	
-		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())) {
+		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole()) ||
+				PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())
+		) {
 			ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 			tltmAdd.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -135,7 +137,6 @@ public class UserListComposite extends Composite {
 				}
 			});
 			tltmAdd.setText("Add");
-		
 		
 			tltmModify = new ToolItem(toolBar, SWT.NONE);
 			tltmModify.setEnabled(false);
