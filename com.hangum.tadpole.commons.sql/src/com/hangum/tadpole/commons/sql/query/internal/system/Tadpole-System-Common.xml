@@ -295,7 +295,7 @@
 <!-- 
 	add user_db
  -->
-<insert id="userDBInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBDAO">
+<insert id="userDBInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBOriginalDAO">
 	INSERT INTO user_db(seq, 
 	user_seq, ext_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
 	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables

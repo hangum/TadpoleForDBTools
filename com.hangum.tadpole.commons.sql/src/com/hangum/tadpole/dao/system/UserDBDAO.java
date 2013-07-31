@@ -14,19 +14,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.dao.ManagerListDTO;
 
 /**
+ * <pre>
  * 사용자 디비
-
-   ps)
-   특이 password의 get메소드는 다음이어야 합니다. 
+   
+   1. 특이 url, db, host, port, user password의 get메소드는 다음이어야 합니다. 
    이유는, 디비에 암호화된 패스워드가 들어 있기 때문에 그렇고..
    
  	public String getPasswd() {
 		return EncryptiDecryptUtil.decryption(passwd);
 	}
-
+   2. DB에 데이터를 넣기 위해서는 {@code UserDBOriginalDAO} 를 참고합니다.
+	</pre>
  * 
  * @author hangum
  *
@@ -139,7 +141,14 @@ public class UserDBDAO {
 	}
 
 	public String getUrl() {
-		return url;
+		String urlDecrypt = url;
+		try {
+			urlDecrypt = CipherManager.getInstance().decryption(urlDecrypt);
+		} catch(Exception e) {
+			// ignor exception
+		}
+		
+		return urlDecrypt;
 	}
 
 	public void setUrl(String url) {
@@ -155,7 +164,14 @@ public class UserDBDAO {
 	}
 
 	public String getHost() {
-		return host;
+		String hostDecrypt = host;
+		try {
+			hostDecrypt = CipherManager.getInstance().decryption(hostDecrypt);
+		} catch(Exception e) {
+			// ignor exception
+		}
+		
+		return hostDecrypt;
 	}
 
 	public void setHost(String host) {
@@ -163,7 +179,14 @@ public class UserDBDAO {
 	}
 
 	public String getPort() {
-		return port;
+		String portDecrypt = port;
+		try {
+			portDecrypt = CipherManager.getInstance().decryption(portDecrypt);
+		} catch(Exception e) {
+			// ignor exception
+		}
+		
+		return portDecrypt;
 	}
 
 	public void setPort(String port) {
@@ -183,7 +206,14 @@ public class UserDBDAO {
 	 * @return
 	 */
 	public String getPasswd() {
-		return passwd;
+		String passwdDecrypt = passwd;
+		try {
+			passwdDecrypt = CipherManager.getInstance().decryption(passwdDecrypt);
+		} catch(Exception e) {
+			// ignor exception
+		}
+		
+		return passwdDecrypt;
 	}
 
 	public void setPasswd(String passwd) {
@@ -238,7 +268,14 @@ public class UserDBDAO {
 	}
 
 	public String getDb() {
-		return db;
+		String dbDecrypt = db;
+		try {
+			dbDecrypt = CipherManager.getInstance().decryption(dbDecrypt);
+		} catch(Exception e) {
+			// ignor exception
+		}
+		
+		return dbDecrypt;
 	}
 
 	public void setDb(String db) {
@@ -246,7 +283,14 @@ public class UserDBDAO {
 	}
 
 	public String getUsers() {
-		return users;
+		String userDecrypt = users;
+		try {
+			userDecrypt = CipherManager.getInstance().decryption(userDecrypt);
+		} catch(Exception e) {
+			// ignor exception
+		}
+		
+		return userDecrypt;
 	}
 
 	public void setUsers(String users) {

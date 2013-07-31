@@ -19,6 +19,8 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.dao.system.UserDBOriginalDAO;
+import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -94,13 +96,26 @@ public class TadpoleSystem_UserDBQuery {
 	 */
 	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
 		userDb.setUser_seq(userSeq);
-		userDb.setPasswd( CipherManager.getInstance().encryption(userDb.getPasswd()) );
 		
-//		// 기존에 등록 되어 있는지 검사한다
+		// data encryption
+		UserDBOriginalDAO userEncryptDao = new UserDBOriginalDAO();
+		userEncryptDao.setUser_seq(userDb.getUser_seq());
+		userEncryptDao.setDbms_types(userDb.getDbms_types());
+		userEncryptDao.setGroup_seq(userDb.getGroup_seq());
+		userEncryptDao.setGroup_name(userDb.getGroup_name());
+		userEncryptDao.setDisplay_name(userDb.getDisplay_name());
+		userEncryptDao.setOperation_type(userDb.getOperation_type());
+		userEncryptDao.setLocale(userDb.getLocale());
+		
+		userEncryptDao.setUrl(CipherManager.getInstance().encryption(userDb.getUrl()));
+		userEncryptDao.setDb(CipherManager.getInstance().encryption(userDb.getDb()));
+		userEncryptDao.setHost(CipherManager.getInstance().encryption(userDb.getHost()));
+		userEncryptDao.setPort(CipherManager.getInstance().encryption(userDb.getPort()));
+		userEncryptDao.setUsers(CipherManager.getInstance().encryption(userDb.getUsers()));
+		userEncryptDao.setPasswd(CipherManager.getInstance().encryption(userDb.getPasswd()));
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-
-		// user_db등록
-		UserDBDAO insertedUserDB = (UserDBDAO)sqlClient.insert("userDBInsert", userDb); //$NON-NLS-1$
+		UserDBDAO insertedUserDB = (UserDBDAO)sqlClient.insert("userDBInsert", userEncryptDao); //$NON-NLS-1$
 		
 		userDb.setSeq(insertedUserDB.getSeq());
 		
@@ -110,14 +125,14 @@ public class TadpoleSystem_UserDBQuery {
 		// 데이터베이스 확장속성 등록
 		sqlClient.insert("userDBEXTInsert", userDb);
 		
-		return userDb;
+		return insertedUserDB;
 	}
 	
 	/**
 	 * userDAO 수정 
-	 * 
-	 * @param oldUserDb
+	 *
 	 * @param newUserDb
+	 * @param oldUserDb
 	 * @param userSeq
 	 * @return
 	 * @throws Exception
@@ -126,7 +141,12 @@ public class TadpoleSystem_UserDBQuery {
 		newUserDb.setUser_seq(userSeq);
 		newUserDb.setSeq(oldUserDb.getSeq());
 		
-		newUserDb.setPasswd( CipherManager.getInstance().encryption(newUserDb.getPasswd()) );
+//		newUserDb.setUrl(CipherManager.getInstance().encryption(newUserDb.getUrl()));
+//		newUserDb.setDb(CipherManager.getInstance().encryption(newUserDb.getDb()));
+//		newUserDb.setHost(CipherManager.getInstance().encryption(newUserDb.getHost()));
+//		newUserDb.setPort(CipherManager.getInstance().encryption(newUserDb.getPort()));
+//		newUserDb.setUsers(CipherManager.getInstance().encryption(newUserDb.getUsers()));
+//		newUserDb.setPasswd(CipherManager.getInstance().encryption(newUserDb.getPasswd()));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBUpdate", newUserDb); //$NON-NLS-1$

@@ -16,7 +16,6 @@ import java.io.StringReader;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -41,7 +40,7 @@ public class SQLMap {
 	public static SqlMapClient getInstance(UserDBDAO dbInfo) throws Exception {
 		String config = getConfig(dbInfo);
 		
-		return SqlMapClientBuilder.buildSqlMapClient( new StringReader( config ) );
+		return SqlMapClientBuilder.buildSqlMapClient(new StringReader(config));
 	}
 
 	/**
@@ -53,23 +52,20 @@ public class SQLMap {
 	private static String getConfig(UserDBDAO dbInfo) throws Exception {
 		String config = getFileToString(DBDefine.getDBDefine(dbInfo.getDbms_types()).getLocation());
 		
-		// url chnage
-		config = config.replace(URL, StringEscapeUtils.escapeXml( dbInfo.getUrl() ));			
-		// id change
-		config = config.replace(USERNAME, StringEscapeUtils.escapeXml( dbInfo.getUsers() ));
-		
-		// pass change
-		String passwdDecrypt = "";
-		try {
-			passwdDecrypt = CipherManager.getInstance().decryption(dbInfo.getPasswd());
-		} catch(Exception e) {
-			passwdDecrypt = dbInfo.getPasswd();
-		}
-		config = config.replace(PASSWORD, StringEscapeUtils.escapeXml( passwdDecrypt )) ;
+		config = config.replace(URL, StringEscapeUtils.escapeXml(dbInfo.getUrl()));	
+		config = config.replace(USERNAME, StringEscapeUtils.escapeXml(dbInfo.getUsers()));
+		config = config.replace(PASSWORD, StringEscapeUtils.escapeXml(dbInfo.getPasswd())) ;
 		
 		return config;		
 	}
 	
+	/**
+	 * SQLMap XML to string
+	 * 
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
 	private static String getFileToString(String url) throws Exception{
 		ClassLoader loader = SQLMap.class.getClassLoader();
 		InputStream is = loader == null ? ClassLoader.getSystemResourceAsStream(url) : loader.getResourceAsStream(url);

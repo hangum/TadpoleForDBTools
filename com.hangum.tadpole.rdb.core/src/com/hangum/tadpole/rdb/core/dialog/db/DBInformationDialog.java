@@ -105,9 +105,9 @@ public class DBInformationDialog extends Dialog {
 		grpOtherInformation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		grpOtherInformation.setText(Messages.DBInformationDialog_1);
 		
-		Label lblGroupName = new Label(grpOtherInformation, SWT.NONE);
-		lblGroupName.setText(Messages.DBInformationDialog_2);
-		
+//		Label lblGroupName = new Label(grpOtherInformation, SWT.NONE);
+//		lblGroupName.setText(Messages.DBInformationDialog_2);
+//		
 //		Label lblGroupValue = new Label(grpOtherInformation, SWT.NONE);
 //		lblGroupValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 //		lblGroupValue.setText(SessionManager.getGroupName());
