@@ -39,6 +39,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -119,12 +120,13 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
 				if(!iss.isEmpty()) {
 					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)iss.getFirstElement();
-
-					if(procedureDAO.isValid()) {
+					
+					ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
+					if(pm.isExecuted(procedureDAO, getUserDB())) {
 						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
 						epd.open();
 					}
-				}
+				}	// end iss.isempty
 			}
 		});
 

@@ -70,10 +70,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	private Label[] labelType;
 	
 	private Group grpTables;
-	
 	private Button btnExecute;
-	private Table table_1;
-	private Table table_2;
 
 	/**
 	 * Create the dialog.
@@ -193,7 +190,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 * @throws Exception
 	 */
 	private void initProcedureExecuter() throws Exception {
-		ProcedureExecuterManager executorManager = new ProcedureExecuterManager(procedureDAO, userDB);
+		ProcedureExecuterManager executorManager = new ProcedureExecuterManager(userDB, procedureDAO);
 		procedureExecutor = executorManager.getExecuter();
 	}
 	
@@ -227,7 +224,7 @@ public class ExecuteProcedureDialog extends Dialog {
 					Table table = sqlResultTableViewer[i].getTable();
 					table.setHeaderVisible(true);
 					table.setLinesVisible(true);
-					table.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
+					table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 					
 					sqlSorter = new SQLResultSorter(-999);
 					

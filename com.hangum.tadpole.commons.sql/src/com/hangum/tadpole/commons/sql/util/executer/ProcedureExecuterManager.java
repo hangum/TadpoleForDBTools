@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util.executer;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.MSSQLProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.MySqlProcedureExecuter;
@@ -28,7 +30,7 @@ public class ProcedureExecuterManager {
 	protected UserDBDAO userDB;
 	protected ProcedureFunctionDAO procedureDAO;
 	
-	public ProcedureExecuterManager(ProcedureFunctionDAO procedureDAO, UserDBDAO userDB) {
+	public ProcedureExecuterManager(UserDBDAO userDB, ProcedureFunctionDAO procedureDAO) {
 		this.userDB = userDB;
 		this.procedureDAO = procedureDAO;
 	}
@@ -68,5 +70,32 @@ public class ProcedureExecuterManager {
 		}
 	}
 	
+	/**
+	 * Is executed procedure?
+	 * 
+	 * @param procedureDAO
+	 * @param useDB
+	 * @return
+	 */
+	public boolean isExecuted(ProcedureFunctionDAO procedureDAO, UserDBDAO selectUseDB) {
+		if(!isSupport()) {
+			MessageDialog.openError(null, "Error", "Not Support database");
+			return false;
+		}
+		if(!procedureDAO.isValid()) {
+			MessageDialog.openError(null, "Error", "Not valid this procedure.");
+			return false;
+		}
+		
+		try {
+			ProcedureExecutor procedureExecutor = getExecuter();
+			procedureExecutor.getInParameters();
+		} catch(Exception e) {
+			MessageDialog.openError(null, "Error", e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
 	
 }

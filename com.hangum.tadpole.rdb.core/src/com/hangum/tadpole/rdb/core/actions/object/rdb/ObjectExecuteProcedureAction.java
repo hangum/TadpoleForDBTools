@@ -16,7 +16,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecuterManager;
+import com.hangum.tadpole.commons.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 
@@ -46,13 +48,11 @@ public class ObjectExecuteProcedureAction extends AbstractObjectAction {
 	public void run() {
 		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
 		
-		ProcedureExecuterManager executorManager = new ProcedureExecuterManager(procedureDAO, userDB);
-		if(executorManager.isSupport()) {
+		ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
+		if(pm.isExecuted(procedureDAO, getUserDB())) {
 			ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
 			epd.open();
-		} else {
-			MessageDialog.openError(null, "Error", "Not Support database");
 		}
 	}// end method
-
+	
 }
