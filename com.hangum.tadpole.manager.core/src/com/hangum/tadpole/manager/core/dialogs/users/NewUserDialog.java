@@ -44,7 +44,7 @@ import com.hangum.tadpole.system.TadpoleSystem_UserRole;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 
 /**
- * 신규 유저 등록
+ * Add new user Dialog
  *  
  * @author hangum
  *

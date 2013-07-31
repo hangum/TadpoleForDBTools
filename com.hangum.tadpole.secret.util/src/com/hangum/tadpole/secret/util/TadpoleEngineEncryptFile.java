@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 
 /**
  * 올챙이 엔진디비의 암호화 파일 
@@ -45,8 +45,6 @@ public class TadpoleEngineEncryptFile implements IApplication {
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/**
@@ -137,7 +135,7 @@ public class TadpoleEngineEncryptFile implements IApplication {
 	 */
 	private void encrypt() {
 		try {
-			String strEncrypt = EncryptiDecryptUtil.encryption(defaultContent);
+			String strEncrypt = CipherManager.getInstance().encryption(defaultContent);
 			textEncrypt.setText(strEncrypt);
 			
 //			System.out.println(strEncrypt);			

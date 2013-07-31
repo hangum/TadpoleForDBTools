@@ -16,9 +16,9 @@ import java.io.StringReader;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
@@ -61,7 +61,7 @@ public class SQLMap {
 		// pass change
 		String passwdDecrypt = "";
 		try {
-			passwdDecrypt = EncryptiDecryptUtil.decryption(dbInfo.getPasswd());
+			passwdDecrypt = CipherManager.getInstance().decryption(dbInfo.getPasswd());
 		} catch(Exception e) {
 			passwdDecrypt = dbInfo.getPasswd();
 		}

@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  com.hangum.tadpole.commons;bundle-version="1.0.0",
  org.eclipse.rap.draw2d;bundle-version="1.5.0",
  org.eclipse.rap.draw2d.compatibility;bundle-version="1.5.0",
- org.eclipse.equinox.http.registry;bundle-version="1.1.200"
+ org.eclipse.equinox.http.registry;bundle-version="1.1.200",
+ com.hangum.tadpole.cipher.core;bundle-version="1.0.0"
 Bundle-ClassPath: libs/ibatis-2.3.4.726.jar,
  .
 Export-Package: com.hangum.tadpole.commons.sql,

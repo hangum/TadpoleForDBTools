@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.Messages;
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.TadpoleSystemDAO;
@@ -32,7 +33,6 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
 import com.hangum.tadpole.system.internal.migration.SystemMigrationSR9TOSR10;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
-import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -355,7 +355,7 @@ public class TadpoleSystemInitializer {
 				fis.read(readData, 0, available);
 				
 				// decrypt
-				String propData= EncryptiDecryptUtil.decryption(new String(readData));				
+				String propData= CipherManager.getInstance().decryption(new String(readData));				
 				InputStream is = new ByteArrayInputStream(propData.getBytes());
 				
 				// properties

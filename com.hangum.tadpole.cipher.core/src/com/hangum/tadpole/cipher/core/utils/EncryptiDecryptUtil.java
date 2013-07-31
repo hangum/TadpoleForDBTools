@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.util.secret;
+package com.hangum.tadpole.cipher.core.utils;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
@@ -21,8 +21,9 @@ import org.jasypt.util.text.BasicTextEncryptor;
  * @author hangum
  *
  */
-public class EncryptiDecryptUtil {
-	final static String ENCRYPT_PASSWORD = "heechan.tadpole.owner.son";
+public class EncryptiDecryptUtil implements DefaultEncryptDecrypt {
+	/** default encrypt password */
+	final static String DEFAULT_ENCRYPT_PASSWORD = "heechan.tadpole.owner.son";
 	
 	/**
 	 * 텍스트를 암호화 합니다.
@@ -30,11 +31,12 @@ public class EncryptiDecryptUtil {
 	 * @param text 암호화된 값 
 	 * @return
 	 */
-	public static String encryption(String text) {
+	@Override
+	public String encryption(String text) {
 		if("".equals(text) || null == text) return "";
 		
 		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-		textEncryptor.setPassword(ENCRYPT_PASSWORD);
+		textEncryptor.setPassword(DEFAULT_ENCRYPT_PASSWORD);
 		
 		return textEncryptor.encrypt(text);
 	}
@@ -45,11 +47,12 @@ public class EncryptiDecryptUtil {
 	 * @param text 복호화 된 text
 	 * @return
 	 */
-	public static String decryption(String text) {
+	@Override
+	public String decryption(String text) {
 		if("".equals(text) || null == text) return "";
 		
 		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-		textEncryptor.setPassword(ENCRYPT_PASSWORD);
+		textEncryptor.setPassword(DEFAULT_ENCRYPT_PASSWORD);
 		
 		return textEncryptor.decrypt(text);
 	}

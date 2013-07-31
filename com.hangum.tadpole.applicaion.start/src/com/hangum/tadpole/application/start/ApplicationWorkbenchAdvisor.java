@@ -18,6 +18,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditor;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditorInput;
@@ -40,8 +41,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public void postStartup() {
-		
-		if("true".equals(GetPreferenceGeneral.getDefaultHomePageUse())) {			
+//		open source is alwary view.
+//		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(GetPreferenceGeneral.getDefaultHomePageUse())) {			
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {
 				IntroEditorInput mei = new IntroEditorInput();
@@ -49,8 +50,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 			} catch (PartInitException e) {
 				logger.error("Default home page", e);
 			};
-		}
-		
+//		}
+//		
 	}
 	
 //	@Override

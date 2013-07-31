@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.Messages;
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
@@ -33,18 +34,6 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class TadpoleSystem_UserQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserQuery.class);
 	
-//	/**
-//	 * 신규 user를 추가합니다.
-//	 * 
-//	 * @param email
-//	 * @param passwd
-//	 * @param name
-//	 * @throws Exception
-//	 */
-//	public static UserDAO newUser(int groupSeq, String email, String passwd, String name, String language) throws Exception {
-//		return newUser(groupSeq, email, passwd, name, language, PublicTadpoleDefine.YES_NO.NO.toString());
-//	}
-	
 	/**
 	 * 신규 유저를 등록합니다.
 	 * @param email
@@ -55,7 +44,8 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static UserDAO newUser(String email, String passwd, String name, String language, String approvalYn) throws Exception {
-		UserDAO loginDAO = new UserDAO(email, passwd, name, language, approvalYn);
+		UserDAO loginDAO = new UserDAO(email, name, language, approvalYn);
+		loginDAO.setPasswd(CipherManager.getInstance().encryption(passwd));
 		
 		// Is test mode?
 		if(ApplicationArgumentUtils.isTestMode()) {
@@ -103,7 +93,9 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static UserDAO login(String email, String passwd) throws Exception {
-		UserDAO login = new UserDAO(email, passwd);
+		UserDAO login = new UserDAO();
+		login.setEmail(email);
+		login.setPasswd(CipherManager.getInstance().encryption(passwd));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$
@@ -112,6 +104,10 @@ public class TadpoleSystem_UserQuery {
 			throw new Exception(Messages.TadpoleSystem_UserQuery_9);
 		} else if("NO".equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
 			throw new Exception(Messages.TadpoleSystem_UserQuery_1);
+		} else {
+			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+				throw new Exception(Messages.TadpoleSystem_UserQuery_9);
+			}
 		}
 	
 		return userInfo;
@@ -184,6 +180,8 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static void updateUserPassword(UserDAO user) throws Exception {
+		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
 	}

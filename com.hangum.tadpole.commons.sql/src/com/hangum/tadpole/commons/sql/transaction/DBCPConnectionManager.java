@@ -21,8 +21,8 @@ import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 
 /**
  * DBCP connection manager
@@ -45,7 +45,7 @@ public class DBCPConnectionManager {
 		
 		String passwdDecrypt = "";
 		try {
-			passwdDecrypt = EncryptiDecryptUtil.decryption(userDB.getPasswd());
+			passwdDecrypt = CipherManager.getInstance().decryption(userDB.getPasswd());
 		} catch(Exception e) {
 			passwdDecrypt = userDB.getPasswd();
 		}

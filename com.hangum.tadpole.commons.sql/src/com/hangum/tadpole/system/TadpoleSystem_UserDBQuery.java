@@ -16,10 +16,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -94,7 +94,7 @@ public class TadpoleSystem_UserDBQuery {
 	 */
 	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
 		userDb.setUser_seq(userSeq);
-		userDb.setPasswd( EncryptiDecryptUtil.encryption(userDb.getPasswd()) );
+		userDb.setPasswd( CipherManager.getInstance().encryption(userDb.getPasswd()) );
 		
 //		// 기존에 등록 되어 있는지 검사한다
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -126,7 +126,7 @@ public class TadpoleSystem_UserDBQuery {
 		newUserDb.setUser_seq(userSeq);
 		newUserDb.setSeq(oldUserDb.getSeq());
 		
-		newUserDb.setPasswd( EncryptiDecryptUtil.encryption(newUserDb.getPasswd()) );
+		newUserDb.setPasswd( CipherManager.getInstance().encryption(newUserDb.getPasswd()) );
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBUpdate", newUserDb); //$NON-NLS-1$

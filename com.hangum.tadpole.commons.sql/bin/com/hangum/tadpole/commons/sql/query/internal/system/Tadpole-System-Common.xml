@@ -115,8 +115,7 @@
 	SELECT * 
 	FROM user 
 	WHERE 
-		email = #email# AND 
-		passwd = #passwd#
+		email = #email#
 </select>
 
 <!-- userDB의 manager 권한 리스트 -->

@@ -6,6 +6,7 @@
       <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.aws.rds.commons.core"/>
+      <plugin id="com.hangum.tadpole.cipher.core"/>
       <plugin id="com.hangum.tadpole.commons"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.sql"/>
@@ -67,6 +68,7 @@
       <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.aws.rds.commons.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.cipher.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />

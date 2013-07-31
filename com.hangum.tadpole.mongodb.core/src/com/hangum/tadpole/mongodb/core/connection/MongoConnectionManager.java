@@ -18,12 +18,11 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
-import com.hangum.tadpole.util.secret.EncryptiDecryptUtil;
 import com.mongodb.DB;
 import com.mongodb.DBAddress;
-import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 import com.mongodb.MongoOptions;
 import com.mongodb.ServerAddress;
@@ -97,7 +96,7 @@ public class MongoConnectionManager {
 						// pass change
 						String passwdDecrypt = "";
 						try {
-							passwdDecrypt = EncryptiDecryptUtil.decryption(userDB.getPasswd());
+							passwdDecrypt = CipherManager.getInstance().decryption(userDB.getPasswd());
 						} catch(Exception e) {
 							passwdDecrypt = userDB.getPasswd();
 						}
