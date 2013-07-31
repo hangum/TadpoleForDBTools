@@ -72,6 +72,8 @@ public class ExecuteProcedureDialog extends Dialog {
 	private Group grpTables;
 	
 	private Button btnExecute;
+	private Table table_1;
+	private Table table_2;
 
 	/**
 	 * Create the dialog.
@@ -170,8 +172,6 @@ public class ExecuteProcedureDialog extends Dialog {
 		});
 		btnExecute.setText("Execute");
 		
-		//////[ input values ]////////////////////////////////////////////////////////////////////////
-		
 		grpTables = new Group(container, SWT.NONE);
 		GridLayout gl_grpTables = new GridLayout(1, false);
 		gl_grpTables.horizontalSpacing = 2;
@@ -204,8 +204,8 @@ public class ExecuteProcedureDialog extends Dialog {
 	private void executeProcedure() {
 		if(sqlResultTableViewer != null) {
 			for(int i=0; i<sqlResultTableViewer.length; i++) {
-				TableViewer tv = sqlResultTableViewer[0];
-				tv.getControl().dispose();
+				TableViewer tv = sqlResultTableViewer[i];
+				tv.getTable().dispose();
 			}
 		}
 		
@@ -227,7 +227,7 @@ public class ExecuteProcedureDialog extends Dialog {
 					Table table = sqlResultTableViewer[i].getTable();
 					table.setHeaderVisible(true);
 					table.setLinesVisible(true);
-					table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+					table.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
 					
 					sqlSorter = new SQLResultSorter(-999);
 					
@@ -244,7 +244,8 @@ public class ExecuteProcedureDialog extends Dialog {
 			
 			grpTables.layout();
 		} catch(Exception e) {
-			logger.error("Result view", e);
+			logger.error("Procedure execute Result view", e);
+			MessageDialog.openError(null, "Error", e.getMessage());
 		}
 	}
 	
