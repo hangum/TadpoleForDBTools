@@ -26,7 +26,6 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilter
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.SSHTunnelingDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * Others connection info

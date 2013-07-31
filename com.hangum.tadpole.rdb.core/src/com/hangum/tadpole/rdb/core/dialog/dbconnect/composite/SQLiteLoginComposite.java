@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -116,7 +117,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
 			// os타입별 기본 디렉토리를서정합니다.
-			String defaultDir = System.getProperty("user.home") + "/tadpole-test.db";
+			String defaultDir = System.getProperty("user.home") + File.separator + "tadpole-test.db";
 			textFile.setText(defaultDir);
 		}
 		

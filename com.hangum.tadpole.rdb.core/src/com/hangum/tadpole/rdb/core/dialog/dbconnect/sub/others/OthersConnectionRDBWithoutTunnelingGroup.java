@@ -25,7 +25,6 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilterDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * Others connection info
@@ -70,7 +69,6 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 		btnAutoCommit.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_2);
 		
 		Button btnTableFilters = new Button(this, SWT.NONE);
-		btnTableFilters.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnTableFilters.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
