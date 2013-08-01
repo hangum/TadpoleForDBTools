@@ -69,6 +69,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		try {			
 			for(int i=0; i<mapColumns.size(); i++) {
 				final int index = i;
+//				Table column align bug.
 //				final int columnAlign =  RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))?SWT.RIGHT:SWT.LEFT;
 				
 				final TableViewerColumn tv = new TableViewerColumn(tableViewer, SWT.NONE);
