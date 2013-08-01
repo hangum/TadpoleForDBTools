@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -110,7 +111,8 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmRefresh.setText("Refresh");
-		
+
+		// access control
 		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())) {
 			final ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 			tltmAdd.addSelectionListener(new SelectionAdapter() {
@@ -125,6 +127,26 @@ public class DBListComposite extends Composite {
 				}
 			});
 			tltmAdd.setText("Add");
+			
+			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
+			tltmDbExport.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(MessageDialog.openConfirm(null, "Confirm", "사용자 디비를 export하시겠습니까?")) {
+					
+					}
+				}
+			});
+			tltmDbExport.setText("DB Info Export");
+			
+			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
+			tltmDbImport.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					
+				}
+			});
+			tltmDbImport.setText("DB Info Import");
 		}
 		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
