@@ -41,6 +41,7 @@ public class SystemDBDataManager {
 	 */
 	public String exportUserDB(List<UserDBDAO> listUserDB) {
 		String retStr = SystemDefine.MAJOR_VERSION + SystemDefine.SUB_VERSION + "." + EXPORT_VER + PublicTadpoleDefine.LINE_SEPARATOR;
+		retStr += "OPERATION_TYPE, DBMS_TYPES, URL, DB, GROUP_NAME, DISPLAY_NAME, HOST, PORT, LOCALE, PASSWD, USERS, IS_PROFILE, PROFILE_SELECT_MILL, QUESTION_DML,IS_READONLYCONNECT, IS_AUTOCOMMIT, IS_SHOWTABLES, DELYN ";
 		
 		for (UserDBDAO userDBDAO : listUserDB) {
 			retStr  += userDBDAO.getOperation_type() 	+ PublicTadpoleDefine.DELIMITER;
