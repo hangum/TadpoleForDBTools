@@ -77,7 +77,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			textHost.setText("cloud.cubrid.org");
 			textUser.setText("dba");
 			textPassword.setText("");
-			textDatabase.setText("db_aditadpole");
+			textDatabase.setText("db_hangum");
 			textPort.setText("33001");
 		} else {
 			textPort.setText("33000");

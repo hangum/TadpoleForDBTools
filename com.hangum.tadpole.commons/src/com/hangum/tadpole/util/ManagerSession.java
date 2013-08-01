@@ -31,11 +31,11 @@ public class ManagerSession {
 	 */
 	private static final Logger logger = Logger.getLogger(ManagerSession.class);
 
-	/**
-	 * session관리
-	 */
-	public static void sessionManager() {
-		
+//	/**
+//	 * session관리
+//	 */
+//	public static void sessionManager() {
+//		
 //		HttpSession rootSession = RWT.getRequest().getSession(true);				
 ////		String id 				= session.getId();
 ////		long createTime 		= session.getCreationTime();
@@ -58,9 +58,9 @@ public class ManagerSession {
 //		}
 //		
 //		logger.debug("total connect user is " + i);
-		
-		ServletContext sc = RWT.getRequest().getServletContext();
-	}
+//		
+//		ServletContext sc = RWT.getRequest().getServletContext();
+//	}
 	
 	/**
 	 * logout 처리를 합니다.

@@ -55,7 +55,6 @@ import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 DB List composite

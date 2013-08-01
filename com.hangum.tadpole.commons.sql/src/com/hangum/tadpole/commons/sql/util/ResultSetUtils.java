@@ -86,7 +86,8 @@ public class ResultSetUtils {
 				
 				return val;
 			} catch(Exception e){
-				logger.error("pretty data", e); //$NON-NLS-1$
+//				logger.error("pretty data", e); //$NON-NLS-1$
+//				igonr exception
 			}			
 		} 
 

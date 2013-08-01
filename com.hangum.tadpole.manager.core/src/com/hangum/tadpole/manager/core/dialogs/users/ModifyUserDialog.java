@@ -150,7 +150,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		initData();
 		
-		ManagerSession.sessionManager();
+//		ManagerSession.sessionManager();
 
 		return container;
 	}
