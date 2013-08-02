@@ -41,6 +41,34 @@ public class FindEditorAndWriteQueryUtil {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(FindEditorAndWriteQueryUtil.class);
+	
+	/**
+	 * 쿼리 스트링을 에디터로 엽니다.
+	 * 
+	 * @param userDB
+	 * @param lowSQL
+	 * @param isNewEditor 항상 새로운 창으로 엽니다.
+	 */
+	public static void run(UserDBDAO userDB, String lowSQL, boolean isNewEditor) {
+		
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+			newMongoDBEditorOpen(userDB, lowSQL);
+		} else {
+			// 포멧팅 한것이 잘 보이지 않아서 우선 블럭 해 놓습니다.
+			try {
+				lowSQL = SQLFormater.format(lowSQL);
+			} catch(Exception e) {
+				// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
+			}
+						
+			IEditorReference reference = EditorUtils.findSQLEditor(userDB);
+			if(reference == null || isNewEditor) {				
+				newSQLEditorOpen(userDB, lowSQL);		
+			} else {
+				appendSQLEditorOpen(reference, userDB, lowSQL);				
+			}	// end reference
+		}	// end db
+	}
 
 	/**
 	 * 쿼리 스트링으로 엽니다.
@@ -49,54 +77,68 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param lowSQL
 	 */
 	public static void run(UserDBDAO userDB, String lowSQL) {
-		
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
-			try {
-				ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB);
-				page.openEditor(input, ServerSideJavaScriptEditor.ID, false);
-				
-			} catch (PartInitException e) {
-				logger.error("Mongodb javascirpt", e);
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "GridFS Open Exception", errStatus); //$NON-NLS-1$
-			}
-		} else {
-			IEditorReference reference = EditorUtils.findSQLEditor(userDB);
+		run(userDB, lowSQL, false);
+	}
+	
+	/**
+	 * Open mongodB editor
+	 * 
+	 * @param userDB
+	 * @param lowSQL
+	 */
+	private static void newMongoDBEditorOpen(UserDBDAO userDB, String lowSQL) { 
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
+		try {
+			ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB);
+			page.openEditor(input, ServerSideJavaScriptEditor.ID, false);
 			
-//			포멧팅 한것이 잘 보이지 않아서 우선 블럭 해 놓습니다.
-			try {
-				lowSQL = SQLFormater.format(lowSQL);
-			} catch(Exception e) {}
+		} catch (PartInitException e) {
+			logger.error("Mongodb javascirpt", e);
 			
-			if(reference == null) {				
-				try {
-					MainEditorInput mei = new MainEditorInput(userDB, lowSQL);
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);
-				} catch (PartInitException e) {
-					logger.error("new editor open", e); //$NON-NLS-1$
-					
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
-				}				
-			} else {
-				try {
-					MainEditor editor = (MainEditor)reference.getEditor(false);
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
-					
-					editor.setAppendQueryText(lowSQL); //$NON-NLS-1$
-					editor.browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
-					
-				} catch (Exception e) {
-					logger.error("find editor open", e); //$NON-NLS-1$
-					
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
-				}
-				
-			}	// end reference
-		}	// end db
-	}	// end method
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "GridFS Open Exception", errStatus); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * new window open
+	 * 
+	 * @param userDB
+	 * @param lowSQL
+	 */
+	private static void newSQLEditorOpen(UserDBDAO userDB, String lowSQL) {
+		try {
+			MainEditorInput mei = new MainEditorInput(userDB, lowSQL);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);
+		} catch (PartInitException e) {
+			logger.error("new editor open", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+		}	
+	}
+	
+	/**
+	 * 같은 디비의 에디터가 열려 있을 경우, 기존 에디터에 더한다.
+	 * 
+	 * @param reference
+	 * @param userDB
+	 * @param lowSQL
+	 */
+	private static void appendSQLEditorOpen(IEditorReference reference, UserDBDAO userDB, String lowSQL) {
+		try {
+			MainEditor editor = (MainEditor)reference.getEditor(false);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
+			
+			editor.setAppendQueryText(lowSQL); //$NON-NLS-1$
+			editor.browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+			
+		} catch (Exception e) {
+			logger.error("find editor open", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+		}
+	}
 	
 }

@@ -55,7 +55,7 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 	public void run() {
 		try {
 			DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
-			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(sel.getFirstElement()));		
+			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(sel.getFirstElement()), true);		
 		} catch(Exception e) {
 			logger.error("view ddl", e);
 			MessageDialog.openError(null, "Confirm", "Not support this function.");
