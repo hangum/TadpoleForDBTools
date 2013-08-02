@@ -28,6 +28,10 @@
 SELECT TABLE_NAME name	FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0  
 </select>
 
+<select id="findDBInfo" resultClass="com.hangum.tadpole.dao.DBInfoDAO">
+	SELECT version() as productversion, version() as productlevel, version() as edition;
+</select>
+
 <!-- 
 	table 이름
  -->

@@ -16,14 +16,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
+import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
+import com.hangum.tadpole.dao.DBInfoDAO;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * rdb procedure executer.
@@ -67,6 +72,22 @@ public abstract class ProcedureExecutor {
 	 * @return
 	 */
 	public List<InOutParameterDAO> getInParameters() throws Exception {
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT) {
+			double dbVersion = 0.0;
+			try {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
+				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
+				dbVersion = Double.parseDouble( StringUtils.substring(dbInfo.getProductversion(), 0, 3) );
+				
+			} catch (Exception e) {
+
+			}
+			
+			if (dbVersion < 5.5){
+				throw new Exception("The current version does not support.\n\n5.5 or later is supported.");
+			}
+		}
+
 		DDLScriptManager ddlScriptManager = new DDLScriptManager(userDB);
 		listInParamValues = ddlScriptManager.getProcedureInParamter(procedureDAO);
 		if(listInParamValues == null) listInParamValues = new ArrayList<InOutParameterDAO>();
