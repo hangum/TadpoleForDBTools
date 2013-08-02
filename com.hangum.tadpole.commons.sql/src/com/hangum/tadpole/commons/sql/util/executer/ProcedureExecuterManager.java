@@ -10,15 +10,19 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util.executer;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.MSSQLProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.MySqlProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.OracleProcedureExecuter;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.ProcedureExecutor;
+import com.hangum.tadpole.dao.DBInfoDAO;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * RDB procedure executer manager
@@ -85,6 +89,22 @@ public class ProcedureExecuterManager {
 		if(!procedureDAO.isValid()) {
 			MessageDialog.openError(null, "Error", "Not valid this procedure.");
 			return false;
+		}
+		
+		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT) {
+			double dbVersion = 0.0;
+			try {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
+				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
+				dbVersion = Double.parseDouble( StringUtils.substring(dbInfo.getProductversion(), 0, 3) );
+				
+			} catch (Exception e) {
+
+			}
+			
+			if (dbVersion < 5.5){
+				MessageDialog.openError(null, "Error", "The current version does not support.\n\n5.5 or later is supported.");
+			}
 		}
 		
 		try {

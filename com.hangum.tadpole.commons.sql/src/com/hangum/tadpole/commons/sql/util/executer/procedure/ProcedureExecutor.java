@@ -72,22 +72,6 @@ public abstract class ProcedureExecutor {
 	 * @return
 	 */
 	public List<InOutParameterDAO> getInParameters() throws Exception {
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT) {
-			double dbVersion = 0.0;
-			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
-				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
-				dbVersion = Double.parseDouble( StringUtils.substring(dbInfo.getProductversion(), 0, 3) );
-				
-			} catch (Exception e) {
-
-			}
-			
-			if (dbVersion < 5.5){
-				throw new Exception("The current version does not support.\n\n5.5 or later is supported.");
-			}
-		}
-
 		DDLScriptManager ddlScriptManager = new DDLScriptManager(userDB);
 		listInParamValues = ddlScriptManager.getProcedureInParamter(procedureDAO);
 		if(listInParamValues == null) listInParamValues = new ArrayList<InOutParameterDAO>();
