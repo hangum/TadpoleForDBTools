@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/driver/mariadb/mariadb-java-client-1.1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/log4j/org.apache.log4j_1.2.13.v200806030600.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/httpcomponents-client-4.1.1/httpclient-4.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/httpcomponents-client-4.1.1/httpcore-4.1.jar"/>

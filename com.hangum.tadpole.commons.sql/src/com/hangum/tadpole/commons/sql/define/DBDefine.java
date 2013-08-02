@@ -131,7 +131,7 @@ public enum DBDefine {
 			case MSSQL_8_LE_DEFAULT: return "jdbc:jtds:sqlserver://%s:%s/%s";
 			
 			case MYSQL_DEFAULT:		return "jdbc:mysql://%s:%s/%s";
-			case MARIADB_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
+			case MARIADB_DEFAULT:	return "jdbc:mariadb://%s:%s/%s";
 			
 			case SQLite_DEFAULT:	return "jdbc:sqlite:/%s";
 			case CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";

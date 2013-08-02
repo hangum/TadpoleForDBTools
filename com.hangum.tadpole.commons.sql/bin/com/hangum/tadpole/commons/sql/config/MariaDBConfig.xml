@@ -17,7 +17,7 @@
 
 	<transactionManager type="JDBC">
 		<dataSource type="DBCP">
-			<property name="JDBC.Driver" 			value="com.mysql.jdbc.Driver" />
+			<property name="JDBC.Driver" 			value="org.mariadb.jdbc.Driver" />
 			<property name="JDBC.ConnectionURL" 	value="${JDBC.ConnectionURL}" />
 			<property name="JDBC.Username" 			value="${JDBC.Username}" />
 			<property name="JDBC.Password" 			value="${JDBC.Password}" />
