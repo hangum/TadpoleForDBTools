@@ -1243,7 +1243,7 @@ public class MainEditor extends EditorExtension {
 			mapColumns = ResultSetUtils.getColumnName(rs);
 			
 			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-			sourceDataList = ResultSetUtils.getResultToList(rs, queryResultCount, true);
+			sourceDataList = ResultSetUtils.getResultToList(rs, queryResultCount, false);
 			
 		} finally {
 			try { stmt.close(); } catch(Exception e) {}

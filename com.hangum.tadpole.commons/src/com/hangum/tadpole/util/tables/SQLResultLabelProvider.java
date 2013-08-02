@@ -25,8 +25,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.hangum.tadpold.commons.libs.core.sql.utils.RDBTypeToJavaTypeUtils;
-
 /**
  * SQLResult의 LabelProvider
  * 
@@ -96,7 +94,6 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				});
 				
 			}	// end for
-			
 			
 		} catch(Exception e) { 
 			logger.error("SQLResult TableViewer", e);
