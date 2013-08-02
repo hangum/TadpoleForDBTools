@@ -27,6 +27,12 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.swtdesigner.ResourceManager;
 
+/**
+ * About dialog
+ * 
+ * @author hangum
+ *
+ */
 public class AboutDialog extends Dialog {
 
 	/**
@@ -35,7 +41,6 @@ public class AboutDialog extends Dialog {
 	 */
 	public AboutDialog(Shell parentShell) {
 		super(parentShell);
-		// Tadpole for DB Tools - �룸떎由��섏삤湲��꾨줈�앺듃 (2012/04/01)
 	}
 	
 	
@@ -76,9 +81,7 @@ public class AboutDialog extends Dialog {
 		Composite composite_1 = new Composite(container, SWT.NONE);
 		composite_1.setLayout(new GridLayout(1, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-//		�덈뀞�섏꽭�� �ъ슜��二쇱뀛��媛먯궗�⑸땲��
-//		  踰꾧렇��吏덈Ц��硫붿씪(<a href=\"mailto:adi.tadpole@gmail.com\">tadpole</a>), 
+
 		Label lblNewLabel = new Label(composite_1, SWT.NONE);
 		lblNewLabel.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION);
 		
@@ -87,18 +90,17 @@ public class AboutDialog extends Dialog {
 		
 		Label label = new Label(composite_1, SWT.NONE);
 		
-		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
 		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel0.setText("MAIL : <a href=\"mailto:adi.tadpole@gmail.com\" target=\"_blank\">adi.tadpole@gmail.com</a>");//Messages.AboutAction_4);
+		lblNewLabel0.setText("Mail : <a href=\"mailto:adi.tadpole@gmail.com\" target=\"_blank\">adi.tadpole@gmail.com</a>");//Messages.AboutAction_4);
 
 		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
 		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel2.setText("HOME : <a href=\"https://github.com/hangum/TadpoleForDBTools\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools</a>");//Messages.AboutAction_4);
+		lblNewLabel2.setText("Home : <a href=\"https://github.com/hangum/TadpoleForDBTools\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools</a>");//Messages.AboutAction_4);
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel3.setText("ISSUES : <a href=\"https://github.com/hangum/TadpoleForDBTools/issues?state=open\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools/issues?state=open</a>");//Messages.AboutAction_4);
+		lblNewLabel3.setText("Issue : <a href=\"https://github.com/hangum/TadpoleForDBTools/issues?state=open\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools/issues?state=open</a>");//Messages.AboutAction_4);
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
