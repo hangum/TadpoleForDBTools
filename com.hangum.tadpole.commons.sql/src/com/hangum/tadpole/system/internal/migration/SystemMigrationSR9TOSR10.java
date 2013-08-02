@@ -35,10 +35,16 @@ public class SystemMigrationSR9TOSR10 {
 	 */
 	public static void migration(String major_version, String sub_version) throws Exception {
 		try {
-			SystemMigration.runSQLExecuteBatch("ALTER TABLE user_db ADD COLUMN ext1 VARCHAR(2000)");
-			SystemMigration.runSQLExecuteBatch("ALTER TABLE user_db ADD COLUMN ext2 VARCHAR(2000)");
-			SystemMigration.runSQLExecuteBatch("ALTER TABLE user_db ADD COLUMN ext3 VARCHAR(2000)");
-		
+			String targetTable = "user_db";
+			String newColumns[] = new String[] {"ext1", "ext2", "ext3"};
+			String columnDefine[] = new String[] {"VARCHAR(2000)", "VARCHAR(2000)", "VARCHAR(2000)"};
+			
+			for (int i=0; i < newColumns.length; i++){
+				if (!SystemMigration.isExistsColumn(targetTable, newColumns[i])) {
+					SystemMigration.runSQLExecuteBatch("ALTER TABLE "+targetTable+" ADD COLUMN "+newColumns[i]+" " +columnDefine[i]+ " ");
+				}
+			}
+			
 			// 시스템 버전 정보를 수정해 줍니다.
 			TadpoleSystemQuery.updateSystemVersion(major_version, sub_version);
 			
