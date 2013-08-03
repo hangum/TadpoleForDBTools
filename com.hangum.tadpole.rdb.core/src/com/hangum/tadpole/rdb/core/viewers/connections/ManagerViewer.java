@@ -81,9 +81,14 @@ public class ManagerViewer extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
+		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.verticalSpacing = 0;
+		gl_composite.horizontalSpacing = 0;
+		gl_composite.marginHeight = 0;
+		gl_composite.marginWidth = 0;
+		composite.setLayout(gl_composite);
 		
-		treeViewer = new TreeViewer(composite, SWT.VIRTUAL | SWT.BORDER);
+		treeViewer = new TreeViewer(composite, SWT.VIRTUAL | SWT.NONE);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			public void selectionChanged(SelectionChangedEvent event) {
