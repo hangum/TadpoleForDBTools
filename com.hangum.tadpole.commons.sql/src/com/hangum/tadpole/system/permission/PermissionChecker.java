@@ -79,6 +79,23 @@ public class PermissionChecker {
 		
 		return boolReturn;
 	}
+	
+	/**
+	 * Manager이상의 권한이 있는 사용자만 보여준다.
+	 * 
+	 * @param strUserType
+	 * @return
+	 */
+	public static boolean isDBAShow(String strUserType) {
+		boolean boolReturn = false;
+		
+		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
+				PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType)) {
+			boolReturn = true;
+		}
+		
+		return boolReturn;
+	}
 
 	/**
 	 * 로그인타입에 따른 보여주어도 되는지
@@ -91,7 +108,9 @@ public class PermissionChecker {
 		
 		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
 				PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType) ||
-				PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) boolReturn = true;
+				PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) {
+			boolReturn = true;
+		}
 		
 		return boolReturn;
 	}

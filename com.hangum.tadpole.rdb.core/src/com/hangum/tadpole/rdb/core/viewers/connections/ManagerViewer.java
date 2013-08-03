@@ -132,7 +132,7 @@ public class ManagerViewer extends ViewPart {
 				} else if (selElement instanceof ManagerListDTO) {
 					ManagerListDTO managerDto = (ManagerListDTO)selElement;
 					
-					if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+					if(PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
 						ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
 						cda.runConnectionDialog(is);
 					}
