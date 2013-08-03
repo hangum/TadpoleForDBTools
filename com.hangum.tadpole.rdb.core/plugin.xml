@@ -151,6 +151,7 @@
           <action
                 class="com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction"
                 enablesFor="1"
+                icon="resources/icons/sql-query.png"
                 id="com.hangum.tadpole.rdb.core.action.creatTrigger"
                 label="%action.label.4"
                 menubarPath="menu.create/dml">
@@ -163,6 +164,7 @@
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction"
                enablesFor="1"
+               icon="resources/icons/sql-query.png"
                id="com.hangum.tadpole.rdb.core.action.creatFunction"
                label="%action.label.5"
                menubarPath="menu.create/dml">
@@ -175,6 +177,7 @@
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction"
                enablesFor="1"
+               icon="resources/icons/sql-query.png"
                id="com.hangum.tadpole.rdb.core.action.creatProcedure"
                label="%action.label.6"
                menubarPath="menu.create/dml">
@@ -187,6 +190,7 @@
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction"
                enablesFor="1"
+               icon="resources/icons/sql-query.png"
                id="com.hangum.tadpole.rdb.core.action.createIndex"
                label="%action.label.7"
                menubarPath="menu.create/dml">
@@ -199,6 +203,7 @@
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction"
                enablesFor="1"
+               icon="resources/icons/sql-query.png"
                id="com.hangum.tadpole.rdb.core.action.createView"
                label="%action.label"
                menubarPath="menu.create/dml">
@@ -211,6 +216,7 @@
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction"
                enablesFor="1"
+               icon="resources/icons/sql-query.png"
                id="com.hangum.tadpole.rdb.core.action.createTable"
                label="%action.label.0"
                menubarPath="menu.create/dml">
