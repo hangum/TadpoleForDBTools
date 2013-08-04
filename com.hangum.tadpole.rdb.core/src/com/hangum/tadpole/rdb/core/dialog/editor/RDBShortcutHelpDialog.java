@@ -86,6 +86,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 	 */
 	public void createContents() {
 		shlEditorShortcutDialog = new Shell(getParent(), SWT.CLOSE | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		shlEditorShortcutDialog.setText("Shortcuts Dialog");
 		shlEditorShortcutDialog.setSize(280, 300);
 		shlEditorShortcutDialog.setLayout(new GridLayout(1, false));
 

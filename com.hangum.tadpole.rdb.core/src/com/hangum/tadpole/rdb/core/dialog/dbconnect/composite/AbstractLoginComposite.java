@@ -61,7 +61,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	// start table filters define
 	protected boolean isTableFilter = false;
 	protected String strTableFilterInclude = ""; //$NON-NLS-1$
-	protected String strTableFilterExclude = Messages.AbstractLoginComposite_0;
+	protected String strTableFilterExclude = ""; //$NON-NLS-1$
 	// end table filters define
 
 	/** 기존에 접속한 user db */

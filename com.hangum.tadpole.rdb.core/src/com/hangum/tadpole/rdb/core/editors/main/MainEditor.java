@@ -600,6 +600,8 @@ public class MainEditor extends EditorExtension {
 					} catch(Exception ee){
 						logger.error("history selection" , ee); //$NON-NLS-1$
 					}
+				} else {
+					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}
 			}
 		});
@@ -615,6 +617,8 @@ public class MainEditor extends EditorExtension {
 					SQLHistoryDAO tmd = (SQLHistoryDAO)selElement;
 					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getSite().getShell(), Messages.MainEditor_11, SQLHistoryLabelProvider.dateToStr(tmd.getStartDateExecute()), tmd.getStrSQLText() );
 					dlg.open();
+				} else {
+					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}
 			}
 		});
@@ -736,15 +740,15 @@ public class MainEditor extends EditorExtension {
 		Label labelMsgDumy = new Label(compositeMessageSub, SWT.NONE);
 		labelMsgDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Button btnClear = new Button(compositeMessageSub, SWT.NONE);
-		btnClear.addSelectionListener(new SelectionAdapter() {
+		Button btnMessageViewClear = new Button(compositeMessageSub, SWT.NONE);
+		btnMessageViewClear.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				listMessage.clear();
 				tableViewerMessage.refresh();
 			}
 		});
-		btnClear.setText(Messages.MainEditor_btnClear_text);
+		btnMessageViewClear.setText(Messages.MainEditor_btnClear_text);
 		/////////////////////// end tap item /////////////////////////////////////////////
 		
 		sashForm.setWeights(new int[] {65, 35});
@@ -1349,13 +1353,13 @@ public class MainEditor extends EditorExtension {
 			
 			// 오라클의 경우 procedure, function, package, trigger의 경우 마지막에 ; 가 있어야 정상 프로시저로 인정됩니다. 
 			//
-			} else if(StringUtils.startsWith(checkSQL, "CREATE OR") ||
-					StringUtils.startsWith(checkSQL, "CREATE PROCEDURE") ||
-					StringUtils.startsWith(checkSQL, "CREATE FUNCTION") ||
-					StringUtils.startsWith(checkSQL, "CREATE PACKAGE") ||
-					StringUtils.startsWith(checkSQL, "CREATE TRIGGER")
+			} else if(StringUtils.startsWith(checkSQL, "CREATE OR") || //$NON-NLS-1$
+					StringUtils.startsWith(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
+					StringUtils.startsWith(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
+					StringUtils.startsWith(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
+					StringUtils.startsWith(checkSQL, "CREATE TRIGGER") //$NON-NLS-1$
 			) { //$NON-NLS-1$
-				sqlQuery += ";";
+				sqlQuery += ";"; //$NON-NLS-1$
 			}
 			int boolResult = statement.executeUpdate( sqlQuery );
 			
