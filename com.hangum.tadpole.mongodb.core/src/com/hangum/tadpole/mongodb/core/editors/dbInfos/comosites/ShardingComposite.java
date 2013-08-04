@@ -71,7 +71,7 @@ public class ShardingComposite extends Composite {
 		gl_grpReplicaSet.marginHeight = 0;
 		gl_grpReplicaSet.marginWidth = 0;
 		grpReplicaSet.setLayout(gl_grpReplicaSet);
-		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpReplicaSet.setText(Messages.ShardingComposite_0);
 		
 		try {
@@ -83,7 +83,12 @@ public class ShardingComposite extends Composite {
 	    
 		Composite compositeLocalLocks = new FindOneDetailComposite(grpReplicaSet, Messages.ShardingComposite_4, shards, false);
 		compositeLocalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeLocalLocks.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeLocalLocks = new GridLayout(1, false);
+		gl_compositeLocalLocks.verticalSpacing = 2;
+		gl_compositeLocalLocks.horizontalSpacing = 2;
+		gl_compositeLocalLocks.marginHeight = 2;
+		gl_compositeLocalLocks.marginWidth = 2;
+		compositeLocalLocks.setLayout(gl_compositeLocalLocks);
 	}
 
 	@Override

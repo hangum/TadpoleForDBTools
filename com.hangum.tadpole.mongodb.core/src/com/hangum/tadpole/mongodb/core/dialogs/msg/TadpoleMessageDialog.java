@@ -75,7 +75,6 @@ public class TadpoleMessageDialog extends Dialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		lblDate = new Label(container, SWT.NONE);
-		lblDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDate.setText(Messages.TadpoleMessageDialog_1);
 		
 		text = new Text(container, SWT.BORDER);

@@ -17,4 +17,5 @@ Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.editor.core,
  com.hangum.tadpole.editor.core.rdb.texteditor,
  com.hangum.tadpole.editor.core.rdb.texteditor.function,
+ com.hangum.tadpole.editor.core.utils,
  com.hangum.tadpole.editor.core.widgets.editor

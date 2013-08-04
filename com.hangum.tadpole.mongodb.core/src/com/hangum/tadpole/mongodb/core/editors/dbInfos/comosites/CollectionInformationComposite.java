@@ -36,7 +36,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -105,7 +104,12 @@ public class CollectionInformationComposite extends Composite {
 		Composite compositeHead = new Composite(this, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeHead.setSize(590, 35);
-		compositeHead.setLayout(new GridLayout(3, false));
+		GridLayout gl_compositeHead = new GridLayout(2, false);
+		gl_compositeHead.verticalSpacing = 2;
+		gl_compositeHead.horizontalSpacing = 2;
+		gl_compositeHead.marginHeight = 2;
+		gl_compositeHead.marginWidth = 2;
+		compositeHead.setLayout(gl_compositeHead);
 		
 		Label lblName = new Label(compositeHead, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -120,19 +124,15 @@ public class CollectionInformationComposite extends Composite {
 			}
 		});
 		
-		Button btnRefresh = new Button(compositeHead, SWT.NONE);
-		btnRefresh.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				initData(userDB);
-			}
-		});
-		btnRefresh.setText(Messages.CollectionInformationComposite_1);
-		
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setSize(590, 199);
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 		
 		treeViewerCollections = new TreeViewer(compositeBody, SWT.BORDER | SWT.VIRTUAL | SWT.FULL_SELECTION);
 		treeViewerCollections.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -199,7 +199,12 @@ public class CollectionInformationComposite extends Composite {
 		grpSummary.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpSummary.setSize(590, 45);
 		grpSummary.setText(Messages.CollectionInformationComposite_2);
-		grpSummary.setLayout(new GridLayout(4, false));
+		GridLayout gl_grpSummary = new GridLayout(4, false);
+		gl_grpSummary.verticalSpacing = 2;
+		gl_grpSummary.horizontalSpacing = 2;
+		gl_grpSummary.marginHeight = 2;
+		gl_grpSummary.marginWidth = 2;
+		grpSummary.setLayout(gl_grpSummary);
 		
 		lblCollection = new Label(grpSummary, SWT.BORDER);
 		lblCollection.setText("Collection"); //$NON-NLS-1$

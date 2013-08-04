@@ -61,7 +61,12 @@ public class InstanceInformationComposite extends Composite {
 		compositeServerStatus.setLayout(gl_compositeServerStatus);
 		
 		Composite compositeInstance = new Composite(compositeServerStatus, SWT.NONE);
-		compositeInstance.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeInstance = new GridLayout(2, false);
+		gl_compositeInstance.verticalSpacing = 2;
+		gl_compositeInstance.horizontalSpacing = 2;
+		gl_compositeInstance.marginHeight = 2;
+		gl_compositeInstance.marginWidth = 2;
+		compositeInstance.setLayout(gl_compositeInstance);
 		compositeInstance.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		Label lblHost = new Label(compositeInstance, SWT.NONE);
@@ -79,7 +84,12 @@ public class InstanceInformationComposite extends Composite {
 		textVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Group grpMemory = new Group(compositeServerStatus, SWT.NONE);
-		grpMemory.setLayout(new GridLayout(2, false));
+		GridLayout gl_grpMemory = new GridLayout(2, false);
+		gl_grpMemory.verticalSpacing = 2;
+		gl_grpMemory.horizontalSpacing = 2;
+		gl_grpMemory.marginHeight = 2;
+		gl_grpMemory.marginWidth = 2;
+		grpMemory.setLayout(gl_grpMemory);
 		grpMemory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		grpMemory.setText("System Information");
 		
@@ -92,7 +102,12 @@ public class InstanceInformationComposite extends Composite {
 		compositeNetwork.setLayout(new GridLayout(1, false));
 		
 		Group grpConnections = new Group(compositeServerStatus, SWT.NONE);
-		grpConnections.setLayout(new GridLayout(2, false));
+		GridLayout gl_grpConnections = new GridLayout(2, false);
+		gl_grpConnections.verticalSpacing = 2;
+		gl_grpConnections.horizontalSpacing = 2;
+		gl_grpConnections.marginHeight = 2;
+		gl_grpConnections.marginWidth = 2;
+		grpConnections.setLayout(gl_grpConnections);
 		grpConnections.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		grpConnections.setText("Connections");
 		
@@ -105,7 +120,12 @@ public class InstanceInformationComposite extends Composite {
 		compositeCursor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpExtraInfo = new Group(compositeServerStatus, SWT.NONE);
-		grpExtraInfo.setLayout(new GridLayout(1, false));
+		GridLayout gl_grpExtraInfo = new GridLayout(1, false);
+		gl_grpExtraInfo.verticalSpacing = 2;
+		gl_grpExtraInfo.horizontalSpacing = 2;
+		gl_grpExtraInfo.marginHeight = 2;
+		gl_grpExtraInfo.marginWidth = 2;
+		grpExtraInfo.setLayout(gl_grpExtraInfo);
 		grpExtraInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpExtraInfo.setText("Extra Information");
 		

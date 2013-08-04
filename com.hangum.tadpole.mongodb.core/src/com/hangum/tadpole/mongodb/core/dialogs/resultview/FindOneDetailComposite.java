@@ -203,7 +203,10 @@ public class FindOneDetailComposite extends Composite {
 			int columnViewCnt = 2;
 			if(isTypeShowing) columnViewCnt = 3;
 			for(int i=0; i<columnViewCnt; i++) {
-				final TreeViewerColumn tableColumn = new TreeViewerColumn(treeViewerMongo, SWT.LEFT);
+				int columnAlign = SWT.LEFT;
+				if(i == 1) columnAlign = SWT.RIGHT;
+				
+				final TreeViewerColumn tableColumn = new TreeViewerColumn(treeViewerMongo, columnAlign);
 				tableColumn.getColumn().setText( columnName[i] );
 				tableColumn.getColumn().setWidth( columnSize[i] );
 				tableColumn.getColumn().setResizable(true);

@@ -61,16 +61,26 @@ public class LockComposite extends Composite {
 		gl_grpReplicaSet.marginHeight = 0;
 		gl_grpReplicaSet.marginWidth = 0;
 		grpReplicaSet.setLayout(gl_grpReplicaSet);
-		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpReplicaSet.setText("Locks Information");
 		
 		Composite compositeLocalLocks = new FindOneDetailComposite(grpReplicaSet, "Local Locks", (DBObject)commandResult.get("locks"), false);
 		compositeLocalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeLocalLocks.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeLocalLocks = new GridLayout(1, false);
+		gl_compositeLocalLocks.verticalSpacing = 2;
+		gl_compositeLocalLocks.horizontalSpacing = 2;
+		gl_compositeLocalLocks.marginHeight = 2;
+		gl_compositeLocalLocks.marginWidth = 2;
+		compositeLocalLocks.setLayout(gl_compositeLocalLocks);
 		
 		Composite compositeGlobalLocks = new FindOneDetailComposite(grpReplicaSet, "Global Locks", (DBObject)commandResult.get("globalLock"), false);
 		compositeGlobalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeGlobalLocks.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeGlobalLocks = new GridLayout(1, false);
+		gl_compositeGlobalLocks.verticalSpacing = 2;
+		gl_compositeGlobalLocks.horizontalSpacing = 2;
+		gl_compositeGlobalLocks.marginHeight = 2;
+		gl_compositeGlobalLocks.marginWidth = 2;
+		compositeGlobalLocks.setLayout(gl_compositeGlobalLocks);
 	}
 
 	@Override

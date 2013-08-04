@@ -61,7 +61,7 @@ public class ReplicaSetComposite extends Composite {
 		gl_grpReplicaSet.marginHeight = 0;
 		gl_grpReplicaSet.marginWidth = 0;
 		grpReplicaSet.setLayout(gl_grpReplicaSet);
-		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpReplicaSet.setText("Replica Set Information");
 		
 		Composite compositeReplicaSet = new FindOneDetailComposite(grpReplicaSet, "Replica Set", (DBObject)commandResult.get("repl"), false);

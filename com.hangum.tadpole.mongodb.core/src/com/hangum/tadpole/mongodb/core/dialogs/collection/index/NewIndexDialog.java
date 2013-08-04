@@ -145,6 +145,8 @@ public class NewIndexDialog extends Dialog {
 		btnUnique.setText("Unique");
 		
 		initUI();
+		
+		comboColName.setFocus();
 
 		return container;
 	}

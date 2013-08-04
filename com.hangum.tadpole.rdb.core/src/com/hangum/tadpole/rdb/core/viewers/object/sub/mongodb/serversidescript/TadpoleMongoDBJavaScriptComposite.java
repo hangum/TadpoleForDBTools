@@ -12,12 +12,15 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript;
 
 import java.util.List;
 
+import oracle.net.aso.s;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -33,6 +36,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
@@ -47,6 +51,7 @@ import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScri
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbSJavaScriptAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
@@ -75,6 +80,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatActionJS;
 	private ObjectDeleteAction deleteActionJS;
 	private ObjectRefreshAction refreshActionJS;
+	private ObjectMongodbSJavaScriptAction serverJavaScript;
 
 	/**
 	 * ServerSide JavaScirpt
@@ -179,6 +185,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
 		deleteActionJS = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
 		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
+		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Execute Java Script"); //$NON-NLS-1$)
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -189,6 +196,9 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 				manager.add(creatActionJS);
 				manager.add(deleteActionJS);
 				manager.add(refreshActionJS);
+				
+				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+				manager.add(serverJavaScript);
 			}
 		});
 
@@ -208,6 +218,8 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		creatActionJS.setUserDB(getUserDB());
 		deleteActionJS.setUserDB(getUserDB());
 		refreshActionJS.setUserDB(getUserDB());
+		
+		serverJavaScript.setUserDB(getUserDB());
 	}
 	
 	/**

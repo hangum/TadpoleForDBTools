@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.editor.core.widgets.editor;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -21,7 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
 
 /**
  * code editor
@@ -106,8 +105,7 @@ public class TadpoleOrionHubEditor extends Composite {
 					logger.error("javascript execute exception", e);
 				}
 				
-				String strInitContent = StringUtils.replace(initContent, PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
-				strInitContent = StringUtils.replace(strInitContent, "\"", "'");
+				String strInitContent = TadpoleEditorUtils.getGrantText(getInitContent());
 				
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
 				String callCommand = "setInitialContent(\"" + "test.json"+ "\", \"" + strInitContent + "\", \"" + initAssist + "\");";
