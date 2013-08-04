@@ -85,7 +85,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	public void createContents() {
-		shlEditorShortcutDialog = new Shell(getParent(), SWT.CLOSE | SWT.APPLICATION_MODAL);
+		shlEditorShortcutDialog = new Shell(getParent(), SWT.CLOSE | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		shlEditorShortcutDialog.setSize(280, 300);
 		shlEditorShortcutDialog.setLayout(new GridLayout(1, false));
 
@@ -119,7 +119,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnKey = tableViewerColumn_1.getColumn();
-		tblclmnKey.setWidth(120);
+		tblclmnKey.setWidth(220);
 		tblclmnKey.setText("Key");
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
