@@ -292,11 +292,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
 		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
 		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
+		
 		userDB.setHost(textHost.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
 		userDB.setPort(textPort.getText().trim());
-		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setUsers(textUser.getText().trim());
+		userDB.setPasswd(textPassword.getText().trim());
+		userDB.setLocale(comboLocale.getText().trim());
 		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();

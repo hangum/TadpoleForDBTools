@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -101,18 +102,33 @@ public class TadpoleSystem_UserDBQuery {
 		UserDBOriginalDAO userEncryptDao = new UserDBOriginalDAO();
 		userEncryptDao.setUser_seq(userDb.getUser_seq());
 		userEncryptDao.setDbms_types(userDb.getDbms_types());
+		userEncryptDao.setUrl(CipherManager.getInstance().encryption(userDb.getUrl()));
+		userEncryptDao.setDb(CipherManager.getInstance().encryption(userDb.getDb()));
+		
 		userEncryptDao.setGroup_seq(userDb.getGroup_seq());
 		userEncryptDao.setGroup_name(userDb.getGroup_name());
 		userEncryptDao.setDisplay_name(userDb.getDisplay_name());
 		userEncryptDao.setOperation_type(userDb.getOperation_type());
-		userEncryptDao.setLocale(userDb.getLocale());
 		
-		userEncryptDao.setUrl(CipherManager.getInstance().encryption(userDb.getUrl()));
-		userEncryptDao.setDb(CipherManager.getInstance().encryption(userDb.getDb()));
 		userEncryptDao.setHost(CipherManager.getInstance().encryption(userDb.getHost()));
 		userEncryptDao.setPort(CipherManager.getInstance().encryption(userDb.getPort()));
 		userEncryptDao.setUsers(CipherManager.getInstance().encryption(userDb.getUsers()));
 		userEncryptDao.setPasswd(CipherManager.getInstance().encryption(userDb.getPasswd()));
+
+		userEncryptDao.setLocale(userDb.getLocale());
+		
+		// ext information
+		userEncryptDao.setIs_readOnlyConnect(userDb.getIs_readOnlyConnect());
+		userEncryptDao.setIs_autocommit(userDb.getIs_autocommit());
+		userEncryptDao.setIs_showtables(userDb.getIs_showtables());
+		
+		userEncryptDao.setIs_table_filter(userDb.getIs_table_filter());
+		userEncryptDao.setTable_filter_include(userDb.getTable_filter_include());
+		userEncryptDao.setTable_filter_exclude(userDb.getTable_filter_exclude());
+		
+		userEncryptDao.setIs_profile(userDb.getIs_profile());
+		userEncryptDao.setQuestion_dml(userDb.getQuestion_dml());
+		//
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDBDAO insertedUserDB = (UserDBDAO)sqlClient.insert("userDBInsert", userEncryptDao); //$NON-NLS-1$

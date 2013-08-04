@@ -173,19 +173,21 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			preDBInfo.getComboOperationType().setText(DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName());
 			
 			textHost.setText(oldUserDB.getHost());
+			textPort.setText(oldUserDB.getPort());
+			textDatabase.setText(oldUserDB.getDb());
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
-			textDatabase.setText(oldUserDB.getDb());
-			textPort.setText(oldUserDB.getPort());
+			
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
 			textHost.setText("192.168.32.128");
+			textPort.setText(Messages.OracleLoginComposite_4);
+			textDatabase.setText(Messages.OracleLoginComposite_3);
 			textUser.setText(Messages.OracleLoginComposite_1);
 			textPassword.setText(Messages.OracleLoginComposite_2);
-			textDatabase.setText(Messages.OracleLoginComposite_3);
-			textPort.setText(Messages.OracleLoginComposite_4);
+			
 		} else {
 			textPort.setText(Messages.OracleLoginComposite_4);
 		}
@@ -295,10 +297,11 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
 		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
 		userDB.setHost(textHost.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
 		userDB.setPort(textPort.getText().trim());
-//		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setUsers(textUser.getText().trim());
+		userDB.setPasswd(textPassword.getText().trim());
+		
+//		userDB.setLocale(comboLocale.getText().trim());
 
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();

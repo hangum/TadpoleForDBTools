@@ -202,10 +202,10 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textHost.setText(oldUserDB.getHost());
+			textPort.setText(oldUserDB.getPort());
+			textDatabase.setText(oldUserDB.getDb());
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
-			textDatabase.setText(oldUserDB.getDb());
-			textPort.setText(oldUserDB.getPort());
 			
 			textReplicaSet.setText(oldUserDB.getExt1()==null?"":oldUserDB.getExt1());
 		} else if(ApplicationArgumentUtils.isTestMode()) {
@@ -213,10 +213,11 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
 			textHost.setText("127.0.0.1"); //$NON-NLS-1$
+			textPort.setText("27017");			 //$NON-NLS-1$
+			textDatabase.setText("test"); //$NON-NLS-1$
 			textUser.setText(""); //$NON-NLS-1$
 			textPassword.setText(""); //$NON-NLS-1$
-			textDatabase.setText("test"); //$NON-NLS-1$
-			textPort.setText("27017");			 //$NON-NLS-1$
+			
 		} else {
 			textPort.setText("27017");			 //$NON-NLS-1$
 		}
@@ -329,10 +330,10 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
 		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		userDB.setHost(textHost.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
 		userDB.setPort(textPort.getText().trim());
-		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setUsers(textUser.getText().trim());
+		userDB.setPasswd(textPassword.getText().trim());
+		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setExt1(textReplicaSet.getText().trim());
 		
 		// others connection 정보를 입력합니다.
