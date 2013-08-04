@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -355,7 +354,7 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 		case 2: return userDB.getDisplay_name();
 		case 3:
 			// sqlite
-			if(userDB.getHost() == null) return userDB.getUrl();
+			if("".equals(userDB.getHost())) return userDB.getUrl();
 			return userDB.getHost() + ":"  + userDB.getPort();
 		case 4: return userDB.getUsers();
 		case 5: return ""+userDB.getCreate_time();
