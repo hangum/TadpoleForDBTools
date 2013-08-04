@@ -56,9 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -81,8 +79,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.TableDataEditorAction;
-import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
-import com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
@@ -274,7 +270,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// table column tooltip
 		ColumnViewerToolTipSupport.enableFor(tableListViewer);
-		CellLabelProvider labelProvider = new CellLabelProvider() {
+		CellLabelProvider clpTable = new CellLabelProvider() {
 
 			public String getToolTipText(Object element) {
 				TableDAO table = (TableDAO) element;
@@ -304,7 +300,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tbComment.setWidth(200);
 		tbComment.setText("Comment"); //$NON-NLS-1$
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
-		tvTableComment.setLabelProvider(labelProvider);
+		tvTableComment.setLabelProvider(clpTable);
 		tvTableComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
 		
@@ -322,7 +318,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableListViewer.addFilter(tableFilter);
 
 		// columns
-		tableColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		tableColumnViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableColumn = tableColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
@@ -345,7 +341,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	protected void createTableColumne(final TableViewer tv) {
 		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
 		int[] size = {120, 90, 50, 100, 50, 50, 50};
-
+		
+		// table column tooltip
+		ColumnViewerToolTipSupport.enableFor(tv);
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
