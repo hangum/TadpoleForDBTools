@@ -13,17 +13,10 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 import java.sql.PreparedStatement;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
@@ -78,7 +71,8 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	@Override
 	protected boolean canEdit(Object element) {
 		if(column == 3) {
-			logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB.getDbms_types()));
+			if(logger.isDebugEnabled()) logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB.getDbms_types()));
+			
 			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || 
 					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ||
 					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ) {
@@ -107,13 +101,13 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	protected void setValue(Object element, Object value) {
 		String comment = "";
 		try {
-			logger.debug("element.getClass().toString() is " + element.getClass().toString());
+			if(logger.isDebugEnabled()) logger.debug("element.getClass().toString() is " + element.getClass().toString());
 
 			TableColumnDAO dao = (TableColumnDAO) element;
 
 			comment = (String) (value == null ? "" : value);
 			
-			logger.debug("dao column name is " + dao.getField());
+			if(logger.isDebugEnabled()) logger.debug("dao column name is " + dao.getField());
 			
 			// 기존 코멘트와 다를때만 db에 반영한다.
 			if (!(comment.equals(dao.getComment()))) {
@@ -135,7 +129,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 		PreparedStatement stmt = null;
 		try {
 
-			logger.debug("userDB is " + userDB.toString());
+			if(logger.isDebugEnabled()) logger.debug("userDB is " + userDB.toString());
 
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 
@@ -151,7 +145,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 				
 				query.append(" COMMENT ON COLUMN ").append(tableDAO.getName()+".").append(dao.getField()).append(" IS '").append(dao.getComment()).append("'");
 
-				logger.debug("query is " + query.toString());
+				if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 				
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.executeQuery();
@@ -164,7 +158,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 				try {
 					stmt.execute();
 				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
+					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
 				}
 
