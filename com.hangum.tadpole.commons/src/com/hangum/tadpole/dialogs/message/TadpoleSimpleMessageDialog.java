@@ -90,6 +90,8 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 		textMessage.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
+		
+		textMessage.setFocus();
 
 		return area;
 	}
