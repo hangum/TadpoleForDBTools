@@ -47,6 +47,7 @@ public class MongoDBShortcutHelpDialog extends RDBShortcutHelpDialog {
 	private void initData() {
 		listShortcut.clear();
 		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
+		listShortcut.add( new ShortcutHelpDAO("Collection Assist", 	prefixOSShortcut + "+ Space") 	);
 		
 		listShortcut.add( new ShortcutHelpDAO("To Lower case", 	prefixOSShortcut + "+ Shift + Y") );
 		listShortcut.add( new ShortcutHelpDAO("To Upper case", 	prefixOSShortcut + "+ Shift + X") );

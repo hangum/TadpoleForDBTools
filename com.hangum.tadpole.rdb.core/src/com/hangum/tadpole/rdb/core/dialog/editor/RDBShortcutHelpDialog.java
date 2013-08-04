@@ -142,6 +142,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 		listShortcut.add( new ShortcutHelpDAO("Add Block Comment", 	prefixOSShortcut +"+ /"));
 		
 		listShortcut.add( new ShortcutHelpDAO("Save", 			prefixOSShortcut + "+ S") 		);
+		listShortcut.add( new ShortcutHelpDAO("SQL Assist", 	prefixOSShortcut + "+ Space") 		);
 		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	prefixOSShortcut + "+ enter") 	);
 		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"F5") 				);
 		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	prefixOSShortcut + "+ E") 		);
