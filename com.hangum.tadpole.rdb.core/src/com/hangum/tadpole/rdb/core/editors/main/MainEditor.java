@@ -584,7 +584,7 @@ public class MainEditor extends EditorExtension {
 		
 		Composite compositeRecallBtn = new Composite(compositeSQLHistory, SWT.NONE);
 		compositeRecallBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeRecallBtn.setLayout(new GridLayout(7, false));
+		compositeRecallBtn.setLayout(new GridLayout(8, false));
 		
 		final Button btnExportHistory = new Button(compositeRecallBtn, SWT.NONE);
 		btnExportHistory.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -635,6 +635,18 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		btnSetEditor.setText(Messages.MainEditor_17);
+		
+		// table clear
+		Button btnHistoyClear = new Button(compositeRecallBtn, SWT.NONE);
+		btnHistoyClear.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		btnHistoyClear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				listSQLHistory.clear();
+				tableViewerSQLHistory.refresh();
+			}
+		});
+		btnHistoyClear.setText(Messages.MainEditor_btnClear_text);
 		
 		Label labelDumyRecal = new Label(compositeRecallBtn, SWT.NONE);
 		labelDumyRecal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
