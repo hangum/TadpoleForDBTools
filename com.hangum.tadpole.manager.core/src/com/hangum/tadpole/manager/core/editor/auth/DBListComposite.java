@@ -128,25 +128,25 @@ public class DBListComposite extends Composite {
 			});
 			tltmAdd.setText("Add");
 			
-			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
-			tltmDbExport.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if(MessageDialog.openConfirm(null, "Confirm", "사용자 디비를 export하시겠습니까?")) {
-					
-					}
-				}
-			});
-			tltmDbExport.setText("DB Info Export");
-			
-			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
-			tltmDbImport.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					
-				}
-			});
-			tltmDbImport.setText("DB Info Import");
+//			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
+//			tltmDbExport.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					if(MessageDialog.openConfirm(null, "Confirm", "사용자 디비를 export하시겠습니까?")) {
+//					
+//					}
+//				}
+//			});
+//			tltmDbExport.setText("DB Info Export");
+//			
+//			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
+//			tltmDbImport.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					
+//				}
+//			});
+//			tltmDbImport.setText("DB Info Import");
 		}
 		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
