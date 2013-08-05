@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.get;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -127,5 +128,24 @@ public class GetPreferenceGeneral {
 		public static String getMongoDefaultResultPage() {
 			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.MONGO_DEFAULT_RESULT);
 			return userInfo.getValue0();
+		}
+
+		/** preference RDB ResultSet number column add comma? */
+		public static String getRDBNumberISComma() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
+			String strYesNo = userInfo.getValue0();
+			if(null == strYesNo || "".equals(strYesNo)) {
+				return PublicTadpoleDefine.YES_NO.YES.toString();
+			}
+			
+			return strYesNo;
+		}
+		
+		/**
+		 * BOOLEAN is RDB ResultSet number column add comma
+		 * @return
+		 */
+		public static boolean getISRDBNumberIsComma() {
+			return getRDBNumberISComma().equals(PublicTadpoleDefine.YES_NO.YES.toString())?true:false;
 		}
 }

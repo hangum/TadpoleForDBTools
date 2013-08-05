@@ -15,6 +15,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.editor.core.IEditorExtension;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
@@ -57,6 +58,8 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	protected String planTableName 	= GetPreferenceGeneral.getPlanTableName();
 	/** export delimit */
 	protected String exportDelimit = GetPreferenceGeneral.getExportDelimit().toLowerCase().equals("tab")?"	":GetPreferenceGeneral.getExportDelimit(); //$NON-NLS-1$ //$NON-NLS-2$
+	/** 결과 컬럼이 숫자이면 ,를 찍을 것인지 */
+	protected boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 	
 	/** 에디터의 모든 쿼리를 수행합니다. */
 	public static int ALL_QUERY_EXECUTE 	= -998;

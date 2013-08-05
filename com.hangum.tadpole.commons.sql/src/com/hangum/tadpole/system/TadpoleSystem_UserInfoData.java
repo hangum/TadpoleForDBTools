@@ -155,8 +155,9 @@ public class TadpoleSystem_UserInfoData {
 	 * @param limitSelect
 	 * @param resultSelect
 	 * @param oraclePlan
+	 * @param txtRDBNumberColumnIsComman RDB의 결과테이블이 숫자 컬럼인 경우 ,를 넣을 것인지?
 	 */
-	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String oraclePlan) throws Exception {
+	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String oraclePlan, String txtRDBNumberColumnIsComman) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getSeq());
@@ -174,6 +175,11 @@ public class TadpoleSystem_UserInfoData {
 		// ORACLE PLAN TABLE 
 		userInfoData.setName(PreferenceDefine.ORACLE_PLAN_TABLE);
 		userInfoData.setValue0(oraclePlan);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		// RDB Result set number column.
+		userInfoData.setName(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
+		userInfoData.setValue0(txtRDBNumberColumnIsComman);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
 	
@@ -283,6 +289,11 @@ public class TadpoleSystem_UserInfoData {
 		userInfoData.setValue0(PreferenceDefine.ORACLE_PLAN_TABLE_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
+		// RDB 결과가 숫자 컬럼이면 ,를 찍도록 합니다.
+		userInfoData.setName(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
+		userInfoData.setValue0(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		
 		// MONGO_DEFAULT_LIMIT
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_LIMIT);
 		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_LIMIT_VALUE);
@@ -316,7 +327,7 @@ public class TadpoleSystem_UserInfoData {
 				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
 				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE_VALUE);
 				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
+				
 	}
 	
 }

@@ -25,12 +25,15 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.preference.internal.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
+
+import org.eclipse.swt.widgets.Combo;
 
 /**
  * rdb preference
@@ -42,6 +45,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	private Text textSelectLimit;
 	private Text textResultPage;
 	private Text textOraclePlan;
+	private Combo comboRDBNumberComma;
 
 	public RDBPreferencePage() {
 	}
@@ -55,6 +59,16 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
+		
+		Label lblNumberColumnAdd = new Label(container, SWT.NONE);
+		lblNumberColumnAdd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNumberColumnAdd.setText(Messages.RDBPreferencePage_lblNumberColumnAdd_text);
+		
+		comboRDBNumberComma = new Combo(container, SWT.READ_ONLY);
+		comboRDBNumberComma.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboRDBNumberComma.add(PublicTadpoleDefine.YES_NO.YES.toString());
+		comboRDBNumberComma.add(PublicTadpoleDefine.YES_NO.NO.toString());
+		comboRDBNumberComma.select(0);
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setText(Messages.DefaultPreferencePage_0);
@@ -99,6 +113,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		String txtSelectLimit = textSelectLimit.getText();
 		String txtResultPage = textResultPage.getText();
 		String txtOraclePlan = textOraclePlan.getText();
+		String txtRDBNumberColumnIsComman = comboRDBNumberComma.getText();
 		
 		try {
 			Integer.parseInt(txtSelectLimit);
@@ -121,12 +136,13 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		// 테이블에 저장 
 		try {
-			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtSelectLimit, txtResultPage, txtOraclePlan);
+			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtSelectLimit, txtResultPage, txtOraclePlan, txtRDBNumberColumnIsComman);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT, txtSelectLimit);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, txtResultPage);
-			SessionManager.setUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE, txtOraclePlan);			
+			SessionManager.setUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE, txtOraclePlan);		
+			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, txtRDBNumberColumnIsComman);;
 		} catch(Exception e) {
 			e.printStackTrace();
 			
@@ -164,7 +180,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		textSelectLimit.setText( "" + GetPreferenceGeneral.getQueryResultCount() ); //$NON-NLS-1$
 		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
 		textOraclePlan.setText( GetPreferenceGeneral.getPlanTableName() );
-		
+		comboRDBNumberComma.setText(GetPreferenceGeneral.getRDBNumberISComma());
 	}
 	
 	public static String planTable = 

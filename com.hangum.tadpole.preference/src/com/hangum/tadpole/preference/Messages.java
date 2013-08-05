@@ -83,6 +83,7 @@ public class Messages extends NLS {
 	public static String SQLFormatterPreferencePage_3;
 
 	public static String SQLFormatterPreferencePage_4;
+	public static String RDBPreferencePage_lblNumberColumnAdd_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

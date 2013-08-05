@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.define;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * Preference name define
  * 
@@ -90,10 +92,12 @@ public class PreferenceDefine {
 	public static final String MONGO_DEFAULT_FIND_EXTEND = "MONGO_DEFAULT_FIND_PAGE_EXTEND";
 	
 	/** mongodb default result page */
-	public static final String MONGO_DEFAULT_RESULT 		= "MONGO_DEFAULT_RESULT_PAGE";
+	public static final String MONGO_DEFAULT_RESULT 	= "MONGO_DEFAULT_RESULT_PAGE";
 	public static final String MONGO_DEFAULT_RESULT_TREE = "MONGO_DEFAULT_RESULT_PAGE_TREE";
 	public static final String MONGO_DEFAULT_RESULT_TABLE = "MONGO_DEFAULT_RESULT_PAGE_TABLE";
 	public static final String MONGO_DEFAULT_RESULT_TEXT = "MONGO_DEFAULT_RESULT_PAGE_TEXT";
 	
-	
+	/** RDB 결과 테이블의 결과에서 ,를 붙일 것인지 지정 할 수 있도록 */
+	public static final String RDB_RESULT_NUMBER_IS_COMMA = "RDB_RESULT_NUMBER_IS_COMMA";
+	public static final String RDB_RESULT_NUMBER_IS_COMMA_VALUE = PublicTadpoleDefine.YES_NO.YES.toString();
 }
