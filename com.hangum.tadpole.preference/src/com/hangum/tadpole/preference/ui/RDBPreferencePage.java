@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -42,6 +43,8 @@ import org.eclipse.swt.widgets.Combo;
  *
  */
 public class RDBPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	private static final Logger logger = Logger.getLogger(RDBPreferencePage.class);
+	
 	private Text textSelectLimit;
 	private Text textResultPage;
 	private Text textOraclePlan;
@@ -144,7 +147,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			SessionManager.setUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE, txtOraclePlan);		
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, txtRDBNumberColumnIsComman);;
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("RDBPreference saveing", e);
 			
 			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;

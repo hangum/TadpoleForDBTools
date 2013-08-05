@@ -53,10 +53,10 @@ public class PreferenceDefine {
 		public static final String DEFAULT_TAB_SIZE_PREFERENCE_VALUE = "2";
 		
 		public static final String SQL_FORMATTER_DECODE_PREFERENCE = "SQL_FORMATTER_DECODE_PREFERENCE";
-		public static final String SQL_FORMATTER_DECODE_PREFERENCE_VALUE = "true";
+		public static final String SQL_FORMATTER_DECODE_PREFERENCE_VALUE = "false";
 		
 		public static final String SQL_FORMATTER_IN_PREFERENCE = "SQL_FORMATTER_IN_PREFERENCE";
-		public static final String SQL_FORMATTER_IN_PREFERENCE_VALUE = "true";
+		public static final String SQL_FORMATTER_IN_PREFERENCE_VALUE = "false";
 	
 	
 	/** SESSION TIME OUT */
@@ -80,7 +80,7 @@ public class PreferenceDefine {
 	
 	/** mongodb limit */
 	public static final String MONGO_DEFAULT_LIMIT = "MONGO_DEFAULT_LIMIT_COUNT";
-	public static final String MONGO_DEFAULT_LIMIT_VALUE = "50";
+	public static final String MONGO_DEFAULT_LIMIT_VALUE = "30";
 	
 	/** monodb max */
 	public static final String MONGO_DEFAULT_MAX_COUNT = "MONGO_DEFAULT_MAX_COUNT";

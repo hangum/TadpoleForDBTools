@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -34,9 +35,9 @@ import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
  *
  */
 public class UserInfoPerference extends PreferencePage implements IWorkbenchPreferencePage {
-//	private static final Logger logger = Logger.getLogger(UserInfoPerference.class);
+	private static final Logger logger = Logger.getLogger(UserInfoPerference.class);
 	
-	private Text textGroupName;
+//	private Text textGroupName;
 	private Text textEmail;
 	private Text textPassword;
 	private Text textRePassword;
@@ -57,13 +58,13 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
 		
-		Label lblGroupName = new Label(container, SWT.NONE);
-		lblGroupName.setText(Messages.UserInfoPerference_1);
-		
-		textGroupName = new Text(container, SWT.BORDER);
-		textGroupName.setEnabled(false);
-		textGroupName.setEditable(false);
-		textGroupName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		Label lblGroupName = new Label(container, SWT.NONE);
+//		lblGroupName.setText(Messages.UserInfoPerference_1);
+//		
+//		textGroupName = new Text(container, SWT.BORDER);
+//		textGroupName.setEnabled(false);
+//		textGroupName.setEditable(false);
+//		textGroupName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 //		textGroupName.setText(SessionManager.getGroupName());
 		
 		Label lblEmail = new Label(container, SWT.NONE);
@@ -116,10 +117,8 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		user.setPasswd(pass);		
 		try {
 			TadpoleSystem_UserQuery.updateUserPassword(user);
-			
-			MessageDialog.openConfirm(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_8);
 		} catch (Exception e) {
-//			logger.error("password change", e); //$NON-NLS-1$
+			logger.error("password change", e); //$NON-NLS-1$
 			MessageDialog.openError(getShell(), "Confirm", e.getMessage());			 //$NON-NLS-1$
 			
 			return false;

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -36,6 +37,8 @@ import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
  *
  */
 public class SQLFormatterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	private static final Logger logger = Logger.getLogger(SQLFormatterPreferencePage.class);
+	
 	private Combo comboTabsize;
 	private Button btnNoInsertNewDecode;
 	private Button btnNoInsertNewIn;
@@ -100,7 +103,7 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE, txtNoInsertDecode);
 			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE, txtNoInsertIn);			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("SQLFormatter preference saveing", e);
 			
 			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
@@ -114,8 +117,9 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 	 */
 	private void initDefaultValue() {
 		comboTabsize.setText(GetPreferenceGeneral.getDefaultTabSize());
-		btnNoInsertNewDecode.setSelection(Boolean.getBoolean(GetPreferenceGeneral.getSQLFormatDecode()));
-		btnNoInsertNewIn.setSelection(Boolean.getBoolean(GetPreferenceGeneral.getSQLFormatIn()));
+		
+		btnNoInsertNewDecode.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatDecode()));
+		btnNoInsertNewIn.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn()));
 	}
 
 	@Override

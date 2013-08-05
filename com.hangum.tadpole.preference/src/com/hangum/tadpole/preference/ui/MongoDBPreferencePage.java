@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -35,6 +36,8 @@ import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
  *  @author hangum
  */
 public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	private static final Logger logger = Logger.getLogger(MongoDBPreferencePage.class);
+	
 	private Text textLimitCount;
 	private Text textMaxCount;
 	
@@ -150,7 +153,7 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 			SessionManager.setUserInfo(PreferenceDefine.MONGO_DEFAULT_FIND, txtFindPage);
 			SessionManager.setUserInfo(PreferenceDefine.MONGO_DEFAULT_RESULT, txtResultPage);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("MongoDBreference saveing", e);
 			
 			MessageDialog.openError(getShell(), Messages.MongoDBPreferencePage_12, Messages.MongoDBPreferencePage_13 + e.getMessage());
 			return false;

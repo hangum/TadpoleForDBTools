@@ -10,11 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -28,8 +30,6 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
 
-import org.eclipse.swt.widgets.Button;
-
 /**
  * general preference
  * 
@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.Button;
  *
  */
 public class GeneralPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	private static final Logger logger = Logger.getLogger(GeneralPreferencePage.class);
+	
 	private Text textSessionTime;
 	private Text textExportDelimit;
 	private Text textHomePage;
@@ -110,7 +112,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE, txtHomePage);
 			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE_USE, txtHomePageUse);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("GeneralPreference saveing", e);
 			
 			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
