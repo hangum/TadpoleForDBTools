@@ -128,7 +128,12 @@ public class IntroEditor extends EditorPart {
 		Group grpDonor = new Group(parent, SWT.BORDER);
 		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.IntroEditor_0);
-		grpDonor.setLayout(new GridLayout(3, false));
+		GridLayout gl_grpDonor = new GridLayout(4, false);
+		gl_grpDonor.verticalSpacing = 2;
+		gl_grpDonor.marginHeight = 2;
+		gl_grpDonor.horizontalSpacing = 2;
+		gl_grpDonor.marginWidth = 2;
+		grpDonor.setLayout(gl_grpDonor);
 		
 		CLabel lblWwwcubridorg = new CLabel(grpDonor, SWT.BORDER);
 		lblWwwcubridorg.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -140,6 +145,11 @@ public class IntroEditor extends EditorPart {
 		CLabel lblXenonix = new CLabel(grpDonor, SWT.BORDER);
 		lblXenonix.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/xenonix_logo.png")); //$NON-NLS-1$
 		
+		// dumy 
+		CLabel lblTadpole = new CLabel(grpDonor, SWT.BORDER);
+		lblTadpole.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/TadpoleDBHub.png")); //$NON-NLS-1$
+		
+		// image text
 		CLabel labelCubrid = new CLabel(grpDonor, SWT.NONE);
 		labelCubrid.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		labelCubrid.setText(Messages.IntroEditor_label_text);
@@ -151,6 +161,11 @@ public class IntroEditor extends EditorPart {
 		CLabel labelXenonix = new CLabel(grpDonor, SWT.NONE);
 		labelXenonix.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		labelXenonix.setText("<a href='http://www.xenonix.com' target='_blank'>http://www.xenonix.com</a>");
+		
+		// dumy 
+		CLabel labelAllDonerList= new CLabel(grpDonor, SWT.NONE);
+		labelAllDonerList.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		labelAllDonerList.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List' target='_blank'>All donor and Donation method</a>");
 		
 		setBrowserURL();		
 	}
