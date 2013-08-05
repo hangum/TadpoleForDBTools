@@ -11,11 +11,9 @@
 package com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport;
 
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.swt.SWT;
 
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
 

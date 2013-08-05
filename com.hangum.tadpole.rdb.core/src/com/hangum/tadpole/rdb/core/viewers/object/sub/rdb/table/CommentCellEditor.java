@@ -21,7 +21,6 @@ public class CommentCellEditor extends TextCellEditor {
 	 * 
 	 */
 	public CommentCellEditor() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -29,7 +28,6 @@ public class CommentCellEditor extends TextCellEditor {
 	 */
 	public CommentCellEditor(Composite parent) {
 		super(parent);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -39,7 +37,6 @@ public class CommentCellEditor extends TextCellEditor {
 		super(viewer.getTable());
 		this.viewer = viewer;
 		this.column = column;
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -48,7 +45,6 @@ public class CommentCellEditor extends TextCellEditor {
 	 */
 	public CommentCellEditor(Composite parent, int style) {
 		super(parent, style);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

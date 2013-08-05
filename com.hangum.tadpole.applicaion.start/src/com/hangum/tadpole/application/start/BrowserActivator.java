@@ -10,6 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start;
 
+/**
+ * 
+ * @author hangum
+ *
+ */
 public class BrowserActivator {
 	public static final String ID = "com.hangum.tadpole.applicaion.start";
 }

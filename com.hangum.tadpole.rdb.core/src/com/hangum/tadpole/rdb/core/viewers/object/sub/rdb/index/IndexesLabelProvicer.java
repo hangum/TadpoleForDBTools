@@ -33,24 +33,6 @@ public class IndexesLabelProvicer extends LabelProvider implements ITableLabelPr
 	public String getColumnText(Object element, int columnIndex) {
 		InformationSchemaDAO tc = (InformationSchemaDAO) element;
 		
-//		switch(columnIndex) {
-//		case 0: return tc.getTABLE_NAME();
-//		case 1: return tc.getINDEX_NAME();
-//		case 2: return tc.getNON_UNIQUE();
-//		case 3: return tc.getINDEX_SCHEMA();
-//		case 4: return tc.getSEQ_IN_INDEX();
-//		case 5: return tc.getCOLUMN_NAME();
-//		
-//		case 6: return tc.getCOLLATION();
-//		case 7: return tc.getCARDINALITY();
-//		case 8: return tc.getSUB_PART();
-//		case 9: return tc.getPACKED();
-//		case 10: return tc.getNULLABLE();
-//		case 11: return tc.getINDEX_TYPE();
-//		
-//		case 12: return tc.getCOMMENT();
-//		}
-		
 		switch(columnIndex) {
 		case 0: return tc.getTABLE_NAME();
 		case 1: return tc.getINDEX_NAME();

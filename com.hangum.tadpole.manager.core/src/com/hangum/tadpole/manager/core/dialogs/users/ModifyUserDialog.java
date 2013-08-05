@@ -35,7 +35,6 @@ import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.session.manager.SessionManagerListener;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.util.ManagerSession;
 
 /**
  * 사용자 수정 다이얼로그

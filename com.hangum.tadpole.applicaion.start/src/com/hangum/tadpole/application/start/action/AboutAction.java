@@ -36,13 +36,6 @@ public class AboutAction extends Action {
 	
 	public void run() {
 		if(window != null) {	
-//			String title = Messages.AboutAction_1;
-//			
-//			String msg =   Messages.AboutAction_2
-//						 + Messages.AboutAction_3
-//			             + Messages.AboutAction_4 
-//			             + Messages.AboutAction_5;
-//			MessageDialog.openInformation( window.getShell(), title, msg );
 			AboutDialog ad = new AboutDialog(window.getShell());
 			ad.open();
 			

@@ -13,7 +13,6 @@ package com.hangum.tadpole.rdb.core.viewers.object.comparator;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 
 /**
  * sort를 위한 최상위 클래서(기본으로 table의 column 사용)

@@ -12,8 +12,6 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript;
 
 import java.util.List;
 
-import oracle.net.aso.s;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
