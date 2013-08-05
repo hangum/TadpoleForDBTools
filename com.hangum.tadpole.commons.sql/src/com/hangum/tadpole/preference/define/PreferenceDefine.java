@@ -78,7 +78,7 @@ public class PreferenceDefine {
 	
 	/** mongodb limit */
 	public static final String MONGO_DEFAULT_LIMIT = "MONGO_DEFAULT_LIMIT_COUNT";
-	public static final String MONGO_DEFAULT_LIMIT_VALUE = "100";
+	public static final String MONGO_DEFAULT_LIMIT_VALUE = "50";
 	
 	/** monodb max */
 	public static final String MONGO_DEFAULT_MAX_COUNT = "MONGO_DEFAULT_MAX_COUNT";
