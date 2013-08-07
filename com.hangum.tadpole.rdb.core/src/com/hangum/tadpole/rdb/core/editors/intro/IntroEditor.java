@@ -147,7 +147,7 @@ public class IntroEditor extends EditorPart {
 		
 		// dumy 
 		CLabel lblTadpole = new CLabel(grpDonor, SWT.BORDER);
-		lblTadpole.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/TadpoleDBHub.png")); //$NON-NLS-1$
+//		lblTadpole.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/TadpoleDBHub.png")); //$NON-NLS-1$
 		
 		// image text
 		CLabel labelCubrid = new CLabel(grpDonor, SWT.NONE);
