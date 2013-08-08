@@ -72,7 +72,7 @@ public class MongoConnectionManager {
 					options.safe = true;
 					
 					String strReplcaSet = userDB.getExt1();
-					if("".equals(strReplcaSet)) {
+					if(strReplcaSet == null | "".equals(strReplcaSet)) {
 						mongoDB = new Mongo(new DBAddress(userDB.getUrl()), options);
 						
 					} else {
