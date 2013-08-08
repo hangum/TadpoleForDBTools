@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole for DB Tools RDB model core
+Bundle-Name: Tadpole DB Hub RDB model core
 Bundle-SymbolicName: com.hangum.tadpole.rdb.model;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-ClassPath: .

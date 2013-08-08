@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole for DB Tools commons Sql
+Bundle-Name: Tadpole DB Hub commons SQL
 Bundle-SymbolicName: com.hangum.tadpole.commons.sql;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: hangum.com

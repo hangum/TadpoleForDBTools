@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole for DB Tools mongodb ERD Core
+Bundle-Name: Tadpole DB Hub mongodb ERD Core
 Bundle-SymbolicName: com.hangum.tadpole.mongodb.erd.core;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.mongodb.erd.stanalone.Activator

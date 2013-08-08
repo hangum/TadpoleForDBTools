@@ -36,7 +36,7 @@ public class TadpoleSystem {
 			
 			try {
 				
-				boolean isLock = ApplicationLock.setLock("Tadpole For DB Tools application lock");
+				boolean isLock = ApplicationLock.setLock("Tadpole DB HUB application lock");
 				if(logger.isDebugEnabled()) {
 					logger.debug("############################################################");
 					logger.debug("[Tadpole System is lock?] " + isLock);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.hangum.tadpole.feature"
-      label="Tadpole for DB Tools Feature"
+      label="Tadpole DB Hub Feature"
       version="2.0.0.qualifier"
       provider-name="hangum.com">
 

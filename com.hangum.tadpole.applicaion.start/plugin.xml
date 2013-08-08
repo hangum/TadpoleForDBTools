@@ -6,7 +6,7 @@
       <perspective
             class="com.hangum.tadpole.application.start.Perspective"
             id="com.hangum.tadpole.application.start.perspective"
-            name="Tadpole for db Tools">
+            name="Tadpole DB Hub">
       </perspective>
    </extension>
 

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole for DB Tools Commons
+Bundle-Name: Tadpole DB Hub Commons
 Bundle-SymbolicName: com.hangum.tadpole.commons
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.commons.Activator

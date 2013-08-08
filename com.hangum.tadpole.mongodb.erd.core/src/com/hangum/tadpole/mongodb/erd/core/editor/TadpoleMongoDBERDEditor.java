@@ -70,7 +70,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
 
 /**
- * Tadpole for DB Tools ERD editor
+ * Tadpole DB Hub ERD editor
  * 
  * @author hangum
  *
