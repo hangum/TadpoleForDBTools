@@ -84,7 +84,7 @@ public class PreferenceDefine {
 	
 	/** monodb max */
 	public static final String MONGO_DEFAULT_MAX_COUNT = "MONGO_DEFAULT_MAX_COUNT";
-	public static final String MONGO_DEFAULT_MAX_COUNT_VALUE = "1000";
+	public static final String MONGO_DEFAULT_MAX_COUNT_VALUE = "200";
 	
 	/** mongodb find page */ 
 	public static final String MONGO_DEFAULT_FIND = "MONGO_DEFAULT_FIND_PAGE";
