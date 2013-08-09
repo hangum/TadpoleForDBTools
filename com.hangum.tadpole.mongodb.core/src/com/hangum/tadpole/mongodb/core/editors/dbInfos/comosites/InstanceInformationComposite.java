@@ -34,6 +34,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.util.NumberFormatUtils;
+import com.hangum.tadpole.util.TimeUtils;
 import com.mongodb.CommandResult;
 import com.mongodb.DBObject;
 
@@ -254,9 +255,9 @@ public class InstanceInformationComposite extends Composite {
 		String version 	= StringUtils.trimToEmpty(commandResult.getString("version"));
 		String process 	= StringUtils.trimToEmpty(commandResult.getString("process"));
 		String pid 		= StringUtils.trimToEmpty(commandResult.getString("pid"));
-		String uptime 	= StringUtils.trimToEmpty((commandResult.getDouble("uptime")/1000) + " Sec");
-		String uptimeMillis 	= StringUtils.trimToEmpty((commandResult.getDouble("uptimeMillis")/1000) + " Sec");
-		String uptimeEstimate 	= StringUtils.trimToEmpty((commandResult.getDouble("uptimeEstimate")/1000) + " Sec");
+		String uptime 	= StringUtils.trimToEmpty(commandResult.getString("uptime"));
+		String uptimeMillis 	= StringUtils.trimToEmpty(TimeUtils.getHoureMinSecString(commandResult.getLong("uptimeMillis")));
+		String uptimeEstimate 	= StringUtils.trimToEmpty(commandResult.getString("uptimeEstimate"));
 		String localTime 		= StringUtils.trimToEmpty(commandResult.getString("localTime"));
 		
 		textHost.setText(strHost);
