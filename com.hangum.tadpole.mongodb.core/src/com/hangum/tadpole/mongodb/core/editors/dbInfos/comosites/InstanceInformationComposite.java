@@ -126,7 +126,7 @@ public class InstanceInformationComposite extends Composite {
 		btnStart.setText("Start");
 		
 		btnStop = new Button(compositeHead, SWT.NONE);
-		btnStop.setSelection(false);
+		btnStop.setEnabled(false);
 		btnStop.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
