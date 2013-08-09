@@ -23,11 +23,14 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
  *
  */
 public class MongoDBInfosInput implements IEditorInput {
+	private MongoDBInfosEditor.PAGES defaultPage;
+	
 	/** db info */
 	private UserDBDAO userDB;
 
-	public MongoDBInfosInput(UserDBDAO userDB) {
+	public MongoDBInfosInput(UserDBDAO userDB, MongoDBInfosEditor.PAGES defaultPage) {
 		this.userDB = userDB;
+		this.defaultPage = defaultPage;
 	}
 
 	@Override
@@ -70,4 +73,7 @@ public class MongoDBInfosInput implements IEditorInput {
 		return userDB;
 	}
 	
+	public MongoDBInfosEditor.PAGES getDefaultPage() {
+		return defaultPage;
+	}
 }

@@ -48,6 +48,11 @@ import com.mongodb.CommandResult;
  */
 public class MongoDBInfosEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.mongodb.core.editor.dbInfos"; //$NON-NLS-1$
+	
+	/**
+	 */
+	public static enum PAGES {INSTANCE_INFORMATION, COLLECTION_SUMMERY, DB_LOCKS, REPLACA_SET, SHARDING};
+	
 	/**
 	 * Logger for this class
 	 */
@@ -55,6 +60,7 @@ public class MongoDBInfosEditor extends EditorPart {
 	
 	private UserDBDAO userDB;
 	private CommandResult commandResult;
+	private PAGES defaultPage; 
 	
 	InstanceInformationComposite compositeServerStatus;
 	CollectionInformationComposite compositeCollectionSummary;
@@ -75,7 +81,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		try {
 			commandResult = MongoDBQuery.serverStatusCommandResult(userDB);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("Get status command", e1);
 		}
 		
 		CTabFolder tabFolder = new CTabFolder(parent, SWT.NONE);
@@ -86,7 +92,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		CTabItem tbtmServerStatus = new CTabItem(tabFolder, SWT.NONE);
 		tbtmServerStatus.setText(Messages.MongoDBInfosEditor_0);
 		
-		compositeServerStatus = new InstanceInformationComposite(tabFolder, SWT.NONE, commandResult);
+		compositeServerStatus = new InstanceInformationComposite(tabFolder, SWT.NONE, userDB, commandResult);
 		tbtmServerStatus.setControl(compositeServerStatus);
 		compositeServerStatus.setLayout(new GridLayout(2, false));
 		new Label(compositeServerStatus, SWT.NONE);
@@ -123,7 +129,12 @@ public class MongoDBInfosEditor extends EditorPart {
 		tbtmShardingInformation.setControl(compositeSharding);
 		compositeSharding.setLayout(gl_compositeCollectionSummary);
 
-		tabFolder.setSelection(1);
+		if(defaultPage == PAGES.INSTANCE_INFORMATION) 		tabFolder.setSelection(0);
+		else if(defaultPage == PAGES.COLLECTION_SUMMERY) 	tabFolder.setSelection(1);
+		else if(defaultPage == PAGES.DB_LOCKS) 				tabFolder.setSelection(2);
+		else if(defaultPage == PAGES.REPLACA_SET) 			tabFolder.setSelection(3);
+		else  tabFolder.setSelection(4);
+		
 		initData();
 	}
 	
@@ -131,7 +142,7 @@ public class MongoDBInfosEditor extends EditorPart {
 	 * 초기 데이터를 로드합니다.
 	 */
 	private void initData() {
-		compositeServerStatus.initData();
+		compositeServerStatus.initMongoDBInfoData(commandResult);
 		compositeCollectionSummary.initData(userDB);
 	}
 
@@ -141,7 +152,9 @@ public class MongoDBInfosEditor extends EditorPart {
 		setInput(input);
 		
 		MongoDBInfosInput moInput = (MongoDBInfosInput)input;
-		this.userDB = moInput.getUserDB();		
+		this.userDB = moInput.getUserDB();
+		this.defaultPage = moInput.getDefaultPage();
+		
 		setPartName(moInput.getName());
 	}
 

@@ -78,7 +78,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
 		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
-			MongoDBInfosInput mongoInput = new MongoDBInfosInput(userDB);
+			MongoDBInfosInput mongoInput = new MongoDBInfosInput(userDB, MongoDBInfosEditor.PAGES.INSTANCE_INFORMATION);//COLLECTION_SUMMERY);
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mongoInput, MongoDBInfosEditor.ID);
 			} catch (PartInitException e) {

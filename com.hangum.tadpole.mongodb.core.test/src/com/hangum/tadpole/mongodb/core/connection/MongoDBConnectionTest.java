@@ -12,12 +12,12 @@ package com.hangum.tadpole.mongodb.core.connection;
 
 import junit.framework.TestCase;
 
-import com.hangum.tadpole.mongodb.core.test.ConAndAuthentication;
 import com.hangum.tadpole.mongodb.core.test.MakeUserDBDAO;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import com.mongodb.Mongo;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 /** * 
  * mongodb connection test
@@ -48,13 +48,13 @@ public class MongoDBConnectionTest extends TestCase {
 				
 				DBCollection myColl = db.getCollection("language");
 
-	//			DBObject dbObject = (DBObject) JSON.parse("{'rental_id':1,  'inventory_id':367}");
-	//			myColl.insert(dbObject);
+				DBObject dbObject = (DBObject) JSON.parse("{'rental_id':1,  'inventory_id':367}");
+				myColl.insert(dbObject);
 	//			
 				DBCursor cursorDoc = myColl.find();
-//				while (cursorDoc.hasNext()) {
-//					System.out.println(cursorDoc.next());
-//				}
+				while (cursorDoc.hasNext()) {
+					System.out.println(cursorDoc.next());
+				}
 				cursorDoc.close();
 			}
 		} catch(Exception e) {
