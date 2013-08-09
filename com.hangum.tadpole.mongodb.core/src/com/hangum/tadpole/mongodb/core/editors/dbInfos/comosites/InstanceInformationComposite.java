@@ -221,12 +221,13 @@ public class InstanceInformationComposite extends Composite {
 					    	}
 					    } );
 					    
-					    try {
-							Thread.sleep(1000);								
-						} catch(Exception e){}	
 				    } catch(Exception e) {
 				    	logger.error("Job executing", e);
 				    }
+				    
+				    try {
+						Thread.sleep(2000);								
+					} catch(Exception e){}	
 				}	// end while
 			}	// end run
 		};
@@ -476,8 +477,10 @@ public class InstanceInformationComposite extends Composite {
 	    int virtual = (Integer)cursorConnections.get("virtual");
 	    
 	    int mapped = (Integer)cursorConnections.get("mapped");
-	    int mappedWithJournal = (Integer)cursorConnections.get("mappedWithJournal");
-	    
+	    int mappedWithJournal =0;
+	    try {
+	    	mappedWithJournal = (Integer)cursorConnections.get("mappedWithJournal");
+	    } catch(Exception e) {}
 	    
 	    float fBits 	= (float)bits / (float)virtual;
 	    float fResident = (float)resident / (float)virtual;
