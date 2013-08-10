@@ -11,6 +11,7 @@
 package com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.addons.d3chart.BarChart;
 import org.eclipse.rap.addons.d3chart.ChartItem;
@@ -172,7 +173,7 @@ public class InstanceInformationComposite extends Composite {
 		gl_grpExtraInfo.marginHeight = 2;
 		gl_grpExtraInfo.marginWidth = 2;
 		grpExtraInfo.setLayout(gl_grpExtraInfo);
-		grpExtraInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpExtraInfo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		grpExtraInfo.setText("Extra Information");
 		
 		Composite compositeExtraInfo = new FindOneDetailComposite(grpExtraInfo, "Extra Information", (DBObject)commandResult.get("extra_info"), false);
@@ -257,7 +258,8 @@ public class InstanceInformationComposite extends Composite {
 		String process 	= StringUtils.trimToEmpty(commandResult.getString("process"));
 		String pid 		= StringUtils.trimToEmpty(commandResult.getString("pid"));
 		String uptime 	= StringUtils.trimToEmpty(commandResult.getString("uptime"));
-		String uptimeMillis 	= StringUtils.trimToEmpty(TimeUtils.getHoureMinSecString(commandResult.getLong("uptimeMillis")));
+		
+		String uptimeMillis 	= StringUtils.trimToEmpty(TimeUtils.getHoureMinSecString(NumberUtils.toLong(commandResult.getString("uptimeMillis"))));
 		String uptimeEstimate 	= StringUtils.trimToEmpty(commandResult.getString("uptimeEstimate"));
 		String localTime 		= StringUtils.trimToEmpty(commandResult.getString("localTime"));
 		
@@ -278,12 +280,12 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private void refreshMemoryData(CommandResult commandResult) {
 		DBObject cursorConnections = (DBObject)commandResult.get("mem");
-	    int bits = (Integer)cursorConnections.get("bits");
-	    int resident = (Integer)cursorConnections.get("resident");
-	    int virtual = (Integer)cursorConnections.get("virtual");
+	    int bits 		= NumberUtils.toInt(cursorConnections.get("bits").toString());
+	    int resident 	= NumberUtils.toInt(cursorConnections.get("resident").toString());
+	    int virtual 	= NumberUtils.toInt(cursorConnections.get("virtual").toString());
 	    
-	    int mapped = (Integer)cursorConnections.get("mapped");
-	    int mappedWithJournal = (Integer)cursorConnections.get("mappedWithJournal");
+	    int mapped 		= NumberUtils.toInt(cursorConnections.get("mapped").toString());
+	    int mappedWithJournal = NumberUtils.toInt(cursorConnections.get("mappedWithJournal").toString());
 	    
 	    float fBits 	= (float)bits / (float)virtual;
 	    float fResident = (float)resident / (float)virtual;
@@ -318,9 +320,9 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private void refreshNetwork(CommandResult commandResult) {
 	    DBObject cursorConnections = (DBObject)commandResult.get("network");
-	    int bytesIn = (Integer)cursorConnections.get("bytesIn");
-	    int bytesOut = (Integer)cursorConnections.get("bytesOut");
-	    int numRequests = (Integer)cursorConnections.get("numRequests");
+	    int bytesIn 	= NumberUtils.toInt(cursorConnections.get("bytesIn").toString());
+	    int bytesOut 	= NumberUtils.toInt(cursorConnections.get("bytesOut").toString());
+	    int numRequests = NumberUtils.toInt(cursorConnections.get("numRequests").toString());
 
 	    float floatBI = 0f, floatBO = 0f, floatNf = 0f;
 	    if(bytesIn < bytesOut) {
@@ -353,9 +355,9 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private void refreshConnections(CommandResult commandResult) {
 		DBObject cursorConnections = (DBObject)commandResult.get("connections");
-	    int current = (Integer)cursorConnections.get("current");
-	    int available = (Integer)cursorConnections.get("available");
-	    float floatCurrent = (float)current / (float)available;
+	    int current 		= NumberUtils.toInt(cursorConnections.get("current").toString());
+	    int available 		= NumberUtils.toInt(cursorConnections.get("available").toString());
+	    float floatCurrent 	= (float)current / (float)available;
 
 	    ChartItem itemAvailable = barChartConnection.getItems()[0];
 	    itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
@@ -373,9 +375,9 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private void refreshCursors(CommandResult commandResult) {
 		DBObject cursorCursors = (DBObject)commandResult.get("cursors");
-		int totalOpen = (Integer)cursorCursors.get("totalOpen");
-		int clientCursors_size = (Integer)cursorCursors.get("clientCursors_size");
-		int timedOut = (Integer)cursorCursors.get("timedOut");
+		int totalOpen 			= NumberUtils.toInt(cursorCursors.get("totalOpen").toString());
+		int clientCursors_size 	= NumberUtils.toInt(cursorCursors.get("clientCursors_size").toString());
+		int timedOut 			= NumberUtils.toInt(cursorCursors.get("timedOut").toString());
 		
 		ChartItem itemTotalOpen = pieChartCursors.getItems()[0];
 	    itemTotalOpen.setText("Total Open (" + totalOpen + ")");
@@ -472,9 +474,9 @@ public class InstanceInformationComposite extends Composite {
 	    barChartMemory.setBarWidth(25);
 
 	    DBObject cursorConnections = (DBObject)commandResult.get("mem");
-	    int bits = (Integer)cursorConnections.get("bits");
-	    int resident = (Integer)cursorConnections.get("resident");
-	    int virtual = (Integer)cursorConnections.get("virtual");
+	    int bits 		= NumberUtils.toInt(cursorConnections.get("bits").toString());
+	    int resident 	= NumberUtils.toInt(cursorConnections.get("resident").toString());
+	    int virtual 	= NumberUtils.toInt(cursorConnections.get("virtual").toString());
 	    
 	    int mapped = (Integer)cursorConnections.get("mapped");
 	    int mappedWithJournal =0;
@@ -532,9 +534,9 @@ public class InstanceInformationComposite extends Composite {
 	    barChartNetwork.setBarWidth(25);
 
 	    DBObject cursorConnections = (DBObject)commandResult.get("network");
-	    int bytesIn = (Integer)cursorConnections.get("bytesIn");
-	    int bytesOut = (Integer)cursorConnections.get("bytesOut");
-	    int numRequests = (Integer)cursorConnections.get("numRequests");
+	    int bytesIn 	= NumberUtils.toInt(cursorConnections.get("bytesIn").toString());
+	    int bytesOut 	= NumberUtils.toInt(cursorConnections.get("bytesOut").toString());
+	    int numRequests = NumberUtils.toInt(cursorConnections.get("numRequests").toString());
 
 	    float floatBI = 0f, floatBO = 0f, floatNf = 0f;
 	    if(bytesIn < bytesOut) {
@@ -585,8 +587,8 @@ public class InstanceInformationComposite extends Composite {
 	    barChartConnection.setBarWidth(25);
 
 	    DBObject cursorConnections = (DBObject)commandResult.get("connections");
-	    int current = (Integer)cursorConnections.get("current");
-	    int available = (Integer)cursorConnections.get("available");
+	    int current 	= NumberUtils.toInt(cursorConnections.get("current").toString());
+	    int available 	= NumberUtils.toInt(cursorConnections.get("available").toString());
 	    float floatCurrent = (float)current / (float)available;
 
 	    ChartItem itemAvailable = new ChartItem(barChartConnection);
@@ -622,9 +624,9 @@ public class InstanceInformationComposite extends Composite {
 		pieChartCursors.setInnerRadius(0.1f);
 		
 		DBObject cursorCursors = (DBObject)commandResult.get("cursors");
-		int totalOpen = (Integer)cursorCursors.get("totalOpen");
-		int clientCursors_size = (Integer)cursorCursors.get("clientCursors_size");
-		int timedOut = (Integer)cursorCursors.get("timedOut");
+		int totalOpen 			= NumberUtils.toInt(cursorCursors.get("totalOpen").toString());
+		int clientCursors_size 	= NumberUtils.toInt(cursorCursors.get("clientCursors_size").toString());
+		int timedOut 			= NumberUtils.toInt(cursorCursors.get("timedOut").toString());
 		
 		ChartItem itemTotalOpen = new ChartItem(pieChartCursors);
 	    itemTotalOpen.setText("Total Open (" + totalOpen + ")");
@@ -640,11 +642,7 @@ public class InstanceInformationComposite extends Composite {
 	    itemTimedOut.setText("Timed Out (" + timedOut + ")");
 	    itemTimedOut.setColor(colors.next());
 	    itemTimedOut.setValue(timedOut);
-	    
-//	    if(totalOpen == 0 && clientCursors_size == 0 && timedOut == 0) {
-//	    	Label label = new Label(compositeCursor, SWT.NONE);
-//	    	label.setText("Cursors value is all zero");
-//	    }
+
 	}
 	
 	@Override
