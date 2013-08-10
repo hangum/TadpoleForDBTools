@@ -126,7 +126,7 @@ public class TadpoleSystemInitializer {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUserTable = sqlClient.queryForList("isUserTable"); //$NON-NLS-1$
 		
-		if(isUserTable.size() != 1) {
+		if(isUserTable.size() == 0) {
 			createSystemTable();			
 			return true;
 		} else {

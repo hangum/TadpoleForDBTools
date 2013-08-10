@@ -62,8 +62,8 @@
 	신규 그룹 등록.
  -->
 <insert id="newGroup" parameterClass="com.hangum.tadpole.dao.system.UserGroupDAO">
-	INSERT INTO user_group (seq, name)
-	VALUES((select max(seq) from user_group)+1,  #name#)
+	INSERT INTO user_group (name)
+	VALUES(#name#)
 	
 	<selectKey keyProperty="seq" resultClass="int">
 		select seq from user_group
@@ -296,11 +296,11 @@
 	add user_db
  -->
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBOriginalDAO">
-	INSERT INTO user_db(seq, 
+	INSERT INTO user_db( 
 	user_seq, ext_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
 	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables
 	)
-	VALUES( (select max(seq) from user_db)+1 , 
+	VALUES(
 	#user_seq#, #ext_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
 	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables# 
 	)
@@ -372,8 +372,8 @@
 	============================================================================================================================
  -->
 <insert id="userDbResourceInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
-	INSERT INTO user_db_resource(resource_seq, resource_types, user_seq, db_seq, group_seq, name, shared_type, description)
-	VALUES( (select max(resource_seq) from user_db_resource)+1, #resource_types#, #user_seq#, #db_seq#, #group_seq#, #name#, #shared_type#, #description#)
+	INSERT INTO user_db_resource(resource_types, user_seq, db_seq, group_seq, name, shared_type, description)
+	VALUES(#resource_types#, #user_seq#, #db_seq#, #group_seq#, #name#, #shared_type#, #description#)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
 		SELECT * 
@@ -436,8 +436,8 @@
 	resource data를 저장합니다.
  -->
 <insert id="userDbResourceDataInsert" parameterClass="com.hangum.tadpole.dao.system.UserDBResourceDataDAO">
-	INSERT INTO user_db_resource_data(seq, user_db_resource_seq, datas)
-	VALUES( (select max(seq) from user_db_resource_data)+1, #user_db_resource_seq#, #datas#)
+	INSERT INTO user_db_resource_data(user_db_resource_seq, datas)
+	VALUES(#user_db_resource_seq#, #datas#)
 </insert>
 
 <!-- 
@@ -474,8 +474,8 @@
 	사용자 정보를 저장한다. 
  -->
 <insert id="userInfoDataInsert" parameterClass="com.hangum.tadpole.dao.system.UserInfoDataDAO">
-	INSERT INTO user_info_data(seq, user_seq, db_seq, name, value0, value1, value2, value3, value4, value5)
-	VALUES( (select max(seq) from user_info_data)+1, #user_seq#, #db_seq#, #name#, #value0#, #value1#, #value2#, #value3#, #value4#, #value5# )
+	INSERT INTO user_info_data(user_seq, db_seq, name, value0, value1, value2, value3, value4, value5)
+	VALUES(#user_seq#, #db_seq#, #name#, #value0#, #value1#, #value2#, #value3#, #value4#, #value5# )
 </insert>
 
 <!-- 
@@ -500,8 +500,8 @@
 	=========================================================================================================
  -->
 <insert id="userExecuteSQLResourceInsert" parameterClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDAO">
-	INSERT INTO executed_sql_resource(seq, user_seq, db_seq, types, startDateExecute, endDateExecute, duration, row, result, message)
-	VALUES((select max(seq) from executed_sql_resource)+1, #user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #duration#, #row#, #result#, #message#)
+	INSERT INTO executed_sql_resource(user_seq, db_seq, types, startDateExecute, endDateExecute, duration, row, result, message)
+	VALUES(#user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #duration#, #row#, #result#, #message#)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDAO">
 		SELECT * 
@@ -509,8 +509,7 @@
 		WHERE user_seq = #user_seq# AND
 			db_seq = #db_seq# AND 
 			types = #types# AND 
-			startDateExecute = #startDateExecute# AND
-			delYn = 'NO'
+			startDateExecute = #startDateExecute#
 	</selectKey>
 </insert>
 
@@ -519,8 +518,8 @@
 	execute sql resource data를 저장합니다.
  -->
 <insert id="userExecuteSQLResourceDataInsert" parameterClass="com.hangum.tadpole.dao.system.ExecutedSqlResourceDataDAO">
-	INSERT INTO executed_sql_resource_data(seq, executed_sql_resource_seq, datas)
-	VALUES( (select max(seq) from executed_sql_resource_data)+1, #executed_sql_resource_seq#, #datas#)
+	INSERT INTO executed_sql_resource_data(executed_sql_resource_seq, datas)
+	VALUES(#executed_sql_resource_seq#, #datas#)
 </insert>
 
 <!-- 
@@ -569,8 +568,8 @@
 	=========================================================================================================
  -->
 <insert id="userUserRoleInsert" parameterClass="com.hangum.tadpole.dao.system.UserRoleDAO">
-	INSERT INTO user_role(seq, group_seq, user_seq, role_type, name)
-	VALUES((select max(seq) from user_role)+1, #group_seq#, #user_seq#, #role_type#, #name#)
+	INSERT INTO user_role(group_seq, user_seq, role_type, name)
+	VALUES(#group_seq#, #user_seq#, #role_type#, #name#)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.UserRoleDAO">
 		SELECT * 

@@ -1078,11 +1078,11 @@ public class MainEditor extends EditorExtension {
 						}
 					}
 					
-					executingSQLHistoryDAO.setResult("Success"); //$NON-NLS-1$
+					executingSQLHistoryDAO.setResult("S"); //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + finalExecuteSQL, e);
 					
-					executingSQLHistoryDAO.setResult("Fail"); //$NON-NLS-1$
+					executingSQLHistoryDAO.setResult("F"); //$NON-NLS-1$
 					executingSQLHistoryDAO.setMesssage(e.getMessage());
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());

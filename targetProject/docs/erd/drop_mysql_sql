@@ -1,0 +1,47 @@
+-- 사용자
+DROP TABLE IF EXISTS `user` RESTRICT;
+
+-- 사용자그룹
+DROP TABLE IF EXISTS `user_group` RESTRICT;
+
+-- 사용자리소스
+DROP TABLE IF EXISTS `user_db_resource` RESTRICT;
+
+-- 데이터베이스
+DROP TABLE IF EXISTS `user_db` RESTRICT;
+
+-- 사용자정보
+DROP TABLE IF EXISTS `user_info_data` RESTRICT;
+
+-- 실행SQL
+DROP TABLE IF EXISTS `executed_sql_resource` RESTRICT;
+
+-- 리소스내용
+DROP TABLE IF EXISTS `user_db_resource_data` RESTRICT;
+
+-- 실행SQL내용
+DROP TABLE IF EXISTS `executed_sql_resource_data` RESTRICT;
+
+-- 계정추가정보
+DROP TABLE IF EXISTS `account_ext` RESTRICT;
+
+-- 시스템정보
+DROP TABLE IF EXISTS `tadpole_system` RESTRICT;
+
+-- 테이블필터
+DROP TABLE IF EXISTS `user_db_filter` RESTRICT;
+
+-- SSH연결정보
+DROP TABLE IF EXISTS `ssh_info` RESTRICT;
+
+-- 데이터베이스확장속성
+DROP TABLE IF EXISTS `user_db_ext` RESTRICT;
+
+-- 사용자역활
+DROP TABLE IF EXISTS `user_role` RESTRICT;
+
+-- 데이터보안정보
+DROP TABLE IF EXISTS `data_security` RESTRICT;
+
+-- 클래스 목록
+DROP TABLE IF EXISTS `security_class` RESTRICT;
