@@ -116,7 +116,7 @@ public class BasicEntryPoint extends AbstractEntryPoint {
 	 */
 	private void encrypt() {
 		try {
-			String strEncrypt = CipherManager.getInstance().encryption(defaultContent);
+			String strEncrypt = CipherManager.getInstance().encryption(txtOriginal.getText());
 			textEncrypt.setText(strEncrypt);
 
 			// System.out.println(strEncrypt);

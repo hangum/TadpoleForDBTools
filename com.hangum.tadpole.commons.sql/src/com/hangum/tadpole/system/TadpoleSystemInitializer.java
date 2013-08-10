@@ -75,7 +75,7 @@ public class TadpoleSystemInitializer {
 	
 	/**
 	 * 시스템 시작환경이 디비를 공유모드로 사용할지 환경을 선택합니다.
-	 *  -dbServer C:\dev\eclipse-SDK-4.2RC1-Xtext-2.3.0RC1-win32\eclipse\workspace-tadpole\TadpoleForDBTools\targetProject\TadpoleEngine.cfg
+	 *  -dbServer 	/Users/hangum/git/TadpoleForDBTools/targetProject/TadpoleEngine.cfg
 	 */
 	static {
 		String dbServerPath = "";
@@ -170,6 +170,7 @@ public class TadpoleSystemInitializer {
 			boolean boolResult = false;
 			
 			if(!ApplicationArgumentUtils.isDBServer()) {
+				logger.info("*** SQLite System Teable creation ***");
 				
 				// system db 생성
 				createMsg = "System Table create [" + Messages.TadpoleSystemConnector_system_info_create  + "]"; 
@@ -247,49 +248,85 @@ public class TadpoleSystemInitializer {
 				logger.info("[executed_sql_resource_data] Tables" + (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 				
-			// default is cubrid
+			// default is mysql
 			} else {
+				logger.info("*** MySQL System Teable creation ***");
+//				throw new Exception("Not support this function. Please contact to the admin(adi.tadpole@gmail.com)");
 				
-				throw new Exception("Not support this function. Please contact to the admin(adi.tadpole@gmail.com)");
+				// system db 생성
+				createMsg = "System Table create [" + Messages.TadpoleSystemConnector_system_info_create_mysql  + "]"; 
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_system_info_create_mysql );
+				logger.info( "System" + (!boolResult?Messages.TadpoleSystemConnector_6:Messages.TadpoleSystemConnector_7));
 				
-//				createMsg = "System Table create [" + Messages.TadpoleSystemConnector_system_info_create_CUBRID  + "]"; 
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_system_info_create_CUBRID );
-//				logger.info( "System" + (!boolResult?Messages.TadpoleSystemConnector_6:Messages.TadpoleSystemConnector_7));
-//				
-//				// group
-//				createMsg = "Group Table create [" + Messages.TadpoleSystemConnector_group_create_CUBRID  + "]";
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_group_create_CUBRID);
-//				logger.info("Group" + (!boolResult?Messages.TadpoleSystemConnector_6:Messages.TadpoleSystemConnector_7) );
-//				
-//				// user
-//				createMsg = Messages.TadpoleSystemConnector_5 + "[" + Messages.TadpoleSystemConnector_user_table_create_CUBRID + "]";
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_table_create_CUBRID );
-//				logger.info(Messages.TadpoleSystemConnector_5+ (!boolResult?Messages.TadpoleSystemConnector_6:Messages.TadpoleSystemConnector_7) );
-//				
-//				// ext account
-//				createMsg = "external account table [" + Messages.TadpoleSystemConnector_user_external_account_CUBRID + "]";
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account_CUBRID );
-//				logger.info("external account table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
-//				
-//				// user db
-//				createMsg = Messages.TadpoleSystemConnector_9 + "[" + Messages.TadpoleSystemConnector_user_db_table_create_CUBRID + "]";
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_table_create_CUBRID );
-//				logger.info(Messages.TadpoleSystemConnector_9+ (!boolResult?Messages.TadpoleSystemConnector_10:Messages.TadpoleSystemConnector_11) );
-//				
-//				// user resource
-//				createMsg = Messages.TadpoleSystemConnector_13 + "[" + Messages.TadpoleSystemConnector_user_db_resource_create_CUBRID + "]";
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_resource_create_CUBRID );
-//				logger.info(Messages.TadpoleSystemConnector_13+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
-//				
-//				// user resource data
-//				createMsg = "user_db_resource_data Tables [" + Messages.TadpoleSystemConnector_user_db_resource_data_create_CUBRID + "]";
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_resource_data_create_CUBRID );
-//				logger.info("user_db_resource_data Tables" + (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
-//				
-//				// user info data
-//				createMsg = "user_info_data Tables [" + Messages.TadpoleSystemConnector_user_info_data_CUBRID + "]";
-//				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data_CUBRID );
-//				logger.info("user_info_data"+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				// group
+				createMsg = "Group Table create [" + Messages.TadpoleSystemConnector_group_create_mysql  + "]"; 
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_group_create_mysql );
+				logger.info( "Group" + (!boolResult?Messages.TadpoleSystemConnector_6:Messages.TadpoleSystemConnector_7));
+				
+				// user
+				createMsg = Messages.TadpoleSystemConnector_5 + "[" + Messages.TadpoleSystemConnector_user_table_create_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_table_create_mysql );
+				logger.info( Messages.TadpoleSystemConnector_5 + (!boolResult?Messages.TadpoleSystemConnector_6:Messages.TadpoleSystemConnector_7));
+				
+				// user role table
+				createMsg = Messages.TadpoleSystemConnector_5 + "[" + Messages.TadpoleSystemConnector_user_role_table_create_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_role_table_create_mysql );
+				logger.info( Messages.TadpoleSystemConnector_5 + (!boolResult?Messages.TadpoleSystemConnector_6:Messages.TadpoleSystemConnector_7));
+				
+					// ext account
+				createMsg = "external account table [" + Messages.TadpoleSystemConnector_user_external_account_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_external_account_mysql );
+				logger.info("external account table "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
+				// user db
+				createMsg = Messages.TadpoleSystemConnector_9 + "[" + Messages.TadpoleSystemConnector_user_db_table_create_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_table_create_mysql );
+				logger.info(Messages.TadpoleSystemConnector_9+ (!boolResult?Messages.TadpoleSystemConnector_10:Messages.TadpoleSystemConnector_11) );
+				
+				// user_db_filter
+				createMsg = "[user_db_filter]" + "[" + Messages.TadpoleSystemConnector_user_db_filter_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_filter_mysql );
+				logger.info("[user_db_filter]" + (!boolResult?Messages.TadpoleSystemConnector_10:Messages.TadpoleSystemConnector_11) );
+
+				// user_db_filter
+				createMsg = "[user_db_ext]" + "[" + Messages.TadpoleSystemConnector_user_db_ext_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_ext_mysql );
+				logger.info("[user_db_ext]" + (!boolResult?Messages.TadpoleSystemConnector_10:Messages.TadpoleSystemConnector_11) );
+				
+				// security_class
+				createMsg = "[security_class]" + "[" + Messages.TadpoleSystemConnector_security_class_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_security_class_mysql );
+				logger.info("[security_class]" + (!boolResult?Messages.TadpoleSystemConnector_10:Messages.TadpoleSystemConnector_11) );
+				
+				//data_security
+				createMsg = "[data_security]" + "[" + Messages.TadpoleSystemConnector_data_security_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_data_security_mysql );
+				logger.info("[data_security]" + (!boolResult?Messages.TadpoleSystemConnector_10:Messages.TadpoleSystemConnector_11) );
+				
+				// user resource
+				createMsg = Messages.TadpoleSystemConnector_13 + "][" + Messages.TadpoleSystemConnector_user_db_resource_create_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_resource_create_mysql	);
+				logger.info(Messages.TadpoleSystemConnector_13+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
+				// user resource data
+				createMsg = "[user_db_resource_data] Tables [" + Messages.TadpoleSystemConnector_user_db_resource_data_create_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_db_resource_data_create_mysql	);
+				logger.info("[user_db_resource_data] Tables" + (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
+				// user info data
+				createMsg = "[user_info_data] Tables [" + Messages.TadpoleSystemConnector_user_info_data_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_user_info_data_mysql);
+				logger.info("[user_info_data] Tables "+ (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
+				// execute_sql_resource_create data
+				createMsg = "[executed_sql_resource] Tables [" + Messages.TadpoleSystemConnector_execute_sql_resource_create_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_execute_sql_resource_create_mysql	);
+				logger.info("[execute_sql_resource] Tables" + (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
+				
+				// 	executed_sql_resource_data
+				createMsg = "[executed_sql_resource_data] Tables [" + Messages.TadpoleSystemConnector_execute_sql_resource_date_create_mysql + "]";
+				boolResult = stmt.execute( Messages.TadpoleSystemConnector_execute_sql_resource_date_create_mysql	);
+				logger.info("[executed_sql_resource_data] Tables" + (!boolResult?Messages.TadpoleSystemConnector_14:Messages.TadpoleSystemConnector_15) );
 				
 			}
 			
@@ -370,10 +407,10 @@ public class TadpoleSystemInitializer {
 				String passwd	= prop.getProperty("password").trim();
 			
 				// make userDB
-				tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_CUBRID_DEFAULT.getDBToString());
-				tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_CUBRID_DEFAULT.getDB_URL_INFO(), ip, port, database));
+				tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
+				tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
 				tadpoleEngineDB.setDb(database);
-				tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_CUBRID_DEFAULT.getDBToString());
+				tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
 				tadpoleEngineDB.setUsers(user);
 				tadpoleEngineDB.setPasswd(passwd);
 				

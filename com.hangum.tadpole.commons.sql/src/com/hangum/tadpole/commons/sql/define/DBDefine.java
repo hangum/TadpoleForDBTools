@@ -38,7 +38,7 @@ import java.util.List;
 public enum DBDefine {
 	/** Tadpole System DB */
 	TADPOLE_SYSTEM_DEFAULT,
-	TADPOLE_SYSTEM_CUBRID_DEFAULT,
+	TADPOLE_SYSTEM_MYSQL_DEFAULT,
 	
 	/** USER DB */
 	ORACLE_DEFAULT,
@@ -70,7 +70,7 @@ public enum DBDefine {
 	public String getLocation() {
 		switch ( this ) {
 			case TADPOLE_SYSTEM_DEFAULT: return prefix_system + "TadpoleSystem-SQLite-Config.xml";
-			case TADPOLE_SYSTEM_CUBRID_DEFAULT: return prefix_system + "TadpoleSystem-CUBRID-Config.xml";
+			case TADPOLE_SYSTEM_MYSQL_DEFAULT: return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
 			
 			case ORACLE_DEFAULT:	return prefix + "OracleConfig.xml";
 			case MSSQL_DEFAULT:		return prefix + "MSSQLConfig.xml";
@@ -95,7 +95,7 @@ public enum DBDefine {
 	public static DBDefine getDBDefine(String type) {
 		
 		if(type.equalsIgnoreCase("TadpoleSystem")) 	return TADPOLE_SYSTEM_DEFAULT;
-		if(type.equalsIgnoreCase("TadpoleSystem_CUBRID")) 	return TADPOLE_SYSTEM_CUBRID_DEFAULT;
+		if(type.equalsIgnoreCase("TadpoleSystem_MYSQL")) 	return TADPOLE_SYSTEM_MYSQL_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
 		
@@ -123,7 +123,7 @@ public enum DBDefine {
 	public String getDB_URL_INFO() {
 		switch ( this ) {
 			case TADPOLE_SYSTEM_DEFAULT:		return "jdbc:sqlite:/%s";
-			case TADPOLE_SYSTEM_CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";
+			case TADPOLE_SYSTEM_MYSQL_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
 			
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
 			
@@ -148,9 +148,9 @@ public enum DBDefine {
 	public String getDBToString() {
 		switch ( this ) {
 			case TADPOLE_SYSTEM_DEFAULT:		return "TadpoleSystem";
-			case TADPOLE_SYSTEM_CUBRID_DEFAULT: return "TadpoleSystem_CUBRID";
+			case TADPOLE_SYSTEM_MYSQL_DEFAULT: 	return "TadpoleSystem_MYSQL";
 		
-			case ORACLE_DEFAULT:	return "Oracle";
+			case ORACLE_DEFAULT:		return "Oracle";
 			
 			case MSSQL_DEFAULT:			return "MSSQL";
 			case MSSQL_8_LE_DEFAULT:	return "MSSQL_8_LE";

@@ -12,7 +12,7 @@ Program Argument
   -test			: 테스트 데이터를 로드할것인지 (ex: 예제 데이터 베이스 정보 노출)
   -standalone 	: 독립 실행모드인지 (ex: 서버 종료 모드, 시작시 브라우저 자동 노출)
   -debuglog 	: log4j 로그레벨이 debug모드. 아니면 info 
-  -dbServer C:\dev\eclipse-SDK-4.2RC1-Xtext-2.3.0RC1-win32\eclipse\workspace-tadpole\TadpoleForDBTools\targetProject\TadpoleEngine.cfg
+  -dbServer 	/Users/hangum/git/TadpoleForDBTools/targetProject/TadpoleEngine.cfg
   				: 엔진디비를 지정한 디비를 사용합니다. 디폴트는 내부 sqlite 디비를 사용합니다. 
   
   

@@ -17,14 +17,14 @@
 
 	<transactionManager type="JDBC">
 		<dataSource type="DBCP">
-			<property name="JDBC.Driver" 			value="cubrid.jdbc.driver.CUBRIDDriver" />
+			<property name="JDBC.Driver" 			value="com.mysql.jdbc.Driver" />
 			<property name="JDBC.ConnectionURL" 	value="${JDBC.ConnectionURL}" />
 			<property name="JDBC.Username" 			value="${JDBC.Username}" />
 			<property name="JDBC.Password" 			value="${JDBC.Password}" />
 
 			<!--OPTIONAL PROPERTIES BELOW -->
-			<property name="Pool.MaximumActiveConnections" 	value="3" />
-			<property name="Pool.MaximumIdleConnections" 	value="1" />
+			<property name="Pool.MaximumActiveConnections" 	value="30" />
+			<property name="Pool.MaximumIdleConnections" 	value="5" />
 			<property name="Pool.MaximumWait" 				value="60000" />
 			<!--
 				Use of the validation query can be problematic. If you have
@@ -45,6 +45,6 @@
 		DML문은 SQLite와 같아서 sqlite것을 사용합니다. - hangum
 	-->
 	<sqlMap resource="com/hangum/tadpole/commons/sql/query/internal/system/Tadpole-System-Common.xml" />
-	<sqlMap resource="com/hangum/tadpole/commons/sql/query/internal/system/Tadpole-System-CUBRID.xml" />
+	<sqlMap resource="com/hangum/tadpole/commons/sql/query/internal/system/Tadpole-System-MySQL.xml" />
 
 </sqlMapConfig>

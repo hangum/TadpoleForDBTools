@@ -11,14 +11,12 @@
 -->
 <!-- 
 
-	
-
  -->
 <!DOCTYPE sqlMap      
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
-<sqlMap namespace="Tadpole-System-CUBRID">
+<sqlMap namespace="Tadpole-System-MySQL">
 
 	<!--
 		============================================================================================================================ 
@@ -26,11 +24,11 @@
 		============================================================================================================================
 	 -->
 	<select id="isUserTable" resultClass="java.lang.String">
-		SELECT class_name name
-		FROM DB_CLASS
-		WHERE  is_system_class = 'NO' AND 
-			class_type = 'CLASS' AND 
-			class_name = 'user'  
+		SELECT TABLE_NAME name
+		FROM INFORMATION_SCHEMA.TABLES
+		WHERE TABLE_SCHEMA = #db# 
+			AND TABLE_TYPE = 'BASE TABLE'
+			AND table_name = 'user'
 	</select>
 	
 </sqlMap>
