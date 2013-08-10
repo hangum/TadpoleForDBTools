@@ -149,7 +149,7 @@ public class InstanceInformationComposite extends Composite {
 		cmpMemory.setLayout(gl_grpMemory);
 		cmpMemory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		createMemeoryInformation(cmpMemory, commandResult);
+		createConnectionChart(cmpMemory, commandResult);
 		createNetworkInformation(cmpMemory, commandResult);
 
 		// show connection, cursor
@@ -162,7 +162,7 @@ public class InstanceInformationComposite extends Composite {
 		cmpConnections.setLayout(gl_grpConnections);
 		cmpConnections.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		createConnectionChart(cmpConnections, commandResult);
+		createMemeoryInformation(cmpConnections, commandResult);
 		createCursorsChart(cmpConnections, commandResult);
 		
 		// show extra information
