@@ -16,6 +16,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
+import com.hangum.tadpole.util.TadpoleDisplay;
 
 
 /**
@@ -24,9 +25,9 @@ import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
  */
 public class Application implements IEntryPoint {
 
-//	public Object start(IApplicationContext context) throws Exception {
 	public int createUI() {
-		Display display = PlatformUI.createDisplay();
+		Display display = PlatformUI.createDisplay();//new TadpoleDisplay();// PlatformUI.createDisplay();
+		
 		WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
 		return PlatformUI.createAndRunWorkbench( display, advisor );
 	}
