@@ -5,8 +5,8 @@
 
 .textviewContainer {
 	background-color: #eaeaea;
-	font-family: monospace;
-	font-size: 9pt;
+	font-family: "Lucida Sans";
+	font-size: 8.8pt;
 	min-width: 50px;
 	min-height: 50px;
 }

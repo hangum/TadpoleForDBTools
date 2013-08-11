@@ -6,8 +6,8 @@
 
 /* Styles for the view tooltips */
 .textviewTooltip {
-	font-family: monospace;
-	font-size: 10pt;
+	font-family: 'Lucida Sans';
+	font-size: 8.8pt;
 	background-color: InfoBackground;
 	color: InfoText;
 	padding: 2px;
