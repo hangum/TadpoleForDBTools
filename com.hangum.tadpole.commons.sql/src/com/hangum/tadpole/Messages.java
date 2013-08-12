@@ -40,37 +40,6 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_6;
 	public static String TadpoleSystemConnector_7;
 	public static String TadpoleSystemConnector_9;
-	public static String TadpoleSystemConnector_system_info_create;
-	public static String TadpoleSystemConnector_group_create;
-	public static String TadpoleSystemConnector_user_db_resource_create;
-	public static String TadpoleSystemConnector_user_db_resource_data_create;
-	public static String TadpoleSystemConnector_user_db_table_create;
-	public static String TadpoleSystemConnector_user_table_create;
-	public static String TadpoleSystemConnector_user_info_data;
-	public static String TadpoleSystemConnector_user_external_account;
-	public static String TadpoleSystemConnector_execute_sql_resource_create;
-	public static String TadpoleSystemConnector_execute_sql_resource_date_create;
-	public static String TadpoleSystemConnector_user_db_filter;
-	public static String TadpoleSystemConnector_user_db_ext;
-	public static String TadpoleSystemConnector_security_class;
-	public static String TadpoleSystemConnector_data_security;
-	public static String TadpoleSystemConnector_user_role_table_create;
-	
-	public static String TadpoleSystemConnector_execute_sql_resource_date_create_mysql;
-	public static String TadpoleSystemConnector_system_info_create_mysql;
-	public static String TadpoleSystemConnector_group_create_mysql;
-	public static String TadpoleSystemConnector_user_table_create_mysql;
-	public static String TadpoleSystemConnector_user_role_table_create_mysql;
-	public static String TadpoleSystemConnector_user_external_account_mysql;
-	public static String TadpoleSystemConnector_user_db_table_create_mysql;
-	public static String TadpoleSystemConnector_user_db_filter_mysql;
-	public static String TadpoleSystemConnector_user_db_ext_mysql;
-	public static String TadpoleSystemConnector_security_class_mysql;
-	public static String TadpoleSystemConnector_data_security_mysql;
-	public static String TadpoleSystemConnector_user_db_resource_create_mysql;
-	public static String TadpoleSystemConnector_user_db_resource_data_create_mysql;
-	public static String TadpoleSystemConnector_user_info_data_mysql;
-	public static String TadpoleSystemConnector_execute_sql_resource_create_mysql;
 	
 	static {
 		// initialize resource bundle

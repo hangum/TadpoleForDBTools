@@ -26,7 +26,7 @@
 	<select id="isUserTable" resultClass="java.lang.String">
 		SELECT TABLE_NAME name
 		FROM INFORMATION_SCHEMA.TABLES
-		WHERE  table_name = 'user'
+		WHERE  table_name = 'tadpole_system'
 	</select>
 	
 </sqlMap>

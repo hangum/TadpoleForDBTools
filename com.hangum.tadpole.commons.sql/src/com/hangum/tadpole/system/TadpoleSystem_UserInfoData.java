@@ -253,6 +253,10 @@ public class TadpoleSystem_UserInfoData {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(userdb.getSeq());
+		/*user_db 테이블의 seq가 들어가야함.*/
+		/* 사용자별 dbms의 종류에 따른 환경설정 정보 - 초기등록시 작업이 아니라 커넥션 최초 등록시 작업하는게 맞음. */
+		/* dbms종속적인 환경설정도 있을 수 있으므로.. */
+		//userInfoData.setDb_seq(1);
 		
 		// export delimiter
 		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
