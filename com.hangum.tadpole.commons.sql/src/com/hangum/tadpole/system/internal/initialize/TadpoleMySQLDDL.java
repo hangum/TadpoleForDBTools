@@ -59,12 +59,13 @@ public class TadpoleMySQLDDL extends NLS {
 	public static String executed_sql_resource_data_fk2;
 	public static String executed_sql_resource_fk;
 	public static String executed_sql_resource_fk2;
-	public static String ext_account_fk;
+//	public static String ext_account_fk;
 	public static String security_class_fk;
 	public static String user_db_ext_fk;
 	public static String user_db_filter_fk;
 	public static String user_db_fk;
-	public static String user_db_fk2;
+	// user_info_data 입력시 참조무결성 제약조건 위반 오류. 임시로 막음.
+//	public static String user_db_fk2;
 	public static String user_db_fk3;
 	public static String user_db_resource_fk;
 	public static String user_db_resource_fk2;
