@@ -13,7 +13,7 @@ package com.hangum.tadpole.system.internal.initialize;
 import org.eclipse.osgi.util.NLS;
 
 public class TadpoleMySQLDDL extends NLS {
-	private static String BUNDLE_NAME = "com.hangum.tadpole.tadpole_mysql_ddl"; //$NON-NLS-1$
+	private static String BUNDLE_NAME = "com.hangum.tadpole.system.internal.initialize.tadpole_mysql_ddl"; //$NON-NLS-1$
 
 	/*
 	 * 
