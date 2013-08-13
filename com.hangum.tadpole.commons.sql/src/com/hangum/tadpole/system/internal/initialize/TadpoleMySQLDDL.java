@@ -52,11 +52,13 @@ public class TadpoleMySQLDDL extends NLS {
 	public static String executed_sql_resource_seq;
 	public static String executed_sql_resource_data;
 	public static String executed_sql_resource_data_pk;
+	public static String data_security_seq;
 	public static String data_security_fk;
 	public static String data_security_fk2;
 	public static String data_security_fk3;
 	public static String executed_sql_resource_data_fk;
 	public static String executed_sql_resource_data_fk2;
+	public static String executed_sql_resource_data_seq;
 	public static String executed_sql_resource_fk;
 	public static String executed_sql_resource_fk2;
 //	public static String ext_account_fk;
