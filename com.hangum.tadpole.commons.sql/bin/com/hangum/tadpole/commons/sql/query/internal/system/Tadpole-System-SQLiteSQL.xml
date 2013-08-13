@@ -28,7 +28,7 @@
 		FROM sqlite_master
 		WHERE 
 			type = 'table' and 
-			name = 'user'  
+			name = 'tadpole_system'  
 	</select>
 
 </sqlMap>

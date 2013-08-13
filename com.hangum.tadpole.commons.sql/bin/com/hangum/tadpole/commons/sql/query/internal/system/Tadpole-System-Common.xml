@@ -101,7 +101,7 @@
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.dao.system.UserDAO">
 	INSERT INTO user(email, passwd, name, language, approval_yn)
-	VALUES( #email#, #passwd#, #name#, #language#, #approval_yn#)
+	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#)
 	
 	<selectKey resultClass="com.hangum.tadpole.dao.system.UserDAO">
 		select * from user where email = #email# 
