@@ -272,12 +272,13 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 
 		String dbUrl = "";
 		String locale = comboLocale.getText().trim();
+		String selectLocale = "";
 		if(locale.equals("") || DBLocaleUtils.NONE_TXT.equals(locale)) {
 			dbUrl = String.format(
 					getSelectDB().getDB_URL_INFO(), 
 					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
 		} else {			
-			String selectLocale = StringUtils.substringBefore(comboLocale.getText().trim(), "|");			
+			selectLocale = StringUtils.substringBefore(comboLocale.getText().trim(), "|");			
 			
 			dbUrl = String.format(
 					getSelectDB().getDB_URL_INFO(), 
@@ -297,7 +298,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setPort(textPort.getText().trim());
 		userDB.setUsers(textUser.getText().trim());
 		userDB.setPasswd(textPassword.getText().trim());
-		userDB.setLocale(comboLocale.getText().trim());
+		userDB.setLocale(selectLocale);
 		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
