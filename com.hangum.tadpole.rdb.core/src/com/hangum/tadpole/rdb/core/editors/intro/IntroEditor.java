@@ -175,7 +175,7 @@ public class IntroEditor extends EditorPart {
 	 */
 	private void setBrowserURL() {
 		int selectRandom = (int)(Math.random() * ARRAY_DEFAULT_MAIN_HOME_PAGE.length);
-		logger.info("[select home]" + ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]); //$NON-NLS-1$
+//		logger.info("[select home]" + ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]); //$NON-NLS-1$
 		browser.setUrl(ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
 		
 		textURL.setText(ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
