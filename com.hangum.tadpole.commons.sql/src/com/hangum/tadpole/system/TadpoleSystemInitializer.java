@@ -24,8 +24,6 @@ import org.eclipse.core.runtime.Platform;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.Messages;
-import com.hangum.tadpole.TadpoleMySQLDDL;
-import com.hangum.tadpole.TadpoleSQLIteDDL;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
@@ -33,6 +31,8 @@ import com.hangum.tadpole.dao.system.TadpoleSystemDAO;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
+import com.hangum.tadpole.system.internal.initialize.TadpoleMySQLDDL;
+import com.hangum.tadpole.system.internal.initialize.TadpoleSQLIteDDL;
 import com.hangum.tadpole.system.internal.migration.SystemMigrationSR9TOSR10;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -86,8 +86,7 @@ public class TadpoleSystemInitializer {
 			if (!new File(DB_FILE_LOCATION).exists()) {
 				new File(DB_FILE_LOCATION).mkdirs();
 			}
-			if (logger.isDebugEnabled())
-				logger.debug(DB_FILE_LOCATION + DB_NAME);
+			if (logger.isDebugEnabled()) logger.debug(DB_FILE_LOCATION + DB_NAME);
 
 			// 원격디비를 사용 할 경우.
 		} else {
@@ -129,11 +128,14 @@ public class TadpoleSystemInitializer {
 
 		if (isUserTable.size() == 0) {
 			createSystemTable();
+			insertInitialData();
+			
 			return true;
 		} else {
 			logger.info(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION + " start...");
 			return systemCheck();
 		}
+		
 	}
 
 	/**
@@ -168,7 +170,7 @@ public class TadpoleSystemInitializer {
 
 			// 테이블 생성
 			Statement stmt = javaConn.createStatement();
-			boolean boolResult = false;
+//			boolean boolResult = false;
 
 			Object obj = null;
 			if (ApplicationArgumentUtils.isDBServer()) {
@@ -184,34 +186,9 @@ public class TadpoleSystemInitializer {
 				targetDDL = obj.getClass().getField(field.getName()).get("").toString();
 				//targetDDL = new String(targetDDL.getBytes(), "ISO-8859-1");
 				createMsg = "System Table create [" + targetDDL + "]";
-				boolResult = stmt.execute(targetDDL);
+				stmt.execute(targetDDL);
 				logger.info("\n System Table create ==>> " + field.getName());
 			}
-
-			// 시스템 기본 정보를 입력합니다.
-			TadpoleSystemQuery.newSystemInfo(SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.INFORMATION);
-
-			// add basic group
-			createMsg = "AdminGroup crateing....";
-			UserGroupDAO groupAdmin = TadpoleSystem_UserGroupQuery.newUserGroup("AdminGroup");
-
-			createMsg = "TestGroup crateing....";
-			UserGroupDAO groupTest = TadpoleSystem_UserGroupQuery.newUserGroup("TestGroup");
-
-			// add basic user
-			createMsg = ADMIN_EMAIL + " user creating....";
-			UserDAO adminUser = TadpoleSystem_UserQuery.newUser(ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
-
-			createMsg = MANAGER_EMAIL + " user creating....";
-			UserDAO managerUser = TadpoleSystem_UserQuery.newUser(MANAGER_EMAIL, MANAGER_PASSWD, MANAGER_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
-
-			createMsg = GUEST_EMAIL + " user creating....";
-			UserDAO gusetUser = TadpoleSystem_UserQuery.newUser(GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
-
-			// add group_role
-			TadpoleSystem_UserRole.newUserRole(groupAdmin.getSeq(), adminUser.getSeq(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
-			TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), managerUser.getSeq(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString());
-			TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), gusetUser.getSeq(), PublicTadpoleDefine.USER_TYPE.USER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.USER.toString());
 
 		} catch (Exception e) {
 			logger.error(createMsg, e);
@@ -223,6 +200,39 @@ public class TadpoleSystemInitializer {
 			} catch (Exception e) {
 			}
 		}
+	}
+	
+	/**
+	 * insert initialize data 
+	 * 
+	 * @throws Exception
+	 */
+	private static void insertInitialData() throws Exception {
+		// 시스템 기본 정보를 입력합니다.
+		TadpoleSystemQuery.newSystemInfo(SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.INFORMATION);
+
+		// add basic group
+		String createMsg = "AdminGroup crateing....";
+		UserGroupDAO groupAdmin = TadpoleSystem_UserGroupQuery.newUserGroup("AdminGroup");
+
+		createMsg = "TestGroup crateing....";
+		UserGroupDAO groupTest = TadpoleSystem_UserGroupQuery.newUserGroup("TestGroup");
+
+		// add basic user
+		createMsg = ADMIN_EMAIL + " user creating....";
+		UserDAO adminUser = TadpoleSystem_UserQuery.newUser(ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
+
+		createMsg = MANAGER_EMAIL + " user creating....";
+		UserDAO managerUser = TadpoleSystem_UserQuery.newUser(MANAGER_EMAIL, MANAGER_PASSWD, MANAGER_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
+
+		createMsg = GUEST_EMAIL + " user creating....";
+		UserDAO gusetUser = TadpoleSystem_UserQuery.newUser(GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
+
+		// add group_role
+		TadpoleSystem_UserRole.newUserRole(groupAdmin.getSeq(), adminUser.getSeq(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
+		TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), managerUser.getSeq(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString());
+		TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), gusetUser.getSeq(), PublicTadpoleDefine.USER_TYPE.USER.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.USER.toString());
+
 	}
 
 	/**
@@ -275,10 +285,10 @@ public class TadpoleSystemInitializer {
 				tadpoleEngineDB.setUsers(user);
 				tadpoleEngineDB.setPasswd(passwd);
 
-				if (logger.isDebugEnabled()) {
-					logger.debug("[which DB]" + whichDB);
-					logger.debug(tadpoleEngineDB.toString());
-				}
+//				if (logger.isDebugEnabled()) {
+//					logger.debug("[which DB]" + whichDB);
+//					logger.debug(tadpoleEngineDB.toString());
+//				}
 
 			} catch (Exception ioe) {
 				logger.error("File not found exception or file encrypt exception. check the exist file." + dbServerPath, ioe);

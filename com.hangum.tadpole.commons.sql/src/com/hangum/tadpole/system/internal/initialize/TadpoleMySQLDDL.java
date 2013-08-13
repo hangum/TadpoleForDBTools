@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole;
+package com.hangum.tadpole.system.internal.initialize;
 
 import org.eclipse.osgi.util.NLS;
 
