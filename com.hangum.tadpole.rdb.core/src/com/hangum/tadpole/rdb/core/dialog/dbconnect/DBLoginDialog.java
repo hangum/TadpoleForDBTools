@@ -20,6 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,6 +45,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginCompo
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * Login dialog
@@ -127,6 +129,7 @@ public class DBLoginDialog extends Dialog {
 		lblNewLabel.setText(Messages.DBLoginDialog_35);
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
+		comboDBList.setBackground(SWTResourceManager.getColor(255, 250, 205));
 		comboDBList.setVisibleItemCount(9);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
