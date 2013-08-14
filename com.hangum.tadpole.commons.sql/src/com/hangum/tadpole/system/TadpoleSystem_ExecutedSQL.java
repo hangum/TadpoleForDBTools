@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,14 +68,14 @@ public class TadpoleSystem_ExecutedSQL {
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
 		
 		for (Map resultMap : listResourceData) {
-			int seq = (Integer)resultMap.get("EXECUTED_SQL_RESOURCE_SEQ");
+			int seq = (Integer)resultMap.get("executed_sql_resource_seq");
 			
-			Long startdateexecute = (Long)resultMap.get("STARTDATEEXECUTE");
-			String strSQLText = (String)resultMap.get("DATAS");
-			Long enddateexecute = (Long)resultMap.get("ENDDATEEXECUTE");
+			Long startdateexecute = (Long)resultMap.get("startdateexecute");
+			String strSQLText = (String)resultMap.get("datas");
+			Long enddateexecute = (Long)resultMap.get("enddateexecute");
 			
-			int row = (Integer)resultMap.get("ROW");
-			String result = (String)resultMap.get("RESULT");
+			int row = (Integer)resultMap.get("row");
+			String result = (String)resultMap.get("result");
 			
 			SQLHistoryDAO dao = new SQLHistoryDAO(new Date(startdateexecute), strSQLText, new Date(enddateexecute), row, result, "");
 			dao.setSeq(seq);
@@ -105,14 +106,28 @@ public class TadpoleSystem_ExecutedSQL {
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistory", queryMap);
 		
 		for (Map resultMap : listResourceData) {
-			int seq = (Integer)resultMap.get("EXECUTED_SQL_RESOURCE_SEQ");
+			int seq 				= (Integer)resultMap.get("executed_sql_resource_seq");
 			
-			Long startdateexecute = (Long)resultMap.get("STARTDATEEXECUTE");
-			String strSQLText = (String)resultMap.get("DATAS");
-			Long enddateexecute = (Long)resultMap.get("ENDDATEEXECUTE");
+			Long startdateexecute 	= 0l;
+			// This case sqlite
+			if(resultMap.get("startdateexecute") instanceof Long) {
+				startdateexecute = (Long)resultMap.get("startdateexecute");
+			// This case mysql
+			} else {
+				startdateexecute = ((Timestamp)resultMap.get("startdateexecute")).getTime();
+			}
+			String strSQLText 		= (String)resultMap.get("datas");
+			Long enddateexecute 	= 0l;
+			// This case sqlite
+			if(resultMap.get("enddateexecute") instanceof Long) {
+				enddateexecute = (Long)resultMap.get("enddateexecute");
+			// This case mysql
+			} else {
+				enddateexecute = ((Timestamp)resultMap.get("enddateexecute")).getTime();
+			}
 			
-			int row = (Integer)resultMap.get("ROW");
-			String result = (String)resultMap.get("RESULT");
+			int row 			= (Integer)resultMap.get("row");
+			String result 		= (String)resultMap.get("result");
 			
 			SQLHistoryDAO dao = new SQLHistoryDAO(new Date(startdateexecute), strSQLText, new Date(enddateexecute), row, result, "");
 			dao.setSeq(seq);

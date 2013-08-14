@@ -107,6 +107,7 @@ public class SessionManager {
 				
 				strGroupSeqs += userRoleDAO.getGroup_seq() + ",";
 			}
+
 			strGroupSeqs = StringUtils.removeEnd(strGroupSeqs, ",");
 			sStore.setAttribute(SESSEION_NAME.GROUP_SEQS.toString(), strGroupSeqs);
 			

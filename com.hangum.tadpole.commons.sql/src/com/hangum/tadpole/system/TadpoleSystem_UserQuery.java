@@ -102,7 +102,7 @@ public class TadpoleSystem_UserQuery {
 	
 		if(null == userInfo) {
 			throw new Exception(Messages.TadpoleSystem_UserQuery_9);
-		} else if("NO".equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
+		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
 			throw new Exception(Messages.TadpoleSystem_UserQuery_1);
 		} else {
 			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
