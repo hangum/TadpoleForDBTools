@@ -161,7 +161,10 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		comboLocale = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			
-		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
+		for(String val : DBLocaleUtils.getMySQLList()) {
+			comboLocale.add(val);
+			comboLocale.setData(StringUtils.substringBefore(val, "|").trim(), val);
+		}
 		comboLocale.setVisibleItemCount(12);
 		comboLocale.select(0);
 		
@@ -185,6 +188,9 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textPassword.setText(oldUserDB.getPasswd());
 			textDatabase.setText(oldUserDB.getDb());
 			textPort.setText(oldUserDB.getPort());
+			
+			comboLocale.setText(DBLocaleUtils.findMySQLFullLocale(oldUserDB.getLocale()));
+			
 		} else if(ApplicationArgumentUtils.isTestMode()) {
 			
 			preDBInfo.setTextDisplayName(getDisplayName());

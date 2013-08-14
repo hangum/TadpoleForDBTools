@@ -13,6 +13,8 @@ package com.hangum.tadpole.rdb.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * db locale list
  * 
@@ -94,5 +96,19 @@ public class DBLocaleUtils {
 		listLocale.add("utf32     | UTF-32 Unicode");
 		
 		return listLocale;
+	}
+	
+	/**
+	 * find full combo text
+	 * 
+	 * @param locale
+	 * @return
+	 */
+	public static String findMySQLFullLocale(String locale) {
+		for(String strLocale : getMySQLList()) {
+			if(StringUtils.startsWith(strLocale, locale)) return strLocale;
+		}
+		
+		return "";
 	}
 }
