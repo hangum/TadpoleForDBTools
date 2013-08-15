@@ -347,15 +347,8 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
-				
-				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
-//				String strInitContent = StringUtils.replace(getInputJavaScriptContent(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
-//				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n");
-				String strInitContent = TadpoleEditorUtils.getGrantText(getInputJavaScriptContent());
-				String callCommand = "setInitialContent(\"" + "mapreduce.js" + "\", \"" + strInitContent + "\" );";
-				
-				if(logger.isDebugEnabled()) logger.debug(callCommand);
-				
+
+				String callCommand = TadpoleEditorUtils.makeCommand("mapreduce.js", getInputJavaScriptContent(), "");
 				browserEvaluate(callCommand);
 			}
 			public void changed( ProgressEvent event ) {}

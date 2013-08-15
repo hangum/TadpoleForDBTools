@@ -104,12 +104,8 @@ public class TadpoleOrionHubEditor extends Composite {
 				} catch(Exception e) {
 					logger.error("javascript execute exception", e);
 				}
-				
-				String strInitContent = TadpoleEditorUtils.getGrantText(getInitContent());
-				String strInitAssis = TadpoleEditorUtils.getGrantText(initAssist);
-				
-				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
-				String callCommand = "setInitialContent(\"" + "test.json"+ "\", \"" + strInitContent + "\", \"" + strInitAssis + "\");";
+
+				String callCommand = TadpoleEditorUtils.makeCommand("test.json", getInitContent(), getInitAssist());
 				try {
 					browserEvaluate(callCommand);
 				} catch(Exception e) {
@@ -138,6 +134,15 @@ public class TadpoleOrionHubEditor extends Composite {
 		checkWidget();
 		
 		return initContent;
+	}
+	
+	/**
+	 * initialize assist
+	 * @return
+	 */
+	public String getInitAssist() {
+		checkWidget();
+		return initAssist;
 	}
 	
 	/**

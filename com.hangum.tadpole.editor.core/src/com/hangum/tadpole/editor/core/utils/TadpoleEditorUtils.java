@@ -43,4 +43,20 @@ public class TadpoleEditorUtils {
 		
 		return strInitContent;
 	}
+	
+	/**
+	 * edito init command
+	 * 
+	 * @param ext
+	 * @param initContent
+	 * @param initAssist
+	 * @return
+	 */
+	public static String makeCommand(String ext, String initContent, String initAssist) {
+		String strContent = getGrantText(initContent);
+		String strAssis = getGrantText(initAssist);
+		String strCommand = "setInitialContent(\"" + ext + "\", \"" + strContent + "\", \"" + strAssis + "\" );";
+		
+		return strCommand;
+	}
 }

@@ -821,16 +821,9 @@ public class MainEditor extends EditorExtension {
 				} catch(Exception e) {
 					logger.error(RequestInfoUtils.requestInfo("MainEditor browser init", strUserEMail), e); //$NON-NLS-1$
 				}
-				
-				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
-//				String strInitContent = StringUtils.replace(getInitDefaultEditorStr(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n"); //$NON-NLS-1$
-//				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				String strInitContent = TadpoleEditorUtils.getGrantText(getInitDefaultEditorStr());
-				String strConAssist = TadpoleEditorUtils.getGrantText(getAssistList());
-				
-				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\", \"" + strConAssist + "\" );"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+				String callCommand = TadpoleEditorUtils.makeCommand(getInitExt(), getInitDefaultEditorStr(), getAssistList());
 				browserEvaluate(callCommand);
-				
 			}
 			public void changed( ProgressEvent event ) {}			
 		});
