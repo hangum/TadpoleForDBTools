@@ -87,6 +87,7 @@ import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.dialogs.save.ResourceSaveDialog;
 import com.hangum.tadpole.editor.core.rdb.texteditor.EditorExtension;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
+import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -822,9 +823,12 @@ public class MainEditor extends EditorExtension {
 				}
 				
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
-				String strInitContent = StringUtils.replace(getInitDefaultEditorStr(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n"); //$NON-NLS-1$
-				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\", \"" + getAssistList() + "\" );"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+//				String strInitContent = StringUtils.replace(getInitDefaultEditorStr(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n"); //$NON-NLS-1$
+//				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				String strInitContent = TadpoleEditorUtils.getGrantText(getInitDefaultEditorStr());
+				String strConAssist = TadpoleEditorUtils.getGrantText(getAssistList());
+				
+				String callCommand = "setInitialContent(\"" + getInitExt() + "\", \"" + strInitContent + "\", \"" + strConAssist + "\" );"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				browserEvaluate(callCommand);
 				
 			}

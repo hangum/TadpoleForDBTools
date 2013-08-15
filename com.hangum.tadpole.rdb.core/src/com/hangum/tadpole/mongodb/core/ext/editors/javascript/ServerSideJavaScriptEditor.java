@@ -47,6 +47,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
+import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
@@ -348,8 +349,9 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 				}
 				
 				// 초기 코드는 라인 분리자가 있다면 이것을 javascript 라인 분리자인 \n로 바꾸어 주어야 합니다.
-				String strInitContent = StringUtils.replace(getInputJavaScriptContent(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
-				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n");
+//				String strInitContent = StringUtils.replace(getInputJavaScriptContent(), PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
+//				strInitContent = StringUtils.replace(strInitContent, "\r", "\\n");
+				String strInitContent = TadpoleEditorUtils.getGrantText(getInputJavaScriptContent());
 				String callCommand = "setInitialContent(\"" + "mapreduce.js" + "\", \"" + strInitContent + "\" );";
 				
 				if(logger.isDebugEnabled()) logger.debug(callCommand);
