@@ -50,6 +50,9 @@ public class PublicTadpoleDefine {
 	/** yes, no */
 	public static enum YES_NO {YES, NO}; 
 	
+	/** Success, Fail */
+	public static enum SUCCESS_FAIL {S, F};
+	
 	/** change resource save */
 	public static final String SAVE_FILE = "CHANGE_TADPOLE_RESOURE";
 	
@@ -116,7 +119,7 @@ public class PublicTadpoleDefine {
 		return false;
 	}
 	public static boolean isKEY(String key) {
-		return isKEY(key, PublicTadpoleDefine.YES_NO.NO.toString());
+		return isKEY(key, YES_NO.NO.toString());
 	}
 	public static boolean isKEY(String key, String isNull) {
 		for(DB_KEY dbKEY : DB_KEY.values()) {
