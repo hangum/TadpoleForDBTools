@@ -10,13 +10,16 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.editor.auth;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -29,6 +32,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -52,9 +56,13 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.util.download.DownloadUtils;
+import com.hangum.tadpole.util.fileupload.FileUploadDialog;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 DB List composite
@@ -76,6 +84,11 @@ public class DBListComposite extends Composite {
 	
 	private ToolItem tltmQueryHistory;
 	
+	/** download dumy compoiste */
+	private Composite compositeDumy;
+	/** download servcie handler. */
+	private DownloadServiceHandler downloadServiceHandler;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -91,7 +104,7 @@ public class DBListComposite extends Composite {
 		setLayout(gridLayout);
 		
 		Composite compositeHead = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeHead = new GridLayout(2, false);
+		GridLayout gl_compositeHead = new GridLayout(3, false);
 		gl_compositeHead.verticalSpacing = 2;
 		gl_compositeHead.horizontalSpacing = 2;
 		gl_compositeHead.marginHeight = 2;
@@ -127,25 +140,23 @@ public class DBListComposite extends Composite {
 			});
 			tltmAdd.setText("Add");
 			
-//			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
-//			tltmDbExport.addSelectionListener(new SelectionAdapter() {
-//				@Override
-//				public void widgetSelected(SelectionEvent e) {
-//					if(MessageDialog.openConfirm(null, "Confirm", "사용자 디비를 export하시겠습니까?")) {
-//					
-//					}
-//				}
-//			});
-//			tltmDbExport.setText("DB Info Export");
-//			
-//			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
-//			tltmDbImport.addSelectionListener(new SelectionAdapter() {
-//				@Override
-//				public void widgetSelected(SelectionEvent e) {
-//					
-//				}
-//			});
-//			tltmDbImport.setText("DB Info Import");
+			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
+			tltmDbExport.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					exportDB();
+				}
+			});
+			tltmDbExport.setText("DB Export");
+			
+			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
+			tltmDbImport.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					importDB();
+				}
+			});
+			tltmDbImport.setText("DB Import");
 		}
 		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
@@ -157,6 +168,7 @@ public class DBListComposite extends Composite {
 		});
 		tltmQueryHistory.setEnabled(false);
 		tltmQueryHistory.setText("Query History");
+		new Label(compositeHead, SWT.NONE);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -164,12 +176,17 @@ public class DBListComposite extends Composite {
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		textSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				filter.setSearchString(textSearch.getText());
 				treeViewerAdmin.refresh();
 			}
 		});
+		
+		// download dumy
+		compositeDumy = new Composite(compositeHead, SWT.NONE);
+		compositeDumy.setLayout(new GridLayout(1, false));
 		
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -227,6 +244,60 @@ public class DBListComposite extends Composite {
 		
 		filter = new AdminCompFilter();
 		treeViewerAdmin.addFilter(filter);
+		
+		registerServiceHandler();
+	}
+	
+	
+	/** registery service handler */
+	private void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	
+	/**
+	 * import db list
+	 */
+	private void importDB() {
+		FileUploadDialog fud = new FileUploadDialog(this.getShell());
+		if(Dialog.OK == fud.open()) {
+			
+			try {
+				String abstFile = fud.getListFiles().get(0);
+				String fileContetn = FileUtils.readFileToString(new File(abstFile));
+				
+				SystemDBDataManager.importUserDB(fileContetn);
+				treeViewerAdmin.setInput(initData());
+			} catch(Exception e) {
+				logger.error("File Read exception", e);
+			}
+		}
+	}
+	
+	/**
+	 * export db list
+	 */
+	private void exportDB() {
+		final String strDBEncrypt = SystemDBDataManager.exportUserDB(listUserDBs);
+		
+		if(!"".equals(strDBEncrypt)) {
+			if(MessageDialog.openConfirm(null, "Confirm", "사용자 디비를 export하시겠습니까?"))  { //$NON-NLS-1$
+				
+				try {
+					byte[] arrayData = strDBEncrypt.getBytes();
+					
+					downloadServiceHandler.setContentType("txt");
+					downloadServiceHandler.setName("Tadpole_DBList_Export.txt"); //$NON-NLS-1$
+					downloadServiceHandler.setByteContent(arrayData);
+					DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
+				} catch(Exception e) {
+					logger.error("DB export exception", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null, "Error", "DB export Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+		}
 	}
 	
 	/**
@@ -272,6 +343,19 @@ public class DBListComposite extends Composite {
 		}
 		
 		return listUserDBs;
+	}
+	
+	@Override
+	public void dispose() {
+		unregisterServiceHandler();
+		
+		super.dispose();
+	}
+	
+	/** download service handler call */
+	private void unregisterServiceHandler() {
+		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
+		downloadServiceHandler = null;
 	}
 
 	@Override

@@ -7,7 +7,9 @@ Bundle-Activator: com.hangum.tadpole.commons.Activator
 Bundle-Vendor: hangum.com
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.4.0",
- com.hangum.tadpole.commons.libs;bundle-version="1.0.0"
+ com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
+ org.eclipse.rap.rwt.supplemental.filedialog;bundle-version="2.0.0",
+ org.eclipse.rap.rwt.supplemental.fileupload;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
@@ -28,6 +30,7 @@ Export-Package: com.google.gson,
  com.hangum.tadpole.start,
  com.hangum.tadpole.util,
  com.hangum.tadpole.util.download,
+ com.hangum.tadpole.util.fileupload,
  com.hangum.tadpole.util.tables,
  com.hangum.tadpole.viewsupport,
  com.swtdesigner,
