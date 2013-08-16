@@ -267,9 +267,10 @@ public class DBListComposite extends Composite {
 				String fileContetn = FileUtils.readFileToString(new File(abstFile));
 				
 				SystemDBDataManager.importUserDB(fileContetn);
-				treeViewerAdmin.setInput(initData());
 			} catch(Exception e) {
-				logger.error("File Read exception", e);
+				logger.error("Import DB exception", e);
+				
+				MessageDialog.openError(null, "Error", e.getMessage());
 			}
 		}
 	}

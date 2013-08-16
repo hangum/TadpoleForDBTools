@@ -56,6 +56,8 @@ public class Messages extends NLS {
 	public static String NewUserDialog_btnUser_text;
 	public static String NewUserDialog_lblNewLabel_text;
 	public static String NewUserDialog_lblLanguage_text;
+
+	public static String SystemDBDataManager_8;
 	
 	static {
 		// initialize resource bundle

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.export;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import com.google.gson.Gson;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 
@@ -34,7 +34,7 @@ import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
  *
  */
 public class SystemDBDataManager {
-	public static String EXPORT_VER = "00001";
+	public static String EXPORT_VER = "00001"; //$NON-NLS-1$
 	
 	/**
 	 * head
@@ -42,8 +42,8 @@ public class SystemDBDataManager {
 	 * @return
 	 */
 	public static String makeHead() {
-		String retStr = SystemDefine.NAME +  SystemDefine.MAJOR_VERSION + "." + SystemDefine.SUB_VERSION + " " + new Date() + PublicTadpoleDefine.LINE_SEPARATOR;
-		retStr += "EXPORT_VER:" + EXPORT_VER + PublicTadpoleDefine.LINE_SEPARATOR;
+		String retStr = SystemDefine.NAME +  SystemDefine.MAJOR_VERSION + "." + SystemDefine.SUB_VERSION + " " + new Date() + PublicTadpoleDefine.LINE_SEPARATOR; //$NON-NLS-1$ //$NON-NLS-2$
+		retStr += "EXPORT_VER:" + EXPORT_VER + PublicTadpoleDefine.LINE_SEPARATOR; //$NON-NLS-1$
 		
 		retStr += "OPERATION_TYPE	, DBMS_TYPES	, URL					, DB			, GROUP_NAME	, 		" +
 				  "DISPLAY_NAME		, HOST			, PORT					, LOCALE		, PASSWD		, 		" +
@@ -70,9 +70,6 @@ public class SystemDBDataManager {
 			retStr += PublicTadpoleDefine.LINE_SEPARATOR;
 		}
 		
-		//
-//		CipherManager cm = CipherManager.getInstance();
-//		return cm.encryption(retStr);
 		return retStr;
 	}
 	
@@ -81,16 +78,11 @@ public class SystemDBDataManager {
 	 * 
 	 */
 	public static void importUserDB(String strSource) throws Exception {
-//		List<UserDBDAO> retListUserDB = new ArrayList<UserDBDAO>();
-		
-//		CipherManager cm = CipherManager.getInstance();
-//		String retStr = cm.decryption(strSource);
-		
 		Gson gson = new Gson();
 		
 		String[] strUserdb =  StringUtils.split(strSource, PublicTadpoleDefine.LINE_SEPARATOR);
 		if(!StringUtils.startsWith(strUserdb[0], SystemDefine.NAME)) {
-			throw new RuntimeException("올챙이 디비 파일이 압니다.");
+			throw new RuntimeException(Messages.SystemDBDataManager_8);
 		}
 		
 		// int 가 1인 이유는 시스템 버전 정보를 빼서입니다.
