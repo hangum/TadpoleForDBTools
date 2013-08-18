@@ -58,16 +58,17 @@ Demo Video
 
 Document
 -
-* RDB Turorial 
- - http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 * Developer Guide 
- - English(https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-Eng)
- - Korea(https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-kor)
-* User Guide : 
- - Korea(https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Kor)
- - English(https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Eng)
- - Indonesia(https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID)
- - Korea(https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor)
+ - https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-Eng
+ - https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-kor
+* RDB User Guide
+ - https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Kor
+ - https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Eng
+ - https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID
+* MongoDB User Guide
+ - https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor
+* RDB Tutorial 
+ - http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
 Demo Site
 -

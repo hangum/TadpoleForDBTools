@@ -130,7 +130,7 @@ public class DBLoginDialog extends Dialog {
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboDBList.setBackground(SWTResourceManager.getColor(255, 250, 205));
-		comboDBList.setVisibleItemCount(9);
+		comboDBList.setVisibleItemCount(10);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
@@ -213,6 +213,8 @@ public class DBLoginDialog extends Dialog {
 			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
 			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
+			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		}
 	}
 

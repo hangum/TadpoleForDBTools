@@ -358,6 +358,15 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 		"LIKE",
 		 "commit", "rollback"
 		 ];
+	
+	/** hive ql */
+	var HQL_KEYWORDS =
+		[
+		 "alert", "add", "all", "alter", "and", "as", "asc", "auto_increment",
+		 "between", "binary", "both", "by", "begin", "before",
+		 "change", "check", "column", "columns", "create", "cross", "continue", "cursor",
+		 "data", "database", "databases", "default", "delayed", "delete", "desc", "describe", "distinct", "drop"
+		];
 
 	// Scanner constants
 	var UNKOWN = 1;
@@ -733,7 +742,7 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 			case "oracle": 
 				keywords = ORACLE_KEYWORDS; 
 				break;
-			case "mysql": 
+			case "mysql":
 				keywords = MYSQL_KEYWORDS; 
 				break;
 			case "mssql": 
@@ -741,6 +750,9 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 				break;
 			case "sqlite": 
 				keywords = SQLITE_KEYWORDS; 
+				break;
+			case "hql":
+				keywords = HQL_KEYWORDS;
 				break;
 			default:
 				keywords = MYSQL_KEYWORDS;

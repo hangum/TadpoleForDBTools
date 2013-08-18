@@ -1807,6 +1807,8 @@ public class MainEditor extends EditorExtension {
 			extension += ".sqlite"; //$NON-NLS-1$
 		} else if(userDBDefine == DBDefine.CUBRID_DEFAULT) {
 			extension += ".mysql"; //$NON-NLS-1$
+		} else if(userDBDefine == DBDefine.CUBRID_DEFAULT) {
+			extension += ".hql"; //$NON-NLS-1$
 		} else {
 			extension += ".postgresql"; //$NON-NLS-1$
 		}

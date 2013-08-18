@@ -51,6 +51,9 @@ public enum DBDefine {
 	CUBRID_DEFAULT,
 	POSTGRE_DEFAULT,
 	
+	/** hive */
+	HIVE_DEFAULT,
+	
 	/** NO SQL */
 	MONGODB_DEFAULT,
 	
@@ -82,6 +85,7 @@ public enum DBDefine {
 			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
 			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
+			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
 			default:
 				return "undefine db";
 		}
@@ -111,6 +115,7 @@ public enum DBDefine {
 		
 		else if(type.equalsIgnoreCase("MONGODB"))		return MONGODB_DEFAULT;
 		else if(type.equalsIgnoreCase("AmazonRDS")) return AMAZONRDS_DEFAULT;
+		else if(type.equalsIgnoreCase("HIVE")) return HIVE_DEFAULT;
 		else return null;
 	}
 	
@@ -140,6 +145,8 @@ public enum DBDefine {
 			/** http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html */
 			case MONGODB_DEFAULT:		return "%s:%s/%s";
 			
+			case HIVE_DEFAULT:		return "jdbc:hive://%s:%s/%s";
+			
 			default:
 				return "undefine db";
 		}
@@ -165,6 +172,8 @@ public enum DBDefine {
 			case MONGODB_DEFAULT :  return "MONGODB";
 			
 			case AMAZONRDS_DEFAULT: return "AmazonRDS";
+			
+			case HIVE_DEFAULT: return "HIVE";
 			default:
 				return "undefine db";
 		}
@@ -189,6 +198,8 @@ public enum DBDefine {
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);		
+		
+		supportDb.add(HIVE_DEFAULT);
 		
 		return supportDb;
 	}
