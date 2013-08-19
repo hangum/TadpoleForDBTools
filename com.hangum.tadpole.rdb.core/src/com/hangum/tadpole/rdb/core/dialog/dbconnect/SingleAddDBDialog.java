@@ -32,6 +32,7 @@ import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSRDSLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.HiveLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MSSQLLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MariaDBLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MongoDBLoginComposite;
@@ -124,6 +125,8 @@ public class SingleAddDBDialog extends Dialog {
 			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
 			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
+			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		}
 
 		return container;

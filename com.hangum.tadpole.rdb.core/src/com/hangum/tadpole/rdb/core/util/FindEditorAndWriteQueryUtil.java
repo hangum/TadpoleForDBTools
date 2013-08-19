@@ -54,7 +54,7 @@ public class FindEditorAndWriteQueryUtil {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 			newMongoDBEditorOpen(userDB, lowSQL);
 		} else {
-			// 포멧팅 한것이 잘 보이지 않아서 우선 블럭 해 놓습니다.
+
 			try {
 				lowSQL = SQLFormater.format(lowSQL);
 			} catch(Exception e) {

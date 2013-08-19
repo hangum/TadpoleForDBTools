@@ -20,7 +20,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -36,6 +35,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSRDSLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.HiveLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MSSQLLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MariaDBLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MongoDBLoginComposite;
@@ -145,7 +145,7 @@ public class DBLoginDialog extends Dialog {
 			comboDBList.add(dbDefine.getDBToString());
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
 		}
-		comboDBList.select(2);
+		comboDBList.select(3);
 				
 		// combo에서 선택된 디비의 콤포짖
 		compositeBody = new Composite(compositeHead, SWT.NONE);
@@ -214,7 +214,7 @@ public class DBLoginDialog extends Dialog {
 		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
 			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		}
 	}
 

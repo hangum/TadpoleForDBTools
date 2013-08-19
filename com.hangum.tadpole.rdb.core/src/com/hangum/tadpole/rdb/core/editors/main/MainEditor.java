@@ -1358,7 +1358,8 @@ public class MainEditor extends EditorExtension {
 			) { //$NON-NLS-1$
 				sqlQuery += ";"; //$NON-NLS-1$
 			}
-			int boolResult = statement.executeUpdate( sqlQuery );
+			// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+			statement.execute(sqlQuery);//executeUpdate( sqlQuery );
 			
 			// create table, drop table이면 작동하도록			
 			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
