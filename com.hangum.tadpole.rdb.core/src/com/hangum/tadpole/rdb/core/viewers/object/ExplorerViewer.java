@@ -270,6 +270,19 @@ public class ExplorerViewer extends ViewPart {
 			refreshTable(false);
 			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
+		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
+			createTable();
+			
+			// view의 set selection provider 설정
+			arrayStructureViewer = new StructuredViewer[] { 
+					tableCompost.getTableListViewer(), 
+				};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
+			
+			refreshTable(false);
+			
+			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
+			
 		// mongodb
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
 			

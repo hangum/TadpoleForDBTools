@@ -10,10 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
-import org.apache.log4j.Logger;
-
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -22,7 +21,6 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
@@ -33,7 +31,6 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnect
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * hive connect dialog

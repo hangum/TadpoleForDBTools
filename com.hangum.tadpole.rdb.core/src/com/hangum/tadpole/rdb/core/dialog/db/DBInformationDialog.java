@@ -30,6 +30,7 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.HiveLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MSSQLLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MariaDBLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MongoDBLoginComposite;
@@ -174,6 +175,8 @@ public class DBInformationDialog extends Dialog {
 			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
 			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
+		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
+			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
 		}
 		compositeBody.layout();
 		container.layout();

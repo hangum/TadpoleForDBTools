@@ -305,17 +305,19 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
-		
-		ToolItem tltmExplainPlanctrl = new ToolItem(toolBar, SWT.NONE);
-		tltmExplainPlanctrl.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/execute_plan.png")); //$NON-NLS-1$
-		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
-			}
-		});
-		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, prefixOSShortcut));
-		new ToolItem(toolBar, SWT.SEPARATOR);
+	
+		if (DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.HIVE_DEFAULT) {
+			ToolItem tltmExplainPlanctrl = new ToolItem(toolBar, SWT.NONE);
+			tltmExplainPlanctrl.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/execute_plan.png")); //$NON-NLS-1$
+			tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_EXECUTE_PLAN_FUNCTION);
+				}
+			});
+			tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, prefixOSShortcut));
+			new ToolItem(toolBar, SWT.SEPARATOR);
+		}
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
 		tltmSort.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/query_format.png")); //$NON-NLS-1$
@@ -865,6 +867,10 @@ public class MainEditor extends EditorExtension {
 	 * initialize editor
 	 */
 	private void initEditor() {
+		if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.HIVE_DEFAULT) {
+			tltmAutoCommit.setEnabled(false);
+		}
+
 		if("YES".equals(userDB.getIs_autocommit())) { //$NON-NLS-1$
 			tltmAutoCommit.setSelection(false);
 		} else {
