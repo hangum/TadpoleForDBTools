@@ -46,6 +46,7 @@ public class ResultSetUtils {
 		Map<Integer, Object> tmpRow = null;
 		
 		// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
+		int rowCnt = 0;
 		while(rs.next()) {
 			tmpRow = new HashMap<Integer, Object>();
 			
@@ -64,8 +65,9 @@ public class ResultSetUtils {
 			
 			sourceDataList.add(tmpRow);
 			
-			// 쿼리 검색 결과 만큼만 결과셋을 받습니다. 
-			if(limitCount == rs.getRow()) break;
+			// 쿼리 검색 결과 만큼만 결과셋을 받습니다. (hive driver는 getRow를 지원하지 않습니다) --;; 2013.08.19, hangum
+//			if(limitCount == rs.getRow()) break;
+			if(limitCount == rowCnt++) break;
 		}
 		
 		return sourceDataList;

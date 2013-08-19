@@ -20,6 +20,9 @@ public class TableDAO {
 	String name;
 	String comment="";
 	
+	/** hive */
+	String tab_name = "";
+	
 	public TableDAO() {
 	}
 	
@@ -42,6 +45,15 @@ public class TableDAO {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	public String getTab_name() {
+		return tab_name;
+	}
+	
+	public void setTab_name(String tab_name) {
+		this.tab_name = tab_name;
+		setName(tab_name);
 	}
 
 }

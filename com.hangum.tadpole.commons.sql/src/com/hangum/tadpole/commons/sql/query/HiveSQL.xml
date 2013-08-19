@@ -35,17 +35,14 @@
 	table 이름
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.dao.mysql.TableDAO" parameterClass="java.lang.String">
-	SELECT name, sql as comment
-	FROM sqlite_master
-	WHERE type = 'table'
-	ORDER BY name
+	show tables
 </select>
 
 <!-- 
 	table, view의 컬럼 정보
  -->
 <select id="tableColumnList" resultClass="com.hangum.tadpole.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
-	 PRAGMA table_info($table$)
+	 describe $table$
 </select>
 
 <!-- 

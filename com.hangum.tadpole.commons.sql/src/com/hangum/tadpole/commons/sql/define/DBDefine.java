@@ -143,7 +143,7 @@ public enum DBDefine {
 			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
 			
 			/** http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html */
-			case MONGODB_DEFAULT:		return "%s:%s/%s";
+			case MONGODB_DEFAULT:	return "%s:%s/%s";
 			
 			case HIVE_DEFAULT:		return "jdbc:hive://%s:%s/%s";
 			
@@ -189,6 +189,8 @@ public enum DBDefine {
 		
 		supportDb.add(CUBRID_DEFAULT);
 		
+		supportDb.add(HIVE_DEFAULT);
+		
 		supportDb.add(MONGODB_DEFAULT);
 		
 		supportDb.add(MARIADB_DEFAULT);
@@ -198,8 +200,6 @@ public enum DBDefine {
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);		
-		
-		supportDb.add(HIVE_DEFAULT);
 		
 		return supportDb;
 	}

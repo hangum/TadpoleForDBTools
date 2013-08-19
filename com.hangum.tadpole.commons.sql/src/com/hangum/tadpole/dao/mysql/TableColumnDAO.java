@@ -51,6 +51,10 @@ public class TableColumnDAO {
 	/** table column의 comment */
 	String comment = "";
 	
+	// hive
+	String col_name = "";
+	String data_type = "";
+	
 	public TableColumnDAO() {
 	}
 	
@@ -174,6 +178,25 @@ public class TableColumnDAO {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	public String getCol_name() {
+		return col_name;
+	}
+	
+	public void setCol_name(String col_name) {
+		this.col_name = col_name;
+		setField(col_name);
+	}
+	
+	
+	public String getData_type() {
+		return data_type;
+	}
+	
+	public void setData_type(String data_type) {
+		this.data_type = data_type;
+		setType(data_type);
 	}
 
 }
