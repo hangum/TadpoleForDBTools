@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.rule;
 
+import kry.sql.format.ISqlFormatRule;
 import kry.sql.format.SqlFormatRule;
 import kry.sql.util.StringUtil;
 
@@ -38,6 +39,14 @@ public class SQLFormatRule {
 		rule.setDecodeSpecialFormat(!optDecode);
 		rule.setInSpecialFormat(optIn);
 		rule.setOutSqlSeparator(SqlFormatRule.SQL_SEPARATOR_SEMICOLON);
+		rule.setRemoveEmptyLine(true);
+		rule.setIndentEmptyLine(true);
+		rule.setConvertName(ISqlFormatRule.CONVERT_STRING_NONE);
+		rule.setConvertKeyword(ISqlFormatRule.CONVERT_STRING_NONE);
+		rule.setNewLineBeforeAndOr(false);
+		rule.setNewLineBeforeComma(false);
+		
+		rule.setWordBreak(false);
 		
 		return rule;
 	}
