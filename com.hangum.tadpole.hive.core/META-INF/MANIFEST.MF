@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: TadpoleDBHub Apache Hive core
+Bundle-SymbolicName: com.hangum.tadpole.hive.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.hangum.tadpole.hive.core.Activator
+Bundle-Vendor: HANGUM
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.rap.ui;bundle-version="2.1.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Import-Package: javax.servlet;version="2.6.0",
+ javax.servlet.http;version="2.6.0"

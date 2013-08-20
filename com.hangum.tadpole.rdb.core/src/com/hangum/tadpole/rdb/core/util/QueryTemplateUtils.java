@@ -36,9 +36,10 @@ public class QueryTemplateUtils {
 	 */
 	public static String getQuery(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION initAction) {
 		String defaultStr = "";
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) || DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) ||
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) || 
+				DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) ||
 				DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) 				
-			) {
+		) {
 			
 			if(initAction == PublicTadpoleDefine.DB_ACTION.TABLES) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -108,6 +109,8 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+			
 		}
 		
 //		else if(DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
