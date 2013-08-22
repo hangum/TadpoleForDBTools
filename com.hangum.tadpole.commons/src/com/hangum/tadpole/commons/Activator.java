@@ -40,7 +40,7 @@ public class Activator implements BundleActivator {
 		plugin = this;
 		
 		// log level설정
-		LogConfiguration.getInstance();
+//		LogConfiguration.getInstance();
 		
 		// eclipse 로그도 log4j에 넣어주도록 수정 ... (해야할지 살짝 의문이고 삭제해야할지도....) -hangum, 11.09
 		listener = new LogListener();

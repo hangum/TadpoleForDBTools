@@ -41,7 +41,7 @@ public class CommonsSQLActivator extends Plugin {
 		super.start(context);
 		plugin = this;
 		
-		LogConfiguration.getInstance();//.setLevel(Level.DEBUG.toString());
+//		LogConfiguration.getInstance();//.setLevel(Level.DEBUG.toString());
 		
 		// eclipse 로그도 log4j에 넣어주도록 수정 ... (해야할지 살짝 의문이고 삭제해야할지도....) -hangum, 11.09
 		listener = new LogListener();
