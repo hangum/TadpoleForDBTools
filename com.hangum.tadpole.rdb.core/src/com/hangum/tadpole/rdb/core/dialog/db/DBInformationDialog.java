@@ -28,16 +28,8 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBConnection;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.HiveLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MSSQLLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MariaDBLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MongoDBLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MySQLLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.permission.PermissionChecker;
@@ -159,25 +151,7 @@ public class DBInformationDialog extends Dialog {
 		selGroupName = userDB.getGroup_name();
 		
 		DBDefine dbDefine = DBDefine.getDBDefine(userDB.getDbms_types());
-		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.MARIADB_DEFAULT) {
-			loginComposite = new MariaDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
-			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.SQLite_DEFAULT) {
-			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.MSSQL_DEFAULT) {
-			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
-			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
-			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
-			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
-			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, groupName, selGroupName, userDB);
-		}
+		loginComposite = DBConnection.getDBConnection(dbDefine, compositeBody, groupName, selGroupName, userDB);
 		compositeBody.layout();
 		container.layout();
 	}

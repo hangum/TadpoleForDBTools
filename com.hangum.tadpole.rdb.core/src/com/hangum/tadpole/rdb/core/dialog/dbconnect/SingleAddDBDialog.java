@@ -29,17 +29,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSRDSLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.HiveLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MSSQLLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MariaDBLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MongoDBLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MySQLLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 
 /**
@@ -106,28 +96,7 @@ public class SingleAddDBDialog extends Dialog {
 		compositeBody.setLayout(gl_compositeBody);
 		
 		DBDefine dbDefine = DBDefine.getDBDefine(amazonRDSDto.getDbms_types());
-		UserDBDAO userDB = (UserDBDAO)amazonRDSDto;
-		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.MARIADB_DEFAULT) {	
-			loginComposite = new MariaDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
-			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.SQLite_DEFAULT) {
-			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.MSSQL_DEFAULT) {
-			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
-			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
-			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
-			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
-			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
-			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		}
+		loginComposite = DBConnection.getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, (UserDBDAO)amazonRDSDto);
 
 		return container;
 	}
