@@ -33,8 +33,9 @@ Bundle-ClassPath: .,
  libs/driver/hive/hive-service-0.11.0.jar,
  libs/driver/hive/libfb303-0.9.0.jar,
  libs/apache/log4j/log4j-1.2.16.jar,
- libs/driver/hive/slf4j-api-1.7.2.jar,
- libs/driver/hive/slf4j-log4j12-1.7.2.jar
+ libs/slf4j/osgi-over-slf4j-1.7.2.jar,
+ libs/slf4j/slf4j-api-1.7.2.jar,
+ libs/slf4j/slf4j-log4j12-1.7.2.jar
 Export-Package: .,
  blanco.commons.sql.format,
  blanco.commons.sql.format.valueobject,

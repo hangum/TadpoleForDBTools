@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/driver/hive/slf4j-api-1.7.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/hive/slf4j-log4j12-1.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/slf4j/osgi-over-slf4j-1.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/slf4j/slf4j-api-1.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/slf4j/slf4j-log4j12-1.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/hive/hadoop-core-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/hive/hive-exec-0.11.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/hive/hive-jdbc-0.11.0.jar"/>
