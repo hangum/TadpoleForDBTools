@@ -359,14 +359,8 @@ define("tadpole/textview/textStyler", ['orion/textview/annotations'], function(m
 		 "commit", "rollback"
 		 ];
 	
-	/** hive ql */
-	var HQL_KEYWORDS =
-		[
-		 "alert", "add", "all", "alter", "and", "as", "asc", "auto_increment",
-		 "between", "binary", "both", "by", "begin", "before",
-		 "change", "check", "column", "columns", "create", "cross", "continue", "cursor",
-		 "data", "database", "databases", "default", "delayed", "delete", "desc", "describe", "distinct", "drop"
-		];
+	/** hive ql -  https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-CreateTable */
+	var HQL_KEYWORDS = MYSQL_KEYWORDS;
 
 	// Scanner constants
 	var UNKOWN = 1;
