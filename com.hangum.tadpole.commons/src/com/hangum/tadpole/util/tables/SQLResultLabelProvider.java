@@ -25,8 +25,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.hangum.tadpold.commons.libs.core.sql.utils.RDBTypeToJavaTypeUtils;
-
 /**
  * SQLResult의 LabelProvider
  * 
@@ -69,7 +67,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		try {			
 			for(int i=0; i<mapColumns.size(); i++) {
 				final int index = i;
-				final int columnAlign =  RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))?SWT.RIGHT:SWT.LEFT;
+				final int columnAlign = SWT.LEFT;// RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))?SWT.RIGHT:SWT.LEFT;
 				
 				final TableViewerColumn tv = new TableViewerColumn(tableViewer, columnAlign);
 				final TableColumn tc = tv.getColumn();

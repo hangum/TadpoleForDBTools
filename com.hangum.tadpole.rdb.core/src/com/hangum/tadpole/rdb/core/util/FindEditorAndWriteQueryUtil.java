@@ -132,7 +132,6 @@ public class FindEditorAndWriteQueryUtil {
 			
 			editor.setAppendQueryText(lowSQL); //$NON-NLS-1$
 			editor.browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
-			
 		} catch (Exception e) {
 			logger.error("find editor open", e); //$NON-NLS-1$
 			
