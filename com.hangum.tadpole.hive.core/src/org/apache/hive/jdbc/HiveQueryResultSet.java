@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.hive.service.cli.TableSchema;
 import org.apache.hive.service.cli.thrift.TCLIService;
 import org.apache.hive.service.cli.thrift.TColumnDesc;
@@ -47,7 +45,7 @@ import org.apache.hive.service.cli.thrift.TTableSchema;
  */
 public class HiveQueryResultSet extends HiveBaseResultSet {
 
-  public static final Log LOG = LogFactory.getLog(HiveQueryResultSet.class);
+//  public static final Log LOG = LogFactory.getLog(HiveQueryResultSet.class);
 
   private TCLIService.Iface client;
   private TOperationHandle stmtHandle;
@@ -236,9 +234,9 @@ public class HiveQueryResultSet extends HiveBaseResultSet {
       }
 
       rowsFetched++;
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Fetched row string: " + rowStr);
-      }
+//      if (LOG.isDebugEnabled()) {
+//        LOG.debug("Fetched row string: " + rowStr);
+//      }
 
     } catch (SQLException eS) {
       throw eS;

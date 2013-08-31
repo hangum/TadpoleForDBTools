@@ -239,10 +239,8 @@ public abstract class AbstractLoginComposite extends Composite {
 	private boolean checkDatabase(UserDBDAO loginInfo) {
 		if(DBDefine.getDBDefine(loginInfo.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			try {
-				logger.debug("=======================> start................");
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
-				Object temp = sqlClient.queryForObject("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$
-				logger.debug("=======================> end................");
+				Object temp = sqlClient.queryForList("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$
 				
 			} catch (Exception e) {
 				// If UserDBDao is not invalid, remove UserDBDao at internal cache
