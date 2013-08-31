@@ -135,7 +135,7 @@ public class DBLoginDialog extends Dialog {
 			comboDBList.add(dbDefine.getDBToString());
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
 		}
-		comboDBList.select(3);
+		comboDBList.select(5);
 				
 		// combo에서 선택된 디비의 콤포짖
 		compositeBody = new Composite(compositeHead, SWT.NONE);
