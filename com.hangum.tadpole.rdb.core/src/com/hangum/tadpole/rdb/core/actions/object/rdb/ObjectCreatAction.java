@@ -54,12 +54,12 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			
 			// others db
-			if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+			if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 				
 				CreateTableAction cta = new CreateTableAction();
 				
 				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
-				if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
+				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
 					TableDAO tc = (TableDAO)sel.getFirstElement();
 					if(tc == null) cta.run(userDB, actionType);
 					else cta.run(userDB, tc.getComment());
@@ -68,7 +68,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				}
 				
 			// moongodb
-			} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {				
+			} else if(DBDefine.getDBDefine(userDB) == DBDefine.MONGODB_DEFAULT) {				
 				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == ncd.open() ) {
 					refreshTable();
@@ -79,11 +79,11 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
-			if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+			if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 				CreateIndexAction cia = new CreateIndexAction();
 				cia.run(userDB, actionType);
 			// moongodb
-			} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
+			} else if(DBDefine.getDBDefine(userDB) == DBDefine.MONGODB_DEFAULT) {
 				NewIndexDialog nid = new NewIndexDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == nid.open()) {
 					refreshIndexes();

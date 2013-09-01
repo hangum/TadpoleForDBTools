@@ -13,6 +13,8 @@ package com.hangum.tadpole.commons.sql.define;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hangum.tadpole.dao.system.UserDBDAO;
+
 /**
  * 지원하는 디비를 정의한다.
  * 
@@ -118,6 +120,16 @@ public enum DBDefine {
 		else if(type.equalsIgnoreCase("HIVE")) return HIVE_DEFAULT;
 		else return null;
 	}
+	
+	/**
+	 * DB Typed을 얻습니다.
+	 * @param userDB
+	 * @return
+	 */
+	public static DBDefine getDBDefine(UserDBDAO userDB) {
+		return getDBDefine(userDB.getDbms_types());
+	}
+	
 	
 	/**
 	 * DB URL INFO를 얻는다.

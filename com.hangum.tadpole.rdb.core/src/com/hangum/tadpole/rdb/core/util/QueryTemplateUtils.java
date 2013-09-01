@@ -14,6 +14,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.CubridDMLTemplate;
+import com.hangum.tadpole.define.HIVEDMLTemplate;
 import com.hangum.tadpole.define.MySQLDMLTemplate;
 import com.hangum.tadpole.define.OracleDMLTemplate;
 import com.hangum.tadpole.define.PostgreDMLTemplate;
@@ -36,9 +37,9 @@ public class QueryTemplateUtils {
 	 */
 	public static String getQuery(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION initAction) {
 		String defaultStr = "";
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) || 
-				DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) ||
-				DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) 				
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB) || 
+				DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB) ||
+				DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB) 	
 		) {
 			
 			if(initAction == PublicTadpoleDefine.DB_ACTION.TABLES) {
@@ -55,7 +56,7 @@ public class QueryTemplateUtils {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.ORACLE_DEFAULT ==  DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.ORACLE_DEFAULT ==  DBDefine.getDBDefine(userDB)) {
 			if(initAction == PublicTadpoleDefine.DB_ACTION.TABLES) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.VIEWS) {
@@ -69,7 +70,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB)) {
 			
 			if(initAction == PublicTadpoleDefine.DB_ACTION.TABLES) {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -81,7 +82,7 @@ public class QueryTemplateUtils {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			if(initAction == PublicTadpoleDefine.DB_ACTION.TABLES) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.VIEWS) {
@@ -95,7 +96,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			if(initAction == PublicTadpoleDefine.DB_ACTION.TABLES) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.VIEWS) {
@@ -109,11 +110,15 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
-			
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			if(initAction == PublicTadpoleDefine.DB_ACTION.TABLES) {
+				defaultStr =  HIVEDMLTemplate.TMP_CREATE_TABLE_STMT;
+			} else if(initAction == PublicTadpoleDefine.DB_ACTION.VIEWS) {
+				defaultStr =  HIVEDMLTemplate.TMP_CREATE_VIEW_STMT;
+			}
 		}
 		
-//		else if(DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+//		else if(DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
 //		
 //			if(initAction == Define.DB_ACTION.TABLES) {
 //				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_TABLE_STMT;

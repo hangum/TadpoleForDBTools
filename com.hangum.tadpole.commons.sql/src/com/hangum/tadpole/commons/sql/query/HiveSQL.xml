@@ -93,60 +93,7 @@ and sql like '%FOREIGN KEY%'
     FROM information_schema.CONSTRAINT_COLUMN_USAGE
     WHERE 1=0
 </select>
-<!-- 
-	procedure list - sqlite는 없음.
- -->
-<select id="procedureList" resultClass="com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-SELECT name as procedure_name,
- 		tbl_name as db_name
-	FROM sqlite_master
-	WHERE type = 'procedure_name'
-	ORDER BY name 
-</select>
 
-<!-- 
-	function list - sqlite는 없음.
- -->
-<select id="functionList" resultClass="com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-SELECT name as function_name,
- 		tbl_name as db_name
-	FROM sqlite_master
-	WHERE type = 'procedure_name'
-	ORDER BY name 
-</select>
-
-<!-- 
-	show triggers
- -->
-<select id="triggerList" resultClass="com.hangum.tadpole.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
-	SELECT name as trigger,
- 		tbl_name as table_name,
- 		sql as statement
-	FROM sqlite_master
-	WHERE type = 'trigger'
-	ORDER BY trigger  
-</select>
-
-<!-- 
-	get function, object  -sqlite없음
- -->
-<select id="functionSource" resultClass="java.lang.String" parameterClass="java.lang.String">
-	SELECT name as trigger_name,
- 		tbl_name as db_name
-	FROM sqlite_master
-	WHERE type = 'trigger'
-	ORDER BY name  
-</select>
-
-<!-- 
-	table information
- -->
-<select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
-	SELECT name, sql as comment
-	FROM sqlite_master
-	WHERE type = 'table'
-	ORDER BY name 
-</select>
 
 <!-- 
 	Table DDL Script

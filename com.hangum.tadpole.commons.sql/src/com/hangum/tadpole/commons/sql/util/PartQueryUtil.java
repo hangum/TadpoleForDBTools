@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.CubridDMLTemplate;
+import com.hangum.tadpole.define.HIVEDMLTemplate;
 import com.hangum.tadpole.define.MySQLDMLTemplate;
 import com.hangum.tadpole.define.OracleDMLTemplate;
 import com.hangum.tadpole.define.PostgreDMLTemplate;
@@ -36,14 +37,14 @@ public class PartQueryUtil {
 	public static String makeSelect(UserDBDAO userDB, String originalQuery, int startResultPos, int endResultPos) {
 		String requestQuery = "";
 		
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types()) ) {
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB) ) {
 			if(!StringUtils.contains(originalQuery.toLowerCase(), "limit ")) {
 				requestQuery = String.format(MySQLDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
 			} else {
 				requestQuery = originalQuery;
 			}
 		
-		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			
 			if(!StringUtils.contains(originalQuery.toLowerCase(), "where")) {
 				requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
@@ -51,14 +52,14 @@ public class PartQueryUtil {
 				requestQuery = originalQuery;				
 			}
 		
-		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			if(!StringUtils.contains(originalQuery.toLowerCase(), "limit ")) {
 				requestQuery = String.format(SQLiteDMLTemplate.TMP_GET_PARTDATA, originalQuery, startResultPos, endResultPos);
 			} else {
 				requestQuery = originalQuery;
 			}
 		
-		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			
 //			//https://github.com/hangum/TadpoleForDBTools/issues/12 와 같은 이유로 더 좋은 방법이 나타나기 전까지는 주석 처리 합니다.
 			if(!StringUtils.contains(originalQuery.toLowerCase(), "limit ")) {
@@ -67,7 +68,7 @@ public class PartQueryUtil {
 				requestQuery = originalQuery;	
 			}
 			
-		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			// 기존 쿼리에 limit 가 있으면 실행하지 않는다.
 			if(!StringUtils.contains(originalQuery.toLowerCase(), "limit ")) {
 				requestQuery = String.format(PostgreDMLTemplate.TMP_GET_PARTDATA, originalQuery, endResultPos, startResultPos);
@@ -100,20 +101,21 @@ public class PartQueryUtil {
 	public static String makeExplainQuery(UserDBDAO userDB, String query) throws Exception {
 		String resultQuery = "";
 		
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())
-				|| DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())
+		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB)
+				|| DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB)
 		) {
 			resultQuery = MySQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			resultQuery = SQLiteDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			resultQuery = query;
-			
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			resultQuery = HIVEDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 		} else {
 			throw new Exception("Not Support DBMS Query Plan.");
 		}

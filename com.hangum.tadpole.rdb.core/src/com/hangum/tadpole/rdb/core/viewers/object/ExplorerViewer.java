@@ -272,10 +272,16 @@ public class ExplorerViewer extends ViewPart {
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
 			createTable();
+//			createView();
+//			createIndexes();
+//			createFunction();
 			
 			// view의 set selection provider 설정
 			arrayStructureViewer = new StructuredViewer[] { 
-					tableCompost.getTableListViewer(), 
+					tableCompost.getTableListViewer() 
+//					viewComposite.getViewListViewer(), 
+//					indexComposite.getTableViewer(), 
+//					functionCompostite.getTableviewer()
 				};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
 			
