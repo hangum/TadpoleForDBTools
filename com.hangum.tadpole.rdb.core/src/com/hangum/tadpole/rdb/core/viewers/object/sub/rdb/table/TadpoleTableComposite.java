@@ -419,13 +419,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					
 					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(insertStmtAction);
-						if(DBDefine.getDBDefine(userDB) != DBDefine.HIVE_DEFAULT) manager.add(updateStmtAction);
-						manager.add(deleteStmtAction);
-						
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-						manager.add(viewDDLAction);
 						
 						if(DBDefine.getDBDefine(userDB) != DBDefine.HIVE_DEFAULT) {
+							manager.add(updateStmtAction);
+							manager.add(deleteStmtAction);
+
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							manager.add(viewDDLAction);
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(tableDataEditorAction);
 						}
