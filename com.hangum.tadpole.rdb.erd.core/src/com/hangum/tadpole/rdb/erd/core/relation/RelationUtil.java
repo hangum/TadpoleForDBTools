@@ -63,13 +63,14 @@ public class RelationUtil {
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db, String refTableNames) throws Exception {
 			
 		// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getDbms_types() )) {
-			
+		if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 			
-		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getDbms_types() )) {
-			
+		} else if(DBDefine.CUBRID_DEFAULT  == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
+		
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			calRelation(userDB, mapDBTables, db, new ArrayList<ReferencedTableDAO>());
 			
 		} else {
 		
@@ -88,16 +89,16 @@ public class RelationUtil {
 	public static void calRelation(UserDBDAO userDB, Map<String, Table> mapDBTables, DB db)  throws Exception {
 		
 		// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-		if(DBDefine.SQLite_DEFAULT.getDBToString().equals( userDB.getDbms_types() )) {
-			 
+		if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 			
-		} else if(DBDefine.CUBRID_DEFAULT.getDBToString().equals( userDB.getDbms_types() )) {
-			
+		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
 			
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			calRelation(userDB, mapDBTables, db, new ArrayList<ReferencedTableDAO>());
+			
 		} else {
-
 			calRelation(userDB, mapDBTables, db, getReferenceTable(userDB));
 		}
 	}
