@@ -117,7 +117,7 @@ public class OthersConnectionHiveGroup extends Group {
 	 * @return the btnAutoCommit
 	 */
 	public boolean getBtnAutoCommit() {
-		return false;
+		return true;
 	}
 
 	public boolean getBtnProfiler() {

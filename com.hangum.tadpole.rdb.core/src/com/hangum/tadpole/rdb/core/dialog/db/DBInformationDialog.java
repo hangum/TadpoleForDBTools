@@ -170,9 +170,11 @@ public class DBInformationDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		DBDefine dbDefine = DBDefine.getDBDefine(userDB.getDbms_types());
+		DBDefine dbDefine = DBDefine.getDBDefine(userDB);
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			return new Point(450, 460);
+		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
+			return new Point(450, 540);
 		} else {
 			return new Point(450, 590);
 		}
