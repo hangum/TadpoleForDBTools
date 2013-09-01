@@ -40,5 +40,5 @@
 		</dataSource>
 	</transactionManager>
 
-	<sqlMap resource="com/hangum/tadpole/commons/sql/query/HiveSQL.xml" />
+	<sqlMap resource="com/hangum/tadpole/commons/sql/query/HIVESQL.xml" />
 </sqlMapConfig>
