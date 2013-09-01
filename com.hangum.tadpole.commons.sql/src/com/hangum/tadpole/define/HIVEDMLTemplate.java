@@ -15,6 +15,8 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 /**
  * Define HIVE DML
  * 
+ * ref) https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL
+ * 
  * @author hangum
  *
  */
@@ -42,14 +44,5 @@ public class HIVEDMLTemplate {
 	public static final String TMP_ALTER_VIEW_STMT = "ALTER ALGORITHM=UNDEFINED DEFINER='%s'@'%' " + PublicTadpoleDefine.LINE_SEPARATOR +
 													" SQL SECURITY DEFINER VIEW '%s' AS " + PublicTadpoleDefine.LINE_SEPARATOR +
 													"";
-	
-	/** index */
-	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name \r\n  ON table_name ( columns );";
-	
-	
-	/** function */
-	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE FUNCTION hello (s CHAR(20)) RETURNS CHAR(50)  " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																	" RETURN CONCAT('Hello, 's');";
-	
 	
 }
