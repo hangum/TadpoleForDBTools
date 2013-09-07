@@ -43,14 +43,11 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.util.NumberFormatUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -97,9 +94,12 @@ public class ColumnsComposite extends Composite {
 		textFilter = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textFilter.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent e) {
-				columnFilter.setSearchString(selectColumns, textFilter.getText());
-				tvColumnInform.refresh();
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.Selection){
+					columnFilter.setSearchString(selectColumns, textFilter.getText());
+					tvColumnInform.refresh();
+				}
 			}
 		});
 

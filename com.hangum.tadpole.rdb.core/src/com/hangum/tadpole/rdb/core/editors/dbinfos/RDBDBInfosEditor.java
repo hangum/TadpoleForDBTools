@@ -107,7 +107,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		CTabItem tbtmColumnSummary = new CTabItem(tabFolder, SWT.NONE);
 		tbtmColumnSummary.setText("Column Summary");
 		columnInformationComposite = new ColumnsComposite(tabFolder, SWT.NONE, userDB);
-		tbtmCollectionSummary.setControl(columnInformationComposite);
+		tbtmColumnSummary.setControl(columnInformationComposite);
 		
 		GridLayout gl_compositeColumnInformation = new GridLayout(1, false);
 		gl_compositeColumnInformation.verticalSpacing = 2;
