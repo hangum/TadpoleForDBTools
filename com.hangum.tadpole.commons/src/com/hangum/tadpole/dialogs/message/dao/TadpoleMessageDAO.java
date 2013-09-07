@@ -20,7 +20,7 @@ import java.util.Date;
  */
 public class TadpoleMessageDAO  {
 	
-	/** 실행시간*/
+	/** Start execute query time */
 	Date dateExecute;
 	/** sql text */
 	String strMessage;

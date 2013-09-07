@@ -90,7 +90,7 @@ public class ApplicationArgumentUtils {
 			}
 		}
 	
-		throw new Exception("Can't find argument. key is " + key);
+		throw new Exception("Can't find argument. Find key is " + key);
 	}
 	
 	/**

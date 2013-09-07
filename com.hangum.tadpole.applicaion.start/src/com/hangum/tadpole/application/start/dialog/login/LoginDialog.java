@@ -37,10 +37,8 @@ import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.swtdesigner.SWTResourceManager;
 
 /**
- * login dialog
- * 
- * 국제화
- * http://wiki.eclipse.org/RAP/FAQ#How_to_switch_locale.2Flanguage_on_user_action.3F 
+ * Tadpole DB Hub User login dialog.
+ * support the localization : (http://wiki.eclipse.org/RAP/FAQ#How_to_switch_locale.2Flanguage_on_user_action.3F) 
  * 
  * @author hangum
  *
@@ -171,12 +169,10 @@ public class LoginDialog extends Dialog {
 
 		if(!validation(strEmail, strPass)) return;
 		
-		// 신규 사용자 등록이면 
 		try {
 			SessionManager.addSession(TadpoleSystem_UserQuery.login(strEmail, strPass));
-
 		} catch (Exception e) {
-			logger.error("login", e); //$NON-NLS-1$
+			logger.error("Login exception", e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
 			return;
 		}	
@@ -186,8 +182,7 @@ public class LoginDialog extends Dialog {
 		
 	@Override
 	public boolean close() {
-		// 로그인이 안되었을 경우 로그인 창이 남아 있도록...
-		// https://github.com/hangum/TadpoleForDBTools/issues/31
+		//  로그인이 안되었을 경우 로그인 창이 남아 있도록...(https://github.com/hangum/TadpoleForDBTools/issues/31)
 		if(!SessionManager.isLogin()) return false;
 		
 		return super.close();

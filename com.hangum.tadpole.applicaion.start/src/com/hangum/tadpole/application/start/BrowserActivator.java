@@ -11,6 +11,7 @@
 package com.hangum.tadpole.application.start;
 
 /**
+ * Dummy plugin activator
  * 
  * @author hangum
  *

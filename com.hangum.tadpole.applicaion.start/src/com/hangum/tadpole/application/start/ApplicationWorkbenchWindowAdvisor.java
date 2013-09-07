@@ -27,14 +27,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.views.IViewDescriptor;
 
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserInfoDataDAO;
@@ -42,12 +43,12 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.util.RequestInfoUtils;
 
 /**
  * Configures the initial size and appearance of a workbench window.
@@ -77,11 +78,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowProgressIndicator(false);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
         
-        // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
+        // Browser screen max, not min.
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(false);
     
-        // 시스템 종료 메시지 출력시킬 것인지.
+        // Set system exist message.
         ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
     	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
     
@@ -89,11 +90,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     /**
-     * 시스템 초기화 
+     * System initialize 
      */
     private void initSystem() {
 //    	try {
-//	    	// Add HttpListener(사용자 정보를 수집하기.
+//	    	// Add HttpListener(User data collection
 //			System.out.println("================= start add session ==========================");
 //			TadpoleSessionListener listener = new TadpoleSessionListener();
 //			RWT.getUISession().getHttpSession().getServletContext().addListener(listener);//"com.hangum.tadpole.application.start.sessions.TadpoleSessionListener");
@@ -102,17 +103,16 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    		e.printStackTrace();
 //    	}
     			
-    	// 올챙이가 지원하지 않는 브라우저면 정보 다이얼로그를 보여준다.
-    	String isBrowser = RequestInfoUtils.isTadpoleRunning();
-    	if(!"".equals(isBrowser)) {
-    		UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), isBrowser);
-    		uiDialog.open();
-    	}
+//    	// Show Information Dialog(Is not Firefox, Chrome, Safari)
+//    	String isBrowser = RequestInfoUtils.isTadpoleRunning();
+//    	if(!"".equals(isBrowser)) {
+//    		UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), isBrowser);
+//    		uiDialog.open();
+//    	}
     	
-    	// tadpole의 시스템 테이블이 존재 하지 않는다면 테이블을 생성합니다.
+    	// If the system table does not exist, create a table.
     	try {
     		TadpoleSystemInitializer.initSystem();
-    		
     	} catch(Exception e) {
     		logger.error("System initialize", e); //$NON-NLS-1$
     		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -121,13 +121,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     		System.exit(0);
     	}
     	
-    	// 이미 로그인 되어 있는지 검사합니다.
+    	// If you already login?
     	if(0 == SessionManager.getSeq()) {
     	
-	    	// login dialog를 뜨도록합니다.    
+	    	// Open login dialog    
 	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
 	    	
-	    	// 로그인 취소 버튼을 누르면 manager 권한으로 사용하도록 합니다.
+	    	// When login cancel button, i use in manager authority.
 	    	if(Dialog.OK != loginDialog.open()) {
 	    		
 	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
@@ -142,7 +142,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				}	
 	    	} else {
 	    		try {
-		    		// 사용자 세션을 저장한다.
+		    		// Stored user session.
 					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
 					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
@@ -161,20 +161,20 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     @Override
     public void postWindowOpen() {
-    	// 로그인 이후 디비가 없을 경우 디비 커넥트 다이얼로그가 출력되도록 합니다.
+    	// If login after does not DB exist, DB connect Dialog open.
     	try {
-    		List<UserDBDAO> listUserDB = TadpoleSystem_UserDBQuery.getUserDB();
-    		if(listUserDB.size() == 0) {
+    		ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+    		if(0 == mv.getAllTreeList().size()) {
     			ConnectDatabase cd = new ConnectDatabase();
     			cd.run();
-    		}    		
+    		}
     	} catch(Exception e) {
-    		logger.error("list user db", e); //$NON-NLS-1$
+    		logger.error("Is DB list?", e); //$NON-NLS-1$
     	}    	
     }
     
     /**
-	 * session을 설정합니다.
+	 * Set initialize session
 	 */
 	private void initSession() {
 		HttpSession iss = RWT.getRequest().getSession();
@@ -185,31 +185,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		} else {
 			iss.setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
 		}
-	}	// end method
+	}
     
     @Override
     public void postWindowCreate() {
-    	
-        // browser화면 최대화 되도록 하고, 최소화 최대화 없도록 수정
-//    	현재는 rcp 버전은 삭제
-//    	if(getTadpoleRAPBundle()) {
-	    	Shell shell = getWindowConfigurer().getWindow().getShell();
-	    	if(shell == null) {
-	    		shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-	    	}
-	    	shell.setMaximized(true);
-//        }	    
+    	Shell shell = getWindowConfigurer().getWindow().getShell();
+    	if(shell == null) {
+    		shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    	}
+    	shell.setMaximized(true);
     }
-    
-//
-//	/**
-//     * 현재 rap번들이 실행중인지
-//     * @return
-//     */
-//    public boolean getTadpoleRAPBundle() {
-//    	Bundle bundle = Platform.getBundle("com.hangum.db.browser.rap"); //$NON-NLS-1$
-//        if(bundle != null) return true;
-//        
-//        return false;
-//    }
 }

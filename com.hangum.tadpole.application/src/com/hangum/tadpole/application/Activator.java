@@ -16,7 +16,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.hangum.tadpole.log.LogConfiguration;
 import com.hangum.tadpole.log.LogListener;
 
 /**
@@ -44,11 +43,8 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
-//		 log level설정
-//		LogConfiguration.getInstance();
-		
-		// eclipse 로그도 log4j에 넣어주도록 수정 ... (해야할지 살짝 의문이고 삭제해야할지도....) -hangum, 11.09
+
+		// Add eclipse log to log4j log
 		listener = new LogListener();
 		Platform.addLogListener(listener);
 	}

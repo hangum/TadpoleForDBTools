@@ -10,7 +10,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/sql/parser/blancosqlformatter-0.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sql/parser/zigen.sql.parser.1.0.4.v20101009.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sql/formatter/kry.sql.format_1.0.0.v20101023.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/security/jasypt-1.7.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
