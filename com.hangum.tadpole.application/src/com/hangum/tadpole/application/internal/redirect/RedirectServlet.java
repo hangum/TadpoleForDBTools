@@ -22,9 +22,7 @@ import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
 /**
- * rap1.5의 url을 2.0의 url로 리다이렉트합니다.
- * 즉, rap에서 1.5에서는 /tadpole/db?startup=tadpole 호출하는 방식이었으나 2.0에서는 /tadpole만 호출하면 되는 방식이어서 수정합니다.
- * 
+ * If invalid URL come, i change to the correct URL.
  *  http://wiki.eclipse.org/RAP/FAQ#How_to_access_a_RAP_application_without_specifying_a_servlet_name.3F
  * 
  * @author hangum
@@ -42,7 +40,6 @@ public class RedirectServlet extends HttpServlet {
 	}
 
 	private static void redirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// tomcat에서 실행했는지.. 아니면 standalone모드인지...
 		if(!isStandardalone()) {			
 			response.sendRedirect(response.encodeRedirectURL("/tadpole/tadpole"));
 		} else {
@@ -51,7 +48,7 @@ public class RedirectServlet extends HttpServlet {
 	}
 	
 	/**
-	  * standalone mode인지 
+	  * Is standalone mode? 
 	  * 
 	  * @return
 	  */

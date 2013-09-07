@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 
 /**
- * eclipse log 정보를 log4j로그에 남길수 있도록 리스너 생성
+ * Save to log4j log of Eclipse
  * 
  * @author hangum
  *

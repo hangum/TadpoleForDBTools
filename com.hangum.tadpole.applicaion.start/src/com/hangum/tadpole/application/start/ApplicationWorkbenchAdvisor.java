@@ -27,7 +27,7 @@ import com.hangum.tadpole.rdb.core.editors.intro.IntroEditorInput;
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	private static final Logger logger = Logger.getLogger(ApplicationWorkbenchAdvisor.class);
-	private static final String PERSPECTIVE_ID = "com.hangum.tadpole.application.start.perspective";
+	public static final String PERSPECTIVE_ID = "com.hangum.tadpole.application.start.perspective";
 
     public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         return new ApplicationWorkbenchWindowAdvisor(configurer);

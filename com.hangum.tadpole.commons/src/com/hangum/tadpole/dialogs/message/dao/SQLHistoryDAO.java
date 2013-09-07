@@ -21,10 +21,10 @@ import java.util.Date;
 public class SQLHistoryDAO {
 	int seq;
 	
-	/** 시작 시간 */
+	/** Execute start time */
 	Date startDateExecute;
 	
-	/** sql text */
+	/** execute sql text */
 	String strSQLText;
 	
 	Date endDateExecute;

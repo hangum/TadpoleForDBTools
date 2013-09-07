@@ -13,11 +13,9 @@ package com.hangum.tadpole.cipher.core.utils;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 /**
- * <pre>
- *	내용을 암호화 합니다. 
- * 	http://www.jasypt.org
- * </pre>
+ * Encryption, Decryption utils
  * 
+ * @see http://www.jasypt.org
  * @author hangum
  *
  */
@@ -26,9 +24,9 @@ public class EncryptiDecryptUtil implements DefaultEncryptDecrypt {
 	final static String DEFAULT_ENCRYPT_PASSWORD = "heechan.tadpole.owner.son";
 	
 	/**
-	 * 텍스트를 암호화 합니다.
+	 * encryption
 	 * 
-	 * @param text 암호화된 값 
+	 * @param text  
 	 * @return
 	 */
 	@Override
@@ -42,9 +40,9 @@ public class EncryptiDecryptUtil implements DefaultEncryptDecrypt {
 	}
 	
 	/**
-	 * text를 복호화 합니다.
+	 * description
 	 * 
-	 * @param text 복호화 된 text
+	 * @param text 
 	 * @return
 	 */
 	@Override

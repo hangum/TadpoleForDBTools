@@ -54,8 +54,10 @@ public class ApplicationLock {
 				tmp_dir += System.getProperty("file.separator");
 			}
 			
-			logger.debug("[java.io.tmpdir]" + System.getProperty("java.io.tmpdir"));
-			logger.debug("[file.separator]" + System.getProperty("file.separator"));
+			if(logger.isDebugEnabled()) {
+				logger.debug("[java.io.tmpdir]" + System.getProperty("java.io.tmpdir"));
+				logger.debug("[file.separator]" + System.getProperty("file.separator"));
+			}
 	
 			// Acquire MD5
 			try {
@@ -70,13 +72,11 @@ public class ApplicationLock {
 			} catch (Exception ex) {
 				logger.error("lock_file", ex);
 			}
-			logger.debug("l1111111111111111111111111111111111111111111111");
 	
 			// MD5 acquire fail
 			if (lock_file == null) {
 				lock_file = new File(tmp_dir + key + ".app_lock");
 			}
-			logger.debug("2222222222222222222222222222222");
 	
 			lock_stream = new FileOutputStream(lock_file);
 	

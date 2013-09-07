@@ -69,6 +69,7 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLDMLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLInsertAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLSelectAction;
@@ -119,6 +120,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private AbstractObjectAction refreshAction_Table;
 
 	private AbstractObjectAction generateSampleData;
+	
+	private GenerateSQLDMLAction selectDMLAction;
 
 	private GenerateSQLSelectAction selectStmtAction;
 	private GenerateSQLSelectAction insertStmtAction;
@@ -385,6 +388,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		// generation sample data
 		generateSampleData = new GenerateSampleDataAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		
+		selectDMLAction = new GenerateSQLDMLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "DML"); //$NON-NLS-1$
 
 		selectStmtAction = new GenerateSQLSelectAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
 		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
@@ -413,6 +418,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						manager.add(generateSampleData);
 					}
+					
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					manager.add(selectDMLAction);
 
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(selectStmtAction);
@@ -578,6 +586,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		refreshAction_Table.setUserDB(getUserDB());
 
 		generateSampleData.setUserDB(getUserDB());
+		
+		selectDMLAction.setUserDB(getUserDB());
 
 		selectStmtAction.setUserDB(getUserDB());
 		insertStmtAction.setUserDB(getUserDB());

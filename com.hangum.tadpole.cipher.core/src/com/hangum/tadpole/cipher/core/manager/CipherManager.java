@@ -16,8 +16,6 @@ import com.hangum.tadpole.cipher.core.utils.EncryptiDecryptUtil;
 /**
  * Tadpole Cipher Manager
  * 
- * 현재 코드는 나중에 어떻게 확장할 빌미를 재공하기 위한 수단 정도로 만들어 놓은 코드입니다. ㅠ
- * 
  * @author hangum
  *
  */
