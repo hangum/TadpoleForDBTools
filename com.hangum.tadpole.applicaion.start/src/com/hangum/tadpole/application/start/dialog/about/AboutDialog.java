@@ -100,7 +100,7 @@ public class AboutDialog extends Dialog {
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel3.setText("Issue : <a href=\"https://github.com/hangum/TadpoleForDBTools/issues?state=open\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools/issues?state=open</a>");//Messages.AboutAction_4);
+		lblNewLabel3.setText("Register Issue : <a href=\"https://github.com/hangum/TadpoleForDBTools/issues?state=open\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools/issues?state=open</a>");//Messages.AboutAction_4);
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -115,7 +115,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Ok", true);
+		createButton(parent, IDialogConstants.OK_ID, "OK", true);
 	}
 
 	/**

@@ -38,7 +38,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
- * 올챙이에서 사용하려는 workbench의 action과 toolbar, menu를 생성합니다.
+ * Define at action, toolbar, menu
  * 
  * @author hangum
  */
@@ -53,9 +53,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction dbRelationOpenAction;
     private IAction deleteResourceAction;
     
-    /** 사용자 권한 */
+    /** User permission action */
     private IAction userPermissionAction;
-    /** 실행된 sql */
+    /** executed sql */
     private IAction executedSQLAction;
     
     private IAction preferenceAction;
@@ -109,8 +109,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /**
      * Comment at 2.1 RC3 has error(https://bugs.eclipse.org/bugs/show_bug.cgi?id=410260) 
-     * 
-     * 
      */
     protected void fillMenuBar(IMenuManager menuBar) {
 //        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
