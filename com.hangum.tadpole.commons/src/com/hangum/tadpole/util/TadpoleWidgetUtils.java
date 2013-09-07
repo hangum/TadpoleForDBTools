@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.Color;
 import com.swtdesigner.SWTResourceManager;
 
 /**
- * Tadpole wiget utils
+ * Tadpole widget utils
  * 
  * @author hangum
  *

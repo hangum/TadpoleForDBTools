@@ -20,7 +20,7 @@ import org.apache.log4j.RollingFileAppender;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 
 /**
- * log file의 환경을 설정합니다.
+ * Set log file configuration.
  * 
  * @author hangum
  *
@@ -61,14 +61,11 @@ public class LogConfiguration {
 		if(ApplicationArgumentUtils.isDebugMode()) this.level = Level.DEBUG;
 		else this.level = Level.INFO;
 		
-//		System.out.println("###################### log4j log level is " + this.level.toString());
-		
 		logger = Logger.getRootLogger();
 		logger.setLevel(this.level);
 		logger.addAppender(fileAppender);
 		logger.addAppender(consoleAppender);
 //		logger.setPriority(priority);
-		
 	}
 	
 	public void closeAppend() {
