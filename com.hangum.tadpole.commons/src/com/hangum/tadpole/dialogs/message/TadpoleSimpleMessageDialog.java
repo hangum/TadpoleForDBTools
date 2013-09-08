@@ -38,8 +38,8 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	private static final Logger logger = Logger.getLogger(TadpoleSimpleMessageDialog.class);
 	private Text textMessage;
 	
-	String title;
-	String message;
+	private String title;
+	private String message;
 	private Label lblMessage;
 	
 	/**

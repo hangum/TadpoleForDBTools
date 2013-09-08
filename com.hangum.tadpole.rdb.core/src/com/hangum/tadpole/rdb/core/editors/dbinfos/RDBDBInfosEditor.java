@@ -24,6 +24,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnsComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.RDBInformationComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TablesComposite;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
@@ -44,6 +45,7 @@ public class RDBDBInfosEditor extends EditorPart {
 	private UserDBDAO userDB;
 	private RDBInformationComposite compositeRDBInformation;
 	private TablesComposite tableInformationComposite;
+	private ColumnsComposite columnInformationComposite;
 
 	public RDBDBInfosEditor() {
 	}
@@ -102,7 +104,20 @@ public class RDBDBInfosEditor extends EditorPart {
 		tableInformationComposite.setLayout(gl_compositeTableInformation);
 		//[table information end]
 		
+		CTabItem tbtmColumnSummary = new CTabItem(tabFolder, SWT.NONE);
+		tbtmColumnSummary.setText("Column Summary");
+		columnInformationComposite = new ColumnsComposite(tabFolder, SWT.NONE, userDB);
+		tbtmColumnSummary.setControl(columnInformationComposite);
+		
+		GridLayout gl_compositeColumnInformation = new GridLayout(1, false);
+		gl_compositeColumnInformation.verticalSpacing = 2;
+		gl_compositeColumnInformation.horizontalSpacing = 2;
+		gl_compositeColumnInformation.marginHeight = 2;
+		gl_compositeColumnInformation.marginWidth = 2;
+		columnInformationComposite.setLayout(gl_compositeColumnInformation);
+
 		tabFolder.setSelection(0);
+		
 	}
 
 	@Override

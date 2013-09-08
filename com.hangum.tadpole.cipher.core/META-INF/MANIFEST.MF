@@ -10,3 +10,5 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.cipher.core.manager
+Bundle-ClassPath: libs/jasypt-1.7.1.jar,
+ .

@@ -408,6 +408,43 @@ ORDER BY 1, 2
 </select>
 
 <!-- 
+	column information
+ -->
+<select id="columnInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	select cols.table_name
+	       , tbls.comments as table_comment
+	        ,cols.column_name
+	        ,nullable
+	        ,data_type as type
+	        ,decode (data_type
+	                ,'CHAR', char_length
+	                ,'VARCHAR', char_length
+	                ,'VARCHAR2', char_length
+	                ,'NCHAR', char_length
+	                ,'NVARCHAR', char_length
+	                ,'NVARCHAR2', char_length
+	                ,null)
+	            nchar_length
+	        ,decode (data_type, 'NUMBER', data_precision + data_scale, data_length) length
+	        ,data_precision precision
+	        ,data_scale scale
+	        ,data_length dlength
+	        ,data_default
+	        ,coms.comments as column_comment
+	        ,data_type_mod
+	        ,cols.char_used
+	        ,decode (cols.density, null, 'No', 'Yes') histogram
+	        ,num_distinct
+	        ,num_nulls
+	        ,round (density, 5) density
+	    from sys.user_tab_cols cols
+	    	left join sys.user_col_comments coms on coms.table_name = cols.table_name and coms.column_name = cols.column_name 
+	    	left join sys.user_tab_comments tbls on tbls.table_name = cols.table_name
+	   where 1 = 1 and cols.hidden_column = 'NO'
+	order by cols.table_name, cols.column_id
+</select>
+
+<!-- 
 	Table DDL Script
  -->
 <select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">

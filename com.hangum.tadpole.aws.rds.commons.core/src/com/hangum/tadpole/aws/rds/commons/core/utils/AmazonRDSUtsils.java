@@ -25,7 +25,7 @@ import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
 
 /**
- * AmazonRDS 를 사용하는 Utils
+ * AmazonRDS Utils
  * 
  * @author hangum
  *
@@ -48,7 +48,7 @@ public class AmazonRDSUtsils {
 	}
 
 	/**
-	 * rds 자료를 가져와서 올챙이가 처리하려는 자료 형태로 만듭니다.
+	 * Get RDS to Tadpole UserDB data.
 	 * 
 	 * @param accessKey
 	 * @param secretKey
@@ -104,8 +104,6 @@ public class AmazonRDSUtsils {
 			}
 		} catch(Exception e) {
 			throw e;
-		} finally {
-			
 		}
 		
 		return returnDBList;
