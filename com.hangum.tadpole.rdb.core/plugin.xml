@@ -148,13 +148,6 @@
                   name="admin">
             </groupMarker>
          </menu>
-         <action
-               class="com.hangum.tadpole.rdb.core.actions.connections.ShowDBInformationAction"
-               icon="resources/icons/db_information.png"
-               id="com.hangum.tadpole.rdb.core.action.rdb.dbInformation"
-               label="DB Information"
-               menubarPath="menu.admin/admin">
-         </action>
           <action
                 class="com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction"
                 enablesFor="1"
@@ -285,6 +278,13 @@
                      name="com.hangum.tadpole.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
+         </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.connections.ShowDBInformationAction"
+               icon="resources/icons/db_information.png"
+               id="com.hangum.tadpole.rdb.core.action.rdb.dbInformation"
+               label="DB Information"
+               menubarPath="menu.admin/admin">
          </action>
             <!--
          <action
