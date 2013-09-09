@@ -165,10 +165,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public void postWindowOpen() {
     	// If login after does not DB exist, DB connect Dialog open.
     	try {
-    		ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-    		
     		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
     		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+    			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
 	    		if(0 == mv.getAllTreeList().size()) {
 	    			ConnectDatabase cd = new ConnectDatabase();
 	    			cd.run();
