@@ -178,6 +178,20 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
     TABLE_NAME
 </select>
 
+<select id="columnInformation" resultClass="com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+	SELECT   
+         table_name,
+         column_name ,
+         column_type ,
+         is_nullable nullable,
+         column_key pk,
+         column_default data_default,
+         extra,
+         column_comment 
+	FROM information_schema.columns
+	WHERE table_schema = #db# 
+</select>
+
 <!-- 
 	Table DDL Script
  -->
