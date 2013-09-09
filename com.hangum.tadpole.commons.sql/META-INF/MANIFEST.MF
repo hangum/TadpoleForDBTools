@@ -40,6 +40,7 @@ Export-Package:
  com.hangum.tadpole.commons.sql.util.executer.procedure,
  com.hangum.tadpole.commons.sql.util.sqlscripts,
  com.hangum.tadpole.commons.sql.util.sqlscripts.scripts,
+ com.hangum.tadpole.commons.sql.util.tables,
  com.hangum.tadpole.dao,
  com.hangum.tadpole.dao.mongodb,
  com.hangum.tadpole.dao.mysql,
