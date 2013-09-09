@@ -11,9 +11,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.dbinfos.composites;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -43,12 +41,12 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
-import com.hangum.tadpole.util.NumberFormatUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -68,8 +66,6 @@ public class ColumnsComposite extends Composite {
 
 	private ColumnInfoFilter columnFilter;
 	private Text textFilter;
-
-	private String[] selectColumns;
 
 	/**
 	 * Create the composite.
@@ -96,8 +92,8 @@ public class ColumnsComposite extends Composite {
 		textFilter.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == SWT.Selection){
-					columnFilter.setSearchString(selectColumns, textFilter.getText());
+				if (e.keyCode == SWT.Selection) {
+					columnFilter.setSearchString(textFilter.getText());
 					tvColumnInform.refresh();
 				}
 			}
@@ -118,7 +114,7 @@ public class ColumnsComposite extends Composite {
 		table.setLinesVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		createColumn();
+		createTableColumn();
 
 		columnFilter = new ColumnInfoFilter();
 		tvColumnInform.addFilter(columnFilter);
@@ -129,36 +125,70 @@ public class ColumnsComposite extends Composite {
 	/**
 	 * table column head를 생성합니다.
 	 */
-	private void createColumn() {
+	private void createTableColumn() {
 
-		String[] name;
-		int[] size;
-		int[] align;
+		TableColumnDef[] tableColumnDef = new TableColumnDef[] {};
 		if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
-			selectColumns = new String[] { "TABLE_NAME", "TABLE_COMMENT", "COLUMN_NAME", "COLUMN_COMMENT" };
-			name = new String[] { "Table Name", "Table Comment", "Column Name", "Column Comment" };
-			size = new int[] { 120, 180, 150, 180 };
-			align = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
+
+			tableColumnDef = new TableColumnDef[] { //
+			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT) //
+					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
+					, new TableColumnDef("NULLABLE", "Nullable", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
+					, new TableColumnDef("CHAR_USED", "Char Used", 100, SWT.LEFT) //
+					, new TableColumnDef("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
+					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
+					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
+					, new TableColumnDef("DENSITY", "Density", 100, SWT.LEFT) //
+					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			};
+
 		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
-			selectColumns = new String[] { "TABLE_NAME", "TABLE_COMMENT", "COLUMN_NAME", "COLUMN_COMMENT" };
-			name = new String[] { "Table Name", "Table Comment", "Column Name", "Column Comment" };
-			size = new int[] { 120, 180, 150, 180 };
-			align = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
+
+			tableColumnDef = new TableColumnDef[] { //
+			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT) //
+					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 150, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_NAME", "Column Name", 120, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 150, SWT.LEFT) //
+					, new TableColumnDef("NULLABLE", "Nullable", 60, SWT.CENTER) //
+					, new TableColumnDef("DATA_TYPE", "Data Type", 120, SWT.LEFT) //
+					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
+					, new TableColumnDef("CHAR_USED", "Char Used", 60, SWT.CENTER) //
+					, new TableColumnDef("HISTOGRAM", "Histogram", 60, SWT.CENTER) //
+					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.RIGHT) //
+					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.RIGHT) //
+					, new TableColumnDef("DENSITY", "Density", 100, SWT.RIGHT) //
+					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 120, SWT.LEFT) //
+			};
+
 		} else {
-			selectColumns = new String[] { "TABLE_NAME", "TABLE_COMMENT", "COLUMN_NAME", "COLUMN_COMMENT" };
-			name = new String[] { "Table Name", "Table Comment", "Column Name", "Column Comment" };
-			size = new int[] { 120, 180, 150, 180 };
-			align = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
+			tableColumnDef = new TableColumnDef[] { //
+			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT) //
+					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
+					, new TableColumnDef("NULLABLE", "Nullable", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
+					, new TableColumnDef("CHAR_USED", "Char Used", 100, SWT.LEFT) //
+					, new TableColumnDef("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
+					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
+					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
+					, new TableColumnDef("DENSITY", "Density", 100, SWT.LEFT) //
+					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			};
 		}
 
-		// sorter
-		AllColumnComparator tableComparator = new AllColumnComparator(selectColumns);
-		tvColumnInform.setSorter(tableComparator);
-
-		createColumn(tableComparator, name, size, align);
+		createColumnHeader(tableColumnDef);
 
 		tvColumnInform.setContentProvider(new ArrayContentProvider());
-		tvColumnInform.setLabelProvider(new ColumnInformLabelProvider(userDB, selectColumns));
+		tvColumnInform.setLabelProvider(new ColumnInformLabelProvider(tvColumnInform));
 
 	}
 
@@ -168,18 +198,22 @@ public class ColumnsComposite extends Composite {
 	 * @param name
 	 * @param size
 	 */
-	private void createColumn(AllColumnComparator tableComparator, String[] name, int[] size, int[] align) {
-		for (int i = 0; i < name.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvColumnInform, align[i]);
+	private void createColumnHeader(TableColumnDef[] colDef) {
+		AllColumnComparator tableComparator = new AllColumnComparator();
+
+		for (int i = 0; i < colDef.length; i++) {
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvColumnInform, colDef[i].align);
 
 			TableColumn tableColumn = tableViewerColumn.getColumn();
-
-			tableColumn.setText(name[i]);
-			tableColumn.setWidth(size[i]);
+			tableColumn.setText(colDef[i].caption);
+			tableColumn.setData("column", colDef[i].column);
+			tableColumn.setWidth(colDef[i].width);
 
 			tableColumn.addSelectionListener(getSelectionAdapter(tvColumnInform, tableComparator, tableColumn, i));
 
 		}
+
+		tvColumnInform.setSorter(tableComparator);
 	}
 
 	protected SelectionAdapter getSelectionAdapter(final TableViewer viewer, final ObjectComparator comparator, final TableColumn column, final int index) {
@@ -202,7 +236,7 @@ public class ColumnsComposite extends Composite {
 	private void initUI() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List listTableInform = sqlClient.queryForList("columnInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
+			List<RDBInfomationforColumnDAO> listTableInform = sqlClient.queryForList("columnInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
 
 			tvColumnInform.setInput(listTableInform);
 			tvColumnInform.refresh();
@@ -220,6 +254,32 @@ public class ColumnsComposite extends Composite {
 
 }
 
+class TableColumnDef {
+	String column;
+	String caption;
+	int width;
+	int align;
+
+	public TableColumnDef(String column) {
+		this(column, StringUtils.capitalize(column.toLowerCase().replace("_", "")));
+	}
+
+	public TableColumnDef(String column, String caption) {
+		this(column, caption, 100);
+	}
+
+	public TableColumnDef(String column, String caption, int width) {
+		this(column, caption, width, SWT.LEFT);
+	}
+
+	TableColumnDef(String column, String caption, int width, int align) {
+		this.column = column;
+		this.caption = caption == null ? StringUtils.capitalize(column.toLowerCase().replace("_", "")) : caption;
+		this.width = width == 0 ? 100 : width;
+		this.align = align <= 0 ? SWT.LEFT : align;
+	}
+}
+
 /**
  * sort를 위한 최상위 클래서(기본으로 table의 column 사용)
  * 
@@ -227,39 +287,24 @@ public class ColumnsComposite extends Composite {
  * 
  */
 class AllColumnComparator extends ObjectComparator {
-
-	String[] keyColumns;
-
-	public AllColumnComparator(String[] key) {
+	public AllColumnComparator() {
 		this.propertyIndex = 0;
 		direction = DESCENDING;
-
-		this.keyColumns = key;
 	}
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		Map tc1 = (HashMap) e1;
-		Map tc2 = (HashMap) e2;
+		RDBInfomationforColumnDAO tc1 = (RDBInfomationforColumnDAO) e1;
+		RDBInfomationforColumnDAO tc2 = (RDBInfomationforColumnDAO) e2;
 
-		int rc = StringValueCompare(tc1, tc2, keyColumns[propertyIndex]);
+		String column = (String) ((TableViewer) viewer).getTable().getColumn(propertyIndex).getData("column");
+		int rc = tc1.compareToIgnoreCase(tc2, column);
 
 		if (direction == DESCENDING) {
 			rc = -rc;
 		}
 		return rc;
 	}
-
-	private int StringValueCompare(Map map1, Map map2, String key) {
-		String value1 = "";
-		String value2 = "";
-
-		value1 = map1.get(key) == null ? "" : map1.get(key).toString().trim();
-		value2 = map2.get(key) == null ? "" : map2.get(key).toString().trim();
-
-		return value1.compareToIgnoreCase(value2);
-	}
-
 }
 
 /**
@@ -269,12 +314,10 @@ class AllColumnComparator extends ObjectComparator {
  * 
  */
 class ColumnInformLabelProvider extends LabelProvider implements ITableLabelProvider {
-	private UserDBDAO userDB;
-	private String[] displayColumns;
+	private TableViewer tableViewer;
 
-	public ColumnInformLabelProvider(UserDBDAO userDB, String[] columns) {
-		this.userDB = userDB;
-		this.displayColumns = columns;
+	public ColumnInformLabelProvider(TableViewer tv) {
+		this.tableViewer = tv;
 	}
 
 	@Override
@@ -284,46 +327,9 @@ class ColumnInformLabelProvider extends LabelProvider implements ITableLabelProv
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		Map resultMap = (HashMap) element;
-
-		if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
-			switch (columnIndex) {
-			case 0:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			case 1:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			case 2:
-				return NumberFormatUtils.commaFormat("" + resultMap.get(displayColumns[columnIndex]));
-			case 3:
-				return NumberFormatUtils.commaFormat(StringUtils.replace("" + resultMap.get(displayColumns[columnIndex]), "null", ""));
-			case 4:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			case 5:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			case 6:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			}
-		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
-			switch (columnIndex) {
-			case 0:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			case 1:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			case 2:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			case 3:
-				return "" + resultMap.get(displayColumns[columnIndex]);
-			}
-		} else {
-			switch (columnIndex) {
-			case 0:
-				return "" + resultMap.get("name");
-			case 1:
-				return StringUtils.replace("" + resultMap.get("comment"), "null", "");
-			}
-		}
-
-		return "*** not set column ***";
+		String columnName = (String) tableViewer.getTable().getColumn(columnIndex).getData("column");
+		RDBInfomationforColumnDAO resultMap = (RDBInfomationforColumnDAO) element;
+		return resultMap.getColumnValuebyName(columnName);
 	}
 
 }
@@ -335,15 +341,10 @@ class ColumnInformLabelProvider extends LabelProvider implements ITableLabelProv
  * 
  */
 class ColumnInfoFilter extends ViewerFilter {
+	private String searchString;
 
-	private static final Logger logger = Logger.getLogger(ColumnInfoFilter.class);
-
-	String searchString;
-	String[] keys;
-
-	public void setSearchString(String[] keys, String s) {
-		this.searchString = ".*" + s + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
-		this.keys = keys;
+	public void setSearchString(String s) {
+		this.searchString = ".*" + s.toLowerCase() + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -352,19 +353,17 @@ class ColumnInfoFilter extends ViewerFilter {
 			return true;
 		} else {
 
-			Map resultMap = (HashMap) element;
-			for (String key : keys) {
-				String targetString = (String) resultMap.get(key);
-				targetString = targetString == null ? "" : targetString;
+			RDBInfomationforColumnDAO dao = (RDBInfomationforColumnDAO) element;
+			String targetString = "";
+
+			for (TableColumn tc : ((TableViewer) viewer).getTable().getColumns()) {
+				targetString = dao.getColumnValuebyName((String) tc.getData("column")).toLowerCase();
 
 				if (targetString.matches(searchString)) {
-					return true;
-				}else if (targetString.toLowerCase().matches(searchString.toLowerCase())) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-
 }
