@@ -43,6 +43,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.sql.util.tables.AutoResizeTableLayout;
+import com.hangum.tadpole.commons.sql.util.tables.SQLHistoryCreateColumn;
+import com.hangum.tadpole.commons.sql.util.tables.SQLHistoryFilter;
+import com.hangum.tadpole.commons.sql.util.tables.SQLHistoryLabelProvider;
+import com.hangum.tadpole.commons.sql.util.tables.SQLHistorySorter;
 import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
@@ -52,11 +57,6 @@ import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
-import com.hangum.tadpole.util.tables.SQLHistoryCreateColumn;
-import com.hangum.tadpole.util.tables.SQLHistoryFilter;
-import com.hangum.tadpole.util.tables.SQLHistoryLabelProvider;
-import com.hangum.tadpole.util.tables.SQLHistorySorter;
 
 /**
  * 실행한 쿼리.
