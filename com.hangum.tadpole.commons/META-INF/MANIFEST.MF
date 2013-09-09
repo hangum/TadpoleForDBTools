@@ -30,7 +30,6 @@ Export-Package: com.google.gson,
  com.hangum.tadpole.util,
  com.hangum.tadpole.util.download,
  com.hangum.tadpole.util.fileupload,
- com.hangum.tadpole.util.tables,
  com.hangum.tadpole.viewsupport,
  com.swtdesigner
 Import-Package: javax.servlet;version="2.5.0",
