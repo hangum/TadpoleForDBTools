@@ -259,7 +259,8 @@ public abstract class AbstractLoginComposite extends Composite {
 				TadpoleSQLManager.removeInstance(loginInfo);
 				
 				logger.error("MongoDB Connection error", e); //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.AbstractLoginComposite_1);
+				// fix. https://github.com/hangum/TadpoleForDBTools/issues/216
+				MessageDialog.openError(null, Messages.DBLoginDialog_26, e.getMessage());
 				
 				return false;
 			}
