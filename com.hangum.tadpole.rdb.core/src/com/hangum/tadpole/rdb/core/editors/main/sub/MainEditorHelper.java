@@ -19,10 +19,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.hangum.tadpole.commons.sql.util.tables.AutoResizeTableLayout;
+import com.hangum.tadpole.commons.sql.util.tables.DefaultViewerSorter;
+import com.hangum.tadpole.commons.sql.util.tables.SQLHistorySorter;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.util.tables.AutoResizeTableLayout;
-import com.hangum.tadpole.util.tables.DefaultViewerSorter;
-import com.hangum.tadpole.util.tables.SQLHistorySorter;
 
 /**
  * Maineditor helper

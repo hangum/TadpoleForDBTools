@@ -51,6 +51,11 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
 import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
+import com.hangum.tadpole.commons.sql.util.tables.SQLResultContentProvider;
+import com.hangum.tadpole.commons.sql.util.tables.SQLResultFilter;
+import com.hangum.tadpole.commons.sql.util.tables.SQLResultLabelProvider;
+import com.hangum.tadpole.commons.sql.util.tables.SQLResultSorter;
+import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -61,11 +66,6 @@ import com.hangum.tadpole.rdb.core.editors.main.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.editors.objects.table.TbUtils.TABLE_MOD_TYPE;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.util.XMLUtils;
-import com.hangum.tadpole.util.tables.SQLResultContentProvider;
-import com.hangum.tadpole.util.tables.SQLResultFilter;
-import com.hangum.tadpole.util.tables.SQLResultLabelProvider;
-import com.hangum.tadpole.util.tables.SQLResultSorter;
-import com.hangum.tadpole.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

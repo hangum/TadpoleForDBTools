@@ -37,13 +37,13 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
 import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.commons.sql.util.executer.procedure.ProcedureExecutor;
+import com.hangum.tadpole.commons.sql.util.tables.SQLResultContentProvider;
+import com.hangum.tadpole.commons.sql.util.tables.SQLResultLabelProvider;
+import com.hangum.tadpole.commons.sql.util.tables.SQLResultSorter;
+import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.util.tables.SQLResultContentProvider;
-import com.hangum.tadpole.util.tables.SQLResultLabelProvider;
-import com.hangum.tadpole.util.tables.SQLResultSorter;
-import com.hangum.tadpole.util.tables.TableUtil;
 
 /**
  * procedure 실행 다이얼로그.
