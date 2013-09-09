@@ -35,6 +35,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.views.IViewDescriptor;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -45,6 +46,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.session.manager.SessionManager.SESSEION_NAME;
 import com.hangum.tadpole.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
@@ -164,9 +166,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	// If login after does not DB exist, DB connect Dialog open.
     	try {
     		ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-    		if(0 == mv.getAllTreeList().size()) {
-    			ConnectDatabase cd = new ConnectDatabase();
-    			cd.run();
+    		
+    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+	    		if(0 == mv.getAllTreeList().size()) {
+	    			ConnectDatabase cd = new ConnectDatabase();
+	    			cd.run();
+	    		}
     		}
     	} catch(Exception e) {
     		logger.error("Is DB list?", e); //$NON-NLS-1$
