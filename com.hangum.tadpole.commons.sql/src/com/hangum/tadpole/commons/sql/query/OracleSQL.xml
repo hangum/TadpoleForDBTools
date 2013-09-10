@@ -408,6 +408,36 @@ ORDER BY 1, 2
 </select>
 
 <!-- 
+	column information
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+select cols.table_name as table_name
+           , tbls.comments as table_comment
+            ,cols.column_name as column_name
+            ,cols.nullable as nullable
+            ,cols.data_type || 
+            (case when cols.data_type =  'NUMBER' then '('|| cols.data_precision ||','|| cols.data_scale ||')'
+            when cols.data_type = 'DATA' then null 
+            when cols.data_type in ( 'CHAR', 'VARCHAR', 'VARCHAR2'  ,'NCHAR'  ,'NVARCHAR' ,'NVARCHAR2'  ) then '(' || to_char(cols.char_length) || ')'
+            else  '(' || to_char(cols.data_length) ||')' 
+            end  ) as data_type
+            ,cols.data_default as data_default
+            ,coms.comments as column_comment
+            ,cols.data_type_mod as data_type_mod
+            ,cols.char_used as char_used
+            ,decode (cols.density, null, 'No', 'Yes') as histogram
+            ,cols.num_distinct as num_distinct
+            ,cols.num_nulls as num_nulls
+            ,round (cols.density, 5) as density
+            ,cols.last_analyzed as last_analyzed
+        from sys.user_tab_cols cols
+            left join sys.user_col_comments coms on coms.table_name = cols.table_name and coms.column_name = cols.column_name 
+            left join sys.user_tab_comments tbls on tbls.table_name = cols.table_name
+       where 1 = 1 and cols.hidden_column = 'NO'
+    order by cols.table_name, cols.column_id
+</select>
+
+<!-- 
 	Table DDL Script
  -->
 <select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
