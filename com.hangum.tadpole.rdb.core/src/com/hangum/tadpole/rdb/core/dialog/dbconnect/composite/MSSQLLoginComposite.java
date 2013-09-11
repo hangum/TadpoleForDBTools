@@ -337,8 +337,10 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
 		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
 		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
+		
 		userDB.setHost(textHost.getText().trim());
 		userDB.setPort(textPort.getText().trim());
+		userDB.setUsers(textUser.getText().trim());
 		userDB.setPasswd(textPassword.getText().trim());
 		
 		// others connection 정보를 입력합니다.

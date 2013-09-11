@@ -359,7 +359,7 @@ public class Messages extends NLS {
 	public static String MongoDBLoginComposite_lblExLocalhostlocalhost_text;
 	public static String MainEditor_btnClear_text;
 	public static String MySQLLoginComposite_lblOperationType_text;
-	public static String IntroEditor_label_text;
+//	public static String IntroEditor_label_text;
 	public static String IntroEditor_label_1_text;
 	public static String PreDBInfoComposite_this_text;
 	public static String MSSQLLoginComposite_grpConnectionType_text;

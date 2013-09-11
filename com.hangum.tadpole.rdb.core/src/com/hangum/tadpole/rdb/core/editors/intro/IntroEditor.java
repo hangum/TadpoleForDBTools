@@ -54,7 +54,7 @@ public class IntroEditor extends EditorPart {
 	public static String[] ARRAY_DEFAULT_MAIN_HOME_PAGE = {PreferenceDefine.DEFAULT_HOME_PAGE_VALUE};//, "http://www.pitmongo.co.kr/"};
 	
 	/** default dona home */
-	public static String[] ARRAY_DONATION_HOME_PAGE = {"http://www.cubrid.org/", "www.osci.kr", "http://www.xenonix.com"}; //$NON-NLS-1$ //$NON-NLS-2$
+	public static String[] ARRAY_DONATION_HOME_PAGE = {"www.osci.kr", "http://www.xenonix.com"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public IntroEditor() {
 		super();
@@ -128,16 +128,16 @@ public class IntroEditor extends EditorPart {
 		Group grpDonor = new Group(parent, SWT.BORDER);
 		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.IntroEditor_0);
-		GridLayout gl_grpDonor = new GridLayout(4, false);
+		GridLayout gl_grpDonor = new GridLayout(3, false);
 		gl_grpDonor.verticalSpacing = 2;
 		gl_grpDonor.marginHeight = 2;
 		gl_grpDonor.horizontalSpacing = 2;
 		gl_grpDonor.marginWidth = 2;
 		grpDonor.setLayout(gl_grpDonor);
 		
-		CLabel lblWwwcubridorg = new CLabel(grpDonor, SWT.BORDER);
-		lblWwwcubridorg.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblWwwcubridorg.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/CUBRID.png")); //$NON-NLS-1$
+//		CLabel lblWwwcubridorg = new CLabel(grpDonor, SWT.BORDER);
+//		lblWwwcubridorg.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+//		lblWwwcubridorg.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/CUBRID.png")); //$NON-NLS-1$
 
 		CLabel lblOpenSourceCunsulting = new CLabel(grpDonor, SWT.BORDER);
 		lblOpenSourceCunsulting.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/OpenSourceConsulting.png")); //$NON-NLS-1$
@@ -149,10 +149,10 @@ public class IntroEditor extends EditorPart {
 		CLabel lblTadpole = new CLabel(grpDonor, SWT.BORDER);
 //		lblTadpole.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/TadpoleDBHub.png")); //$NON-NLS-1$
 		
-		// image text
-		CLabel labelCubrid = new CLabel(grpDonor, SWT.NONE);
-		labelCubrid.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		labelCubrid.setText(Messages.IntroEditor_label_text);
+//		// image text
+//		CLabel labelCubrid = new CLabel(grpDonor, SWT.NONE);
+//		labelCubrid.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+//		labelCubrid.setText(Messages.IntroEditor_label_text);
 		
 		CLabel labelOsci = new CLabel(grpDonor, SWT.NONE);
 		labelOsci.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
