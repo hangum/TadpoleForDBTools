@@ -47,6 +47,8 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.ColumnCommentEditorSupport;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -171,10 +173,10 @@ public class ColumnsComposite extends Composite {
 			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT) //
 					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
 					, new TableColumnDef("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
 					, new TableColumnDef("NULLABLE", "Nullable", 100, SWT.LEFT) //
 					, new TableColumnDef("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
 					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
 					, new TableColumnDef("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
 					, new TableColumnDef("CHAR_USED", "Char Used", 100, SWT.LEFT) //
 					, new TableColumnDef("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
@@ -210,7 +212,13 @@ public class ColumnsComposite extends Composite {
 			tableColumn.setWidth(colDef[i].width);
 
 			tableColumn.addSelectionListener(getSelectionAdapter(tvColumnInform, tableComparator, tableColumn, i));
-
+			
+			if ("TABLE_COMMENT".equals(colDef[i].column)){
+				//table is multi line display...(table object explorer)
+				//tableViewerColumn.setEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, i));
+			}else if ("COLUMN_COMMENT".equals(colDef[i].column)) {
+				tableViewerColumn.setEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, i));
+			}
 		}
 
 		tvColumnInform.setSorter(tableComparator);

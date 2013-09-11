@@ -227,6 +227,31 @@ SELECT
 		where o.xtype = 'U' 
 		order by o.name 
 </select>
+<!-- 
+	RDB Information - Column summary page
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+	select 
+	      t.name as table_name
+	      , tc.value as table_comment 
+	      , b.name as column_name
+	       , c.name + case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')'  else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')'  end as data_type
+	       , case when b.isnullable = 0  then 'NO' else 'YES' end as nullable
+	       , d.keyno ispk
+	       , cc.value as column_comment
+	from sysobjects t
+			    left join sysproperties tc on t.id = tc.id	 and tc.type = '3'	
+	   inner join sysobjects a on t.id = a.id 
+	   INNER JOIN syscolumns b ON (a.id = b.id)
+		INNER JOIN systypes c ON (b.xusertype = c.xusertype)
+		left outer join dbo.sysindexkeys d on (b.id =d.id and b.colid = d.colid and indid =1)
+	    left join sysproperties cc on a.id = cc.id and b.colid = cc.smallid and cc.type = '4'
+	        and cc.name in ('ms_description', 'caption', 'comment')    	
+	where 1=1
+	and t.xtype = 'U'
+	ORDER BY t.name, a.id, b.colid
+</select>
+
 
 <!-- 
 	Table DDL Script

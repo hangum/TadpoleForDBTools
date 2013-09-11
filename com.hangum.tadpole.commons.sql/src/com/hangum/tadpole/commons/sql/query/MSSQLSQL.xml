@@ -226,6 +226,30 @@ SELECT
 </select>
 
 <!-- 
+	RDB Information - Column summary page
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+select    
+      tbl.name as table_name
+    ,tp.value      as table_comment
+    ,a.name
+    , b.name  as column_name
+    , p.value as column_comment
+    , c.name +  case  when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')'  end as data_type
+    , case  when b.isnullable = 0 then 'NO' else 'YES'  end as nullable
+    , (case when x.is_primary_key ='true' then 'PK' else ''  end) as pk
+   from sys.tables  as tbl
+   left join sys.extended_properties as tp   on tp.major_id = tbl.object_id  and tp.minor_id = 0  and tp.class    = 1
+   inner join sysobjects a  on tbl.object_id = a.id
+   inner join syscolumns b  on a.id = b.id
+   inner join systypes c on  b.xusertype = c.xusertype
+   left outer join dbo.sysindexkeys d  on  b.id  = d.id  and b.colid = d.colid  and indid   =1 
+   left join sys.extended_properties as p  on p.major_id     = a.id  and p.minor_id = b.colid  and p.class    = 1
+   left join sys.indexes x   on x.object_id    = a.id  and x.index_id = d.indid
+   order by tbl.name, b.colid
+</select>
+
+<!-- 
 	Table DDL Script
  -->
 <select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">

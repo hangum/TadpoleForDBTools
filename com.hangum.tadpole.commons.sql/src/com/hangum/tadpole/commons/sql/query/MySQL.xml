@@ -178,18 +178,25 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
     TABLE_NAME
 </select>
 
+<!-- 
+	RDB Information - Column summary page
+ -->
 <select id="columnInformation" resultClass="com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
-	SELECT   
-         table_name,
-         column_name ,
-         column_type ,
-         is_nullable nullable,
-         column_key pk,
-         column_default data_default,
-         extra,
-         column_comment 
-	FROM information_schema.columns
-	WHERE table_schema = #db# 
+select   
+         t.table_name,
+         t.table_comment,
+         c.column_name ,
+         c.column_type as data_type,
+         c.numeric_precision,
+         c.numeric_scale,
+         c.is_nullable nullable,
+         c.column_key pk,
+         c.column_default data_default,
+         c.extra,
+         c.column_comment 
+	from information_schema.tables t 
+      inner join information_schema.columns c on t.table_schema = c.table_schema and t.table_name = c.table_name
+     	where c.table_schema = #db# 
 </select>
 
 <!-- 

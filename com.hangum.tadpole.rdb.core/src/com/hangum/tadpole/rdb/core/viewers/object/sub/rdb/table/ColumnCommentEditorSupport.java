@@ -43,7 +43,6 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	 */
 	private static final Logger logger = Logger.getLogger(ColumnCommentEditorSupport.class);
 
-	private final TableViewer tableviewer;
 	private final TableViewer viewer;
 	private UserDBDAO userDB;
 	private int column;
@@ -53,10 +52,9 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	 * @param viewer
 	 * @param explorer
 	 */
-	public ColumnCommentEditorSupport(TableViewer tableviewer, TableViewer viewer, UserDBDAO userDB, int column) {
+	public ColumnCommentEditorSupport(TableViewer viewer, UserDBDAO userDB, int column) {
 		super(viewer);
 		
-		this.tableviewer = tableviewer;
 		this.viewer = viewer;
 		this.userDB = userDB;
 		this.column = column;
@@ -135,7 +133,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 			javaConn = client.getDataSource().getConnection();
 
-			IStructuredSelection is = (IStructuredSelection) tableviewer.getSelection();
+			IStructuredSelection is = (IStructuredSelection) viewer.getSelection();
 			
 			TableDAO tableDAO = (TableDAO)is.getFirstElement();
 
