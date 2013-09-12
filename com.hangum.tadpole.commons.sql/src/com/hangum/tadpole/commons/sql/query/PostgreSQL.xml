@@ -268,5 +268,35 @@ FROM
 	ORDER BY name 
 </select>
 
+<!-- 
+	column information
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+	SELECT b.table_name
+	  , '' as table_comment
+	  ,a.column_name
+       ,a.data_type 
+       ,a.is_nullable as nullable
+       ,a.column_default as data_default
+	    ,(SELECT 
+		    pg_catalog.col_description(attrelid, attnum)
+		FROM    pg_catalog.pg_attribute
+		WHERE attrelid = (select oid from pg_catalog.pg_class  where relname = a.table_name  ) 
+		AND attname= a.column_name 
+		AND attnum > 0 
+		AND NOT attisdropped )	as "column_comment"			
+       ,(SELECT
+  			tc.constraint_type 
+			FROM 
+   				 information_schema.table_constraints AS tc 
+  				  JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+			WHERE tc.table_name = a.table_name
+			AND kcu.column_name = a.column_name) as "key"
+    FROM information_schema.columns a
+    	inner join information_schema.tables b on b.table_name= a.table_name
+    	where b.table_schema = 'public' 
+    	and b.table_type = 'BASE TABLE'
+	ORDER BY a.ordinal_position
+</select>
 
 </sqlMap>

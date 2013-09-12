@@ -149,7 +149,7 @@ public class ColumnsComposite extends Composite {
 					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
 			};
 
-		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
 
 			tableColumnDef = new TableColumnDef[] { //
 			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT) //

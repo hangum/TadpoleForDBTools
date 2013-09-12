@@ -70,7 +70,10 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 			if (logger.isDebugEnabled())
 				logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB.getDbms_types()));
 
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || 
+					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT || 
+					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT || 
+					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				return true;
 			} else {
 				return false;
@@ -159,7 +162,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
 
 				query.append(" COMMENT ON COLUMN ").append(dao.getTable_name() + ".").append(dao.getColumn_name()).append(" IS '").append(dao.getColumn_comment()).append("'");
 
@@ -247,7 +250,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
 				query.append(" COMMENT ON TABLE ").append(dao.getTable_name()).append(" IS '").append(dao.getTable_comment()).append("'");
 
 				stmt = javaConn.prepareStatement(query.toString());

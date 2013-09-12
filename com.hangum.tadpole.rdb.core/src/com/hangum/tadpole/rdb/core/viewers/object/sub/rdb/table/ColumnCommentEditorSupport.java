@@ -43,6 +43,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	 */
 	private static final Logger logger = Logger.getLogger(ColumnCommentEditorSupport.class);
 
+	private final TableViewer tableviewer;
 	private final TableViewer viewer;
 	private UserDBDAO userDB;
 	private int column;
@@ -52,9 +53,10 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	 * @param viewer
 	 * @param explorer
 	 */
-	public ColumnCommentEditorSupport(TableViewer viewer, UserDBDAO userDB, int column) {
+	public ColumnCommentEditorSupport(TableViewer tableviewer, TableViewer viewer, UserDBDAO userDB, int column) {
 		super(viewer);
 		
+		this.tableviewer = tableviewer;
 		this.viewer = viewer;
 		this.userDB = userDB;
 		this.column = column;
@@ -72,6 +74,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 			if(logger.isDebugEnabled()) logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB.getDbms_types()));
 			
 			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || 
+					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT || 
 					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ||
 					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ) {
 				return true;
@@ -133,20 +136,25 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 			javaConn = client.getDataSource().getConnection();
 
-			IStructuredSelection is = (IStructuredSelection) viewer.getSelection();
+			IStructuredSelection is = (IStructuredSelection) tableviewer.getSelection();
 			
 			TableDAO tableDAO = (TableDAO)is.getFirstElement();
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
 				
 				query.append(" COMMENT ON COLUMN ").append(tableDAO.getName()+".").append(dao.getField()).append(" IS '").append(dao.getComment()).append("'");
 
 				if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 				
 				stmt = javaConn.prepareStatement(query.toString());
-				stmt.executeQuery();
+				
+				try{
+					stmt.executeQuery();
+				}catch(Exception e){
+					//  org.postgresql.util.PSQLException: No results were returned by the query.
+				}
 
 			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers());
