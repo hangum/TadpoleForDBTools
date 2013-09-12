@@ -133,9 +133,12 @@ public class GetPreferenceGeneral {
 		/** preference RDB ResultSet number column add comma? */
 		public static String getRDBNumberISComma() {
 			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
-			String strYesNo = userInfo.getValue0();
-			if(null == strYesNo || "".equals(strYesNo)) {
-				return PublicTadpoleDefine.YES_NO.YES.toString();
+			String strYesNo = "No";
+			if (userInfo!=null){
+				strYesNo = userInfo.getValue0();
+				if(null == strYesNo || "".equals(strYesNo)) {
+					return PublicTadpoleDefine.YES_NO.YES.toString();
+				}
 			}
 			
 			return strYesNo;
