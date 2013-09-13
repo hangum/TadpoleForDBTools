@@ -225,4 +225,24 @@ SELECT
 	ORDER BY  class_name 
 </select>
 
+<!-- 
+	column information
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+	SELECT 
+		tab.class_name as table_name
+		,tab.partitioned as partitioned 
+		, col.attr_name as column_name
+		, col.data_type as data_type
+		, col.prec as data_precision
+		, col.scale as data_scale
+		, col.default_value as data_default
+		, col.is_nullable as nullable
+		FROM db_class tab
+		     inner join db_attribute col on tab.class_name = col.class_name
+		where tab.is_system_class = 'NO' 
+		AND tab.class_type = 'CLASS'
+		order by tab.class_name, col.def_order
+</select>
+
 </sqlMap>
