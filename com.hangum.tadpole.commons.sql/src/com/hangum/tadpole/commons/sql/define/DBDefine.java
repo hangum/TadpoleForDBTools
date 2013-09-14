@@ -97,6 +97,7 @@ public enum DBDefine {
 	 * DB TYPE을 얻는다.
 	 * @param type
 	 * @return
+	 * @deprecated can use {@DBDefine#getDBDefine()}
 	 */
 	public static DBDefine getDBDefine(String type) {
 		
