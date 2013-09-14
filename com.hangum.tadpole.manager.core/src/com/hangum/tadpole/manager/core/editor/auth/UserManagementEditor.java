@@ -88,7 +88,7 @@ public class UserManagementEditor extends EditorPart {
 
 		// Users
 		CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
-		tbtmItem.setText("Users");
+		tbtmItem.setText("User List");
 
 		Composite compositeUserList = new UserListComposite(tabFolder, SWT.NONE);
 		tbtmItem.setControl(compositeUserList);
@@ -96,7 +96,7 @@ public class UserManagementEditor extends EditorPart {
 		
 		// DBs
 		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
-		tbtmDB.setText("DB");
+		tbtmDB.setText("DB List");
 		
 		Composite compositeDBList = new DBListComposite(tabFolder, SWT.NONE);
 		tbtmDB.setControl(compositeDBList);

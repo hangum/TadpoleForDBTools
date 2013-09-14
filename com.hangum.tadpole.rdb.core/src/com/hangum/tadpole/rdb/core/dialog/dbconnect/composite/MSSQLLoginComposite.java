@@ -293,6 +293,8 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 				logger.error("MSSQL", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
+				
+				return false;
 			}
 		}
 		
@@ -304,7 +306,10 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		if(!isValidateInput()) return false;
 		
 		String dbUrl = ""; 
-		String strHost = textHost.getText();
+		String strHost = StringUtils.trimToEmpty(textHost.getText());
+		String strPort = StringUtils.trimToEmpty(textPort.getText());
+		String strDB = StringUtils.trimToEmpty(textDatabase.getText());
+		
 		if(StringUtils.contains(strHost, "\\")) {
 			
 			String strIp 		= StringUtils.substringBefore(strHost, "\\");
@@ -312,7 +317,9 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			
 			dbUrl = String.format(
 					getSelectDB().getDB_URL_INFO(), 
-					strIp, textPort.getText(), textDatabase.getText()) + ";instance=" + strInstance;			
+					strIp, 
+					strPort, 
+					strDB) + ";instance=" + strInstance;			
 		} else if(StringUtils.contains(strHost, "/")) {
 			
 			String strIp 		= StringUtils.substringBefore(strHost, "/");
@@ -320,28 +327,32 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			
 			dbUrl = String.format(
 					getSelectDB().getDB_URL_INFO(), 
-					strIp, textPort.getText(), textDatabase.getText()) + ";instance=" + strInstance;
+					strIp, 
+					strPort, 
+					strDB) + ";instance=" + strInstance;
 			
 		} else {		
 			dbUrl = String.format(
 					getSelectDB().getDB_URL_INFO(), 
-					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
+					strHost, 
+					strPort, 
+					strDB);
 		}
 		if(logger.isDebugEnabled()) logger.debug("[db url]" + dbUrl);
 
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDb(textDatabase.getText().trim());
+		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
 		userDB.setGroup_seq(SessionManager.getGroupSeq());
-		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
-		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
+		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
 		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		
-		userDB.setHost(textHost.getText().trim());
-		userDB.setPort(textPort.getText().trim());
-		userDB.setUsers(textUser.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
+		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
+		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
+		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
+		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();

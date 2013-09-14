@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -24,7 +26,9 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STAT
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
@@ -124,7 +128,38 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract boolean connection();
+	public boolean connection() {
+		if(!testConnection()) return false;
+		
+		// 기존 데이터 업데이트
+		if(getDalog_status() == DATA_STATUS.MODIFY) {
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			
+			try {
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error(Messages.SQLiteLoginComposite_8, e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
+			
+		// 신규 데이터 저장.
+		} else {
+			try {
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+			} catch (Exception e) {
+				logger.error("Add new database", e);
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
+		}
+
+		return true;
+	}
 	
 	/**
 	 * input validation

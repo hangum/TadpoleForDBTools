@@ -14,8 +14,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -30,19 +28,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 
 /**
@@ -222,39 +216,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		textHost.setFocus();
 	}
 
-	@Override
-	public boolean connection() {
-		if(!testConnection()) return false;
-		
-		// 기존 데이터 업데이트
-		if(getDalog_status() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
-			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.SQLiteLoginComposite_8, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
-			return true;
-		// 신규 데이터 저장.
-		} else {
-			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.MySQLLoginComposite_0, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
-			}
-			
-			return true;
-		}
-	}
-	
 	/**
 	 * 화면에 값이 올바른지 검사합니다.
 	 * 
@@ -277,33 +238,38 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		if(!isValidateInput()) return false;
 
 		String dbUrl = "";
-		String locale = comboLocale.getText().trim();
+		String locale = StringUtils.trimToEmpty(comboLocale.getText());
 		String selectLocale = "";
 		if(locale.equals("") || DBLocaleUtils.NONE_TXT.equals(locale)) {
 			dbUrl = String.format(
-					getSelectDB().getDB_URL_INFO(), 
-					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim());
+						getSelectDB().getDB_URL_INFO(), 
+						StringUtils.trimToEmpty(textHost.getText()), 
+						StringUtils.trimToEmpty(textPort.getText()), 
+						StringUtils.trimToEmpty(textDatabase.getText())
+					);
 		} else {			
-			selectLocale = StringUtils.substringBefore(comboLocale.getText().trim(), "|");			
+			selectLocale = StringUtils.substringBefore(StringUtils.trimToEmpty(comboLocale.getText()), "|");			
 			
 			dbUrl = String.format(
-					getSelectDB().getDB_URL_INFO(), 
-					textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText().trim() + "?useUnicode=false&characterEncoding=" + selectLocale.trim());
+						getSelectDB().getDB_URL_INFO(), 
+						StringUtils.trimToEmpty(textHost.getText()), 
+						StringUtils.trimToEmpty(textPort.getText()), 
+						StringUtils.trimToEmpty(textDatabase.getText()) + "?useUnicode=false&characterEncoding=" + StringUtils.trimToEmpty(selectLocale));
 		}
 		
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDb(textDatabase.getText().trim());
+		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
 		userDB.setGroup_seq(SessionManager.getGroupSeq());
-		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
-		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
+		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
 		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
 		
-		userDB.setHost(textHost.getText().trim());
-		userDB.setPort(textPort.getText().trim());
-		userDB.setUsers(textUser.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
+		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
+		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
+		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
+		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		userDB.setLocale(selectLocale);
 		
 		// others connection 정보를 입력합니다.

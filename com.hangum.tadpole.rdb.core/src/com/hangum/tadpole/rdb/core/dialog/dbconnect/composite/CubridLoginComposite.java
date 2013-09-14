@@ -12,27 +12,17 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * cubrid login composite
@@ -45,7 +35,6 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	 * 
 	 */
 	private static final long serialVersionUID = -4519162649799179626L;
-	private static final Logger logger = Logger.getLogger(CubridLoginComposite.class);
 	
 	/**
 	 * Create the composite.
@@ -104,58 +93,29 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	}
 	
 	@Override
-	public boolean connection() {
-		if(!testConnection()) return false;
-		
-		// 기존 데이터 업데이트
-		if(getDalog_status() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
-			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.SQLiteLoginComposite_8, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
-		// 신규 데이터 저장.
-		} else {
-	
-			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error("cubrid db preference save", e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_11, errStatus); //$NON-NLS-1$
-			}
-		}
-		return true;
-	}
-	
-	@Override
 	public boolean makeUserDBDao() {
 		if(!isValidateInput()) return false;
 		
 		final String dbUrl = String.format(
 				getSelectDB().getDB_URL_INFO(), 
-				textHost.getText().trim(), textPort.getText().trim(), textDatabase.getText()).trim();
+				StringUtils.trimToEmpty(textHost.getText()), 
+				StringUtils.trimToEmpty(textPort.getText()), 
+				StringUtils.trimToEmpty(textDatabase.getText())
+			);
 
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
-		userDB.setDb(textDatabase.getText().trim());
+		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
 		userDB.setGroup_seq(SessionManager.getGroupSeq());
-		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
-		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
+		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
 		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
-		userDB.setHost(textHost.getText().trim());
-		userDB.setPort(textPort.getText().trim());
-		userDB.setUsers(textUser.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
-		userDB.setLocale(comboLocale.getText().trim());
+		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
+		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
+		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
+		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
+		userDB.setLocale(StringUtils.trimToEmpty(comboLocale.getText()));
 		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();

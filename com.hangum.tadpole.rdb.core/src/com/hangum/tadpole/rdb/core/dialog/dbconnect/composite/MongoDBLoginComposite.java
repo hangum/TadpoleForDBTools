@@ -13,9 +13,6 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -30,22 +27,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
-import com.hangum.tadpole.mongodb.core.connection.MongoDBNotFoundException;
-import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionMongoDBGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 
 /**
@@ -59,7 +49,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	 * 
 	 */
 	private static final long serialVersionUID = 8245123047846049939L;
-	private static final Logger logger = Logger.getLogger(MongoDBLoginComposite.class);
+//	private static final Logger logger = Logger.getLogger(MongoDBLoginComposite.class);
 	
 	protected Text textHost;
 	protected Text textUser;
@@ -250,38 +240,6 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		return true;
 	}
-	
-	@Override
-	public boolean connection() {
-		if(!testConnection()) return false;
-		
-		// 기존 데이터 업데이트
-		if(getDalog_status() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
-			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.SQLiteLoginComposite_8, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
-		// 신규 데이터 저장.
-		} else {
-
-			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error("MongoDB info save", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "MongoDB", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
-		return true;
-	}
 
 	@Override
 	public boolean makeUserDBDao() {
@@ -289,24 +247,25 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		final String dbUrl = String.format(
 								getSelectDB().getDB_URL_INFO(), 
-								textHost.getText().trim(), 
-								textPort.getText().trim(), 
-								textDatabase.getText().trim());
+								StringUtils.trimToEmpty(textHost.getText()), 
+								StringUtils.trimToEmpty(textPort.getText()), 
+								StringUtils.trimToEmpty(textDatabase.getText())
+							);
 
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
 		userDB.setGroup_seq(SessionManager.getGroupSeq());
-		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
-		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
+		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
 		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
-		userDB.setHost(textHost.getText().trim());
-		userDB.setPort(textPort.getText().trim());
-		userDB.setUsers(textUser.getText().trim());
-		userDB.setPasswd(textPassword.getText().trim());
-		userDB.setLocale(comboLocale.getText().trim());
-		userDB.setExt1(textReplicaSet.getText().trim());
+		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
+		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
+		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
+		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
+		userDB.setLocale(StringUtils.trimToEmpty(comboLocale.getText()));
+		userDB.setExt1(StringUtils.trimToEmpty(textReplicaSet.getText()));
 		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();

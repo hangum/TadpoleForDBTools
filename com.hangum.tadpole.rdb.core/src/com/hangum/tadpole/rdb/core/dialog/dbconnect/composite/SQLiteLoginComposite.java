@@ -14,9 +14,6 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -28,18 +25,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBWithoutTunnelingGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 
 /**
@@ -49,11 +42,6 @@ import com.hangum.tadpole.util.ApplicationArgumentUtils;
  *
  */
 public class SQLiteLoginComposite extends AbstractLoginComposite {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -444340316081961365L;
-	private static final Logger logger = Logger.getLogger(SQLiteLoginComposite.class);
 	
 	protected OthersConnectionRDBWithoutTunnelingGroup othersConnectionInfo;
 	protected Text textFile;
@@ -138,41 +126,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		textFile.setFocus();
 	}
-
-	@Override
-	public boolean connection() {
-		if(!testConnection()) return false;
-		
-		// 기존 데이터 업데이트
-		if(getDalog_status() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
-			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.SQLiteLoginComposite_8, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
-		// 신규 데이터 저장.
-		} else {
-			
-			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.SQLiteLoginComposite_8, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-		}
-		
-		return true;		
-	}
 	
 	/**
 	 * 화면에 값이 올바른지 검사합니다.
@@ -183,7 +136,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	public boolean isValidateInput() {
 		String strFile = StringUtils.trimToEmpty(textFile.getText());
 		
-		if("".equals(preDBInfo.getComboGroup().getText().trim())) {
+		if("".equals(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()))) {
 			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "Group" + Messages.MySQLLoginComposite_10);
 			return false;
 		} else if("".equals(strFile) ) { //$NON-NLS-1$
@@ -203,11 +156,11 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
-		userDB.setUrl(String.format(getSelectDB().getDB_URL_INFO(), textFile.getText().trim()));
-		userDB.setDb(textFile.getText().trim());
+		userDB.setUrl(String.format(getSelectDB().getDB_URL_INFO(), StringUtils.trimToEmpty(textFile.getText())));
+		userDB.setDb(StringUtils.trimToEmpty(textFile.getText()));
 		userDB.setGroup_seq(SessionManager.getGroupSeq());
-		userDB.setGroup_name(preDBInfo.getComboGroup().getText().trim());
-		userDB.setDisplay_name(preDBInfo.getTextDisplayName().getText().trim());
+		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
+		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
 		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
 		userDB.setUsers(""); //$NON-NLS-1$
 		userDB.setPasswd(""); //$NON-NLS-1$

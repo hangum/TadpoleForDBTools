@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
+import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
@@ -43,7 +44,7 @@ import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 public class ModifyDBDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ModifyDBDialog.class);
 	
-	private UserDBDAO userDBDao;
+	private UserDBDAO userDBDAO;
 	/** group name */
 	protected List<String> listGroupName;
 //	/** 초기 선택한 그룹 */
@@ -60,11 +61,11 @@ public class ModifyDBDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public ModifyDBDialog(Shell parentShell, UserDBDAO userDBDao) {
+	public ModifyDBDialog(Shell parentShell, UserDBDAO userDBDAO) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
-		this.userDBDao = userDBDao;
+		this.userDBDAO = userDBDAO;
 		// db groupData 
 		try {
 			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
@@ -76,7 +77,7 @@ public class ModifyDBDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(userDBDao.getDbms_types() + " Database"); //$NON-NLS-1$
+		newShell.setText(userDBDAO.getDbms_types() + " Database"); //$NON-NLS-1$
 	}
 
 	/**
@@ -101,11 +102,11 @@ public class ModifyDBDialog extends Dialog {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 		
-		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(userDBDao), 
+		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(userDBDAO), 
 															compositeBody, 
 															listGroupName, 
-															userDBDao.getGroup_name(), 
-															userDBDao,
+															userDBDAO.getGroup_name(), 
+															userDBDAO,
 															DATA_STATUS.MODIFY
 				);
 
@@ -117,6 +118,9 @@ public class ModifyDBDialog extends Dialog {
 		if (!loginComposite.connection()) return;
 		this.retuserDb = loginComposite.getDBDTO();
 		refreshManagerView();
+		
+		// 
+		TadpoleSQLManager.removeInstance(userDBDAO);
 		
 		super.okPressed();
 	}
