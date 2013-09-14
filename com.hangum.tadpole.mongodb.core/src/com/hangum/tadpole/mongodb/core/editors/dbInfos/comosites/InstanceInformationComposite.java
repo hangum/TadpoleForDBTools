@@ -30,10 +30,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.utils.ENumberUtils;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.util.ENumberUtils;
 import com.hangum.tadpole.util.NumberFormatUtils;
 import com.hangum.tadpole.util.TimeUtils;
 import com.mongodb.CommandResult;

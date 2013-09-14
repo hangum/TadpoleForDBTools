@@ -78,7 +78,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	 * @param style
 	 */
 	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample MongoDB 2.0.2", DBDefine.MONGODB_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample MongoDB", DBDefine.MONGODB_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override
@@ -272,34 +272,6 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		// 신규 데이터 저장.
 		} else {
 
-			// db가 정상적인지 채크해본다 
-			try {
-				MongoConnectionManager.getInstance(userDB);
-			} catch(MongoDBNotFoundException mdbfe) {
-				
-				if(MessageDialog.openConfirm(null, "Confirm", userDB.getDb() + Messages.MongoDBLoginComposite_9)) { //$NON-NLS-1$
-					try {
-						MongoDBQuery.createDB(userDB);
-					} catch (Exception e) {
-						logger.error("MongoDB Connection error", e); //$NON-NLS-1$
-						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
-						
-						return false;
-					}
-				} else {
-					return false;
-				}
-				
-	
-			} catch (Exception e) {
-				logger.error("MongoDB Connection error", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {

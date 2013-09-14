@@ -72,7 +72,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	 * @param style
 	 */
 	public MSSQLLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample MSSQL 2000", DBDefine.MSSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample MSSQL", DBDefine.MSSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override

@@ -19,6 +19,7 @@ import com.hangum.tadpole.log.LogConfiguration;
 import com.hangum.tadpole.log.LogListener;
 
 public class Activator implements BundleActivator {
+	public static final String ID = "com.hangum.tadpole.commons";
 
 	private static BundleContext context;
 	

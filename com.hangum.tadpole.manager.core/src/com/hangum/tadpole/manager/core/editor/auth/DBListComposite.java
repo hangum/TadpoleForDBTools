@@ -58,8 +58,10 @@ import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.util.ImageUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
 import com.hangum.tadpole.util.fileupload.FileUploadDialog;
@@ -76,13 +78,14 @@ public class DBListComposite extends Composite {
 	 */
 	private static final Logger logger = Logger.getLogger(DBListComposite.class);
 
-	private TreeViewer treeViewerAdmin;
+	private TreeViewer treeViewerDBList;
 	private List<UserDBDAO> listUserDBs = new ArrayList<UserDBDAO>();
 	
 	private AdminCompFilter filter;
 	private Text textSearch;
 	
 	private ToolItem tltmQueryHistory;
+	private ToolItem tltmModify;
 	
 	/** download dumy compoiste */
 	private Composite compositeDumy;
@@ -97,18 +100,18 @@ public class DBListComposite extends Composite {
 	public DBListComposite(Composite parent, int style) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 2;
-		gridLayout.horizontalSpacing = 2;
-		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
 		
 		Composite compositeHead = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeHead = new GridLayout(3, false);
-		gl_compositeHead.verticalSpacing = 2;
-		gl_compositeHead.horizontalSpacing = 2;
-		gl_compositeHead.marginHeight = 2;
-		gl_compositeHead.marginWidth = 2;
+		gl_compositeHead.verticalSpacing = 0;
+		gl_compositeHead.horizontalSpacing = 0;
+		gl_compositeHead.marginHeight = 0;
+		gl_compositeHead.marginWidth = 0;
 		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -116,17 +119,19 @@ public class DBListComposite extends Composite {
 		toolBar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.setImage(ImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				treeViewerAdmin.setInput(initData());
+				treeViewerDBList.setInput(initData());
 			}
 		});
-		tltmRefresh.setText("Refresh");
+		tltmRefresh.setToolTipText("Refresh");
 
 		// access control
 		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())) {
 			final ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+			tltmAdd.setImage(ImageUtils.getAdd());
 			tltmAdd.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -134,32 +139,46 @@ public class DBListComposite extends Composite {
 					final int ret = dialog.open();
 					
 					if(ret == Dialog.OK) {
-						treeViewerAdmin.setInput(initData());
+						treeViewerDBList.setInput(initData());
 					}
 				}
 			});
-			tltmAdd.setText("Add");
+			tltmAdd.setToolTipText("Add");
+			
+			tltmModify = new ToolItem(toolBar, SWT.NONE);
+			tltmModify.setImage(ImageUtils.getModify());
+			tltmModify.setEnabled(false);
+			tltmModify.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					modifyDB();
+				}
+			});
+			tltmModify.setToolTipText("Modify");
 			
 			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
+			tltmDbExport.setImage(ImageUtils.getExport());
 			tltmDbExport.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					exportDB();
 				}
 			});
-			tltmDbExport.setText("DB Export");
+			tltmDbExport.setToolTipText("DB Export");
 			
 			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
+			tltmDbImport.setImage(ImageUtils.getImport()); //$NON-NLS-1$
 			tltmDbImport.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					importDB();
 				}
 			});
-			tltmDbImport.setText("DB Import");
+			tltmDbImport.setToolTipText("DB Import");
 		}
 		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
+		tltmQueryHistory.setImage(ImageUtils.getQueryHistory()); //$NON-NLS-1$
 		tltmQueryHistory.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -167,7 +186,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmQueryHistory.setEnabled(false);
-		tltmQueryHistory.setText("Query History");
+		tltmQueryHistory.setToolTipText("Query History");
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
@@ -180,7 +199,7 @@ public class DBListComposite extends Composite {
 		textSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				filter.setSearchString(textSearch.getText());
-				treeViewerAdmin.refresh();
+				treeViewerDBList.refresh();
 			}
 		});
 		
@@ -197,55 +216,71 @@ public class DBListComposite extends Composite {
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		treeViewerAdmin = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
-		treeViewerAdmin.addSelectionChangedListener(new ISelectionChangedListener() {
+		treeViewerDBList = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		treeViewerDBList.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
+				if(tltmModify != null) tltmModify.setEnabled(true);
 				tltmQueryHistory.setEnabled(true);
 			}
 		});
-		treeViewerAdmin.addDoubleClickListener(new IDoubleClickListener() {
+		treeViewerDBList.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				viewQueryHistory();
 			}
 		});
-		Tree treeAdmin = treeViewerAdmin.getTree();
+		Tree treeAdmin = treeViewerDBList.getTree();
 		treeAdmin.setLinesVisible(true);
 		treeAdmin.setHeaderVisible(true);
 		treeAdmin.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		TreeViewerColumn colGroupName = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
+		TreeViewerColumn colGroupName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colGroupName.getColumn().setWidth(130);
 		colGroupName.getColumn().setText("Group Name");
 		
-		TreeViewerColumn colUserType = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
+		TreeViewerColumn colUserType = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colUserType.getColumn().setWidth(100);
 		colUserType.getColumn().setText("DB Type");
 		
-		TreeViewerColumn colEmail = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
+		TreeViewerColumn colEmail = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colEmail.getColumn().setWidth(200);
 		colEmail.getColumn().setText("DB Name");
 		
-		TreeViewerColumn colName = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
+		TreeViewerColumn colName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colName.getColumn().setWidth(150);
 		colName.getColumn().setText("DB Info");
 		
-		TreeViewerColumn colApproval = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
+		TreeViewerColumn colApproval = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colApproval.getColumn().setWidth(60);
 		colApproval.getColumn().setText("User");
 		
-		TreeViewerColumn colCreateTime = new TreeViewerColumn(treeViewerAdmin, SWT.NONE);
+		TreeViewerColumn colCreateTime = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colCreateTime.getColumn().setWidth(120);
 		colCreateTime.getColumn().setText("Create tiem");
 		
-		treeViewerAdmin.setContentProvider(new AdminUserContentProvider());
-		treeViewerAdmin.setLabelProvider(new AdminUserLabelProvider());
-		treeViewerAdmin.setInput(initData());
-		treeViewerAdmin.expandToLevel(2);
+		treeViewerDBList.setContentProvider(new AdminUserContentProvider());
+		treeViewerDBList.setLabelProvider(new AdminUserLabelProvider());
+		treeViewerDBList.setInput(initData());
+		treeViewerDBList.expandToLevel(2);
 		
 		filter = new AdminCompFilter();
-		treeViewerAdmin.addFilter(filter);
+		treeViewerDBList.addFilter(filter);
 		
 		registerServiceHandler();
+	}
+	
+	/**
+	 * modify db
+	 */
+	private void modifyDB() {
+		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+		if(ss != null) {
+			final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), (UserDBDAO)ss.getFirstElement());
+			final int ret = dialog.open();
+			
+			if(ret == Dialog.OK) {
+				treeViewerDBList.setInput(initData());
+			}
+		}
 	}
 	
 	
@@ -305,7 +340,7 @@ public class DBListComposite extends Composite {
 	 * 사용자가 실행 했던 쿼리의 히스토리를 봅니다.
 	 */
 	private void viewQueryHistory() {
-		IStructuredSelection ss = (IStructuredSelection)treeViewerAdmin.getSelection();
+		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
 		if(ss != null) {
 			 UserDBDAO userDBDAO = ((UserDBDAO)ss.getFirstElement());
 			
@@ -330,7 +365,7 @@ public class DBListComposite extends Composite {
 	 * @return
 	 */
 	private List<UserDBDAO> initData() {
-		
+		listUserDBs.clear();
 		try {
 			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
 					|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())

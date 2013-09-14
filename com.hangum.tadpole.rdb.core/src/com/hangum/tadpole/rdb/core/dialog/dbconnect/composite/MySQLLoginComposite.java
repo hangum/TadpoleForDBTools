@@ -62,7 +62,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	protected Combo comboLocale;
 	
 	public MySQLLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample MySQL 5.4", DBDefine.MYSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample MySQL", DBDefine.MYSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 
 	public MySQLLoginComposite(String strDisplayName, DBDefine selectDB,

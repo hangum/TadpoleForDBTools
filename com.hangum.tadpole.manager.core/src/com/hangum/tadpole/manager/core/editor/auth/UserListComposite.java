@@ -17,6 +17,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -55,8 +57,7 @@ import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.DoubleClickEvent;
+import com.hangum.tadpole.util.ImageUtils;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 사용자리스트 화면
@@ -108,37 +109,40 @@ public class UserListComposite extends Composite {
 		Composite compositeHead = new Composite(composite, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeHead = new GridLayout(2, false);
-		gl_compositeHead.verticalSpacing = 2;
-		gl_compositeHead.horizontalSpacing = 2;
-		gl_compositeHead.marginHeight = 2;
-		gl_compositeHead.marginWidth = 2;
+		gl_compositeHead.verticalSpacing = 0;
+		gl_compositeHead.horizontalSpacing = 0;
+		gl_compositeHead.marginHeight = 0;
+		gl_compositeHead.marginWidth = 0;
 		compositeHead.setLayout(gl_compositeHead);
 		
 		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.setImage(ImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				initUI();
 			}
 		});
-		tltmRefresh.setText("Refresh");
+		tltmRefresh.setToolTipText("Refresh");
 	
 		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole()) ||
 				PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())
 		) {
 			ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+			tltmAdd.setImage(ImageUtils.getAdd());
 			tltmAdd.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					addUser();
 				}
 			});
-			tltmAdd.setText("Add");
+			tltmAdd.setToolTipText("Add");
 		
 			tltmModify = new ToolItem(toolBar, SWT.NONE);
+			tltmModify.setImage(ImageUtils.getModify());
 			tltmModify.setEnabled(false);
 			tltmModify.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -146,10 +150,11 @@ public class UserListComposite extends Composite {
 					modifyUser();
 				}
 			});
-			tltmModify.setText("Modify");
+			tltmModify.setToolTipText("Modify");
 		}
 		
 		tltmQuery = new ToolItem(toolBar, SWT.NONE);
+		tltmQuery.setImage(ImageUtils.getQueryHistory());
 		tltmQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -157,7 +162,7 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmQuery.setEnabled(false);
-		tltmQuery.setText("Query History");
+		tltmQuery.setToolTipText("Query History");
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));

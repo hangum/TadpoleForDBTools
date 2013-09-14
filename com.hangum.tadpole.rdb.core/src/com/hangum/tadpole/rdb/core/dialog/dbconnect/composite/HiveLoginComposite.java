@@ -64,7 +64,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	protected OthersConnectionHiveGroup othersConnectionInfo;
 	
 	public HiveLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample HIVE 0.1.0", DBDefine.HIVE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample Hive", DBDefine.HIVE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	public HiveLoginComposite(String strDisplayName, DBDefine selectDB,
@@ -230,20 +230,6 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 			
 		// 신규 데이터 저장.
 		} else {
-	
-//			// db가 정상적인지 채크해본다 
-//			try {
-//				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//				List showTables = sqlClient.queryForList("connectionCheck", textDatabase.getText());
-//				
-//			} catch (Exception e) {
-//				logger.error("Hive DB Connection", e);
-//				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
-//				
-//				return false;
-//			}
-			
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {

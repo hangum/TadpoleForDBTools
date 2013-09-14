@@ -17,6 +17,7 @@ import com.hangum.tadpold.commons.libs.core.logs.LogConfiguration;
 
 
 public class Activator extends AbstractUIPlugin {
+	public static String ID = "com.hangum.tadpole.commons.libs";
 	
 	// The shared instance
 		private static Activator plugin;

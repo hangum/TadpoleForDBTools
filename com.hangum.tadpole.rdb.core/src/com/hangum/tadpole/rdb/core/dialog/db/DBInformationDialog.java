@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBConnection;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBConnectionUtils;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
@@ -150,8 +150,8 @@ public class DBInformationDialog extends Dialog {
 		}
 		selGroupName = userDB.getGroup_name();
 		
-		DBDefine dbDefine = DBDefine.getDBDefine(userDB.getDbms_types());
-		loginComposite = DBConnection.getDBConnection(dbDefine, compositeBody, groupName, selGroupName, userDB);
+		DBDefine dbDefine = DBDefine.getDBDefine(userDB);
+		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, groupName, selGroupName, userDB);
 		compositeBody.layout();
 		container.layout();
 	}

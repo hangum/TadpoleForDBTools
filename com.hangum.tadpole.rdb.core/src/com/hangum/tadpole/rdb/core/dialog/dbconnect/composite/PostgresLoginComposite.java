@@ -50,7 +50,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	 * @param style
 	 */
 	public PostgresLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample PostgreSQL 9.1", DBDefine.POSTGRE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample PostgreSQL", DBDefine.POSTGRE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override
@@ -119,19 +119,6 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			
 		// 신규 데이터 저장.
 		} else {
-	
-			// db가 정상적인지 채크해본다 
-			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				List showTables = sqlClient.queryForList("tableList", textDatabase.getText());
-				
-			} catch (Exception e) {
-				logger.error("PostgreSQL DB Connection", e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "PostgreSQL Connection Exception", errStatus);
-				
-				return false;
-			}
 			
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());

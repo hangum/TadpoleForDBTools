@@ -26,26 +26,28 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
 
 /**
- * Single DB ADD Dialog
+ * Modify DB Dialog
  * 
  * @author hangum
  *
  */
-public class SingleAddDBDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(SingleAddDBDialog.class);
+public class ModifyDBDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(ModifyDBDialog.class);
 	
-	private AWSRDSUserDBDAO amazonRDSDto;
+	private UserDBDAO userDBDao;
 	/** group name */
 	protected List<String> listGroupName;
-	/** 초기 선택한 그룹 */
-	private String selGroupName;
+//	/** 초기 선택한 그룹 */
+//	private String selGroupName;
 	
 	private Composite compositeBody;
 
@@ -58,19 +60,23 @@ public class SingleAddDBDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public SingleAddDBDialog(Shell parentShell, AWSRDSUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName) {
+	public ModifyDBDialog(Shell parentShell, UserDBDAO userDBDao) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
-		this.amazonRDSDto = amazonRDSDto;
-		this.listGroupName = listGroupName;
-		this.selGroupName = selGroupName;
+		this.userDBDao = userDBDao;
+		// db groupData 
+		try {
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
+		} catch (Exception e1) {
+			logger.error("get group info", e1); //$NON-NLS-1$
+		}
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(amazonRDSDto.getDbms_types() + " add Database"); //$NON-NLS-1$
+		newShell.setText(userDBDao.getDbms_types() + " Database"); //$NON-NLS-1$
 	}
 
 	/**
@@ -95,11 +101,13 @@ public class SingleAddDBDialog extends Dialog {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 		
-		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(amazonRDSDto), 
-				compositeBody, 
-				listGroupName, 
-				selGroupName, 
-				(UserDBDAO)amazonRDSDto);
+		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(userDBDao), 
+															compositeBody, 
+															listGroupName, 
+															userDBDao.getGroup_name(), 
+															userDBDao,
+															DATA_STATUS.MODIFY
+				);
 
 		return container;
 	}

@@ -64,7 +64,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 * @param style
 	 */
 	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample SQLite 3.7.2", DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample SQLite", DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override

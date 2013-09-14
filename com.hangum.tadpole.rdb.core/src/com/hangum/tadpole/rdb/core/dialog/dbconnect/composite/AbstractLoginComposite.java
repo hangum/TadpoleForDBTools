@@ -237,33 +237,21 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 */
 	private boolean checkDatabase(UserDBDAO loginInfo) {
-		if(DBDefine.getDBDefine(loginInfo.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
-			try {
+		try {
+			if(DBDefine.getDBDefine(loginInfo) != DBDefine.MONGODB_DEFAULT) {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
-				Object temp = sqlClient.queryForList("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$
-				
-			} catch (Exception e) {
-				// If UserDBDao is not invalid, remove UserDBDao at internal cache
-				TadpoleSQLManager.removeInstance(loginInfo);
-				
-				logger.error("DB Connecting... ", e); //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.AbstractLoginComposite_1);
-				
-				return false;
-			}
-		} else {
-			try {
+				sqlClient.queryForList("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$
+			} else {
 				MongoConnectionManager.getInstance(userDB);
-			} catch (Exception e) {
-				// If UserDBDao is not invalid, remove UserDBDao at internal cache
-				TadpoleSQLManager.removeInstance(loginInfo);
-				
-				logger.error("MongoDB Connection error", e); //$NON-NLS-1$
-				// fix. https://github.com/hangum/TadpoleForDBTools/issues/216
-				MessageDialog.openError(null, Messages.DBLoginDialog_26, e.getMessage());
-				
-				return false;
 			}
+		} catch (Exception e) {
+			// If UserDBDao is not invalid, remove UserDBDao at internal cache
+			TadpoleSQLManager.removeInstance(loginInfo);
+			
+			logger.error("DB Connecting... ", e); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.DBLoginDialog_26, e.getMessage());//Messages.AbstractLoginComposite_1);
+			
+			return false;
 		}
 		
 		return true;

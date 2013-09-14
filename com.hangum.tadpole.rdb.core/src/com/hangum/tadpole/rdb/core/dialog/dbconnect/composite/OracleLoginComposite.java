@@ -74,7 +74,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	 * @param style
 	 */
 	public OracleLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample Oracle 10g", DBDefine.ORACLE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample Oracle", DBDefine.ORACLE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override
@@ -230,19 +230,6 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			
 		// 신규 데이터 저장.
 		} else {
-			// db가 정상적인지 채크해본다 
-			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				List showTables = sqlClient.queryForList("tableList", textDatabase.getText());
-				
-			} catch (Exception e) {
-				logger.error(Messages.OracleLoginComposite_7, e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {

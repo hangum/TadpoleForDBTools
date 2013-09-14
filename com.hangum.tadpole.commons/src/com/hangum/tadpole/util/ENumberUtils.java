@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpold.commons.libs.core.utils;
+package com.hangum.tadpole.util;
 
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -29,6 +29,10 @@ public class ENumberUtils {
 	public static int toInt(Object obj) {
 		if(obj == null) return 0;
 		
-		return NumberUtils.toInt(obj.toString());
+		try {
+			return NumberUtils.toInt(obj.toString());
+		} catch(Exception nfe) {
+			return 0;
+		}
 	}
 }

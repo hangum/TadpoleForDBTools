@@ -53,7 +53,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	 * @param style
 	 */
 	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample Cubrid 8.4", DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample Cubrid", DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override
@@ -75,9 +75,9 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("cloud.cubrid.org");
-			textPort.setText("33001");
-			textDatabase.setText("db_hangum");
+			textHost.setText("192.168.32.128");
+			textPort.setText("33000");
+			textDatabase.setText("demodb");
 			textUser.setText("dba");
 			textPassword.setText("");
 			
@@ -124,19 +124,6 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 		// 신규 데이터 저장.
 		} else {
 	
-			// db가 정상적인지 채크해본다 
-			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				List showTables = sqlClient.queryForList("tableList", textDatabase.getText());
-				
-			} catch (Exception e) {
-				logger.error("Cubrid DB Connection", e);
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.OracleLoginComposite_10, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {

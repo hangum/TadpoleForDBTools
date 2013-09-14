@@ -152,18 +152,46 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws Exception
 	 */
 	public static UserDBDAO updateUserDB(UserDBDAO newUserDb, UserDBDAO oldUserDb, int userSeq) throws Exception {
-		newUserDb.setUser_seq(userSeq);
-		newUserDb.setSeq(oldUserDb.getSeq());
 		
-//		newUserDb.setUrl(CipherManager.getInstance().encryption(newUserDb.getUrl()));
-//		newUserDb.setDb(CipherManager.getInstance().encryption(newUserDb.getDb()));
-//		newUserDb.setHost(CipherManager.getInstance().encryption(newUserDb.getHost()));
-//		newUserDb.setPort(CipherManager.getInstance().encryption(newUserDb.getPort()));
-//		newUserDb.setUsers(CipherManager.getInstance().encryption(newUserDb.getUsers()));
-//		newUserDb.setPasswd(CipherManager.getInstance().encryption(newUserDb.getPasswd()));
+		UserDBOriginalDAO userEncryptDao = new UserDBOriginalDAO();
+		userEncryptDao.setUser_seq(userSeq);
+		userEncryptDao.setSeq(oldUserDb.getSeq());
+		userEncryptDao.setDbms_types(newUserDb.getDbms_types());
+		userEncryptDao.setUrl(CipherManager.getInstance().encryption(newUserDb.getUrl()));
+		userEncryptDao.setDb(CipherManager.getInstance().encryption(newUserDb.getDb()));
+		
+		userEncryptDao.setGroup_seq(newUserDb.getGroup_seq());
+		userEncryptDao.setGroup_name(newUserDb.getGroup_name());
+		userEncryptDao.setDisplay_name(newUserDb.getDisplay_name());
+		userEncryptDao.setOperation_type(newUserDb.getOperation_type());
+		
+		userEncryptDao.setHost(CipherManager.getInstance().encryption(newUserDb.getHost()));
+		userEncryptDao.setPort(CipherManager.getInstance().encryption(newUserDb.getPort()));
+		userEncryptDao.setUsers(CipherManager.getInstance().encryption(newUserDb.getUsers()));
+		userEncryptDao.setPasswd(CipherManager.getInstance().encryption(newUserDb.getPasswd()));
+
+		userEncryptDao.setLocale(newUserDb.getLocale());
+		
+		// ext information
+		userEncryptDao.setIs_readOnlyConnect(newUserDb.getIs_readOnlyConnect());
+		userEncryptDao.setIs_autocommit(newUserDb.getIs_autocommit());
+		userEncryptDao.setIs_showtables(newUserDb.getIs_showtables());
+		
+		userEncryptDao.setIs_table_filter(newUserDb.getIs_table_filter());
+		userEncryptDao.setTable_filter_include(newUserDb.getTable_filter_include());
+		userEncryptDao.setTable_filter_exclude(newUserDb.getTable_filter_exclude());
+		
+		userEncryptDao.setIs_profile(newUserDb.getIs_profile());
+		userEncryptDao.setQuestion_dml(newUserDb.getQuestion_dml());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.update("userDBUpdate", newUserDb); //$NON-NLS-1$
+		sqlClient.update("userDBUpdate", userEncryptDao); //$NON-NLS-1$
+		
+		// table_filter 등록
+		sqlClient.update("userDBFilterUpdate", userEncryptDao);
+		
+		// 데이터베이스 확장속성 등록
+		sqlClient.update("userDBEXTUpdate", userEncryptDao);
 		
 		return newUserDb;
 	}
