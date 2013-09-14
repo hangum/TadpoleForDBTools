@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -43,6 +44,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
+import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -151,6 +153,26 @@ public class ColumnsComposite extends Composite {
 
 		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.CUBRID_DEFAULT) {
 
+			tableColumnDef = new TableColumnDef[] { //
+			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
+					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
+					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
+					, new TableColumnDef("NULLABLE", "Nullable", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
+					, new TableColumnDef("PARTITIONED", "Paritioned", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_PRECISION", "Data Precision", 100, SWT.LEFT) //
+					, new TableColumnDef("DATA_SCALE", "Data Scale", 100, SWT.LEFT) //
+					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
+					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
+					, new TableColumnDef("DENSITY", "Density", 100, SWT.LEFT) //
+					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			};
+
+			
+		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
+			
 			tableColumnDef = new TableColumnDef[] { //
 			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
 					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
@@ -357,7 +379,6 @@ class AllColumnComparator extends ObjectComparator {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		((TableViewer) viewer).getTable().getColumn(propertyIndex).setData("preValue", "");
-
 		RDBInfomationforColumnDAO tc1 = (RDBInfomationforColumnDAO) e1;
 		RDBInfomationforColumnDAO tc2 = (RDBInfomationforColumnDAO) e2;
 
@@ -379,12 +400,13 @@ class AllColumnComparator extends ObjectComparator {
  */
 class ColumnInformLabelProvider extends LabelProvider implements ITableLabelProvider {
 	private TableViewer tableViewer;
+	
 
 	public ColumnInformLabelProvider(TableViewer tv) {
 		this.tableViewer = tv;
 
 		// cell merge compare value initialize.
-		for (TableColumn column : tableViewer.getTable().getColumns()) {
+		for (TableColumn column : tableViewer.getTable().getColumns()){
 			column.setData("preValue", "");
 		}
 	}
@@ -398,23 +420,23 @@ class ColumnInformLabelProvider extends LabelProvider implements ITableLabelProv
 	public String getColumnText(Object element, int columnIndex) {
 		String columnName = (String) tableViewer.getTable().getColumn(columnIndex).getData("column");
 		boolean cellMerge = (Boolean) tableViewer.getTable().getColumn(columnIndex).getData("merge");
-		String preValue = (String) tableViewer.getTable().getColumn(columnIndex).getData("preValue");
+		String preValue =  (String) tableViewer.getTable().getColumn(columnIndex).getData("preValue");
 
 		RDBInfomationforColumnDAO infoDao = (RDBInfomationforColumnDAO) element;
-
-		if (cellMerge) {
+		
+		if(cellMerge){
 			String tableName = infoDao.getColumnValuebyName(columnName);
-			if (!preValue.equals(tableName)) {
+			if (!preValue.equals(tableName)){
 				tableViewer.getTable().getColumn(columnIndex).setData("preValue", tableName);
 				return tableName;
-			} else {
+			}else{
 				return "   ➥ " + infoDao.getColumnValuebyName(columnName);
 			}
-		} else {
+		}else{
 			return infoDao.getColumnValuebyName(columnName);
 		}
-
-		// return infoDao.getColumnValuebyName(columnName);
+		
+		//return infoDao.getColumnValuebyName(columnName);
 	}
 
 }
