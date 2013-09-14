@@ -11,7 +11,6 @@
 package com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.addons.d3chart.BarChart;
 import org.eclipse.rap.addons.d3chart.ChartItem;
@@ -31,6 +30,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.utils.ENumberUtils;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -259,7 +259,7 @@ public class InstanceInformationComposite extends Composite {
 		String pid 		= StringUtils.trimToEmpty(commandResult.getString("pid"));
 		String uptime 	= StringUtils.trimToEmpty(commandResult.getString("uptime"));
 		
-		String uptimeMillis 	= StringUtils.trimToEmpty(TimeUtils.getHoureMinSecString(NumberUtils.toLong(commandResult.getString("uptimeMillis"))));
+		String uptimeMillis 	= StringUtils.trimToEmpty(TimeUtils.getHoureMinSecString(ENumberUtils.toInt(commandResult.getString("uptimeMillis"))));
 		String uptimeEstimate 	= StringUtils.trimToEmpty(commandResult.getString("uptimeEstimate"));
 		String localTime 		= StringUtils.trimToEmpty(commandResult.getString("localTime"));
 		
@@ -280,12 +280,12 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private void refreshMemoryData(CommandResult commandResult) {
 		DBObject cursorConnections = (DBObject)commandResult.get("mem");
-	    int bits 		= NumberUtils.toInt(cursorConnections.get("bits").toString());
-	    int resident 	= NumberUtils.toInt(cursorConnections.get("resident").toString());
-	    int virtual 	= NumberUtils.toInt(cursorConnections.get("virtual").toString());
+	    int bits 		= ENumberUtils.toInt(cursorConnections.get("bits"));
+	    int resident 	= ENumberUtils.toInt(cursorConnections.get("resident"));
+	    int virtual 	= ENumberUtils.toInt(cursorConnections.get("virtual"));
 	    
-	    int mapped 		= NumberUtils.toInt(cursorConnections.get("mapped").toString());
-	    int mappedWithJournal = NumberUtils.toInt(cursorConnections.get("mappedWithJournal").toString());
+	    int mapped 		= ENumberUtils.toInt(cursorConnections.get("mapped"));
+	    int mappedWithJournal = ENumberUtils.toInt(cursorConnections.get("mappedWithJournal"));
 	    
 	    float fBits 	= (float)bits / (float)virtual;
 	    float fResident = (float)resident / (float)virtual;
@@ -320,9 +320,9 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private void refreshNetwork(CommandResult commandResult) {
 	    DBObject cursorConnections = (DBObject)commandResult.get("network");
-	    int bytesIn 	= NumberUtils.toInt(cursorConnections.get("bytesIn").toString());
-	    int bytesOut 	= NumberUtils.toInt(cursorConnections.get("bytesOut").toString());
-	    int numRequests = NumberUtils.toInt(cursorConnections.get("numRequests").toString());
+	    int bytesIn 	= ENumberUtils.toInt(cursorConnections.get("bytesIn"));
+	    int bytesOut 	= ENumberUtils.toInt(cursorConnections.get("bytesOut"));
+	    int numRequests = ENumberUtils.toInt(cursorConnections.get("numRequests"));
 
 	    float floatBI = 0f, floatBO = 0f, floatNf = 0f;
 	    if(bytesIn < bytesOut) {
@@ -355,8 +355,8 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private void refreshConnections(CommandResult commandResult) {
 		DBObject cursorConnections = (DBObject)commandResult.get("connections");
-	    int current 		= NumberUtils.toInt(cursorConnections.get("current").toString());
-	    int available 		= NumberUtils.toInt(cursorConnections.get("available").toString());
+	    int current 		= ENumberUtils.toInt(cursorConnections.get("current"));
+	    int available 		= ENumberUtils.toInt(cursorConnections.get("available"));
 	    float floatCurrent 	= (float)current / (float)available;
 
 	    ChartItem itemAvailable = barChartConnection.getItems()[0];
@@ -375,9 +375,9 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private void refreshCursors(CommandResult commandResult) {
 		DBObject cursorCursors = (DBObject)commandResult.get("cursors");
-		int totalOpen 			= NumberUtils.toInt(cursorCursors.get("totalOpen").toString());
-		int clientCursors_size 	= NumberUtils.toInt(cursorCursors.get("clientCursors_size").toString());
-		int timedOut 			= NumberUtils.toInt(cursorCursors.get("timedOut").toString());
+		int totalOpen 			= ENumberUtils.toInt(cursorCursors.get("totalOpen"));
+		int clientCursors_size 	= ENumberUtils.toInt(cursorCursors.get("clientCursors_size"));
+		int timedOut 			= ENumberUtils.toInt(cursorCursors.get("timedOut"));
 		
 		ChartItem itemTotalOpen = pieChartCursors.getItems()[0];
 	    itemTotalOpen.setText("Total Open (" + totalOpen + ")");
@@ -474,9 +474,9 @@ public class InstanceInformationComposite extends Composite {
 	    barChartMemory.setBarWidth(25);
 
 	    DBObject cursorConnections = (DBObject)commandResult.get("mem");
-	    int bits 		= NumberUtils.toInt(cursorConnections.get("bits").toString());
-	    int resident 	= NumberUtils.toInt(cursorConnections.get("resident").toString());
-	    int virtual 	= NumberUtils.toInt(cursorConnections.get("virtual").toString());
+	    int bits 		= ENumberUtils.toInt(cursorConnections.get("bits"));
+	    int resident 	= ENumberUtils.toInt(cursorConnections.get("resident"));
+	    int virtual 	= ENumberUtils.toInt(cursorConnections.get("virtual"));
 	    
 	    int mapped = (Integer)cursorConnections.get("mapped");
 	    int mappedWithJournal =0;
@@ -534,9 +534,9 @@ public class InstanceInformationComposite extends Composite {
 	    barChartNetwork.setBarWidth(25);
 
 	    DBObject cursorConnections = (DBObject)commandResult.get("network");
-	    int bytesIn 	= NumberUtils.toInt(cursorConnections.get("bytesIn").toString());
-	    int bytesOut 	= NumberUtils.toInt(cursorConnections.get("bytesOut").toString());
-	    int numRequests = NumberUtils.toInt(cursorConnections.get("numRequests").toString());
+	    int bytesIn 	= ENumberUtils.toInt(cursorConnections.get("bytesIn"));
+	    int bytesOut 	= ENumberUtils.toInt(cursorConnections.get("bytesOut"));
+	    int numRequests = ENumberUtils.toInt(cursorConnections.get("numRequests"));
 
 	    float floatBI = 0f, floatBO = 0f, floatNf = 0f;
 	    if(bytesIn < bytesOut) {
@@ -587,8 +587,8 @@ public class InstanceInformationComposite extends Composite {
 	    barChartConnection.setBarWidth(25);
 
 	    DBObject cursorConnections = (DBObject)commandResult.get("connections");
-	    int current 	= NumberUtils.toInt(cursorConnections.get("current").toString());
-	    int available 	= NumberUtils.toInt(cursorConnections.get("available").toString());
+	    int current 	= ENumberUtils.toInt(cursorConnections.get("current"));
+	    int available 	= ENumberUtils.toInt(cursorConnections.get("available"));
 	    float floatCurrent = (float)current / (float)available;
 
 	    ChartItem itemAvailable = new ChartItem(barChartConnection);
@@ -624,9 +624,9 @@ public class InstanceInformationComposite extends Composite {
 		pieChartCursors.setInnerRadius(0.1f);
 		
 		DBObject cursorCursors = (DBObject)commandResult.get("cursors");
-		int totalOpen 			= NumberUtils.toInt(cursorCursors.get("totalOpen").toString());
-		int clientCursors_size 	= NumberUtils.toInt(cursorCursors.get("clientCursors_size").toString());
-		int timedOut 			= NumberUtils.toInt(cursorCursors.get("timedOut").toString());
+		int totalOpen 			= ENumberUtils.toInt(cursorCursors.get("totalOpen"));
+		int clientCursors_size 	= ENumberUtils.toInt(cursorCursors.get("clientCursors_size"));
+		int timedOut 			= ENumberUtils.toInt(cursorCursors.get("timedOut"));
 		
 		ChartItem itemTotalOpen = new ChartItem(pieChartCursors);
 	    itemTotalOpen.setText("Total Open (" + totalOpen + ")");
