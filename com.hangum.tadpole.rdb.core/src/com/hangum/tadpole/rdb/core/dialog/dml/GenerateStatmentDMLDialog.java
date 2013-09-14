@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dml;
 
 import java.util.ArrayList;
@@ -13,9 +23,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -38,11 +45,19 @@ import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
+/**
+ * DMLGenerae Statement Dialog
+ * 
+ * @author nilriri
+ *
+ */
 public class GenerateStatmentDMLDialog extends Dialog {
+	/** generation SQL string */
+	private String genSQL = "";
+	
 	private UserDBDAO userDB;
 	private String tableName;
 	private TableViewer tableViewer;
@@ -83,11 +98,6 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		parent.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent event) {
-				FindEditorAndWriteQueryUtil.run(userDB, queryGenetation());
-			}
-		});
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.verticalSpacing = 2;
@@ -245,6 +255,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		tableViewer.setLabelProvider(new GenerateLabelProvider());
 
 		initData();
+		queryGenetation();
 
 		return container;
 	}
@@ -272,11 +283,16 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		} else {
 			sql = "/* DML generation error. */";
 		}
+		genSQL = sql;
 
 		this.textQuery.setText(sql);
 
 		return sql;
 
+	}
+	
+	public String getDML() {
+		return genSQL;
 	}
 
 	private void initData() {

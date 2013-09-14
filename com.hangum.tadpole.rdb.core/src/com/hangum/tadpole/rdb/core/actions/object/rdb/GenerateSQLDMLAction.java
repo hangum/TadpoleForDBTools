@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
@@ -53,12 +54,14 @@ public class GenerateSQLDMLAction extends AbstractObjectAction {
 	
 	@Override
 	public void run() {
-		StringBuffer sbSQL = new StringBuffer();
+//		StringBuffer sbSQL = new StringBuffer();
 		try {
 			TableDAO tableDAO = (TableDAO)sel.getFirstElement();
 			
 			GenerateStatmentDMLDialog dialog = new GenerateStatmentDMLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, tableDAO.getName());
-			dialog.open();
+			if(Dialog.OK == dialog.open()) {
+				FindEditorAndWriteQueryUtil.run(userDB, dialog.getDML());
+			}
 			
 		
 			
