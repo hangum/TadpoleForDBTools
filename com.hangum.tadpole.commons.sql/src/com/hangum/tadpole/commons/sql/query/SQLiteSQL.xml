@@ -149,6 +149,13 @@ SELECT name as function_name,
 </select>
 
 <!-- 
+	column information
+ -->
+<select id="columnInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	 PRAGMA table_info($table$)
+</select>
+
+<!-- 
 	Table DDL Script
  -->
 <select id="getTableScript" resultClass="java.lang.String" parameterClass="java.lang.String">

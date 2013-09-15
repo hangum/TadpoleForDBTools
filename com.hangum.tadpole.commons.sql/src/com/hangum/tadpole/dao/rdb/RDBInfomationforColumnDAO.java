@@ -39,12 +39,24 @@ public class RDBInfomationforColumnDAO {
 	private String num_nulls;
 	private String density;
 	private String last_analyzed;
+	private String pk;
 
 	/**
 	 * 
 	 */
 	public RDBInfomationforColumnDAO() {
-		// TODO Auto-generated constructor stub
+		this("", "", "", "", "", "", "", "");
+	}
+
+	public RDBInfomationforColumnDAO(String table_name, String table_comment, String column_name, String column_comment, String data_type, String notnull, String dflt_value, String pk) {
+		this.table_name = table_name;
+		this.table_comment = table_comment;
+		this.column_name = column_name;
+		this.column_comment = column_comment;
+		this.data_type = data_type;
+		this.nullable = notnull;
+		this.data_default = dflt_value;
+		this.setPk(pk);
 	}
 
 	public int compareToIgnoreCase(RDBInfomationforColumnDAO target, String column) {
@@ -90,6 +102,8 @@ public class RDBInfomationforColumnDAO {
 			result = this.getDensity();
 		} else if ("last_analyzed".equals(column.toLowerCase())) {
 			result = this.getLast_analyzed();
+		} else if ("pk".equals(column.toLowerCase())) {
+			result = this.pk.toLowerCase();
 		} else {
 			result = "";
 		}
@@ -304,6 +318,14 @@ public class RDBInfomationforColumnDAO {
 	 */
 	public void setLast_analyzed(String last_analyzed) {
 		this.last_analyzed = last_analyzed;
+	}
+
+	public String getPk() {
+		return pk;
+	}
+
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
 }
