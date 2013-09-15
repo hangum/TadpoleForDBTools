@@ -26,7 +26,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
@@ -35,7 +35,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  * @author hangum
  *
  */
-public class ObjectModifyAction extends AbstractObjectAction {
+public class ObjectModifyAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
@@ -47,18 +47,6 @@ public class ObjectModifyAction extends AbstractObjectAction {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText("Alert " + title); //$NON-NLS-1$
-	}
-	
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
-	
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {			
-			if(userDB != null) {
-				if(selection instanceof IStructuredSelection && !selection.isEmpty()) setEnabled(true);
-				else setEnabled(false);
-			} else setEnabled(false);
-		}
 	}
 
 	@Override

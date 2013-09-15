@@ -72,8 +72,6 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 			}
 			sbSQL.append(PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
 			
-			//
-//			QueryEditorAction qea = new QueryEditorAction();
 			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLDeleteAction_10, e);

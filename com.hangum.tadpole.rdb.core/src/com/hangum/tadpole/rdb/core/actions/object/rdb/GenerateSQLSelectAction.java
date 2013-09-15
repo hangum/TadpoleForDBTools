@@ -17,9 +17,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -29,9 +26,8 @@ import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -40,7 +36,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class GenerateSQLSelectAction extends AbstractObjectAction {
+public class GenerateSQLSelectAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
@@ -88,22 +84,6 @@ public class GenerateSQLSelectAction extends AbstractObjectAction {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
 		}
-	}
-	
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
-			
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-//			if(userDB != null) {
-				if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					setEnabled(this.sel.size() > 0);
-				} else setEnabled(false);
-//			}
-//		} else {
-//			setEnabled(false);
-		}
-
 	}
 	
 }

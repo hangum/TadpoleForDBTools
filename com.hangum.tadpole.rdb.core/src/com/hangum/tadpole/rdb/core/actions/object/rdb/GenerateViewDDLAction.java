@@ -12,16 +12,12 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
  * generate ddl view     
@@ -29,7 +25,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  * @author hangum
  *
  */
-public class GenerateViewDDLAction extends AbstractObjectAction {
+public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
@@ -60,18 +56,6 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 			logger.error("view ddl", e);
 			MessageDialog.openError(null, "Confirm", "Not support this function.");
 		}
-	}
-	
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
-			
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-			if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
-				setEnabled(this.sel.size() > 0);
-			} else setEnabled(false);
-		}
-
 	}
 	
 }

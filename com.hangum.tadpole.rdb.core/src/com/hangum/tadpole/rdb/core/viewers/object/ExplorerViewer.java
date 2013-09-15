@@ -52,7 +52,7 @@ import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.viewsupport.SelectionProviderMediator;
 
 /**
- * object viewer
+ * object explorer viewer
  * 
  * @author hangum
  * 
@@ -60,7 +60,6 @@ import com.hangum.tadpole.viewsupport.SelectionProviderMediator;
 public class ExplorerViewer extends ViewPart {
 	private static Logger logger = Logger.getLogger(ExplorerViewer.class);
 	public static String ID = "com.hangum.tadpole.rdb.core.view.object.explorer"; //$NON-NLS-1$
-	private StructuredViewer[] arrayStructureViewer = null;
 	
 	/** tabfolder가 초기화 될때는 tab select 이벤트 먹지 않도록 조절하지 않도록 */
 	private boolean boolInitObjectHead = true;
@@ -132,7 +131,7 @@ public class ExplorerViewer extends ViewPart {
 					viewComposite.filter(strSearchText);					
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
-					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 						mongoIndexComposite.filter(strSearchText);
 					} else {
 						indexComposite.filter(strSearchText);
@@ -235,7 +234,7 @@ public class ExplorerViewer extends ViewPart {
 			
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
-			initObjectDetail(DBDefine.getDBDefine(userDB.getDbms_types()));
+			initObjectDetail(DBDefine.getDBDefine(userDB));
 		} else {
 			userDB = null;
 
@@ -250,7 +249,8 @@ public class ExplorerViewer extends ViewPart {
 	 * 
 	 * @param dbDefine Manager에서 선택된 object
 	 */
-	private void initObjectDetail(DBDefine dbDefine) {				
+	private void initObjectDetail(DBDefine dbDefine) {	
+		
 		// sqlite
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			createTable();
@@ -258,35 +258,24 @@ public class ExplorerViewer extends ViewPart {
 			createIndexes();
 			createTrigger();
 			
-			// view의 set selection provider 설정
-			arrayStructureViewer = new StructuredViewer[] { 
+			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
 					tableCompost.getTableListViewer(), 
 					viewComposite.getViewListViewer(), 
 					indexComposite.getTableViewer(), 
 					triggerComposite.getTableViewer()
 				};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
-			
 			refreshTable(false);
-			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
+			
 		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
 			createTable();
-//			createView();
-//			createIndexes();
-//			createFunction();
 			
-			// view의 set selection provider 설정
-			arrayStructureViewer = new StructuredViewer[] { 
+			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
 					tableCompost.getTableListViewer() 
-//					viewComposite.getViewListViewer(), 
-//					indexComposite.getTableViewer(), 
-//					functionCompostite.getTableviewer()
 				};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
-			
 			refreshTable(false);
-			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 			
 		// mongodb
@@ -296,15 +285,15 @@ public class ExplorerViewer extends ViewPart {
 			createMongoIndex();
 			createMongoJavaScript();
 			
-			refreshTable(false);
-			
-			arrayStructureViewer = new StructuredViewer[] { 
+			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
 				mongoCollectionComposite.getCollectionListViewer(),
 				mongoIndexComposite.getTableViewer(),
 				mongoJavaScriptComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, mongoCollectionComposite.getCollectionListViewer()));
+			refreshTable(false);
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString();
+			
 		// cubrid, mysql, oracle, postgre, mssql
 		} else {
 			createTable();
@@ -314,7 +303,7 @@ public class ExplorerViewer extends ViewPart {
 			createFunction();
 			createTrigger();
 			
-			arrayStructureViewer = new StructuredViewer[] { 
+			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
 					tableCompost.getTableListViewer(), 
 					viewComposite.getViewListViewer(), 
 					indexComposite.getTableViewer(), 

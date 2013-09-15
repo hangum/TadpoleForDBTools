@@ -27,7 +27,7 @@ import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.system.TadpoleSystemCommons;
 
@@ -37,7 +37,7 @@ import com.hangum.tadpole.system.TadpoleSystemCommons;
  * @author hangum
  *
  */
-public class ObjectDeleteAction extends AbstractObjectAction {
+public class ObjectDeleteAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
@@ -172,17 +172,5 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 		}
 		
 	}	// end method
-	
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
-			
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-			if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
-				setEnabled(this.sel.size() > 0);
-			} else setEnabled(false);
-		}
-
-	}
 	
 }

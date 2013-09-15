@@ -54,7 +54,6 @@ public class GenerateSQLDMLAction extends AbstractObjectAction {
 	
 	@Override
 	public void run() {
-//		StringBuffer sbSQL = new StringBuffer();
 		try {
 			TableDAO tableDAO = (TableDAO)sel.getFirstElement();
 			
@@ -63,50 +62,12 @@ public class GenerateSQLDMLAction extends AbstractObjectAction {
 				FindEditorAndWriteQueryUtil.run(userDB, dialog.getDML());
 			}
 			
-		
-			
-//			Map<String, String> parameter = new HashMap<String, String>();
-//			parameter.put("db", userDB.getDb());
-//			parameter.put("table", tableDAO.getName());
-//			
-//			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-//			
-//			sbSQL.append(" SELECT "); //$NON-NLS-1$
-//			for (int i=0; i<showTableColumns.size(); i++) {
-//				TableColumnDAO dao = showTableColumns.get(i);
-//				sbSQL.append(dao.getField());
-//				
-//				// 마지막 컬럼에는 ,를 않넣어주어야하니까 
-//				if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
-//				else sbSQL.append(" "); //$NON-NLS-1$
-//			}
-//			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getName() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
-			
-			//
-			//FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLSelectAction_8, e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
 		}
-	}
-	
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
-			
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-//			if(userDB != null) {
-				if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					setEnabled(this.sel.size() > 0);
-				} else setEnabled(false);
-//			}
-//		} else {
-//			setEnabled(false);
-		}
-
 	}
 	
 }

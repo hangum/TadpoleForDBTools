@@ -48,18 +48,21 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param userDB
 	 * @param lowSQL
 	 * @param isNewEditor 항상 새로운 창으로 엽니다.
+	 * @param isFormating sql formatting
 	 */
 	public static void run(UserDBDAO userDB, String lowSQL, boolean isNewEditor) {
 		
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			newMongoDBEditorOpen(userDB, lowSQL);
 		} else {
 
-			try {
-				lowSQL = SQLFormater.format(lowSQL);
-			} catch(Exception e) {
-				// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
-			}
+//			if(isFormating) {
+//				try {
+//					lowSQL = SQLFormater.format(lowSQL);
+//				} catch(Exception e) {
+//					// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
+//				}
+//			}
 						
 			IEditorReference reference = EditorUtils.findSQLEditor(userDB);
 			if(reference == null || isNewEditor) {				
@@ -69,6 +72,7 @@ public class FindEditorAndWriteQueryUtil {
 			}	// end reference
 		}	// end db
 	}
+	
 
 	/**
 	 * 쿼리 스트링으로 엽니다.

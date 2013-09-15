@@ -11,15 +11,12 @@
 package com.hangum.tadpole.rdb.core.actions.object.rdb;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.util.executer.ProcedureExecuterManager;
-import com.hangum.tadpole.commons.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 
 /**
@@ -30,7 +27,7 @@ import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
  * @author hangum
  *
  */
-public class ObjectExecuteProcedureAction extends AbstractObjectAction {
+public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */

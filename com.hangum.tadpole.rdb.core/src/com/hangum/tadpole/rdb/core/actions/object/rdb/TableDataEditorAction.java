@@ -27,7 +27,7 @@ import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
 import com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -38,7 +38,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class TableDataEditorAction extends AbstractObjectAction {
+public class TableDataEditorAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
