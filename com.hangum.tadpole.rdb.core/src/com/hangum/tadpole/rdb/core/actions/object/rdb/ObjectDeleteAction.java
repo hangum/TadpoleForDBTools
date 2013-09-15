@@ -12,6 +12,9 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -25,6 +28,7 @@ import com.hangum.tadpole.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.system.TadpoleSystemCommons;
 
 /**
@@ -168,5 +172,17 @@ public class ObjectDeleteAction extends AbstractObjectAction {
 		}
 		
 	}	// end method
+	
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		this.sel = (IStructuredSelection)selection;
+			
+		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
+			if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
+				setEnabled(this.sel.size() > 0);
+			} else setEnabled(false);
+		}
+
+	}
 	
 }

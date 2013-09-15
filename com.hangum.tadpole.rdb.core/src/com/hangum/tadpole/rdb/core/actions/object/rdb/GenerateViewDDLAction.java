@@ -67,13 +67,9 @@ public class GenerateViewDDLAction extends AbstractObjectAction {
 		this.sel = (IStructuredSelection)selection;
 			
 		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-//			if(userDB != null) {
-				if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					setEnabled(this.sel.size() > 0);
-				} else setEnabled(false);
-//			}
-//		} else {
-//			setEnabled(false);
+			if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
+				setEnabled(this.sel.size() > 0);
+			} else setEnabled(false);
 		}
 
 	}

@@ -43,6 +43,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
 import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -126,6 +127,13 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	
 		tableViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
+
+				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
+				if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ||
+						DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT ||
+						DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
+				)  return;
+				
 				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.

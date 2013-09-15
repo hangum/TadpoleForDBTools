@@ -414,7 +414,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					manager.add(refreshAction_Table);
 
 					// 현재는 oracle db만 데이터 수정 모드..
-					if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+					if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						manager.add(generateSampleData);
 					}

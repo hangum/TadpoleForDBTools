@@ -156,7 +156,7 @@ public abstract class AbstractObjectComposite extends Composite {
 //						"NULLABLE", 	"INDEX TYPE","COMMENT"
 //		};
 		String[] name = {"Table Name", "Index Name","Type","Comment"};
-		int[] size = {120, 70, 70, 70//, 70, 
+		int[] size = {120, 120, 70, 70//, 70, 
 //						70,	70, 70, 70, 70, 
 //						70, 70,	70
 		};

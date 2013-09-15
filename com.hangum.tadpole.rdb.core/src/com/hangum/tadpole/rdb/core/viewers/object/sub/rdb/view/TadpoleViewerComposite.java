@@ -23,6 +23,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -45,6 +47,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
+import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -53,6 +56,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableColumnLabelprovider;
@@ -115,6 +119,48 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		viewListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		viewListViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				
+				IStructuredSelection is = (IStructuredSelection) event.getSelection();
+
+				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+					if (null != is) {
+						try {
+							String viewName = (String)is.getFirstElement();
+							StringBuffer sbSQL = new StringBuffer();
+		
+							Map<String, String> parameter = new HashMap<String, String>();
+							parameter.put("db", userDB.getDb());
+							parameter.put("table", viewName);
+							
+							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+							List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
+							
+							sbSQL.append(" SELECT "); //$NON-NLS-1$
+							for (int i=0; i<showTableColumns.size(); i++) {
+								TableColumnDAO dao = showTableColumns.get(i);
+								sbSQL.append(dao.getField());
+								
+								// 마지막 컬럼에는 ,를 않넣어주어야하니까 
+								if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
+								else sbSQL.append(" "); //$NON-NLS-1$
+							}
+							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + viewName + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+							
+							//
+							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
+						} catch(Exception e) {
+							logger.error(Messages.GenerateSQLSelectAction_8, e);
+							
+							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
+						}
+					}
+				}
+			}
+		});
 		viewListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				// 테이블의 컬럼 목록을 출력합니다.
