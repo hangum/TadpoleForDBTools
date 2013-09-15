@@ -8,7 +8,7 @@ It enables you to handle typical DB over the World Wide Web
 
 1.RDB Feature
 -
-* Intuitive web interface (Safari, Chrome, IE 9, Firefox, Opera) recommended IE
+* Intuitive web interface (Safari, Chrome, IE 10, Firefox, Opera) recommended IE
 * User Management (Admin, Manager, User)
 * Support Apache Hive, Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
