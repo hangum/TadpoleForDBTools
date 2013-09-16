@@ -18,7 +18,7 @@
       <view
             category="com.hangum.tadpole.rdb.core.category.info"
             class="com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer"
-            icon="resources/icons/object-explorer.png"
+            icon="resources/icons/object_explorer.png"
             id="com.hangum.tadpole.rdb.core.view.object.explorer"
             name="%view.name.0"
             restorable="true">
