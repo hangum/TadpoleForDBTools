@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -44,7 +43,6 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.rdb.RDBInfomationforColumnDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -430,7 +428,9 @@ class ColumnInformLabelProvider extends LabelProvider implements ITableLabelProv
 				tableViewer.getTable().getColumn(columnIndex).setData("preValue", tableName);
 				return tableName;
 			}else{
-				return "   ➥ " + infoDao.getColumnValuebyName(columnName);
+//				ubuntu에서 특수문자 깨져서..
+//				return "   ➥ " + infoDao.getColumnValuebyName(columnName);
+				return "   " + infoDao.getColumnValuebyName(columnName);
 			}
 		}else{
 			return infoDao.getColumnValuebyName(columnName);

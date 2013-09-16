@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.sql.util.executer;
 
+import org.apache.log4j.Logger;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 
@@ -31,6 +33,12 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class ProcedureExecuterManager {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger
+			.getLogger(ProcedureExecuterManager.class);
+
 	protected UserDBDAO userDB;
 	protected ProcedureFunctionDAO procedureDAO;
 	
@@ -97,14 +105,17 @@ public class ProcedureExecuterManager {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
 				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
 				dbVersion = Double.parseDouble( StringUtils.substring(dbInfo.getProductversion(), 0, 3) );
-				
-			} catch (Exception e) {
-
-			}
 			
-			if (dbVersion < 5.5){
-				MessageDialog.openError(null, "Error", "The current version does not support.\n\n5.5 or later is supported.");
+				if (dbVersion < 5.5){
+					MessageDialog.openError(null, "Error", "The current version does not support.\n\n5.5 or later is supported.");
+					return false;
+				}
+			} catch (Exception e) {
+				logger.error("find DB info", e);
+				
+				return false;
 			}
+
 		}
 		
 		try {
