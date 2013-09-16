@@ -132,7 +132,7 @@ public class ColumnsComposite extends Composite {
 	private void createTableColumn() {
 
 		TableColumnDef[] tableColumnDef = new TableColumnDef[] {};
-		if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
+		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 
 			tableColumnDef = new TableColumnDef[] { //
 			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
@@ -151,7 +151,7 @@ public class ColumnsComposite extends Composite {
 					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
 			};
 
-		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.CUBRID_DEFAULT) {
+		} else if (DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT) {
 
 			tableColumnDef = new TableColumnDef[] { //
 			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
@@ -171,26 +171,7 @@ public class ColumnsComposite extends Composite {
 			};
 
 			
-		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
-			
-			tableColumnDef = new TableColumnDef[] { //
-			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
-					, new TableColumnDef("NULLABLE", "Nullable", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableColumnDef("PARTITIONED", "Paritioned", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_PRECISION", "Data Precision", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_SCALE", "Data Scale", 100, SWT.LEFT) //
-					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
-					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
-					, new TableColumnDef("DENSITY", "Density", 100, SWT.LEFT) //
-					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
-			};
-
-		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
+		} else if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 
 			tableColumnDef = new TableColumnDef[] { //
 			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
@@ -290,7 +271,7 @@ public class ColumnsComposite extends Composite {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<RDBInfomationforColumnDAO> listTableInform = null;
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
 
 				List<HashMap<String, String>> sqliteTableList = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
 				for (HashMap<String, String> table : sqliteTableList) {
