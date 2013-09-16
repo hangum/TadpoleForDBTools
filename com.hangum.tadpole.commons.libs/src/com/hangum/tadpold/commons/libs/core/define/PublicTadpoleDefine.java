@@ -105,17 +105,17 @@ public class PublicTadpoleDefine {
 	/** 디비들의 키 이름을 정의합니다 */
 	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
 	public static boolean isPK(String key) {
-		if(DB_KEY.PRI.toString().equals(key)) return true;
-		if(DB_KEY.PK.toString().equals(key)) return true;
+		if(DB_KEY.PRI.toString().equalsIgnoreCase(key)) return true;
+		if(DB_KEY.PK.toString().equalsIgnoreCase(key)) return true;
 		
 		return false;
 	}
 	public static boolean isFK(String key) {
-		if(DB_KEY.FK.toString().equals(key)) return true;
+		if(DB_KEY.FK.toString().equalsIgnoreCase(key)) return true;
 		return false;
 	}
 	public static boolean isMUL(String key) {
-		if(DB_KEY.MUL.toString().equals(key)) return true;
+		if(DB_KEY.MUL.toString().equalsIgnoreCase(key)) return true;
 		return false;
 	}
 	public static boolean isKEY(String key) {
@@ -123,7 +123,7 @@ public class PublicTadpoleDefine {
 	}
 	public static boolean isKEY(String key, String isNull) {
 		for(DB_KEY dbKEY : DB_KEY.values()) {
-			if(dbKEY.toString().equals(key)) {
+			if(dbKEY.toString().equalsIgnoreCase(key)) {
 				// 컬럼이 null허용이면 false
 				if("YES".equals(isNull)) return false;
 				return true;

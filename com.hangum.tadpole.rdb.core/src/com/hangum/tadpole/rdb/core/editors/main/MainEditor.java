@@ -865,7 +865,7 @@ public class MainEditor extends EditorExtension {
 	 * initialize editor
 	 */
 	private void initEditor() {
-		if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.HIVE_DEFAULT) {
+		if (DBDefine.getDBDefine(userDB) == DBDefine.HIVE_DEFAULT) {
 			tltmAutoCommit.setEnabled(false);
 		}
 
@@ -1213,20 +1213,20 @@ public class MainEditor extends EditorExtension {
 			
 			if(PublicTadpoleDefine.QUERY_MODE.DEFAULT == queryMode) {
 				
-				if( requestQuery.toUpperCase().startsWith("SELECT") ) { //$NON-NLS-1$
+				if(requestQuery.toUpperCase().startsWith("SELECT")) { //$NON-NLS-1$
 					requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, queryResultCount);
 					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + requestQuery); //$NON-NLS-1$
 				}
 				
 				stmt = javaConn.prepareStatement(requestQuery);
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
-				rs = stmt.executeQuery();//Query( selText );
+				rs = stmt.executeQuery();
 				
 			// explain
 			}  else if(PublicTadpoleDefine.QUERY_MODE.EXPLAIN_PLAN == queryMode) {
 				
 				// 큐브리드 디비이면 다음과 같아야 합니다.
-				if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.CUBRID_DEFAULT) {
+				if(DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT) {
 					
 					String cubridQueryPlan = CubridExecutePlanUtils.plan(userDB, requestQuery);
 					mapColumns = CubridExecutePlanUtils.getMapColumns();
@@ -1234,7 +1234,7 @@ public class MainEditor extends EditorExtension {
 					
 					return;
 					
-				} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+				} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 					// 플랜결과를 디비에 저장합니다.
 					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
 					// 저장된 결과를 가져와서 보여줍니다.
