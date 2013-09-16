@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -110,6 +111,7 @@ public class DBLoginDialog extends Dialog {
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText(Messages.DBLoginDialog_35);
+		lblNewLabel.setFont(SWTResourceManager.getBoldFont(PlatformUI.getWorkbench().getDisplay().getSystemFont()));
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboDBList.setBackground(SWTResourceManager.getColor(255, 250, 205));

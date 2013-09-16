@@ -101,7 +101,7 @@ public enum DBDefine {
 	 */
 	public static DBDefine getDBDefine(String type) {
 		
-		if(type.equalsIgnoreCase("TadpoleSystem")) 	return TADPOLE_SYSTEM_DEFAULT;
+		if(type.equalsIgnoreCase("TadpoleSystem")) 		return TADPOLE_SYSTEM_DEFAULT;
 		if(type.equalsIgnoreCase("TadpoleSystem_MYSQL")) 	return TADPOLE_SYSTEM_MYSQL_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
@@ -110,15 +110,15 @@ public enum DBDefine {
 		else if(type.equalsIgnoreCase("MSSQL_8_LE"))	return MSSQL_8_LE_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("MySQL")) 		return MYSQL_DEFAULT;
-		else if(type.equalsIgnoreCase("MARIADB")) 	return MARIADB_DEFAULT;
+		else if(type.equalsIgnoreCase("MariaDB")) 		return MARIADB_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("SQLite"))		return SQLite_DEFAULT;
-		else if(type.equalsIgnoreCase("CUBRID"))		return CUBRID_DEFAULT;
-		else if(type.equalsIgnoreCase("POSTGRE"))		return POSTGRE_DEFAULT;
+		else if(type.equalsIgnoreCase("Cubrid"))		return CUBRID_DEFAULT;
+		else if(type.equalsIgnoreCase("PostgreSQL"))		return POSTGRE_DEFAULT;
 		
-		else if(type.equalsIgnoreCase("MONGODB"))		return MONGODB_DEFAULT;
-		else if(type.equalsIgnoreCase("AmazonRDS")) return AMAZONRDS_DEFAULT;
-		else if(type.equalsIgnoreCase("HIVE")) return HIVE_DEFAULT;
+		else if(type.equalsIgnoreCase("MongoDB"))		return MONGODB_DEFAULT;
+		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
+		else if(type.equalsIgnoreCase("Hive")) 			return HIVE_DEFAULT;
 		else return null;
 	}
 	
@@ -175,18 +175,18 @@ public enum DBDefine {
 			case MSSQL_DEFAULT:			return "MSSQL";
 			case MSSQL_8_LE_DEFAULT:	return "MSSQL_8_LE";
 			
-			case MYSQL_DEFAULT:		return "MySQL";
-			case MARIADB_DEFAULT:	return "MARIADB";
+			case MYSQL_DEFAULT:			return "MySQL";
+			case MARIADB_DEFAULT:		return "MariaDB";
 			
-			case SQLite_DEFAULT:	return "SQLite";
-			case CUBRID_DEFAULT:	return "CUBRID";
-			case POSTGRE_DEFAULT:	return "POSTGRE";
+			case SQLite_DEFAULT:		return "SQLite";
+			case CUBRID_DEFAULT:		return "Cubrid";
+			case POSTGRE_DEFAULT:		return "PostgreSQL";
 			
-			case MONGODB_DEFAULT :  return "MONGODB";
+			case MONGODB_DEFAULT :  	return "MongoDB";
 			
-			case AMAZONRDS_DEFAULT: return "AmazonRDS";
+			case AMAZONRDS_DEFAULT: 	return "AmazonRDS";
 			
-			case HIVE_DEFAULT: return "HIVE";
+			case HIVE_DEFAULT: 			return "Hive";
 			default:
 				return "undefine db";
 		}

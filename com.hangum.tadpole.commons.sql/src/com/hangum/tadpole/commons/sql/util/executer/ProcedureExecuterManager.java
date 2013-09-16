@@ -46,13 +46,13 @@ public class ProcedureExecuterManager {
 	 * @throws Exception
 	 */
 	public ProcedureExecutor getExecuter() throws Exception {
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT ) {
+		if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT ) {
 			return new OracleProcedureExecuter(procedureDAO, userDB);
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ||
-				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT ||
+				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
 			return new MSSQLProcedureExecuter(procedureDAO, userDB);
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
+				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 			return new MySqlProcedureExecuter(procedureDAO, userDB);
 		} else {
 			throw new Exception("Not Support database");
@@ -91,7 +91,7 @@ public class ProcedureExecuterManager {
 			return false;
 		}
 		
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT) {
 			double dbVersion = 0.0;
 			try {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				

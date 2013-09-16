@@ -40,6 +40,7 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -77,6 +78,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
 import com.hangum.tadpole.system.permission.PermissionChecker;
+import com.swtdesigner.ResourceManager;
 
 /**
  * Mongodb Collection composite
@@ -205,6 +207,11 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		tbName.setText("Name"); //$NON-NLS-1$
 		tbName.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbName, 0));
 		tvColName.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public Image getImage(Object element) {
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$
+			}
+			
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;

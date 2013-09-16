@@ -15,6 +15,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.rdb.core.Activator;
+import com.swtdesigner.ResourceManager;
 
 /**
  * TABLE, VIEW의 컬럼 정보
@@ -26,6 +28,7 @@ public class TableColumnLabelprovider extends LabelProvider implements ITableLab
 	
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
+		if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/column.png"); //$NON-NLS-1$
 		return null;
 	}
 

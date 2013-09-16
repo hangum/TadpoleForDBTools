@@ -15,7 +15,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -64,6 +63,9 @@ public class ExplorerViewer extends ViewPart {
 	
 	/** tabfolder가 초기화 될때는 tab select 이벤트 먹지 않도록 조절하지 않도록 */
 	private boolean boolInitObjectHead = true;
+
+	/** multi structured viewer */
+	private StructuredViewer[] arrayStructuredViewer = null;
 
 	/**
 	 * 현재 오픈된페이지를 리프레쉬한다.
@@ -273,27 +275,26 @@ public class ExplorerViewer extends ViewPart {
 			createIndexes();
 			createTrigger();
 			
-			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
+			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
 				viewComposite.getViewListViewer(), 
 				indexComposite.getTableViewer(), 
 				triggerComposite.getTableViewer()
 			};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableComposite.getTableListViewer()));
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
-			refreshTable(false);
-			
+		
+		// hive
 		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
 			createTable();
 			
-			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
+			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer() 
 			};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableComposite.getTableListViewer()));
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
-			refreshTable(false);
 			
 		// mongodb
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
@@ -301,15 +302,14 @@ public class ExplorerViewer extends ViewPart {
 			createMongoIndex();
 			createMongoJavaScript();
 			
-			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
+			arrayStructuredViewer = new StructuredViewer[] { 
 				mongoCollectionComposite.getCollectionListViewer(),
 				mongoIndexComposite.getTableViewer(),
 				mongoJavaScriptComposite.getTableViewer()
 			};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, mongoCollectionComposite.getCollectionListViewer()));
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, mongoCollectionComposite.getCollectionListViewer()));
 			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString();
-			refreshTable(false);
 			
 		// cubrid, mysql, oracle, postgre, mssql
 		} else {
@@ -320,7 +320,7 @@ public class ExplorerViewer extends ViewPart {
 			createFunction();
 			createTrigger();
 			
-			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
+			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
 				viewComposite.getViewListViewer(), 
 				indexComposite.getTableViewer(), 
@@ -328,11 +328,12 @@ public class ExplorerViewer extends ViewPart {
 				functionCompostite.getTableviewer(), 
 				triggerComposite.getTableViewer()
 			};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableComposite.getTableListViewer()));
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
-			refreshTable(false);
 		}
+		
+		refreshTable(false);
 		
 	}
 	
@@ -478,14 +479,8 @@ public class ExplorerViewer extends ViewPart {
 	public void refreshTable(boolean boolRefresh) {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {		
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
-
-//			tableListViewer.setSelection(new StructuredSelection(0), true);
-//			tableListViewer.getTable().setFocus();			
 		} else {
 			tableComposite.refreshTable(userDB, boolRefresh);
-			
-//			tableListViewer.setSelection(new StructuredSelection(0), true);
-//			tableListViewer.getTable().setFocus();			
 		}		
 	}
 	

@@ -49,6 +49,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -89,6 +90,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.system.permission.PermissionChecker;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.swtdesigner.ResourceManager;
 
 /**
  * RDB table composite
@@ -234,6 +236,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tbName.setText("Name"); //$NON-NLS-1$
 		tbName.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbName, 0));
 		tvColName.setLabelProvider(new ColumnLabelProvider() {
+			
+			@Override
+			public Image getImage(Object element) {
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$
+			}
+			
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
