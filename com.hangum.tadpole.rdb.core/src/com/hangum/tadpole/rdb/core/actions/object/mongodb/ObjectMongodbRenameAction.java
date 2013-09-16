@@ -82,7 +82,7 @@ class LengthValidator implements IInputValidator {
     int len = newText.length();
 
     // Determine if input is too short or too long
-    if (len < 3) return "Too short";
+    if (len < 2) return "Too short";
 
     return null;
   }
