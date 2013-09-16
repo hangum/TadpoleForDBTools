@@ -96,6 +96,12 @@ public class ManagerViewer extends ViewPart {
 				if(is.getFirstElement() instanceof UserDBDAO) {
 					addUserResouceData((UserDBDAO)is.getFirstElement());
 				}
+				
+				//
+				// 아래 코드(managerTV.getControl().setFocus();)가 없으면, 오브젝트 탐색기의 event listener가 동작하지 않는다. 
+				// 이유는 글쎄 모르겠어.
+				//
+				managerTV.getControl().setFocus();
 			}
 		});
 		managerTV.addDoubleClickListener(new IDoubleClickListener() {

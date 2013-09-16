@@ -10,7 +10,7 @@
       <view
             category="com.hangum.tadpole.rdb.core.category.info"
             class="com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer"
-            icon="resources/icons/database_table.png"
+            icon="resources/icons/ConnectionList.png"
             id="com.hangum.tadpole.rdb.core.view.connection.manager"
             name="%view.name"
             restorable="true">
