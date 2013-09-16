@@ -32,7 +32,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -44,9 +43,9 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
@@ -66,7 +65,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	// index
 	private TableViewer tableViewer;
 	private ObjectComparator indexComparator;
-	private List listIndexes;
+	private List<MongoDBIndexDAO> listIndexes;
 	private MongoDBIndexesViewFilter indexFilter;
 	
 	// index detail field
@@ -217,10 +216,8 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 			}
 		});
 
-		Menu popupMenu = menuMgr.createContextMenu(tableViewer.getTable());
-		tableViewer.getTable().setMenu(popupMenu);
+		tableViewer.getTable().setMenu(menuMgr.createContextMenu(tableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableViewer);
-
 	}
 
 	/**
@@ -276,5 +273,14 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	@Override
 	public void setSearchText(String searchText) {
 		indexFilter.setSearchText(searchText);
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		creatAction_Index.dispose();
+		deleteAction_Index.dispose();
+		refreshAction_Index.dispose();
 	}
 }

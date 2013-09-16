@@ -28,22 +28,21 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionLabelProvicer;
@@ -63,16 +62,16 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleFunctionComposite.class);
 	
-	private TableViewer tableViewer;
+	private TableViewer functionTableViewer;
 	private ObjectComparator fuctionComparator;
-	private List showFunction;
+	private List<ProcedureFunctionDAO> showFunction;
 	private ProcedureFunctionViewFilter functionFilter;
 
 	private ObjectCreatAction creatAction_Function;
 	private ObjectDeleteAction deleteAction_Function;
 	private ObjectRefreshAction refreshAction_Function;
-
 	private GenerateViewDDLAction viewDDLAction;
+	
 	/**
 	 * function composite
 	 * 
@@ -103,22 +102,22 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
-		Table tableTableList = tableViewer.getTable();
+		functionTableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		Table tableTableList = functionTableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
 		fuctionComparator = new ObjectComparator();
-		tableViewer.setSorter(fuctionComparator);
+		functionTableViewer.setSorter(fuctionComparator);
 
-		createProcedureFunctionColumn(tableViewer, fuctionComparator);
+		createProcedureFunctionColumn(functionTableViewer, fuctionComparator);
 
-		tableViewer.setLabelProvider(new ProcedureFunctionLabelProvicer());
-		tableViewer.setContentProvider(new ArrayContentProvider());
+		functionTableViewer.setLabelProvider(new ProcedureFunctionLabelProvicer());
+		functionTableViewer.setContentProvider(new ArrayContentProvider());
 //		tableViewer.setInput(showFunction);
 
 		functionFilter = new ProcedureFunctionViewFilter();
-		tableViewer.addFilter(functionFilter);
+		functionTableViewer.addFilter(functionFilter);
 
 		sashForm.setWeights(new int[] { 1 });
 
@@ -131,7 +130,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		deleteAction_Function = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
 		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
 	
-		viewDDLAction = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "View"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -150,9 +149,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			}
 		});
 
-		Menu popupMenu = menuMgr.createContextMenu(tableViewer.getTable());
-		tableViewer.getTable().setMenu(popupMenu);
-		getSite().registerContextMenu(menuMgr, tableViewer);
+		functionTableViewer.getTable().setMenu(menuMgr.createContextMenu(functionTableViewer.getTable()));
+		getSite().registerContextMenu(menuMgr, functionTableViewer);
 	}
 
 	/**
@@ -161,7 +159,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	 */
 	public void filter(String textSearch) {
 		functionFilter.setSearchText(textSearch);
-		tableViewer.refresh();
+		functionTableViewer.refresh();
 	}
 
 	/**
@@ -169,8 +167,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	 */
 	public void initAction() {
 		if (showFunction != null) showFunction.clear();
-		tableViewer.setInput(showFunction);
-		tableViewer.refresh();
+		functionTableViewer.setInput(showFunction);
+		functionTableViewer.refresh();
 
 		creatAction_Function.setUserDB(getUserDB());
 		deleteAction_Function.setUserDB(getUserDB());
@@ -190,8 +188,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
 
-			tableViewer.setInput(showFunction);
-			tableViewer.refresh();
+			functionTableViewer.setInput(showFunction);
+			functionTableViewer.refresh();
 
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$
@@ -206,12 +204,22 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	 * @return
 	 */
 	public TableViewer getTableviewer() {
-		return tableViewer;
+		return functionTableViewer;
 	}
 
 	@Override
 	public void setSearchText(String searchText) {
 		functionFilter.setSearchText(searchText);
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		creatAction_Function.dispose();
+		deleteAction_Function.dispose();
+		refreshAction_Function.dispose();
+		viewDDLAction.dispose();
 	}
 
 }

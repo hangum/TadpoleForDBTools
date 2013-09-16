@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.actions.object.rdb;
+package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
 import org.apache.log4j.Logger;
 import org.eclipse.ui.IWorkbenchWindow;

@@ -41,7 +41,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	/**
 	 * 디비 중에 올챙이가 테이블,컬럼의 도움말을 제공하는 디비를 정의합니다.
 	 */
-	protected static DBDefine[] editType = {DBDefine.ORACLE_DEFAULT, DBDefine.POSTGRE_DEFAULT, DBDefine.MYSQL_DEFAULT};
+	protected static DBDefine[] editType = {DBDefine.ORACLE_DEFAULT, DBDefine.POSTGRE_DEFAULT, DBDefine.MYSQL_DEFAULT, DBDefine.MARIADB_DEFAULT};
 
 	/**
 	 * 

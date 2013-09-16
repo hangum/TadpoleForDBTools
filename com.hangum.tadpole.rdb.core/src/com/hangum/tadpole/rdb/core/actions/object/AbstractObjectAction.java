@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -36,15 +35,14 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  * 
  */
 public abstract class AbstractObjectAction extends Action implements ISelectionListener, IWorkbenchAction {
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger logger = Logger.getLogger(AbstractObjectAction.class);
 
 	protected UserDBDAO userDB = null;
 	protected IWorkbenchWindow window;				  
 	protected IStructuredSelection sel;
 	protected PublicTadpoleDefine.DB_ACTION actionType;
+	
+	public AbstractObjectAction() {
+	}
 	
 	/**
 	 * 
@@ -56,7 +54,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 		this.window = window;
 		this.actionType = actionType;
 		
-		setEnabled(userDB != null);
+		setEnabled(false);//userDB != null);
 		window.getSelectionService().addSelectionListener(this);
 	}
 	
@@ -141,14 +139,17 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
 		
 		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-			if(userDB != null) setEnabled(true);
-			else setEnabled(false);
-		} else {
-			setEnabled(false);
+			this.sel = (IStructuredSelection)selection;
+			
+			if(userDB != null) {
+				setEnabled(true);
+				return;
+			}
 		}
+		
+		setEnabled(false);
 	}
 	
 	@Override

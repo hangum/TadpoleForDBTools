@@ -37,12 +37,10 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
@@ -52,10 +50,10 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
@@ -77,16 +75,14 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	
 	private TableViewer viewListViewer;
 	private ObjectComparator viewComparator;
-	private List showViews;
+	private List<String> showViews;
 	private TableViewer viewColumnViewer;
-	private List showViewColumns;
+	private List<TableColumnDAO> showViewColumns;
 	private RDBViewFilter viewFilter;
 	
 	private ObjectCreatAction creatAction_View;
 	private ObjectDeleteAction deleteAction_View;
 	private ObjectRefreshAction refreshAction_View;
-//	private ObjectModifyAction modifyAction_View;
-	
 	private GenerateViewDDLAction viewDDLAction;
 
 	/**
@@ -242,7 +238,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 //		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
 
-		viewDDLAction = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -262,8 +258,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			}
 		});
 
-		Menu popupMenu = menuMgr.createContextMenu(viewListViewer.getTable());
-		viewListViewer.getTable().setMenu(popupMenu);
+		viewListViewer.getTable().setMenu(menuMgr.createContextMenu(viewListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, viewListViewer);
 	}
 
@@ -328,5 +323,15 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	@Override
 	public void setSearchText(String searchText) {
 		viewFilter.setSearchText(searchText);		
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		creatAction_View.dispose();
+		deleteAction_View.dispose();
+		refreshAction_View.dispose();
+		viewDDLAction.dispose();
 	}
 }

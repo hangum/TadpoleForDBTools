@@ -35,11 +35,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
@@ -50,10 +48,10 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.IndexColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -77,9 +75,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private String selectIndexName = ""; //$NON-NLS-1$
 
 	// index
-	private TableViewer tableViewer;
+	private TableViewer indexTableViewer;
 	private ObjectComparator indexComparator;
-	private List listIndexes;
+	private List<InformationSchemaDAO> listIndexes;
 	private IndexesViewFilter indexFilter;
 
 	// column info
@@ -90,7 +88,6 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Index;
 	private ObjectDeleteAction deleteAction_Index;
 	private ObjectRefreshAction refreshAction_Index;
-	
 	private GenerateViewDDLAction viewDDLAction;
 
 	/**
@@ -123,9 +120,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		indexTableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 	
-		tableViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+		indexTableViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 
 				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
@@ -172,21 +169,20 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		});		
 		
 		
-		Table tableTableList = tableViewer.getTable();
+		Table tableTableList = indexTableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
 		indexComparator = new DefaultComparator();
-		tableViewer.setSorter(indexComparator);
+		indexTableViewer.setSorter(indexComparator);
 
-		createIndexesColumn(tableViewer, indexComparator);
+		createIndexesColumn(indexTableViewer, indexComparator);
 
-		tableViewer.setLabelProvider(new IndexesLabelProvicer());
-		tableViewer.setContentProvider(new ArrayContentProvider());
-//		tableViewer.setInput(listIndexes);
+		indexTableViewer.setLabelProvider(new IndexesLabelProvicer());
+		indexTableViewer.setContentProvider(new ArrayContentProvider());
 
 		indexFilter = new IndexesViewFilter();
-		tableViewer.addFilter(indexFilter);
+		indexTableViewer.addFilter(indexFilter);
 		
 		
 		// columns
@@ -258,7 +254,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		
-		viewDDLAction = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "View"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -278,10 +274,8 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			}
 		});
 
-		Menu popupMenu = menuMgr.createContextMenu(tableViewer.getTable());
-		tableViewer.getTable().setMenu(popupMenu);
-		getSite().registerContextMenu(menuMgr, tableViewer);
-
+		indexTableViewer.getTable().setMenu(menuMgr.createContextMenu(indexTableViewer.getTable()));
+		getSite().registerContextMenu(menuMgr, indexTableViewer);
 	}
 
 	/**
@@ -289,8 +283,8 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 */
 	public void initAction() {
 		if (listIndexes != null) listIndexes.clear();
-		tableViewer.setInput(listIndexes);
-		tableViewer.refresh();
+		indexTableViewer.setInput(listIndexes);
+		indexTableViewer.refresh();
 
 		creatAction_Index.setUserDB(getUserDB());
 		deleteAction_Index.setUserDB(getUserDB());
@@ -310,8 +304,8 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			listIndexes = sqlClient.queryForList("indexList", userDB.getDb()); //$NON-NLS-1$
 
-			tableViewer.setInput(listIndexes);
-			tableViewer.refresh();
+			indexTableViewer.setInput(listIndexes);
+			indexTableViewer.refresh();
 
 		} catch (Exception e) {
 			logger.error("index refresh", e); //$NON-NLS-1$
@@ -327,7 +321,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 */
 	public void filter(String textSearch) {
 		indexFilter.setSearchText(textSearch);
-		tableViewer.refresh();		
+		indexTableViewer.refresh();		
 	}
 	
 	/**
@@ -335,11 +329,21 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * @return
 	 */
 	public TableViewer getTableViewer() {
-		return tableViewer;
+		return indexTableViewer;
 	}
 
 	@Override
 	public void setSearchText(String searchText) {
 		indexFilter.setSearchText(searchText);
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		creatAction_Index.dispose();
+		deleteAction_Index.dispose();
+		refreshAction_Index.dispose();
+		viewDDLAction.dispose();
 	}
 }

@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
@@ -71,18 +70,19 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLDMLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLInsertAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLSelectAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLUpdateAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSampleDataAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.TableDataEditorAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLDMLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLInsertAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelectAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLUpdateAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSampleDataAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
@@ -113,7 +113,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	// column info
 	private TableViewer tableColumnViewer;
 	private ObjectComparator tableColumnComparator;
-	private List showTableColumns;
+	private List<TableColumnDAO> showTableColumns;
 	
 	private AbstractObjectAction creatAction_Table;
 	private AbstractObjectAction deleteAction_Table;
@@ -173,36 +173,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					if (null != is) {
-						try {
-							TableDAO tableDAO = (TableDAO) is.getFirstElement();
-							StringBuffer sbSQL = new StringBuffer();
-		
-							Map<String, String> parameter = new HashMap<String, String>();
-							parameter.put("db", userDB.getDb());
-							parameter.put("table", tableDAO.getName());
-							
-							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-							List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-							
-							sbSQL.append(" SELECT "); //$NON-NLS-1$
-							for (int i=0; i<showTableColumns.size(); i++) {
-								TableColumnDAO dao = showTableColumns.get(i);
-								sbSQL.append(dao.getField());
-								
-								// 마지막 컬럼에는 ,를 않넣어주어야하니까 
-								if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
-								else sbSQL.append(" "); //$NON-NLS-1$
-							}
-							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getName() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
-							
-							//
-							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
-						} catch(Exception e) {
-							logger.error(Messages.GenerateSQLSelectAction_8, e);
-							
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
-						}
+						TableDAO tableDAO = (TableDAO) is.getFirstElement();
+						FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
 					}
 				}
 			}
@@ -308,10 +280,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
 		
 		tableListViewer.getTable().setLayout(layoutColumnLayout);
-
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
-
+		
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(userDB, tableListViewer));
@@ -382,23 +353,23 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table = new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		deleteAction_Table = new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
-		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		creatAction_Table = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		deleteAction_Table = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 
 		// generation sample data
-		generateSampleData = new GenerateSampleDataAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		generateSampleData = new GenerateSampleDataAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		
-		selectDMLAction = new GenerateSQLDMLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "DML"); //$NON-NLS-1$
+		selectDMLAction = new GenerateSQLDMLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "DML"); //$NON-NLS-1$
 
-		selectStmtAction = new GenerateSQLSelectAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
-		insertStmtAction = new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
-		updateStmtAction = new GenerateSQLUpdateAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
-		deleteStmtAction = new GenerateSQLDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
+		selectStmtAction = new GenerateSQLSelectAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
+		insertStmtAction = new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
+		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
+		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
 		
-		viewDDLAction = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "View"); //$NON-NLS-1$
 		
-		tableDataEditorAction = new TableDataEditorAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES);
+		tableDataEditorAction = new TableDataEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -442,8 +413,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 		});
 
-		org.eclipse.swt.widgets.Menu popupMenu = menuMgr.createContextMenu(tableListViewer.getTable());
-		tableListViewer.getTable().setMenu(popupMenu);
+		tableListViewer.getTable().setMenu(menuMgr.createContextMenu(tableListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableListViewer);
 	}
 
@@ -470,13 +440,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN);
 				
 				try {
-//					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//					showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-//					
-//					/** filter 정보가 있으면 처리합니다. */
-//					filter();
+					/** filter 정보가 있으면 처리합니다. */
 					showTables = getTableList(userDB);
-					
 				} catch(Exception e) {
 					logger.error("Table Referesh", e);
 					
@@ -636,5 +601,23 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public void setSearchText(String searchText) {
 		tableFilter.setSearchText(searchText);		
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
 
+		creatAction_Table.dispose();
+		deleteAction_Table.dispose();
+		refreshAction_Table.dispose();
+		generateSampleData.dispose();
+		selectDMLAction.dispose();
+
+		selectStmtAction.dispose();
+		insertStmtAction.dispose();
+		updateStmtAction.dispose();
+		deleteStmtAction.dispose();
+		viewDDLAction.dispose();
+		tableDataEditorAction.dispose();
+	}
+	
 }

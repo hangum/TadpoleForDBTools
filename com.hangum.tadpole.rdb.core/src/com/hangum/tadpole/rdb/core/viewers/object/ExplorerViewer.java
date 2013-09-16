@@ -15,6 +15,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -80,7 +81,7 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleProcedureComposite	procedureComposite 	= null;
 	private TadpoleIndexesComposite 	indexComposite 		= null;
 	private TadpoleViewerComposite 		viewComposite 		= null;
-	private TadpoleTableComposite 		tableCompost 		= null;
+	private TadpoleTableComposite 		tableComposite 		= null;
 	
 	// mongodb
 	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
@@ -125,7 +126,7 @@ public class ExplorerViewer extends ViewPart {
 					mongoCollectionComposite.filter(strSearchText);
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
-					tableCompost.filter(strSearchText);
+					tableComposite.filter(strSearchText);
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 					viewComposite.filter(strSearchText);					
@@ -181,7 +182,7 @@ public class ExplorerViewer extends ViewPart {
 		// dumy table
 		createTable();
 
-		// 왼쪽 트리에서 데이터 받았는지.
+		// Connection View에서 선택이벤트 받기.
 		getSite().getPage().addSelectionListener(ManagerViewer.ID, managementViewerListener);
 
 		// erd table에 선택되었을때..
@@ -193,7 +194,7 @@ public class ExplorerViewer extends ViewPart {
 					String tableName = event.getNewValue().toString();
 					if (tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
 
-					tableCompost.selectTable(tableName);
+					tableComposite.selectTable(tableName);
 				} // end if(event.getProperty()
 			} //
 		}); // end property change
@@ -221,6 +222,21 @@ public class ExplorerViewer extends ViewPart {
 	 * @param selectElement
 	 */
 	public void initObjectHead(Object selectElement) {
+		// 기존 사용자원을 반납합니다. 
+		if(null != tableComposite) tableComposite.dispose(); 
+		if(null != viewComposite) viewComposite.dispose(); 
+		if(null != indexComposite) indexComposite.dispose(); 
+		if(null != procedureComposite) procedureComposite.dispose(); 
+		if(null != functionCompostite) functionCompostite.dispose(); 
+		if(null != triggerComposite) triggerComposite.dispose();
+		
+		if(null != mongoCollectionComposite) { 
+			mongoCollectionComposite.dispose();
+			mongoIndexComposite.dispose();
+			mongoJavaScriptComposite.dispose();
+		}
+
+		// Initialize resources
 		if (selectElement instanceof UserDBDAO || selectElement instanceof UserDBResourceDAO) {
 			UserDBDAO selectUserDb = null;
 			if (selectElement instanceof UserDBDAO) selectUserDb = (UserDBDAO)selectElement;
@@ -249,8 +265,7 @@ public class ExplorerViewer extends ViewPart {
 	 * 
 	 * @param dbDefine Manager에서 선택된 object
 	 */
-	private void initObjectDetail(DBDefine dbDefine) {	
-		
+	private void initObjectDetail(DBDefine dbDefine) {
 		// sqlite
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			createTable();
@@ -259,28 +274,29 @@ public class ExplorerViewer extends ViewPart {
 			createTrigger();
 			
 			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
-					tableCompost.getTableListViewer(), 
-					viewComposite.getViewListViewer(), 
-					indexComposite.getTableViewer(), 
-					triggerComposite.getTableViewer()
-				};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
-			refreshTable(false);
+				tableComposite.getTableListViewer(), 
+				viewComposite.getViewListViewer(), 
+				indexComposite.getTableViewer(), 
+				triggerComposite.getTableViewer()
+			};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableComposite.getTableListViewer()));
+			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
+			refreshTable(false);
 			
 		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
 			createTable();
 			
 			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
-					tableCompost.getTableListViewer() 
-				};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
-			refreshTable(false);
+				tableComposite.getTableListViewer() 
+			};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableComposite.getTableListViewer()));
+			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
+			refreshTable(false);
 			
 		// mongodb
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
-			
 			createMongoCollection();
 			createMongoIndex();
 			createMongoJavaScript();
@@ -291,8 +307,9 @@ public class ExplorerViewer extends ViewPart {
 				mongoJavaScriptComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, mongoCollectionComposite.getCollectionListViewer()));
-			refreshTable(false);
+			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString();
+			refreshTable(false);
 			
 		// cubrid, mysql, oracle, postgre, mssql
 		} else {
@@ -304,18 +321,19 @@ public class ExplorerViewer extends ViewPart {
 			createTrigger();
 			
 			StructuredViewer[] arrayStructureViewer = new StructuredViewer[] { 
-					tableCompost.getTableListViewer(), 
-					viewComposite.getViewListViewer(), 
-					indexComposite.getTableViewer(), 
-					procedureComposite.getTableViewer(), 
-					functionCompostite.getTableviewer(), 
-					triggerComposite.getTableViewer()
-				};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableCompost.getTableListViewer()));
-		
-			refreshTable(false);
+				tableComposite.getTableListViewer(), 
+				viewComposite.getViewListViewer(), 
+				indexComposite.getTableViewer(), 
+				procedureComposite.getTableViewer(), 
+				functionCompostite.getTableviewer(), 
+				triggerComposite.getTableViewer()
+			};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructureViewer, tableComposite.getTableListViewer()));
+			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
+			refreshTable(false);
 		}
+		
 	}
 	
 	/**
@@ -410,8 +428,8 @@ public class ExplorerViewer extends ViewPart {
 	 * Table 정의
 	 */
 	private void createTable() {
-		tableCompost = new TadpoleTableComposite(getSite(), tabFolderObject, userDB);
-		tableCompost.initAction();
+		tableComposite = new TadpoleTableComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.initAction();
 		tabFolderObject.setSelection(0);
 	}
 
@@ -426,7 +444,7 @@ public class ExplorerViewer extends ViewPart {
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshIndexes(boolean boolRefresh) {
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			mongoIndexComposite.refreshIndexes(userDB, boolRefresh);
 		} else {
 			indexComposite.refreshIndexes(getUserDB(), boolRefresh);
@@ -458,10 +476,16 @@ public class ExplorerViewer extends ViewPart {
 	 * table 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshTable(boolean boolRefresh) {
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {		
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {		
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
+
+//			tableListViewer.setSelection(new StructuredSelection(0), true);
+//			tableListViewer.getTable().setFocus();			
 		} else {
-			tableCompost.refreshTable(userDB, boolRefresh);
+			tableComposite.refreshTable(userDB, boolRefresh);
+			
+//			tableListViewer.setSelection(new StructuredSelection(0), true);
+//			tableListViewer.getTable().setFocus();			
 		}		
 	}
 	
@@ -492,8 +516,6 @@ public class ExplorerViewer extends ViewPart {
 	
 	@Override
 	public void setFocus() {
-//		if(userDB != null) getViewSite().getActionBars().getStatusLineManager().setMessage(userDB.getDb());
-//		else getViewSite().getActionBars().getStatusLineManager().setMessage("");
 	}
 
 }

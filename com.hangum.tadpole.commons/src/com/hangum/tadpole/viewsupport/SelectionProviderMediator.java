@@ -41,8 +41,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class SelectionProviderMediator implements IPostSelectionProvider {
 
-	private class InternalListener implements ISelectionChangedListener,
-			FocusListener {
+	private class InternalListener implements ISelectionChangedListener, FocusListener {
 		/*
 		 * @see ISelectionChangedListener#selectionChanged
 		 */
@@ -86,8 +85,7 @@ public class SelectionProviderMediator implements IPostSelectionProvider {
 	 * @param viewerInFocus
 	 *            the viewer currently in focus or <code>null</code>
 	 */
-	public SelectionProviderMediator(StructuredViewer[] viewers,
-			StructuredViewer viewerInFocus) {
+	public SelectionProviderMediator(StructuredViewer[] viewers, StructuredViewer viewerInFocus) {
 		Assert.isNotNull(viewers);
 		fViewers = viewers;
 		InternalListener listener = new InternalListener();

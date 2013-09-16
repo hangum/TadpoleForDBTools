@@ -72,7 +72,7 @@ public class ManagerViewer extends ViewPart {
 	public static String ID = "com.hangum.tadpole.rdb.core.view.connection.manager"; //$NON-NLS-1$
 	
 	List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
-	TreeViewer treeViewer;
+	TreeViewer managerTV;
 	
 	public ManagerViewer() {
 		super();
@@ -88,19 +88,17 @@ public class ManagerViewer extends ViewPart {
 		gl_composite.marginWidth = 0;
 		composite.setLayout(gl_composite);
 		
-		treeViewer = new TreeViewer(composite, SWT.VIRTUAL | SWT.NONE);
-		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		managerTV = new TreeViewer(composite, SWT.NONE);
+		managerTV.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				Object selElement = is.getFirstElement();
-				
-				if(selElement instanceof UserDBDAO) {
-					addUserResouceData((UserDBDAO)selElement);
+				if(is.getFirstElement() instanceof UserDBDAO) {
+					addUserResouceData((UserDBDAO)is.getFirstElement());
 				}
 			}
 		});
-		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+		managerTV.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
@@ -117,7 +115,7 @@ public class ManagerViewer extends ViewPart {
 					if( PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
 						UserDBDAO userDB = dao.getParent();
 						
-						if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {							
+						if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {							
 							MongoDBERDViewAction ea = new MongoDBERDViewAction();
 							ea.run(dao);
 						} else {
@@ -130,8 +128,6 @@ public class ManagerViewer extends ViewPart {
 					}
 				// manager
 				} else if (selElement instanceof ManagerListDTO) {
-					ManagerListDTO managerDto = (ManagerListDTO)selElement;
-					
 					if(PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
 						ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
 						cda.runConnectionDialog(is);
@@ -141,17 +137,16 @@ public class ManagerViewer extends ViewPart {
 				
 			}
 		});
-		Tree tree = treeViewer.getTree();
+		Tree tree = managerTV.getTree();
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tree.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		
-		treeViewer.setContentProvider(new ManagerContentProvider());
-		treeViewer.setLabelProvider(new ManagerLabelProvider());
-		treeViewer.setInput(treeList);		
-		getSite().setSelectionProvider(treeViewer);
+		managerTV.setContentProvider(new ManagerContentProvider());
+		managerTV.setLabelProvider(new ManagerLabelProvider());
+		managerTV.setInput(treeList);		
+		getSite().setSelectionProvider(managerTV);
 		
 		createPopupMenu();
-//		getViewSite().getActionBars().getStatusLineManager().setMessage("Done"); //$NON-NLS-1$
 		
 		init();
 		
@@ -191,8 +186,8 @@ public class ManagerViewer extends ViewPart {
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
 		}
 
-		treeViewer.refresh();
-		treeViewer.expandToLevel(2);
+		managerTV.refresh();
+		managerTV.expandToLevel(2);
 	}
 
 	/**
@@ -202,9 +197,9 @@ public class ManagerViewer extends ViewPart {
 		MenuManager menuMgr = new MenuManager();
 		menuMgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		
-		Menu popupMenu = menuMgr.createContextMenu(treeViewer.getTree());
-		treeViewer.getTree().setMenu(popupMenu);
-		getSite().registerContextMenu(menuMgr, treeViewer);
+		Menu popupMenu = menuMgr.createContextMenu(managerTV.getTree());
+		managerTV.getTree().setMenu(popupMenu);
+		getSite().registerContextMenu(menuMgr, managerTV);
 	}
 
 	@Override
@@ -253,7 +248,7 @@ public class ManagerViewer extends ViewPart {
 				
 				if(defaultOpen) {
 					selectAndOpenView(userDB);
-					treeViewer.expandToLevel(userDB, 2);
+					managerTV.expandToLevel(userDB, 2);
 				}
 				return;
 			}	// end if(dto.getname()....		
@@ -266,7 +261,7 @@ public class ManagerViewer extends ViewPart {
 		
 		if(defaultOpen) {
 			selectAndOpenView(userDB);
-			treeViewer.expandToLevel(userDB, 2);
+			managerTV.expandToLevel(userDB, 2);
 		}
 	}
 	
@@ -285,7 +280,7 @@ public class ManagerViewer extends ViewPart {
 						userDBResourceDAO.setParent(userDB);
 					}
 					userDB.setListUserDBErd(listUserDBResources);
-					treeViewer.expandToLevel(userDB, 3);
+					managerTV.expandToLevel(userDB, 3);
 				}
 				
 			} catch (Exception e) {
@@ -323,8 +318,8 @@ public class ManagerViewer extends ViewPart {
 						ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_8, errStatus); //$NON-NLS-1$
 					}
 					
-					treeViewer.refresh(userDB);					
-					treeViewer.expandToLevel(userDB, 3);
+					managerTV.refresh(userDB);					
+					managerTV.expandToLevel(userDB, 3);
 					
 					break;
 				}	// if(userDB.getSeq() == dbSeq) {
@@ -352,7 +347,7 @@ public class ManagerViewer extends ViewPart {
 		
 		// 삭제
 		userDBResource.getParent().getListUserDBErd().remove(userDBResource);
-		treeViewer.refresh(userDB);
+		managerTV.refresh(userDB);
 	}
 	
 //	/**
@@ -383,11 +378,11 @@ public class ManagerViewer extends ViewPart {
 	 * @param dto
 	 */
 	public void selectAndOpenView(UserDBDAO dto) {
-		treeViewer.refresh();
-		treeViewer.setSelection(new StructuredSelection(dto), true);
+		managerTV.refresh();
+		managerTV.setSelection(new StructuredSelection(dto), true);
 		
 		// mongodb 일경우 열지 않는다.
-		if(DBDefine.getDBDefine(dto.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(dto) != DBDefine.MONGODB_DEFAULT) {
 			MainEditorInput mei = new MainEditorInput(dto);		
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {

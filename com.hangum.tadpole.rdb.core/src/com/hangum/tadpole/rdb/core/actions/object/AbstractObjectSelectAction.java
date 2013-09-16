@@ -32,13 +32,18 @@ public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
-	
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {			
+		
+		if(ExplorerViewer.ID.equals(part.getSite().getId())) {
+			this.sel = (IStructuredSelection)selection;
+			
 			if(userDB != null) {
-				if(!selection.isEmpty()) setEnabled(true);
-				else setEnabled(false);
-			} else setEnabled(false);
+				if(!this.sel.isEmpty()) {
+					setEnabled(true);
+					return;
+				}
+			}
 		}
+		
+		setEnabled(false);
 	}
 }

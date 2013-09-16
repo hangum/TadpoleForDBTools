@@ -50,9 +50,9 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -65,11 +65,11 @@ import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbGroupActi
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbMapReduceAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbReIndexAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbRenameAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLInsertAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.GenerateSQLSelectAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLInsertAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelectAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
@@ -101,7 +101,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	
 	// column info
 	private TreeViewer treeColumnViewer;
-	private List showTableColumns;
+	private List<CollectionFieldDAO> showTableColumns;
 	
 	private ObjectCreatAction 			creatAction_Table;
 	private ObjectDeleteAction 			deleteAction_Table;
@@ -147,7 +147,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
 
 					MongoDBEditorInput input = new MongoDBEditorInput(tableDAO.getName(), userDB, showTableColumns);
-					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
 					try {
 						page.openEditor(input, MongoDBTableEditor.ID);
 					} catch (PartInitException e) {
@@ -281,15 +281,15 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table 	= new ObjectCreatAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		deleteAction_Table 	= new ObjectDeleteAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		refreshAction_Table = new ObjectRefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		insertStmtAction 	= new GenerateSQLInsertAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		creatAction_Table 	= new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		deleteAction_Table 	= new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		insertStmtAction 	= new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 
-		renameColAction 	= new ObjectMongodbRenameAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Rename Collection"); //$NON-NLS-1$
-		reIndexColAction 	= new ObjectMongodbReIndexAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "ReIndex Collection"); //$NON-NLS-1$
-		mapReduceAction 	= new ObjectMongodbMapReduceAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "MapReduce"); //$NON-NLS-1$
-		groupAction			= new ObjectMongodbGroupAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Group"); //$NON-NLS-1$
+		renameColAction 	= new ObjectMongodbRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Rename Collection"); //$NON-NLS-1$
+		reIndexColAction 	= new ObjectMongodbReIndexAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "ReIndex Collection"); //$NON-NLS-1$
+		mapReduceAction 	= new ObjectMongodbMapReduceAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "MapReduce"); //$NON-NLS-1$
+		groupAction			= new ObjectMongodbGroupAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Group"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -320,8 +320,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			}
 		});
 
-		org.eclipse.swt.widgets.Menu popupMenu = menuMgr.createContextMenu(tableListViewer.getTable());
-		tableListViewer.getTable().setMenu(popupMenu);
+		tableListViewer.getTable().setMenu(menuMgr.createContextMenu(tableListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableListViewer);
 	}
 
@@ -415,9 +414,27 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		job.setUser(true);
 		job.schedule();
 	}
+	
+	public TableViewer getTableListViewer() {
+		return tableListViewer;
+	}
 
 	public void filter(String textSearch) {
 		tableFilter.setSearchText(textSearch);
 		tableListViewer.refresh();
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		creatAction_Table.dispose();
+		deleteAction_Table.dispose();
+		refreshAction_Table.dispose();
+		insertStmtAction.dispose();
+		renameColAction.dispose();
+		reIndexColAction.dispose();
+		mapReduceAction.dispose();
+		groupAction.dispose();
 	}
 }

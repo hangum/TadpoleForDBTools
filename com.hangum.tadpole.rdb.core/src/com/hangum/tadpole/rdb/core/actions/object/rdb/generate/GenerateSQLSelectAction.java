@@ -8,54 +8,43 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.actions.object.rdb;
+package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
+import com.hangum.tadpole.dao.mysql.TableDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 
 /**
- * generate ddl view     
+ * generate sql statement     
  * 
  * @author hangum
  *
  */
-public class GenerateViewDDLAction extends AbstractObjectSelectAction {
+public class GenerateSQLSelectAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(GenerateViewDDLAction.class);
-	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateViewDDLAction"; //$NON-NLS-1$
+	private static final Logger logger = Logger.getLogger(GenerateSQLSelectAction.class);
+	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateSQLSelectAction"; //$NON-NLS-1$
 	
-	/**
-	 * generated view ddl
-	 * 
-	 * @param window
-	 * @param actionType
-	 * @param target
-	 */
-	public GenerateViewDDLAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String target) {
+	public GenerateSQLSelectAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
-		
+	
 		setId(ID + actionType.toString());
-		setText(target + " DDL" );
+		setText(Messages.GenerateSQLSelectAction_1 + title);
+		
 		window.getSelectionService().addSelectionListener(this);
 	}
-	
+
 	@Override
 	public void run() {
-		try {
-			DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
-			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(sel.getFirstElement()), true);		
-		} catch(Exception e) {
-			logger.error("view ddl", e);
-			MessageDialog.openError(null, "Confirm", "Not support this function.");
-		}
+		TableDAO tableDAO = (TableDAO)sel.getFirstElement();
+		FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
 	}
-	
 }

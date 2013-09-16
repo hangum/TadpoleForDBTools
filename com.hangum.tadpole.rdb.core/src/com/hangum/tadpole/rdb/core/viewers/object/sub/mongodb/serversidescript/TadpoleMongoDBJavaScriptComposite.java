@@ -32,7 +32,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
@@ -50,9 +49,9 @@ import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbSJavaScriptAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
@@ -71,7 +70,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	
 	private TableViewer tableViewer;
 	private ObjectComparator javascriptComparator;
-	private List listJavaScript;
+	private List<MongoDBServerSideJavaScriptDAO> listJavaScript;
 	private MongoJavaScriptViewFilter javascriptFilter;
 	
 
@@ -165,7 +164,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 */
 	private void createMongoDBIndexesColumn(TableViewer tv, ObjectComparator comparator) {
 		String[] name = {"Name", "Contetn"};
-		int[] size = {120,200};
+		int[] size = {120, 200};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
@@ -200,8 +199,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 			}
 		});
 
-		Menu popupMenu = menuMgr.createContextMenu(tableViewer.getTable());
-		tableViewer.getTable().setMenu(popupMenu);
+		tableViewer.getTable().setMenu(menuMgr.createContextMenu(tableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableViewer);
 	}
 
@@ -260,5 +258,15 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	@Override
 	public void setSearchText(String searchText) {
 		javascriptFilter.setSearchText(searchText);
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		creatActionJS.dispose();
+		deleteActionJS.dispose();
+		refreshActionJS.dispose();
+		serverJavaScript.dispose();
 	}
 }

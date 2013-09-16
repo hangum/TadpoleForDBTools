@@ -8,17 +8,18 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.actions.object.rdb;
+package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.mysql.TableDAO;
+import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
+import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
@@ -26,8 +27,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -35,42 +35,60 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  * @author hangum
  *
  */
-public class ObjectModifyAction extends AbstractObjectSelectAction {
+public class ObjectCreatAction extends AbstractObjectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ObjectModifyAction.class);
+	private static final Logger logger = Logger.getLogger(ObjectCreatAction.class);
 
-	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.modify"; //$NON-NLS-1$
-
-	public ObjectModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.creat";
+	
+	public ObjectCreatAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Alert " + title); //$NON-NLS-1$
+		setText("Create " + title);
 	}
 
 	@Override
 	public void run() {
 		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			
-			CreateTableAction cta = new CreateTableAction();
-			
-			// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
-			if(DBDefine.getDBDefine(userDB.getDelYn()) == DBDefine.SQLite_DEFAULT) {
-				TableDAO tc = (TableDAO)sel.getFirstElement();
-				if(tc == null) cta.run(userDB, actionType);
-				else cta.run(userDB, tc.getComment());
-			} else {				
-				cta.run(userDB, actionType);
-			}
+			// others db
+			if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 				
+				CreateTableAction cta = new CreateTableAction();
+				
+				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
+				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
+					TableDAO tc = (TableDAO)sel.getFirstElement();
+					if(tc == null) cta.run(userDB, actionType);
+					else cta.run(userDB, tc.getComment());
+				} else {				
+					cta.run(userDB, actionType);
+				}
+				
+			// moongodb
+			} else if(DBDefine.getDBDefine(userDB) == DBDefine.MONGODB_DEFAULT) {				
+				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
+				if(Dialog.OK == ncd.open() ) {
+					refreshTable();
+				}
+			}
 			
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
-			CreateIndexAction cia = new CreateIndexAction();
-			cia.run(userDB, actionType);
+			if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
+				CreateIndexAction cia = new CreateIndexAction();
+				cia.run(userDB, actionType);
+			// moongodb
+			} else if(DBDefine.getDBDefine(userDB) == DBDefine.MONGODB_DEFAULT) {
+				NewIndexDialog nid = new NewIndexDialog(Display.getCurrent().getActiveShell(), userDB);
+				if(Dialog.OK == nid.open()) {
+					refreshIndexes();
+				}
+			}
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
 			CreateProcedureAction cia = new CreateProcedureAction();
 			cia.run(userDB, actionType);
@@ -85,4 +103,5 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 			csa.run(userDB, actionType);
 		}
 	}
+	
 }
