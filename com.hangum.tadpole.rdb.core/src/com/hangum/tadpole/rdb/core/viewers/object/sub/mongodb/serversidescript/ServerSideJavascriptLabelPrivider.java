@@ -15,6 +15,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.rdb.core.Activator;
+import com.swtdesigner.ResourceManager;
 
 /**
  * ServerSide Javascript 컬럼 정보
@@ -26,6 +28,7 @@ public class ServerSideJavascriptLabelPrivider extends LabelProvider implements 
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
+		if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/javascript.png"); //$NON-NLS-1$
 		return null;
 	}
 	

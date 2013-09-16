@@ -34,6 +34,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -60,6 +61,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableColumnLabelprovider;
 import com.hangum.tadpole.system.permission.PermissionChecker;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.swtdesigner.ResourceManager;
 
 /**
  * RDB viewer composite
@@ -200,6 +202,12 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		tblclmnTableName.setText("Name"); //$NON-NLS-1$
 		tblclmnTableName.addSelectionListener(getSelectionAdapter(viewListViewer, viewComparator, tblclmnTableName, 0));
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
+			
+			@Override
+			public Image getImage(Object element) {
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/view.png"); //$NON-NLS-1$
+			}
+			
 			@Override
 			public String getText(Object element) {
 				return element.toString();
