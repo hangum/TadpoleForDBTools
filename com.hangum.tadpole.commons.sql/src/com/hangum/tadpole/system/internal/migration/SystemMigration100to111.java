@@ -16,41 +16,31 @@ import com.hangum.tadpole.system.TadpoleSystemQuery;
 import com.hangum.tadpole.system.internal.migration.utils.SystemMigrationUtils;
 
 /**
- * System migration sr9 to sr10
+ * System migration 1.0.0 to 1.1.1
  * 
  * @author hangum
- * @deprecated
+ *
  */
-public class SystemMigrationSR9TOSR10 extends SystemMigration {
+public class SystemMigration100to111 extends SystemMigration {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(SystemMigrationSR9TOSR10.class);
+	private static final Logger logger = Logger.getLogger(SystemMigration100to111.class);
 
 	/**
-	 * user_db table add column 
-	 * 		ext1 VARCHAR(2000),
-     		ext2 VARCHAR(2000), 
-     		ext3 VARCHAR(2000),
 	 * 
 	 */
 	public void migration(String major_version, String sub_version) throws Exception {
 		try {
-			String targetTable = "user_db";
-			String newColumns[] = new String[] {"ext1", "ext2", "ext3"};
-			String columnDefine[] = new String[] {"VARCHAR(2000)", "VARCHAR(2000)", "VARCHAR(2000)"};
-			
-			for (int i=0; i < newColumns.length; i++){
-				if (!SystemMigrationUtils.isExistsColumn(targetTable, newColumns[i])) {
-					SystemMigrationUtils.runSQLExecuteBatch("ALTER TABLE "+targetTable+" ADD COLUMN "+newColumns[i]+" " +columnDefine[i]+ " ");
-				}
-			}
+			// posgre sql일때 type을 바꾸었습니다.
+			String strQuery = "UPDATE user_db SET dbms_types = 'PostgreSQL' WHERE dbms_types = 'postgre'";
+			SystemMigrationUtils.runSQLExecuteBatch(strQuery);
 			
 			// 시스템 버전 정보를 수정해 줍니다.
 			TadpoleSystemQuery.updateSystemVersion(major_version, sub_version);
 			
 		} catch(Exception e) {
-			logger.error("update system version(SR9 to SR10)", e);
+			logger.error("System migration exception 1.0.0 to 1.1.1", e);
 			
 			throw e;
 		}

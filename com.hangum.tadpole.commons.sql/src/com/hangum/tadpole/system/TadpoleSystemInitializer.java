@@ -33,7 +33,8 @@ import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dao.system.UserGroupDAO;
 import com.hangum.tadpole.system.internal.initialize.TadpoleMySQLDDL;
 import com.hangum.tadpole.system.internal.initialize.TadpoleSQLIteDDL;
-import com.hangum.tadpole.system.internal.migration.SystemMigrationSR9TOSR10;
+import com.hangum.tadpole.system.internal.migration.SystemMigration;
+import com.hangum.tadpole.system.internal.migration.SystemMigration100to111;
 import com.hangum.tadpole.util.ApplicationArgumentUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -147,7 +148,12 @@ public class TadpoleSystemInitializer {
 			return true;
 		} else {
 			logger.info("System migration start....");
-			SystemMigrationSR9TOSR10.migration(SystemDefine.MAJOR_VERSION, "10");
+			
+			// 1.0.0 ~ 1.1.0까지의 버전을 마이그레이션 합니다.
+			if("1.0.0".equals(tsdao.getMajor_version()) || "1.0.1".equals(tsdao.getMajor_version()) || "1.1.0".equals(tsdao.getMajor_version())) {
+				SystemMigration migr = new SystemMigration100to111();
+				migr.migration(SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION);
+			}
 
 			logger.info("System migration end....");
 
@@ -162,6 +168,7 @@ public class TadpoleSystemInitializer {
 	private static void createSystemTable() throws Exception {
 
 		java.sql.Connection javaConn = null;
+		Statement stmt = null;
 		String createMsg = "";
 
 		try {
@@ -169,7 +176,7 @@ public class TadpoleSystemInitializer {
 			javaConn = sqlClient.getDataSource().getConnection();
 
 			// 테이블 생성
-			Statement stmt = javaConn.createStatement();
+			stmt = javaConn.createStatement();
 //			boolean boolResult = false;
 
 			Object obj = null;
@@ -195,10 +202,8 @@ public class TadpoleSystemInitializer {
 			throw e;
 
 		} finally {
-			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
+			try { stmt.close(); } catch(Exception e) {}
+			try { javaConn.close(); } catch (Exception e) {}
 		}
 	}
 	
