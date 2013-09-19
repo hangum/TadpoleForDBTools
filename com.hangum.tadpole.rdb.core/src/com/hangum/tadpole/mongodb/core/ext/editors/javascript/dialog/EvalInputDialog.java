@@ -68,6 +68,9 @@ public class EvalInputDialog extends Dialog {
 			textInputValue[i] = new Text(container, SWT.BORDER);
 			textInputValue[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		}
+		
+//		// set default focus
+		textInputValue[0].setFocus();
 
 		return container;
 	}

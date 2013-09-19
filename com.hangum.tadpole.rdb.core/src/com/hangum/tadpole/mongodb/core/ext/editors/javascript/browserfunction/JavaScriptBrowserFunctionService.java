@@ -135,7 +135,7 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 		boolean result = false;
 		if (arguments.length == 2 && (arguments[1] instanceof String)) {
 			String newContents = (String) arguments[1];
-			result = editor.performSaveS(newContents);
+			result = editor.performSave(newContents);
 		}
 		
 		return result;

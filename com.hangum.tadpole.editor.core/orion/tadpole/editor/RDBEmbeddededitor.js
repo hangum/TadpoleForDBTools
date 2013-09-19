@@ -228,7 +228,7 @@ function initEmbeddedEditor(){
 		});		
 		editor.installTextView();
 		
-		console.log('editor is ' + editor);
+		//console.log('editor is ' + editor);
 	});
 }
 	

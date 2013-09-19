@@ -1647,12 +1647,8 @@ public class MainEditor extends EditorExtension {
 	public void doSave(IProgressMonitor monitor) {
 		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
 		if(dBResource == null) {
-			ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
-			if(rsDialog.open() == Window.OK) {
-				userSetDBResource = rsDialog.getRetResourceDao();
-			} else {
-				return;
-			}
+			userSetDBResource = getFileName();
+			if(userSetDBResource == null) return;
 		}
 		
 		// 저장을 호출합니다.
@@ -1666,6 +1662,19 @@ public class MainEditor extends EditorExtension {
 			monitor.setCanceled(true);
 		}	
 
+	}
+
+	/**
+	 * new file name
+	 * @return
+	 */
+	private UserDBResourceDAO getFileName() {
+		ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
+		if(rsDialog.open() == Window.OK) {
+			return rsDialog.getRetResourceDao();
+		} else {
+			return null;
+		}
 	}
 	
 	/**
@@ -1681,9 +1690,8 @@ public class MainEditor extends EditorExtension {
 			if(!isDirty()) return false; 
 			
 			if(userSetDBResource == null) {
-				ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
-				if(rsDialog.open() != Window.OK) return false;
-				else userSetDBResource = rsDialog.getRetResourceDao();
+				userSetDBResource = getFileName();
+				if(userSetDBResource == null) return false;
 			}
 			
 			try {

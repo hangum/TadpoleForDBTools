@@ -34,8 +34,11 @@ var editorService = {
 	RE_NEW_TEXT  : 41,
 	reNewText: function(editor) {},
 	
-//	HELP_POPUP : 60,
-//	helpPopup: function(editor) {},
+	DOWNLOAD_SQL : 50,
+	downloadSQL: function(editor) {},
+	
+	HELP_POPUP : 60,
+	helpPopup: function(editor) {},
 	
 	SET_FOCUS : 999,
 	setTextFocus: function(editor) {}
@@ -118,11 +121,57 @@ function initEmbeddedEditor(){
 		
 		var annotationFactory = new mEditorFeatures.AnnotationFactory();		
 		var keyBindingFactory = function(editor, keyModeStack, undoStack, contentAssist) {
-			// empty key binding
+
+			// Create keybindings for generic editing
+			var genericBindings = new mEditorFeatures.TextActions(editor, undoStack);
+			keyModeStack.push(genericBindings);
+			
+			// create keybindings for source editing
+			var codeBindings = new mEditorFeatures.SourceCodeActions(editor, undoStack, contentAssist);
+			keyModeStack.push(codeBindings);
+			
+			// save(ctrl + s)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(83, true), "save");
+			editor.getTextView().setAction("save", function(){
+				editorService.saveS(editor);
+				return true;
+			});
+			
+			// execute query
+			// f5
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(116), "executeQuery");
+			
+			// ctrl + enter
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(13, true), "executeQuery");
+			editor.getTextView().setAction("executeQuery", function(){
+				editorService.executeQuery(editor);
+				return true;
+			});
+			
+			// to low case(ctrl + shift + y)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(89, true, true), "lowCaseText");
+			editor.getTextView().setAction("lowCaseText", function(){
+				editorService.lowCaseText(editor);
+				return true;
+			});
+			
+			// to upper case(ctrl + shift + x)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(88, true, true), "upperCaseText");
+			editor.getTextView().setAction("upperCaseText", function(){
+				editorService.upperCaseText(editor);
+				return true;
+			});			
+			
+			// 에디터 도움말(ctrl + shift + l)
+			editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding(76, true, true), "helpPopup");
+			editor.getTextView().setAction("helpPopup", function(){
+				editorService.helpPopup(editor);
+				return true;
+			});
 		};
+
 			
 		var statusReporter = function(message, isError) {
-			// empty status report
 		};
 		
 		editor = new mEditor.Editor({
@@ -159,7 +208,7 @@ function installWorkbenchHooks() {
 	
 	// set initialize content
 	setInitialContent = function(varExt, varCon, varAssistList) {
-		console.log(varExt + ":" + varCon)
+		//console.log(varExt + ":" + varCon)
 		try {
 			editor.setInput(varExt, null, varCon);
 
@@ -198,16 +247,15 @@ function installWorkbenchHooks() {
 		// This is a function created in Eclipse and registered with the page.
 		var result = editorServiceHandler(editorService.SAVE, editor.getContents());
 	
-//			if (result) {
-//				editor.setInput(null, null, null, true);
-//			}
+		if (result) {
+			editor.setInput(null, null, null, true);
+		}
 		
 		return result;
 	};
 	
 	// append query text
 	editorService.appendQueryText = function() {
-	
 		var sql = editorServiceHandler(editorService.APPEND_QUERY_TEXT, '');
 		
 		editor.appendQueryText(sql);
@@ -219,6 +267,26 @@ function installWorkbenchHooks() {
 		var sql = editorServiceHandler(editorService.RE_NEW_TEXT, '');
 		
 		editor.setText(sql);
+		editor.setTextFocus();
+	};
+	
+	// download sql 
+	editorService.downloadSQL = function() {
+		editorServiceHandler(editorService.DOWNLOAD_SQL, editor.getCaretOffsetAndContent());
+	};
+	
+	// to upper case text
+	editorService.upperCaseText = function() {
+		editor.upperCaseText();
+	};
+	
+	// to low case text
+	editorService.lowCaseText = function() {
+		editor.lowCaseText();
+	};
+
+	// text set focus
+	editorService.setTextFocus = function() {
 		editor.setTextFocus();
 	};
 	

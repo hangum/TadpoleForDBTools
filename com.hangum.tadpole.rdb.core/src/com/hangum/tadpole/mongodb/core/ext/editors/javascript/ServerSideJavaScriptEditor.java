@@ -43,7 +43,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
@@ -60,6 +59,7 @@ import com.hangum.tadpole.rdb.core.util.FindTadpoleViewerOrEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.util.RequestInfoUtils;
+import com.hangum.tadpole.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.util.download.DownloadUtils;
 import com.swtdesigner.ResourceManager;
@@ -81,7 +81,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	private MongoDBServerSideJavaScriptDAO javascriptDAO;
 	
 	/** save field */
-//	private boolean isFirstLoad = false;
+	private boolean isFirstLoad = false;
 	private boolean isDirty = false;
 	
 	private static final String URL = "orion/tadpole/editor/mongoDBEmbeddededitor.html"; //$NON-NLS-1$
@@ -126,6 +126,9 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		ToolBar toolBar = new ToolBar(compositeBody, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		// Shortcut prefix
+		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
+		
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
 		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
@@ -141,7 +144,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmExecute.setToolTipText(Messages.MainEditor_tltmExecute_toolTipText_1);
+		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, prefixOSShortcut));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb/mongo-executable.png"));
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -151,18 +154,6 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		});
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
-		
-//		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
-//		tltmSort.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/query_format.png"));
-//		tltmSort.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_FORMAT_FUNCTION);
-//			}
-//		});
-//		tltmSort.setToolTipText(Messages.MainEditor_4);
-//		
-//		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
 		tltmDownload.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/download_query.png"));
@@ -236,15 +227,11 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		registerServiceHandler();
 		tabFolder.setSelection(0);		
 	}
-
+	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if(javascriptDAO == null) {
-			MongoJSNameValidator fv = new MongoJSNameValidator(userDB);
-			InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", "Java Script Name", userDB.getDisplay_name(), fv); //$NON-NLS-1$
-			if (dlg.open() == Window.OK) {
-				save_id = fv.getFileName();
-			}
+			save_id = getJSName();
 		}
 	
 		if(!"".equals(save_id)) {
@@ -260,11 +247,20 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		}		
 	}
 	
-	public boolean performSaveS(String newContents) {
-		if(javascriptDAO != null) {
-			return performSave(newContents);
+	/**
+	 * new java script name
+	 * 
+	 * @return
+	 */
+	private String getJSName() {
+		MongoJSNameValidator fv = new MongoJSNameValidator(userDB);
+		
+		InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", "Java Script Name", userDB.getDisplay_name(), fv); //$NON-NLS-1$
+		if (dlg.open() == Window.OK) {
+			return fv.getFileName();
+		} else {
+			return "";
 		}
-		return false;
 	}
 	
 	/**
@@ -274,19 +270,25 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 */
 	public boolean performSave(String newContents) {
 		if(javascriptDAO == null) {
-			MongoDBServerSideJavaScriptDAO javaScriptDAO = new MongoDBServerSideJavaScriptDAO(save_id, newContents);
-			try {
-				MongoDBQuery.insertJavaScript(userDB, javaScriptDAO);
-				
-				setPartName(save_id);
-				setDirty(false);
-				
-			} catch(Exception e) {
-				logger.error("save javascript", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
-				
-				return false;
+			save_id = getJSName();
+	
+			if(!"".equals(save_id)) {
+				MongoDBServerSideJavaScriptDAO javaScriptDAO = new MongoDBServerSideJavaScriptDAO(save_id, newContents);
+				try {
+					MongoDBQuery.insertJavaScript(userDB, javaScriptDAO);
+					
+					setPartName(save_id);
+					setDirty(false);
+					
+					// explorer refresh합니다.
+					referExplorer();
+				} catch(Exception e) {
+					logger.error("save javascript", e); //$NON-NLS-1$
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+					
+					return false;
+				}
 			}
 		} else {
 			try {
@@ -294,8 +296,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 				setDirty(false);
 				
 				// explorer refresh합니다.
-				ExplorerViewer ev = FindTadpoleViewerOrEditor.getExplorerView(userDB);
-				if(ev != null) ev.refreshJS(true);
+				referExplorer();
 			} catch(Exception e) {
 				logger.error("save javascript", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -305,6 +306,16 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * refresh explorer
+	 * 
+	 */
+	private void referExplorer() {
+		// explorer refresh합니다.
+		ExplorerViewer ev = FindTadpoleViewerOrEditor.getExplorerView(userDB);
+		if(ev != null) ev.refreshJS(true);
 	}
 
 	@Override
@@ -319,9 +330,12 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		ServerSideJavaScriptEditorInput qei = (ServerSideJavaScriptEditorInput)input;
 		this.userDB = qei.getUserDB();
 		this.javascriptDAO = qei.getJavascriptDAO();
-		if(this.javascriptDAO != null) {
+		if(this.javascriptDAO == null) {
 			setPartName(qei.getName());
-		}
+		} else {
+			setPartName(javascriptDAO.getName());
+			isFirstLoad = true;
+		} 
 	}
 	
 	@Override
@@ -447,14 +461,14 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 * @param boolean1
 	 */
 	public void setDirty(Boolean boolean1) {
-//		if(!isFirstLoad) {
+		if(!isFirstLoad) {
 			if(isDirty != boolean1) {
 				isDirty = boolean1;
 				firePropertyChange(PROP_DIRTY);
 			}
-//		} else {
-//			isFirstLoad = false;			
-//		}		
+		}		
+		
+		isFirstLoad = false;
 	}
 
 	/**
