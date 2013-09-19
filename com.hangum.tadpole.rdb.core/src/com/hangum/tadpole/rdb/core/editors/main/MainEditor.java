@@ -94,6 +94,7 @@ import com.hangum.tadpole.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.dialogs.save.ResourceSaveDialog;
+import com.hangum.tadpole.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.editor.core.rdb.texteditor.EditorExtension;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
@@ -101,7 +102,6 @@ import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
-import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
@@ -269,7 +269,7 @@ public class MainEditor extends EditorExtension {
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.SQLite_DEFAULT ) {
+		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 			String fileName = new File(userDB.getDb()).getName();			
 			tltmConnectURL.setText("Connect [ " + fileName + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
@@ -1808,7 +1808,7 @@ public class MainEditor extends EditorExtension {
 	 */
 	public String getInitExt() {
 		String extension = "tadpole_edit"; //$NON-NLS-1$
-		DBDefine userDBDefine = DBDefine.getDBDefine(getUserDB().getDbms_types());
+		DBDefine userDBDefine = DBDefine.getDBDefine(getUserDB());
 		
 		if(userDBDefine == DBDefine.MYSQL_DEFAULT || userDBDefine == DBDefine.MARIADB_DEFAULT) {
 			extension += ".mysql"; //$NON-NLS-1$

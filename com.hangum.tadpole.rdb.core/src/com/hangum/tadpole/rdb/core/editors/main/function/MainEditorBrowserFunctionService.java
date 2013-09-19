@@ -16,8 +16,8 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
-import com.hangum.tadpole.rdb.core.dialog.editor.RDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.sql.format.SQLFormater;

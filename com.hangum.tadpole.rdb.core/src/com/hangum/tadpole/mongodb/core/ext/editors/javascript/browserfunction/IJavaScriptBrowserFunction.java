@@ -20,7 +20,6 @@ import com.hangum.tadpold.commons.libs.core.browser.TadpoleBrowserFunction;
  */
 public interface IJavaScriptBrowserFunction extends TadpoleBrowserFunction {
 	
-	
 	public static final int DIRTY_CHANGED 			= 1;
 //	public static final int GET_CONTENT_NAME 		= 5;
 	public static final int GET_INITIAL_CONTENT 	= 10;

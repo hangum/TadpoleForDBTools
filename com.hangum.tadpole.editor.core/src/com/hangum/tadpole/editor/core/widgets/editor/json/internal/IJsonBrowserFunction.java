@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.editor.core.widgets.editor;
+package com.hangum.tadpole.editor.core.widgets.editor.json.internal;
 
 /**
  * OrionHub Editor Browser function 
@@ -16,7 +16,7 @@ package com.hangum.tadpole.editor.core.widgets.editor;
  * @author hangum
  *
  */
-public interface IJavaScriptBrowserFunction {
+public interface IJsonBrowserFunction {
 	
 	/** 
 	 * Delimiter used on OrionHub Editor

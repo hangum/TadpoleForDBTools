@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.editor;
+package com.hangum.tadpole.editor.core.dialogs.help;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Shell;

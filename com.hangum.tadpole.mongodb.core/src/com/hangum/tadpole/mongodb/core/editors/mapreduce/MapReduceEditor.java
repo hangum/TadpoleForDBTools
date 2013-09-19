@@ -35,7 +35,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
@@ -72,15 +72,15 @@ public class MapReduceEditor extends EditorPart {
 	private UserDBDAO userDB;
 	private String initColName = "";
 	
-	private TadpoleOrionHubEditor textMap;
-	private TadpoleOrionHubEditor textReduce;
-	private TadpoleOrionHubEditor textFinalize;
+	private JsonTadpoleEditor textMap;
+	private JsonTadpoleEditor textReduce;
+	private JsonTadpoleEditor textFinalize;
 	
 	// output
 	private Combo comboOutputType;
-	private TadpoleOrionHubEditor textQuery;
+	private JsonTadpoleEditor textQuery;
 	private Text textLimit;
-	private TadpoleOrionHubEditor textSort;
+	private JsonTadpoleEditor textSort;
 	private Text textOutputTarget;
 	
 	private Button btnSharded;
@@ -128,7 +128,7 @@ public class MapReduceEditor extends EditorPart {
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
-		textMap = new TadpoleOrionHubEditor(grpMap, SWT.BORDER, "", strAssist);
+		textMap = new JsonTadpoleEditor(grpMap, SWT.BORDER, "", strAssist);
 		textMap.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpReduce = new Group(sashFormMRF, SWT.NONE);
@@ -140,7 +140,7 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpReduce.marginWidth = 1;
 		grpReduce.setLayout(gl_grpReduce);
 		
-		textReduce = new TadpoleOrionHubEditor(grpReduce, SWT.BORDER, "", strAssist);
+		textReduce = new JsonTadpoleEditor(grpReduce, SWT.BORDER, "", strAssist);
 		textReduce.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpFinalize = new Group(sashFormMRF, SWT.NONE);
@@ -152,7 +152,7 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpFinalize.marginWidth = 1;
 		grpFinalize.setLayout(gl_grpFinalize);
 		
-		textFinalize = new TadpoleOrionHubEditor(grpFinalize, SWT.BORDER, "", strAssist);
+		textFinalize = new JsonTadpoleEditor(grpFinalize, SWT.BORDER, "", strAssist);
 		textFinalize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		sashFormMRF.setWeights(new int[] {4, 4, 2});
@@ -181,14 +181,14 @@ public class MapReduceEditor extends EditorPart {
 		lblQuery.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblQuery.setText("Query");
 		
-		textQuery = new TadpoleOrionHubEditor(grpInput, SWT.BORDER, "", strAssist);
+		textQuery = new JsonTadpoleEditor(grpInput, SWT.BORDER, "", strAssist);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblSort = new Label(grpInput, SWT.NONE);
 		lblSort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSort.setText("Sort");
 		
-		textSort = new TadpoleOrionHubEditor(grpInput, SWT.BORDER, "", strAssist);
+		textSort = new JsonTadpoleEditor(grpInput, SWT.BORDER, "", strAssist);
 		textSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblLimit = new Label(grpInput, SWT.NONE);

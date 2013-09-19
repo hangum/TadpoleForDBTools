@@ -8,11 +8,13 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.editor.core.widgets.editor;
+package com.hangum.tadpole.editor.core.widgets.editor.json.internal;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
+
+import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 
 /**
  * query editor browser function
@@ -20,28 +22,22 @@ import org.eclipse.swt.browser.BrowserFunction;
  * @author hangum
  *
  */
-public class JavaScriptBrowserFunctionService extends BrowserFunction implements IJavaScriptBrowserFunction {
+public class JsonBrowserFunctionService extends BrowserFunction implements IJsonBrowserFunction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(JavaScriptBrowserFunctionService.class);
+	private static final Logger logger = Logger.getLogger(JsonBrowserFunctionService.class);
         
-	private TadpoleOrionHubEditor editor;
+	private JsonTadpoleEditor editor;
 
-	public JavaScriptBrowserFunctionService(Browser browser, String name, TadpoleOrionHubEditor editor) {
+	public JsonBrowserFunctionService(Browser browser, String name, JsonTadpoleEditor editor) {
 		super(browser, name);
 		this.editor = editor;
 	}
 	
 	@Override
 	public Object function(Object[] arguments) {
-//		super.function(arguments);
-//		
-//		if (arguments.length == 0 || !(arguments[0] instanceof Double)) {
-//			return null;
-//		}
-		int action = Integer.parseInt(arguments[0].toString());//((Double) arguments[0]).intValue();
-//		logger.debug("Java Script Browser function Action type is " + action);
+		int action = Integer.parseInt(arguments[0].toString());
 	
 		switch (action) {
 			case DIRTY_CHANGED:
@@ -97,7 +93,6 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	 * @return
 	 */
 	private Object doGetInitialContent(Object[] arguments) {
-//		if(logger.isDebugEnabled()) logger.debug(editor.getInputFileName() + "[doGetInitialContent]===>]" + editor.getInitContent() + "[end text]");
 		return editor.getInputFileName() + ".js" + ":ext:" + editor.getInitContent();
 	}
 	

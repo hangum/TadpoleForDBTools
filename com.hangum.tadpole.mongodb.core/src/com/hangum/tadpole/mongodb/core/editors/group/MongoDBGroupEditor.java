@@ -33,7 +33,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
@@ -61,11 +61,11 @@ public class MongoDBGroupEditor extends EditorPart {
 	/** initial collection name */
 	private String initColName;
 	private UserDBDAO userDB;
-	private TadpoleOrionHubEditor textKeys;
-	private TadpoleOrionHubEditor textQuery;
-	private TadpoleOrionHubEditor textInitialValue;
-	private TadpoleOrionHubEditor textReduceFunction;
-	private TadpoleOrionHubEditor textFinalizeFunction;
+	private JsonTadpoleEditor textKeys;
+	private JsonTadpoleEditor textQuery;
+	private JsonTadpoleEditor textInitialValue;
+	private JsonTadpoleEditor textReduceFunction;
+	private JsonTadpoleEditor textFinalizeFunction;
 
 	private MongodbResultComposite compositeResult ;
 	
@@ -126,7 +126,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
-		textKeys = new TadpoleOrionHubEditor(grpKeys, SWT.BORDER, "", strAssist);
+		textKeys = new JsonTadpoleEditor(grpKeys, SWT.BORDER, "", strAssist);
 		textKeys.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpQuery = new Group(compositeSearch, SWT.NONE);
@@ -140,7 +140,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		gl_grpQuery.marginWidth = 1;
 		grpQuery.setLayout(gl_grpQuery);
 		
-		textQuery = new TadpoleOrionHubEditor(grpQuery, SWT.BORDER, "", strAssist);
+		textQuery = new JsonTadpoleEditor(grpQuery, SWT.BORDER, "", strAssist);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpInitialValue = new Group(compositeSearch, SWT.NONE);
@@ -153,7 +153,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		gl_grpInitialValue.marginWidth = 1;
 		grpInitialValue.setLayout(gl_grpInitialValue);
 		
-		textInitialValue = new TadpoleOrionHubEditor(grpInitialValue, SWT.BORDER, "", strAssist);
+		textInitialValue = new JsonTadpoleEditor(grpInitialValue, SWT.BORDER, "", strAssist);
 		textInitialValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeFunction = new Composite(compositeMainSearch, SWT.NONE);
@@ -175,7 +175,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		grpReductJavascriptFunction.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpReductJavascriptFunction.setText("Reduce JavaScript Function");
 		
-		textReduceFunction = new TadpoleOrionHubEditor(grpReductJavascriptFunction, SWT.BORDER, "", strAssist);
+		textReduceFunction = new JsonTadpoleEditor(grpReductJavascriptFunction, SWT.BORDER, "", strAssist);
 		textReduceFunction.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpFinalizeJavascriptFunction = new Group(compositeFunction, SWT.NONE);
@@ -189,7 +189,7 @@ public class MongoDBGroupEditor extends EditorPart {
 		grpFinalizeJavascriptFunction.setText("Finalize JavaScript Function");
 		grpFinalizeJavascriptFunction.setBounds(0, 0, 70, 82);
 		
-		textFinalizeFunction = new TadpoleOrionHubEditor(grpFinalizeJavascriptFunction, SWT.BORDER, "", strAssist);
+		textFinalizeFunction = new JsonTadpoleEditor(grpFinalizeJavascriptFunction, SWT.BORDER, "", strAssist);
 		textFinalizeFunction.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBtn = new Composite(compositeMainSearch, SWT.NONE);

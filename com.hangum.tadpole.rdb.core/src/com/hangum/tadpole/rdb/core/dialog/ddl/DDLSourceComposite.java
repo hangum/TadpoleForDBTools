@@ -15,7 +15,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
+
 import org.eclipse.swt.widgets.Label;
 
 /**
@@ -27,7 +28,7 @@ import org.eclipse.swt.widgets.Label;
 public class DDLSourceComposite extends Composite {
 	
 	private Label labelTable;
-	private TadpoleOrionHubEditor ddlSource;
+	private JsonTadpoleEditor ddlSource;
 
 	/**
 	 * Create the composite.
@@ -51,7 +52,7 @@ public class DDLSourceComposite extends Composite {
 		labelTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		labelTable.setText(tableName);
 		
-		ddlSource = new TadpoleOrionHubEditor(compositeBasic, SWT.BORDER, initDDL, "");
+		ddlSource = new JsonTadpoleEditor(compositeBasic, SWT.BORDER, initDDL, "");
 		ddlSource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 	}
 	

@@ -16,8 +16,8 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
-import com.hangum.tadpole.rdb.core.dialog.editor.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.util.JSONUtil;
 
 /**
@@ -79,48 +79,9 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	}
 	
 	private Object doGetInitialContent(Object[] arguments) {
-//		if("".equals(editor.getInputJavaScriptName())) {
-//			return "mongojavascript.js"+ ":ext: ";
-//		}
 		return "mongojavascript.js" + ":ext:" + editor.getInputJavaScriptContent();
 	}
 	
-//	private Object doGetContentName(Object[] arguments) {
-//		if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MYSQL_DEFAULT) {
-//			return editor.getEditorInput().getName() + ".mysql";
-//		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.ORACLE_DEFAULT) {
-//			return editor.getEditorInput().getName() + ".oracle";
-//		} else if( DBDefine.getDBDefine( editor.getUserDB().getType() ) == DBDefine.MSSQL_DEFAULT) {
-//			return editor.getEditorInput().getName() + ".mssql";
-//		} else {
-//			return editor.getEditorInput().getName() + ".sqlite";
-//		}
-//	}
-//
-//	private boolean doStatusChanged(Object[] arguments) {
-//		if (arguments.length != 2 || !(arguments[1] instanceof String)) {
-//			return false;
-//		}
-//		
-//		String[] position = parsePosition((String) arguments[1]);
-//		editor.setPositionStatus(position[0] + CARET_QUERY_DELIMIT + position[1]);
-//		return true;
-//	}
-//	
-//	private String[] parsePosition(String message) {
-//        int start = message.indexOf("Line ") + "Line ".length();
-//        int end = message.indexOf(' ', start);
-//        String line = message.substring(start, end);
-//        start = message.indexOf("Col ") + "Col ".length();
-//        end = message.indexOf(' ', start);
-//        if(end == -1)
-//            end = message.length();
-//        String col = message.substring(start, end);
-//        return (new String[] {
-//            line, col
-//        });
-//    }
-//
 	private Object doSave(Object[] arguments) {
 		boolean result = false;
 		if (arguments.length == 2 && (arguments[1] instanceof String)) {
@@ -140,7 +101,7 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 		
 		return result;
 	}
-//
+
 	private Object doDirtyChanged(Object[] arguments) {
 		if (arguments.length == 2 && (arguments[1] instanceof Boolean)) {
 			editor.setDirty((Boolean) arguments[1]);
@@ -184,14 +145,7 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 			editor.downloadJavaScript(editor.getUserDB().getDisplay_name() + ".js",  queryStruct[1]);
 		}
 	}
-//	
-//	/**
-//	 * 쿼리 히스토리 페이지로 이동합니다.
-//	 */
-//	private void moveHistoryPage() {
-//		editor.selectHistoryPage();
-//	}
-//	
+
 	/**
 	 * help popup
 	 */

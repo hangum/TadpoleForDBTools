@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
@@ -54,7 +54,7 @@ public class NewDocumentDialog extends Dialog {
 	protected String collectionName;
 	
 	protected Text textName;
-	protected TadpoleOrionHubEditor textContent;
+	protected JsonTadpoleEditor textContent;
 
 	/**
 	 * Create the dialog.
@@ -95,7 +95,7 @@ public class NewDocumentDialog extends Dialog {
 		lblDataStructure.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblDataStructure.setText("JSON Type Document"); //$NON-NLS-1$
 		
-		textContent = new TadpoleOrionHubEditor(container, SWT.BORDER, "", "");		
+		textContent = new JsonTadpoleEditor(container, SWT.BORDER, "", "");		
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		textContent.setFocus();

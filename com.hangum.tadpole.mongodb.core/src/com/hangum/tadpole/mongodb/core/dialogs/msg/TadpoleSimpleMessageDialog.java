@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.util.JSONUtil;
 
@@ -33,7 +33,7 @@ import com.hangum.tadpole.util.JSONUtil;
  */
 public class TadpoleSimpleMessageDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(TadpoleSimpleMessageDialog.class);
-	private TadpoleOrionHubEditor tadpoleEditor;
+	private JsonTadpoleEditor tadpoleEditor;
 	
 	String title;
 	String content;
@@ -73,7 +73,7 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
-		tadpoleEditor = new TadpoleOrionHubEditor(compositeBody, SWT.BORDER, "", "");
+		tadpoleEditor = new JsonTadpoleEditor(compositeBody, SWT.BORDER, "", "");
 		tadpoleEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();

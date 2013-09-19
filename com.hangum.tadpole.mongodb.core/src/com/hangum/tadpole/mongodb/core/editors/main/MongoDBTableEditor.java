@@ -37,12 +37,13 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.editor.core.widgets.editor.TadpoleOrionHubEditor;
+import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.swtdesigner.SWTResourceManager;
 
@@ -72,9 +73,9 @@ public class MongoDBTableEditor extends EditorPart {
 	/** 쿼리 결과 출력 */
 	private MongodbResultComposite compositeResult ;
 
-	private TadpoleOrionHubEditor textBasicFind;
-	private TadpoleOrionHubEditor textBasicField;
-	private TadpoleOrionHubEditor textBasicSort;
+	private JsonTadpoleEditor textBasicFind;
+	private JsonTadpoleEditor textBasicField;
+	private JsonTadpoleEditor textBasicSort;
 	private Text textBasicSkip;
 	private Text textBasicLimit;
 	
@@ -126,19 +127,19 @@ public class MongoDBTableEditor extends EditorPart {
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
-		textBasicFind = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
+		textBasicFind = new JsonTadpoleEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
 		Label lblfield = new Label(compositeBasicHead, SWT.NONE);
 		lblfield.setText(Messages.MongoDBTableEditor_1);
 		
-		textBasicField = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
+		textBasicField = new JsonTadpoleEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblsort = new Label(compositeBasicHead, SWT.NONE);
 		lblsort.setText(Messages.MongoDBTableEditor_2);
 		
-		textBasicSort = new TadpoleOrionHubEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
+		textBasicSort = new JsonTadpoleEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBasicSearch = new Composite(compositeBasic, SWT.NONE);
@@ -215,6 +216,9 @@ public class MongoDBTableEditor extends EditorPart {
 		gd_label_2.widthHint = 10;
 		label_2.setLayoutData(gd_label_2);
 		
+//		// Shortcut prefix
+//		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
+		
 		Button btnBasicSearch = new Button(compositeBasicSearch, SWT.NONE);
 		btnBasicSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -222,7 +226,7 @@ public class MongoDBTableEditor extends EditorPart {
 				findBasic();
 			}
 		});
-		btnBasicSearch.setText(Messages.MongoDBTableEditor_5);
+		btnBasicSearch.setText(Messages.MongoDBTableEditor_5);//String.format(Messages.MongoDBTableEditor_5, prefixOSShortcut));
 		
 		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, initColName, true);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -249,7 +253,6 @@ public class MongoDBTableEditor extends EditorPart {
 //		findBasic();
 		compositeResult.find("", "", "", getCntSkip(), getCntLimit()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
-
 		textBasicFind.setFocus();
 	}
 	

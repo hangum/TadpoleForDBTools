@@ -45,6 +45,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -54,7 +55,6 @@ import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
-import com.hangum.tadpole.rdb.core.dialog.editor.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.rdb.core.util.FindTadpoleViewerOrEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;

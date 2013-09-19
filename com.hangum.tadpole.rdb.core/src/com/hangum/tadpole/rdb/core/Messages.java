@@ -207,6 +207,8 @@ public class Messages extends NLS {
 	public static String ObjectDeleteAction_9;
 	public static String ObjectModifyAction_2;
 	public static String ObjectMongodbReIndexAction_2;
+	public static String ObjectMongodbRenameAction_7;
+	public static String ObjectMongodbRenameAction_8;
 	public static String OpenDBRelationAction_1;
 	public static String OpenDBRelationAction_2;
 	public static String OpenQueryEditorAction_1;

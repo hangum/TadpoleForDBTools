@@ -24,6 +24,7 @@ import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 
 /**
@@ -38,7 +39,7 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 	 */
 	private static final Logger logger = Logger.getLogger(ObjectMongodbRenameAction.class);
 
-	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.rename";
+	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.rename"; //$NON-NLS-1$
 	
 	public ObjectMongodbRenameAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
@@ -52,13 +53,13 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 //			String originalName = this.sel.getFirstElement().toString();
 			TableDAO table = (TableDAO) this.sel.getFirstElement();
 			String originalName = table.getName();
-			String newName = "";
+			String newName = ""; //$NON-NLS-1$
 			
 			InputDialog inputDialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-						"Rename Collection", 
+						"Rename Collection",  //$NON-NLS-1$
 						"Enter new collection name", 
 						originalName, 
-						new LengthValidator(originalName)
+						new RenameValidator(originalName)
 					);
 			if(inputDialog.open() == Window.OK) {				
 				try {
@@ -70,7 +71,7 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 					logger.error("mongodb rename", e);
 					
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(null, "Error","Rename Collection", errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null, "Error","Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				
 			}
@@ -81,21 +82,21 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 /**
  * rename validattor
  */
-class LengthValidator implements IInputValidator {
-	String oldName = "";
+class RenameValidator implements IInputValidator {
+	String oldName = ""; //$NON-NLS-1$
 	
-	public LengthValidator(String oldName) {
+	public RenameValidator(String oldName) {
 		this.oldName = oldName;
 	}
 
 	public String isValid(String newText) {
 		if(oldName.equals(newText)) {
-			return "It is the same the name of the previous.";
+			return Messages.ObjectMongodbRenameAction_7;
 		}
 	    int len = newText.length();
 	
 	    // Determine if input is too short or too long
-	    if (len < 2) return "Too short";
+	    if (len < 2) return Messages.ObjectMongodbRenameAction_8;
 	
 	    return null;
 	}

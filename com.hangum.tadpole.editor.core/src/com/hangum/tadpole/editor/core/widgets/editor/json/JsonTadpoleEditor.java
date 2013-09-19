@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.editor.core.widgets.editor;
+package com.hangum.tadpole.editor.core.widgets.editor.json;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -21,6 +21,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
+import com.hangum.tadpole.editor.core.widgets.editor.json.internal.JsonBrowserFunctionService;
 
 /**
  * code editor
@@ -28,11 +29,11 @@ import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
  * @author hangum
  *
  */
-public class TadpoleOrionHubEditor extends Composite {
+public class JsonTadpoleEditor extends Composite {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TadpoleOrionHubEditor.class);
+	private static final Logger logger = Logger.getLogger(JsonTadpoleEditor.class);
 	
 	/** editor url resource */
 	private static final String EDITOR_URL = "orion/tadpole/editor/jsonEmbeddededitor.html";
@@ -53,7 +54,7 @@ public class TadpoleOrionHubEditor extends Composite {
 	/** 
 	 * browser.browserFunction의 서비스 헨들러 
 	 */
-	private JavaScriptBrowserFunctionService editorService;
+	private JsonBrowserFunctionService editorService;
 	
 	/**
 	 * Create the composite.
@@ -62,7 +63,7 @@ public class TadpoleOrionHubEditor extends Composite {
 	 * @param initContent
 	 * @param initAssist
 	 */
-	public TadpoleOrionHubEditor(Composite parent, int style, String initContent, String initAssist) {
+	public JsonTadpoleEditor(Composite parent, int style, String initContent, String initAssist) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 1;
@@ -153,7 +154,7 @@ public class TadpoleOrionHubEditor extends Composite {
 	public String getText() {
 		checkWidget();
 		try {			
-			Object obj = browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);					
+			Object obj = browserEvaluate(JsonBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);					
 			return obj.toString();
 		} catch(Exception e) {
 			logger.error("getText error", e);
@@ -172,7 +173,7 @@ public class TadpoleOrionHubEditor extends Composite {
 		checkWidget();
 		try {
 			this.initContent = text;
-			browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_RE_NEW_TEXT);
+			browserEvaluate(JsonBrowserFunctionService.JAVA_SCRIPT_RE_NEW_TEXT);
 		} catch(Exception e) {
 			
 			logger.error("setText TadpoleEditor error" + e.getMessage() + "\r\n[start]" + this.initContent + "\r\n[end]");
@@ -183,7 +184,7 @@ public class TadpoleOrionHubEditor extends Composite {
 	 * register browser function
 	 */
 	private void registerBrowserFunctions() {
-		editorService = new JavaScriptBrowserFunctionService(browserOrionEditor, JavaScriptBrowserFunctionService.EDITOR_SERVICE_HANDLER, this);
+		editorService = new JsonBrowserFunctionService(browserOrionEditor, JsonBrowserFunctionService.EDITOR_SERVICE_HANDLER, this);
 	}
 
 	/**
