@@ -54,7 +54,12 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 			String originalName = table.getName();
 			String newName = "";
 			
-			InputDialog inputDialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Rename Collection", "Enter new collection name", originalName, new LengthValidator());
+			InputDialog inputDialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+						"Rename Collection", 
+						"Enter new collection name", 
+						originalName, 
+						new LengthValidator(originalName)
+					);
 			if(inputDialog.open() == Window.OK) {				
 				try {
 					MongoDBQuery.renameCollection(userDB, originalName, inputDialog.getValue());
@@ -77,13 +82,21 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
  * rename validattor
  */
 class LengthValidator implements IInputValidator {
+	String oldName = "";
+	
+	public LengthValidator(String oldName) {
+		this.oldName = oldName;
+	}
 
 	public String isValid(String newText) {
-    int len = newText.length();
-
-    // Determine if input is too short or too long
-    if (len < 2) return "Too short";
-
-    return null;
-  }
+		if(oldName.equals(newText)) {
+			return "It is the same the name of the previous.";
+		}
+	    int len = newText.length();
+	
+	    // Determine if input is too short or too long
+	    if (len < 2) return "Too short";
+	
+	    return null;
+	}
 }
