@@ -105,7 +105,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
 			// os타입별 기본 디렉토리를서정합니다.
-			String defaultDir = System.getProperty("user.home") + File.separator + "tadpole-test.db";
+			String defaultDir = System.getProperty("user.home") + File.separator + "Chinook_Sqlite.sqlite";
 			textFile.setText(defaultDir);
 		}
 		
