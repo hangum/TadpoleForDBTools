@@ -16,11 +16,12 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 
 /**
  * application lock
  * 
- * referece code : http://fresh2l.com/en/blog/2011/01/08/howto-run-only-single-java-application-instance
+ * referecne code : http://fresh2l.com/en/blog/2011/01/08/howto-run-only-single-java-application-instance
  * 
  * @author hangum
  *
@@ -49,14 +50,14 @@ public class ApplicationLock {
 	 */
 	private ApplicationLock(String key) throws Exception {
 		try {
-			String tmp_dir = System.getProperty("java.io.tmpdir");
-			if (!tmp_dir.endsWith(System.getProperty("file.separator"))) {
-				tmp_dir += System.getProperty("file.separator");
+			String tmp_dir = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/temp/";
+			File tmpDir = new File(tmp_dir);
+			if(!tmpDir.isDirectory()) {
+				tmpDir.mkdirs();
 			}
 			
 			if(logger.isDebugEnabled()) {
-				logger.debug("[java.io.tmpdir]" + System.getProperty("java.io.tmpdir"));
-				logger.debug("[file.separator]" + System.getProperty("file.separator"));
+				logger.debug("Application temp dir is " + tmp_dir);
 			}
 	
 			// Acquire MD5
@@ -80,7 +81,7 @@ public class ApplicationLock {
 	
 			lock_stream = new FileOutputStream(lock_file);
 	
-			String f_content = "Java AppLock Object\r\nLocked by key: " + key 	+ "\r\n";
+			String f_content = "Tadpole DB Hub Application \r\nLocked by key: " + key 	+ "\r\n";
 			lock_stream.write(f_content.getBytes());
 	
 			lock_channel = lock_stream.getChannel();
