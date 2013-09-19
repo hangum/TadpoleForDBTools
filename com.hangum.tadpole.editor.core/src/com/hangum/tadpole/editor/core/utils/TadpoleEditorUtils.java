@@ -31,12 +31,13 @@ public class TadpoleEditorUtils {
 	 * @return
 	 */
 	public static String getGrantText(String initContent) {
-		String strInitContent = initContent;
+		if(null == initContent | "".equals(initContent)) return "";
 		
+		String strInitContent = initContent;
 		try {
-			strInitContent = StringUtils.replace(initContent, PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
+			strInitContent = StringUtils.replace(initContent, "\r\n", "\\n");
+			strInitContent = StringUtils.replace(strInitContent, PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
 			strInitContent = StringUtils.replace(strInitContent, "\"", "'");
-			
 		} catch(Exception e) {
 			logger.error("Tadpole Editor grant utils", e);
 		}
