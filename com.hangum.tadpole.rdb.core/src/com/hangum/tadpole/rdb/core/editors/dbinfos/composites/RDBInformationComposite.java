@@ -29,6 +29,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.hangum.tadpold.commons.libs.core.dao.KeyValueDAO;
 import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
  * RDB 디비 summary 정보를 출력하는 composite.
@@ -87,15 +89,13 @@ public class RDBInformationComposite extends Composite {
 		listInfo.add(new KeyValueDAO("Group Name", 		userDB.getGroup_name()));
 		listInfo.add(new KeyValueDAO("Display Name", 	userDB.getDisplay_name()));
 		
-		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getUrl()));
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost() + "/" + userDB.getPort()));
+		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getShowUrl(SessionManager.getRepresentRole())));
+		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
+			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getShowHost(SessionManager.getRepresentRole()) + "/" + userDB.getShowPort(SessionManager.getRepresentRole())));
 		}
-		
-		listInfo.add(new KeyValueDAO("Database", 		userDB.getDb()));
-		
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers()));
+		listInfo.add(new KeyValueDAO("Database", 		userDB.getShowDb(SessionManager.getRepresentRole())));
+		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
+			listInfo.add(new KeyValueDAO("User",	 		userDB.getShowUsers(SessionManager.getRepresentRole())));
 		}
 		
 		listInfo.add(new KeyValueDAO("Read Only", 		userDB.getIs_readOnlyConnect()));
@@ -104,9 +104,8 @@ public class RDBInformationComposite extends Composite {
 			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include()));
 			listInfo.add(new KeyValueDAO("\tExclude Filter",	userDB.getTable_filter_exclude()));
 		}
-		
 		// 몽고디비는 없으므로.. 
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 			listInfo.add(new KeyValueDAO("Auto Commit",		userDB.getIs_autocommit()));
 			listInfo.add(new KeyValueDAO("Profile", 		userDB.getIs_profile()));
 			listInfo.add(new KeyValueDAO("Select문 이외 문자 실행시 묻기", 	userDB.getQuestion_dml()));

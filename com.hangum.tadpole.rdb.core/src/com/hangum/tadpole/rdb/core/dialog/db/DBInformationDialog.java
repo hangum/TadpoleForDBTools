@@ -115,7 +115,7 @@ public class DBInformationDialog extends Dialog {
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText(Messages.DBInformationDialog_4);
 		
-		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB.getGroup_seq()), userDB)) {
+		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {//SessionManager.getRoleType(userDB.getGroup_seq()), userDB)) {
 			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
 			lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			lblNameValue.setText(SessionManager.getName());

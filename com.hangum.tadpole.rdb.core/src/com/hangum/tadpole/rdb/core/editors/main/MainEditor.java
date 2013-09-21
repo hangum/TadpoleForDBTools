@@ -268,13 +268,19 @@ public class MainEditor extends EditorExtension {
 		
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
-		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
-		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
-			String fileName = new File(userDB.getDb()).getName();			
-			tltmConnectURL.setText("Connect [ " + fileName + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
+		tltmConnectURL.setToolTipText("Connection Information"); //$NON-NLS-1$
+		
+		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+				String fileName = new File(userDB.getDb()).getName();			
+				tltmConnectURL.setText("Connect [ " + fileName + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getUsers() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}	
 		} else {
-			tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getUsers() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			tltmConnectURL.setText("Connect Information"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+		
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
