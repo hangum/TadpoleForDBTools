@@ -58,6 +58,7 @@ import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.util.FindTadpoleViewerOrEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 import com.hangum.tadpole.util.RequestInfoUtils;
 import com.hangum.tadpole.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.util.download.DownloadServiceHandler;
@@ -132,7 +133,12 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
 		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
-		tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getDb() + " ]"); //$NON-NLS-1$		
+		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+			tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getDb() + " ]"); //$NON-NLS-1$
+		} else {
+			tltmConnectURL.setText("Connect Information"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -487,17 +493,17 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			EvalInputDialog dialog = new EvalInputDialog(getSite().getShell(), intArgumentCount);
 			if(Dialog.OK == dialog.open()) {
 				arryArgs = dialog.getInputObject();
+				
+				try {
+					Object objResult = MongoDBQuery.executeEval(getUserDB(), strJavaScript, arryArgs);			
+					textResultJavaScript.setText(objResult == null?"":objResult.toString());
+				} catch (Exception e) {
+					textResultJavaScript.setText("");
+					logger.error("execute javascript", e); //$NON-NLS-1$
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+				}
 			}
-		}
-		
-		try {
-			Object objResult = MongoDBQuery.executeEval(getUserDB(), strJavaScript, arryArgs);			
-			textResultJavaScript.setText(objResult == null?"":objResult.toString());
-		} catch (Exception e) {
-			textResultJavaScript.setText("");
-			logger.error("execute javascript", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
 		}
 				
 	}
