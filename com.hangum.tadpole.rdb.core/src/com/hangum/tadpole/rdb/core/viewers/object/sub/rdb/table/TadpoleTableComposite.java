@@ -387,7 +387,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
 					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-						manager.add(creatAction_Table);
+						if(DBDefine.getDBDefine(userDB) != DBDefine.HIVE_DEFAULT) manager.add(creatAction_Table);
 						manager.add(deleteAction_Table);
 					}					
 					manager.add(refreshAction_Table);

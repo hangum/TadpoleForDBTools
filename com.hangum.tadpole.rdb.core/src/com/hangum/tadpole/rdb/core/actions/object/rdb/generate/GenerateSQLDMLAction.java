@@ -14,9 +14,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -25,10 +22,8 @@ import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.dialog.dml.GenerateStatmentDMLDialog;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
  * generate sql dml statement     
@@ -36,7 +31,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  * @author hangum
  *
  */
-public class GenerateSQLDMLAction extends AbstractObjectAction {
+public class GenerateSQLDMLAction extends GenerateSQLSelectAction {
 	/**
 	 * Logger for this class
 	 */
@@ -44,12 +39,7 @@ public class GenerateSQLDMLAction extends AbstractObjectAction {
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateDMLtAction"; //$NON-NLS-1$
 	
 	public GenerateSQLDMLAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
-		super(window, actionType);
-	
-		setId(ID + actionType.toString());
-		setText(Messages.GenerateSQLSelectAction_1 + title);
-		
-		window.getSelectionService().addSelectionListener(this);
+		super(window, actionType, title);
 	}
 	
 	@Override
