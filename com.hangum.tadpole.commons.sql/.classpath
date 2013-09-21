@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/driver/cubrid/JDBC-9.1.0.0212-cubrid.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mssql/jtds-1.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mariadb/mariadb-java-client-1.1.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-java-driver-2.11.3.jar"/>
@@ -7,7 +8,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/driver/postgreSQL/postgresql-9.1-902.jdbc4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mysql/mysql-connector-java-5.1.22-bin.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/cubrid/JDBC-8.4.1.2032-cubrid.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-dbcp-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-pool-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/ibatis-2.3.4.726.jar" sourcepath="C:/Documents and Settings/Jang/바탕 화면/src/ibatis-src.zip"/>

@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.dao.ManagerListDTO;
+import com.hangum.tadpole.system.permission.PermissionChecker;
 
 /**
  * <pre>
@@ -46,13 +47,36 @@ public class UserDBDAO {
     
 	protected String dbms_types;
 	protected String url;
+	public String getShowUrl(String userType) {
+		return PermissionChecker.isShow(userType)?getUrl():"jdbc:*************************";
+	}
+	
 	protected String db;
+	public String getShowDb(String userType) {
+		return PermissionChecker.isShow(userType)?getDb():"********";
+	}
 	protected String display_name;
 	protected String host;
+	public String getShowHost(String userType) {
+		return PermissionChecker.isShow(userType)?getHost():"***.***.***.***";
+	}
+	
 	protected String port;
+	public String getShowPort(String userType) {
+		return PermissionChecker.isShow(userType)?getPort():"****";
+	}
+	
 	protected String locale;
 	protected String passwd;
+	public String getShowPasswd(String userType) {
+		return PermissionChecker.isShow(userType)?getPasswd():"********";
+	}
+	
 	protected String users;
+	public String getShowUsers(String userType) {
+		return PermissionChecker.isShow(userType)?getUsers():"********";
+	}
+	
 	protected Date create_time;
 	protected String delYn;
 	
@@ -145,7 +169,7 @@ public class UserDBDAO {
 		try {
 			urlDecrypt = CipherManager.getInstance().decryption(urlDecrypt);
 		} catch(Exception e) {
-			// ignor exception
+			// ignore exception
 		}
 		
 		return urlDecrypt;
@@ -168,7 +192,7 @@ public class UserDBDAO {
 		try {
 			hostDecrypt = CipherManager.getInstance().decryption(hostDecrypt);
 		} catch(Exception e) {
-			// ignor exception
+			// ignore exception
 		}
 		
 		return hostDecrypt;
@@ -183,7 +207,7 @@ public class UserDBDAO {
 		try {
 			portDecrypt = CipherManager.getInstance().decryption(portDecrypt);
 		} catch(Exception e) {
-			// ignor exception
+			// ignore exception
 		}
 		
 		return portDecrypt;
@@ -210,7 +234,7 @@ public class UserDBDAO {
 		try {
 			passwdDecrypt = CipherManager.getInstance().decryption(passwdDecrypt);
 		} catch(Exception e) {
-			// ignor exception
+			// ignore exception
 		}
 		
 		return passwdDecrypt;
@@ -272,7 +296,7 @@ public class UserDBDAO {
 		try {
 			dbDecrypt = CipherManager.getInstance().decryption(dbDecrypt);
 		} catch(Exception e) {
-			// ignor exception
+			// ignore exception
 		}
 		
 		return dbDecrypt;
@@ -287,7 +311,7 @@ public class UserDBDAO {
 		try {
 			userDecrypt = CipherManager.getInstance().decryption(userDecrypt);
 		} catch(Exception e) {
-			// ignor exception
+			// ignore exception
 		}
 		
 		return userDecrypt;

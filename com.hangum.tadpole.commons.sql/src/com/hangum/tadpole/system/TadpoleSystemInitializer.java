@@ -18,6 +18,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
@@ -85,7 +87,7 @@ public class TadpoleSystemInitializer {
 		// 로컬 디비를 사용 할 경우.
 		if (!ApplicationArgumentUtils.isDBServer()) {
 			if (!new File(DB_FILE_LOCATION).exists()) {
-				new File(DB_FILE_LOCATION).mkdirs();
+				boolean bool = new File(DB_FILE_LOCATION).mkdirs();
 			}
 			if (logger.isDebugEnabled()) logger.debug(DB_FILE_LOCATION + DB_NAME);
 
@@ -124,10 +126,19 @@ public class TadpoleSystemInitializer {
 	 * @throws Exception
 	 */
 	public static boolean initSystem() throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List isUserTable = sqlClient.queryForList("isUserTable"); //$NON-NLS-1$
-
-		if (isUserTable.size() == 0) {
+		boolean isInitialize = false;
+		
+		if (!ApplicationArgumentUtils.isDBServer()) {
+			if(new File(DB_FILE_LOCATION + DB_NAME).canRead()) {
+				isInitialize = true;
+			}
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+			List listUserTable = sqlClient.queryForList("isUserTable"); //$NON-NLS-1$
+			isInitialize = listUserTable.size() == 0?false:true; 
+		}
+		
+		if (!isInitialize) {
 			createSystemTable();
 			insertInitialData();
 			
@@ -136,7 +147,6 @@ public class TadpoleSystemInitializer {
 			logger.info(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION + " start...");
 			return systemCheck();
 		}
-		
 	}
 
 	/**
@@ -306,7 +316,7 @@ public class TadpoleSystemInitializer {
 					}
 			}
 
-		}
+		} // is local db?
 	}
 
 }

@@ -293,7 +293,7 @@ public class SessionManager {
 			HttpSession sStore = RWT.getRequest().getSession();
 			sStore.invalidate();
 		} catch(Exception e) {
-			// ignor exception
+			// ignore exception
 		}
 	}
 	

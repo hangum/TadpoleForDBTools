@@ -145,14 +145,14 @@ public enum DBDefine {
 			
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
 			
-			case MSSQL_DEFAULT:		return "jdbc:jtds:sqlserver://%s:%s/%s";
+			case MSSQL_DEFAULT:		
 			case MSSQL_8_LE_DEFAULT: return "jdbc:jtds:sqlserver://%s:%s/%s";
 			
 			case MYSQL_DEFAULT:		return "jdbc:mysql://%s:%s/%s";
 			case MARIADB_DEFAULT:	return "jdbc:mariadb://%s:%s/%s";
 			
 			case SQLite_DEFAULT:	return "jdbc:sqlite:/%s";
-			case CUBRID_DEFAULT:	return "jdbc:CUBRID:%s:%s:%s:::";
+			case CUBRID_DEFAULT:	return "jdbc:cubrid:%s:%s:%s:::";
 			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
 			
 			/** http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html */
