@@ -12,6 +12,7 @@ package com.hangum.tadpole.system.internal.migration;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.sql.define.DBDefine;
 import com.hangum.tadpole.system.TadpoleSystemQuery;
 import com.hangum.tadpole.system.internal.migration.utils.SystemMigrationUtils;
 
@@ -33,7 +34,7 @@ public class SystemMigration100to111 extends SystemMigration {
 	public void migration(String major_version, String sub_version) throws Exception {
 		try {
 			// posgre sql일때 type을 바꾸었습니다.
-			String strQuery = "UPDATE user_db SET dbms_types = 'PostgreSQL' WHERE dbms_types = 'postgre'";
+			String strQuery = "UPDATE user_db SET dbms_types = " + DBDefine.POSTGRE_DEFAULT.getDBToString() + " WHERE dbms_types = 'postgre'";
 			SystemMigrationUtils.runSQLExecuteBatch(strQuery);
 			
 			// 시스템 버전 정보를 수정해 줍니다.
