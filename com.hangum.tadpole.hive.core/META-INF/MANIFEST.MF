@@ -17,6 +17,6 @@ Bundle-ClassPath: .,
  libs/driver/hive/hadoop-core-1.0.3.jar,
  libs/commons-logging-1.0.4.jar,
  libs/slf4j/slf4j-api-1.6.1.jar
-Import-Package: javax.servlet;version="2.6.0",
- javax.servlet.http;version="2.6.0"
+Import-Package: javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0"
 Export-Package: org.apache.hadoop.hive.jdbc
