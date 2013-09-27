@@ -404,6 +404,25 @@ public class MongoDBQuery {
 		DBCollection collection = findCollection(userDB, originalName);
 		collection.rename(newName, true);
 	}
+	
+	/**
+	 * coll stats
+	 * 
+	 * @return
+	 * @param userDB
+	 * @param colName
+	 * @throws Exception
+	 */
+	public static String getCollStats(UserDBDAO userDB, String colName) throws Exception {
+		DBCollection collection = findCollection(userDB, colName);
+		
+		CommandResult cr = collection.getStats();
+		if(cr.ok()) {
+			return cr.toString();
+		} else {
+			throw cr.getException();
+		}
+	}
 
 	/**
 	 * reIndex collection

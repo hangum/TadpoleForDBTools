@@ -43,7 +43,6 @@ import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.util.TadpoleWidgetUtils;
 import com.swtdesigner.SWTResourceManager;
 
