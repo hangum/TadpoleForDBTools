@@ -408,9 +408,9 @@ public class MongoDBQuery {
 	/**
 	 * coll stats
 	 * 
-	 * @return
 	 * @param userDB
 	 * @param colName
+	 * @return
 	 * @throws Exception
 	 */
 	public static String getCollStats(UserDBDAO userDB, String colName) throws Exception {
@@ -422,6 +422,32 @@ public class MongoDBQuery {
 		} else {
 			throw cr.getException();
 		}
+	}
+	
+	/**
+	 * coll compact
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @param force
+	 * @param paddingFactor
+	 * @param paddingBytes
+	 * @return
+	 * @throws Exception
+	 */
+	public static String collCompact(UserDBDAO userDB, String colName, boolean isForct, int paddingFactor, int paddingBytes) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		
+		DBObject queryObj = new BasicDBObject("compact", colName );
+		if(paddingFactor > 0) queryObj.put("paddingFactor", paddingFactor);
+		if(paddingBytes > 0) queryObj.put("paddingBytes", paddingBytes);
+		
+		CommandResult cr = mongoDB.command(queryObj);
+		
+		if(!cr.ok()) throw cr.getException();
+		if(logger.isDebugEnabled()) logger.debug("[compact] complements" + cr.toString());
+		
+		return cr.toString();
 	}
 
 	/**

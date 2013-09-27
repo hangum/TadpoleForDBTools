@@ -30,15 +30,15 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
  * @author hangum
  *
  */
-public class ObjectMongodbCollStates extends AbstractObjectAction {
+public class ObjectMongodbCollStatesAction extends AbstractObjectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ObjectMongodbCollStates.class);
+	private static final Logger logger = Logger.getLogger(ObjectMongodbCollStatesAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.collection.stats";
 	
-	public ObjectMongodbCollStates(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public ObjectMongodbCollStatesAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);

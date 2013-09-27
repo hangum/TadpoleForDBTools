@@ -62,7 +62,8 @@ import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollStates;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollCompactAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollStatesAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbGroupAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbMapReduceAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbReIndexAction;
@@ -114,7 +115,9 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private ObjectMongodbReIndexAction 	reIndexColAction;
 	private ObjectMongodbMapReduceAction mapReduceAction;
 	private ObjectMongodbGroupAction 	groupAction;
-	private ObjectMongodbCollStates		collStatsAction;
+	private ObjectMongodbCollStatesAction		collStatsAction;
+	private ObjectMongodbCollCompactAction		collCompactAction;
+	
 	
 	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(partSite, tabFolderObject, userDB);
@@ -300,7 +303,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		mapReduceAction 	= new ObjectMongodbMapReduceAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "MapReduce"); //$NON-NLS-1$
 		groupAction			= new ObjectMongodbGroupAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Group"); //$NON-NLS-1$
 		
-		collStatsAction 	= new ObjectMongodbCollStates(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection stats"); //$NON-NLS-1$
+		collStatsAction 	= new ObjectMongodbCollStatesAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection stats"); //$NON-NLS-1$
+		collCompactAction   = new ObjectMongodbCollCompactAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection compact"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -321,6 +325,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					
 					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(collCompactAction);
 						manager.add(renameColAction);
 						manager.add(reIndexColAction);
 					}
@@ -349,6 +354,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		
 		collStatsAction.setUserDB(getUserDB());
 		
+		collCompactAction.setUserDB(getUserDB());
 		renameColAction.setUserDB(getUserDB());
 		reIndexColAction.setUserDB(getUserDB());
 		mapReduceAction.setUserDB(getUserDB());
