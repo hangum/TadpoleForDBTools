@@ -137,21 +137,24 @@ public class CollectionCompactDialog extends Dialog {
 			textPaddingBytes.setFocus();
 			return;
 		}
-		
-		try {
-			String retMsg = MongoDBQuery.collCompact(userDB, 
-					collName, 
-					btnForce.getSelection(), 
-					NumberUtils.createInteger(textPaddingFactor.getText()), 
-					NumberUtils.createInteger(textPaddingBytes.getText()));
-			
-			MessageDialog.openInformation(null, "Successful", "Compact success");
-		} catch (Exception e) {
-			logger.error("mongodb compact" + collName, e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Collection compact Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-			
-			return;
+
+		if(MessageDialog.openConfirm(null, "Question?", "Are you sure you want to run this command?  It can potentially lock the db for a long time.")) {
+			try {
+				String retMsg = MongoDBQuery.collCompact(userDB, 
+						collName, 
+						btnForce.getSelection(), 
+						NumberUtils.createInteger(textPaddingFactor.getText()), 
+						NumberUtils.createInteger(textPaddingBytes.getText()));
+				
+				MessageDialog.openInformation(null, "Successful", "Compact success");
+					
+			} catch (Exception e) {
+				logger.error("mongodb compact" + collName, e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "Collection compact Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				
+				return;
+			}
 		}
 		
 		super.okPressed();

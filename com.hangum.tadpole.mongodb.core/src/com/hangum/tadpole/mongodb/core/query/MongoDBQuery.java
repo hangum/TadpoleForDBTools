@@ -425,7 +425,7 @@ public class MongoDBQuery {
 	}
 	
 	/**
-	 * coll compact
+	 * collection compact
 	 * 
 	 * @param userDB
 	 * @param colName

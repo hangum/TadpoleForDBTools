@@ -43,14 +43,12 @@ public class ObjectMongodbCollCompactAction extends AbstractObjectAction {
 	@Override
 	public void run() {
 		if(null != this.sel) {
-			if(MessageDialog.openConfirm(null, "Question?", "Are you sure you want to run this command?  It can potentially lock the db for a long time.")) {
-				TableDAO collDAO = (TableDAO)this.sel.getFirstElement();
-				CollectionCompactDialog dialog = new CollectionCompactDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-										getUserDB(), 
-										collDAO.getName()
-									);
-				dialog.open();
-			}
+			TableDAO collDAO = (TableDAO)this.sel.getFirstElement();
+			CollectionCompactDialog dialog = new CollectionCompactDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+									getUserDB(), 
+									collDAO.getName()
+								);
+			dialog.open();
 		}		
 	}
 	
