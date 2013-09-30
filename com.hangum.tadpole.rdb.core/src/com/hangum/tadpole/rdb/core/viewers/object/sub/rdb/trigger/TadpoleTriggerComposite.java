@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
 import com.hangum.tadpole.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -188,6 +189,8 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 
 			triggerTableViewer.setInput(showTrigger);
 			triggerTableViewer.refresh();
+			
+			TableUtil.packTable(triggerTableViewer.getTable());
 
 		} catch (Exception e) {
 			logger.error("showTrigger refresh", e); //$NON-NLS-1$

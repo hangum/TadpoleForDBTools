@@ -292,7 +292,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 			viewListViewer.setInput(showViews);
 			viewListViewer.refresh();
-
+			
+			TableUtil.packTable(viewListViewer.getTable());
 		} catch (Exception e) {
 			logger.error("view refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

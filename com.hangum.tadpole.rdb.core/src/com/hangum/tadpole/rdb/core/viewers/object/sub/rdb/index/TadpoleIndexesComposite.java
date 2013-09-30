@@ -306,6 +306,8 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 
 			indexTableViewer.setInput(listIndexes);
 			indexTableViewer.refresh();
+			
+			TableUtil.packTable(indexTableViewer.getTable());
 
 		} catch (Exception e) {
 			logger.error("index refresh", e); //$NON-NLS-1$

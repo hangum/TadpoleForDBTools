@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
+import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
 import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -190,6 +191,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 
 			functionTableViewer.setInput(showFunction);
 			functionTableViewer.refresh();
+			
+			TableUtil.packTable(functionTableViewer.getTable());
 
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$

@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
 import com.hangum.tadpole.commons.sql.util.tables.TreeUtil;
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
@@ -384,7 +385,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			
 			tableListViewer.setInput(showTables);
 			tableListViewer.refresh();
-			
+			TableUtil.packTable(tableListViewer.getTable());
 			return;
 		}
 
@@ -420,10 +421,12 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 						if(jobEvent.getResult().isOK()) {
 							tableListViewer.setInput(showTables);
 							tableListViewer.refresh();
+							TableUtil.packTable(tableListViewer.getTable());
 						} else {
 							if (showTables != null) showTables.clear();
 							tableListViewer.setInput(showTables);
 							tableListViewer.refresh();
+							TableUtil.packTable(tableListViewer.getTable());
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
