@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.sql.util.tables.TreeUtil;
 import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.dao.mysql.TableDAO;
 import com.hangum.tadpole.dao.system.UserDBDAO;
@@ -188,6 +189,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 
 					treeColumnViewer.setInput(showTableColumns);
 					treeColumnViewer.refresh();
+					
+					TreeUtil.packTree(treeColumnViewer.getTree());
 
 				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$

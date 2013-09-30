@@ -12,15 +12,20 @@ package com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.util.ImageUtils;
 import com.mongodb.BasicDBList;
 import com.mongodb.CommandResult;
 
@@ -38,6 +43,8 @@ public class ShardingComposite extends Composite {
 	
 	private UserDBDAO userDB;
 	private BasicDBList shards;
+	
+	private FindOneDetailComposite compositeShardList;
 
 	/**
 	 * Create the composite.
@@ -64,6 +71,29 @@ public class ShardingComposite extends Composite {
 		gl_compositeServerStatus.marginWidth = 1;
 		compositeServerStatus.setLayout(gl_compositeServerStatus);
 		
+		Composite composite = new Composite(compositeServerStatus, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.verticalSpacing = 1;
+		gl_composite.horizontalSpacing = 1;
+		gl_composite.marginHeight = 1;
+		gl_composite.marginWidth = 1;
+		composite.setLayout(gl_composite);
+		
+		ToolBar toolBar = new ToolBar(composite, SWT.FLAT | SWT.RIGHT);
+		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		toolBar.setBounds(0, 0, 87, 20);
+		
+		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initData();
+			}
+		});
+		tltmRefresh.setToolTipText(Messages.CollectionInformationComposite_tltmRefresh_text);
+		
 		Group grpReplicaSet = new Group(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpReplicaSet = new GridLayout(1, false);
 		gl_grpReplicaSet.verticalSpacing = 0;
@@ -81,19 +111,32 @@ public class ShardingComposite extends Composite {
 			logger.error("listShards", e); //$NON-NLS-1$
 		}
 	    
-		Composite compositeLocalLocks = new FindOneDetailComposite(grpReplicaSet, Messages.ShardingComposite_4, shards, false);
-		compositeLocalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeShardList = new FindOneDetailComposite(grpReplicaSet, Messages.ShardingComposite_4, shards, false);
+		compositeShardList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeLocalLocks = new GridLayout(1, false);
 		gl_compositeLocalLocks.verticalSpacing = 2;
 		gl_compositeLocalLocks.horizontalSpacing = 2;
 		gl_compositeLocalLocks.marginHeight = 2;
 		gl_compositeLocalLocks.marginWidth = 2;
-		compositeLocalLocks.setLayout(gl_compositeLocalLocks);
+		compositeShardList.setLayout(gl_compositeLocalLocks);
+	}
+	
+	/**
+	 * data refresh
+	 */
+	private void initData() {
+		try {
+			CommandResult res = MongoDBQuery.getAdminMongoDB(userDB).command("listShards"); //$NON-NLS-1$
+			shards = (BasicDBList)res.get("shards"); //$NON-NLS-1$
+		} catch(Exception e) {
+			logger.error("listShards", e); //$NON-NLS-1$
+		}
+		
+		compositeShardList.refresh(Messages.ShardingComposite_4, shards, false);
 	}
 
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-
 }

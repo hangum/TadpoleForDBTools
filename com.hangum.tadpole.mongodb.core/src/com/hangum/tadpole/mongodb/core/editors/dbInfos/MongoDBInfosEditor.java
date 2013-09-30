@@ -112,13 +112,13 @@ public class MongoDBInfosEditor extends EditorPart {
 		CTabItem tbtmLocaks = new CTabItem(tabFolder, SWT.NONE);
 		tbtmLocaks.setText(Messages.MongoDBInfosEditor_2);
 		
-		LockComposite compositeLock = new LockComposite(tabFolder, SWT.NONE, commandResult);
+		LockComposite compositeLock = new LockComposite(tabFolder, SWT.NONE, userDB, commandResult);
 		tbtmLocaks.setControl(compositeLock);
 		compositeLock.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmReplicaInformation = new CTabItem(tabFolder, SWT.NONE);
 		tbtmReplicaInformation.setText(Messages.MongoDBInfosEditor_3);		
-		ReplicaSetComposite compositeReplicaSet = new ReplicaSetComposite(tabFolder, SWT.NONE, commandResult);
+		ReplicaSetComposite compositeReplicaSet = new ReplicaSetComposite(tabFolder, SWT.NONE, userDB, commandResult);
 		tbtmReplicaInformation.setControl(compositeReplicaSet);
 		compositeReplicaSet.setLayout(gl_compositeCollectionSummary);
 		

@@ -40,6 +40,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -57,6 +59,7 @@ import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBCollectionComparat
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.util.ImageUtils;
 import com.hangum.tadpole.util.NumberFormatUtils;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
@@ -100,10 +103,30 @@ public class CollectionInformationComposite extends Composite {
 		gridLayout.marginHeight = 1;
 		gridLayout.marginWidth = 1;
 		setLayout(gridLayout);
+		
+		Composite compositeToolbar = new Composite(this, SWT.NONE);
+		compositeToolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeToolbar = new GridLayout(1, false);
+		gl_compositeToolbar.verticalSpacing = 1;
+		gl_compositeToolbar.horizontalSpacing = 1;
+		gl_compositeToolbar.marginHeight = 1;
+		gl_compositeToolbar.marginWidth = 1;
+		compositeToolbar.setLayout(gl_compositeToolbar);
+		
+		ToolBar toolBar = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
+		
+		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initData(userDB);
+			}
+		});
+		tltmRefresh.setToolTipText(Messages.CollectionInformationComposite_tltmRefresh_text);
 
 		Composite compositeHead = new Composite(this, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setSize(590, 35);
 		GridLayout gl_compositeHead = new GridLayout(2, false);
 		gl_compositeHead.verticalSpacing = 2;
 		gl_compositeHead.horizontalSpacing = 2;
@@ -219,6 +242,10 @@ public class CollectionInformationComposite extends Composite {
 		lblIndex.setText("Index"); //$NON-NLS-1$
 	}
 	
+	/**
+	 * make collection columns
+	 * 
+	 */
 	private void createTableColumn() {
 		String[] columnName = {"Name", "Rows", "Size", "Storage", "Index", "Last Extent Size", "AvgObj","Padding" };  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 		int[] columnSize = {200, 100, 100, 100, 100, 100, 100, 100 };

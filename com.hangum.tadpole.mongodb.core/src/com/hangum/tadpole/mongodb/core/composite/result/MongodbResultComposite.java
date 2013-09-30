@@ -62,6 +62,7 @@ import com.hangum.tadpole.commons.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.commons.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.commons.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
+import com.hangum.tadpole.commons.sql.util.tables.TreeUtil;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -845,9 +846,10 @@ public class MongodbResultComposite extends Composite {
 			resultTableViewer.setInput(sourceDataList);
 			resultTableViewer.setSorter(sqlSorter);		
 			sqlFilter.setTable(resultTableViewer.getTable());
-			
-			TableUtil.packTable(resultTableViewer.getTable());
 		}
+		
+		TreeUtil.packTree(treeViewerMongo.getTree());
+		TableUtil.packTable(resultTableViewer.getTable());
 	}
 	
 	/**

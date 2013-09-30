@@ -439,6 +439,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			tableListViewer.setInput(showTables);
 			tableListViewer.refresh();
 			
+			TableUtil.packTable(tableListViewer.getTable());
+			
 			return;
 		}
 		
@@ -474,10 +476,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						if(jobEvent.getResult().isOK()) {
 							tableListViewer.setInput(showTables);
 							tableListViewer.refresh();
+							TableUtil.packTable(tableListViewer.getTable());
+							
 						} else {
 							if (showTables != null) showTables.clear();
 							tableListViewer.setInput(showTables);
 							tableListViewer.refresh();
+							TableUtil.packTable(tableListViewer.getTable());
 							
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
