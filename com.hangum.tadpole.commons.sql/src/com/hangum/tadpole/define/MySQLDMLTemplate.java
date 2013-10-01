@@ -43,7 +43,8 @@ public class MySQLDMLTemplate {
 													"";
 	
 	/** index */
-	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name \r\n  ON table_name ( columns );";
+	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name "+ PublicTadpoleDefine.LINE_SEPARATOR +  
+														" ON table_name ( columns );";
 	
 	
 	

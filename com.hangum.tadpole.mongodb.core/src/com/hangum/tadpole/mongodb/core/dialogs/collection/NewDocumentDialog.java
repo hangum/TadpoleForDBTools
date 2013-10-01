@@ -48,7 +48,7 @@ public class NewDocumentDialog extends Dialog {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(NewDocumentDialog.class);
-	private static int FORMAT_BTN_ID = 999;
+	private static int FORMAT_BTN_ID = IDialogConstants.CLIENT_ID + 1;
 
 	protected UserDBDAO userDB;
 	protected String collectionName;

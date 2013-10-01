@@ -31,9 +31,9 @@ public class CubridDMLTemplate extends MySQLDMLTemplate {
 	
 	/** table create */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE   sample_table   ( " + PublicTadpoleDefine.LINE_SEPARATOR + 
-						 " id INT(11),  \r\n" +
-						 " name char(60) default NULL, \r\n" +
-						 " PRIMARY KEY (id) \r\n" +
+						 " id INT(11), " + PublicTadpoleDefine.LINE_SEPARATOR +
+						 " name char(60) default NULL, " + PublicTadpoleDefine.LINE_SEPARATOR +
+						 " PRIMARY KEY (id) " + PublicTadpoleDefine.LINE_SEPARATOR +
 						" );";
 
 	/** procedure */
@@ -48,8 +48,8 @@ public class CubridDMLTemplate extends MySQLDMLTemplate {
 	
 	
 	/** trigger */
-	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER sampelTrigger   \r\n" +
-																			" BEFORE INSERT ON tableName  \r\n" +
-																			" IF obj.seats > 100000  \r\n" +
+	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER sampelTrigger " + PublicTadpoleDefine.LINE_SEPARATOR +
+																			" BEFORE INSERT ON tableName " + PublicTadpoleDefine.LINE_SEPARATOR +
+																			" IF obj.seats > 100000 " + PublicTadpoleDefine.LINE_SEPARATOR +
 																			" EXECUTE REJECT;";
 }

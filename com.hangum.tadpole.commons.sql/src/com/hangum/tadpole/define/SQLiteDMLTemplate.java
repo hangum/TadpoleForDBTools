@@ -38,7 +38,8 @@ public class SQLiteDMLTemplate {
 																" SELECT   columns   FROM   table;";
 	
 	/** index */
-	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name  \r\n  ON table_name ( columns );";
+	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name " + PublicTadpoleDefine.LINE_SEPARATOR + 
+															" ON table_name ( columns );";
 	
 	/** trigger */
 	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER testref BEFORE INSERT ON test1 " + PublicTadpoleDefine.LINE_SEPARATOR +  

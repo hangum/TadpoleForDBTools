@@ -41,7 +41,8 @@ public class MSSQLDMLTemplate {
 																" SELECT   columns   FROM   table;";
 	
 	/** index */
-	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name " + PublicTadpoleDefine.LINE_SEPARATOR + " ON table_name ( columns );";
+	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name " + PublicTadpoleDefine.LINE_SEPARATOR +
+													" ON table_name ( columns );";
 	
 	
 	
