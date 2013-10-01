@@ -63,7 +63,7 @@ public class PublicTadpoleDefine {
 	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE";
 	
 	/** Tadpole support browser list  */
-	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI};
+	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI, IE10};
 	
 	/** USER TYPE */
 	public static enum USER_TYPE {ADMIN, DBA, MANAGER, USER/*, GUEST*/};

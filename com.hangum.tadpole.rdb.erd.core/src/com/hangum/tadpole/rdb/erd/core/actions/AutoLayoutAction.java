@@ -94,7 +94,6 @@ public class AutoLayoutAction extends SelectionAction {
 				}
 			}
 			
-			
 			// edge
 			for (int i = 0; i < models.size(); i++) {
 				Object obj = models.get(i);
@@ -149,7 +148,7 @@ public class AutoLayoutAction extends SelectionAction {
 	private class EntityNode extends Node {
 		private Table model;
 	}
-//
+
 	private class ConnectionEdge extends Edge {
 		private Table model;
 		public ConnectionEdge(EntityNode source, EntityNode target){
