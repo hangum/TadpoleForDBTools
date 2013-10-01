@@ -19,8 +19,6 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  *
  */
 public class MySQLDMLTemplate {
-//	public static final String PublicTadpoleDefine.LINE_SEPARATOR = "\r\n";
-	
 	/**  
 	 * mysql 을 수행할때 preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.
 	 */	
