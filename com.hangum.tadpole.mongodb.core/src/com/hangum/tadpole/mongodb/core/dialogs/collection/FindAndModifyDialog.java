@@ -210,13 +210,10 @@ public class FindAndModifyDialog extends Dialog {
 		try {
 			DBObject retDBObj = MongoDBQuery.findAndModify(userDB, collName, objQuery, objSort, objFields, btnRemove.getSelection(), objUpdate, btnReturnNew.getSelection(), btnUpsert.getSelection());
 			if(null != retDBObj) {
-				logger.debug("\t [result]" + retDBObj.toString() );
-				
 				FindOneDetailDialog resultViewDialog = new FindOneDetailDialog(null, userDB, "Update Result", retDBObj);
 				resultViewDialog.open();
 			}
-			else logger.debug("result is null");
-			
+			else MessageDialog.openInformation(null, "Result", "Result message is null");
 			
 		} catch (Exception e) {
 			logger.error("mongodb FindAndModify", e); //$NON-NLS-1$
