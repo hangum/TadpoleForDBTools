@@ -389,7 +389,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						if(DBDefine.getDBDefine(userDB) != DBDefine.HIVE_DEFAULT) manager.add(creatAction_Table);
 						manager.add(deleteAction_Table);
-					}					
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					}	
+					
 					manager.add(refreshAction_Table);
 
 					// 현재는 oracle db만 데이터 수정 모드..

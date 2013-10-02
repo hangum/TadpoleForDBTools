@@ -65,6 +65,7 @@ import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollCompactAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollFindAndModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollStatesAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbGroupAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbMapReduceAction;
@@ -119,6 +120,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private ObjectMongodbGroupAction 	groupAction;
 	private ObjectMongodbCollStatesAction		collStatsAction;
 	private ObjectMongodbCollCompactAction		collCompactAction;
+	private ObjectMongodbCollFindAndModifyAction collFindAndModifyAction;
 	
 	
 	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
@@ -309,6 +311,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		
 		collStatsAction 	= new ObjectMongodbCollStatesAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection stats"); //$NON-NLS-1$
 		collCompactAction   = new ObjectMongodbCollCompactAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection compact"); //$NON-NLS-1$
+		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Find and Modify"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -320,7 +323,9 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					manager.add(creatAction_Table);
 					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(deleteAction_Table);
+						manager.add(collFindAndModifyAction);
 					}
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(refreshAction_Table);
 
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -353,6 +358,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	public void initAction() {
 		creatAction_Table.setUserDB(getUserDB());
 		deleteAction_Table.setUserDB(getUserDB());
+		collFindAndModifyAction.setUserDB(getUserDB());
 		refreshAction_Table.setUserDB(getUserDB());
 		insertStmtAction.setUserDB(getUserDB());
 		
