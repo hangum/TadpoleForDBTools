@@ -68,6 +68,7 @@ Document
  - https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID
 * MongoDB User Guide
  - https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor
+ - https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Eng
 * RDB Tutorial 
  - http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 

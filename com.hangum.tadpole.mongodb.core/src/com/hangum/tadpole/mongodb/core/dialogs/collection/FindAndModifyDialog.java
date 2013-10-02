@@ -10,9 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.dialogs.collection;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -24,8 +29,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
+import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.mongodb.core.Activator;
+import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
-import org.eclipse.swt.custom.SashForm;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 /**
  * mongodb find and moidfy dialog
@@ -36,17 +46,22 @@ import org.eclipse.swt.custom.SashForm;
  *
  */
 public class FindAndModifyDialog extends Dialog {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger
+			.getLogger(FindAndModifyDialog.class);
 	
 	private UserDBDAO userDB;
 	private String collName;
 	
 	private JsonTadpoleEditor textQuery;
-	private JsonTadpoleEditor textField;
+	private JsonTadpoleEditor textFields;
 	private JsonTadpoleEditor textSort;
 	private JsonTadpoleEditor textUpdate;
 	
 	private Button btnRemove;
-	private Button btnNew;
+	private Button btnReturnNew;
 	private Button btnUpsert;
 
 	/**
@@ -123,8 +138,8 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel_1.setLayoutData(gd_lblNewLabel_1);
 		lblNewLabel_1.setText("{Field}");
 		
-		textField = new JsonTadpoleEditor(compositeField, SWT.BORDER, "", strAssist);
-		textField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		textFields = new JsonTadpoleEditor(compositeField, SWT.BORDER, "", strAssist);
+		textFields.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeSort = new Composite(compositeBody, SWT.NONE);
 		compositeSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -167,17 +182,47 @@ public class FindAndModifyDialog extends Dialog {
 		compositeOthers.setLayout(new GridLayout(3, false));
 		
 		btnRemove = new Button(compositeOthers, SWT.CHECK);
+		btnRemove.setSelection(true);
 		btnRemove.setText("Remove");
 		
-		btnNew = new Button(compositeOthers, SWT.CHECK);
-		btnNew.setText("New");
+		btnReturnNew = new Button(compositeOthers, SWT.CHECK);
+		btnReturnNew.setSelection(false);
+		btnReturnNew.setText("Return New");
 		
 		btnUpsert = new Button(compositeOthers, SWT.CHECK);
+		btnUpsert.setSelection(false);
 		btnUpsert.setText("Upsert");
 		
 		compositeBody.setWeights(new int[]{40, 20, 20, 20});
 
 		return container;
+	}
+	
+	@Override
+	protected void okPressed() {
+		if(!MessageDialog.openConfirm(null, "Confirm", "Are you want to execute?")) return;
+		
+		DBObject objQuery = "".equals(textQuery.getText())?null:(DBObject)JSON.parse(textQuery.getText());
+		DBObject objFields = "".equals(textFields.getText())?null:(DBObject)JSON.parse(textFields.getText());
+		DBObject objSort = "".equals(textSort.getText())?null:(DBObject)JSON.parse(textSort.getText());
+		DBObject objUpdate = "".equals(textUpdate.getText())?null:(DBObject)JSON.parse(textUpdate.getText());
+		
+		try {
+			DBObject retDBObj = MongoDBQuery.findAndModify(userDB, collName, objQuery, objSort, objFields, btnRemove.getSelection(), objUpdate, btnReturnNew.getSelection(), btnUpsert.getSelection());
+			if(null != retDBObj) {
+				logger.debug("\t [result]" + retDBObj.toString() );
+				
+				FindOneDetailDialog resultViewDialog = new FindOneDetailDialog(null, userDB, "Update Result", retDBObj);
+				resultViewDialog.open();
+			}
+			else logger.debug("result is null");
+			
+			
+		} catch (Exception e) {
+			logger.error("mongodb FindAndModify", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "FindAndModify Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	/**
@@ -186,8 +231,8 @@ public class FindAndModifyDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, "Execute", true);
+		createButton(parent, IDialogConstants.CANCEL_ID, "CLOSE", false);
 	}
 
 	/**

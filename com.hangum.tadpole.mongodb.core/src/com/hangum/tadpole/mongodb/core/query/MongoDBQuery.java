@@ -189,13 +189,43 @@ public class MongoDBQuery {
 	 * collection 정보를 리턴한다.
 	 * 
 	 * @param userDB
-	 * @param colName
+	 * @param collName
 	 * @return
 	 * @throws Exception
 	 */
-	public static DBCollection findCollection(UserDBDAO userDB, String colName) throws Exception {
+	public static DBCollection findCollection(UserDBDAO userDB, String collName) throws Exception {
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
-		return mongoDB.getCollection(colName);
+		return mongoDB.getCollection(collName);
+	}
+	
+	/**
+	 * findAndModify
+	 * 
+	 * @param userDB
+	 * @param collName
+	 * @param objQuery
+	 * @param objSort
+	 * @param isRemove
+	 * @param objUpdate
+	 * @param isReturnNew
+	 * @param objFields
+	 * @param isUpsert
+	 * @return
+	 * @throws Exception
+	 */
+	public static DBObject findAndModify(UserDBDAO userDB, String collName,
+			DBObject objQuery, 
+			DBObject objSort, 
+			DBObject objFields,
+			boolean isRemove,
+			DBObject objUpdate,
+			boolean isReturnNew,
+			boolean isUpsert
+	) throws Exception {
+		DBCollection coll = findCollection(userDB, collName);
+		DBObject retDBObject = coll.findAndModify(objQuery, objFields, objSort, isRemove, objUpdate, isReturnNew, isUpsert);
+		
+		return retDBObject;
 	}
 	
 	/**
@@ -533,7 +563,7 @@ public class MongoDBQuery {
 	 */
 	public static void insertJavaScript(UserDBDAO userDB, MongoDBServerSideJavaScriptDAO javaScriptDAO) throws Exception {
 		DBObject dbObject = (DBObject) JSON.parse("{'_id':'" + javaScriptDAO.getName() + "', 'value':'" +  javaScriptDAO.getContent() + "'}");
-		findDB(userDB).getCollection("system.js").save(dbObject);
+		findCollection(userDB, "system.js").save(dbObject);
 	}
 	
 	/**
@@ -548,7 +578,7 @@ public class MongoDBQuery {
 		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + _id + "'}");
 		DBObject dbUpdateObject = (DBObject) JSON.parse("{'_id':'" + _id + "', 'value':'" + content +"'}");
 		
-		findDB(userDB).getCollection("system.js").findAndModify(dbFindObject, dbUpdateObject);
+		findCollection(userDB, "system.js").findAndModify(dbFindObject, dbUpdateObject);
 	}
 	
 	/**
@@ -560,7 +590,7 @@ public class MongoDBQuery {
 	 */
 	public static void deleteJavaScirpt(UserDBDAO userDB, String _id) throws Exception {
 		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + _id + "'}");
-		findDB(userDB).getCollection("system.js").remove(dbFindObject);
+		findCollection(userDB, "system.js").remove(dbFindObject);
 	}
 	
 	/**
