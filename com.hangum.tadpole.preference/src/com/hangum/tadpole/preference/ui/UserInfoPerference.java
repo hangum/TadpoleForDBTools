@@ -23,10 +23,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.hangum.tadpole.dao.system.UserDAO;
 import com.hangum.tadpole.preference.Messages;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.dao.system.UserDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
 
 /**
  * 사용자 정보 수정

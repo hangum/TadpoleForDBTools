@@ -53,12 +53,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
-import com.hangum.tadpole.commons.sql.util.tables.TreeUtil;
-import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -82,7 +77,12 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
-import com.hangum.tadpole.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.util.tables.TableUtil;
+import com.hangum.tadpole.sql.util.tables.TreeUtil;
 import com.swtdesigner.ResourceManager;
 
 /**

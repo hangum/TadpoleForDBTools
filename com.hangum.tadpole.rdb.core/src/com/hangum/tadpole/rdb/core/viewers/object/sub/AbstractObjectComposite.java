@@ -20,10 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
-import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
 
 /**
  * Object explorer composite

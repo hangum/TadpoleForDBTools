@@ -15,17 +15,17 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
-import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
-import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
-import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.system.TadpoleSystemCommons;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.sql.system.TadpoleSystemCommons;
 
 /**
  * Object Explorer에서 사용하는 공통 action

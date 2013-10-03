@@ -16,12 +16,12 @@ import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.editor.core.IEditorExtension;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.util.RequestInfoUtils;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
 
 /**
  * Editor의 확장을 정의한다.

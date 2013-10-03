@@ -14,8 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import com.hangum.tadpole.dao.system.UserDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Executed SQL Editor input

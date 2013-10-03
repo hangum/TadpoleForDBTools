@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;

@@ -14,8 +14,8 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
-import com.hangum.tadpole.util.NumberFormatUtils;
 
 /**
  * tree label provider

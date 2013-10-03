@@ -12,7 +12,7 @@ package com.hangum.tadpole.rdb.core.actions.adapter.resource;
 
 import org.eclipse.ui.IActionFilter;
 
-import com.hangum.tadpole.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 
 /**
  * resource type adapter

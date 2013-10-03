@@ -37,16 +37,16 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
-import com.hangum.tadpole.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystemInitializer;
-import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
 
 /**
  * Configures the initial size and appearance of a workbench window.

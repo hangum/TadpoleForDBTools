@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.define.DBOperationType;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * DB 등록시 공통으로 들어가는 정보를 나열합니다.

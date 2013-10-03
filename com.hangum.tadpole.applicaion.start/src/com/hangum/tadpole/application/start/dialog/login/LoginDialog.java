@@ -29,11 +29,11 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystemInitializer;
-import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
 import com.swtdesigner.SWTResourceManager;
 
 /**

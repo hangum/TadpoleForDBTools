@@ -28,15 +28,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.help.HelpDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.util.HelpUtils;
 import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
-import com.hangum.tadpole.util.HelpUtils;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 

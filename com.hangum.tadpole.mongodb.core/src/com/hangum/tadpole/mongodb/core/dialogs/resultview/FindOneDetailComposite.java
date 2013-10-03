@@ -28,11 +28,11 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.commons.sql.util.tables.TreeUtil;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoContentProvider;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoLabelProvider;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
+import com.hangum.tadpole.sql.util.tables.TreeUtil;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;

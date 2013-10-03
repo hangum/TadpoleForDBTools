@@ -50,21 +50,21 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.commons.util.fileupload.FileUploadDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.util.ImageUtils;
-import com.hangum.tadpole.util.download.DownloadServiceHandler;
-import com.hangum.tadpole.util.download.DownloadUtils;
-import com.hangum.tadpole.util.fileupload.FileUploadDialog;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 DB List composite

@@ -11,12 +11,11 @@
 package com.hangum.tadpole.rdb.core.actions.adapter.rdb;
 
 import org.apache.log4j.Logger;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.ui.IActionFilter;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
 
 /**
  * rdb db popup

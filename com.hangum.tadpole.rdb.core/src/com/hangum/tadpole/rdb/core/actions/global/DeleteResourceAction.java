@@ -19,10 +19,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
-import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDDeleteAction;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.swtdesigner.ResourceManager;
 
 /**

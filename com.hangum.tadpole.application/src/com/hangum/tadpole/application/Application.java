@@ -16,7 +16,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
-import com.hangum.tadpole.util.TadpoleDisplay;
+import com.hangum.tadpole.commons.util.TadpoleDisplay;
 
 
 /**

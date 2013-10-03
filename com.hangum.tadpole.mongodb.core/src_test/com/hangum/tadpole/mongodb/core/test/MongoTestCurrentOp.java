@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.test;
 
-import com.hangum.tadpole.util.JSONUtil;
+import com.hangum.tadpole.commons.util.JSONUtil;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;

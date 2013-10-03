@@ -30,7 +30,7 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.erd.core.Messages;
 import com.hangum.tadpole.mongodb.erd.core.part.RelationEditPart;
 import com.hangum.tadpole.mongodb.erd.core.part.TableEditPart;

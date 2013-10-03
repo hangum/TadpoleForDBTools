@@ -12,7 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.util.TadpoleViewrFilter;
+import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
 
 /**
  * VIEW의 FILTER

@@ -34,9 +34,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
@@ -48,8 +48,8 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProce
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
-import com.hangum.tadpole.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.viewsupport.SelectionProviderMediator;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 
 /**
  * object explorer viewer

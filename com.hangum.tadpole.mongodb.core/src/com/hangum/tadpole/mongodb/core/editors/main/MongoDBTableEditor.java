@@ -35,15 +35,15 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
-import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
 import com.swtdesigner.SWTResourceManager;
 
 /**

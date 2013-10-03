@@ -51,10 +51,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.xml.sax.InputSource;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.dialogs.save.ResourceSaveDialog;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
 import com.hangum.tadpole.rdb.erd.core.actions.TableSelectionAction;
@@ -66,8 +63,11 @@ import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.RdbPackage;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
 
 /**
  * Tadpole DB Hub ERD editor
