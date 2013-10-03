@@ -12,13 +12,13 @@ package com.hangum.tadpole.system;
 
 import java.util.List;
 
-import com.hangum.tadpole.dao.system.UserGroupDAO;
-import com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery;
+import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserGroupQuery;
 
 import junit.framework.TestCase;
 
 /**
- * {@link com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery 유저그룹테스트}
+ * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserGroupQuery 유저그룹테스트}
  * 
  * @author hangum
  *
@@ -29,7 +29,7 @@ public class TadpoleSystem_UserGroupQueryTest extends TestCase {
 	public static String groupName = "sample test group";
 	
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery#newUserGroup(String) 신규 유저그룹 등록 테스트}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserGroupQuery#newUserGroup(String) 신규 유저그룹 등록 테스트}
 	 */
 	public void testNewUserGroup() {
 		try {
@@ -45,7 +45,7 @@ public class TadpoleSystem_UserGroupQueryTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery#isUserGroup(String) 유저그룹 존재}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserGroupQuery#isUserGroup(String) 유저그룹 존재}
 	 */
 	public void testIsUserGroup() {
 		boolean isGroup = TadpoleSystem_UserGroupQuery.isUserGroup(groupName);
@@ -53,7 +53,7 @@ public class TadpoleSystem_UserGroupQueryTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserGroupQuery#getGroup() 유저그룹 리스트 테스트}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserGroupQuery#getGroup() 유저그룹 리스트 테스트}
 	 */
 	public void testGetGroup() {
 		boolean isGroupExist = false;
