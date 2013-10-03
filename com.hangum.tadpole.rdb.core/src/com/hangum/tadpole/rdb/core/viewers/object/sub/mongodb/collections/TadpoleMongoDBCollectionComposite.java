@@ -62,6 +62,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollCompactAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollFindAndModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollStatesAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollValidateAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbGroupAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbMapReduceAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbReIndexAction;
@@ -112,7 +113,10 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	
 	private ObjectCreatAction 			creatAction_Table;
 	private ObjectDeleteAction 			deleteAction_Table;
+	private ObjectMongodbCollFindAndModifyAction collFindAndModifyAction;
+	
 	private ObjectRefreshAction 		refreshAction_Table;
+	
 	private GenerateSQLSelectAction 	insertStmtAction;
 	private ObjectMongodbRenameAction 	renameColAction;
 	private ObjectMongodbReIndexAction 	reIndexColAction;
@@ -120,7 +124,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private ObjectMongodbGroupAction 	groupAction;
 	private ObjectMongodbCollStatesAction		collStatsAction;
 	private ObjectMongodbCollCompactAction		collCompactAction;
-	private ObjectMongodbCollFindAndModifyAction collFindAndModifyAction;
+	
+	private ObjectMongodbCollValidateAction		collValidateAction;
 	
 	
 	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
@@ -313,6 +318,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		
 		collStatsAction 	= new ObjectMongodbCollStatesAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection stats"); //$NON-NLS-1$
 		collCompactAction   = new ObjectMongodbCollCompactAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection compact"); //$NON-NLS-1$
+		
+		collValidateAction = new ObjectMongodbCollValidateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection validate"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -325,6 +332,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(deleteAction_Table);
 						manager.add(collFindAndModifyAction);
+						manager.add(collValidateAction);
 					}
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(refreshAction_Table);
@@ -360,6 +368,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		creatAction_Table.setUserDB(getUserDB());
 		deleteAction_Table.setUserDB(getUserDB());
 		collFindAndModifyAction.setUserDB(getUserDB());
+		collValidateAction.setUserDB(getUserDB());
+		
 		refreshAction_Table.setUserDB(getUserDB());
 		insertStmtAction.setUserDB(getUserDB());
 		

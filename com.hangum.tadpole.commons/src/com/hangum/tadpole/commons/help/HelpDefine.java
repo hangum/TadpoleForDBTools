@@ -19,4 +19,5 @@ package com.hangum.tadpole.commons.help;
 public class HelpDefine {
 
 	public static final String MONGODB_FINDANDMOIDFY = "http://docs.mongodb.org/manual/reference/command/findAndModify/";
+	public static final String MONGODB_VALIDATE = "http://docs.mongodb.org/manual/reference/command/validate/";
 }

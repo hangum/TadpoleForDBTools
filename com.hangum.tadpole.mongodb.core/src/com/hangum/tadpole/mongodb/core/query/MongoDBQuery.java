@@ -455,6 +455,27 @@ public class MongoDBQuery {
 	}
 	
 	/**
+	 * collection validate
+	 * 
+	 * @param userDB
+	 * @param collName
+	 * @param isFull
+	 * @return
+	 * @throws Exception
+	 */
+	public static BasicDBObject collValidate(UserDBDAO userDB, String collName, boolean isFull) throws Exception {
+		
+		DBObject queryObj = new BasicDBObject("validate", collName );
+		queryObj.put("full", isFull);		
+		CommandResult cr = findDB(userDB).command(queryObj);
+		
+		if(!cr.ok()) throw cr.getException();
+		if(logger.isDebugEnabled()) logger.debug("[compact] complements" + cr.toString());
+		
+		return (BasicDBObject)cr;
+	}
+	
+	/**
 	 * collection compact
 	 * 
 	 * @param userDB
