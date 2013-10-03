@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.help.HelpDefine;
 import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
@@ -34,6 +36,7 @@ import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
+import com.hangum.tadpole.util.HelpUtils;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
@@ -201,16 +204,47 @@ public class FindAndModifyDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if(!MessageDialog.openConfirm(null, "Confirm", "Are you want to execute?")) return;
+		DBObject objQuery = null;
+		DBObject objFields = null;
+		DBObject objSort = null;
+		DBObject objUpdate = null;
 		
-		DBObject objQuery = "".equals(textQuery.getText())?null:(DBObject)JSON.parse(textQuery.getText());
-		DBObject objFields = "".equals(textFields.getText())?null:(DBObject)JSON.parse(textFields.getText());
-		DBObject objSort = "".equals(textSort.getText())?null:(DBObject)JSON.parse(textSort.getText());
-		DBObject objUpdate = "".equals(textUpdate.getText())?null:(DBObject)JSON.parse(textUpdate.getText());
+		try {
+			objQuery = "".equals(textQuery.getText())?null:(DBObject)JSON.parse(textQuery.getText());
+		} catch(Exception e) {
+			textQuery.setFocus();
+			MessageDialog.openError(null, "Error", e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Query} is error.");
+			return;
+		}
+		
+		try {
+			objFields = "".equals(textFields.getText())?null:(DBObject)JSON.parse(textFields.getText());
+		} catch(Exception e) {
+			textFields.setFocus();
+			MessageDialog.openError(null, "Error", e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Field} is error.");
+			return;
+		}
+		
+		try {
+			objSort = "".equals(textSort.getText())?null:(DBObject)JSON.parse(textSort.getText());
+		} catch(Exception e) {
+			textSort.setFocus();
+			MessageDialog.openError(null, "Error", e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Sort} is error.");
+			return;
+		}
+		
+		try {
+			objUpdate = "".equals(textUpdate.getText())?null:(DBObject)JSON.parse(textUpdate.getText());
+		} catch(Exception e) {
+			textUpdate.setFocus();
+			MessageDialog.openError(null, "Error", e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Update} is error.");
+			return;
+		}
 		
 		try {
 			DBObject retDBObj = MongoDBQuery.findAndModify(userDB, collName, objQuery, objSort, objFields, btnRemove.getSelection(), objUpdate, btnReturnNew.getSelection(), btnUpsert.getSelection());
 			if(null != retDBObj) {
-				FindOneDetailDialog resultViewDialog = new FindOneDetailDialog(null, userDB, "Update Result", retDBObj);
+				FindOneDetailDialog resultViewDialog = new FindOneDetailDialog(null, userDB, "Update Result Message", retDBObj);
 				resultViewDialog.open();
 			}
 			else MessageDialog.openInformation(null, "Result", "Result message is null");
@@ -221,13 +255,22 @@ public class FindAndModifyDialog extends Dialog {
 			ExceptionDetailsErrorDialog.openError(null, "Error", "FindAndModify Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		super.buttonPressed(buttonId);
+		if(buttonId == IDialogConstants.HELP_ID) {
+			HelpUtils.showHelp(HelpDefine.MONGODB_FINDANDMOIDFY);
+		}
+	}
+	
 	/**
 	 * Create contents of the button bar.
 	 * @param parent
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.HELP_ID, "Help", false);
 		createButton(parent, IDialogConstants.OK_ID, "Execute", true);
 		createButton(parent, IDialogConstants.CANCEL_ID, "CLOSE", false);
 	}
