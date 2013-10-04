@@ -10,8 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.adapter.rdb;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.ui.IActionFilter;
 
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -24,10 +24,10 @@ import com.hangum.tadpole.sql.session.manager.SessionManager;
  *
  */
 public class DBTypeActionFilterAdapter implements IActionFilter {
-//	/**
-//	 * Logger for this class
-//	 */
-//	private static final Logger logger = Logger.getLogger(DBTypeActionFilterAdapter.class);
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(DBTypeActionFilterAdapter.class);
 	
 	private static final String DB_TYPE = "db_type";
 	private static final String USER_TYPE = "user_type";

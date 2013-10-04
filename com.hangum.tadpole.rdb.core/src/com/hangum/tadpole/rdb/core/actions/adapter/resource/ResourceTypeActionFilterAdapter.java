@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.adapter.resource;
 
+import org.apache.log4j.Logger;
+
 import org.eclipse.ui.IActionFilter;
 
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
@@ -21,11 +23,17 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
  *
  */
 public class ResourceTypeActionFilterAdapter implements IActionFilter {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(ResourceTypeActionFilterAdapter.class);
+
 	private static final Object MYOBJECT_TYPE = "type";
 	
 	@Override
 	public boolean testAttribute(Object target, String name, String value) {
-//		System.out.println(target);
+//		logger.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		logger.debug("[target]" + target + "[name]" + name + "[value]" + value);
 		
 		if (target instanceof UserDBResourceDAO) {
 //			UserDBResourceDAO obj = (UserDBResourceDAO) target;

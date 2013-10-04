@@ -63,7 +63,7 @@ public class CollValidateDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(collName + " - validte Dialog");
+		newShell.setText(collName + " - validate Dialog");
 	}
 
 	/**

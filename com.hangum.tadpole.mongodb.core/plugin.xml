@@ -31,6 +31,13 @@
             id="com.hangum.tadpole.mongodb.core.editor.group"
             name="Group">
       </editor>
+      <editor
+            class="com.hangum.tadpole.mongodb.core.editors.command.MongoDBCommandEditor"
+            default="false"
+            icon="resources/icons/mongodb-add.png"
+            id="com.hangum.tadpole.mongodb.core.editor.command"
+            name="Command">
+      </editor>
    </extension>
 
 </plugin>
