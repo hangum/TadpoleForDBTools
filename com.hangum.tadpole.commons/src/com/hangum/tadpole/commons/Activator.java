@@ -15,11 +15,10 @@ import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import com.hangum.tadpole.commons.log.LogConfiguration;
 import com.hangum.tadpole.commons.log.LogListener;
 
 public class Activator implements BundleActivator {
-	public static final String ID = "com.hangum.tadpole.commons";
+	public static final String ID = "com.hangum.tadpole.commons.utils";
 
 	private static BundleContext context;
 	
