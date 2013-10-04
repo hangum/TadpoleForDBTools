@@ -223,9 +223,10 @@ public class MainEditor extends EditorExtension {
 			setPartName(qei.getName());
 		} else {
 			setPartName(dBResource.getName());
-			isFirstLoad = true;
 		}
 		
+		// fix : https://github.com/hangum/TadpoleForDBTools/issues/237
+		isFirstLoad = true;
 		initDefaultEditorStr = qei.getDefaultStr();
 	}
 
