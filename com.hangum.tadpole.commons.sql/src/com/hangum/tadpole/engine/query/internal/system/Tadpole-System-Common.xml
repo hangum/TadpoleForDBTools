@@ -223,11 +223,22 @@
 	user db
 	============================================================================================================================
  -->
+   <!-- 
+ 		기디비 등록할 수 있는지 검사합니다.
+  -->
+ <select id="isOldDBValidate" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.util.Map">
+ <![CDATA[
+ 	SELECT *
+ 	FROM user_db
+ 	WHERE user_seq = #user_seq# AND
+ 		display_name = #display_name# AND
+ 		seq <> #seq# AND 
+		delYn = 'NO'
+]]>
+ </select>
+ 
   <!-- 
  		신규디비 등록할 수 있는지 검사합니다.
- 		
-- - 		url = #url# AND
-- - 		users = #users#  AND
   -->
  <select id="isNewDBValidate" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.util.Map">
  	SELECT *

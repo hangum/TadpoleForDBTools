@@ -33,6 +33,28 @@ public class TadpoleSystem_UserDBQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBQuery.class);
 	
 	/**
+	 * 기존 디비 수정할 수 있는지 검사합니다.
+	 * 
+	 * @param user_seq
+	 * @param userDBDao
+	 * @param oldUserDBDao
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean isOldDBValidate(int user_seq, UserDBDAO userDBDao, UserDBDAO oldUserDBDao) throws Exception {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("user_seq", 	user_seq);
+		queryMap.put("seq", oldUserDBDao.getSeq());
+		queryMap.put("display_name", userDBDao.getDisplay_name());
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<Object> listUserDB = sqlClient.queryForList("isOldDBValidate", queryMap);
+		
+		if(listUserDB.size() == 0) return false;
+		else return true;
+	}
+	
+	/**
 	 * 신규디비 등록할 수 있는지 검사합니다.
 	 * 
 	 * @param user_seq
@@ -44,8 +66,6 @@ public class TadpoleSystem_UserDBQuery {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
 		queryMap.put("display_name", userDBDao.getDisplay_name());
-//		queryMap.put("url", 	userDBDao.getUrl());
-//		queryMap.put("users", 	userDBDao.getUsers());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<Object> listUserDB = sqlClient.queryForList("isNewDBValidate", queryMap);

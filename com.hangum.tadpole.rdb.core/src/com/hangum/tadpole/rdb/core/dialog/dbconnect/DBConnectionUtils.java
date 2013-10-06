@@ -63,7 +63,8 @@ public class DBConnectionUtils {
 	 * 
 	 * @return
 	 */
-	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB, PublicTadpoleDefine.DATA_STATUS dataStatus) {
+	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB, 
+			PublicTadpoleDefine.DATA_STATUS dataStatus) {
 		AbstractLoginComposite loginComposite = null;
 		
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
@@ -87,7 +88,7 @@ public class DBConnectionUtils {
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
 			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		}
-		loginComposite.setDalog_status(dataStatus);
+		loginComposite.setDataActionStatus(dataStatus);
 		
 		return loginComposite;
 	}

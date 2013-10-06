@@ -251,7 +251,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		if(!testConnection()) return false;
 		
 		// 기존 데이터 업데이트
-		if(getDalog_status() == DATA_STATUS.MODIFY) {
+		if(getDataActionStatus() == DATA_STATUS.MODIFY) {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
