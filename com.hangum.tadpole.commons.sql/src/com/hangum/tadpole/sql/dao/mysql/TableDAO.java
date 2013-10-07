@@ -23,6 +23,9 @@ public class TableDAO {
 	/** hive */
 	String tab_name = "";
 	
+	/** mongoDB */
+	String size = "";
+	
 	public TableDAO() {
 	}
 	
@@ -55,5 +58,14 @@ public class TableDAO {
 		this.tab_name = tab_name;
 		setName(tab_name);
 	}
+
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+	
 
 }

@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
+import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
@@ -108,7 +109,11 @@ public class MongoDBQuery {
 			if(!isSystemCollection(col)) {
 				TableDAO dao = new TableDAO();
 				dao.setName(col);
-
+				
+				CommandResult commandResult = mongoDB.getCollection(col).getStats();
+				dao.setComment( NumberFormatUtils.commaFormat(commandResult.getInt("count"))); //$NON-NLS-1$
+				dao.setSize(NumberFormatUtils.kbMbFormat(commandResult.getInt("size")));
+				
 				listReturn.add(dao);
 			}
 		}

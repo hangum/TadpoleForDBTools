@@ -234,21 +234,34 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 				return table.getName();
 			}
 		});
-		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
+//		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
 
-		TableViewerColumn tvColComment = new TableViewerColumn(tableListViewer, SWT.NONE);
-		TableColumn tbComment = tvColComment.getColumn();
-		tbComment.setWidth(400);
-		tbComment.setText("Comment"); //$NON-NLS-1$
+		TableViewerColumn tvColRows = new TableViewerColumn(tableListViewer, SWT.RIGHT);
+		TableColumn tbComment = tvColRows.getColumn();
+		tbComment.setWidth(200);
+		tbComment.setText("Rows"); //$NON-NLS-1$
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
-		tvColComment.setLabelProvider(new ColumnLabelProvider() {
+		tvColRows.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
 				return table.getComment();
 			}
 		});
-		tvColComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
+//		tvColRows.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
+		
+		TableViewerColumn tvColSize = new TableViewerColumn(tableListViewer, SWT.RIGHT);
+		TableColumn tbSize = tvColSize.getColumn();
+		tbSize.setWidth(200);
+		tbSize.setText("Size"); //$NON-NLS-1$
+		tbSize.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
+		tvColSize.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				TableDAO table = (TableDAO) element;
+				return table.getSize();
+			}
+		});
 
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
