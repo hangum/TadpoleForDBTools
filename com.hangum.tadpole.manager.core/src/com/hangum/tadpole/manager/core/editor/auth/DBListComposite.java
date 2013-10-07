@@ -18,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -42,6 +43,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -55,12 +57,14 @@ import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.commons.util.fileupload.FileUploadDialog;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
@@ -86,6 +90,7 @@ public class DBListComposite extends Composite {
 	
 	private ToolItem tltmQueryHistory;
 	private ToolItem tltmModify;
+	private ToolItem tltmDBDelete;
 	
 	/** download dumy compoiste */
 	private Composite compositeDumy;
@@ -145,6 +150,17 @@ public class DBListComposite extends Composite {
 			});
 			tltmAdd.setToolTipText("Add");
 			
+			tltmDBDelete = new ToolItem(toolBar, SWT.NONE);
+			tltmDBDelete.setImage(ImageUtils.getDelete());
+			tltmDBDelete.setEnabled(false);
+			tltmDBDelete.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					deleteDB();
+				}
+			});
+			tltmDBDelete.setToolTipText("DB Delete");
+
 			tltmModify = new ToolItem(toolBar, SWT.NONE);
 			tltmModify.setImage(ImageUtils.getModify());
 			tltmModify.setEnabled(false);
@@ -220,6 +236,7 @@ public class DBListComposite extends Composite {
 		treeViewerDBList.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if(tltmModify != null) tltmModify.setEnabled(true);
+				if(tltmDBDelete != null) tltmDBDelete.setEnabled(true);
 				tltmQueryHistory.setEnabled(true);
 			}
 		});
@@ -268,6 +285,16 @@ public class DBListComposite extends Composite {
 		registerServiceHandler();
 	}
 	
+	private void refreshConnections() {
+		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+		Display.getCurrent().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				managerView.init();
+			}
+		});	// end display
+	}
+
 	/**
 	 * modify db
 	 */
@@ -279,6 +306,32 @@ public class DBListComposite extends Composite {
 			
 			if(ret == Dialog.OK) {
 				treeViewerDBList.setInput(initData());
+				refreshConnections();
+			}
+		}
+	}
+	
+	/**
+	 * delete db (delete marking)
+	 */
+	private void deleteDB(){
+		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+		if(ss != null) {
+			if(!MessageDialog.openConfirm(null, "Confirm", "Do you want to delete the selected database?") ) return; //$NON-NLS-1$
+
+			UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
+				
+			try {
+				if (userDB != null){
+					TadpoleSystem_UserDBQuery.removeUserDB(userDB.getSeq());
+					TadpoleSQLManager.removeInstance(userDB);
+					treeViewerDBList.setInput(initData());
+					refreshConnections();
+				}
+			} catch (Exception e) { 
+				logger.error("disconnection exception", e);				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -302,6 +355,9 @@ public class DBListComposite extends Composite {
 				String fileContetn = FileUtils.readFileToString(new File(abstFile));
 				
 				SystemDBDataManager.importUserDB(fileContetn);
+				
+				treeViewerDBList.setInput(initData());
+				refreshConnections();
 			} catch(Exception e) {
 				logger.error("Import DB exception", e);
 				
@@ -434,7 +490,7 @@ class AdminUserContentProvider implements ITreeContentProvider {
 			return null;
 		}
 		
-		return ((UserGroupAUserDAO) element).parent;
+		return null;
 	}
 
 	@Override

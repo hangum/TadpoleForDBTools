@@ -41,6 +41,14 @@ public class ImageUtils {
 	}
 
 	/**
+	 * delete image
+	 * @return
+	 */
+	public static Image getDelete() {
+		return ResourceManager.getPluginImage(ImageUtils.IMAGE_Activator_ID, "resources/icons/delete.png");
+	}
+
+	/**
 	 * moidfy image
 	 * @return
 	 */
