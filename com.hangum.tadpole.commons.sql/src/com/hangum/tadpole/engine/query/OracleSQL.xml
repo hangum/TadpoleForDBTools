@@ -277,8 +277,59 @@ SELECT
         , s.created
         , s.status
 FROM    user_objects s
-WHERE   s.object_type IN ('PROCEDURE', 'PACKAGE')
+WHERE   s.object_type = 'PROCEDURE'
 ORDER BY s.object_type DESC, s.object_name 
+</select>
+
+<!-- 
+	Oracle Pakage & PackageBody 내역	
+-->
+
+<select id="packageList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+SELECT  
+          s.object_name AS name
+        , s.object_type AS TYPE
+        , #db_name#   AS db
+        , s.created
+        , s.status
+FROM    user_objects s
+WHERE   s.object_type = 'PACKAGE'
+ORDER BY s.object_type DESC, s.object_name 
+</select>
+
+<!-- 
+	package arguments list
+	SELECT 
+	       OBJECT_NAME, POSITION, DECODE(DATA_TYPE, 'REF CURSOR', 'SYS_REFCURSOR', DATA_TYPE) DATA_TYPE, OVERLOAD, ARGUMENT_NAME,
+	       DATA_LEVEL, DATA_LENGTH, DATA_PRECISION, DATA_SCALE, TYPE_NAME,
+	       IN_OUT, OBJECT_ID, SEQUENCE
+	FROM   ALL_ARGUMENTS
+	WHERE  OBJECT_ID = (SELECT OBJECT_ID
+	         FROM SYS.USER_OBJECTS 
+	         WHERE OBJECT_NAME ='PKG_UTIL'
+	         AND OBJECT_TYPE IN ('PACKAGE', 'PROCEDURE', 'FUNCTION'))
+	ORDER BY OBJECT_NAME, OVERLOAD, SEQUENCE
+
+ -->
+<select id="packageBodyList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+select 
+	s.object_name as packagename
+	,s.procedure_name as name
+	,(
+		select case 
+		when instr(upper(replace(text,chr(9),' ')), ' FUNCTION ') > 0 then 'FUNCTION'
+		         when  instr(upper(replace(text,chr(9),' ')), ' PROCEDURE ') > 0 then 'PROCEDURE'
+		         else 'unknow' end
+		  from user_source
+		where 1=1
+		and  name = s.object_name
+		and  upper(replace(text,chr(9),' ')) like '% '|| s.procedure_name ||'%'
+		and rownum &lt;= 1
+	) as type
+ from user_procedures s
+ where 1=1
+  and s.object_name = upper(#package#)
+ order by 3, 2
 </select>
 
 <!-- 
@@ -693,7 +744,7 @@ ORDER BY IC.COLUMN_POSITION
 	프로시져의 아규먼트 목록을 리턴한다.
 	
  -->
-<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
 
   SELECT ua.position AS "order"
         ,ua.argument_name AS name
@@ -705,6 +756,8 @@ ORDER BY IC.COLUMN_POSITION
    WHERE 1=1
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('IN','IN/OUT')
+   AND ua.argument_name > ' '
+   and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
 ORDER BY ua.object_name, ua.overload, ua.sequence
   
 </select>    
@@ -713,7 +766,7 @@ ORDER BY ua.object_name, ua.overload, ua.sequence
 	프로시져의 아규먼트 목록을 리턴한다.
 	
  -->
-<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
 
   SELECT ua.position AS "order"
         ,ua.argument_name AS name
@@ -725,6 +778,8 @@ ORDER BY ua.object_name, ua.overload, ua.sequence
    WHERE 1=1
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('OUT', 'IN/OUT')
+   AND ua.argument_name > ' '
+   and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
 ORDER BY ua.object_name, ua.overload, ua.sequence
   
 </select>    
