@@ -130,6 +130,23 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 					exeMessage(Messages.ObjectDeleteAction_10, e);
 				}
 			}
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+			ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
+			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_23, procedureDAO.getName() + Messages.ObjectDeleteAction_24)) {
+				try {
+					try{
+					TadpoleSystemCommons.executSQL(getUserDB(), "drop package body " + procedureDAO.getName()); //$NON-NLS-1$
+					}catch(Exception e){
+						// package body는 없을 수도 있음.
+					}
+					TadpoleSystemCommons.executSQL(getUserDB(), "drop package " + procedureDAO.getName()); //$NON-NLS-1$
+					
+					refreshPackage();
+				} catch(Exception e) {
+					logger.error(Messages.ObjectDeleteAction_26, e);
+					exeMessage(Messages.ObjectDeleteAction_10, e);
+				}
+			}
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 			ProcedureFunctionDAO functionDAO = (ProcedureFunctionDAO)sel.getFirstElement();
 			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_29, functionDAO.getName() + Messages.ObjectDeleteAction_30)) {

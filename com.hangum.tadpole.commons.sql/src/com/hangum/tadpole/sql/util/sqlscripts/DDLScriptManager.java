@@ -108,6 +108,8 @@ public class DDLScriptManager {
 			retStr = rdbScript.getFunctionScript((ProcedureFunctionDAO)obj);
 		} else if(PublicTadpoleDefine.DB_ACTION.PROCEDURES == actionType) {
 			retStr = rdbScript.getProcedureScript((ProcedureFunctionDAO)obj);
+		} else if(PublicTadpoleDefine.DB_ACTION.PACKAGES == actionType) {
+			retStr = rdbScript.getProcedureScript((ProcedureFunctionDAO)obj);
 		} else if(PublicTadpoleDefine.DB_ACTION.TRIGGERS == actionType) {
 			retStr = rdbScript.getTriggerScript((TriggerDAO)obj);
 		} else {

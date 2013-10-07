@@ -65,6 +65,8 @@ public class QueryTemplateUtils {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_INDEX_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
+			} else if(initAction == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+				defaultStr =  OracleDMLTemplate.TMP_CREATE_PACKAGE_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_FUNCTION_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {

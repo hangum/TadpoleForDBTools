@@ -503,7 +503,7 @@ public class ExplorerViewer extends ViewPart {
 	 * package 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshPackage(boolean boolRefresh) {
-		packageComposite.refreshProcedure(userDB, boolRefresh);
+		packageComposite.refreshPackage(userDB, boolRefresh);
 	}
 
 	/**

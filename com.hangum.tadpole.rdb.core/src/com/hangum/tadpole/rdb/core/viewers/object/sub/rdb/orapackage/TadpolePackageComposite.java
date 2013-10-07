@@ -134,23 +134,6 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 		
-		/*
-		packageTableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
-				if(!iss.isEmpty()) {
-					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)iss.getFirstElement();
-					
-					ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
-					if(pm.isExecuted(procedureDAO, getUserDB())) {
-						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
-						epd.open();
-					}
-				}	// end iss.isempty
-			}
-		});
-		*/
-		
 		packageTableViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 
@@ -361,7 +344,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	/**
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh) {
+	public void refreshPackage(final UserDBDAO userDB, boolean boolRefresh) {
 		if (!boolRefresh)
 			if (showPackage != null)
 				return;
@@ -377,7 +360,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 			TableUtil.packTable(packageTableViewer.getTable());
 
 		} catch (Exception e) {
-			logger.error("showProcedure refresh", e); //$NON-NLS-1$
+			logger.error("showPackage refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_71, errStatus); //$NON-NLS-1$
 		}
@@ -409,7 +392,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		deleteAction_Package.dispose();
 		refreshAction_Package.dispose();
 		viewDDLAction.dispose();
-		//executeAction_Procedure.dispose();
+		executeAction_Procedure.dispose();
 	}
 	
 }
