@@ -24,7 +24,8 @@ public class TableDAO {
 	String tab_name = "";
 	
 	/** mongoDB */
-	String size = "";
+	long rows = 0l;
+	long size = 0l;
 	
 	public TableDAO() {
 	}
@@ -59,13 +60,20 @@ public class TableDAO {
 		setName(tab_name);
 	}
 
-	public String getSize() {
+	public long getRows() {
+		return rows;
+	}
+
+	public void setRows(long rows) {
+		this.rows = rows;
+	}
+
+	public long getSize() {
 		return size;
 	}
 
-	public void setSize(String size) {
+	public void setSize(long size) {
 		this.size = size;
 	}
-	
 
 }

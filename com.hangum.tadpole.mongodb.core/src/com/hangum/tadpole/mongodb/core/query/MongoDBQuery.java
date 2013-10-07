@@ -111,8 +111,8 @@ public class MongoDBQuery {
 				dao.setName(col);
 				
 				CommandResult commandResult = mongoDB.getCollection(col).getStats();
-				dao.setComment( NumberFormatUtils.commaFormat(commandResult.getInt("count"))); //$NON-NLS-1$
-				dao.setSize(NumberFormatUtils.kbMbFormat(commandResult.getInt("size")));
+				dao.setRows(commandResult.getLong("count"));
+				dao.setSize(commandResult.getInt("size"));
 				
 				listReturn.add(dao);
 			}

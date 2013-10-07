@@ -54,6 +54,7 @@ import org.eclipse.ui.PartInitException;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -72,11 +73,10 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelect
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.MongoDBCollectionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
 import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
@@ -214,7 +214,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		tableTableList.setHeaderVisible(true);
 
 		// sorter
-		tableComparator = new TableComparator();
+		tableComparator = new MongoDBCollectionComparator();
 		tableListViewer.setSorter(tableComparator);
 
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
@@ -245,7 +245,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				return table.getComment();
+				return NumberFormatUtils.commaFormat(table.getRows());
 			}
 		});
 //		tvColRows.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
@@ -259,7 +259,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				return table.getSize();
+				return NumberFormatUtils.kbMbFormat(table.getSize());
 			}
 		});
 
