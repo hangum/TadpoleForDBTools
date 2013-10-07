@@ -24,7 +24,22 @@ public class ProcedureFunctionDAO {
 	String Database;
 	String Collation;
 	String Status;
+	String packagename;
 	
+	/**
+	 * @return the packagename
+	 */
+	public String getPackagename() {
+		return packagename == null ? "" : packagename ;
+	}
+
+	/**
+	 * @param packagename the packagename to set
+	 */
+	public void setPackagename(String packagename) {
+		this.packagename = packagename;
+	}
+
 	public boolean isValid() {
 		return "VALID".equals(Status) || Status == null || "".equals(Status);
 	}

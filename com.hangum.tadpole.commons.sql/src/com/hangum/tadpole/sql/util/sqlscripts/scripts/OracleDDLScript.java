@@ -310,13 +310,25 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 	@Override
 	public List<InOutParameterDAO> getProcedureInParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		return client.queryForList("getProcedureInParamter", procedureDAO.getName());
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("package_name", procedureDAO.getPackagename());
+		map.put("object_name", procedureDAO.getName());	
+
+		logger.debug("\n getProcedureInParamter=" + map.get("package_name"));
+		logger.debug("\n getProcedureInParamter=" + map.get("object_name"));
+		logger.debug("\n procedureDAO=" + procedureDAO);
+		
+		return client.queryForList("getProcedureInParamter", map);
 	}
 
 	@Override
 	public List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		return client.queryForList("getProcedureOutParamter", procedureDAO.getName());
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("package_name", procedureDAO.getPackagename());
+		map.put("object_name", procedureDAO.getName());	
+		
+		return client.queryForList("getProcedureOutParamter", map );
 	}
 
 }

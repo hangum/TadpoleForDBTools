@@ -44,6 +44,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongo
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index.TadpoleIndexesComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
@@ -81,6 +82,7 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleTriggerComposite 	triggerComposite 	= null;
 	private TadpoleFunctionComposite 	functionCompostite 	= null;
 	private TadpoleProcedureComposite	procedureComposite 	= null;
+	private TadpolePackageComposite	    packageComposite 	= null;
 	private TadpoleIndexesComposite 	indexComposite 		= null;
 	private TadpoleViewerComposite 		viewComposite 		= null;
 	private TadpoleTableComposite 		tableComposite 		= null;
@@ -142,6 +144,9 @@ public class ExplorerViewer extends ViewPart {
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
 					procedureComposite.filter(strSearchText);
+				
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
+					packageComposite.filter(strSearchText);
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
 					functionCompostite.filter(strSearchText);
@@ -229,6 +234,7 @@ public class ExplorerViewer extends ViewPart {
 		if(null != viewComposite) viewComposite.dispose(); 
 		if(null != indexComposite) indexComposite.dispose(); 
 		if(null != procedureComposite) procedureComposite.dispose(); 
+		if(null != packageComposite) packageComposite.dispose(); 
 		if(null != functionCompostite) functionCompostite.dispose(); 
 		if(null != triggerComposite) triggerComposite.dispose();
 		
@@ -311,7 +317,29 @@ public class ExplorerViewer extends ViewPart {
 			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString();
 			
-		// cubrid, mysql, oracle, postgre, mssql
+		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
+			createTable();
+			createView();
+			createIndexes();
+			createProcedure();
+			createPackage();
+			createFunction();
+			createTrigger();
+			
+			arrayStructuredViewer = new StructuredViewer[] { 
+				tableComposite.getTableListViewer(), 
+				viewComposite.getViewListViewer(), 
+				indexComposite.getTableViewer(), 
+				procedureComposite.getTableViewer(), 
+				packageComposite.getTableViewer(), 
+				packageComposite.getSubTableViewer(),
+				functionCompostite.getTableviewer(), 
+				triggerComposite.getTableViewer()
+			};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
+			
+			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
+		// cubrid, mysql, postgre, mssql
 		} else {
 			createTable();
 			createView();
@@ -353,6 +381,8 @@ public class ExplorerViewer extends ViewPart {
 			refreshIndexes(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
 			refreshProcedure(false);
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
+			refreshPackage(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
 			refreshFunction(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.toString())) {
@@ -412,6 +442,14 @@ public class ExplorerViewer extends ViewPart {
 	}
 
 	/**
+	 * Package 정의
+	 */
+	private void createPackage() {
+		packageComposite = new TadpolePackageComposite(getSite(), tabFolderObject, userDB);
+		packageComposite.initAction();
+	}
+
+	/**
 	 * indexes 정의
 	 */
 	private void createIndexes() {
@@ -459,6 +497,13 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshProcedure(boolean boolRefresh) {
 		procedureComposite.refreshProcedure(userDB, boolRefresh);
+	}
+
+	/**
+	 * package 정보를 최신으로 갱신 합니다.
+	 */
+	public void refreshPackage(boolean boolRefresh) {
+		packageComposite.refreshProcedure(userDB, boolRefresh);
 	}
 
 	/**

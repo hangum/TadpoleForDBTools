@@ -90,7 +90,8 @@ public class PublicTadpoleDefine {
 		FUNCTIONS, 
 		TRIGGERS,
 		COLLECTIONS,
-		JAVASCRIPT
+		JAVASCRIPT,
+		PACKAGES
 	};
 	
 	/** query editor에서 실행 모드 */
