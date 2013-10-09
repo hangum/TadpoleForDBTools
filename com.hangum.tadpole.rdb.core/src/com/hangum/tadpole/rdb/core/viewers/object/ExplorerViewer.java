@@ -283,6 +283,7 @@ public class ExplorerViewer extends ViewPart {
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
+				tableComposite.getTableColumnViewer(),
 				viewComposite.getViewListViewer(), 
 				indexComposite.getTableViewer(), 
 				triggerComposite.getTableViewer()
@@ -296,7 +297,8 @@ public class ExplorerViewer extends ViewPart {
 			createTable();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer() 
+				tableComposite.getTableListViewer(),
+				tableComposite.getTableColumnViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
@@ -327,7 +329,8 @@ public class ExplorerViewer extends ViewPart {
 			createTrigger();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(), 
+				tableComposite.getTableListViewer(),
+				tableComposite.getTableColumnViewer(),
 				viewComposite.getViewListViewer(), 
 				indexComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
@@ -350,6 +353,7 @@ public class ExplorerViewer extends ViewPart {
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
+				tableComposite.getTableColumnViewer(),
 				viewComposite.getViewListViewer(), 
 				indexComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 

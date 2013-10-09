@@ -13,13 +13,13 @@ package com.hangum.tadpole.rdb.core.util;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditorInput;
@@ -28,7 +28,6 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**
  * 쿼리 생성관련 유틸입니다.
@@ -134,14 +133,32 @@ public class FindEditorAndWriteQueryUtil {
 			MainEditor editor = (MainEditor)reference.getEditor(false);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
 			
-			editor.setAppendQueryText(lowSQL); //$NON-NLS-1$
-			editor.browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+			editor.appendText(lowSQL);
 		} catch (Exception e) {
 			logger.error("find editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 		}
+	}
+
+	/**
+	 * 현재 오픈되어 있는 에디터의 커서 포지션에 데이터를 뿌려줍니다.
+	 * 만약에 에디터가 없다면 무시합니다.
+	 * 
+	 * @param userDB
+	 * @param strAppendText
+	 */
+	public static void runAtPosition(String strAppendText) {
+
+		IEditorPart iep = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		if(iep != null) {
+			if(iep instanceof MainEditor) {
+				MainEditor editor = (MainEditor)iep;
+				editor.appendTextAtPosition(strAppendText);
+			}
+		}
+		
 	}
 	
 }

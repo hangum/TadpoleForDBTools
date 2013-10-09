@@ -467,14 +467,9 @@ public class MainEditor extends EditorExtension {
 					if (item.getBounds(i).contains(event.x, event.y)) {
 						String strText = item.getText(i);
 						if(strText == null || "".equals(strText)) return;
+						strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))? (" " + strText + " "): (" '" + strText + "' ");
 						
-						try {
-							strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))?strText:"'" + strText + "'";
-							setAppendQueryText(strText); //$NON-NLS-1$
-							browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT_AT_POSITION);
-						} catch(Exception ee){
-							logger.error("query text at position" , ee); //$NON-NLS-1$
-						}
+						appendTextAtPosition(strText);
 
 //		                TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), msg);
 //		                dlg.open();
@@ -570,12 +565,7 @@ public class MainEditor extends EditorExtension {
 				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(!is.isEmpty()) {
-					try {
-						setAppendQueryText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
-						browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
-					} catch(Exception ee){
-						logger.error("history selection" , ee); //$NON-NLS-1$
-					}
+					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
 				}
 			}
 		});
@@ -610,12 +600,7 @@ public class MainEditor extends EditorExtension {
 				
 				IStructuredSelection is = (IStructuredSelection)tableViewerSQLHistory.getSelection();
 				if(!is.isEmpty()) {
-					try {
-						setAppendQueryText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
-						browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
-					} catch(Exception ee){
-						logger.error("history selection" , ee); //$NON-NLS-1$
-					}
+					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}
@@ -803,6 +788,34 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
+	 * append text at position
+	 * 
+	 * @param strText
+	 */
+	public void appendTextAtPosition(String strText) {
+		try {
+			setAppendQueryText(strText); //$NON-NLS-1$
+			browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT_AT_POSITION);
+		} catch(Exception ee){
+			logger.error("query text at position" , ee); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * append text at position
+	 * 
+	 * @param strText
+	 */
+	public void appendText(String strText) {
+		try {
+			setAppendQueryText(strText); //$NON-NLS-1$
+			browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+		} catch(Exception ee){
+			logger.error("query text" , ee); //$NON-NLS-1$
+		}
+	}
+	
+	/**
 	 * refresh sql history table 
 	 */
 	private void refreshSqlHistory() {
@@ -940,7 +953,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 * @throws Exception
 	 */
-	private String getHistoryTabelSelectData() throws Exception {
+	private String getHistoryTabelSelectData() {
 		StringBuffer sbData = new StringBuffer();
 		
 		for(TableItem ti : tableSQLHistory.getSelection()) {

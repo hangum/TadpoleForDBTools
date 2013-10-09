@@ -77,6 +77,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -131,8 +132,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private GenerateSQLSelectAction deleteStmtAction;
 	
 	private AbstractObjectAction viewDDLAction;
-	
 	private AbstractObjectAction tableDataEditorAction;
+	
+	// table column
+	private TableColumnSelectionAction tableColumnSelectionAction;
 	
 	/**
 	 * Create the composite.
@@ -298,9 +301,21 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// filter
 		tableFilter = new TableFilter();
 		tableListViewer.addFilter(tableFilter);
+		
+		createTableMenu();
 
 		// columns
-		tableColumnViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		tableColumnViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tableColumnViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection is = (IStructuredSelection) event.getSelection();
+
+				if (null != is) {
+					TableColumnDAO tableDAO = (TableColumnDAO) is.getFirstElement();
+					FindEditorAndWriteQueryUtil.runAtPosition(tableDAO.getField());
+				}
+			}
+		});
 		Table tableTableColumn = tableColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
@@ -312,7 +327,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		tableColumnViewer.setContentProvider(new ArrayContentProvider());
 		tableColumnViewer.setLabelProvider(new TableColumnLabelprovider());
-		createMenu();
+		
+		createTableColumnMenu();
 		
 		sashForm.setWeights(new int[] { 1, 1 });
 	}
@@ -356,11 +372,31 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		return selectionAdapter;
 	}
+	
+	/**
+	 * create table column menu
+	 */
+	private void createTableColumnMenu() {
+		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		
+		// menu
+		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				manager.add(tableColumnSelectionAction);
+			}
+		});
+
+		tableColumnViewer.getTable().setMenu(menuMgr.createContextMenu(tableColumnViewer.getTable()));
+		getSite().registerContextMenu(menuMgr, tableColumnViewer);
+	}
 
 	/**
-	 * create menu
+	 * create Table menu
 	 */
-	private void createMenu() {
+	private void createTableMenu() {
 		creatAction_Table = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		deleteAction_Table = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
@@ -576,6 +612,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		viewDDLAction.setUserDB(getUserDB());
 		tableDataEditorAction.setUserDB(getUserDB());
+		
+		// table column
+		tableColumnSelectionAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -606,6 +645,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	public TableViewer getTableListViewer() {
 		return tableListViewer;
+	}
+	
+	/**
+	 * get table column viewer
+	 * @return
+	 */
+	public TableViewer getTableColumnViewer() {
+		return tableColumnViewer;
 	}
 
 	/**
