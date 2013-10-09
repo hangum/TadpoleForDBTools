@@ -106,6 +106,7 @@ import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.template.DBOperationType;
 import com.hangum.tadpole.sql.util.PartQueryUtil;
+import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.sql.util.ResultSetUtils;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
@@ -453,25 +454,32 @@ public class MainEditor extends EditorExtension {
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		sqlResultTableViewer = new TableViewer(compositeQueryResult, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		sqlResultTableViewer = new TableViewer(compositeQueryResult, SWT.BORDER | SWT.SINGLE);
 		sqlResultTableViewer.setUseHashlookup(true);
 		tableResult = sqlResultTableViewer.getTable();
 		tableResult.addListener(SWT.MouseDoubleClick, new Listener() {
 		    public void handleEvent(Event event) {
-		        Point pt = new Point(event.x, event.y);
-		        TableItem ti = tableResult.getItem(pt);
-		        if (ti == null) return;
-		        
-		        for (int i = 0; i < tableResult.getItemCount(); i++) {
-		            Rectangle rect = ti.getBounds(i);
-		            if (rect.contains(pt)) {
-		            	String msg = ti.getText(i);
-		            	if("".equals(msg.trim())) return; //$NON-NLS-1$
-		            	
-		                TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), msg);
-		                dlg.open();
-		             }
-		        }
+		    	TableItem[] selection = tableResult.getSelection();
+				if (selection.length != 1) return;
+
+				TableItem item = tableResult.getSelection()[0];
+				for (int i=0; i<tableResult.getColumnCount(); i++) {
+					if (item.getBounds(i).contains(event.x, event.y)) {
+						String strText = item.getText(i);
+						if(strText == null || "".equals(strText)) return;
+						
+						try {
+							strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))?strText:"'" + strText + "'";
+							setAppendQueryText(strText); //$NON-NLS-1$
+							browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT_AT_POSITION);
+						} catch(Exception ee){
+							logger.error("query text at position" , ee); //$NON-NLS-1$
+						}
+
+//		                TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), msg);
+//		                dlg.open();
+					}
+				}
 		    }
 		});
 		

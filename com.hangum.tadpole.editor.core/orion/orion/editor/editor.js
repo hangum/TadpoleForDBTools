@@ -206,8 +206,27 @@ define("orion/editor/editor", ['i18n!orion/editor/nls/messages', 'orion/textview
 				var lineCount = this._textView.getModel().getLineCount()-1;
 				var colunmCount = this._textView.getModel().getLineEnd(lineCount);
 				editor.onGotoLine(lineCount, 0);
+			}
+		},
+		/**
+		 * Append query Text at position
+		 */
+		appendQueryTextAtPosition : function(strText) {
+			if (this._textView) {
+				var textView = this._textView;
 				
-				this._textView.focus();
+				var selection = textView.getSelection();
+				
+				var sqlText = textView.getText();
+				var firstString = sqlText.substring(0, selection.start);
+				var lastString = sqlText.substring(selection.end);
+				
+				textView.setText(firstString + strText + " " + lastString);
+				
+				// 블럭을 선택합니다.
+				textView.setSelection(selection.start, (selection.start + strText.length + 1) , true);
+				
+				this.checkDirty();
 			}
 		},
 		// to upper case text

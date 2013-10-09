@@ -67,6 +67,9 @@ public abstract class EditorBrowserFunctionService extends BrowserFunction imple
 			case APPEND_QUERY_TEXT:
 				return appendQueryText(arguments);
 				
+			case APPEND_QUERY_TEXT_AT_POSITION:
+				return appendQueryText(arguments);
+				
 			case SQL_TO_APPLICATION:
 				sqlToApplication(arguments);
 				break;
