@@ -270,7 +270,6 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 			for (int i=0; i<srcScriptList.size(); i++){
 				result.append( srcScriptList.get(i));
 			}
-			result.append(PublicTadpoleDefine.SQL_DILIMITER + "\n");
 			result.append("/ \n\n ");
 			result.append("CREATE OR REPLACE ");
 			srcScriptList = client.queryForList("getPackageScript.body", procedureDAO.getName());				
@@ -278,7 +277,6 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 				result.append( srcScriptList.get(i));
 			}
 			
-			result.append(PublicTadpoleDefine.SQL_DILIMITER);
 			result.append("/ \n\n ");
 		}
 		
