@@ -145,6 +145,7 @@ public class DBListComposite extends Composite {
 					
 					if(ret == Dialog.OK) {
 						treeViewerDBList.setInput(initData());
+						refreshConnections();
 					}
 				}
 			});
