@@ -48,7 +48,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProced
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionLabelProvicer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionViewFilter;
@@ -72,7 +72,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private static final Logger logger = Logger.getLogger(TadpoleFunctionComposite.class);
 	
 	private TableViewer functionTableViewer;
-	private ObjectComparator fuctionComparator;
+	private ProcedureFunctionComparator fuctionComparator;
 	private List<ProcedureFunctionDAO> showFunction;
 	private ProcedureFunctionViewFilter functionFilter;
 
@@ -118,7 +118,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
-		fuctionComparator = new ObjectComparator();
+		fuctionComparator = new ProcedureFunctionComparator();
 		functionTableViewer.setSorter(fuctionComparator);
 
 		createProcedureFunctionColumn(functionTableViewer, fuctionComparator);

@@ -43,7 +43,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.TriggerComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -64,7 +64,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	private static final Logger logger = Logger.getLogger(TadpoleTriggerComposite.class);
 	
 	private TableViewer triggerTableViewer;
-	private ObjectComparator triggerComparator;
+	private TriggerComparator triggerComparator;
 	private List<TriggerDAO> showTrigger;
 	private TriggerViewFilter triggerFilter;
 
@@ -109,7 +109,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
-		triggerComparator = new ObjectComparator();
+		triggerComparator = new TriggerComparator();
 		triggerTableViewer.setSorter(triggerComparator);
 
 		createTriggerColumn(triggerTableViewer, triggerComparator);

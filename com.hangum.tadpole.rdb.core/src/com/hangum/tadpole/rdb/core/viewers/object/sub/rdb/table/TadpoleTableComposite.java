@@ -210,6 +210,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						showTableColumns = null;
 
 					tableColumnViewer.setInput(showTableColumns);
+					
+					tableColumnComparator = new TableColumnComparator();
+					tableColumnViewer.setSorter(tableColumnComparator);
+					
 					tableColumnViewer.refresh();
 					TableUtil.packTable(tableColumnViewer.getTable());
 

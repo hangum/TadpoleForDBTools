@@ -42,13 +42,13 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -70,7 +70,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private static final Logger logger = Logger.getLogger(TadpoleProcedureComposite.class);
 
 	private TableViewer procedureTableViewer;
-	private ObjectComparator procedureComparator;
+	private ProcedureFunctionComparator procedureComparator;
 	private List<ProcedureFunctionDAO> showProcedure;
 	private ProcedureFunctionViewFilter procedureFilter;
 
@@ -130,7 +130,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			}
 		});
 
-		procedureComparator = new ObjectComparator();
+		procedureComparator = new ProcedureFunctionComparator();
 		procedureTableViewer.setSorter(procedureComparator);
 
 		createProcedureFunctionColumn(procedureTableViewer, procedureComparator);

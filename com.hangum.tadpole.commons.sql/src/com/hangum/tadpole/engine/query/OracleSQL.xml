@@ -381,15 +381,17 @@ ORDER BY s.object_name
 	collation				:
  -->
 <select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
-SELECT  
-          s.object_name AS name
-        , s.object_type AS TYPE
-        , #db_name#   AS db
-        , s.created
-        , s.status
-FROM    user_objects s
-WHERE   s.object_type = 'TRIGGER'
-ORDER BY s.object_name 
+  SELECT s.object_name AS name
+        ,t.table_name AS table_name
+        ,t.triggering_event AS event
+        ,t.when_clause AS timing
+        ,s.object_type AS TYPE
+        ,#db_name# AS db
+        ,s.created
+        , (CASE WHEN t.status = 'ENABLED' AND s.status = 'VALID' THEN 'VALID' ELSE 'INVALID' END) AS status
+    FROM user_objects s INNER JOIN user_triggers t ON S.OBJECT_NAME = t.trigger_name
+   WHERE s.object_type = 'TRIGGER'
+ORDER BY t.table_name, s.object_name
 </select>
 
 <!-- 

@@ -50,7 +50,7 @@ public class TriggerDAO {
 	}
 
 	public String getEvent() {
-		return Event;
+		return Event == null ? "" : Event;
 	}
 
 	public void setEvent(String event) {
@@ -72,7 +72,7 @@ public class TriggerDAO {
 	}
 
 	public String getStatement() {
-		return Statement;
+		return Statement == null ? "" : Statement;
 	}
 
 	public void setStatement(String statement) {
@@ -80,7 +80,7 @@ public class TriggerDAO {
 	}
 
 	public String getTiming() {
-		return Timing;
+		return Timing == null ? "" : Timing;
 	}
 
 	public void setTiming(String timing) {

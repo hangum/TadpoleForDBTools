@@ -65,7 +65,7 @@ public class TableColumnDAO {
 	}
 
 	public String getField() {
-		return Field;
+		return Field == null ? "" : Field;
 	}
 
 	public void setField(String field) {
@@ -124,7 +124,7 @@ public class TableColumnDAO {
 	}
 
 	public String getName() {
-		return name;
+		return name == null || "".equals(name) ? this.getField() : name ;
 	}
 
 	public void setName(String name) {

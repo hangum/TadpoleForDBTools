@@ -47,14 +47,15 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionLabelProvicer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionViewFilter;
@@ -82,7 +83,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private String selectPackageName = ""; //$NON-NLS-1$
 
 	private TableViewer packageTableViewer;
-	private ObjectComparator packageComparator;
+	private ProcedureFunctionComparator packageComparator;
 	private List<ProcedureFunctionDAO> showPackage;
 	private ProcedureFunctionViewFilter packageFilter;
 
@@ -178,7 +179,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		});		
 		
 
-		packageComparator = new ObjectComparator();
+		packageComparator = new ProcedureFunctionComparator();
 		packageTableViewer.setSorter(packageComparator);
 
 		createProcedureFunctionColumn(packageTableViewer, packageComparator);

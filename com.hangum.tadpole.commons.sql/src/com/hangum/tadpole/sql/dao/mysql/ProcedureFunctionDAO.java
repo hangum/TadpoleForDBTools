@@ -77,7 +77,7 @@ public class ProcedureFunctionDAO {
 	}
 
 	public String getDefiner() {
-		return Definer;
+		return Definer == null ? "" : Definer;
 	}
 
 	public void setDefiner(String definer) {
@@ -85,7 +85,7 @@ public class ProcedureFunctionDAO {
 	}
 
 	public String getModified() {
-		return Modified;
+		return Modified == null ? "" : Modified;
 	}
 
 	public void setModified(String modified) {
@@ -101,7 +101,7 @@ public class ProcedureFunctionDAO {
 	}
 
 	public String getSecurity_type() {
-		return Security_type;
+		return Security_type == null ? "" : Security_type;
 	}
 
 	public void setSecurity_type(String security_type) {
@@ -109,7 +109,7 @@ public class ProcedureFunctionDAO {
 	}
 
 	public String getComment() {
-		return Comment;
+		return Comment == null ? "" : Comment;
 	}
 
 	public void setComment(String comment) {
@@ -117,7 +117,7 @@ public class ProcedureFunctionDAO {
 	}
 
 	public String getCharacter_set_client() {
-		return character_set_client;
+		return character_set_client == null ? "" : character_set_client;
 	}
 
 	public void setCharacter_set_client(String character_set_client) {
@@ -125,7 +125,7 @@ public class ProcedureFunctionDAO {
 	}
 
 	public String getCollation_connection() {
-		return collation_connection;
+		return collation_connection == null ? "" : collation_connection;
 	}
 
 	public void setCollation_connection(String collation_connection) {
@@ -133,7 +133,7 @@ public class ProcedureFunctionDAO {
 	}
 
 	public String getDatabase() {
-		return Database;
+		return Database == null ? "" : Database;
 	}
 
 	public void setDatabase(String database) {
@@ -141,7 +141,7 @@ public class ProcedureFunctionDAO {
 	}
 
 	public String getCollation() {
-		return Collation;
+		return Collation == null ? "" : Collation;
 	}
 
 	public void setCollation(String collation) {
