@@ -37,6 +37,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -45,6 +46,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
@@ -79,6 +81,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private ObjectRefreshAction refreshAction_Function;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction_Procedure;
+	private OracleObjectCompileAction objectCompileAction;
 	
 	/**
 	 * function composite
@@ -158,6 +161,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "View"); //$NON-NLS-1$
 
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
@@ -174,6 +179,9 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 				manager.add(viewDDLAction);
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(executeAction_Procedure);
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(objectCompileAction);
+				}
 			}
 		});
 
@@ -205,6 +213,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		viewDDLAction.setUserDB(getUserDB());
 
 		executeAction_Procedure.setUserDB(getUserDB());
+		objectCompileAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -252,6 +261,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		deleteAction_Function.dispose();
 		refreshAction_Function.dispose();
 		viewDDLAction.dispose();
+		executeAction_Procedure.dispose();
+		objectCompileAction.dispose();
 	}
 
 }

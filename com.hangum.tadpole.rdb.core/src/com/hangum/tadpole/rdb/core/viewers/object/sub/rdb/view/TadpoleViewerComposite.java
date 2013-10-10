@@ -45,6 +45,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -52,6 +53,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
@@ -86,6 +88,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private ObjectDeleteAction deleteAction_View;
 	private ObjectRefreshAction refreshAction_View;
 	private GenerateViewDDLAction viewDDLAction;
+	private OracleObjectCompileAction objectCompileAction;
 
 	/**
 	 * 
@@ -247,21 +250,27 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 //		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
 
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_View);
 					manager.add(deleteAction_View);
-//					manager.add(modifyAction_View);
-					manager.add(refreshAction_View);
+				}
+//				manager.add(modifyAction_View);
+				manager.add(refreshAction_View);
 					
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(viewDDLAction);
+				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+				manager.add(viewDDLAction);
+				
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(objectCompileAction);
 				}
 			}
 		});
@@ -319,6 +328,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 //		modifyAction_View.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
+		objectCompileAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -342,5 +352,6 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		deleteAction_View.dispose();
 		refreshAction_View.dispose();
 		viewDDLAction.dispose();
+		objectCompileAction.dispose();
 	}
 }

@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -41,6 +42,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
@@ -70,6 +72,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	private ObjectDeleteAction deleteAction_Trigger;
 	private ObjectRefreshAction refreshAction_Trigger;
 	private GenerateViewDDLAction viewDDLAction;
+	private OracleObjectCompileAction objectCompileAction;
 
 	/**
 	 * trigger composite
@@ -129,6 +132,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "View"); //$NON-NLS-1$
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -139,12 +143,16 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Trigger);
 					manager.add(deleteAction_Trigger);
-					
-					manager.add(refreshAction_Trigger);
-					
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(viewDDLAction);
 				}
+					
+				manager.add(refreshAction_Trigger);
+				
+				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+				manager.add(viewDDLAction);
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(objectCompileAction);
+				}
+				
 			}
 		});
 
@@ -174,6 +182,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		refreshAction_Trigger.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
+		objectCompileAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -219,6 +228,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		creatAction_Trigger.dispose();
 		deleteAction_Trigger.dispose();
 		refreshAction_Trigger.dispose();
-		viewDDLAction.dispose();		
+		viewDDLAction.dispose();	
+		objectCompileAction.dispose();
 	}
 }

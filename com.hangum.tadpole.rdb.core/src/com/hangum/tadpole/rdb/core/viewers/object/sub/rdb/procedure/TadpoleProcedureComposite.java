@@ -37,10 +37,12 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
@@ -77,6 +79,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private ObjectRefreshAction refreshAction_Procedure;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction_Procedure;
+	private OracleObjectCompileAction objectCompileAction;
 
 	/**
 	 * procedure
@@ -152,6 +155,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "View"); //$NON-NLS-1$
 
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -162,14 +166,17 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Procedure);
 					manager.add(deleteAction_Procedure);
-					manager.add(refreshAction_Procedure);
-
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(viewDDLAction);
 				}
+				manager.add(refreshAction_Procedure);
+
+				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+				manager.add(viewDDLAction);
 
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(executeAction_Procedure);
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(objectCompileAction);
+				}
 			}
 		});
 
@@ -200,6 +207,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		deleteAction_Procedure.setUserDB(getUserDB());
 		refreshAction_Procedure.setUserDB(getUserDB());
 		executeAction_Procedure.setUserDB(getUserDB());
+		objectCompileAction.setUserDB(getUserDB());
 
 		viewDDLAction.setUserDB(getUserDB());
 	}
@@ -252,6 +260,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		refreshAction_Procedure.dispose();
 		viewDDLAction.dispose();
 		executeAction_Procedure.dispose();
+		objectCompileAction.dispose();
 	}
 	
 }

@@ -47,7 +47,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCompileAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
@@ -91,7 +91,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private ObjectRefreshAction refreshAction_Package;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction_Procedure;
-	private ObjectCompileAction objectCompileAction;
+	private OracleObjectCompileAction objectCompileAction;
 
 	// column info
 	private TableViewer packageProcFuncViewer;
@@ -220,8 +220,8 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "View"); //$NON-NLS-1$
 
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
 
-		objectCompileAction = new ObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -239,7 +239,9 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 				}
 
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				manager.add(objectCompileAction);
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(objectCompileAction);
+				}
 			}
 		});
 		
@@ -397,6 +399,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		refreshAction_Package.dispose();
 		viewDDLAction.dispose();
 		executeAction_Procedure.dispose();
+		objectCompileAction.dispose();
 	}
 	
 }
