@@ -32,7 +32,7 @@ public class TadpoleSystemConnectorTest extends TestCase {
 	
 		try {
 			// 기존 디비 파일을 삭제 하고 제대로 생성되는지 검사합니다.
-			new File(TadpoleSystemInitializer.DB_FILE_LOCATION + TadpoleSystemInitializer.DB_NAME).delete(); 
+			new File(TadpoleSystemInitializer.DEFAULT_DB_FILE_LOCATION + TadpoleSystemInitializer.DB_NAME).delete(); 
 
 			//
 			TadpoleSystemInitializer.initSystem();

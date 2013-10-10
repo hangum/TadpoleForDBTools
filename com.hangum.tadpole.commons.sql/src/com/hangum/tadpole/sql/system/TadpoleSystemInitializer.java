@@ -53,12 +53,12 @@ public class TadpoleSystemInitializer {
 
 	private static UserDBDAO tadpoleEngineDB;
 
-	public static final String DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db/";// //$NON-NLS-1$
+	public static String DEFAULT_DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db";// //$NON-NLS-1$
 	public static final String DB_NAME = "tadpole-system.db"; //$NON-NLS-1$
-	public static final String DB_INFORMATION = Messages.TadpoleSystemConnector_2;
+	private static final String DB_INFORMATION = Messages.TadpoleSystemConnector_2;
 
 	/** default group */
-	public static final String GROUP_NAME = "Default_Group";
+	private static final String GROUP_NAME = "Default_Group";
 
 	/** guest mode */
 	public static final String GUEST_EMAIL = "guest.tadpole@gmail.com"; //$NON-NLS-1$
@@ -84,10 +84,19 @@ public class TadpoleSystemInitializer {
 
 		// 로컬 디비를 사용 할 경우.
 		if (!ApplicationArgumentUtils.isDBServer()) {
-			if (!new File(DB_FILE_LOCATION).exists()) {
-				boolean bool = new File(DB_FILE_LOCATION).mkdirs();
+
+			try {
+				if(ApplicationArgumentUtils.isDBPath()) DEFAULT_DB_FILE_LOCATION = ApplicationArgumentUtils.getDBPath() + File.separator;
+				if (!new File(DEFAULT_DB_FILE_LOCATION).exists()) {
+					if(!new File(DEFAULT_DB_FILE_LOCATION).mkdirs()) {
+						throw new Exception("Can not create the Directory. " + DEFAULT_DB_FILE_LOCATION);
+					}
+				}
+				if (logger.isDebugEnabled()) logger.debug(DEFAULT_DB_FILE_LOCATION + DB_NAME);
+			} catch(Exception e) {
+				logger.error("System DB Initialize exception", e);
+				System.exit(1);
 			}
-			if (logger.isDebugEnabled()) logger.debug(DB_FILE_LOCATION + DB_NAME);
 
 			// 원격디비를 사용 할 경우.
 		} else {
@@ -95,11 +104,11 @@ public class TadpoleSystemInitializer {
 				dbServerPath = ApplicationArgumentUtils.getDbServer();
 				if (!new File(dbServerPath).exists()) {
 					logger.error("DBServer file not found. " + dbServerPath);
-					System.exit(0);
+					System.exit(1);
 				}
 			} catch (Exception e) {
 				logger.error("Tadpole Argument error. check ini file is -dbServer value. ", e);
-				System.exit(0);
+				System.exit(1);
 			}
 		}
 
@@ -127,7 +136,7 @@ public class TadpoleSystemInitializer {
 		boolean isInitialize = false;
 		
 		if (!ApplicationArgumentUtils.isDBServer()) {
-			if(new File(DB_FILE_LOCATION + DB_NAME).canRead()) {
+			if(new File(DEFAULT_DB_FILE_LOCATION + DB_NAME).canRead()) {
 				isInitialize = true;
 			}
 		} else {
@@ -260,7 +269,7 @@ public class TadpoleSystemInitializer {
 		if ("".equals(dbServerPath)) {
 
 			tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDBToString());
-			tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDB_URL_INFO(), DB_FILE_LOCATION + DB_NAME));
+			tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDB_URL_INFO(), DEFAULT_DB_FILE_LOCATION + DB_NAME));
 			tadpoleEngineDB.setDb(DB_INFORMATION);
 			tadpoleEngineDB.setDisplay_name(DB_INFORMATION);
 			tadpoleEngineDB.setPasswd(""); //$NON-NLS-1$

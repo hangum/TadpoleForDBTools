@@ -224,7 +224,7 @@ define("orion/editor/editor", ['i18n!orion/editor/nls/messages', 'orion/textview
 				textView.setText(firstString + strText + " " + lastString);
 				
 //				// 블럭을 선택합니다.
-				textView.setSelection((selection.start + strText.length + 1), (selection.start + strText.length + 1) , true);
+				textView.setSelection((selection.start + strText.length), (selection.start + strText.length) , true);
 				
 				this.checkDirty();
 			}

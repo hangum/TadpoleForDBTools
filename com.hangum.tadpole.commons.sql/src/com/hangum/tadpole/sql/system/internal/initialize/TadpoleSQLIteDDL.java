@@ -13,7 +13,7 @@ package com.hangum.tadpole.sql.system.internal.initialize;
 import org.eclipse.osgi.util.NLS;
 
 public class TadpoleSQLIteDDL extends NLS {
-	private static String BUNDLE_NAME = "com.hangum.tadpole.system.internal.initialize.tadpole_sqlite_ddl"; //$NON-NLS-1$
+	private static String BUNDLE_NAME = "com.hangum.tadpole.sql.system.internal.initialize.tadpole_sqlite_ddl"; //$NON-NLS-1$
 
 	public static String tadpole_system;
 	public static String user_group;

@@ -45,6 +45,24 @@ public class ApplicationArgumentUtils {
 	public static String getDbServer() throws Exception {
 		return getValue("-dbServer");
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static boolean isDBPath() {
+		return checkString("-dbPath");
+	}
+	
+	/**
+	 * 엔진디비를 로컬디비를 사용했을때 path를 적어 줍니다.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getDBPath() throws Exception {
+		return getValue("-dbPath");
+	}
 
 	/**
 	 * <pre>

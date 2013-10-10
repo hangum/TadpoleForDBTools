@@ -236,7 +236,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$		
+//		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$		
 		
 		return true;
 	}

@@ -467,7 +467,7 @@ public class MainEditor extends EditorExtension {
 					if (item.getBounds(i).contains(event.x, event.y)) {
 						String strText = item.getText(i);
 						if(strText == null || "".equals(strText)) return;
-						strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))? (" " + strText + " "): (" '" + strText + "' ");
+						strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))? (" " + strText + ""): (" '" + strText + "'");
 						
 						appendTextAtPosition(strText);
 

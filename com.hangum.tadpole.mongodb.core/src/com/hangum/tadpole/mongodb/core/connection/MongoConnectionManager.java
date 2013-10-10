@@ -121,6 +121,7 @@ public class MongoConnectionManager {
 						//디비가 정상 생성 되어 있는지 권한이 올바른지 검사하기 위해 날려봅니다.
 						db.getCollectionNames();
 					} catch(Exception e) {
+						logger.error("error", e);
 						throw new MongoDBNotFoundException(userDB.getDb() + Messages.MongoDBConnection_0);
 					}
 					
