@@ -286,15 +286,15 @@ ORDER BY s.object_type DESC, s.object_name
 -->
 
 <select id="packageList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-SELECT  
+	SELECT  
           s.object_name AS name
         , s.object_type AS TYPE
         , #db_name#   AS db
         , s.created
-        , s.status
-FROM    user_objects s
-WHERE   s.object_type = 'PACKAGE'
-ORDER BY s.object_type DESC, s.object_name 
+        , (CASE WHEN 'VALID' = NVL (b.status, 'VALID') AND 'VALID' = s.status THEN 'VALID' ELSE 'INVALID' END) AS status
+    FROM user_objects s LEFT JOIN user_objects b ON s.object_name = b.object_name AND b.object_type = 'PACKAGE BODY'
+	WHERE   s.object_type = 'PACKAGE'
+	ORDER BY s.object_type DESC, s.object_name 
 </select>
 
 <!-- 

@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -48,6 +47,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCompileAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
@@ -91,6 +91,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private ObjectRefreshAction refreshAction_Package;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction_Procedure;
+	private ObjectCompileAction objectCompileAction;
 
 	// column info
 	private TableViewer packageProcFuncViewer;
@@ -220,6 +221,8 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
 
+		objectCompileAction = new ObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
+
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
@@ -236,7 +239,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 				}
 
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				//manager.add(executeAction_Procedure);
+				manager.add(objectCompileAction);
 			}
 		});
 		
@@ -339,6 +342,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		executeAction_Procedure.setUserDB(getUserDB());
 
 		viewDDLAction.setUserDB(getUserDB());
+		objectCompileAction.setUserDB(getUserDB());
 	}
 
 	/**
