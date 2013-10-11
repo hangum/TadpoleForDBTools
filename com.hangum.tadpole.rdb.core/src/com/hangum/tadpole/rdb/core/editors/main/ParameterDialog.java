@@ -172,6 +172,7 @@ public class ParameterDialog extends Dialog {
 			paramCount = stmt.getParameterMetaData().getParameterCount();
 
 		} catch (Exception e) {
+			paramCount = 0;
 			e.printStackTrace();
 		} finally {
 			try {
