@@ -19,6 +19,9 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
+
 /**
  * SampleDAtaEditingSupport
  * 
@@ -35,16 +38,19 @@ public class ParameterEditingSupport extends EditingSupport {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ParameterEditingSupport.class);
-	private static final String[] types = { "String", "Long", "Integer" };
 
 	private final TableViewer viewer;
 	private int columnIndex;
+	private UserDBDAO userDB;
+	private final String[] types;
 
-	public ParameterEditingSupport(TableViewer viewer, int columnIndex) {
+	public ParameterEditingSupport(TableViewer viewer, int columnIndex, UserDBDAO userDB) {
 		super(viewer);
 
 		this.viewer = viewer;
 		this.columnIndex = columnIndex;
+		this.userDB = userDB;
+		this.types = RDBTypeToJavaTypeUtils.supportParameterTypes(userDB);
 	}
 
 	@Override
@@ -53,16 +59,14 @@ public class ParameterEditingSupport extends EditingSupport {
 
 		if (columnIndex == 2) {
 			return new ComboBoxCellEditor(viewer.getTable(), types);
-		} else {
-			if (map.get(2).equals("String")) {
-				return new TextCellEditor(viewer.getTable());
-			} else if (map.get(2).equals("Long")) {
-				return new TextCellEditor(viewer.getTable());
-			} else if (map.get(2).equals("Integer")) {
+		} else if (columnIndex == 3) {
+			if (RDBTypeToJavaTypeUtils.isNumberType((String)map.get(2)) || RDBTypeToJavaTypeUtils.isCharType((String)map.get(2)) ) {
 				return new TextCellEditor(viewer.getTable());
 			} else {
 				return new TextCellEditor(viewer.getTable());
 			}
+		}else{
+			return null;
 		}
 	}
 
@@ -80,18 +84,9 @@ public class ParameterEditingSupport extends EditingSupport {
 		HashMap<Integer, Object> map = (HashMap<Integer, Object>) element;
 
 		if (columnIndex == 2) {
-			if (map.get(2).equals("String")) {
-				return 0;
-			} else if ("Long".equals(map.get(2))) {
-				return 1;
-			} else if ("Integer".equals(map.get(2))) {
-				return 2;
-			} else {
-				return 0;
-			}
-
+			return RDBTypeToJavaTypeUtils.getIndex(userDB, (String) map.get(2));
 		} else if (columnIndex == 3) {
-			return (String) map.get(3);
+			return map.get(3);
 		}
 
 		return null;
@@ -101,13 +96,7 @@ public class ParameterEditingSupport extends EditingSupport {
 	protected void setValue(Object element, Object value) {
 		HashMap<Integer, Object> map = (HashMap<Integer, Object>) element;
 		if (columnIndex == 2) {
-			if (Integer.valueOf(value.toString()) == 0) {
-				map.put(2, "String");
-			} else if (Integer.valueOf(value.toString()) == 1){
-				map.put(2, "Long");
-			} else if (Integer.valueOf(value.toString()) == 2){
-				map.put(2, "Integer");
-			}
+			map.put(2, this.types[(Integer) value]);
 		} else if (columnIndex == 3) {
 			map.put(3, value);
 		}
