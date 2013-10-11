@@ -257,6 +257,7 @@ public class SQLUtil {
 	public static String[] makeResourceDataArays(String resourceContent)  {
 		int cutsize = 1998;
 		String[] tmpRetArryStr = new String[2000];
+		resourceContent = resourceContent == null ? "" : resourceContent;
 		byte[] byteSqlText = resourceContent.getBytes();
 		
 		int isEndTextHangul = 0;

@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.File;
+import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -50,8 +51,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -72,7 +71,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
-import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -92,6 +90,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
+import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
@@ -205,6 +204,7 @@ public class MainEditor extends EditorExtension {
 	    
     /** content download를 위한 더미 composite */
     private Composite compositeDumy;
+	private ParameterObject param;
     
 	public MainEditor() {
 		super();
@@ -1008,6 +1008,7 @@ public class MainEditor extends EditorExtension {
 				executeLastSQL = SQLUtil.executeQuery(strSQL);
 				
 				// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
+				// ResultSet이 없는 create, insert, update 등의 문장을 실행하기 위함.
 				if(!isStatement(executeLastSQL)) {
 					listStrExecuteQuery.add(executeLastSQL);
 					tmpArayExecuteQuery += executeLastSQL + PublicTadpoleDefine.LINE_SEPARATOR;
@@ -1056,6 +1057,7 @@ public class MainEditor extends EditorExtension {
 		}
 
 		// 쿼리를 실행할 수 있도록 준비합니다.
+		// All Execute일 경우는 가장 마지막 Select문만 실행하여 결과탭에 표시한다.
 		final String finalExecuteSQL = executeLastSQL;
 		final boolean isStatement = isStatement(executeLastSQL);
 		
@@ -1063,6 +1065,17 @@ public class MainEditor extends EditorExtension {
 		final boolean isAutoCommit = isAutoCommit();
 		
 		final String strArayExecuteQuery = tmpArayExecuteQuery;
+		
+		// Parameter Object init.
+		param = null;
+		if(intExecuteQueryType != ALL_QUERY_EXECUTE) {
+			ParameterDialog epd = new ParameterDialog(this.getSite().getWorkbenchWindow().getShell(), this.userDB, finalExecuteSQL);
+			if (epd.getParamCount() > 0){
+				epd.open();
+				param = epd.getParameterObject();
+				epd.close();
+			}
+		}
 
 		// job
 		Job job = new Job(Messages.MainEditor_45) {
@@ -1082,20 +1095,25 @@ public class MainEditor extends EditorExtension {
 						executingSQLHistoryDAO.setStrSQLText(strArayExecuteQuery);
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
+							// select 문장 이외의 문장 처리.
 							runSQLExecuteBatch(listStrExecuteQuery, isAutoCommit);
 						}
-						executingSQLHistoryDAO.setEndDateExecute(new Date());
-						executingSQLHistoryDAO.setResult("Success"); //$NON-NLS-1$
-						listExecutingSqltHistoryDao.add(executingSQLHistoryDAO);
-						
 						// select 문장 실행
+						// 가장 마지막 문장이 select 문장이 아닐경우는 결과탭에는 아무것도 표시하지 않는다.
 						if(isStatement) { //$NON-NLS-1$
 							executingSQLHistoryDAO = new SQLHistoryDAO();
 							executingSQLHistoryDAO.setStartDateExecute(new Date());
 							
 							runSQLSelect(finalExecuteSQL, isAutoCommit);
 							executingSQLHistoryDAO.setRows(sourceDataList.size());
+						}else{
+							// 기존 결과가 화면에 남아있는데.. 결과탭 초기화는 안해줘도 되는가??
 						}
+					
+						//executingSQLHistoryDAO.setEndDateExecute(new Date());
+						//executingSQLHistoryDAO.setResult("Success"); //$NON-NLS-1$
+						//listExecutingSqltHistoryDao.add(executingSQLHistoryDAO);
+						
 					} else {
 						executingSQLHistoryDAO.setStrSQLText(finalExecuteSQL);
 						
@@ -1247,6 +1265,13 @@ public class MainEditor extends EditorExtension {
 				}
 				
 				stmt = javaConn.prepareStatement(requestQuery);
+				
+				if (param != null && param.getParameter().length > 0 ){
+					int i = 1;
+					for (Object obj : param.getParameter()){
+						stmt.setObject(i++, obj);
+					}
+				}
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
 				rs = stmt.executeQuery();
 				
@@ -1290,6 +1315,8 @@ public class MainEditor extends EditorExtension {
 			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
 			sourceDataList = ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma);
 			
+		}catch(Exception e){
+			e.printStackTrace();
 		} finally {
 			try { stmt.close(); } catch(Exception e) {}
 			try { rs.close(); } catch(Exception e) {}
@@ -1327,11 +1354,9 @@ public class MainEditor extends EditorExtension {
 			for (String strQuery : listQuery) {
 				// 쿼리 중간에 commit이나 rollback이 있으면 어떻게 해야 하나???
 				if(!transactionQuery(strQuery)) { 
-					
 					if(StringUtils.startsWith(strQuery.trim().toUpperCase(), "CREATE TABLE")) { //$NON-NLS-1$
 						strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					
 				}
 				statement.addBatch(strQuery);
 			}
@@ -1339,6 +1364,7 @@ public class MainEditor extends EditorExtension {
 		} catch(Exception e) {
 			logger.error("Execute batch update", e); //$NON-NLS-1$
 			throw e;
+			
 		} finally {
 			try { statement.close();} catch(Exception e) {}
 
@@ -1365,6 +1391,7 @@ public class MainEditor extends EditorExtension {
 		
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
+		PreparedStatement pstmt = null;
 		try {
 			if(isAutoCommit) {
 				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
@@ -1373,7 +1400,6 @@ public class MainEditor extends EditorExtension {
 				javaConn = TadpoleSQLTransactionManager.getInstance(strUserEMail, userDB, isAutoCommit);
 			}
 			
-			statement = javaConn.createStatement();
 			
 			final String checkSQL = sqlQuery.trim().toUpperCase();
 			// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
@@ -1390,8 +1416,24 @@ public class MainEditor extends EditorExtension {
 			) { //$NON-NLS-1$
 				sqlQuery += ";"; //$NON-NLS-1$
 			}
-			// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-			statement.execute(sqlQuery);//executeUpdate( sqlQuery );
+			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "INSERT") ||  //$NON-NLS-1$
+					StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "UPDATE")  || //$NON-NLS-1$
+					StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DELETE")) {  //$NON-NLS-1$
+				pstmt = javaConn.prepareStatement(sqlQuery);
+				
+				if (param != null && param.getParameter().length > 0 ){
+					int i = 1;
+					for (Object obj : param.getParameter()){
+						pstmt.setObject(i++, obj);
+					}
+				}				
+				pstmt.executeUpdate();
+				
+			}else{
+				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+				statement = javaConn.createStatement();
+				statement.execute(sqlQuery);//executeUpdate( sqlQuery );
+			}
 			
 			// create table, drop table이면 작동하도록			
 			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
