@@ -1315,8 +1315,6 @@ public class MainEditor extends EditorExtension {
 			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
 			sourceDataList = ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma);
 			
-		}catch(Exception e){
-			e.printStackTrace();
 		} finally {
 			try { stmt.close(); } catch(Exception e) {}
 			try { rs.close(); } catch(Exception e) {}
