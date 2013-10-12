@@ -248,7 +248,7 @@ public abstract class AbstractLoginComposite extends Composite {
 					return false;
 				}
 				
-			} else if(DATA_STATUS.MODIFY == dataActionStatus) {
+			} else {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
 				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getSeq(), userDBDao)) {
