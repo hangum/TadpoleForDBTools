@@ -14,7 +14,7 @@ package com.hangum.tadpole.sql.dao.system;
  * user 정보 정의
  * 
  * @author hangum
- *
+ * 
  */
 public class UserDAO {
 	int seq;
@@ -25,15 +25,19 @@ public class UserDAO {
 	String delYn;
 	String create_time;
 	String approval_yn;
-	
+	String security_question;
+	String security_answer;
+
 	public UserDAO() {
 	}
-	
-	public UserDAO(String email, String name, String language, String approval_yn) {
+
+	public UserDAO(String email, String name, String language, String approval_yn, String security_question, String security_answer) {
 		this.email = email;
 		this.name = name;
 		this.language = language;
 		this.approval_yn = approval_yn;
+		this.security_question = security_question;
+		this.security_answer = security_answer;
 	}
 
 	public int getSeq() {
@@ -76,7 +80,8 @@ public class UserDAO {
 	}
 
 	/**
-	 * @param language the language to set
+	 * @param language
+	 *            the language to set
 	 */
 	public void setLanguage(String language) {
 		this.language = language;
@@ -106,10 +111,27 @@ public class UserDAO {
 	}
 
 	/**
-	 * @param approval_yn the approval_yn to set
+	 * @param approval_yn
+	 *            the approval_yn to set
 	 */
 	public void setApproval_yn(String approval_yn) {
 		this.approval_yn = approval_yn;
 	}
-	
+
+	public String getSecurity_question() {
+		return security_question;
+	}
+
+	public void setSecurity_question(String security_question) {
+		this.security_question = security_question;
+	}
+
+	public String getSecurity_answer() {
+		return security_answer;
+	}
+
+	public void setSecurity_answer(String security_answer) {
+		this.security_answer = security_answer;
+	}
+
 }

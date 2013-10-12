@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -27,6 +28,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
@@ -59,6 +62,9 @@ public class ModifyUserDialog extends Dialog {
 	private Combo comboApproval;
 	private Combo comboDel;
 
+	private Text textQuestion;
+	private Text textAnswer;
+	
 	/**
 	 * Create the dialog.
 	 * @param parentShell
@@ -147,6 +153,28 @@ public class ModifyUserDialog extends Dialog {
 		textCreateDate.setEditable(false);
 		textCreateDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label lblPasswordDescription = new Label(container, SWT.NONE);
+		lblPasswordDescription.setText("* The information below is used to find the password.");
+		lblPasswordDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		Label lblQuestion = new Label(container, SWT.NONE);
+		lblQuestion.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblQuestion.setText("Question");
+
+		textQuestion = new Text(container, SWT.BORDER);
+		textQuestion.setEnabled(false);
+		textQuestion.setEditable(false);
+		textQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblAnswer = new Label(container, SWT.NONE);
+		lblAnswer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblAnswer.setText("Answer");
+
+		textAnswer = new Text(container, SWT.BORDER);
+		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textAnswer.setEnabled(false);
+		textAnswer.setEditable(false);
+		
 		initData();
 		
 //		ManagerSession.sessionManager();
@@ -165,7 +193,17 @@ public class ModifyUserDialog extends Dialog {
 		textCreateDate.setText(userDAO.getCreate_time());
 		
 		comboApproval.setText(userDAO.getApproval_yn());
-		comboDel.setText(userDAO.getDelYn());		
+		comboDel.setText(userDAO.getDelYn());
+		String question = userDAO.getSecurity_question();
+		if (null!= question && !"".equals(question.trim())) {
+			try {
+				SecurityHint questionKey = PublicTadpoleDefine.SecurityHint.valueOf(question);
+				textQuestion.setText(questionKey.toString());
+			} catch (IllegalStateException e) {
+				// skip
+			}
+		}
+		textAnswer.setText(StringUtils.trimToEmpty(userDAO.getSecurity_answer()));
 	}
 	
 	@Override
@@ -216,7 +254,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(438, 291);
+		return new Point(438, 360);
 	}
 
 }

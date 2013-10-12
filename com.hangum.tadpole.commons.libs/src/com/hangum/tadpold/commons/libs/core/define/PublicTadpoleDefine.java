@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.define;
 
+import com.hangum.tadpold.commons.libs.core.Messages;
+
 /**
  * 올챙이 전역 정의 
  * 
@@ -20,16 +22,16 @@ public class PublicTadpoleDefine {
 	/**
 	 * 분리자
 	 */
-	public static String DELIMITER = "||TADPOLE-DELIMITER||";
+	public static String DELIMITER = "||TADPOLE-DELIMITER||"; //$NON-NLS-1$
 	
 	/** 라인분리자 */
-	public static String LINE_SEPARATOR = System.getProperty("line.separator");
+	public static String LINE_SEPARATOR = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	/**  쿼리 구분자 */
-	public static final String SQL_DILIMITER = ";";
+	public static final String SQL_DILIMITER = ";"; //$NON-NLS-1$
 	
 	/** tadpole url */
-	public static String TADPOLE_URL = "http://127.0.0.1:%s/tadpole";//db?startup=tadpole";
+	public static String TADPOLE_URL = "http://127.0.0.1:%s/tadpole";//db?startup=tadpole"; //$NON-NLS-1$
 	
 	/**
 	 * tadpole url
@@ -37,7 +39,7 @@ public class PublicTadpoleDefine {
 	 * @return
 	 */
 	public static String getTadpoleUrl() {
-		String tadpolePort = System.getProperty("org.osgi.service.http.port", "10081");
+		String tadpolePort = System.getProperty("org.osgi.service.http.port", "10081"); //$NON-NLS-1$ //$NON-NLS-2$
 		return String.format(TADPOLE_URL, tadpolePort);
 	}
 	
@@ -54,13 +56,13 @@ public class PublicTadpoleDefine {
 	public static enum SUCCESS_FAIL {S, F};
 	
 	/** change resource save */
-	public static final String SAVE_FILE = "CHANGE_TADPOLE_RESOURE";
+	public static final String SAVE_FILE = "CHANGE_TADPOLE_RESOURE"; //$NON-NLS-1$
 	
 	/** erd - select table */
-	public static final String SELECT_ERD_TABLE = "SELECT_ERD_TABLE_RESOURE";
+	public static final String SELECT_ERD_TABLE = "SELECT_ERD_TABLE_RESOURE"; //$NON-NLS-1$
 	
 	/** auto commit 사용여부를 가립니다. */
-	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE";
+	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE"; //$NON-NLS-1$
 	
 	/** Tadpole support browser list  */
 	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI, IE10};
@@ -126,11 +128,51 @@ public class PublicTadpoleDefine {
 		for(DB_KEY dbKEY : DB_KEY.values()) {
 			if(dbKEY.toString().equalsIgnoreCase(key)) {
 				// 컬럼이 null허용이면 false
-				if("YES".equals(isNull)) return false;
+				if("YES".equals(isNull)) return false; //$NON-NLS-1$
 				return true;
 			}
 		}
 		
 		return false;
 	}
+	
+	/**
+	 * This is questions for security hint.<br>
+	 * Maybe you will put the value in the DB for common code.
+	 * 
+	 * @author billygoo
+	 *
+	 */
+	public enum SecurityHint {
+		QUESTION0("", 0), 
+		QUESTION1(Messages.PublicTadpoleDefine_0, 1), 
+		QUESTION2(Messages.PublicTadpoleDefine_1, 2), 
+		QUESTION3(Messages.PublicTadpoleDefine_2, 3), 
+		QUESTION4(Messages.PublicTadpoleDefine_3, 4),
+		QUESTION5(Messages.PublicTadpoleDefine_4, 5),
+		QUESTION6(Messages.PublicTadpoleDefine_5, 6),
+		QUESTION7(Messages.PublicTadpoleDefine_6, 7), 
+		QUESTION8(Messages.PublicTadpoleDefine_7, 8);
+		
+		private String value;
+		private int order;
+		
+		private SecurityHint(String value, int order) {
+			this.value = value;
+			this.order = order;
+		}
+		
+		public String getKey() {
+			return super.toString();
+		}
+		
+		public int getOrderIndex() {
+			return order;
+		}
+
+		@Override
+		public String toString() {
+			return this.value;
+		}
+	};
 }

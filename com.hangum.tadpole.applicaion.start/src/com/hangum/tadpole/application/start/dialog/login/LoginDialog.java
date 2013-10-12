@@ -18,9 +18,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -111,6 +114,18 @@ public class LoginDialog extends Dialog {
 		Label lblRecommand = new Label(container, SWT.NONE);
 		lblRecommand.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		lblRecommand.setText(Messages.LoginDialog_lblNewLabel_text);
+
+		new Label(container, SWT.NONE);
+
+		Button btnFindPassword = new Button(container, SWT.PUSH);
+		btnFindPassword.setText(Messages.LoginDialog_lblFindPassword);
+		setButtonLayoutData(btnFindPassword);
+		btnFindPassword.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findPassword();
+			}
+		});
 		
 		textEMail.setFocus();
 	
@@ -120,6 +135,11 @@ public class LoginDialog extends Dialog {
 	private void newUser() {
 		NewUserDialog newUser = new NewUserDialog(getParentShell(), PublicTadpoleDefine.YES_NO.NO);
 		newUser.open();
+	}
+	
+	private void findPassword() {
+		FindPasswordDialog dlg = new FindPasswordDialog(getShell());
+		dlg.open();
 	}
 	
 	@Override
@@ -132,7 +152,7 @@ public class LoginDialog extends Dialog {
 			 okPressed();
 			 
 		 } else {
-			String userId = "", password = "";
+			String userId = "", password = ""; //$NON-NLS-1$ //$NON-NLS-2$
 			
 			if(buttonId == ID_GUEST_USER) {
 				userId = TadpoleSystemInitializer.GUEST_EMAIL;
@@ -232,7 +252,7 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(526, 200);
+		return new Point(526, 220);
 	}
 	
 }

@@ -55,7 +55,9 @@ public class SessionManager {
 																LOGIN_NAME, 
 										/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
 										/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
-																USER_INFO_DATA}
+																USER_INFO_DATA,
+																SECURITY_QUESTION,
+																SECURITY_ANSWER}
 
 	/**
 	 * is login?
@@ -65,6 +67,21 @@ public class SessionManager {
 	public static boolean isLogin() {
 		if(getSeq() == 0) return false;
 		else return true;
+	}
+	
+	/**
+	 * Update session information.<br>
+	 * <br>
+	 * Session uses the information in multiple places(preference, user info etc.). 
+	 * So when updating the information stored in the Session, 
+	 * you must update the information given session.
+	 * 
+	 * @param key Session Attribute name
+	 * @param value Object
+	 */
+	public static void updateSessionAttribute(String key, Object value) {
+		HttpSession sStore = RWT.getRequest().getSession();
+		sStore.setAttribute(key, value);
 	}
 	
 	/**
@@ -139,6 +156,9 @@ public class SessionManager {
 		sStore.setAttribute(SESSEION_NAME.LOGIN_EMAIL.toString(), loginUserDao.getEmail());
 		sStore.setAttribute(SESSEION_NAME.LOGIN_PASSWORD.toString(), loginUserDao.getPasswd());
 		sStore.setAttribute(SESSEION_NAME.LOGIN_NAME.toString(), loginUserDao.getName());
+		sStore.setAttribute(SESSEION_NAME.SECURITY_ANSWER.toString(), loginUserDao.getSecurity_answer());
+		sStore.setAttribute(SESSEION_NAME.SECURITY_QUESTION.toString(), loginUserDao.getSecurity_question());
+		
 	}
 	
 	/**
@@ -183,6 +203,15 @@ public class SessionManager {
 		return (String)sStore.getAttribute(SESSEION_NAME.LOGIN_NAME.toString());
 	}
 	
+	public static String getSecurityQuestion() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(SESSEION_NAME.SECURITY_QUESTION.toString());
+	}
+	
+	public static String getSecurityAnswer() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(SESSEION_NAME.SECURITY_ANSWER.toString());
+	}
 	/**
 	 * db에 해당하는 자신의 role을 가지고 옵니다.
 	 * 
