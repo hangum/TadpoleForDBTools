@@ -50,8 +50,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -72,7 +70,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
-import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
