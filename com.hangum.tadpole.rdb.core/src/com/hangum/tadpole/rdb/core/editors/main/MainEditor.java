@@ -219,13 +219,17 @@ public class MainEditor extends EditorExtension {
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) {
 			setPartName(qei.getName());
+			
+			// fix : https://github.com/hangum/TadpoleForDBTools/issues/237
+			initDefaultEditorStr = qei.getDefaultStr();
+			if(!"".equals(initDefaultEditorStr)) {
+				isFirstLoad = true;	
+			}
 		} else {
 			setPartName(dBResource.getName());
+			isFirstLoad = true;
+			initDefaultEditorStr = qei.getDefaultStr();
 		}
-		
-		// fix : https://github.com/hangum/TadpoleForDBTools/issues/237
-		isFirstLoad = true;
-		initDefaultEditorStr = qei.getDefaultStr();
 	}
 
 	@Override
@@ -860,7 +864,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private String getAssistList() {
-		String strTablelist = "";//"select,insert,update,delete,drop,alert,where,"; //$NON-NLS-1$
+		String strTablelist = "select,select * from,"; //$NON-NLS-1$
 		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -1758,6 +1762,7 @@ public class MainEditor extends EditorExtension {
 	
 	/** save property dirty */
 	public void setDirty(Boolean newValue) {
+//		logger.debug("[setdirty][isFirstLoad]" + isFirstLoad + "[newValue]" + newValue + "[isDirty]"+ isDirty);
 		if(!isFirstLoad) {
 			if(isDirty != newValue) {
 				isDirty = newValue;
