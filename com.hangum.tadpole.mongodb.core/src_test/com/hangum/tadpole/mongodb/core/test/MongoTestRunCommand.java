@@ -21,10 +21,10 @@ public class MongoTestRunCommand {
 	 */
 	public static void main(String[] args) throws Exception {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
-		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
-		DB db = mongo.getDB("test");
+		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, 10001);//ConAndAuthentication.port);
+		DB db = mongo.getDB("admin");
 		
-		CommandResult cr = db.command(new BasicDBObject("listCommands", 1));
+		CommandResult cr = db.command(new BasicDBObject("replSetInitiate", "{'_id' : 'firstset', 'members' : [{'_id' : 1, 'host' : 'localhost:10001'}, {'_id' : 2, 'host' : 'localhost:10002'}, {'_id' : 3, 'host' : 'localhost:10003', arbiterOnly: true }]}"));
 		System.out.println( cr.toString() );		
 		
 		mongo.close();
