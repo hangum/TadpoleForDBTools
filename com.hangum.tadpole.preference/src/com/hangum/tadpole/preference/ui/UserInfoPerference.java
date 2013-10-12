@@ -117,6 +117,9 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		user.setPasswd(pass);		
 		try {
 			TadpoleSystem_UserQuery.updateUserPassword(user);
+			
+			//fix https://github.com/hangum/TadpoleForDBTools/issues/243
+			SessionManager.setPassword(user.getPasswd());
 		} catch (Exception e) {
 			logger.error("password change", e); //$NON-NLS-1$
 			MessageDialog.openError(getShell(), "Confirm", e.getMessage());			 //$NON-NLS-1$

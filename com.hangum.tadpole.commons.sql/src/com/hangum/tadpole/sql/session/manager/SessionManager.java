@@ -142,6 +142,16 @@ public class SessionManager {
 	}
 	
 	/**
+	 * set password
+	 * 
+	 * @param strPasswd
+	 */
+	public static void setPassword(String strPasswd) {
+		HttpSession sStore = RWT.getRequest().getSession();
+		sStore.setAttribute(SESSEION_NAME.LOGIN_PASSWORD.toString(), strPasswd);
+	}
+	
+	/**
 	 * 사용자 그룹 seqs를 보내줍니다.
 	 * @return
 	 */
