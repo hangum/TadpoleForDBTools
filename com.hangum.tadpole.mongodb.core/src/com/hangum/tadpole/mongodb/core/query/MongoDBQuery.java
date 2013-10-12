@@ -70,6 +70,7 @@ public class MongoDBQuery {
 		options.connectionsPerHost = 20;		
 		Mongo mongo = new Mongo(userDB.getHost(), Integer.parseInt(userDB.getPort()));
 		DB db = mongo.getDB(userDB.getDb());
+		db.authenticate(userDB.getUsers(), userDB.getPasswd().toCharArray());
 		
 		// 
 		// 신규는 다음과 같은 작업을 해주지 않으면 디비가 생성되지 않습니다.
