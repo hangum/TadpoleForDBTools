@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.sql.PreparedStatement;
@@ -31,6 +41,34 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
+/**
+ * 
+ * @author nilriri
+ * example code
+   1065
+		
+		// Parameter Object init.
+		param = null;
+		if(intExecuteQueryType != ALL_QUERY_EXECUTE) {
+			ParameterDialog epd = new ParameterDialog(this.getSite().getWorkbenchWindow().getShell(), this.userDB, finalExecuteSQL);
+			if (epd.getParamCount() > 0){
+				epd.open();
+				param = epd.getParameterObject();
+				epd.close();
+			}
+		}
+
+
+
+1249				
+				if (param != null && param.getParameter().length > 0 ){
+					int i = 1;
+					for (Object obj : param.getParameter()){
+						stmt.setObject(i++, obj);
+					}
+				}
+
+ */
 public class ParameterDialog extends Dialog {
 	private Table table;
 	private UserDBDAO userDB;
