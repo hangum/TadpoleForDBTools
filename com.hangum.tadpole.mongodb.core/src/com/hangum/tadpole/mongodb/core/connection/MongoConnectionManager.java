@@ -122,7 +122,7 @@ public class MongoConnectionManager {
 						db.getCollectionNames();
 					} catch(Exception e) {
 						logger.error("error", e);
-						throw new MongoDBNotFoundException(userDB.getDb() + Messages.MongoDBConnection_0);
+						throw new MongoDBNotFoundException(userDB.getDb() + " " + e.getMessage());//Messages.MongoDBConnection_0);
 					}
 					
 					// db를 map에 넣습니다.

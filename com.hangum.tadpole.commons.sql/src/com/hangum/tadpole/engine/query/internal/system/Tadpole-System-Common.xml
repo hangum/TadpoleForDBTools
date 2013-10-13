@@ -100,8 +100,8 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
-	INSERT INTO user(email, passwd, name, language, approval_yn)
-	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#)
+	INSERT INTO user(email, passwd, name, language, approval_yn, security_question, security_answer)
+	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#, #security_question#, #security_answer#)
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 		select * from user where email = #email# 
@@ -116,6 +116,18 @@
 	FROM user 
 	WHERE 
 		email = #email#
+</select>
+
+<!-- 
+	When lost password, check security hint
+ -->
+<select id="checkSecurityHint" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	SELECT * 
+	FROM user 
+	WHERE 1=1
+		AND email = #email#
+		AND security_question = #security_question#
+		AND security_answer = #security_answer#
 </select>
 
 <!-- userDB의 manager 권한 리스트 -->
@@ -153,6 +165,8 @@
     ,b.delYn
     ,b.create_time
     ,b.approval_yn
+    ,b.security_question
+    ,b.security_answer
   FROM
     user_group a
     ,USER b
@@ -180,6 +194,8 @@
     ,b.delYn
     ,b.create_time
     ,b.approval_yn
+    ,b.security_question
+    ,b.security_answer
   FROM
     user_group a
     ,user b
@@ -191,7 +207,7 @@
   ORDER BY
     user_group_name, email
  </select>
- 
+
 <!-- 
 	유저의 권한 데이터를 수정합니다.
  -->
@@ -203,13 +219,24 @@
 </update>
 
 <!-- 
-	유저의 패스워드 번경
+	Change user password
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 	UPDATE user SET
 		passwd = #passwd#
 	WHERE seq = #seq#
 </update>
+
+<!-- 
+	Change user security hint
+ -->
+<update id="updateUserSecurityHint" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	UPDATE user SET
+		security_question = #security_question#, 
+		security_answer = #security_answer#
+	WHERE seq = #seq#
+</update>
+
 
 <!-- 
 	유저를 삭제합니다.

@@ -10,6 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.system.internal.migration;
 
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.sql.system.TadpoleSystemQuery;
+
 /**
  * System abstract class
  * 
@@ -17,6 +21,22 @@ package com.hangum.tadpole.sql.system.internal.migration;
  *
  */
 public abstract class SystemMigration {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(SystemMigration.class);
+	
+	protected void updateVersion(String major_version, String sub_version) throws Exception {
+		try {
+			// 시스템 버전 정보를 수정해 줍니다.
+			TadpoleSystemQuery.updateSystemVersion(major_version, sub_version);
+			
+		} catch(Exception e) {
+			logger.error("System migration exception : update version number", e);
+			
+			throw e;
+		}
+	}
 
 	public abstract void migration(String major_version, String sub_version) throws Exception;
 }

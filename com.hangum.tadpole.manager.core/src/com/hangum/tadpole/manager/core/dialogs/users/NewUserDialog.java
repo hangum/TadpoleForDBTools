@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
@@ -72,6 +73,9 @@ public class NewUserDialog extends Dialog {
 	
 	/** 자동 허용유무 */
 	private PublicTadpoleDefine.YES_NO approvalYn;
+	
+	private Combo comboQuestion;
+	private Text textAnswer;
 	
 	/**
 	 * Create the dialog.
@@ -129,7 +133,7 @@ public class NewUserDialog extends Dialog {
 				initUserGroup();
 			}
 		});
-		btnDBA.setText("DBA");
+		btnDBA.setText("DBA"); //$NON-NLS-1$
 		
 		btnUser = new Button(composite, SWT.RADIO);
 		btnUser.addSelectionListener(new SelectionAdapter() {
@@ -185,7 +189,43 @@ public class NewUserDialog extends Dialog {
 		comboLanguage.add("ko"); //$NON-NLS-1$
 		comboLanguage.add("en_us"); //$NON-NLS-1$
 		comboLanguage.select(0);
+		
+		Label lblPasswordDescription = new Label(container, SWT.NONE);
+		lblPasswordDescription.setText(Messages.NewUserDialog_18);
+		lblPasswordDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		Label lblQuestion = new Label(container, SWT.NONE);
+		lblQuestion.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblQuestion.setText(Messages.NewUserDialog_22);
 
+		comboQuestion = new Combo(container, SWT.READ_ONLY);
+		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
+			comboQuestion.add(q.toString(), q.getOrderIndex());
+			comboQuestion.setData(q.getOrderIndex()+q.toString(), q.getKey());
+		}
+		comboQuestion.select(0);
+		comboQuestion.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int index = comboQuestion.getSelectionIndex();
+				if (index == -1 || index == 0) {
+					textAnswer.setText(""); //$NON-NLS-1$
+					textAnswer.setEnabled(false);
+				} else {
+					textAnswer.setEnabled(true);
+				}
+			}
+		});
+		
+		Label lblAnswer = new Label(container, SWT.NONE);
+		lblAnswer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblAnswer.setText(Messages.NewUserDialog_27);
+
+		textAnswer = new Text(container, SWT.BORDER);
+		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textAnswer.setEnabled(false);
+		
 		initUserGroup();
 		
 		return container;
@@ -203,7 +243,7 @@ public class NewUserDialog extends Dialog {
 			
 			// 사용자가 로그인 중일때.
 			int groupSeq = -99;
-			String groupName = "";
+			String groupName = ""; //$NON-NLS-1$
 			if(SessionManager.isLogin()) groupSeq = SessionManager.getGroupSeq();
 			
 			try {
@@ -244,6 +284,8 @@ public class NewUserDialog extends Dialog {
 		String passwd = StringUtils.trimToEmpty(textPasswd.getText());
 		String rePasswd = StringUtils.trimToEmpty(textRePasswd.getText());
 		String name = StringUtils.trimToEmpty(textName.getText());
+		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
+		String answer = StringUtils.trimToEmpty(textAnswer.getText());
 		
 		if(!validation(strEmail, passwd, rePasswd, name)) return;
 		
@@ -274,7 +316,7 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		try {
-			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn.toString());
+			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn.toString(), questionKey, answer);
 			
 			// user_role 입력.
 			TadpoleSystem_UserRole.newUserRole(groupDAO.getSeq(), newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
@@ -391,7 +433,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(450, 400);
 	}
 
 }

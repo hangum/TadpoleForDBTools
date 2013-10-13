@@ -36,6 +36,7 @@ import com.hangum.tadpole.sql.system.internal.initialize.TadpoleMySQLDDL;
 import com.hangum.tadpole.sql.system.internal.initialize.TadpoleSQLIteDDL;
 import com.hangum.tadpole.sql.system.internal.migration.SystemMigration;
 import com.hangum.tadpole.sql.system.internal.migration.SystemMigration100to111;
+import com.hangum.tadpole.sql.system.internal.migration.SystemMigration100to112;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -53,7 +54,7 @@ public class TadpoleSystemInitializer {
 
 	private static UserDBDAO tadpoleEngineDB;
 
-	public static String DEFAULT_DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db";// //$NON-NLS-1$
+	public static String DEFAULT_DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db/";// //$NON-NLS-1$
 	public static final String DB_NAME = "tadpole-system.db"; //$NON-NLS-1$
 	private static final String DB_INFORMATION = Messages.TadpoleSystemConnector_2;
 
@@ -166,9 +167,12 @@ public class TadpoleSystemInitializer {
 		} else {
 			logger.info("System migration start....");
 			
-			// 1.0.0 ~ 1.1.0까지의 버전을 마이그레이션 합니다.
-			if("1.0.0".equals(tsdao.getMajor_version()) || "1.0.1".equals(tsdao.getMajor_version()) || "1.1.0".equals(tsdao.getMajor_version())) {
+			// 1.0.0 ~ 1.1.1까지의 버전을 마이그레이션 합니다.
+			if("1.0.0".equals(tsdao.getMajor_version()) || "1.0.1".equals(tsdao.getMajor_version()) || "1.1.0".equals(tsdao.getMajor_version()) || "1.1.1".equals(tsdao.getMajor_version())) {
 				SystemMigration migr = new SystemMigration100to111();
+				migr.migration(SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION);
+				
+				migr = new SystemMigration100to112();
 				migr.migration(SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION);
 			}
 
@@ -242,13 +246,16 @@ public class TadpoleSystemInitializer {
 
 		// add basic user
 //		createMsg = ADMIN_EMAIL + " user creating....";
-		UserDAO adminUser = TadpoleSystem_UserQuery.newUser(ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
+		UserDAO adminUser = TadpoleSystem_UserQuery.newUser(ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString(),
+				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole");
 
 //		createMsg = MANAGER_EMAIL + " user creating....";
-		UserDAO managerUser = TadpoleSystem_UserQuery.newUser(MANAGER_EMAIL, MANAGER_PASSWD, MANAGER_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
+		UserDAO managerUser = TadpoleSystem_UserQuery.newUser(MANAGER_EMAIL, MANAGER_PASSWD, MANAGER_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString(),
+				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole");
 
 //		createMsg = GUEST_EMAIL + " user creating....";
-		UserDAO gusetUser = TadpoleSystem_UserQuery.newUser(GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString());
+		UserDAO gusetUser = TadpoleSystem_UserQuery.newUser(GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString(),
+				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole");
 
 		// add group_role
 		TadpoleSystem_UserRole.newUserRole(groupAdmin.getSeq(), adminUser.getSeq(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString(), PublicTadpoleDefine.YES_NO.NO.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());

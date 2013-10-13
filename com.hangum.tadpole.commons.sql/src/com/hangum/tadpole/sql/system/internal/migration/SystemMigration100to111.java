@@ -13,7 +13,6 @@ package com.hangum.tadpole.sql.system.internal.migration;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.sql.system.TadpoleSystemQuery;
 import com.hangum.tadpole.sql.system.internal.migration.utils.SystemMigrationUtils;
 
 /**
@@ -32,18 +31,19 @@ public class SystemMigration100to111 extends SystemMigration {
 	 * 
 	 */
 	public void migration(String major_version, String sub_version) throws Exception {
+		
 		try {
 			// posgre sql일때 type을 바꾸었습니다.
 			String strQuery = "UPDATE user_db SET dbms_types = '" + DBDefine.POSTGRE_DEFAULT.getDBToString() + "' WHERE dbms_types = 'postgre'";
 			SystemMigrationUtils.runSQLExecuteBatch(strQuery);
 			
-			// 시스템 버전 정보를 수정해 줍니다.
-			TadpoleSystemQuery.updateSystemVersion(major_version, sub_version);
-			
 		} catch(Exception e) {
-			logger.error("System migration exception 1.0.0 to 1.1.1", e);
+			logger.error("System migration exception 1.0.0 to 1.1.2", e);
 			
 			throw e;
 		}
+		
+		updateVersion(major_version, sub_version);
+		
 	}
 }
