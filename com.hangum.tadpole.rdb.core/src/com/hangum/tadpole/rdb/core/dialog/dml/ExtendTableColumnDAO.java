@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dml;
 
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 
 /**
  * DMLGenerae Stateme TableColumnDAO

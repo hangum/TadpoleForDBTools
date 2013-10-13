@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-standalone -test -debuglog</programArgs>
+      <programArgs>-standalone -test</programArgs>
       <vmArgs>-Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1 -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer</vmArgs>
    </launcherArgs>
 
@@ -36,10 +36,10 @@
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.aws.rds.commons.core"/>
       <plugin id="com.hangum.tadpole.cipher.core"/>
-      <plugin id="com.hangum.tadpole.commons"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
-      <plugin id="com.hangum.tadpole.commons.sql"/>
+      <plugin id="com.hangum.tadpole.commons.utils"/>
       <plugin id="com.hangum.tadpole.editor.core"/>
+      <plugin id="com.hangum.tadpole.engine"/>
       <plugin id="com.hangum.tadpole.hive.core"/>
       <plugin id="com.hangum.tadpole.importdb"/>
       <plugin id="com.hangum.tadpole.manager.core"/>
@@ -131,11 +131,11 @@
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.aws.rds.commons.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.cipher.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.commons" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.commons.sql" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql.test" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.editor.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.hive.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.importdb" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />

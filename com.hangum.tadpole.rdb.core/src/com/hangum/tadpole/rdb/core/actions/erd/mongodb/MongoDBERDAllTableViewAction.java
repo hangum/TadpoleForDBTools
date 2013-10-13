@@ -22,12 +22,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.erd.core.editor.TadpoleMongoDBERDEditor;
 import com.hangum.tadpole.mongodb.erd.core.editor.TadpoleMongoDBEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * 전체 table의 erd를 그립니다.

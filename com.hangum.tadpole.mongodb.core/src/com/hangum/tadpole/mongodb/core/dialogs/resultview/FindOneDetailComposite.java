@@ -21,12 +21,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoContentProvider;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoLabelProvider;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
+import com.hangum.tadpole.sql.util.tables.TreeUtil;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -89,6 +95,21 @@ public class FindOneDetailComposite extends Composite {
 	}
 	
 	/**
+	 * Rrefresh data
+	 * 
+	 * @param collectionName
+	 * @param dbResultObject
+	 * @param isTypeShowing
+	 */
+	public void refresh(String collectionName, DBObject dbResultObject, boolean isTypeShowing) {
+		this.collectionName = collectionName;
+		this.dbResultObject = dbResultObject;
+		this.isTypeShowing = isTypeShowing;
+		
+		initData();
+	}
+	
+	/**
 	 * init composite
 	 */
 	private void initData() {
@@ -100,10 +121,14 @@ public class FindOneDetailComposite extends Composite {
 			
 			treeViewerMongo.setInput(listTrees);			
 			treeViewerMongo.expandToLevel(3);
+			
+			TreeUtil.packTree(treeViewerMongo.getTree());
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("Refresh mongo tree data", e);
 		}
 	}
+	
+	
 	
 	/**
 	 * parser tree obejct

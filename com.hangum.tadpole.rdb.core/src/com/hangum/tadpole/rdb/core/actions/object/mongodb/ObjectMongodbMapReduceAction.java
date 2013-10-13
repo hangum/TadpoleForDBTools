@@ -19,12 +19,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.editors.mapreduce.MapReduceEditor;
 import com.hangum.tadpole.mongodb.core.editors.mapreduce.MapReduceEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 
 /**
  * Object Explorer에서 사용하는 Mongodb MapReduce

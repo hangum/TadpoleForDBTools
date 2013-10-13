@@ -36,10 +36,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
-import com.hangum.tadpole.dao.mongodb.MongoDBIndexFieldDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -49,6 +46,10 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexFieldDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.tables.TableUtil;
 
 /**
  * MongoDB indexes composite
@@ -119,6 +120,8 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 					
 					tableColumnViewer.setInput(tableDAO.getListIndexField());
 					tableColumnViewer.refresh();
+					
+					TableUtil.packTable(tableColumnViewer.getTable());
 
 				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$
@@ -225,12 +228,20 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	 */
 	public void initAction() {
 		if (listIndexes != null) listIndexes.clear();
-		tableViewer.setInput(listIndexes);
-		tableViewer.refresh();
+		refreshViewer();
 
 		creatAction_Index.setUserDB(getUserDB());
 		deleteAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
+	}
+	
+	/**
+	 * refresh viewer
+	 */
+	private void refreshViewer() {
+		tableViewer.setInput(listIndexes);
+		tableViewer.refresh();
+		TableUtil.packTable(tableViewer.getTable());
 	}
 	
 	/**
@@ -242,8 +253,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		try {
 			listIndexes = MongoDBQuery.listAllIndex(userDB);
-			tableViewer.setInput(listIndexes);
-			tableViewer.refresh();
+			refreshViewer();
 
 		} catch (Exception e) {
 			logger.error("index refresh", e); //$NON-NLS-1$

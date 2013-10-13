@@ -12,8 +12,8 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
-import com.hangum.tadpole.util.TadpoleViewrFilter;
+import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 
 /**
  * Mongo ServerSide javascript

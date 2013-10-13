@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 
 /**
  * Mongodb collection field label provide

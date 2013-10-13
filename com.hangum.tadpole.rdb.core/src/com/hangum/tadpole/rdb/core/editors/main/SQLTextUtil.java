@@ -44,8 +44,8 @@ public class SQLTextUtil {
 
 		int queryBeforeCount = 0;
 		for(int i=0; i<querys.length; i++) {
-			// dilimiter 을 추가한 +1 입니다.
-			int firstSearch = querys[i].length() + 1;
+			// dilimiter와 그다음 커서를 추가한 +2 입니다.
+			int firstSearch = querys[i].length() + 2;
 			
 			queryBeforeCount += firstSearch;
 			if(cursorPosition <= queryBeforeCount) {

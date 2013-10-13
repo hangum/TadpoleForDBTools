@@ -20,9 +20,9 @@ import com.amazonaws.regions.ServiceAbbreviations;
 import com.amazonaws.services.rds.AmazonRDSClient;
 import com.amazonaws.services.rds.model.DBInstance;
 import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
-import com.hangum.tadpole.define.DBOperationType;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.sql.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
+import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * AmazonRDS Utils

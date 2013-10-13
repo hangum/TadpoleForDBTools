@@ -15,8 +15,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Composite;
 
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * MariaDB login composite

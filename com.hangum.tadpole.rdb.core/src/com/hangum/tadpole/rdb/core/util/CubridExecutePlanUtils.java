@@ -22,7 +22,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 import cubrid.jdbc.driver.CUBRIDStatement;
 

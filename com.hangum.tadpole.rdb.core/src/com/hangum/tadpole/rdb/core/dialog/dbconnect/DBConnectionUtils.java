@@ -16,8 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSRDSLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
@@ -29,6 +28,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MySQLLoginComposit
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * DB Connection utils
@@ -63,7 +63,8 @@ public class DBConnectionUtils {
 	 * 
 	 * @return
 	 */
-	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB, PublicTadpoleDefine.DATA_STATUS dataStatus) {
+	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB, 
+			PublicTadpoleDefine.DATA_STATUS dataStatus) {
 		AbstractLoginComposite loginComposite = null;
 		
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
@@ -87,7 +88,7 @@ public class DBConnectionUtils {
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
 			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		}
-		loginComposite.setDalog_status(dataStatus);
+		loginComposite.setDataActionStatus(dataStatus);
 		
 		return loginComposite;
 	}

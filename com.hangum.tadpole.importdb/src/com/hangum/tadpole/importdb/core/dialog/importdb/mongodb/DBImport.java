@@ -13,7 +13,7 @@ package com.hangum.tadpole.importdb.core.dialog.importdb.mongodb;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.jobs.Job;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * ? to mongodb database import

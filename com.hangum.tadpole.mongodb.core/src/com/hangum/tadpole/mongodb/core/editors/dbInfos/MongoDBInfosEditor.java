@@ -24,7 +24,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.CollectionInformationComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.InstanceInformationComposite;
@@ -32,7 +32,7 @@ import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.LockComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.ReplicaSetComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.ShardingComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.CommandResult;
 
 /**
@@ -112,13 +112,13 @@ public class MongoDBInfosEditor extends EditorPart {
 		CTabItem tbtmLocaks = new CTabItem(tabFolder, SWT.NONE);
 		tbtmLocaks.setText(Messages.MongoDBInfosEditor_2);
 		
-		LockComposite compositeLock = new LockComposite(tabFolder, SWT.NONE, commandResult);
+		LockComposite compositeLock = new LockComposite(tabFolder, SWT.NONE, userDB, commandResult);
 		tbtmLocaks.setControl(compositeLock);
 		compositeLock.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmReplicaInformation = new CTabItem(tabFolder, SWT.NONE);
 		tbtmReplicaInformation.setText(Messages.MongoDBInfosEditor_3);		
-		ReplicaSetComposite compositeReplicaSet = new ReplicaSetComposite(tabFolder, SWT.NONE, commandResult);
+		ReplicaSetComposite compositeReplicaSet = new ReplicaSetComposite(tabFolder, SWT.NONE, userDB, commandResult);
 		tbtmReplicaInformation.setControl(compositeReplicaSet);
 		compositeReplicaSet.setLayout(gl_compositeCollectionSummary);
 		

@@ -22,6 +22,7 @@ public class Messages extends NLS {
 	public static String AWSRDSLoginComposite_1;
 	public static String AWSRDSLoginComposite_2;
 	public static String AWSRDSLoginComposite_8;
+	public static String TableColumnSelectionAction_1;
 	public static String TableEditPart_0;
 	public static String TableEditPart_1;
 	public static String TableEditPart_10;

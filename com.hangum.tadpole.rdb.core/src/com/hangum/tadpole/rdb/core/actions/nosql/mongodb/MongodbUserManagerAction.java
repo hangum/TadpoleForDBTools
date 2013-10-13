@@ -18,8 +18,8 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.dialogs.users.UserManagerDialog;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * mongodb user manager action

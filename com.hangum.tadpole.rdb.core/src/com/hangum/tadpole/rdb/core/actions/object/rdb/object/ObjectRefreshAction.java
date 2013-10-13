@@ -46,6 +46,8 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 			refreshIndexes();
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
 			refreshProcedure();
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+			refreshPackage();
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 			refreshFunction();
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {

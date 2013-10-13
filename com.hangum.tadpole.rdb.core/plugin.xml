@@ -99,7 +99,7 @@
       <objectContribution
             adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.connection"
-            objectClass="com.hangum.tadpole.dao.system.UserDBDAO">
+            objectClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.DeleteDBAction"
                icon="resources/icons/database_delete.png"
@@ -108,7 +108,7 @@
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -123,7 +123,7 @@
       <objectContribution
             adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.rdb"
-            objectClass="com.hangum.tadpole.dao.system.UserDBDAO">
+            objectClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
          <menu
                icon="resources/icons/create-dml.png"
                id="menu.create"
@@ -157,7 +157,7 @@
                 menubarPath="menu.create/dml">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -170,7 +170,7 @@
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -183,7 +183,7 @@
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -196,7 +196,7 @@
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -209,7 +209,7 @@
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -222,7 +222,7 @@
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -236,7 +236,7 @@
                menubarPath="additions">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -249,7 +249,7 @@
                menubarPath="menu.erd/erd">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -262,7 +262,7 @@
                menubarPath="menu.erd/erd">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -275,7 +275,7 @@
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -296,7 +296,7 @@
                menubarPath="additions">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -311,7 +311,7 @@
       <objectContribution
             adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.hive"
-            objectClass="com.hangum.tadpole.dao.system.UserDBDAO">
+            objectClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
 <menu
                icon="resources/icons/create-dml.png"
                id="menu.create"
@@ -345,7 +345,7 @@
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -358,7 +358,7 @@
                menubarPath="menu.create/dml">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -372,7 +372,7 @@
                menubarPath="additions">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -385,7 +385,7 @@
                menubarPath="menu.erd/erd">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -398,7 +398,7 @@
                menubarPath="menu.erd/erd">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -412,7 +412,7 @@
                menubarPath="additions">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -427,7 +427,7 @@
       <objectContribution
             adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.nosql"
-            objectClass="com.hangum.tadpole.dao.system.UserDBDAO">
+            objectClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
          <menu
                icon="resources/icons/user.png"
                id="menu.admin"
@@ -444,7 +444,7 @@
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -456,7 +456,7 @@
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -468,7 +468,7 @@
                menubarPath="additions">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -480,7 +480,7 @@
                menubarPath="additions">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -492,7 +492,7 @@
                menubarPath="additions">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -511,7 +511,7 @@
                menubarPath="additions">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -523,7 +523,7 @@
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -535,7 +535,7 @@
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -556,7 +556,7 @@
         menubarPath="menu.nosql.erd/erd">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBResourceDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
                </objectClass>
             </enablement>
          </action>
@@ -570,7 +570,7 @@
                menubarPath="menu.nosql.erd/erd">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -583,7 +583,7 @@
                menubarPath="menu.nosql.erd/erd">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -596,7 +596,7 @@
                label="Disconnnect Database">
             <enablement>
                <objectClass
-                     name="com.hangum.tadpole.dao.system.UserDBDAO">
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
                </objectClass>
             </enablement>
          </action>
@@ -611,7 +611,7 @@
       <objectContribution
             adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.resource"
-            objectClass="com.hangum.tadpole.dao.system.UserDBResourceDAO">
+            objectClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
          <action
                class="com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDDeleteAction"
                enablesFor="1"
@@ -631,14 +631,14 @@
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="com.hangum.tadpole.dao.system.UserDBDAO"
+            adaptableType="com.hangum.tadpole.sql.dao.system.UserDBDAO"
             class="com.hangum.tadpole.rdb.core.actions.adapter.rdb.DBTypeActionFilterAdapterFactory">
          <adapter
                type="org.eclipse.ui.IActionFilter">
          </adapter>
       </factory>
       <factory
-            adaptableType="com.hangum.tadpole.dao.system.UserDBResourceDAO"
+            adaptableType="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO"
             class="com.hangum.tadpole.rdb.core.actions.adapter.resource.ResourceTypeAdapterFactory">
          <adapter
                type="org.eclipse.ui.IActionFilter">

@@ -38,6 +38,10 @@ var editorService = {
 	RE_NEW_TEXT  : 41,
 	reNewText: function(editor) {},
 	
+	APPEND_QUERY_TEXT_AT_POSITION : 42,
+	appendQueryTextAtPosition: function(editor) {}, 
+
+	
 	SQL_TO_APPLICATION : 45,
 	sqlToApplication: function(editor) {},
 	
@@ -329,6 +333,13 @@ function installWorkbenchHooks() {
 		editor.appendQueryText(sql);
 		editor.setTextFocus();
 	};
+	
+	// append query text at position
+	editorService.appendQueryTextAtPosition = function() {
+		var appendText = editorServiceHandler(editorService.APPEND_QUERY_TEXT, '');
+		editor.appendQueryTextAtPosition(appendText);
+		editor.setTextFocus();
+	}
 	
 	// re new query text
 	editorService.reNewText = function() {

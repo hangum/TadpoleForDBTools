@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<!-- 
+
+	엔지디비는 현재 SQLite, MySQL 두개의 디비를 지원합니다.
+	
+ -->
+
+<sqlMap namespace="Tadpole-System-Common">
+    
+<!-- 
+	=====================================================================
+	SYSTEM QUERY
+	=====================================================================
+ -->
+<select id="system_information" resultClass="com.hangum.tadpole.sql.dao.system.TadpoleSystemDAO">
+    SELECT * FROM tadpole_system
+</select>
+
+<!-- 
+	UPDATE System version 
+ -->
+<update id="update_system" parameterClass="com.hangum.tadpole.sql.dao.system.TadpoleSystemDAO">
+    UPDATE tadpole_system SET
+		major_version = #major_version#, sub_version = #sub_version# 
+</update>
+
+<!-- 
+	신규 시스템 정보를 입력합니다.
+ -->
+<insert id="newSystem" parameterClass="com.hangum.tadpole.sql.dao.system.TadpoleSystemDAO">
+	INSERT INTO tadpole_system(name, major_version, sub_version, information)
+	VALUES (#name#, #major_version#, #sub_version#, #information#)    
+</insert>
+    
+<!-- 
+	============================================================================================================================
+	user group
+	============================================================================================================================
+ -->
+<select id="isUserGroup" resultClass="com.hangum.tadpole.sql.dao.system.UserGroupDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserGroupDAO">
+	SELECT name 
+	FROM user_group 
+	WHERE 
+		name = #name#
+</select>
+
+<!-- 
+	신규 그룹 등록.
+ -->
+<insert id="newGroup" parameterClass="com.hangum.tadpole.sql.dao.system.UserGroupDAO">
+	INSERT INTO user_group (name)
+	VALUES(#name#)
+	
+	<selectKey keyProperty="seq" resultClass="int">
+		select seq from user_group
+		where name = #name# 
+	</selectKey>
+</insert>
+
+<select id ="userDBList" resultClass="com.hangum.tadpole.sql.dao.system.UserGroupDAO">
+	SELECT * 
+	FROM user_group
+	WHERE delYn = 'NO'
+</select> 
+
+<!-- 
+	그룹 seq로 이름
+ -->
+<select id="findGroupName" resultClass="java.lang.String" parameterClass="java.lang.Integer">
+	SELECT name
+	FROM user_group
+	WHERE seq = #seq#
+</select>
+
+<!--
+	user가 있는지 중복 검사 합니다. 
+ -->
+<select id="isUser" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT email 
+	FROM user 
+	WHERE 
+		email = #email#
+</select>
+
+<!-- 
+	신규 유저 등록
+ -->
+<insert id="newUser" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	INSERT INTO user(email, passwd, name, language, approval_yn, security_question, security_answer)
+	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#, #security_question#, #security_answer#)
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+		select * from user where email = #email# 
+	</selectKey>
+</insert>
+
+<!-- 
+	로그인
+ -->
+<select id="login" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	SELECT * 
+	FROM user 
+	WHERE 
+		email = #email#
+</select>
+
+<!-- 
+	When lost password, check security hint
+ -->
+<select id="checkSecurityHint" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	SELECT * 
+	FROM user 
+	WHERE 1=1
+		AND email = #email#
+		AND security_question = #security_question#
+		AND security_answer = #security_answer#
+</select>
+
+<!-- userDB의 manager 권한 리스트 -->
+<select id="groupManager" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="java.lang.Integer">
+	select * from user
+	where group_seq = #group_seq#
+	and user_type='MANAGER'
+</select>
+
+<!-- 
+	초기 로그인시 유저가 한명이명 인진 조사한다.
+	한명이면 로그인화면에 디폴트 유저를 출력해 주기위해서....
+ -->
+<select id="loginUserCount" resultClass="java.lang.Integer">
+	SELECT count(*)
+	FROM user
+</select>
+<select id="onlyOnUser" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	SELECT * 
+	FROM user 
+</select>
+
+<!-- 
+	권한별 유저 리스트
+ -->
+ <select id="userListPermissions" resultClass="com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO">
+ SELECT
+    a.name user_group_name
+    ,b.seq user_seq
+    ,a.seq group_seq
+    ,email
+    ,passwd
+    ,b.name
+    ,c.role_type role_type
+    ,b.delYn
+    ,b.create_time
+    ,b.approval_yn
+    ,b.security_question
+    ,b.security_answer
+  FROM
+    user_group a
+    ,USER b
+    ,user_role c
+  WHERE
+    a.seq = c.group_seq
+    AND c.user_seq = b.seq
+  ORDER BY
+    user_group_name
+    ,email
+ </select>
+ 
+ <!-- 
+ 	사용자 그룹별 유저 리스트 
+  -->
+ <select id="userListGroup" resultClass="com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO" parameterClass="java.lang.String">
+ SELECT
+    a.name user_group_name
+    ,b.seq user_seq
+    ,a.seq group_seq
+    ,email
+    ,passwd
+    ,b.name
+    ,c.role_type role_type
+    ,b.delYn
+    ,b.create_time
+    ,b.approval_yn
+    ,b.security_question
+    ,b.security_answer
+  FROM
+    user_group a
+    ,user b
+    ,user_role c
+  WHERE
+ 	   a.seq = c.group_seq
+    AND c.user_seq = b.seq
+    AND c.group_seq in (#group_seq#)
+  ORDER BY
+    user_group_name, email
+ </select>
+
+<!-- 
+	유저의 권한 데이터를 수정합니다.
+ -->
+<update id="updateUserPermission" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	UPDATE user SET
+		 delYn = #delYn#,
+		 approval_yn = #approval_yn#
+	WHERE seq = #seq#
+</update>
+
+<!-- 
+	Change user password
+ -->
+<update id="updateUserPassword" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	UPDATE user SET
+		passwd = #passwd#
+	WHERE seq = #seq#
+</update>
+
+<!-- 
+	Change user security hint
+ -->
+<update id="updateUserSecurityHint" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	UPDATE user SET
+		security_question = #security_question#, 
+		security_answer = #security_answer#
+	WHERE seq = #seq#
+</update>
+
+
+<!-- 
+	유저를 삭제합니다.
+ -->
+<delete id="deleteUser" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	DELETE FROM user WHERE email = #email#
+</delete>
+
+<!-- 
+	============================================================================================================================
+	user db
+	============================================================================================================================
+ -->
+   <!-- 
+ 		기디비 등록할 수 있는지 검사합니다.
+  -->
+ <select id="isOldDBValidate" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.util.Map">
+ <![CDATA[
+ 	SELECT *
+ 	FROM user_db
+ 	WHERE user_seq = #user_seq# AND
+ 		display_name = #display_name# AND
+ 		seq <> #seq# AND 
+		delYn = 'NO'
+]]>
+ </select>
+ 
+  <!-- 
+ 		신규디비 등록할 수 있는지 검사합니다.
+  -->
+ <select id="isNewDBValidate" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.util.Map">
+ 	SELECT *
+ 	FROM user_db
+ 	WHERE user_seq = #user_seq# AND
+ 		display_name = #display_name# AND 
+		delYn = 'NO'
+ </select>
+ 
+ <!-- 
+ 		신규디비 등록시 이미 등록되어 있는지 검사합니다.
+  -->
+ <select id="isAlreadyExistDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.util.Map">
+ 	SELECT *
+ 	FROM user_db
+ 	WHERE user_seq = #user_seq# AND
+ 		url = #url# AND
+ 		users = #users#  AND
+		delYn = 'NO'
+ </select>
+ 
+ <!-- 
+ 	유저디비 그룹정보를 가져옵니다.
+  -->
+ <select id="userDBGroup" resultClass="java.lang.String" parameterClass="java.lang.String">
+ 	SELECT group_name
+ 	FROM user_db
+ 	WHERE 
+		group_seq in (#group_seqs#) AND
+		delYn = 'NO'
+ 	group by group_name 
+ </select>
+ 
+ <!-- 
+	1) userDB 중복 저장 용도
+	2) 저장 후 seq가져오는 용도로 사용
+ -->
+<select id="isUserDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	SELECT * FROM user_db a
+	WHERE 
+		user_seq = #user_seq# and 
+		db = #db# and 
+		group_name = #group_name# and
+		display_name = #display_name# and
+		delYn = 'NO'
+</select>
+
+<!-- 모든 userDB를 리스트업 합니다. -->
+<select id="userDBPermissions" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
+	SELECT * FROM user_db 
+	WHERE 
+		delYn = 'NO'
+	ORDER BY group_name
+</select>
+
+<!--  UserDB의 리스트 -->
+<select id="userDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
+	SELECT * FROM user_db 
+	WHERE 
+		group_seq in (#group_seqs#) AND
+		delYn = 'NO'
+	ORDER BY group_name
+</select>
+
+<!-- 
+	add user_db
+ -->
+<insert id="userDBInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBOriginalDAO">
+	INSERT INTO user_db( 
+	user_seq, ext_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
+	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables
+	)
+	VALUES(
+	#user_seq#, #ext_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
+	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables# 
+	)
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+		SELECT * 
+		FROM user_db 
+		WHERE user_seq = #user_seq# AND 
+			ext_seq = #ext_seq# AND 
+			group_seq = #group_seq# AND 
+			operation_type = #operation_type# AND 
+			dbms_types = #dbms_types# AND
+			group_name = #group_name# AND
+			display_name = #display_name# AND
+			delYn = 'NO'
+	</selectKey>
+</insert>
+
+<!-- 
+	add user_db_filter
+ -->
+ <insert id="userDBFilterInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	INSERT INTO user_db_filter
+		(seq, is_table_filter, table_filter_include, table_filter_exclude)
+	VALUES
+		(#seq#, #is_table_filter#, #table_filter_include#, #table_filter_exclude#)
+</insert>
+ 
+ <!-- 
+	add user_db_filter
+ -->
+ <insert id="userDBEXTInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	INSERT INTO user_db_ext
+		(seq, ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10)
+	VALUES
+		(#seq#, #ext1#, #ext2#, #ext3#, #ext4#, #ext5#, #ext6#, #ext7#, #ext8#, #ext9#, #ext10#)
+</insert>
+
+<!--
+	db type은 업데이트 되지 않도록 합니다. 
+ -->
+<update id="userDBUpdate" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	UPDATE user_db SET
+		operation_type = #operation_type#,
+		url 		= #url#, 
+		db			= #db#,  
+		group_name 	= #group_name#, 
+		display_name 	= #display_name#, 
+		host			= #host#, 
+		port			= #port#, 
+		locale			= #locale#, 
+		passwd			= #passwd#,  
+		users			= #users#,
+		is_profile		= #is_profile#,
+		profile_select_mill		= #profile_select_mill#,
+		question_dml			= #question_dml#,
+		is_readOnlyConnect		= #is_readOnlyConnect#,
+		is_autocommit			= #is_autocommit#,
+		is_showtables			= #is_showtables#
+	WHERE seq = #seq#	
+</update>
+
+<!-- 
+	add user_db_filter
+ -->
+ <update id="userDBFilterUpdate" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	UPDATE user_db_filter SET
+		is_table_filter = #is_table_filter#, 
+		table_filter_include = #table_filter_include#, 
+		table_filter_exclude = #table_filter_exclude#
+	WHERE seq = #seq#	
+</update>
+
+<!--
+	db type은 업데이트 되지 않도록 합니다. 
+ -->
+<update id="userDBEXTUpdate" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	UPDATE user_db_ext SET
+		ext1 = #ext1#, 
+		ext2 = #ext2#,
+		ext3 = #ext3#,
+		ext4 = #ext4#,
+		ext5 = #ext5#,
+		ext6 = #ext6#,
+		ext7 = #ext7#,
+		ext8 = #ext8#,
+		ext9 = #ext9#,
+		ext10 = #ext10#
+	WHERE seq = #seq#	
+</update>
+
+<update id="userDBDelete" parameterClass="java.lang.Integer">
+	UPDATE user_db SET
+		delYn = 'YES'
+	WHERE seq = #seq#
+</update>
+
+<!-- 
+	============================================================================================================================
+	user db resource
+	============================================================================================================================
+ -->
+<insert id="userDbResourceInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
+	INSERT INTO user_db_resource(resource_types, user_seq, db_seq, group_seq, name, shared_type, description)
+	VALUES(#resource_types#, #user_seq#, #db_seq#, #group_seq#, #name#, #shared_type#, #description#)
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
+		SELECT * 
+		FROM user_db_resource 
+		WHERE user_seq = #user_seq# AND 
+			resource_types = #resource_types# AND 
+			db_seq = #db_seq# AND 
+			group_seq = #group_seq# AND
+			name = #name# AND
+			delYn = 'NO'
+	</selectKey>
+</insert>
+
+<select id="userDbResourceTree" resultClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	SELECT * FROM user_db_resource
+	WHERE
+		user_seq = #user_seq# and
+		db_seq = #seq#  AND
+		resource_types in ('ERD', 'SQL') AND
+		delYn = 'NO'		
+	ORDER BY name
+</select>
+
+<select id="userDbResource" resultClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
+	SELECT * FROM user_db_resource
+	WHERE
+		resource_seq = #resource_seq#
+</select>
+
+<!-- 
+	1) 데이터 중복 검사쿼리
+	2) 데이터 저장 후 seq를 가져오는 용도로도 사용
+ -->
+<select id="userDBResourceDuplication" resultClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
+	SELECT * FROM user_db_resource
+	WHERE
+		resource_types = #resource_types# 			and
+		user_seq = #user_seq# 	and
+		db_seq = #db_seq# 		and
+		name = #name#
+</select>
+
+<update id="userDBResourceDelete" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
+	UPDATE user_db_resource SET
+		delYn = 'YES'
+	WHERE resource_seq = #resource_seq#
+</update>
+
+<!-- 
+	resource data를 얻습니다.
+ -->
+<select id="userDBResourceData" resultClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDataDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
+	SELECT * FROM user_db_resource_data
+	WHERE
+		user_db_resource_seq = #resource_seq#
+	ORDER BY seq
+</select>
+
+<!-- 
+	resource data를 저장합니다.
+ -->
+<insert id="userDbResourceDataInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDataDAO">
+	INSERT INTO user_db_resource_data(user_db_resource_seq, datas)
+	VALUES(#user_db_resource_seq#, #datas#)
+</insert>
+
+<!-- 
+	resource data를 삭제합니다.
+ -->
+<delete id="userDbResourceDataDelete" parameterClass="java.lang.Integer">
+	DELETE FROM user_db_resource_data
+	WHERE
+		user_db_resource_seq = #seq#
+</delete>
+
+<!-- 
+	=========================================================================================================
+	user_info_data 정보를 설정합니다.
+	=========================================================================================================
+ -->
+<select id="allUserInfoData" resultClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO" parameterClass="java.lang.Integer">
+	SELECT * FROM user_info_data
+	WHERE
+		user_seq = #user_seq#
+</select>
+
+<!-- 
+	사용자 정보를 가져온다. 
+ -->
+<select id="getUserInfoData" resultClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO">
+	SELECT * FROM user_info_data
+	WHERE
+		user_seq = #user_seq# AND
+		name = #name#
+</select>
+
+<!-- 
+	사용자 정보를 저장한다. 
+ -->
+<insert id="userInfoDataInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO">
+	INSERT INTO user_info_data(user_seq, db_seq, name, value0, value1, value2, value3, value4, value5)
+	VALUES(#user_seq#, #db_seq#, #name#, #value0#, #value1#, #value2#, #value3#, #value4#, #value5# )
+</insert>
+
+<!-- 
+	사용자 정보를 수정합니다.
+ -->
+<update id="userInfoDataUpdate" parameterClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO">
+	UPDATE user_info_data 
+	SET
+		value0 = #value0#,
+		value1 = #value1#,
+		value2 = #value2#,
+		value3 = #value3#,
+		value4 = #value4#,
+		value5 = #value5#
+	WHERE user_seq = #user_seq# AND
+		name = #name#
+</update>
+
+<!-- 
+	=========================================================================================================
+	executed_sql_resource 정보를 설정합니다.
+	=========================================================================================================
+ -->
+<insert id="userExecuteSQLResourceInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ExecutedSqlResourceDAO">
+	INSERT INTO executed_sql_resource(user_seq, db_seq, types, startDateExecute, endDateExecute, duration, row, result, message)
+	VALUES(#user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #duration#, #row#, #result#, #message#)
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.ExecutedSqlResourceDAO">
+		SELECT * 
+		FROM executed_sql_resource 
+		WHERE user_seq = #user_seq# AND
+			db_seq = #db_seq# AND 
+			types = #types# AND 
+			startDateExecute = #startDateExecute#
+	</selectKey>
+</insert>
+
+
+<!-- 
+	execute sql resource data를 저장합니다.
+ -->
+<insert id="userExecuteSQLResourceDataInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ExecutedSqlResourceDataDAO">
+	INSERT INTO executed_sql_resource_data(executed_sql_resource_seq, datas)
+	VALUES(#executed_sql_resource_seq#, #datas#)
+</insert>
+
+<!-- 
+	쿼리의 실행 히스토리를 얻습니다.
+	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
+ -->
+<select id="getExecuteQueryHistoryDetail" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+<![CDATA[
+ 	SELECT b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.datas, a.row, a.result
+	 FROM 
+	 executed_sql_resource a,
+	 executed_sql_resource_data b
+	where a.user_seq = #user_seq# AND
+	  a.db_seq = #db_seq# AND 
+	  a.delyn = 'NO' AND
+	  a.seq = b.executed_sql_resource_seq AND
+	  a.startdateexecute >= #startTime# AND  
+      a.enddateexecute <= #endTime# AND
+      a.duration >= #duration#
+	order by a.create_time desc
+	limit #count#	
+]]>
+</select>
+
+<!-- 
+	쿼리의 실행 히스토리를 얻습니다.
+	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
+ -->
+<select id="getExecuteQueryHistory" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+	  SELECT b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.datas, a.row, a.result
+	 FROM 
+	 executed_sql_resource a,
+	 executed_sql_resource_data b
+	where a.user_seq = #user_seq# AND
+	  a.db_seq = #db_seq# AND 
+	  a.delyn = 'NO' AND
+	  a.seq = b.executed_sql_resource_seq AND
+	  b.datas like #filter#
+	order by a.create_time desc
+	limit #count#	
+</select>
+
+<!-- 
+	=========================================================================================================
+	user_rol 정보를 설정합니다.
+	=========================================================================================================
+ -->
+<insert id="userUserRoleInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
+	INSERT INTO user_role(group_seq, user_seq, role_type, name)
+	VALUES(#group_seq#, #user_seq#, #role_type#, #name#)
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
+		SELECT * 
+		FROM user_role 
+		WHERE group_seq = #group_seq# AND 
+			user_seq = #user_seq# AND 
+			role_type = #role_type# AND 
+			name = #name# AND
+			delYn = 'NO'
+	</selectKey>
+</insert>
+	
+<!-- 
+	사용자 정보를 가져온다. 
+ -->
+<select id="findUserRole" resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO" parameterClass="java.lang.Integer">
+	SELECT * FROM user_role
+	WHERE
+		user_seq = #user_seq# AND
+		delyn = 'NO'
+</select>
+	
+</sqlMap>
