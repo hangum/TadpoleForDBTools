@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CubridSQL_query">
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT class_name name FROM DB_CLASS WHERE 1 = 0 
+</select>
+
+<!-- 
+	db의 user table 이름
+	
+	컬럼 설명
+	TNAME 		: 테이블 명
+ -->
+<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	SELECT class_name name
+	FROM DB_CLASS
+	WHERE  is_system_class = 'NO' AND class_type = 'CLASS'
+	ORDER BY  class_name
+</select>
+
+<!-- 
+	특정 table, view 컬럼 정보
+	
+	컬럼 설명
+	Field			: 컬럼 명
+	Type			: 컬럼 타입
+	Null			: Null 유무 (예: YES,NO)
+	Key			: primary key, foreign key(예: PK, FK)
+	Default		: 기본값
+	Extra			: 특수컬럼(예: auto_increment)
+ -->
+<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+	show columns FROM $table$
+</select>
+
+<!-- 
+	erd에서 테이블간의 관계를 표시하기 위한 정보
+	
+	컬럼 설명
+	constraint_name	:	 인덱스 이름
+	table_name			:	 소스 테이블 이름
+	column_name		:	 소스 테이블 컬럼
+	
+	referenced_table_name	:	타켓 테이블 이름
+	referenced_column_name	: 	타켓 테이블 컬럼
+ -->
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+	cubrid는 JDBC API로 해야함
+</select>
+
+<!-- 
+	erd에서 모든 관계 테이블 목록을 가져옵니다.
+	(referencedTableList와 쿼리는 같음, 틀린 점은 모든 테이블의 관계를 가져 옵니다. erd에서 모든 테이블 관계 보여주는 기능 사용 용도)
+	
+	컬럼 설명
+	constraint_name		:	 인덱스 이름
+	table_name				:	 소스 테이블 이름
+	column_name			:	 소스 테이블 컬럼
+	
+	referenced_table_name	:	타켓 테이블 이름
+	referenced_column_name	: 	타켓 테이블 컬럼
+ -->
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" >
+	cubrid는 JDBC API로 해야함
+</select>
+	
+<!-- 
+	db의 view 정보
+	
+	컬럼 설명
+	oebjt_name		: view 이름
+ -->
+<select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT class_name
+	FROM DB_CLASS
+	WHERE  is_system_class = 'NO' AND class_type = 'VCLASS'
+	ORDER BY  class_name
+</select>
+	
+<!-- 
+	index 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	table_name			:  	테이블 명
+    index_name			:	인덱스 명
+    column_name			:	컬럼 명
+    column_position		: 
+    column_length		:
+    char_length			:
+    descend				:	
+    uniqueness			:
+    table_owner			:
+    constraint_type		:
+    status				:
+    #table_schema# AS table_schema
+ -->
+ <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+SELECT
+    a.class_name AS table_name
+    ,a.index_name
+    ,CASE WHEN a.is_primary_key =  'YES' THEN 'PK'
+         WHEN a.is_foreign_key = 'YES' THEN 'FK'
+         WHEN a.is_unique = 'YES' then 'UQ'
+        ELSE ' ' END as index_type
+  FROM db_index a
+  ORDER BY table_name
+</select>
+<!-- 
+	index의 디테일 정보
+ -->
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+	SELECT 
+		a.class_name AS table_name,
+		a.index_name,
+		b.key_attr_name AS column_name,
+		b.key_order AS column_position,
+		b.key_order AS seq_in_index,
+		b.key_prefix_length AS column_length
+	FROM 
+		db_index a 
+		left join db_index_key b on  a.index_name = b.index_name
+	WHERE 1=1
+	      AND a.index_name = #index_name#
+	ORDER BY column_position desc;
+</select>
+
+<!-- 
+	procedure 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	db				:	db 명
+	name			:	procedure 명
+	type			:	procedure type
+	definer			:	procedure 정의 자
+	modified		:	수정일시
+	created			:	생성일시
+	security_type	:	예를 들어 (DEFINER)
+	comment			:
+	character_set_client	:	예를 들어 (utf8)
+	collation_connection	:	에를 들어 (utf8_general_ci)
+	database				:
+	collation				:
+ -->
+<select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT  
+		sp_name AS name	
+	FROM db_stored_procedure
+</select>
+
+<!-- 
+	function 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	db				:	db 명
+	name			:	procedure 명
+	type			:	procedure type
+	definer			:	procedure 정의 자
+	modified		:	수정일시
+	created			:	생성일시
+	security_type	:	예를 들어 (DEFINER)
+	comment			:
+	character_set_client	:	예를 들어 (utf8)
+	collation_connection	:	에를 들어 (utf8_general_ci)
+	database				:
+	collation				:
+ -->
+<select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT  
+		sp_name AS name	
+	FROM db_stored_procedure
+</select>
+
+<!-- 
+	show trigger 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	trigger			: trigger name	
+	event			: event
+	table			: table name
+	statement		:
+	timing			:
+	created			:
+	sql_mode		:
+	definer			:
+	character_set_client	:	
+	collation_connection	:
+	database				:
+	collation				:
+ -->
+<select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SELECT 
+		name,
+		event,
+	 	condition AS statement
+	FROM db_trigger
+</select>
+
+<!-- 
+	table information
+ -->
+<select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	SELECT class_name name
+	FROM DB_CLASS
+	WHERE  is_system_class = 'NO' AND class_type = 'CLASS'
+	ORDER BY  class_name 
+</select>
+
+<!-- 
+	column information
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+	SELECT 
+		tab.class_name as table_name
+		,tab.partitioned as partitioned 
+		, col.attr_name as column_name
+		, col.data_type as data_type
+		, col.prec as data_precision
+		, col.scale as data_scale
+		, col.default_value as data_default
+		, col.is_nullable as nullable
+		FROM db_class tab
+		     inner join db_attribute col on tab.class_name = col.class_name
+		where tab.is_system_class = 'NO' 
+		AND tab.class_type = 'CLASS'
+		order by tab.class_name, col.def_order
+</select>
+
+</sqlMap>

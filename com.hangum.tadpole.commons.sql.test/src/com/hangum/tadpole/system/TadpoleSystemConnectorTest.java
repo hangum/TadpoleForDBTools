@@ -12,12 +12,12 @@ package com.hangum.tadpole.system;
 
 import java.io.File;
 
-import com.hangum.tadpole.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
 
 import junit.framework.TestCase;
 
 /**
- * {@link com.hangum.tadpole.system.TadpoleSystemInitializer 시스템엔진디비 초기화}
+ * {@link com.hangum.tadpole.sql.system.TadpoleSystemInitializer 시스템엔진디비 초기화}
  * 
  * @author hangum
  *
@@ -25,14 +25,14 @@ import junit.framework.TestCase;
 public class TadpoleSystemConnectorTest extends TestCase {
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystemInitializer#createSystemTable() 시스템엔진디비 초기화}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystemInitializer#createSystemTable() 시스템엔진디비 초기화}
 	 * 
 	 */
 	public void testCreateSystemTable() {
 	
 		try {
 			// 기존 디비 파일을 삭제 하고 제대로 생성되는지 검사합니다.
-			new File(TadpoleSystemInitializer.DB_FILE_LOCATION + TadpoleSystemInitializer.DB_NAME).delete(); 
+			new File(TadpoleSystemInitializer.DEFAULT_DB_FILE_LOCATION + TadpoleSystemInitializer.DB_NAME).delete(); 
 
 			//
 			TadpoleSystemInitializer.initSystem();

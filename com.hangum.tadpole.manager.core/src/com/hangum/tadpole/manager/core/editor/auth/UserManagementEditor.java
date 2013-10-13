@@ -22,7 +22,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 
 /**
  * 사용자 관리 에디터

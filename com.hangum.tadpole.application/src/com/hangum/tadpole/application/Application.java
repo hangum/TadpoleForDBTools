@@ -10,20 +10,19 @@
  ******************************************************************************/
 package com.hangum.tadpole.application;
 
-import org.eclipse.rap.rwt.application.IEntryPoint;
+import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
-import com.hangum.tadpole.util.TadpoleDisplay;
 
 
 /**
  * This class controls all aspects of the application's execution
  * and is contributed through the plugin.xml.
  */
-public class Application implements IEntryPoint {
+public class Application implements EntryPoint {
 
 	public int createUI() {
 		Display display = PlatformUI.createDisplay();//new TadpoleDisplay();// PlatformUI.createDisplay();

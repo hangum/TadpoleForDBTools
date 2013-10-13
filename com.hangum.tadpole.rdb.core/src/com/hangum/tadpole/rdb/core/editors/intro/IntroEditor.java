@@ -30,10 +30,10 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
 
 /**
  * 기본 introduction

@@ -43,12 +43,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -57,12 +59,10 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.util.FindTadpoleViewerOrEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.permission.PermissionChecker;
-import com.hangum.tadpole.util.RequestInfoUtils;
-import com.hangum.tadpole.util.ShortcutPrefixUtils;
-import com.hangum.tadpole.util.download.DownloadServiceHandler;
-import com.hangum.tadpole.util.download.DownloadUtils;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.swtdesigner.ResourceManager;
 
 /**

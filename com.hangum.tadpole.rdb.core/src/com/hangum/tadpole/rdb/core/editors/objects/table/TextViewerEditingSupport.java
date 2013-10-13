@@ -19,8 +19,8 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
-import com.hangum.tadpole.datetype.DataTypeValidate;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.sql.datetype.DataTypeValidate;
 
 /**
  * text editor

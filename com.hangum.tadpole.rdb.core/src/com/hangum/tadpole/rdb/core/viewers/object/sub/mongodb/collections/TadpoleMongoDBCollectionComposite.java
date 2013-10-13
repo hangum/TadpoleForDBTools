@@ -53,15 +53,17 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollCompactAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollFindAndModifyAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollStatesAction;
+import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollValidateAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbGroupAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbMapReduceAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbReIndexAction;
@@ -71,13 +73,17 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelect
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.MongoDBCollectionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableCommentEditorSupport;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
-import com.hangum.tadpole.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.util.tables.TableUtil;
+import com.hangum.tadpole.sql.util.tables.TreeUtil;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -107,12 +113,20 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	
 	private ObjectCreatAction 			creatAction_Table;
 	private ObjectDeleteAction 			deleteAction_Table;
+	private ObjectMongodbCollFindAndModifyAction collFindAndModifyAction;
+	
 	private ObjectRefreshAction 		refreshAction_Table;
+	
 	private GenerateSQLSelectAction 	insertStmtAction;
 	private ObjectMongodbRenameAction 	renameColAction;
 	private ObjectMongodbReIndexAction 	reIndexColAction;
 	private ObjectMongodbMapReduceAction mapReduceAction;
 	private ObjectMongodbGroupAction 	groupAction;
+	private ObjectMongodbCollStatesAction		collStatsAction;
+	private ObjectMongodbCollCompactAction		collCompactAction;
+	
+	private ObjectMongodbCollValidateAction		collValidateAction;
+	
 	
 	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(partSite, tabFolderObject, userDB);
@@ -183,6 +197,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 
 					treeColumnViewer.setInput(showTableColumns);
 					treeColumnViewer.refresh();
+					
+					TreeUtil.packTree(treeColumnViewer.getTree());
 
 				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$
@@ -198,7 +214,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		tableTableList.setHeaderVisible(true);
 
 		// sorter
-		tableComparator = new TableComparator();
+		tableComparator = new MongoDBCollectionComparator();
 		tableListViewer.setSorter(tableComparator);
 
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
@@ -218,21 +234,34 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 				return table.getName();
 			}
 		});
-		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
+//		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
 
-		TableViewerColumn tvColComment = new TableViewerColumn(tableListViewer, SWT.NONE);
-		TableColumn tbComment = tvColComment.getColumn();
-		tbComment.setWidth(400);
-		tbComment.setText("Comment"); //$NON-NLS-1$
+		TableViewerColumn tvColRows = new TableViewerColumn(tableListViewer, SWT.RIGHT);
+		TableColumn tbComment = tvColRows.getColumn();
+		tbComment.setWidth(200);
+		tbComment.setText("Rows"); //$NON-NLS-1$
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
-		tvColComment.setLabelProvider(new ColumnLabelProvider() {
+		tvColRows.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				return table.getComment();
+				return NumberFormatUtils.commaFormat(table.getRows());
 			}
 		});
-		tvColComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
+//		tvColRows.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
+		
+		TableViewerColumn tvColSize = new TableViewerColumn(tableListViewer, SWT.RIGHT);
+		TableColumn tbSize = tvColSize.getColumn();
+		tbSize.setWidth(200);
+		tbSize.setText("Size"); //$NON-NLS-1$
+		tbSize.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
+		tvColSize.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				TableDAO table = (TableDAO) element;
+				return NumberFormatUtils.kbMbFormat(table.getSize());
+			}
+		});
 
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(showTables);
@@ -290,6 +319,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatAction_Table 	= new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 		deleteAction_Table 	= new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Find and Modify"); //$NON-NLS-1$
+		
 		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 		insertStmtAction 	= new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 
@@ -297,6 +328,11 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		reIndexColAction 	= new ObjectMongodbReIndexAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "ReIndex Collection"); //$NON-NLS-1$
 		mapReduceAction 	= new ObjectMongodbMapReduceAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "MapReduce"); //$NON-NLS-1$
 		groupAction			= new ObjectMongodbGroupAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Group"); //$NON-NLS-1$
+		
+		collStatsAction 	= new ObjectMongodbCollStatesAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection stats"); //$NON-NLS-1$
+		collCompactAction   = new ObjectMongodbCollCompactAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection compact"); //$NON-NLS-1$
+		
+		collValidateAction = new ObjectMongodbCollValidateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection validate"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -308,14 +344,19 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					manager.add(creatAction_Table);
 					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 						manager.add(deleteAction_Table);
+						manager.add(collFindAndModifyAction);
+						manager.add(collValidateAction);
 					}
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(refreshAction_Table);
 
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(insertStmtAction);
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					manager.add(collStatsAction);
 					
 					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(collCompactAction);
 						manager.add(renameColAction);
 						manager.add(reIndexColAction);
 					}
@@ -339,8 +380,15 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	public void initAction() {
 		creatAction_Table.setUserDB(getUserDB());
 		deleteAction_Table.setUserDB(getUserDB());
+		collFindAndModifyAction.setUserDB(getUserDB());
+		collValidateAction.setUserDB(getUserDB());
+		
 		refreshAction_Table.setUserDB(getUserDB());
 		insertStmtAction.setUserDB(getUserDB());
+		
+		collStatsAction.setUserDB(getUserDB());
+		
+		collCompactAction.setUserDB(getUserDB());
 		renameColAction.setUserDB(getUserDB());
 		reIndexColAction.setUserDB(getUserDB());
 		mapReduceAction.setUserDB(getUserDB());
@@ -367,7 +415,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			
 			tableListViewer.setInput(showTables);
 			tableListViewer.refresh();
-			
+			TableUtil.packTable(tableListViewer.getTable());
 			return;
 		}
 
@@ -403,10 +451,12 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 						if(jobEvent.getResult().isOK()) {
 							tableListViewer.setInput(showTables);
 							tableListViewer.refresh();
+							TableUtil.packTable(tableListViewer.getTable());
 						} else {
 							if (showTables != null) showTables.clear();
 							tableListViewer.setInput(showTables);
 							tableListViewer.refresh();
+							TableUtil.packTable(tableListViewer.getTable());
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$

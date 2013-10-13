@@ -10,8 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.test;
 
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 public class MakeUserDBDAO {
 	

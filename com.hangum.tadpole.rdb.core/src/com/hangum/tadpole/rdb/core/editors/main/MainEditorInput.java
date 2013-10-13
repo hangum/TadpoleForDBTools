@@ -16,10 +16,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
 
 /**
  * main editor의 input

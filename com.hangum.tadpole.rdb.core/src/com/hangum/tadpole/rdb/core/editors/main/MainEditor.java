@@ -50,8 +50,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -71,34 +69,23 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.TadpoleSQLTransactionManager;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.commons.sql.util.PartQueryUtil;
-import com.hangum.tadpole.commons.sql.util.ResultSetUtils;
-import com.hangum.tadpole.commons.sql.util.SQLUtil;
-import com.hangum.tadpole.commons.sql.util.tables.AutoResizeTableLayout;
-import com.hangum.tadpole.commons.sql.util.tables.SQLHistoryCreateColumn;
-import com.hangum.tadpole.commons.sql.util.tables.SQLHistoryLabelProvider;
-import com.hangum.tadpole.commons.sql.util.tables.SQLHistorySorter;
-import com.hangum.tadpole.commons.sql.util.tables.SQLResultContentProvider;
-import com.hangum.tadpole.commons.sql.util.tables.SQLResultFilter;
-import com.hangum.tadpole.commons.sql.util.tables.SQLResultLabelProvider;
-import com.hangum.tadpole.commons.sql.util.tables.SQLResultSorter;
-import com.hangum.tadpole.commons.sql.util.tables.TableUtil;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.DBOperationType;
-import com.hangum.tadpole.dialogs.message.TadpoleMessageDialog;
-import com.hangum.tadpole.dialogs.message.TadpoleSimpleMessageDialog;
-import com.hangum.tadpole.dialogs.message.dao.SQLHistoryDAO;
-import com.hangum.tadpole.dialogs.message.dao.TadpoleMessageDAO;
-import com.hangum.tadpole.dialogs.save.ResourceSaveDialog;
+import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
+import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.commons.util.UnicodeUtils;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.editor.core.rdb.texteditor.EditorExtension;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
 import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
@@ -107,16 +94,27 @@ import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_ExecutedSQL;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.system.permission.PermissionChecker;
-import com.hangum.tadpole.util.RequestInfoUtils;
-import com.hangum.tadpole.util.ShortcutPrefixUtils;
-import com.hangum.tadpole.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.util.UnicodeUtils;
-import com.hangum.tadpole.util.download.DownloadServiceHandler;
-import com.hangum.tadpole.util.download.DownloadUtils;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.template.DBOperationType;
+import com.hangum.tadpole.sql.util.PartQueryUtil;
+import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.sql.util.ResultSetUtils;
+import com.hangum.tadpole.sql.util.SQLUtil;
+import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
+import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
+import com.hangum.tadpole.sql.util.tables.SQLHistoryLabelProvider;
+import com.hangum.tadpole.sql.util.tables.SQLHistorySorter;
+import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
+import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
+import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
+import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
+import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -221,12 +219,17 @@ public class MainEditor extends EditorExtension {
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) {
 			setPartName(qei.getName());
+			
+			// fix : https://github.com/hangum/TadpoleForDBTools/issues/237
+			initDefaultEditorStr = qei.getDefaultStr();
+			if(!"".equals(initDefaultEditorStr)) {
+				isFirstLoad = true;	
+			}
 		} else {
 			setPartName(dBResource.getName());
 			isFirstLoad = true;
+			initDefaultEditorStr = qei.getDefaultStr();
 		}
-		
-		initDefaultEditorStr = qei.getDefaultStr();
 	}
 
 	@Override
@@ -452,25 +455,27 @@ public class MainEditor extends EditorExtension {
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		sqlResultTableViewer = new TableViewer(compositeQueryResult, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		sqlResultTableViewer = new TableViewer(compositeQueryResult, SWT.BORDER | SWT.SINGLE);
 		sqlResultTableViewer.setUseHashlookup(true);
 		tableResult = sqlResultTableViewer.getTable();
 		tableResult.addListener(SWT.MouseDoubleClick, new Listener() {
 		    public void handleEvent(Event event) {
-		        Point pt = new Point(event.x, event.y);
-		        TableItem ti = tableResult.getItem(pt);
-		        if (ti == null) return;
-		        
-		        for (int i = 0; i < tableResult.getItemCount(); i++) {
-		            Rectangle rect = ti.getBounds(i);
-		            if (rect.contains(pt)) {
-		            	String msg = ti.getText(i);
-		            	if("".equals(msg.trim())) return; //$NON-NLS-1$
-		            	
-		                TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), msg);
-		                dlg.open();
-		             }
-		        }
+		    	TableItem[] selection = tableResult.getSelection();
+				if (selection.length != 1) return;
+
+				TableItem item = tableResult.getSelection()[0];
+				for (int i=0; i<tableResult.getColumnCount(); i++) {
+					if (item.getBounds(i).contains(event.x, event.y)) {
+						String strText = item.getText(i);
+						if(strText == null || "".equals(strText)) return;
+						strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))? (" " + strText + ""): (" '" + strText + "'");
+						
+						appendTextAtPosition(strText);
+
+//		                TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), msg);
+//		                dlg.open();
+					}
+				}
 		    }
 		});
 		
@@ -561,12 +566,7 @@ public class MainEditor extends EditorExtension {
 				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(!is.isEmpty()) {
-					try {
-						setAppendQueryText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
-						browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
-					} catch(Exception ee){
-						logger.error("history selection" , ee); //$NON-NLS-1$
-					}
+					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
 				}
 			}
 		});
@@ -601,12 +601,7 @@ public class MainEditor extends EditorExtension {
 				
 				IStructuredSelection is = (IStructuredSelection)tableViewerSQLHistory.getSelection();
 				if(!is.isEmpty()) {
-					try {
-						setAppendQueryText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
-						browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
-					} catch(Exception ee){
-						logger.error("history selection" , ee); //$NON-NLS-1$
-					}
+					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}
@@ -794,6 +789,34 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
+	 * append text at position
+	 * 
+	 * @param strText
+	 */
+	public void appendTextAtPosition(String strText) {
+		try {
+			setAppendQueryText(strText); //$NON-NLS-1$
+			browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT_AT_POSITION);
+		} catch(Exception ee){
+			logger.error("query text at position" , ee); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * append text at position
+	 * 
+	 * @param strText
+	 */
+	public void appendText(String strText) {
+		try {
+			setAppendQueryText(strText); //$NON-NLS-1$
+			browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_APPEND_QUERY_TEXT);
+		} catch(Exception ee){
+			logger.error("query text" , ee); //$NON-NLS-1$
+		}
+	}
+	
+	/**
 	 * refresh sql history table 
 	 */
 	private void refreshSqlHistory() {
@@ -841,7 +864,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private String getAssistList() {
-		String strTablelist = "";//"select,insert,update,delete,drop,alert,where,"; //$NON-NLS-1$
+		String strTablelist = "select,select * from,"; //$NON-NLS-1$
 		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -931,7 +954,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 * @throws Exception
 	 */
-	private String getHistoryTabelSelectData() throws Exception {
+	private String getHistoryTabelSelectData() {
 		StringBuffer sbData = new StringBuffer();
 		
 		for(TableItem ti : tableSQLHistory.getSelection()) {
@@ -1062,9 +1085,10 @@ public class MainEditor extends EditorExtension {
 						if(!listStrExecuteQuery.isEmpty()) {
 							runSQLExecuteBatch(listStrExecuteQuery, isAutoCommit);
 						}
-						executingSQLHistoryDAO.setEndDateExecute(new Date());
-						executingSQLHistoryDAO.setResult("Success"); //$NON-NLS-1$
-						listExecutingSqltHistoryDao.add(executingSQLHistoryDAO);
+						//finally bolock duplicate
+						//executingSQLHistoryDAO.setEndDateExecute(new Date());
+						//executingSQLHistoryDAO.setResult("Success"); //$NON-NLS-1$
+						//listExecutingSqltHistoryDao.add(executingSQLHistoryDAO);
 						
 						// select 문장 실행
 						if(isStatement) { //$NON-NLS-1$
@@ -1738,6 +1762,7 @@ public class MainEditor extends EditorExtension {
 	
 	/** save property dirty */
 	public void setDirty(Boolean newValue) {
+//		logger.debug("[setdirty][isFirstLoad]" + isFirstLoad + "[newValue]" + newValue + "[isDirty]"+ isDirty);
 		if(!isFirstLoad) {
 			if(isDirty != newValue) {
 				isDirty = newValue;

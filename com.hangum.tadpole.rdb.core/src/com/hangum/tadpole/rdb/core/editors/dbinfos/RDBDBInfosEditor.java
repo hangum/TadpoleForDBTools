@@ -23,11 +23,11 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnsComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.RDBInformationComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TablesComposite;
-import com.hangum.tadpole.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * RDB DB Information editor

@@ -19,10 +19,10 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.dao.ManagerListDTO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.sql.dao.ManagerListDTO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * db 연결 action

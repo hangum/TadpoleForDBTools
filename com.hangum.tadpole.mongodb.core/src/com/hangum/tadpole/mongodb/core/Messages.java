@@ -98,6 +98,9 @@ public class Messages extends NLS {
 	public static String UserManagerDialog_5;
 	public static String UserManagerDialog_6;
 	public static String UserManagerDialog_7;
+	public static String CollectionInformationComposite_btnRefresh_text;
+	public static String CollectionInformationComposite_tltmRefresh_text;
+	public static String ShardingComposite_tltmNewItem_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

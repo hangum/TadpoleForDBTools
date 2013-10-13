@@ -20,6 +20,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -33,21 +36,27 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
+import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionLabelProvicer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionViewFilter;
-import com.hangum.tadpole.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.util.executer.ProcedureExecuterManager;
+import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -63,7 +72,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private static final Logger logger = Logger.getLogger(TadpoleFunctionComposite.class);
 	
 	private TableViewer functionTableViewer;
-	private ObjectComparator fuctionComparator;
+	private ProcedureFunctionComparator fuctionComparator;
 	private List<ProcedureFunctionDAO> showFunction;
 	private ProcedureFunctionViewFilter functionFilter;
 
@@ -71,6 +80,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private ObjectDeleteAction deleteAction_Function;
 	private ObjectRefreshAction refreshAction_Function;
 	private GenerateViewDDLAction viewDDLAction;
+	private ObjectExecuteProcedureAction executeAction_Procedure;
+	private OracleObjectCompileAction objectCompileAction;
 	
 	/**
 	 * function composite
@@ -107,7 +118,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
-		fuctionComparator = new ObjectComparator();
+		fuctionComparator = new ProcedureFunctionComparator();
 		functionTableViewer.setSorter(fuctionComparator);
 
 		createProcedureFunctionColumn(functionTableViewer, fuctionComparator);
@@ -115,6 +126,23 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		functionTableViewer.setLabelProvider(new ProcedureFunctionLabelProvicer());
 		functionTableViewer.setContentProvider(new ArrayContentProvider());
 //		tableViewer.setInput(showFunction);
+		
+		
+		functionTableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
+				if(!iss.isEmpty()) {
+					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)iss.getFirstElement();
+					
+					ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
+					if(pm.isExecuted(procedureDAO, getUserDB())) {
+						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
+						epd.open();
+					}
+				}	// end iss.isempty
+			}
+		});
+
 
 		functionFilter = new ProcedureFunctionViewFilter();
 		functionTableViewer.addFilter(functionFilter);
@@ -132,6 +160,9 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "View"); //$NON-NLS-1$
 
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
@@ -146,6 +177,11 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 				
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(viewDDLAction);
+				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+				manager.add(executeAction_Procedure);
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(objectCompileAction);
+				}
 			}
 		});
 
@@ -175,6 +211,9 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		refreshAction_Function.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
+
+		executeAction_Procedure.setUserDB(getUserDB());
+		objectCompileAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -190,6 +229,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 
 			functionTableViewer.setInput(showFunction);
 			functionTableViewer.refresh();
+			
+			TableUtil.packTable(functionTableViewer.getTable());
 
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$
@@ -220,6 +261,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		deleteAction_Function.dispose();
 		refreshAction_Function.dispose();
 		viewDDLAction.dispose();
+		executeAction_Procedure.dispose();
+		objectCompileAction.dispose();
 	}
 
 }

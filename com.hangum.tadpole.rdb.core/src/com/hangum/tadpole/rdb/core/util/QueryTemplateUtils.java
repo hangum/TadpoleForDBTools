@@ -11,14 +11,14 @@
 package com.hangum.tadpole.rdb.core.util;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.define.CubridDMLTemplate;
-import com.hangum.tadpole.define.HIVEDMLTemplate;
-import com.hangum.tadpole.define.MySQLDMLTemplate;
-import com.hangum.tadpole.define.OracleDMLTemplate;
-import com.hangum.tadpole.define.PostgreDMLTemplate;
-import com.hangum.tadpole.define.SQLiteDMLTemplate;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.template.CubridDMLTemplate;
+import com.hangum.tadpole.sql.template.HIVEDMLTemplate;
+import com.hangum.tadpole.sql.template.MySQLDMLTemplate;
+import com.hangum.tadpole.sql.template.OracleDMLTemplate;
+import com.hangum.tadpole.sql.template.PostgreDMLTemplate;
+import com.hangum.tadpole.sql.template.SQLiteDMLTemplate;
 
 /**
  * db에 다른 템플릿 쿼리를 생성합니다.
@@ -65,6 +65,8 @@ public class QueryTemplateUtils {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_INDEX_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
+			} else if(initAction == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+				defaultStr =  OracleDMLTemplate.TMP_CREATE_PACKAGE_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_FUNCTION_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {

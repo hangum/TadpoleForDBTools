@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tadpole DB Hub Commons
-Bundle-SymbolicName: com.hangum.tadpole.commons
+Bundle-SymbolicName: com.hangum.tadpole.commons.utils
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.commons.Activator
 Bundle-Vendor: hangum.com
@@ -21,16 +21,17 @@ Export-Package: com.google.gson,
  com.google.gson.reflect,
  com.google.gson.stream,
  com.hangum.tadpole.commons,
- com.hangum.tadpole.dialogs.message,
- com.hangum.tadpole.dialogs.message.dao,
- com.hangum.tadpole.exception,
- com.hangum.tadpole.exception.dialog,
- com.hangum.tadpole.log,
- com.hangum.tadpole.start,
- com.hangum.tadpole.util,
- com.hangum.tadpole.util.download,
- com.hangum.tadpole.util.fileupload,
- com.hangum.tadpole.viewsupport,
+ com.hangum.tadpole.commons.dialogs.message,
+ com.hangum.tadpole.commons.dialogs.message.dao,
+ com.hangum.tadpole.commons.exception,
+ com.hangum.tadpole.commons.exception.dialog,
+ com.hangum.tadpole.commons.help,
+ com.hangum.tadpole.commons.log,
+ com.hangum.tadpole.commons.start,
+ com.hangum.tadpole.commons.util,
+ com.hangum.tadpole.commons.util.download,
+ com.hangum.tadpole.commons.util.fileupload,
+ com.hangum.tadpole.commons.viewsupport,
  com.swtdesigner
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",

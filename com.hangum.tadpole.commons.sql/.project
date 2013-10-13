@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>com.hangum.tadpole.commons.sql</name>
+	<name>com.hangum.tadpole.engine</name>
 	<comment></comment>
 	<projects>
 	</projects>

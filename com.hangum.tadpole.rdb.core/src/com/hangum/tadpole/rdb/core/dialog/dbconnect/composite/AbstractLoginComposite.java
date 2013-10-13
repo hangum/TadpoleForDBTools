@@ -23,18 +23,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.PingTest;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.util.PingTest;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -49,8 +49,9 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	private static final long serialVersionUID = -3434604591881525231L;
 	private static final Logger logger = Logger.getLogger(AbstractLoginComposite.class);
-	
-	protected DATA_STATUS dalog_status = DATA_STATUS.NEW;
+
+	/** 현재 창의 저장, 수정 상태인지 상태. */
+	protected DATA_STATUS dataActionStatus = DATA_STATUS.NEW;
 	
 	protected String displayName = ""; //$NON-NLS-1$
 	
@@ -93,11 +94,11 @@ public abstract class AbstractLoginComposite extends Composite {
 	}
 	
 	/**
-	 * dialog 상태 신규데이터 인지 수정상태인지.
+	 * 현재 창의 저장, 수정 상태인지 상태.
 	 * @return
 	 */
-	public DATA_STATUS getDalog_status() {
-		return dalog_status;
+	public DATA_STATUS getDataActionStatus() {
+		return dataActionStatus;
 	}
 	
 	/**
@@ -105,8 +106,8 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * 
 	 * @param dalog_status
 	 */
-	public void setDalog_status(DATA_STATUS dalog_status) {
-		this.dalog_status = dalog_status;
+	public void setDataActionStatus(DATA_STATUS dalog_status) {
+		this.dataActionStatus = dalog_status;
 	}
 	
 
@@ -132,7 +133,7 @@ public abstract class AbstractLoginComposite extends Composite {
 		if(!testConnection()) return false;
 		
 		// 기존 데이터 업데이트
-		if(getDalog_status() == DATA_STATUS.MODIFY) {
+		if(getDataActionStatus() == DATA_STATUS.MODIFY) {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
@@ -236,26 +237,38 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 */
 	private boolean isAlreadExistDB(UserDBDAO userDBDao) {
-		
+
 		try {
-			// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
-			// 최소한 display_name이라도 틀려야 한다.
-			if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getSeq(), userDBDao)) {
-				MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
+			// 기존 데이터 업데이트
+			if(getDataActionStatus() == DATA_STATUS.MODIFY) {
+				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
+				// 최소한 display_name이라도 틀려야 한다.
+				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getSeq(), userDBDao, oldUserDB)) {
+					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
+					return false;
+				}
 				
-				return false;
+			} else {
+				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
+				// 최소한 display_name이라도 틀려야 한다.
+				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getSeq(), userDBDao)) {
+					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
+					
+					return false;
+				}
+				
+				// 이름은 틀리지만, 다른 정보는 같은 이미 등록된 디비 인지 검사합니다.
+				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), userDBDao)){
+					
+					// 중복 디비 등록시 사용자의 의견을 묻습니다.
+					if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {
+						return true;
+					} 
+					
+					return false;
+				}
 			}
 			
-			// 이름은 틀리지만, 다른 정보는 같은 이미 등록된 디비 인지 검사합니다.
-			if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), userDBDao)){
-				
-				// 중복 디비 등록시 사용자의 의견을 묻습니다.
-				if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {
-					return true;
-				} 
-				
-				return false;
-			}
 		} catch(Exception e) {
 			logger.error("DB Connecting... ", e); //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.DBLoginDialog_27 + "\n" + e.getMessage()); //$NON-NLS-1$

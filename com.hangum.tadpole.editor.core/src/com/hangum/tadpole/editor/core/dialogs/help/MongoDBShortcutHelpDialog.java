@@ -13,7 +13,7 @@ package com.hangum.tadpole.editor.core.dialogs.help;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Shell;
 
-import com.hangum.tadpole.util.ShortcutPrefixUtils;
+import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 
 /**
  * mongodb editor 단축키 도움말.  

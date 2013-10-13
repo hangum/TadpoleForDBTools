@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.layout.GridData;
 
 import com.hangum.tadpole.preference.Messages;
-import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
 
 /**
  * SQL formatter preference page

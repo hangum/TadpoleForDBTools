@@ -12,8 +12,8 @@ package com.hangum.tadpole.rdb.core.editors.sessionlist;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
+import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
 
 /**
  * SessionList tableview compare

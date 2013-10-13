@@ -29,13 +29,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.util.JSONUtil;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * 신규 document 를 생성합니다.
@@ -48,7 +48,7 @@ public class NewDocumentDialog extends Dialog {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(NewDocumentDialog.class);
-	private static int FORMAT_BTN_ID = 999;
+	private static int FORMAT_BTN_ID = IDialogConstants.CLIENT_ID + 1;
 
 	protected UserDBDAO userDB;
 	protected String collectionName;

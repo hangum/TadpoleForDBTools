@@ -15,17 +15,17 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
-import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
-import com.hangum.tadpole.dao.mysql.InformationSchemaDAO;
-import com.hangum.tadpole.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.system.TadpoleSystemCommons;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.sql.system.TadpoleSystemCommons;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -125,6 +125,23 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 					TadpoleSystemCommons.executSQL(getUserDB(), "drop procedure " + procedureDAO.getName()); //$NON-NLS-1$
 					
 					refreshProcedure();
+				} catch(Exception e) {
+					logger.error(Messages.ObjectDeleteAction_26, e);
+					exeMessage(Messages.ObjectDeleteAction_10, e);
+				}
+			}
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+			ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
+			if(MessageDialog.openConfirm(window.getShell(), Messages.ObjectDeleteAction_23, procedureDAO.getName() + Messages.ObjectDeleteAction_24)) {
+				try {
+					try{
+					TadpoleSystemCommons.executSQL(getUserDB(), "drop package body " + procedureDAO.getName()); //$NON-NLS-1$
+					}catch(Exception e){
+						// package body는 없을 수도 있음.
+					}
+					TadpoleSystemCommons.executSQL(getUserDB(), "drop package " + procedureDAO.getName()); //$NON-NLS-1$
+					
+					refreshPackage();
 				} catch(Exception e) {
 					logger.error(Messages.ObjectDeleteAction_26, e);
 					exeMessage(Messages.ObjectDeleteAction_10, e);

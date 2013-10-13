@@ -12,8 +12,8 @@ package com.hangum.tadpole.rdb.core.editors.objects.table;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hangum.tadpole.commons.util.XMLUtils;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.util.XMLUtils;
 
 /**
  * 테이블뷰의 테이블 수정관련 정의
