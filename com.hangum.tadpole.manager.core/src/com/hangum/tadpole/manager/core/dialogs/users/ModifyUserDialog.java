@@ -254,7 +254,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(438, 360);
+		return new Point(450, 400);
 	}
 
 }
