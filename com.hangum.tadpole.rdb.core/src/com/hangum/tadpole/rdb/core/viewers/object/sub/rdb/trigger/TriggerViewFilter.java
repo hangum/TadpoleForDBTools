@@ -12,8 +12,8 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.dao.mysql.TriggerDAO;
-import com.hangum.tadpole.util.TadpoleViewrFilter;
+import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
+import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
 
 /**
  * Trigger의 FILTER

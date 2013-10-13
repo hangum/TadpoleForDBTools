@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 
 /**
  * mongodb collection field content provider

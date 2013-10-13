@@ -23,15 +23,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
-import com.hangum.tadpole.dao.mongodb.CollectionFieldDAO;
-import com.hangum.tadpole.dao.mongodb.MongoDBIndexDAO;
-import com.hangum.tadpole.dao.mongodb.MongoDBIndexFieldDAO;
-import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
+import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexFieldDAO;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
@@ -69,6 +70,7 @@ public class MongoDBQuery {
 		options.connectionsPerHost = 20;		
 		Mongo mongo = new Mongo(userDB.getHost(), Integer.parseInt(userDB.getPort()));
 		DB db = mongo.getDB(userDB.getDb());
+		db.authenticate(userDB.getUsers(), userDB.getPasswd().toCharArray());
 		
 		// 
 		// 신규는 다음과 같은 작업을 해주지 않으면 디비가 생성되지 않습니다.
@@ -108,7 +110,11 @@ public class MongoDBQuery {
 			if(!isSystemCollection(col)) {
 				TableDAO dao = new TableDAO();
 				dao.setName(col);
-
+				
+				CommandResult commandResult = mongoDB.getCollection(col).getStats();
+				dao.setRows(commandResult.getLong("count"));
+				dao.setSize(commandResult.getInt("size"));
+				
 				listReturn.add(dao);
 			}
 		}
@@ -189,13 +195,43 @@ public class MongoDBQuery {
 	 * collection 정보를 리턴한다.
 	 * 
 	 * @param userDB
-	 * @param colName
+	 * @param collName
 	 * @return
 	 * @throws Exception
 	 */
-	public static DBCollection findCollection(UserDBDAO userDB, String colName) throws Exception {
+	public static DBCollection findCollection(UserDBDAO userDB, String collName) throws Exception {
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
-		return mongoDB.getCollection(colName);
+		return mongoDB.getCollection(collName);
+	}
+	
+	/**
+	 * findAndModify
+	 * 
+	 * @param userDB
+	 * @param collName
+	 * @param objQuery
+	 * @param objSort
+	 * @param isRemove
+	 * @param objUpdate
+	 * @param isReturnNew
+	 * @param objFields
+	 * @param isUpsert
+	 * @return
+	 * @throws Exception
+	 */
+	public static DBObject findAndModify(UserDBDAO userDB, String collName,
+			DBObject objQuery, 
+			DBObject objSort, 
+			DBObject objFields,
+			boolean isRemove,
+			DBObject objUpdate,
+			boolean isReturnNew,
+			boolean isUpsert
+	) throws Exception {
+		DBCollection coll = findCollection(userDB, collName);
+		DBObject retDBObject = coll.findAndModify(objQuery, objFields, objSort, isRemove, objUpdate, isReturnNew, isUpsert);
+		
+		return retDBObject;
 	}
 	
 	/**
@@ -404,6 +440,72 @@ public class MongoDBQuery {
 		DBCollection collection = findCollection(userDB, originalName);
 		collection.rename(newName, true);
 	}
+	
+	/**
+	 * coll stats
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getCollStats(UserDBDAO userDB, String colName) throws Exception {
+		DBCollection collection = findCollection(userDB, colName);
+		
+		CommandResult cr = collection.getStats();
+		if(cr.ok()) {
+			return cr.toString();
+		} else {
+			throw cr.getException();
+		}
+	}
+	
+	/**
+	 * collection validate
+	 * 
+	 * @param userDB
+	 * @param collName
+	 * @param isFull
+	 * @return
+	 * @throws Exception
+	 */
+	public static BasicDBObject collValidate(UserDBDAO userDB, String collName, boolean isFull) throws Exception {
+		
+		DBObject queryObj = new BasicDBObject("validate", collName );
+		queryObj.put("full", isFull);		
+		CommandResult cr = findDB(userDB).command(queryObj);
+		
+		if(!cr.ok()) throw cr.getException();
+		if(logger.isDebugEnabled()) logger.debug("[compact] complements" + cr.toString());
+		
+		return (BasicDBObject)cr;
+	}
+	
+	/**
+	 * collection compact
+	 * 
+	 * @param userDB
+	 * @param colName
+	 * @param force
+	 * @param paddingFactor
+	 * @param paddingBytes
+	 * @return
+	 * @throws Exception
+	 */
+	public static String collCompact(UserDBDAO userDB, String colName, boolean isForct, int paddingFactor, int paddingBytes) throws Exception {
+		DB mongoDB =  findDB(userDB);
+		
+		DBObject queryObj = new BasicDBObject("compact", colName );
+		if(paddingFactor > 0) queryObj.put("paddingFactor", paddingFactor);
+		if(paddingBytes > 0) queryObj.put("paddingBytes", paddingBytes);
+		
+		CommandResult cr = mongoDB.command(queryObj);
+		
+		if(!cr.ok()) throw cr.getException();
+		if(logger.isDebugEnabled()) logger.debug("[compact] complements" + cr.toString());
+		
+		return cr.toString();
+	}
 
 	/**
 	 * reIndex collection
@@ -488,7 +590,7 @@ public class MongoDBQuery {
 	 */
 	public static void insertJavaScript(UserDBDAO userDB, MongoDBServerSideJavaScriptDAO javaScriptDAO) throws Exception {
 		DBObject dbObject = (DBObject) JSON.parse("{'_id':'" + javaScriptDAO.getName() + "', 'value':'" +  javaScriptDAO.getContent() + "'}");
-		findDB(userDB).getCollection("system.js").save(dbObject);
+		findCollection(userDB, "system.js").save(dbObject);
 	}
 	
 	/**
@@ -503,7 +605,7 @@ public class MongoDBQuery {
 		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + _id + "'}");
 		DBObject dbUpdateObject = (DBObject) JSON.parse("{'_id':'" + _id + "', 'value':'" + content +"'}");
 		
-		findDB(userDB).getCollection("system.js").findAndModify(dbFindObject, dbUpdateObject);
+		findCollection(userDB, "system.js").findAndModify(dbFindObject, dbUpdateObject);
 	}
 	
 	/**
@@ -515,7 +617,7 @@ public class MongoDBQuery {
 	 */
 	public static void deleteJavaScirpt(UserDBDAO userDB, String _id) throws Exception {
 		DBObject dbFindObject = (DBObject) JSON.parse("{'_id':'" + _id + "'}");
-		findDB(userDB).getCollection("system.js").remove(dbFindObject);
+		findCollection(userDB, "system.js").remove(dbFindObject);
 	}
 	
 	/**

@@ -10,13 +10,22 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
+import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.CommandResult;
 import com.mongodb.DBObject;
 
@@ -27,14 +36,23 @@ import com.mongodb.DBObject;
  *
  */
 public class LockComposite extends Composite {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(LockComposite.class);
+
+	private UserDBDAO userDB;
 	private CommandResult commandResult;
+	
+	private FindOneDetailComposite compositeLocalLocks;
+	private FindOneDetailComposite compositeGlobalLocks;
 
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LockComposite(Composite parent, int style, CommandResult cr) {
+	public LockComposite(Composite parent, int style, UserDBDAO userDB, CommandResult cr) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 1;
@@ -43,6 +61,7 @@ public class LockComposite extends Composite {
 		gridLayout.marginWidth = 1;
 		setLayout(gridLayout);
 		
+		this.userDB = userDB;
 		this.commandResult = cr;
 
 		Composite compositeServerStatus = new Composite(this, SWT.NONE);
@@ -54,6 +73,28 @@ public class LockComposite extends Composite {
 		gl_compositeServerStatus.marginWidth = 1;
 		compositeServerStatus.setLayout(gl_compositeServerStatus);
 		
+		Composite compositeToolbar = new Composite(compositeServerStatus, SWT.NONE);
+		compositeToolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeToolbar = new GridLayout(1, false);
+		gl_compositeToolbar.verticalSpacing = 1;
+		gl_compositeToolbar.horizontalSpacing = 1;
+		gl_compositeToolbar.marginHeight = 1;
+		gl_compositeToolbar.marginWidth = 1;
+		compositeToolbar.setLayout(gl_compositeToolbar);
+		
+		ToolBar toolBar = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
+		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initData();
+			}
+		});
+		tltmRefresh.setToolTipText(Messages.CollectionInformationComposite_tltmRefresh_text);
+		
 		Group grpReplicaSet = new Group(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpReplicaSet = new GridLayout(1, false);
 		gl_grpReplicaSet.verticalSpacing = 0;
@@ -64,7 +105,7 @@ public class LockComposite extends Composite {
 		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpReplicaSet.setText("Locks Information");
 		
-		Composite compositeLocalLocks = new FindOneDetailComposite(grpReplicaSet, "Local Locks", (DBObject)commandResult.get("locks"), false);
+		compositeLocalLocks = new FindOneDetailComposite(grpReplicaSet, "Local Locks", (DBObject)commandResult.get("locks"), false);
 		compositeLocalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeLocalLocks = new GridLayout(1, false);
 		gl_compositeLocalLocks.verticalSpacing = 2;
@@ -73,7 +114,7 @@ public class LockComposite extends Composite {
 		gl_compositeLocalLocks.marginWidth = 2;
 		compositeLocalLocks.setLayout(gl_compositeLocalLocks);
 		
-		Composite compositeGlobalLocks = new FindOneDetailComposite(grpReplicaSet, "Global Locks", (DBObject)commandResult.get("globalLock"), false);
+		compositeGlobalLocks = new FindOneDetailComposite(grpReplicaSet, "Global Locks", (DBObject)commandResult.get("globalLock"), false);
 		compositeGlobalLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeGlobalLocks = new GridLayout(1, false);
 		gl_compositeGlobalLocks.verticalSpacing = 2;
@@ -83,6 +124,20 @@ public class LockComposite extends Composite {
 		compositeGlobalLocks.setLayout(gl_compositeGlobalLocks);
 	}
 
+	/**
+	 * data refresh
+	 */
+	private void initData() {
+		try {
+			commandResult = MongoDBQuery.serverStatusCommandResult(userDB);
+		} catch (Exception e1) {
+			logger.error("Get status command", e1);
+		}
+		
+		compositeLocalLocks.refresh("Local Locks", (DBObject)commandResult.get("locks"), false);
+		compositeGlobalLocks.refresh("Global Locks", (DBObject)commandResult.get("globalLock"), false);
+	}
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components

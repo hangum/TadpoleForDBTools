@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -53,8 +53,8 @@ public class TableColumnLabelprovider extends LabelProvider implements ITableLab
 		switch(columnIndex) {
 		case 0: return tc.getField();
 		case 1: return tc.getType();
-		case 2: return tc.getComment();
-		case 3: return tc.getKey();
+		case 2: return tc.getKey();
+		case 3: return tc.getComment();
 		case 4: return tc.getNull();
 		case 5: return tc.getDefault();
 		case 6: return tc.getExtra();

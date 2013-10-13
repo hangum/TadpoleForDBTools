@@ -23,10 +23,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.DBObject;
 
 /**

@@ -15,9 +15,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.util.sqlscripts.DDLScriptManager;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 
 /**
  * generate ddl view     

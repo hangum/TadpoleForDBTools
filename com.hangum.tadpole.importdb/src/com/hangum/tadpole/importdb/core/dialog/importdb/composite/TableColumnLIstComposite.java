@@ -26,10 +26,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.ExistOnDeleteColumnEditingSupport;
@@ -37,6 +35,8 @@ import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.RenameColumnEditingSupport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 

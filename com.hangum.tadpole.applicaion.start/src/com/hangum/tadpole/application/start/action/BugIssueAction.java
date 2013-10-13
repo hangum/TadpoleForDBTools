@@ -11,13 +11,19 @@
 package com.hangum.tadpole.application.start.action;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.rap.rwt.widgets.ExternalBrowser;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.UrlLauncher;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.swtdesigner.ResourceManager;
 
+/**
+ * bug issue action
+ * @author hangum
+ *
+ */
 public class BugIssueAction extends Action {
 	private final IWorkbenchWindow window;
 	
@@ -31,6 +37,7 @@ public class BugIssueAction extends Action {
 	}
 	
 	public void run() {
-		ExternalBrowser.open(Messages.BugIssueAction_3, "https://github.com/hangum/TadpoleForDBTools/issues", ExternalBrowser.LOCATION_BAR | ExternalBrowser.NAVIGATION_BAR | ExternalBrowser.STATUS ); //$NON-NLS-2$
+		UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+		launcher.openURL("https://github.com/hangum/TadpoleForDBTools/issues");
 	}
 }

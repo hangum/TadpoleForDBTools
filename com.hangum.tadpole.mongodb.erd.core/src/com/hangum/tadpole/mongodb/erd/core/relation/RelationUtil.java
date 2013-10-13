@@ -19,9 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.dao.mysql.ReferencedTableDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.mongodb.erd.core.utils.MongodbUtils;
 import com.hangum.tadpole.mongodb.model.Column;
 import com.hangum.tadpole.mongodb.model.DB;
@@ -29,6 +27,8 @@ import com.hangum.tadpole.mongodb.model.MongodbFactory;
 import com.hangum.tadpole.mongodb.model.Relation;
 import com.hangum.tadpole.mongodb.model.RelationKind;
 import com.hangum.tadpole.mongodb.model.Table;
+import com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

@@ -13,8 +13,8 @@ package com.hangum.tadpole.mongodb.core.ext.editors.javascript;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IInputValidator;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * mongodb javascript name

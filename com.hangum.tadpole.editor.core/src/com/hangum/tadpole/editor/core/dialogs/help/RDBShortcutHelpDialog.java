@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.util.ShortcutPrefixUtils;
+import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 
 /**
  * sql editor 단축키 도움말.

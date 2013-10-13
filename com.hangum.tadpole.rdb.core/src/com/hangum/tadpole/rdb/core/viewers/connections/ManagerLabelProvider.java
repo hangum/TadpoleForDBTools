@@ -15,13 +15,13 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.ManagerListDTO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.define.DBOperationType;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.ManagerListDTO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.template.DBOperationType;
 import com.swtdesigner.ResourceManager;
 
 /**

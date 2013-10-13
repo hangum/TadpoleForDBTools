@@ -15,12 +15,16 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.dao.system.UserGroupDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
+import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserGroupQuery;
 
 /**
- * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource 시스템 리소스 테스트}
+ * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource 시스템 리소스 테스트}
  * 
  * @author hangum
  *
@@ -61,7 +65,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#saveResource(UserDBDAO, com.hangum.tadpole.define.PublicTadpoleDefine.RESOURCE_TYPE, String, String) 시스템 리소스 저장 테스트}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource#saveResource(UserDBDAO, com.hangum.tadpole.define.PublicTadpoleDefine.RESOURCE_TYPE, String, String) 시스템 리소스 저장 테스트}
 	 */
 	public void testSaveResource() {
 //		try {
@@ -73,7 +77,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#updateResource(UserDBResourceDAO, String) 시스템 리소스 수정 테스트}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource#updateResource(UserDBResourceDAO, String) 시스템 리소스 수정 테스트}
 	 */
 	public void testUpdateResource() {
 		
@@ -88,7 +92,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#userDbErdTree(UserDBDAO) 시스템 리소스  테스트}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource#userDbErdTree(UserDBDAO) 시스템 리소스  테스트}
 	 */
 	public void testUserDbErdTree() {
 		try {
@@ -102,7 +106,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#userDBResourceDuplication(com.hangum.tadpole.define.PublicTadpoleDefine.RESOURCE_TYPE, int, int, String) 시스템 리소스 중복 테스트}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource#userDBResourceDuplication(com.hangum.tadpole.define.PublicTadpoleDefine.RESOURCE_TYPE, int, int, String) 시스템 리소스 중복 테스트}
 	 */
 	public void testUserDBResourceDuplication() {
 		try {
@@ -116,7 +120,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 	
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#delete(UserDBResourceDAO) 시스템 리소스 삭제 테스트}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource#delete(UserDBResourceDAO) 시스템 리소스 삭제 테스트}
 	 */
 	public void testGetResourceData() {
 		try {
@@ -131,7 +135,7 @@ public class TadpoleSystem_UserDBResourceTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.system.TadpoleSystem_UserDBResource#delete(UserDBResourceDAO) 시스템 리소스 삭제 테스트}
+	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource#delete(UserDBResourceDAO) 시스템 리소스 삭제 테스트}
 	 */
 	public void testDelete() {
 		try {

@@ -13,8 +13,8 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.util.TadpoleViewrFilter;
+import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 
 /**
  * TABLE의 FILTER

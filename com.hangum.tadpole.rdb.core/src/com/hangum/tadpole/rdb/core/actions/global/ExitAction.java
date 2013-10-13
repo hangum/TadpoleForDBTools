@@ -21,10 +21,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**

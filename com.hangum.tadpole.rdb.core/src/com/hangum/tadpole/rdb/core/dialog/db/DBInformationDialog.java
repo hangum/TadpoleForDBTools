@@ -25,14 +25,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import com.hangum.tadpole.commons.sql.define.DBDefine;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBConnectionUtils;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * DB 정보를 보여 주는 다이얼로그

@@ -7,8 +7,8 @@ Bundle-Activator: com.hangum.tadpole.importdb.Activator
 Bundle-Vendor: hangum.com
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
- com.hangum.tadpole.commons.sql;bundle-version="1.0.0",
- com.hangum.tadpole.commons;bundle-version="1.0.0",
+ com.hangum.tadpole.engine;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.utils;bundle-version="1.0.0",
  com.hangum.tadpole.mongodb.core;bundle-version="1.0.0",
  com.hangum.tadpole.editor.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

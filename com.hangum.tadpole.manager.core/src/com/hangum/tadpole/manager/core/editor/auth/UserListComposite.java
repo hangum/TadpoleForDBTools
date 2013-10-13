@@ -47,17 +47,17 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.system.UserDAO;
-import com.hangum.tadpole.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.system.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.util.ImageUtils;
+import com.hangum.tadpole.sql.dao.system.UserDAO;
+import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 사용자리스트 화면

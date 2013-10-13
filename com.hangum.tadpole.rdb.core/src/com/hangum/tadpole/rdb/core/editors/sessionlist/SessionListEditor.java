@@ -44,14 +44,14 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.dao.mysql.SessionListDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
-import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 

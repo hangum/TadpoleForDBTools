@@ -12,8 +12,8 @@ package com.hangum.tadpole.rdb.core.actions.connections;
 
 import org.eclipse.jface.action.IAction;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * mongodb javascript action

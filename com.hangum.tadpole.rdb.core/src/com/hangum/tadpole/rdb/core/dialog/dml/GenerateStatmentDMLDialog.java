@@ -41,10 +41,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 

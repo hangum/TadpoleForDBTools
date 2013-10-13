@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.TadpoleSQLManager;
-import com.hangum.tadpole.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.dao.mysql.TableDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

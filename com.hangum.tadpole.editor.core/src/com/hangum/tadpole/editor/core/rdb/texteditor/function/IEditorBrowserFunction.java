@@ -36,6 +36,7 @@ public interface IEditorBrowserFunction extends TadpoleBrowserFunction {
 	
 	public static final int APPEND_QUERY_TEXT 		= 40;
 	public static final int RE_NEW_TEXT				= 41; 
+	public static final int APPEND_QUERY_TEXT_AT_POSITION = 42;
 	public static final int SQL_TO_APPLICATION 		= 45;
 	
 	public static final int DOWNLOAD_SQL	 		= 50;
@@ -74,6 +75,9 @@ public interface IEditorBrowserFunction extends TadpoleBrowserFunction {
     
     /** 쿼리 추가 */
     public static final String JAVA_SCRIPT_APPEND_QUERY_TEXT = "return " + EDITOR_SERVICE_MAP + ".appendQueryText()";
+    
+    /** 현재 커서 포인트에 쿼리 추가 */
+    public static final String JAVA_SCRIPT_APPEND_QUERY_TEXT_AT_POSITION = "return " + EDITOR_SERVICE_MAP + ".appendQueryTextAtPosition()";
     
     /** 에디터에 기존 텍스트를 없애고 새롭게 데이터를 채웁니다 */
     public static final String JAVA_SCRIPT_RE_NEW = "return " + EDITOR_SERVICE_MAP + ".reNew()";

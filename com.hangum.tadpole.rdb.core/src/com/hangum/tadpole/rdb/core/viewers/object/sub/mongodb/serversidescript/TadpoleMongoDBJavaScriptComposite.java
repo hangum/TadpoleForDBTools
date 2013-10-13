@@ -40,9 +40,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.dao.mongodb.MongoDBServerSideJavaScriptDAO;
-import com.hangum.tadpole.dao.system.UserDBDAO;
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditorInput;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -55,6 +53,9 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.tables.TableUtil;
 
 /**
  * MongoDB ServerSide JavaScirpt composite
@@ -208,14 +209,22 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 */
 	public void initAction() {
 		if (listJavaScript != null) listJavaScript.clear();
-		tableViewer.setInput(listJavaScript);
-		tableViewer.refresh();
+		refreshViewer();
 
 		creatActionJS.setUserDB(getUserDB());
 		deleteActionJS.setUserDB(getUserDB());
 		refreshActionJS.setUserDB(getUserDB());
 		
 		serverJavaScript.setUserDB(getUserDB());
+	}
+	
+	/**
+	 * refresh viewer
+	 */
+	private void refreshViewer() {
+		tableViewer.setInput(listJavaScript);
+		tableViewer.refresh();
+		TableUtil.packTable(tableViewer.getTable());
 	}
 	
 	/**
@@ -227,8 +236,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		try {
 			listJavaScript = MongoDBQuery.listAllJavaScript(userDB);
-			tableViewer.setInput(listJavaScript);
-			tableViewer.refresh();
+			refreshViewer();
 
 		} catch (Exception e) {
 			logger.error("javascript refresh", e); //$NON-NLS-1$

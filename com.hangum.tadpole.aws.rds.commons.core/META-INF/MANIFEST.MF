@@ -7,9 +7,9 @@ Bundle-Activator: com.hangum.tadpole.aws.rds.commons.core.Activator
 Bundle-Vendor: hangum.com
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="2.1.0",
- com.hangum.tadpole.commons;bundle-version="2.0.0",
+ com.hangum.tadpole.commons.utils;bundle-version="2.0.0",
  com.hangum.tadpole.commons.libs;bundle-version="2.0.0",
- com.hangum.tadpole.commons.sql;bundle-version="1.0.0"
+ com.hangum.tadpole.engine;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: libs/aws-java-sdk-1.4.7.jar,

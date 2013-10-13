@@ -19,8 +19,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
-import com.hangum.tadpole.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.Mongo;
@@ -121,7 +121,8 @@ public class MongoConnectionManager {
 						//디비가 정상 생성 되어 있는지 권한이 올바른지 검사하기 위해 날려봅니다.
 						db.getCollectionNames();
 					} catch(Exception e) {
-						throw new MongoDBNotFoundException(userDB.getDb() + Messages.MongoDBConnection_0);
+						logger.error("error", e);
+						throw new MongoDBNotFoundException(userDB.getDb() + " " + e.getMessage());//Messages.MongoDBConnection_0);
 					}
 					
 					// db를 map에 넣습니다.

@@ -29,7 +29,7 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.part.RelationEditPart;
 import com.hangum.tadpole.rdb.erd.core.part.TableEditPart;
@@ -94,7 +94,6 @@ public class AutoLayoutAction extends SelectionAction {
 				}
 			}
 			
-			
 			// edge
 			for (int i = 0; i < models.size(); i++) {
 				Object obj = models.get(i);
@@ -149,7 +148,7 @@ public class AutoLayoutAction extends SelectionAction {
 	private class EntityNode extends Node {
 		private Table model;
 	}
-//
+
 	private class ConnectionEdge extends Edge {
 		private Table model;
 		public ConnectionEdge(EntityNode source, EntityNode target){

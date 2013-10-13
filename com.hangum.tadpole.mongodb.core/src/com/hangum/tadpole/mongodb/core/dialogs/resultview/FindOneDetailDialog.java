@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.DBObject;
 
 /**
