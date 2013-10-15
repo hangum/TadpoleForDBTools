@@ -63,60 +63,42 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 			result.append("\t");
 			if (i > 0)
 				result.append(",");
-			result.append(source.get("COLUMN_NAME")).append(" ");
-			result.append(source.get("DATA_TYPE"));
+			result.append(source.get("column_name")).append(" ");
+			result.append(source.get("data_type"));
 
-			if (source.get("DATA_PRECISION") != null && ((BigDecimal) source.get("DATA_PRECISION")).intValue() > 0) {
-				result.append("(" + source.get("DATA_PRECISION"));
-				if (source.get("DATA_SCALE") != null && ((BigDecimal) source.get("DATA_SCALE")).intValue() > 0) {
-					result.append("," + source.get("DATA_SCALE"));
+			if (source.get("data_precision") != null && ((Integer) source.get("data_precision") > 0)) {
+				result.append("(" + source.get("data_precision"));
+				if (source.get("data_scale") != null && ((Integer) source.get("data_scale") > 0)) {
+					result.append("," + source.get("data_scale"));
 				}
 
 				result.append(")");
-			} else if (!StringUtils.contains((String) source.get("DATA_TYPE"), "DATE") && !StringUtils.contains((String) source.get("DATA_TYPE"), "NUMBER") && ((BigDecimal) source.get("DATA_LENGTH")).intValue() > 0) {
-				result.append("(" + source.get("DATA_LENGTH") + ")");
+			} else if ((Integer) source.get("data_length") > 0) {
+				result.append("(" + source.get("data_length") + ")");
 			} else {
 				result.append(" ");
 			}
 
-			if (source.get("DATA_DEFAULT") != null) {
-
-				if (StringUtils.contains((String) source.get("DATA_TYPE"), "CHAR")) {
-					result.append(" DEFAULT '" + source.get("DATA_DEFAULT") + "'");
+			if (source.get("data_default") != null && !"NULL".equals(source.get("nullable"))) {
+				if (StringUtils.contains((String) source.get("data_type"), "text")) {
+					result.append(" DEFAULT '" + source.get("data_default") + "'");
 				} else {
-					result.append(" DEFAULT " + source.get("DATA_DEFAULT"));
+					result.append(" DEFAULT " + source.get("data_default"));
 				}
 			}
 
-			if ("NO".equals(source.get("NULLABLE"))) {
+			if (!"NULL".equals(source.get("nullable"))) {
 				result.append(" NOT NULL ");
 			}
-
 			result.append("\n");
-
 		}
-
-		// primary key
-		List<HashMap> srcPkList = client.queryForList("getTableScript.pk", tableDAO.getName());
-		for (int i = 0; i < srcPkList.size(); i++) {
-			HashMap<String, Object> source = srcPkList.get(i);
-			if (i == 0) {
-				result.append("\t,CONSTRAINT ").append(source.get("CONSTRAINT_NAME")).append(" PRIMARY KEY ( ").append(source.get("COLUMN_NAME"));
-			} else {
-				result.append(", " + source.get("COLUMN_NAME"));
-			}
-
-			if (i == srcPkList.size() - 1) {
-				result.append(") \n");
-			}
-		}
-
-		result.append("); \n\n");
+		result.append(");\n");
 
 		// table, column comments
+		result.append("\n\n");
 		List<String> srcCommentList = client.queryForList("getTableScript.comments", tableDAO.getName());
 		for (int i = 0; i < srcCommentList.size(); i++) {
-			result.append(srcCommentList.get(i) + "\n");
+			result.append(srcCommentList.get(i) + ";\n");
 		}
 
 		// foreign key

@@ -313,6 +313,89 @@ FROM
 </select>
 
 <!-- 
+	Table DDL Script
+ -->
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+
+  SELECT 
+            b.nspname as OWNER,
+            b.relname as TABLE_NAME,
+            a.attname as COLUMN_NAME,
+            pg_catalog.format_type(a.atttypid, a.atttypmod) as DATA_TYPE,
+            '' as DATA_TYPE_MOD,
+            '' as DATA_TYPE_OWNER,
+            CASE WHEN 
+                (SELECT substring(pg_catalog.pg_get_expr(d.adbin, d.adrelid) for 128)
+                 FROM pg_catalog.pg_attrdef d
+                 WHERE d.adrelid = a.attrelid AND d.adnum = a.attnum AND a.atthasdef) IS NOT NULL THEN
+                'DEFAULT '|| (SELECT substring(pg_catalog.pg_get_expr(d.adbin, d.adrelid) for 128)
+                              FROM pg_catalog.pg_attrdef d
+                              WHERE d.adrelid = a.attrelid AND d.adnum = a.attnum AND a.atthasdef)
+            ELSE
+                ''
+            END as DATA_DEFAULT,
+            CASE WHEN a.attnotnull = true THEN 
+                'NOT NULL'
+            ELSE
+                'NULL'
+            END as NULLABLE,
+            a.attnum as ATTNUM,
+            e.max_attnum as MAX_ATTNUM,
+            '' as CHAR_USED,
+            0 as DATA_PRECISION,
+            0 as DATA_SCALE,
+            0 as DATA_LENGTH
+        FROM 
+            pg_catalog.pg_attribute a
+            INNER JOIN 
+             (SELECT c.oid,
+                n.nspname,
+                c.relname
+              FROM pg_catalog.pg_class c
+                   LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+              WHERE c.relname = #table_name#
+                AND pg_catalog.pg_table_is_visible(c.oid)
+              ORDER BY 2, 3) b
+            ON a.attrelid = b.oid
+            INNER JOIN 
+             (SELECT 
+                  a.attrelid,
+                  max(a.attnum) as max_attnum
+              FROM pg_catalog.pg_attribute a
+              WHERE a.attnum > 0 
+                AND NOT a.attisdropped
+              GROUP BY a.attrelid) e
+            ON a.attrelid=e.attrelid
+        WHERE a.attnum > 0 
+          AND NOT a.attisdropped
+        ORDER BY a.attnum
+</select>
+<!-- 
+	Table DDL Script => Table, Column Comment Script
+ -->
+ 
+<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT
+    'COMMENT ON TABLE ' || relname || ' IS ''' || pg_catalog.obj_description(oid,'pg_class') || '''' as "comment_text"
+  FROM pg_catalog.pg_class ‌
+  WHERE 1 = 1 
+    AND relkind IN ('r','')
+    AND relname IN (
+      SELECT a.table_name
+        FROM information_schema.tables a
+        WHERE a.table_schema = 'public' 
+          AND a.table_type = 'BASE TABLE' )
+		  AND relname = #table_name#
+UNION ALL
+	SELECT 
+		'COMMENT ON COLUMN ' ||#table_name#||'.'|| ATTNAME || ' IS ''' || pg_catalog.col_description(attrelid, attnum) || '''' 
+		FROM   pg_catalog.pg_attribute
+		WHERE attrelid = (select oid from pg_catalog.pg_class where relname = #table_name#) 
+		AND attnum > 0 
+		AND NOT attisdropped
+</select>
+
+<!-- 
 	Function Script 
  -->
  
