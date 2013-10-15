@@ -341,7 +341,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * table table column
 	 */
 	protected void createTableColumne(final TableViewer tv) {
-		String[] name = {"Field", "Type", "Comment", "Key", "Null", "Default", "Extra"};
+		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
 		int[] size = {120, 90, 100, 50, 50, 50, 50};
 		
 		// table column tooltip
