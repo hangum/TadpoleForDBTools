@@ -49,11 +49,18 @@ SELECT a.table_name "name" FROM information_schema.tables a where 1 = 0
 	
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
-	SELECT a.table_name "name"
-	FROM information_schema.tables a
-	where a.table_schema = 'public' and 
-		a.table_type = 'BASE TABLE'
-	ORDER BY name 
+SELECT
+    relname as "name"
+    ,pg_catalog.obj_description(oid,'pg_class') as "comment"
+  FROM pg_catalog.pg_class ‌
+  WHERE 1 = 1 
+    AND relkind IN ('r','')
+    AND relname IN (
+      SELECT a.table_name
+        FROM information_schema.tables a
+        WHERE a.table_schema = 'public' 
+          AND a.table_type = 'BASE TABLE' )
+  ORDER BY name
 </select>
 
 <!-- 
