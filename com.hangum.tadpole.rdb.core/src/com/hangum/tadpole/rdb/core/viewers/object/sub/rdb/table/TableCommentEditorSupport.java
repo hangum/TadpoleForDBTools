@@ -138,7 +138,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 				query.append(" COMMENT ON TABLE ").append(dao.getName()).append(" IS '").append(dao.getComment()).append("'");
 
 				stmt = javaConn.prepareStatement(query.toString());
-				stmt.executeQuery();
+				stmt.execute();
 
 			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
