@@ -207,13 +207,18 @@ FROM
 	collation_connection	:	에를 들어 (utf8_general_ci)
 	database				:
 	collation				:
+	
+	prorettype = 2278 : procedure return type void
+	prorettype = 2279 : procedure return type trigger
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT  proname "name" 
 	FROM    pg_catalog.pg_namespace n 
 	JOIN    pg_catalog.pg_proc p 
 	ON      pronamespace = n.oid 
-	WHERE   nspname = 'public'; 
+	WHERE   nspname = 'public'
+	and pronargs = 0
+	and prorettype = 2278; 
 </select>
 
 <!-- 
@@ -239,7 +244,8 @@ FROM
 	FROM    pg_catalog.pg_namespace n 
 	JOIN    pg_catalog.pg_proc p 
 	ON      pronamespace = n.oid 
-	WHERE   nspname = 'public'; 
+	WHERE   nspname = 'public'
+	and pronargs > 0; 
 </select>
 
 <!-- 
@@ -304,6 +310,86 @@ FROM
     	where b.table_schema = 'public' 
     	and b.table_type = 'BASE TABLE'
 	ORDER BY a.ordinal_position
+</select>
+
+<!-- 
+	Function Script 
+ -->
+ 
+<select id="getFunctionScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ SELECT   
+ 	proname as procedure_name
+ 	, proargtypes as parameter_types
+ 	, prorettype as return_types
+ 	, prosrc as source_text
+ FROM    pg_catalog.pg_namespace n   JOIN    pg_catalog.pg_proc p   ON      pronamespace = n.oid   
+ WHERE   nspname = 'public'   
+ and proname = #object_name#
+</select>
+ 
+<!-- 
+	Procedure Script 
+ -->
+ 
+<select id="getProcedureScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ SELECT   
+ 	proname as procedure_name
+ 	, proargtypes as parameter_types
+ 	, prorettype as return_types
+ 	, prosrc as source_text
+ FROM    pg_catalog.pg_namespace n   JOIN    pg_catalog.pg_proc p   ON      pronamespace = n.oid   
+ WHERE   nspname = 'public'   
+ and proname = #object_name#
+</select>
+ 
+<select id="getProcedureScript.type" resultClass="java.lang.String" parameterClass="java.lang.Object">
+select typname as type_name
+from pg_catalog.pg_type
+where oid = #oid#;
+</select>
+
+<!-- 
+	Trigger Script 
+ -->
+ 
+<select id="getTriggerScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+select 
+	trigger_name as trigger_name
+	, action_timing as action_timing
+	, event_manipulation as event_name
+	, event_object_table as event_table
+	, action_orientation as action_orientation
+	, action_statement as action_statement
+from information_schema.triggers
+where trigger_name = #object_name#
+</select>
+
+<!-- 
+	Index Script 
+ -->
+ 
+<select id="getIndexScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+select 
+	indexdef as indexdef
+from pg_catalog.pg_indexes
+where indexname = #object_name#
+</select>
+
+<!-- 
+	View Script 
+ -->
+<select id="getViewScript.head" resultClass="java.lang.String" parameterClass="java.lang.String">
+  select
+  		'CREATE OR REPLACE VIEW ' || table_schema||'.'||table_name || ' AS ' AS SOURCE_TEXT
+ from information_schema.views
+ where table_name = #view_name#
+</select> 
+ 
+<select id="getViewScript.body" resultClass="java.lang.String" parameterClass="java.lang.String">
+select 
+	definition as definition
+from pg_catalog.pg_views
+where viewname = #object_name#
 </select>
 
 </sqlMap>
