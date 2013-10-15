@@ -72,10 +72,11 @@ public class TableCommentEditorSupport extends EditingSupport {
 		
 		if(column == 1) {
 //			userDB = explorer.getUserDB();
-			logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB.getDbms_types()));
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || 
-					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ||
-					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT ) {
+			logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB));
+			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || 
+					DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT ||
+							DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ||
+							DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT ) {
 				return true;
 			} else {
 				return false;
@@ -133,13 +134,13 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 				query.append(" COMMENT ON TABLE ").append(dao.getName()).append(" IS '").append(dao.getComment()).append("'");
 
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.executeQuery();
 
-			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT) {
+			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
@@ -158,7 +159,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				}
-			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT ) {
+			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo,'table' ").append(" , '").append(dao.getName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
