@@ -126,9 +126,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			public void selectionChanged(SelectionChangedEvent event) {
 
 				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
-				if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ||
-						DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT ||
-						DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
+				if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT 
+						//DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT 
+						//DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
 				)  return;
 				
 				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;

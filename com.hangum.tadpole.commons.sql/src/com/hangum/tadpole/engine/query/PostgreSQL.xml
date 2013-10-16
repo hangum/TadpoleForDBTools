@@ -73,6 +73,11 @@ SELECT
 	Key				: primary key, foreign key(예: PK, FK)
 	Default			: 기본값
 	Extra			: 특수컬럼(예: auto_increment)
+
+	PostgreSQL System function
+	col_description(table_oid, column_number)	text	get comment for a table column
+	obj_description(object_oid, catalog_name)	text	get comment for a database object
+	
  -->
 <select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	SELECT a.column_name AS "FIELD",
@@ -184,10 +189,39 @@ FROM
 </select>
 <!-- 
 	index의 디테일 정보
+	
+	and t.relkind = 'r'
+	and ix.indisunique = 'true'
+	and ix.indisprimary = 'false'
+	
  -->
  <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
- select * from pg_catalog.pg_class c
- where 1=0
+	select
+	t.relname as table_name,
+	i.relname as index_name,
+	a.attname as column_name,
+	row_number() over() as seq_in_index,
+	0 as column_length,
+	0 as char_length,
+	'' as "comment",
+	ix.indisunique as uniqueness,
+	'' as table_owner,
+	'' as table_schema,
+	ix.indisprimary,
+	ix.indoption
+	from
+	pg_class t,
+	pg_class i,
+	pg_index ix,
+	pg_attribute a
+	where
+	t.oid = ix.indrelid
+	and i.oid = ix.indexrelid
+	and a.attrelid = t.oid
+	and a.attnum = ANY(ix.indkey)
+	and t.relname = #table_name#
+	and i.relname = #index_name#
+	order by t.relname, i.relname
 </select>
 
 <!-- 
@@ -397,6 +431,8 @@ UNION ALL
 
 <!-- 
 	Function Script 
+	
+	pg_get_functiondef(func_oid) : get definition of a function
  -->
  
 <select id="getFunctionScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
@@ -433,6 +469,7 @@ where oid = #oid#;
 
 <!-- 
 	Trigger Script 
+	pg_get_triggerdef(trigger_oid)	:	get CREATE [ CONSTRAINT ] TRIGGER command for trigger
  -->
  
 <select id="getTriggerScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
@@ -449,6 +486,7 @@ where trigger_name = #object_name#
 
 <!-- 
 	Index Script 
+	pg_get_indexdef(index_oid)	:	get CREATE INDEX command for index
  -->
  
 <select id="getIndexScript" resultClass="java.lang.String" parameterClass="java.lang.String">
@@ -460,6 +498,7 @@ where indexname = #object_name#
 
 <!-- 
 	View Script 
+	pg_get_viewdef(view_oid)	:	get underlying SELECT command for view
  -->
 <select id="getViewScript.head" resultClass="java.lang.String" parameterClass="java.lang.String">
   select

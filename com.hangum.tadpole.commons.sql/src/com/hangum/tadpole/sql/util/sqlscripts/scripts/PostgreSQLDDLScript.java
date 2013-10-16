@@ -179,7 +179,7 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 	public String getFunctionScript(ProcedureFunctionDAO functionDAO) throws Exception {
 		logger.debug("\n Function DDL Generation...");
 
-		return (functionDAO.getName());
+		return (getFunctionScript(functionDAO.getName()));
 
 	}
 
