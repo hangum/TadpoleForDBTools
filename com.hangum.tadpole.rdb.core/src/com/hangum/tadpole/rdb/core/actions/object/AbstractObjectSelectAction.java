@@ -17,6 +17,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * object select되어야 일을 하는 action
@@ -34,10 +35,11 @@ public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		
 		if(ExplorerViewer.ID.equals(part.getSite().getId())) {
-			this.sel = (IStructuredSelection)selection;
+			this.selection = (IStructuredSelection)selection;
 			
+			UserDBDAO userDB = this.userDB;
 			if(userDB != null) {
-				if(!this.sel.isEmpty()) {
+				if(!this.selection.isEmpty()) {
 					setEnabled(true);
 					return;
 				}

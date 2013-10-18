@@ -17,9 +17,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -27,6 +29,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
@@ -41,10 +44,10 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 	}
 	
 	@Override
-	public void run() {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		StringBuffer sbSQL = new StringBuffer();
 		try {
-			TableDAO tableDAO = (TableDAO)sel.getFirstElement();
+			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 			
 			Map<String, String> parameter = new HashMap<String, String>();
 			parameter.put("db", userDB.getDb());

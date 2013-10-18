@@ -17,10 +17,12 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -30,6 +32,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
@@ -44,8 +47,8 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	}
 	
 	@Override
-	public void run() {
-		TableDAO tableDAO = (TableDAO)sel.getFirstElement();
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		
 		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			StringBuffer sbSQL = new StringBuffer();

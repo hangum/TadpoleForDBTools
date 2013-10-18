@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -36,10 +37,11 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  */
 public abstract class AbstractObjectAction extends Action implements ISelectionListener, IWorkbenchAction {
 
-	protected UserDBDAO userDB = null;
-	protected IWorkbenchWindow window;				  
-	protected IStructuredSelection sel;
-	protected PublicTadpoleDefine.DB_ACTION actionType;
+	private IWorkbenchWindow window;				  
+	UserDBDAO userDB = null;
+	IStructuredSelection selection;
+
+	private PublicTadpoleDefine.DB_ACTION actionType;
 	
 	public AbstractObjectAction() {
 	}
@@ -149,7 +151,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		
 		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-			this.sel = (IStructuredSelection)selection;
+			this.selection = (IStructuredSelection)selection;
 			
 			if(userDB != null) {
 				setEnabled(true);
@@ -161,8 +163,34 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	@Override
+	public void run() {
+		if (null == this.selection) {
+			run(selection, userDB, actionType);
+		}
+	}
+	
+	/**
+	 * Convenience method for Deduplication.<br>
+	 * There is no need to check null. If selection is null, don't execute this
+	 * method.<br>
+	 * <br>
+	 * 
+	 * @param selection selection of ExplorerViewer
+	 * @param actionType
+	 */
+	abstract public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType);
+	
+	@Override
 	public void dispose() {
 		window.getSelectionService().removePostSelectionListener(this);
+	}
+
+	public IWorkbenchWindow getWindow() {
+		return window;
+	}
+
+	public void setWindow(IWorkbenchWindow window) {
+		this.window = window;
 	}
 
 	public UserDBDAO getUserDB() {
@@ -172,5 +200,5 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	public void setUserDB(UserDBDAO userDB) {
 		this.userDB = userDB;
 	}
-
+	
 }
