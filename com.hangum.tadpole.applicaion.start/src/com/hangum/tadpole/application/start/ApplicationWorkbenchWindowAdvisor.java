@@ -35,8 +35,10 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
@@ -100,12 +102,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    		e.printStackTrace();
 //    	}
     			
-//    	// Show Information Dialog(Is not Firefox, Chrome, Safari)
-//    	String isBrowser = RequestInfoUtils.isTadpoleRunning();
-//    	if(!"".equals(isBrowser)) {
-//    		UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), isBrowser);
-//    		uiDialog.open();
-//    	}
+    	// Show Information Dialog(Is not Firefox, Chrome, Safari)
+    	String isBrowser = RequestInfoUtils.isTadpoleRunning();
+    	if(!"".equals(isBrowser)) {
+    		UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), isBrowser);
+    		uiDialog.open();
+    	}
     	
     	// If the system table does not exist, create a table.
     	try {

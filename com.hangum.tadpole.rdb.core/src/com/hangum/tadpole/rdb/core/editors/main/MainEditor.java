@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
