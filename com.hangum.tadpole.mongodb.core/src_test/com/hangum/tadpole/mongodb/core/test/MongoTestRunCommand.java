@@ -13,7 +13,9 @@ package com.hangum.tadpole.mongodb.core.test;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.util.JSON;
 
 public class MongoTestRunCommand {
 	/**
@@ -21,10 +23,12 @@ public class MongoTestRunCommand {
 	 */
 	public static void main(String[] args) throws Exception {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
-		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, 10001);//ConAndAuthentication.port);
-		DB db = mongo.getDB("admin");
+		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, 27017);//ConAndAuthentication.port);
+		DB db = mongo.getDB("test");
 		
-		CommandResult cr = db.command(new BasicDBObject("replSetInitiate", "{'_id' : 'firstset', 'members' : [{'_id' : 1, 'host' : 'localhost:10001'}, {'_id' : 2, 'host' : 'localhost:10002'}, {'_id' : 3, 'host' : 'localhost:10003', arbiterOnly: true }]}"));
+		DBObject cmdObj = (DBObject) JSON.parse("{'create':'hyunjongiee33'}");
+		CommandResult cr = db.command(cmdObj);//new BasicDBObject("create", "hyunjong"));
+		
 		System.out.println( cr.toString() );		
 		
 		mongo.close();

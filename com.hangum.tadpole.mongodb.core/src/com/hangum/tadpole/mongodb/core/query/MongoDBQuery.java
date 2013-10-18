@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
-import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
@@ -120,6 +119,21 @@ public class MongoDBQuery {
 		}
 		
 		return filter(userDB, listReturn);
+	}
+	
+	/**
+	 * Execute command
+	 * 
+	 * @param userDB
+	 * @param cmd
+	 * @return
+	 * @throws Exception
+	 */
+	public static CommandResult runCommand(UserDBDAO userDB, String cmd) throws Exception {
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
+		
+		DBObject cmdObj = (DBObject) JSON.parse(cmd);
+		return mongoDB.command(cmdObj);
 	}
 	
 	/**
