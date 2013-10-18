@@ -41,7 +41,11 @@ public class RequestInfoUtils {
 
 		String strBrowser = sua.getBrowserType().toString();
 		for(PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER supportBrowser: PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER.values()) {
-			if(strBrowser.equalsIgnoreCase(supportBrowser.toString())) return "";
+			if("IE".equals(strBrowser)) {
+				if(10 >= sua.getMajorVersion()) return "";
+			} else {
+				if(strBrowser.equalsIgnoreCase(supportBrowser.toString())) return "";
+			}
 		}
 		
 		return strBrowser;
