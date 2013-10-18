@@ -30,7 +30,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_UserDBResource {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBResource.class);
-	
+		
 	/**
 	 * 저장 
 	 * 
@@ -107,14 +107,13 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws Exception
 	 */
 	public static boolean userDBResourceDuplication(PublicTadpoleDefine.RESOURCE_TYPE type, int user_seq, int db_seq, String filename) throws Exception {
-		UserDBResourceDAO erd = new UserDBResourceDAO();
-//		erd.setTypes(type.toString());
-//		erd.setUser_seq(user_seq);
-//		erd.setDb_seq(db_seq);
-//		erd.setFilename(filename);
+		UserDBResourceDAO dbResourceDAO = new UserDBResourceDAO();
+		dbResourceDAO.setResource_types(type.toString());
+		dbResourceDAO.setDb_seq(db_seq);
+		dbResourceDAO.setName(filename);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("userDBResourceDuplication", erd).size()  == 0; //$NON-NLS-1$
+		return sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).size()  == 0; //$NON-NLS-1$
 	}
 	
 	/**

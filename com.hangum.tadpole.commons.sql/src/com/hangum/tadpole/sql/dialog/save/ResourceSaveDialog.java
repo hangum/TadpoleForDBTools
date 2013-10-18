@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.sql.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
@@ -88,13 +89,13 @@ public class ResourceSaveDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText("Name");
+		lblName.setText("Name"); //$NON-NLS-1$
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSharedType = new Label(container, SWT.NONE);
-		lblSharedType.setText("Shared Type");
+		lblSharedType.setText("Shared Type"); //$NON-NLS-1$
 		
 		comboSharedType = new Combo(container, SWT.READ_ONLY);
 		comboSharedType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -105,7 +106,7 @@ public class ResourceSaveDialog extends Dialog {
 		
 		Label lblDescription = new Label(container, SWT.NONE);
 		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDescription.setText("Description");
+		lblDescription.setText("Description"); //$NON-NLS-1$
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -126,7 +127,7 @@ public class ResourceSaveDialog extends Dialog {
 	protected void okPressed() {
 		String errMsg = isValid();
 		if(null != errMsg) {
-			MessageDialog.openError(null, "Confirm", errMsg);
+			MessageDialog.openError(null, "Confirm", errMsg); //$NON-NLS-1$
 			textName.setFocus();
 			return;
 		}
@@ -140,6 +141,16 @@ public class ResourceSaveDialog extends Dialog {
 		retResourceDao.setShared_type(comboSharedType.getText());
 		retResourceDao.setDescription(textDescription.getText());
 		
+		// Checking duplication name
+		try {
+			if(!TadpoleSystem_UserDBResource.userDBResourceDuplication(resourceType, userDB.getUser_seq(), userDB.getSeq(), textName.getText())) {
+				MessageDialog.openError(null, "Duplication", Messages.ResourceSaveDialog_5); //$NON-NLS-1$
+				return;
+			}
+		} catch (Exception e) {
+			logger.error("SQL Editor File validator", e); //$NON-NLS-1$
+		}
+		
 		super.okPressed();
 	}
 
@@ -149,8 +160,8 @@ public class ResourceSaveDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Save", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
+		createButton(parent, IDialogConstants.OK_ID, "Save", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
 	}
 
 	/**
@@ -169,16 +180,8 @@ public class ResourceSaveDialog extends Dialog {
 	 */
 	public String isValid() {
 		int len = textName.getText().trim().length();
-		if(len < 5) return "The name must enter at least 5 characters.";
+		if(len < 5) return "The name must enter at least 5 characters."; //$NON-NLS-1$
 		
-		try {
-			if(!TadpoleSystem_UserDBResource.userDBResourceDuplication(resourceType, userDB.getUser_seq(), userDB.getSeq(), textName.getText())) {
-				return "The name is duplication.";
-			}
-		} catch (Exception e) {
-			logger.error("SQL Editor File validator", e);
-		}
-				
 		return null;
 	}
 	

@@ -46,7 +46,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction exitAction;
     
     private IAction saveAction;
-//    private IAction saveAsAction;
+    private IAction saveAsAction;
     
     private IAction connectAction;
     private IAction queryOpenAction;
@@ -72,8 +72,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	saveAction = ActionFactory.SAVE.create(window);
     	register(saveAction);
     	
-//    	saveAsAction = ActionFactory.SAVE_AS.create(window);
-//    	register(saveAsAction);
+    	saveAsAction = ActionFactory.SAVE_AS.create(window);
+    	register(saveAsAction);
     	
     	connectAction = new ConnectDatabaseAction(window);
     	register(connectAction);
@@ -154,7 +154,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         }
         
         toolbar.add(saveAction);
-//        toolbar.add(saveAsAction);
+        toolbar.add(saveAsAction);
         toolbar.add(new Separator());        
         
         toolbar.add(queryOpenAction);

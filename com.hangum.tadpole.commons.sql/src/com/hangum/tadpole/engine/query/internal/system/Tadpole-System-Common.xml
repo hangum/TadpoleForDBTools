@@ -481,7 +481,6 @@
 	SELECT * FROM user_db_resource
 	WHERE
 		resource_types = #resource_types# 			and
-		user_seq = #user_seq# 	and
 		db_seq = #db_seq# 		and
 		name = #name#
 </select>

@@ -225,13 +225,14 @@ public class MainEditor extends EditorExtension {
 			if(!"".equals(initDefaultEditorStr)) {
 				isFirstLoad = true;	
 			}
+			
 		} else {
 			setPartName(dBResource.getName());
 			isFirstLoad = true;
 			initDefaultEditorStr = qei.getDefaultStr();
 		}
 	}
-
+	
 	@Override
 	public boolean isDirty() {
 		return isDirty;
@@ -239,7 +240,8 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		return false;
+		if(dBResource == null) return false;
+		else return true;
 	}
 
 	@Override
@@ -1690,8 +1692,23 @@ public class MainEditor extends EditorExtension {
 		} catch(SWTException e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
 			monitor.setCanceled(true);
-		}	
-
+		}
+	}
+	
+	@Override
+	public void doSaveAs() {
+		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
+		userSetDBResource = getFileName();
+		if(userSetDBResource == null) return;
+		
+		// 저장을 호출합니다.
+		try {
+			Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
+//			if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
+//			}
+		} catch(SWTException e) {
+			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -1723,27 +1740,12 @@ public class MainEditor extends EditorExtension {
 				userSetDBResource = getFileName();
 				if(userSetDBResource == null) return false;
 			}
+			return saveData(newContents);
 			
-			try {
-				// db 저장
-				dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, userSetDBResource, newContents);
-				dBResource.setParent(userDB);
-				
-				// title 수정
-				setPartName(userSetDBResource.getName());
-				
-				// tree 갱신
-				PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+dBResource.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				setDirty(false);
-			} catch (Exception e) {
-				logger.error("save file", e); //$NON-NLS-1$
-
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
-				
-				return false;
-			}
-			
+		// save as
+		} if(userSetDBResource != null) {
+			boolean isSucc =  saveData(newContents);
+			if(isSucc) userSetDBResource = null;
 		} else {
 			try {
 				TadpoleSystem_UserDBResource.updateResource(dBResource, newContents);
@@ -1757,6 +1759,36 @@ public class MainEditor extends EditorExtension {
 			}
 		}
 
+		return true;
+	}
+	
+	/**
+	 * save data
+	 * 
+	 * @param newContents
+	 * @return
+	 */
+	private boolean saveData(String newContents) {
+		try {
+			// db 저장
+			dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, userSetDBResource, newContents);
+			dBResource.setParent(userDB);
+			
+			// title 수정
+			setPartName(userSetDBResource.getName());
+			
+			// tree 갱신
+			PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+dBResource.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			setDirty(false);
+		} catch (Exception e) {
+			logger.error("save data", e); //$NON-NLS-1$
+
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+			
+			return false;
+		}
+		
 		return true;
 	}
 	
@@ -1783,10 +1815,6 @@ public class MainEditor extends EditorExtension {
 	private void unregisterServiceHandler() {
 		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
 		downloadServiceHandler = null;
-	}
-
-	@Override
-	public void doSaveAs() {
 	}
 	
 	public UserDBResourceDAO getdBResource() {
