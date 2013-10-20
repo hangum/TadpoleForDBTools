@@ -11,14 +11,16 @@
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Table Column 선택 action입니다. 
@@ -30,7 +32,7 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TableColumnSelectionAction.class);
+//	private static final Logger logger = Logger.getLogger(TableColumnSelectionAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.table.column.selection"; //$NON-NLS-1$
 
@@ -41,10 +43,10 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run() {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		String strColumnName = "";
 		
-		for(Object obj : sel.toArray()) {
+		for(Object obj : selection.toArray()) {
 			TableColumnDAO tcDAO = (TableColumnDAO)obj;
 			strColumnName += tcDAO.getField() + ", "; //$NON-NLS-1$
 		}

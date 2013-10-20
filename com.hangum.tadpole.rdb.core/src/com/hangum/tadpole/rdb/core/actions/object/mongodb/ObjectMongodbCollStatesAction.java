@@ -13,16 +13,19 @@ package com.hangum.tadpole.rdb.core.actions.object.mongodb;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * mongoDB collection stats
@@ -45,23 +48,19 @@ public class ObjectMongodbCollStatesAction extends AbstractObjectAction {
 	}
 
 	@Override
-	public void run() {
-		if(null != this.sel) {
-			TableDAO collDAO = (TableDAO)this.sel.getFirstElement();
-			
-			try {
-				String strCollStats = MongoDBQuery.getCollStats(getUserDB(), collDAO.getName());
-				TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-								collDAO.getName()  + " stats", 
-								strCollStats);
-				dialog.open();
-			} catch(Exception e) {
-				logger.error("Collection stats", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Collection stats", errStatus); //$NON-NLS-1$
-			}
-			
-		}		
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+		TableDAO collDAO = (TableDAO) selection.getFirstElement();
+
+		try {
+			String strCollStats = MongoDBQuery.getCollStats(userDB, collDAO.getName());
+			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					collDAO.getName() + " stats", strCollStats);
+			dialog.open();
+		} catch (Exception e) {
+			logger.error("Collection stats", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Collection stats", errStatus); //$NON-NLS-1$
+		}
 	}
 	
 }

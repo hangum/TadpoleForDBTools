@@ -12,11 +12,14 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 
 /**
@@ -48,10 +51,10 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 	}
 	
 	@Override
-	public void run() {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		try {
 			DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
-			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(sel.getFirstElement()), true);		
+			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(selection.getFirstElement()), true);		
 		} catch(Exception e) {
 			logger.error("view ddl", e);
 			MessageDialog.openError(null, "Confirm", "Not support this function.");

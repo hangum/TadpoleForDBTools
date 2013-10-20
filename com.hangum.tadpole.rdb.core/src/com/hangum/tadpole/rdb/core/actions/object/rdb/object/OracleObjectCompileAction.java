@@ -13,17 +13,18 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -36,7 +37,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(OracleObjectCompileAction.class);
+//	private static final Logger logger = Logger.getLogger(OracleObjectCompileAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.compile";
 	
@@ -48,33 +49,33 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run() {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
 			if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {			
 				
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
-				ViewCompile();	
+				ViewCompile(selection, userDB);	
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
-				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)sel.getFirstElement();
-				OtherObjectCompile("PROCEDURE", dao.getName().trim().toUpperCase());			
+				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
+				OtherObjectCompile("PROCEDURE", dao.getName().trim().toUpperCase(), userDB);			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
-				PackageCompile();
+				PackageCompile(selection, userDB);
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
-				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)sel.getFirstElement();
-				OtherObjectCompile("FUNCTION",  dao.getName().trim().toUpperCase());			
+				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
+				OtherObjectCompile("FUNCTION",  dao.getName().trim().toUpperCase(), userDB);			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
-				TriggerDAO dao = (TriggerDAO)sel.getFirstElement();
-				OtherObjectCompile("TRIGGER",  dao.getName().trim().toUpperCase());			
+				TriggerDAO dao = (TriggerDAO)selection.getFirstElement();
+				OtherObjectCompile("TRIGGER",  dao.getName().trim().toUpperCase(), userDB);			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
 			
 			}
 		}
 	}
 	
-	public void ViewCompile() {
-		String viewName = (String)sel.getFirstElement();
+	public void ViewCompile(IStructuredSelection selection, UserDBDAO userDB) {
+		String viewName = (String)selection.getFirstElement();
 		
 		String sqlQuery = "ALTER VIEW " + userDB.getUsers() + "." + viewName.trim().toUpperCase() + " COMPILE ";
 
@@ -110,9 +111,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		}
 	}
 	
-	public void OtherObjectCompile(String objType, String objName) {
-		
-		
+	public void OtherObjectCompile(String objType, String objName, UserDBDAO userDB) {
 		String sqlQuery = "ALTER "+objType+" " + userDB.getUsers() + "." + objName.trim().toUpperCase() + " COMPILE DEBUG ";
 
 		java.sql.Connection javaConn = null;
@@ -147,8 +146,9 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		}
 	}
 	
-	public void PackageCompile() {
-		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
+	public void PackageCompile(IStructuredSelection selection, UserDBDAO userDB) {
+		
+		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
 		
 		String sqlQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + procedureDAO.getName().trim().toUpperCase() + " COMPILE DEBUG SPECIFICATION ";
 		String sqlBodyQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + procedureDAO.getName().trim().toUpperCase() + " COMPILE DEBUG BODY ";
