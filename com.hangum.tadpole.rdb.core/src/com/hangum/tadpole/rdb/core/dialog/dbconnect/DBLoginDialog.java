@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
@@ -129,7 +130,18 @@ public class DBLoginDialog extends Dialog {
 			comboDBList.add(dbDefine.getDBToString());
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
 		}
-		comboDBList.select(0);
+		
+		// option에 default db가 존재하면..
+		if(ApplicationArgumentUtils.isDefaultDB()) {
+			try {
+				String strDefaultDB = ApplicationArgumentUtils.getDefaultDB();
+				comboDBList.setText(strDefaultDB);
+			} catch(Exception e) {
+				logger.error("find default db", e);
+			}
+		} else {
+			comboDBList.select(0);
+		}
 				
 		// combo에서 선택된 디비의 콤포짖
 		compositeBody = new Composite(compositeHead, SWT.NONE);

@@ -30,6 +30,8 @@ Program Argument
 						case AMAZONRDS_DEFAULT: 	return "AmazonRDS";
 						case HIVE_DEFAULT: 			return "Hive";
 					*/
+ -defaultDB     : 디비 입력시 선택디비 나열:
+ 				: ex : -defaultDB MySQL
     
   
 VM Argument

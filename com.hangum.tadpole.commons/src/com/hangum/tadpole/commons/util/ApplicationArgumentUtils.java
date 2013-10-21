@@ -80,6 +80,13 @@ public class ApplicationArgumentUtils {
 	public static String getUseDB() throws Exception {
 		return getValue("-useDB");
 	}
+	
+	public static boolean isDefaultDB() {
+		return checkString("-defaultDB");
+	}
+	public static String getDefaultDB() throws Exception {
+		return getValue("-defaultDB");
+	}
 
 	/**
 	 * <pre>

@@ -20,7 +20,7 @@
          the -console parameter to enabled OSGi console access.  -->
     <init-param>
       <param-name>commandline</param-name>
-      <param-value>-registryMultiLanguage -test -useDB all -ws rap</param-value>     
+      <param-value>-registryMultiLanguage -test -useDB all -defaultDB MySQL -ws rap</param-value>     
     </init-param>
 
     <load-on-startup>1</load-on-startup>    
