@@ -19,8 +19,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -29,7 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -48,6 +45,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.SessionListLabelProvider;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -302,35 +300,3 @@ public class SessionListEditor extends EditorPart {
 
 }
 
-/**
- * session list label provider
- * 
- * @author hangum
- *
- */
-class SessionListLabelProvider extends LabelProvider implements ITableLabelProvider {
-
-	@Override
-	public Image getColumnImage(Object element, int columnIndex) {
-		return null;
-	}
-
-	@Override
-	public String getColumnText(Object element, int columnIndex) {
-		SessionListDAO sl = (SessionListDAO)element;
-		
-		switch(columnIndex) {
-		case 0: return sl.getId();
-		case 1: return sl.getUser();
-		case 2: return sl.getHost();
-		case 3: return sl.getDb();
-		case 4: return sl.getCommand();
-		case 5: return sl.getTime();
-		case 6: return sl.getState();
-		case 7: return sl.getInfo();
-		}
-		
-		return "*** not set column ***";
-	}
-	
-}
