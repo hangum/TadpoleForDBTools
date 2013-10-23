@@ -136,6 +136,9 @@ public class DBLoginDialog extends Dialog {
 			try {
 				String strDefaultDB = ApplicationArgumentUtils.getDefaultDB();
 				comboDBList.setText(strDefaultDB);
+				
+				// 초기 값이 잘못되어 ui가 잘못 생성되는것을 방지하기위한 코드.
+				if(-1 == comboDBList.getSelectionIndex()) comboDBList.select(0);;
 			} catch(Exception e) {
 				logger.error("find default db", e);
 			}
