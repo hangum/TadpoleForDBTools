@@ -164,7 +164,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	
 	@Override
 	public void run() {
-		if (null == this.selection) {
+		if (null != this.selection) {
 			run(selection, userDB, actionType);
 		}
 	}
