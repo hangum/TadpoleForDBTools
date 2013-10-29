@@ -23,23 +23,23 @@ package com.hangum.tadpole.sql.dao.rdb;
  * 
  */
 
-public class RDBInfomationforColumnDAO {
+public class RDBInfomationforColumnDAO extends AbstractDAO{
 
-	private String table_name;
-	private String table_comment;
-	private String column_name;
-	private String nullable;
-	private String data_type;
-	private String data_default;
-	private String column_comment;
-	private String data_type_mod;
-	private String char_used;
-	private String histogram;
-	private String num_distinct;
-	private String num_nulls;
-	private String density;
-	private String last_analyzed;
-	private String pk;
+	 String table_name;
+	 String table_comment;
+	 String column_name;
+	 String nullable;
+	 String data_type;
+	 String data_default;
+	 String column_comment;
+	 String data_type_mod;
+	 String char_used;
+	 String histogram;
+	 String num_distinct;
+	 String num_nulls;
+	 String density;
+	 String last_analyzed;
+	 String pk;
 
 	/**
 	 * 
@@ -48,6 +48,17 @@ public class RDBInfomationforColumnDAO {
 		this("", "", "", "", "", "", "", "");
 	}
 
+	/**
+	 * 
+	 * @param table_name
+	 * @param table_comment
+	 * @param column_name
+	 * @param column_comment
+	 * @param data_type
+	 * @param notnull
+	 * @param dflt_value
+	 * @param pk
+	 */
 	public RDBInfomationforColumnDAO(String table_name, String table_comment, String column_name, String column_comment, String data_type, String notnull, String dflt_value, String pk) {
 		this.table_name = table_name;
 		this.table_comment = table_comment;
@@ -59,7 +70,10 @@ public class RDBInfomationforColumnDAO {
 		this.setPk(pk);
 	}
 
-	public int compareToIgnoreCase(RDBInfomationforColumnDAO target, String column) {
+	/**
+	 * 
+	 */
+	public int compareToIgnoreCase(AbstractDAO target, String column) {
 
 		String value1 = "";
 		String value2 = "";
@@ -72,6 +86,9 @@ public class RDBInfomationforColumnDAO {
 
 	}
 
+	/**
+	 * 
+	 */
 	public String getColumnValuebyName(String column) {
 		String result = "";
 		if ("table_name".equals(column.toLowerCase())) {
@@ -320,10 +337,18 @@ public class RDBInfomationforColumnDAO {
 		this.last_analyzed = last_analyzed;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getPk() {
 		return pk;
 	}
 
+	/**
+	 * 
+	 * @param pk
+	 */
 	public void setPk(String pk) {
 		this.pk = pk;
 	}

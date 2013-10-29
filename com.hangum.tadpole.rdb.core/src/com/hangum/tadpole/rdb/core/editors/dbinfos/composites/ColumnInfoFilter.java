@@ -1,0 +1,36 @@
+package com.hangum.tadpole.rdb.core.editors.dbinfos.composites;
+
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.widgets.TableColumn;
+
+import com.hangum.tadpole.sql.dao.rdb.AbstractDAO;
+
+public class ColumnInfoFilter extends ViewerFilter {
+	private String searchString;
+	private AbstractDAO dao = null;
+
+	public void setSearchString(String s) {
+		this.searchString = ".*" + s.toLowerCase() + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	@Override
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		if (searchString == null || searchString.length() == 0) {
+			return true;
+		} else {
+			// RDBInfomationforColumnDAO dao = (RDBInfomationforColumnDAO)
+			// element;
+			dao = (AbstractDAO) element;
+			String targetString = "";
+			for (TableColumn tc : ((TableViewer) viewer).getTable().getColumns()) {
+				targetString = dao.getColumnValuebyName((String) tc.getData("column")).toLowerCase();
+				if (targetString.matches(searchString)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

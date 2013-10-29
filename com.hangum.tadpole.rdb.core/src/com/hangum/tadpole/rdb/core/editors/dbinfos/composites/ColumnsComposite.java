@@ -15,30 +15,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -46,7 +38,6 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -129,138 +120,91 @@ public class ColumnsComposite extends Composite {
 	 */
 	private void createTableColumn() {
 
-		TableColumnDef[] tableColumnDef = new TableColumnDef[] {};
+		TableViewColumnDefine [] tableColumnDef = new TableViewColumnDefine [] {};
 		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 
-			tableColumnDef = new TableColumnDef[] { //
-			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
-					, new TableColumnDef("NULLABLE", "Nullable", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
-					, new TableColumnDef("CHAR_USED", "Char Used", 100, SWT.LEFT) //
-					, new TableColumnDef("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
-					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
-					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
-					, new TableColumnDef("DENSITY", "Density", 100, SWT.LEFT) //
-					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			tableColumnDef = new TableViewColumnDefine [] { //
+			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
 			};
 
 		} else if (DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT) {
 
-			tableColumnDef = new TableColumnDef[] { //
-			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
-					, new TableColumnDef("NULLABLE", "Nullable", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableColumnDef("PARTITIONED", "Paritioned", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_PRECISION", "Data Precision", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_SCALE", "Data Scale", 100, SWT.LEFT) //
-					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
-					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
-					, new TableColumnDef("DENSITY", "Density", 100, SWT.LEFT) //
-					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			tableColumnDef = new TableViewColumnDefine [] { //
+			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("PARTITIONED", "Paritioned", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_PRECISION", "Data Precision", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_SCALE", "Data Scale", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
 			};
 
-			
 		} else if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 
-			tableColumnDef = new TableColumnDef[] { //
-			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 150, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_NAME", "Column Name", 120, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 150, SWT.LEFT) //
-					, new TableColumnDef("NULLABLE", "Nullable", 60, SWT.CENTER) //
-					, new TableColumnDef("DATA_TYPE", "Data Type", 120, SWT.LEFT) //
-					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
-					, new TableColumnDef("CHAR_USED", "Char Used", 60, SWT.CENTER) //
-					, new TableColumnDef("HISTOGRAM", "Histogram", 60, SWT.CENTER) //
-					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.RIGHT) //
-					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.RIGHT) //
-					, new TableColumnDef("DENSITY", "Density", 100, SWT.RIGHT) //
-					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 120, SWT.LEFT) //
+			tableColumnDef = new TableViewColumnDefine [] { //
+			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 150, SWT.LEFT) //
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 120, SWT.LEFT) //
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 150, SWT.LEFT).assignEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, 3) )  //
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 60, SWT.CENTER) //
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 120, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 60, SWT.CENTER) //
+					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 60, SWT.CENTER) //
+					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.RIGHT) //
+					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.RIGHT) //
+					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.RIGHT) //
+					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 120, SWT.LEFT) //
 			};
 
 		} else {
-			tableColumnDef = new TableColumnDef[] { //
-			new TableColumnDef("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableColumnDef("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
-					, new TableColumnDef("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
-					, new TableColumnDef("NULLABLE", "Nullable", 60, SWT.CENTER) //
-					, new TableColumnDef("PK", "PK", 60, SWT.CENTER) //
-					, new TableColumnDef("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableColumnDef("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
-					, new TableColumnDef("CHAR_USED", "Char Used", 100, SWT.LEFT) //
-					, new TableColumnDef("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
-					, new TableColumnDef("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
-					, new TableColumnDef("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
-					, new TableColumnDef("DENSITY", "Density", 100, SWT.LEFT) //
-					, new TableColumnDef("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			tableColumnDef = new TableViewColumnDefine [] { //
+			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT).assignEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, 3) ) //
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 60, SWT.CENTER) //
+					, new TableViewColumnDefine ("PK", "PK", 60, SWT.CENTER) //
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) //
+					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
 			};
 		}
 
-		createColumnHeader(tableColumnDef);
+		ColumnHeaderCreator.createColumnHeader(tvColumnInform, tableColumnDef);
 
 		tvColumnInform.setContentProvider(new ArrayContentProvider());
 		tvColumnInform.setLabelProvider(new ColumnInformLabelProvider(tvColumnInform));
 
 	}
 
-	/**
-	 * 실제 컬럼의 헤더를 생성합니다.
-	 * 
-	 * @param name
-	 * @param size
-	 */
-	private void createColumnHeader(TableColumnDef[] colDef) {
-		AllColumnComparator tableComparator = new AllColumnComparator();
-
-		for (int i = 0; i < colDef.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvColumnInform, colDef[i].align);
-
-			TableColumn tableColumn = tableViewerColumn.getColumn();
-			tableColumn.setText(colDef[i].caption);
-			tableColumn.setData("column", colDef[i].column);
-			tableColumn.setData("merge", colDef[i].merge);
-			tableColumn.setData("preValue", colDef[i].preValue);
-			tableColumn.setWidth(colDef[i].width);
-
-			tableColumn.addSelectionListener(getSelectionAdapter(tvColumnInform, tableComparator, tableColumn, i));
-
-			if ("TABLE_COMMENT".equals(colDef[i].column)) {
-				// table is multi line display...(table object explorer)
-				// tableViewerColumn.setEditingSupport(new
-				// DBInfoCommentEditorSupport(tvColumnInform, userDB, i));
-			} else if ("COLUMN_COMMENT".equals(colDef[i].column)) {
-				tableViewerColumn.setEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, i));
-			}
-		}
-
-		tvColumnInform.setSorter(tableComparator);
-	}
-
-	protected SelectionAdapter getSelectionAdapter(final TableViewer viewer, final ObjectComparator comparator, final TableColumn column, final int index) {
-		SelectionAdapter adapter = new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				comparator.setColumn(index);
-				viewer.getTable().setSortDirection(comparator.getDirection());
-				viewer.getTable().setSortColumn(column);
-				viewer.refresh();
-			}
-		};
-
-		return adapter;
-	}
 
 	/**
 	 * 
@@ -307,151 +251,4 @@ public class ColumnsComposite extends Composite {
 	protected void checkSubclass() {
 	}
 
-}
-
-class TableColumnDef {
-	String column;
-	String caption;
-	int width;
-	int align;
-	String preValue;
-	boolean merge;
-
-	public TableColumnDef(String column) {
-		this(column, StringUtils.capitalize(column.toLowerCase().replace("_", "")));
-	}
-
-	public TableColumnDef(String column, String caption) {
-		this(column, caption, 100);
-	}
-
-	public TableColumnDef(String column, String caption, int width) {
-		this(column, caption, width, SWT.LEFT);
-	}
-
-	public TableColumnDef(String column, String caption, int width, int align) {
-		this(column, caption, width, align, false);
-	}
-
-	TableColumnDef(String column, String caption, int width, int align, boolean merge) {
-		this.column = column;
-		this.caption = caption == null ? StringUtils.capitalize(column.toLowerCase().replace("_", "")) : caption;
-		this.width = width == 0 ? 100 : width;
-		this.align = align <= 0 ? SWT.LEFT : align;
-		this.merge = merge;
-		this.preValue = "";
-	}
-}
-
-/**
- * sort를 위한 최상위 클래서(기본으로 table의 column 사용)
- * 
- * @author hangum
- * 
- */
-class AllColumnComparator extends ObjectComparator {
-	public AllColumnComparator() {
-		this.propertyIndex = 0;
-		direction = DESCENDING;
-	}
-
-	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		((TableViewer) viewer).getTable().getColumn(propertyIndex).setData("preValue", "");
-		RDBInfomationforColumnDAO tc1 = (RDBInfomationforColumnDAO) e1;
-		RDBInfomationforColumnDAO tc2 = (RDBInfomationforColumnDAO) e2;
-
-		String column = (String) ((TableViewer) viewer).getTable().getColumn(propertyIndex).getData("column");
-		int rc = tc1.compareToIgnoreCase(tc2, column);
-
-		if (direction == DESCENDING) {
-			rc = -rc;
-		}
-		return rc;
-	}
-}
-
-/**
- * mysql, mariadb label provider
- * 
- * @author hangum
- * 
- */
-class ColumnInformLabelProvider extends LabelProvider implements ITableLabelProvider {
-	private TableViewer tableViewer;
-	
-
-	public ColumnInformLabelProvider(TableViewer tv) {
-		this.tableViewer = tv;
-
-		// cell merge compare value initialize.
-		for (TableColumn column : tableViewer.getTable().getColumns()){
-			column.setData("preValue", "");
-		}
-	}
-
-	@Override
-	public Image getColumnImage(Object element, int columnIndex) {
-		return null;
-	}
-
-	@Override
-	public String getColumnText(Object element, int columnIndex) {
-		String columnName = (String) tableViewer.getTable().getColumn(columnIndex).getData("column");
-		boolean cellMerge = (Boolean) tableViewer.getTable().getColumn(columnIndex).getData("merge");
-		String preValue =  (String) tableViewer.getTable().getColumn(columnIndex).getData("preValue");
-
-		RDBInfomationforColumnDAO infoDao = (RDBInfomationforColumnDAO) element;
-		
-		if(cellMerge){
-			String tableName = infoDao.getColumnValuebyName(columnName);
-			if (!preValue.equals(tableName)){
-				tableViewer.getTable().getColumn(columnIndex).setData("preValue", tableName);
-				return tableName;
-			}else{
-//				ubuntu에서 특수문자 깨져서..
-//				return "   ➥ " + infoDao.getColumnValuebyName(columnName);
-				return "   " + infoDao.getColumnValuebyName(columnName);
-			}
-		}else{
-			return infoDao.getColumnValuebyName(columnName);
-		}
-		
-		//return infoDao.getColumnValuebyName(columnName);
-	}
-
-}
-
-/**
- * name filetr
- * 
- * @author hangum
- * 
- */
-class ColumnInfoFilter extends ViewerFilter {
-	private String searchString;
-
-	public void setSearchString(String s) {
-		this.searchString = ".*" + s.toLowerCase() + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (searchString == null || searchString.length() == 0) {
-			return true;
-		} else {
-
-			RDBInfomationforColumnDAO dao = (RDBInfomationforColumnDAO) element;
-			String targetString = "";
-
-			for (TableColumn tc : ((TableViewer) viewer).getTable().getColumns()) {
-				targetString = dao.getColumnValuebyName((String) tc.getData("column")).toLowerCase();
-
-				if (targetString.matches(searchString)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 }
