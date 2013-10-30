@@ -678,17 +678,19 @@ public class MongodbResultComposite extends Composite {
 		mapColumns = new HashMap<Integer, String>();
 		sourceDataList = new ArrayList<Map<Integer, Object>>();
 		listTrees = new ArrayList<MongodbTreeViewDTO>();
+
+		// 헤더를 분석하여 만듭니다.
+		for(DBObject dbObject : iteResult) {
+			MongoDBTableColumn.getTabelColumnView(dbObject, mapColumns);
+		}
 		
 		for(DBObject dbObject : iteResult) {
-			// 초기 호출시 컬럼 정보 설정 되어 있지 않을때
-			if(mapColumns.size() == 0) mapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
-			
-			// append tree text columnInfo.get(key)
+			// append tree data columnInfo.get(key)
 			MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			parserTreeObject(dbObject, treeDto, dbObject);
 			listTrees.add(treeDto);
 							
-			// append table text
+			// append table data
 			HashMap<Integer, Object> dataMap = new HashMap<Integer, Object>();				
 			for(int i=0; i<mapColumns.size(); i++)	{
 				
