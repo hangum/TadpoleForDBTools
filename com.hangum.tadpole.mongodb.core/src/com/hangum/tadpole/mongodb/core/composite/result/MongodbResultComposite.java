@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -316,8 +317,6 @@ public class MongodbResultComposite extends Composite {
 					
 					FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName, dbObject);
 					dlg.open();
-//					TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, collectionName, JSONUtil.getPretty(jsonString));					 //$NON-NLS-1$ //$NON-NLS-2$
-//					dlg.open();
 				}
 			}
 		});
@@ -370,26 +369,33 @@ public class MongodbResultComposite extends Composite {
 		btnExportCSV.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				StringBuffer sbExportData = new StringBuffer();
+				StringBuffer sbExportDataBody = new StringBuffer();
 				
+				// fixed : https://github.com/hangum/TadpoleForDBTools/issues/284
 				// column 헤더추가.
+				String tmpStrHead = "";
 				TableColumn[] tcs = resultTableViewer.getTable().getColumns();
 				for (TableColumn tableColumn : tcs) {
-					sbExportData.append( tableColumn.getText()).append(","); //$NON-NLS-1$
+					tmpStrHead += tableColumn.getText() + ","; //$NON-NLS-1$
 				}
-				sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+				tmpStrHead = StringUtils.removeEnd(tmpStrHead, ",");
+				tmpStrHead += PublicTadpoleDefine.LINE_SEPARATOR; //$NON-NLS-1$
 				
 				// column 데이터 추가. 
 				for(int i=0; i<sourceDataList.size(); i++) {
+					String tmpData = "";
 					Map<Integer, Object> mapColumns = sourceDataList.get(i);
-					for(int j=0; j<mapColumns.size(); j++) {
-						sbExportData.append(mapColumns.get(j)).append(","); //$NON-NLS-1$
+					for(int j=0; j<tcs.length; j++) {
+						tmpData += mapColumns.get(j) + ","; //$NON-NLS-1$
 					}
-					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+					tmpData = StringUtils.removeEnd(tmpData, ",");
+					tmpData += PublicTadpoleDefine.LINE_SEPARATOR;
+					
+					sbExportDataBody.append(tmpData); //$NON-NLS-1$
 				}
 				
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_ResultSetExport.csv"); //$NON-NLS-1$
-				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
+				downloadServiceHandler.setByteContent((tmpStrHead + sbExportDataBody.toString()).getBytes());
 				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
 			}
 		});
