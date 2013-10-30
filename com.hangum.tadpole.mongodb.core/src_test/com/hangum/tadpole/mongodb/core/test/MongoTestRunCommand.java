@@ -10,9 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.test;
 
+import java.awt.color.CMMException;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.util.JSON;
@@ -26,10 +30,16 @@ public class MongoTestRunCommand {
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, 27017);//ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
 		
-		DBObject cmdObj = (DBObject) JSON.parse("{'create':'hyunjongiee33'}");
-		CommandResult cr = db.command(cmdObj);//new BasicDBObject("create", "hyunjong"));
+		DBCollection dbColl = db.getCollection("user");
 		
-		System.out.println( cr.toString() );		
+		DBObject cmdObj = (DBObject) JSON.parse("{language  : 'en_us'}, {seq: true, email:true}, {seq, -1}");
+		DBCursor dbCur = dbColl.find(cmdObj);
+		for(DBObject obj : dbCur.toArray()) {
+			System.out.println(obj);
+		}
+		
+//		CommandResult cr = db.command(cmdObj);//new BasicDBObject("create", "hyunjong"));
+//		System.out.println( cr.toString() );		
 		
 		mongo.close();
 	}

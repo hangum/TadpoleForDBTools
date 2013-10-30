@@ -11,7 +11,6 @@
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -1732,7 +1731,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	public boolean performSave(String newContents) {
-		// null은 단축키를 바로 눌렀을 경우에 호출되어 집니다.
+		// new save
 		if(dBResource == null) {
 			// editor가 저장 가능 상태인지 검사합니다.
 			if(!isDirty()) return false; 
@@ -1747,6 +1746,8 @@ public class MainEditor extends EditorExtension {
 		} if(userSetDBResource != null) {
 			boolean isSucc =  saveData(newContents);
 			if(isSucc) userSetDBResource = null;
+			
+		// update
 		} else {
 			try {
 				TadpoleSystem_UserDBResource.updateResource(dBResource, newContents);
@@ -1781,6 +1782,8 @@ public class MainEditor extends EditorExtension {
 			// tree 갱신
 			PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+dBResource.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			setDirty(false);
+			
+			userSetDBResource = null;
 		} catch (Exception e) {
 			logger.error("save data", e); //$NON-NLS-1$
 
