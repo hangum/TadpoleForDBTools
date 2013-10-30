@@ -1065,15 +1065,17 @@ public class MongodbResultComposite extends Composite {
 	 * error console
 	 */
 	public void consoleError() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " " + Messages.MongodbResultComposite_25, sbConsoleErrorMsg.toString());
-		dialog.open();
+		DBObject dbObject = (DBObject)JSON.parse(sbConsoleErrorMsg.toString());
+		FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName + " " + Messages.MongodbResultComposite_25, dbObject);
+		dlg.open();
 	}
 
 	/**
 	 * execute plan console
 	 */
 	public void consoleExecutePlan() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName  + " " +  Messages.MongodbResultComposite_26, sbConsoleExecuteMsg.toString());
-		dialog.open();
+		DBObject dbObject = (DBObject)JSON.parse(sbConsoleExecuteMsg.toString());
+		FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName + " " + Messages.MongodbResultComposite_26, dbObject);
+		dlg.open();
 	}
 }
