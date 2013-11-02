@@ -12,8 +12,8 @@ public class TableViewColumnDefine {
 	int align; // data align
 	String preValue; // compare value for cell merge
 	boolean merge; // cell merge
-	boolean sortable;
-	EditingSupport editor;
+	boolean sortable; // 컬럼 헤더 클릭시 데이터의 정렬 여부를 지정한다.
+	EditingSupport editor; // 컬럼내용을 수정하기 위한 클래스를 지정한다.
 
 	public TableViewColumnDefine(String column) {
 		this(column, StringUtils.capitalize(column.toLowerCase().replace("_", "")));
@@ -32,7 +32,7 @@ public class TableViewColumnDefine {
 	}
 
 	public TableViewColumnDefine(String column, String caption, int width, int align, boolean merge) {
-		this(column, caption, width, align, false, true);
+		this(column, caption, width, align, merge, true);
 	}
 
 	TableViewColumnDefine(String column, String caption, int width, int align, boolean merge, boolean sortable) {

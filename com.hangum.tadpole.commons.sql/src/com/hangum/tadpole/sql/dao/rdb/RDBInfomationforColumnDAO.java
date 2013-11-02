@@ -22,31 +22,23 @@ package com.hangum.tadpole.sql.dao.rdb;
  * @author nilriri
  * 
  */
+public class RDBInfomationforColumnDAO extends AbstractDAO {
 
-public class RDBInfomationforColumnDAO extends AbstractDAO{
-
-	 String table_name;
-	 String table_comment;
-	 String column_name;
-	 String nullable;
-	 String data_type;
-	 String data_default;
-	 String column_comment;
-	 String data_type_mod;
-	 String char_used;
-	 String histogram;
-	 String num_distinct;
-	 String num_nulls;
-	 String density;
-	 String last_analyzed;
-	 String pk;
-
-	/**
-	 * 
-	 */
-	public RDBInfomationforColumnDAO() {
-		this("", "", "", "", "", "", "", "");
-	}
+	String table_name;
+	String table_comment;
+	String column_name;
+	String nullable;
+	String data_type;
+	String data_default;
+	String column_comment;
+	String data_type_mod;
+	String char_used;
+	String histogram;
+	String num_distinct;
+	String num_nulls;
+	String density;
+	String last_analyzed;
+	String pk;
 
 	/**
 	 * 
@@ -59,7 +51,8 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	 * @param dflt_value
 	 * @param pk
 	 */
-	public RDBInfomationforColumnDAO(String table_name, String table_comment, String column_name, String column_comment, String data_type, String notnull, String dflt_value, String pk) {
+	public RDBInfomationforColumnDAO(String table_name, String table_comment, String column_name, String column_comment, String data_type, String notnull,
+			String dflt_value, String pk) {
 		this.table_name = table_name;
 		this.table_comment = table_comment;
 		this.column_name = column_name;
@@ -67,71 +60,127 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 		this.data_type = data_type;
 		this.nullable = notnull;
 		this.data_default = dflt_value;
-		this.setPk(pk);
-	}
-
-	/**
-	 * 
-	 */
-	public int compareToIgnoreCase(AbstractDAO target, String column) {
-
-		String value1 = "";
-		String value2 = "";
-		if (column != null && !"".equals(column)) {
-
-			value1 = (String) this.getColumnValuebyName(column);
-			value2 = (String) target.getColumnValuebyName(column);
-		}
-		return value1.compareToIgnoreCase(value2);
-
-	}
-
-	/**
-	 * 
-	 */
-	public String getColumnValuebyName(String column) {
-		String result = "";
-		if ("table_name".equals(column.toLowerCase())) {
-			result = this.getTable_name();
-		} else if ("table_comment".equals(column.toLowerCase())) {
-			result = this.getTable_comment();
-		} else if ("column_name".equals(column.toLowerCase())) {
-			result = this.getColumn_name();
-		} else if ("nullable".equals(column.toLowerCase())) {
-			result = this.getNullable();
-		} else if ("data_type".equals(column.toLowerCase())) {
-			result = this.getData_type();
-		} else if ("data_default".equals(column.toLowerCase())) {
-			result = this.getData_default();
-		} else if ("column_comment".equals(column.toLowerCase())) {
-			result = this.getColumn_comment();
-		} else if ("data_type_mod".equals(column.toLowerCase())) {
-			result = this.getData_type_mod();
-		} else if ("char_used".equals(column.toLowerCase())) {
-			result = this.getChar_used();
-		} else if ("histogram".equals(column.toLowerCase())) {
-			result = this.getHistogram();
-		} else if ("num_distinct".equals(column.toLowerCase())) {
-			result = this.getNum_distinct();
-		} else if ("num_nulls".equals(column.toLowerCase())) {
-			result = this.getNum_nulls();
-		} else if ("density".equals(column.toLowerCase())) {
-			result = this.getDensity();
-		} else if ("last_analyzed".equals(column.toLowerCase())) {
-			result = this.getLast_analyzed();
-		} else if ("pk".equals(column.toLowerCase())) {
-			result = this.pk.toLowerCase();
-		} else {
-			result = "";
-		}
-		return result == null ? "" : result;
+		this.pk = pk;
 	}
 
 	/**
 	 * @return the table_name
 	 */
+	@FieldNameAnnotationClass(fieldKey = "table_name")
 	public String getTable_name() {
 		return table_name;
+	}
+
+	/**
+	 * @return the table_comment
+	 */
+	@FieldNameAnnotationClass(fieldKey = "table_comment")
+	public String getTable_comment() {
+		return table_comment;
+	}
+
+	/**
+	 * @return the column_name
+	 */
+	@FieldNameAnnotationClass(fieldKey = "column_name")
+	public String getColumn_name() {
+		return column_name;
+	}
+
+	/**
+	 * @return the nullable
+	 */
+	@FieldNameAnnotationClass(fieldKey = "nullable")
+	public String getNullable() {
+		return nullable;
+	}
+
+	/**
+	 * @return the data_type
+	 */
+	@FieldNameAnnotationClass(fieldKey = "data_type")
+	public String getData_type() {
+		return data_type;
+	}
+
+	/**
+	 * @return the data_default
+	 */
+	@FieldNameAnnotationClass(fieldKey = "data_default")
+	public String getData_default() {
+		return data_default;
+	}
+
+	/**
+	 * @return the column_comment
+	 */
+	@FieldNameAnnotationClass(fieldKey = "column_comment")
+	public String getColumn_comment() {
+		return column_comment;
+	}
+
+	/**
+	 * @return the data_type_mod
+	 */
+	@FieldNameAnnotationClass(fieldKey = "data_type_mod")
+	public String getData_type_mod() {
+		return data_type_mod;
+	}
+
+	/**
+	 * @return the char_used
+	 */
+	@FieldNameAnnotationClass(fieldKey = "char_used")
+	public String getChar_used() {
+		return char_used;
+	}
+
+	/**
+	 * @return the histogram
+	 */
+	@FieldNameAnnotationClass(fieldKey = "histogram")
+	public String getHistogram() {
+		return histogram;
+	}
+
+	/**
+	 * @return the num_distinct
+	 */
+	@FieldNameAnnotationClass(fieldKey = "num_distinct")
+	public String getNum_distinct() {
+		return num_distinct;
+	}
+
+	/**
+	 * @return the num_nulls
+	 */
+	@FieldNameAnnotationClass(fieldKey = "num_nulls")
+	public String getNum_nulls() {
+		return num_nulls;
+	}
+
+	/**
+	 * @return the density
+	 */
+	@FieldNameAnnotationClass(fieldKey = "density")
+	public String getDensity() {
+		return density;
+	}
+
+	/**
+	 * @return the last_analyzed
+	 */
+	@FieldNameAnnotationClass(fieldKey = "last_analyzed")
+	public String getLast_analyzed() {
+		return last_analyzed;
+	}
+
+	/**
+	 * @return the pk
+	 */
+	@FieldNameAnnotationClass(fieldKey = "pk")
+	public String getPk() {
+		return pk;
 	}
 
 	/**
@@ -143,25 +192,11 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	}
 
 	/**
-	 * @return the table_comment
-	 */
-	public String getTable_comment() {
-		return table_comment;
-	}
-
-	/**
 	 * @param table_comment
 	 *            the table_comment to set
 	 */
 	public void setTable_comment(String table_comment) {
 		this.table_comment = table_comment;
-	}
-
-	/**
-	 * @return the column_name
-	 */
-	public String getColumn_name() {
-		return column_name;
 	}
 
 	/**
@@ -173,25 +208,11 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	}
 
 	/**
-	 * @return the nullable
-	 */
-	public String getNullable() {
-		return nullable;
-	}
-
-	/**
 	 * @param nullable
 	 *            the nullable to set
 	 */
 	public void setNullable(String nullable) {
 		this.nullable = nullable;
-	}
-
-	/**
-	 * @return the data_type
-	 */
-	public String getData_type() {
-		return data_type;
 	}
 
 	/**
@@ -203,25 +224,11 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	}
 
 	/**
-	 * @return the data_default
-	 */
-	public String getData_default() {
-		return data_default;
-	}
-
-	/**
 	 * @param data_default
 	 *            the data_default to set
 	 */
 	public void setData_default(String data_default) {
 		this.data_default = data_default;
-	}
-
-	/**
-	 * @return the column_comment
-	 */
-	public String getColumn_comment() {
-		return column_comment;
 	}
 
 	/**
@@ -233,25 +240,11 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	}
 
 	/**
-	 * @return the data_type_mod
-	 */
-	public String getData_type_mod() {
-		return data_type_mod;
-	}
-
-	/**
 	 * @param data_type_mod
 	 *            the data_type_mod to set
 	 */
 	public void setData_type_mod(String data_type_mod) {
 		this.data_type_mod = data_type_mod;
-	}
-
-	/**
-	 * @return the char_used
-	 */
-	public String getChar_used() {
-		return char_used;
 	}
 
 	/**
@@ -263,25 +256,11 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	}
 
 	/**
-	 * @return the histogram
-	 */
-	public String getHistogram() {
-		return histogram;
-	}
-
-	/**
 	 * @param histogram
 	 *            the histogram to set
 	 */
 	public void setHistogram(String histogram) {
 		this.histogram = histogram;
-	}
-
-	/**
-	 * @return the num_distinct
-	 */
-	public String getNum_distinct() {
-		return num_distinct;
 	}
 
 	/**
@@ -293,25 +272,11 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	}
 
 	/**
-	 * @return the num_nulls
-	 */
-	public String getNum_nulls() {
-		return num_nulls;
-	}
-
-	/**
 	 * @param num_nulls
 	 *            the num_nulls to set
 	 */
 	public void setNum_nulls(String num_nulls) {
 		this.num_nulls = num_nulls;
-	}
-
-	/**
-	 * @return the density
-	 */
-	public String getDensity() {
-		return density;
 	}
 
 	/**
@@ -323,13 +288,6 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	}
 
 	/**
-	 * @return the last_analyzed
-	 */
-	public String getLast_analyzed() {
-		return last_analyzed;
-	}
-
-	/**
 	 * @param last_analyzed
 	 *            the last_analyzed to set
 	 */
@@ -338,16 +296,8 @@ public class RDBInfomationforColumnDAO extends AbstractDAO{
 	}
 
 	/**
-	 * 
-	 * @return
-	 */
-	public String getPk() {
-		return pk;
-	}
-
-	/**
-	 * 
 	 * @param pk
+	 *            the pk to set
 	 */
 	public void setPk(String pk) {
 		this.pk = pk;

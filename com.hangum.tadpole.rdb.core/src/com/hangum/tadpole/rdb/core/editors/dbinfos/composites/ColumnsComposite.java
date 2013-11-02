@@ -57,7 +57,7 @@ public class ColumnsComposite extends Composite {
 	private UserDBDAO userDB;
 	private TableViewer tvColumnInform;
 
-	private ColumnInfoFilter columnFilter;
+	private DefaultTableColumnFilter columnFilter;
 	private Text textFilter;
 
 	/**
@@ -109,7 +109,7 @@ public class ColumnsComposite extends Composite {
 
 		createTableColumn();
 
-		columnFilter = new ColumnInfoFilter();
+		columnFilter = new DefaultTableColumnFilter();
 		tvColumnInform.addFilter(columnFilter);
 
 		initUI();
@@ -201,7 +201,7 @@ public class ColumnsComposite extends Composite {
 		ColumnHeaderCreator.createColumnHeader(tvColumnInform, tableColumnDef);
 
 		tvColumnInform.setContentProvider(new ArrayContentProvider());
-		tvColumnInform.setLabelProvider(new ColumnInformLabelProvider(tvColumnInform));
+		tvColumnInform.setLabelProvider(new DefaultLabelProvider(tvColumnInform));
 
 	}
 
@@ -216,11 +216,11 @@ public class ColumnsComposite extends Composite {
 			if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
 
 				List<HashMap<String, String>> sqliteTableList = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
+				listTableInform = new ArrayList<RDBInfomationforColumnDAO>();
 				for (HashMap<String, String> table : sqliteTableList) {
 
 					List<HashMap<String, String>> sqliteColumnList = sqlClient.queryForList("columnInformation", table.get("name")); //$NON-NLS-1$ //$NON-NLS-2$
 
-					listTableInform = new ArrayList<RDBInfomationforColumnDAO>();
 
 					for (HashMap<String, String> sqliteMap : sqliteColumnList) {//
 						RDBInfomationforColumnDAO dao = new RDBInfomationforColumnDAO(table.get("name"), ""//

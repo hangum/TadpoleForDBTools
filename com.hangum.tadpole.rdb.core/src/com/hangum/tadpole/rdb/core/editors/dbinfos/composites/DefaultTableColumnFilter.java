@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.sql.dao.rdb.AbstractDAO;
 
-public class ColumnInfoFilter extends ViewerFilter {
+public class DefaultTableColumnFilter extends ViewerFilter {
 	private String searchString;
 	private AbstractDAO dao = null;
 
@@ -20,12 +20,10 @@ public class ColumnInfoFilter extends ViewerFilter {
 		if (searchString == null || searchString.length() == 0) {
 			return true;
 		} else {
-			// RDBInfomationforColumnDAO dao = (RDBInfomationforColumnDAO)
-			// element;
 			dao = (AbstractDAO) element;
 			String targetString = "";
 			for (TableColumn tc : ((TableViewer) viewer).getTable().getColumns()) {
-				targetString = dao.getColumnValuebyName((String) tc.getData("column")).toLowerCase();
+				targetString = dao.getvalue((String) tc.getData("column")).toLowerCase();
 				if (targetString.matches(searchString)) {
 					return true;
 				}
