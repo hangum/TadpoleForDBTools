@@ -45,7 +45,8 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.SessionListLabelProvider;
+import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListLabelProvider;
+import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListTableCompare;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -185,13 +186,13 @@ public class SessionListEditor extends EditorPart {
 		
 		textQuery = new Text(compositeQuery, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		comparator = new SessionListTableCompare();
+		comparator = new MySQLSessionListTableCompare();
 		tableViewerSessionList.setSorter(comparator);
 		
 		createColumn();
 		
 		tableViewerSessionList.setContentProvider(new ArrayContentProvider());
-		tableViewerSessionList.setLabelProvider(new SessionListLabelProvider());
+		tableViewerSessionList.setLabelProvider(new MySQLSessionListLabelProvider());
 		
 		sashForm.setWeights(new int[] {7, 3});
 		

@@ -8,10 +8,11 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.sessionlist.composite;
+package com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql;
 
 import org.eclipse.swt.widgets.Composite;
 
+import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.ASessionListComposite;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -33,7 +34,7 @@ public class MySQLSessionListCompoiste extends ASessionListComposite {
 
 	@Override
 	protected void initUI() {
-		getTableViewerSessionList().setLabelProvider(new SessionListLabelProvider());
+		getTableViewerSessionList().setLabelProvider(new MySQLSessionListLabelProvider());
 		initSessionListData();
 	}
 

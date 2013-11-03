@@ -29,12 +29,12 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import com.hangum.tadpole.rdb.core.Activator;
-//import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListLabelProvider;
-import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListTableCompare;
+import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListTableCompare;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.swtdesigner.ResourceManager;
+//import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListLabelProvider;
 
 /**
  * abstract session list composite
@@ -122,7 +122,7 @@ public abstract class ASessionListComposite extends Composite {
 		
 		textQuery = new Text(compositeQuery, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		comparator = new SessionListTableCompare();
+		comparator = new MySQLSessionListTableCompare();
 		tableViewerSessionList.setSorter(comparator);
 		
 //		createColumn();
