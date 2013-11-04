@@ -25,7 +25,7 @@ public class PublicTadpoleDefine {
 	public static String DELIMITER = "||TADPOLE-DELIMITER||"; //$NON-NLS-1$
 	
 	/** 라인분리자 */
-	public static String LINE_SEPARATOR = System.getProperty("line.separator"); //$NON-NLS-1$
+	public static String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DILIMITER = ";"; //$NON-NLS-1$

@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -19,13 +22,14 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
-import com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -37,7 +41,7 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(ObjectModifyAction.class);
+	private static final Logger logger = Logger.getLogger(ObjectModifyAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.modify"; //$NON-NLS-1$
 
@@ -49,12 +53,12 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+
 		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
-			
 			CreateTableAction cta = new CreateTableAction();
 			
 			// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
-			if(DBDefine.getDBDefine(userDB.getDelYn()) == DBDefine.SQLite_DEFAULT) {
+			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
 				TableDAO tc = (TableDAO)selection.getFirstElement();
 				if(tc == null) cta.run(userDB, actionType);
 				else cta.run(userDB, tc.getComment());
@@ -70,8 +74,18 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 			CreateIndexAction cia = new CreateIndexAction();
 			cia.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
-			CreateProcedureAction cia = new CreateProcedureAction();
-			cia.run(userDB, actionType);
+			
+			try {
+				DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
+				String strScript = scriptManager.getScript(selection.getFirstElement());
+				strScript = StringUtils.replace(strScript, "CREATE PROCEDURE", "ALTER PROCEDURE");
+				
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, true);		
+			} catch(Exception e) {
+				logger.error("alert ddl script", e);
+				MessageDialog.openError(null, "Confirm", "Not support this function.");
+			}
+			
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 			CreateFunctionAction cia = new CreateFunctionAction();
 			cia.run(userDB, actionType);

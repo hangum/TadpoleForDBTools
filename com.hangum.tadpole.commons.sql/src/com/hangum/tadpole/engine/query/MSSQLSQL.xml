@@ -385,4 +385,19 @@ order by ordinal_position
   
 </select>  
 
+
+<!-- 
+	SESSION LIST
+ -->
+<select id="sessionList" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
+	select session_id as id from sys.dm_exec_connections;
+</select>
+
+<!-- 
+	process kill
+ -->
+<select id="killProcess" parameterClass="java.lang.String">
+	kill #pid#
+</select>
+
 </sqlMap>

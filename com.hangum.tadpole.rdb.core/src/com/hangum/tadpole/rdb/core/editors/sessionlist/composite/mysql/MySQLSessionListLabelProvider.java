@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.sessionlist.composite;
+package com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -22,7 +22,7 @@ import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
  * @author hangum
  *
  */
-public class SessionListLabelProvider extends LabelProvider implements ITableLabelProvider {
+public class MySQLSessionListLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
