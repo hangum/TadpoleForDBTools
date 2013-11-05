@@ -184,7 +184,6 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		indexFilter = new IndexesViewFilter();
 		indexTableViewer.addFilter(indexFilter);
 		
-		
 		// columns
 		indexColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableColumn = indexColumnViewer.getTable();
@@ -193,6 +192,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		
 		indexColumnComparator = new IndexColumnComparator();
 		indexColumnViewer.setSorter(indexColumnComparator);
+		indexColumnComparator.setColumn(0);
 
 		createIndexColumne(indexColumnViewer);
 

@@ -134,6 +134,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 		procedureComparator = new ProcedureFunctionComparator();
 		procedureTableViewer.setSorter(procedureComparator);
+		procedureComparator.setColumn(0);
 
 		createProcedureFunctionColumn(procedureTableViewer, procedureComparator);
 

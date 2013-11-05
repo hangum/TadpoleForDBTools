@@ -13,14 +13,19 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
@@ -37,7 +42,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(OracleObjectCompileAction.class);
+	private static final Logger logger = Logger.getLogger(OracleObjectCompileAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.compile";
 	
@@ -61,7 +66,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
 				OtherObjectCompile("PROCEDURE", dao.getName().trim().toUpperCase(), userDB);			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
-				PackageCompile(selection, userDB);
+				packageCompile(selection, userDB);
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
 				OtherObjectCompile("FUNCTION",  dao.getName().trim().toUpperCase(), userDB);			
@@ -74,6 +79,12 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		}
 	}
 	
+	/**
+	 * view compile
+	 * 
+	 * @param selection
+	 * @param userDB
+	 */
 	public void ViewCompile(IStructuredSelection selection, UserDBDAO userDB) {
 		String viewName = (String)selection.getFirstElement();
 		
@@ -101,7 +112,10 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			MessageDialog.openError(null, "Compile result", result.toString());
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(viewName + " compile", e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", viewName + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
 			try { rs.close();} catch(Exception e) {}
 			try { statement.close();} catch(Exception e) {}
@@ -111,6 +125,13 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		}
 	}
 	
+	/**
+	 * other object compile
+	 * 
+	 * @param objType
+	 * @param objName
+	 * @param userDB
+	 */
 	public void OtherObjectCompile(String objType, String objName, UserDBDAO userDB) {
 		String sqlQuery = "ALTER "+objType+" " + userDB.getUsers() + "." + objName.trim().toUpperCase() + " COMPILE DEBUG ";
 
@@ -136,7 +157,10 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			MessageDialog.openError(null, "Compile result", result.toString());
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(objName + " compile", e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", objName + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
 			try { rs.close();} catch(Exception e) {}
 			try { statement.close();} catch(Exception e) {}
@@ -146,7 +170,13 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		}
 	}
 	
-	public void PackageCompile(IStructuredSelection selection, UserDBDAO userDB) {
+	/**
+	 * package compile
+	 * 
+	 * @param selection
+	 * @param userDB
+	 */
+	public void packageCompile(IStructuredSelection selection, UserDBDAO userDB) {
 		
 		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
 		
@@ -178,7 +208,10 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(procedureDAO.getName() + " compile", e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", procedureDAO.getName() + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
 			try { rs.close();} catch(Exception e) {}
 			try { statement.close();} catch(Exception e) {}

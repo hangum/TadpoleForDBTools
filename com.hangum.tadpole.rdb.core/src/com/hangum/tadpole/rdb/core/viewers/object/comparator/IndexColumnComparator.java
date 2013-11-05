@@ -35,13 +35,13 @@ public  class IndexColumnComparator extends ObjectComparator  {
 		int rc = 0;
 		switch(propertyIndex) {
 		case 0:
-			rc = tc1.getSEQ_IN_INDEX().compareToIgnoreCase(tc2.getSEQ_IN_INDEX());
+			rc = tc1.getSEQ_IN_INDEX().toLowerCase().compareToIgnoreCase(tc2.getSEQ_IN_INDEX().toLowerCase());
 			break;
 		case 1:
-			rc = tc1.getCOLUMN_NAME().compareToIgnoreCase(tc2.getCOLUMN_NAME());
+			rc = tc1.getCOLUMN_NAME().toLowerCase().compareToIgnoreCase(tc2.getCOLUMN_NAME().toLowerCase());
 			break;
 		case 2:
-			rc = tc1.getCOMMENT().compareToIgnoreCase(tc2.getCOMMENT());
+			rc = tc1.getCOMMENT().toLowerCase().compareToIgnoreCase(tc2.getCOMMENT().toLowerCase());
 			break;		
 		}
 		

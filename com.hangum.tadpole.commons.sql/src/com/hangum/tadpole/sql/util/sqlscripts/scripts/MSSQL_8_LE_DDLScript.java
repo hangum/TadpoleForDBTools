@@ -199,7 +199,7 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* DROP PROCEDURE " + procedureDAO.getName() + "; */ \n\n");
+		result.append("/* DROP PROCEDURE '" + procedureDAO.getName() + "'; */ \n\n");
 
 		List<String> srcProcList = client.queryForList("getProcedureScript", procedureDAO.getName());				
 		for (int i=0; i<srcProcList.size(); i++){

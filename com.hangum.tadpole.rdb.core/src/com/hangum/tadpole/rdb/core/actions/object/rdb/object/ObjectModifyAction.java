@@ -12,13 +12,16 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
@@ -78,12 +81,17 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 			try {
 				DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
 				String strScript = scriptManager.getScript(selection.getFirstElement());
-				strScript = StringUtils.replace(strScript, "CREATE PROCEDURE", "ALTER PROCEDURE");
+				strScript = StringUtils.replaceOnce(strScript, "CREATE", "ALTER");
+				if(strScript.indexOf("ALTER") == -1) {
+					strScript = StringUtils.replaceOnce(strScript, "create", "alter");
+				}
 				
 				FindEditorAndWriteQueryUtil.run(userDB, strScript, true);		
 			} catch(Exception e) {
 				logger.error("alert ddl script", e);
-				MessageDialog.openError(null, "Confirm", "Not support this function.");
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", selection.getFirstElement() + " Load scipt error", errStatus); //$NON-NLS-1$
 			}
 			
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {

@@ -111,6 +111,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 
 		triggerComparator = new TriggerComparator();
 		triggerTableViewer.setSorter(triggerComparator);
+		triggerComparator.setColumn(0);
 
 		createTriggerColumn(triggerTableViewer, triggerComparator);
 

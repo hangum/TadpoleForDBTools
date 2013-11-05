@@ -35,34 +35,34 @@ public class ProcedureFunctionComparator extends ObjectComparator {
 		int rc = ASCENDING;
 		switch (propertyIndex) {
 		case 0:
-			rc = tb1.getName().compareTo(tb2.getName());
+			rc = tb1.getName().toLowerCase().compareTo(tb2.getName().toLowerCase());
 			break;
 		case 1:
-			rc = tb1.getDefiner().compareTo(tb2.getDefiner());
+			rc = tb1.getDefiner().toLowerCase().compareTo(tb2.getDefiner().toLowerCase());
 			break;
 		case 2:
-			rc = tb1.getModified().compareTo(tb2.getModified());
+			rc = tb1.getModified().toLowerCase().compareTo(tb2.getModified().toLowerCase());
 			break;
 		case 3:
-			rc = tb1.getCreated().compareTo(tb2.getCreated());
+			rc = tb1.getCreated().toLowerCase().compareTo(tb2.getCreated().toLowerCase());
 			break;
 		case 4:
-			rc = tb1.getSecurity_type().compareTo(tb2.getSecurity_type());
+			rc = tb1.getSecurity_type().toLowerCase().compareTo(tb2.getSecurity_type().toLowerCase());
 			break;
 		case 5:
-			rc = tb1.getComment().compareTo(tb2.getComment());
+			rc = tb1.getComment().toLowerCase().compareTo(tb2.getComment().toLowerCase());
 			break;
 		case 6:
-			rc = tb1.getCharacter_set_client().compareTo(tb2.getCharacter_set_client());
+			rc = tb1.getCharacter_set_client().toLowerCase().compareTo(tb2.getCharacter_set_client().toLowerCase());
 			break;
 		case 7:
-			rc = tb1.getCollation_connection().compareTo(tb2.getCollation_connection());
+			rc = tb1.getCollation_connection().toLowerCase().compareTo(tb2.getCollation_connection().toLowerCase());
 			break;
 		case 8:
-			rc = tb1.getDatabase().compareTo(tb2.getDatabase());
+			rc = tb1.getDatabase().toLowerCase().compareTo(tb2.getDatabase().toLowerCase());
 			break;
 		case 9:
-			rc = tb1.getCollation().compareTo(tb2.getCollation());
+			rc = tb1.getCollation().toLowerCase().compareTo(tb2.getCollation().toLowerCase());
 			break;
 		}
 

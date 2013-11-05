@@ -340,16 +340,16 @@ SELECT  CONSTRAINT_CATALOG
  -->
  
 <select id="getViewScript" resultClass="java.lang.String" parameterClass="java.lang.String">
-sp_helptext $object_name$
+sp_helptext '$object_name$'
 </select>
 <select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
-sp_helptext $object_name$
+sp_helptext '$object_name$'
 </select>
 <select id="getProcedureScript" resultClass="java.lang.String" parameterClass="java.lang.String">
-sp_helptext $object_name$
+sp_helptext '$object_name$'
 </select>
 <select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.lang.String">
-sp_helptext $object_name$
+sp_helptext '$object_name$'
 </select>
 
 <select id="getProcedureInParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">

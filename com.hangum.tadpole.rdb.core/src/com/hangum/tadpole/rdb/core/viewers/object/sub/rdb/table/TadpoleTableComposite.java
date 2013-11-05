@@ -230,6 +230,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// sorter
 		tableComparator = new TableComparator();
 		tableListViewer.setSorter(tableComparator);
+		tableComparator.setColumn(0);
 		
 		// auto table layout
 		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tableListViewer.getTable());
