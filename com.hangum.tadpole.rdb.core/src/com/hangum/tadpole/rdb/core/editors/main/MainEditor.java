@@ -1228,12 +1228,15 @@ public class MainEditor extends EditorExtension {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
+		requestQuery = StringUtils.trimToEmpty(requestQuery);
+		
 		// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 		if(transactionQuery(requestQuery)) return;
 		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
-		PreparedStatement stmt = null;
+		PreparedStatement pstmt = null;
+		java.sql.Statement stmt = null;
 		
 		try {
 			if(isAutoCommit) {
@@ -1250,9 +1253,9 @@ public class MainEditor extends EditorExtension {
 					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + requestQuery); //$NON-NLS-1$
 				}
 				
-				stmt = javaConn.prepareStatement(requestQuery);
+				pstmt = javaConn.prepareStatement(requestQuery);
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
-				rs = stmt.executeQuery();
+				rs = pstmt.executeQuery();
 				
 			// explain
 			}  else if(PublicTadpoleDefine.QUERY_MODE.EXPLAIN_PLAN == queryMode) {
@@ -1270,13 +1273,20 @@ public class MainEditor extends EditorExtension {
 					// 플랜결과를 디비에 저장합니다.
 					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
 					// 저장된 결과를 가져와서 보여줍니다.
-					stmt = javaConn.prepareStatement("select * from " + planTableName); //$NON-NLS-1$
-					rs = stmt.executeQuery();
-					
+					pstmt = javaConn.prepareStatement("select * from " + planTableName); //$NON-NLS-1$
+					rs = pstmt.executeQuery();
+				 } else if(DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
+					 stmt = javaConn.createStatement();
+					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "ON"));
+
+					 pstmt = javaConn.prepareStatement(requestQuery);
+					 rs = pstmt.executeQuery();
+
+					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "OFF"));
 				} else {
 				
-					stmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, requestQuery));
-					rs = stmt.executeQuery();
+					pstmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, requestQuery));
+					rs = pstmt.executeQuery();
 					
 				}
 			}
@@ -1294,9 +1304,16 @@ public class MainEditor extends EditorExtension {
 			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
 			sourceDataList = ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma);
 			
+			// 데이터셋에 추가 결과 셋이 있을경우 모두 fetch 하여 결과 그리드에 표시한다.
+			while(pstmt.getMoreResults()){  
+				if(logger.isDebugEnabled()) logger.debug("\n**********has more resultset1...***********");
+				sourceDataList.addAll(ResultSetUtils.getResultToList(pstmt.getResultSet(), queryResultCount, isResultComma));
+			}
+			
 		} finally {
-			try { stmt.close(); } catch(Exception e) {}
-			try { rs.close(); } catch(Exception e) {}
+			try { if(pstmt != null) pstmt.close(); } catch(Exception e) {}
+			try { if(stmt != null) stmt.close(); } catch(Exception e) {}
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
 			
 			if(isAutoCommit) {
 				try { javaConn.close(); } catch(Exception e){}
