@@ -16,6 +16,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.template.CubridDMLTemplate;
 import com.hangum.tadpole.sql.template.HIVEDMLTemplate;
+import com.hangum.tadpole.sql.template.MSSQLDMLTemplate;
 import com.hangum.tadpole.sql.template.MySQLDMLTemplate;
 import com.hangum.tadpole.sql.template.OracleDMLTemplate;
 import com.hangum.tadpole.sql.template.PostgreDMLTemplate;
@@ -108,6 +109,9 @@ public class PartQueryUtil {
 			
 		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			
+		} else if(DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			resultQuery =  MSSQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
 		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			resultQuery = SQLiteDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
