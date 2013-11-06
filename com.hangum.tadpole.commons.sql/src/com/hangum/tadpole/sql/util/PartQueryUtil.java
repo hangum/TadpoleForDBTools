@@ -111,7 +111,6 @@ public class PartQueryUtil {
 			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 		} else if(DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
 	      resultQuery =  MSSQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
-			 
 		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			resultQuery = SQLiteDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			

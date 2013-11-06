@@ -10,9 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,6 +74,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
+import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -464,7 +469,7 @@ public class MainEditor extends EditorExtension {
 		    public void handleEvent(Event event) {
 		    	TableItem[] selection = tableResult.getSelection();
 				if (selection.length != 1) return;
-
+				
 				TableItem item = tableResult.getSelection()[0];
 				for (int i=0; i<tableResult.getColumnCount(); i++) {
 					if (item.getBounds(i).contains(event.x, event.y)) {
@@ -473,6 +478,36 @@ public class MainEditor extends EditorExtension {
 						strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))? (" " + strText + ""): (" '" + strText + "'");
 						
 						appendTextAtPosition(strText);
+						
+						//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
+						Map<Integer, Object> mapColumns = sourceDataList.get(tableResult.getSelectionIndex());
+						Object columnObject = mapColumns.get(i);
+						
+						// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
+						//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
+						if (columnObject != null && (Clob) columnObject instanceof java.sql.Clob ){
+							Clob cl = (Clob) columnObject;
+	
+							StringBuffer clobContent = new StringBuffer();
+							String readBuffer = new String();
+	
+							// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
+							BufferedReader bufferedReader;
+							try {
+								bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
+								
+								while ((readBuffer = bufferedReader.readLine())!= null)
+									clobContent.append(readBuffer);
+	
+								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), clobContent.toString());
+				                dlg.open();
+	
+							} catch (SQLException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
 
 //		                TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), msg);
 //		                dlg.open();
@@ -1314,7 +1349,7 @@ public class MainEditor extends EditorExtension {
 			try { if(pstmt != null) pstmt.close(); } catch(Exception e) {}
 			try { if(stmt != null) stmt.close(); } catch(Exception e) {}
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
-			
+
 			if(isAutoCommit) {
 				try { javaConn.close(); } catch(Exception e){}
 			}
@@ -1412,6 +1447,7 @@ public class MainEditor extends EditorExtension {
 				sqlQuery += ";"; //$NON-NLS-1$
 			}
 			// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+			logger.debug(""+sqlQuery);
 			statement.execute(sqlQuery);//executeUpdate( sqlQuery );
 			
 			// create table, drop table이면 작동하도록			
