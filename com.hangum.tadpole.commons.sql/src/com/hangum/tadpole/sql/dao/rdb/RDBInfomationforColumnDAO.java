@@ -11,6 +11,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.dao.rdb;
 
+
 /**
  * 테이블의 모든 컬럼에 대한 정보를 조회
  * 
@@ -40,6 +41,9 @@ public class RDBInfomationforColumnDAO extends AbstractDAO {
 	String last_analyzed;
 	String pk;
 
+	public RDBInfomationforColumnDAO() {
+		this("", "", "", "", "", "", "", "");
+	}
 	/**
 	 * 
 	 * @param table_name
