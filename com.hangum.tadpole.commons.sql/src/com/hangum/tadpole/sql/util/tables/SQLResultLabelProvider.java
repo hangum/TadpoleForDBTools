@@ -45,9 +45,10 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 
 	@SuppressWarnings("unchecked")
 	public String getColumnText(Object element, int columnIndex) {
-		HashMap<Integer, String> rsResult = (HashMap<Integer, String>)element;
+		HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)element;
 		
-		return rsResult.get(columnIndex);
+		Object obj = rsResult.get(columnIndex);
+		return obj == null ? "" : obj.toString();
 	}
 	
 	/**

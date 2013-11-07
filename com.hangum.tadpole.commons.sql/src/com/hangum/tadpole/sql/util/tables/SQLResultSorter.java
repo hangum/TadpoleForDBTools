@@ -53,11 +53,11 @@ public class SQLResultSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		HashMap<Integer, String> p1 = (HashMap<Integer, String>)e1;
-		HashMap<Integer, String> p2 = (HashMap<Integer, String>)e2;
+		HashMap<Integer, Object> p1 = (HashMap<Integer, Object>)e1;
+		HashMap<Integer, Object> p2 = (HashMap<Integer, Object>)e2;
 		
-		String search1 = ""+p1.get(propertyIndex);
-		String search2 = ""+p2.get(propertyIndex);
+		String search1 = p1.get(propertyIndex)==null?"":p1.get(propertyIndex).toString();
+		String search2 = p2.get(propertyIndex)==null?"":p2.get(propertyIndex).toString();
 		
 		int rc=0;
 		try {
