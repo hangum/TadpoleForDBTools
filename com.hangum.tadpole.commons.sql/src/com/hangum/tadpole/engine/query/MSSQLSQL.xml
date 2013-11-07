@@ -198,7 +198,7 @@ select
 	,p.last_altered as last_altered
 	, p.routine_schema as schemaname
 	, p.routine_name as procname
-from serp.information_schema.routines p
+from information_schema.routines p
 where p.routine_type = 'procedure'
 order by p.routine_schema, p.routine_name
 </select>
@@ -215,7 +215,7 @@ select
 	,p.last_altered as last_altered
 	, p.routine_schema as schemaname
 	, p.routine_name as procname
-from serp.information_schema.routines p
+from information_schema.routines p
 where p.routine_type = 'function'
 order by p.routine_schema, p.routine_name
 </select>
