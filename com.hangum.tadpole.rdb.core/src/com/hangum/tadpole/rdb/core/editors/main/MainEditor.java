@@ -1011,7 +1011,7 @@ public class MainEditor extends EditorExtension {
 				executeLastSQL = SQLUtil.executeQuery(strSQL);
 				
 				// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
-				if(!isStatement(executeLastSQL)) {
+				if(!SQLUtil.isStatement(executeLastSQL)) {
 					listStrExecuteQuery.add(executeLastSQL);
 					tmpArayExecuteQuery += executeLastSQL + PublicTadpoleDefine.LINE_SEPARATOR;
 					executeLastSQL = ""; //$NON-NLS-1$
@@ -1060,7 +1060,7 @@ public class MainEditor extends EditorExtension {
 
 		// 쿼리를 실행할 수 있도록 준비합니다.
 		final String finalExecuteSQL = executeLastSQL;
-		final boolean isStatement = isStatement(executeLastSQL);
+		final boolean isStatement = SQLUtil.isStatement(executeLastSQL);
 		
 		/* 선택은 autocommit false이므로 아래와 같습니다. */
 		final boolean isAutoCommit = isAutoCommit();
@@ -1175,18 +1175,6 @@ public class MainEditor extends EditorExtension {
 				logger.error("save the user query", e); //$NON-NLS-1$
 			}
 		}
-	}
-	
-	/**
-	 * sql이 statement인지 검사합니다.
-	 * @param sql
-	 * @return
-	 */
-	private boolean isStatement(String sql) {
-		boolean isTmpStatement = false;
-		if(SQLUtil.isStatement(sql)) isTmpStatement = true;
-
-		return isTmpStatement;
 	}
 	
 	/**
@@ -1403,11 +1391,16 @@ public class MainEditor extends EditorExtension {
 			
 			// 오라클의 경우 procedure, function, package, trigger의 경우 마지막에 ; 가 있어야 정상 프로시저로 인정됩니다. 
 			//
-			} else if(StringUtils.startsWith(checkSQL, "CREATE OR") || //$NON-NLS-1$
-					StringUtils.startsWith(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
-					StringUtils.startsWith(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
-					StringUtils.startsWith(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
-					StringUtils.startsWith(checkSQL, "CREATE TRIGGER") //$NON-NLS-1$
+			} else if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TRIGGER") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER OR") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
+					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER")
 			) { //$NON-NLS-1$
 				sqlQuery += ";"; //$NON-NLS-1$
 			}
@@ -1464,7 +1457,7 @@ public class MainEditor extends EditorExtension {
 	private void executeFinish(String finalExecuteSQL) {
 		setFilter();
 		
-		if(isStatement(finalExecuteSQL)) {			
+		if(SQLUtil.isStatement(finalExecuteSQL)) {			
 			btnPrev.setEnabled(false);
 			if( sourceDataList.size() < queryPageCount ) btnNext.setEnabled(false);
 			else btnNext.setEnabled(true);
@@ -1507,7 +1500,7 @@ public class MainEditor extends EditorExtension {
 	 * 쿼리의 결과를 화면에 출력하거나 정리 합니다.
 	 */
 	private void setResultTable(String finalExecuteSQL) {
-		if(isStatement(finalExecuteSQL)) {			
+		if(SQLUtil.isStatement(finalExecuteSQL)) {			
 			// table data를 생성한다.
 			sqlSorter = new SQLResultSorter(-999);
 			
