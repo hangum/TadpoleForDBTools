@@ -43,15 +43,18 @@ SELECT getdate()
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
-    tbl.name AS name
+    s.name + '.' + tbl.name AS name
     ,p.value AS comment
+    , s.name as schema_name
+    , tbl.name as table_name
   FROM
     sys.tables AS tbl
+    inner join sys.schemas as s on s.schema_id = tbl.schema_id
       LEFT JOIN sys.extended_properties AS p
         ON p.major_id = tbl.object_id
         AND p.minor_id = 0
         AND p.class = 1
-  ORDER BY tbl.name ;	
+  ORDER BY s.name, tbl.name 
 </select>
 
 <!-- 
@@ -71,8 +74,8 @@ FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
 	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
 	LEFT JOIN sys.extended_properties AS p         ON p.major_id = a.id        AND p.minor_id = b.colid       AND p.class = 1
-WHERE 
-		a.name = #table#
+WHERE 1 = 1
+	and a.id = object_id('$table$')
 ORDER BY a.id, b.colid
 </select>
 
@@ -146,11 +149,12 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 	view 정보
  -->
 <select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
-	/*
-	SELECT SERVERPROPERTY('productversion')
-	select name from sys.views order by name	
-	*/
-	select name from sysobjects where xtype = 'V' order by name
+select 
+	v.table_schema + '.' + v.table_name as name
+	, v.table_schema as schema_name
+	, v.table_name as view_name	
+from information_schema.views v
+order by v.table_schema, v.table_name
 </select>
 
 <!-- 
@@ -159,10 +163,11 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
  <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
 SELECT 
     i.table_schema 
-    , i.table_name
-    , i.constraint_schema as index_owner
+    , i.table_schema + '.' + i.table_name as table_name
+    , i.constraint_schema as index_schema
     , i.constraint_name as index_name
     FROM information_schema.CONSTRAINT_TABLE_USAGE i
+    order by table_schema, table_name, index_schema, index_name
     
 </select>
 
@@ -177,52 +182,78 @@ SELECT
          column_name,         
          table_catalog AS table_schema
     FROM information_schema.CONSTRAINT_COLUMN_USAGE
-    WHERE constraint_name = #index_name#
+    WHERE table_schema+'.'+table_name = #table_name#
+      and constraint_name = #index_name#
 </select>
 
 <!-- 
 	procedure list
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT s.name,
-		s.type,
-	   #db_name# as db,
-	   crdate as created
-    FROM     sysobjects s
-	WHERE    s.TYPE = 'P'
-	ORDER BY s.name
+select 
+	p.routine_schema + '.' + p.routine_name as name
+	,'P' as type
+	,routine_catalog as db
+	,p.created as created
+	,p.last_altered as last_altered
+	, p.routine_schema as schemaname
+	, p.routine_name as procname
+from serp.information_schema.routines p
+where p.routine_type = 'procedure'
+order by p.routine_schema, p.routine_name
 </select>
 
 <!-- 
 	function list
  -->
 <select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT s.name,
-		s.type,
-	   #db_name# as db,
-	   crdate as created
-    FROM     sysobjects s
-	WHERE    s.TYPE = 'FN'
-	ORDER BY s.name
+select 
+	p.routine_schema + '.' + p.routine_name as name
+	,'P' as type
+	,routine_catalog as db
+	,p.created as created
+	,p.last_altered as last_altered
+	, p.routine_schema as schemaname
+	, p.routine_name as procname
+from serp.information_schema.routines p
+where p.routine_type = 'function'
+order by p.routine_schema, p.routine_name
 </select>
 
 <!-- 
 	show triggers
  -->
 <select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
-	SELECT s.name,
-	 	#db_name# as db,
-	   crdate as created 
-	FROM sysobjects  s
-	WHERE s.type = 'TR'
+	select 
+		s.table_schema + '.' + t.name as name
+		, t.name as "trigger"
+		, t.create_date as created
+		, o.name as table_name
+		, s.table_schema as definer
+	 	, s.table_catalog as db
+	from sys.triggers t
+		inner join sys.objects o on o.object_id = t.parent_id
+		inner join information_schema.tables s on o.object_id = object_id(s.table_schema + '.' + s.table_name)
+	order by s.table_schema, s.table_name, t.name
 </select>
 
 <!-- 
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
-	select name from sys.tables
-	order by name 
+SELECT
+    s.name + '.' + tbl.name AS name
+    ,p.value AS comment
+    , s.name as schema_name
+    , tbl.name as table_name
+  FROM
+    sys.tables AS tbl
+    inner join sys.schemas as s on s.schema_id = tbl.schema_id
+      LEFT JOIN sys.extended_properties AS p
+        ON p.major_id = tbl.object_id
+        AND p.minor_id = 0
+        AND p.class = 1
+  ORDER BY s.name, tbl.name 
 </select>
 
 <!-- 
@@ -253,7 +284,8 @@ select
 	Table DDL Script
  -->
 <select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
-	select t.name as TABLE_NAME
+	select 
+		'[' + s.table_schema + '.' + t.name + ']' as TABLE_NAME
 	    , c.name as COLUMN_NAME
 		, d.name as DATA_TYPE
 		, c.max_length as DATA_LENGTH
@@ -261,13 +293,14 @@ select
 		, c.scale as DATA_SCALE
 		, (case when c.is_nullable = 0 then 'NO' else 'YES' end) as NULLABLE 
 		, USER as OWNER
-		, v.definition as DATA_DEFAULT
+		, convert(varchar, v.definition) as DATA_DEFAULT
 	from sys.tables t 
+	   inner join information_schema.tables s on t.object_id = object_id(s.table_schema + '.' + s.table_name)
 	   inner join sys.columns c on t.object_id = c.object_id
 	   inner join sys.types d on c.system_type_id = d.system_type_id
 	   left join sys.default_constraints v on v.parent_object_id = t.object_id and c.column_id = v.parent_column_id
 	 where 1=1
-	    and t.name = #table_name#
+	    and t.object_id = object_id('$table_name$')
 	order by c.column_id
 </select>
 
@@ -285,7 +318,7 @@ select
 	  inner join sys.index_columns c on t.object_id = c.object_id 
 	  inner join sys.all_columns tc on tc.object_id = t.object_id and c.column_id = tc.column_id
 	  where 1=1
-	  and t.name = #table_name#
+	  and t.object_id = object_id('$table_name$')
 	order by c.key_ordinal
 
 </select>
@@ -307,7 +340,7 @@ SELECT
    WHERE 1=1
         AND p.minor_id = 0
         AND p.class = 1
-        AND tbl.name = #table#
+        AND tbl.object_id = object_id('$table_name$')
         AND p.value &gt; ''
   UNION ALL
 SELECT  
@@ -323,7 +356,7 @@ FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
 	LEFT JOIN sys.extended_properties AS p ON p.major_id = a.id AND p.minor_id = b.colid AND p.class = 1
 WHERE 1=1
-  AND a.name = #table#
+  AND a.id = object_id('$table_name$')
   AND p.value &gt; ''
   
 </select>
@@ -360,7 +393,7 @@ select
    , '' as value
 from information_schema.parameters p
 where 1=1
-and p.specific_name=#object_name#
+and p.specific_schema + '.' + p.specific_name='$object_name$'
 and p.parameter_mode in ('IN','INOUT')
 order by ordinal_position 
   
@@ -379,7 +412,7 @@ select
    , '' as value
 from information_schema.parameters p
 where 1=1
-and p.specific_name=#object_name#
+and p.specific_schema + '.' + p.specific_name='$object_name$'
 and p.parameter_mode in ('OUT','INOUT')
 order by ordinal_position 
   
@@ -397,7 +430,7 @@ order by ordinal_position
 	process kill
  -->
 <select id="killProcess" parameterClass="java.lang.String">
-	kill #pid#
+	kill $pid$
 </select>
 
 </sqlMap>

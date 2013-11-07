@@ -160,7 +160,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 					logger.error("Comment add error ", e);
 				}
 			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
-				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo,'table' ").append(" , '").append(dao.getName()).append("'");
+				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'schema' , "+dao.getSchema_name()+",'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
 					stmt.execute();
@@ -171,7 +171,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 				try {
 					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' , dbo ,'table' ").append(" , '").append(dao.getName()).append("'");
+					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {
