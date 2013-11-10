@@ -12,11 +12,9 @@ package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,6 +94,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
+import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
@@ -485,7 +484,7 @@ public class MainEditor extends EditorExtension {
 						
 						// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
 						//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
-						if (columnObject != null && (Clob) columnObject instanceof java.sql.Clob ){
+						if (columnObject != null && columnObject instanceof java.sql.Clob ){
 							Clob cl = (Clob) columnObject;
 	
 							StringBuffer clobContent = new StringBuffer();
@@ -502,10 +501,8 @@ public class MainEditor extends EditorExtension {
 								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), clobContent.toString());
 				                dlg.open();
 	
-							} catch (SQLException e) {
-								e.printStackTrace();
-							} catch (IOException e) {
-								e.printStackTrace();
+							} catch (Exception e) {
+								logger.error("Clob column echeck", e);
 							}
 						}
 
@@ -888,7 +885,9 @@ public class MainEditor extends EditorExtension {
 					logger.error(RequestInfoUtils.requestInfo("MainEditor browser init", strUserEMail), e); //$NON-NLS-1$
 				}
 
-				String callCommand = TadpoleEditorUtils.makeCommand(getInitExt(), getInitDefaultEditorStr(), getAssistList());
+				getUserDB().getDBDefine().getExt();
+				
+				String callCommand = TadpoleEditorUtils.makeCommand(getUserDB().getDBDefine().getExt(), getInitDefaultEditorStr(), getAssistList());
 				browserEvaluate(callCommand);
 			}
 			public void changed( ProgressEvent event ) {}			
@@ -1447,7 +1446,6 @@ public class MainEditor extends EditorExtension {
 			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
 				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP")  || //$NON-NLS-1$
 				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "ALTER")) {  //$NON-NLS-1$
-																					//$NON-NLS-1$ //$NON-NLS-2$
 				
 				try {
 					refreshExplorerView();
@@ -1911,30 +1909,4 @@ public class MainEditor extends EditorExtension {
 		return initDefaultEditorStr;
 	}
 	
-	/**
-	 * 에디터에서 사용할 확장자를 만듭니다.
-	 * @return
-	 */
-	public String getInitExt() {
-		String extension = "tadpole_edit"; //$NON-NLS-1$
-		DBDefine userDBDefine = DBDefine.getDBDefine(getUserDB());
-		
-		if(userDBDefine == DBDefine.MYSQL_DEFAULT || userDBDefine == DBDefine.MARIADB_DEFAULT) {
-			extension += ".mysql"; //$NON-NLS-1$
-		} else if(userDBDefine == DBDefine.ORACLE_DEFAULT) {
-			extension += ".oracle"; //$NON-NLS-1$
-		} else if(userDBDefine == DBDefine.MSSQL_DEFAULT) {
-			extension += ".mssql"; //$NON-NLS-1$
-		} else if(userDBDefine == DBDefine.SQLite_DEFAULT) {
-			extension += ".sqlite"; //$NON-NLS-1$
-		} else if(userDBDefine == DBDefine.CUBRID_DEFAULT) {
-			extension += ".mysql"; //$NON-NLS-1$
-		} else if(userDBDefine == DBDefine.HIVE_DEFAULT) {
-			extension += ".hql"; //$NON-NLS-1$
-		} else {
-			extension += ".postgresql"; //$NON-NLS-1$
-		}
-		
-		return extension;
-	}
 }

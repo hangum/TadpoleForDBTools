@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
@@ -117,6 +118,10 @@ public class UserDBDAO {
     
     public UserDBDAO() {
 	}
+   
+    public DBDefine getDBDefine() {
+    	return DBDefine.getDBDefine(this);
+    }
     
 	/**
 	 * @return the group_seq

@@ -115,6 +115,7 @@ public class RDBTypeToJavaTypeUtils {
 		case Types.FLOAT:
 		case Types.INTEGER:
 		case Types.NUMERIC:
+		case Types.BIT:
 		case Types.SMALLINT:
 		case Types.TINYINT:
 			return true;

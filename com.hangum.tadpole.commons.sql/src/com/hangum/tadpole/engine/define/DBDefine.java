@@ -199,6 +199,32 @@ public enum DBDefine {
 	}
 	
 	/**
+	 * 에디터에서 사용할 확장자를 만듭니다.
+	 * @return
+	 */
+	public String getExt() {
+		String extension = "tadpole_edit"; //$NON-NLS-1$
+		
+		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
+			extension += ".mysql"; //$NON-NLS-1$
+		} else if(this == DBDefine.ORACLE_DEFAULT) {
+			extension += ".oracle"; //$NON-NLS-1$
+		} else if(this == DBDefine.MSSQL_DEFAULT) {
+			extension += ".mssql"; //$NON-NLS-1$
+		} else if(this == DBDefine.SQLite_DEFAULT) {
+			extension += ".sqlite"; //$NON-NLS-1$
+		} else if(this == DBDefine.CUBRID_DEFAULT) {
+			extension += ".mysql"; //$NON-NLS-1$
+		} else if(this == DBDefine.HIVE_DEFAULT) {
+			extension += ".hql"; //$NON-NLS-1$
+		} else {
+			extension += ".postgresql"; //$NON-NLS-1$
+		}
+		
+		return extension;
+	}
+	
+	/**
 	 * 사용자 디비를 리턴한다.
 	 * @return
 	 */

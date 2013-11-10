@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.parser;
 
+import kry.sql.format.ISqlFormatRule;
+import kry.sql.format.SqlFormatRule;
+
 import org.apache.log4j.Logger;
 
 import zigen.sql.parser.ASTVisitorToString;
@@ -54,16 +57,43 @@ public class SQLParser {
 		
 		return node;
 	}
-	
-	public static void main(String[] args) {
-		INode node = SQLParser.parserSql("SELECT * FROM sample_table a WHERE a.id = ?");
-		
-		ASTVisitorToString visitor = new ASTVisitorToString();
-		node.accept(visitor, null);
-		visitor.print();
-		
-		System.out.println( node.getASTAlias() );
-		System.out.println(node.getASTSelectStatement().getASTAlias());
-		
-	}
+//	
+//	public static SqlFormatRule getSqlFormatRule() {
+//		SqlFormatRule rule = new SqlFormatRule();
+//		rule.setRemoveEmptyLine(true);
+//
+//		rule.setOutSqlSeparator(SqlFormatRule.SQL_SEPARATOR_SEMICOLON);
+//		rule.setRemoveEmptyLine(true);
+//		rule.setIndentEmptyLine(true);
+//		rule.setConvertName(ISqlFormatRule.CONVERT_STRING_NONE);
+//		rule.setConvertKeyword(ISqlFormatRule.CONVERT_STRING_NONE);
+//		rule.setNewLineBeforeAndOr(false);
+//		rule.setNewLineBeforeComma(false);
+//		
+//		rule.setWordBreak(false);
+//		
+//		return rule;
+//	}
+//	
+//	public static void main(String[] args) throws Exception {
+//		INode node = new ASTRoot();
+//		ISqlParser parser = new SqlParser("SELECT * FROM sample_table a WHERE a.id = ?", getSqlFormatRule());
+//		parser.parse(node);
+//		
+//		ASTVisitorToString visitor = new ASTVisitorToString();
+//		node.accept(visitor, null);
+//		visitor.print();
+//		
+//		System.out.println("[name]" +  node.getName() );
+//		
+//		System.out.println( node.getChildrenSize() );
+//		System.out.println( node.getASTSelectStatement().getName() );
+//		
+//		
+////		System.out.println("[Aliase ]" + node.getASTAlias() );
+////		System.out.println( node.getName() );
+//		
+//		
+//		
+//	}
 }
