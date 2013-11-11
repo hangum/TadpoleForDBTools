@@ -42,6 +42,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -245,29 +246,35 @@ public class SessionListEditor extends EditorPart {
 	private void initSessionListData() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			
-			int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant");
-			if (0 >= getSessionGrant){
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a 'ALTER SYSTEM' authority.", null); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "You do not have permission to 'ALTER SYSTEM'", errStatus); //$NON-NLS-1$
-				return;
-			}
-			
-			try {
-				int getSessionView = (Integer) sqlClient.queryForObject("getSessionView");
-			}catch (Exception e) {
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "You do not have permission to viewing 'V $ SESSION'", errStatus); //$NON-NLS-1$
-				return;
-			}
-			
-			int version = (Integer) sqlClient.queryForObject("getVersion");
+
 			List<?> listSessionList = null;
-			if (version <= 9){
-				listSessionList = sqlClient.queryForList("sessionList_9");
+			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
+
+				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant");
+				if (0 >= getSessionGrant){
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "You do not have permission", errStatus); //$NON-NLS-1$
+					return;
+				}
+				
+				try {
+					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView");
+				}catch (Exception e) {
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "You do not have permission to viewing session", errStatus); //$NON-NLS-1$
+					return;
+				}
+				
+				int version = (Integer) sqlClient.queryForObject("getVersion");				
+				if (version <= 9){
+					listSessionList = sqlClient.queryForList("sessionList_9");
+				}else{
+					listSessionList = sqlClient.queryForList("sessionList");
+				}
 			}else{
 				listSessionList = sqlClient.queryForList("sessionList");
 			}
+			
 			tableViewerSessionList.setInput(listSessionList);
 			tableViewerSessionList.refresh();
 		} catch (Exception e) {

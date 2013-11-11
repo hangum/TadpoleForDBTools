@@ -421,16 +421,40 @@ order by ordinal_position
 
 <!-- 
 	SESSION LIST
+	
+	select *  from sys.dm_exec_connections;
  -->
 <select id="sessionList" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
-	select session_id as id from sys.dm_exec_connections;
+<![CDATA[
+	SELECT 
+	   s.spid as id
+		,(CASE WHEN s.DBID = 0 THEN NULL WHEN s.DBID <> 0 THEN DB_NAME(s.DBID) END) AS DBNAME ,CONVERT(SYSNAME, RTRIM(s.LOGINAME)) AS "USER"
+		, (CASE s.HOSTNAME WHEN NULL THEN '.' WHEN ' ' THEN '.' ELSE s.HOSTNAME END) AS HOSTNAME
+	   ,  db_name (s.dbid) AS DB
+	   , s.CMD as command
+		, SUBSTRING( CONVERT(VARCHAR,s.LAST_BATCH,111) ,6 ,5 ) + ' ' + SUBSTRING( CONVERT(VARCHAR,s.LAST_BATCH,113) ,13 ,8 ) AS time
+	   , (CASE LOWER (s.STATUS) WHEN 'sleeping' THEN LOWER(s.STATUS) ELSE UPPER(s.STATUS) END) AS STATUS
+	    , q.text as info
+		, s.PROGRAM_NAME
+		, s.CPU AS CPUTIME
+		, s.PHYSICAL_IO AS DISKIO
+		, s.BLOCKED
+		, s.REQUEST_ID
+	FROM SYS.SYSPROCESSES s WITH (NOLOCK) 
+OUTER APPLY sys.dm_exec_sql_text(s.sql_handle) Q
+	WHERE 1 = 1
+		AND LOWER(STATUS) = 'sleeping' 
+		AND UPPER(CMD) IN ('AWAITING COMMAND','LAZY WRITER','CHECKPOINT SLEEP')
+		AND BLOCKED = 0
+	ORDER BY s.spid
+]]>
 </select>
 
 <!-- 
 	process kill
  -->
 <select id="killProcess" parameterClass="java.lang.String">
-	kill $pid$
+	kill $spid$
 </select>
 
 </sqlMap>
