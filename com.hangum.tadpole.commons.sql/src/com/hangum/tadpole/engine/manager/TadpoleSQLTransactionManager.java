@@ -55,7 +55,7 @@ public class TadpoleSQLTransactionManager {
 	 */
 	public static Connection getInstance(final String userId, final UserDBDAO userDB, final boolean isAutoCommit) throws Exception {
 		
-		logger.debug("[userId]" + userId + "[userDB]" + userId + "[isAutoCommit]: " + isAutoCommit);
+		logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + " / " + userDB.getUsers() + "[isAutoCommit]: " + isAutoCommit);
 		
 		synchronized(dbManager) {
 			final String searchKey = getKey(userId, userDB);

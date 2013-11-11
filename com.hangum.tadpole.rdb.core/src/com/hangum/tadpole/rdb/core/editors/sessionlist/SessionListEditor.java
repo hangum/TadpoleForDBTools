@@ -184,7 +184,7 @@ public class SessionListEditor extends EditorPart {
 		compositeQuery.setLayout(new GridLayout(1, false));
 		compositeQuery.setText("Query");
 		
-		textQuery = new Text(compositeQuery, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textQuery = new Text(compositeQuery, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		comparator = new MySQLSessionListTableCompare();
 		tableViewerSessionList.setSorter(comparator);
@@ -245,7 +245,29 @@ public class SessionListEditor extends EditorPart {
 	private void initSessionListData() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List listSessionList = sqlClient.queryForList("sessionList");
+			
+			int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant");
+			if (0 >= getSessionGrant){
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a 'ALTER SYSTEM' authority.", null); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "You do not have permission to 'ALTER SYSTEM'", errStatus); //$NON-NLS-1$
+				return;
+			}
+			
+			try {
+				int getSessionView = (Integer) sqlClient.queryForObject("getSessionView");
+			}catch (Exception e) {
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "You do not have permission to viewing 'V $ SESSION'", errStatus); //$NON-NLS-1$
+				return;
+			}
+			
+			int version = (Integer) sqlClient.queryForObject("getVersion");
+			List<?> listSessionList = null;
+			if (version <= 9){
+				listSessionList = sqlClient.queryForList("sessionList_9");
+			}else{
+				listSessionList = sqlClient.queryForList("sessionList");
+			}
 			tableViewerSessionList.setInput(listSessionList);
 			tableViewerSessionList.refresh();
 		} catch (Exception e) {

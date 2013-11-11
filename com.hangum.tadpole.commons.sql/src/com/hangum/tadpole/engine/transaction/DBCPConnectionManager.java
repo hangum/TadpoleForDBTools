@@ -53,18 +53,23 @@ public class DBCPConnectionManager {
 
 		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
 		DataSource ds = new PoolingDataSource(connectionPool);
-		mapDataSource.put(userDB.getUrl(), ds);
+		mapDataSource.put(getKey(userDB), ds);
 		
 		return ds;
 	}
 	
 	public DataSource getDataSource(UserDBDAO userDB) {
-		DataSource retDataSource = mapDataSource.get(userDB.getUrl());
+		DataSource retDataSource = mapDataSource.get(getKey(userDB));
 		if(retDataSource == null) { 
 			return makePool(userDB);
 		}
 		
 		return retDataSource;
 	}
+	
+	private static String getKey(UserDBDAO dbInfo) {
+		return dbInfo.getSeq() + dbInfo.getDbms_types()+dbInfo.getUrl()+dbInfo.getUsers()+dbInfo.getPasswd();
+	}
+
 
 }

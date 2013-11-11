@@ -12,29 +12,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnInfoFilter" 
-    project="com.hangum.tadpole.rdb.core" 
-    file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/ColumnInfoFilter.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="571" y="96"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="3" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnInformLabelProvider" 
-    project="com.hangum.tadpole.rdb.core" 
-    file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/ColumnInformLabelProvider.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="932" y="43"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="4" language="java" 
+  <class id="2" language="java" 
     name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.RDBInformationLabelProvider" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/RDBInformationComposite.java" 
@@ -46,7 +24,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.RDBInformationComposite" 
+  <class id="3" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.RDBInformationComposite" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/RDBInformationComposite.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -57,7 +35,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor" 
+  <class id="4" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/RDBDBInfosEditor.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -68,7 +46,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfoEditorInput" 
+  <class id="5" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfoEditorInput" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/RDBDBInfoEditorInput.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -79,7 +57,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableInfoFilter" 
+  <class id="6" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableInfoFilter" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/TablesComposite.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -90,7 +68,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TablesComposite" 
+  <class id="7" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TablesComposite" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/TablesComposite.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -101,7 +79,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableInformLabelProvider" 
+  <class id="8" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableInformLabelProvider" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/TablesComposite.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -112,8 +90,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" 
-    name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DBInfoCommentEditorSupport" 
+  <class id="9" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DBInfoCommentEditorSupport" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/DBInfoCommentEditorSupport.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -124,7 +101,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="com.hangum.tadpole.sql.dao.rdb.AbstractDAO" 
+  <class id="10" language="java" name="com.hangum.tadpole.sql.dao.rdb.AbstractDAO" 
     project="com.hangum.tadpole.commons.sql" 
     file="/com.hangum.tadpole.commons.sql/src/com/hangum/tadpole/sql/dao/rdb/AbstractDAO.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -135,7 +112,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" 
+  <class id="11" language="java" name="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" 
     project="com.hangum.tadpole.commons.sql" 
     file="/com.hangum.tadpole.commons.sql/src/com/hangum/tadpole/sql/dao/rdb/RDBInfomationforColumnDAO.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -146,7 +123,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="14" language="java" name="com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator" 
+  <class id="12" language="java" name="com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/viewers/object/comparator/DefaultComparator.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -157,7 +134,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="15" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator" 
+  <class id="13" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/ColumnHeaderCreator.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -168,7 +145,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="16" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine" 
+  <class id="14" language="java" name="com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine" 
     project="com.hangum.tadpole.rdb.core" 
     file="/com.hangum.tadpole.rdb.core/src/com/hangum/tadpole/rdb/core/editors/dbinfos/composites/TableViewColumnDefine.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -179,110 +156,82 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="17">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="18" name="columnFilter"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="20">    
+  <dependency id="15">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="14"/>  
+  </dependency>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="18">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="20">    
     <end type="SOURCE" refId="13"/>    
     <end type="TARGET" refId="12"/>  
-  </generalization>  
+  </dependency>  
   <dependency id="21">    
     <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="16"/>  
+    <end type="TARGET" refId="9"/>  
   </dependency>  
   <dependency id="22">    
-    <end type="SOURCE" refId="9"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="23">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <association id="24">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="25" name="tableFilter"/>      
+      <multiplicity id="26" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="27">    
+    <end type="SOURCE" refId="11"/>    
     <end type="TARGET" refId="10"/>  
-  </dependency>  
-  <association id="23">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="24" name="tableFilter"/>      
-      <multiplicity id="25" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="26">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="7"/>  
-  </dependency>  
-  <association id="27">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="28" name="compositeRDBInformation"/>      
-      <multiplicity id="29" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="30">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="31" name="columnInformationComposite"/>      
-      <multiplicity id="32" minimum="0" maximum="1"/>    
+  </generalization>  
+  <association id="28">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="29" name="columnInformationComposite"/>      
+      <multiplicity id="30" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="33">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="15"/>  
-  </dependency>  
-  <dependency id="34">    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="13"/>  
-  </dependency>  
-  <association id="35">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="36" name="dao"/>      
-      <multiplicity id="37" minimum="0" maximum="1"/>    
+  <association id="31">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="32" name="compositeRDBInformation"/>      
+      <multiplicity id="33" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="38">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="4"/>  
-  </dependency>  
-  <dependency id="39">    
-    <end type="SOURCE" refId="15"/>    
+  <dependency id="34">    
+    <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="14"/>  
   </dependency>  
-  <association id="40">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="41" name="tableInformationComposite"/>      
-      <multiplicity id="42" minimum="0" maximum="1"/>    
+  <association id="35">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="36" name="tableInformationComposite"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="43">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="44" name="dao"/>      
-      <multiplicity id="45" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="46">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
-  <dependency id="47">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="13"/>  
-  </dependency>  
-  <dependency id="48">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="3"/>  
-  </dependency>  
-  <dependency id="49">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="16"/>  
-  </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
