@@ -62,7 +62,7 @@ public class TadpoleSQLTransactionManager {
 			TransactionDAO transactionDAO = dbManager.get(searchKey);
 			if(transactionDAO == null) {
 				try {
-					DataSource ds = DBCPConnectionManager.getInstance().getDataSource(userDB);
+					DataSource ds = DBCPConnectionManager.getInstance().getDataSource(userId, userDB);
 					
 					transactionDAO = new TransactionDAO();
 					Connection conn = ds.getConnection();

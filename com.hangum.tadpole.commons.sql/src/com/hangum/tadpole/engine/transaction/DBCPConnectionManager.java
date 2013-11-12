@@ -39,7 +39,7 @@ public class DBCPConnectionManager {
 		return instance;
 	}
 	
-	private DataSource makePool(UserDBDAO userDB) {
+	private DataSource makePool(final String userId, UserDBDAO userDB) {
 		GenericObjectPool connectionPool = new GenericObjectPool();
 		connectionPool.setMaxActive(10);
 		
@@ -53,23 +53,27 @@ public class DBCPConnectionManager {
 
 		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
 		DataSource ds = new PoolingDataSource(connectionPool);
-		mapDataSource.put(getKey(userDB), ds);
+		mapDataSource.put(getKey(userId, userDB), ds);
 		
 		return ds;
 	}
 	
-	public DataSource getDataSource(UserDBDAO userDB) {
-		DataSource retDataSource = mapDataSource.get(getKey(userDB));
+	public DataSource getDataSource(final String userId, final UserDBDAO userDB) {
+		DataSource retDataSource = mapDataSource.get(getKey(userId, userDB));
 		if(retDataSource == null) { 
-			return makePool(userDB);
+			return makePool(userId, userDB);
 		}
 		
 		return retDataSource;
 	}
 	
-	private static String getKey(UserDBDAO dbInfo) {
-		return dbInfo.getSeq() + dbInfo.getDbms_types()+dbInfo.getUrl()+dbInfo.getUsers()+dbInfo.getPasswd();
+	/**
+	 * map의 카를 가져옵니다.
+	 * @param userDB
+	 * @return
+	 */
+	private static String getKey(final String userId, final UserDBDAO userDB) {
+		return userId + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
 	}
-
 
 }
