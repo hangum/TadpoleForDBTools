@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -87,8 +88,12 @@ public class MSSQLProcedureExecuter extends ProcedureExecutor {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
+			
 			// make the script
-			StringBuffer sbQuery = new StringBuffer("{call " + procedureDAO.getName() + "(");
+			String[] arrProcedureName = StringUtils.split(procedureDAO.getName(), ".");
+			String strProcName = "[" + arrProcedureName[0] + "].[" + arrProcedureName[1] + "]";
+			
+			StringBuffer sbQuery = new StringBuffer("{call " + strProcName + "(");
 			// in script
 			int intParamSize = this.getParametersCount();
 			for (int i = 0; i < intParamSize; i++) {
