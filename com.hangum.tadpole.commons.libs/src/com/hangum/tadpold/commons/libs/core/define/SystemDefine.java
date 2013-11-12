@@ -20,8 +20,8 @@ public class SystemDefine {
 	
 	public static final String NAME = "Tadpole DB Hub";
 	public static final String MAJOR_VERSION = "1.1.3(Living)";
-	public static final String SUB_VERSION = "Build" + "(03)";	
-	public static final String RELEASE_DATE = "2013.11.11";
+	public static final String SUB_VERSION = "Build" + "(04)";	
+	public static final String RELEASE_DATE = "2013.11.12";
 	public static final String INFORMATION = "https://github.com/hangum/TadpoleForDBTools";
 	
 	public static final String ADMIN_EMAIL = "adi.tadpole@gmail.com";
