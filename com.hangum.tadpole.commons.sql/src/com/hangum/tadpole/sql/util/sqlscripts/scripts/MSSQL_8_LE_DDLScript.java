@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -33,7 +34,8 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
-
+	private static final Logger logger = Logger.getLogger(MSSQL_8_LE_DDLScript.class);
+	
 	/**
 	 * @param userDB
 	 * @param actionType
@@ -196,17 +198,23 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 	 */
 	@Override
 	public String getProcedureScript(ProcedureFunctionDAO procedureDAO)	throws Exception {
-		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		
-		StringBuilder result = new StringBuilder("");
-		result.append("/* DROP PROCEDURE '" + procedureDAO.getName() + "'; */ \n\n");
-
-		List<String> srcProcList = client.queryForList("getProcedureScript", procedureDAO.getName());				
-		for (int i=0; i<srcProcList.size(); i++){
-			result.append(srcProcList.get(i));
+		try {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			
+			StringBuilder result = new StringBuilder("");
+			result.append("/* DROP PROCEDURE '" + procedureDAO.getName() + "'; */ \n\n");
+	
+			List<String> srcProcList = client.queryForList("getProcedureScript", procedureDAO.getName());				
+			for (int i=0; i<srcProcList.size(); i++){
+				result.append(srcProcList.get(i));
+			}
+			
+			return result.toString();
+		} catch(Exception e) {
+			logger.error("get view script [" + procedureDAO.getName() + "]", e);
+			
+			throw e;
 		}
-		
-		return result.toString();
 	}
 	
 	@Override
