@@ -120,6 +120,8 @@ public class PartQueryUtil {
 			resultQuery = query;
 		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			resultQuery = HIVEDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			resultQuery = PostgreDMLTemplate.TMP_EXPLAIN_EXTENDED + query;			
 		} else {
 			throw new Exception("Not Support DBMS Query Plan.");
 		}
