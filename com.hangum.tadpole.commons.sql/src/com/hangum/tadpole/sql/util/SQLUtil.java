@@ -198,7 +198,7 @@ public class SQLUtil {
 //			exeSQL = delComment(exeSQL, "--");
 			
 			// 문장 의 // 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
-			exeSQL = delComment(exeSQL, "--");
+//			exeSQL = delComment(exeSQL, "--");
 			
 			// 마지막 쿼리를 재 사용하기위해
 //			exeSQL = StringUtils.replace(exeSQL, "\r", " ");
