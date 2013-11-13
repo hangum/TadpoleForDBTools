@@ -12,6 +12,10 @@ package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.math.BigInteger;
+import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -476,7 +480,7 @@ public class MainEditor extends EditorExtension {
 						if(strText == null || "".equals(strText)) return;
 						strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))? (" " + strText + ""): (" '" + strText + "'");
 						
-						appendTextAtPosition(strText);
+						//appendTextAtPosition(strText);
 						
 						//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
 						Map<Integer, Object> mapColumns = sourceDataList.get(tableResult.getSelectionIndex());
@@ -504,6 +508,51 @@ public class MainEditor extends EditorExtension {
 							} catch (Exception e) {
 								logger.error("Clob column echeck", e);
 							}
+						}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
+							try {
+								Blob blob = (Blob) columnObject;
+								
+								int offset = -1;
+								int chunkSize = 1024;
+								long blobLength = blob.length();
+								if(chunkSize > blobLength) {
+									chunkSize = (int)blobLength;
+								}
+								char buffer[] = new char[chunkSize];
+								StringBuilder stringBuffer = new StringBuilder();
+								Reader reader = new InputStreamReader(blob.getBinaryStream());
+
+								while((offset = reader.read(buffer)) != -1) {
+									stringBuffer.append(buffer,0,offset);
+								}
+								
+								//byte[] bdata = blob.getBytes(1, (int) blob.length());
+								//String s = new String(bdata);
+								
+								// image view dialog 또는 파일로 다운로드 하는 기능 필요....
+								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), stringBuffer.toString());
+								dlg.open();								
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+		
+						}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
+							byte[] b = (byte[])columnObject;
+							StringBuffer str = new StringBuffer();
+							try {
+								for (byte buf : b){
+									str.append(buf);
+								}
+								str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16));
+								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), str.toString() );
+				                dlg.open();
+							} catch (Exception e) {
+								logger.error("Clob column echeck", e);
+							}
+						}else{
+							appendTextAtPosition(strText);
+							logger.debug("\nColumn object type is" + columnObject.getClass().toString());
 						}
 
 //		                TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), msg);

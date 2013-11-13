@@ -51,14 +51,21 @@ public class ResultSetUtils {
 			for(int i=0; i<rs.getMetaData().getColumnCount(); i++) {
 				final int intColIndex = i+1;
 				try {
-					String colValue = rs.getString(intColIndex) == null ?"":rs.getString(intColIndex); //$NON-NLS-1$
-					if(isPretty) colValue = prettyData(rs.getMetaData().getColumnType(intColIndex), rs.getObject(intColIndex));
-					
-					//TODO : CLOB처리 추가.
-					// 에디터에서 옵션형태로 선택을 했을경우만 전체 스트림 자료를 읽어서 담거나 또는 그냥 Object형태로 받도록 한다.
-					
-					//tmpRow.put(i, colValue);
-					tmpRow.put(i, rs.getObject(intColIndex));
+					Object obj = rs.getObject(intColIndex);
+					int type = rs.getMetaData().getColumnType(intColIndex);
+
+					if (RDBTypeToJavaTypeUtils.isNumberType(type)){
+						if(isPretty) { 
+							tmpRow.put(i, prettyData(type, obj));
+						}else{
+							tmpRow.put(i, obj);
+						}
+					}else if (RDBTypeToJavaTypeUtils.isCharType(type)){
+						tmpRow.put(i, obj == null?"":obj);
+					}else {
+						tmpRow.put(i, obj);					
+						logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
+					}
 				} catch(Exception e) {
 					logger.error("ResutSet fetch error", e); //$NON-NLS-1$
 					tmpRow.put(i, ""); //$NON-NLS-1$
