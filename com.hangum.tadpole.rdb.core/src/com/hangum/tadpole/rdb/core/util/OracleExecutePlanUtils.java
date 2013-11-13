@@ -10,9 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
+import java.io.ObjectOutputStream.PutField;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.PartQueryUtil;
@@ -43,7 +47,7 @@ public class OracleExecutePlanUtils {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 				
-			stmt = javaConn.prepareStatement( String.format(PartQueryUtil.makeExplainQuery(userDB,  sql), planTableName));
+			stmt = javaConn.prepareStatement( StringUtils.replaceOnce(PartQueryUtil.makeExplainQuery(userDB,  sql), PublicTadpoleDefine.DELIMITER, planTableName));
 			rs = stmt.executeQuery();
 			
 		} finally {

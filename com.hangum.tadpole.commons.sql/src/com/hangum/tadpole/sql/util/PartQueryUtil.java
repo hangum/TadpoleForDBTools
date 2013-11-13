@@ -11,6 +11,7 @@
 package com.hangum.tadpole.sql.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -29,6 +30,7 @@ import com.hangum.tadpole.sql.template.SQLiteDMLTemplate;
  *
  */
 public class PartQueryUtil {
+	private static final Logger logger = Logger.getLogger(PartQueryUtil.class);
 	
 	/**
 	 *  각 DBMS에 맞는 SELECT 문을 만들어줍니다.
@@ -108,7 +110,7 @@ public class PartQueryUtil {
 			resultQuery = MySQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
 		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB)) {
-			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + "( " + query + ")";
 		} else if(DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
 	      resultQuery =  MSSQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 		} else if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
@@ -121,6 +123,8 @@ public class PartQueryUtil {
 		} else {
 			throw new Exception("Not Support DBMS Query Plan.");
 		}
+
+		if(logger.isDebugEnabled()) logger.debug("[plan query]" + resultQuery);
 		
 		return resultQuery;
 	}
