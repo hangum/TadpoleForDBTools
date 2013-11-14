@@ -467,6 +467,36 @@
 	ORDER BY name
 </select>
 
+<select id="userDbResourceManager" resultClass="com.hangum.tadpole.sql.dao.ResourceManagerDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+SELECT 
+	m.resource_seq as resource_seq
+	, m.resource_types as resource_types
+	, m.user_seq as user_seq
+	, u.name as user_name
+	, m.db_seq as db_seq
+	, m.group_seq as group_seq
+	, m.name as res_title
+	, m.shared_type as shared_type
+	, m.description as description
+	, m.create_time as create_time
+	, m.delyn as delyn
+  FROM user_db_resource m
+  inner join user u on m.user_seq = u.seq
+  where 1=1
+  and m.resource_types in ( 'SQL' , 'ERD' )
+  and m.delyn = 'NO'
+  and m.db_seq = #seq# 
+  and (m.user_seq = #user_seq# or m.shared_type = 'PUBLIC')
+  order by m.resource_types, m.resource_seq
+</select>
+
+<select id="userDbResourceData" resultClass="java.lang.String" parameterClass="com.hangum.tadpole.sql.dao.ResourceManagerDAO">
+	SELECT datas FROM user_db_resource_data
+	WHERE
+		user_db_resource_seq = #resource_seq#
+	order by seq
+</select>
+
 <select id="userDbResource" resultClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource
 	WHERE

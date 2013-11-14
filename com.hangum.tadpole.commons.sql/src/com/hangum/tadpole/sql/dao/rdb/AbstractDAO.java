@@ -14,10 +14,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
 
-@Retention(RetentionPolicy.RUNTIME)
-@interface FieldNameAnnotationClass {
-	String fieldKey();
-}
 
 /**
  * 
@@ -42,7 +38,10 @@ public abstract class AbstractDAO {
 				FieldNameAnnotationClass fieldAnnotation = method.getAnnotation(FieldNameAnnotationClass.class);
 				try {
 					if (columnName.toLowerCase().equals(fieldAnnotation.fieldKey().toLowerCase())) {
-						return (String) method.invoke(this, null);
+						Object result = method.invoke(this, null);
+						if (result!=null){
+							return String.valueOf(result);
+						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
