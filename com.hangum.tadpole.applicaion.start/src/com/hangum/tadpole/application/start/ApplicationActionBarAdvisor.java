@@ -27,6 +27,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
+import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
@@ -57,6 +58,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction userPermissionAction;
     /** executed sql */
     private IAction executedSQLAction;
+    
+    private IAction resourceManageAction;
     
     private IAction preferenceAction;
     private IAction aboutAction;
@@ -92,6 +95,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	executedSQLAction = new ExecutedSQLAction(window);
     	register(executedSQLAction);
+    	
+    	resourceManageAction = new ResourceManagerAction(window);
+    	register(resourceManageAction);
 
         exitAction = new ExitAction(window);
         register(exitAction);
@@ -170,6 +176,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         	toolbar.add(executedSQLAction);
             toolbar.add(new Separator());
         }
+        
+        toolbar.add(resourceManageAction);
+        toolbar.add(new Separator());
         
         toolbar.add(preferenceAction);
         toolbar.add(new Separator());

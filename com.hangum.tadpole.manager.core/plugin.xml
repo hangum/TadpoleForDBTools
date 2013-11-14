@@ -17,6 +17,12 @@
             id="com.hangum.tadpole.manager.core.editor.manager.executed_sql"
             name="실행한 쿼리">
       </editor>
+      <editor
+            class="com.hangum.tadpole.manager.core.editor.resource.ResourceManageEditor"
+            default="false"
+            id="com.hangum.tadpole.manager.core.editor.resource.manager"
+            name="Resource Manager">
+      </editor>
    </extension>
 
 </plugin>
