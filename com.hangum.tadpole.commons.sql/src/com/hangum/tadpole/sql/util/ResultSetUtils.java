@@ -64,7 +64,7 @@ public class ResultSetUtils {
 						tmpRow.put(i, obj == null?"":obj);
 					}else {
 						tmpRow.put(i, obj);					
-						logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
+//						logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
 					}
 				} catch(Exception e) {
 					logger.error("ResutSet fetch error", e); //$NON-NLS-1$

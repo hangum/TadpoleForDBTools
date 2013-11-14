@@ -61,7 +61,7 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static boolean isStatement(String strSQL) {
-		boolean isStatement = true;
+		boolean isStatement = false;
 		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
 			return true;
 		} else {
@@ -72,8 +72,6 @@ public class SQLUtil {
 				if(statement instanceof Select) return true;
 			} catch(Exception e) {
 				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]", e);
-				
-				return false;
 			}
 		}
 		

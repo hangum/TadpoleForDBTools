@@ -449,7 +449,11 @@ public class MainEditor extends EditorExtension {
 		
 		Composite compositeQueryResult = new Composite(tabFolderResult, SWT.NONE);
 		tbtmResult.setControl(compositeQueryResult);
-		compositeQueryResult.setLayout(new GridLayout(2, false));
+		
+		GridLayout gl_compositeQueryResultBtn = new GridLayout(2, false);
+		gl_compositeQueryResultBtn.marginWidth = 1;
+		gl_compositeQueryResultBtn.marginHeight = 0;
+		compositeQueryResult.setLayout(gl_compositeQueryResultBtn);
 		
 		Label lblFilter = new Label(compositeQueryResult, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -571,7 +575,7 @@ public class MainEditor extends EditorExtension {
 		Composite compositeBtn = new Composite(compositeQueryResult, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		GridLayout gl_compositeBtn = new GridLayout(5, false);
-		gl_compositeBtn.marginWidth = 3;
+		gl_compositeBtn.marginWidth = 1;
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
 		
@@ -638,7 +642,7 @@ public class MainEditor extends EditorExtension {
 		tbtmNewItem.setControl(compositeSQLHistory);
 		GridLayout gl_compositeSQLHistory = new GridLayout(1, false);
 		gl_compositeSQLHistory.marginHeight = 0;
-		gl_compositeSQLHistory.marginWidth = 0;
+		gl_compositeSQLHistory.marginWidth = 1;
 		gl_compositeSQLHistory.marginBottom = 0;
 		compositeSQLHistory.setLayout(gl_compositeSQLHistory);
 		
@@ -674,7 +678,10 @@ public class MainEditor extends EditorExtension {
 		
 		Composite compositeRecallBtn = new Composite(compositeSQLHistory, SWT.NONE);
 		compositeRecallBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeRecallBtn.setLayout(new GridLayout(8, false));
+		GridLayout gl_compositeRecallBtn = new GridLayout(8, false);
+		gl_compositeRecallBtn.marginWidth = 1;
+		gl_compositeRecallBtn.marginHeight = 0;
+		compositeRecallBtn.setLayout(gl_compositeRecallBtn);
 		
 		final Button btnExportHistory = new Button(compositeRecallBtn, SWT.NONE);
 		btnExportHistory.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -767,6 +774,7 @@ public class MainEditor extends EditorExtension {
 		Composite compositeMessage = new Composite(tabFolderResult, SWT.NONE);
 		tbtmMessage.setControl(compositeMessage);
 		GridLayout gl_compositeMessage = new GridLayout(1, false);
+		gl_compositeMessage.marginWidth = 1;
 		gl_compositeMessage.marginHeight = 0;
 		compositeMessage.setLayout(gl_compositeMessage);
 		
@@ -804,7 +812,11 @@ public class MainEditor extends EditorExtension {
 		
 		Composite compositeMessageSub = new Composite(compositeMessage, SWT.NONE);
 		compositeMessageSub.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeMessageSub.setLayout(new GridLayout(3, false));
+		
+		GridLayout gl_compositeMessageSubBtn = new GridLayout(3, false);
+		gl_compositeMessageSubBtn.marginWidth = 1;
+		gl_compositeMessageSubBtn.marginHeight = 0;
+		compositeMessageSub.setLayout(gl_compositeMessageSubBtn);
 		
 		Button btnExportMessage = new Button(compositeMessageSub, SWT.NONE);
 		btnExportMessage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
