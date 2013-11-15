@@ -34,12 +34,12 @@ import com.hangum.tadpole.mongodb.model.Table;
  * DB edit part
  * 
  * @author hangum
- *
+ * 
  */
-public class DBEditPart extends AbstractGraphicalEditPart implements LayerConstants  {
+public class DBEditPart extends AbstractGraphicalEditPart implements LayerConstants {
 	private static final Logger logger = Logger.getLogger(DBEditPart.class);
-	private  DBAdapter adapter;
-	
+	private DBAdapter adapter;
+
 	public DBEditPart() {
 		super();
 		adapter = new DBAdapter();
@@ -50,18 +50,18 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		IFigure figure = new DBFigure();
 		return figure;
 	}
-	
+
 	@Override
 	protected void refreshVisuals() {
-		DBFigure figure = (DBFigure)getFigure();
-		DB model = (DB)getModel();
-		
+		DBFigure figure = (DBFigure) getFigure();
+		DB model = (DB) getModel();
+
 		figure.setLabelDBType(model.getDbType());
 		figure.setLabelID(model.getId());
 		figure.setLabelURL(model.getUrl());
-		
+
 		// connection router 조절
-		ConnectionLayer cLayer = (ConnectionLayer)getLayer(CONNECTION_LAYER);
+		ConnectionLayer cLayer = (ConnectionLayer) getLayer(CONNECTION_LAYER);
 		cLayer.setForegroundColor(ColorConstants.lightGray);
 		cLayer.setConnectionRouter(new ShortestPathConnectionRouter(getFigure()));
 	}
@@ -75,48 +75,48 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 	protected List<Table> getModelChildren() {
 		List<Table> retVal = new ArrayList<Table>();
 
-		DB db = (DB)getModel();
+		DB db = (DB) getModel();
 		retVal.addAll(db.getTables());
 
 		return retVal;
 	}
-	
+
 	@Override
 	public void activate() {
-		if(!isActive()) {
-			((DB)getModel()).eAdapters().add(adapter);
+		if (!isActive()) {
+			((DB) getModel()).eAdapters().add(adapter);
 		}
 		super.activate();
 	}
-	
+
 	@Override
 	public void deactivate() {
-		if(isActive()) {
-			((DB)getModel()).eAdapters().remove(adapter);
+		if (isActive()) {
+			((DB) getModel()).eAdapters().remove(adapter);
 		}
 		super.deactivate();
 	}
-	
+
 	/**
 	 * db event adapter
 	 * 
 	 * @author hangum
-	 *
+	 * 
 	 */
-	public class DBAdapter implements Adapter {		
+	public class DBAdapter implements Adapter {
 
 		@Override
 		public void notifyChanged(Notification notification) {
-//			DB db = (DB) getModel();
-//			logger.debug("\t ######################## [DB] " + db.getSid());
-			
+			// DB db = (DB) getModel();
+			// logger.debug("\t ######################## [DB] " + db.getSid());
+
 			refreshVisuals();
 			refreshChildren();
 		}
 
 		@Override
 		public Notifier getTarget() {
-			return (DB)getModel();
+			return (DB) getModel();
 		}
 
 		@Override
@@ -126,6 +126,6 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		@Override
 		public boolean isAdapterForType(Object type) {
 			return type.equals(DB.class);
-		}		
-	}	
+		}
+	}
 }

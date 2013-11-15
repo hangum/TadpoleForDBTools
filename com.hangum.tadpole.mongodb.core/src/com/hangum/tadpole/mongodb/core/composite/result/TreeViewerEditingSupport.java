@@ -27,7 +27,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * data direct editor
  * 
  * @author hangum
- *
+ * 
  */
 public class TreeViewerEditingSupport extends EditingSupport {
 	/**
@@ -53,62 +53,65 @@ public class TreeViewerEditingSupport extends EditingSupport {
 
 	@Override
 	protected boolean canEdit(Object element) {
-		MongodbTreeViewDTO dto = (MongodbTreeViewDTO)element;
-		if( "Array".equals(dto.getType()) || //$NON-NLS-1$
-			"Document".equals(dto.getType()) //$NON-NLS-1$
-		){
+		MongodbTreeViewDTO dto = (MongodbTreeViewDTO) element;
+		if ("Array".equals(dto.getType()) || //$NON-NLS-1$
+				"Document".equals(dto.getType()) //$NON-NLS-1$
+		) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	@Override
 	protected Object getValue(Object element) {
-		MongodbTreeViewDTO dto = (MongodbTreeViewDTO)element;
-		
+		MongodbTreeViewDTO dto = (MongodbTreeViewDTO) element;
+
 		return dto.getValue();
 	}
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		MongodbTreeViewDTO dto = (MongodbTreeViewDTO)element;
-		
+		MongodbTreeViewDTO dto = (MongodbTreeViewDTO) element;
+
 		// data 수정하자
-		if( dto.getValue().equals(value.toString()) ) return;
-		
+		if (dto.getValue().equals(value.toString()))
+			return;
+
 		try {
 			// 데이터가 올바른지 검사합니다.
 			MongoDBJavaStrToJavaObj.convStrToObj(dto.getType(), value.toString());
-			
+
 			// fully key를 검색합니다.
 			String fullyKey = findRealKey(dto, dto.getRealKey());
-			if(logger.isDebugEnabled())	logger.debug("====>[update][real key]======> " + fullyKey + "\t [value]" + value.toString());
-			
+			if (logger.isDebugEnabled())
+				logger.debug("====>[update][real key]======> " + fullyKey + "\t [value]" + value.toString());
+
 			MongoDBQuery.updateDocument(userDB, collectionName, dto.getDbObject(), fullyKey, value.toString());
-			
-		} catch(Exception e) {
-			MessageDialog.openError(null, Messages.TreeViewerEditingSupport_2, Messages.TreeViewerEditingSupport_3 +  dto.getType() + Messages.TreeViewerEditingSupport_4);
+
+		} catch (Exception e) {
+			MessageDialog.openError(null, Messages.TreeViewerEditingSupport_2, Messages.TreeViewerEditingSupport_3 + dto.getType()
+					+ Messages.TreeViewerEditingSupport_4);
 			return;
 		}
-		
+
 		dto.setValue(value.toString());
 		viewer.refresh();
 	}
-	
-	/** 
+
+	/**
 	 * real key path를 얻는다
 	 * 
-	 *  @param dto
-	 *  @param key
+	 * @param dto
+	 * @param key
 	 */
 	private String findRealKey(MongodbTreeViewDTO dto, String key) {
 		String retVal = "";
 		MongodbTreeViewDTO tmpDto = dto.getParent();
-//		logger.debug("[key]" + key + "[retVal]"+ retVal);
-		
-		if( tmpDto != null) {
-			if(tmpDto.getRealKey() != null) {
+		// logger.debug("[key]" + key + "[retVal]"+ retVal);
+
+		if (tmpDto != null) {
+			if (tmpDto.getRealKey() != null) {
 				retVal += findRealKey(tmpDto, tmpDto.getRealKey() + "." + key);
 			} else {
 				retVal = key;
@@ -116,7 +119,7 @@ public class TreeViewerEditingSupport extends EditingSupport {
 		} else {
 			retVal = key;
 		}
-		
+
 		return retVal;
 	}
 

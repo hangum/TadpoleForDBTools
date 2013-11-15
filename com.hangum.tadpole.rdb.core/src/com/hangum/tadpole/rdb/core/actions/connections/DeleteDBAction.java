@@ -38,7 +38,7 @@ import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
  * delete database action.
  * 
  * @author hangum
- *
+ * 
  */
 public class DeleteDBAction implements IViewActionDelegate {
 	/**
@@ -55,55 +55,59 @@ public class DeleteDBAction implements IViewActionDelegate {
 	@Override
 	public void run(IAction action) {
 
-		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
-		if(!MessageDialog.openConfirm(null, "Confirm", "[" + userDB.getDisplay_name() + "] " + Messages.DeleteDBAction_1)) return;  //$NON-NLS-1$
-		
+		final UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
+		if (!MessageDialog.openConfirm(null, "Confirm", "[" + userDB.getDisplay_name() + "] " + Messages.DeleteDBAction_1))return; //$NON-NLS-1$
+
 		// editor 삭제
-		MainEditorInput mei = new MainEditorInput(userDB);		
+		MainEditorInput mei = new MainEditorInput(userDB);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorReference[] editroRefreence = page.getEditorReferences();
 
 		String titleName = mei.getName();
 		for (IEditorReference iEditorReference : editroRefreence) {
-			if(iEditorReference.getTitle().indexOf(titleName) != -1) {
+			if (iEditorReference.getTitle().indexOf(titleName) != -1) {
 				page.closeEditor(iEditorReference.getEditor(false), true);
 			}
 		}
-		
+
 		// connection view를 초기화 합니다.
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+		final ManagerViewer managerView = (ManagerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				try { managerView.init(); } catch(Exception e) {}
+				try {
+					managerView.init();
+				} catch (Exception e) {
+				}
 			}
-		});	// end display
-		
+		}); // end display
+
 		// object view를 초기화합니다.
-		final ExplorerViewer explorerView = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
+		final ExplorerViewer explorerView = (ExplorerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				explorerView.initObjectHead(null);
 			}
-		});	// end display
-		
+		}); // end display
+
 		// realdb disconnect
 		try {
 			TadpoleSystem_UserDBQuery.removeUserDB(userDB.getSeq());
-			TadpoleSQLManager.removeInstance(userDB);			
-		} catch (Exception e) { 
-			logger.error("disconnection exception", e);			
-			
+			TadpoleSQLManager.removeInstance(userDB);
+		} catch (Exception e) {
+			logger.error("disconnection exception", e);
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
+
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		sel = (IStructuredSelection)selection;
+		sel = (IStructuredSelection) selection;
 	}
 
 	@Override

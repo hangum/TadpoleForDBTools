@@ -22,24 +22,24 @@ import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.Table;
 
 public class TableXYLayoutPolicy extends XYLayoutEditPolicy {
-	
+
 	@Override
 	protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
 		TableChangeConstraintCommand command = new TableChangeConstraintCommand();
-		command.setModel((Table)child.getModel());
-		command.setNewConstraint((Rectangle)constraint);
-		
+		command.setModel((Table) child.getModel());
+		command.setNewConstraint((Rectangle) constraint);
+
 		return command;
 	}
 
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		Command retVal = null;
-		if(request.getNewObjectType().equals(Table.class)) {
+		if (request.getNewObjectType().equals(Table.class)) {
 			TableCreateCommand command = new TableCreateCommand();
 			command.setLocation(request.getLocation());
-			command.setParent((DB)getHost().getModel());
-			command.setTable((Table)(request.getNewObject()));
+			command.setParent((DB) getHost().getModel());
+			command.setTable((Table) (request.getNewObject()));
 			retVal = command;
 		}
 		return retVal;

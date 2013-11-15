@@ -30,8 +30,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class DownloadServiceHandler implements ServiceHandler {
 	public static final String ID = "com.hangum.db.browser.rap.core.editors.main.internals.DownloadServiceHandler";
-	private static final Logger logger = Logger
-			.getLogger(DownloadServiceHandler.class);
+	private static final Logger logger = Logger.getLogger(DownloadServiceHandler.class);
 	private String name;
 	private String contentType = "";
 	private byte[] byteContent;

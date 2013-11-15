@@ -21,7 +21,7 @@ import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
  * tree view content provider
  * 
  * @author hangum
- *
+ * 
  */
 public class TreeMongoContentProvider implements ITreeContentProvider {
 
@@ -35,12 +35,12 @@ public class TreeMongoContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		return ((List<MongodbTreeViewDTO>)inputElement).toArray();
+		return ((List<MongodbTreeViewDTO>) inputElement).toArray();
 	}
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		return ((MongodbTreeViewDTO)parentElement).getChildren().toArray();
+		return ((MongodbTreeViewDTO) parentElement).getChildren().toArray();
 	}
 
 	@Override
@@ -50,9 +50,10 @@ public class TreeMongoContentProvider implements ITreeContentProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {
-		MongodbTreeViewDTO mongoTree = (MongodbTreeViewDTO)element;
-		if( mongoTree.getChildren().toArray().length > 0) return true;
+		MongodbTreeViewDTO mongoTree = (MongodbTreeViewDTO) element;
+		if (mongoTree.getChildren().toArray().length > 0)
+			return true;
 		return false;
 	}
-	
+
 }

@@ -12,35 +12,34 @@
  */
 package com.hangum.tadpole.rdb.model.impl;
 
-import com.hangum.tadpole.rdb.model.ERDInfo;
-import com.hangum.tadpole.rdb.model.RdbPackage;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import com.hangum.tadpole.rdb.model.ERDInfo;
+import com.hangum.tadpole.rdb.model.RdbPackage;
+
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>ERD Info</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>ERD Info</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.hangum.tadpole.rdb.model.impl.ERDInfoImpl#isAutoLayout <em>Auto Layout</em>}</li>
- *   <li>{@link com.hangum.tadpole.rdb.model.impl.ERDInfoImpl#getVersion <em>Version</em>}</li>
+ * <li>{@link com.hangum.tadpole.rdb.model.impl.ERDInfoImpl#isAutoLayout <em>
+ * Auto Layout</em>}</li>
+ * <li>{@link com.hangum.tadpole.rdb.model.impl.ERDInfoImpl#getVersion <em>
+ * Version</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	/**
-	 * The default value of the '{@link #isAutoLayout() <em>Auto Layout</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isAutoLayout() <em>Auto Layout</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isAutoLayout()
 	 * @generated
 	 * @ordered
@@ -48,9 +47,9 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	protected static final boolean AUTO_LAYOUT_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isAutoLayout() <em>Auto Layout</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #isAutoLayout() <em>Auto Layout</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isAutoLayout()
 	 * @generated
 	 * @ordered
@@ -58,9 +57,9 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	protected boolean autoLayout = AUTO_LAYOUT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getVersion() <em>Version</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getVersion()
 	 * @generated
 	 * @ordered
@@ -68,9 +67,9 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	protected static final String VERSION_EDEFAULT = "0.8.1(2012.04.13)";
 
 	/**
-	 * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getVersion() <em>Version</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getVersion()
 	 * @generated
 	 * @ordered
@@ -78,8 +77,8 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	protected String version = VERSION_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ERDInfoImpl() {
@@ -87,8 +86,8 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -97,8 +96,8 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isAutoLayout() {
@@ -106,8 +105,8 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setAutoLayout(boolean newAutoLayout) {
@@ -118,8 +117,8 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getVersion() {
@@ -127,8 +126,8 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setVersion(String newVersion) {
@@ -139,81 +138,82 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case RdbPackage.ERD_INFO__AUTO_LAYOUT:
-				return isAutoLayout();
-			case RdbPackage.ERD_INFO__VERSION:
-				return getVersion();
+		case RdbPackage.ERD_INFO__AUTO_LAYOUT:
+			return isAutoLayout();
+		case RdbPackage.ERD_INFO__VERSION:
+			return getVersion();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case RdbPackage.ERD_INFO__AUTO_LAYOUT:
-				setAutoLayout((Boolean)newValue);
-				return;
-			case RdbPackage.ERD_INFO__VERSION:
-				setVersion((String)newValue);
-				return;
+		case RdbPackage.ERD_INFO__AUTO_LAYOUT:
+			setAutoLayout((Boolean) newValue);
+			return;
+		case RdbPackage.ERD_INFO__VERSION:
+			setVersion((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case RdbPackage.ERD_INFO__AUTO_LAYOUT:
-				setAutoLayout(AUTO_LAYOUT_EDEFAULT);
-				return;
-			case RdbPackage.ERD_INFO__VERSION:
-				setVersion(VERSION_EDEFAULT);
-				return;
+		case RdbPackage.ERD_INFO__AUTO_LAYOUT:
+			setAutoLayout(AUTO_LAYOUT_EDEFAULT);
+			return;
+		case RdbPackage.ERD_INFO__VERSION:
+			setVersion(VERSION_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case RdbPackage.ERD_INFO__AUTO_LAYOUT:
-				return autoLayout != AUTO_LAYOUT_EDEFAULT;
-			case RdbPackage.ERD_INFO__VERSION:
-				return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
+		case RdbPackage.ERD_INFO__AUTO_LAYOUT:
+			return autoLayout != AUTO_LAYOUT_EDEFAULT;
+		case RdbPackage.ERD_INFO__VERSION:
+			return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (autoLayout: ");
@@ -224,4 +224,4 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 		return result.toString();
 	}
 
-} //ERDInfoImpl
+} // ERDInfoImpl

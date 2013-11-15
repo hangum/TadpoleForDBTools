@@ -28,33 +28,32 @@ import com.swtdesigner.ResourceManager;
  * 현재 선택된 디비의 릴레이션 화면을 오픈합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class OpenDBRelationAction extends Action implements ISelectionListener, IWorkbenchAction {
 	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.DBRelationOpenAction"; //$NON-NLS-1$
 	private IStructuredSelection iss;
-	
+
 	public OpenDBRelationAction(IWorkbenchWindow window) {
 		this.window = window;
-		
+
 		setId(ID);
 		setText(Messages.OpenDBRelationAction_1);
 		setToolTipText(Messages.OpenDBRelationAction_2);
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/erd.png"));
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/erd.png"));
 		setEnabled(false);
-		
+
 		window.getSelectionService().addPostSelectionListener(this);
 	}
-	
+
 	@Override
 	public void run() {
-		UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
-		
+		UserDBDAO userDB = (UserDBDAO) iss.getFirstElement();
+
 		RDBERDViewAction qea = new RDBERDViewAction();
 		qea.run(userDB);
 	}
-	
 
 	@Override
 	public void dispose() {
@@ -63,14 +62,16 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		IStructuredSelection sel = (IStructuredSelection)selection;
-		if(sel != null) {
-			if( sel.getFirstElement() instanceof UserDBDAO ) {
+		IStructuredSelection sel = (IStructuredSelection) selection;
+		if (sel != null) {
+			if (sel.getFirstElement() instanceof UserDBDAO) {
 				iss = sel;
-				
+
 				setEnabled(true);
-			} else setEnabled(false);
-		} else setEnabled(false);
+			} else
+				setEnabled(false);
+		} else
+			setEnabled(false);
 	}
 
 }

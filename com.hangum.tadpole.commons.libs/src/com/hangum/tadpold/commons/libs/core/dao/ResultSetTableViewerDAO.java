@@ -19,26 +19,23 @@ import java.util.Map;
  * java.sql.ResultSet을 TableViewer에 보여주기 위한 DAO.
  * 
  * @author hangum
- *
+ * 
  */
 public class ResultSetTableViewerDAO {
 
-	/** 
-	 * column 이름.
-	 *  <columnIndex, name>
+	/**
+	 * column 이름. <columnIndex, name>
 	 */
 	private Map<Integer, String> mapColumns = new HashMap<Integer, String>();
 	/**
-	 * column 정렬을 위한 index
-	 * 	<columnIndex, java.sql.Type>
+	 * column 정렬을 위한 index <columnIndex, java.sql.Type>
 	 */
 	private Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
 	/**
-	 * data
-	 * 	<columnIndex, data>
+	 * data <columnIndex, data>
 	 */
-	private List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer,Object>>();
-	
+	private List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer, Object>>();
+
 	/**
 	 * 
 	 * @param mapColumns
@@ -59,7 +56,8 @@ public class ResultSetTableViewerDAO {
 	}
 
 	/**
-	 * @param mapColumns the mapColumns to set
+	 * @param mapColumns
+	 *            the mapColumns to set
 	 */
 	public void setMapColumns(Map<Integer, String> mapColumns) {
 		this.mapColumns = mapColumns;
@@ -73,7 +71,8 @@ public class ResultSetTableViewerDAO {
 	}
 
 	/**
-	 * @param mapColumnType the mapColumnType to set
+	 * @param mapColumnType
+	 *            the mapColumnType to set
 	 */
 	public void setMapColumnType(Map<Integer, Integer> mapColumnType) {
 		this.mapColumnType = mapColumnType;
@@ -87,12 +86,11 @@ public class ResultSetTableViewerDAO {
 	}
 
 	/**
-	 * @param sourceDataList the sourceDataList to set
+	 * @param sourceDataList
+	 *            the sourceDataList to set
 	 */
 	public void setSourceDataList(List<Map<Integer, Object>> sourceDataList) {
 		this.sourceDataList = sourceDataList;
 	}
-	
-	
-	
+
 }

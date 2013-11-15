@@ -42,48 +42,52 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 	public GenerateSQLUpdateAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType, title);
 	}
-	
+
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		StringBuffer sbSQL = new StringBuffer();
 		try {
-			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
-			
+			TableDAO tableDAO = (TableDAO) selection.getFirstElement();
+
 			Map<String, String> parameter = new HashMap<String, String>();
 			parameter.put("db", userDB.getDb());
 			parameter.put("table", tableDAO.getName());
-			
+
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-			
+
 			sbSQL.append(" UPDATE " + tableDAO.getName() + PublicTadpoleDefine.LINE_SEPARATOR + " SET "); //$NON-NLS-1$ //$NON-NLS-2$
-			for (int i=0; i<showTableColumns.size(); i++) {
+			for (int i = 0; i < showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				sbSQL.append(dao.getField());
-				
-				// 마지막 컬럼에는 ,를 않넣어주어야하니까 
-				if(i < (showTableColumns.size()-1)) sbSQL.append("= ?,  ");  //$NON-NLS-1$
-				else sbSQL.append("=? "); //$NON-NLS-1$
+
+				// 마지막 컬럼에는 ,를 않넣어주어야하니까
+				if (i < (showTableColumns.size() - 1))
+					sbSQL.append("= ?,  "); //$NON-NLS-1$
+				else
+					sbSQL.append("=? "); //$NON-NLS-1$
 			}
 
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 			int cnt = 0;
-			for (int i=0; i<showTableColumns.size(); i++) {
+			for (int i = 0; i < showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
-				if(PublicTadpoleDefine.isKEY(dao.getKey())) {
-					if(cnt == 0) sbSQL.append("\t" + dao.getField() + " = ? " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
-					else sbSQL.append("\tAND " + dao.getField() + " = ? "); //$NON-NLS-1$ //$NON-NLS-2$
+				if (PublicTadpoleDefine.isKEY(dao.getKey())) {
+					if (cnt == 0)
+						sbSQL.append("\t" + dao.getField() + " = ? " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
+					else
+						sbSQL.append("\tAND " + dao.getField() + " = ? "); //$NON-NLS-1$ //$NON-NLS-2$
 					cnt++;
-				}				
+				}
 			}
 			sbSQL.append(" ; "); //$NON-NLS-1$
-			
+
 			//
-//			QueryEditorAction qea = new QueryEditorAction();
+			// QueryEditorAction qea = new QueryEditorAction();
 			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("Generate SQL Statement Error", e); //$NON-NLS-1$
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLUpdateAction_13, errStatus); //$NON-NLS-1$
 		}

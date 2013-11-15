@@ -31,12 +31,12 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnect
  * Others connection info
  * 
  * @author hangum
- *
+ * 
  */
 public class OthersConnectionRDBGroup extends Group {
-	
+
 	private OthersConnectionInfoDAO otherConnectionDAO = new OthersConnectionInfoDAO();
-	
+
 	/** read only connection */
 	private Button btnReadOnlyConnection;
 	/** auto commit */
@@ -49,6 +49,7 @@ public class OthersConnectionRDBGroup extends Group {
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -61,24 +62,24 @@ public class OthersConnectionRDBGroup extends Group {
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
-		
+
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnReadOnlyConnection.setText(Messages.OthersConnectionRDBGroup_1);
-		
+
 		btnAutoCommit = new Button(this, SWT.CHECK);
 		btnAutoCommit.setSelection(true);
 		btnAutoCommit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnAutoCommit.setText(Messages.OthersConnectionRDBGroup_2);
-		
+
 		Button btnTableFilters = new Button(this, SWT.NONE);
 		btnTableFilters.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				if(Dialog.OK == dialog.open()) {
+				if (Dialog.OK == dialog.open()) {
 					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
-					
+
 					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
 					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
 					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
@@ -86,7 +87,7 @@ public class OthersConnectionRDBGroup extends Group {
 			}
 		});
 		btnTableFilters.setText(Messages.OthersConnectionRDBGroup_3);
-		
+
 		btnTunneling = new Button(this, SWT.NONE);
 		btnTunneling.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -97,20 +98,20 @@ public class OthersConnectionRDBGroup extends Group {
 		});
 		btnTunneling.setText(Messages.OthersConnectionRDBGroup_4);
 		btnTunneling.setEnabled(false);
-		
+
 		btnProfiler = new Button(this, SWT.CHECK);
 		btnProfiler.setText(Messages.OthersConnectionRDBGroup_5);
 		btnProfiler.setSelection(true);
-		
+
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
 		btnShowTables.setText(Messages.OthersConnectionRDBGroup_btnShowTables_text);
-		
+
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBGroup_6);
 	}
-	
+
 	/**
 	 * other db connection info
 	 * 
@@ -120,13 +121,13 @@ public class OthersConnectionRDBGroup extends Group {
 		otherConnectionDAO.setReadOnlyConnection(getBtnReadOnlyConnection());
 		otherConnectionDAO.setAutoCommit(getBtnAutoCommit());
 		otherConnectionDAO.setShowTables(getBtnShowTables());
-		
+
 		otherConnectionDAO.setProfiling(getBtnProfiler());
 		otherConnectionDAO.setDMLStatement(getBtnExecuteQuestionDml());
-		
+
 		return otherConnectionDAO;
 	}
-	
+
 	/**
 	 * @return the btnReadOnlyConnection
 	 */
@@ -151,7 +152,7 @@ public class OthersConnectionRDBGroup extends Group {
 	public boolean getBtnExecuteQuestionDml() {
 		return btnExecuteQuestionDml.getSelection();
 	}
-	
+
 	public boolean getBtnProfiler() {
 		return btnProfiler.getSelection();
 	}
@@ -162,7 +163,7 @@ public class OthersConnectionRDBGroup extends Group {
 	public void setBtnShowTables(boolean btnShowTables) {
 		this.btnShowTables.setSelection(btnShowTables);
 	}
-	
+
 	/**
 	 * 
 	 * @return

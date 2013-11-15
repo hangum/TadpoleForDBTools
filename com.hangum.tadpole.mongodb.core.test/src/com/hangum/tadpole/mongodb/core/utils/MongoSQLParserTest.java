@@ -36,7 +36,7 @@
 //		columnInfo.put("age", new TableColumnDAO("age", "java.lang.Integer", "10"));
 //		columnInfo.put("name", new TableColumnDAO("name", "java.lang.String", ""));
 //		columnInfo.put("mail", new TableColumnDAO("mail", "java.lang.Boolean", "true"));
-//		
+//		 
 //		
 //		return columnInfo;
 //	}
@@ -155,4 +155,4 @@
 //		}
 //	}
 //
-//}
+// }

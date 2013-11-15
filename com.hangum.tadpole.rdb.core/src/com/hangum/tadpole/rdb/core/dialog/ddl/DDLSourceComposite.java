@@ -14,24 +14,24 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
-
-import org.eclipse.swt.widgets.Label;
 
 /**
  * Table summary composite
  * 
  * @author hangum
- *
+ * 
  */
 public class DDLSourceComposite extends Composite {
-	
+
 	private Label labelTable;
 	private JsonTadpoleEditor ddlSource;
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -43,19 +43,19 @@ public class DDLSourceComposite extends Composite {
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
-		
+
 		Composite compositeBasic = new Composite(this, SWT.NONE);
 		compositeBasic.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBasic.setLayout(new GridLayout(1, false));
-		
+
 		labelTable = new Label(compositeBasic, SWT.NONE);
 		labelTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		labelTable.setText(tableName);
-		
+
 		ddlSource = new JsonTadpoleEditor(compositeBasic, SWT.BORDER, initDDL, "");
 		ddlSource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 	}
-	
+
 	/**
 	 * set ddl
 	 * 
@@ -65,7 +65,7 @@ public class DDLSourceComposite extends Composite {
 	public void setDdlSource(String strDdl) {
 		ddlSource.setText(strDdl);
 	}
-	
+
 	/**
 	 * get ddl
 	 * 

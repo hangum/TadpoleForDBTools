@@ -17,12 +17,12 @@ import org.eclipse.rap.rwt.client.service.UrlLauncher;
  * help utils
  * 
  * @author hangum
- *
+ * 
  */
 public class HelpUtils {
 
 	public static void showHelp(String strUrl) {
-		UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+		UrlLauncher launcher = RWT.getClient().getService(UrlLauncher.class);
 		launcher.openURL(strUrl);
 	}
 }

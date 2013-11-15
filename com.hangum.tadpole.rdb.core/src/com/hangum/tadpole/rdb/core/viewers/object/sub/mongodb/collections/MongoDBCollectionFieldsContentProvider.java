@@ -21,7 +21,7 @@ import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
  * mongodb collection field content provider
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBCollectionFieldsContentProvider implements ITreeContentProvider {
 
@@ -35,17 +35,17 @@ public class MongoDBCollectionFieldsContentProvider implements ITreeContentProvi
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		List listDao = (List)inputElement;
+		List listDao = (List) inputElement;
 		return listDao.toArray();
 	}
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		CollectionFieldDAO dao = (CollectionFieldDAO)parentElement;
-		if(!dao.getChildren().isEmpty()) {
+		CollectionFieldDAO dao = (CollectionFieldDAO) parentElement;
+		if (!dao.getChildren().isEmpty()) {
 			return dao.getChildren().toArray();
 		}
-		
+
 		return null;
 	}
 
@@ -56,7 +56,7 @@ public class MongoDBCollectionFieldsContentProvider implements ITreeContentProvi
 
 	@Override
 	public boolean hasChildren(Object element) {
-		CollectionFieldDAO dao = (CollectionFieldDAO)element;
-		return dao.getChildren().isEmpty()?false:true;
+		CollectionFieldDAO dao = (CollectionFieldDAO) element;
+		return dao.getChildren().isEmpty() ? false : true;
 	}
 }

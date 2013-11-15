@@ -23,7 +23,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * object select되어야 일을 하는 action
  * 
  * @author hangum
- *
+ * 
  */
 public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
 
@@ -33,19 +33,19 @@ public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		
-		if(ExplorerViewer.ID.equals(part.getSite().getId())) {
-			this.selection = (IStructuredSelection)selection;
-			
+
+		if (ExplorerViewer.ID.equals(part.getSite().getId())) {
+			this.selection = (IStructuredSelection) selection;
+
 			UserDBDAO userDB = this.userDB;
-			if(userDB != null) {
-				if(!this.selection.isEmpty()) {
+			if (userDB != null) {
+				if (!this.selection.isEmpty()) {
 					setEnabled(true);
 					return;
 				}
 			}
 		}
-		
+
 		setEnabled(false);
 	}
 }

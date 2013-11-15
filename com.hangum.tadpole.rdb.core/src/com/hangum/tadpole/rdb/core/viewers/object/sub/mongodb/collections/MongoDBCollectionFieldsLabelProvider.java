@@ -23,19 +23,19 @@ import com.swtdesigner.ResourceManager;
  * Mongodb collection field label provide
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBCollectionFieldsLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		CollectionFieldDAO dao = (CollectionFieldDAO) element;
-		
-		if(columnIndex == 0) {
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(dao.getKey())) {
+
+		if (columnIndex == 0) {
+			if (PublicTadpoleDefine.YES_NO.YES.toString().equals(dao.getKey())) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/index_column.png"); //$NON-NLS-1$
 			}
-			
+
 			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/column.png"); //$NON-NLS-1$
 		}
 		return null;
@@ -44,11 +44,14 @@ public class MongoDBCollectionFieldsLabelProvider extends LabelProvider implemen
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		CollectionFieldDAO dao = (CollectionFieldDAO) element;
-		
-		switch(columnIndex) {
-		case 0: return dao.getField();
-		case 1: return dao.getType();
-		case 2: return dao.getKey();
+
+		switch (columnIndex) {
+		case 0:
+			return dao.getField();
+		case 1:
+			return dao.getType();
+		case 2:
+			return dao.getKey();
 		}
 		return null;
 	}

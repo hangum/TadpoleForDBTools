@@ -31,9 +31,9 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Show db information action
  * 
  * @author hangum
- *
+ * 
  */
-public class ShowDBInformationAction extends AbstractQueryAction{
+public class ShowDBInformationAction extends AbstractQueryAction {
 	/**
 	 * Logger for this class
 	 */
@@ -42,27 +42,27 @@ public class ShowDBInformationAction extends AbstractQueryAction{
 	public ShowDBInformationAction() {
 		super();
 	}
-	
+
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+		if (DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
 			try {
 				RDBDBInfoEditorInput editorInput = new RDBDBInfoEditorInput(userDB);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, RDBDBInfosEditor.ID);
 			} catch (PartInitException e) {
 				logger.error("open DB Information editor", e); //$NON-NLS-1$
-				
+
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
+		} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
 			MongoDBInfosInput mongoInput = new MongoDBInfosInput(userDB, MongoDBInfosEditor.PAGES.INSTANCE_INFORMATION);
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mongoInput, MongoDBInfosEditor.ID);
 			} catch (PartInitException e) {
 				logger.error("open editor", e); //$NON-NLS-1$
-				
+
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}

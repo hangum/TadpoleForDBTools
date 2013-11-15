@@ -24,13 +24,13 @@ public class RelationBendpointEditPolicy extends BendpointEditPolicy {
 	@Override
 	protected Command getCreateBendpointCommand(BendpointRequest request) {
 		RelationCreateBendpointCommand command = new RelationCreateBendpointCommand();
-		
+
 		Point p = request.getLocation();
-		
-		command.setRelation( (Relation)request.getSource().getModel());
+
+		command.setRelation((Relation) request.getSource().getModel());
 		command.setLocation(p);
 		command.setIndex(request.getIndex());
-		
+
 		return command;
 	}
 
@@ -42,13 +42,13 @@ public class RelationBendpointEditPolicy extends BendpointEditPolicy {
 	@Override
 	protected Command getMoveBendpointCommand(BendpointRequest request) {
 		RelationMoveBendpointCommand command = new RelationMoveBendpointCommand();
-		
+
 		Point p = request.getLocation();
-		
-		command.setRelation( (Relation)request.getSource().getModel());
+
+		command.setRelation((Relation) request.getSource().getModel());
 		command.setLocation(p);
 		command.setIndex(request.getIndex());
-		
+
 		return command;
 	}
 

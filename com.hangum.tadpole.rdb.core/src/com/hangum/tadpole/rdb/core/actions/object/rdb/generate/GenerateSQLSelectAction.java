@@ -24,10 +24,10 @@ import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
- * generate sql statement     
+ * generate sql statement
  * 
  * @author hangum
- *
+ * 
  */
 public class GenerateSQLSelectAction extends AbstractObjectSelectAction {
 	/**
@@ -35,19 +35,19 @@ public class GenerateSQLSelectAction extends AbstractObjectSelectAction {
 	 */
 	private static final Logger logger = Logger.getLogger(GenerateSQLSelectAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateSQLSelectAction"; //$NON-NLS-1$
-	
+
 	public GenerateSQLSelectAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
-	
+
 		setId(ID + actionType.toString());
 		setText(Messages.GenerateSQLSelectAction_1 + title);
-		
+
 		window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
+		TableDAO tableDAO = (TableDAO) selection.getFirstElement();
 		FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
 	}
 }

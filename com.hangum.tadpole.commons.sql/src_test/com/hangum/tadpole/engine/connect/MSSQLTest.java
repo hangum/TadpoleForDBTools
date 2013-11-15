@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.connect;
 
-
 public class MSSQLTest {
 	private java.sql.Connection con = null;
 	private final String url = "jdbc:jtds:sqlserver://";
@@ -19,17 +18,23 @@ public class MSSQLTest {
 	private final String databaseName = "testdb";
 	private final String userName = "sa";
 	private final String password = "1234";
+
 	// Informs the driver to use server a side-cursor,
 	// which permits more than one active statement
 	// on a connection.
-//	private final String selectMethod = "cursor";
+	// private final String selectMethod = "cursor";
 
 	// Constructor
 	public MSSQLTest() {
 	}
 
 	private String getConnectionUrl() {
-		return url + serverName + ":" + portNumber + "/"+ databaseName;// + ";selectMethod=" + selectMethod + Define.SQL_DILIMITER;
+		return url + serverName + ":" + portNumber + "/" + databaseName;// +
+																		// ";selectMethod="
+																		// +
+																		// selectMethod
+																		// +
+																		// Define.SQL_DILIMITER;
 	}
 
 	private java.sql.Connection getConnection() {
@@ -40,8 +45,7 @@ public class MSSQLTest {
 				System.out.println("Connection Successful!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Error Trace in getConnection() : "
-					+ e.getMessage());
+			System.out.println("Error Trace in getConnection() : " + e.getMessage());
 		}
 		return con;
 	}
@@ -59,15 +63,12 @@ public class MSSQLTest {
 				dm = con.getMetaData();
 				System.out.println("Driver Information");
 				System.out.println("\tDriver Name: " + dm.getDriverName());
-				System.out
-						.println("\tDriver Version: " + dm.getDriverVersion());
+				System.out.println("\tDriver Version: " + dm.getDriverVersion());
 				System.out.println("\nDatabase Information ");
-				System.out.println("\tDatabase Name: "
-						+ dm.getDatabaseProductName());
-				System.out.println("\tDatabase Version: "
-						+ dm.getDatabaseProductVersion());
+				System.out.println("\tDatabase Name: " + dm.getDatabaseProductName());
+				System.out.println("\tDatabase Version: " + dm.getDatabaseProductVersion());
 				System.out.println("Avalilable Catalogs ");
-				
+
 				rs = dm.getCatalogs();
 				while (rs.next()) {
 					System.out.println("\tcatalog: " + rs.getString(1));

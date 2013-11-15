@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.test;
 
-import com.hangum.tadpole.commons.util.JSONUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
@@ -34,10 +33,10 @@ public class MongoTestServerStatus {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
-		
+
 		DBObject queryObj = new BasicDBObject("serverStatus", 0);
 		CommandResult cr = db.command(queryObj);
-		
+
 		String strHost = cr.getString("host");
 		String version = cr.getString("version");
 		String process = cr.getString("process");
@@ -46,7 +45,7 @@ public class MongoTestServerStatus {
 		String uptimeMillis = cr.getString("uptimeMillis");
 		String uptimeEstimate = cr.getString("uptimeEstimate");
 		String localTime = cr.getString("localTime");
-		
+
 		System.out.println("[strHost]\t " + strHost);
 		System.out.println("[version]\t " + version);
 
@@ -56,12 +55,12 @@ public class MongoTestServerStatus {
 		System.out.println("[uptimeMillis]\t " + uptimeMillis);
 		System.out.println("[uptimeEstimate]\t " + uptimeEstimate);
 		System.out.println("[localTime]\t " + localTime);
-		
-			
-		System.out.println("[ok]" + cr.ok() );
-		if(!cr.ok()) System.out.println("[Exception ]" + cr.getException().toString());
-		System.out.println("[toString]" + cr.toString() );
-		System.out.println("[size]" + cr.size() );		
+
+		System.out.println("[ok]" + cr.ok());
+		if (!cr.ok())
+			System.out.println("[Exception ]" + cr.getException().toString());
+		System.out.println("[toString]" + cr.toString());
+		System.out.println("[size]" + cr.size());
 
 		mongo.close();
 	}

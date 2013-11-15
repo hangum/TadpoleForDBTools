@@ -35,7 +35,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * 
  * @since 2013.04.01
  * @author hangum
- *
+ * 
  */
 public class SessionListAction implements IViewActionDelegate {
 	/**
@@ -53,20 +53,17 @@ public class SessionListAction implements IViewActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
-		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT  ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT 
-		) {
-			
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
+		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT
+				|| DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT) {
+
 			try {
 				SessionListEditorInput sleInput = new SessionListEditorInput(userDB);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, SessionListEditor.ID);
 			} catch (PartInitException e) {
 				logger.error("open session list", e); //$NON-NLS-1$
-				
+
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
@@ -77,7 +74,7 @@ public class SessionListAction implements IViewActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		sel = (IStructuredSelection)selection;
+		sel = (IStructuredSelection) selection;
 	}
 
 	@Override

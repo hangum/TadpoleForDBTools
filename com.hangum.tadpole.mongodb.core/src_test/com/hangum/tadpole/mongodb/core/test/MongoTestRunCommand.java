@@ -10,10 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.test;
 
-import java.awt.color.CMMException;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -27,20 +23,21 @@ public class MongoTestRunCommand {
 	 */
 	public static void main(String[] args) throws Exception {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
-		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, 27017);//ConAndAuthentication.port);
+		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, 27017);// ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
-		
+
 		DBCollection dbColl = db.getCollection("user");
-		
+
 		DBObject cmdObj = (DBObject) JSON.parse("{language  : 'en_us'}, {seq: true, email:true}, {seq, -1}");
 		DBCursor dbCur = dbColl.find(cmdObj);
-		for(DBObject obj : dbCur.toArray()) {
+		for (DBObject obj : dbCur.toArray()) {
 			System.out.println(obj);
 		}
-		
-//		CommandResult cr = db.command(cmdObj);//new BasicDBObject("create", "hyunjong"));
-//		System.out.println( cr.toString() );		
-		
+
+		// CommandResult cr = db.command(cmdObj);//new BasicDBObject("create",
+		// "hyunjong"));
+		// System.out.println( cr.toString() );
+
 		mongo.close();
 	}
 }

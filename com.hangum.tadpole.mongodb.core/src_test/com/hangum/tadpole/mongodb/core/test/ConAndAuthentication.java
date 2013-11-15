@@ -18,7 +18,6 @@ import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -107,39 +106,39 @@ public class ConAndAuthentication {
 		List<DBObject> listIndex = coll.getIndexInfo();
 		List<CollectionFieldDAO> columnInfo = MongoDBTableColumn.tableColumnInfo(listIndex, db.getCollection(collection).findOne());
 		for (CollectionFieldDAO collectionFieldDAO : columnInfo) {
-			System.out.println("[field]" + collectionFieldDAO.getField() );
-			
-			if(!collectionFieldDAO.getChildren().isEmpty()) {
+			System.out.println("[field]" + collectionFieldDAO.getField());
+
+			if (!collectionFieldDAO.getChildren().isEmpty()) {
 				List<CollectionFieldDAO> childColl = collectionFieldDAO.getChildren();
 				for (CollectionFieldDAO collectionFieldDAO2 : childColl) {
 					System.out.println("\t [child field]" + collectionFieldDAO2.getField());
-					
-					if(!collectionFieldDAO2.getChildren().isEmpty()) {
+
+					if (!collectionFieldDAO2.getChildren().isEmpty()) {
 						List<CollectionFieldDAO> childColl2 = collectionFieldDAO2.getChildren();
 						for (CollectionFieldDAO collectionFieldDAO3 : childColl2) {
-							System.out.println("\t\t [child field]" + collectionFieldDAO3.getField());	
+							System.out.println("\t\t [child field]" + collectionFieldDAO3.getField());
 						}
-						
-					}	
+
+					}
 				}
-				
+
 			}
 		}
 
-//		//
-//		StringBuffer sbJson = new StringBuffer();
-//
-//		DBCursor cursor = coll.find();
-//		while (cursor.hasNext()) {
-//			DBObject dbObj = cursor.next();
-//			String jsonData = dbObj.toString();
-//			System.out.println("[data] \t" + jsonData);
-//
-//			sbJson.append(jsonData);
-//		}
-//
-//		System.out
-//				.println("#####[fully text]#########################################################");
+		// //
+		// StringBuffer sbJson = new StringBuffer();
+		//
+		// DBCursor cursor = coll.find();
+		// while (cursor.hasNext()) {
+		// DBObject dbObj = cursor.next();
+		// String jsonData = dbObj.toString();
+		// System.out.println("[data] \t" + jsonData);
+		//
+		// sbJson.append(jsonData);
+		// }
+		//
+		// System.out
+		// .println("#####[fully text]#########################################################");
 
 		// System.out.println("\t\t ******[detail data][start]*******************************************");
 		// ObjectMapper om = new ObjectMapper();
@@ -161,8 +160,7 @@ public class ConAndAuthentication {
 		// e.printStackTrace();
 		// }
 
-		System.out
-				.println("\t\t ******[detail data][end]*******************************************");
+		System.out.println("\t\t ******[detail data][end]*******************************************");
 
 		return "";
 	}

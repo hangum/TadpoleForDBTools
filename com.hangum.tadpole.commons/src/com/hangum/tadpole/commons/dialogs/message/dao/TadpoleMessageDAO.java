@@ -16,10 +16,10 @@ import java.util.Date;
  * system message dao
  * 
  * @author hangum
- *
+ * 
  */
-public class TadpoleMessageDAO  {
-	
+public class TadpoleMessageDAO {
+
 	/** Start execute query time */
 	Date dateExecute;
 	/** sql text */
@@ -45,6 +45,5 @@ public class TadpoleMessageDAO  {
 	public void setStrMessage(String strMessage) {
 		this.strMessage = strMessage;
 	}
-	
-	
+
 }

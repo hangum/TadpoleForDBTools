@@ -37,44 +37,46 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  */
 public abstract class AbstractObjectAction extends Action implements ISelectionListener, IWorkbenchAction {
 
-	private IWorkbenchWindow window;				  
+	private IWorkbenchWindow window;
 	UserDBDAO userDB = null;
 	IStructuredSelection selection;
 
 	private PublicTadpoleDefine.DB_ACTION actionType;
-	
+
 	public AbstractObjectAction() {
 	}
-	
+
 	/**
 	 * 
 	 * @param window
-	 * @param actionType view의 작업 타입
+	 * @param actionType
+	 *            view의 작업 타입
 	 * @param userDB
 	 */
 	public AbstractObjectAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType) {
 		this.window = window;
 		this.actionType = actionType;
-		
-		setEnabled(false);//userDB != null);
+
+		setEnabled(false);// userDB != null);
 		window.getSelectionService().addSelectionListener(this);
 	}
-	
+
 	/**
 	 * explorer viewe
+	 * 
 	 * @return
 	 */
 	protected ExplorerViewer getExplorerView() {
 		try {
-			return (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
-		} catch(Exception e) {
+			return (ExplorerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
+		} catch (Exception e) {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * delete message
-	 *  
+	 * 
 	 * @param msgHead
 	 * @param e
 	 */
@@ -82,104 +84,113 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 		ExceptionDetailsErrorDialog.openError(null, "Error", msgHead + Messages.ObjectDeleteAction_25, errStatus); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * table 최신정보로 갱신
 	 */
 	protected void refreshTable() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshTable(true);		
+		if (ev != null)
+			ev.refreshTable(true);
 	}
-	
+
 	/**
 	 * View 최신정보로 갱신
 	 */
 	protected void refreshView() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshView(true);		
+		if (ev != null)
+			ev.refreshView(true);
 	}
-	
+
 	/**
 	 * Indexes 최신정보로 갱신
 	 */
 	protected void refreshIndexes() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshIndexes(true);		
+		if (ev != null)
+			ev.refreshIndexes(true);
 	}
-	
+
 	/**
 	 * Procedure 최신정보로 갱신
 	 */
 	protected void refreshProcedure() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshProcedure(true);		
+		if (ev != null)
+			ev.refreshProcedure(true);
 	}
-	
+
 	/**
 	 * Procedure 최신정보로 갱신
 	 */
 	protected void refreshPackage() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshPackage(true);		
+		if (ev != null)
+			ev.refreshPackage(true);
 	}
-	
+
 	/**
 	 * Function 최신정보로 갱신
 	 */
 	protected void refreshFunction() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshFunction(true);		
+		if (ev != null)
+			ev.refreshFunction(true);
 	}
-	
+
 	/**
 	 * Trigger 최신정보로 갱신
 	 */
 	protected void refreshTrigger() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshTrigger(true);		
+		if (ev != null)
+			ev.refreshTrigger(true);
 	}
-	
+
 	/**
 	 * mongodb javascript 최신정보로 갱신
 	 */
 	protected void refreshJS() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshJS(true);
+		if (ev != null)
+			ev.refreshJS(true);
 	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		
-		if(ExplorerViewer.ID.equals( part.getSite().getId() )) {
-			this.selection = (IStructuredSelection)selection;
-			
-			if(userDB != null) {
+
+		if (ExplorerViewer.ID.equals(part.getSite().getId())) {
+			this.selection = (IStructuredSelection) selection;
+
+			if (userDB != null) {
 				setEnabled(true);
 				return;
 			}
 		}
-		
+
 		setEnabled(false);
 	}
-	
+
 	@Override
 	public void run() {
 		if (null != this.selection) {
 			run(selection, userDB, actionType);
 		}
 	}
-	
+
 	/**
 	 * Convenience method for Deduplication.<br>
 	 * There is no need to check null. If selection is null, don't execute this
 	 * method.<br>
 	 * <br>
 	 * 
-	 * @param selection selection of ExplorerViewer
+	 * @param selection
+	 *            selection of ExplorerViewer
 	 * @param actionType
 	 */
 	abstract public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType);
-	
+
 	@Override
 	public void dispose() {
 		window.getSelectionService().removePostSelectionListener(this);
@@ -200,5 +211,5 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	public void setUserDB(UserDBDAO userDB) {
 		this.userDB = userDB;
 	}
-	
+
 }

@@ -38,19 +38,19 @@ public class MongoTestORStmt {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
-		
+
 		DBCollection myColl = db.getCollection("rental");
 		ArrayList<BasicDBObject> myList = new ArrayList<BasicDBObject>();
 		myList.add(new BasicDBObject("rental_id", new BasicDBObject("$lte", 5)));
 		myList.add(new BasicDBObject("rental_id", 2));
-		
+
 		BasicDBObject myOrQuery = new BasicDBObject("$or", myList);
-		
-		DBCursor myCursor = myColl.find(myOrQuery);		
+
+		DBCursor myCursor = myColl.find(myOrQuery);
 		while (myCursor.hasNext()) {
 			System.out.println(myCursor.next());
 		}
-		
+
 		mongo.close();
 	}
 

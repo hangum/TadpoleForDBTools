@@ -65,18 +65,18 @@ import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
  * 화면에서 사용자의 추가, 수정은 어드민, 매니저 권한을 가지 사용자 만 가능하다.
  * 
  * @author hangum
- *
+ * 
  */
 public class UserListComposite extends Composite {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(UserListComposite.class);
-	
+
 	/** toolbar button */
 	private ToolItem tltmModify;
 	private ToolItem tltmQuery;
-	
+
 	/** search text */
 	private Text textSearch;
 	private TreeViewer userListViewer;
@@ -85,6 +85,7 @@ public class UserListComposite extends Composite {
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -96,7 +97,7 @@ public class UserListComposite extends Composite {
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
-		
+
 		Composite composite = new Composite(this, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.verticalSpacing = 2;
@@ -105,7 +106,7 @@ public class UserListComposite extends Composite {
 		gl_composite.marginWidth = 2;
 		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Composite compositeHead = new Composite(composite, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeHead = new GridLayout(2, false);
@@ -114,10 +115,10 @@ public class UserListComposite extends Composite {
 		gl_compositeHead.marginHeight = 0;
 		gl_compositeHead.marginWidth = 0;
 		compositeHead.setLayout(gl_compositeHead);
-		
+
 		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		
+
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
 		tltmRefresh.setImage(ImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
@@ -127,10 +128,9 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmRefresh.setToolTipText("Refresh");
-	
-		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole()) ||
-				PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())
-		) {
+
+		if (PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
+				|| PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())) {
 			ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 			tltmAdd.setImage(ImageUtils.getAdd());
 			tltmAdd.addSelectionListener(new SelectionAdapter() {
@@ -140,7 +140,7 @@ public class UserListComposite extends Composite {
 				}
 			});
 			tltmAdd.setToolTipText("Add");
-		
+
 			tltmModify = new ToolItem(toolBar, SWT.NONE);
 			tltmModify.setImage(ImageUtils.getModify());
 			tltmModify.setEnabled(false);
@@ -152,7 +152,7 @@ public class UserListComposite extends Composite {
 			});
 			tltmModify.setToolTipText("Modify");
 		}
-		
+
 		tltmQuery = new ToolItem(toolBar, SWT.NONE);
 		tltmQuery.setImage(ImageUtils.getQueryHistory());
 		tltmQuery.addSelectionListener(new SelectionAdapter() {
@@ -163,11 +163,11 @@ public class UserListComposite extends Composite {
 		});
 		tltmQuery.setEnabled(false);
 		tltmQuery.setToolTipText("Query History");
-		
+
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSearch.setText("Search");
-		
+
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textSearch.addKeyListener(new KeyAdapter() {
@@ -176,7 +176,7 @@ public class UserListComposite extends Composite {
 				userListViewer.refresh();
 			}
 		});
-		
+
 		Composite compositeBody = new Composite(composite, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -185,7 +185,7 @@ public class UserListComposite extends Composite {
 		gl_compositeBody.marginHeight = 2;
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
-		
+
 		userListViewer = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		userListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
@@ -194,7 +194,8 @@ public class UserListComposite extends Composite {
 		});
 		userListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if(tltmModify != null) tltmModify.setEnabled(true);
+				if (tltmModify != null)
+					tltmModify.setEnabled(true);
 				tltmQuery.setEnabled(true);
 			}
 		});
@@ -202,95 +203,112 @@ public class UserListComposite extends Composite {
 		tree.setLinesVisible(true);
 		tree.setHeaderVisible(true);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		createColumn();
-		
+
 		userListViewer.setContentProvider(new UserContentProvider());
 		userListViewer.setLabelProvider(new UserLabelProvider());
-		
+
 		filter = new UserCompFilter();
-		userListViewer.addFilter(filter);;
-		
+		userListViewer.addFilter(filter);
+		;
+
 		initUI();
 	}
-	
+
 	/**
 	 * 사용자가 실행 했던 쿼리의 히스토리를 봅니다.
 	 */
 	private void viewQueryHistory() {
-		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
-		if(ss != null) {
-			 UserDAO userDAO = ((UserGroupAUserDAO)ss.getFirstElement());
-			
+		IStructuredSelection ss = (IStructuredSelection) userListViewer.getSelection();
+		if (ss != null) {
+			UserDAO userDAO = ((UserGroupAUserDAO) ss.getFirstElement());
+
 			try {
 				ExecutedSQLEditorInput esei = new ExecutedSQLEditorInput(userDAO);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, ExecutedSQLEditor.ID, false);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				logger.error("Query History open", e); //$NON-NLS-1$
-				
+
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", "Query History", errStatus); //$NON-NLS-1$
 			}
 		}
 	}
-	
+
 	/**
 	 * create column
 	 */
 	private void createColumn() {
-		String[] colNames = {"Group Name", "Email", "Name", "Role", "Approval", "Delete", "Create Time"};
-		int[] colSize = {130, 200, 150, 80, 60, 60, 120};
-		
-		for (int i=0; i<colSize.length; i++) {
+		String[] colNames = {
+				"Group Name",
+				"Email",
+				"Name",
+				"Role",
+				"Approval",
+				"Delete",
+				"Create Time"
+		};
+		int[] colSize = {
+				130,
+				200,
+				150,
+				80,
+				60,
+				60,
+				120
+		};
+
+		for (int i = 0; i < colSize.length; i++) {
 			TreeViewerColumn treeViewerColumn = new TreeViewerColumn(userListViewer, SWT.NONE);
 			TreeColumn treeColumn = treeViewerColumn.getColumn();
 			treeColumn.setWidth(colSize[i]);
 			treeColumn.setText(colNames[i]);
 		}
 	}
-	
+
 	/**
 	 * user 화면을 초기화 한다.
 	 */
 	private void initUI() {
 		listUserGroup.clear();
-		
+
 		try {
-			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
-				|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())
-			) {	// manager, dba
-				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
-			} else {	// admin 
-				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission();
+			if (PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
+					|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())) { // manager,
+																													// dba
+				listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
+			} else { // admin
+				listUserGroup = TadpoleSystem_UserQuery.getUserListPermission();
 			}
-			
+
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();
 			userListViewer.expandToLevel(2);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("Get user list", e);
 		}
 	}
-	
+
 	/**
 	 * add user
 	 */
 	private void addUser() {
 		NewUserDialog dialog = new NewUserDialog(getShell(), PublicTadpoleDefine.YES_NO.YES);
-		if(Dialog.OK == dialog.open()) {
+		if (Dialog.OK == dialog.open()) {
 			initUI();
 		}
 	}
-	
+
 	/**
 	 * modify user
 	 */
 	private void modifyUser() {
-		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
-		if(ss != null) {
-			
-			ModifyUserDialog dialog = new ModifyUserDialog(getShell(), (UserGroupAUserDAO)ss.getFirstElement());
-			if(Dialog.OK == dialog.open()) {
+		IStructuredSelection ss = (IStructuredSelection) userListViewer.getSelection();
+		if (ss != null) {
+
+			ModifyUserDialog dialog = new ModifyUserDialog(getShell(), (UserGroupAUserDAO) ss.getFirstElement());
+			if (Dialog.OK == dialog.open()) {
 				initUI();
 			}
 		}
@@ -302,14 +320,14 @@ public class UserListComposite extends Composite {
 }
 
 /**
-* content provider
-* 
-* @author hangum
-*
-*/
+ * content provider
+ * 
+ * @author hangum
+ * 
+ */
 class UserContentProvider implements ITreeContentProvider {
 	private static final Logger logger = Logger.getLogger(UserContentProvider.class);
-	
+
 	@Override
 	public void dispose() {
 	}
@@ -320,7 +338,7 @@ class UserContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		return ((List<UserGroupAUserDAO>)inputElement).toArray();
+		return ((List<UserGroupAUserDAO>) inputElement).toArray();
 	}
 
 	@Override
@@ -330,35 +348,35 @@ class UserContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object getParent(Object element) {
-		if(element == null) {
+		if (element == null) {
 			return null;
 		}
-		
+
 		return ((UserGroupAUserDAO) element).parent;
 	}
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if(element instanceof ArrayList) {
-			return ((ArrayList)element).size() > 0;			
-		} else if(element instanceof UserGroupAUserDAO) {
-			return ((UserGroupAUserDAO)element).child.size() > 0;
+		if (element instanceof ArrayList) {
+			return ((ArrayList) element).size() > 0;
+		} else if (element instanceof UserGroupAUserDAO) {
+			return ((UserGroupAUserDAO) element).child.size() > 0;
 		}
-		
+
 		return false;
 	}
-	
+
 }
 
 /**
-* 유저 정보 레이블 
-* 
-* @author hangum
-*
-*/
+ * 유저 정보 레이블
+ * 
+ * @author hangum
+ * 
+ */
 class UserLabelProvider extends LabelProvider implements ITableLabelProvider {
 	private static final Logger logger = Logger.getLogger(UserLabelProvider.class);
-	
+
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
@@ -366,50 +384,62 @@ class UserLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		UserGroupAUserDAO user = (UserGroupAUserDAO)element;
+		UserGroupAUserDAO user = (UserGroupAUserDAO) element;
 
-		switch(columnIndex) {
-		case 0: return user.getUser_group_name();
-		case 1: return user.getEmail();
-		case 2: return user.getName();
-		case 3: return user.getRole_type();
-		case 4: return user.getApproval_yn();
-		case 5: return user.getDelYn();
-		case 6: return user.getCreate_time();
+		switch (columnIndex) {
+		case 0:
+			return user.getUser_group_name();
+		case 1:
+			return user.getEmail();
+		case 2:
+			return user.getName();
+		case 3:
+			return user.getRole_type();
+		case 4:
+			return user.getApproval_yn();
+		case 5:
+			return user.getDelYn();
+		case 6:
+			return user.getCreate_time();
 		}
-		
+
 		return "*** not set column ***";
 	}
-	
+
 }
 
 /**
-* User composite filter
-* 
-* @author hangum
-*
-*/
+ * User composite filter
+ * 
+ * @author hangum
+ * 
+ */
 class UserCompFilter extends ViewerFilter {
 	String searchString;
-	
+
 	public void setSearchString(String s) {
 		this.searchString = ".*" + s.toLowerCase() + ".*";
 	}
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if(searchString == null || searchString.length() == 0) {
+		if (searchString == null || searchString.length() == 0) {
 			return true;
 		}
-			
-		UserGroupAUserDAO user = (UserGroupAUserDAO)element;
-		if(user.getUser_group_name().toLowerCase().matches(searchString)) return true;
-		if(user.getEmail().toLowerCase().matches(searchString)) return true;
-		if(user.getName().toLowerCase().matches(searchString)) return true;
-		if(user.getRole_type().toLowerCase().matches(searchString)) return true;
-		if(user.getApproval_yn().toLowerCase().matches(searchString)) return true;
-		
+
+		UserGroupAUserDAO user = (UserGroupAUserDAO) element;
+		if (user.getUser_group_name().toLowerCase().matches(searchString))
+			return true;
+		if (user.getEmail().toLowerCase().matches(searchString))
+			return true;
+		if (user.getName().toLowerCase().matches(searchString))
+			return true;
+		if (user.getRole_type().toLowerCase().matches(searchString))
+			return true;
+		if (user.getApproval_yn().toLowerCase().matches(searchString))
+			return true;
+
 		return false;
 	}
-	
+
 }

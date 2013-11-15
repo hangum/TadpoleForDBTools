@@ -19,51 +19,54 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 
 /**
  * manager view의 content provider
+ * 
  * @author hangum
- *
+ * 
  */
 public class ResourceManagerContentProvider extends ArrayContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		
-		if(parentElement instanceof ManagerListDTO) {
-			ManagerListDTO dto = (ManagerListDTO)parentElement;
+
+		if (parentElement instanceof ManagerListDTO) {
+			ManagerListDTO dto = (ManagerListDTO) parentElement;
 			return dto.getManagerList().toArray();
-		} else if(parentElement instanceof UserDBDAO) {
-			UserDBDAO dto = (UserDBDAO)parentElement;
+		} else if (parentElement instanceof UserDBDAO) {
+			UserDBDAO dto = (UserDBDAO) parentElement;
 			return dto.getListUserDBErd().toArray();
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public Object getParent(Object element) {
-		
-		if(element instanceof UserDBDAO) {
-			UserDBDAO dto = (UserDBDAO)element;
+
+		if (element instanceof UserDBDAO) {
+			UserDBDAO dto = (UserDBDAO) element;
 			return dto.getParent();
-		} else if(element instanceof UserDBResourceDAO) {
-			UserDBResourceDAO dao = (UserDBResourceDAO)element;
+		} else if (element instanceof UserDBResourceDAO) {
+			UserDBResourceDAO dao = (UserDBResourceDAO) element;
 			return dao.getParent();
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if(element instanceof ManagerListDTO) {
-			ManagerListDTO dto = (ManagerListDTO)element;
+		if (element instanceof ManagerListDTO) {
+			ManagerListDTO dto = (ManagerListDTO) element;
 			return dto.getManagerList().size() > 0;
-		} else if(element instanceof UserDBDAO) {
-			UserDBDAO dto = (UserDBDAO)element;
-			if(dto.getListUserDBErd() == null) return false;
-			else return dto.getListUserDBErd().size() > 0;
+		} else if (element instanceof UserDBDAO) {
+			UserDBDAO dto = (UserDBDAO) element;
+			if (dto.getListUserDBErd() == null)
+				return false;
+			else
+				return dto.getListUserDBErd().size() > 0;
 		}
 
 		return false;
 	}
-	
+
 }

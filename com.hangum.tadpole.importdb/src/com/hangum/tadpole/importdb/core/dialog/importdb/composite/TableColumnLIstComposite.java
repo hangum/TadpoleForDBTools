@@ -49,7 +49,7 @@ import com.swtdesigner.ResourceManager;
  * </pre>
  * 
  * @author hangum
- *
+ * 
  */
 public class TableColumnLIstComposite extends Composite {
 	/**
@@ -57,28 +57,29 @@ public class TableColumnLIstComposite extends Composite {
 	 */
 	private static final Logger logger = Logger.getLogger(TableColumnLIstComposite.class);
 	private UserDBDAO userDB = null;
-	
+
 	private TableViewer tableViewer = null;
 	private List<ModTableDAO> listTables = new ArrayList<ModTableDAO>();
-	
+
 	private static final Image CHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/checked.png"); //$NON-NLS-1$;
 	private static final Image UNCHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unchecked.png"); //$NON-NLS-1$;
-			
+
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
 	public TableColumnLIstComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-		
+
 		tableViewer = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
 		Table table = tableViewer.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		final TableViewerColumn tableColumn = new TableViewerColumn(tableViewer, SWT.LEFT);
 		tableColumn.getColumn().setText("Is Import"); //$NON-NLS-1$
 		tableColumn.getColumn().setWidth(70);
@@ -90,7 +91,7 @@ public class TableColumnLIstComposite extends Composite {
 
 			@Override
 			public Image getImage(Object element) {
-				ModTableDAO modDao = (ModTableDAO)element;
+				ModTableDAO modDao = (ModTableDAO) element;
 				if (modDao.isModify()) {
 					return CHECKED;
 				} else {
@@ -99,18 +100,18 @@ public class TableColumnLIstComposite extends Composite {
 			}
 		});
 		tableColumn.setEditingSupport(new ImportColumnEditingSupport(tableViewer));
-		
+
 		final TableViewerColumn tableColumnName = new TableViewerColumn(tableViewer, SWT.LEFT);
 		tableColumnName.getColumn().setText("Table Name"); //$NON-NLS-1$
 		tableColumnName.getColumn().setWidth(200);
 		tableColumnName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				ModTableDAO modDao = (ModTableDAO)element;
-				return modDao.getName();						
+				ModTableDAO modDao = (ModTableDAO) element;
+				return modDao.getName();
 			}
 		});
-		
+
 		final TableViewerColumn tableColumnExistOnDelete = new TableViewerColumn(tableViewer, SWT.LEFT);
 		tableColumnExistOnDelete.getColumn().setText("Exist on delete"); //$NON-NLS-1$
 		tableColumnExistOnDelete.getColumn().setWidth(100);
@@ -122,7 +123,7 @@ public class TableColumnLIstComposite extends Composite {
 
 			@Override
 			public Image getImage(Object element) {
-				ModTableDAO modDao = (ModTableDAO)element;
+				ModTableDAO modDao = (ModTableDAO) element;
 				if (modDao.isExistOnDelete()) {
 					return CHECKED;
 				} else {
@@ -131,95 +132,96 @@ public class TableColumnLIstComposite extends Composite {
 			}
 		});
 		tableColumnExistOnDelete.setEditingSupport(new ExistOnDeleteColumnEditingSupport(tableViewer));
-		
+
 		final TableViewerColumn tableColumnRename = new TableViewerColumn(tableViewer, SWT.LEFT);
 		tableColumnRename.getColumn().setText("Rename"); //$NON-NLS-1$
 		tableColumnRename.getColumn().setWidth(200);
 		tableColumnRename.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				ModTableDAO modDao = (ModTableDAO)element;
-				return modDao.getReName();						
+				ModTableDAO modDao = (ModTableDAO) element;
+				return modDao.getReName();
 			}
 		});
 		tableColumnRename.setEditingSupport(new RenameColumnEditingSupport(tableViewer));
-		
+
 		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setInput(listTables);		
+		tableViewer.setInput(listTables);
 	}
-	
+
 	public void init(UserDBDAO userDB) {
-		if(userDB == null) {
+		if (userDB == null) {
 			MessageDialog.openError(null, "Data Import", Messages.TableColumnLIstComposite_1); //$NON-NLS-1$
-			
+
 			return;
 		}
 		listTables.clear();
 		this.userDB = userDB;
 
 		try {
-			if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+			if (userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
 				List<TableDAO> listCollection = MongoDBQuery.listCollection(userDB);
 				for (TableDAO tableDao : listCollection) {
-					listTables.add( new ModTableDAO(tableDao.getName()) );
+					listTables.add(new ModTableDAO(tableDao.getName()));
 				}
 			} else {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 				for (TableDAO tableDAO : showTables) {
-					listTables.add( new ModTableDAO(tableDAO.getName()) );
-				}			
+					listTables.add(new ModTableDAO(tableDAO.getName()));
+				}
 			}
 		} catch (Exception e) {
 			logger.error("DB Connecting... ", e); //$NON-NLS-1$
 			MessageDialog.openError(null, "Data Import", e.getMessage()); //$NON-NLS-1$
 		}
-		
+
 		tableViewer.setInput(listTables);
 		tableViewer.refresh();
 	}
-	
+
 	public List<ModTableDAO> getListTables() {
 		return listTables;
 	}
-	
+
 	/**
 	 * 사용자가 선택한 테이블 정보만 넘겨줍니다.
+	 * 
 	 * @return
 	 */
 	public List<ModTableDAO> getSelectListTables() {
 		List<ModTableDAO> listSelectTable = new ArrayList<ModTableDAO>();
 		for (ModTableDAO modTableDAO : getListTables()) {
-			if(modTableDAO.isModify()) listSelectTable.add(modTableDAO);			
+			if (modTableDAO.isModify())
+				listSelectTable.add(modTableDAO);
 		}
-		
+
 		return listSelectTable;
 	}
-	
+
 	/**
 	 * select all
 	 */
 	public void selectAll() {
-		for(ModTableDAO modDAO : getListTables()) {
+		for (ModTableDAO modDAO : getListTables()) {
 			modDAO.setModify(true);
 		}
 		tableViewer.refresh();
 	}
-	
+
 	/**
 	 * 
 	 */
 	public void selectNotAll() {
-		for(ModTableDAO modDAO : getListTables()) {
+		for (ModTableDAO modDAO : getListTables()) {
 			modDAO.setModify(false);
 		}
-		tableViewer.refresh();	
+		tableViewer.refresh();
 	}
-	
+
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
 
-	
 }

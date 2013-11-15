@@ -26,7 +26,7 @@ public class TableTransferFactory implements CreationFactory {
 	public Object getObjectType() {
 		return Table.class;
 	}
-	
+
 	public void setTable(Table table) {
 		this.table = table;
 	}

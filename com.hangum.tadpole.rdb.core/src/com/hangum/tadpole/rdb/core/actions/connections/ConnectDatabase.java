@@ -26,8 +26,9 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * db 연결 action
+ * 
  * @author hangum
- *
+ * 
  */
 public class ConnectDatabase implements IViewActionDelegate {
 	public static final String ID = "com.hangum.tadpole.browser.rap.core.action.connect.database";
@@ -36,45 +37,46 @@ public class ConnectDatabase implements IViewActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		
-		if(sel != null) {
-			if(sel.getFirstElement() instanceof ManagerListDTO) {
-				ManagerListDTO mana = (ManagerListDTO)sel.getFirstElement();
+
+		if (sel != null) {
+			if (sel.getFirstElement() instanceof ManagerListDTO) {
+				ManagerListDTO mana = (ManagerListDTO) sel.getFirstElement();
 				selGroupName = mana.getName();
-			} else if(sel.getFirstElement() instanceof UserDBDAO) {
-				UserDBDAO user =(UserDBDAO)sel.getFirstElement();
+			} else if (sel.getFirstElement() instanceof UserDBDAO) {
+				UserDBDAO user = (UserDBDAO) sel.getFirstElement();
 				selGroupName = user.getParent().getName();
 			}
 		}
-		
+
 		run();
-		
+
 	}
-	
+
 	public void run() {
 		final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selGroupName);
 		final int ret = dialog.open();
 
 		final UserDBDAO userDB = dialog.getDTO();
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
-		
+		final ManagerViewer managerView = (ManagerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if(ret == Dialog.OK) {
-					if(userDB == null) managerView.init();
-					else managerView.addUserDB(userDB, true);
-				}
-				else managerView.init();
+				if (ret == Dialog.OK) {
+					if (userDB == null)
+						managerView.init();
+					else
+						managerView.addUserDB(userDB, true);
+				} else
+					managerView.init();
 			}
-		});	// end display
+		}); // end display
 
 	}
-	
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		sel = (IStructuredSelection)selection;
+		sel = (IStructuredSelection) selection;
 	}
 
 	@Override

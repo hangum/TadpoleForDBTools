@@ -28,7 +28,7 @@ import com.hangum.tadpole.sql.dao.mysql.TableDAO;
  * </pre>
  * 
  * @author hangum
- *
+ * 
  */
 public class TableColumnEditor extends EditingSupport {
 	/**
@@ -37,7 +37,7 @@ public class TableColumnEditor extends EditingSupport {
 	private static final Logger logger = Logger.getLogger(TableColumnEditor.class);
 	private ExplorerViewer explorerViewer;
 	private TableViewer tableViewer;
-	
+
 	/**
 	 * 테이블 컬럼 에디터
 	 */
@@ -50,6 +50,7 @@ public class TableColumnEditor extends EditingSupport {
 
 	/**
 	 * 테이블 컬럼 에디터.
+	 * 
 	 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
 	 */
 	@Override
@@ -59,6 +60,7 @@ public class TableColumnEditor extends EditingSupport {
 
 	/**
 	 * 수정할수 있는지.
+	 * 
 	 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
 	 */
 	@Override
@@ -73,37 +75,35 @@ public class TableColumnEditor extends EditingSupport {
 	 */
 	@Override
 	protected Object getValue(Object element) {
-		
-		if(element instanceof TableColumnDAO) {
-			TableColumnDAO table = (TableColumnDAO)element;
+
+		if (element instanceof TableColumnDAO) {
+			TableColumnDAO table = (TableColumnDAO) element;
 			return table.getComment();
-			
-		} else if(element instanceof TableDAO) {
-			TableDAO table = (TableDAO)element;
+
+		} else if (element instanceof TableDAO) {
+			TableDAO table = (TableDAO) element;
 			return table.getComment();
 		}
-		
+
 		return null;
 	}
 
 	/**
 	 * 
-	 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
+	 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
+	 *      java.lang.Object)
 	 */
 	@Override
 	protected void setValue(Object element, Object value) {
-		
-		if(element instanceof TableColumnDAO) {
-			TableColumnDAO table = (TableColumnDAO)element;
-			
-			
-			
-		} else if(element instanceof TableDAO) {
-			TableDAO table = (TableDAO)element;
-		
-			
+
+		if (element instanceof TableColumnDAO) {
+			TableColumnDAO table = (TableColumnDAO) element;
+
+		} else if (element instanceof TableDAO) {
+			TableDAO table = (TableDAO) element;
+
 		}
-		
+
 		tableViewer.update(element, null);
 	}
 

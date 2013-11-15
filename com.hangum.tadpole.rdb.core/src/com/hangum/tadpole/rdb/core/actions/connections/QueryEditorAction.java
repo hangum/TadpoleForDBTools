@@ -10,15 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.connections;
 
-
 /**
  * query 창을 오픈합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class QueryEditorAction extends AbstractQueryAction {
-	
+
 	public QueryEditorAction() {
 		super();
 	}

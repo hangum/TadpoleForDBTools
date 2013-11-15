@@ -20,45 +20,45 @@ import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import com.hangum.tadpole.mongodb.model.DB;
 
 public class DBTreeEditPart extends AbstractTreeEditPart {
-	private  DBAdapter adapter;
-	
+	private DBAdapter adapter;
+
 	public DBTreeEditPart() {
 		super();
 		adapter = new DBAdapter();
 	}
-	
+
 	@Override
 	protected List getModelChildren() {
-		return ((DB)getModel()).getTables();
+		return ((DB) getModel()).getTables();
 	}
-	
+
 	@Override
 	protected void refreshVisuals() {
-		DB db = (DB)getModel();
+		DB db = (DB) getModel();
 		setWidgetText(db.getId());
 	}
-	
+
 	@Override
 	public void activate() {
-		if(!isActive()) {
-			((DB)getModel()).eAdapters().add(adapter);
+		if (!isActive()) {
+			((DB) getModel()).eAdapters().add(adapter);
 		}
 		super.activate();
 	}
-	
+
 	@Override
 	public void deactivate() {
-		if(isActive()) {
-			((DB)getModel()).eAdapters().remove(adapter);
+		if (isActive()) {
+			((DB) getModel()).eAdapters().remove(adapter);
 		}
 		super.deactivate();
 	}
-	
+
 	/**
 	 * db event adapter
 	 * 
 	 * @author hangum
-	 *
+	 * 
 	 */
 	public class DBAdapter implements Adapter {
 
@@ -70,7 +70,7 @@ public class DBTreeEditPart extends AbstractTreeEditPart {
 
 		@Override
 		public Notifier getTarget() {
-			return (DB)getModel();
+			return (DB) getModel();
 		}
 
 		@Override
@@ -81,6 +81,6 @@ public class DBTreeEditPart extends AbstractTreeEditPart {
 		public boolean isAdapterForType(Object type) {
 			return type.equals(DB.class);
 		}
-		
+
 	}
 }

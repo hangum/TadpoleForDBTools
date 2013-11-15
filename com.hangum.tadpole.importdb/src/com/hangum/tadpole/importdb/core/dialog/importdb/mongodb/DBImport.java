@@ -19,18 +19,18 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * ? to mongodb database import
  * 
  * @author hangum
- *
+ * 
  */
 public abstract class DBImport {
-	
+
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(DBImport.class);
-	
+
 	protected UserDBDAO targetUserDB;
 	protected UserDBDAO sourceUserDB;
-	
+
 	public DBImport(UserDBDAO sourceUserDB, UserDBDAO targetUserDB) {
 		this.sourceUserDB = sourceUserDB;
 		this.targetUserDB = targetUserDB;
@@ -46,7 +46,8 @@ public abstract class DBImport {
 	}
 
 	/**
-	 * @param targetUserDB the targetUserDB to set
+	 * @param targetUserDB
+	 *            the targetUserDB to set
 	 */
 	public void setTargetUserDB(UserDBDAO targetUserDB) {
 		this.targetUserDB = targetUserDB;
@@ -60,11 +61,11 @@ public abstract class DBImport {
 	}
 
 	/**
-	 * @param sourceUserDB the sourceUserDB to set
+	 * @param sourceUserDB
+	 *            the sourceUserDB to set
 	 */
 	public void setSourceUserDB(UserDBDAO sourceUserDB) {
 		this.sourceUserDB = sourceUserDB;
 	}
-	
-	
+
 }

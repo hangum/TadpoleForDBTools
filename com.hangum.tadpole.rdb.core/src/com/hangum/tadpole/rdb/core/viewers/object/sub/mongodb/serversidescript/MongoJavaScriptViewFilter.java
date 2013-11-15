@@ -19,17 +19,19 @@ import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
  * Mongo ServerSide javascript
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoJavaScriptViewFilter extends TadpoleViewrFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if(searchString == null || searchString.length() == 0) return true;
-		
-		MongoDBServerSideJavaScriptDAO dao  = (MongoDBServerSideJavaScriptDAO)element;
-		if(dao.getName().toUpperCase().matches(searchString.toUpperCase())) return true;
-		
+		if (searchString == null || searchString.length() == 0)
+			return true;
+
+		MongoDBServerSideJavaScriptDAO dao = (MongoDBServerSideJavaScriptDAO) element;
+		if (dao.getName().toUpperCase().matches(searchString.toUpperCase()))
+			return true;
+
 		return false;
 	}
 

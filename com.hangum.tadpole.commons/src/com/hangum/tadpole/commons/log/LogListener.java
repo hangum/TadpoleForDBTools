@@ -18,12 +18,12 @@ import org.eclipse.core.runtime.IStatus;
  * Save to log4j log of Eclipse
  * 
  * @author hangum
- *
+ * 
  */
 public class LogListener implements ILogListener {
 
 	private static final Logger logger = Logger.getLogger(LogListener.class.getName());
-	
+
 	public void logging(IStatus status, String plugin) {
 		if (status.getSeverity() == IStatus.WARNING) {
 			if (status.getException() == null) {

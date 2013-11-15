@@ -20,7 +20,7 @@ import com.hangum.tadpole.mongodb.core.dto.MongoDBCollectionInfoDTO;
  * mongodb collection comparator
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBCollectionComparator extends ViewerSorter {
 	private int propertyIndex;
@@ -48,62 +48,63 @@ public class MongoDBCollectionComparator extends ViewerSorter {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		int rc = 0;
-		
-		if(e1 instanceof MongoDBCollectionInfoDTO) {
-			MongoDBCollectionInfoDTO m1 = (MongoDBCollectionInfoDTO)e1;
-			MongoDBCollectionInfoDTO m2 = (MongoDBCollectionInfoDTO)e2;
-			
+
+		if (e1 instanceof MongoDBCollectionInfoDTO) {
+			MongoDBCollectionInfoDTO m1 = (MongoDBCollectionInfoDTO) e1;
+			MongoDBCollectionInfoDTO m2 = (MongoDBCollectionInfoDTO) e2;
+
 			Double dbl1, dbl2;
-			
+
 			switch (propertyIndex) {
 			case 0:
 				rc = m1.getName().compareTo(m2.getName());
 				break;
 			case 1:
-				
-				dbl1 = Double.valueOf(""+m1.getCount());
-				dbl2 = Double.valueOf(""+m2.getCount());
-				
+
+				dbl1 = Double.valueOf("" + m1.getCount());
+				dbl2 = Double.valueOf("" + m2.getCount());
+
 				rc = dbl1.compareTo(dbl2);
 				break;
-	
+
 			case 2:
-				dbl1 = Double.valueOf(""+m1.getSize());
-				dbl2 = Double.valueOf(""+m2.getSize());
-				
+				dbl1 = Double.valueOf("" + m1.getSize());
+				dbl2 = Double.valueOf("" + m2.getSize());
+
 				rc = dbl1.compareTo(dbl2);
 				break;
 			case 3:
-				dbl1 = Double.valueOf(""+m1.getStorage());
-				dbl2 = Double.valueOf(""+m2.getStorage());
-				
+				dbl1 = Double.valueOf("" + m1.getStorage());
+				dbl2 = Double.valueOf("" + m2.getStorage());
+
 				rc = dbl1.compareTo(dbl2);
 				break;
 			case 4:
-				dbl1 = Double.valueOf(""+m1.getIndex());
-				dbl2 = Double.valueOf(""+m2.getIndex());
-				
+				dbl1 = Double.valueOf("" + m1.getIndex());
+				dbl2 = Double.valueOf("" + m2.getIndex());
+
 				rc = dbl1.compareTo(dbl2);
 				break;
 			case 5:
-				dbl1 = Double.valueOf(""+m1.getAvgObj());
-				dbl2 = Double.valueOf(""+m2.getAvgObj());
-				
+				dbl1 = Double.valueOf("" + m1.getAvgObj());
+				dbl2 = Double.valueOf("" + m2.getAvgObj());
+
 				rc = dbl1.compareTo(dbl2);
 				break;
 			case 6:
-				dbl1 = Double.valueOf(""+m1.getPadding());
-				dbl2 = Double.valueOf(""+m2.getPadding());
-				
+				dbl1 = Double.valueOf("" + m1.getPadding());
+				dbl2 = Double.valueOf("" + m2.getPadding());
+
 				rc = dbl1.compareTo(dbl2);
 				break;
 			default:
 				break;
 			}
-			
-			if(direction == DESCENDING) rc = -rc;
+
+			if (direction == DESCENDING)
+				rc = -rc;
 		}
-		
+
 		return rc;
 	}
 }

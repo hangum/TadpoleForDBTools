@@ -14,14 +14,14 @@ package com.hangum.tadpole.mongodb.core.dto;
  * UserDTO
  * 
  * @author hangum
- *
+ * 
  */
 public class UserDTO {
 
 	String id;
 	String passwd;
 	String readOnly;
-	
+
 	public UserDTO() {
 	}
 
@@ -48,5 +48,5 @@ public class UserDTO {
 	public void setReadOnly(String readOnly) {
 		this.readOnly = readOnly;
 	}
-	
+
 }

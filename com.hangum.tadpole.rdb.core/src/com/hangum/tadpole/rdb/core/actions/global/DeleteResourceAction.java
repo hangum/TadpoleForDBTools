@@ -29,34 +29,34 @@ import com.swtdesigner.ResourceManager;
  * 현재 선택된 디비의 릴레이션 화면을 오픈합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class DeleteResourceAction extends Action implements ISelectionListener, IWorkbenchAction {
 	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.DeleteResourceAction"; //$NON-NLS-1$
 	private IStructuredSelection iss;
-	
+
 	public DeleteResourceAction(IWorkbenchWindow window) {
 		this.window = window;
-		
+
 		setId(ID);
 		setText(Messages.DeleteResourceAction_0);
 		setToolTipText(Messages.DeleteResourceAction_0);
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/delete-relation.png")); //$NON-NLS-1$
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/delete-relation.png")); //$NON-NLS-1$
 		setEnabled(false);
-		
+
 		window.getSelectionService().addPostSelectionListener(this);
 	}
-	
+
 	@Override
 	public void run() {
-		UserDBResourceDAO userResourceDB = (UserDBResourceDAO)iss.getFirstElement();
-		if(!MessageDialog.openConfirm(window.getShell(), Messages.DeleteResourceAction_3, userResourceDB.getName() + Messages.DeleteResourceAction_4)) return;
-		
+		UserDBResourceDAO userResourceDB = (UserDBResourceDAO) iss.getFirstElement();
+		if (!MessageDialog.openConfirm(window.getShell(), Messages.DeleteResourceAction_3, userResourceDB.getName() + Messages.DeleteResourceAction_4))
+			return;
+
 		RDBERDDeleteAction erdDelete = new RDBERDDeleteAction();
 		erdDelete.run(userResourceDB);
 	}
-	
 
 	@Override
 	public void dispose() {
@@ -65,14 +65,16 @@ public class DeleteResourceAction extends Action implements ISelectionListener, 
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		IStructuredSelection sel = (IStructuredSelection)selection;
-		if(sel != null) {
-			if( sel.getFirstElement() instanceof UserDBResourceDAO ) {
+		IStructuredSelection sel = (IStructuredSelection) selection;
+		if (sel != null) {
+			if (sel.getFirstElement() instanceof UserDBResourceDAO) {
 				iss = sel;
-				
+
 				setEnabled(true);
-			} else setEnabled(false);
-		} else setEnabled(false);
+			} else
+				setEnabled(false);
+		} else
+			setEnabled(false);
 	}
 
 }

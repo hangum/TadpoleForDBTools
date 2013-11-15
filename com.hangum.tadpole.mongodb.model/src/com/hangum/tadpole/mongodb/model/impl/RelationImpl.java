@@ -12,57 +12,63 @@
  */
 package com.hangum.tadpole.mongodb.model.impl;
 
+import java.util.Collection;
+
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.MongodbPackage;
 import com.hangum.tadpole.mongodb.model.Relation;
 import com.hangum.tadpole.mongodb.model.RelationKind;
 import com.hangum.tadpole.mongodb.model.Table;
 
-import java.util.Collection;
-
-import org.eclipse.draw2d.geometry.Point;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Relation</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Relation</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getSource <em>Source</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getTarget <em>Target</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getSource_kind <em>Source kind</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getTarget_kind <em>Target kind</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getColumn_name <em>Column name</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getReferenced_column_name <em>Referenced column name</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getBendpoint <em>Bendpoint</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getDb <em>Db</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getComment <em>Comment</em>}</li>
- *   <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getConstraint_name <em>Constraint name</em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getSource <em>
+ * Source</em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getTarget <em>
+ * Target</em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getSource_kind
+ * <em>Source kind</em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getTarget_kind
+ * <em>Target kind</em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getColumn_name
+ * <em>Column name</em>}</li>
+ * <li>
+ * {@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getReferenced_column_name
+ * <em>Referenced column name</em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getBendpoint
+ * <em>Bendpoint</em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getDb <em>Db
+ * </em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getComment <em>
+ * Comment</em>}</li>
+ * <li>
+ * {@link com.hangum.tadpole.mongodb.model.impl.RelationImpl#getConstraint_name
+ * <em>Constraint name</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class RelationImpl extends EObjectImpl implements Relation {
 	/**
 	 * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSource()
 	 * @generated
 	 * @ordered
@@ -71,8 +77,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 
 	/**
 	 * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTarget()
 	 * @generated
 	 * @ordered
@@ -80,9 +86,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected Table target;
 
 	/**
-	 * The default value of the '{@link #getSource_kind() <em>Source kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getSource_kind() <em>Source kind</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSource_kind()
 	 * @generated
 	 * @ordered
@@ -90,9 +96,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected static final RelationKind SOURCE_KIND_EDEFAULT = RelationKind.ONLY_ONE;
 
 	/**
-	 * The cached value of the '{@link #getSource_kind() <em>Source kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSource_kind() <em>Source kind</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSource_kind()
 	 * @generated
 	 * @ordered
@@ -100,9 +106,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected RelationKind source_kind = SOURCE_KIND_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getTarget_kind() <em>Target kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getTarget_kind() <em>Target kind</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTarget_kind()
 	 * @generated
 	 * @ordered
@@ -110,9 +116,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected static final RelationKind TARGET_KIND_EDEFAULT = RelationKind.ONLY_ONE;
 
 	/**
-	 * The cached value of the '{@link #getTarget_kind() <em>Target kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTarget_kind() <em>Target kind</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTarget_kind()
 	 * @generated
 	 * @ordered
@@ -120,9 +126,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected RelationKind target_kind = TARGET_KIND_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getColumn_name() <em>Column name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getColumn_name() <em>Column name</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getColumn_name()
 	 * @generated
 	 * @ordered
@@ -130,9 +136,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected static final String COLUMN_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getColumn_name() <em>Column name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getColumn_name() <em>Column name</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getColumn_name()
 	 * @generated
 	 * @ordered
@@ -140,9 +146,10 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected String column_name = COLUMN_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getReferenced_column_name() <em>Referenced column name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getReferenced_column_name()
+	 * <em>Referenced column name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getReferenced_column_name()
 	 * @generated
 	 * @ordered
@@ -150,9 +157,10 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected static final String REFERENCED_COLUMN_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getReferenced_column_name() <em>Referenced column name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getReferenced_column_name()
+	 * <em>Referenced column name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getReferenced_column_name()
 	 * @generated
 	 * @ordered
@@ -160,9 +168,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected String referenced_column_name = REFERENCED_COLUMN_NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getBendpoint() <em>Bendpoint</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBendpoint() <em>Bendpoint</em>}'
+	 * attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getBendpoint()
 	 * @generated
 	 * @ordered
@@ -170,9 +178,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected EList<Point> bendpoint;
 
 	/**
-	 * The default value of the '{@link #getComment() <em>Comment</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getComment() <em>Comment</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getComment()
 	 * @generated
 	 * @ordered
@@ -180,9 +188,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected static final String COMMENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getComment() <em>Comment</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getComment() <em>Comment</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getComment()
 	 * @generated
 	 * @ordered
@@ -190,9 +198,10 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected String comment = COMMENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getConstraint_name() <em>Constraint name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getConstraint_name()
+	 * <em>Constraint name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getConstraint_name()
 	 * @generated
 	 * @ordered
@@ -200,9 +209,10 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected static final String CONSTRAINT_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getConstraint_name() <em>Constraint name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getConstraint_name()
+	 * <em>Constraint name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getConstraint_name()
 	 * @generated
 	 * @ordered
@@ -210,8 +220,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	protected String constraint_name = CONSTRAINT_NAME_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RelationImpl() {
@@ -219,8 +229,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -229,14 +239,14 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Table getSource() {
 		if (source != null && source.eIsProxy()) {
-			InternalEObject oldSource = (InternalEObject)source;
-			source = (Table)eResolveProxy(oldSource);
+			InternalEObject oldSource = (InternalEObject) source;
+			source = (Table) eResolveProxy(oldSource);
 			if (source != oldSource) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MongodbPackage.RELATION__SOURCE, oldSource, source));
@@ -246,8 +256,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Table basicGetSource() {
@@ -255,8 +265,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetSource(Table newSource, NotificationChain msgs) {
@@ -264,39 +274,42 @@ public class RelationImpl extends EObjectImpl implements Relation {
 		source = newSource;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MongodbPackage.RELATION__SOURCE, oldSource, newSource);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSource(Table newSource) {
 		if (newSource != source) {
 			NotificationChain msgs = null;
 			if (source != null)
-				msgs = ((InternalEObject)source).eInverseRemove(this, MongodbPackage.TABLE__OUTGOING_LINKS, Table.class, msgs);
+				msgs = ((InternalEObject) source).eInverseRemove(this, MongodbPackage.TABLE__OUTGOING_LINKS, Table.class, msgs);
 			if (newSource != null)
-				msgs = ((InternalEObject)newSource).eInverseAdd(this, MongodbPackage.TABLE__OUTGOING_LINKS, Table.class, msgs);
+				msgs = ((InternalEObject) newSource).eInverseAdd(this, MongodbPackage.TABLE__OUTGOING_LINKS, Table.class, msgs);
 			msgs = basicSetSource(newSource, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MongodbPackage.RELATION__SOURCE, newSource, newSource));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Table getTarget() {
 		if (target != null && target.eIsProxy()) {
-			InternalEObject oldTarget = (InternalEObject)target;
-			target = (Table)eResolveProxy(oldTarget);
+			InternalEObject oldTarget = (InternalEObject) target;
+			target = (Table) eResolveProxy(oldTarget);
 			if (target != oldTarget) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MongodbPackage.RELATION__TARGET, oldTarget, target));
@@ -306,8 +319,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Table basicGetTarget() {
@@ -315,8 +328,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetTarget(Table newTarget, NotificationChain msgs) {
@@ -324,33 +337,36 @@ public class RelationImpl extends EObjectImpl implements Relation {
 		target = newTarget;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MongodbPackage.RELATION__TARGET, oldTarget, newTarget);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setTarget(Table newTarget) {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
 			if (target != null)
-				msgs = ((InternalEObject)target).eInverseRemove(this, MongodbPackage.TABLE__INCOMING_LINKS, Table.class, msgs);
+				msgs = ((InternalEObject) target).eInverseRemove(this, MongodbPackage.TABLE__INCOMING_LINKS, Table.class, msgs);
 			if (newTarget != null)
-				msgs = ((InternalEObject)newTarget).eInverseAdd(this, MongodbPackage.TABLE__INCOMING_LINKS, Table.class, msgs);
+				msgs = ((InternalEObject) newTarget).eInverseAdd(this, MongodbPackage.TABLE__INCOMING_LINKS, Table.class, msgs);
 			msgs = basicSetTarget(newTarget, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MongodbPackage.RELATION__TARGET, newTarget, newTarget));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RelationKind getSource_kind() {
@@ -358,8 +374,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSource_kind(RelationKind newSource_kind) {
@@ -370,8 +386,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RelationKind getTarget_kind() {
@@ -379,8 +395,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setTarget_kind(RelationKind newTarget_kind) {
@@ -391,8 +407,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getColumn_name() {
@@ -400,8 +416,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setColumn_name(String newColumn_name) {
@@ -412,8 +428,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getReferenced_column_name() {
@@ -421,20 +437,21 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setReferenced_column_name(String newReferenced_column_name) {
 		String oldReferenced_column_name = referenced_column_name;
 		referenced_column_name = newReferenced_column_name;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MongodbPackage.RELATION__REFERENCED_COLUMN_NAME, oldReferenced_column_name, referenced_column_name));
+			eNotify(new ENotificationImpl(this, Notification.SET, MongodbPackage.RELATION__REFERENCED_COLUMN_NAME, oldReferenced_column_name,
+					referenced_column_name));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<Point> getBendpoint() {
@@ -445,28 +462,29 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public DB getDb() {
-		if (eContainerFeatureID() != MongodbPackage.RELATION__DB) return null;
-		return (DB)eContainer();
+		if (eContainerFeatureID() != MongodbPackage.RELATION__DB)
+			return null;
+		return (DB) eContainer();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetDb(DB newDb, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newDb, MongodbPackage.RELATION__DB, msgs);
+		msgs = eBasicSetContainer((InternalEObject) newDb, MongodbPackage.RELATION__DB, msgs);
 		return msgs;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDb(DB newDb) {
@@ -477,17 +495,17 @@ public class RelationImpl extends EObjectImpl implements Relation {
 			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newDb != null)
-				msgs = ((InternalEObject)newDb).eInverseAdd(this, MongodbPackage.DB__REFERENCES, DB.class, msgs);
+				msgs = ((InternalEObject) newDb).eInverseAdd(this, MongodbPackage.DB__REFERENCES, DB.class, msgs);
 			msgs = basicSetDb(newDb, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MongodbPackage.RELATION__DB, newDb, newDb));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getComment() {
@@ -495,8 +513,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setComment(String newComment) {
@@ -507,8 +525,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getConstraint_name() {
@@ -516,8 +534,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setConstraint_name(String newConstraint_name) {
@@ -528,221 +546,224 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case MongodbPackage.RELATION__SOURCE:
-				if (source != null)
-					msgs = ((InternalEObject)source).eInverseRemove(this, MongodbPackage.TABLE__OUTGOING_LINKS, Table.class, msgs);
-				return basicSetSource((Table)otherEnd, msgs);
-			case MongodbPackage.RELATION__TARGET:
-				if (target != null)
-					msgs = ((InternalEObject)target).eInverseRemove(this, MongodbPackage.TABLE__INCOMING_LINKS, Table.class, msgs);
-				return basicSetTarget((Table)otherEnd, msgs);
-			case MongodbPackage.RELATION__DB:
-				if (eInternalContainer() != null)
-					msgs = eBasicRemoveFromContainer(msgs);
-				return basicSetDb((DB)otherEnd, msgs);
+		case MongodbPackage.RELATION__SOURCE:
+			if (source != null)
+				msgs = ((InternalEObject) source).eInverseRemove(this, MongodbPackage.TABLE__OUTGOING_LINKS, Table.class, msgs);
+			return basicSetSource((Table) otherEnd, msgs);
+		case MongodbPackage.RELATION__TARGET:
+			if (target != null)
+				msgs = ((InternalEObject) target).eInverseRemove(this, MongodbPackage.TABLE__INCOMING_LINKS, Table.class, msgs);
+			return basicSetTarget((Table) otherEnd, msgs);
+		case MongodbPackage.RELATION__DB:
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			return basicSetDb((DB) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case MongodbPackage.RELATION__SOURCE:
-				return basicSetSource(null, msgs);
-			case MongodbPackage.RELATION__TARGET:
-				return basicSetTarget(null, msgs);
-			case MongodbPackage.RELATION__DB:
-				return basicSetDb(null, msgs);
+		case MongodbPackage.RELATION__SOURCE:
+			return basicSetSource(null, msgs);
+		case MongodbPackage.RELATION__TARGET:
+			return basicSetTarget(null, msgs);
+		case MongodbPackage.RELATION__DB:
+			return basicSetDb(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-			case MongodbPackage.RELATION__DB:
-				return eInternalContainer().eInverseRemove(this, MongodbPackage.DB__REFERENCES, DB.class, msgs);
+		case MongodbPackage.RELATION__DB:
+			return eInternalContainer().eInverseRemove(this, MongodbPackage.DB__REFERENCES, DB.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case MongodbPackage.RELATION__SOURCE:
-				if (resolve) return getSource();
-				return basicGetSource();
-			case MongodbPackage.RELATION__TARGET:
-				if (resolve) return getTarget();
-				return basicGetTarget();
-			case MongodbPackage.RELATION__SOURCE_KIND:
-				return getSource_kind();
-			case MongodbPackage.RELATION__TARGET_KIND:
-				return getTarget_kind();
-			case MongodbPackage.RELATION__COLUMN_NAME:
-				return getColumn_name();
-			case MongodbPackage.RELATION__REFERENCED_COLUMN_NAME:
-				return getReferenced_column_name();
-			case MongodbPackage.RELATION__BENDPOINT:
-				return getBendpoint();
-			case MongodbPackage.RELATION__DB:
-				return getDb();
-			case MongodbPackage.RELATION__COMMENT:
-				return getComment();
-			case MongodbPackage.RELATION__CONSTRAINT_NAME:
-				return getConstraint_name();
+		case MongodbPackage.RELATION__SOURCE:
+			if (resolve)
+				return getSource();
+			return basicGetSource();
+		case MongodbPackage.RELATION__TARGET:
+			if (resolve)
+				return getTarget();
+			return basicGetTarget();
+		case MongodbPackage.RELATION__SOURCE_KIND:
+			return getSource_kind();
+		case MongodbPackage.RELATION__TARGET_KIND:
+			return getTarget_kind();
+		case MongodbPackage.RELATION__COLUMN_NAME:
+			return getColumn_name();
+		case MongodbPackage.RELATION__REFERENCED_COLUMN_NAME:
+			return getReferenced_column_name();
+		case MongodbPackage.RELATION__BENDPOINT:
+			return getBendpoint();
+		case MongodbPackage.RELATION__DB:
+			return getDb();
+		case MongodbPackage.RELATION__COMMENT:
+			return getComment();
+		case MongodbPackage.RELATION__CONSTRAINT_NAME:
+			return getConstraint_name();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case MongodbPackage.RELATION__SOURCE:
-				setSource((Table)newValue);
-				return;
-			case MongodbPackage.RELATION__TARGET:
-				setTarget((Table)newValue);
-				return;
-			case MongodbPackage.RELATION__SOURCE_KIND:
-				setSource_kind((RelationKind)newValue);
-				return;
-			case MongodbPackage.RELATION__TARGET_KIND:
-				setTarget_kind((RelationKind)newValue);
-				return;
-			case MongodbPackage.RELATION__COLUMN_NAME:
-				setColumn_name((String)newValue);
-				return;
-			case MongodbPackage.RELATION__REFERENCED_COLUMN_NAME:
-				setReferenced_column_name((String)newValue);
-				return;
-			case MongodbPackage.RELATION__BENDPOINT:
-				getBendpoint().clear();
-				getBendpoint().addAll((Collection<? extends Point>)newValue);
-				return;
-			case MongodbPackage.RELATION__DB:
-				setDb((DB)newValue);
-				return;
-			case MongodbPackage.RELATION__COMMENT:
-				setComment((String)newValue);
-				return;
-			case MongodbPackage.RELATION__CONSTRAINT_NAME:
-				setConstraint_name((String)newValue);
-				return;
+		case MongodbPackage.RELATION__SOURCE:
+			setSource((Table) newValue);
+			return;
+		case MongodbPackage.RELATION__TARGET:
+			setTarget((Table) newValue);
+			return;
+		case MongodbPackage.RELATION__SOURCE_KIND:
+			setSource_kind((RelationKind) newValue);
+			return;
+		case MongodbPackage.RELATION__TARGET_KIND:
+			setTarget_kind((RelationKind) newValue);
+			return;
+		case MongodbPackage.RELATION__COLUMN_NAME:
+			setColumn_name((String) newValue);
+			return;
+		case MongodbPackage.RELATION__REFERENCED_COLUMN_NAME:
+			setReferenced_column_name((String) newValue);
+			return;
+		case MongodbPackage.RELATION__BENDPOINT:
+			getBendpoint().clear();
+			getBendpoint().addAll((Collection<? extends Point>) newValue);
+			return;
+		case MongodbPackage.RELATION__DB:
+			setDb((DB) newValue);
+			return;
+		case MongodbPackage.RELATION__COMMENT:
+			setComment((String) newValue);
+			return;
+		case MongodbPackage.RELATION__CONSTRAINT_NAME:
+			setConstraint_name((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case MongodbPackage.RELATION__SOURCE:
-				setSource((Table)null);
-				return;
-			case MongodbPackage.RELATION__TARGET:
-				setTarget((Table)null);
-				return;
-			case MongodbPackage.RELATION__SOURCE_KIND:
-				setSource_kind(SOURCE_KIND_EDEFAULT);
-				return;
-			case MongodbPackage.RELATION__TARGET_KIND:
-				setTarget_kind(TARGET_KIND_EDEFAULT);
-				return;
-			case MongodbPackage.RELATION__COLUMN_NAME:
-				setColumn_name(COLUMN_NAME_EDEFAULT);
-				return;
-			case MongodbPackage.RELATION__REFERENCED_COLUMN_NAME:
-				setReferenced_column_name(REFERENCED_COLUMN_NAME_EDEFAULT);
-				return;
-			case MongodbPackage.RELATION__BENDPOINT:
-				getBendpoint().clear();
-				return;
-			case MongodbPackage.RELATION__DB:
-				setDb((DB)null);
-				return;
-			case MongodbPackage.RELATION__COMMENT:
-				setComment(COMMENT_EDEFAULT);
-				return;
-			case MongodbPackage.RELATION__CONSTRAINT_NAME:
-				setConstraint_name(CONSTRAINT_NAME_EDEFAULT);
-				return;
+		case MongodbPackage.RELATION__SOURCE:
+			setSource((Table) null);
+			return;
+		case MongodbPackage.RELATION__TARGET:
+			setTarget((Table) null);
+			return;
+		case MongodbPackage.RELATION__SOURCE_KIND:
+			setSource_kind(SOURCE_KIND_EDEFAULT);
+			return;
+		case MongodbPackage.RELATION__TARGET_KIND:
+			setTarget_kind(TARGET_KIND_EDEFAULT);
+			return;
+		case MongodbPackage.RELATION__COLUMN_NAME:
+			setColumn_name(COLUMN_NAME_EDEFAULT);
+			return;
+		case MongodbPackage.RELATION__REFERENCED_COLUMN_NAME:
+			setReferenced_column_name(REFERENCED_COLUMN_NAME_EDEFAULT);
+			return;
+		case MongodbPackage.RELATION__BENDPOINT:
+			getBendpoint().clear();
+			return;
+		case MongodbPackage.RELATION__DB:
+			setDb((DB) null);
+			return;
+		case MongodbPackage.RELATION__COMMENT:
+			setComment(COMMENT_EDEFAULT);
+			return;
+		case MongodbPackage.RELATION__CONSTRAINT_NAME:
+			setConstraint_name(CONSTRAINT_NAME_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case MongodbPackage.RELATION__SOURCE:
-				return source != null;
-			case MongodbPackage.RELATION__TARGET:
-				return target != null;
-			case MongodbPackage.RELATION__SOURCE_KIND:
-				return source_kind != SOURCE_KIND_EDEFAULT;
-			case MongodbPackage.RELATION__TARGET_KIND:
-				return target_kind != TARGET_KIND_EDEFAULT;
-			case MongodbPackage.RELATION__COLUMN_NAME:
-				return COLUMN_NAME_EDEFAULT == null ? column_name != null : !COLUMN_NAME_EDEFAULT.equals(column_name);
-			case MongodbPackage.RELATION__REFERENCED_COLUMN_NAME:
-				return REFERENCED_COLUMN_NAME_EDEFAULT == null ? referenced_column_name != null : !REFERENCED_COLUMN_NAME_EDEFAULT.equals(referenced_column_name);
-			case MongodbPackage.RELATION__BENDPOINT:
-				return bendpoint != null && !bendpoint.isEmpty();
-			case MongodbPackage.RELATION__DB:
-				return getDb() != null;
-			case MongodbPackage.RELATION__COMMENT:
-				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
-			case MongodbPackage.RELATION__CONSTRAINT_NAME:
-				return CONSTRAINT_NAME_EDEFAULT == null ? constraint_name != null : !CONSTRAINT_NAME_EDEFAULT.equals(constraint_name);
+		case MongodbPackage.RELATION__SOURCE:
+			return source != null;
+		case MongodbPackage.RELATION__TARGET:
+			return target != null;
+		case MongodbPackage.RELATION__SOURCE_KIND:
+			return source_kind != SOURCE_KIND_EDEFAULT;
+		case MongodbPackage.RELATION__TARGET_KIND:
+			return target_kind != TARGET_KIND_EDEFAULT;
+		case MongodbPackage.RELATION__COLUMN_NAME:
+			return COLUMN_NAME_EDEFAULT == null ? column_name != null : !COLUMN_NAME_EDEFAULT.equals(column_name);
+		case MongodbPackage.RELATION__REFERENCED_COLUMN_NAME:
+			return REFERENCED_COLUMN_NAME_EDEFAULT == null ? referenced_column_name != null : !REFERENCED_COLUMN_NAME_EDEFAULT.equals(referenced_column_name);
+		case MongodbPackage.RELATION__BENDPOINT:
+			return bendpoint != null && !bendpoint.isEmpty();
+		case MongodbPackage.RELATION__DB:
+			return getDb() != null;
+		case MongodbPackage.RELATION__COMMENT:
+			return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
+		case MongodbPackage.RELATION__CONSTRAINT_NAME:
+			return CONSTRAINT_NAME_EDEFAULT == null ? constraint_name != null : !CONSTRAINT_NAME_EDEFAULT.equals(constraint_name);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (source_kind: ");
@@ -763,4 +784,4 @@ public class RelationImpl extends EObjectImpl implements Relation {
 		return result.toString();
 	}
 
-} //RelationImpl
+} // RelationImpl

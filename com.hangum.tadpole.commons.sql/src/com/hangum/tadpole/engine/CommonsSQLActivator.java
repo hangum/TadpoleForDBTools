@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-import com.hangum.tadpole.commons.log.LogConfiguration;
 import com.hangum.tadpole.commons.log.LogListener;
 
 public class CommonsSQLActivator extends Plugin {
@@ -26,7 +25,7 @@ public class CommonsSQLActivator extends Plugin {
 	// The shared instance
 	private static CommonsSQLActivator plugin;
 	private ILogListener listener;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -35,33 +34,38 @@ public class CommonsSQLActivator extends Plugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
-//		LogConfiguration.getInstance();//.setLevel(Level.DEBUG.toString());
-		
-		// eclipse 로그도 log4j에 넣어주도록 수정 ... (해야할지 살짝 의문이고 삭제해야할지도....) -hangum, 11.09
+
+		// LogConfiguration.getInstance();//.setLevel(Level.DEBUG.toString());
+
+		// eclipse 로그도 log4j에 넣어주도록 수정 ... (해야할지 살짝 의문이고 삭제해야할지도....) -hangum,
+		// 11.09
 		listener = new LogListener();
-		Platform.addLogListener(listener);	
+		Platform.addLogListener(listener);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
-		
+
 		Platform.removeLogListener(listener);
 	}
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static CommonsSQLActivator getDefault() {

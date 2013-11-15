@@ -14,7 +14,7 @@ package com.hangum.tadpole.commons.exception;
  * tadpole system exception
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleRuntimeException extends RuntimeException {
 
@@ -29,7 +29,7 @@ public class TadpoleRuntimeException extends RuntimeException {
 	public TadpoleRuntimeException(String message, Throwable cause) {
 		super(message, cause);
 	}
-	
+
 	public TadpoleRuntimeException(Throwable cause) {
 		super(cause);
 	}

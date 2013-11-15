@@ -18,10 +18,10 @@ import org.eclipse.ui.IPersistableElement;
  * user management input
  * 
  * @author hangum
- *
+ * 
  */
 public class UserManagementEditorInput implements IEditorInput {
-	
+
 	public UserManagementEditorInput() {
 	}
 

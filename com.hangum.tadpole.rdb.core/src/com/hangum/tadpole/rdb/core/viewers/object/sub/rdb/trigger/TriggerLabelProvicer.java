@@ -22,7 +22,7 @@ import com.swtdesigner.ResourceManager;
  * Trigger 의 컬럼 정보
  * 
  * @author hangum
- *
+ * 
  */
 public class TriggerLabelProvicer extends LabelProvider implements ITableLabelProvider {
 
@@ -30,38 +30,50 @@ public class TriggerLabelProvicer extends LabelProvider implements ITableLabelPr
 	public Image getColumnImage(Object element, int columnIndex) {
 		TriggerDAO triggerDao = (TriggerDAO) element;
 
-		switch(columnIndex) {
-		case 0: 
-			if (triggerDao.isValid()){
+		switch (columnIndex) {
+		case 0:
+			if (triggerDao.isValid()) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/normalcy.png");
-			}else{
+			} else {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/warning.png");
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		TriggerDAO tc = (TriggerDAO) element;
 
-		switch(columnIndex) {
-		case 0: return tc.getTrigger();
-		case 1: return tc.getEvent();
-		case 2: return tc.getTable_name();
-		case 3: return tc.getStatement();
-		case 4: return tc.getTiming();
-		case 5: return tc.getCreated();
-		
-		case 6: return tc.getSql_mode();
-		case 7: return tc.getDefiner();
-		case 8: return tc.getCharacter_set_client();
-		case 9: return tc.getCollation_connection();
-		case 10: return tc.getDatabase();
-		case 11: return tc.getCollation();
+		switch (columnIndex) {
+		case 0:
+			return tc.getTrigger();
+		case 1:
+			return tc.getEvent();
+		case 2:
+			return tc.getTable_name();
+		case 3:
+			return tc.getStatement();
+		case 4:
+			return tc.getTiming();
+		case 5:
+			return tc.getCreated();
+
+		case 6:
+			return tc.getSql_mode();
+		case 7:
+			return tc.getDefiner();
+		case 8:
+			return tc.getCharacter_set_client();
+		case 9:
+			return tc.getCollation_connection();
+		case 10:
+			return tc.getDatabase();
+		case 11:
+			return tc.getCollation();
 		}
-		
+
 		return "** not set column **";
 	}
 

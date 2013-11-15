@@ -38,25 +38,26 @@ import com.hangum.tadpole.sql.system.permission.PermissionChecker;
  * DB 정보를 보여 주는 다이얼로그
  * 
  * @author hangum
- *
+ * 
  */
 public class DBInformationDialog extends Dialog {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(DBInformationDialog.class);
-	
+
 	private Composite container;
 	private Composite compositeBody;
-	
+
 	private UserDBDAO userDB;
 	private AbstractLoginComposite loginComposite;
 	/** group name */
 	private List<String> groupName;
-	private String selGroupName;	
+	private String selGroupName;
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public DBInformationDialog(Shell parentShell, UserDBDAO userDB) {
@@ -64,7 +65,7 @@ public class DBInformationDialog extends Dialog {
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		this.userDB = userDB;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -73,6 +74,7 @@ public class DBInformationDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -83,7 +85,7 @@ public class DBInformationDialog extends Dialog {
 		gridLayout.horizontalSpacing = 3;
 		gridLayout.marginHeight = 3;
 		gridLayout.marginWidth = 3;
-		
+
 		Composite compositeTail = new Composite(container, SWT.NONE);
 		GridLayout gl_compositeTail = new GridLayout(1, false);
 		gl_compositeTail.verticalSpacing = 3;
@@ -92,53 +94,56 @@ public class DBInformationDialog extends Dialog {
 		gl_compositeTail.marginWidth = 3;
 		compositeTail.setLayout(gl_compositeTail);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		
+
 		Group grpOtherInformation = new Group(compositeTail, SWT.NONE);
 		grpOtherInformation.setLayout(new GridLayout(2, false));
 		grpOtherInformation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		grpOtherInformation.setText(Messages.DBInformationDialog_1);
-		
-//		Label lblGroupName = new Label(grpOtherInformation, SWT.NONE);
-//		lblGroupName.setText(Messages.DBInformationDialog_2);
-//		
-//		Label lblGroupValue = new Label(grpOtherInformation, SWT.NONE);
-//		lblGroupValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		lblGroupValue.setText(SessionManager.getGroupName());
-		
+
+		// Label lblGroupName = new Label(grpOtherInformation, SWT.NONE);
+		// lblGroupName.setText(Messages.DBInformationDialog_2);
+		//
+		// Label lblGroupValue = new Label(grpOtherInformation, SWT.NONE);
+		// lblGroupValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+		// false, 1, 1));
+		// lblGroupValue.setText(SessionManager.getGroupName());
+
 		Label lblEmail = new Label(grpOtherInformation, SWT.NONE);
 		lblEmail.setText(Messages.DBInformationDialog_3);
-		
+
 		Label lblEmailValue = new Label(grpOtherInformation, SWT.NONE);
 		lblEmailValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblEmailValue.setText(SessionManager.getEMAIL());
-		
+
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText(Messages.DBInformationDialog_4);
-		
-		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {//SessionManager.getRoleType(userDB.getGroup_seq()), userDB)) {
+
+		if (PermissionChecker.isShow(SessionManager.getRepresentRole())) {// SessionManager.getRoleType(userDB.getGroup_seq()),
+																			// userDB))
+																			// {
 			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
 			lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			lblNameValue.setText(SessionManager.getName());
-			
+
 			compositeBody = new Composite(container, SWT.NONE);
 			compositeBody.setLayout(new GridLayout(1, false));
 			compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-					
+
 			initDBWidget();
 		} else {
 			Group grpDetail = new Group(container, SWT.NONE);
 			grpDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			grpDetail.setText(Messages.DBInformationDialog_5);
 			grpDetail.setLayout(new GridLayout(1, false));
-			
+
 			Label lblNewLabel = new Label(grpDetail, SWT.NONE);
 			lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			lblNewLabel.setText(Messages.MainEditor_21);
 		}
-		
+
 		return container;
 	}
-	
+
 	/**
 	 * db widget
 	 */
@@ -149,7 +154,7 @@ public class DBInformationDialog extends Dialog {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}
 		selGroupName = userDB.getGroup_name();
-		
+
 		DBDefine dbDefine = DBDefine.getDBDefine(userDB);
 		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, groupName, selGroupName, userDB);
 		compositeBody.layout();
@@ -158,6 +163,7 @@ public class DBInformationDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -173,7 +179,7 @@ public class DBInformationDialog extends Dialog {
 		DBDefine dbDefine = DBDefine.getDBDefine(userDB);
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			return new Point(450, 460);
-		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
+		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
 			return new Point(450, 540);
 		} else {
 			return new Point(450, 590);

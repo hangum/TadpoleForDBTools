@@ -17,23 +17,23 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
 
-
 /**
- * This class controls all aspects of the application's execution
- * and is contributed through the plugin.xml.
+ * This class controls all aspects of the application's execution and is
+ * contributed through the plugin.xml.
  */
 public class Application implements EntryPoint {
 
 	public int createUI() {
-		Display display = PlatformUI.createDisplay();//new TadpoleDisplay();// PlatformUI.createDisplay();
-		
-		WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
-		return PlatformUI.createAndRunWorkbench( display, advisor );
+		Display display = PlatformUI.createDisplay();// new TadpoleDisplay();//
+														// PlatformUI.createDisplay();
+
+		WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();
+		return PlatformUI.createAndRunWorkbench(display, advisor);
 	}
-	
-//	@Override
-//	public void stop() {
-//		// TODO Auto-generated method stub
-//	}
-	
+
+	// @Override
+	// public void stop() {
+	// // TODO Auto-generated method stub
+	// }
+
 }

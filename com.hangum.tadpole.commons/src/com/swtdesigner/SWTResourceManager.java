@@ -26,26 +26,29 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-
 /**
- * Utility class for managing OS resources associated with SWT controls such as colors, fonts, images, etc.
+ * Utility class for managing OS resources associated with SWT controls such as
+ * colors, fonts, images, etc.
  * <p>
- * !!! IMPORTANT !!! Application code must explicitly invoke the <code>dispose()</code> method to release the
- * operating system resources managed by cached objects when those objects and OS resources are no longer
+ * !!! IMPORTANT !!! Application code must explicitly invoke the
+ * <code>dispose()</code> method to release the operating system resources
+ * managed by cached objects when those objects and OS resources are no longer
  * needed (e.g. on application shutdown)
  * <p>
  * This class may be freely distributed as part of any application or plugin.
  * <p>
+ * 
  * @author scheglov_ke
  * @author Dan Rubel
  */
 public class SWTResourceManager {
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// Color
 	//
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	private static Map<RGB, Color> m_colorMap = new HashMap<RGB, Color>();
+
 	/**
 	 * Returns the system {@link Color} matching the specific ID.
 	 * 
@@ -57,6 +60,7 @@ public class SWTResourceManager {
 		Display display = Display.getCurrent();
 		return display.getSystemColor(systemColorID);
 	}
+
 	/**
 	 * Returns a {@link Color} given its red, green and blue component values.
 	 * 
@@ -66,11 +70,13 @@ public class SWTResourceManager {
 	 *            the green component of the color
 	 * @param b
 	 *            the blue component of the color
-	 * @return the {@link Color} matching the given red, green and blue component values
+	 * @return the {@link Color} matching the given red, green and blue
+	 *         component values
 	 */
 	public static Color getColor(int r, int g, int b) {
 		return getColor(new RGB(r, g, b));
 	}
+
 	/**
 	 * Returns a {@link Color} given its RGB value.
 	 * 
@@ -87,6 +93,7 @@ public class SWTResourceManager {
 		}
 		return color;
 	}
+
 	/**
 	 * Dispose of all the cached {@link Color}'s.
 	 */
@@ -96,15 +103,17 @@ public class SWTResourceManager {
 		}
 		m_colorMap.clear();
 	}
-	////////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// Image
 	//
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	/**
 	 * Maps image paths to images.
 	 */
 	private static Map<String, Image> m_imageMap = new HashMap<String, Image>();
+
 	/**
 	 * Returns an {@link Image} encoded by the specified {@link InputStream}.
 	 * 
@@ -116,14 +125,15 @@ public class SWTResourceManager {
 		try {
 			Display display = Display.getCurrent();
 			ImageData data = new ImageData(stream);
-//			if (data.transparentPixel > 0) {
-//				return new Image(display, data, data.getTransparencyMask());
-//			}
+			// if (data.transparentPixel > 0) {
+			// return new Image(display, data, data.getTransparencyMask());
+			// }
 			return new Image(display, data);
 		} finally {
 			stream.close();
 		}
 	}
+
 	/**
 	 * Returns an {@link Image} stored in the file at the specified path.
 	 * 
@@ -138,14 +148,16 @@ public class SWTResourceManager {
 				image = getImage(new FileInputStream(path));
 				m_imageMap.put(path, image);
 			} catch (Exception e) {
-//				image = getMissingImage();
-//				m_imageMap.put(path, image);
+				// image = getMissingImage();
+				// m_imageMap.put(path, image);
 			}
 		}
 		return image;
 	}
+
 	/**
-	 * Returns an {@link Image} stored in the file at the specified path relative to the specified class.
+	 * Returns an {@link Image} stored in the file at the specified path
+	 * relative to the specified class.
 	 * 
 	 * @param clazz
 	 *            the {@link Class} relative to which to find the image
@@ -161,40 +173,47 @@ public class SWTResourceManager {
 				image = getImage(clazz.getResourceAsStream(path));
 				m_imageMap.put(key, image);
 			} catch (Exception e) {
-//				image = getMissingImage();
-//				m_imageMap.put(key, image);
+				// image = getMissingImage();
+				// m_imageMap.put(key, image);
 			}
 		}
 		return image;
 	}
+
 	private static final int MISSING_IMAGE_SIZE = 10;
-//	/**
-//	 * @return the small {@link Image} that can be used as placeholder for missing image.
-//	 */
-//	private static Image getMissingImage() {
-//		Image image = new Image(Display.getCurrent(), MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
-//		//
-//		GC gc = new GC(image);
-//		gc.setBackground(getColor(SWT.COLOR_RED));
-//		gc.fillRectangle(0, 0, MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
-//		gc.dispose();
-//		//
-//		return image;
-//	}
+	// /**
+	// * @return the small {@link Image} that can be used as placeholder for
+	// missing image.
+	// */
+	// private static Image getMissingImage() {
+	// Image image = new Image(Display.getCurrent(), MISSING_IMAGE_SIZE,
+	// MISSING_IMAGE_SIZE);
+	// //
+	// GC gc = new GC(image);
+	// gc.setBackground(getColor(SWT.COLOR_RED));
+	// gc.fillRectangle(0, 0, MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
+	// gc.dispose();
+	// //
+	// return image;
+	// }
 	/**
-	 * Style constant for placing decorator image in top left corner of base image.
+	 * Style constant for placing decorator image in top left corner of base
+	 * image.
 	 */
 	public static final int TOP_LEFT = 1;
 	/**
-	 * Style constant for placing decorator image in top right corner of base image.
+	 * Style constant for placing decorator image in top right corner of base
+	 * image.
 	 */
 	public static final int TOP_RIGHT = 2;
 	/**
-	 * Style constant for placing decorator image in bottom left corner of base image.
+	 * Style constant for placing decorator image in bottom left corner of base
+	 * image.
 	 */
 	public static final int BOTTOM_LEFT = 3;
 	/**
-	 * Style constant for placing decorator image in bottom right corner of base image.
+	 * Style constant for placing decorator image in bottom right corner of base
+	 * image.
 	 */
 	public static final int BOTTOM_RIGHT = 4;
 	/**
@@ -206,8 +225,10 @@ public class SWTResourceManager {
 	 */
 	@SuppressWarnings("unchecked")
 	private static Map<Image, Map<Image, Image>>[] m_decoratedImageMap = new Map[LAST_CORNER_KEY];
+
 	/**
-	 * Returns an {@link Image} composed of a base image decorated by another image.
+	 * Returns an {@link Image} composed of a base image decorated by another
+	 * image.
 	 * 
 	 * @param baseImage
 	 *            the base {@link Image} that should be decorated
@@ -218,8 +239,10 @@ public class SWTResourceManager {
 	public static Image decorateImage(Image baseImage, Image decorator) {
 		return decorateImage(baseImage, decorator, BOTTOM_RIGHT);
 	}
+
 	/**
-	 * Returns an {@link Image} composed of a base image decorated by another image.
+	 * Returns an {@link Image} composed of a base image decorated by another
+	 * image.
 	 * 
 	 * @param baseImage
 	 *            the base {@link Image} that should be decorated
@@ -245,29 +268,31 @@ public class SWTResourceManager {
 		}
 		//
 		Image result = decoratedMap.get(decorator);
-//		if (result == null) {
-//			Rectangle bib = baseImage.getBounds();
-//			Rectangle dib = decorator.getBounds();
-//			//
-//			result = new Image(Display.getCurrent(), bib.width, bib.height);
-//			//
-//			GC gc = new GC(result);
-//			gc.drawImage(baseImage, 0, 0);
-//			if (corner == TOP_LEFT) {
-//				gc.drawImage(decorator, 0, 0);
-//			} else if (corner == TOP_RIGHT) {
-//				gc.drawImage(decorator, bib.width - dib.width, 0);
-//			} else if (corner == BOTTOM_LEFT) {
-//				gc.drawImage(decorator, 0, bib.height - dib.height);
-//			} else if (corner == BOTTOM_RIGHT) {
-//				gc.drawImage(decorator, bib.width - dib.width, bib.height - dib.height);
-//			}
-//			gc.dispose();
-//			//
-//			decoratedMap.put(decorator, result);
-//		}
+		// if (result == null) {
+		// Rectangle bib = baseImage.getBounds();
+		// Rectangle dib = decorator.getBounds();
+		// //
+		// result = new Image(Display.getCurrent(), bib.width, bib.height);
+		// //
+		// GC gc = new GC(result);
+		// gc.drawImage(baseImage, 0, 0);
+		// if (corner == TOP_LEFT) {
+		// gc.drawImage(decorator, 0, 0);
+		// } else if (corner == TOP_RIGHT) {
+		// gc.drawImage(decorator, bib.width - dib.width, 0);
+		// } else if (corner == BOTTOM_LEFT) {
+		// gc.drawImage(decorator, 0, bib.height - dib.height);
+		// } else if (corner == BOTTOM_RIGHT) {
+		// gc.drawImage(decorator, bib.width - dib.width, bib.height -
+		// dib.height);
+		// }
+		// gc.dispose();
+		// //
+		// decoratedMap.put(decorator, result);
+		// }
 		return result;
 	}
+
 	/**
 	 * Dispose all of the cached {@link Image}'s.
 	 */
@@ -293,11 +318,12 @@ public class SWTResourceManager {
 			}
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// Font
 	//
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	/**
 	 * Maps font names to fonts.
 	 */
@@ -306,6 +332,7 @@ public class SWTResourceManager {
 	 * Maps fonts to their bold versions.
 	 */
 	private static Map<Font, Font> m_fontToBoldFontMap = new HashMap<Font, Font>();
+
 	/**
 	 * Returns a {@link Font} based on its name, height and style.
 	 * 
@@ -320,9 +347,10 @@ public class SWTResourceManager {
 	public static Font getFont(String name, int height, int style) {
 		return getFont(name, height, style, false, false);
 	}
+
 	/**
-	 * Returns a {@link Font} based on its name, height and style. Windows-specific strikeout and underline
-	 * flags are also supported.
+	 * Returns a {@link Font} based on its name, height and style.
+	 * Windows-specific strikeout and underline flags are also supported.
 	 * 
 	 * @param name
 	 *            the name of the font
@@ -334,7 +362,8 @@ public class SWTResourceManager {
 	 *            the strikeout flag (warning: Windows only)
 	 * @param underline
 	 *            the underline flag (warning: Windows only)
-	 * @return {@link Font} The font matching the name, height, style, strikeout and underline
+	 * @return {@link Font} The font matching the name, height, style, strikeout
+	 *         and underline
 	 */
 	public static Font getFont(String name, int size, int style, boolean strikeout, boolean underline) {
 		String fontName = name + '|' + size + '|' + style + '|' + strikeout + '|' + underline;
@@ -362,6 +391,7 @@ public class SWTResourceManager {
 		}
 		return font;
 	}
+
 	/**
 	 * Returns a bold version of the given {@link Font}.
 	 * 
@@ -379,6 +409,7 @@ public class SWTResourceManager {
 		}
 		return font;
 	}
+
 	/**
 	 * Dispose all of the cached {@link Font}'s.
 	 */
@@ -394,15 +425,17 @@ public class SWTResourceManager {
 		}
 		m_fontToBoldFontMap.clear();
 	}
-	////////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// Cursor
 	//
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	/**
 	 * Maps IDs to cursors.
 	 */
 	private static Map<Integer, Cursor> m_idToCursorMap = new HashMap<Integer, Cursor>();
+
 	/**
 	 * Returns the system cursor matching the specific ID.
 	 * 
@@ -419,6 +452,7 @@ public class SWTResourceManager {
 		}
 		return cursor;
 	}
+
 	/**
 	 * Dispose all of the cached cursors.
 	 */
@@ -428,14 +462,16 @@ public class SWTResourceManager {
 		}
 		m_idToCursorMap.clear();
 	}
-	////////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// General
 	//
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	/**
-	 * Dispose of cached objects and their underlying OS resources. This should only be called when the cached
-	 * objects are no longer needed (e.g. on application shutdown).
+	 * Dispose of cached objects and their underlying OS resources. This should
+	 * only be called when the cached objects are no longer needed (e.g. on
+	 * application shutdown).
 	 */
 	public static void dispose() {
 		disposeColors();

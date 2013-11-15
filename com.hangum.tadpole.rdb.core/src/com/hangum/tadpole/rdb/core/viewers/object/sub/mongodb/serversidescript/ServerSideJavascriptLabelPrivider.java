@@ -22,25 +22,28 @@ import com.swtdesigner.ResourceManager;
  * ServerSide Javascript 컬럼 정보
  * 
  * @author hangum
- *
+ * 
  */
 public class ServerSideJavascriptLabelPrivider extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/javascript.png"); //$NON-NLS-1$
+		if (columnIndex == 0)
+			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/javascript.png"); //$NON-NLS-1$
 		return null;
 	}
-	
+
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		MongoDBServerSideJavaScriptDAO tc = (MongoDBServerSideJavaScriptDAO)element;
-		
-		switch(columnIndex) {
-		case 0: return tc.getName();
-		case 1: return tc.getContent();
+		MongoDBServerSideJavaScriptDAO tc = (MongoDBServerSideJavaScriptDAO) element;
+
+		switch (columnIndex) {
+		case 0:
+			return tc.getName();
+		case 1:
+			return tc.getContent();
 		}
-		
+
 		return "** not set column **";
 	}
 

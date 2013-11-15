@@ -18,22 +18,22 @@ import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
  * sort를 위한 최상위 클래서(기본으로 table의 column 사용)
  * 
  * @author hangum
- *
+ * 
  */
-public  class TableColumnComparator extends ObjectComparator  {
-	
+public class TableColumnComparator extends ObjectComparator {
+
 	public TableColumnComparator() {
 		this.propertyIndex = -1;
 		direction = ASCENDING;
 	}
-	
+
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		TableColumnDAO tc1 = (TableColumnDAO)e1;
-		TableColumnDAO tc2 = (TableColumnDAO)e2;
-		
+		TableColumnDAO tc1 = (TableColumnDAO) e1;
+		TableColumnDAO tc2 = (TableColumnDAO) e2;
+
 		int rc = 0;
-		switch(propertyIndex) {
+		switch (propertyIndex) {
 		case 0:
 			rc = tc1.getName().toLowerCase().compareToIgnoreCase(tc2.getName().toLowerCase());
 			break;
@@ -55,8 +55,7 @@ public  class TableColumnComparator extends ObjectComparator  {
 		case 6:
 			rc = tc1.getExtra().toLowerCase().compareToIgnoreCase(tc2.getExtra().toLowerCase());
 		}
-		
-				
+
 		if (direction == DESCENDING) {
 			rc = -rc;
 		}

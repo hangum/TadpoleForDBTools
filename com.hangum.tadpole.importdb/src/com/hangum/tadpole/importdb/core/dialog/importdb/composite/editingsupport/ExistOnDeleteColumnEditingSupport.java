@@ -22,14 +22,14 @@ import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
  * 데이터 임포트 할것인지.
  * 
  * @author hangum
- *
+ * 
  */
 public class ExistOnDeleteColumnEditingSupport extends EditingSupport {
 	private final TableViewer viewer;
-	
+
 	public ExistOnDeleteColumnEditingSupport(TableViewer viewer) {
 		super(viewer);
-		
+
 		this.viewer = viewer;
 	}
 
@@ -45,15 +45,15 @@ public class ExistOnDeleteColumnEditingSupport extends EditingSupport {
 
 	@Override
 	protected Object getValue(Object element) {
-		ModTableDAO modDao = (ModTableDAO)element;
+		ModTableDAO modDao = (ModTableDAO) element;
 		return modDao.isExistOnDelete();
 	}
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		ModTableDAO modDao = (ModTableDAO)element;
-		modDao.setExistOnDelete((Boolean)value);
-		
+		ModTableDAO modDao = (ModTableDAO) element;
+		modDao.setExistOnDelete((Boolean) value);
+
 		viewer.update(element, null);
 	}
 

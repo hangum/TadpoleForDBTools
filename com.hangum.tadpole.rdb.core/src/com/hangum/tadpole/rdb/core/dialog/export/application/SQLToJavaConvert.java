@@ -19,11 +19,11 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
  * sql to java
  * 
  * @author hangum
- *
+ * 
  */
 public class SQLToJavaConvert {
 	public static final String DEFAULT_VARIABLE = "sqlBuff";
-	
+
 	/**
 	 * sql to string
 	 * 
@@ -33,17 +33,17 @@ public class SQLToJavaConvert {
 	 */
 	public static String sqlToString(String name, String sql) {
 		StringBuffer sbSQL = new StringBuffer("StringBuffer " + name + " = new StringBuffer();" + PublicTadpoleDefine.LINE_SEPARATOR);
-		
-		sql = StringUtils.remove(sql, ";");		
+
+		sql = StringUtils.remove(sql, ";");
 		String[] splists = StringUtils.split(sql, PublicTadpoleDefine.LINE_SEPARATOR);
 		for (String part : splists) {
-			
-			if(!"".equals( StringUtils.trimToEmpty(part) )) {
+
+			if (!"".equals(StringUtils.trimToEmpty(part))) {
 				// https://github.com/hangum/TadpoleForDBTools/issues/181 fix
 				sbSQL.append(name + ".append(\" " + SQLTextUtil.delLineChar(part) + " \"); " + PublicTadpoleDefine.LINE_SEPARATOR);
-			}			
+			}
 		}
-		
+
 		return sbSQL.toString();
 	}
 

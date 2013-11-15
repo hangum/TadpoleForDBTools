@@ -30,53 +30,54 @@ public class MongoDBQueryUtil {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(MongoDBQueryUtil.class);
-	
+
 	private int DATA_COUNT = 1000;
-	
+
 	private UserDBDAO userDB;
 	private String requestQuery;
-	
+
 	private List<DBObject> listDBOject;
-	
+
 	/** 처음한번은 반듯이 동작해야 하므로 */
 	private boolean isFirst = true;
 	private int startPoint = 0;
 	private int nextPoint = -1;
-	
+
 	public MongoDBQueryUtil(UserDBDAO userDB, String requestQuery) {
 		this.userDB = userDB;
 		this.requestQuery = requestQuery;
 	}
-	
+
 	public void nextQuery() throws Exception {
-		startPoint = nextPoint+1;
+		startPoint = nextPoint + 1;
 		nextPoint = nextPoint + DATA_COUNT;
 		runSQLSelect();
 	}
-	
+
 	/**
 	 * 테이블에 쿼리를 실행합니다.
 	 */
 	private void runSQLSelect() throws Exception {
-		
+
 		DBCollection dbCollection = MongoDBQuery.findCollection(userDB, requestQuery);
 		DBCursor dbCursor = dbCollection.find().skip(startPoint).limit(DATA_COUNT);
-		
+
 		listDBOject = dbCursor.toArray();
 	}
-	
+
 	public boolean hasNext() {
-		if(isFirst) {
+		if (isFirst) {
 			isFirst = false;
 		} else {
-			if(listDBOject.size() < DATA_COUNT) return false;
+			if (listDBOject.size() < DATA_COUNT)
+				return false;
 		}
-		 
-		return true;		
+
+		return true;
 	}
-	
+
 	public List<DBObject> getCollectionDataList() {
 		return listDBOject;
 	}
-	
+
 }

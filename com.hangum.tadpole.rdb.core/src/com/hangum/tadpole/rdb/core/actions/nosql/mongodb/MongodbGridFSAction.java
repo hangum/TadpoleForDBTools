@@ -30,9 +30,9 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * mongodb GridFS action
- * 	
+ * 
  * @author hangum
- *
+ * 
  */
 public class MongodbGridFSAction implements IViewActionDelegate {
 	/**
@@ -47,16 +47,16 @@ public class MongodbGridFSAction implements IViewActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		try {
 			GridFsEditorInput input = new GridFsEditorInput(userDB);
 			page.openEditor(input, GridFSEditor.ID, false);
-			
+
 		} catch (PartInitException e) {
 			logger.error("Mongodb gridfs", e);
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "GridFS Open Exception", errStatus); //$NON-NLS-1$
 		}
@@ -64,7 +64,7 @@ public class MongodbGridFSAction implements IViewActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
+		this.sel = (IStructuredSelection) selection;
 	}
 
 	@Override

@@ -31,47 +31,46 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  *  를 참고합니다.
  *  
  * MSSQL 은 다음을 지원합니다.(http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=11774)
-	Microsoft® SQL Server® 2012
-	Microsoft® SQL Server® 2008 R2
-	Microsoft® SQL Server® 2008
-	Microsoft® SQL Server® 2005
-	Microsoft® SQL AzureTM
+ * 	Microsoft® SQL Server® 2012
+ * 	Microsoft® SQL Server® 2008 R2
+ * 	Microsoft® SQL Server® 2008
+ * 	Microsoft® SQL Server® 2005
+ * 	Microsoft® SQL AzureTM
  * </pre>
  * 
  * @author hangum
- *
+ * 
  */
 public enum DBDefine {
 	/** Tadpole System DB */
 	TADPOLE_SYSTEM_DEFAULT,
 	TADPOLE_SYSTEM_MYSQL_DEFAULT,
-	
+
 	/** USER DB */
 	ORACLE_DEFAULT,
 	MSSQL_DEFAULT,
 	MSSQL_8_LE_DEFAULT,
-	
+
 	MYSQL_DEFAULT,
 	MARIADB_DEFAULT,
 	SQLite_DEFAULT,
 	CUBRID_DEFAULT,
 	POSTGRE_DEFAULT,
-	
+
 	/** hive */
 	HIVE_DEFAULT,
-	
+
 	/** NO SQL */
 	MONGODB_DEFAULT,
-	
+
 	/** Aamazon RDS */
-	AMAZONRDS_DEFAULT
-	;	
-	
+	AMAZONRDS_DEFAULT;
+
 	private static final Logger logger = Logger.getLogger(DBDefine.class);
-	
+
 	/** 환경정보가 있는 상대 위치 */
-	private final static String prefix 			= "com/hangum/tadpole/engine/config/";
-	private final static String prefix_system 	= "com/hangum/tadpole/engine/config/internal/system/";	
+	private final static String prefix = "com/hangum/tadpole/engine/config/";
+	private final static String prefix_system = "com/hangum/tadpole/engine/config/internal/system/";
 
 	/**
 	 * db 환경이 있는 정보를 리턴한다.
@@ -79,65 +78,91 @@ public enum DBDefine {
 	 * @return
 	 */
 	public String getLocation() {
-		switch ( this ) {
-			case TADPOLE_SYSTEM_DEFAULT: return prefix_system + "TadpoleSystem-SQLite-Config.xml";
-			case TADPOLE_SYSTEM_MYSQL_DEFAULT: return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
-			
-			case ORACLE_DEFAULT:	return prefix + "OracleConfig.xml";
-			case MSSQL_DEFAULT:		return prefix + "MSSQLConfig.xml";
-			case MSSQL_8_LE_DEFAULT: return prefix + "MSSQLConfig_8_LE.xml";
-			
-			case MYSQL_DEFAULT:		return prefix + "MySQLConfig.xml";
-			case MARIADB_DEFAULT:		return prefix + "MariaDBConfig.xml";
-			
-			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
-			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
-			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
-			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
-			default:
-				return "undefine db";
+		switch (this) {
+		case TADPOLE_SYSTEM_DEFAULT:
+			return prefix_system + "TadpoleSystem-SQLite-Config.xml";
+		case TADPOLE_SYSTEM_MYSQL_DEFAULT:
+			return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
+
+		case ORACLE_DEFAULT:
+			return prefix + "OracleConfig.xml";
+		case MSSQL_DEFAULT:
+			return prefix + "MSSQLConfig.xml";
+		case MSSQL_8_LE_DEFAULT:
+			return prefix + "MSSQLConfig_8_LE.xml";
+
+		case MYSQL_DEFAULT:
+			return prefix + "MySQLConfig.xml";
+		case MARIADB_DEFAULT:
+			return prefix + "MariaDBConfig.xml";
+
+		case SQLite_DEFAULT:
+			return prefix + "SQLiteConfig.xml";
+		case CUBRID_DEFAULT:
+			return prefix + "CUBRIDConfig.xml";
+		case POSTGRE_DEFAULT:
+			return prefix + "POSTGREConfig.xml";
+		case HIVE_DEFAULT:
+			return prefix + "HIVEConfig.xml";
+		default:
+			return "undefine db";
 		}
 	}
-	
+
 	/**
 	 * DB TYPE을 얻는다.
+	 * 
 	 * @param type
 	 * @return
 	 * @deprecated can use {@DBDefine#getDBDefine()}
 	 */
 	public static DBDefine getDBDefine(String type) {
-		
-		if(type.equalsIgnoreCase("TadpoleSystem")) 		return TADPOLE_SYSTEM_DEFAULT;
-		if(type.equalsIgnoreCase("TadpoleSystem_MYSQL")) 	return TADPOLE_SYSTEM_MYSQL_DEFAULT;
-		
-		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
-		
-		else if(type.equalsIgnoreCase("MSSQL")) 		return MSSQL_DEFAULT;
-		else if(type.equalsIgnoreCase("MSSQL_8_LE"))	return MSSQL_8_LE_DEFAULT;
-		
-		else if(type.equalsIgnoreCase("MySQL")) 		return MYSQL_DEFAULT;
-		else if(type.equalsIgnoreCase("MariaDB")) 		return MARIADB_DEFAULT;
-		
-		else if(type.equalsIgnoreCase("SQLite"))		return SQLite_DEFAULT;
-		else if(type.equalsIgnoreCase("Cubrid"))		return CUBRID_DEFAULT;
-		else if(type.equalsIgnoreCase("PostgreSQL"))		return POSTGRE_DEFAULT;
-		
-		else if(type.equalsIgnoreCase("MongoDB"))		return MONGODB_DEFAULT;
-		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
-		else if(type.equalsIgnoreCase("Hive")) 			return HIVE_DEFAULT;
-		else return null;
+
+		if (type.equalsIgnoreCase("TadpoleSystem"))
+			return TADPOLE_SYSTEM_DEFAULT;
+		if (type.equalsIgnoreCase("TadpoleSystem_MYSQL"))
+			return TADPOLE_SYSTEM_MYSQL_DEFAULT;
+
+		else if (type.equalsIgnoreCase("Oracle"))
+			return ORACLE_DEFAULT;
+
+		else if (type.equalsIgnoreCase("MSSQL"))
+			return MSSQL_DEFAULT;
+		else if (type.equalsIgnoreCase("MSSQL_8_LE"))
+			return MSSQL_8_LE_DEFAULT;
+
+		else if (type.equalsIgnoreCase("MySQL"))
+			return MYSQL_DEFAULT;
+		else if (type.equalsIgnoreCase("MariaDB"))
+			return MARIADB_DEFAULT;
+
+		else if (type.equalsIgnoreCase("SQLite"))
+			return SQLite_DEFAULT;
+		else if (type.equalsIgnoreCase("Cubrid"))
+			return CUBRID_DEFAULT;
+		else if (type.equalsIgnoreCase("PostgreSQL"))
+			return POSTGRE_DEFAULT;
+
+		else if (type.equalsIgnoreCase("MongoDB"))
+			return MONGODB_DEFAULT;
+		else if (type.equalsIgnoreCase("AmazonRDS"))
+			return AMAZONRDS_DEFAULT;
+		else if (type.equalsIgnoreCase("Hive"))
+			return HIVE_DEFAULT;
+		else
+			return null;
 	}
-	
+
 	/**
 	 * DB Typed을 얻습니다.
+	 * 
 	 * @param userDB
 	 * @return
 	 */
 	public static DBDefine getDBDefine(UserDBDAO userDB) {
 		return getDBDefine(userDB.getDbms_types());
 	}
-	
-	
+
 	/**
 	 * DB URL INFO를 얻는다.
 	 * 
@@ -145,145 +170,173 @@ public enum DBDefine {
 	 * @return
 	 */
 	public String getDB_URL_INFO() {
-		switch ( this ) {
-			case TADPOLE_SYSTEM_DEFAULT:		return "jdbc:sqlite:/%s";
-			case TADPOLE_SYSTEM_MYSQL_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
-			
-			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
-			
-			case MSSQL_DEFAULT:		
-			case MSSQL_8_LE_DEFAULT: return "jdbc:jtds:sqlserver://%s:%s/%s";
-			
-			case MYSQL_DEFAULT:		return "jdbc:mysql://%s:%s/%s";
-			case MARIADB_DEFAULT:	return "jdbc:mariadb://%s:%s/%s";
-			
-			case SQLite_DEFAULT:	return "jdbc:sqlite:/%s";
-			case CUBRID_DEFAULT:	return "jdbc:cubrid:%s:%s:%s:::";
-			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
-			
+		switch (this) {
+		case TADPOLE_SYSTEM_DEFAULT:
+			return "jdbc:sqlite:/%s";
+		case TADPOLE_SYSTEM_MYSQL_DEFAULT:
+			return "jdbc:mysql://%s:%s/%s";
+
+		case ORACLE_DEFAULT:
+			return "jdbc:oracle:thin:@%s:%s:%s";
+
+		case MSSQL_DEFAULT:
+		case MSSQL_8_LE_DEFAULT:
+			return "jdbc:jtds:sqlserver://%s:%s/%s";
+
+		case MYSQL_DEFAULT:
+			return "jdbc:mysql://%s:%s/%s";
+		case MARIADB_DEFAULT:
+			return "jdbc:mariadb://%s:%s/%s";
+
+		case SQLite_DEFAULT:
+			return "jdbc:sqlite:/%s";
+		case CUBRID_DEFAULT:
+			return "jdbc:cubrid:%s:%s:%s:::";
+		case POSTGRE_DEFAULT:
+			return "jdbc:postgresql://%s:%s/%s";
+
 			/** http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html */
-			case MONGODB_DEFAULT:	return "%s:%s/%s";
-			
-			case HIVE_DEFAULT:		return "jdbc:hive://%s:%s/%s";
-			
-			default:
-				return "undefine db";
+		case MONGODB_DEFAULT:
+			return "%s:%s/%s";
+
+		case HIVE_DEFAULT:
+			return "jdbc:hive://%s:%s/%s";
+
+		default:
+			return "undefine db";
 		}
 	}
-	
+
 	public String getDBToString() {
-		switch ( this ) {
-			case TADPOLE_SYSTEM_DEFAULT:		return "TadpoleSystem";
-			case TADPOLE_SYSTEM_MYSQL_DEFAULT: 	return "TadpoleSystem_MYSQL";
-		
-			case ORACLE_DEFAULT:		return "Oracle";
-			
-			case MSSQL_DEFAULT:			return "MSSQL";
-			case MSSQL_8_LE_DEFAULT:	return "MSSQL_8_LE";
-			
-			case MYSQL_DEFAULT:			return "MySQL";
-			case MARIADB_DEFAULT:		return "MariaDB";
-			
-			case SQLite_DEFAULT:		return "SQLite";
-			case CUBRID_DEFAULT:		return "Cubrid";
-			case POSTGRE_DEFAULT:		return "PostgreSQL";
-			
-			case MONGODB_DEFAULT :  	return "MongoDB";
-			
-			case AMAZONRDS_DEFAULT: 	return "AmazonRDS";
-			
-			case HIVE_DEFAULT: 			return "Hive";
-			default:
-				return "undefine db";
+		switch (this) {
+		case TADPOLE_SYSTEM_DEFAULT:
+			return "TadpoleSystem";
+		case TADPOLE_SYSTEM_MYSQL_DEFAULT:
+			return "TadpoleSystem_MYSQL";
+
+		case ORACLE_DEFAULT:
+			return "Oracle";
+
+		case MSSQL_DEFAULT:
+			return "MSSQL";
+		case MSSQL_8_LE_DEFAULT:
+			return "MSSQL_8_LE";
+
+		case MYSQL_DEFAULT:
+			return "MySQL";
+		case MARIADB_DEFAULT:
+			return "MariaDB";
+
+		case SQLite_DEFAULT:
+			return "SQLite";
+		case CUBRID_DEFAULT:
+			return "Cubrid";
+		case POSTGRE_DEFAULT:
+			return "PostgreSQL";
+
+		case MONGODB_DEFAULT:
+			return "MongoDB";
+
+		case AMAZONRDS_DEFAULT:
+			return "AmazonRDS";
+
+		case HIVE_DEFAULT:
+			return "Hive";
+		default:
+			return "undefine db";
 		}
 	}
-	
+
 	/**
 	 * 에디터에서 사용할 확장자를 만듭니다.
+	 * 
 	 * @return
 	 */
 	public String getExt() {
 		String extension = "tadpole_edit"; //$NON-NLS-1$
-		
-		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
+
+		if (this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
 			extension += ".mysql"; //$NON-NLS-1$
-		} else if(this == DBDefine.ORACLE_DEFAULT) {
+		} else if (this == DBDefine.ORACLE_DEFAULT) {
 			extension += ".oracle"; //$NON-NLS-1$
-		} else if(this == DBDefine.MSSQL_DEFAULT) {
+		} else if (this == DBDefine.MSSQL_DEFAULT) {
 			extension += ".mssql"; //$NON-NLS-1$
-		} else if(this == DBDefine.SQLite_DEFAULT) {
+		} else if (this == DBDefine.SQLite_DEFAULT) {
 			extension += ".sqlite"; //$NON-NLS-1$
-		} else if(this == DBDefine.CUBRID_DEFAULT) {
+		} else if (this == DBDefine.CUBRID_DEFAULT) {
 			extension += ".mysql"; //$NON-NLS-1$
-		} else if(this == DBDefine.HIVE_DEFAULT) {
+		} else if (this == DBDefine.HIVE_DEFAULT) {
 			extension += ".hql"; //$NON-NLS-1$
 		} else {
 			extension += ".postgresql"; //$NON-NLS-1$
 		}
-		
+
 		return extension;
 	}
-	
+
 	/**
 	 * 사용자 디비를 리턴한다.
+	 * 
 	 * @return
 	 */
 	public static List<DBDefine> userDBValues() {
 		List<DBDefine> listSupportDb = new ArrayList<DBDefine>();
-		
-		if(ApplicationArgumentUtils.isUseDB()) {
-			
+
+		if (ApplicationArgumentUtils.isUseDB()) {
+
 			try {
 				String strUserDB = ApplicationArgumentUtils.getUseDB();
-				if("all".equalsIgnoreCase(strUserDB)) listSupportDb = allUserUseDB();
+				if ("all".equalsIgnoreCase(strUserDB))
+					listSupportDb = allUserUseDB();
 				else {
 					String[] arryUseDBTypes = StringUtils.split(strUserDB, ",");
-					
+
 					for (String strDBTyps : arryUseDBTypes) {
 						DBDefine tmpDBDefine = getDBDefine(strDBTyps);
-						if(tmpDBDefine != null) {
-							listSupportDb.add(tmpDBDefine); 
+						if (tmpDBDefine != null) {
+							listSupportDb.add(tmpDBDefine);
 						} else {
 							logger.error("*** Error : Not support DB. " + strDBTyps);
 						}
 					}
 				}
-				
+
 			} catch (Exception e) {
 				logger.error("System initialize exception", e);
 				System.exit(1);
 			}
-			
+
 		} else {
 			listSupportDb = allUserUseDB();
 		}
-		
+
 		return listSupportDb;
 	}
-	
+
 	/**
 	 * 사용자가 사용할 수 있는 모든 디비.
+	 * 
 	 * @return
 	 */
 	private static List<DBDefine> allUserUseDB() {
 		List<DBDefine> supportDb = new ArrayList<DBDefine>();
-		
+
 		supportDb.add(AMAZONRDS_DEFAULT);
-		
+
 		supportDb.add(CUBRID_DEFAULT);
-		
+
 		supportDb.add(HIVE_DEFAULT);
-		
+
 		supportDb.add(MONGODB_DEFAULT);
-		
+
 		supportDb.add(MARIADB_DEFAULT);
-		supportDb.add(MYSQL_DEFAULT);		
-		supportDb.add(MSSQL_DEFAULT);		
-		
+		supportDb.add(MYSQL_DEFAULT);
+		supportDb.add(MSSQL_DEFAULT);
+
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
-		
+
 		return supportDb;
 	}
 }

@@ -21,23 +21,24 @@ import com.swtdesigner.ResourceManager;
 
 /**
  * bug issue action
+ * 
  * @author hangum
- *
+ * 
  */
 public class BugIssueAction extends Action {
 	private final IWorkbenchWindow window;
-	
+
 	public BugIssueAction(IWorkbenchWindow window) {
 		super(Messages.BugIssueAction_0);
 		setId(this.getClass().getName());
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(BrowserActivator.ID, "resources/icons/bugAndIssue.png")); //$NON-NLS-1$
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(BrowserActivator.ID, "resources/icons/bugAndIssue.png")); //$NON-NLS-1$
 		setToolTipText(Messages.BugIssueAction_2);
-		
+
 		this.window = window;
 	}
-	
+
 	public void run() {
-		UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+		UrlLauncher launcher = RWT.getClient().getService(UrlLauncher.class);
 		launcher.openURL("https://github.com/hangum/TadpoleForDBTools/issues");
 	}
 }

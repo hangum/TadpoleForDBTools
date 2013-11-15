@@ -18,23 +18,23 @@ import com.hangum.tadpole.rdb.core.dialog.export.application.SQLToPHPConvert;
  * sql to language convert
  * 
  * @author hangum
- *
+ * 
  */
 public class SQLToLanguageConvert {
-	private PublicTadpoleDefine.SQL_TO_APPLICATION application ;
+	private PublicTadpoleDefine.SQL_TO_APPLICATION application;
 
 	public SQLToLanguageConvert(PublicTadpoleDefine.SQL_TO_APPLICATION application) {
 		this.application = application;
 	}
-	
+
 	public String sqlToString(String name, String sql) {
-		if(application == PublicTadpoleDefine.SQL_TO_APPLICATION.PHP) {
+		if (application == PublicTadpoleDefine.SQL_TO_APPLICATION.PHP) {
 			return SQLToPHPConvert.sqlToString(name, sql);
-		} else if(application == PublicTadpoleDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
+		} else if (application == PublicTadpoleDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
 			return SQLToJavaConvert.sqlToString(name, sql);
 		}
-		
+
 		return "*** not set appliation type ****";
 	}
-	
+
 }

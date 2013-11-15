@@ -17,28 +17,30 @@ import com.hangum.tadpole.cipher.core.utils.EncryptiDecryptUtil;
  * Tadpole Cipher Manager
  * 
  * @author hangum
- *
+ * 
  */
 public class CipherManager {
 	private static CipherManager instance;
 	private static DefaultEncryptDecrypt encryptDecryptUtil;
 
-	private CipherManager() {}
-	
+	private CipherManager() {
+	}
+
 	/**
 	 * cipher manage
+	 * 
 	 * @return
 	 */
 	public static CipherManager getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new CipherManager();
-			
+
 			encryptDecryptUtil = new EncryptiDecryptUtil();
 		}
-		
+
 		return instance;
 	}
-	
+
 	/**
 	 * {@link EncryptiDecryptUtil}
 	 * 
@@ -48,7 +50,7 @@ public class CipherManager {
 	public String encryption(String text) {
 		return encryptDecryptUtil.encryption(text);
 	}
-	
+
 	/**
 	 * {@link EncryptiDecryptUtil}
 	 * 

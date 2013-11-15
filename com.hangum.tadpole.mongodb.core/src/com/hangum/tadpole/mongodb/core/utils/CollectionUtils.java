@@ -13,7 +13,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongodb collection 다루는 utils.
  * 
  * @author hangum
- *
+ * 
  */
 public class CollectionUtils {
 	/**
@@ -31,25 +31,25 @@ public class CollectionUtils {
 	 */
 	public static String getAssistList(final UserDBDAO userDB, final String strCollectionName) {
 		String strAssistList = "";
-		
+
 		try {
 			List<CollectionFieldDAO> showTableColumns = MongoDBQuery.collectionColumn(userDB, strCollectionName);
 			for (CollectionFieldDAO collectionFieldDAO : showTableColumns) {
 				strAssistList += collectionFieldDAO.getField() + ",";
-				
-				if(collectionFieldDAO.getChildren().size() > 0) {
+
+				if (collectionFieldDAO.getChildren().size() > 0) {
 					strAssistList = getChildFild(strAssistList, collectionFieldDAO.getField(), collectionFieldDAO.getChildren());
 				}
 			}
 
 			strAssistList = StringUtils.removeEnd(strAssistList, ",");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("MongoDB groupeditor get the table list", e);
 		}
-		
+
 		return strAssistList;
 	}
-	
+
 	/**
 	 * child field
 	 * 
@@ -61,13 +61,13 @@ public class CollectionUtils {
 	private static String getChildFild(String strAssistList, final String parentCollectionName, final List<CollectionFieldDAO> listCollection) {
 		for (CollectionFieldDAO collectionFieldDAO : listCollection) {
 			strAssistList += parentCollectionName + "." + collectionFieldDAO.getField() + ",";
-			
-			if(collectionFieldDAO.getChildren().size() > 0) {
+
+			if (collectionFieldDAO.getChildren().size() > 0) {
 				strAssistList = getChildFild(strAssistList, collectionFieldDAO.getField(), collectionFieldDAO.getChildren());
 			}
 		}
 		strAssistList = StringUtils.removeEnd(strAssistList, ",");
-		
+
 		return strAssistList;
 	}
 }

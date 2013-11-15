@@ -32,19 +32,19 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
- * RDB Table data to Mongodb 
+ * RDB Table data to Mongodb
  * 
  * @author hangum
- *
+ * 
  */
 public class RDBTableToMongoDBImport extends DBImport {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(RDBTableToMongoDBImport.class);
-	
-	private List<ModTableDAO> listModeTable; 
-	
+
+	private List<ModTableDAO> listModeTable;
+
 	public RDBTableToMongoDBImport(UserDBDAO sourceUserDB, UserDBDAO targetUserDB, List<ModTableDAO> listModeTable) {
 		super(sourceUserDB, targetUserDB);
 		this.listModeTable = listModeTable;
@@ -54,44 +54,45 @@ public class RDBTableToMongoDBImport extends DBImport {
 	 * table import
 	 */
 	public Job workTableImport() {
-		if(0 == listModeTable.size()) {
+		if (0 == listModeTable.size()) {
 			MessageDialog.openInformation(null, "Confirm", "Please select table");
 			return null;
 		}
-		
+
 		// job
 		Job job = new Job("Execute data Import.") {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Start import....", IProgressMonitor.UNKNOWN);
-				
+
 				try {
 					for (ModTableDAO modTableDAO : listModeTable) {
 
 						monitor.subTask(modTableDAO.getName() + " importing...");
-						
+
 						// collection is exist on delete.
-						String strNewColName = modTableDAO.getReName().trim().equals("")?modTableDAO.getName():modTableDAO.getReName();
-						if(modTableDAO.isExistOnDelete()) MongoDBQuery.existOnDelete(getTargetUserDB(), modTableDAO.getName());
-						
+						String strNewColName = modTableDAO.getReName().trim().equals("") ? modTableDAO.getName() : modTableDAO.getReName();
+						if (modTableDAO.isExistOnDelete())
+							MongoDBQuery.existOnDelete(getTargetUserDB(), modTableDAO.getName());
+
 						// insert
 						insertMongoDB(modTableDAO, strNewColName);
-					}			
+					}
 
-				} catch(Exception e) {
-					logger.error("press ok button", e);						
+				} catch (Exception e) {
+					logger.error("press ok button", e);
 					return new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
-				
+
 				return Status.OK_STATUS;
 			}
 		};
-		
+
 		return job;
 	}
-	
+
 	/**
 	 * 데이터를 입력합니다.
 	 * 
@@ -100,36 +101,37 @@ public class RDBTableToMongoDBImport extends DBImport {
 	 * @throws Exception
 	 */
 	private void insertMongoDB(ModTableDAO modTableDAO, String strNewColName) throws Exception {
-		String workTable = modTableDAO.getName();		
-		if(logger.isDebugEnabled()) logger.debug("[work table]" + workTable);			
-		
+		String workTable = modTableDAO.getName();
+		if (logger.isDebugEnabled())
+			logger.debug("[work table]" + workTable);
+
 		SQLQueryUtil qu = new SQLQueryUtil(getSourceUserDB(), "SELECT * FROM " + workTable);
-		while(qu.hasNext()) {
+		while (qu.hasNext()) {
 			qu.nextQuery();
 			Map<Integer, String> mapCNameToIndex = qu.getMapColumns();
 			List<HashMap<Integer, Object>> listTableData = qu.getTableDataList();
-			
+
 			// row 단위
 			List<DBObject> listDBObject = new ArrayList<DBObject>();
-			for (int i=0; i<listTableData.size(); i++) {
-				HashMap<Integer, Object> resultMap = listTableData.get(i);					
-				
+			for (int i = 0; i < listTableData.size(); i++) {
+				HashMap<Integer, Object> resultMap = listTableData.get(i);
+
 				DBObject insertObject = new BasicDBObject();
 				// column 단위
-				for(int j=0; j<mapCNameToIndex.size(); j++) {
-					// BigDecimal is not support mongodb 
-					if(resultMap.get(j) instanceof java.math.BigDecimal) {
-						BigDecimal db = (BigDecimal)resultMap.get(j);
-						insertObject.put(mapCNameToIndex.get(j), db.longValue());	
+				for (int j = 0; j < mapCNameToIndex.size(); j++) {
+					// BigDecimal is not support mongodb
+					if (resultMap.get(j) instanceof java.math.BigDecimal) {
+						BigDecimal db = (BigDecimal) resultMap.get(j);
+						insertObject.put(mapCNameToIndex.get(j), db.longValue());
 					} else {
 						insertObject.put(mapCNameToIndex.get(j), resultMap.get(j));
-					}						
+					}
 				}
-				
+
 				listDBObject.add(insertObject);
-			}	// end for
+			} // end for
 			logger.debug("[work table]" + strNewColName + " size is " + listDBObject.size());
-		
+
 			MongoDBQuery.insertDocument(getTargetUserDB(), strNewColName, listDBObject);
 		}
 	}

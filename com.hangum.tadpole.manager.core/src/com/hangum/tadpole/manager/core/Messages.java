@@ -64,7 +64,7 @@ public class Messages extends NLS {
 	public static String NewUserDialog_lblLanguage_text;
 
 	public static String SystemDBDataManager_8;
-	
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

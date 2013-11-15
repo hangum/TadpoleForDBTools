@@ -30,12 +30,12 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnect
  * hive Others connection info
  * 
  * @author hangum
- *
+ * 
  */
 public class OthersConnectionHiveGroup extends Group {
-	
+
 	private OthersConnectionInfoDAO otherConnectionDAO = new OthersConnectionInfoDAO();
-	
+
 	/** read only connection */
 	private Button btnReadOnlyConnection;
 	private Button btnProfiler;
@@ -44,6 +44,7 @@ public class OthersConnectionHiveGroup extends Group {
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -56,19 +57,19 @@ public class OthersConnectionHiveGroup extends Group {
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
-		
+
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		btnReadOnlyConnection.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_1);
-		
+
 		Button btnTableFilters = new Button(this, SWT.NONE);
 		btnTableFilters.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				if(Dialog.OK == dialog.open()) {
+				if (Dialog.OK == dialog.open()) {
 					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
-					
+
 					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
 					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
 					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
@@ -76,20 +77,20 @@ public class OthersConnectionHiveGroup extends Group {
 			}
 		});
 		btnTableFilters.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_3);
-		
+
 		btnProfiler = new Button(this, SWT.CHECK);
 		btnProfiler.setSelection(true);
 		btnProfiler.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_4);
-		
+
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
 		btnShowTables.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text);
-		
+
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_5);
-		
+
 	}
-	
+
 	/**
 	 * other db connection info
 	 * 
@@ -99,13 +100,13 @@ public class OthersConnectionHiveGroup extends Group {
 		otherConnectionDAO.setReadOnlyConnection(getBtnReadOnlyConnection());
 		otherConnectionDAO.setAutoCommit(getBtnAutoCommit());
 		otherConnectionDAO.setShowTables(getBtnShowTables());
-		
+
 		otherConnectionDAO.setProfiling(getBtnProfiler());
 		otherConnectionDAO.setDMLStatement(getBtnExecuteQuestionDml());
-		
+
 		return otherConnectionDAO;
 	}
-	
+
 	/**
 	 * @return the btnReadOnlyConnection
 	 */
@@ -123,18 +124,18 @@ public class OthersConnectionHiveGroup extends Group {
 	public boolean getBtnProfiler() {
 		return btnProfiler.getSelection();
 	}
-	
+
 	public boolean getBtnExecuteQuestionDml() {
 		return btnExecuteQuestionDml.getSelection();
 	}
-	
+
 	/**
 	 * @param btnShowTables
 	 */
 	public void setBtnShowTables(boolean btnShowTables) {
 		this.btnShowTables.setSelection(btnShowTables);
 	}
-	
+
 	/**
 	 * 
 	 * @return

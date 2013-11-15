@@ -16,24 +16,25 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * default comparator
+ * 
  * @author hangum
- *
+ * 
  */
 public class DefaultComparator extends ObjectComparator {
-	
+
 	public DefaultComparator() {
 		super();
 	}
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		
-		TableViewer tableViewer = (TableViewer)viewer;
-		ITableLabelProvider tlprov = (ITableLabelProvider)tableViewer.getLabelProvider();
-		
-		String e1Val = tlprov.getColumnText(e1, propertyIndex) == null?"":tlprov.getColumnText(e1, propertyIndex);
-		String e2Val = tlprov.getColumnText(e2, propertyIndex) == null?"":tlprov.getColumnText(e2, propertyIndex);
-		
+
+		TableViewer tableViewer = (TableViewer) viewer;
+		ITableLabelProvider tlprov = (ITableLabelProvider) tableViewer.getLabelProvider();
+
+		String e1Val = tlprov.getColumnText(e1, propertyIndex) == null ? "" : tlprov.getColumnText(e1, propertyIndex);
+		String e2Val = tlprov.getColumnText(e2, propertyIndex) == null ? "" : tlprov.getColumnText(e2, propertyIndex);
+
 		int rc = e1Val.toLowerCase().compareTo(e2Val.toLowerCase());
 		if (direction == DESCENDING) {
 			rc = -rc;

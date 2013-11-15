@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Text;
  * javascript eval input dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class EvalInputDialog extends Dialog {
 	int intArgumentCount;
@@ -35,14 +35,15 @@ public class EvalInputDialog extends Dialog {
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public EvalInputDialog(Shell parentShell, int intArgumentCount) {
 		super(parentShell);
-		
+
 		this.intArgumentCount = intArgumentCount;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -51,6 +52,7 @@ public class EvalInputDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -58,46 +60,48 @@ public class EvalInputDialog extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 2;
-		
+
 		textInputValue = new Text[intArgumentCount];
-		for(int i=0; i<intArgumentCount; i++) {
+		for (int i = 0; i < intArgumentCount; i++) {
 			Label lblNewLabel = new Label(container, SWT.NONE);
 			lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			lblNewLabel.setText("input value : " + i);
-			
+
 			textInputValue[i] = new Text(container, SWT.BORDER);
 			textInputValue[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		}
-		
-//		// set default focus
+
+		// // set default focus
 		textInputValue[0].setFocus();
 
 		return container;
 	}
-	
+
 	@Override
 	protected void okPressed() {
-	
+
 		inputObject = new Object[intArgumentCount];
-		for (int i=0; i<intArgumentCount; i++) {
-			inputObject[i] = convertInputVal(textInputValue[i].getText());			
+		for (int i = 0; i < intArgumentCount; i++) {
+			inputObject[i] = convertInputVal(textInputValue[i].getText());
 		}
-		
+
 		super.okPressed();
 	}
-	
+
 	private Object convertInputVal(String val) {
-		if("".equals(val)) return "";
-		
+		if ("".equals(val))
+			return "";
+
 		try {
 			return Double.parseDouble(val);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return val;
 		}
 	}
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -113,7 +117,7 @@ public class EvalInputDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(450, 422);
 	}
-	
+
 	public Object[] getInputObject() {
 		return inputObject;
 	}

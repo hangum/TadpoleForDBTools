@@ -21,16 +21,17 @@ public class ResourceTypeAdapterFactory implements IAdapterFactory {
 
 	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
-		if(adapterType == IActionFilter.class) {
+		if (adapterType == IActionFilter.class) {
 			return new ResourceTypeActionFilterAdapter();
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public Class[] getAdapterList() {
-		return new Class[] {IActionFilter.class};
+		return new Class[] { IActionFilter.class
+		};
 	}
 
 }

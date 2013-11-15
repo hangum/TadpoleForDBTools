@@ -28,22 +28,23 @@ import com.swtdesigner.SWTResourceManager;
  * When your browser shows incorrect information.
  * 
  * @author hangum
- *
+ * 
  */
 public class UserInformationDialog extends Dialog {
-	
+
 	private String userBroser = ""; //$NON-NLS-1$
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public UserInformationDialog(Shell parentShell, String userBrowser) {
 		super(parentShell);
-		
+
 		this.userBroser = userBrowser;
 	}
-	
+
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -52,31 +53,33 @@ public class UserInformationDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		container.setLayout(new GridLayout(1, false));
-		
-		// 
+
+		//
 		Label lblInformation = new Label(container, SWT.NONE);
 		lblInformation.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		lblInformation.setText("User browser is " + userBroser + "."); //$NON-NLS-1$ //$NON-NLS-2$
-		
+
 		Label lblRecommand = new Label(container, SWT.NONE);
 		lblRecommand.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		lblRecommand.setText(Messages.UserInformationDialog_5);
-		
+
 		Label lblRecommand2 = new Label(container, SWT.NONE);
 		lblRecommand2.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		lblRecommand2.setText(Messages.LoginDialog_lblNewLabel_text ); //$NON-NLS-1$
+		lblRecommand2.setText(Messages.LoginDialog_lblNewLabel_text); //$NON-NLS-1$
 
 		return container;
 	}
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

@@ -30,51 +30,52 @@ import com.swtdesigner.ResourceManager;
 /**
  * <pre>
  * 	Application(server, tomcat, jetty)을 종료합니다.
- * 	
+ * 
  * </pre>
  * 
  * @author hangum
- *
+ * 
  */
 public class ExitAction extends Action implements ISelectionListener, IWorkbenchAction {
 	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.ExitAction"; //$NON-NLS-1$
-	
+
 	public ExitAction(IWorkbenchWindow window) {
 		this.window = window;
-		
+
 		setId(ID);
 		setText(Messages.ExitAction_0);
-		if(ApplicationArgumentUtils.isStandaloneMode()) { 
-			setToolTipText(Messages.ExitAction_1);		
+		if (ApplicationArgumentUtils.isStandaloneMode()) {
+			setToolTipText(Messages.ExitAction_1);
 		} else {
 			setToolTipText("Log out");
 		}
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png"));
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png"));
 	}
 
 	@Override
 	public void run() {
-		// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에 내용이 있다면 묻도록 수정.)
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
+		// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에
+		// 내용이 있다면 묻도록 수정.)
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorReference[] references = page.getEditorReferences();
 		for (IEditorReference iEditorReference : references) {
 			page.closeEditor(iEditorReference.getEditor(false), true);
 		}
-		
+
 		// standalone 모드일경우에는 프로그램 종료한다.
-		if(ApplicationArgumentUtils.isStandaloneMode()) {
-			if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
+		if (ApplicationArgumentUtils.isStandaloneMode()) {
+			if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3)) {
 				System.exit(0);
 			}
-		// 서버모드 일 경우 프로그램 로그아웃한다.
+			// 서버모드 일 경우 프로그램 로그아웃한다.
 		} else {
-			if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
+			if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3)) {
 				SessionManager.logout();
 			}
 		}
 	}
-	
+
 	@Override
 	public void dispose() {
 	}
@@ -82,7 +83,7 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

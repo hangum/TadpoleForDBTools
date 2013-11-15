@@ -21,44 +21,44 @@ import com.hangum.tadpole.sql.session.manager.SessionManager;
  * rdb db popup
  * 
  * @author hangum
- *
+ * 
  */
 public class DBTypeActionFilterAdapter implements IActionFilter {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(DBTypeActionFilterAdapter.class);
-	
+
 	private static final String DB_TYPE = "db_type";
 	private static final String USER_TYPE = "user_type";
-	
+
 	@Override
 	public boolean testAttribute(Object target, String name, String value) {
 		UserDBDAO userDB = null;
-		
+
 		if (target instanceof UserDBDAO) {
-			userDB = (UserDBDAO)target;
-			
+			userDB = (UserDBDAO) target;
+
 			// db 종류에 따라.
-			if(DB_TYPE.equals(name)) {
+			if (DB_TYPE.equals(name)) {
 				String[] dbTypes = StringUtils.split(value, ",");
 				for (String dbType : dbTypes) {
-					if(userDB.getDbms_types().toLowerCase().equals(dbType)) {
+					if (userDB.getDbms_types().toLowerCase().equals(dbType)) {
 						return true;
 					}
 				}
-				
-			// 사용자 권한에 따라.
-			} else if(USER_TYPE.equals(name)) {
+
+				// 사용자 권한에 따라.
+			} else if (USER_TYPE.equals(name)) {
 				String[] userTypes = StringUtils.split(value, ",");
 				for (String userType : userTypes) {
-					if(SessionManager.getRoleType(userDB.getGroup_seq()).toLowerCase().equals(userType)) {
+					if (SessionManager.getRoleType(userDB.getGroup_seq()).toLowerCase().equals(userType)) {
 						return true;
 					}
 				}
 			}
 		}
-		
+
 		return false;
 	}
 

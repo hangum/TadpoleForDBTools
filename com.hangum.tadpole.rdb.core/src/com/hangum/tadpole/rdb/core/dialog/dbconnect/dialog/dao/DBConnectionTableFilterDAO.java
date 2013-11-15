@@ -14,13 +14,13 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao;
  * connection table filter
  * 
  * @author hangum
- *
+ * 
  */
 public class DBConnectionTableFilterDAO {
 	boolean isEnable = false;
 	String includeFilter = "";
 	String excludeFilter = "";
-	
+
 	public DBConnectionTableFilterDAO() {
 	}
 
@@ -32,7 +32,8 @@ public class DBConnectionTableFilterDAO {
 	}
 
 	/**
-	 * @param isEnable the isEnable to set
+	 * @param isEnable
+	 *            the isEnable to set
 	 */
 	public void setEnable(boolean isEnable) {
 		this.isEnable = isEnable;
@@ -46,7 +47,8 @@ public class DBConnectionTableFilterDAO {
 	}
 
 	/**
-	 * @param includeFilter the includeFilter to set
+	 * @param includeFilter
+	 *            the includeFilter to set
 	 */
 	public void setIncludeFilter(String includeFilter) {
 		this.includeFilter = includeFilter;
@@ -60,10 +62,11 @@ public class DBConnectionTableFilterDAO {
 	}
 
 	/**
-	 * @param excludeFilter the excludeFilter to set
+	 * @param excludeFilter
+	 *            the excludeFilter to set
 	 */
 	public void setExcludeFilter(String excludeFilter) {
 		this.excludeFilter = excludeFilter;
 	}
-	
+
 }

@@ -15,19 +15,19 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * SSH Tunneling
  * 
  * @author hangum
- *
+ * 
  */
 public class SSHTunnelingDialog extends Dialog {
 	private Text textIP;
@@ -37,6 +37,7 @@ public class SSHTunnelingDialog extends Dialog {
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public SSHTunnelingDialog(Shell parentShell) {
@@ -45,6 +46,7 @@ public class SSHTunnelingDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -55,36 +57,36 @@ public class SSHTunnelingDialog extends Dialog {
 		gridLayout.horizontalSpacing = 5;
 		gridLayout.marginHeight = 5;
 		gridLayout.marginWidth = 5;
-		
+
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Button btnUseSsh = new Button(composite, SWT.CHECK);
 		btnUseSsh.setText("Use SSH");
 		new Label(composite, SWT.NONE);
-		
+
 		Label lblIp = new Label(composite, SWT.NONE);
 		lblIp.setText("IP");
-		
+
 		textIP = new Text(composite, SWT.BORDER);
 		textIP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblPort = new Label(composite, SWT.NONE);
 		lblPort.setText("Port");
-		
+
 		textPort = new Text(composite, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblId = new Label(composite, SWT.NONE);
 		lblId.setText("ID");
-		
+
 		textID = new Text(composite, SWT.BORDER);
 		textID.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblPassword = new Label(composite, SWT.NONE);
 		lblPassword.setText("Password");
-		
+
 		textPasswd = new Text(composite, SWT.BORDER);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -93,6 +95,7 @@ public class SSHTunnelingDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

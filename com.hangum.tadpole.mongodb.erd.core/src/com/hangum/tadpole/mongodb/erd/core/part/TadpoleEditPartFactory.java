@@ -21,26 +21,27 @@ import com.hangum.tadpole.mongodb.model.Table;
  * editpart factory
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleEditPartFactory implements EditPartFactory {
 
 	@Override
 	public EditPart createEditPart(EditPart context, Object model) {
 		EditPart part = null;
-		
-		if(model instanceof DB) {
+
+		if (model instanceof DB) {
 			part = new DBEditPart();
-		} else if(model instanceof Table) {
+		} else if (model instanceof Table) {
 			part = new TableEditPart();
-		} else if(model instanceof Relation) {
+		} else if (model instanceof Relation) {
 			part = new RelationEditPart();
 		} else {
 			throw new IllegalArgumentException("Model class " + model.getClass() + " not supported yet.");
 		}
-		
-		if(part != null) part.setModel(model);
-		
+
+		if (part != null)
+			part.setModel(model);
+
 		return part;
 	}
 

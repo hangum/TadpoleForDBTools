@@ -33,21 +33,22 @@ import com.mongodb.CommandResult;
  * MongoDB Shard info composite
  * 
  * @author hangum
- *
+ * 
  */
 public class ShardingComposite extends Composite {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ShardingComposite.class);
-	
+
 	private UserDBDAO userDB;
 	private BasicDBList shards;
-	
+
 	private FindOneDetailComposite compositeShardList;
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -59,7 +60,7 @@ public class ShardingComposite extends Composite {
 		gridLayout.marginHeight = 1;
 		gridLayout.marginWidth = 1;
 		setLayout(gridLayout);
-		
+
 		this.userDB = userDB;
 
 		Composite compositeServerStatus = new Composite(this, SWT.NONE);
@@ -70,7 +71,7 @@ public class ShardingComposite extends Composite {
 		gl_compositeServerStatus.marginHeight = 1;
 		gl_compositeServerStatus.marginWidth = 1;
 		compositeServerStatus.setLayout(gl_compositeServerStatus);
-		
+
 		Composite composite = new Composite(compositeServerStatus, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -79,11 +80,11 @@ public class ShardingComposite extends Composite {
 		gl_composite.marginHeight = 1;
 		gl_composite.marginWidth = 1;
 		composite.setLayout(gl_composite);
-		
+
 		ToolBar toolBar = new ToolBar(composite, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		toolBar.setBounds(0, 0, 87, 20);
-		
+
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
 		tltmRefresh.setImage(ImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
@@ -93,7 +94,7 @@ public class ShardingComposite extends Composite {
 			}
 		});
 		tltmRefresh.setToolTipText(Messages.CollectionInformationComposite_tltmRefresh_text);
-		
+
 		Group grpReplicaSet = new Group(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpReplicaSet = new GridLayout(1, false);
 		gl_grpReplicaSet.verticalSpacing = 0;
@@ -103,14 +104,14 @@ public class ShardingComposite extends Composite {
 		grpReplicaSet.setLayout(gl_grpReplicaSet);
 		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpReplicaSet.setText(Messages.ShardingComposite_0);
-		
+
 		try {
 			CommandResult res = MongoDBQuery.getAdminMongoDB(userDB).command("listShards"); //$NON-NLS-1$
-			shards = (BasicDBList)res.get("shards"); //$NON-NLS-1$
-		} catch(Exception e) {
+			shards = (BasicDBList) res.get("shards"); //$NON-NLS-1$
+		} catch (Exception e) {
 			logger.error("listShards", e); //$NON-NLS-1$
 		}
-	    
+
 		compositeShardList = new FindOneDetailComposite(grpReplicaSet, Messages.ShardingComposite_4, shards, false);
 		compositeShardList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeLocalLocks = new GridLayout(1, false);
@@ -120,18 +121,18 @@ public class ShardingComposite extends Composite {
 		gl_compositeLocalLocks.marginWidth = 2;
 		compositeShardList.setLayout(gl_compositeLocalLocks);
 	}
-	
+
 	/**
 	 * data refresh
 	 */
 	private void initData() {
 		try {
 			CommandResult res = MongoDBQuery.getAdminMongoDB(userDB).command("listShards"); //$NON-NLS-1$
-			shards = (BasicDBList)res.get("shards"); //$NON-NLS-1$
-		} catch(Exception e) {
+			shards = (BasicDBList) res.get("shards"); //$NON-NLS-1$
+		} catch (Exception e) {
 			logger.error("listShards", e); //$NON-NLS-1$
 		}
-		
+
 		compositeShardList.refresh(Messages.ShardingComposite_4, shards, false);
 	}
 

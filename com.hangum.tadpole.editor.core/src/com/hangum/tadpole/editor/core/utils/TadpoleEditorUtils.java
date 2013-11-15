@@ -19,11 +19,11 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  * Tadpole Editor Utils
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleEditorUtils {
 	private static final Logger logger = Logger.getLogger(TadpoleEditorUtils.class);
-	
+
 	/**
 	 * Tadpole Editor grant text
 	 * 
@@ -31,20 +31,21 @@ public class TadpoleEditorUtils {
 	 * @return
 	 */
 	public static String getGrantText(String initContent) {
-		if(null == initContent | "".equals(initContent)) return "";
-		
+		if (null == initContent | "".equals(initContent))
+			return "";
+
 		String strInitContent = initContent;
 		try {
 			strInitContent = StringUtils.replace(initContent, "\r\n", "\\n");
 			strInitContent = StringUtils.replace(strInitContent, PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
 			strInitContent = StringUtils.replace(strInitContent, "\"", "'");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("Tadpole Editor grant utils", e);
 		}
-		
+
 		return strInitContent;
 	}
-	
+
 	/**
 	 * edito init command
 	 * 
@@ -57,7 +58,7 @@ public class TadpoleEditorUtils {
 		String strContent = getGrantText(initContent);
 		String strAssis = getGrantText(initAssist);
 		String strCommand = "setInitialContent(\"" + ext + "\", \"" + strContent + "\", \"" + strAssis + "\" );";
-		
+
 		return strCommand;
 	}
 }

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
-import java.io.ObjectOutputStream.PutField;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -26,12 +25,12 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * oracle execute plan
  * 
  * @author hangum
- *
+ * 
  */
 public class OracleExecutePlanUtils {
 
 	/**
-	 * oracle query plan을 실행합니다. 
+	 * oracle query plan을 실행합니다.
 	 * 
 	 * @param userDB
 	 * @param sql
@@ -42,19 +41,23 @@ public class OracleExecutePlanUtils {
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
-				
-			stmt = javaConn.prepareStatement( StringUtils.replaceOnce(PartQueryUtil.makeExplainQuery(userDB,  sql), PublicTadpoleDefine.DELIMITER, planTableName));
+
+			stmt = javaConn
+					.prepareStatement(StringUtils.replaceOnce(PartQueryUtil.makeExplainQuery(userDB, sql), PublicTadpoleDefine.DELIMITER, planTableName));
 			rs = stmt.executeQuery();
-			
+
 		} finally {
-			if(rs != null) rs.close();
-			if(stmt != null) stmt.close();
-			if(javaConn != null) javaConn.close();
+			if (rs != null)
+				rs.close();
+			if (stmt != null)
+				stmt.close();
+			if (javaConn != null)
+				javaConn.close();
 		}
-		
+
 	}
 }

@@ -19,21 +19,21 @@ import com.mongodb.util.JSON;
 
 public class ConvertJsonToDBObject {
 	public static void main(String[] args) throws Exception {
-		
+
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
-		
+
 		DBCollection myColl = db.getCollection("objectInsert");
-		
-//		
-//		DBObject dbObject = new BasicDBObject();
-//		dbObject.put("aa", 1);
-//		dbObject.put("bb", "33");
+
+		//
+		// DBObject dbObject = new BasicDBObject();
+		// dbObject.put("aa", 1);
+		// dbObject.put("bb", "33");
 
 		DBObject dbObject = (DBObject) JSON.parse("{'rental_id':1,  'inventory_id':367}");
 		myColl.insert(dbObject);
-		
+
 		DBCursor cursorDoc = myColl.find();
 		while (cursorDoc.hasNext()) {
 			System.out.println(cursorDoc.next());

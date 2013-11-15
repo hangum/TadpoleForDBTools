@@ -61,7 +61,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 public class ExplorerViewer extends ViewPart {
 	private static Logger logger = Logger.getLogger(ExplorerViewer.class);
 	public static String ID = "com.hangum.tadpole.rdb.core.view.object.explorer"; //$NON-NLS-1$
-	
+
 	/** tabfolder가 초기화 될때는 tab select 이벤트 먹지 않도록 조절하지 않도록 */
 	private boolean boolInitObjectHead = true;
 
@@ -71,26 +71,29 @@ public class ExplorerViewer extends ViewPart {
 	/**
 	 * 현재 오픈된페이지를 리프레쉬한다.
 	 */
-	public static enum CHANGE_TYPE { DEL, INS };
+	public static enum CHANGE_TYPE {
+		DEL,
+		INS
+	};
 
 	private UserDBDAO userDB;
 	private CTabFolder tabFolderObject;
 	private Text textSearch;
-	
+
 	private String strSelectItem;
 	private Composite compositeBody;
-	private TadpoleTriggerComposite 	triggerComposite 	= null;
-	private TadpoleFunctionComposite 	functionCompostite 	= null;
-	private TadpoleProcedureComposite	procedureComposite 	= null;
-	private TadpolePackageComposite	    packageComposite 	= null;
-	private TadpoleIndexesComposite 	indexComposite 		= null;
-	private TadpoleViewerComposite 		viewComposite 		= null;
-	private TadpoleTableComposite 		tableComposite 		= null;
-	
+	private TadpoleTriggerComposite triggerComposite = null;
+	private TadpoleFunctionComposite functionCompostite = null;
+	private TadpoleProcedureComposite procedureComposite = null;
+	private TadpolePackageComposite packageComposite = null;
+	private TadpoleIndexesComposite indexComposite = null;
+	private TadpoleViewerComposite viewComposite = null;
+	private TadpoleTableComposite tableComposite = null;
+
 	// mongodb
-	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
-	private TadpoleMongoDBIndexesComposite mongoIndexComposite 			= null;
-	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite 	= null;
+	private TadpoleMongoDBCollectionComposite mongoCollectionComposite = null;
+	private TadpoleMongoDBIndexesComposite mongoIndexComposite = null;
+	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite = null;
 
 	public ExplorerViewer() {
 		super();
@@ -125,35 +128,35 @@ public class ExplorerViewer extends ViewPart {
 			public void keyPressed(KeyEvent e) {
 				String strSelectTab = tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getText();
 				String strSearchText = textSearch.getText();
-				
+
 				if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString())) {
 					mongoCollectionComposite.filter(strSearchText);
-				
+
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
 					tableComposite.filter(strSearchText);
-				
+
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
-					viewComposite.filter(strSearchText);					
-				
+					viewComposite.filter(strSearchText);
+
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
-					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+					if (userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 						mongoIndexComposite.filter(strSearchText);
 					} else {
 						indexComposite.filter(strSearchText);
-					}					
-				
+					}
+
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
 					procedureComposite.filter(strSearchText);
-				
+
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
 					packageComposite.filter(strSearchText);
-				
+
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
 					functionCompostite.filter(strSearchText);
-				
+
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.toString())) {
 					triggerComposite.filter(strSearchText);
-				
+
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.toString())) {
 					mongoJavaScriptComposite.filter(strSearchText);
 				}
@@ -171,15 +174,16 @@ public class ExplorerViewer extends ViewPart {
 		compositeBody.setLayout(gl_compositeBody);
 
 		tabFolderObject = new CTabFolder(compositeBody, SWT.NONE);
-		tabFolderObject.setBorderVisible(false);		
+		tabFolderObject.setBorderVisible(false);
 		tabFolderObject.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
-		
+
 		tabFolderObject.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent evt) {
-				if (userDB == null) return;
-				if(boolInitObjectHead) {
-					strSelectItem = ((CTabItem)evt.item).getText();
+				if (userDB == null)
+					return;
+				if (boolInitObjectHead) {
+					strSelectItem = ((CTabItem) evt.item).getText();
 					refershSelectObject(strSelectItem);
 				}
 			}
@@ -199,7 +203,8 @@ public class ExplorerViewer extends ViewPart {
 
 				if (event.getProperty() == PublicTadpoleDefine.SELECT_ERD_TABLE) {
 					String tableName = event.getNewValue().toString();
-					if (tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
+					if (tabFolderObject.getSelectionIndex() != 0)
+						tabFolderObject.setSelection(0);
 
 					tableComposite.selectTable(tableName);
 				} // end if(event.getProperty()
@@ -219,7 +224,7 @@ public class ExplorerViewer extends ViewPart {
 				boolInitObjectHead = false;
 				initObjectHead(is.getFirstElement());
 				boolInitObjectHead = true;
-			} // end selection			
+			} // end selection
 		} // end selectionchange
 	};
 
@@ -229,16 +234,23 @@ public class ExplorerViewer extends ViewPart {
 	 * @param selectElement
 	 */
 	public void initObjectHead(Object selectElement) {
-		// 기존 사용자원을 반납합니다. 
-		if(null != tableComposite) tableComposite.dispose(); 
-		if(null != viewComposite) viewComposite.dispose(); 
-		if(null != indexComposite) indexComposite.dispose(); 
-		if(null != procedureComposite) procedureComposite.dispose(); 
-		if(null != packageComposite) packageComposite.dispose(); 
-		if(null != functionCompostite) functionCompostite.dispose(); 
-		if(null != triggerComposite) triggerComposite.dispose();
-		
-		if(null != mongoCollectionComposite) { 
+		// 기존 사용자원을 반납합니다.
+		if (null != tableComposite)
+			tableComposite.dispose();
+		if (null != viewComposite)
+			viewComposite.dispose();
+		if (null != indexComposite)
+			indexComposite.dispose();
+		if (null != procedureComposite)
+			procedureComposite.dispose();
+		if (null != packageComposite)
+			packageComposite.dispose();
+		if (null != functionCompostite)
+			functionCompostite.dispose();
+		if (null != triggerComposite)
+			triggerComposite.dispose();
+
+		if (null != mongoCollectionComposite) {
 			mongoCollectionComposite.dispose();
 			mongoIndexComposite.dispose();
 			mongoJavaScriptComposite.dispose();
@@ -247,31 +259,38 @@ public class ExplorerViewer extends ViewPart {
 		// Initialize resources
 		if (selectElement instanceof UserDBDAO || selectElement instanceof UserDBResourceDAO) {
 			UserDBDAO selectUserDb = null;
-			if (selectElement instanceof UserDBDAO) selectUserDb = (UserDBDAO)selectElement;
-			else 									selectUserDb = ((UserDBResourceDAO)selectElement).getParent();
+			if (selectElement instanceof UserDBDAO)
+				selectUserDb = (UserDBDAO) selectElement;
+			else
+				selectUserDb = ((UserDBResourceDAO) selectElement).getParent();
 
 			// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
-			if (userDB != null) if (userDB.getSeq() == selectUserDb.getSeq()) return;
+			if (userDB != null)
+				if (userDB.getSeq() == selectUserDb.getSeq())
+					return;
 
 			// 디비 선택
 			userDB = selectUserDb;
-			
+
 			// 존재하는 tadfolder를 삭제한다.
-			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
+			for (CTabItem tabItem : tabFolderObject.getItems())
+				tabItem.dispose();
 			initObjectDetail(DBDefine.getDBDefine(userDB));
 		} else {
 			userDB = null;
 
 			// 존재하는 tadfolder를 삭제한다.
-			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
+			for (CTabItem tabItem : tabFolderObject.getItems())
+				tabItem.dispose();
 			createTable();
 		}
 	}
-	
+
 	/**
 	 * 다른 디비가 선택되어 지면 초기화 되어야 할 object 목록
 	 * 
-	 * @param dbDefine Manager에서 선택된 object
+	 * @param dbDefine
+	 *            Manager에서 선택된 object
 	 */
 	private void initObjectDetail(DBDefine dbDefine) {
 		// sqlite
@@ -280,45 +299,45 @@ public class ExplorerViewer extends ViewPart {
 			createView();
 			createIndexes();
 			createTrigger();
-			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(), 
-				tableComposite.getTableColumnViewer(),
-				viewComposite.getViewListViewer(), 
-				indexComposite.getTableViewer(), 
-				triggerComposite.getTableViewer()
+
+			arrayStructuredViewer = new StructuredViewer[] {
+					tableComposite.getTableListViewer(),
+					tableComposite.getTableColumnViewer(),
+					viewComposite.getViewListViewer(),
+					indexComposite.getTableViewer(),
+					triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
+
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
-		
-		// hive
+
+			// hive
 		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
 			createTable();
-			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(),
-				tableComposite.getTableColumnViewer()
+
+			arrayStructuredViewer = new StructuredViewer[] {
+					tableComposite.getTableListViewer(),
+					tableComposite.getTableColumnViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
+
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
-			
-		// mongodb
+
+			// mongodb
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
 			createMongoCollection();
 			createMongoIndex();
 			createMongoJavaScript();
-			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				mongoCollectionComposite.getCollectionListViewer(),
-				mongoIndexComposite.getTableViewer(),
-				mongoJavaScriptComposite.getTableViewer()
+
+			arrayStructuredViewer = new StructuredViewer[] {
+					mongoCollectionComposite.getCollectionListViewer(),
+					mongoIndexComposite.getTableViewer(),
+					mongoJavaScriptComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, mongoCollectionComposite.getCollectionListViewer()));
-			
+
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString();
-			
+
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
 			createTable();
 			createView();
@@ -327,22 +346,22 @@ public class ExplorerViewer extends ViewPart {
 			createPackage();
 			createFunction();
 			createTrigger();
-			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(),
-				tableComposite.getTableColumnViewer(),
-				viewComposite.getViewListViewer(), 
-				indexComposite.getTableViewer(), 
-				procedureComposite.getTableViewer(), 
-				packageComposite.getTableViewer(), 
-				packageComposite.getSubTableViewer(),
-				functionCompostite.getTableviewer(), 
-				triggerComposite.getTableViewer()
+
+			arrayStructuredViewer = new StructuredViewer[] {
+					tableComposite.getTableListViewer(),
+					tableComposite.getTableColumnViewer(),
+					viewComposite.getViewListViewer(),
+					indexComposite.getTableViewer(),
+					procedureComposite.getTableViewer(),
+					packageComposite.getTableViewer(),
+					packageComposite.getSubTableViewer(),
+					functionCompostite.getTableviewer(),
+					triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
+
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
-		// cubrid, mysql, postgre, mssql
+			// cubrid, mysql, postgre, mssql
 		} else {
 			createTable();
 			createView();
@@ -350,35 +369,38 @@ public class ExplorerViewer extends ViewPart {
 			createProcedure();
 			createFunction();
 			createTrigger();
-			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(), 
-				tableComposite.getTableColumnViewer(),
-				viewComposite.getViewListViewer(), 
-				indexComposite.getTableViewer(), 
-				procedureComposite.getTableViewer(), 
-				functionCompostite.getTableviewer(), 
-				triggerComposite.getTableViewer()
+
+			arrayStructuredViewer = new StructuredViewer[] {
+					tableComposite.getTableListViewer(),
+					tableComposite.getTableColumnViewer(),
+					viewComposite.getViewListViewer(),
+					indexComposite.getTableViewer(),
+					procedureComposite.getTableViewer(),
+					functionCompostite.getTableviewer(),
+					triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
+
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 		}
-		
+
 		refreshTable(false);
-		
+
 	}
-	
+
 	/**
 	 * 현재 선택된 tab을 리프레쉬합니다.
 	 * 
-	 * @param strSelectItemText TabItem text
+	 * @param strSelectItemText
+	 *            TabItem text
 	 */
 	private void refershSelectObject(String strSelectItemText) {
-//		테이블 초기화 될때 무조건 리프레쉬 되므로 다시리프레쉬 되는것을 막습니다.
-//		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
-//			refreshTable(false);
-//		} else
+		// 테이블 초기화 될때 무조건 리프레쉬 되므로 다시리프레쉬 되는것을 막습니다.
+		// if
+		// (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString()))
+		// {
+		// refreshTable(false);
+		// } else
 		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 			refreshView(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
@@ -395,7 +417,7 @@ public class ExplorerViewer extends ViewPart {
 			refreshJS(false);
 		}
 	}
-	
+
 	/**
 	 * mongo server side javascript define
 	 */
@@ -403,7 +425,7 @@ public class ExplorerViewer extends ViewPart {
 		mongoJavaScriptComposite = new TadpoleMongoDBJavaScriptComposite(getSite(), tabFolderObject, userDB);
 		mongoJavaScriptComposite.initAction();
 	}
-	
+
 	/**
 	 * mongodb collection define
 	 */
@@ -412,7 +434,7 @@ public class ExplorerViewer extends ViewPart {
 		mongoCollectionComposite.initAction();
 		tabFolderObject.setSelection(0);
 	}
-	
+
 	/**
 	 * mongodb index define
 	 */
@@ -468,7 +490,7 @@ public class ExplorerViewer extends ViewPart {
 		viewComposite = new TadpoleViewerComposite(getSite(), tabFolderObject, userDB);
 		viewComposite.initAction();
 	}
-	
+
 	/**
 	 * Table 정의
 	 */
@@ -489,7 +511,7 @@ public class ExplorerViewer extends ViewPart {
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshIndexes(boolean boolRefresh) {
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		if (userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			mongoIndexComposite.refreshIndexes(userDB, boolRefresh);
 		} else {
 			indexComposite.refreshIndexes(getUserDB(), boolRefresh);
@@ -528,13 +550,13 @@ public class ExplorerViewer extends ViewPart {
 	 * table 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshTable(boolean boolRefresh) {
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {		
-			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
+		if (userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			mongoCollectionComposite.refreshTable(userDB, boolRefresh);
 		} else {
 			tableComposite.refreshTable(userDB, boolRefresh);
-		}		
+		}
 	}
-	
+
 	/**
 	 * mongodb server side javascript define
 	 */
@@ -547,19 +569,21 @@ public class ExplorerViewer extends ViewPart {
 	}
 
 	/**
-	 *  refresh table
+	 * refresh table
 	 * 
 	 * @param chgUserDB
 	 * @param changeType
 	 * @param changeTbName
 	 */
 	public void refreshCurrentTab(UserDBDAO chgUserDB) {
-		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
-		if (tabFolderObject.getSelectionIndex() != 0)	return;
+		if (this.userDB.getSeq() != chgUserDB.getSeq())
+			return;
+		if (tabFolderObject.getSelectionIndex() != 0)
+			return;
 
 		refershSelectObject(strSelectItem);
 	}
-	
+
 	@Override
 	public void setFocus() {
 	}

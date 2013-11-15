@@ -24,31 +24,31 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongodb shell command action
  * 
  * @author hangum
- *
+ * 
  */
 public class MongodbCommandAction implements IViewActionDelegate {
 	private IStructuredSelection sel;
-	
+
 	public MongodbCommandAction() {
 	}
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
 		ShellCommandDialog dialog = new ShellCommandDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 		dialog.open();
 	}
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		sel = (IStructuredSelection)selection;
+		sel = (IStructuredSelection) selection;
 	}
 
 	@Override
 	public void init(IViewPart view) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -29,7 +29,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * column comment editor
  * 
  * @author nilriri
- *
+ * 
  */
 public class ColumnCommentEditorSupport extends EditingSupport {
 
@@ -55,7 +55,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	 */
 	public ColumnCommentEditorSupport(TableViewer tableviewer, TableViewer viewer, UserDBDAO userDB, int column) {
 		super(viewer);
-		
+
 		this.tableviewer = tableviewer;
 		this.viewer = viewer;
 		this.userDB = userDB;
@@ -64,19 +64,20 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		if(column == 3) return new CommentCellEditor(column, viewer);
-		else return null;
+		if (column == 3)
+			return new CommentCellEditor(column, viewer);
+		else
+			return null;
 	}
 
 	@Override
 	protected boolean canEdit(Object element) {
-		if(column == 3) {
-			if(logger.isDebugEnabled()) logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB));
-			
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || 
-					DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT || 
-					DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ||
-					DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT ) {
+		if (column == 3) {
+			if (logger.isDebugEnabled())
+				logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB));
+
+			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
+					|| DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				return true;
 			} else {
 				return false;
@@ -102,14 +103,16 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	protected void setValue(Object element, Object value) {
 		String comment = "";
 		try {
-			if(logger.isDebugEnabled()) logger.debug("element.getClass().toString() is " + element.getClass().toString());
+			if (logger.isDebugEnabled())
+				logger.debug("element.getClass().toString() is " + element.getClass().toString());
 
 			TableColumnDAO dao = (TableColumnDAO) element;
 
 			comment = (String) (value == null ? "" : value);
-			
-			if(logger.isDebugEnabled()) logger.debug("dao column name is " + dao.getField());
-			
+
+			if (logger.isDebugEnabled())
+				logger.debug("dao column name is " + dao.getField());
+
 			// 기존 코멘트와 다를때만 db에 반영한다.
 			if (!(comment.equals(dao.getComment()))) {
 				dao.setComment(comment);
@@ -124,36 +127,40 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	}
 
 	private void ApplyComment(TableColumnDAO dao) {
-		// TODO : DBMS별 처리를 위해 별도의 Class로 분리해야 하지 않을까? 
+		// TODO : DBMS별 처리를 위해 별도의 Class로 분리해야 하지 않을까?
 
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
 		try {
 
-			if(logger.isDebugEnabled()) logger.debug("userDB is " + userDB.toString());
+			if (logger.isDebugEnabled())
+				logger.debug("userDB is " + userDB.toString());
 
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 
 			javaConn = client.getDataSource().getConnection();
 
 			IStructuredSelection is = (IStructuredSelection) tableviewer.getSelection();
-			
-			TableDAO tableDAO = (TableDAO)is.getFirstElement();
+
+			TableDAO tableDAO = (TableDAO) is.getFirstElement();
 
 			StringBuffer query = new StringBuffer();
 
 			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
-				
-				query.append(" COMMENT ON COLUMN ").append(tableDAO.getName()+".").append(dao.getField()).append(" IS '").append(dao.getComment()).append("'");
 
-				if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
-				
+				query.append(" COMMENT ON COLUMN ").append(tableDAO.getName() + ".").append(dao.getField()).append(" IS '").append(dao.getComment())
+						.append("'");
+
+				if (logger.isDebugEnabled())
+					logger.debug("query is " + query.toString());
+
 				stmt = javaConn.prepareStatement(query.toString());
-				
-				try{
+
+				try {
 					stmt.execute();
-				}catch(Exception e){
-					//  org.postgresql.util.PSQLException: No results were returned by the query.
+				} catch (Exception e) {
+					// org.postgresql.util.PSQLException: No results were
+					// returned by the query.
 				}
 
 			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
@@ -164,7 +171,8 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 				try {
 					stmt.execute();
 				} catch (Exception e) {
-					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
+					if (logger.isDebugEnabled())
+						logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
 				}
 
@@ -179,7 +187,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				}
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
+			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo ");
 				query.append(",'table' , '").append(tableDAO.getName()).append("'");
 				query.append(",'column' , '").append(dao.getField()).append("'");

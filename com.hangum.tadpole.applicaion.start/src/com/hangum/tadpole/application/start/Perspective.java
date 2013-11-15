@@ -19,8 +19,8 @@ import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
- * Configures the perspective layout. This class is contributed 
- * through the plugin.xml.
+ * Configures the perspective layout. This class is contributed through the
+ * plugin.xml.
  */
 public class Perspective implements IPerspectiveFactory {
 
@@ -28,17 +28,17 @@ public class Perspective implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
-		
-		IFolderLayout leftFolder = layout.createFolder("id"+ManagerViewer.ID, IPageLayout.LEFT, 0.30f, editorArea);
+
+		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.30f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
-		
-		IFolderLayout leftUnderFolder = layout.createFolder("id"+ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id"+ManagerViewer.ID);		
+
+		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
-		
+
 		// viewer closealbe false
 		IViewLayout viewManagerLayout = layout.getViewLayout(ManagerViewer.ID);
 		viewManagerLayout.setCloseable(false);
-		
+
 		IViewLayout viewExplorerLayout = layout.getViewLayout(ExplorerViewer.ID);
 		viewExplorerLayout.setCloseable(false);
 	}

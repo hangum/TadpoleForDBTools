@@ -34,7 +34,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Object Explorer에서 사용하는 Mongodb rename action
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectMongodbRenameAction extends AbstractObjectAction {
 	/**
@@ -43,7 +43,7 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 	private static final Logger logger = Logger.getLogger(ObjectMongodbRenameAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.rename"; //$NON-NLS-1$
-	
+
 	public ObjectMongodbRenameAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
@@ -52,10 +52,10 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-//		String originalName = selection.getFirstElement().toString();
+		// String originalName = selection.getFirstElement().toString();
 		TableDAO table = (TableDAO) selection.getFirstElement();
 		String originalName = table.getName();
-//		String newName = ""; //$NON-NLS-1$
+		//		String newName = ""; //$NON-NLS-1$
 
 		InputDialog inputDialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Rename Collection", //$NON-NLS-1$
 				"Enter new collection name", originalName, new RenameValidator(originalName));
@@ -73,27 +73,29 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 			}
 		}
 	}
-	
+
 }
+
 /**
  * rename validattor
  */
 class RenameValidator implements IInputValidator {
 	String oldName = ""; //$NON-NLS-1$
-	
+
 	public RenameValidator(String oldName) {
 		this.oldName = oldName;
 	}
 
 	public String isValid(String newText) {
-		if(oldName.equals(newText)) {
+		if (oldName.equals(newText)) {
 			return Messages.ObjectMongodbRenameAction_7;
 		}
-	    int len = newText.length();
-	
-	    // Determine if input is too short or too long
-	    if (len < 2) return Messages.ObjectMongodbRenameAction_8;
-	
-	    return null;
+		int len = newText.length();
+
+		// Determine if input is too short or too long
+		if (len < 2)
+			return Messages.ObjectMongodbRenameAction_8;
+
+		return null;
 	}
 }

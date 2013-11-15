@@ -20,15 +20,15 @@ public class HiveJdbcClient {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		
+
 		System.out.println("===Connection start===========================================");
 		Connection con = DriverManager.getConnection("jdbc:hive://localhost:10000/default", "", "");
 		System.out.println("===Connection send===========================================");
-		
+
 		Statement stmt = con.createStatement();
 		String tableName = "testHiveDriverTable";
 		stmt.executeQuery("drop table " + tableName);
-		ResultSet res = stmt.executeQuery("create table " + tableName + " (key int, value string)"); 
+		ResultSet res = stmt.executeQuery("create table " + tableName + " (key int, value string)");
 		// show tables
 		String sql = "show tables '" + tableName + "'";
 		System.out.println("Running: " + sql);
@@ -48,8 +48,7 @@ public class HiveJdbcClient {
 		// NOTE: filepath has to be local to the hive server
 		// NOTE: /tmp/a.txt is a ctrl-A separated file with two fields per line
 		String filepath = "/tmp/a.txt";
-		sql = "load data local inpath '" + filepath + "' into table "
-				+ tableName;
+		sql = "load data local inpath '" + filepath + "' into table " + tableName;
 		System.out.println("Running: " + sql);
 		res = stmt.executeQuery(sql);
 
@@ -58,8 +57,7 @@ public class HiveJdbcClient {
 		System.out.println("Running: " + sql);
 		res = stmt.executeQuery(sql);
 		while (res.next()) {
-			System.out.println(String.valueOf(res.getInt(1)) + "\t"
-					+ res.getString(2));
+			System.out.println(String.valueOf(res.getInt(1)) + "\t" + res.getString(2));
 		}
 
 		// regular hive query

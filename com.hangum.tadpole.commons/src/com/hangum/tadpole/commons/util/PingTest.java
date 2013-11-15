@@ -19,11 +19,11 @@ import org.apache.log4j.Logger;
  * IP, PORT에 ping test 합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class PingTest implements Runnable {
 	private static final Logger logger = Logger.getLogger(PingTest.class);
-	
+
 	public static final int HOST_NOT_FOUND = 0;
 	public static final int CANNOT_CONNECT = 1;
 	public static final int SUCCESS = 2;
@@ -50,15 +50,15 @@ public class PingTest implements Runnable {
 		try {
 			status = HOST_NOT_FOUND;
 			InetAddress addr = InetAddress.getByName(hostname);
-			
+
 			status = CANNOT_CONNECT;
 			Socket s = new Socket(addr, port);
-			
+
 			status = SUCCESS;
 			s.close();
 		} catch (Exception e) {
 		}
-		
+
 	}
 
 	/**
@@ -70,19 +70,19 @@ public class PingTest implements Runnable {
 	 * @return
 	 */
 	public static int ping(String hostname, int port, long maxWait) {
-		
+
 		PingTest ping = new PingTest(hostname, port);
-		
+
 		try {
 			Thread t = new Thread(ping);
 			t.setDaemon(true);
 			t.start();
 			t.join(maxWait);
-			
+
 		} catch (InterruptedException ie) {
 			logger.error("pint test faile", ie);
 		}
-		
+
 		return ping.status;
 	}
 }

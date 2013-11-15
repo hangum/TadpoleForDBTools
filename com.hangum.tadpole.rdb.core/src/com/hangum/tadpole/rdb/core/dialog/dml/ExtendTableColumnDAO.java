@@ -16,7 +16,7 @@ import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
  * DMLGenerae Stateme TableColumnDAO
  * 
  * @author nilriri
- *
+ * 
  */
 public class ExtendTableColumnDAO extends TableColumnDAO {
 	private String tableAlias = "";
@@ -49,9 +49,9 @@ public class ExtendTableColumnDAO extends TableColumnDAO {
 	}
 
 	public String getColumnNamebyTableAlias() {
-		return tableAlias == null || tableAlias.length() == 0 ? this.getField(): tableAlias + "." + this.getField() ;
+		return tableAlias == null || tableAlias.length() == 0 ? this.getField() : tableAlias + "." + this.getField();
 	}
-	
+
 	public void setTableAlias(String tableAlias) {
 		this.tableAlias = tableAlias.trim().toLowerCase();
 	}

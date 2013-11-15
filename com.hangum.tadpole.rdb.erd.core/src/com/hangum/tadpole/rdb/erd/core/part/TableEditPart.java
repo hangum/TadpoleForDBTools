@@ -35,13 +35,14 @@ import com.hangum.tadpole.rdb.model.Table;
 
 public class TableEditPart extends AbstractGraphicalEditPart implements NodeEditPart {
 	private static final Logger logger = Logger.getLogger(TableEditPart.class);
-	
+
 	private TableAdapter adapter;
+
 	public TableEditPart() {
 		super();
 		adapter = new TableAdapter();
 	}
-	
+
 	@Override
 	protected IFigure createFigure() {
 		TableFigure tf = new TableFigure();
@@ -51,25 +52,26 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 
 	@Override
 	protected void createEditPolicies() {
-//		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new RelationNodeEditPolicy());
+		// installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new
+		// RelationNodeEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new TableComponentEditPolicy());
 	}
-	
+
 	@Override
 	protected void refreshVisuals() {
-		Table table = (Table)getModel();
-		DBEditPart parent = (DBEditPart)getParent();
+		Table table = (Table) getModel();
+		DBEditPart parent = (DBEditPart) getParent();
 
 		super.refreshVisuals();
-		updateFigure((TableFigure)getFigure());
+		updateFigure((TableFigure) getFigure());
 		refreshChildren();
-		
+
 		parent.setLayoutConstraint(this, figure, table.getConstraints());
 	}
-	
+
 	private void updateFigure(TableFigure figure) {
-		Table tableModel = (Table)getModel();
-		
+		Table tableModel = (Table) getModel();
+
 		figure.setTableName(tableModel.getName());
 		figure.removeAllColumns();
 
@@ -82,76 +84,82 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 			figure.add(figures[3]);
 		}
 	}
-	
-	private ColumnFigure[] createColumnFigure(Table tableModel, Column model){
+
+	private ColumnFigure[] createColumnFigure(Table tableModel, Column model) {
 		ColumnFigure labelKey = new ColumnFigure(COLUMN_TYPE.KEY);
 		ColumnFigure labelName = new ColumnFigure(COLUMN_TYPE.NAME);
 		ColumnFigure labelType = new ColumnFigure(COLUMN_TYPE.TYPE);
 		ColumnFigure labelNotNull = new ColumnFigure(COLUMN_TYPE.NULL);
-		
-		labelKey.setText( StringUtils.substring(model.getKey(), 0, 1));
+
+		labelKey.setText(StringUtils.substring(model.getKey(), 0, 1));
 		labelName.setText(model.getField());
 		labelType.setText(model.getType());
 		labelNotNull.setText(StringUtils.substring(model.getNull(), 0, 1));
 
-		return new ColumnFigure[]{labelKey, labelName, labelType, labelNotNull};
+		return new ColumnFigure[] {
+				labelKey,
+				labelName,
+				labelType,
+				labelNotNull
+		};
 	}
-	
+
 	@Override
 	protected List getModelSourceConnections() {
-		Table model = (Table)getModel();
+		Table model = (Table) getModel();
 		return model.getOutgoingLinks();
 	}
-	
+
 	@Override
 	protected List getModelTargetConnections() {
-		Table model = (Table)getModel();
+		Table model = (Table) getModel();
 		return model.getIncomingLinks();
 	}
-	
+
 	@Override
 	public void activate() {
-		if(!isActive()) {
-			((Table)getModel()).eAdapters().add(adapter);
+		if (!isActive()) {
+			((Table) getModel()).eAdapters().add(adapter);
 		}
 		super.activate();
 	}
-	
+
 	@Override
 	public void deactivate() {
-		if(isActive()) {
-			((Table)getModel()).eAdapters().remove(adapter);
+		if (isActive()) {
+			((Table) getModel()).eAdapters().remove(adapter);
 		}
 		super.deactivate();
 	}
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
-		return ((TableFigure)getFigure()).getConnectionAnchor();
+		return ((TableFigure) getFigure()).getConnectionAnchor();
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
-		return ((TableFigure)getFigure()).getConnectionAnchor();
+		return ((TableFigure) getFigure()).getConnectionAnchor();
 	}
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		return ((TableFigure)getFigure()).getConnectionAnchor();
+		return ((TableFigure) getFigure()).getConnectionAnchor();
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		return ((TableFigure)getFigure()).getConnectionAnchor();
+		return ((TableFigure) getFigure()).getConnectionAnchor();
 	}
-	
+
 	public class TableAdapter implements Adapter {
 
 		@Override
 		public void notifyChanged(Notification notification) {
-//			Table tableModel = (Table)getModel();
-//			logger.debug("\t\t ######################## [table] " + tableModel.getName());
-			
+			// Table tableModel = (Table)getModel();
+			// logger.debug("\t\t ######################## [table] " +
+			// tableModel.getName());
+
 			refreshVisuals();
 			refreshSourceConnections();
 			refreshTargetConnections();
@@ -159,7 +167,7 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 
 		@Override
 		public Notifier getTarget() {
-			return (Table)getModel();
+			return (Table) getModel();
 		}
 
 		@Override

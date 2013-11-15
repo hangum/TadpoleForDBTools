@@ -17,14 +17,14 @@ import java.util.List;
  * key value dao
  * 
  * @author hangum
- *
+ * 
  */
 public class KeyValueDAO {
 	String name;
 	String value;
-	
+
 	List<KeyValueDAO> children = new ArrayList<KeyValueDAO>();
-	
+
 	public KeyValueDAO(String name, String value) {
 		this.name = name;
 		this.value = value;
@@ -38,7 +38,8 @@ public class KeyValueDAO {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -52,7 +53,8 @@ public class KeyValueDAO {
 	}
 
 	/**
-	 * @param value the value to set
+	 * @param value
+	 *            the value to set
 	 */
 	public void setValue(String value) {
 		this.value = value;
@@ -66,11 +68,11 @@ public class KeyValueDAO {
 	}
 
 	/**
-	 * @param children the children to set
+	 * @param children
+	 *            the children to set
 	 */
 	public void setChildren(List<KeyValueDAO> children) {
 		this.children = children;
 	}
 
-	
 }

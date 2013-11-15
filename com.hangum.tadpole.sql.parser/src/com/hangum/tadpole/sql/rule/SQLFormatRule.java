@@ -20,12 +20,13 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
  * user sql format rule
  * 
  * @author hangum
- *
+ * 
  */
 public class SQLFormatRule {
-	
+
 	/**
 	 * get user sql rule
+	 * 
 	 * @return
 	 */
 	public static SqlFormatRule getSqlFormatRule() {
@@ -33,7 +34,7 @@ public class SQLFormatRule {
 		rule.setRemoveEmptyLine(true);
 		int tabSize = Integer.parseInt(GetPreferenceGeneral.getDefaultTabSize());
 		boolean optDecode = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatDecode());// true;
-		boolean optIn = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn());//false;
+		boolean optIn = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn());// false;
 
 		rule.setIndentString(StringUtil.padLeft("", tabSize, ' '));
 		rule.setDecodeSpecialFormat(!optDecode);
@@ -45,9 +46,9 @@ public class SQLFormatRule {
 		rule.setConvertKeyword(ISqlFormatRule.CONVERT_STRING_NONE);
 		rule.setNewLineBeforeAndOr(false);
 		rule.setNewLineBeforeComma(false);
-		
+
 		rule.setWordBreak(false);
-		
+
 		return rule;
 	}
 }

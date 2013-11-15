@@ -23,14 +23,15 @@ import org.osgi.framework.Bundle;
 
 /**
  * If invalid URL come, i change to the correct URL.
- *  http://wiki.eclipse.org/RAP/FAQ#How_to_access_a_RAP_application_without_specifying_a_servlet_name.3F
+ * http://wiki.eclipse.org/RAP/
+ * FAQ#How_to_access_a_RAP_application_without_specifying_a_servlet_name.3F
  * 
  * @author hangum
- *
+ * 
  */
 public class RedirectServlet extends HttpServlet {
 	private static final Logger logger = Logger.getLogger(RedirectServlet.class);
-	
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		redirect(request, response);
 	}
@@ -40,23 +41,24 @@ public class RedirectServlet extends HttpServlet {
 	}
 
 	private static void redirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if(!isStandardalone()) {			
+		if (!isStandardalone()) {
 			response.sendRedirect(response.encodeRedirectURL("/tadpole/tadpole"));
 		} else {
 			response.sendRedirect(response.encodeRedirectURL("/tadpole"));
 		}
 	}
-	
+
 	/**
-	  * Is standalone mode? 
-	  * 
-	  * @return
-	  */
+	 * Is standalone mode?
+	 * 
+	 * @return
+	 */
 	private static boolean isStandardalone() {
-		 Bundle bundle = Platform.getBundle("org.eclipse.jetty.server"); //$NON-NLS-1$
-	     if(bundle != null) return true;
-	     
-	     return false;
+		Bundle bundle = Platform.getBundle("org.eclipse.jetty.server"); //$NON-NLS-1$
+		if (bundle != null)
+			return true;
+
+		return false;
 	}
-	
+
 }

@@ -27,16 +27,17 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * referencd : http://docs.mongodb.org/manual/reference/command/validate/
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectMongodbCollValidateAction extends AbstractObjectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(ObjectMongodbCollValidateAction.class);
+	// private static final Logger logger =
+	// Logger.getLogger(ObjectMongodbCollValidateAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.collection.validate";
-	
+
 	public ObjectMongodbCollValidateAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
@@ -50,5 +51,5 @@ public class ObjectMongodbCollValidateAction extends AbstractObjectAction {
 		CollValidateDialog dialog = new CollValidateDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, collDAO.getName());
 		dialog.open();
 	}
-	
+
 }

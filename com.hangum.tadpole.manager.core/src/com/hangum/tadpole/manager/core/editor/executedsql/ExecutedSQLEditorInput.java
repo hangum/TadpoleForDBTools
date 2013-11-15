@@ -21,7 +21,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Executed SQL Editor input
  * 
  * @author hangum
- *
+ * 
  */
 public class ExecutedSQLEditorInput implements IEditorInput {
 	private UserDAO userDAO;
@@ -30,7 +30,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 	public ExecutedSQLEditorInput(UserDAO selectUserDAO) {
 		this.userDAO = selectUserDAO;
 	}
-	
+
 	public ExecutedSQLEditorInput() {
 	}
 
@@ -67,11 +67,11 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 	public String getToolTipText() {
 		return "Executed SQL Management";
 	}
-	
+
 	public UserDAO getUserDAO() {
 		return userDAO;
 	}
-	
+
 	public UserDBDAO getUserDBDAO() {
 		return userDBDAO;
 	}

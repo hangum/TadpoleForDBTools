@@ -21,12 +21,12 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Server Side Java script editor input
  * 
  * @author hangum
- *
+ * 
  */
 public class ServerSideJavaScriptEditorInput implements IEditorInput {
 	private UserDBDAO userDB;
 	private MongoDBServerSideJavaScriptDAO javascriptDAO;
-	
+
 	public ServerSideJavaScriptEditorInput(UserDBDAO userDB, MongoDBServerSideJavaScriptDAO mjsDAO) {
 		this.userDB = userDB;
 		this.javascriptDAO = mjsDAO;
@@ -53,8 +53,10 @@ public class ServerSideJavaScriptEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		if(javascriptDAO == null) return " JavaScript" + userDB.getDb();
-		else return "JavaScript " + userDB.getDb() + "[" + javascriptDAO.getName() + "]";
+		if (javascriptDAO == null)
+			return " JavaScript" + userDB.getDb();
+		else
+			return "JavaScript " + userDB.getDb() + "[" + javascriptDAO.getName() + "]";
 	}
 
 	@Override
@@ -64,14 +66,16 @@ public class ServerSideJavaScriptEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		if(javascriptDAO == null) return " JavaScript" + userDB.getDb();
-		else return "JavaScript " + userDB.getDb() + "[" + javascriptDAO.getName() + "]";
+		if (javascriptDAO == null)
+			return " JavaScript" + userDB.getDb();
+		else
+			return "JavaScript " + userDB.getDb() + "[" + javascriptDAO.getName() + "]";
 	}
 
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
-	
+
 	public MongoDBServerSideJavaScriptDAO getJavascriptDAO() {
 		return javascriptDAO;
 	}

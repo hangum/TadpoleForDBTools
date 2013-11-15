@@ -27,37 +27,38 @@ import com.hangum.tadpole.editor.core.widgets.editor.json.internal.JsonBrowserFu
  * code editor
  * 
  * @author hangum
- *
+ * 
  */
 public class JsonTadpoleEditor extends Composite {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(JsonTadpoleEditor.class);
-	
+
 	/** editor url resource */
 	private static final String EDITOR_URL = "orion/tadpole/editor/jsonEmbeddededitor.html";
-	
+
 	/** 초기설정 텍스트 */
 	private String initContent;
-	
+
 	/**
-	 * 초기 content assist 
+	 * 초기 content assist
 	 */
 	private String initAssist;
-	
+
 	/**
 	 * 에디터를 보여줄 browser
 	 */
 	private Browser browserOrionEditor;
-	
-	/** 
-	 * browser.browserFunction의 서비스 헨들러 
+
+	/**
+	 * browser.browserFunction의 서비스 헨들러
 	 */
 	private JsonBrowserFunctionService editorService;
-	
+
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 * @param initContent
@@ -72,10 +73,10 @@ public class JsonTadpoleEditor extends Composite {
 		gridLayout.marginWidth = 1;
 		setLayout(gridLayout);
 		setBackgroundMode(SWT.INHERIT_FORCE);
-		
+
 		this.initContent = initContent;
 		this.initAssist = initAssist;
-		
+
 		Composite compositeServerStatus = new Composite(this, SWT.NONE);
 		compositeServerStatus.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeServerStatus = new GridLayout(1, false);
@@ -84,48 +85,51 @@ public class JsonTadpoleEditor extends Composite {
 		gl_compositeServerStatus.marginHeight = 1;
 		gl_compositeServerStatus.marginWidth = 1;
 		compositeServerStatus.setLayout(gl_compositeServerStatus);
-		
+
 		browserOrionEditor = new Browser(compositeServerStatus, SWT.NONE);
 		browserOrionEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		addBrowserHandler();
 	}
-	
+
 	/**
 	 * browser handler
 	 */
 	private void addBrowserHandler() {
 		browserOrionEditor.setUrl(EDITOR_URL);
-		
+
 		registerBrowserFunctions();
-		
-		browserOrionEditor.addProgressListener( new ProgressListener() {
-			public void completed( ProgressEvent event ) {
+
+		browserOrionEditor.addProgressListener(new ProgressListener() {
+			public void completed(ProgressEvent event) {
 				try {
 					browserEvaluate("getEditor();");
-				} catch(Exception e) {
+				} catch (Exception e) {
 					logger.error("javascript execute exception", e);
 				}
 
 				String callCommand = TadpoleEditorUtils.makeCommand("test.json", getInitContent(), getInitAssist());
 				try {
 					browserEvaluate(callCommand);
-				} catch(Exception e) {
+				} catch (Exception e) {
 					logger.error("javascript execut exception", e);
 				}
 			}
-			public void changed( ProgressEvent event ) {}
+
+			public void changed(ProgressEvent event) {
+			}
 		});
 	}
-	
-	/** 
+
+	/**
 	 * browser function call
 	 * 
-	 *  @param command brower command
+	 * @param command
+	 *            brower command
 	 */
 	public Object browserEvaluate(String command) throws Exception {
 		return browserOrionEditor.evaluate(command);
 	}
-	
+
 	/**
 	 * edit에 초기 데이터를 설정합니다.
 	 * 
@@ -133,19 +137,20 @@ public class JsonTadpoleEditor extends Composite {
 	 */
 	public String getInitContent() {
 		checkWidget();
-		
+
 		return initContent;
 	}
-	
+
 	/**
 	 * initialize assist
+	 * 
 	 * @return
 	 */
 	public String getInitAssist() {
 		checkWidget();
 		return initAssist;
 	}
-	
+
 	/**
 	 * get editor text
 	 * 
@@ -153,17 +158,16 @@ public class JsonTadpoleEditor extends Composite {
 	 */
 	public String getText() {
 		checkWidget();
-		try {			
-			Object obj = browserEvaluate(JsonBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);					
+		try {
+			Object obj = browserEvaluate(JsonBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
 			return obj.toString();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("getText error", e);
-			
+
 			return "";
 		}
 	}
-	
-	
+
 	/**
 	 * set editor text
 	 * 
@@ -174,12 +178,12 @@ public class JsonTadpoleEditor extends Composite {
 		try {
 			this.initContent = text;
 			browserEvaluate(JsonBrowserFunctionService.JAVA_SCRIPT_RE_NEW_TEXT);
-		} catch(Exception e) {
-			
+		} catch (Exception e) {
+
 			logger.error("setText TadpoleEditor error" + e.getMessage() + "\r\n[start]" + this.initContent + "\r\n[end]");
 		}
-	}	
-	
+	}
+
 	/**
 	 * register browser function
 	 */
@@ -191,15 +195,15 @@ public class JsonTadpoleEditor extends Composite {
 	 * unregister browser function
 	 */
 	private void unregisterBrowserFunctions() {
-		if(editorService != null && editorService instanceof BrowserFunction) {
+		if (editorService != null && editorService instanceof BrowserFunction) {
 			editorService.dispose();
 		}
 	}
-	
+
 	@Override
 	public void dispose() {
 		unregisterBrowserFunctions();
-		
+
 		super.dispose();
 	}
 
@@ -208,8 +212,7 @@ public class JsonTadpoleEditor extends Composite {
 	}
 
 	/**
-	 * set file name
-	 * ps) Important thing, file name extension.
+	 * set file name ps) Important thing, file name extension.
 	 * 
 	 * @return
 	 */
@@ -219,6 +222,7 @@ public class JsonTadpoleEditor extends Composite {
 
 	/**
 	 * append text
+	 * 
 	 * @return
 	 */
 	public String getAppendQueryText() {

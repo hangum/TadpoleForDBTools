@@ -30,7 +30,7 @@ import com.mongodb.DBObject;
  * 결과 한개를 디테일하게 보는 다이얼로그
  * 
  * @author hangum
- *
+ * 
  */
 public class FindOneDetailDialog extends Dialog {
 	/**
@@ -41,22 +41,23 @@ public class FindOneDetailDialog extends Dialog {
 	private UserDBDAO userDB;
 	private String collectionName;
 	private DBObject dbResultObject;
-	
+
 	private Text textColName;
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public FindOneDetailDialog(Shell parentShell, UserDBDAO userDB, String collectionName, DBObject dbResultObject) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.userDB = userDB;
 		this.collectionName = collectionName;
-		this.dbResultObject = dbResultObject;				
+		this.dbResultObject = dbResultObject;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -66,6 +67,7 @@ public class FindOneDetailDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -76,7 +78,7 @@ public class FindOneDetailDialog extends Dialog {
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 2;
-		
+
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		GridLayout gl_compositeHead = new GridLayout(2, false);
 		gl_compositeHead.verticalSpacing = 2;
@@ -85,29 +87,31 @@ public class FindOneDetailDialog extends Dialog {
 		gl_compositeHead.marginWidth = 2;
 		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblName = new Label(compositeHead, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText("Name");
-		
+
 		textColName = new Text(compositeHead, SWT.BORDER);
 		textColName.setEditable(false);
 		textColName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Composite compositeBody = new FindOneDetailComposite(container, collectionName, dbResultObject);
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		initData();
 
 		return container;
 	}
-	
+
 	private void initData() {
 		textColName.setText(collectionName);
 	}
+
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

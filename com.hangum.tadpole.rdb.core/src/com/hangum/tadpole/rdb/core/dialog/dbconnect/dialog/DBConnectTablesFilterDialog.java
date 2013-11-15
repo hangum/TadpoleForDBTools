@@ -28,21 +28,21 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTable
 /**
  * Table Filter Dialog
  * 
- * ex)
- * 		".*" + test + ".*"
+ * ex) ".*" + test + ".*"
  * 
  * @author hangum
- *
+ * 
  */
 public class DBConnectTablesFilterDialog extends Dialog {
 	private DBConnectionTableFilterDAO tableFilterDAO = new DBConnectionTableFilterDAO();
-	
+
 	private Button btnEnable;
 	private Text textInclude;
 	private Text textExclude;
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public DBConnectTablesFilterDialog(Shell parentShell) {
@@ -51,43 +51,44 @@ public class DBConnectTablesFilterDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-		
+
 		btnEnable = new Button(container, SWT.CHECK);
 		btnEnable.setText("Enable");
-		
+
 		Group grpInclude = new Group(container, SWT.NONE);
 		grpInclude.setLayout(new GridLayout(1, false));
 		grpInclude.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpInclude.setText("Include");
-		
+
 		textInclude = new Text(grpInclude, SWT.BORDER | SWT.MULTI);
 		textInclude.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Group grpExclude = new Group(container, SWT.NONE);
 		grpExclude.setLayout(new GridLayout(1, false));
 		grpExclude.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpExclude.setText("Exclude");
-		
+
 		textExclude = new Text(grpExclude, SWT.BORDER | SWT.MULTI);
 		textExclude.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		return container;
 	}
-	
+
 	@Override
 	protected void okPressed() {
 		tableFilterDAO.setEnable(btnEnable.getSelection());
 		tableFilterDAO.setIncludeFilter(textInclude.getText());
 		tableFilterDAO.setExcludeFilter(textExclude.getText());
-		
+
 		super.okPressed();
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -98,6 +99,7 @@ public class DBConnectTablesFilterDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -122,7 +124,8 @@ public class DBConnectTablesFilterDialog extends Dialog {
 	}
 
 	/**
-	 * @param btnEnable the btnEnable to set
+	 * @param btnEnable
+	 *            the btnEnable to set
 	 */
 	public void setBtnEnable(boolean btnEnable) {
 		this.btnEnable.setSelection(btnEnable);
@@ -136,7 +139,8 @@ public class DBConnectTablesFilterDialog extends Dialog {
 	}
 
 	/**
-	 * @param textInclude the textInclude to set
+	 * @param textInclude
+	 *            the textInclude to set
 	 */
 	public void setTextInclude(String textInclude) {
 		this.textInclude.setText(textInclude);
@@ -150,7 +154,8 @@ public class DBConnectTablesFilterDialog extends Dialog {
 	}
 
 	/**
-	 * @param textExclude the textExclude to set
+	 * @param textExclude
+	 *            the textExclude to set
 	 */
 	public void setTextExclude(String textExclude) {
 		this.textExclude.setText(textExclude);

@@ -90,7 +90,7 @@ public class DMLColumnEditingSupport extends EditingSupport {
 			selDao.setColumnAlias(value.toString());
 			viewer.update(selDao, null);
 		}
-		
+
 		parent.queryGenetation();
 	}
 }

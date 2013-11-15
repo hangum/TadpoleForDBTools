@@ -22,27 +22,32 @@ import com.swtdesigner.ResourceManager;
  * index의 컬럼 정보
  * 
  * @author hangum
- *
+ * 
  */
 public class IndexesLabelProvicer extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/index_column.png"); //$NON-NLS-1$
+		if (columnIndex == 0)
+			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/index_column.png"); //$NON-NLS-1$
 		return null;
 	}
-	
+
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		InformationSchemaDAO tc = (InformationSchemaDAO) element;
-		
-		switch(columnIndex) {
-		case 0: return tc.getTABLE_NAME();
-		case 1: return tc.getINDEX_NAME();
-		case 2: return tc.getINDEX_TYPE();		
-		case 3: return tc.getCOMMENT();
+
+		switch (columnIndex) {
+		case 0:
+			return tc.getTABLE_NAME();
+		case 1:
+			return tc.getINDEX_NAME();
+		case 2:
+			return tc.getINDEX_TYPE();
+		case 3:
+			return tc.getCOMMENT();
 		}
-		
+
 		return "** not set column **";
 	}
 

@@ -11,7 +11,6 @@
 package com.hangum.tadpole.rdb.core.actions.adapter.resource;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.ui.IActionFilter;
 
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
@@ -20,7 +19,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
  * resource type adapter
  * 
  * @author hangum
- *
+ * 
  */
 public class ResourceTypeActionFilterAdapter implements IActionFilter {
 	/**
@@ -29,21 +28,22 @@ public class ResourceTypeActionFilterAdapter implements IActionFilter {
 	private static final Logger logger = Logger.getLogger(ResourceTypeActionFilterAdapter.class);
 
 	private static final Object MYOBJECT_TYPE = "type";
-	
+
 	@Override
 	public boolean testAttribute(Object target, String name, String value) {
-//		logger.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//		logger.debug("[target]" + target + "[name]" + name + "[value]" + value);
-		
+		// logger.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		// logger.debug("[target]" + target + "[name]" + name + "[value]" +
+		// value);
+
 		if (target instanceof UserDBResourceDAO) {
-//			UserDBResourceDAO obj = (UserDBResourceDAO) target;
-//
-//			if(MYOBJECT_TYPE.equals(name)) {
-//				return true;
-//			}
-			return true;			
+			// UserDBResourceDAO obj = (UserDBResourceDAO) target;
+			//
+			// if(MYOBJECT_TYPE.equals(name)) {
+			// return true;
+			// }
+			return true;
 		}
-		
+
 		return false;
 	}
 

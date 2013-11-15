@@ -19,7 +19,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongodb javascript action
  * 
  * @author hangum
- *
+ * 
  */
 public class CreateJavaScriptAction extends AbstractQueryAction {
 
@@ -29,9 +29,9 @@ public class CreateJavaScriptAction extends AbstractQueryAction {
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
 		FindEditorAndWriteQueryUtil.run(userDB, "");
 	}
-	
+
 }

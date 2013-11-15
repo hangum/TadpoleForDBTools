@@ -120,15 +120,15 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		procedureTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
-				if(!iss.isEmpty()) {
-					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)iss.getFirstElement();
-					
+				if (!iss.isEmpty()) {
+					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO) iss.getFirstElement();
+
 					ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
-					if(pm.isExecuted(procedureDAO, getUserDB())) {
+					if (pm.isExecuted(procedureDAO, getUserDB())) {
 						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
 						epd.open();
 					}
-				}	// end iss.isempty
+				} // end iss.isempty
 			}
 		});
 
@@ -144,7 +144,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		procedureFilter = new ProcedureFunctionViewFilter();
 		procedureTableViewer.addFilter(procedureFilter);
 
-		sashForm.setWeights(new int[] { 1 });
+		sashForm.setWeights(new int[] { 1
+		});
 
 		// creat action
 		createMenu();
@@ -179,7 +180,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(executeAction_Procedure);
-				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 					manager.add(objectCompileAction);
 				}
 			}
@@ -203,8 +204,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	 * initialize action
 	 */
 	public void initAction() {
-		if (showProcedure != null) showProcedure.clear();
-		
+		if (showProcedure != null)
+			showProcedure.clear();
+
 		procedureTableViewer.setInput(showProcedure);
 		procedureTableViewer.refresh();
 
@@ -233,7 +235,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 			procedureTableViewer.setInput(showProcedure);
 			procedureTableViewer.refresh();
-			
+
 			TableUtil.packTable(procedureTableViewer.getTable());
 
 		} catch (Exception e) {
@@ -256,11 +258,11 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	public void setSearchText(String searchText) {
 		procedureFilter.setSearchText(searchText);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		
+
 		creatAction_Procedure.dispose();
 		modifyAction_Procedure.dispose();
 		deleteAction_Procedure.dispose();
@@ -269,5 +271,5 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		executeAction_Procedure.dispose();
 		objectCompileAction.dispose();
 	}
-	
+
 }

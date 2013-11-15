@@ -14,17 +14,17 @@ package com.hangum.tadpole.importdb.core.dialog.importdb.dao;
  * table 수정 뷰에서 사용할 dao
  * 
  * @author hangum
- *
+ * 
  */
 public class ModTableDAO {
 	boolean isModify = false;
 	String name;
 	boolean isExistOnDelete = false;
 	String reName = "";
-	
+
 	public ModTableDAO() {
 	}
-	
+
 	public ModTableDAO(String name) {
 		this.name = name;
 	}
@@ -60,6 +60,5 @@ public class ModTableDAO {
 	public void setReName(String reName) {
 		this.reName = reName;
 	}
-	
-	
+
 }

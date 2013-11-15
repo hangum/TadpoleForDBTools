@@ -18,43 +18,45 @@ import org.apache.commons.lang.StringUtils;
  * number format util
  * 
  * @author hangum
- *
+ * 
  */
 public class NumberFormatUtils {
-	
+
 	/**
 	 * 데이터를 표현합니다.
+	 * 
 	 * @param value
 	 * @return
 	 */
 	public static String commaFormat(String value) {
-		if(null == value) return "";
-		
+		if (null == value)
+			return "";
+
 		try {
 			return commaFormat(new Double(value));
-		} catch(NumberFormatException nfe) {
+		} catch (NumberFormatException nfe) {
 			return value;
 		}
 	}
-	
-	
+
 	/**
 	 * ,로만 찍도로.
+	 * 
 	 * @param value
 	 * @return
 	 */
 	public static String commaFormat(double value) {
-//		String tmpVal = String.format("%.2f", value);
-		DecimalFormat df = new DecimalFormat("#,###.##");    
+		// String tmpVal = String.format("%.2f", value);
+		DecimalFormat df = new DecimalFormat("#,###.##");
 		String tmpVal = df.format(value).toString();
-		
-		if(-1 == StringUtils.indexOf(tmpVal, ".00")) {
+
+		if (-1 == StringUtils.indexOf(tmpVal, ".00")) {
 			return tmpVal;
 		} else {
 			return StringUtils.replaceOnce(tmpVal, ".00", "");
-		}				
+		}
 	}
-	
+
 	/**
 	 * kb, mb 변환
 	 * 
@@ -63,15 +65,15 @@ public class NumberFormatUtils {
 	 */
 	public static String kbMbFormat(double value) {
 		// bytes
-		if(value < 1024) {
+		if (value < 1024) {
 			double val = value;
-			
-			return commaFormat(val) + " bytes";			
-		// kb
-		} else if(value < 1024*1024) {
+
+			return commaFormat(val) + " bytes";
+			// kb
+		} else if (value < 1024 * 1024) {
 			double val = value / (1024);
-			return commaFormat(val) + " KB";			
-		// mb
+			return commaFormat(val) + " KB";
+			// mb
 		} else {
 			double val = value / (1024 * 1024);
 			return commaFormat(val) + " MB";

@@ -22,34 +22,35 @@ import com.swtdesigner.ResourceManager;
 public class TableTreeEditPart extends AbstractTreeEditPart {
 
 	private TableAdapter adapter;
+
 	public TableTreeEditPart() {
 		super();
 		adapter = new TableAdapter();
 	}
-	
+
 	@Override
 	protected void refreshVisuals() {
-		Table table = (Table)getModel();
+		Table table = (Table) getModel();
 		setWidgetText(table.getName());
 		setWidgetImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/database_table.png"));
 	}
-	
+
 	@Override
 	public void activate() {
-		if(!isActive()) {
-			((Table)getModel()).eAdapters().add(adapter);
+		if (!isActive()) {
+			((Table) getModel()).eAdapters().add(adapter);
 		}
 		super.activate();
 	}
-	
+
 	@Override
 	public void deactivate() {
-		if(isActive()) {
-			((Table)getModel()).eAdapters().remove(adapter);
+		if (isActive()) {
+			((Table) getModel()).eAdapters().remove(adapter);
 		}
 		super.deactivate();
 	}
-	
+
 	public class TableAdapter implements Adapter {
 
 		@Override
@@ -60,7 +61,7 @@ public class TableTreeEditPart extends AbstractTreeEditPart {
 
 		@Override
 		public Notifier getTarget() {
-			return (Table)getModel();
+			return (Table) getModel();
 		}
 
 		@Override

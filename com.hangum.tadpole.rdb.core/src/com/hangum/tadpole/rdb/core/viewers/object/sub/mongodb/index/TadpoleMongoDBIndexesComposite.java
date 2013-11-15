@@ -55,20 +55,20 @@ import com.hangum.tadpole.sql.util.tables.TableUtil;
  * MongoDB indexes composite
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleMongoDBIndexesComposite.class);
-	
+
 	// index
 	private TableViewer tableViewer;
 	private ObjectComparator indexComparator;
 	private List<MongoDBIndexDAO> listIndexes;
 	private MongoDBIndexesViewFilter indexFilter;
-	
+
 	// index detail field
 	private TableViewer tableColumnViewer;
 
@@ -87,7 +87,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		super(site, tabFolderObject, userDB);
 		createWidget(tabFolderObject);
 	}
-	
+
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmIndex.setText("Indexes"); //$NON-NLS-1$
@@ -105,7 +105,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
@@ -114,13 +114,14 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 			public void selectionChanged(SelectionChangedEvent event) {
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-					MongoDBIndexDAO tableDAO = (MongoDBIndexDAO)is.getFirstElement();
+					MongoDBIndexDAO tableDAO = (MongoDBIndexDAO) is.getFirstElement();
 
-					if(tableDAO == null) return;
-					
+					if (tableDAO == null)
+						return;
+
 					tableColumnViewer.setInput(tableDAO.getListIndexField());
 					tableColumnViewer.refresh();
-					
+
 					TableUtil.packTable(tableColumnViewer.getTable());
 
 				} catch (Exception e) {
@@ -145,7 +146,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		tableViewer.addFilter(indexFilter);
 
 		createMenu();
-		
+
 		// index detail column
 		tableColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableColumn = tableColumnViewer.getTable();
@@ -162,7 +163,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 				return table.getName();
 			}
 		});
-		
+
 		tableColumn = new TableViewerColumn(tableColumnViewer, SWT.LEFT);
 		tableColumn.getColumn().setText("order");
 		tableColumn.getColumn().setWidth(100);
@@ -170,15 +171,17 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				MongoDBIndexFieldDAO table = (MongoDBIndexFieldDAO) element;
-				
-				return table.getOrder().equals("1")?"Ascending":
-					table.getOrder().equals("-1")?"Descending":"Geospatial";
+
+				return table.getOrder().equals("1") ? "Ascending" : table.getOrder().equals("-1") ? "Descending" : "Geospatial";
 			}
 		});
 
 		tableColumnViewer.setContentProvider(new ArrayContentProvider());
 
-		sashForm.setWeights(new int[] {7, 3});
+		sashForm.setWeights(new int[] {
+				7,
+				3
+		});
 	}
 
 	/**
@@ -188,10 +191,18 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	 * @param indexComparator
 	 */
 	private void createMongoDBIndexesColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {"Collection Name", "Index Name","Unique"};
-		int[] size = {120, 70, 70};
+		String[] name = {
+				"Collection Name",
+				"Index Name",
+				"Unique"
+		};
+		int[] size = {
+				120,
+				70,
+				70
+		};
 
-		for (int i=0; i<name.length; i++) {
+		for (int i = 0; i < name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
@@ -228,14 +239,15 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	 * init action
 	 */
 	public void initAction() {
-		if (listIndexes != null) listIndexes.clear();
+		if (listIndexes != null)
+			listIndexes.clear();
 		refreshViewer();
 
 		creatAction_Index.setUserDB(getUserDB());
 		deleteAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
 	}
-	
+
 	/**
 	 * refresh viewer
 	 */
@@ -244,13 +256,15 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		tableViewer.refresh();
 		TableUtil.packTable(tableViewer.getTable());
 	}
-	
+
 	/**
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshIndexes(final UserDBDAO userDB, boolean boolRefresh) {
-		if(!boolRefresh) if(listIndexes != null) return;
-		
+		if (!boolRefresh)
+			if (listIndexes != null)
+				return;
+
 		this.userDB = userDB;
 		try {
 			listIndexes = MongoDBQuery.listAllIndex(userDB);
@@ -270,11 +284,12 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	 */
 	public void filter(String textSearch) {
 		indexFilter.setSearchText(textSearch);
-		tableViewer.refresh();		
+		tableViewer.refresh();
 	}
-	
+
 	/**
 	 * table viewer
+	 * 
 	 * @return
 	 */
 	public TableViewer getTableViewer() {
@@ -285,11 +300,11 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	public void setSearchText(String searchText) {
 		indexFilter.setSearchText(searchText);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		
+
 		creatAction_Index.dispose();
 		deleteAction_Index.dispose();
 		refreshAction_Index.dispose();

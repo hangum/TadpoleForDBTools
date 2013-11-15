@@ -51,18 +51,17 @@ public class DBLoginDialog extends Dialog {
 	 */
 	private static final long serialVersionUID = 1327678815994219469L;
 	private static final Logger logger = Logger.getLogger(DBLoginDialog.class);
-	
-	
+
 	public static final int TEST_CONNECTION_ID = IDialogConstants.CLIENT_ID + 1;
-	
+
 	/** main composite */
 	private Composite container;
-	
+
 	/** group name */
 	protected List<String> groupName;
 	/** 초기 선택한 그룹 */
 	private String selGroupName;
-	
+
 	private Combo comboDBList;
 	private Composite compositeBody;
 
@@ -70,7 +69,7 @@ public class DBLoginDialog extends Dialog {
 
 	// 결과셋으로 사용할 logindb
 	private UserDBDAO retuserDb;
-	
+
 	public DBLoginDialog(Shell paShell, String selGroupName) {
 		super(paShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
@@ -82,7 +81,7 @@ public class DBLoginDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText("New Database Connection"); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Create contents of the dialog.
 	 * 
@@ -96,7 +95,7 @@ public class DBLoginDialog extends Dialog {
 		gridLayout.horizontalSpacing = 3;
 		gridLayout.marginHeight = 3;
 		gridLayout.marginWidth = 3;
-		
+
 		SashForm sashFormContainer = new SashForm(container, SWT.VERTICAL);
 		sashFormContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
@@ -119,7 +118,7 @@ public class DBLoginDialog extends Dialog {
 		comboDBList.setVisibleItemCount(10);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {				
+			public void widgetSelected(SelectionEvent e) {
 				initDBWidget(null);
 			}
 		});
@@ -130,22 +129,24 @@ public class DBLoginDialog extends Dialog {
 			comboDBList.add(dbDefine.getDBToString());
 			comboDBList.setData(dbDefine.getDBToString(), dbDefine);
 		}
-		
+
 		// option에 default db가 존재하면..
-		if(ApplicationArgumentUtils.isDefaultDB()) {
+		if (ApplicationArgumentUtils.isDefaultDB()) {
 			try {
 				String strDefaultDB = ApplicationArgumentUtils.getDefaultDB();
 				comboDBList.setText(strDefaultDB);
-				
+
 				// 초기 값이 잘못되어 ui가 잘못 생성되는것을 방지하기위한 코드.
-				if(-1 == comboDBList.getSelectionIndex()) comboDBList.select(0);;
-			} catch(Exception e) {
+				if (-1 == comboDBList.getSelectionIndex())
+					comboDBList.select(0);
+				;
+			} catch (Exception e) {
 				logger.error("find default db", e);
 			}
 		} else {
 			comboDBList.select(0);
 		}
-				
+
 		// combo에서 선택된 디비의 콤포짖
 		compositeBody = new Composite(compositeHead, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
@@ -155,59 +156,62 @@ public class DBLoginDialog extends Dialog {
 		gl_compositeBody.marginHeight = 2;
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
-		
-		// db groupData 
+
+		// db groupData
 		try {
 			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}
-		
+
 		createDBWidget(null);
 
 		// history .....................................
-		sashFormContainer.setWeights(new int[] {1});
+		sashFormContainer.setWeights(new int[] { 1
+		});
 
-		
 		comboDBList.setFocus();
-		
+
 		return container;
 	}
-	
+
 	/**
 	 * db widget을 설정한다.
+	 * 
 	 * @param userDB
 	 */
 	private void initDBWidget(UserDBDAO userDB) {
-		if (loginComposite != null)loginComposite.dispose();
+		if (loginComposite != null)
+			loginComposite.dispose();
 
 		createDBWidget(userDB);
 		compositeBody.layout();
 		container.layout();
 	}
-	
+
 	/**
 	 * db widget을 생성한다.
 	 */
 	private void createDBWidget(UserDBDAO userDB) {
-		
+
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
 		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, groupName, selGroupName, userDB);
 	}
 
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
+		if (!loginComposite.connection())
+			return;
 		this.retuserDb = loginComposite.getDBDTO();
-		
+
 		super.okPressed();
 	}
-	
+
 	@Override
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
-		if(TEST_CONNECTION_ID == buttonId) {
-			if(loginComposite.testConnection()) {
+		if (TEST_CONNECTION_ID == buttonId) {
+			if (loginComposite.testConnection()) {
 				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
 			}
 		}
@@ -228,6 +232,7 @@ public class DBLoginDialog extends Dialog {
 		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_6, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLoginDialog_7, false);
 	}
+
 	/**
 	 * group name
 	 * 

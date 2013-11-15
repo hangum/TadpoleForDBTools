@@ -22,13 +22,14 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Object Explorer에서 사용하는 공통 action
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectRefreshAction extends AbstractObjectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(ObjectRefreshAction.class);
+	// private static final Logger logger =
+	// Logger.getLogger(ObjectRefreshAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.refresh";
 
@@ -40,21 +41,21 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
+		if (actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			refreshTable();
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
 			refreshView();
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			refreshIndexes();
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
 			refreshProcedure();
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
 			refreshPackage();
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 			refreshFunction();
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 			refreshTrigger();
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
 			refreshJS();
 		}
 	}

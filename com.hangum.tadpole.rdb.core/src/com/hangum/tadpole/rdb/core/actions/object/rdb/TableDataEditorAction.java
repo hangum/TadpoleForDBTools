@@ -38,7 +38,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * Table Data editor action
  * 
  * @author hangum
- *
+ * 
  */
 public class TableDataEditorAction extends AbstractObjectSelectAction {
 	/**
@@ -49,14 +49,14 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 
 	public TableDataEditorAction(IWorkbenchWindow window, DB_ACTION actionType) {
 		super(window, actionType);
-		
+
 		setId(ID + actionType);
 		setText("Table Data Editor");
 	}
-	
+
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
+		TableDAO tableDAO = (TableDAO) selection.getFirstElement();
 		try {
 			// get the table columns
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -69,7 +69,7 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 			DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			page.openEditor(mei, TableInformationEditor.ID);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("Load the table data", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

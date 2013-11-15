@@ -19,31 +19,39 @@ import com.swtdesigner.SWTResourceManager;
  * Tadpole widget utils
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleWidgetUtils {
-	
+
 	/** tab content */
 	public static final String TAB_CONETNT = "    ";
-	
+
 	/**
 	 * CTabFolder background color
+	 * 
 	 * @return
 	 */
 	public static Color[] getTabFolderBackgroundColor() {
-		Color[] arrayColor = new Color[]{SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW),
+		Color[] arrayColor = new Color[] {
+				SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW),
 				SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
 				SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
-				SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW)};
+				SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW)
+		};
 		return arrayColor;
 	}
-	
+
 	/**
 	 * CTabFolder background percents
+	 * 
 	 * @return
 	 */
 	public static int[] getTabFolderPercents() {
-		return new int[] {100, 100, 100};
+		return new int[] {
+				100,
+				100,
+				100
+		};
 	}
 
 }

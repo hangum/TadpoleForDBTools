@@ -27,7 +27,7 @@ public class JSONUtil {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(JSONUtil.class);
-	
+
 	/**
 	 * json normal string to pretty string
 	 * 
@@ -35,20 +35,22 @@ public class JSONUtil {
 	 * @return
 	 */
 	public static String getPretty(String jsonString) {
-		if(jsonString == null) return "";
+		if (jsonString == null)
+			return "";
 
 		try {
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(jsonString);
-			
+
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			String strGson = gson.toJson(je);
 			System.out.println(StringUtils.trimToEmpty(strGson));
-			
-			if(strGson == null || "null".equals(strGson)) strGson = "";
-			
+
+			if (strGson == null || "null".equals(strGson))
+				strGson = "";
+
 			return strGson;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("pretty json", e);
 		}
 

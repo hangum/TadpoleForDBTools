@@ -22,7 +22,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongodb기본 editor의 editorinput
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBEditorInput implements IEditorInput {
 	/** db info */
@@ -30,10 +30,10 @@ public class MongoDBEditorInput implements IEditorInput {
 
 	/** collection name */
 	private String collectionName = "";
-	
+
 	/** collection column info */
 	private List showTableColumns;
-	
+
 	public MongoDBEditorInput(String collectionName, UserDBDAO userDB, List showTableColumns) {
 		this.collectionName = collectionName;
 		this.userDB = userDB;
@@ -49,11 +49,12 @@ public class MongoDBEditorInput implements IEditorInput {
 	public boolean exists() {
 		return (this.collectionName != null);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if( !(obj instanceof MongoDBEditorInput) ) return false;
-		return ((MongoDBEditorInput)obj).getName().equals(getName());
+		if (!(obj instanceof MongoDBEditorInput))
+			return false;
+		return ((MongoDBEditorInput) obj).getName().equals(getName());
 	}
 
 	@Override
@@ -79,11 +80,11 @@ public class MongoDBEditorInput implements IEditorInput {
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
-	
+
 	public List getShowTableColumns() {
 		return showTableColumns;
 	}
-	
+
 	public String getCollectionName() {
 		return collectionName;
 	}

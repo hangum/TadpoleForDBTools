@@ -19,17 +19,19 @@ import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexDAO;
  * mongodb Indexes의 filter
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBIndexesViewFilter extends TadpoleViewrFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if(searchString == null || searchString.length() == 0) return true;
-		
-		MongoDBIndexDAO dao  = (MongoDBIndexDAO)element;
-		if(dao.getNs().toUpperCase().matches(searchString.toUpperCase())) return true;
-		
+		if (searchString == null || searchString.length() == 0)
+			return true;
+
+		MongoDBIndexDAO dao = (MongoDBIndexDAO) element;
+		if (dao.getNs().toUpperCase().matches(searchString.toUpperCase()))
+			return true;
+
 		return false;
 	}
 

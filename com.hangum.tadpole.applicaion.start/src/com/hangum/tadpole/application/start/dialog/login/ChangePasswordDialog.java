@@ -32,7 +32,7 @@ import com.swtdesigner.ResourceManager;
 /**
  * 
  * @author billygoo
- *
+ * 
  */
 public class ChangePasswordDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ChangePasswordDialog.class);
@@ -115,7 +115,7 @@ public class ChangePasswordDialog extends Dialog {
 		}
 		super.okPressed();
 	}
-	
+
 	@Override
 	protected Point getInitialSize() {
 		return new Point(350, 300);

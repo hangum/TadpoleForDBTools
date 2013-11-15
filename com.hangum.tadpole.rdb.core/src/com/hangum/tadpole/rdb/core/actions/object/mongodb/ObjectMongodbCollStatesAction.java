@@ -31,7 +31,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongoDB collection stats
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectMongodbCollStatesAction extends AbstractObjectAction {
 	/**
@@ -40,7 +40,7 @@ public class ObjectMongodbCollStatesAction extends AbstractObjectAction {
 	private static final Logger logger = Logger.getLogger(ObjectMongodbCollStatesAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.collection.stats";
-	
+
 	public ObjectMongodbCollStatesAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
@@ -62,5 +62,5 @@ public class ObjectMongodbCollStatesAction extends AbstractObjectAction {
 			ExceptionDetailsErrorDialog.openError(null, "Error", "Collection stats", errStatus); //$NON-NLS-1$
 		}
 	}
-	
+
 }

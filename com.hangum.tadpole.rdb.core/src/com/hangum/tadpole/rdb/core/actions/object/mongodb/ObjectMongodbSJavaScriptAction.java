@@ -33,7 +33,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Object Explorer에서 사용하는 Server Side JavaScript
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectMongodbSJavaScriptAction extends AbstractObjectAction {
 	/**
@@ -42,7 +42,7 @@ public class ObjectMongodbSJavaScriptAction extends AbstractObjectAction {
 	private static final Logger logger = Logger.getLogger(ObjectMongodbSJavaScriptAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.serversidejavascript";
-	
+
 	public ObjectMongodbSJavaScriptAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
@@ -74,5 +74,5 @@ public class ObjectMongodbSJavaScriptAction extends AbstractObjectAction {
 			ExceptionDetailsErrorDialog.openError(null, "Error", e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 	}
-	
+
 }

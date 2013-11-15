@@ -28,25 +28,27 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * DBCP connection manager
  * 
  * @author hangum
- *
+ * 
  */
 public class DBCPConnectionManager {
 	public static DBCPConnectionManager instance = new DBCPConnectionManager();
 	private Map<String, DataSource> mapDataSource = new HashMap<String, DataSource>();
-	private DBCPConnectionManager() {}
-	
+
+	private DBCPConnectionManager() {
+	}
+
 	public static DBCPConnectionManager getInstance() {
 		return instance;
 	}
-	
+
 	private DataSource makePool(final String userId, UserDBDAO userDB) {
 		GenericObjectPool connectionPool = new GenericObjectPool();
 		connectionPool.setMaxActive(2);
-		
+
 		String passwdDecrypt = "";
 		try {
 			passwdDecrypt = CipherManager.getInstance().decryption(userDB.getPasswd());
-		} catch(Exception e) {
+		} catch (Exception e) {
 			passwdDecrypt = userDB.getPasswd();
 		}
 		ConnectionFactory cf = new DriverManagerConnectionFactory(userDB.getUrl(), userDB.getUsers(), passwdDecrypt);
@@ -54,26 +56,27 @@ public class DBCPConnectionManager {
 		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
 		DataSource ds = new PoolingDataSource(connectionPool);
 		mapDataSource.put(getKey(userId, userDB), ds);
-		
+
 		return ds;
 	}
-	
+
 	public DataSource getDataSource(final String userId, final UserDBDAO userDB) {
 		DataSource retDataSource = mapDataSource.get(getKey(userId, userDB));
-		if(retDataSource == null) { 
+		if (retDataSource == null) {
 			return makePool(userId, userDB);
 		}
-		
+
 		return retDataSource;
 	}
-	
+
 	/**
 	 * map의 카를 가져옵니다.
+	 * 
 	 * @param userDB
 	 * @return
 	 */
 	private static String getKey(final String userId, final UserDBDAO userDB) {
-		return userId + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
+		return userId + userDB.getSeq() + userDB.getDbms_types() + userDB.getUrl() + userDB.getUsers();// +dbInfo.getPasswd();
 	}
 
 }

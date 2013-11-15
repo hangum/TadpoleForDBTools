@@ -34,7 +34,7 @@ public class CubridTest {
 
 			String sql = "select name, players from event";
 			System.out.println("success cubrid connect");
-			
+
 			stmt = conn.createStatement();
 			System.out.println("succes execute query ");
 

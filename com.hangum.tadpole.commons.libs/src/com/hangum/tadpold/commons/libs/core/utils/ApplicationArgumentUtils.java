@@ -14,26 +14,27 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
 /**
- * 시스템 시작 유틸 
+ * 시스템 시작 유틸
  * 
  * @author hangum
- *
+ * 
  */
 public class ApplicationArgumentUtils {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ApplicationArgumentUtils.class);
-	
+
 	/**
 	 * 엔진이 외부 디비를 사용 할 것인지?
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	public static boolean isDBServer() {
 		return checkString("-dbServer");
 	}
-	
+
 	/**
 	 * <pre>
 	 * 	엔진이 디비를 공유 디비정보를 가져온다.
@@ -50,6 +51,7 @@ public class ApplicationArgumentUtils {
 	 * application 시작 모드
 	 * 
 	 * application argement에 -standalone가 있으면 standalone 모드
+	 * 
 	 * <pre>
 	 * 
 	 * @return
@@ -57,7 +59,7 @@ public class ApplicationArgumentUtils {
 	public static boolean isStandaloneMode() {
 		return checkString("-standalone");
 	}
-	
+
 	/**
 	 * test 모드이면
 	 * 
@@ -66,14 +68,14 @@ public class ApplicationArgumentUtils {
 	public static boolean isTestMode() {
 		return checkString("-test");
 	}
-	
+
 	/**
 	 * check debug mode
 	 */
 	public static boolean isDebugMode() {
 		return checkString("-debuglog");
 	}
-	
+
 	/**
 	 * runtime시에 argument의 value를 리턴합니다.
 	 * 
@@ -82,16 +84,16 @@ public class ApplicationArgumentUtils {
 	 */
 	private static String getValue(String key) throws Exception {
 		String[] applicationArgs = Platform.getApplicationArgs();
-		for(int i=0; i<applicationArgs.length; i++) {
+		for (int i = 0; i < applicationArgs.length; i++) {
 			String arg = applicationArgs[i];
-			if( arg.startsWith(key) ) {
-				return applicationArgs[i+1];
+			if (arg.startsWith(key)) {
+				return applicationArgs[i + 1];
 			}
 		}
-	
+
 		throw new Exception("Can't find argument. key is " + key);
 	}
-	
+
 	/**
 	 * runtime시에 argument가 있는지 검사합니다.
 	 * 
@@ -100,11 +102,12 @@ public class ApplicationArgumentUtils {
 	 */
 	private static boolean checkString(String checkString) {
 		String[] applicationArgs = Platform.getApplicationArgs();
-		
+
 		for (String string : applicationArgs) {
-			if( string.startsWith(checkString) ) return true;
+			if (string.startsWith(checkString))
+				return true;
 		}
-		
+
 		return false;
 	}
 }

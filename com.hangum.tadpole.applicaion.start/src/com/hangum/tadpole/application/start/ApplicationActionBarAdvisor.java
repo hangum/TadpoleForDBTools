@@ -44,150 +44,153 @@ import com.hangum.tadpole.sql.system.permission.PermissionChecker;
  * @author hangum
  */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
-    private IWorkbenchAction exitAction;
-    
-    private IAction saveAction;
-    private IAction saveAsAction;
-    
-    private IAction connectAction;
-    private IAction queryOpenAction;
-    private IAction dbRelationOpenAction;
-    private IAction deleteResourceAction;
-    
-    /** User permission action */
-    private IAction userPermissionAction;
-    /** executed sql */
-    private IAction executedSQLAction;
-    
-    private IAction resourceManageAction;
-    
-    private IAction preferenceAction;
-    private IAction aboutAction;
-    private IAction bugIssueAction;
-    
+	private IWorkbenchAction exitAction;
 
-    public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
-        super(configurer);
-    }
-    
-    protected void makeActions(final IWorkbenchWindow window) {
-   	
-    	saveAction = ActionFactory.SAVE.create(window);
-    	register(saveAction);
-    	
-    	saveAsAction = ActionFactory.SAVE_AS.create(window);
-    	register(saveAsAction);
-    	
-    	connectAction = new ConnectDatabaseAction(window);
-    	register(connectAction);
-    	
-    	queryOpenAction = new OpenQueryEditorAction(window);
-    	register(queryOpenAction);
-    	
-    	dbRelationOpenAction = new OpenDBRelationAction(window);
-    	register(dbRelationOpenAction);
-    	
-    	deleteResourceAction = new DeleteResourceAction(window);
-    	register(deleteResourceAction);
-    	
-    	userPermissionAction = new UserPermissionAction(window);
-    	register(userPermissionAction);
-    	
-    	executedSQLAction = new ExecutedSQLAction(window);
-    	register(executedSQLAction);
-    	
-    	resourceManageAction = new ResourceManagerAction(window);
-    	register(resourceManageAction);
+	private IAction saveAction;
+	private IAction saveAsAction;
 
-        exitAction = new ExitAction(window);
-        register(exitAction);
-        
-        preferenceAction = new PreferenceAction(window);
-        register(preferenceAction);        
-        
-        aboutAction = new AboutAction(window);
-        register(aboutAction);
-        
-        bugIssueAction = new BugIssueAction(window);
-        register(bugIssueAction);
-        
-    }
-    
-    /**
-     * Comment at 2.1 RC3 has error(https://bugs.eclipse.org/bugs/show_bug.cgi?id=410260) 
-     */
-    protected void fillMenuBar(IMenuManager menuBar) {
-//        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
-//        MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
-//        MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
-//        
-//        menuBar.add(fileMenu);
-//        
-//        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-//        menuBar.add(windowMenu);
-//        
-//        // Add a group marker indicating where action set menus will appear.
-//        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-//        menuBar.add(helpMenu);
-//        
-//        // File
-//        fileMenu.add(new Separator());
-//        fileMenu.add(saveAction);
-////        fileMenu.add(saveAsAction);
-//        fileMenu.add(new Separator());
-//        fileMenu.add(connectAction);
-//        fileMenu.add(new Separator());
-//        fileMenu.add(queryOpenAction);
-//        fileMenu.add(dbRelationOpenAction);
-//        fileMenu.add(deleteResourceAction);
-//        fileMenu.add(new Separator());
-////        fileMenu.add(exitAction);
-//        
-//        windowMenu.add(preferenceAction);        
-//        //        
-//        // Help
-//        helpMenu.add(bugIssueAction);
-//        helpMenu.add(aboutAction);
-    }
-    
-    protected void fillCoolBar(ICoolBarManager coolBar) {
-        IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
-        coolBar.add(new ToolBarContributionItem(toolbar, "main"));
-        
-        if(PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
-	        toolbar.add(connectAction);
-	        toolbar.add(new Separator());
-        }
-        
-        toolbar.add(saveAction);
-        toolbar.add(saveAsAction);
-        toolbar.add(new Separator());        
-        
-        toolbar.add(queryOpenAction);
-        toolbar.add(dbRelationOpenAction);
-        toolbar.add(new Separator());
-        
-        toolbar.add(deleteResourceAction);
-        toolbar.add(new Separator());
-        
-        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-        	toolbar.add(userPermissionAction);
-        	toolbar.add(new Separator());
-        	toolbar.add(executedSQLAction);
-            toolbar.add(new Separator());
-        }
-        
-        toolbar.add(resourceManageAction);
-        toolbar.add(new Separator());
-        
-        toolbar.add(preferenceAction);
-        toolbar.add(new Separator());
-        
-        toolbar.add(bugIssueAction);
-        toolbar.add(aboutAction);
-        
-    	toolbar.add(new Separator());
-    	toolbar.add(exitAction);
-    }
-    
+	private IAction connectAction;
+	private IAction queryOpenAction;
+	private IAction dbRelationOpenAction;
+	private IAction deleteResourceAction;
+
+	/** User permission action */
+	private IAction userPermissionAction;
+	/** executed sql */
+	private IAction executedSQLAction;
+
+	private IAction resourceManageAction;
+
+	private IAction preferenceAction;
+	private IAction aboutAction;
+	private IAction bugIssueAction;
+
+	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
+		super(configurer);
+	}
+
+	protected void makeActions(final IWorkbenchWindow window) {
+
+		saveAction = ActionFactory.SAVE.create(window);
+		register(saveAction);
+
+		saveAsAction = ActionFactory.SAVE_AS.create(window);
+		register(saveAsAction);
+
+		connectAction = new ConnectDatabaseAction(window);
+		register(connectAction);
+
+		queryOpenAction = new OpenQueryEditorAction(window);
+		register(queryOpenAction);
+
+		dbRelationOpenAction = new OpenDBRelationAction(window);
+		register(dbRelationOpenAction);
+
+		deleteResourceAction = new DeleteResourceAction(window);
+		register(deleteResourceAction);
+
+		userPermissionAction = new UserPermissionAction(window);
+		register(userPermissionAction);
+
+		executedSQLAction = new ExecutedSQLAction(window);
+		register(executedSQLAction);
+
+		resourceManageAction = new ResourceManagerAction(window);
+		register(resourceManageAction);
+
+		exitAction = new ExitAction(window);
+		register(exitAction);
+
+		preferenceAction = new PreferenceAction(window);
+		register(preferenceAction);
+
+		aboutAction = new AboutAction(window);
+		register(aboutAction);
+
+		bugIssueAction = new BugIssueAction(window);
+		register(bugIssueAction);
+
+	}
+
+	/**
+	 * Comment at 2.1 RC3 has
+	 * error(https://bugs.eclipse.org/bugs/show_bug.cgi?id=410260)
+	 */
+	protected void fillMenuBar(IMenuManager menuBar) {
+		// MenuManager fileMenu = new MenuManager("&File",
+		// IWorkbenchActionConstants.M_FILE);
+		// MenuManager windowMenu = new MenuManager("&Window",
+		// IWorkbenchActionConstants.M_WINDOW);
+		// MenuManager helpMenu = new MenuManager("&Help",
+		// IWorkbenchActionConstants.M_HELP);
+		//
+		// menuBar.add(fileMenu);
+		//
+		// menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		// menuBar.add(windowMenu);
+		//
+		// // Add a group marker indicating where action set menus will appear.
+		// menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		// menuBar.add(helpMenu);
+		//
+		// // File
+		// fileMenu.add(new Separator());
+		// fileMenu.add(saveAction);
+		// // fileMenu.add(saveAsAction);
+		// fileMenu.add(new Separator());
+		// fileMenu.add(connectAction);
+		// fileMenu.add(new Separator());
+		// fileMenu.add(queryOpenAction);
+		// fileMenu.add(dbRelationOpenAction);
+		// fileMenu.add(deleteResourceAction);
+		// fileMenu.add(new Separator());
+		// // fileMenu.add(exitAction);
+		//
+		// windowMenu.add(preferenceAction);
+		// //
+		// // Help
+		// helpMenu.add(bugIssueAction);
+		// helpMenu.add(aboutAction);
+	}
+
+	protected void fillCoolBar(ICoolBarManager coolBar) {
+		IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
+		coolBar.add(new ToolBarContributionItem(toolbar, "main"));
+
+		if (PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
+			toolbar.add(connectAction);
+			toolbar.add(new Separator());
+		}
+
+		toolbar.add(saveAction);
+		toolbar.add(saveAsAction);
+		toolbar.add(new Separator());
+
+		toolbar.add(queryOpenAction);
+		toolbar.add(dbRelationOpenAction);
+		toolbar.add(new Separator());
+
+		toolbar.add(deleteResourceAction);
+		toolbar.add(new Separator());
+
+		if (PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+			toolbar.add(userPermissionAction);
+			toolbar.add(new Separator());
+			toolbar.add(executedSQLAction);
+			toolbar.add(new Separator());
+		}
+
+		toolbar.add(resourceManageAction);
+		toolbar.add(new Separator());
+
+		toolbar.add(preferenceAction);
+		toolbar.add(new Separator());
+
+		toolbar.add(bugIssueAction);
+		toolbar.add(aboutAction);
+
+		toolbar.add(new Separator());
+		toolbar.add(exitAction);
+	}
+
 }

@@ -26,10 +26,10 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  * </pre>
  * 
  * @author hangum
- *
+ * 
  */
 public class RequestInfoUtils {
-	
+
 	/**
 	 * 올챙이가 동작 할 수 없는 브라우저라면, 사용자 브라우저 를 리턴합니다.
 	 * 
@@ -40,14 +40,16 @@ public class RequestInfoUtils {
 		sua.detect(RWT.getRequest());
 
 		String strBrowser = sua.getBrowserType().toString();
-		for(PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER supportBrowser: PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER.values()) {
-			if("IE".equals(strBrowser)) {
-				if(10 >= sua.getMajorVersion()) return "";
+		for (PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER supportBrowser : PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER.values()) {
+			if ("IE".equals(strBrowser)) {
+				if (10 >= sua.getMajorVersion())
+					return "";
 			} else {
-				if(strBrowser.equalsIgnoreCase(supportBrowser.toString())) return "";
+				if (strBrowser.equalsIgnoreCase(supportBrowser.toString()))
+					return "";
 			}
 		}
-		
+
 		return strBrowser;
 	}
 
@@ -62,7 +64,7 @@ public class RequestInfoUtils {
 
 		String strBrowser = sua.getBrowserType().toString();
 		String strFullVersion = sua.getFullVersion() + sua.getMajorVersion();
-		
+
 		return strBrowser + " Ver" + strFullVersion;
 	}
 
@@ -75,19 +77,19 @@ public class RequestInfoUtils {
 	 */
 	public static String requestInfo(String prefixMsg, String email) {
 		StringBuffer retMsg = new StringBuffer(prefixMsg + "\r\n");
-		
+
 		ServletUserAgent sua = new ServletUserAgent();
 		sua.detect(RWT.getRequest());
 		String strOs = sua.getOSSimpleType().toString();
 		String strBrowser = sua.getBrowserType().toString();
 		String strFullVersion = sua.getFullVersion() + sua.getMajorVersion();
-		
+
 		retMsg.append("[email]" + email + "[ip]" + RWT.getRequest().getLocalAddr() + "\r\n");
 		retMsg.append("[os]" + strOs + "[browser]" + strBrowser + "[full version]" + strFullVersion);
-		
+
 		return retMsg.toString();
 	}
-	
+
 	/**
 	 * 사용자의 os를 얻습니다.
 	 * 
@@ -96,8 +98,8 @@ public class RequestInfoUtils {
 	public static ServletUserAgent.OS_SIMPLE_TYPE findOSSimpleType() {
 		ServletUserAgent sua = new ServletUserAgent();
 		sua.detect(RWT.getRequest());
-		
+
 		return sua.getOSSimpleType();
 	}
-	
+
 }

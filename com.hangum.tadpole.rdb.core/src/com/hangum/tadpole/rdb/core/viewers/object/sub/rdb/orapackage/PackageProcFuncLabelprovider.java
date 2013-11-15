@@ -14,19 +14,16 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
-import com.swtdesigner.ResourceManager;
 
 /**
  * Index를 구성하는 컬럼 정보
  * 
  * @author nilriri
- *
+ * 
  */
 public class PackageProcFuncLabelprovider extends LabelProvider implements ITableLabelProvider {
-	
+
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
@@ -35,11 +32,13 @@ public class PackageProcFuncLabelprovider extends LabelProvider implements ITabl
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		ProcedureFunctionDAO tc = (ProcedureFunctionDAO) element;
-			
-			switch(columnIndex) {
-			case 0: return tc.getType();
-			case 1: return tc.getName();
-			}
+
+		switch (columnIndex) {
+		case 0:
+			return tc.getType();
+		case 1:
+			return tc.getName();
+		}
 		return null;
 	}
 

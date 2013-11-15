@@ -39,34 +39,35 @@ import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
  * Modify DB Dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class ModifyDBDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ModifyDBDialog.class);
-	
+
 	private UserDBDAO userDBDAO;
 	/** group name */
 	protected List<String> listGroupName;
-//	/** 초기 선택한 그룹 */
-//	private String selGroupName;
-	
+	// /** 초기 선택한 그룹 */
+	// private String selGroupName;
+
 	private Composite compositeBody;
 
 	private AbstractLoginComposite loginComposite;
-	
+
 	// 결과셋으로 사용할 logindb
 	private UserDBDAO retuserDb;
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public ModifyDBDialog(Shell parentShell, UserDBDAO userDBDAO) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.userDBDAO = userDBDAO;
-		// db groupData 
+		// db groupData
 		try {
 			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
 		} catch (Exception e1) {
@@ -82,6 +83,7 @@ public class ModifyDBDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -92,7 +94,7 @@ public class ModifyDBDialog extends Dialog {
 		gridLayout.horizontalSpacing = 1;
 		gridLayout.marginHeight = 1;
 		gridLayout.marginWidth = 1;
-		
+
 		compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -101,39 +103,35 @@ public class ModifyDBDialog extends Dialog {
 		gl_compositeBody.marginHeight = 2;
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
-		
-		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(userDBDAO), 
-															compositeBody, 
-															listGroupName, 
-															userDBDAO.getGroup_name(), 
-															userDBDAO,
-															DATA_STATUS.MODIFY
-				);
+
+		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(userDBDAO), compositeBody, listGroupName, userDBDAO.getGroup_name(), userDBDAO,
+				DATA_STATUS.MODIFY);
 
 		return container;
 	}
-	
+
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
+		if (!loginComposite.connection())
+			return;
 		this.retuserDb = loginComposite.getDBDTO();
 		refreshManagerView();
-		
-		// 
+
+		//
 		TadpoleSQLManager.removeInstance(userDBDAO);
-		
+
 		super.okPressed();
 	}
 
 	public UserDBDAO getDTO() {
 		return retuserDb;
 	}
-	
+
 	@Override
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
-		if(DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
-			if(loginComposite.testConnection()) {
+		if (DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
+			if (loginComposite.testConnection()) {
 				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
 			}
 		}
@@ -141,6 +139,7 @@ public class ModifyDBDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -157,18 +156,18 @@ public class ModifyDBDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(450, 500);
 	}
-	
+
 	/**
 	 * refresh manager view
 	 */
 	protected void refreshManagerView() {
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
-		
+		final ManagerViewer managerView = (ManagerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				managerView.init();
 			}
-		});	// end display
+		}); // end display
 	}
 }

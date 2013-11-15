@@ -21,18 +21,16 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 /**
  * MariaDB login composite
  * 
- * default port : 4306
- * user			: root
- * password		: tadpole
+ * default port : 4306 user : root password : tadpole
  * 
  * @author hangum
- *
+ * 
  */
 public class MariaDBLoginComposite extends MySQLLoginComposite {
 	private static final Logger logger = Logger.getLogger(MariaDBLoginComposite.class);
-	
+
 	public MariaDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
 		super("Sample MariaDB", DBDefine.MARIADB_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
-	
+
 }

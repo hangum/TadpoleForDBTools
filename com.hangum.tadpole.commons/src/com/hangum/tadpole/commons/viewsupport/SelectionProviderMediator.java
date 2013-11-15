@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Widget;
  *******************************************************************************/
 //package org.eclipse.jdt.internal.ui.viewsupport;
 /**
- * A selection provider for view parts with more that one viewer.
- * Tracks the focus of the viewers to provide the correct selection.
+ * A selection provider for view parts with more that one viewer. Tracks the
+ * focus of the viewers to provide the correct selection.
  */
 public class SelectionProviderMediator implements IPostSelectionProvider {
 
@@ -65,8 +65,7 @@ public class SelectionProviderMediator implements IPostSelectionProvider {
 		}
 	}
 
-	private class InternalPostSelectionListener implements
-			ISelectionChangedListener {
+	private class InternalPostSelectionListener implements ISelectionChangedListener {
 		public void selectionChanged(SelectionChangedEvent event) {
 			doPostSelectionChanged(event);
 		}
@@ -135,8 +134,7 @@ public class SelectionProviderMediator implements IPostSelectionProvider {
 
 	private void fireSelectionChanged() {
 		if (fSelectionChangedListeners != null) {
-			SelectionChangedEvent event = new SelectionChangedEvent(this,
-					getSelection());
+			SelectionChangedEvent event = new SelectionChangedEvent(this, getSelection());
 
 			Object[] listeners = fSelectionChangedListeners.getListeners();
 			for (int i = 0; i < listeners.length; i++) {
@@ -148,8 +146,7 @@ public class SelectionProviderMediator implements IPostSelectionProvider {
 
 	private void firePostSelectionChanged() {
 		if (fPostSelectionChangedListeners != null) {
-			SelectionChangedEvent event = new SelectionChangedEvent(this,
-					getSelection());
+			SelectionChangedEvent event = new SelectionChangedEvent(this, getSelection());
 
 			Object[] listeners = fPostSelectionChangedListeners.getListeners();
 			for (int i = 0; i < listeners.length; i++) {
@@ -169,8 +166,7 @@ public class SelectionProviderMediator implements IPostSelectionProvider {
 	/*
 	 * @see ISelectionProvider#removeSelectionChangedListener
 	 */
-	public void removeSelectionChangedListener(
-			ISelectionChangedListener listener) {
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		fSelectionChangedListeners.remove(listener);
 	}
 
@@ -181,8 +177,7 @@ public class SelectionProviderMediator implements IPostSelectionProvider {
 	 * addPostSelectionChangedListener
 	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
-	public void addPostSelectionChangedListener(
-			ISelectionChangedListener listener) {
+	public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
 		fPostSelectionChangedListeners.add(listener);
 	}
 
@@ -193,8 +188,7 @@ public class SelectionProviderMediator implements IPostSelectionProvider {
 	 * removePostSelectionChangedListener
 	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
-	public void removePostSelectionChangedListener(
-			ISelectionChangedListener listener) {
+	public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
 		fPostSelectionChangedListeners.remove(listener);
 	}
 

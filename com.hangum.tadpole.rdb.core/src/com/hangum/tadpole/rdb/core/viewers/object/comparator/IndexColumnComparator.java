@@ -18,22 +18,22 @@ import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
  * sort를 위한 최상위 클래서(기본으로 table의 column 사용)
  * 
  * @author nilriri
- *
+ * 
  */
-public  class IndexColumnComparator extends ObjectComparator  {
-	
+public class IndexColumnComparator extends ObjectComparator {
+
 	public IndexColumnComparator() {
 		this.propertyIndex = 0;
 		direction = ASCENDING;
 	}
-	
+
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		InformationSchemaDAO tc1 = (InformationSchemaDAO)e1;
-		InformationSchemaDAO tc2 = (InformationSchemaDAO)e2;
-		
+		InformationSchemaDAO tc1 = (InformationSchemaDAO) e1;
+		InformationSchemaDAO tc2 = (InformationSchemaDAO) e2;
+
 		int rc = 0;
-		switch(propertyIndex) {
+		switch (propertyIndex) {
 		case 0:
 			rc = tc1.getSEQ_IN_INDEX().toLowerCase().compareToIgnoreCase(tc2.getSEQ_IN_INDEX().toLowerCase());
 			break;
@@ -42,10 +42,9 @@ public  class IndexColumnComparator extends ObjectComparator  {
 			break;
 		case 2:
 			rc = tc1.getCOMMENT().toLowerCase().compareToIgnoreCase(tc2.getCOMMENT().toLowerCase());
-			break;		
+			break;
 		}
-		
-				
+
 		if (direction == DESCENDING) {
 			rc = -rc;
 		}

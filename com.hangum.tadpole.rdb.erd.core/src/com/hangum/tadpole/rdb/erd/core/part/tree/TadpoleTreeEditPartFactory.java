@@ -21,17 +21,17 @@ public class TadpoleTreeEditPartFactory implements EditPartFactory {
 	@Override
 	public EditPart createEditPart(EditPart context, Object model) {
 		EditPart part = null;
-		
-		if(model instanceof DB) {
+
+		if (model instanceof DB) {
 			part = new DBTreeEditPart();
-		} else if(model instanceof Table) {
+		} else if (model instanceof Table) {
 			part = new TableTreeEditPart();
 		}
-		
-		if(part != null) {
+
+		if (part != null) {
 			part.setModel(model);
 		}
-		
+
 		return part;
 	}
 

@@ -27,20 +27,20 @@ import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
  */
 public class ConnectionManagerRefreshAction implements IViewActionDelegate {
 	protected IStructuredSelection sel;
-	
+
 	public ConnectionManagerRefreshAction() {
 		super();
 	}
 
 	@Override
 	public void run(IAction action) {
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+		final ManagerViewer managerView = (ManagerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				managerView.init();
 			}
-		});	// end display
+		}); // end display
 	}
 
 	@Override

@@ -33,7 +33,7 @@ import com.swtdesigner.ResourceManager;
  * 유저관리.
  * 
  * @author hangum
- *
+ * 
  */
 public class UserPermissionAction extends Action implements ISelectionListener, IWorkbenchAction {
 	/**
@@ -41,20 +41,20 @@ public class UserPermissionAction extends Action implements ISelectionListener, 
 	 */
 	private static final Logger logger = Logger.getLogger(UserPermissionAction.class);
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.UserPermissionAction"; //$NON-NLS-1$
-	
+
 	private final IWorkbenchWindow window;
 	private IStructuredSelection iss;
-	
+
 	public UserPermissionAction(IWorkbenchWindow window) {
 		this.window = window;
-		
+
 		setId(ID);
 		setText("User And DB Manager");
 		setToolTipText("User And DB Manager");
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png"));
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png"));
 		setEnabled(true);
 	}
-	
+
 	@Override
 	public void run() {
 		try {
@@ -62,7 +62,7 @@ public class UserPermissionAction extends Action implements ISelectionListener, 
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, UserManagementEditor.ID);
 		} catch (PartInitException e) {
 			logger.error("User Management editor", e); //$NON-NLS-1$
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "User Management editor", errStatus); //$NON-NLS-1$
 		}

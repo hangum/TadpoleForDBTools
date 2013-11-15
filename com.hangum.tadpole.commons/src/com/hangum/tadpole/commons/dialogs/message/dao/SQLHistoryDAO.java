@@ -16,25 +16,25 @@ import java.util.Date;
  * query history
  * 
  * @author hangum
- *
+ * 
  */
 public class SQLHistoryDAO {
 	int seq;
-	
+
 	/** Execute start time */
 	Date startDateExecute;
-	
+
 	/** execute sql text */
 	String strSQLText;
-	
+
 	Date endDateExecute;
 	int rows;
 	String result;
 	String messsage;
-	
+
 	public SQLHistoryDAO(Date dateExecute, String strSQLText, Date endDateExecute, int rows, String result, String message) {
 		this.startDateExecute = dateExecute;
-		this.strSQLText = strSQLText;		
+		this.strSQLText = strSQLText;
 		this.endDateExecute = endDateExecute;
 		this.rows = rows;
 		this.result = result;
@@ -43,7 +43,6 @@ public class SQLHistoryDAO {
 
 	public SQLHistoryDAO() {
 	}
-
 
 	public int getSeq() {
 		return seq;
@@ -69,7 +68,8 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param startDateExecute the startDateExecute to set
+	 * @param startDateExecute
+	 *            the startDateExecute to set
 	 */
 	public void setStartDateExecute(Date startDateExecute) {
 		this.startDateExecute = startDateExecute;
@@ -83,7 +83,8 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param endDateExecute the endDateExecute to set
+	 * @param endDateExecute
+	 *            the endDateExecute to set
 	 */
 	public void setEndDateExecute(Date endDateExecute) {
 		this.endDateExecute = endDateExecute;
@@ -97,7 +98,8 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param rows the rows to set
+	 * @param rows
+	 *            the rows to set
 	 */
 	public void setRows(int rows) {
 		this.rows = rows;
@@ -111,7 +113,8 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param result the result to set
+	 * @param result
+	 *            the result to set
 	 */
 	public void setResult(String result) {
 		this.result = result;
@@ -125,11 +128,11 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param messsage the messsage to set
+	 * @param messsage
+	 *            the messsage to set
 	 */
 	public void setMesssage(String messsage) {
 		this.messsage = messsage;
 	}
 
-	
 }

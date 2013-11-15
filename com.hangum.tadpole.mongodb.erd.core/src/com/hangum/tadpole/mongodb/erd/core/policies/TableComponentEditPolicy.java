@@ -21,14 +21,14 @@ import com.hangum.tadpole.mongodb.model.Table;
  * table delete command policy
  * 
  * @author hangum
- *
+ * 
  */
 public class TableComponentEditPolicy extends ComponentEditPolicy {
 
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
 		TableDeleteCommand tableDeleteCommand = new TableDeleteCommand();
-		tableDeleteCommand.setTable( (Table)getHost().getModel() );
+		tableDeleteCommand.setTable((Table) getHost().getModel());
 		return tableDeleteCommand;
 	}
 }

@@ -55,14 +55,14 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * trigger composite
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleTriggerComposite.class);
-	
+
 	private TableViewer triggerTableViewer;
 	private TriggerComparator triggerComparator;
 	private List<TriggerDAO> showTrigger;
@@ -85,8 +85,8 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		super(site, tabFolderObject, userDB);
 		createWidget(tabFolderObject);
 	}
-	
-	private void createWidget(final CTabFolder tabFolderObject) {		
+
+	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmTriggers = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmTriggers.setText("Triggers"); //$NON-NLS-1$
 
@@ -103,7 +103,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		triggerTableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableList = triggerTableViewer.getTable();
 		tableTableList.setLinesVisible(true);
@@ -121,17 +121,18 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		triggerFilter = new TriggerViewFilter();
 		triggerTableViewer.addFilter(triggerFilter);
 
-		sashForm.setWeights(new int[] { 1 });
+		sashForm.setWeights(new int[] { 1
+		});
 
 		// creat action
 		createMenu();
 	}
-	
+
 	private void createMenu() {
 		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 		deleteAction_Trigger = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
-		
+
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "View"); //$NON-NLS-1$
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 
@@ -141,19 +142,19 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Trigger);
 					manager.add(deleteAction_Trigger);
 				}
-					
+
 				manager.add(refreshAction_Trigger);
-				
+
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(viewDDLAction);
-				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 					manager.add(objectCompileAction);
 				}
-				
+
 			}
 		});
 
@@ -163,6 +164,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 
 	/**
 	 * trigger filter text
+	 * 
 	 * @param textSearch
 	 */
 	public void filter(String textSearch) {
@@ -174,32 +176,35 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 * initialize action
 	 */
 	public void initAction() {
-		if (showTrigger != null) showTrigger.clear();
+		if (showTrigger != null)
+			showTrigger.clear();
 		triggerTableViewer.setInput(showTrigger);
 		triggerTableViewer.refresh();
 
 		creatAction_Trigger.setUserDB(getUserDB());
 		deleteAction_Trigger.setUserDB(getUserDB());
 		refreshAction_Trigger.setUserDB(getUserDB());
-		
+
 		viewDDLAction.setUserDB(getUserDB());
 		objectCompileAction.setUserDB(getUserDB());
 	}
-	
+
 	/**
 	 * trigger 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshTrigger(final UserDBDAO userDB, boolean boolRefresh) {
-		if(!boolRefresh) if(showTrigger != null) return;
+		if (!boolRefresh)
+			if (showTrigger != null)
+				return;
 		this.userDB = userDB;
-		
+
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showTrigger = sqlClient.queryForList("triggerList", userDB.getDb()); //$NON-NLS-1$
 
 			triggerTableViewer.setInput(showTrigger);
 			triggerTableViewer.refresh();
-			
+
 			TableUtil.packTable(triggerTableViewer.getTable());
 
 		} catch (Exception e) {
@@ -211,6 +216,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 
 	/**
 	 * get tableviewer
+	 * 
 	 * @return
 	 */
 	public TableViewer getTableViewer() {
@@ -219,17 +225,17 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 
 	@Override
 	public void setSearchText(String searchText) {
-		triggerFilter.setSearchText(searchText);		
+		triggerFilter.setSearchText(searchText);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		
+
 		creatAction_Trigger.dispose();
 		deleteAction_Trigger.dispose();
 		refreshAction_Trigger.dispose();
-		viewDDLAction.dispose();	
+		viewDDLAction.dispose();
 		objectCompileAction.dispose();
 	}
 }

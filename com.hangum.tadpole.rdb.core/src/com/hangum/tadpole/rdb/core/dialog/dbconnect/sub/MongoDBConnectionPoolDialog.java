@@ -12,21 +12,21 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.sub;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
 
 /**
  * MongoDB Connection Poool Dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBConnectionPoolDialog extends Dialog {
 	private Text textConnectionPerHost;
@@ -35,6 +35,7 @@ public class MongoDBConnectionPoolDialog extends Dialog {
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public MongoDBConnectionPoolDialog(Shell parentShell) {
@@ -43,6 +44,7 @@ public class MongoDBConnectionPoolDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -50,22 +52,22 @@ public class MongoDBConnectionPoolDialog extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 2;
-		
+
 		Label lblConnectionsPerHost = new Label(container, SWT.NONE);
 		lblConnectionsPerHost.setText("Connections Per Host");
-		
+
 		textConnectionPerHost = new Text(container, SWT.BORDER);
 		textConnectionPerHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblBlockingThreadMultiplier = new Label(container, SWT.NONE);
 		lblBlockingThreadMultiplier.setText("Blocking Thread Multiplier");
-		
+
 		textBlockingThreadMultiplier = new Text(container, SWT.BORDER);
 		textBlockingThreadMultiplier.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblMaxWaitTime = new Label(container, SWT.NONE);
 		lblMaxWaitTime.setText("Max Wait Time");
-		
+
 		textMaxWiatTime = new Text(container, SWT.BORDER);
 		textMaxWiatTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -74,6 +76,7 @@ public class MongoDBConnectionPoolDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

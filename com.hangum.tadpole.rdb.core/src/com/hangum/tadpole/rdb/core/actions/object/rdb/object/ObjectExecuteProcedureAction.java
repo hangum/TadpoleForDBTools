@@ -24,34 +24,35 @@ import com.hangum.tadpole.sql.util.executer.ProcedureExecuterManager;
 /**
  * Object Explorer에서 사용하는 공통 action
  * 
- *  Procedure를 실행합니다.
+ * Procedure를 실행합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(ObjectExecuteProcedureAction.class);
+	// private static final Logger logger =
+	// Logger.getLogger(ObjectExecuteProcedureAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.execute.procedure";
 
 	public ObjectExecuteProcedureAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Execute "  + title);
+		setText("Execute " + title);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
-		
+		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
+
 		ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
-		if(pm.isExecuted(procedureDAO, userDB)) {
+		if (pm.isExecuted(procedureDAO, userDB)) {
 			ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, userDB, procedureDAO);
 			epd.open();
 		}
 	}// end method
-	
+
 }

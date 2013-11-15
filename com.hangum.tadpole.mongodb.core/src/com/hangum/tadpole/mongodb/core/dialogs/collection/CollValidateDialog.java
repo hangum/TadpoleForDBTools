@@ -35,7 +35,7 @@ import com.mongodb.DBObject;
  * Collection validate
  * 
  * @author hangum
- *
+ * 
  */
 public class CollValidateDialog extends Dialog {
 	/**
@@ -44,22 +44,22 @@ public class CollValidateDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(CollValidateDialog.class);
 	private UserDBDAO userDB;
 	private String collName;
-	
+
 	private Button btnFull;
-	
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public CollValidateDialog(Shell parentShell, UserDBDAO userDB, String collName) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.userDB = userDB;
 		this.collName = collName;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -68,25 +68,26 @@ public class CollValidateDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-		
+
 		btnFull = new Button(container, SWT.CHECK);
 		btnFull.setSelection(true);
 		btnFull.setText("Full");
 
 		return container;
 	}
-	
+
 	@Override
 	protected void okPressed() {
 		try {
 			DBObject retDBObj = MongoDBQuery.collValidate(userDB, collName, btnFull.getSelection());
-			
-			if(null != retDBObj) {
+
+			if (null != retDBObj) {
 				FindOneDetailDialog resultViewDialog = new FindOneDetailDialog(null, userDB, "Validate Message", retDBObj);
 				resultViewDialog.open();
 			}
@@ -96,18 +97,18 @@ public class CollValidateDialog extends Dialog {
 			ExceptionDetailsErrorDialog.openError(null, "Error", "collection validate Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
+
 	@Override
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
-		if(buttonId == IDialogConstants.HELP_ID) {
+		if (buttonId == IDialogConstants.HELP_ID) {
 			HelpUtils.showHelp(HelpDefine.MONGODB_VALIDATE);
 		}
 	}
-	
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

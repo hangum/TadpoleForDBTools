@@ -28,13 +28,10 @@ import com.hangum.tadpole.sql.template.DBOperationType;
 /**
  * DB 등록시 공통으로 들어가는 정보를 나열합니다.
  * 
- * 1. 디비종류
- * 2. 그룹명
- * 3. 표시이름
- * 4. 운영타입
+ * 1. 디비종류 2. 그룹명 3. 표시이름 4. 운영타입
  * 
  * @author hangum
- *
+ * 
  */
 public class PreConnectionInfoGroup extends Group {
 	/** already group name */
@@ -48,6 +45,7 @@ public class PreConnectionInfoGroup extends Group {
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -60,30 +58,31 @@ public class PreConnectionInfoGroup extends Group {
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
-		
+
 		Label lblOperationType = new Label(this, SWT.NONE);
 		lblOperationType.setText(Messages.MySQLLoginComposite_lblOperationType_text);
-		
+
 		comboOperationType = new Combo(this, SWT.READ_ONLY);
 		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (DBOperationType opType : DBOperationType.values()) {
 			comboOperationType.add(opType.getTypeName());
 		}
 		comboOperationType.select(1);
-		
+
 		Label lblGroupName = new Label(this, SWT.NONE);
 		lblGroupName.setText(Messages.MySQLLoginComposite_lblGroupName_text);
 		comboGroup = new Combo(this, SWT.NONE);
 		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (String strGroup : listGroupName) comboGroup.add(strGroup);
-		
+		for (String strGroup : listGroupName)
+			comboGroup.add(strGroup);
+
 		Label lblNewLabel_1 = new Label(this, SWT.NONE);
 		lblNewLabel_1.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
-		
+
 		textDisplayName = new Text(this, SWT.BORDER);
 		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 	}
-	
+
 	public List<String> getListGroupName() {
 		return listGroupName;
 	}

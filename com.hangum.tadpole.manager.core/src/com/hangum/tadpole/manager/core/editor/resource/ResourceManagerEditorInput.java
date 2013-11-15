@@ -18,7 +18,7 @@ import org.eclipse.ui.IPersistableElement;
  * Resource Manager input
  * 
  * @author hangum
- *
+ * 
  */
 public class ResourceManagerEditorInput implements IEditorInput {
 

@@ -14,7 +14,7 @@ package com.hangum.tadpole.application.start;
  * Dummy plugin activator
  * 
  * @author hangum
- *
+ * 
  */
 public class BrowserActivator {
 	public static final String ID = "com.hangum.tadpole.applicaion.start";

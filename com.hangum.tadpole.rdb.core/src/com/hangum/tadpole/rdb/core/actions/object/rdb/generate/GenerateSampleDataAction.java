@@ -24,28 +24,29 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Object Explorer에서 사용하는 공통 action
  * 
  * @author hangum
- *
+ * 
  */
 public class GenerateSampleDataAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(GenerateSampleDataAction.class);
+	// private static final Logger logger =
+	// Logger.getLogger(GenerateSampleDataAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.generatesample.data";
-	
+
 	public GenerateSampleDataAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText("Generate Sample data");
-		
-//		window.getSelectionService().addSelectionListener(this);
+
+		// window.getSelectionService().addSelectionListener(this);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		TableDAO tableDao = (TableDAO)selection.getFirstElement();
-		
+		TableDAO tableDao = (TableDAO) selection.getFirstElement();
+
 		SampleDataGenerateDialog dialog = new SampleDataGenerateDialog(getWindow().getShell(), userDB, tableDao.getName());
 		dialog.open();
 	}

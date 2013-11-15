@@ -18,7 +18,7 @@ import org.eclipse.ui.internal.OpenPreferencesAction;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
 
-public class PreferenceAction extends Action implements  IWorkbenchAction {
+public class PreferenceAction extends Action implements IWorkbenchAction {
 	private final IWorkbenchWindow window;
 	public static final String ID = "com.hangum.db.browser.rap.core.actions.global.preference";
 
@@ -35,7 +35,7 @@ public class PreferenceAction extends Action implements  IWorkbenchAction {
 	public void run() {
 		IWorkbenchAction action = new OpenPreferencesAction(window);
 		action.setId(getId());
-		
+
 		action.run();
 	}
 

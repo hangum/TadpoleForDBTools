@@ -14,12 +14,12 @@ package com.hangum.tadpole.editor.core;
  * editor의 표준 인터페이스를 정의합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public interface IEditorExtension {
 	/** 개발디비 에디터 정의 */
 	public static final String DEV_DB_URL = "orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
-	
+
 	/** 운영디비 에디터 정의 */
 	public static final String REAL_DB_URL = "orion/tadpole/editor/REAL_RDBEmbeddededitor.html"; //$NON-NLS-1$
 }

@@ -14,13 +14,13 @@ package com.hangum.tadpole.editor.core.dialogs.help;
  * 단축키 dao
  * 
  * @author hangum
- *
+ * 
  */
 public class ShortcutHelpDAO {
 	String name;
 	String key;
 	String desc;
-	
+
 	public ShortcutHelpDAO(String name, String key) {
 		this.name = name;
 		this.key = key;
@@ -49,6 +49,5 @@ public class ShortcutHelpDAO {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-	
-	
+
 }

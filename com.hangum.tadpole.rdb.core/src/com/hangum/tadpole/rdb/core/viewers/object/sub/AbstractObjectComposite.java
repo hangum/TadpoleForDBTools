@@ -29,19 +29,24 @@ import com.hangum.tadpole.sql.session.manager.SessionManager;
  * Object explorer composite
  * 
  * @author hangum
- *
+ * 
  */
 public abstract class AbstractObjectComposite extends Composite {
 	protected IWorkbenchPartSite site;
-//	protected final String strUserType = SessionManager.getRoleType();
-	
+	// protected final String strUserType = SessionManager.getRoleType();
+
 	protected UserDBDAO userDB;
 	protected int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
-	
+
 	/**
 	 * 디비 중에 올챙이가 테이블,컬럼의 도움말을 제공하는 디비를 정의합니다.
 	 */
-	protected static DBDefine[] editType = {DBDefine.ORACLE_DEFAULT, DBDefine.POSTGRE_DEFAULT, DBDefine.MYSQL_DEFAULT, DBDefine.MARIADB_DEFAULT};
+	protected static DBDefine[] editType = {
+			DBDefine.ORACLE_DEFAULT,
+			DBDefine.POSTGRE_DEFAULT,
+			DBDefine.MYSQL_DEFAULT,
+			DBDefine.MARIADB_DEFAULT
+	};
 
 	/**
 	 * 
@@ -51,37 +56,40 @@ public abstract class AbstractObjectComposite extends Composite {
 	 */
 	public AbstractObjectComposite(IWorkbenchPartSite site, Composite parent, UserDBDAO userDB) {
 		super(parent, SWT.NONE);
-		
+
 		this.site = site;
 		this.userDB = userDB;
 	}
-	
+
 	/**
 	 * select userDB
+	 * 
 	 * @return
 	 */
 	protected UserDBDAO getUserDB() {
 		return userDB;
 	}
-	
+
 	protected String getUserRoleType() {
 		return SessionManager.getRoleType(getUserDB().getGroup_seq());
 	}
-	
+
 	/**
 	 * select site
+	 * 
 	 * @return
 	 */
 	protected IWorkbenchPartSite getSite() {
 		return site;
 	}
-	
+
 	/**
 	 * search text
+	 * 
 	 * @param searchText
 	 */
 	public abstract void setSearchText(String searchText);
-	
+
 	/**
 	 * init action
 	 */
@@ -89,100 +97,169 @@ public abstract class AbstractObjectComposite extends Composite {
 
 	/**
 	 * 테이블, 테이블 컬럼의 컬럼을 에디트 할수 있는지.
+	 * 
 	 * @param userDB
 	 * @return
 	 */
 	protected boolean isCommentEdit(UserDBDAO userDB) {
-		if(userDB == null) return false;
-		
+		if (userDB == null)
+			return false;
+
 		for (DBDefine dbType : editType) {
-			if(dbType.getDBToString().equals(userDB.getDb())) return true;
+			if (dbType.getDBToString().equals(userDB.getDb()))
+				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * trigger table column
+	 * 
 	 * @param tv
 	 */
 	protected void createTriggerColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {"Trigger", "Event", "Table", "Statement", "Timing",
-			"Created", "sql_mode", "Definer", "character_set_client", "collation_connection", "Database",
-			"Collation"
+		String[] name = {
+				"Trigger",
+				"Event",
+				"Table",
+				"Statement",
+				"Timing",
+				"Created",
+				"sql_mode",
+				"Definer",
+				"character_set_client",
+				"collation_connection",
+				"Database",
+				"Collation"
 		};
-		int[] size = {120, 70, 70, 70, 70,
-					   70, 70, 70, 70, 70, 
-					   70, 70
+		int[] size = {
+				120,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70
 		};
 
-		for (int i=0; i<name.length; i++) {
+		for (int i = 0; i < name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}
-	
+
 	/**
 	 * Procedure table column
+	 * 
 	 * @param tv
 	 */
 	protected void createProcedureFunctionColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {"Name", "Definer", "Modified", "Created",
-						"Security_type", "Comment", "character_set_client", "collation_connection", "Database", 
-						"Collation"
+		String[] name = {
+				"Name",
+				"Definer",
+				"Modified",
+				"Created",
+				"Security_type",
+				"Comment",
+				"character_set_client",
+				"collation_connection",
+				"Database",
+				"Collation"
 		};
-		int[] size = {120, 70, 70, 70,
-						70, 70, 70, 70, 70, 
-						70
+		int[] size = {
+				120,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70,
+				70
 		};
 
-		for (int i=0; i<name.length; i++) {
+		for (int i = 0; i < name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}
-	
+
 	/**
 	 * indexes table column
+	 * 
 	 * @param tv
 	 */
 	protected void createIndexesColumn(final TableViewer tv, final ObjectComparator comparator) {
-//		String[] name = {"TABLE NAME", "INDEX NAME", "NON UNIQUE", "INDEX SCHEMA", "SEQ IN INDEX", 
-//						"COLUMN NAME", "COLLATION", "CARDINALITY", "SUB PART", "PACKED", 
-//						"NULLABLE", 	"INDEX TYPE","COMMENT"
-//		};
-		String[] name = {"Table Name", "Index Name","Type","Comment"};
-		int[] size = {120, 120, 70, 70//, 70, 
-//						70,	70, 70, 70, 70, 
-//						70, 70,	70
+		// String[] name = {"TABLE NAME", "INDEX NAME", "NON UNIQUE",
+		// "INDEX SCHEMA", "SEQ IN INDEX",
+		// "COLUMN NAME", "COLLATION", "CARDINALITY", "SUB PART", "PACKED",
+		// "NULLABLE", "INDEX TYPE","COMMENT"
+		// };
+		String[] name = {
+				"Table Name",
+				"Index Name",
+				"Type",
+				"Comment"
+		};
+		int[] size = {
+				120,
+				120,
+				70,
+				70
+		// , 70,
+		// 70, 70, 70, 70, 70,
+		// 70, 70, 70
 		};
 
-		for (int i=0; i<name.length; i++) {
+		for (int i = 0; i < name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}
-	
+
 	/**
 	 * view column
 	 */
 	protected void createViewColumne(TableViewer tv) {
-		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
-		int[] size = {120, 70, 50, 100, 50, 50, 50};
+		String[] name = {
+				"Field",
+				"Type",
+				"Key",
+				"Comment",
+				"Null",
+				"Default",
+				"Extra"
+		};
+		int[] size = {
+				120,
+				70,
+				50,
+				100,
+				50,
+				50,
+				50
+		};
 
-		for (int i=0; i<name.length; i++) {
+		for (int i = 0; i < name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 		}
 	}
-	
+
 	/**
 	 * table sorter
 	 * 
@@ -202,10 +279,10 @@ public abstract class AbstractObjectComposite extends Composite {
 				viewer.refresh();
 			}
 		};
-		
+
 		return adapter;
 	}
-	
+
 	@Override
 	protected void checkSubclass() {
 	}

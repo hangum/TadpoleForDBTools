@@ -38,17 +38,17 @@ public class MongoTestLikeStmt {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
-		
+
 		DBCollection myColl = db.getCollection("language");
 		BasicDBObject dbObject = new BasicDBObject();
 		Pattern regex = Pattern.compile(".*en*");
 		dbObject.put("name", regex);
-		
-		DBCursor myCursor = myColl.find(dbObject);		
+
+		DBCursor myCursor = myColl.find(dbObject);
 		while (myCursor.hasNext()) {
 			System.out.println(myCursor.next());
 		}
-		
+
 		mongo.close();
 	}
 

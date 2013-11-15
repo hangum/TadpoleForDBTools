@@ -17,42 +17,44 @@ import org.jasypt.util.text.BasicTextEncryptor;
  * 
  * @see http://www.jasypt.org
  * @author hangum
- *
+ * 
  */
 public class EncryptiDecryptUtil implements DefaultEncryptDecrypt {
 	/** default encrypt password */
 	final static String DEFAULT_ENCRYPT_PASSWORD = "heechan.tadpole.owner.son";
-	
+
 	/**
 	 * encryption
 	 * 
-	 * @param text  
+	 * @param text
 	 * @return
 	 */
 	@Override
 	public String encryption(String text) {
-		if("".equals(text) || null == text) return "";
-		
+		if ("".equals(text) || null == text)
+			return "";
+
 		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
 		textEncryptor.setPassword(DEFAULT_ENCRYPT_PASSWORD);
-		
+
 		return textEncryptor.encrypt(text);
 	}
-	
+
 	/**
 	 * description
 	 * 
-	 * @param text 
+	 * @param text
 	 * @return
 	 */
 	@Override
 	public String decryption(String text) {
-		if("".equals(text) || null == text) return "";
-		
+		if ("".equals(text) || null == text)
+			return "";
+
 		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
 		textEncryptor.setPassword(DEFAULT_ENCRYPT_PASSWORD);
-		
+
 		return textEncryptor.decrypt(text);
 	}
-	
+
 }

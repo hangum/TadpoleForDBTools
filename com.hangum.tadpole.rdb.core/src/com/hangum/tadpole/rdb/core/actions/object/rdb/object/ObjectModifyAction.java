@@ -38,7 +38,7 @@ import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
  * Object Explorer에서 사용하는 공통 action
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectModifyAction extends AbstractObjectSelectAction {
 	/**
@@ -57,50 +57,51 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 
-		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
+		if (actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			CreateTableAction cta = new CreateTableAction();
-			
+
 			// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
-			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
-				TableDAO tc = (TableDAO)selection.getFirstElement();
-				if(tc == null) cta.run(userDB, actionType);
-				else cta.run(userDB, tc.getComment());
-			} else {				
+			if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
+				TableDAO tc = (TableDAO) selection.getFirstElement();
+				if (tc == null)
+					cta.run(userDB, actionType);
+				else
+					cta.run(userDB, tc.getComment());
+			} else {
 				cta.run(userDB, actionType);
 			}
-				
-			
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
+
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			CreateIndexAction cia = new CreateIndexAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
-			
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
+
 			try {
 				DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
 				String strScript = scriptManager.getScript(selection.getFirstElement());
 				strScript = StringUtils.replaceOnce(strScript, "CREATE", "ALTER");
-				if(strScript.indexOf("ALTER") == -1) {
+				if (strScript.indexOf("ALTER") == -1) {
 					strScript = StringUtils.replaceOnce(strScript, "create", "alter");
 				}
-				
-				FindEditorAndWriteQueryUtil.run(userDB, strScript, true);		
-			} catch(Exception e) {
+
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, true);
+			} catch (Exception e) {
 				logger.error("alert ddl script", e);
-				
+
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", selection.getFirstElement() + " Load scipt error", errStatus); //$NON-NLS-1$
 			}
-			
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
+
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
 			CreateFunctionAction cia = new CreateFunctionAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 			CreateTriggerAction cia = new CreateTriggerAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
+		} else if (actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
 			CreateJavaScriptAction csa = new CreateJavaScriptAction();
 			csa.run(userDB, actionType);
 		}

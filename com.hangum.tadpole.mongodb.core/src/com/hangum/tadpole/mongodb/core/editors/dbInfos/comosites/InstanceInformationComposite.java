@@ -43,26 +43,26 @@ import com.mongodb.DBObject;
  * Server Status (Instance Information) composite
  * 
  * @author hangum
- *
+ * 
  */
 public class InstanceInformationComposite extends Composite {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(InstanceInformationComposite.class);
-	
+
 	/** server push session */
 	final ServerPushSession spsInstance = new ServerPushSession();
 	private boolean isUIThreadRunning = false;
-	
+
 	/** main composite */
 	private Composite compositeServerStatus;
 	private Button btnStart;
 	private Button btnStop;
-	
+
 	/** userDB data */
 	private UserDBDAO userDB;
-	
+
 	/** System information */
 	private Text textHost;
 	private Text textVersion;
@@ -72,15 +72,16 @@ public class InstanceInformationComposite extends Composite {
 	private Text textUptimeMillis;
 	private Text textUpTimeEstimate;
 	private Text textLocalTime;
-	
+
 	private BarChart barChartMemory;
 	private BarChart barChartNetwork;
-	
+
 	private BarChart barChartConnection;
 	private PieChart pieChartCursors;
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -92,9 +93,9 @@ public class InstanceInformationComposite extends Composite {
 		gridLayout.marginHeight = 1;
 		gridLayout.marginWidth = 1;
 		setLayout(gridLayout);
-		
+
 		this.userDB = userDB;
-		
+
 		compositeServerStatus = new Composite(this, SWT.NONE);
 		compositeServerStatus.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeServerStatus = new GridLayout(1, false);
@@ -103,7 +104,7 @@ public class InstanceInformationComposite extends Composite {
 		gl_compositeServerStatus.marginHeight = 2;
 		gl_compositeServerStatus.marginWidth = 2;
 		compositeServerStatus.setLayout(gl_compositeServerStatus);
-		
+
 		// monitoring start, stop
 		Composite compositeHead = new Composite(compositeServerStatus, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
@@ -113,10 +114,10 @@ public class InstanceInformationComposite extends Composite {
 		gl_compositeHead.marginHeight = 2;
 		gl_compositeHead.marginWidth = 2;
 		compositeHead.setLayout(gl_compositeHead);
-		
+
 		Label lblMonitoring = new Label(compositeHead, SWT.NONE);
 		lblMonitoring.setText("Monitoring");
-		
+
 		btnStart = new Button(compositeHead, SWT.NONE);
 		btnStart.setBounds(0, 0, 94, 28);
 		btnStart.addSelectionListener(new SelectionAdapter() {
@@ -126,7 +127,7 @@ public class InstanceInformationComposite extends Composite {
 			}
 		});
 		btnStart.setText("Start");
-		
+
 		btnStop = new Button(compositeHead, SWT.NONE);
 		btnStop.setEnabled(false);
 		btnStop.addSelectionListener(new SelectionAdapter() {
@@ -136,10 +137,10 @@ public class InstanceInformationComposite extends Composite {
 			}
 		});
 		btnStop.setText("Stop");
-		
+
 		// create information
 		createInstanceInformation();
-		
+
 		Composite cmpMemory = new Composite(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpMemory = new GridLayout(2, false);
 		gl_grpMemory.verticalSpacing = 2;
@@ -161,10 +162,10 @@ public class InstanceInformationComposite extends Composite {
 		gl_grpConnections.marginWidth = 1;
 		cmpConnections.setLayout(gl_grpConnections);
 		cmpConnections.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		createMemeoryInformation(cmpConnections, commandResult);
 		createCursorsChart(cmpConnections, commandResult);
-		
+
 		// show extra information
 		Group grpExtraInfo = new Group(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpExtraInfo = new GridLayout(1, false);
@@ -175,27 +176,27 @@ public class InstanceInformationComposite extends Composite {
 		grpExtraInfo.setLayout(gl_grpExtraInfo);
 		grpExtraInfo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		grpExtraInfo.setText("Extra Information");
-		
-		Composite compositeExtraInfo = new FindOneDetailComposite(grpExtraInfo, "Extra Information", (DBObject)commandResult.get("extra_info"), false);
+
+		Composite compositeExtraInfo = new FindOneDetailComposite(grpExtraInfo, "Extra Information", (DBObject) commandResult.get("extra_info"), false);
 		compositeExtraInfo.setLayout(new GridLayout(1, false));
 		compositeExtraInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	}
-	
+
 	/**
 	 * start instance monitoring
 	 */
 	private void startInstanceMon() {
-		if(!isUIThreadRunning) {
+		if (!isUIThreadRunning) {
 			spsInstance.start();
-			Thread bgThread = new Thread( startUIThread() );
-			bgThread.setDaemon( true );
+			Thread bgThread = new Thread(startUIThread());
+			bgThread.setDaemon(true);
 			bgThread.start();
-			
+
 			btnStart.setEnabled(false);
 			btnStop.setEnabled(true);
 		}
 	}
-	
+
 	/**
 	 * start runnable
 	 * 
@@ -203,66 +204,67 @@ public class InstanceInformationComposite extends Composite {
 	 */
 	private Runnable startUIThread() {
 		isUIThreadRunning = true;
-		
+
 		Runnable bgRunnable = new Runnable() {
 			public void run() {
-		    
-				while(isUIThreadRunning) {
-				    try {
-				    	final CommandResult commandResult = MongoDBQuery.serverStatusCommandResult(userDB);
-				    
-					    final Display display = compositeServerStatus.getDisplay();
-					    display.asyncExec( new Runnable() {
-					    	public void run() {
-					    		initMongoDBInfoData(commandResult);
-					    		refreshMemoryData(commandResult);
-					    		refreshNetwork(commandResult);
-					    		refreshConnections(commandResult);
-					    		refreshCursors(commandResult);
-					    	}
-					    } );
-					    
-				    } catch(Exception e) {
-				    	logger.error("Job executing", e);
-				    }
-				    
-				    try {
-						Thread.sleep(2000);								
-					} catch(Exception e){}	
-				}	// end while
-			}	// end run
+
+				while (isUIThreadRunning) {
+					try {
+						final CommandResult commandResult = MongoDBQuery.serverStatusCommandResult(userDB);
+
+						final Display display = compositeServerStatus.getDisplay();
+						display.asyncExec(new Runnable() {
+							public void run() {
+								initMongoDBInfoData(commandResult);
+								refreshMemoryData(commandResult);
+								refreshNetwork(commandResult);
+								refreshConnections(commandResult);
+								refreshCursors(commandResult);
+							}
+						});
+
+					} catch (Exception e) {
+						logger.error("Job executing", e);
+					}
+
+					try {
+						Thread.sleep(2000);
+					} catch (Exception e) {
+					}
+				} // end while
+			} // end run
 		};
-		
+
 		return bgRunnable;
 	}
-	
+
 	/**
 	 * stop instance monitoring
 	 */
 	private void stopInstanceMon() {
 		isUIThreadRunning = false;
 		spsInstance.stop();
-		
+
 		btnStart.setEnabled(true);
 		btnStop.setEnabled(false);
 	}
-	
+
 	/**
 	 * Show Mongodb System Information
 	 * 
 	 * @param commandResult
 	 */
 	public void initMongoDBInfoData(CommandResult commandResult) {
-		String strHost 	= StringUtils.trimToEmpty(commandResult.getString("host"));
-		String version 	= StringUtils.trimToEmpty(commandResult.getString("version"));
-		String process 	= StringUtils.trimToEmpty(commandResult.getString("process"));
-		String pid 		= StringUtils.trimToEmpty(commandResult.getString("pid"));
-		String uptime 	= StringUtils.trimToEmpty(commandResult.getString("uptime"));
-		
-		String uptimeMillis 	= StringUtils.trimToEmpty(TimeUtils.getHoureMinSecString(ENumberUtils.toInt(commandResult.getString("uptimeMillis"))));
-		String uptimeEstimate 	= StringUtils.trimToEmpty(commandResult.getString("uptimeEstimate"));
-		String localTime 		= StringUtils.trimToEmpty(commandResult.getString("localTime"));
-		
+		String strHost = StringUtils.trimToEmpty(commandResult.getString("host"));
+		String version = StringUtils.trimToEmpty(commandResult.getString("version"));
+		String process = StringUtils.trimToEmpty(commandResult.getString("process"));
+		String pid = StringUtils.trimToEmpty(commandResult.getString("pid"));
+		String uptime = StringUtils.trimToEmpty(commandResult.getString("uptime"));
+
+		String uptimeMillis = StringUtils.trimToEmpty(TimeUtils.getHoureMinSecString(ENumberUtils.toInt(commandResult.getString("uptimeMillis"))));
+		String uptimeEstimate = StringUtils.trimToEmpty(commandResult.getString("uptimeEstimate"));
+		String localTime = StringUtils.trimToEmpty(commandResult.getString("localTime"));
+
 		textHost.setText(strHost);
 		textVersion.setText(version);
 		textProcess.setText(process);
@@ -272,126 +274,127 @@ public class InstanceInformationComposite extends Composite {
 		textUpTimeEstimate.setText(uptimeEstimate);
 		textLocalTime.setText(localTime);
 	}
-	
+
 	/**
 	 * refresh memory
 	 * 
 	 * @param commandResult
 	 */
 	private void refreshMemoryData(CommandResult commandResult) {
-		DBObject cursorConnections = (DBObject)commandResult.get("mem");
-	    int bits 		= ENumberUtils.toInt(cursorConnections.get("bits"));
-	    int resident 	= ENumberUtils.toInt(cursorConnections.get("resident"));
-	    int virtual 	= ENumberUtils.toInt(cursorConnections.get("virtual"));
-	    
-	    int mapped 		= ENumberUtils.toInt(cursorConnections.get("mapped"));
-	    int mappedWithJournal = ENumberUtils.toInt(cursorConnections.get("mappedWithJournal"));
-	    
-	    float fBits 	= (float)bits / (float)virtual;
-	    float fResident = (float)resident / (float)virtual;
-	    float fVirtual 	= 0.8f;
-	    float fMapped 	= (float)mapped / (float)virtual;
-	    float fMappedWithJournal = (float)mappedWithJournal / (float)virtual;
-	    
-	    ChartItem itemAvailable = barChartMemory.getItems()[0];
-	    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bits) + ")");
-	    itemAvailable.setValue(fBits);
+		DBObject cursorConnections = (DBObject) commandResult.get("mem");
+		int bits = ENumberUtils.toInt(cursorConnections.get("bits"));
+		int resident = ENumberUtils.toInt(cursorConnections.get("resident"));
+		int virtual = ENumberUtils.toInt(cursorConnections.get("virtual"));
 
-	    ChartItem itemCurrent = barChartMemory.getItems()[1];
-	    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(resident) + ")");
-	    itemCurrent.setValue(fResident);
-	    
-	    ChartItem itemNumRequests = barChartMemory.getItems()[2];
-	    itemNumRequests.setText("Vitrual (" + NumberFormatUtils.commaFormat(virtual) + ")");
-	    itemNumRequests.setValue(fVirtual);
-	    
-	    ChartItem itemMapped = barChartMemory.getItems()[3];
-	    itemMapped.setText("Mapped (" + NumberFormatUtils.commaFormat(mapped) + ")");
-	    itemMapped.setValue(fMapped);
-	    
-	    ChartItem itemMappedWithJournal = barChartMemory.getItems()[4];
-	    itemMappedWithJournal.setText("Mapped With Journal (" + NumberFormatUtils.commaFormat(mappedWithJournal) + ")");
-	    itemMappedWithJournal.setValue(fMappedWithJournal);
+		int mapped = ENumberUtils.toInt(cursorConnections.get("mapped"));
+		int mappedWithJournal = ENumberUtils.toInt(cursorConnections.get("mappedWithJournal"));
+
+		float fBits = (float) bits / (float) virtual;
+		float fResident = (float) resident / (float) virtual;
+		float fVirtual = 0.8f;
+		float fMapped = (float) mapped / (float) virtual;
+		float fMappedWithJournal = (float) mappedWithJournal / (float) virtual;
+
+		ChartItem itemAvailable = barChartMemory.getItems()[0];
+		itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bits) + ")");
+		itemAvailable.setValue(fBits);
+
+		ChartItem itemCurrent = barChartMemory.getItems()[1];
+		itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(resident) + ")");
+		itemCurrent.setValue(fResident);
+
+		ChartItem itemNumRequests = barChartMemory.getItems()[2];
+		itemNumRequests.setText("Vitrual (" + NumberFormatUtils.commaFormat(virtual) + ")");
+		itemNumRequests.setValue(fVirtual);
+
+		ChartItem itemMapped = barChartMemory.getItems()[3];
+		itemMapped.setText("Mapped (" + NumberFormatUtils.commaFormat(mapped) + ")");
+		itemMapped.setValue(fMapped);
+
+		ChartItem itemMappedWithJournal = barChartMemory.getItems()[4];
+		itemMappedWithJournal.setText("Mapped With Journal (" + NumberFormatUtils.commaFormat(mappedWithJournal) + ")");
+		itemMappedWithJournal.setValue(fMappedWithJournal);
 	}
-	
+
 	/**
 	 * refresh network
+	 * 
 	 * @param commandResult
 	 */
 	private void refreshNetwork(CommandResult commandResult) {
-	    DBObject cursorConnections = (DBObject)commandResult.get("network");
-	    int bytesIn 	= ENumberUtils.toInt(cursorConnections.get("bytesIn"));
-	    int bytesOut 	= ENumberUtils.toInt(cursorConnections.get("bytesOut"));
-	    int numRequests = ENumberUtils.toInt(cursorConnections.get("numRequests"));
+		DBObject cursorConnections = (DBObject) commandResult.get("network");
+		int bytesIn = ENumberUtils.toInt(cursorConnections.get("bytesIn"));
+		int bytesOut = ENumberUtils.toInt(cursorConnections.get("bytesOut"));
+		int numRequests = ENumberUtils.toInt(cursorConnections.get("numRequests"));
 
-	    float floatBI = 0f, floatBO = 0f, floatNf = 0f;
-	    if(bytesIn < bytesOut) {
-	    	floatBI = (float)bytesIn / (float)bytesOut;	    	
-	    	floatBO = 0.8f;
-	    	floatNf = (float)numRequests / (float)bytesOut;
-	    } else {
-	    	floatBI = 0.0f;	    	
-	    	floatBO = (float)bytesOut / (float)bytesIn;
-	    	floatNf = (float)numRequests / (float)bytesIn;
-	    }
+		float floatBI = 0f, floatBO = 0f, floatNf = 0f;
+		if (bytesIn < bytesOut) {
+			floatBI = (float) bytesIn / (float) bytesOut;
+			floatBO = 0.8f;
+			floatNf = (float) numRequests / (float) bytesOut;
+		} else {
+			floatBI = 0.0f;
+			floatBO = (float) bytesOut / (float) bytesIn;
+			floatNf = (float) numRequests / (float) bytesIn;
+		}
 
-	    ChartItem itemAvailable = barChartNetwork.getItems()[0];
-	    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")");
-	    itemAvailable.setValue(floatBI);
+		ChartItem itemAvailable = barChartNetwork.getItems()[0];
+		itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")");
+		itemAvailable.setValue(floatBI);
 
-	    ChartItem itemCurrent = barChartNetwork.getItems()[1];
-	    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")");
-	    itemCurrent.setValue(floatBO);
-	    
-	    ChartItem itemNumRequests = barChartNetwork.getItems()[2];
-	    itemNumRequests.setText("Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")");
-	    itemNumRequests.setValue(floatNf);
+		ChartItem itemCurrent = barChartNetwork.getItems()[1];
+		itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")");
+		itemCurrent.setValue(floatBO);
+
+		ChartItem itemNumRequests = barChartNetwork.getItems()[2];
+		itemNumRequests.setText("Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")");
+		itemNumRequests.setValue(floatNf);
 	}
-	
+
 	/**
 	 * refresh connections
 	 * 
 	 * @param commandResult
 	 */
 	private void refreshConnections(CommandResult commandResult) {
-		DBObject cursorConnections = (DBObject)commandResult.get("connections");
-	    int current 		= ENumberUtils.toInt(cursorConnections.get("current"));
-	    int available 		= ENumberUtils.toInt(cursorConnections.get("available"));
-	    float floatCurrent 	= (float)current / (float)available;
+		DBObject cursorConnections = (DBObject) commandResult.get("connections");
+		int current = ENumberUtils.toInt(cursorConnections.get("current"));
+		int available = ENumberUtils.toInt(cursorConnections.get("available"));
+		float floatCurrent = (float) current / (float) available;
 
-	    ChartItem itemAvailable = barChartConnection.getItems()[0];
-	    itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
-	    itemAvailable.setValue(0.80f);
+		ChartItem itemAvailable = barChartConnection.getItems()[0];
+		itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
+		itemAvailable.setValue(0.80f);
 
-	    ChartItem itemCurrent = barChartConnection.getItems()[1];
-	    itemCurrent.setText("Current (" + NumberFormatUtils.commaFormat(current) + ")");
-	    itemCurrent.setValue(floatCurrent);
+		ChartItem itemCurrent = barChartConnection.getItems()[1];
+		itemCurrent.setText("Current (" + NumberFormatUtils.commaFormat(current) + ")");
+		itemCurrent.setValue(floatCurrent);
 	}
-	
+
 	/**
 	 * refresh cursors
 	 * 
 	 * @param commandResult
 	 */
 	private void refreshCursors(CommandResult commandResult) {
-		DBObject cursorCursors = (DBObject)commandResult.get("cursors");
-		int totalOpen 			= ENumberUtils.toInt(cursorCursors.get("totalOpen"));
-		int clientCursors_size 	= ENumberUtils.toInt(cursorCursors.get("clientCursors_size"));
-		int timedOut 			= ENumberUtils.toInt(cursorCursors.get("timedOut"));
-		
-		ChartItem itemTotalOpen = pieChartCursors.getItems()[0];
-	    itemTotalOpen.setText("Total Open (" + totalOpen + ")");
-	    itemTotalOpen.setValue(totalOpen);
+		DBObject cursorCursors = (DBObject) commandResult.get("cursors");
+		int totalOpen = ENumberUtils.toInt(cursorCursors.get("totalOpen"));
+		int clientCursors_size = ENumberUtils.toInt(cursorCursors.get("clientCursors_size"));
+		int timedOut = ENumberUtils.toInt(cursorCursors.get("timedOut"));
 
-	    ChartItem itemClientCursors_size = pieChartCursors.getItems()[1];
-	    itemClientCursors_size.setText("Client cursors size (" + clientCursors_size + ")");
-	    itemClientCursors_size.setValue(clientCursors_size);
-	    
-	    ChartItem itemTimedOut = pieChartCursors.getItems()[1];
-	    itemTimedOut.setText("Timed Out (" + timedOut + ")");
-	    itemTimedOut.setValue(timedOut);
+		ChartItem itemTotalOpen = pieChartCursors.getItems()[0];
+		itemTotalOpen.setText("Total Open (" + totalOpen + ")");
+		itemTotalOpen.setValue(totalOpen);
+
+		ChartItem itemClientCursors_size = pieChartCursors.getItems()[1];
+		itemClientCursors_size.setText("Client cursors size (" + clientCursors_size + ")");
+		itemClientCursors_size.setValue(clientCursors_size);
+
+		ChartItem itemTimedOut = pieChartCursors.getItems()[1];
+		itemTimedOut.setText("Timed Out (" + timedOut + ")");
+		itemTimedOut.setValue(timedOut);
 	}
-	
+
 	/**
 	 * Show instance information
 	 */
@@ -405,58 +408,58 @@ public class InstanceInformationComposite extends Composite {
 		groupInstance.setLayout(gl_compositeInstance);
 		groupInstance.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		groupInstance.setText("DB Instance Information");
-		
+
 		Label lblHost = new Label(groupInstance, SWT.NONE);
 		lblHost.setText("Host");
-		
+
 		textHost = new Text(groupInstance, SWT.BORDER | SWT.READ_ONLY);
 		textHost.setEditable(false);
 		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblVersion = new Label(groupInstance, SWT.NONE);
 		lblVersion.setText("Version");
-		
+
 		textVersion = new Text(groupInstance, SWT.BORDER | SWT.READ_ONLY);
 		textVersion.setEditable(false);
 		textVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblProcess = new Label(groupInstance, SWT.NONE);
 		lblProcess.setText("Process");
-		
+
 		textProcess = new Text(groupInstance, SWT.BORDER | SWT.READ_ONLY);
 		textProcess.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblPid = new Label(groupInstance, SWT.NONE);
 		lblPid.setText("PID");
-		
+
 		textPID = new Text(groupInstance, SWT.BORDER | SWT.READ_ONLY);
 		textPID.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblUptime = new Label(groupInstance, SWT.NONE);
 		lblUptime.setText("Uptime");
-		
+
 		textUptime = new Text(groupInstance, SWT.BORDER | SWT.READ_ONLY);
 		textUptime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblUptimemillis = new Label(groupInstance, SWT.NONE);
 		lblUptimemillis.setText("UptimeMillis");
-		
+
 		textUptimeMillis = new Text(groupInstance, SWT.BORDER | SWT.READ_ONLY);
 		textUptimeMillis.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblUptimeEstimate = new Label(groupInstance, SWT.NONE);
 		lblUptimeEstimate.setText("Uptime Estimate");
-		
+
 		textUpTimeEstimate = new Text(groupInstance, SWT.BORDER | SWT.READ_ONLY);
 		textUpTimeEstimate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblLocaltime = new Label(groupInstance, SWT.NONE);
 		lblLocaltime.setText("LocalTime");
-		
+
 		textLocalTime = new Text(groupInstance, SWT.BORDER | SWT.READ_ONLY);
 		textLocalTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 	}
-	
+
 	/**
 	 * Show memory information
 	 */
@@ -465,58 +468,58 @@ public class InstanceInformationComposite extends Composite {
 		compositeMemory.setLayout(new GridLayout(1, false));
 		compositeMemory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeMemory.setText("Memory");
-		
+
 		ColorStream colors = Colors.cat10Colors(compositeMemory.getDisplay()).loop();
-		
+
 		barChartMemory = new BarChart(compositeMemory, SWT.NONE);
 		barChartMemory.setLayout(new GridLayout(1, false));
 		barChartMemory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	    barChartMemory.setBarWidth(25);
+		barChartMemory.setBarWidth(25);
 
-	    DBObject cursorConnections = (DBObject)commandResult.get("mem");
-	    int bits 		= ENumberUtils.toInt(cursorConnections.get("bits"));
-	    int resident 	= ENumberUtils.toInt(cursorConnections.get("resident"));
-	    int virtual 	= ENumberUtils.toInt(cursorConnections.get("virtual"));
-	    
-	    int mapped = (Integer)cursorConnections.get("mapped");
-	    int mappedWithJournal =0;
-	    try {
-	    	mappedWithJournal = (Integer)cursorConnections.get("mappedWithJournal");
-	    } catch(Exception e) {}
-	    
-	    float fBits 	= (float)bits / (float)virtual;
-	    float fResident = (float)resident / (float)virtual;
-	    float fVirtual 	= 0.8f;
-	    float fMapped 	= (float)mapped / (float)virtual;
-	    float fMappedWithJournal = (float)mappedWithJournal / (float)virtual;
-	    
-	    
-	    ChartItem itemAvailable = new ChartItem(barChartMemory);
-	    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bits) + ")");
-	    itemAvailable.setColor(colors.next());
-	    itemAvailable.setValue(fBits);
+		DBObject cursorConnections = (DBObject) commandResult.get("mem");
+		int bits = ENumberUtils.toInt(cursorConnections.get("bits"));
+		int resident = ENumberUtils.toInt(cursorConnections.get("resident"));
+		int virtual = ENumberUtils.toInt(cursorConnections.get("virtual"));
 
-	    ChartItem itemCurrent = new ChartItem(barChartMemory);
-	    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(resident) + ")");
-	    itemCurrent.setColor(colors.next());
-	    itemCurrent.setValue(fResident);
-	    
-	    ChartItem itemNumRequests = new ChartItem(barChartMemory);
-	    itemNumRequests.setText("Vitrual (" + NumberFormatUtils.commaFormat(virtual) + ")");
-	    itemNumRequests.setColor(colors.next());
-	    itemNumRequests.setValue(fVirtual);
-	    
-	    ChartItem itemMapped = new ChartItem(barChartMemory);
-	    itemMapped.setText("Mapped (" + NumberFormatUtils.commaFormat(mapped) + ")");
-	    itemMapped.setColor(colors.next());
-	    itemMapped.setValue(fMapped);
-	    
-	    ChartItem itemMappedWithJournal = new ChartItem(barChartMemory);
-	    itemMappedWithJournal.setText("Mapped With Journal (" + NumberFormatUtils.commaFormat(mappedWithJournal) + ")");
-	    itemMappedWithJournal.setColor(colors.next());
-	    itemMappedWithJournal.setValue(fMappedWithJournal);
+		int mapped = (Integer) cursorConnections.get("mapped");
+		int mappedWithJournal = 0;
+		try {
+			mappedWithJournal = (Integer) cursorConnections.get("mappedWithJournal");
+		} catch (Exception e) {
+		}
+
+		float fBits = (float) bits / (float) virtual;
+		float fResident = (float) resident / (float) virtual;
+		float fVirtual = 0.8f;
+		float fMapped = (float) mapped / (float) virtual;
+		float fMappedWithJournal = (float) mappedWithJournal / (float) virtual;
+
+		ChartItem itemAvailable = new ChartItem(barChartMemory);
+		itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bits) + ")");
+		itemAvailable.setColor(colors.next());
+		itemAvailable.setValue(fBits);
+
+		ChartItem itemCurrent = new ChartItem(barChartMemory);
+		itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(resident) + ")");
+		itemCurrent.setColor(colors.next());
+		itemCurrent.setValue(fResident);
+
+		ChartItem itemNumRequests = new ChartItem(barChartMemory);
+		itemNumRequests.setText("Vitrual (" + NumberFormatUtils.commaFormat(virtual) + ")");
+		itemNumRequests.setColor(colors.next());
+		itemNumRequests.setValue(fVirtual);
+
+		ChartItem itemMapped = new ChartItem(barChartMemory);
+		itemMapped.setText("Mapped (" + NumberFormatUtils.commaFormat(mapped) + ")");
+		itemMapped.setColor(colors.next());
+		itemMapped.setValue(fMapped);
+
+		ChartItem itemMappedWithJournal = new ChartItem(barChartMemory);
+		itemMappedWithJournal.setText("Mapped With Journal (" + NumberFormatUtils.commaFormat(mappedWithJournal) + ")");
+		itemMappedWithJournal.setColor(colors.next());
+		itemMappedWithJournal.setValue(fMappedWithJournal);
 	}
-	
+
 	/**
 	 * Show network information.
 	 */
@@ -525,46 +528,46 @@ public class InstanceInformationComposite extends Composite {
 		compositeNetwork.setLayout(new GridLayout(1, false));
 		compositeNetwork.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeNetwork.setText("Network");
-		
+
 		ColorStream colors = Colors.cat10Colors(compositeNetwork.getDisplay()).loop();
-		
+
 		barChartNetwork = new BarChart(compositeNetwork, SWT.NONE);
 		barChartNetwork.setLayout(new GridLayout(1, false));
 		barChartNetwork.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	    barChartNetwork.setBarWidth(25);
+		barChartNetwork.setBarWidth(25);
 
-	    DBObject cursorConnections = (DBObject)commandResult.get("network");
-	    int bytesIn 	= ENumberUtils.toInt(cursorConnections.get("bytesIn"));
-	    int bytesOut 	= ENumberUtils.toInt(cursorConnections.get("bytesOut"));
-	    int numRequests = ENumberUtils.toInt(cursorConnections.get("numRequests"));
+		DBObject cursorConnections = (DBObject) commandResult.get("network");
+		int bytesIn = ENumberUtils.toInt(cursorConnections.get("bytesIn"));
+		int bytesOut = ENumberUtils.toInt(cursorConnections.get("bytesOut"));
+		int numRequests = ENumberUtils.toInt(cursorConnections.get("numRequests"));
 
-	    float floatBI = 0f, floatBO = 0f, floatNf = 0f;
-	    if(bytesIn < bytesOut) {
-	    	floatBI = (float)bytesIn / (float)bytesOut;	    	
-	    	floatBO = 0.8f;
-	    	floatNf = (float)numRequests / (float)bytesOut;
-	    } else {
-	    	floatBI = 0.0f;	    	
-	    	floatBO = (float)bytesOut / (float)bytesIn;
-	    	floatNf = (float)numRequests / (float)bytesIn;
-	    }
+		float floatBI = 0f, floatBO = 0f, floatNf = 0f;
+		if (bytesIn < bytesOut) {
+			floatBI = (float) bytesIn / (float) bytesOut;
+			floatBO = 0.8f;
+			floatNf = (float) numRequests / (float) bytesOut;
+		} else {
+			floatBI = 0.0f;
+			floatBO = (float) bytesOut / (float) bytesIn;
+			floatNf = (float) numRequests / (float) bytesIn;
+		}
 
-	    ChartItem itemAvailable = new ChartItem(barChartNetwork);
-	    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")");
-	    itemAvailable.setColor(colors.next());
-	    itemAvailable.setValue(floatBI);
+		ChartItem itemAvailable = new ChartItem(barChartNetwork);
+		itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")");
+		itemAvailable.setColor(colors.next());
+		itemAvailable.setValue(floatBI);
 
-	    ChartItem itemCurrent = new ChartItem(barChartNetwork);
-	    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")");
-	    itemCurrent.setColor(colors.next());
-	    itemCurrent.setValue(floatBO);
-	    
-	    ChartItem itemNumRequests = new ChartItem(barChartNetwork);
-	    itemNumRequests.setText("Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")");
-	    itemNumRequests.setColor(colors.next());
-	    itemNumRequests.setValue(floatNf);
+		ChartItem itemCurrent = new ChartItem(barChartNetwork);
+		itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")");
+		itemCurrent.setColor(colors.next());
+		itemCurrent.setValue(floatBO);
+
+		ChartItem itemNumRequests = new ChartItem(barChartNetwork);
+		itemNumRequests.setText("Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")");
+		itemNumRequests.setColor(colors.next());
+		itemNumRequests.setValue(floatNf);
 	}
-	
+
 	/**
 	 * create connection pie chart
 	 */
@@ -573,10 +576,10 @@ public class InstanceInformationComposite extends Composite {
 		compositeConnection.setLayout(new GridLayout(1, false));
 		compositeConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeConnection.setText("Connections");
-		
+
 		ColorStream colors = Colors.cat10Colors(compositeConnection.getDisplay()).loop();
-		
-		barChartConnection = new BarChart(compositeConnection, SWT.NONE );
+
+		barChartConnection = new BarChart(compositeConnection, SWT.NONE);
 		GridLayout gl_grpConnectionInfo = new GridLayout(1, false);
 		gl_grpConnectionInfo.verticalSpacing = 0;
 		gl_grpConnectionInfo.horizontalSpacing = 0;
@@ -584,24 +587,24 @@ public class InstanceInformationComposite extends Composite {
 		gl_grpConnectionInfo.marginWidth = 0;
 		barChartConnection.setLayout(gl_grpConnectionInfo);
 		barChartConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	    barChartConnection.setBarWidth(25);
+		barChartConnection.setBarWidth(25);
 
-	    DBObject cursorConnections = (DBObject)commandResult.get("connections");
-	    int current 	= ENumberUtils.toInt(cursorConnections.get("current"));
-	    int available 	= ENumberUtils.toInt(cursorConnections.get("available"));
-	    float floatCurrent = (float)current / (float)available;
+		DBObject cursorConnections = (DBObject) commandResult.get("connections");
+		int current = ENumberUtils.toInt(cursorConnections.get("current"));
+		int available = ENumberUtils.toInt(cursorConnections.get("available"));
+		float floatCurrent = (float) current / (float) available;
 
-	    ChartItem itemAvailable = new ChartItem(barChartConnection);
-	    itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
-	    itemAvailable.setColor(colors.next());
-	    itemAvailable.setValue(0.80f);
+		ChartItem itemAvailable = new ChartItem(barChartConnection);
+		itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
+		itemAvailable.setColor(colors.next());
+		itemAvailable.setValue(0.80f);
 
-	    ChartItem itemCurrent = new ChartItem(barChartConnection);
-	    itemCurrent.setText("Current (" + NumberFormatUtils.commaFormat(current) + ")");
-	    itemCurrent.setColor(colors.next());
-	    itemCurrent.setValue(floatCurrent);
+		ChartItem itemCurrent = new ChartItem(barChartConnection);
+		itemCurrent.setText("Current (" + NumberFormatUtils.commaFormat(current) + ")");
+		itemCurrent.setColor(colors.next());
+		itemCurrent.setValue(floatCurrent);
 	}
-	
+
 	/**
 	 * Show connection Information
 	 */
@@ -610,9 +613,9 @@ public class InstanceInformationComposite extends Composite {
 		compositeCursor.setLayout(new GridLayout(1, false));
 		compositeCursor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeCursor.setText("Cursors");
-		
+
 		ColorStream colors = Colors.cat10Colors(compositeCursor.getDisplay()).loop();
-		
+
 		pieChartCursors = new PieChart(compositeCursor, SWT.NONE);
 		GridLayout gl_grpConnectionInfo = new GridLayout(1, false);
 		gl_grpConnectionInfo.verticalSpacing = 0;
@@ -622,29 +625,29 @@ public class InstanceInformationComposite extends Composite {
 		pieChartCursors.setLayout(gl_grpConnectionInfo);
 		pieChartCursors.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		pieChartCursors.setInnerRadius(0.1f);
-		
-		DBObject cursorCursors = (DBObject)commandResult.get("cursors");
-		int totalOpen 			= ENumberUtils.toInt(cursorCursors.get("totalOpen"));
-		int clientCursors_size 	= ENumberUtils.toInt(cursorCursors.get("clientCursors_size"));
-		int timedOut 			= ENumberUtils.toInt(cursorCursors.get("timedOut"));
-		
-		ChartItem itemTotalOpen = new ChartItem(pieChartCursors);
-	    itemTotalOpen.setText("Total Open (" + totalOpen + ")");
-	    itemTotalOpen.setColor(colors.next());
-	    itemTotalOpen.setValue(totalOpen);
 
-	    ChartItem itemClientCursors_size = new ChartItem(pieChartCursors);
-	    itemClientCursors_size.setText("Client cursors size (" + clientCursors_size + ")");
-	    itemClientCursors_size.setColor(colors.next());
-	    itemClientCursors_size.setValue(clientCursors_size);
-	    
-	    ChartItem itemTimedOut = new ChartItem(pieChartCursors);
-	    itemTimedOut.setText("Timed Out (" + timedOut + ")");
-	    itemTimedOut.setColor(colors.next());
-	    itemTimedOut.setValue(timedOut);
+		DBObject cursorCursors = (DBObject) commandResult.get("cursors");
+		int totalOpen = ENumberUtils.toInt(cursorCursors.get("totalOpen"));
+		int clientCursors_size = ENumberUtils.toInt(cursorCursors.get("clientCursors_size"));
+		int timedOut = ENumberUtils.toInt(cursorCursors.get("timedOut"));
+
+		ChartItem itemTotalOpen = new ChartItem(pieChartCursors);
+		itemTotalOpen.setText("Total Open (" + totalOpen + ")");
+		itemTotalOpen.setColor(colors.next());
+		itemTotalOpen.setValue(totalOpen);
+
+		ChartItem itemClientCursors_size = new ChartItem(pieChartCursors);
+		itemClientCursors_size.setText("Client cursors size (" + clientCursors_size + ")");
+		itemClientCursors_size.setColor(colors.next());
+		itemClientCursors_size.setValue(clientCursors_size);
+
+		ChartItem itemTimedOut = new ChartItem(pieChartCursors);
+		itemTimedOut.setText("Timed Out (" + timedOut + ")");
+		itemTimedOut.setColor(colors.next());
+		itemTimedOut.setValue(timedOut);
 
 	}
-	
+
 	@Override
 	public void dispose() {
 		isUIThreadRunning = false;

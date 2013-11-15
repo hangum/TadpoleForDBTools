@@ -25,7 +25,7 @@ import com.hangum.tadpole.mongodb.model.RelationKind;
  * relation decoration
  * 
  * @author hangum
- *
+ * 
  */
 public class RelationDecorator extends Shape implements RotatableDecoration {
 	/**
@@ -35,18 +35,18 @@ public class RelationDecorator extends Shape implements RotatableDecoration {
 
 	/** location */
 	private Point location = new Point();
-	
+
 	/** relation kind */
 	private PointList relation = new PointList();
-	
+
 	private Transform transform = new Transform();
-	
+
 	/** bend point */
 	private PointList points;
 
 	/** one or many */
 	public static final PointList ONE_OR_MANY = new PointList();
-	static {		
+	static {
 		ONE_OR_MANY.addPoint(0, 3);
 		ONE_OR_MANY.addPoint(-8, 0);
 		ONE_OR_MANY.addPoint(-8, 3);
@@ -55,9 +55,9 @@ public class RelationDecorator extends Shape implements RotatableDecoration {
 		ONE_OR_MANY.addPoint(-8, 0);
 		ONE_OR_MANY.addPoint(0, -3);
 	}
-	
+
 	/** zero or many */
-	public static final PointList ZERO_OR_MANY = new PointList();	
+	public static final PointList ZERO_OR_MANY = new PointList();
 	static {
 		ZERO_OR_MANY.addPoint(-8, 0);
 		ZERO_OR_MANY.addPoint(0, 3);
@@ -86,9 +86,9 @@ public class RelationDecorator extends Shape implements RotatableDecoration {
 		ONE_ONLY.addPoint(-7, -3);
 		ONE_ONLY.addPoint(-7, 3);
 	}
-	
+
 	/** zero or one */
-	public static final PointList ZERO_OR_ONE = new PointList();	
+	public static final PointList ZERO_OR_ONE = new PointList();
 	static {
 		ZERO_OR_ONE.addPoint(-4, 0);
 		ZERO_OR_ONE.addPoint(-4, -3);
@@ -106,7 +106,7 @@ public class RelationDecorator extends Shape implements RotatableDecoration {
 		ZERO_OR_ONE.addPoint(-7, 1);
 		ZERO_OR_ONE.addPoint(-7, 0);
 	}
-	
+
 	/**
 	 * relation decoreator
 	 * 
@@ -114,14 +114,14 @@ public class RelationDecorator extends Shape implements RotatableDecoration {
 	 */
 	public RelationDecorator(String relationKindName) {
 		setRelationKind(RelationKind.getByName(relationKindName));
-//		setBackgroundColor(ColorConstants.black);
+		// setBackgroundColor(ColorConstants.black);
 	}
 
 	public Rectangle getBounds() {
 		if (bounds == null) {
 			bounds = getPoints().getBounds().getExpanded(getLineWidth() / 2, getLineWidth() / 2);
 		}
-		
+
 		return bounds;
 	}
 
@@ -136,13 +136,13 @@ public class RelationDecorator extends Shape implements RotatableDecoration {
 		erase();
 		this.points = points;
 		bounds = null;
-		
+
 		firePropertyChange("points", null, points);
 		repaint();
 	}
 
 	public PointList getPoints() {
-	
+
 		if (points == null) {
 			points = new PointList();
 			for (int i = 0; i < relation.size(); i++) {
@@ -150,7 +150,7 @@ public class RelationDecorator extends Shape implements RotatableDecoration {
 			}
 
 		}
-		
+
 		return points;
 	}
 
@@ -174,32 +174,32 @@ public class RelationDecorator extends Shape implements RotatableDecoration {
 		transform.setRotation(angle);
 	}
 
-//	public void paintFigure(Graphics graphics) {
-//		graphics.setAntialias(1);
-//		super.paintFigure(graphics);
-//	}
+	// public void paintFigure(Graphics graphics) {
+	// graphics.setAntialias(1);
+	// super.paintFigure(graphics);
+	// }
 
 	@Override
 	protected void fillShape(Graphics graphics) {
 	}
 
 	private void setRelationKind(RelationKind relationKind) {
-		
-		switch(relationKind.getValue()) {
-			case RelationKind.ONLY_ONE_VALUE:
-				relation = ONE_ONLY;
-				break;
-			case RelationKind.ONE_OR_MANY_VALUE:
-				relation = ONE_OR_MANY;
-				break;
-			case RelationKind.ZERO_OR_MANY_VALUE:
-				relation = ZERO_OR_MANY;
-				break;
-			case RelationKind.ZERO_OR_ONE_VALUE:
-				relation = ZERO_OR_ONE;
-				break;
+
+		switch (relationKind.getValue()) {
+		case RelationKind.ONLY_ONE_VALUE:
+			relation = ONE_ONLY;
+			break;
+		case RelationKind.ONE_OR_MANY_VALUE:
+			relation = ONE_OR_MANY;
+			break;
+		case RelationKind.ZERO_OR_MANY_VALUE:
+			relation = ZERO_OR_MANY;
+			break;
+		case RelationKind.ZERO_OR_ONE_VALUE:
+			relation = ZERO_OR_ONE;
+			break;
 		}
-		
+
 		setPoints(null);
 	}
 }

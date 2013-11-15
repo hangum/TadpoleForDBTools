@@ -20,14 +20,14 @@ import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
- * table의 컬럼의 0번째 값을 소스로 설정합니다. 
+ * table의 컬럼의 0번째 값을 소스로 설정합니다.
  * 
  * @author hangum
  */
 public class DragListener implements DragSourceListener {
 	private UserDBDAO userDB;
 	private TableViewer viewer;
-	
+
 	public DragListener(UserDBDAO userDB, TableViewer viewer) {
 		this.userDB = userDB;
 		this.viewer = viewer;
@@ -39,12 +39,12 @@ public class DragListener implements DragSourceListener {
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		IStructuredSelection iss = (IStructuredSelection)viewer.getSelection();
-		if(!iss.isEmpty()) {
-//			Table table = viewer.getTable();
-//			if( table.getSelectionCount() == 0) return;
-//			event.data = table.getSelection()[0].getText();
-			TableDAO td = (TableDAO)iss.getFirstElement();
+		IStructuredSelection iss = (IStructuredSelection) viewer.getSelection();
+		if (!iss.isEmpty()) {
+			// Table table = viewer.getTable();
+			// if( table.getSelectionCount() == 0) return;
+			// event.data = table.getSelection()[0].getText();
+			TableDAO td = (TableDAO) iss.getFirstElement();
 			event.data = userDB.getSeq() + PublicTadpoleDefine.DELIMITER + td.getName();
 		}
 	}

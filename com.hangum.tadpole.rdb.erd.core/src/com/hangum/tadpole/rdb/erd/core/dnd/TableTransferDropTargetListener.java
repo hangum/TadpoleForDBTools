@@ -47,12 +47,12 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * Explorer의 테이블 명을 넘겨 받아서 erd에 테이블을 그려줍니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class TableTransferDropTargetListener extends AbstractTransferDropTargetListener {
 	private static final Logger logger = Logger.getLogger(TableTransferDropTargetListener.class);
 	private RdbFactory tadpoleFactory = RdbFactory.eINSTANCE;
-	
+
 	private TableTransferFactory transferFactory = new TableTransferFactory();
 	private UserDBDAO userDB;
 	private DB db;
@@ -60,14 +60,14 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	public TableTransferDropTargetListener(EditPartViewer viewer, Transfer xfer) {
 		super(viewer, xfer);
 	}
-	
+
 	public TableTransferDropTargetListener(EditPartViewer viewer, UserDBDAO userDB, DB db) {
 		super(viewer, TextTransfer.getInstance());
-		
+
 		this.userDB = userDB;
 		this.db = db;
 	}
-	
+
 	@Override
 	protected Request createTargetRequest() {
 		CreateRequest request = new CreateRequest();
@@ -76,36 +76,36 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	}
 
 	@Override
-	protected void updateTargetRequest() {		
-		((CreateRequest)getTargetRequest()).setLocation(getDropLocation());
+	protected void updateTargetRequest() {
+		((CreateRequest) getTargetRequest()).setLocation(getDropLocation());
 	}
-	
+
 	@Override
 	protected void handleDragOver() {
 		getCurrentEvent().detail = DND.DROP_COPY;
 		super.handleDragOver();
 	}
-	
+
 	@Override
 	protected void handleDrop() {
 		String[] arrayDragSourceData = null;
 		try {
-			arrayDragSourceData = StringUtils.splitByWholeSeparator(((String)getCurrentEvent().data), PublicTadpoleDefine.DELIMITER);
+			arrayDragSourceData = StringUtils.splitByWholeSeparator(((String) getCurrentEvent().data), PublicTadpoleDefine.DELIMITER);
 
 			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
-			if(userDB.getSeq() != sourceDBSeq) {
+			if (userDB.getSeq() != sourceDBSeq) {
 				MessageDialog.openError(null, "Error", Messages.TableTransferDropTargetListener_1); //$NON-NLS-1$
 				return;
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("dragger error", e); //$NON-NLS-1$
 			MessageDialog.openError(null, "Error", "Draging exception : " + e.getMessage()); //$NON-NLS-1$
 			return;
 		}
-		
-		String tableName = arrayDragSourceData[1];		
+
+		String tableName = arrayDragSourceData[1];
 		String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
-		
+
 		// 이미 editor 상에 테이블 정보를 가져온다.
 		Map<String, Table> mapDBTables = new HashMap<String, Table>();
 		for (Table table : db.getTables()) {
@@ -113,48 +113,50 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			refTableNames += "'" + table.getName() + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		refTableNames = StringUtils.chompLast(refTableNames, ","); //$NON-NLS-1$
-		
+
 		// 이미 등록되어 있는 것이 아니라면
-		if(mapDBTables.get(tableName) == null) {
+		if (mapDBTables.get(tableName) == null) {
 			// 테이블 모델 생성
 			Table tableModel = tadpoleFactory.createTable();
 			tableModel.setName(tableName);
 			tableModel.setDb(db);
 			tableModel.setConstraints(new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
-			
+
 			try {
 				// 컬럼 모델 생성
 				for (TableColumnDAO columnDAO : getColumns(tableName)) {
 					Column column = tadpoleFactory.createColumn();
-					
+
 					column.setDefault(columnDAO.getDefault());
 					column.setExtra(columnDAO.getExtra());
 					column.setField(columnDAO.getField());
 					column.setNull(columnDAO.getNull());
 					column.setKey(columnDAO.getKey());
 					column.setType(columnDAO.getType());
-					
+
 					column.setTable(tableModel);
 					tableModel.getColumns().add(column);
 				}
 				mapDBTables.put(tableName, tableModel);
-				RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);//RelationUtil.getReferenceTable(userDB, refTableNames));
-				
-			} catch(Exception e) {
+				RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);// RelationUtil.getReferenceTable(userDB,
+																					// refTableNames));
+
+			} catch (Exception e) {
 				logger.error("GEF Table Drag and Drop Exception", e); //$NON-NLS-1$
-				
+
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						"Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
 			}
-			
+
 			transferFactory.setTable(tableModel);
 		} else {
 			transferFactory.setTable(mapDBTables.get(tableName));
 		}
-		
+
 		super.handleDrop();
 	}
-	
+
 	/**
 	 * table의 컬럼 정보를 가져옵니다.
 	 * 
@@ -163,24 +165,27 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	 * @throws Exception
 	 */
 	public List<TableColumnDAO> getColumns(String strTBName) throws Exception {
-//		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			
-			Map<String, String> param = new HashMap<String, String>();
-			param.put("db", userDB.getDb()); //$NON-NLS-1$
-			param.put("table", strTBName);			 //$NON-NLS-1$
-			
-			return sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
-//		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-//			
-//			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-//			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-//			DBCollection coll = mongoDB.getCollection(strTBName);
-//										
-//			return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
-//		} 
-		
-//		return null;
+		// if(DBDefine.getDBDefine(userDB.getTypes()) !=
+		// DBDefine.MONGODB_DEFAULT) {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("db", userDB.getDb()); //$NON-NLS-1$
+		param.put("table", strTBName); //$NON-NLS-1$
+
+		return sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
+		// } else if(DBDefine.getDBDefine(userDB.getTypes()) ==
+		// DBDefine.MONGODB_DEFAULT) {
+		//
+		// Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
+		// com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
+		// DBCollection coll = mongoDB.getCollection(strTBName);
+		//
+		// return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(),
+		// coll.findOne());
+		// }
+
+		// return null;
 	}
 
 }

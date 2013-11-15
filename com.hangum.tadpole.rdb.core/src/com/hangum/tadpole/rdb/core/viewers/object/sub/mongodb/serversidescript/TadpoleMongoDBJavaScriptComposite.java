@@ -61,19 +61,18 @@ import com.hangum.tadpole.sql.util.tables.TableUtil;
  * MongoDB ServerSide JavaScirpt composite
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleMongoDBJavaScriptComposite.class);
-	
+
 	private TableViewer tableViewer;
 	private ObjectComparator javascriptComparator;
 	private List<MongoDBServerSideJavaScriptDAO> listJavaScript;
 	private MongoJavaScriptViewFilter javascriptFilter;
-	
 
 	private ObjectCreatAction creatActionJS;
 	private ObjectDeleteAction deleteActionJS;
@@ -91,7 +90,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		super(site, tabFolderObject, userDB);
 		createWidget(tabFolderObject);
 	}
-	
+
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmIndex.setText("JavaScript"); //$NON-NLS-1$
@@ -109,7 +108,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableList = tableViewer.getTable();
 		tableTableList.setLinesVisible(true);
@@ -118,16 +117,16 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-					MongoDBServerSideJavaScriptDAO mDBSJSDAO = (MongoDBServerSideJavaScriptDAO)is.getFirstElement();
+					MongoDBServerSideJavaScriptDAO mDBSJSDAO = (MongoDBServerSideJavaScriptDAO) is.getFirstElement();
 
-					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
 						ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB, mDBSJSDAO);
 						page.openEditor(input, ServerSideJavaScriptEditor.ID, false);
-						
+
 					} catch (PartInitException e) {
 						logger.error("Mongodb javascirpt", e);
-						
+
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 						ExceptionDetailsErrorDialog.openError(null, "Error", "JavaScript Open Exception", errStatus); //$NON-NLS-1$
 					}
@@ -154,10 +153,11 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		tableViewer.addFilter(javascriptFilter);
 
 		createMenu();
-		
-		sashForm.setWeights(new int[] {1});
+
+		sashForm.setWeights(new int[] { 1
+		});
 	}
-	
+
 	/**
 	 * mongodb java script column
 	 * 
@@ -165,10 +165,16 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * @param indexComparator
 	 */
 	private void createMongoDBIndexesColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {"Name", "Contetn"};
-		int[] size = {120, 200};
+		String[] name = {
+				"Name",
+				"Contetn"
+		};
+		int[] size = {
+				120,
+				200
+		};
 
-		for (int i=0; i<name.length; i++) {
+		for (int i = 0; i < name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
@@ -195,7 +201,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 				manager.add(creatActionJS);
 				manager.add(deleteActionJS);
 				manager.add(refreshActionJS);
-				
+
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(serverJavaScript);
 			}
@@ -209,16 +215,17 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * init action
 	 */
 	public void initAction() {
-		if (listJavaScript != null) listJavaScript.clear();
+		if (listJavaScript != null)
+			listJavaScript.clear();
 		refreshViewer();
 
 		creatActionJS.setUserDB(getUserDB());
 		deleteActionJS.setUserDB(getUserDB());
 		refreshActionJS.setUserDB(getUserDB());
-		
+
 		serverJavaScript.setUserDB(getUserDB());
 	}
-	
+
 	/**
 	 * refresh viewer
 	 */
@@ -227,13 +234,15 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		tableViewer.refresh();
 		TableUtil.packTable(tableViewer.getTable());
 	}
-	
+
 	/**
 	 * JavaScript 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshJavaScript(final UserDBDAO userDB, boolean boolRefresh) {
-		if(!boolRefresh) if(listJavaScript != null) return;
-		
+		if (!boolRefresh)
+			if (listJavaScript != null)
+				return;
+
 		this.userDB = userDB;
 		try {
 			listJavaScript = MongoDBQuery.listAllJavaScript(userDB);
@@ -253,11 +262,12 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 */
 	public void filter(String textSearch) {
 		javascriptFilter.setSearchText(textSearch);
-		tableViewer.refresh();		
+		tableViewer.refresh();
 	}
-	
+
 	/**
 	 * table viewer
+	 * 
 	 * @return
 	 */
 	public TableViewer getTableViewer() {
@@ -268,11 +278,11 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	public void setSearchText(String searchText) {
 		javascriptFilter.setSearchText(searchText);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		
+
 		creatActionJS.dispose();
 		deleteActionJS.dispose();
 		refreshActionJS.dispose();

@@ -27,32 +27,33 @@ import org.eclipse.swt.widgets.Text;
  * tadpole message dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleMessageDialog extends TitleAreaDialog {
 	private static final Logger logger = Logger.getLogger(TadpoleMessageDialog.class);
 	private Text textMessage;
-	
+
 	private String title;
 	private String head;
 	private String message;
 	private Text text;
 	private Label lblDate;
 	private Label lblMessage;
-	
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public TadpoleMessageDialog(Shell parentShell, String title, String head, String message) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.title = title;
 		this.head = head;
 		this.message = message;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -61,6 +62,7 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -71,23 +73,23 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		lblDate = new Label(container, SWT.NONE);
 		lblDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDate.setText("Date");
-		
+
 		text = new Text(container, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		text.setText(head);
-		
+
 		lblMessage = new Label(container, SWT.NONE);
 		lblMessage.setText("Message");
 		new Label(container, SWT.NONE);
-		
+
 		textMessage = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
-		
+
 		textMessage.setFocus();
 
 		return area;
@@ -95,6 +97,7 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

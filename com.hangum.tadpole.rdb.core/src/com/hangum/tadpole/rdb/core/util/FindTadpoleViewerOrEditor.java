@@ -19,22 +19,24 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Find Connection, Object explorer viewer
  * 
  * @author hangum
- *
+ * 
  */
 public class FindTadpoleViewerOrEditor {
 
 	/**
 	 * explorer viewer
 	 * 
-	 * @param userDB 
+	 * @param userDB
 	 * @return
 	 */
 	public static ExplorerViewer getExplorerView(UserDBDAO userDB) {
 		try {
-			ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
-			if(ev.getUserDB().getSeq() == userDB.getSeq()) return ev;
-			else return null;
-		} catch(Exception e) {
+			ExplorerViewer ev = (ExplorerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
+			if (ev.getUserDB().getSeq() == userDB.getSeq())
+				return ev;
+			else
+				return null;
+		} catch (Exception e) {
 			return null;
 		}
 	}

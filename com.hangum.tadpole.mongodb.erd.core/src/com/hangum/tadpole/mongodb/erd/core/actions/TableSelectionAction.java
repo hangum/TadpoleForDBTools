@@ -25,7 +25,7 @@ import com.hangum.tadpole.mongodb.model.Table;
  * table selection action
  * 
  * @author hangum
- *
+ * 
  */
 public class TableSelectionAction extends SelectionAction {
 	/**
@@ -35,39 +35,39 @@ public class TableSelectionAction extends SelectionAction {
 
 	public static final String ID = "com.hangum.tadpole.erd.core.actions.TableSelectionAction";
 	private GraphicalViewer viewer;
-	
+
 	public TableSelectionAction(IWorkbenchPart part, GraphicalViewer graphicalViewer) {
 		super(part);
-	
+
 		setId(ID);
 		setText("Table Selection");
-		
-		setLazyEnablementCalculation(false);		
+
+		setLazyEnablementCalculation(false);
 		this.viewer = graphicalViewer;
 	}
-	
+
 	public GraphicalViewer getViewer() {
 		return viewer;
 	}
 
 	@Override
 	protected boolean calculateEnabled() {
-		IStructuredSelection is = (IStructuredSelection)getViewer().getSelection();
-		if(!is.isEmpty()) {
-			if(is.getFirstElement() instanceof TableEditPart) {
-				TableEditPart tablePart = (TableEditPart)is.getFirstElement();
-				Table tableModel = (Table)tablePart.getModel();
+		IStructuredSelection is = (IStructuredSelection) getViewer().getSelection();
+		if (!is.isEmpty()) {
+			if (is.getFirstElement() instanceof TableEditPart) {
+				TableEditPart tablePart = (TableEditPart) is.getFirstElement();
+				Table tableModel = (Table) tablePart.getModel();
 
 				PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SELECT_ERD_TABLE, tableModel.getName()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public void run() {
 		super.run();
 	}
-	
+
 }

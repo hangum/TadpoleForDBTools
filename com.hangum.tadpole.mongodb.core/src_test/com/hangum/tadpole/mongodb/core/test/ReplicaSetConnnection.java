@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.test;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,13 +22,12 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
 
 public class ReplicaSetConnnection {
 	public static String serverurl = "localhost";
 	public static int port = 4000;
-	
+
 	public static String SERVER_URL = "localhost:4001,localhost:4002";
 
 	/**
@@ -37,10 +35,10 @@ public class ReplicaSetConnnection {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args)  {
+	public static void main(String[] args) {
 		try {
 			ReplicaSetConnnection testMongoCls = new ReplicaSetConnnection();
-	
+
 			Mongo mongo = testMongoCls.connection(serverurl, port);
 			System.out.println("연결성공");
 			if (mongo != null) {
@@ -51,8 +49,8 @@ public class ReplicaSetConnnection {
 				testMongoCls.getCollectionInfo(testDB, "store");
 				// }
 			}
-//		mongo.close();
-		} catch(Exception e) {
+			// mongo.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -64,32 +62,32 @@ public class ReplicaSetConnnection {
 	 */
 	public Mongo connection(String uri, int port) throws Exception {
 		List<ServerAddress> listServerList = new ArrayList<ServerAddress>();
-		
+
 		listServerList.add(new ServerAddress(serverurl, port));
-		
+
 		String[] urls = StringUtils.split(SERVER_URL, ",");
 		for (String ipPort : urls) {
 			String[] strIpPort = StringUtils.split(ipPort, ":");
-			
+
 			listServerList.add(new ServerAddress(strIpPort[0], Integer.parseInt(strIpPort[1])));
 		}
-		
+
 		Mongo m = null;
-//		try {
-			m = new Mongo(listServerList);//uri, port);
-//			List<String> listDB = m.getDatabaseNames();
-//			for (String dbName : listDB) {
-//				System.out.println(dbName);
-//			}
+		// try {
+		m = new Mongo(listServerList);// uri, port);
+		// List<String> listDB = m.getDatabaseNames();
+		// for (String dbName : listDB) {
+		// System.out.println(dbName);
+		// }
 
-			// authentication(optional)
-			// boolean auth = db.authenticate(myUserName, myPassword);
+		// authentication(optional)
+		// boolean auth = db.authenticate(myUserName, myPassword);
 
-//		} catch (UnknownHostException e) {
-//			e.printStackTrace();
-//		} catch (MongoException e) {
-//			e.printStackTrace();
-//		}
+		// } catch (UnknownHostException e) {
+		// e.printStackTrace();
+		// } catch (MongoException e) {
+		// e.printStackTrace();
+		// }
 
 		return m;
 	}
@@ -128,39 +126,39 @@ public class ReplicaSetConnnection {
 		List<DBObject> listIndex = coll.getIndexInfo();
 		List<CollectionFieldDAO> columnInfo = MongoDBTableColumn.tableColumnInfo(listIndex, db.getCollection(collection).findOne());
 		for (CollectionFieldDAO collectionFieldDAO : columnInfo) {
-			System.out.println("[field]" + collectionFieldDAO.getField() );
-			
-			if(!collectionFieldDAO.getChildren().isEmpty()) {
+			System.out.println("[field]" + collectionFieldDAO.getField());
+
+			if (!collectionFieldDAO.getChildren().isEmpty()) {
 				List<CollectionFieldDAO> childColl = collectionFieldDAO.getChildren();
 				for (CollectionFieldDAO collectionFieldDAO2 : childColl) {
 					System.out.println("\t [child field]" + collectionFieldDAO2.getField());
-					
-					if(!collectionFieldDAO2.getChildren().isEmpty()) {
+
+					if (!collectionFieldDAO2.getChildren().isEmpty()) {
 						List<CollectionFieldDAO> childColl2 = collectionFieldDAO2.getChildren();
 						for (CollectionFieldDAO collectionFieldDAO3 : childColl2) {
-							System.out.println("\t\t [child field]" + collectionFieldDAO3.getField());	
+							System.out.println("\t\t [child field]" + collectionFieldDAO3.getField());
 						}
-						
-					}	
+
+					}
 				}
-				
+
 			}
 		}
 
-//		//
-//		StringBuffer sbJson = new StringBuffer();
-//
-//		DBCursor cursor = coll.find();
-//		while (cursor.hasNext()) {
-//			DBObject dbObj = cursor.next();
-//			String jsonData = dbObj.toString();
-//			System.out.println("[data] \t" + jsonData);
-//
-//			sbJson.append(jsonData);
-//		}
-//
-//		System.out
-//				.println("#####[fully text]#########################################################");
+		// //
+		// StringBuffer sbJson = new StringBuffer();
+		//
+		// DBCursor cursor = coll.find();
+		// while (cursor.hasNext()) {
+		// DBObject dbObj = cursor.next();
+		// String jsonData = dbObj.toString();
+		// System.out.println("[data] \t" + jsonData);
+		//
+		// sbJson.append(jsonData);
+		// }
+		//
+		// System.out
+		// .println("#####[fully text]#########################################################");
 
 		// System.out.println("\t\t ******[detail data][start]*******************************************");
 		// ObjectMapper om = new ObjectMapper();
@@ -182,8 +180,7 @@ public class ReplicaSetConnnection {
 		// e.printStackTrace();
 		// }
 
-		System.out
-				.println("\t\t ******[detail data][end]*******************************************");
+		System.out.println("\t\t ******[detail data][end]*******************************************");
 
 		return "";
 	}

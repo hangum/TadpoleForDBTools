@@ -33,7 +33,7 @@ import com.swtdesigner.ResourceManager;
  * Resource manager action
  * 
  * @author hangum
- *
+ * 
  */
 public class ResourceManagerAction extends Action implements ISelectionListener, IWorkbenchAction {
 	/**
@@ -41,20 +41,20 @@ public class ResourceManagerAction extends Action implements ISelectionListener,
 	 */
 	private static final Logger logger = Logger.getLogger(ResourceManagerAction.class);
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.ResourceManagerAction"; //$NON-NLS-1$
-	
+
 	private final IWorkbenchWindow window;
 	private IStructuredSelection iss;
-	
+
 	public ResourceManagerAction(IWorkbenchWindow window) {
 		this.window = window;
-		
+
 		setId(ID);
 		setText("Resource Manager");
 		setToolTipText("Resource Manager");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/resources.png"));
 		setEnabled(true);
 	}
-	
+
 	@Override
 	public void run() {
 		try {
@@ -62,7 +62,7 @@ public class ResourceManagerAction extends Action implements ISelectionListener,
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, ResourceManageEditor.ID);
 		} catch (PartInitException e) {
 			logger.error("Resource Management editor", e); //$NON-NLS-1$
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "Resource Management editor", errStatus); //$NON-NLS-1$
 		}

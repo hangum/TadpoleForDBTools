@@ -52,12 +52,12 @@ import com.swtdesigner.ResourceManager;
  * DMLGenerae Statement Dialog
  * 
  * @author nilriri
- *
+ * 
  */
 public class GenerateStatmentDMLDialog extends Dialog {
 	/** generation SQL string */
 	private String genSQL = "";
-	
+
 	private UserDBDAO userDB;
 	private String tableName;
 	private TableViewer tableViewer;
@@ -236,7 +236,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		chkComment = new Button(composite_3, SWT.CHECK);
 		chkComment.setText("Include Comment");
 		assignSelectionAdapter(chkComment);
-		
+
 		Composite previewComposite = new Composite(composite_1, SWT.BORDER);
 		previewComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_previewComposite = new GridLayout(1, false);
@@ -290,7 +290,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		return sql;
 
 	}
-	
+
 	public String getDML() {
 		return genSQL;
 	}
@@ -313,7 +313,8 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 			newTableColumns.add(newTableDAO);
 			for (TableColumnDAO tableColumnDAO : showTableColumns) {
-				newTableDAO = new ExtendTableColumnDAO(tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey(), textTableAlias.getText().trim());// (ExtendTableColumnDAO)tableColumnDAO;
+				newTableDAO = new ExtendTableColumnDAO(tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey(), textTableAlias.getText()
+						.trim());// (ExtendTableColumnDAO)tableColumnDAO;
 				newTableColumns.add(newTableDAO);
 			}
 
@@ -345,7 +346,8 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				if ("*".equals(allDao.getField())) {
 					resultSQL.append(allDao.getColumnNamebyTableAlias()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 				} else {
-					resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" as ").append(allDao.getColumnAlias()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" as ").append(allDao.getColumnAlias())
+							.append(PublicTadpoleDefine.LINE_SEPARATOR);
 				}
 				cnt++;
 			}

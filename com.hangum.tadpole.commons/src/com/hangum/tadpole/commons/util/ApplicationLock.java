@@ -21,14 +21,16 @@ import org.eclipse.core.runtime.Platform;
 /**
  * application lock
  * 
- * referecne code : http://fresh2l.com/en/blog/2011/01/08/howto-run-only-single-java-application-instance
+ * referecne code :
+ * http://fresh2l.com/en/blog/2011/01/08/howto-run-only-single-java
+ * -application-instance
  * 
  * @author hangum
- *
+ * 
  */
 public class ApplicationLock {
 	private static final Logger logger = Logger.getLogger(ApplicationLock.class);
-	
+
 	/** hidden constructor */
 	private ApplicationLock() {
 	}
@@ -52,20 +54,20 @@ public class ApplicationLock {
 		try {
 			String tmp_dir = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/temp/";
 			File tmpDir = new File(tmp_dir);
-			if(!tmpDir.isDirectory()) {
+			if (!tmpDir.isDirectory()) {
 				tmpDir.mkdirs();
 			}
-			
-			if(logger.isDebugEnabled()) {
+
+			if (logger.isDebugEnabled()) {
 				logger.debug("Application temp dir is " + tmp_dir);
 			}
-	
+
 			// Acquire MD5
 			try {
 				java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
 				md.reset();
 				String hash_text = new java.math.BigInteger(1, md.digest(key.getBytes())).toString(16);
-				
+
 				while (hash_text.length() < 32) {
 					hash_text = "0" + hash_text;
 				}
@@ -73,25 +75,25 @@ public class ApplicationLock {
 			} catch (Exception ex) {
 				logger.error("lock_file", ex);
 			}
-	
+
 			// MD5 acquire fail
 			if (lock_file == null) {
 				lock_file = new File(tmp_dir + key + ".app_lock");
 			}
-	
+
 			lock_stream = new FileOutputStream(lock_file);
-	
-			String f_content = "Tadpole DB Hub Application \r\nLocked by key: " + key 	+ "\r\n";
+
+			String f_content = "Tadpole DB Hub Application \r\nLocked by key: " + key + "\r\n";
 			lock_stream.write(f_content.getBytes());
-	
+
 			lock_channel = lock_stream.getChannel();
-	
+
 			lock = lock_channel.tryLock();
-	
+
 			if (lock == null) {
 				throw new Exception("Can't create Lock");
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("last error", e);
 			throw e;
 		}

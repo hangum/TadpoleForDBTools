@@ -21,7 +21,7 @@ import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
  * tree label provider
  * 
  * @author hangum
- *
+ * 
  */
 public class TreeMongoLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -32,14 +32,17 @@ public class TreeMongoLabelProvider extends LabelProvider implements ITableLabel
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		MongodbTreeViewDTO mongoTree = (MongodbTreeViewDTO)element;
+		MongodbTreeViewDTO mongoTree = (MongodbTreeViewDTO) element;
 
-		switch(columnIndex) {
-		case 0: return mongoTree.getKey();
-		case 1: return NumberFormatUtils.commaFormat(mongoTree.getValue());
-		case 2: return mongoTree.getType();
+		switch (columnIndex) {
+		case 0:
+			return mongoTree.getKey();
+		case 1:
+			return NumberFormatUtils.commaFormat(mongoTree.getValue());
+		case 2:
+			return mongoTree.getType();
 		}
 		return "*** not set column ***"; //$NON-NLS-1$
 	}
-	
+
 }

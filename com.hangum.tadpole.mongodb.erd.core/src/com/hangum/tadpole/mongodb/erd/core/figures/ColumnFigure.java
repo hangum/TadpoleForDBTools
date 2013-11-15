@@ -16,14 +16,14 @@ import com.hangum.tadpole.mongodb.erd.core.figures.TableFigure.COLUMN_TYPE;
 
 public class ColumnFigure extends Label {
 	private COLUMN_TYPE columnType;
-	
-	public ColumnFigure(COLUMN_TYPE columnType){
+
+	public ColumnFigure(COLUMN_TYPE columnType) {
 		this.columnType = columnType;
 	}
-	
-//	protected void paintFigure(Graphics graphics) {
-//		super.paintFigure(graphics);
-//	}
+
+	// protected void paintFigure(Graphics graphics) {
+	// super.paintFigure(graphics);
+	// }
 
 	public COLUMN_TYPE getColumnType() {
 		return columnType;

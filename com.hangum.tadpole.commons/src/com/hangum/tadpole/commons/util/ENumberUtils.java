@@ -16,7 +16,7 @@ import org.apache.commons.lang.math.NumberUtils;
  * Number utils
  * 
  * @author hangum
- *
+ * 
  */
 public class ENumberUtils {
 
@@ -27,11 +27,12 @@ public class ENumberUtils {
 	 * @return
 	 */
 	public static int toInt(Object obj) {
-		if(obj == null) return 0;
-		
+		if (obj == null)
+			return 0;
+
 		try {
 			return NumberUtils.toInt(obj.toString());
-		} catch(Exception nfe) {
+		} catch (Exception nfe) {
 			return 0;
 		}
 	}

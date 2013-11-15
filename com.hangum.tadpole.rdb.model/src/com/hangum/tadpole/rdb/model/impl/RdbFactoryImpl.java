@@ -12,50 +12,55 @@
  */
 package com.hangum.tadpole.rdb.model.impl;
 
-import com.hangum.tadpole.rdb.model.*;
-
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.hangum.tadpole.rdb.model.Column;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.ERDInfo;
+import com.hangum.tadpole.rdb.model.RdbFactory;
+import com.hangum.tadpole.rdb.model.RdbPackage;
+import com.hangum.tadpole.rdb.model.Relation;
+import com.hangum.tadpole.rdb.model.RelationKind;
+import com.hangum.tadpole.rdb.model.Table;
+import com.hangum.tadpole.rdb.model.UserComment;
+import com.hangum.tadpole.rdb.model.View;
+
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!--
+ * end-user-doc -->
+ * 
  * @generated
  */
 public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static RdbFactory init() {
 		try {
-			RdbFactory theRdbFactory = (RdbFactory)EPackage.Registry.INSTANCE.getEFactory("http://com.hangum.tadpole.rdb.model.ERDInfo"); 
+			RdbFactory theRdbFactory = (RdbFactory) EPackage.Registry.INSTANCE.getEFactory("http://com.hangum.tadpole.rdb.model.ERDInfo");
 			if (theRdbFactory != null) {
 				return theRdbFactory;
 			}
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new RdbFactoryImpl();
 	}
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RdbFactoryImpl() {
@@ -63,66 +68,73 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case RdbPackage.DB: return createDB();
-			case RdbPackage.TABLE: return createTable();
-			case RdbPackage.COLUMN: return createColumn();
-			case RdbPackage.RELATION: return createRelation();
-			case RdbPackage.VIEW: return createView();
-			case RdbPackage.ERD_INFO: return createERDInfo();
-			case RdbPackage.USER_COMMENT: return createUserComment();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		case RdbPackage.DB:
+			return createDB();
+		case RdbPackage.TABLE:
+			return createTable();
+		case RdbPackage.COLUMN:
+			return createColumn();
+		case RdbPackage.RELATION:
+			return createRelation();
+		case RdbPackage.VIEW:
+			return createView();
+		case RdbPackage.ERD_INFO:
+			return createERDInfo();
+		case RdbPackage.USER_COMMENT:
+			return createUserComment();
+		default:
+			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case RdbPackage.RELATION_KIND:
-				return createRelationKindFromString(eDataType, initialValue);
-			case RdbPackage.RECTANGLE:
-				return createRectangleFromString(eDataType, initialValue);
-			case RdbPackage.POINT:
-				return createPointFromString(eDataType, initialValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		case RdbPackage.RELATION_KIND:
+			return createRelationKindFromString(eDataType, initialValue);
+		case RdbPackage.RECTANGLE:
+			return createRectangleFromString(eDataType, initialValue);
+		case RdbPackage.POINT:
+			return createPointFromString(eDataType, initialValue);
+		default:
+			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-			case RdbPackage.RELATION_KIND:
-				return convertRelationKindToString(eDataType, instanceValue);
-			case RdbPackage.RECTANGLE:
-				return convertRectangleToString(eDataType, instanceValue);
-			case RdbPackage.POINT:
-				return convertPointToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		case RdbPackage.RELATION_KIND:
+			return convertRelationKindToString(eDataType, instanceValue);
+		case RdbPackage.RECTANGLE:
+			return convertRectangleToString(eDataType, instanceValue);
+		case RdbPackage.POINT:
+			return convertPointToString(eDataType, instanceValue);
+		default:
+			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public DB createDB() {
@@ -131,8 +143,8 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Table createTable() {
@@ -141,8 +153,8 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Column createColumn() {
@@ -151,8 +163,8 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Relation createRelation() {
@@ -161,8 +173,8 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public View createView() {
@@ -171,8 +183,8 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ERDInfo createERDInfo() {
@@ -181,8 +193,8 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public UserComment createUserComment() {
@@ -191,19 +203,20 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RelationKind createRelationKindFromString(EDataType eDataType, String initialValue) {
 		RelationKind result = RelationKind.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null)
+			throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String convertRelationKindToString(EDataType eDataType, Object instanceValue) {
@@ -211,18 +224,18 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public Rectangle createRectangleFromString(EDataType eDataType, String initialValue) {
-		if(initialValue == null) {
+		if (initialValue == null) {
 			return null;
 		}
-		
-//		initialValue.replaceAll("\\s", "");
+
+		// initialValue.replaceAll("\\s", "");
 		String[] values = initialValue.split(",");
-		if(values.length != 4) {
+		if (values.length != 4) {
 			return null;
 		}
 
@@ -230,7 +243,7 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 		try {
 			rect.setLocation(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
 			rect.setSize(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			EcorePlugin.INSTANCE.log(e);
 			rect = null;
 		}
@@ -239,40 +252,40 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public String convertRectangleToString(EDataType eDataType, Object instanceValue) {
-		if(instanceValue == null) {
+		if (instanceValue == null) {
 			return null;
 		}
 
 		Rectangle rect = (Rectangle) instanceValue;
-		return rect.x+","+rect.y+","+rect.width+","+rect.height;
+		return rect.x + "," + rect.y + "," + rect.width + "," + rect.height;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public Point createPointFromString(EDataType eDataType, String initialValue) {
-		if(initialValue == null) {
+		if (initialValue == null) {
 			return null;
 		}
-		
-//		initialValue.replaceAll("\\s", "");
+
+		// initialValue.replaceAll("\\s", "");
 		String[] values = initialValue.split(",");
-		if(values.length != 2) {
+		if (values.length != 2) {
 			return null;
 		}
 
 		Point point = new Point();
 		try {
 			point.setLocation(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-			
-		} catch(NumberFormatException e) {
+
+		} catch (NumberFormatException e) {
 			EcorePlugin.INSTANCE.log(e);
 			point = null;
 		}
@@ -281,31 +294,31 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public String convertPointToString(EDataType eDataType, Object instanceValue) {
-		if(instanceValue == null) {
+		if (instanceValue == null) {
 			return null;
 		}
 
 		Point point = (Point) instanceValue;
-		return point.x+","+point.y;
+		return point.x + "," + point.y;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RdbPackage getRdbPackage() {
-		return (RdbPackage)getEPackage();
+		return (RdbPackage) getEPackage();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -314,4 +327,4 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 		return RdbPackage.eINSTANCE;
 	}
 
-} //RdbFactoryImpl
+} // RdbFactoryImpl

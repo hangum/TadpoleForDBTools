@@ -69,21 +69,21 @@ import com.swtdesigner.ResourceManager;
  * RDB viewer composite
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleViewerComposite extends AbstractObjectComposite {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleViewerComposite.class);
-	
+
 	private TableViewer viewListViewer;
 	private ObjectComparator viewComparator;
 	private List<String> showViews;
 	private TableViewer viewColumnViewer;
 	private List<TableColumnDAO> showViewColumns;
 	private RDBViewFilter viewFilter;
-	
+
 	private ObjectCreatAction creatAction_View;
 	private ObjectDeleteAction deleteAction_View;
 	private ObjectRefreshAction refreshAction_View;
@@ -100,7 +100,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		super(site, tabFolderObject, userDB);
 		createWidget(tabFolderObject);
 	}
-	
+
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmViews.setText("Views"); //$NON-NLS-1$
@@ -118,43 +118,46 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		viewListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		viewListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
-				
+				if (PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables()))
+					return;
+
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
-				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					if (null != is) {
 						try {
-							String viewName = (String)is.getFirstElement();
+							String viewName = (String) is.getFirstElement();
 							StringBuffer sbSQL = new StringBuffer();
-		
+
 							Map<String, String> parameter = new HashMap<String, String>();
 							parameter.put("db", userDB.getDb());
 							parameter.put("table", viewName);
-							
+
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-							
+
 							sbSQL.append(" SELECT "); //$NON-NLS-1$
-							for (int i=0; i<showTableColumns.size(); i++) {
+							for (int i = 0; i < showTableColumns.size(); i++) {
 								TableColumnDAO dao = showTableColumns.get(i);
 								sbSQL.append(dao.getField());
-								
-								// 마지막 컬럼에는 ,를 않넣어주어야하니까 
-								if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
-								else sbSQL.append(" "); //$NON-NLS-1$
+
+								// 마지막 컬럼에는 ,를 않넣어주어야하니까
+								if (i < (showTableColumns.size() - 1))
+									sbSQL.append(", "); //$NON-NLS-1$
+								else
+									sbSQL.append(" "); //$NON-NLS-1$
 							}
 							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + viewName + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
-							
+
 							//
 							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
-						} catch(Exception e) {
+						} catch (Exception e) {
 							logger.error(Messages.GenerateSQLSelectAction_8, e);
-							
+
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
 						}
@@ -206,12 +209,12 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		tblclmnTableName.setText("Name"); //$NON-NLS-1$
 		tblclmnTableName.addSelectionListener(getSelectionAdapter(viewListViewer, viewComparator, tblclmnTableName, 0));
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
 			public Image getImage(Object element) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/view.png"); //$NON-NLS-1$
 			}
-			
+
 			@Override
 			public String getText(Object element) {
 				return element.toString();
@@ -231,16 +234,19 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 		viewColumnViewer.setContentProvider(new ArrayContentProvider());
 		viewColumnViewer.setLabelProvider(new TableColumnLabelprovider());
-//		viewColumnViewer.setInput(showViewColumns);
+		// viewColumnViewer.setInput(showViewColumns);
 
-		sashForm.setWeights(new int[] { 1, 1 });
+		sashForm.setWeights(new int[] {
+				1,
+				1
+		});
 
 		viewFilter = new RDBViewFilter();
 		viewListViewer.addFilter(viewFilter);
 
 		createMenu();
 	}
-	
+
 	/**
 	 * create menu
 	 */
@@ -248,11 +254,13 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		deleteAction_View = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-//		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
+		// modifyAction_View = new
+		// ObjectModifyAction(getSite().getWorkbenchWindow(),
+		// PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
 
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		
+
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
@@ -260,17 +268,17 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_View);
 					manager.add(deleteAction_View);
 				}
-//				manager.add(modifyAction_View);
+				// manager.add(modifyAction_View);
 				manager.add(refreshAction_View);
-					
+
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(viewDDLAction);
-				
-				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 					manager.add(objectCompileAction);
 				}
 			}
@@ -282,6 +290,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 	/**
 	 * tableviewer filter
+	 * 
 	 * @param textSearch
 	 */
 	public void filter(String textSearch) {
@@ -293,16 +302,18 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * view 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshView(final UserDBDAO userDB, boolean boolRefresh) {
-		if(!boolRefresh) if(showViews != null) return;
+		if (!boolRefresh)
+			if (showViews != null)
+				return;
 		this.userDB = userDB;
-		
+
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showViews = sqlClient.queryForList("viewList", userDB.getDb()); //$NON-NLS-1$
 
 			viewListViewer.setInput(showViews);
 			viewListViewer.refresh();
-			
+
 			TableUtil.packTable(viewListViewer.getTable());
 		} catch (Exception e) {
 			logger.error("view refresh", e); //$NON-NLS-1$
@@ -315,25 +326,28 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * initialize action
 	 */
 	public void initAction() {
-		if (showViews != null) showViews.clear();
+		if (showViews != null)
+			showViews.clear();
 		viewListViewer.setInput(showViews);
 		viewListViewer.refresh();
 
-		if (showViewColumns != null) showViewColumns.clear();
+		if (showViewColumns != null)
+			showViewColumns.clear();
 		viewColumnViewer.setInput(showViewColumns);
 		viewColumnViewer.refresh();
-		
+
 		creatAction_View.setUserDB(getUserDB());
 		deleteAction_View.setUserDB(getUserDB());
-		refreshAction_View.setUserDB(getUserDB());		
-//		modifyAction_View.setUserDB(getUserDB());
-		
+		refreshAction_View.setUserDB(getUserDB());
+		// modifyAction_View.setUserDB(getUserDB());
+
 		viewDDLAction.setUserDB(getUserDB());
 		objectCompileAction.setUserDB(getUserDB());
 	}
-	
+
 	/**
 	 * get tableViewer
+	 * 
 	 * @return
 	 */
 	public TableViewer getViewListViewer() {
@@ -342,13 +356,13 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 	@Override
 	public void setSearchText(String searchText) {
-		viewFilter.setSearchText(searchText);		
+		viewFilter.setSearchText(searchText);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		
+
 		creatAction_View.dispose();
 		deleteAction_View.dispose();
 		refreshAction_View.dispose();

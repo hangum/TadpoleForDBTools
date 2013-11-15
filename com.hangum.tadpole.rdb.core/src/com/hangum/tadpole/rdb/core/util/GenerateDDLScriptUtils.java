@@ -10,12 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
-import org.apache.log4j.Logger;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -33,15 +32,15 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * generate ddl script utils
  * 
  * @author hangum
- *
+ * 
  */
 public class GenerateDDLScriptUtils {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(GenerateDDLScriptUtils.class); 
+	private static final Logger logger = Logger.getLogger(GenerateDDLScriptUtils.class);
 
-	/** 
+	/**
 	 * table script
 	 * 
 	 * @param userDB
@@ -54,28 +53,30 @@ public class GenerateDDLScriptUtils {
 			Map<String, String> parameter = new HashMap<String, String>();
 			parameter.put("db", userDB.getDb());
 			parameter.put("table", tableDAO.getName());
-			
+
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-			
+
 			sbSQL.append(" SELECT "); //$NON-NLS-1$
-			for (int i=0; i<showTableColumns.size(); i++) {
+			for (int i = 0; i < showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				sbSQL.append(dao.getField());
-				
-				// 마지막 컬럼에는 ,를 않넣어주어야하니까 
-				if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
-				else sbSQL.append(" "); //$NON-NLS-1$
+
+				// 마지막 컬럼에는 ,를 않넣어주어야하니까
+				if (i < (showTableColumns.size() - 1))
+					sbSQL.append(", "); //$NON-NLS-1$
+				else
+					sbSQL.append(" "); //$NON-NLS-1$
 			}
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getName() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
-			
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			logger.error(Messages.GenerateSQLSelectAction_8, e);
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
 		}
-		
+
 		return sbSQL.toString();
 	}
 }

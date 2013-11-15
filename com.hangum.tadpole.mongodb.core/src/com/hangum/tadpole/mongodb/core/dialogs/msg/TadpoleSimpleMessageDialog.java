@@ -29,35 +29,37 @@ import com.hangum.tadpole.mongodb.core.Messages;
  * tadpole message dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleSimpleMessageDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(TadpoleSimpleMessageDialog.class);
 	private JsonTadpoleEditor tadpoleEditor;
-	
+
 	String title;
 	String content;
-	
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public TadpoleSimpleMessageDialog(Shell parentShell, String title, String content) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.title = title;
 		this.content = content;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(title);//Messages.TadpoleSimpleMessageDialog_2);
+		newShell.setText(title);// Messages.TadpoleSimpleMessageDialog_2);
 	}
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -68,29 +70,30 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 2;
-		
+
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
-		
+
 		tadpoleEditor = new JsonTadpoleEditor(compositeBody, SWT.BORDER, "", "");
 		tadpoleEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		initUI();
 
 		return container;
 	}
-	
+
 	private void initUI() {
 		try {
 			tadpoleEditor.setText(JSONUtil.getPretty(content));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("server status", e); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

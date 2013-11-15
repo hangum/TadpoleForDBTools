@@ -20,7 +20,7 @@ import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
  * Mongodb collection field label provide
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBCollectionFieldsLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -32,12 +32,16 @@ public class MongoDBCollectionFieldsLabelProvider extends LabelProvider implemen
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		CollectionFieldDAO dao = (CollectionFieldDAO) element;
-		
-		switch(columnIndex) {
-		case 0: return dao.getField();
-		case 1: return dao.getType();
-		case 2: return dao.getKey();
-		case 3: return dao.getNewIndex();
+
+		switch (columnIndex) {
+		case 0:
+			return dao.getField();
+		case 1:
+			return dao.getType();
+		case 2:
+			return dao.getKey();
+		case 3:
+			return dao.getNewIndex();
 		}
 		return null;
 	}

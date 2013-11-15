@@ -37,11 +37,11 @@ import com.swtdesigner.ResourceManager;
  * 
  * 
  * @author billygoo
- *
+ * 
  */
 public class FindPasswordDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(FindPasswordDialog.class);
-	
+
 	private Text textEmail;
 	private Text textAnswer;
 	private Combo comboQuestion;
@@ -53,7 +53,7 @@ public class FindPasswordDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText(Messages.FindPasswordDialog_0);
-		
+
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 2;
@@ -83,7 +83,7 @@ public class FindPasswordDialog extends Dialog {
 
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblQuestion = new Label(container, SWT.NONE);
 		lblQuestion.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblQuestion.setText(Messages.FindPasswordDialog_4);
@@ -95,14 +95,14 @@ public class FindPasswordDialog extends Dialog {
 			comboQuestion.setData(q.toString(), q.getKey());
 		}
 		comboQuestion.select(0);
-		
+
 		Label lblAnswer = new Label(container, SWT.NONE);
 		lblAnswer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblAnswer.setText(Messages.FindPasswordDialog_5);
 
 		textAnswer = new Text(container, SWT.BORDER);
 		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		return container;
 	}
 
@@ -113,7 +113,7 @@ public class FindPasswordDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strEmail = StringUtils.trimToEmpty(textEmail.getText());
-		String strQuestion = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getText()));
+		String strQuestion = StringUtils.trimToEmpty((String) comboQuestion.getData(comboQuestion.getText()));
 		String strAnswer = StringUtils.trimToEmpty(textAnswer.getText());
 
 		if (!checkValidation()) {
@@ -132,6 +132,5 @@ public class FindPasswordDialog extends Dialog {
 		ChangePasswordDialog dialog = new ChangePasswordDialog(getParentShell(), validUser);
 		dialog.open();
 	}
-	
 
 }

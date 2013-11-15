@@ -14,7 +14,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 public class MakeUserDBDAO {
-	
+
 	/**
 	 * test 하려는 UserDB 설정
 	 * 
@@ -22,12 +22,9 @@ public class MakeUserDBDAO {
 	 */
 	public static UserDBDAO getUserDB() {
 		UserDBDAO userDB = new UserDBDAO();
-		
-		final String dbUrl = String.format(
-				DBDefine.MONGODB_DEFAULT.getDB_URL_INFO(), 
-				"127.0.0.1", "27017", "Sample MondogoDB");
-		
-		
+
+		final String dbUrl = String.format(DBDefine.MONGODB_DEFAULT.getDB_URL_INFO(), "127.0.0.1", "27017", "Sample MondogoDB");
+
 		userDB.setDbms_types(DBDefine.MONGODB_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb("test");
@@ -37,7 +34,7 @@ public class MakeUserDBDAO {
 		userDB.setPort("27017");
 		userDB.setLocale("");
 		userDB.setUsers("");
-		
+
 		return userDB;
 	}
 }

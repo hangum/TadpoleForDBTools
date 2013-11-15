@@ -19,24 +19,26 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
  * sql to php
  * 
  * @author hangum
- *
+ * 
  */
 public class SQLToPHPConvert {
 	public static final String name = "query";
-	
+
 	public static String sqlToString(String name, String sql) {
 		StringBuffer sbSQL = new StringBuffer("");
-		
-		sql = StringUtils.remove(sql, ";");		
+
+		sql = StringUtils.remove(sql, ";");
 		String[] splists = StringUtils.split(sql, PublicTadpoleDefine.LINE_SEPARATOR);
-		for(int i = 0; i<splists.length; i++) {
-			if(!"".equals( StringUtils.trimToEmpty(splists[i]) )) {
-				
-				if(i == 0) sbSQL.append("$" + name + " = \"" + SQLTextUtil.delLineChar(splists[i]) + "\"; \r\n");
-				else sbSQL.append("$" + name  + " .= \"" +  SQLTextUtil.delLineChar(splists[i]) + "\"; \r\n");
+		for (int i = 0; i < splists.length; i++) {
+			if (!"".equals(StringUtils.trimToEmpty(splists[i]))) {
+
+				if (i == 0)
+					sbSQL.append("$" + name + " = \"" + SQLTextUtil.delLineChar(splists[i]) + "\"; \r\n");
+				else
+					sbSQL.append("$" + name + " .= \"" + SQLTextUtil.delLineChar(splists[i]) + "\"; \r\n");
 			}
 		}
-		
+
 		return sbSQL.toString();
 	}
 }

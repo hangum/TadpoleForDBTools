@@ -24,7 +24,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * table comment editor
  * 
  * @author hangum
- *
+ * 
  */
 public class FieldIndexEditorSupport extends EditingSupport {
 
@@ -40,8 +40,18 @@ public class FieldIndexEditorSupport extends EditingSupport {
 
 	private final TreeViewer viewer;
 	private UserDBDAO userDB;
-	public static final String[] arryIndexKey 	= new String[] {"", "Ascending", "Desending", "Geospatial"};
-	public static final Object[] arryIndexValue = new Object[] {0, 		1, 			-1, 		"2d"};
+	public static final String[] arryIndexKey = new String[] {
+			"",
+			"Ascending",
+			"Desending",
+			"Geospatial"
+	};
+	public static final Object[] arryIndexValue = new Object[] {
+			0,
+			1,
+			-1,
+			"2d"
+	};
 
 	/**
 	 * 
@@ -50,14 +60,14 @@ public class FieldIndexEditorSupport extends EditingSupport {
 	 */
 	public FieldIndexEditorSupport(TreeViewer viewer, UserDBDAO userDB) {
 		super(viewer);
-		
+
 		this.viewer = viewer;
 		this.userDB = userDB;
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		return new ComboBoxCellEditor(viewer.getTree(), arryIndexKey, SWT.READ_ONLY);		
+		return new ComboBoxCellEditor(viewer.getTree(), arryIndexKey, SWT.READ_ONLY);
 	}
 
 	@Override
@@ -68,10 +78,11 @@ public class FieldIndexEditorSupport extends EditingSupport {
 	@Override
 	protected Object getValue(Object element) {
 		CollectionFieldDAO dao = (CollectionFieldDAO) element;
-		for (int i=0; i<arryIndexKey.length; i++) {
-			if(arryIndexKey[i].equals(dao.getNewIndex())) return i;
+		for (int i = 0; i < arryIndexKey.length; i++) {
+			if (arryIndexKey[i].equals(dao.getNewIndex()))
+				return i;
 		}
-		
+
 		return 0;
 	}
 
@@ -79,8 +90,8 @@ public class FieldIndexEditorSupport extends EditingSupport {
 	protected void setValue(Object element, Object value) {
 		try {
 			CollectionFieldDAO dao = (CollectionFieldDAO) element;
-			
-			String tmpVal = arryIndexKey[Integer.valueOf(""+value)];			
+
+			String tmpVal = arryIndexKey[Integer.valueOf("" + value)];
 			dao.setNewIndex(tmpVal);
 		} catch (Exception e) {
 			logger.error("setValue error ", e);

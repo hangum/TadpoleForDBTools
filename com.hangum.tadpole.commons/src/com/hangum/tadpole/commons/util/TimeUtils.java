@@ -33,9 +33,8 @@ public class TimeUtils {
 			long longMinute = longCalcHour / 60;
 			long longSec = longCalcHour % 60;
 
-			strRetValue = (longViewHour < 10 ? "0" : "")+ String.valueOf(longViewHour) + ":" + 
-						  (longMinute < 10 ? "0" : "") + String.valueOf(longMinute) + ":" + 
-						  (longSec < 10 ? "0" : "") + String.valueOf(longSec);
+			strRetValue = (longViewHour < 10 ? "0" : "") + String.valueOf(longViewHour) + ":" + (longMinute < 10 ? "0" : "") + String.valueOf(longMinute) + ":"
+					+ (longSec < 10 ? "0" : "") + String.valueOf(longSec);
 		}
 
 		return strRetValue;

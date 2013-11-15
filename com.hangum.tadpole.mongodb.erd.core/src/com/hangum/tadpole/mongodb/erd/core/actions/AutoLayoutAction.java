@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.erd.core.actions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -42,7 +41,7 @@ import com.hangum.tadpole.mongodb.model.Table;
  * autolayout action
  * 
  * @author hangum
- *
+ * 
  */
 public class AutoLayoutAction extends SelectionAction {
 	public static final String ID = "com.hangum.tadpole.mongodb.erd.core.actions.AutoLayoutAction"; //$NON-NLS-1$
@@ -52,7 +51,7 @@ public class AutoLayoutAction extends SelectionAction {
 	public AutoLayoutAction(IWorkbenchPart part, GraphicalViewer graphicalViewer) {
 		super(part);
 		setLazyEnablementCalculation(false);
-		
+
 		this.viewer = graphicalViewer;
 	}
 
@@ -63,16 +62,16 @@ public class AutoLayoutAction extends SelectionAction {
 		setId(ID);
 		setEnabled(true);
 	}
-	
+
 	@Override
 	protected boolean calculateEnabled() {
 		return true;
 	}
-	
+
 	public GraphicalViewer getViewer() {
 		return viewer;
 	}
-	
+
 	@Override
 	public void run() {
 		try {
@@ -80,11 +79,11 @@ public class AutoLayoutAction extends SelectionAction {
 			List models = getViewer().getContents().getChildren();
 			NodeList graphNodes = new NodeList();
 			EdgeList graphEdges = new EdgeList();
-			
+
 			// nodes
-			for(int i=0;i<models.size();i++){
+			for (int i = 0; i < models.size(); i++) {
 				Object obj = models.get(i);
-				if(obj instanceof TableEditPart){
+				if (obj instanceof TableEditPart) {
 					TableEditPart editPart = (TableEditPart) obj;
 					Table model = (Table) editPart.getModel();
 					EntityNode node = new EntityNode();
@@ -94,30 +93,29 @@ public class AutoLayoutAction extends SelectionAction {
 					graphNodes.add(node);
 				}
 			}
-			
-			
+
 			// edge
 			for (int i = 0; i < models.size(); i++) {
 				Object obj = models.get(i);
-				if(obj instanceof TableEditPart){
+				if (obj instanceof TableEditPart) {
 					TableEditPart tableEditpart = (TableEditPart) obj;
-					
+
 					List outgoing = tableEditpart.getSourceConnections();
 					for (int j = 0; j < outgoing.size(); j++) {
 						RelationEditPart conn = (RelationEditPart) outgoing.get(j);
-						EntityNode source = (EntityNode) getNode(graphNodes, (Table)conn.getSource().getModel());
-						EntityNode target = (EntityNode) getNode(graphNodes, (Table)conn.getTarget().getModel());
-						
-						if(source != null && target != null){
+						EntityNode source = (EntityNode) getNode(graphNodes, (Table) conn.getSource().getModel());
+						EntityNode target = (EntityNode) getNode(graphNodes, (Table) conn.getTarget().getModel());
+
+						if (source != null && target != null) {
 							ConnectionEdge edge = new ConnectionEdge(source, target);
-							Relation relation = (Relation)conn.getModel();
+							Relation relation = (Relation) conn.getModel();
 							edge.model = relation.getSource();
 							graphEdges.add(edge);
 						}
 					}
 				}
 			}
-	
+
 			DirectedGraph graph = new DirectedGraph();
 			graph.nodes = graphNodes;
 			graph.edges = graphEdges;
@@ -126,41 +124,44 @@ public class AutoLayoutAction extends SelectionAction {
 				EntityNode node = (EntityNode) graph.nodes.getNode(i);
 				commands.add(new LayoutCommand(node.model, node.x, node.y));
 			}
-	
+
 			getViewer().getEditDomain().getCommandStack().execute(commands);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error(Messages.AutoLayoutAction_2, e);
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.AutoLayoutAction_3, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"Error", Messages.AutoLayoutAction_3, errStatus); //$NON-NLS-1$
 
 		}
 	}
-	
-	private static EntityNode getNode(NodeList list, Table model){
-		for(int i=0;i<list.size();i++){
+
+	private static EntityNode getNode(NodeList list, Table model) {
+		for (int i = 0; i < list.size(); i++) {
 			EntityNode node = (EntityNode) list.get(i);
-			if(node.model == model){
+			if (node.model == model) {
 				return node;
 			}
 		}
 		return null;
 	}
-	
+
 	private class EntityNode extends Node {
 		private Table model;
 	}
-//
+
+	//
 	private class ConnectionEdge extends Edge {
 		private Table model;
-		public ConnectionEdge(EntityNode source, EntityNode target){
+
+		public ConnectionEdge(EntityNode source, EntityNode target) {
 			super(source, target);
 		}
 	}
 
 	/**
-	 * Command to relocate the entity model.
-	 * This command is executed as a part of CompoundCommand.
+	 * Command to relocate the entity model. This command is executed as a part
+	 * of CompoundCommand.
 	 */
 	private class LayoutCommand extends Command {
 
@@ -170,7 +171,7 @@ public class AutoLayoutAction extends SelectionAction {
 		private int oldX;
 		private int oldY;
 
-		public LayoutCommand(Table target, int x, int y){
+		public LayoutCommand(Table target, int x, int y) {
 			this.target = target;
 			this.x = x;
 			this.y = y;

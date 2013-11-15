@@ -21,7 +21,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * procedure 생성 action
  * 
  * @author hangum
- *
+ * 
  */
 public class CreateProcedureAction extends AbstractQueryAction {
 
@@ -31,10 +31,9 @@ public class CreateProcedureAction extends AbstractQueryAction {
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
 		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.PROCEDURES));
 	}
-	
 
 }

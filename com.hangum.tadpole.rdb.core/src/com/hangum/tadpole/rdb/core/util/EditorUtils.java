@@ -23,38 +23,40 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
  * editor utils
  * 
  * @author hangum
- *
+ * 
  */
 public class EditorUtils {
 
 	/**
 	 * find sql editor
 	 * 
-	 * @param dao UserDBDAO
+	 * @param dao
+	 *            UserDBDAO
 	 * @return
 	 */
 	public static IEditorReference findSQLEditor(final UserDBDAO dao) {
 		IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-		
+
 		for (IEditorReference iEditorReference : editors) {
-			
-			//  에디터를 검색한다.
-			if(MainEditor.ID.equals( iEditorReference.getId() )) {
-				
-				MainEditor editor = (MainEditor)iEditorReference.getEditor(false);
-				if(editor.getUserDB().getSeq() == dao.getSeq()) {
+
+			// 에디터를 검색한다.
+			if (MainEditor.ID.equals(iEditorReference.getId())) {
+
+				MainEditor editor = (MainEditor) iEditorReference.getEditor(false);
+				if (editor.getUserDB().getSeq() == dao.getSeq()) {
 					return iEditorReference;
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * find sql editor
 	 * 
-	 * @param dao UserDBResourceDAO
+	 * @param dao
+	 *            UserDBResourceDAO
 	 * @return
 	 */
 	public static IEditorReference findSQLEditor(final UserDBResourceDAO dao) {
@@ -63,6 +65,7 @@ public class EditorUtils {
 
 	/**
 	 * find erd editor
+	 * 
 	 * @param dao
 	 * @return
 	 */
@@ -79,24 +82,28 @@ public class EditorUtils {
 	 */
 	public static IEditorReference findEditor(String id, UserDBResourceDAO dao) {
 		IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-		
+
 		for (IEditorReference iEditorReference : editors) {
-			if(id.equals( iEditorReference.getId() )) {				
+			if (id.equals(iEditorReference.getId())) {
 				IEditorPart ier = iEditorReference.getEditor(true);
-				if(ier instanceof MainEditor) {
-					MainEditor editor = (MainEditor)iEditorReference.getEditor(true);
-					if(editor.getdBResource() == null) continue;
-					
-					if(editor.getdBResource().getResource_seq() == dao.getResource_seq()) return iEditorReference;
-				} else if(ier instanceof TadpoleRDBEditor) {
-					TadpoleRDBEditor editor = (TadpoleRDBEditor)iEditorReference.getEditor(true);
-					if(editor.getUserDBErd() == null) continue;
-					
-					if(editor.getUserDBErd().getResource_seq() == dao.getResource_seq()) return iEditorReference;
+				if (ier instanceof MainEditor) {
+					MainEditor editor = (MainEditor) iEditorReference.getEditor(true);
+					if (editor.getdBResource() == null)
+						continue;
+
+					if (editor.getdBResource().getResource_seq() == dao.getResource_seq())
+						return iEditorReference;
+				} else if (ier instanceof TadpoleRDBEditor) {
+					TadpoleRDBEditor editor = (TadpoleRDBEditor) iEditorReference.getEditor(true);
+					if (editor.getUserDBErd() == null)
+						continue;
+
+					if (editor.getUserDBErd().getResource_seq() == dao.getResource_seq())
+						return iEditorReference;
 				}
 			}
 		}
-		
+
 		return null;
 	}
 }

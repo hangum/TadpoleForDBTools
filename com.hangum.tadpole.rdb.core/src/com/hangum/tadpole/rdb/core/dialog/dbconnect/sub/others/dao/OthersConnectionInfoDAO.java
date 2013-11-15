@@ -14,17 +14,17 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao;
  * Others Database Connection information dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class OthersConnectionInfoDAO {
-	
+
 	boolean isReadOnlyConnection = false;
 	boolean isAutoCommit = false;
 	boolean isShowTables = false;
-	
+
 	boolean isProfiling = false;
 	boolean isDMLStatement = false;
-	
+
 	boolean isTableFilter = false;
 	String strTableFilterInclude = "";
 	String strTableFilterExclude = "";
@@ -40,7 +40,8 @@ public class OthersConnectionInfoDAO {
 	}
 
 	/**
-	 * @param isReadOnlyConnection the isReadOnlyConnection to set
+	 * @param isReadOnlyConnection
+	 *            the isReadOnlyConnection to set
 	 */
 	public void setReadOnlyConnection(boolean isReadOnlyConnection) {
 		this.isReadOnlyConnection = isReadOnlyConnection;
@@ -54,7 +55,8 @@ public class OthersConnectionInfoDAO {
 	}
 
 	/**
-	 * @param isAutoCommit the isAutoCommit to set
+	 * @param isAutoCommit
+	 *            the isAutoCommit to set
 	 */
 	public void setAutoCommit(boolean isAutoCommit) {
 		this.isAutoCommit = isAutoCommit;
@@ -68,7 +70,8 @@ public class OthersConnectionInfoDAO {
 	}
 
 	/**
-	 * @param isTableFilter the isTableFilter to set
+	 * @param isTableFilter
+	 *            the isTableFilter to set
 	 */
 	public void setTableFilter(boolean isTableFilter) {
 		this.isTableFilter = isTableFilter;
@@ -82,7 +85,8 @@ public class OthersConnectionInfoDAO {
 	}
 
 	/**
-	 * @param strTableFilterInclude the strTableFilterInclude to set
+	 * @param strTableFilterInclude
+	 *            the strTableFilterInclude to set
 	 */
 	public void setStrTableFilterInclude(String strTableFilterInclude) {
 		this.strTableFilterInclude = strTableFilterInclude;
@@ -96,7 +100,8 @@ public class OthersConnectionInfoDAO {
 	}
 
 	/**
-	 * @param strTableFilterExclude the strTableFilterExclude to set
+	 * @param strTableFilterExclude
+	 *            the strTableFilterExclude to set
 	 */
 	public void setStrTableFilterExclude(String strTableFilterExclude) {
 		this.strTableFilterExclude = strTableFilterExclude;
@@ -110,7 +115,8 @@ public class OthersConnectionInfoDAO {
 	}
 
 	/**
-	 * @param isProfiling the isProfiling to set
+	 * @param isProfiling
+	 *            the isProfiling to set
 	 */
 	public void setProfiling(boolean isProfiling) {
 		this.isProfiling = isProfiling;
@@ -124,7 +130,8 @@ public class OthersConnectionInfoDAO {
 	}
 
 	/**
-	 * @param isDMLStatement the isDMLStatement to set
+	 * @param isDMLStatement
+	 *            the isDMLStatement to set
 	 */
 	public void setDMLStatement(boolean isDMLStatement) {
 		this.isDMLStatement = isDMLStatement;
@@ -138,10 +145,11 @@ public class OthersConnectionInfoDAO {
 	}
 
 	/**
-	 * @param isShowTables the isShowTables to set
+	 * @param isShowTables
+	 *            the isShowTables to set
 	 */
 	public void setShowTables(boolean isShowTables) {
 		this.isShowTables = isShowTables;
 	}
-	
+
 }

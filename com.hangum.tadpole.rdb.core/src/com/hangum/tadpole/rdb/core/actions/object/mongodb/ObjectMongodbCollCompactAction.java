@@ -25,16 +25,17 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongoDB collection compact
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectMongodbCollCompactAction extends AbstractObjectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(ObjectMongodbCollCompactAction.class);
+	// private static final Logger logger =
+	// Logger.getLogger(ObjectMongodbCollCompactAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.collection.compact";
-	
+
 	public ObjectMongodbCollCompactAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
@@ -44,9 +45,8 @@ public class ObjectMongodbCollCompactAction extends AbstractObjectAction {
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		TableDAO collDAO = (TableDAO) selection.getFirstElement();
-		CollectionCompactDialog dialog = new CollectionCompactDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB,
-				collDAO.getName());
+		CollectionCompactDialog dialog = new CollectionCompactDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, collDAO.getName());
 		dialog.open();
 	}
-	
+
 }

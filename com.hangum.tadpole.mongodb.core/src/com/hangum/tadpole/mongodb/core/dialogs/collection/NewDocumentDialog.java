@@ -41,7 +41,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * 신규 document 를 생성합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class NewDocumentDialog extends Dialog {
 	/**
@@ -52,12 +52,13 @@ public class NewDocumentDialog extends Dialog {
 
 	protected UserDBDAO userDB;
 	protected String collectionName;
-	
+
 	protected Text textName;
 	protected JsonTadpoleEditor textContent;
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public NewDocumentDialog(Shell parentShell, UserDBDAO userDB, String collectionName) {
@@ -69,6 +70,7 @@ public class NewDocumentDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -80,33 +82,33 @@ public class NewDocumentDialog extends Dialog {
 		gridLayout.marginHeight = 4;
 		gridLayout.marginWidth = 4;
 		gridLayout.numColumns = 2;
-		
+
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText("Collection Name"); //$NON-NLS-1$
-		
+
 		textName = new Text(container, SWT.BORDER);
 		textName.setEnabled(false);
 		textName.setEditable(false);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textName.setText(collectionName);
-		
+
 		Label lblDataStructure = new Label(container, SWT.NONE);
 		lblDataStructure.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblDataStructure.setText("JSON Type Document"); //$NON-NLS-1$
-		
-		textContent = new JsonTadpoleEditor(container, SWT.BORDER, "", "");		
+
+		textContent = new JsonTadpoleEditor(container, SWT.BORDER, "", "");
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
+
 		textContent.setFocus();
-		
+
 		return container;
 	}
-	
+
 	@Override
 	protected void okPressed() {
-		if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
-			
+		if ("".equals(textContent.getText().trim())) { //$NON-NLS-1$
+
 			textContent.setFocus();
 			MessageDialog.openError(null, Messages.NewDocumentDialog_3, Messages.NewDocumentDialog_4);
 			return;
@@ -118,13 +120,13 @@ public class NewDocumentDialog extends Dialog {
 			logger.error("mongodb create collection", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-			
+
 			return;
 		}
-		
+
 		super.okPressed();
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -133,18 +135,19 @@ public class NewDocumentDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent) {		
+	protected void createButtonsForButtonBar(Composite parent) {
 		Button button = createButton(parent, FORMAT_BTN_ID, Messages.NewDocumentDialog_1, false);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				textContent.setText( JSONUtil.getPretty(textContent.getText()) );
+				textContent.setText(JSONUtil.getPretty(textContent.getText()));
 			}
 		});
-		
+
 		createButton(parent, IDialogConstants.OK_ID, Messages.NewDocumentDialog_2, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.NewDocumentDialog_5, false);
 	}

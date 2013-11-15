@@ -32,20 +32,20 @@ public class MongoTestCurrentOp {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
-		
-		DBObject dbObj = (DBObject)db.eval("db.currentOp()");
+
+		DBObject dbObj = (DBObject) db.eval("db.currentOp()");
 		System.out.println(JSONUtil.getPretty(dbObj.toString()));
-		
-		BasicDBList dbInprogs = (BasicDBList)dbObj.get("inprog");
+
+		BasicDBList dbInprogs = (BasicDBList) dbObj.get("inprog");
 		for (Object object : dbInprogs) {
-			BasicDBObject obj = (BasicDBObject)object;			
+			BasicDBObject obj = (BasicDBObject) object;
 			System.out.println("[opid]" + obj.get("opid"));
-			
-//			System.out.println("##[start] killOp##############");
-//			db.eval("db.killOp(" + obj.get("opid") + ")");
-//			System.out.println("##[stop] killOp##############");
+
+			// System.out.println("##[start] killOp##############");
+			// db.eval("db.killOp(" + obj.get("opid") + ")");
+			// System.out.println("##[stop] killOp##############");
 		}
-			
+
 		mongo.close();
 	}
 

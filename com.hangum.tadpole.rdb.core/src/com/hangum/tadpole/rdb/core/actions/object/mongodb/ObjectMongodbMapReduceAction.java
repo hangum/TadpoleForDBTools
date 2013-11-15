@@ -33,7 +33,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Object Explorer에서 사용하는 Mongodb MapReduce
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectMongodbMapReduceAction extends AbstractObjectAction {
 	/**
@@ -42,7 +42,7 @@ public class ObjectMongodbMapReduceAction extends AbstractObjectAction {
 	private static final Logger logger = Logger.getLogger(ObjectMongodbMapReduceAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.mapreduce";
-	
+
 	public ObjectMongodbMapReduceAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
@@ -65,5 +65,5 @@ public class ObjectMongodbMapReduceAction extends AbstractObjectAction {
 			ExceptionDetailsErrorDialog.openError(null, "Error", "MapReduce Open Exception", errStatus); //$NON-NLS-1$
 		}
 	}
-	
+
 }

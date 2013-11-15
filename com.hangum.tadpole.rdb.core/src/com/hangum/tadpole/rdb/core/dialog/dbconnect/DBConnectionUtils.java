@@ -34,7 +34,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * DB Connection utils
  * 
  * @author hangum
- *
+ * 
  */
 public class DBConnectionUtils {
 	/**
@@ -47,7 +47,8 @@ public class DBConnectionUtils {
 	 * @param userDB
 	 * @return
 	 */
-	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
+	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName,
+			UserDBDAO userDB) {
 		return getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, userDB, PublicTadpoleDefine.DATA_STATUS.NEW);
 	}
 
@@ -63,13 +64,13 @@ public class DBConnectionUtils {
 	 * 
 	 * @return
 	 */
-	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB, 
-			PublicTadpoleDefine.DATA_STATUS dataStatus) {
+	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName,
+			UserDBDAO userDB, PublicTadpoleDefine.DATA_STATUS dataStatus) {
 		AbstractLoginComposite loginComposite = null;
-		
+
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
 			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if (dbDefine == DBDefine.MARIADB_DEFAULT) {	
+		} else if (dbDefine == DBDefine.MARIADB_DEFAULT) {
 			loginComposite = new MariaDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
 			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
@@ -79,17 +80,17 @@ public class DBConnectionUtils {
 			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
 			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
+		} else if (dbDefine == DBDefine.POSTGRE_DEFAULT) {
 			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
+		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
 			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
+		} else if (dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
 			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
+		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
 			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		}
 		loginComposite.setDataActionStatus(dataStatus);
-		
+
 		return loginComposite;
 	}
 }

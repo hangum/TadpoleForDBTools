@@ -10,7 +10,7 @@ public class Messages extends NLS {
 	public static String FileUploadDialog_4;
 	public static String FileUploadDialog_6;
 	public static String FileUploadDialog_8;
-	
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

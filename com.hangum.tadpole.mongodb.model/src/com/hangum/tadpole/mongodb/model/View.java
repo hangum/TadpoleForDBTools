@@ -12,32 +12,32 @@
  */
 package com.hangum.tadpole.mongodb.model;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>View</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '
+ * <em><b>View</b></em>'. <!-- end-user-doc -->
+ * 
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.hangum.tadpole.mongodb.model.View#getTableName <em>Table Name</em>}</li>
+ * <li>{@link com.hangum.tadpole.mongodb.model.View#getTableName <em>Table Name
+ * </em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.hangum.tadpole.mongodb.model.MongodbPackage#getView()
  * @model
  * @generated
  */
 public interface View extends Table {
 	/**
-	 * Returns the value of the '<em><b>Table Name</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Table Name</b></em>' reference. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Table Name</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Table Name</em>' reference isn't clear, there
+	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Table Name</em>' reference.
 	 * @see #setTableName(Table)
 	 * @see com.hangum.tadpole.mongodb.model.MongodbPackage#getView_TableName()
@@ -47,10 +47,13 @@ public interface View extends Table {
 	Table getTableName();
 
 	/**
-	 * Sets the value of the '{@link com.hangum.tadpole.mongodb.model.View#getTableName <em>Table Name</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Table Name</em>' reference.
+	 * Sets the value of the '
+	 * {@link com.hangum.tadpole.mongodb.model.View#getTableName
+	 * <em>Table Name</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Table Name</em>' reference.
 	 * @see #getTableName()
 	 * @generated
 	 */

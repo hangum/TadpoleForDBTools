@@ -22,24 +22,24 @@ import com.swtdesigner.ResourceManager;
  * Opens an &quot;About RAP&quot; message dialog.
  */
 public class AboutAction extends Action {
-	
+
 	private final IWorkbenchWindow window;
-	
+
 	public AboutAction(IWorkbenchWindow window) {
 		super(Messages.AboutAction_0);
 		setId(this.getClass().getName());
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(BrowserActivator.ID, "resources/icons/about.png"));
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(BrowserActivator.ID, "resources/icons/about.png"));
 		setToolTipText("About Tadpole DB Hub");
-		
+
 		this.window = window;
 	}
-	
+
 	public void run() {
-		if(window != null) {	
+		if (window != null) {
 			AboutDialog ad = new AboutDialog(window.getShell());
 			ad.open();
-			
+
 		}
 	}
-	
+
 }

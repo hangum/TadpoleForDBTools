@@ -22,41 +22,45 @@ import com.hangum.tadpole.rdb.core.editors.intro.IntroEditor;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditorInput;
 
 /**
- * This workbench advisor creates the window advisor, and specifies
- * the perspective id for the initial window.
+ * This workbench advisor creates the window advisor, and specifies the
+ * perspective id for the initial window.
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	private static final Logger logger = Logger.getLogger(ApplicationWorkbenchAdvisor.class);
 	public static final String PERSPECTIVE_ID = "com.hangum.tadpole.application.start.perspective";
 
-    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
-        return new ApplicationWorkbenchWindowAdvisor(configurer);
-    }
+	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
+		return new ApplicationWorkbenchWindowAdvisor(configurer);
+	}
 
 	public String getInitialWindowPerspectiveId() {
 		return PERSPECTIVE_ID;
 	}
-	
+
 	@Override
 	public void postStartup() {
-//		open source is alwary view.
-//		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(GetPreferenceGeneral.getDefaultHomePageUse())) {			
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			try {
-				IntroEditorInput mei = new IntroEditorInput();
-				page.openEditor(mei, IntroEditor.ID);
-			} catch (PartInitException e) {
-				logger.error("Default home page", e);
-			};
-//		}
-//		
+		// open source is alwary view.
+		// if(PublicTadpoleDefine.YES_NO.YES.toString().equals(GetPreferenceGeneral.getDefaultHomePageUse()))
+		// {
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		try {
+			IntroEditorInput mei = new IntroEditorInput();
+			page.openEditor(mei, IntroEditor.ID);
+		} catch (PartInitException e) {
+			logger.error("Default home page", e);
+		}
+		;
+		// }
+		//
 	}
-	
-//	@Override
-//	public boolean preShutdown() {
-//		if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "확인", "종료하시겠습니까?") ) {
-//			return super.preShutdown();
-//		}
-//		return false;
-//	}
+
+	// @Override
+	// public boolean preShutdown() {
+	// if(
+	// MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+	// "확인", "종료하시겠습니까?") ) {
+	// return super.preShutdown();
+	// }
+	// return false;
+	// }
 }

@@ -33,7 +33,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Object Explorer에서 사용하는 Mongodb group
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectMongodbGroupAction extends AbstractObjectAction {
 	/**
@@ -42,7 +42,7 @@ public class ObjectMongodbGroupAction extends AbstractObjectAction {
 	private static final Logger logger = Logger.getLogger(ObjectMongodbGroupAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.group";
-	
+
 	public ObjectMongodbGroupAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
@@ -65,5 +65,5 @@ public class ObjectMongodbGroupAction extends AbstractObjectAction {
 			ExceptionDetailsErrorDialog.openError(null, "Error", "Group Open Exception", errStatus); //$NON-NLS-1$
 		}
 	}
-	
+
 }

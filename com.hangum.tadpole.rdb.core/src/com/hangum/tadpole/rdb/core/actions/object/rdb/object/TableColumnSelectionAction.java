@@ -23,16 +23,17 @@ import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
- * Table Column 선택 action입니다. 
+ * Table Column 선택 action입니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(TableColumnSelectionAction.class);
+	// private static final Logger logger =
+	// Logger.getLogger(TableColumnSelectionAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.table.column.selection"; //$NON-NLS-1$
 
@@ -45,14 +46,14 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		String strColumnName = "";
-		
-		for(Object obj : selection.toArray()) {
-			TableColumnDAO tcDAO = (TableColumnDAO)obj;
+
+		for (Object obj : selection.toArray()) {
+			TableColumnDAO tcDAO = (TableColumnDAO) obj;
 			strColumnName += tcDAO.getField() + ", "; //$NON-NLS-1$
 		}
 		strColumnName = StringUtils.removeEnd(strColumnName, ", "); //$NON-NLS-1$
-		
+
 		FindEditorAndWriteQueryUtil.runAtPosition(strColumnName);
 	}// end method
-	
+
 }

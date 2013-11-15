@@ -50,40 +50,40 @@ import com.swtdesigner.SWTResourceManager;
  * mongodb find editor
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBTableEditor extends EditorPart {
-	public static final String  ID = "com.hangum.tadpole.mongodb.core.main.editor"; //$NON-NLS-1$
+	public static final String ID = "com.hangum.tadpole.mongodb.core.main.editor"; //$NON-NLS-1$
 	static Logger logger = Logger.getLogger(MongoDBTableEditor.class);
-	
+
 	/** userDB */
 	private UserDBDAO userDB;
 	/** collectionName */
 	private String initColName;
-	
+
 	/** search panel */
 	private CTabFolder tabFolderSearchPanel;
-	
+
 	/** collection column info */
 	private Map<String, CollectionFieldDAO> columnInfo;
 	/** collection의 전체 컬럼 */
 	private String strColumns = ""; //$NON-NLS-1$
-	
+
 	/** 쿼리 결과 출력 */
-	private MongodbResultComposite compositeResult ;
+	private MongodbResultComposite compositeResult;
 
 	private JsonTadpoleEditor textBasicFind;
 	private JsonTadpoleEditor textBasicField;
 	private JsonTadpoleEditor textBasicSort;
 	private Text textBasicSkip;
 	private Text textBasicLimit;
-	
+
 	/** preference default find page */
-	private String defaultFindPage 	= GetPreferenceGeneral.getMongoDefaultFindPage();
+	private String defaultFindPage = GetPreferenceGeneral.getMongoDefaultFindPage();
 
 	/** preference default limit */
 	private String defaultLimit = GetPreferenceGeneral.getMongoDefaultLimit();
-	
+
 	public MongoDBTableEditor() {
 		super();
 	}
@@ -96,17 +96,17 @@ public class MongoDBTableEditor extends EditorPart {
 		gl_parent.marginHeight = 2;
 		gl_parent.marginWidth = 2;
 		parent.setLayout(gl_parent);
-		
+
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setSashWidth(1);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		tabFolderSearchPanel = new CTabFolder(sashForm, SWT.NONE);
 		tabFolderSearchPanel.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
-		
+
 		CTabItem tabItemBasic = new CTabItem(tabFolderSearchPanel, SWT.NONE);
 		tabItemBasic.setText("JSON Search"); //$NON-NLS-1$
-		
+
 		Composite compositeBasic = new Composite(tabFolderSearchPanel, SWT.NONE);
 		tabItemBasic.setControl(compositeBasic);
 		GridLayout gl_compositeBasic = new GridLayout(1, false);
@@ -115,32 +115,32 @@ public class MongoDBTableEditor extends EditorPart {
 		gl_compositeBasic.marginHeight = 0;
 		gl_compositeBasic.marginWidth = 0;
 		compositeBasic.setLayout(gl_compositeBasic);
-		
+
 		Composite compositeBasicHead = new Composite(compositeBasic, SWT.NONE);
 		compositeBasicHead.setLayout(new GridLayout(4, false));
 		compositeBasicHead.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Label lblfind = new Label(compositeBasicHead, SWT.NONE);
 		lblfind.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 2));
 		lblfind.setText(Messages.MongoDBTableEditor_0);
-		
+
 		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
-		
+
 		textBasicFind = new JsonTadpoleEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-		
+
 		Label lblfield = new Label(compositeBasicHead, SWT.NONE);
 		lblfield.setText(Messages.MongoDBTableEditor_1);
-		
+
 		textBasicField = new JsonTadpoleEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Label lblsort = new Label(compositeBasicHead, SWT.NONE);
 		lblsort.setText(Messages.MongoDBTableEditor_2);
-		
+
 		textBasicSort = new JsonTadpoleEditor(compositeBasicHead, SWT.BORDER, "", strAssist);
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Composite compositeBasicSearch = new Composite(compositeBasic, SWT.NONE);
 		GridLayout gl_compositeBasicSearch = new GridLayout(10, false);
 		gl_compositeBasicSearch.verticalSpacing = 2;
@@ -149,21 +149,22 @@ public class MongoDBTableEditor extends EditorPart {
 		gl_compositeBasicSearch.marginWidth = 2;
 		compositeBasicSearch.setLayout(gl_compositeBasicSearch);
 		compositeBasicSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label label = new Label(compositeBasicSearch, SWT.NONE);
 		GridData gd_label = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_label.widthHint = 30;
 		label.setLayoutData(gd_label);
-		
+
 		Label lblSkip_1 = new Label(compositeBasicSearch, SWT.NONE);
 		lblSkip_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSkip_1.setText("Skip"); //$NON-NLS-1$
-		
+
 		textBasicSkip = new Text(compositeBasicSearch, SWT.BORDER | SWT.RIGHT);
 		textBasicSkip.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection)	findBasic();
+				if (e.keyCode == SWT.Selection)
+					findBasic();
 			}
 		});
 		textBasicSkip.setText("0"); //$NON-NLS-1$
@@ -171,16 +172,17 @@ public class MongoDBTableEditor extends EditorPart {
 		GridData gd_textBasicSkip = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		gd_textBasicSkip.widthHint = 60;
 		textBasicSkip.setLayoutData(gd_textBasicSkip);
-		
+
 		Label lblLimit_1 = new Label(compositeBasicSearch, SWT.NONE);
 		lblLimit_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblLimit_1.setText("Limit"); //$NON-NLS-1$
-		
+
 		textBasicLimit = new Text(compositeBasicSearch, SWT.BORDER | SWT.RIGHT);
 		textBasicLimit.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection)	findBasic();
+				if (e.keyCode == SWT.Selection)
+					findBasic();
 			}
 		});
 		textBasicLimit.setText(defaultLimit); //$NON-NLS-1$
@@ -188,10 +190,10 @@ public class MongoDBTableEditor extends EditorPart {
 		GridData gd_textBasicLimit = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		gd_textBasicLimit.widthHint = 60;
 		textBasicLimit.setLayoutData(gd_textBasicLimit);
-		
+
 		Label label_1 = new Label(compositeBasicSearch, SWT.NONE);
 		label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Button btnExecutePlan = new Button(compositeBasicSearch, SWT.NONE);
 		btnExecutePlan.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -200,7 +202,7 @@ public class MongoDBTableEditor extends EditorPart {
 			}
 		});
 		btnExecutePlan.setText(Messages.MongoDBTableEditor_3);
-		
+
 		Button btnBasicLastCommandConsole = new Button(compositeBasicSearch, SWT.NONE);
 		btnBasicLastCommandConsole.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -209,15 +211,15 @@ public class MongoDBTableEditor extends EditorPart {
 			}
 		});
 		btnBasicLastCommandConsole.setText(Messages.MongoDBTableEditor_4);
-		
+
 		Label label_2 = new Label(compositeBasicSearch, SWT.NONE);
 		GridData gd_label_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_label_2.widthHint = 10;
 		label_2.setLayoutData(gd_label_2);
-		
-//		// Shortcut prefix
-//		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
-		
+
+		// // Shortcut prefix
+		// String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
+
 		Button btnBasicSearch = new Button(compositeBasicSearch, SWT.NONE);
 		btnBasicSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -225,8 +227,9 @@ public class MongoDBTableEditor extends EditorPart {
 				findBasic();
 			}
 		});
-		btnBasicSearch.setText(Messages.MongoDBTableEditor_5);//String.format(Messages.MongoDBTableEditor_5, prefixOSShortcut));
-		
+		btnBasicSearch.setText(Messages.MongoDBTableEditor_5);// String.format(Messages.MongoDBTableEditor_5,
+																// prefixOSShortcut));
+
 		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, initColName, true);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
@@ -235,26 +238,29 @@ public class MongoDBTableEditor extends EditorPart {
 		gl_compositeResult.marginHeight = 0;
 		gl_compositeResult.marginWidth = 0;
 		compositeResult.setLayout(gl_compositeResult);
-		
-		sashForm.setWeights(new int[] {50, 50});
-		
+
+		sashForm.setWeights(new int[] {
+				50,
+				50
+		});
+
 		initCollection();
 	}
-	
+
 	/**
 	 * collection을 초기화 한다.
 	 */
-	private void initCollection() {		
-		if(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC.equals(defaultFindPage)) {
+	private void initCollection() {
+		if (PreferenceDefine.MONGO_DEFAULT_FIND_BASIC.equals(defaultFindPage)) {
 			tabFolderSearchPanel.setSelection(0);
 		}
-		
-//		findBasic();
+
+		// findBasic();
 		compositeResult.find("", "", "", getCntSkip(), getCntLimit()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		
+
 		textBasicFind.setFocus();
 	}
-	
+
 	/**
 	 * 검색 기본
 	 */
@@ -264,39 +270,41 @@ public class MongoDBTableEditor extends EditorPart {
 		final String strBasicSort = textBasicSort.getText().trim();
 		final int cntSkip = getCntSkip();
 		final int cntLimit = getCntLimit();
-		
+
 		compositeResult.find(strBasicField, strBasicFind, strBasicSort, cntSkip, cntLimit);
 	}
-	
+
 	/**
 	 * text cnt skip
+	 * 
 	 * @return
 	 */
 	private int getCntSkip() {
 		try {
 			return Integer.parseInt(textBasicSkip.getText());
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return 0;
 		}
 
 	}
-	
+
 	/**
 	 * text cnt term
+	 * 
 	 * @return
 	 */
 	private int getCntLimit() {
 		try {
 			return Integer.parseInt(textBasicLimit.getText());
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return Integer.parseInt(defaultLimit);
 		}
 	}
-	
+
 	@Override
 	public void setFocus() {
 	}
-	
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 	}
@@ -309,20 +317,20 @@ public class MongoDBTableEditor extends EditorPart {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);
 		setInput(input);
-		
-		MongoDBEditorInput moInput = (MongoDBEditorInput)input;
+
+		MongoDBEditorInput moInput = (MongoDBEditorInput) input;
 		this.userDB = moInput.getUserDB();
 		this.initColName = moInput.getCollectionName();
 		this.columnInfo = new HashMap<String, CollectionFieldDAO>();
-		for (int i=0; i<moInput.getShowTableColumns().size(); i++) {
-			CollectionFieldDAO tcDAO = (CollectionFieldDAO)moInput.getShowTableColumns().get(i);
+		for (int i = 0; i < moInput.getShowTableColumns().size(); i++) {
+			CollectionFieldDAO tcDAO = (CollectionFieldDAO) moInput.getShowTableColumns().get(i);
 			columnInfo.put(tcDAO.getField(), tcDAO);
 
 			strColumns += tcDAO.getField() + ", "; //$NON-NLS-1$
 		}
 		strColumns = StringUtils.chompLast(strColumns, ", "); //$NON-NLS-1$
-		
-		setPartName(moInput.getName());		 //$NON-NLS-1$ //$NON-NLS-2$
+
+		setPartName(moInput.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

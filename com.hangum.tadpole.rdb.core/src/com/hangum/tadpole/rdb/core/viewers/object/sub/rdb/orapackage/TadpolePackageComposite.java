@@ -128,24 +128,23 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		
 		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		packageTableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableList = packageTableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
-		
+
 		packageTableViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 
 				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
-				if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ||
-						DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT ||
-						DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
-				)  return;
-				
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
-				
+				if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT
+						|| DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT)
+					return;
+
+				if (PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables()))
+					return;
+
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
@@ -154,11 +153,12 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					if (packageDAO != null) {
 						ProcedureFunctionDAO oraclePackage = (ProcedureFunctionDAO) packageDAO;
 
-						if (selectPackageName.equals(oraclePackage.getName())) return;
+						if (selectPackageName.equals(oraclePackage.getName()))
+							return;
 						selectPackageName = oraclePackage.getName();
 
 						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-						
+
 						showPackageProcFuncColumns = sqlClient.queryForList("packageBodyList", selectPackageName); //$NON-NLS-1$
 
 					} else
@@ -175,8 +175,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
-		});		
-		
+		});
 
 		packageComparator = new ProcedureFunctionComparator();
 		packageTableViewer.setSorter(packageComparator);
@@ -190,14 +189,12 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		packageFilter = new ProcedureFunctionViewFilter();
 		packageTableViewer.addFilter(packageFilter);
 
-		
-		
 		// columns
 		packageProcFuncViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableColumn = packageProcFuncViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
-		
+
 		packageProcFuncComparator = new DefaultComparator();
 		packageProcFuncViewer.setSorter(packageProcFuncComparator);
 
@@ -206,8 +203,10 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		packageProcFuncViewer.setContentProvider(new ArrayContentProvider());
 		packageProcFuncViewer.setLabelProvider(new PackageProcFuncLabelprovider());
 
-		
-		sashForm.setWeights(new int[] { 1, 1 });
+		sashForm.setWeights(new int[] {
+				1,
+				1
+		});
 
 		// creat action
 		createMenu();
@@ -222,7 +221,6 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
-
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -240,12 +238,12 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 				}
 
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 					manager.add(objectCompileAction);
 				}
 			}
 		});
-		
+
 		// package procedure/function list sub menu
 		final MenuManager subMenuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		subMenuMgr.setRemoveAllWhenShown(true);
@@ -275,14 +273,14 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				packageProcFuncComparator.setColumn(index);
-				
+
 				packageProcFuncViewer.getTable().setSortDirection(packageProcFuncComparator.getDirection());
 				packageProcFuncViewer.getTable().setSortColumn(packageProcFuncColumn.getColumn());
-				
+
 				packageProcFuncViewer.refresh();
 			}
 		};
-		
+
 		return selectionAdapter;
 	}
 
@@ -290,34 +288,37 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * package procedure function list
 	 */
 	protected void createProcedureFunctionListColumne(final TableViewer tv) {
-		String[] name = {"Type", "Name"};
-		int[] size = {120, 300};
+		String[] name = {
+				"Type",
+				"Name"
+		};
+		int[] size = {
+				120,
+				300
+		};
 
-		for (int i=0; i<name.length; i++) {
+		for (int i = 0; i < name.length; i++) {
 			TableViewerColumn packageProcFuncColumn = new TableViewerColumn(tv, SWT.LEFT);
 			packageProcFuncColumn.getColumn().setText(name[i]);
 			packageProcFuncColumn.getColumn().setWidth(size[i]);
 			packageProcFuncColumn.getColumn().addSelectionListener(getSelectionAdapter(packageProcFuncColumn, i));
 		}
-		
-		
+
 		packageProcFuncViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
-				if(!iss.isEmpty()) {
-					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)iss.getFirstElement();
-					
+				if (!iss.isEmpty()) {
+					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO) iss.getFirstElement();
+
 					ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
-					if(pm.isExecuted(procedureDAO, getUserDB())) {
+					if (pm.isExecuted(procedureDAO, getUserDB())) {
 						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
 						epd.open();
 					}
-				}	// end iss.isempty
+				} // end iss.isempty
 			}
 		});
-		
 
-	
 	}
 
 	/**
@@ -363,7 +364,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 			packageTableViewer.setInput(showPackage);
 			packageTableViewer.refresh();
-			
+
 			TableUtil.packTable(packageTableViewer.getTable());
 
 		} catch (Exception e) {
@@ -390,11 +391,11 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	public void setSearchText(String searchText) {
 		packageFilter.setSearchText(searchText);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		
+
 		creatAction_Package.dispose();
 		deleteAction_Package.dispose();
 		refreshAction_Package.dispose();
@@ -402,5 +403,5 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		executeAction_Procedure.dispose();
 		objectCompileAction.dispose();
 	}
-	
+
 }

@@ -32,16 +32,16 @@ public class MongoTestListCommand {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
-		
+
 		DBObject queryObj = new BasicDBObject("listCommands", 1);
 		CommandResult cr = db.command(queryObj);
-			
-		System.out.println("[ok]" + cr.ok() );
-		if(!cr.ok()) System.out.println("[Exception ]" + cr.getException().toString());
+
+		System.out.println("[ok]" + cr.ok());
+		if (!cr.ok())
+			System.out.println("[Exception ]" + cr.getException().toString());
 		System.out.println("[toString]" + JSONUtil.getPretty(cr.toString()));
-		System.out.println("[size]" + cr.size() );
-		
-		
+		System.out.println("[size]" + cr.size());
+
 		mongo.close();
 	}
 

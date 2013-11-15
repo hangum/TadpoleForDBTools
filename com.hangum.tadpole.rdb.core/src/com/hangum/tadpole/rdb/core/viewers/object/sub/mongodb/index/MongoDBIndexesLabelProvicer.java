@@ -22,26 +22,30 @@ import com.swtdesigner.ResourceManager;
  * index의 컬럼 정보
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBIndexesLabelProvicer extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/index_column.png"); //$NON-NLS-1$
+		if (columnIndex == 0)
+			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/index_column.png"); //$NON-NLS-1$
 		return null;
 	}
-	
+
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		MongoDBIndexDAO tc = (MongoDBIndexDAO) element;
-		
-		switch(columnIndex) {
-		case 0: return tc.getNs();
-		case 1: return tc.getName();
-		case 2: return new Boolean(tc.isUnique()).toString();
+
+		switch (columnIndex) {
+		case 0:
+			return tc.getNs();
+		case 1:
+			return tc.getName();
+		case 2:
+			return new Boolean(tc.isUnique()).toString();
 		}
-		
+
 		return "** not set column **";
 	}
 

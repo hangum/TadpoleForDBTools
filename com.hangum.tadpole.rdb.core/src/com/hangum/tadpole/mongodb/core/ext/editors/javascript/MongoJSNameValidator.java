@@ -20,30 +20,31 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongodb javascript name
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoJSNameValidator implements IInputValidator {
 	private static final Logger logger = Logger.getLogger(MongoJSNameValidator.class);
 	private UserDBDAO userDB;
 	private String fileName;
-	
+
 	public MongoJSNameValidator(UserDBDAO userDB) {
 		super();
 		this.userDB = userDB;
 	}
-	
+
 	@Override
 	public String isValid(String newText) {
 		int len = newText.length();
-		if(len < 5) return Messages.FileNameValidator_0;
-		
+		if (len < 5)
+			return Messages.FileNameValidator_0;
+
 		fileName = newText;
-				
+
 		return null;
 	}
-	
+
 	public String getFileName() {
 		return fileName;
 	}
-	
+
 }

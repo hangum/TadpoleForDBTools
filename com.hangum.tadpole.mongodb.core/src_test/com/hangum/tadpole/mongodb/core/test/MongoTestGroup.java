@@ -21,29 +21,23 @@ import com.mongodb.util.JSON;
  * 
  * http://greenfishblog.tistory.com/105 의 group 편
  * 
-{"dep_id":1, "salary":1}
-{"dep_id":1, "salary":2}
-{"dep_id":1, "salary":3}
-{"dep_id":2, "salary":10}
-{"dep_id":2, "salary":12}
-{"dep_id":2, "salary":16}
-{"dep_id":3, "salary":4}
-{"dep_id":3, "salary":1}
+ * {"dep_id":1, "salary":1} {"dep_id":1, "salary":2} {"dep_id":1, "salary":3}
+ * {"dep_id":2, "salary":10} {"dep_id":2, "salary":12} {"dep_id":2, "salary":16}
+ * {"dep_id":3, "salary":4} {"dep_id":3, "salary":1}
  * 
  * @author hangum
  * 
  */
 public class MongoTestGroup {
-	
-	static String key = "";//{ dep_id : true}";
+
+	static String key = "";// { dep_id : true}";
 	static String initial = "{sum_salary:0,avg:0,cnt:0}";
-	
-	static String condition = "";//"{dep_id : { $gt : 2 }}";
-	
+
+	static String condition = "";// "{dep_id : { $gt : 2 }}";
+
 	static String reduce = "function(obj,prev){prev.sum_salary += obj.salary;prev.cnt++;}";
-	
+
 	static String finalizer = "function(out){out.avg=out.sum_salary / out.cnt;}";
-	
 
 	/**
 	 * @param args
@@ -51,19 +45,17 @@ public class MongoTestGroup {
 	public static void main(String[] args) throws Exception {
 
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
-		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl,
-				ConAndAuthentication.port);
+		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
 		DBCollection coll = db.getCollection("group");
-		
-		DBObject dbObjectKey = (DBObject)JSON.parse(key);
+
+		DBObject dbObjectKey = (DBObject) JSON.parse(key);
 		DBObject dbObjectInitial = (DBObject) JSON.parse(initial);
-		DBObject dbObjectCondition = (DBObject)JSON.parse(condition);
+		DBObject dbObjectCondition = (DBObject) JSON.parse(condition);
 
 		DBObject resultDBObject = coll.group(dbObjectKey, dbObjectCondition, dbObjectInitial, reduce, finalizer);
 		System.out.println(resultDBObject);
-		
-		
+
 		mongo.close();
 
 		try {

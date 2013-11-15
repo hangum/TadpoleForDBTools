@@ -41,7 +41,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 로그인시에 사용하게될 디비의 abstract composite
  * 
  * @author hangum
- *
+ * 
  */
 public abstract class AbstractLoginComposite extends Composite {
 	/**
@@ -52,17 +52,17 @@ public abstract class AbstractLoginComposite extends Composite {
 
 	/** 현재 창의 저장, 수정 상태인지 상태. */
 	protected DATA_STATUS dataActionStatus = DATA_STATUS.NEW;
-	
+
 	protected String displayName = ""; //$NON-NLS-1$
-	
+
 	protected PreConnectionInfoGroup preDBInfo;
 	protected OthersConnectionRDBGroup othersConnectionInfo;
-	
+
 	protected String strOtherGroupName = "Other Group"; //$NON-NLS-1$
 	protected String selGroupName = ""; //$NON-NLS-1$
-	
+
 	protected List<String> listGroupName = new ArrayList<String>();
-	
+
 	// start table filters define
 	protected boolean isTableFilter = false;
 	protected String strTableFilterInclude = ""; //$NON-NLS-1$
@@ -74,33 +74,36 @@ public abstract class AbstractLoginComposite extends Composite {
 
 	protected UserDBDAO userDB;
 	protected DBDefine selectDB;
-	
+
 	/**
 	 * Create the composite.
-	 * @param displayName 
+	 * 
+	 * @param displayName
 	 * @param parent
 	 * @param style
 	 */
-	public AbstractLoginComposite(String displayName, DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO oldUserDB) {
+	public AbstractLoginComposite(String displayName, DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName,
+			UserDBDAO oldUserDB) {
 		super(parent, style);
-		
+
 		this.displayName = displayName;
 		this.selectDB = dbDefine;
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
 		this.oldUserDB = oldUserDB;
-		
+
 		crateComposite();
 	}
-	
+
 	/**
 	 * 현재 창의 저장, 수정 상태인지 상태.
+	 * 
 	 * @return
 	 */
 	public DATA_STATUS getDataActionStatus() {
 		return dataActionStatus;
 	}
-	
+
 	/**
 	 * dialog 상태 신규데이터 인지 수정상태인지.
 	 * 
@@ -109,7 +112,6 @@ public abstract class AbstractLoginComposite extends Composite {
 	public void setDataActionStatus(DATA_STATUS dalog_status) {
 		this.dataActionStatus = dalog_status;
 	}
-	
 
 	/**
 	 * 
@@ -117,12 +119,12 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 */
 	protected abstract void crateComposite();
-	
+
 	/**
-	 * 초기데이터 로드 및 처리 
+	 * 초기데이터 로드 및 처리
 	 */
 	protected abstract void init();
-	
+
 	/**
 	 * DB 연결
 	 * 
@@ -130,23 +132,24 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @throws Exception
 	 */
 	public boolean connection() {
-		if(!testConnection()) return false;
-		
+		if (!testConnection())
+			return false;
+
 		// 기존 데이터 업데이트
-		if(getDataActionStatus() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
-			
+		if (getDataActionStatus() == DATA_STATUS.MODIFY) {
+			if (!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13))return false; //$NON-NLS-1$
+
 			try {
 				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
 			} catch (Exception e) {
 				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
-				
+
 				return false;
 			}
-			
-		// 신규 데이터 저장.
+
+			// 신규 데이터 저장.
 		} else {
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
@@ -154,21 +157,21 @@ public abstract class AbstractLoginComposite extends Composite {
 				logger.error("Add new database", e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
-				
+
 				return false;
 			}
 		}
 
 		return true;
 	}
-	
+
 	/**
 	 * input validation
 	 * 
 	 * @return
 	 */
 	public abstract boolean isValidateInput();
-	
+
 	/**
 	 * test connection
 	 * 
@@ -176,18 +179,19 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @throws Exception
 	 */
 	public boolean testConnection() {
-		if(!makeUserDBDao()) return false;
-		if(!isValidateDatabase(userDB)) return false;
-		
+		if (!makeUserDBDao())
+			return false;
+		if (!isValidateDatabase(userDB))
+			return false;
+
 		return true;
 	}
-	
+
 	/**
-	 * 1. input validation
-	 * 2. make UserDBDAO
+	 * 1. input validation 2. make UserDBDAO
 	 */
 	public abstract boolean makeUserDBDao();
-	
+
 	/**
 	 * DB 가 정상 연결되었을때 객체
 	 * 
@@ -196,7 +200,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	public UserDBDAO getDBDTO() {
 		return userDB;
 	}
-	
+
 	/**
 	 * host, port에 ping
 	 * 
@@ -206,16 +210,16 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @deprecated 서버에따라 핑 서비스를 막아 놓는 경우도 있어, 막아 놓습니다.
 	 */
 	public boolean isPing(String host, String port) throws NumberFormatException {
-		
-//		TODO system 네트웍 속도가 느릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
+
+		// TODO system 네트웍 속도가 느릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
 		int stats = PingTest.ping(host, Integer.parseInt(port), 2500);
-		if(PingTest.SUCCESS == stats) {
+		if (PingTest.SUCCESS == stats) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * database의 중복 입력, 실제 연결할 수 있는지 검사합니다.
 	 * 
@@ -223,70 +227,74 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 */
 	protected boolean isValidateDatabase(final UserDBDAO userDB) {
-		if(!checkDatabase(userDB)) return false;
-		if(!isAlreadExistDB(userDB)) return false;
-		
+		if (!checkDatabase(userDB))
+			return false;
+		if (!isAlreadExistDB(userDB))
+			return false;
+
 		return true;
 	}
-	
+
 	/**
 	 * db가 이미 저장되어 있는지 검사합니다.
 	 * 
 	 * @param userDBDao
-	 * @param searchTable 디비의 테이블 검증을위한 쿼리 
+	 * @param searchTable
+	 *            디비의 테이블 검증을위한 쿼리
 	 * @return
 	 */
 	private boolean isAlreadExistDB(UserDBDAO userDBDao) {
 
 		try {
 			// 기존 데이터 업데이트
-			if(getDataActionStatus() == DATA_STATUS.MODIFY) {
+			if (getDataActionStatus() == DATA_STATUS.MODIFY) {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
-				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getSeq(), userDBDao, oldUserDB)) {
+				if (TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getSeq(), userDBDao, oldUserDB)) {
 					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
 					return false;
 				}
-				
+
 			} else {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
-				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getSeq(), userDBDao)) {
+				if (TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getSeq(), userDBDao)) {
 					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
-					
+
 					return false;
 				}
-				
+
 				// 이름은 틀리지만, 다른 정보는 같은 이미 등록된 디비 인지 검사합니다.
-				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), userDBDao)){
-					
+				if (TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), userDBDao)) {
+
 					// 중복 디비 등록시 사용자의 의견을 묻습니다.
-					if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {
+					if (MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {
 						return true;
-					} 
-					
+					}
+
 					return false;
 				}
 			}
-			
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			logger.error("DB Connecting... ", e); //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.DBLoginDialog_27 + "\n" + e.getMessage()); //$NON-NLS-1$
-			
+
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * db가 정상적으로 접속가능한지 검사합니다.
+	 * 
 	 * @param loginInfo
 	 * @return
 	 */
 	private boolean checkDatabase(UserDBDAO loginInfo) {
 		try {
-			if(DBDefine.getDBDefine(loginInfo) != DBDefine.MONGODB_DEFAULT) {
+			if (DBDefine.getDBDefine(loginInfo) != DBDefine.MONGODB_DEFAULT) {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
 				sqlClient.queryForList("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$
 			} else {
@@ -295,16 +303,16 @@ public abstract class AbstractLoginComposite extends Composite {
 		} catch (Exception e) {
 			// If UserDBDao is not invalid, remove UserDBDao at internal cache
 			TadpoleSQLManager.removeInstance(loginInfo);
-			
+
 			logger.error("DB Connecting... ", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_26, e.getMessage());//Messages.AbstractLoginComposite_1);
-			
+			MessageDialog.openError(null, Messages.DBLoginDialog_26, e.getMessage());// Messages.AbstractLoginComposite_1);
+
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * text message
 	 * 
@@ -313,16 +321,16 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 */
 	protected boolean checkTextCtl(Text text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
+		if ("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
 			text.setFocus();
-			
+
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * combo message
 	 * 
@@ -331,13 +339,13 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @return
 	 */
 	protected boolean checkTextCtl(Combo text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
+		if ("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
 			text.setFocus();
-			
+
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -349,7 +357,8 @@ public abstract class AbstractLoginComposite extends Composite {
 	}
 
 	/**
-	 * @param isTableFilter the isTableFilter to set
+	 * @param isTableFilter
+	 *            the isTableFilter to set
 	 */
 	public void setTableFilter(boolean isTableFilter) {
 		this.isTableFilter = isTableFilter;
@@ -363,7 +372,8 @@ public abstract class AbstractLoginComposite extends Composite {
 	}
 
 	/**
-	 * @param strTableFilterInclude the strTableFilterInclude to set
+	 * @param strTableFilterInclude
+	 *            the strTableFilterInclude to set
 	 */
 	public void setStrTableFilterInclude(String strTableFilterInclude) {
 		this.strTableFilterInclude = strTableFilterInclude;
@@ -377,30 +387,32 @@ public abstract class AbstractLoginComposite extends Composite {
 	}
 
 	/**
-	 * @param strTableFilterExclude the strTableFilterExclude to set
+	 * @param strTableFilterExclude
+	 *            the strTableFilterExclude to set
 	 */
 	public void setStrTableFilterExclude(String strTableFilterExclude) {
 		this.strTableFilterExclude = strTableFilterExclude;
 	}
-	
+
 	/**
 	 * display name
+	 * 
 	 * @return
 	 */
 	public String getDisplayName() {
 		return displayName;
 	}
-	
+
 	public DBDefine getSelectDB() {
 		return selectDB;
 	}
-	
+
 	public List<String> getListGroupName() {
 		return listGroupName;
 	}
-	
+
 	public String getSelGroupName() {
 		return selGroupName;
 	}
-	
+
 }

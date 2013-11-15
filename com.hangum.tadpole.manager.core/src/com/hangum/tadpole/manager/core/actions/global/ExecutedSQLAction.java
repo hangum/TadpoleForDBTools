@@ -33,7 +33,7 @@ import com.swtdesigner.ResourceManager;
  * 실행된 sql action
  * 
  * @author hangum
- *
+ * 
  */
 public class ExecutedSQLAction extends Action implements ISelectionListener, IWorkbenchAction {
 	/**
@@ -41,20 +41,20 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 	 */
 	private static final Logger logger = Logger.getLogger(ExecutedSQLAction.class);
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.ExecutedSQLAction"; //$NON-NLS-1$
-	
+
 	private final IWorkbenchWindow window;
 	private IStructuredSelection iss;
-	
+
 	public ExecutedSQLAction(IWorkbenchWindow window) {
 		this.window = window;
-		
+
 		setId(ID);
 		setText("Query History");
 		setToolTipText("Query History");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/queryhistory.png"));
 		setEnabled(true);
 	}
-	
+
 	@Override
 	public void run() {
 		try {
@@ -62,7 +62,7 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, ExecutedSQLEditor.ID);
 		} catch (PartInitException e) {
 			logger.error("ExecutedSQL Management editor", e); //$NON-NLS-1$
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "ExecutedSQL Management editor", errStatus); //$NON-NLS-1$
 		}

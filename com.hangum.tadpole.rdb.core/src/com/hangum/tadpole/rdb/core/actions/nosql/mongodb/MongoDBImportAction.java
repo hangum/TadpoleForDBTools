@@ -32,29 +32,28 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * tadpole db data to mongodb migration
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBImportAction implements IViewActionDelegate {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger
-			.getLogger(MongoDBImportAction.class);
+	private static final Logger logger = Logger.getLogger(MongoDBImportAction.class);
 
 	private IStructuredSelection sel;
-	
+
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		try {
 			MongoDBImportEditorInput input = new MongoDBImportEditorInput(userDB);
 			page.openEditor(input, MongoDBImportEditor.ID, false);
-			
+
 		} catch (PartInitException e) {
 			logger.error("Mongodb import", e);
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "MongoDB Import Exception", errStatus); //$NON-NLS-1$
 		}
@@ -62,7 +61,7 @@ public class MongoDBImportAction implements IViewActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
+		this.sel = (IStructuredSelection) selection;
 	}
 
 	@Override

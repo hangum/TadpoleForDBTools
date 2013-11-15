@@ -26,8 +26,7 @@ public class CubridExecutePlanTest {
 		PreparedStatement pstmt = null;
 		try {
 			Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-			conn = DriverManager.getConnection(
-					"jdbc:cubrid:localhost:33000:demodb:::", "", "");
+			conn = DriverManager.getConnection("jdbc:cubrid:localhost:33000:demodb:::", "", "");
 			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로
 										// 설정해야 함.
 			String sql = "select /*+ recompile */ host_nation from olympic where host_year = ?";

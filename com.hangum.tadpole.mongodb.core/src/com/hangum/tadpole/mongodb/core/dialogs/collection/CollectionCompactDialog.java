@@ -34,11 +34,11 @@ import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
- * Collection compact
- * reference : http://docs.mongodb.org/manual/reference/command/compact/
+ * Collection compact reference :
+ * http://docs.mongodb.org/manual/reference/command/compact/
  * 
  * @author hangum
- *
+ * 
  */
 public class CollectionCompactDialog extends Dialog {
 	/**
@@ -48,24 +48,25 @@ public class CollectionCompactDialog extends Dialog {
 
 	private UserDBDAO userDB;
 	private String collName;
-	
+
 	private Button btnForce;
 	private Text textCollName;
 	private Text textPaddingFactor;
 	private Text textPaddingBytes;
-	
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public CollectionCompactDialog(Shell parentShell, UserDBDAO userDB, String collName) {
 		super(parentShell);
-		
+
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		this.userDB = userDB;
 		this.collName = collName;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -74,6 +75,7 @@ public class CollectionCompactDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -84,84 +86,82 @@ public class CollectionCompactDialog extends Dialog {
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 2;
-		
+
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Label lblName = new Label(composite, SWT.NONE);
 		lblName.setText("Name");
-		
+
 		textCollName = new Text(composite, SWT.BORDER | SWT.READ_ONLY);
 		textCollName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(composite, SWT.NONE);
-		
+
 		btnForce = new Button(composite, SWT.CHECK);
 		btnForce.setText("force");
-		
+
 		Label lblPaddingFactor = new Label(composite, SWT.NONE);
 		lblPaddingFactor.setText("padding Factor");
-		
+
 		textPaddingFactor = new Text(composite, SWT.BORDER);
 		textPaddingFactor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textPaddingFactor.setText("0");
-		
+
 		Label lblPaddingBytes = new Label(composite, SWT.NONE);
 		lblPaddingBytes.setText("padding Bytes");
-		
+
 		textPaddingBytes = new Text(composite, SWT.BORDER);
 		textPaddingBytes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textPaddingBytes.setText("0");
-		
+
 		init();
 
 		return container;
 	}
-	
+
 	/**
 	 * initialize data
 	 */
 	private void init() {
 		textCollName.setText(collName);
 	}
-	
+
 	@Override
 	protected void okPressed() {
-		if(!NumberUtils.isNumber(textPaddingFactor.getText())) {
+		if (!NumberUtils.isNumber(textPaddingFactor.getText())) {
 			MessageDialog.openError(null, "Error", "padding factor is number.");
 			textPaddingFactor.setFocus();
 			return;
 		}
-		if(!NumberUtils.isNumber(textPaddingBytes.getText())) {
+		if (!NumberUtils.isNumber(textPaddingBytes.getText())) {
 			MessageDialog.openError(null, "Error", "padding Bytes is number.");
 			textPaddingBytes.setFocus();
 			return;
 		}
 
-		if(MessageDialog.openConfirm(null, "Question?", "Are you sure you want to run this command?  It can potentially lock the db for a long time.")) {
+		if (MessageDialog.openConfirm(null, "Question?", "Are you sure you want to run this command?  It can potentially lock the db for a long time.")) {
 			try {
-				String retMsg = MongoDBQuery.collCompact(userDB, 
-						collName, 
-						btnForce.getSelection(), 
-						NumberUtils.createInteger(textPaddingFactor.getText()), 
+				String retMsg = MongoDBQuery.collCompact(userDB, collName, btnForce.getSelection(), NumberUtils.createInteger(textPaddingFactor.getText()),
 						NumberUtils.createInteger(textPaddingBytes.getText()));
-				
+
 				MessageDialog.openInformation(null, "Successful", "Compact success");
-					
+
 			} catch (Exception e) {
 				logger.error("mongodb compact" + collName, e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", "Collection compact Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-				
+
 				return;
 			}
 		}
-		
+
 		super.okPressed();
 	}
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

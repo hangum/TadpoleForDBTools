@@ -22,7 +22,7 @@ import com.swtdesigner.ResourceManager;
  * procedure function 의 컬럼 정보
  * 
  * @author hangum
- *
+ * 
  */
 public class ProcedureFunctionLabelProvicer extends LabelProvider implements ITableLabelProvider {
 
@@ -30,35 +30,45 @@ public class ProcedureFunctionLabelProvicer extends LabelProvider implements ITa
 	public Image getColumnImage(Object element, int columnIndex) {
 		ProcedureFunctionDAO procDao = (ProcedureFunctionDAO) element;
 
-		switch(columnIndex) {
-		case 0: 
-			if (procDao.isValid()){
+		switch (columnIndex) {
+		case 0:
+			if (procDao.isValid()) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/normalcy.png");
-			}else{
+			} else {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/warning.png");
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		ProcedureFunctionDAO tc = (ProcedureFunctionDAO) element;
 
-		switch(columnIndex) {
-		case 0: return tc.getName();
-		case 1: return tc.getDefiner();
-		case 2: return tc.getModified();
-		case 3: return tc.getCreated();
-		case 4: return tc.getSecurity_type();
-		case 5: return tc.getComment();
-		case 6: return tc.getCharacter_set_client();
-		case 7: return tc.getCollation_connection();
-		case 8: return tc.getDatabase();
-		case 9: return tc.getCollation();
+		switch (columnIndex) {
+		case 0:
+			return tc.getName();
+		case 1:
+			return tc.getDefiner();
+		case 2:
+			return tc.getModified();
+		case 3:
+			return tc.getCreated();
+		case 4:
+			return tc.getSecurity_type();
+		case 5:
+			return tc.getComment();
+		case 6:
+			return tc.getCharacter_set_client();
+		case 7:
+			return tc.getCollation_connection();
+		case 8:
+			return tc.getDatabase();
+		case 9:
+			return tc.getCollation();
 		}
-		
+
 		return "** not set column **";
 	}
 

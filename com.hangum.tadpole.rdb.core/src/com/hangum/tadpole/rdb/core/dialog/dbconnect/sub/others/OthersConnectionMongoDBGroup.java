@@ -31,16 +31,16 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnect
  * Others connection info
  * 
  * @author hangum
- *
+ * 
  */
 public class OthersConnectionMongoDBGroup extends Group {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(OthersConnectionMongoDBGroup.class);
-	
+
 	private OthersConnectionInfoDAO otherConnectionDAO = new OthersConnectionInfoDAO();
-	
+
 	private Button btnTableFilters;
 	private Button btnReadOnlyConnection;
 	private Button btnTunneling;
@@ -48,6 +48,7 @@ public class OthersConnectionMongoDBGroup extends Group {
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -60,22 +61,22 @@ public class OthersConnectionMongoDBGroup extends Group {
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
-		
+
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setText(Messages.OthersConnectionMongoDBGroup_1);
-		
+
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
 		btnShowTables.setText(Messages.OthersConnectionMongoDBGroup_btnShowTables_text);
-		
+
 		btnTableFilters = new Button(this, SWT.NONE);
 		btnTableFilters.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				if(Dialog.OK == dialog.open()) {
+				if (Dialog.OK == dialog.open()) {
 					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
-					
+
 					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
 					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
 					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
@@ -83,7 +84,7 @@ public class OthersConnectionMongoDBGroup extends Group {
 			}
 		});
 		btnTableFilters.setText(Messages.OthersConnectionMongoDBGroup_2);
-		
+
 		btnTunneling = new Button(this, SWT.NONE);
 		btnTunneling.setEnabled(false);
 		btnTunneling.setText(Messages.OthersConnectionMongoDBGroup_3);
@@ -95,7 +96,7 @@ public class OthersConnectionMongoDBGroup extends Group {
 			}
 		});
 	}
-	
+
 	/**
 	 * other db connection info
 	 * 
@@ -104,10 +105,10 @@ public class OthersConnectionMongoDBGroup extends Group {
 	public OthersConnectionInfoDAO getOthersConnectionInfo() {
 		otherConnectionDAO.setReadOnlyConnection(getBtnReadOnlyConnection());
 		otherConnectionDAO.setShowTables(getBtnShowTables());
-		
+
 		return otherConnectionDAO;
 	}
-	
+
 	/**
 	 * @return the btnReadOnlyConnection
 	 */
@@ -116,19 +117,20 @@ public class OthersConnectionMongoDBGroup extends Group {
 	}
 
 	/**
-	 * @param btnReadOnlyConnection the btnReadOnlyConnection to set
+	 * @param btnReadOnlyConnection
+	 *            the btnReadOnlyConnection to set
 	 */
 	public void setBtnReadOnlyConnection(boolean btnReadOnlyConnection) {
 		this.btnReadOnlyConnection.setSelection(btnReadOnlyConnection);
 	}
-	
+
 	/**
 	 * @param btnShowTables
 	 */
 	public void setBtnShowTables(boolean btnShowTables) {
 		this.btnShowTables.setSelection(btnShowTables);
 	}
-	
+
 	/**
 	 * 
 	 * @return

@@ -19,7 +19,7 @@ import org.eclipse.rap.rwt.RWT;
  * session 관리
  * 
  * @author hangum
- *
+ * 
  */
 public class ManagerSession {
 	/**
@@ -27,37 +27,37 @@ public class ManagerSession {
 	 */
 	private static final Logger logger = Logger.getLogger(ManagerSession.class);
 
-//	/**
-//	 * session관리
-//	 */
-//	public static void sessionManager() {
-//		
-//		HttpSession rootSession = RWT.getRequest().getSession(true);				
-////		String id 				= session.getId();
-////		long createTime 		= session.getCreationTime();
-////		long lastAccessedTime 	= session.getLastAccessedTime();
-//		
-//		// 전체 로그인 된 session 리스트를 가져옵니다.
-//		HttpSessionContext context = rootSession.getSessionContext();
-//		Enumeration ids = context.getIds();
-//		
-//		int i =0;
-//		while(ids.hasMoreElements()) {
-//			i++;
-//			
-//			String id = (String) ids.nextElement();
-//				HttpSession session = context.getSession(id);
-//
-//			String user_id = (String)session.getValue("userID");
-//			logger.debug("(" + i + ")" + id );
-//			logger.debug("  userID = [" + user_id + "]");  
-//		}
-//		
-//		logger.debug("total connect user is " + i);
-//		
-//		ServletContext sc = RWT.getRequest().getServletContext();
-//	}
-	
+	// /**
+	// * session관리
+	// */
+	// public static void sessionManager() {
+	//
+	// HttpSession rootSession = RWT.getRequest().getSession(true);
+	// // String id = session.getId();
+	// // long createTime = session.getCreationTime();
+	// // long lastAccessedTime = session.getLastAccessedTime();
+	//
+	// // 전체 로그인 된 session 리스트를 가져옵니다.
+	// HttpSessionContext context = rootSession.getSessionContext();
+	// Enumeration ids = context.getIds();
+	//
+	// int i =0;
+	// while(ids.hasMoreElements()) {
+	// i++;
+	//
+	// String id = (String) ids.nextElement();
+	// HttpSession session = context.getSession(id);
+	//
+	// String user_id = (String)session.getValue("userID");
+	// logger.debug("(" + i + ")" + id );
+	// logger.debug("  userID = [" + user_id + "]");
+	// }
+	//
+	// logger.debug("total connect user is " + i);
+	//
+	// ServletContext sc = RWT.getRequest().getServletContext();
+	// }
+
 	/**
 	 * logout 처리를 합니다.
 	 */
@@ -65,9 +65,9 @@ public class ManagerSession {
 		try {
 			HttpSession sStore = RWT.getRequest().getSession();
 			sStore.invalidate();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			// ignore exception
 		}
 	}
-	
+
 }

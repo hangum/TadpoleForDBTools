@@ -11,10 +11,10 @@
 package com.hangum.tadpole.commons.help;
 
 /**
- * Define external help url 
+ * Define external help url
  * 
  * @author hangum
- *
+ * 
  */
 public class HelpDefine {
 

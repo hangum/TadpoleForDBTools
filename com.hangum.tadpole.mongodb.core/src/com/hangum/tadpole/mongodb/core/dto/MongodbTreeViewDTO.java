@@ -15,12 +15,11 @@ import java.util.List;
 
 import com.mongodb.DBObject;
 
-
 /**
  * mongodb tree view dto
  * 
  * @author hangum
- *
+ * 
  */
 public class MongodbTreeViewDTO {
 	/**
@@ -28,23 +27,23 @@ public class MongodbTreeViewDTO {
 	 */
 	private DBObject dbObject;
 	private String realKey;
-	
+
 	private String key;
 	private String value;
 	private String type;
-	
+
 	private List<MongodbTreeViewDTO> children = new ArrayList<MongodbTreeViewDTO>();
 	/**
 	 * parent
 	 */
 	private MongodbTreeViewDTO parent;
-	
-	public MongodbTreeViewDTO() {	
+
+	public MongodbTreeViewDTO() {
 	}
-	
+
 	public MongodbTreeViewDTO(DBObject dbObject, String key, String value, String type) {
 		this.dbObject = dbObject;
-		
+
 		this.key = key;
 		this.value = value;
 		this.type = type;
@@ -73,9 +72,7 @@ public class MongodbTreeViewDTO {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	
-	
+
 	public String getRealKey() {
 		return realKey;
 	}
@@ -87,10 +84,10 @@ public class MongodbTreeViewDTO {
 	public List<MongodbTreeViewDTO> getChildren() {
 		return children;
 	}
-	
+
 	public void setChildren(List<MongodbTreeViewDTO> children) {
 		this.children = children;
-		
+
 		for (MongodbTreeViewDTO mongodbTreeViewDTO : children) {
 			mongodbTreeViewDTO.parent = this;
 		}
@@ -103,9 +100,9 @@ public class MongodbTreeViewDTO {
 	public void setDbObject(DBObject dbObject) {
 		this.dbObject = dbObject;
 	}
-	
+
 	public MongodbTreeViewDTO getParent() {
 		return parent;
 	}
-	
+
 }

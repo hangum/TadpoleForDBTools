@@ -23,41 +23,48 @@ import com.swtdesigner.ResourceManager;
  * TABLE, VIEW의 컬럼 정보
  * 
  * @author hangum
- *
+ * 
  */
 public class TableColumnLabelprovider extends LabelProvider implements ITableLabelProvider {
-	
+
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		TableColumnDAO tc = (TableColumnDAO) element;
-		
-		if(columnIndex == 0)  {
-			if(PublicTadpoleDefine.isPK(tc.getKey())) {
+
+		if (columnIndex == 0) {
+			if (PublicTadpoleDefine.isPK(tc.getKey())) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/primary_key_column.png"); //$NON-NLS-1$
-			} else if(PublicTadpoleDefine.isFK(tc.getKey())) {
+			} else if (PublicTadpoleDefine.isFK(tc.getKey())) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/foreign_key_column.png"); //$NON-NLS-1$
-			} else if(PublicTadpoleDefine.isMUL(tc.getKey())) {
+			} else if (PublicTadpoleDefine.isMUL(tc.getKey())) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/multi_key_column.png"); //$NON-NLS-1$
 			}
-			
+
 			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/column.png"); //$NON-NLS-1$
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		TableColumnDAO tc = (TableColumnDAO) element;
-			
-		switch(columnIndex) {
-		case 0: return tc.getField();
-		case 1: return tc.getType();
-		case 2: return tc.getKey();
-		case 3: return tc.getComment();
-		case 4: return tc.getNull();
-		case 5: return tc.getDefault();
-		case 6: return tc.getExtra();
+
+		switch (columnIndex) {
+		case 0:
+			return tc.getField();
+		case 1:
+			return tc.getType();
+		case 2:
+			return tc.getKey();
+		case 3:
+			return tc.getComment();
+		case 4:
+			return tc.getNull();
+		case 5:
+			return tc.getDefault();
+		case 6:
+			return tc.getExtra();
 		}
 		return null;
 	}

@@ -22,13 +22,14 @@ public class TadpoleRDBEditorInput implements IEditorInput {
 	private UserDBDAO userDB;
 	private UserDBResourceDAO userDBERD;
 	private boolean allTable = false;
-	
+
 	/**
 	 * 신규로 작성
 	 * 
 	 * @param name
 	 * @param userDB
-	 * @param allTable 모든 테이블 유무
+	 * @param allTable
+	 *            모든 테이블 유무
 	 */
 	public TadpoleRDBEditorInput(String name, UserDBDAO userDB, boolean allTable) {
 		this.name = name;
@@ -38,6 +39,7 @@ public class TadpoleRDBEditorInput implements IEditorInput {
 
 	/**
 	 * 기존 erd 불러오기
+	 * 
 	 * @param name
 	 * @param userDBErd
 	 */
@@ -56,11 +58,12 @@ public class TadpoleRDBEditorInput implements IEditorInput {
 	public boolean exists() {
 		return (this.name != null);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if( !(obj instanceof TadpoleRDBEditorInput) ) return false;
-		return ((TadpoleRDBEditorInput)obj).getName().equals(getName());
+		if (!(obj instanceof TadpoleRDBEditorInput))
+			return false;
+		return ((TadpoleRDBEditorInput) obj).getName().equals(getName());
 	}
 
 	@Override
@@ -70,7 +73,7 @@ public class TadpoleRDBEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return allTable?"All "+ this.name:this.name;
+		return allTable ? "All " + this.name : this.name;
 	}
 
 	@Override
@@ -82,15 +85,15 @@ public class TadpoleRDBEditorInput implements IEditorInput {
 	public String getToolTipText() {
 		return userDB.getDisplay_name();
 	}
-	
+
 	public UserDBDAO getUserDBDAO() {
 		return userDB;
 	}
-	
+
 	public UserDBResourceDAO getUserDBERD() {
 		return userDBERD;
 	}
-	
+
 	public boolean isAllTable() {
 		return allTable;
 	}

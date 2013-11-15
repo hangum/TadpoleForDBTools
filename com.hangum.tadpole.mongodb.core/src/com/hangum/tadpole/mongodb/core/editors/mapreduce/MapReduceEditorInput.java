@@ -20,15 +20,15 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * MapReduce editor input
  * 
  * @author hangum
- *
+ * 
  */
 public class MapReduceEditorInput implements IEditorInput {
 	private UserDBDAO userDB;
 	private String colname;
-	
+
 	public MapReduceEditorInput(UserDBDAO userDB, String colName) {
 		this.userDB = userDB;
-		this.colname = colName;		
+		this.colname = colName;
 	}
 
 	public MapReduceEditorInput(UserDBDAO userDB) {
@@ -68,7 +68,7 @@ public class MapReduceEditorInput implements IEditorInput {
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
-	
+
 	public String getColname() {
 		return colname;
 	}

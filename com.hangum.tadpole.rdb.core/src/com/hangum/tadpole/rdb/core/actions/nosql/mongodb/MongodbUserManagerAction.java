@@ -23,9 +23,9 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * mongodb user manager action
- * 	
+ * 
  * @author hangum
- *
+ * 
  */
 public class MongodbUserManagerAction implements IViewActionDelegate {
 	/**
@@ -40,15 +40,15 @@ public class MongodbUserManagerAction implements IViewActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
 		UserManagerDialog dialog = new UserManagerDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 		dialog.open();
 	}
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.sel = (IStructuredSelection)selection;
+		this.sel = (IStructuredSelection) selection;
 	}
 
 	@Override

@@ -29,10 +29,10 @@ import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
- * generate sql dml statement     
+ * generate sql dml statement
  * 
  * @author hangum
- *
+ * 
  */
 public class GenerateSQLDMLAction extends GenerateSQLSelectAction {
 	/**
@@ -40,27 +40,28 @@ public class GenerateSQLDMLAction extends GenerateSQLSelectAction {
 	 */
 	private static final Logger logger = Logger.getLogger(GenerateSQLDMLAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateDMLtAction"; //$NON-NLS-1$
-	
+
 	public GenerateSQLDMLAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType, title);
 	}
-	
+
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		try {
-			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
-			
-			GenerateStatmentDMLDialog dialog = new GenerateStatmentDMLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, tableDAO.getName());
-			if(Dialog.OK == dialog.open()) {
+			TableDAO tableDAO = (TableDAO) selection.getFirstElement();
+
+			GenerateStatmentDMLDialog dialog = new GenerateStatmentDMLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB,
+					tableDAO.getName());
+			if (Dialog.OK == dialog.open()) {
 				FindEditorAndWriteQueryUtil.run(userDB, dialog.getDML());
 			}
-			
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			logger.error(Messages.GenerateSQLSelectAction_8, e);
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
 		}
 	}
-	
+
 }

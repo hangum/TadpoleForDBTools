@@ -16,13 +16,13 @@ import java.sql.Connection;
  * transaction dao
  * 
  * @author hangum
- *
+ * 
  */
 public class TransactionDAO {
 
 	private Connection conn;
 	private boolean isTransaction;
-	
+
 	public TransactionDAO() {
 	}
 
@@ -34,7 +34,8 @@ public class TransactionDAO {
 	}
 
 	/**
-	 * @param conn the conn to set
+	 * @param conn
+	 *            the conn to set
 	 */
 	public void setConn(Connection conn) {
 		this.conn = conn;
@@ -48,11 +49,11 @@ public class TransactionDAO {
 	}
 
 	/**
-	 * @param isTransaction the isTransaction to set
+	 * @param isTransaction
+	 *            the isTransaction to set
 	 */
 	public void setTransaction(boolean isTransaction) {
 		this.isTransaction = isTransaction;
 	}
-	
-	
+
 }

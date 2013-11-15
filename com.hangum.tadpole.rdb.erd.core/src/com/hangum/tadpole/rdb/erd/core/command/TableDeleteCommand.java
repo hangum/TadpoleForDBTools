@@ -26,7 +26,7 @@ import com.hangum.tadpole.rdb.model.Table;
  * Table model delete command
  * 
  * @author hangum
- *
+ * 
  */
 public class TableDeleteCommand extends Command {
 	private DB db;
@@ -38,13 +38,13 @@ public class TableDeleteCommand extends Command {
 	private Map<Relation, RelationKind> relationKindSource;
 	private Map<Relation, Table> relationTarget;
 	private Map<Relation, RelationKind> relationKindTarget;
-	
+
 	@Override
 	public void execute() {
 		detachRelatin();
 		table.setDb(null);
 	}
-	
+
 	/**
 	 * relation detach
 	 */
@@ -54,7 +54,7 @@ public class TableDeleteCommand extends Command {
 		relationKindSource = new HashMap<Relation, RelationKind>();
 		relationTarget = new HashMap<Relation, Table>();
 		relationKindTarget = new HashMap<Relation, RelationKind>();
-		
+
 		relations.addAll(table.getIncomingLinks());
 		relations.addAll(table.getOutgoingLinks());
 		for (Relation relation : relations) {
@@ -62,7 +62,7 @@ public class TableDeleteCommand extends Command {
 			relationKindSource.put(relation, relation.getSource_kind());
 			relationTarget.put(relation, relation.getTarget());
 			relationKindTarget.put(relation, relation.getTarget_kind());
-			
+
 			relation.setSource(null);
 			relation.setSource_kind(null);
 			relation.setTarget(null);
@@ -76,7 +76,7 @@ public class TableDeleteCommand extends Command {
 		reattachRelation();
 		table.setDb(db);
 	}
-	
+
 	/**
 	 * relation reattach
 	 */

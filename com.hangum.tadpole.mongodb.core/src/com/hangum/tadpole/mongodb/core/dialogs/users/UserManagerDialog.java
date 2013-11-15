@@ -53,29 +53,30 @@ import com.mongodb.DBObject;
  * 사용자를 추가합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class UserManagerDialog extends Dialog {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(UserManagerDialog.class);
-	
+
 	private static int DELETE_ID = IDialogConstants.CLIENT_ID + 1;
 	private static int APPEND_USER_ID = IDialogConstants.CLIENT_ID + 2;
-	
+
 	private UserDBDAO userDB;
 	private Text textID;
 	private Text textPassword;
 	private Text textRePassword;
 	private Button btnReadOnly;
 	private Composite composite;
-	
+
 	private TableViewer tableViewerUser;
 	private List<UserDTO> listUser = new ArrayList<UserDTO>();
-	
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public UserManagerDialog(Shell parentShell, UserDBDAO userDB) {
@@ -86,6 +87,7 @@ public class UserManagerDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -97,147 +99,148 @@ public class UserManagerDialog extends Dialog {
 		gridLayout.marginHeight = 3;
 		gridLayout.marginWidth = 3;
 		gridLayout.numColumns = 2;
-		
+
 		Label lblId = new Label(container, SWT.NONE);
 		lblId.setText(Messages.UserManagerDialog_0);
-		
+
 		textID = new Text(container, SWT.BORDER);
 		textID.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblPassword = new Label(container, SWT.NONE);
 		lblPassword.setText(Messages.UserManagerDialog_1);
-		
+
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Label lblRePassword = new Label(container, SWT.NONE);
 		lblRePassword.setText(Messages.UserManagerDialog_2);
-		
+
 		textRePassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(container, SWT.NONE);
-		
+
 		btnReadOnly = new Button(container, SWT.CHECK);
 		btnReadOnly.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnReadOnly.setText(Messages.UserManagerDialog_3);
-		
+
 		composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
+
 		Group grpUserList = new Group(composite, SWT.NONE);
 		grpUserList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpUserList.setText(Messages.UserManagerDialog_5);
 		grpUserList.setLayout(new GridLayout(1, false));
-		
+
 		tableViewerUser = new TableViewer(grpUserList, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewerUser.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		
+
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerUser, SWT.NONE);
 		TableColumn tblclmnId = tableViewerColumn.getColumn();
 		tblclmnId.setWidth(162);
 		tblclmnId.setText(Messages.UserManagerDialog_0);
-		
+
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerUser, SWT.NONE);
 		TableColumn tblclmnReadOnly = tableViewerColumn_1.getColumn();
 		tblclmnReadOnly.setWidth(100);
 		tblclmnReadOnly.setText(Messages.UserManagerDialog_3);
-		
+
 		tableViewerUser.setContentProvider(new ArrayContentProvider());
 		tableViewerUser.setLabelProvider(new UserListLabelProvider());
 		tableViewerUser.setInput(listUser);
-		
+
 		initTable();
-		
+
 		textID.setFocus();
 		return container;
 	}
-	
+
 	/**
 	 * table data
 	 */
 	private void initTable() {
-		listUser.clear();		
+		listUser.clear();
 		DBCursor userCursor = null;
-		
+
 		try {
 			userCursor = MongoDBQuery.getUser(userDB);
 			for (DBObject dbObject : userCursor) {
 				UserDTO user = new UserDTO();
-				user.setId( dbObject.get("user").toString() ); //$NON-NLS-1$
-				user.setReadOnly( dbObject.get("readOnly").toString() ); //$NON-NLS-1$
-				
+				user.setId(dbObject.get("user").toString()); //$NON-NLS-1$
+				user.setReadOnly(dbObject.get("readOnly").toString()); //$NON-NLS-1$
+
 				listUser.add(user);
 			}
-			
+
 			tableViewerUser.refresh();
-			
+
 		} catch (Exception e) {
 			logger.error("mongodb user list", e); //$NON-NLS-1$
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "Get User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		} finally {
-			if(userCursor != null) userCursor.close();
+			if (userCursor != null)
+				userCursor.close();
 		}
-		
+
 	}
-	
+
 	protected void buttonPressed(int buttonId) {
-		if(APPEND_USER_ID == buttonId) {
+		if (APPEND_USER_ID == buttonId) {
 			String id = textID.getText().trim();
 			String passwd = textPassword.getText().trim();
 			String passwd2 = textRePassword.getText().trim();
 			boolean isReadOnly = btnReadOnly.getSelection();
-			
-			if("".equals(id)) { //$NON-NLS-1$
+
+			if ("".equals(id)) { //$NON-NLS-1$
 				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_11); //$NON-NLS-1$
 				textID.setFocus();
 				return;
-			} else if("".equals(passwd)) { //$NON-NLS-1$
+			} else if ("".equals(passwd)) { //$NON-NLS-1$
 				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_14); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
-			} else if("".equals(passwd2)) { //$NON-NLS-1$
+			} else if ("".equals(passwd2)) { //$NON-NLS-1$
 				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_17); //$NON-NLS-1$
 				textRePassword.setFocus();
 				return;
-			} else if(!passwd.equals(passwd2)) {
+			} else if (!passwd.equals(passwd2)) {
 				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_19); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			}
-			
+
 			try {
 				MongoDBQuery.addUser(userDB, id, passwd2, isReadOnly);
-				
+
 				initTable();
 			} catch (Exception e) {
 				logger.error("mongodb add user", e); //$NON-NLS-1$
-				
+
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", "Add User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 
 				return;
 			}
-		} else if(buttonId == DELETE_ID) {
-			IStructuredSelection is = (IStructuredSelection)tableViewerUser.getSelection();
+		} else if (buttonId == DELETE_ID) {
+			IStructuredSelection is = (IStructuredSelection) tableViewerUser.getSelection();
 			Object selElement = is.getFirstElement();
-			
-			if(selElement instanceof UserDTO) {
-				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserManagerDialog_22)) { //$NON-NLS-1$
-					UserDTO user = (UserDTO)selElement;
+
+			if (selElement instanceof UserDTO) {
+				if (MessageDialog.openConfirm(null, "Confirm", Messages.UserManagerDialog_22)) { //$NON-NLS-1$
+					UserDTO user = (UserDTO) selElement;
 					try {
 						MongoDBQuery.deleteUser(userDB, user.getId());
-						
+
 						listUser.remove(user);
 						tableViewerUser.refresh();
 					} catch (Exception e1) {
 						logger.error("mongodb delete user", e1); //$NON-NLS-1$
-						
+
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
 						ExceptionDetailsErrorDialog.openError(null, "Error", "Delete User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 					}
@@ -245,21 +248,23 @@ public class UserManagerDialog extends Dialog {
 			} else {
 				MessageDialog.openError(null, "Confirm", "삭제 할 사용자를 선택하여 주세요.");
 			}
-		} else if(buttonId == IDialogConstants.CANCEL_ID) {
+		} else if (buttonId == IDialogConstants.CANCEL_ID) {
 			super.cancelPressed();
 		}
-		
+
 	}
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, DELETE_ID, Messages.UserManagerDialog_4, false);
 		createButton(parent, APPEND_USER_ID, "Add User", true);
-//		createButton(parent, IDialogConstants.OK_ID, Messages.UserManagerDialog_6, true);
+		// createButton(parent, IDialogConstants.OK_ID,
+		// Messages.UserManagerDialog_6, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.UserManagerDialog_7, false);
 	}
 
@@ -270,7 +275,7 @@ public class UserManagerDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(449, 379);
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -288,13 +293,15 @@ class UserListLabelProvider extends LabelProvider implements ITableLabelProvider
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		UserDTO dto = (UserDTO)element;
-		
-		switch(columnIndex) {
-		case 0: return dto.getId();
-		case 1: return dto.getReadOnly();		
+		UserDTO dto = (UserDTO) element;
+
+		switch (columnIndex) {
+		case 0:
+			return dto.getId();
+		case 1:
+			return dto.getReadOnly();
 		}
 		return "*** not set column ***"; //$NON-NLS-1$
 	}
-	
+
 }

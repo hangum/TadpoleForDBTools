@@ -31,27 +31,26 @@ public class MongoTestShardInformation {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
 		Mongo mongo = testMongoCls.connection("127.0.0.1", 27018);
 		DB db = mongo.getDB("admin");
-		
+
 		DBObject queryObj = new BasicDBObject("listshards", 1);
 		CommandResult cr = db.command(queryObj);
-		if(cr.ok()) {
+		if (cr.ok()) {
 			System.out.println(cr.toString());
-		} else {			
-			System.out.println( cr.getException());
+		} else {
+			System.out.println(cr.getException());
 		}
-		
-		// shard key는 인덱스가 생성 되어 있어야 합니당.
-		final BasicDBObject shardKey = new BasicDBObject("TrackId", 1);		
-		final BasicDBObject cmd = new BasicDBObject("shardcollection", "test.Track");
-        cmd.put("key", shardKey);
-        CommandResult result4 = mongo.getDB("admin").command(cmd);
 
-        System.out.println("====>" + result4);
+		// shard key는 인덱스가 생성 되어 있어야 합니당.
+		final BasicDBObject shardKey = new BasicDBObject("TrackId", 1);
+		final BasicDBObject cmd = new BasicDBObject("shardcollection", "test.Track");
+		cmd.put("key", shardKey);
+		CommandResult result4 = mongo.getDB("admin").command(cmd);
+
+		System.out.println("====>" + result4);
 	}
-	
-	
+
 	private static void shardCollection() {
-		
+
 	}
 
 }

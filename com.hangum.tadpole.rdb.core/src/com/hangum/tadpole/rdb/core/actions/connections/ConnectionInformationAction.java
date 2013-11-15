@@ -24,26 +24,26 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Connection Information
  * 
  * @author hangum
- *
+ * 
  */
 public class ConnectionInformationAction implements IViewActionDelegate {
 	protected IStructuredSelection sel;
-	
+
 	public ConnectionInformationAction() {
 		super();
 	}
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
 		DBInformationDialog dialog = new DBInformationDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 		dialog.open();
 	}
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		sel = (IStructuredSelection)selection;
+		sel = (IStructuredSelection) selection;
 	}
 
 	@Override

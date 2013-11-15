@@ -20,7 +20,7 @@ import com.hangum.tadpole.editor.core.rdb.texteditor.EditorExtension;
  * query editor browser function
  * 
  * @author hangum
- *
+ * 
  */
 public abstract class EditorBrowserFunctionService extends BrowserFunction implements IEditorBrowserFunction {
 	private static final Logger logger = Logger.getLogger(EditorBrowserFunctionService.class);
@@ -30,69 +30,69 @@ public abstract class EditorBrowserFunctionService extends BrowserFunction imple
 		super(browser, name);
 		this.editor = editor;
 	}
-	
+
 	@Override
 	public Object function(Object[] arguments) {
-		
+
 		int action = Integer.parseInt(arguments[0].toString());
-		
+
 		switch (action) {
-			case DIRTY_CHANGED:
-				return doDirtyChanged(arguments);
+		case DIRTY_CHANGED:
+			return doDirtyChanged(arguments);
 
-			case GET_INITIAL_CONTENT:
-				return doGetInitialContent(arguments);
+		case GET_INITIAL_CONTENT:
+			return doGetInitialContent(arguments);
 
-			case SAVE:
-				return doSave(arguments);
-				
-			case SAVE_S:
-				return doSaveS(arguments);
-			
-			case EXECUTE_QUERY:
-				doExecuteQuery(arguments);
-				break;
-				
-			case EXECUTE_ALL_QUERY:
-				doExecuteAllQuery(arguments);
-				break;
-				
-			case EXECUTE_PLAN:
-				doExecutePlan(arguments);
-				break;
-				
-			case EXECUTE_FORMAT:
-				return doExecuteFormat(arguments);
-				
-			case APPEND_QUERY_TEXT:
-				return appendQueryText(arguments);
-				
-			case APPEND_QUERY_TEXT_AT_POSITION:
-				return appendQueryText(arguments);
-				
-			case SQL_TO_APPLICATION:
-				sqlToApplication(arguments);
-				break;
-				
-			case DOWNLOAD_SQL:
-				downloadSQL(arguments);
-				break;
-				
-			case MOVE_HISTORY_PAGE:
-				moveHistoryPage();
-				break;
-				
-			case HELP_POPUP:
-				helpPopup();
-				break;
-				
-			default:
-				return null;
+		case SAVE:
+			return doSave(arguments);
+
+		case SAVE_S:
+			return doSaveS(arguments);
+
+		case EXECUTE_QUERY:
+			doExecuteQuery(arguments);
+			break;
+
+		case EXECUTE_ALL_QUERY:
+			doExecuteAllQuery(arguments);
+			break;
+
+		case EXECUTE_PLAN:
+			doExecutePlan(arguments);
+			break;
+
+		case EXECUTE_FORMAT:
+			return doExecuteFormat(arguments);
+
+		case APPEND_QUERY_TEXT:
+			return appendQueryText(arguments);
+
+		case APPEND_QUERY_TEXT_AT_POSITION:
+			return appendQueryText(arguments);
+
+		case SQL_TO_APPLICATION:
+			sqlToApplication(arguments);
+			break;
+
+		case DOWNLOAD_SQL:
+			downloadSQL(arguments);
+			break;
+
+		case MOVE_HISTORY_PAGE:
+			moveHistoryPage();
+			break;
+
+		case HELP_POPUP:
+			helpPopup();
+			break;
+
+		default:
+			return null;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * editor initialize
 	 * 
@@ -100,7 +100,7 @@ public abstract class EditorBrowserFunctionService extends BrowserFunction imple
 	 * @return
 	 */
 	protected abstract Object doGetInitialContent(Object[] arguments);
-	
+
 	/**
 	 * short cut save
 	 * 
@@ -110,7 +110,7 @@ public abstract class EditorBrowserFunctionService extends BrowserFunction imple
 	protected abstract Object doSave(Object[] arguments);
 
 	/**
-	 * short cut save called 
+	 * short cut save called
 	 * 
 	 * @param arguments
 	 * @return
@@ -138,14 +138,14 @@ public abstract class EditorBrowserFunctionService extends BrowserFunction imple
 	 * @param arguments
 	 */
 	protected abstract void doExecuteAllQuery(Object[] arguments);
-	
+
 	/**
 	 * execute plan
 	 * 
 	 * @param arguments
 	 */
 	protected abstract void doExecutePlan(Object[] arguments);
-	
+
 	/**
 	 * query format
 	 * 
@@ -153,15 +153,15 @@ public abstract class EditorBrowserFunctionService extends BrowserFunction imple
 	 * @return
 	 */
 	protected abstract String doExecuteFormat(Object[] arguments);
-	
+
 	/**
 	 * append query text
 	 * 
 	 * @param arguments
 	 * @return
 	 */
-	protected abstract  String appendQueryText(Object[] arguments);
-	
+	protected abstract String appendQueryText(Object[] arguments);
+
 	/**
 	 * sql to application text
 	 * 
@@ -171,17 +171,18 @@ public abstract class EditorBrowserFunctionService extends BrowserFunction imple
 
 	/**
 	 * download sql
+	 * 
 	 * @param arguments
 	 */
 	protected abstract void downloadSQL(Object[] arguments);
-	
+
 	/**
 	 * 쿼리 히스토리 페이지로 이동합니다.
 	 */
 	protected abstract void moveHistoryPage();
-	
+
 	/**
 	 * help popup
 	 */
-	protected abstract  void helpPopup();
+	protected abstract void helpPopup();
 }

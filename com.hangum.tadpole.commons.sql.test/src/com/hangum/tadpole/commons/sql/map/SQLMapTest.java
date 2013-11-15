@@ -22,34 +22,38 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * {@link com.hangum.tadpole.engine.map.SQLMap SQLMap을 테스트합니다.}
  * 
  * @author hangum
- *
+ * 
  */
 public class SQLMapTest extends TestCase {
 
 	/**
-	 * {@link com.hangum.tadpole.engine.map.SQLMap#getInstance(com.hangum.db.dao.system.UserDBDAO) SQLMap을 테스트합니다.}
+	 * {@link com.hangum.tadpole.engine.map.SQLMap#getInstance(com.hangum.db.dao.system.UserDBDAO)
+	 * SQLMap을 테스트합니다.}
 	 */
 	public void testGetInstance() {
 		java.sql.Connection javaConn = null;
-		
+
 		try {
-			
-			SqlMapClient client = SQLMap.getInstance( TadpoleSystemInitializer.getUserDB() );
+
+			SqlMapClient client = SQLMap.getInstance(TadpoleSystemInitializer.getUserDB());
 			javaConn = client.getDataSource().getConnection();
-			
+
 			Statement stmt = javaConn.createStatement();
-			
-			boolean result =  stmt.execute( "CREATE TABLE   sample_getinstance   (  id INTEGER NOT NULL,   name char(60) default NULL,  PRIMARY KEY (id)  );" );
-			
-			result =  stmt.execute( "DROP TABLE   sample_getinstance;" );	
-		
+
+			boolean result = stmt.execute("CREATE TABLE   sample_getinstance   (  id INTEGER NOT NULL,   name char(60) default NULL,  PRIMARY KEY (id)  );");
+
+			result = stmt.execute("DROP TABLE   sample_getinstance;");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("fail get instance");
 		} finally {
-			try { javaConn.close(); } catch(Exception e){}
+			try {
+				javaConn.close();
+			} catch (Exception e) {
+			}
 		}
-		
+
 	}
 
 }

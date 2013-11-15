@@ -163,7 +163,7 @@ public class ResourceManageEditor extends EditorPart {
 				textQuery.setText("");
 
 				initUI();
-				//reLoadResource();
+				// reLoadResource();
 			}
 		});
 
@@ -208,7 +208,10 @@ public class ResourceManageEditor extends EditorPart {
 		tableResource.setHeaderVisible(true);
 		tableResource.setLinesVisible(true);
 		tableResource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		sashForm_1.setWeights(new int[] { 230, 359 });
+		sashForm_1.setWeights(new int[] {
+				230,
+				359
+		});
 		tableViewer.addFilter(columnFilter);
 
 		Group grpQuery = new Group(sashForm, SWT.NONE);
@@ -235,7 +238,10 @@ public class ResourceManageEditor extends EditorPart {
 		comboViewer = new ComboViewer(composite, SWT.NONE);
 		comboShare = comboViewer.getCombo();
 		comboShare.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboShare.setItems(new String[] { "PUBLIC", "PRIVATE" });
+		comboShare.setItems(new String[] {
+				"PUBLIC",
+				"PRIVATE"
+		});
 
 		Label lblNewLabel_1 = new Label(composite, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -262,7 +268,7 @@ public class ResourceManageEditor extends EditorPart {
 					dao.setRes_title(textTitle.getText());
 					dao.setDescription(textDescription.getText());
 					TadpoleSystem_UserDBResource.updateResourceHeader(dao);
-					//reLoadResource();
+					// reLoadResource();
 					addUserResouceData();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -311,7 +317,10 @@ public class ResourceManageEditor extends EditorPart {
 
 		textQuery = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 6, 1));
-		sashForm.setWeights(new int[] { 179, 242 });
+		sashForm.setWeights(new int[] {
+				179,
+				242
+		});
 
 		createTableColumn();
 
@@ -331,13 +340,20 @@ public class ResourceManageEditor extends EditorPart {
 	private void createTableColumn() {
 
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
-		new TableViewColumnDefine("RESOURCE_SEQ", "ID", 50, SWT.RIGHT) //
-				, new TableViewColumnDefine("RESOURCE_TYPES", "Type", 60, SWT.CENTER) //
-				, new TableViewColumnDefine("USER_NAME", "User", 90, SWT.CENTER) //
-				, new TableViewColumnDefine("RES_TITLE", "Subject", 150, SWT.LEFT) //
-				, new TableViewColumnDefine("SHARED_TYPE", "Share", 70, SWT.CENTER) //
-				, new TableViewColumnDefine("CREATE_TIME", "Create", 100, SWT.CENTER) //
-				, new TableViewColumnDefine("DESCRIPTION", "Description", 250, SWT.LEFT) //
+				new TableViewColumnDefine("RESOURCE_SEQ", "ID", 50, SWT.RIGHT) //
+				,
+				new TableViewColumnDefine("RESOURCE_TYPES", "Type", 60, SWT.CENTER) //
+				,
+				new TableViewColumnDefine("USER_NAME", "User", 90, SWT.CENTER) //
+				,
+				new TableViewColumnDefine("RES_TITLE", "Subject", 150, SWT.LEFT) //
+				,
+				new TableViewColumnDefine("SHARED_TYPE", "Share", 70, SWT.CENTER) //
+				,
+				new TableViewColumnDefine("CREATE_TIME", "Create", 100, SWT.CENTER) //
+				,
+				new TableViewColumnDefine("DESCRIPTION", "Description", 250, SWT.LEFT)
+		//
 		};
 
 		ColumnHeaderCreator.createColumnHeader(tableViewer, tableColumnDef);
@@ -411,22 +427,22 @@ public class ResourceManageEditor extends EditorPart {
 
 				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
-		
-				// 기존 데이터베이스 목록에 리소스를 표시하기 위한  DAO를 사용하는 부분과 호환성을 위해 변환.
+
+				// 기존 데이터베이스 목록에 리소스를 표시하기 위한 DAO를 사용하는 부분과 호환성을 위해 변환.
 				// TODO : 리소스DAO를 하나로 통합할 필요 있음.
 				UserDBResourceDAO ad = new UserDBResourceDAO();
 				ad.setResource_seq((int) dao.getResource_seq());
 				ad.setName(dao.getRes_title());
 				ad.setParent(userDB);
-		
+
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if (PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
 					if (userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
-						 MongoDBERDViewAction ea = new MongoDBERDViewAction();
-						 ea.run(ad);
+						MongoDBERDViewAction ea = new MongoDBERDViewAction();
+						ea.run(ad);
 					} else {
-						 RDBERDViewAction ea = new RDBERDViewAction();
-						 ea.run(ad);
+						RDBERDViewAction ea = new RDBERDViewAction();
+						ea.run(ad);
 					}
 				} else if (PublicTadpoleDefine.RESOURCE_TYPE.SQL.toString().equals(dao.getResource_types())) {
 					QueryEditorAction qea = new QueryEditorAction();
@@ -435,7 +451,7 @@ public class ResourceManageEditor extends EditorPart {
 			}
 		});
 		reLoadResource();
-		
+
 	}
 
 	public void reLoadResource() {

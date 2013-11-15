@@ -32,23 +32,24 @@ public class DDLSourceViewerDialog extends Dialog {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(DDLSourceViewerDialog.class);
-	
-	private DDLSourceComposite ddlSourceComposite; 
-	
+
+	private DDLSourceComposite ddlSourceComposite;
+
 	private String tableName;
 	private String ddlSource;
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public DDLSourceViewerDialog(Shell parentShell, String tableName, String ddlSource) {
 		super(parentShell);
-		
+
 		this.tableName = tableName;
 		this.ddlSource = ddlSource;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -57,6 +58,7 @@ public class DDLSourceViewerDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -67,7 +69,7 @@ public class DDLSourceViewerDialog extends Dialog {
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
-		
+
 		ddlSourceComposite = new DDLSourceComposite(container, SWT.NONE, tableName, ddlSource);
 		ddlSourceComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		ddlSourceComposite.setLayout(new GridLayout(1, false));
@@ -77,6 +79,7 @@ public class DDLSourceViewerDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -84,14 +87,14 @@ public class DDLSourceViewerDialog extends Dialog {
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
 	}
 
-//	/**
-//	 * set ddl text
-//	 * 
-//	 * @param ddlText
-//	 */
-//	public void setDDLText(String ddlText) {
-//		ddlSourceComposite.setDdlSource(ddlText);
-//	}
+	// /**
+	// * set ddl text
+	// *
+	// * @param ddlText
+	// */
+	// public void setDDLText(String ddlText) {
+	// ddlSourceComposite.setDdlSource(ddlText);
+	// }
 
 	/**
 	 * Return the initial size of the dialog.

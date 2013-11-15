@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
  * MongoDB Utils
  * 
  * @author hangum
- *
+ * 
  */
 public class MongodbUtils {
 
@@ -28,13 +28,11 @@ public class MongodbUtils {
 	 * @return
 	 */
 	public static boolean isReferenceKey(String type, String field) {
-		if("ObjectId".equals(type) && 
-				!StringUtils.startsWith(field, "_id") && 
-				StringUtils.endsWith(field, "_id")) {
-			return true;			
+		if ("ObjectId".equals(type) && !StringUtils.startsWith(field, "_id") && StringUtils.endsWith(field, "_id")) {
+			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 }

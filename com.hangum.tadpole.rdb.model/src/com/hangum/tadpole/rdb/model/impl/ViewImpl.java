@@ -12,35 +12,33 @@
  */
 package com.hangum.tadpole.rdb.model.impl;
 
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import com.hangum.tadpole.rdb.model.RdbPackage;
 import com.hangum.tadpole.rdb.model.Table;
 import com.hangum.tadpole.rdb.model.View;
 
-import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>View</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>View</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.hangum.tadpole.rdb.model.impl.ViewImpl#getTableName <em>Table Name</em>}</li>
+ * <li>{@link com.hangum.tadpole.rdb.model.impl.ViewImpl#getTableName <em>Table
+ * Name</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ViewImpl extends TableImpl implements View {
 	/**
-	 * The cached value of the '{@link #getTableName() <em>Table Name</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTableName() <em>Table Name</em>}'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTableName()
 	 * @generated
 	 * @ordered
@@ -48,8 +46,8 @@ public class ViewImpl extends TableImpl implements View {
 	protected Table tableName;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ViewImpl() {
@@ -57,8 +55,8 @@ public class ViewImpl extends TableImpl implements View {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -67,14 +65,14 @@ public class ViewImpl extends TableImpl implements View {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Table getTableName() {
 		if (tableName != null && tableName.eIsProxy()) {
-			InternalEObject oldTableName = (InternalEObject)tableName;
-			tableName = (Table)eResolveProxy(oldTableName);
+			InternalEObject oldTableName = (InternalEObject) tableName;
+			tableName = (Table) eResolveProxy(oldTableName);
 			if (tableName != oldTableName) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RdbPackage.VIEW__TABLE_NAME, oldTableName, tableName));
@@ -84,8 +82,8 @@ public class ViewImpl extends TableImpl implements View {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Table basicGetTableName() {
@@ -93,8 +91,8 @@ public class ViewImpl extends TableImpl implements View {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setTableName(Table newTableName) {
@@ -105,62 +103,63 @@ public class ViewImpl extends TableImpl implements View {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case RdbPackage.VIEW__TABLE_NAME:
-				if (resolve) return getTableName();
-				return basicGetTableName();
+		case RdbPackage.VIEW__TABLE_NAME:
+			if (resolve)
+				return getTableName();
+			return basicGetTableName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case RdbPackage.VIEW__TABLE_NAME:
-				setTableName((Table)newValue);
-				return;
+		case RdbPackage.VIEW__TABLE_NAME:
+			setTableName((Table) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case RdbPackage.VIEW__TABLE_NAME:
-				setTableName((Table)null);
-				return;
+		case RdbPackage.VIEW__TABLE_NAME:
+			setTableName((Table) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case RdbPackage.VIEW__TABLE_NAME:
-				return tableName != null;
+		case RdbPackage.VIEW__TABLE_NAME:
+			return tableName != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //ViewImpl
+} // ViewImpl

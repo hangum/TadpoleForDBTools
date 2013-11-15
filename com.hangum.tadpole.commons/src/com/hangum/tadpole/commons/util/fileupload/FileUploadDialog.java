@@ -41,7 +41,7 @@ import com.hangum.tadpole.commons.Messages;
  * File Upload
  * 
  * @author hangum
- *
+ * 
  */
 public class FileUploadDialog extends Dialog {
 	/**
@@ -51,30 +51,32 @@ public class FileUploadDialog extends Dialog {
 
 	private FileUpload fileUpload;
 	private Label fileNameLabel;
-	
+
 	private Label lblUploadComplet;
-	
+
 	/** uploaded file list */
 	private List<String> listFiles = new ArrayList<String>();
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public FileUploadDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		
+
 		newShell.setText(Messages.FileUploadDialog_0);
 	}
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -85,19 +87,19 @@ public class FileUploadDialog extends Dialog {
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 2;
-		
+
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		compositeHead.setLayout(new GridLayout(4, false));
-		
+
 		Label lblFileupload = new Label(compositeHead, SWT.NONE);
 		lblFileupload.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFileupload.setText(Messages.FileUploadDialog_1);
-		
+
 		fileNameLabel = new Label(compositeHead, SWT.NONE);
 		fileNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		fileNameLabel.setText(""); //$NON-NLS-1$
-		
+
 		fileUpload = new FileUpload(compositeHead, SWT.BORDER);
 		fileUpload.setText(Messages.FileUploadDialog_3);
 		fileUpload.addSelectionListener(new SelectionAdapter() {
@@ -108,7 +110,7 @@ public class FileUploadDialog extends Dialog {
 			}
 		});
 		final String url = startUploadReceiver();
-		
+
 		Button uploadButton = new Button(compositeHead, SWT.NONE);
 		uploadButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -118,20 +120,20 @@ public class FileUploadDialog extends Dialog {
 			}
 		});
 		uploadButton.setText(Messages.FileUploadDialog_4);
-		
+
 		Composite compositeTail = new Composite(container, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeTail.setLayout(new GridLayout(2, false));
-		
+
 		lblUploadComplet = new Label(compositeTail, SWT.NONE);
 		lblUploadComplet.setText("");
 		lblUploadComplet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		return container;
 	}
-	
+
 	/**
-	 * 저장 이벤트 
+	 * 저장 이벤트
 	 * 
 	 * @return
 	 */
@@ -145,15 +147,15 @@ public class FileUploadDialog extends Dialog {
 			}
 
 			public void uploadFailed(FileUploadEvent event) {
-				addToLog( "upload failed: " + event.getFileName() ); //$NON-NLS-1$
+				addToLog("upload failed: " + event.getFileName()); //$NON-NLS-1$
 			}
 
-			public void uploadFinished(FileUploadEvent event) {				
-				addToLog( "received: " + event.getFileName() ); //$NON-NLS-1$
+			public void uploadFinished(FileUploadEvent event) {
+				addToLog("received: " + event.getFileName()); //$NON-NLS-1$
 				listFiles.add(receiver.getTargetFile().getAbsolutePath());
-			}			
+			}
 		});
-		
+
 		return uploadHandler.getUploadUrl();
 	}
 
@@ -170,25 +172,27 @@ public class FileUploadDialog extends Dialog {
 			}
 		});
 	}
-	
+
 	@Override
 	protected void okPressed() {
-		if(listFiles.size() == 0) {
+		if (listFiles.size() == 0) {
 			MessageDialog.openError(null, "Error", Messages.FileUploadDialog_8); //$NON-NLS-1$
 			return;
-//		} else {
-//			if(!MessageDialog.openConfirm(null, "Confirm", "파일을 업로드 하시겠습니까?")) return; 
+			// } else {
+			// if(!MessageDialog.openConfirm(null, "Confirm",
+			// "파일을 업로드 하시겠습니까?")) return;
 		}
 
 		super.okPressed();
 	}
-	
+
 	public List<String> getListFiles() {
 		return listFiles;
 	}
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

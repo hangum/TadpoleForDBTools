@@ -15,13 +15,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.commons.lang.StringUtils;
-
-
 /**
  * http://www.mkyong.com/oracle/oracle-stored-procedures-hello-world-examples/
+ * 
  * @author hangum
- *
+ * 
  */
 public class OracleProcedure {
 
@@ -29,22 +27,19 @@ public class OracleProcedure {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
-		String strQuery = "CREATE OR REPLACE PROCEDURE procOneINOUTParameter(genericParam IN OUT VARCHAR2) " +
-				 " IS " +
-				 "		BEGIN " +
-				 "		  genericParam := 'Hello World INOUT parameter ' || genericParam; " +
-				 "		END;";
-		
+
+		String strQuery = "CREATE OR REPLACE PROCEDURE procOneINOUTParameter(genericParam IN OUT VARCHAR2) " + " IS " + "		BEGIN "
+				+ "		  genericParam := 'Hello World INOUT parameter ' || genericParam; " + "		END;";
+
 		Connection conn = null;
-		Statement stmt  = null;
+		Statement stmt = null;
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.32.128:1521:XE", "HR", "tadpole");
 
 			stmt = conn.createStatement();
-	        int code = stmt.executeUpdate(strQuery);
-	        System.out.println("[result]" + code);
+			int code = stmt.executeUpdate(strQuery);
+			System.out.println("[result]" + code);
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -52,9 +47,11 @@ public class OracleProcedure {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt != null) stmt.close();
-				if(conn != null) conn.close();
-			} catch(Exception e) {
+				if (stmt != null)
+					stmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

@@ -36,7 +36,7 @@
 //import org.eclipselabs.mongo.query.query.WhereEntry;
 //import org.eclipselabs.mongo.query.query.impl.ModelImpl;
 //import org.eclipselabs.mongo.query.query.impl.OrWhereEntryImpl;
-//
+// 
 //import com.google.inject.Injector;
 //import com.hangum.db.dao.mysql.TableColumnDAO;
 //import com.hangum.tadpole.mongodb.core.Messages;
@@ -338,4 +338,4 @@
 ////		testQuery.query("rental_id<=10 and age>2", null);
 ////		
 ////	}
-//}
+// }

@@ -19,17 +19,19 @@ import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
  * Trigger의 FILTER
  * 
  * @author hangum
- *
+ * 
  */
 public class TriggerViewFilter extends TadpoleViewrFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if(searchString == null || searchString.length() == 0) return true;
-		
-		TriggerDAO dao  = (TriggerDAO)element;
-		if(dao.getTrigger().matches(searchString)) return true;
-		
+		if (searchString == null || searchString.length() == 0)
+			return true;
+
+		TriggerDAO dao = (TriggerDAO) element;
+		if (dao.getTrigger().matches(searchString))
+			return true;
+
 		return false;
 	}
 

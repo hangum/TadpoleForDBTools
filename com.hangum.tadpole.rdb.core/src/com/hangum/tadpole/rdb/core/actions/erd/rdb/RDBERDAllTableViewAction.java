@@ -33,7 +33,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * 전체 table의 erd를 그립니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class RDBERDAllTableViewAction implements IViewActionDelegate {
 	/**
@@ -47,20 +47,20 @@ public class RDBERDAllTableViewAction implements IViewActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
+		UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
+
 		run(userDB);
 	}
-	
+
 	public void run(UserDBDAO userDB) {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		try {
 			TadpoleRDBEditorInput input = new TadpoleRDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, true); //$NON-NLS-1$ //$NON-NLS-2$
 			page.openEditor(input, TadpoleRDBEditor.ID, false);
-			
+
 		} catch (PartInitException e) {
 			logger.error("erd editor opend", e); //$NON-NLS-1$
-			
+
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ERDAllTableViewAction_3, errStatus); //$NON-NLS-1$
 		}
@@ -68,11 +68,11 @@ public class RDBERDAllTableViewAction implements IViewActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		sel = (IStructuredSelection)selection;
+		sel = (IStructuredSelection) selection;
 	}
 
 	@Override
 	public void init(IViewPart view) {
 	}
-	
+
 }

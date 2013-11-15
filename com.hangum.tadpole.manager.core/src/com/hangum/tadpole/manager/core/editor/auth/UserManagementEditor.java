@@ -28,7 +28,7 @@ import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
  * 사용자 관리 에디터
  * 
  * @author hangum
- *
+ * 
  */
 public class UserManagementEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.manager.core.editor.usermanagement";
@@ -48,8 +48,8 @@ public class UserManagementEditor extends EditorPart {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);
 		setInput(input);
-		
-		UserManagementEditorInput qei = (UserManagementEditorInput)input;
+
+		UserManagementEditorInput qei = (UserManagementEditorInput) input;
 		setPartName(qei.getName());
 	}
 
@@ -71,7 +71,7 @@ public class UserManagementEditor extends EditorPart {
 		gl_parent.marginHeight = 3;
 		gl_parent.marginWidth = 3;
 		parent.setLayout(gl_parent);
-		
+
 		Composite compositeMain = new Composite(parent, SWT.NONE);
 		compositeMain.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -83,7 +83,7 @@ public class UserManagementEditor extends EditorPart {
 
 		CTabFolder tabFolder = new CTabFolder(compositeMain, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tabFolder.setBorderVisible(false);		
+		tabFolder.setBorderVisible(false);
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 
 		// Users
@@ -93,15 +93,15 @@ public class UserManagementEditor extends EditorPart {
 		Composite compositeUserList = new UserListComposite(tabFolder, SWT.NONE);
 		tbtmItem.setControl(compositeUserList);
 		compositeUserList.setLayout(new GridLayout(1, false));
-		
+
 		// DBs
 		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
 		tbtmDB.setText("DB List");
-		
+
 		Composite compositeDBList = new DBListComposite(tabFolder, SWT.NONE);
 		tbtmDB.setControl(compositeDBList);
 		compositeDBList.setLayout(new GridLayout(1, false));
-		
+
 		tabFolder.setSelection(0);
 	}
 

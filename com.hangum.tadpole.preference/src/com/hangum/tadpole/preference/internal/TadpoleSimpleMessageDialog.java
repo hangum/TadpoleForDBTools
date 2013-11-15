@@ -26,28 +26,30 @@ import org.eclipse.swt.widgets.Text;
  * tadpole message dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
-//	private static final Logger logger = Logger.getLogger(TadpoleSimpleMessageDialog.class);
+	// private static final Logger logger =
+	// Logger.getLogger(TadpoleSimpleMessageDialog.class);
 	private Text textMessage;
-	
+
 	String title;
 	String message;
 	private Label lblMessage;
-	
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public TadpoleSimpleMessageDialog(Shell parentShell, String title, String message) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.title = title;
 		this.message = message;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -56,6 +58,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -66,11 +69,11 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		lblMessage = new Label(container, SWT.NONE);
 		lblMessage.setText("Message");
 		new Label(container, SWT.NONE);
-		
+
 		textMessage = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
@@ -80,6 +83,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

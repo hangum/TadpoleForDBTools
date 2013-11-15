@@ -69,7 +69,7 @@ import com.swtdesigner.ResourceManager;
  * MongoDB ServerSide Java Script editor
  * 
  * @author hangum
- *
+ * 
  */
 public class ServerSideJavaScriptEditor extends EditorPart {
 	/**
@@ -77,28 +77,28 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 */
 	private static final Logger logger = Logger.getLogger(ServerSideJavaScriptEditor.class);
 	public static final String ID = "com.hangum.tadpole.mongodb.core.ext.editor.javascript";
-	
+
 	private UserDBDAO userDB;
 	private MongoDBServerSideJavaScriptDAO javascriptDAO;
-	
+
 	/** save field */
 	private boolean isFirstLoad = false;
 	private boolean isDirty = false;
-	
+
 	private static final String URL = "orion/tadpole/editor/mongoDBEmbeddededitor.html"; //$NON-NLS-1$
 	private Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */
 	private JavaScriptBrowserFunctionService editorService;
-	
+
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
-	
+
 	/** content download를 위한 더미 composite */
-    private Composite compositeDumy;
+	private Composite compositeDumy;
 	private String save_id;
 	private Text textResultJavaScript;
 	private CTabFolder tabFolder;
-	
+
 	public ServerSideJavaScriptEditor() {
 		super();
 	}
@@ -111,10 +111,10 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		gl_parent.marginHeight = 2;
 		gl_parent.marginWidth = 2;
 		parent.setLayout(gl_parent);
-		
+
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		Composite compositeBody = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(1, false);
 		gl_compositeBody.verticalSpacing = 1;
@@ -123,22 +123,22 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		gl_compositeBody.marginWidth = 1;
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		ToolBar toolBar = new ToolBar(compositeBody, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		// Shortcut prefix
 		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
-		
+
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
 		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
-		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-			tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getDb() + " ]"); //$NON-NLS-1$
+		if (PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+			tltmConnectURL.setText("Connect [ " + userDB.getHost() + ":" + userDB.getDb() + " ]"); //$NON-NLS-1$
 		} else {
 			tltmConnectURL.setText("Connect Information"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
+
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -146,9 +146,9 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 				dialog.open();
 			}
 		});
-		
+
 		new ToolItem(toolBar, SWT.SEPARATOR);
-		
+
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, prefixOSShortcut));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb/mongo-executable.png"));
@@ -158,9 +158,9 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
 			}
 		});
-		
+
 		new ToolItem(toolBar, SWT.SEPARATOR);
-		
+
 		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
 		tltmDownload.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/download_query.png"));
 		tltmDownload.addSelectionListener(new SelectionAdapter() {
@@ -170,9 +170,9 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			}
 		});
 		tltmDownload.setToolTipText("Download JavaScript"); //$NON-NLS-1$
-		
+
 		new ToolItem(toolBar, SWT.SEPARATOR);
-		
+
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
 		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png"));
 		tltmHelp.addSelectionListener(new SelectionAdapter() {
@@ -183,12 +183,12 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			}
 		});
 		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
-		
+
 		browserQueryEditor = new Browser(compositeBody, SWT.BORDER);
 		browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		addBrowserHandler();
 		browserQueryEditor.setUrl(URL);
-		
+
 		Composite compositeTail = new Composite(sashForm, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeTail = new GridLayout(1, false);
@@ -197,14 +197,14 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		gl_compositeTail.marginHeight = 1;
 		gl_compositeTail.marginWidth = 1;
 		compositeTail.setLayout(gl_compositeTail);
-		
+
 		tabFolder = new CTabFolder(compositeTail, SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
-		
+
 		CTabItem tbtmEvalJavaScript = new CTabItem(tabFolder, SWT.NONE);
 		tbtmEvalJavaScript.setText(Messages.ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1);
-		
+
 		Composite compositeTabJS = new Composite(tabFolder, SWT.NONE);
 		tbtmEvalJavaScript.setControl(compositeTabJS);
 		GridLayout gl_compositeTabJS = new GridLayout(1, false);
@@ -216,43 +216,46 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 
 		textResultJavaScript = new Text(compositeTabJS, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textResultJavaScript.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		compositeDumy = new Composite(compositeTabJS, SWT.NONE);
 		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeDumy.setLayout(new GridLayout(1, false));
-	
-		sashForm.setWeights(new int[] {7, 3});
-		
+
+		sashForm.setWeights(new int[] {
+				7,
+				3
+		});
+
 		initEditor();
 	}
-	
+
 	/**
 	 * 데이터 초기화 합니다.
 	 */
 	private void initEditor() {
 		registerServiceHandler();
-		tabFolder.setSelection(0);		
+		tabFolder.setSelection(0);
 	}
-	
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		if(javascriptDAO == null) {
+		if (javascriptDAO == null) {
 			save_id = getJSName();
 		}
-	
-		if(!"".equals(save_id)) {
+
+		if (!"".equals(save_id)) {
 			try {
 				Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
-				if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
+				if (!(resultObj instanceof Boolean && (Boolean) resultObj)) {
 					monitor.setCanceled(true);
 				}
-			} catch(SWTException e) {
+			} catch (SWTException e) {
 				logger.error(RequestInfoUtils.requestInfo("doSave exception", SessionManager.getEMAIL()), e); //$NON-NLS-1$
 				monitor.setCanceled(true);
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * new java script name
 	 * 
@@ -260,39 +263,41 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 */
 	private String getJSName() {
 		MongoJSNameValidator fv = new MongoJSNameValidator(userDB);
-		
-		InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Save", "Java Script Name", userDB.getDisplay_name(), fv); //$NON-NLS-1$
+
+		InputDialog dlg = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+				"Save", "Java Script Name", userDB.getDisplay_name(), fv); //$NON-NLS-1$
 		if (dlg.open() == Window.OK) {
 			return fv.getFileName();
 		} else {
 			return "";
 		}
 	}
-	
+
 	/**
 	 * 실제 저장
+	 * 
 	 * @param newContents
 	 * @return
 	 */
 	public boolean performSave(String newContents) {
-		if(javascriptDAO == null) {
+		if (javascriptDAO == null) {
 			save_id = getJSName();
-	
-			if(!"".equals(save_id)) {
+
+			if (!"".equals(save_id)) {
 				MongoDBServerSideJavaScriptDAO javaScriptDAO = new MongoDBServerSideJavaScriptDAO(save_id, newContents);
 				try {
 					MongoDBQuery.insertJavaScript(userDB, javaScriptDAO);
-					
+
 					setPartName(save_id);
 					setDirty(false);
-					
+
 					// explorer refresh합니다.
 					referExplorer();
-				} catch(Exception e) {
+				} catch (Exception e) {
 					logger.error("save javascript", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
-					
+
 					return false;
 				}
 			}
@@ -300,20 +305,20 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			try {
 				MongoDBQuery.updateJavaScript(userDB, javascriptDAO.getName(), newContents);
 				setDirty(false);
-				
+
 				// explorer refresh합니다.
 				referExplorer();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				logger.error("save javascript", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
-				
+
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	/**
 	 * refresh explorer
 	 * 
@@ -321,7 +326,8 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	private void referExplorer() {
 		// explorer refresh합니다.
 		ExplorerViewer ev = FindTadpoleViewerOrEditor.getExplorerView(userDB);
-		if(ev != null) ev.refreshJS(true);
+		if (ev != null)
+			ev.refreshJS(true);
 	}
 
 	@Override
@@ -332,74 +338,77 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);
 		setInput(input);
-		
-		ServerSideJavaScriptEditorInput qei = (ServerSideJavaScriptEditorInput)input;
+
+		ServerSideJavaScriptEditorInput qei = (ServerSideJavaScriptEditorInput) input;
 		this.userDB = qei.getUserDB();
 		this.javascriptDAO = qei.getJavascriptDAO();
-		if(this.javascriptDAO == null) {
+		if (this.javascriptDAO == null) {
 			setPartName(qei.getName());
 		} else {
 			setPartName(javascriptDAO.getName());
 			isFirstLoad = true;
-		} 
+		}
 	}
-	
+
 	@Override
 	public boolean isDirty() {
 		return isDirty;
 	}
-	
+
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
-	
+
 	/**
-	 * browser initialize 
+	 * browser initialize
 	 */
 	private void addBrowserHandler() {
 		registerBrowserFunctions();
-		
-		browserQueryEditor.addProgressListener( new ProgressListener() {
-			public void completed( ProgressEvent event ) {
+
+		browserQueryEditor.addProgressListener(new ProgressListener() {
+			public void completed(ProgressEvent event) {
 				try {
 					browserQueryEditor.evaluate("getEditor();");
-				} catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
 				String callCommand = TadpoleEditorUtils.makeCommand("mapreduce.js", getInputJavaScriptContent(), "");
 				browserEvaluate(callCommand);
 			}
-			public void changed( ProgressEvent event ) {}
+
+			public void changed(ProgressEvent event) {
+			}
 		});
 	}
-	
-	/** 
+
+	/**
 	 * browser function call
 	 * 
-	 *  @param command browser
+	 * @param command
+	 *            browser
 	 */
 	public void browserEvaluate(String command) {
 		try {
 			browserQueryEditor.evaluate(command);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", SessionManager.getEMAIL()), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
+
 	/**
 	 * register browser function
 	 */
 	private void registerBrowserFunctions() {
 		editorService = new JavaScriptBrowserFunctionService(browserQueryEditor, JavaScriptBrowserFunctionService.EDITOR_SERVICE_HANDLER, this);
 	}
-	
+
 	/**
 	 * unregister browser function
 	 */
 	private void unregisterBrowserFunctions() {
-		if(editorService != null && editorService instanceof BrowserFunction) {
+		if (editorService != null && editorService instanceof BrowserFunction) {
 			editorService.dispose();
 		}
 	}
@@ -407,29 +416,33 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	@Override
 	public void setFocus() {
 	}
-	
+
 	@Override
 	public void dispose() {
 		unregisterBrowserFunctions();
 		unregisterServiceHandler();
 		super.dispose();
 	}
-	
+
 	/**
 	 * init javascript name
+	 * 
 	 * @return
 	 */
 	public String getInputJavaScriptName() {
-		if(javascriptDAO == null) return "";
+		if (javascriptDAO == null)
+			return "";
 		return javascriptDAO.getName();
 	}
 
 	/**
 	 * init javascript content
+	 * 
 	 * @return
 	 */
 	public String getInputJavaScriptContent() {
-		if(javascriptDAO == null) return "";
+		if (javascriptDAO == null)
+			return "";
 		return javascriptDAO.getContent();
 	}
 
@@ -442,10 +455,10 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	public void downloadJavaScript(String fileName, String newContents) {
 		downloadServiceHandler.setName(fileName); //$NON-NLS-1$
 		downloadServiceHandler.setByteContent(newContents.getBytes());
-		
+
 		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
 	}
-	
+
 	/** registery service handler */
 	private void registerServiceHandler() {
 		downloadServiceHandler = new DownloadServiceHandler();
@@ -457,46 +470,47 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
 		downloadServiceHandler = null;
 	}
-	
+
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
 
 	/**
 	 * save property change
+	 * 
 	 * @param boolean1
 	 */
 	public void setDirty(Boolean boolean1) {
-		if(!isFirstLoad) {
-			if(isDirty != boolean1) {
+		if (!isFirstLoad) {
+			if (isDirty != boolean1) {
 				isDirty = boolean1;
 				firePropertyChange(PROP_DIRTY);
 			}
-		}		
-		
+		}
+
 		isFirstLoad = false;
 	}
 
 	/**
-	 * execute javascript eval 
+	 * execute javascript eval
 	 * 
 	 * @param strJavaScript
 	 */
 	public void executeEval(String strJavaScript) {
-		Object[] arryArgs = null;//{25, 34};
+		Object[] arryArgs = null;// {25, 34};
 		logger.debug("[original javascript]" + strJavaScript);
-		
-		// argument 갯수를 입력받기 
+
+		// argument 갯수를 입력받기
 		String strArgument = StringUtils.substringBetween(strJavaScript, "function", "{");
-		if(strArgument != null) {
-			int intArgumentCount = StringUtils.countMatches(strArgument, ",")+1;
+		if (strArgument != null) {
+			int intArgumentCount = StringUtils.countMatches(strArgument, ",") + 1;
 			EvalInputDialog dialog = new EvalInputDialog(getSite().getShell(), intArgumentCount);
-			if(Dialog.OK == dialog.open()) {
+			if (Dialog.OK == dialog.open()) {
 				arryArgs = dialog.getInputObject();
-				
+
 				try {
-					Object objResult = MongoDBQuery.executeEval(getUserDB(), strJavaScript, arryArgs);			
-					textResultJavaScript.setText(objResult == null?"":objResult.toString());
+					Object objResult = MongoDBQuery.executeEval(getUserDB(), strJavaScript, arryArgs);
+					textResultJavaScript.setText(objResult == null ? "" : objResult.toString());
 				} catch (Exception e) {
 					textResultJavaScript.setText("");
 					logger.error("execute javascript", e); //$NON-NLS-1$
@@ -505,6 +519,6 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 				}
 			}
 		}
-				
+
 	}
 }

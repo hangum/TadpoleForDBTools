@@ -23,7 +23,8 @@ public class UpdateEx {
 	public static Mongo m = null;
 
 	public static void dropCollection(String name) throws Exception {
-		if (m == null) m = new Mongo(MangoDB_IP);
+		if (m == null)
+			m = new Mongo(MangoDB_IP);
 		DB db = m.getDB(DB_NAME);
 		DBCollection coll = db.getCollection(name);
 		coll.drop();
@@ -38,8 +39,7 @@ public class UpdateEx {
 		return coll;
 	}
 
-	public static void insert(DBCollection coll, String hosting, String type,
-			int clients) {
+	public static void insert(DBCollection coll, String hosting, String type, int clients) {
 		BasicDBObject doc = new BasicDBObject();
 		doc.put("hosting", hosting);
 		doc.put("type", type);
@@ -62,47 +62,39 @@ public class UpdateEx {
 		newDocument.put("type", "shared host");
 		newDocument.put("clients", 111);
 
-		collection.update(new BasicDBObject().append("hosting", "hostB"),
-				newDocument);
+		collection.update(new BasicDBObject().append("hosting", "hostB"), newDocument);
 	}
 
 	// Find hosting = hostB, update the "clients" value by increasing its value
 	public static void exam02(DBCollection collection) throws Exception {
-		BasicDBObject newDocument = new BasicDBObject().append("$inc",
-				new BasicDBObject().append("clients", 99));
+		BasicDBObject newDocument = new BasicDBObject().append("$inc", new BasicDBObject().append("clients", 99));
 
-		collection.update(new BasicDBObject().append("hosting", "hostB"),
-				newDocument);
+		collection.update(new BasicDBObject().append("hosting", "hostB"), newDocument);
 	}
 
 	// Find hosting = hostA, update the “type” from “vps” to “dedicated server”.
 	public static void exam03(DBCollection collection) throws Exception {
-		BasicDBObject newDocument3 = new BasicDBObject().append("$set",
-				new BasicDBObject().append("type", "dedicated server"));
+		BasicDBObject newDocument3 = new BasicDBObject().append("$set", new BasicDBObject().append("type", "dedicated server"));
 
-		collection.update(new BasicDBObject().append("hosting", "hostA"),
-				newDocument3);
+		collection.update(new BasicDBObject().append("hosting", "hostA"), newDocument3);
 	}
 
 	public static void exam04(DBCollection collection) throws Exception {
 		// find type = vps , update all matched documents , "clients" value to
 		// 888
-		BasicDBObject updateQuery = new BasicDBObject().append("$set",
-				new BasicDBObject().append("clients", "888"));
+		BasicDBObject updateQuery = new BasicDBObject().append("$set", new BasicDBObject().append("clients", "888"));
 
 		// both methods are doing the same thing.
 		// collection.updateMulti(new BasicDBObject().append("type", "vps"),
 		// updateQuery);
-		collection.update(new BasicDBObject().append("type", "vps"),
-				updateQuery, false, true);
+		collection.update(new BasicDBObject().append("type", "vps"), updateQuery, false, true);
 	}
-	
+
 	public static void exam05(DBCollection collection) throws Exception {
 		// find type = vps , update all matched documents , "clients" value to
 		// 888
-		BasicDBObject updateQuery = new BasicDBObject().append("$set",
-				new BasicDBObject().append("clients", "11111"));
-		
+		BasicDBObject updateQuery = new BasicDBObject().append("$set", new BasicDBObject().append("clients", "11111"));
+
 		BasicDBObject findObj = new BasicDBObject().append("hosting", "hostA");
 		DBObject dbObj = collection.find(findObj).next();
 		System.out.println(dbObj);
@@ -114,11 +106,12 @@ public class UpdateEx {
 	}
 
 	public static void main(String args[]) throws Exception {
-//		dropCollection("tutorial_update"); // Reset collection "tutorial_update"
+		// dropCollection("tutorial_update"); // Reset collection
+		// "tutorial_update"
 		DBCollection coll = retvCollection("tutorial_update");
 		insert(coll, "hostA", "vps", 1000);
-//		insert(coll, "hostB", "dedicated server", 100);
-//		insert(coll, "hostB", "vps", 900);
+		// insert(coll, "hostB", "dedicated server", 100);
+		// insert(coll, "hostB", "vps", 900);
 
 		exam05(coll);
 		showCollection(coll);

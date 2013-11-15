@@ -22,20 +22,20 @@ import com.swtdesigner.SWTResourceManager;
  * SubDocument figure
  * 
  * @author hangum
- *
+ * 
  */
 public class SubTableFigure extends TableFigure {
 	private static final Logger logger = Logger.getLogger(SubTableFigure.class);
-	
+
 	public SubTableFigure() {
-//		this.tableName = new Label();
-//		this.tableName.setBorder(new MarginBorder(0, 0, 0, 0));
-//		this.tableName.setForegroundColor(ColorConstants.lightBlue);
+		// this.tableName = new Label();
+		// this.tableName.setBorder(new MarginBorder(0, 0, 0, 0));
+		// this.tableName.setForegroundColor(ColorConstants.lightBlue);
 
 		// key
 		this.colKeyFigure = new ColumnDetailFigure();
 		this.colKeyFigure.setForegroundColor(ColorConstants.red);
-		// name 
+		// name
 		this.colNameFigure = new ColumnDetailFigure();
 		this.colNameFigure.setForegroundColor(ColorConstants.black);
 		// type
@@ -51,12 +51,12 @@ public class SubTableFigure extends TableFigure {
 		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
 		this.setBorder(new SubTableFigureBorder());
 		this.setOpaque(true);
-		
+
 		this.add(this.tableName);
 		this.add(this.columnFigure);
 	}
-	
-	public void removeAllColumns(){
+
+	public void removeAllColumns() {
 		colKeyFigure.removeAll();
 		colNameFigure.removeAll();
 		colTypeFigure.removeAll();
@@ -64,5 +64,5 @@ public class SubTableFigure extends TableFigure {
 		tableName.removeAll();
 		columnFigure.removeAll();
 	}
-	
+
 }

@@ -33,7 +33,7 @@ import com.mongodb.DBObject;
  * MongoDB의 결과 result dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class FindResultViewerDialog extends Dialog {
 	/**
@@ -44,25 +44,26 @@ public class FindResultViewerDialog extends Dialog {
 	private String strTitle;
 	private UserDBDAO userDB;
 	private String initColName;
-	
+
 	/** 쿼리 결과 출력 */
-	private MongodbResultComposite compositeResult ;
-	
+	private MongodbResultComposite compositeResult;
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public FindResultViewerDialog(Shell parentShell, String strTitle, UserDBDAO userDB, String initColName, Iterable<DBObject> iteResult) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.strTitle = strTitle;
 		this.userDB = userDB;
 		this.initColName = initColName;
-		
+
 		this.iteResult = iteResult;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -72,6 +73,7 @@ public class FindResultViewerDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -82,7 +84,7 @@ public class FindResultViewerDialog extends Dialog {
 		gridLayout.horizontalSpacing = 1;
 		gridLayout.marginHeight = 1;
 		gridLayout.marginWidth = 1;
-		
+
 		Composite composite = new Composite(container, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.verticalSpacing = 2;
@@ -90,7 +92,7 @@ public class FindResultViewerDialog extends Dialog {
 		gl_composite.marginHeight = 2;
 		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName, false);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
@@ -99,11 +101,11 @@ public class FindResultViewerDialog extends Dialog {
 		gl_compositeResult.marginHeight = 2;
 		gl_compositeResult.marginWidth = 2;
 		compositeResult.setLayout(gl_compositeResult);
-		
+
 		try {
 			compositeResult.refreshDBView(iteResult, 0);
 			compositeResult.setResult();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("Show Cursor", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "Show Cursor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
@@ -114,6 +116,7 @@ public class FindResultViewerDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override

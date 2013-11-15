@@ -14,7 +14,7 @@ package com.hangum.tadpold.commons.libs.core.browser;
  * OrionHub를 사용한 에디터에서 공통으로 사용하기 위한 유틸
  * 
  * @author hangum
- *
+ * 
  */
 public interface TadpoleBrowserFunction {
 

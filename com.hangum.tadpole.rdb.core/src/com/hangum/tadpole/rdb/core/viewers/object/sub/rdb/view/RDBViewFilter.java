@@ -18,17 +18,19 @@ import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
  * VIEW의 FILTER
  * 
  * @author hangum
- *
+ * 
  */
 public class RDBViewFilter extends TadpoleViewrFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if(searchString == null || searchString.length() == 0) return true;
-		
-		String strView = (String)element;
-		if(strView.toUpperCase().matches(searchString.toUpperCase())) return true;
-		
+		if (searchString == null || searchString.length() == 0)
+			return true;
+
+		String strView = (String) element;
+		if (strView.toUpperCase().matches(searchString.toUpperCase()))
+			return true;
+
 		return false;
 	}
 

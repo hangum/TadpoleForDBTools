@@ -34,22 +34,23 @@ public class RDBERDDeleteAction implements IViewActionDelegate {
 	 */
 	private static final Logger logger = Logger.getLogger(RDBERDDeleteAction.class);
 	private IStructuredSelection sel;
-	
+
 	public RDBERDDeleteAction() {
 	}
 
 	@Override
 	public void run(IAction action) {
-		UserDBResourceDAO userDB = (UserDBResourceDAO)sel.getFirstElement();
-		
-		if(MessageDialog.openConfirm(null, Messages.ERDDeleteAction_0, Messages.ERDDeleteAction_1)) run(userDB);
+		UserDBResourceDAO userDB = (UserDBResourceDAO) sel.getFirstElement();
+
+		if (MessageDialog.openConfirm(null, Messages.ERDDeleteAction_0, Messages.ERDDeleteAction_1))
+			run(userDB);
 	}
-	
+
 	public void run(UserDBResourceDAO userDBErd) {
 		try {
 			TadpoleSystem_UserDBResource.delete(userDBErd);
-			
-			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
+
+			ManagerViewer mv = (ManagerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
 			mv.deleteErd(userDBErd);
 		} catch (Exception e) {
 			logger.error(Messages.ERDDeleteAction_2, e);
@@ -60,7 +61,7 @@ public class RDBERDDeleteAction implements IViewActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		sel = (IStructuredSelection)selection;
+		sel = (IStructuredSelection) selection;
 	}
 
 	@Override

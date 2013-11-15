@@ -26,7 +26,7 @@ import com.mongodb.gridfs.GridFSInputFile;
  * @author hangum
  * 
  */
-public class MongoTestGridFS  {
+public class MongoTestGridFS {
 
 	/**
 	 * @param args
@@ -35,44 +35,44 @@ public class MongoTestGridFS  {
 		ConAndAuthentication testMongoCls = new ConAndAuthentication();
 		Mongo mongo = testMongoCls.connection(ConAndAuthentication.serverurl, ConAndAuthentication.port);
 		DB db = mongo.getDB("test");
-		
-//		saveImage(db);
-//		getImage(db);
+
+		// saveImage(db);
+		// getImage(db);
 		allList(db);
-		
+
 		mongo.close();
 	}
-	
+
 	private static void allList(DB db) throws Exception {
 		System.out.println("##[all GridFs list] [start]######################");
-		
+
 		GridFS gridFs = new GridFS(db);
 		DBCursor dbCursor = gridFs.getFileList();
 		for (DBObject dbObject : dbCursor) {
 			System.out.println(dbObject);
 		}
-		
+
 		System.out.println("##[all GridFs list] [end]######################");
 	}
-	
+
 	private static void getImage(DB db) throws Exception {
 		String newFileName = "mkyong-java-image";
 		GridFS gfsPhoto = new GridFS(db, "photo");
 		GridFSDBFile imageForOutput = gfsPhoto.findOne(newFileName);
 		System.out.println(imageForOutput);
-		
+
 	}
 
-	private static void saveImage(DB db) throws Exception{
+	private static void saveImage(DB db) throws Exception {
 
 		String newFileName = "currentop";
 		File imageFile = new File("c:/temp/currentop.png");
-		
+
 		GridFS gfsPhoto = new GridFS(db);
 		GridFSInputFile gfsFile = gfsPhoto.createFile(imageFile);
 		gfsFile.setFilename(newFileName);
 		gfsFile.save();
-		
+
 	}
 
 }

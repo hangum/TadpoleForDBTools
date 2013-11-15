@@ -36,32 +36,33 @@ import com.hangum.tadpole.sql.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
  * Single DB ADD Dialog
  * 
  * @author hangum
- *
+ * 
  */
 public class SingleAddDBDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(SingleAddDBDialog.class);
-	
+
 	private AWSRDSUserDBDAO amazonRDSDto;
 	/** group name */
 	protected List<String> listGroupName;
 	/** 초기 선택한 그룹 */
 	private String selGroupName;
-	
+
 	private Composite compositeBody;
 
 	private AbstractLoginComposite loginComposite;
-	
+
 	// 결과셋으로 사용할 logindb
 	private UserDBDAO retuserDb;
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 */
 	public SingleAddDBDialog(Shell parentShell, AWSRDSUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
+
 		this.amazonRDSDto = amazonRDSDto;
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
@@ -75,6 +76,7 @@ public class SingleAddDBDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -85,7 +87,7 @@ public class SingleAddDBDialog extends Dialog {
 		gridLayout.horizontalSpacing = 1;
 		gridLayout.marginHeight = 1;
 		gridLayout.marginWidth = 1;
-		
+
 		compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -94,34 +96,32 @@ public class SingleAddDBDialog extends Dialog {
 		gl_compositeBody.marginHeight = 2;
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
-		
-		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(amazonRDSDto), 
-				compositeBody, 
-				listGroupName, 
-				selGroupName, 
-				(UserDBDAO)amazonRDSDto);
+
+		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(amazonRDSDto), compositeBody, listGroupName, selGroupName,
+				(UserDBDAO) amazonRDSDto);
 
 		return container;
 	}
-	
+
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
+		if (!loginComposite.connection())
+			return;
 		this.retuserDb = loginComposite.getDBDTO();
 		refreshManagerView();
-		
+
 		super.okPressed();
 	}
 
 	public UserDBDAO getDTO() {
 		return retuserDb;
 	}
-	
+
 	@Override
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
-		if(DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
-			if(loginComposite.testConnection()) {
+		if (DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
+			if (loginComposite.testConnection()) {
 				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
 			}
 		}
@@ -129,6 +129,7 @@ public class SingleAddDBDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -145,18 +146,18 @@ public class SingleAddDBDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(450, 500);
 	}
-	
+
 	/**
 	 * refresh manager view
 	 */
 	protected void refreshManagerView() {
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
-		
+		final ManagerViewer managerView = (ManagerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				managerView.init();
 			}
-		});	// end display
+		}); // end display
 	}
 }

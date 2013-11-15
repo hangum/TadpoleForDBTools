@@ -30,64 +30,65 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.swtdesigner.ResourceManager;
 
 /**
- * 전체 영역에서 사용하기 위한 action 
+ * 전체 영역에서 사용하기 위한 action
  * 
  * @author hangum
- *
+ * 
  */
 public class ConnectDatabaseAction extends Action implements ISelectionListener, IWorkbenchAction {
 	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.ConnectDatabaseAction"; //$NON-NLS-1$
 	private IStructuredSelection sel;
-	
+
 	public ConnectDatabaseAction(IWorkbenchWindow window) {
 		this.window = window;
-		
+
 		setId(ID);
 		setText(Messages.ConnectDatabaseAction_1);
 		setToolTipText(Messages.ConnectDatabaseAction_2);
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/connect.png"));
-		
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/connect.png"));
+
 		window.getSelectionService().addPostSelectionListener(this);
 	}
-	
+
 	@Override
 	public void run() {
 		runConnectionDialog(sel);
 	}
-	
+
 	public void runConnectionDialog(IStructuredSelection sel) {
 		String selGroupName = "";
-		
-		if(sel != null) {
-			if(sel.getFirstElement() instanceof ManagerListDTO) {
-				ManagerListDTO mana = (ManagerListDTO)sel.getFirstElement();
+
+		if (sel != null) {
+			if (sel.getFirstElement() instanceof ManagerListDTO) {
+				ManagerListDTO mana = (ManagerListDTO) sel.getFirstElement();
 				selGroupName = mana.getName();
-			} else if(sel.getFirstElement() instanceof UserDBDAO) {
-				UserDBDAO user =(UserDBDAO)sel.getFirstElement();
+			} else if (sel.getFirstElement() instanceof UserDBDAO) {
+				UserDBDAO user = (UserDBDAO) sel.getFirstElement();
 				selGroupName = user.getParent().getName();
 			}
 		}
-		
+
 		final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selGroupName);
 		final int ret = dialog.open();
-		
+
 		final UserDBDAO userDB = dialog.getDTO();
-		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
-		
+		final ManagerViewer managerView = (ManagerViewer) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if(ret == Dialog.OK) {
-					if(userDB == null) managerView.init();
-					else managerView.addUserDB(userDB, true);
-				}
-				else managerView.init();
+				if (ret == Dialog.OK) {
+					if (userDB == null)
+						managerView.init();
+					else
+						managerView.addUserDB(userDB, true);
+				} else
+					managerView.init();
 			}
-		});	// end display
-//		}	// end if
+		}); // end display
+		// } // end if
 	}
-	
 
 	@Override
 	public void dispose() {
@@ -96,7 +97,7 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		sel = (IStructuredSelection)selection;
+		sel = (IStructuredSelection) selection;
 
 	}
 

@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author nilriri
- *
+ * 
  */
 public class CommentCellEditor extends TextCellEditor {
 	private TableViewer viewer = null;
@@ -48,20 +48,20 @@ public class CommentCellEditor extends TextCellEditor {
 	}
 
 	@Override
-    protected void keyReleaseOccured(KeyEvent keyEvent) {
+	protected void keyReleaseOccured(KeyEvent keyEvent) {
 		super.keyReleaseOccured(keyEvent);
-		
-		if (keyEvent.keyCode == SWT.ARROW_UP) { 
-			if (0 < viewer.getTable().getSelectionIndex()){
+
+		if (keyEvent.keyCode == SWT.ARROW_UP) {
+			if (0 < viewer.getTable().getSelectionIndex()) {
 				Object element = viewer.getElementAt(viewer.getTable().getSelectionIndex() - 1);
 				viewer.editElement(element, column);
 			}
-		}else if (keyEvent.keyCode == SWT.ARROW_DOWN) { 
-			if (viewer.getTable().getItemCount() > viewer.getTable().getSelectionIndex()){
+		} else if (keyEvent.keyCode == SWT.ARROW_DOWN) {
+			if (viewer.getTable().getItemCount() > viewer.getTable().getSelectionIndex()) {
 				Object element = viewer.getElementAt(viewer.getTable().getSelectionIndex() + 1);
 				viewer.editElement(element, column);
 			}
 		}
 	}
-	
+
 }

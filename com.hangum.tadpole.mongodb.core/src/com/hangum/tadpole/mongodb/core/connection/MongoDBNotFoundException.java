@@ -17,9 +17,9 @@ package com.hangum.tadpole.mongodb.core.connection;
  * 
  */
 public class MongoDBNotFoundException extends Exception {
-	
+
 	public MongoDBNotFoundException(String msg) {
 		super(msg);
 	}
-	
+
 }

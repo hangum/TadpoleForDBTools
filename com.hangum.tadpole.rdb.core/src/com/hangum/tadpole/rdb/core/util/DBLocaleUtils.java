@@ -19,11 +19,11 @@ import org.apache.commons.lang.StringUtils;
  * db locale list
  * 
  * @author hangum
- *
+ * 
  */
 public class DBLocaleUtils {
 	public static final String NONE_TXT = "none";
-	
+
 	/**
 	 * oracle list
 	 * 
@@ -31,9 +31,9 @@ public class DBLocaleUtils {
 	 */
 	public static List<String> getOracleList() {
 		List<String> listLocale = new ArrayList<String>();
-		
+
 		listLocale.add(NONE_TXT);
-		
+
 		listLocale.add("ko");
 		listLocale.add("ja");
 		listLocale.add("zh");
@@ -41,10 +41,10 @@ public class DBLocaleUtils {
 		listLocale.add("fr");
 		listLocale.add("it");
 		listLocale.add("en");
-		
+
 		return listLocale;
 	}
-	
+
 	/**
 	 * mysql list
 	 * 
@@ -94,10 +94,10 @@ public class DBLocaleUtils {
 		listLocale.add("utf8mb4 | UTF-8 Unicode");
 		listLocale.add("utf16     | UTF-16 Unicode");
 		listLocale.add("utf32     | UTF-32 Unicode");
-		
+
 		return listLocale;
 	}
-	
+
 	/**
 	 * find full combo text
 	 * 
@@ -105,10 +105,11 @@ public class DBLocaleUtils {
 	 * @return
 	 */
 	public static String findMySQLFullLocale(String locale) {
-		for(String strLocale : getMySQLList()) {
-			if(StringUtils.startsWith(strLocale, locale)) return strLocale;
+		for (String strLocale : getMySQLList()) {
+			if (StringUtils.startsWith(strLocale, locale))
+				return strLocale;
 		}
-		
+
 		return "";
 	}
 }

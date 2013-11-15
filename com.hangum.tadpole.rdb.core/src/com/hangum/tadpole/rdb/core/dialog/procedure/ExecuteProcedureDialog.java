@@ -64,11 +64,11 @@ public class ExecuteProcedureDialog extends Dialog {
 	private UserDBDAO userDB;
 	private ProcedureFunctionDAO procedureDAO;
 	private List<InOutParameterDAO> parameterList = new ArrayList<InOutParameterDAO>();
-	
+
 	private Label[] labelInput;
 	private Text[] textInputs;
 	private Label[] labelType;
-	
+
 	private Group grpTables;
 	private Button btnExecute;
 
@@ -116,41 +116,42 @@ public class ExecuteProcedureDialog extends Dialog {
 		gl_compositeInput.marginWidth = 2;
 		compositeInput.setLayout(gl_compositeInput);
 		compositeInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		try {
 			initProcedureExecuter();
 			this.parameterList = getInParameter();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("get in parameter", e);
 			MessageDialog.openError(null, "Error", e.getMessage());
-			
+
 			super.okPressed();
 		}
 
-		//////[ input values ]////////////////////////////////////////////////////////////////////////
-		labelInput 	= new Label[parameterList.size()];
-		textInputs 	= new Text[parameterList.size()];
-		labelType 	= new Label[parameterList.size()];
-		
-		for(int i=0; i<labelInput.length; i++) {
+		// ////[ input values
+		// ]////////////////////////////////////////////////////////////////////////
+		labelInput = new Label[parameterList.size()];
+		textInputs = new Text[parameterList.size()];
+		labelType = new Label[parameterList.size()];
+
+		for (int i = 0; i < labelInput.length; i++) {
 			InOutParameterDAO inParameters = parameterList.get(i);
-				
+
 			labelInput[i] = new Label(compositeInput, SWT.NONE);
 			labelInput[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 			labelInput[i].setText(inParameters.getName());
-			
+
 			textInputs[i] = new Text(compositeInput, SWT.BORDER);
 			textInputs[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			// Parameter default value set.
 			textInputs[i].setText(inParameters.getValue());
-			
+
 			labelType[i] = new Label(compositeInput, SWT.NONE);
 			labelType[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-			
-			String tmpLength = StringUtils.isEmpty(inParameters.getLength())?"" : "(" + inParameters.getLength() + ")";
+
+			String tmpLength = StringUtils.isEmpty(inParameters.getLength()) ? "" : "(" + inParameters.getLength() + ")";
 			labelType[i].setText(inParameters.getRdbType() + " " + tmpLength);
 		}
-		
+
 		Composite compositeBtn = new Composite(container, SWT.NONE);
 		GridLayout gl_compositeBtn = new GridLayout(1, false);
 		gl_compositeBtn.verticalSpacing = 2;
@@ -159,7 +160,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		gl_compositeBtn.marginWidth = 2;
 		compositeBtn.setLayout(gl_compositeBtn);
 		compositeBtn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
-		
+
 		btnExecute = new Button(compositeBtn, SWT.NONE);
 		btnExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -168,7 +169,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			}
 		});
 		btnExecute.setText("Execute");
-		
+
 		grpTables = new Group(container, SWT.NONE);
 		GridLayout gl_grpTables = new GridLayout(1, false);
 		gl_grpTables.horizontalSpacing = 2;
@@ -178,12 +179,12 @@ public class ExecuteProcedureDialog extends Dialog {
 		grpTables.setLayout(gl_grpTables);
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpTables.setText("Result Set view");
-		
+
 		initUI();
 
 		return container;
 	}
-	
+
 	/**
 	 * initialize procedure executer
 	 * 
@@ -193,70 +194,70 @@ public class ExecuteProcedureDialog extends Dialog {
 		ProcedureExecuterManager executorManager = new ProcedureExecuterManager(userDB, procedureDAO);
 		procedureExecutor = executorManager.getExecuter();
 	}
-	
+
 	/**
 	 * 프로시저를 실행합니다.
 	 * 
 	 */
 	private void executeProcedure() {
-		if(sqlResultTableViewer != null) {
-			for(int i=0; i<sqlResultTableViewer.length; i++) {
+		if (sqlResultTableViewer != null) {
+			for (int i = 0; i < sqlResultTableViewer.length; i++) {
 				TableViewer tv = sqlResultTableViewer[i];
 				tv.getTable().dispose();
 			}
 		}
-		
-		for(int i=0; i<parameterList.size(); i++) {
+
+		for (int i = 0; i < parameterList.size(); i++) {
 			InOutParameterDAO inParam = parameterList.get(i);
 			inParam.setValue(textInputs[i].getText());
 		}
-		
+
 		try {
 			boolean ret = procedureExecutor.exec(parameterList);
-			if(ret) {
+			if (ret) {
 				List<ResultSetTableViewerDAO> listResultDao = procedureExecutor.getResultDAO();
 				sqlResultTableViewer = new TableViewer[listResultDao.size()];
-				
-				for(int i=0; i<listResultDao.size(); i++) {
+
+				for (int i = 0; i < listResultDao.size(); i++) {
 					ResultSetTableViewerDAO resultDao = listResultDao.get(i);
-					
+
 					sqlResultTableViewer[i] = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION);
 					Table table = sqlResultTableViewer[i].getTable();
 					table.setHeaderVisible(true);
 					table.setLinesVisible(true);
 					table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-					
+
 					sqlSorter = new SQLResultSorter(-999);
-					
+
 					SQLResultLabelProvider.createTableColumn(sqlResultTableViewer[i], resultDao.getMapColumns(), resultDao.getMapColumnType(), sqlSorter);
 					sqlResultTableViewer[i].setLabelProvider(new SQLResultLabelProvider());
 					sqlResultTableViewer[i].setContentProvider(new SQLResultContentProvider(resultDao.getSourceDataList()));
-					
+
 					sqlResultTableViewer[i].setInput(resultDao.getSourceDataList());
 					sqlResultTableViewer[i].setSorter(sqlSorter);
-					
+
 					TableUtil.packTable(sqlResultTableViewer[i].getTable());
 				}
 			}
-			
+
 			grpTables.layout();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("Procedure execute Result view", e);
 			MessageDialog.openError(null, "Error", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * init ui
 	 */
 	private void initUI() {
-		if(textInputs != null && textInputs.length > 0) {
+		if (textInputs != null && textInputs.length > 0) {
 			textInputs[0].setFocus();
 		} else {
 			btnExecute.setFocus();
 		}
 	}
-	
+
 	/**
 	 * initialize procedure IN information
 	 */

@@ -20,11 +20,11 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongodbimport editor input
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBImportEditorInput implements IEditorInput {
 	UserDBDAO userDB;
-	
+
 	public MongoDBImportEditorInput(UserDBDAO userDB) {
 		this.userDB = userDB;
 	}
@@ -58,7 +58,7 @@ public class MongoDBImportEditorInput implements IEditorInput {
 	public String getToolTipText() {
 		return userDB.getDisplay_name() + " import";
 	}
-	
+
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}

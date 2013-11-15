@@ -33,7 +33,7 @@ import com.mongodb.DBObject;
  * Replica Set Information
  * 
  * @author hangum
- *
+ * 
  */
 public class ReplicaSetComposite extends Composite {
 	/**
@@ -43,14 +43,14 @@ public class ReplicaSetComposite extends Composite {
 
 	private UserDBDAO userDB;
 	private CommandResult commandResult;
-	
+
 	private FindOneDetailComposite compositeReplicaSet;
 	private FindOneDetailComposite compositeReplicatOperation;
 	private FindOneDetailComposite compositeReplicationNetQueue;
-	
-	
+
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -62,10 +62,10 @@ public class ReplicaSetComposite extends Composite {
 		gridLayout.marginHeight = 1;
 		gridLayout.marginWidth = 1;
 		setLayout(gridLayout);
-		
+
 		this.userDB = userDB;
 		this.commandResult = cr;
-		
+
 		Composite compositeToolbar = new Composite(this, SWT.NONE);
 		compositeToolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeToolbar = new GridLayout(1, false);
@@ -74,10 +74,10 @@ public class ReplicaSetComposite extends Composite {
 		gl_compositeToolbar.marginHeight = 1;
 		gl_compositeToolbar.marginWidth = 1;
 		compositeToolbar.setLayout(gl_compositeToolbar);
-		
+
 		ToolBar toolBar = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
 		tltmRefresh.setImage(ImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
@@ -96,7 +96,7 @@ public class ReplicaSetComposite extends Composite {
 		gl_compositeServerStatus.marginHeight = 1;
 		gl_compositeServerStatus.marginWidth = 1;
 		compositeServerStatus.setLayout(gl_compositeServerStatus);
-		
+
 		Group grpReplicaSet = new Group(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpReplicaSet = new GridLayout(1, false);
 		gl_grpReplicaSet.verticalSpacing = 0;
@@ -106,20 +106,21 @@ public class ReplicaSetComposite extends Composite {
 		grpReplicaSet.setLayout(gl_grpReplicaSet);
 		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpReplicaSet.setText("Replica Set Information");
-		
-		compositeReplicaSet = new FindOneDetailComposite(grpReplicaSet, "Replica Set", (DBObject)commandResult.get("repl"), false);
+
+		compositeReplicaSet = new FindOneDetailComposite(grpReplicaSet, "Replica Set", (DBObject) commandResult.get("repl"), false);
 		compositeReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeReplicaSet.setLayout(new GridLayout(1, false));
-		
-		compositeReplicatOperation = new FindOneDetailComposite(grpReplicaSet, "Replication operations", (DBObject)commandResult.get("opcountersRepl"), false);
+
+		compositeReplicatOperation = new FindOneDetailComposite(grpReplicaSet, "Replication operations", (DBObject) commandResult.get("opcountersRepl"), false);
 		compositeReplicatOperation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeReplicatOperation.setLayout(new GridLayout(1, false));
-		
-		compositeReplicationNetQueue = new FindOneDetailComposite(grpReplicaSet, "Replication Network Queue", (DBObject)commandResult.get("replNetworkQueue"), false);
+
+		compositeReplicationNetQueue = new FindOneDetailComposite(grpReplicaSet, "Replication Network Queue", (DBObject) commandResult.get("replNetworkQueue"),
+				false);
 		compositeReplicationNetQueue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeReplicationNetQueue.setLayout(new GridLayout(1, false));
 	}
-	
+
 	/**
 	 * data refresh
 	 */
@@ -129,10 +130,10 @@ public class ReplicaSetComposite extends Composite {
 		} catch (Exception e1) {
 			logger.error("Get status command", e1);
 		}
-		
-		compositeReplicaSet.refresh("Replica Set", (DBObject)commandResult.get("repl"), false);
-		compositeReplicatOperation.refresh("Replication operations", (DBObject)commandResult.get("opcountersRepl"), false);
-		compositeReplicationNetQueue.refresh("Replication Network Queue", (DBObject)commandResult.get("replNetworkQueue"), false);
+
+		compositeReplicaSet.refresh("Replica Set", (DBObject) commandResult.get("repl"), false);
+		compositeReplicatOperation.refresh("Replication operations", (DBObject) commandResult.get("opcountersRepl"), false);
+		compositeReplicationNetQueue.refresh("Replication Network Queue", (DBObject) commandResult.get("replNetworkQueue"), false);
 	}
 
 	@Override

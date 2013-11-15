@@ -19,7 +19,7 @@ import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
  * mongodb collection infos
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBCollectionInfoDTO {
 	private String name;
@@ -30,9 +30,9 @@ public class MongoDBCollectionInfoDTO {
 	private double avgObj;
 	private int padding;
 	private double lastExtentSize;
-	
-	private List<CollectionFieldDAO> child = new ArrayList<CollectionFieldDAO>(); 
-	
+
+	private List<CollectionFieldDAO> child = new ArrayList<CollectionFieldDAO>();
+
 	public MongoDBCollectionInfoDTO() {
 	}
 
@@ -102,8 +102,8 @@ public class MongoDBCollectionInfoDTO {
 
 	public List<CollectionFieldDAO> getChild() {
 		return child;
-	}	
-	
+	}
+
 	public void setChild(List<CollectionFieldDAO> child) {
 		this.child = child;
 	}

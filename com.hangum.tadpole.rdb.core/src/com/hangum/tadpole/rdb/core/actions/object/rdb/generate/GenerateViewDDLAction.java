@@ -23,10 +23,10 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 
 /**
- * generate ddl view     
+ * generate ddl view
  * 
  * @author hangum
- *
+ * 
  */
 public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 	/**
@@ -34,7 +34,7 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 	 */
 	private static final Logger logger = Logger.getLogger(GenerateViewDDLAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateViewDDLAction"; //$NON-NLS-1$
-	
+
 	/**
 	 * generated view ddl
 	 * 
@@ -44,21 +44,21 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 	 */
 	public GenerateViewDDLAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String target) {
 		super(window, actionType);
-		
+
 		setId(ID + actionType.toString());
-		setText(target + " DDL" );
+		setText(target + " DDL");
 		window.getSelectionService().addSelectionListener(this);
 	}
-	
+
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		try {
 			DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
-			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(selection.getFirstElement()), true);		
-		} catch(Exception e) {
+			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(selection.getFirstElement()), true);
+		} catch (Exception e) {
 			logger.error("view ddl", e);
 			MessageDialog.openError(null, "Confirm", "Not support this function.");
 		}
 	}
-	
+
 }

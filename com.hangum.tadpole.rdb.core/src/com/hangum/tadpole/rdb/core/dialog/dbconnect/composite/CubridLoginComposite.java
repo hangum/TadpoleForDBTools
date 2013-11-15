@@ -28,80 +28,79 @@ import com.hangum.tadpole.sql.template.DBOperationType;
  * cubrid login composite
  * 
  * @author hangum
- *
+ * 
  */
 public class CubridLoginComposite extends MySQLLoginComposite {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4519162649799179626L;
-	
+
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
 	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
 		super("Sample Cubrid", DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
-	
+
 	@Override
 	public void init() {
-		
-		 if(oldUserDB != null) {
-			
+
+		if (oldUserDB != null) {
+
 			selGroupName = oldUserDB.getGroup_name();
 			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
-			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
-			
+			preDBInfo.getComboOperationType().setText(DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName());
+
 			textHost.setText(oldUserDB.getHost());
 			textPort.setText(oldUserDB.getPort());
-			textDatabase.setText(oldUserDB.getDb());			
+			textDatabase.setText(oldUserDB.getDb());
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
-			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+
+		} else if (ApplicationArgumentUtils.isTestMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
-			
+
 			textHost.setText("192.168.32.128");
 			textPort.setText("33000");
 			textDatabase.setText("demodb");
 			textUser.setText("dba");
 			textPassword.setText("");
-			
+
 		} else {
 			textPort.setText("33000");
 		}
-		
-		 Combo comboGroup = preDBInfo.getComboGroup();
-		if(comboGroup.getItems().length == 0) {
+
+		Combo comboGroup = preDBInfo.getComboGroup();
+		if (comboGroup.getItems().length == 0) {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) {
+			if ("".equals(selGroupName)) {
 				comboGroup.setText(strOtherGroupName);
 			} else {
-				// 콤보 선택 
-				for(int i=0; i<comboGroup.getItemCount(); i++) {
-					if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
+				// 콤보 선택
+				for (int i = 0; i < comboGroup.getItemCount(); i++) {
+					if (selGroupName.equals(comboGroup.getItem(i)))
+						comboGroup.select(i);
 				}
 			}
 		}
-		
+
 		textHost.setFocus();
 	}
-	
+
 	@Override
 	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
-		
-		final String dbUrl = String.format(
-				getSelectDB().getDB_URL_INFO(), 
-				StringUtils.trimToEmpty(textHost.getText()), 
-				StringUtils.trimToEmpty(textPort.getText()), 
-				StringUtils.trimToEmpty(textDatabase.getText())
-			);
+		if (!isValidateInput())
+			return false;
+
+		final String dbUrl = String.format(getSelectDB().getDB_URL_INFO(), StringUtils.trimToEmpty(textHost.getText()),
+				StringUtils.trimToEmpty(textPort.getText()), StringUtils.trimToEmpty(textDatabase.getText()));
 
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());
@@ -110,26 +109,27 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
+		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		userDB.setLocale(StringUtils.trimToEmpty(comboLocale.getText()));
-		
+
 		// others connection 정보를 입력합니다.
-		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
-		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		
-		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		OthersConnectionInfoDAO otherConnectionDAO = othersConnectionInfo.getOthersConnectionInfo();
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection() ? PublicTadpoleDefine.YES_NO.YES.toString() : PublicTadpoleDefine.YES_NO.NO
+				.toString());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit() ? PublicTadpoleDefine.YES_NO.YES.toString() : PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_showtables(otherConnectionDAO.isShowTables() ? PublicTadpoleDefine.YES_NO.YES.toString() : PublicTadpoleDefine.YES_NO.NO.toString());
+
+		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter() ? PublicTadpoleDefine.YES_NO.YES.toString() : PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
 		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
-		
-		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		
+
+		userDB.setIs_profile(otherConnectionDAO.isProfiling() ? PublicTadpoleDefine.YES_NO.YES.toString() : PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement() ? PublicTadpoleDefine.YES_NO.YES.toString() : PublicTadpoleDefine.YES_NO.NO.toString());
+
 		return true;
 	}
 

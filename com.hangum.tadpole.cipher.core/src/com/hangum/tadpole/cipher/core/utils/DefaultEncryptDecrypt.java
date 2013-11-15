@@ -14,7 +14,7 @@ package com.hangum.tadpole.cipher.core.utils;
  * Tadpole default, encrypt interface
  * 
  * @author hangum
- *
+ * 
  */
 public interface DefaultEncryptDecrypt {
 	/**
@@ -24,7 +24,7 @@ public interface DefaultEncryptDecrypt {
 	 * @return
 	 */
 	public String encryption(String text);
-	
+
 	/**
 	 * decryption
 	 * 

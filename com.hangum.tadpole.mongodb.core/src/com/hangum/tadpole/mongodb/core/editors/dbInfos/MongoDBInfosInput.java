@@ -20,11 +20,11 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * mongodb info기본 editor의 editorinput
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBInfosInput implements IEditorInput {
 	private MongoDBInfosEditor.PAGES defaultPage;
-	
+
 	/** db info */
 	private UserDBDAO userDB;
 
@@ -42,11 +42,12 @@ public class MongoDBInfosInput implements IEditorInput {
 	public boolean exists() {
 		return (this.userDB.getDisplay_name() != null);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if( !(obj instanceof MongoDBInfosInput) ) return false;
-		return ((MongoDBInfosInput)obj).getName().equals(getName());
+		if (!(obj instanceof MongoDBInfosInput))
+			return false;
+		return ((MongoDBInfosInput) obj).getName().equals(getName());
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class MongoDBInfosInput implements IEditorInput {
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
-	
+
 	public MongoDBInfosEditor.PAGES getDefaultPage() {
 		return defaultPage;
 	}

@@ -20,15 +20,15 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * Group editor input
  * 
  * @author hangum
- *
+ * 
  */
 public class MongoDBGroupEditorInput implements IEditorInput {
 	private UserDBDAO userDB;
 	private String colname;
-	
+
 	public MongoDBGroupEditorInput(UserDBDAO userDB, String colName) {
 		this.userDB = userDB;
-		this.colname = colName;		
+		this.colname = colName;
 	}
 
 	public MongoDBGroupEditorInput(UserDBDAO userDB) {
@@ -68,7 +68,7 @@ public class MongoDBGroupEditorInput implements IEditorInput {
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
-	
+
 	public String getColname() {
 		return colname;
 	}

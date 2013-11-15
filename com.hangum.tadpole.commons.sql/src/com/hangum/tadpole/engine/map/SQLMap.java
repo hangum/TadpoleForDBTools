@@ -27,38 +27,41 @@ import com.ibatis.sqlmap.client.SqlMapClientBuilder;
  * @author hangum
  */
 public class SQLMap {
-	private final static String URL 		= "${JDBC.ConnectionURL}";
-	private final static String USERNAME 	= "${JDBC.Username}";
-	private final static String PASSWORD 	= "${JDBC.Password}";
-	
+	private final static String URL = "${JDBC.ConnectionURL}";
+	private final static String USERNAME = "${JDBC.Username}";
+	private final static String PASSWORD = "${JDBC.Password}";
+
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(SQLMap.class);
 
-	private SQLMap() {}
+	private SQLMap() {
+	}
+
 	public static SqlMapClient getInstance(UserDBDAO dbInfo) throws Exception {
 		String config = getConfig(dbInfo);
-		
+
 		return SqlMapClientBuilder.buildSqlMapClient(new StringReader(config));
 	}
 
 	/**
 	 * DB환경 정보 파일을 올바른 정보로 바꾸어준다.
-	 * @param dbInfo 
+	 * 
+	 * @param dbInfo
 	 * @return
 	 * @throws Exception
 	 */
 	private static String getConfig(UserDBDAO dbInfo) throws Exception {
 		String config = getFileToString(DBDefine.getDBDefine(dbInfo.getDbms_types()).getLocation());
-		
-		config = config.replace(URL, StringEscapeUtils.escapeXml(dbInfo.getUrl()));	
+
+		config = config.replace(URL, StringEscapeUtils.escapeXml(dbInfo.getUrl()));
 		config = config.replace(USERNAME, StringEscapeUtils.escapeXml(dbInfo.getUsers()));
-		config = config.replace(PASSWORD, StringEscapeUtils.escapeXml(dbInfo.getPasswd())) ;
-		
-		return config;		
+		config = config.replace(PASSWORD, StringEscapeUtils.escapeXml(dbInfo.getPasswd()));
+
+		return config;
 	}
-	
+
 	/**
 	 * SQLMap XML to string
 	 * 
@@ -66,16 +69,16 @@ public class SQLMap {
 	 * @return
 	 * @throws Exception
 	 */
-	private static String getFileToString(String url) throws Exception{
+	private static String getFileToString(String url) throws Exception {
 		ClassLoader loader = SQLMap.class.getClassLoader();
 		InputStream is = loader == null ? ClassLoader.getSystemResourceAsStream(url) : loader.getResourceAsStream(url);
-		
+
 		int size = is.available();
 		byte[] dataByte = new byte[size];
 		is.read(dataByte, 0, size);
 		is.close();
-		
+
 		return new String(dataByte);
 	}
-	
+
 }
