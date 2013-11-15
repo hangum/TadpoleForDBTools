@@ -402,34 +402,29 @@ public class ResourceManageEditor extends EditorPart {
 
 				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
-
+		
+				// 기존 데이터베이스 목록에 리소스를 표시하기 위한  DAO를 사용하는 부분과 호환성을 위해 변환.
+				// TODO : 리소스DAO를 하나로 통합할 필요 있음.
+				UserDBResourceDAO ad = new UserDBResourceDAO();
+				ad.setResource_seq((int) dao.getResource_seq());
+				ad.setName(dao.getRes_title());
+				ad.setParent(userDB);
+		
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if (PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
-//					UserDBResourceDAO resourceDAO = new UserDBResourceDAO();
-					
-					
 					if (userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 						 MongoDBERDViewAction ea = new MongoDBERDViewAction();
-//						 ea.run(dao);
+						 ea.run(ad);
 					} else {
 						 RDBERDViewAction ea = new RDBERDViewAction();
-//						 ea.run(dao);
+						 ea.run(ad);
 					}
-
 				} else if (PublicTadpoleDefine.RESOURCE_TYPE.SQL.toString().equals(dao.getResource_types())) {
-
 					QueryEditorAction qea = new QueryEditorAction();
-					UserDBResourceDAO ad = new UserDBResourceDAO();
-					ad.setResource_seq((int) dao.getResource_seq());
-					ad.setName(dao.getRes_title());
-					ad.setParent(userDB);
 					qea.run(ad);
-
 				}
-
 			}
 		});
-		
 		reLoadResource();
 	}
 
