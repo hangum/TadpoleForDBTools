@@ -157,7 +157,13 @@ public class ResourceManageEditor extends EditorPart {
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				comboViewer.getCombo().clearSelection();
+				textTitle.setText("");
+				textDescription.setText("");
+				textQuery.setText("");
 
+				initUI();
+				//reLoadResource();
 			}
 		});
 
@@ -256,7 +262,8 @@ public class ResourceManageEditor extends EditorPart {
 					dao.setRes_title(textTitle.getText());
 					dao.setDescription(textDescription.getText());
 					TadpoleSystem_UserDBResource.updateResourceHeader(dao);
-					reLoadResource();
+					//reLoadResource();
+					addUserResouceData();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -346,6 +353,7 @@ public class ResourceManageEditor extends EditorPart {
 		treeViewer.setInput(treeList);
 		getSite().setSelectionProvider(treeViewer);
 
+		treeViewer.getTree().clearAll(true);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -364,6 +372,7 @@ public class ResourceManageEditor extends EditorPart {
 			}
 		});
 
+		tableViewer.setInput(null);
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -426,11 +435,13 @@ public class ResourceManageEditor extends EditorPart {
 			}
 		});
 		reLoadResource();
+		
 	}
 
 	public void reLoadResource() {
 
 		try {
+			treeList.clear();
 			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
 			for (String groupName : groupNames) {
 				ManagerListDTO parent = new ManagerListDTO(groupName);
@@ -462,6 +473,11 @@ public class ResourceManageEditor extends EditorPart {
 	public void addUserResouceData() {
 
 		try {
+			comboViewer.getCombo().clearSelection();
+			textTitle.setText("");
+			textDescription.setText("");
+			textQuery.setText("");
+
 			List<ResourceManagerDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbResource(userDB);
 
 			tableViewer.setInput(listUserDBResources);
