@@ -53,6 +53,18 @@ public class TadpoleSystem_UserDBResource {
 	}
 	
 	/**
+	 * update resource_title & shared_type
+	 * 
+	 * @param dbResource
+	 * @param content
+	 * @throws Exception
+	 */
+	public static void updateResourceHeader(ResourceManagerDAO userDBResource) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("userDbResourceUpdate", userDBResource); //$NON-NLS-1$
+	}
+	
+	/**
 	 * update 
 	 * 
 	 * @param dbResource
@@ -65,7 +77,7 @@ public class TadpoleSystem_UserDBResource {
 		
 		insertResourceData(userDBResource, contents);
 	}
-	
+
 	/**
 	 * resource data 
 	 * 

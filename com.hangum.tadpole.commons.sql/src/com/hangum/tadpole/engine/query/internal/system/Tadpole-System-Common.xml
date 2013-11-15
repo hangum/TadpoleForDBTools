@@ -490,6 +490,15 @@ SELECT
   order by m.resource_types, m.resource_seq
 </select>
 
+<update id="userDbResourceUpdate" parameterClass="com.hangum.tadpole.sql.dao.ResourceManagerDAO">
+	update user_db_resource
+	set shared_type = #shared_type#
+	   ,name = #res_title#
+	   ,description = #description#
+	WHERE
+		resource_seq = #resource_seq#
+</update>
+
 <select id="userDbResourceData" resultClass="java.lang.String" parameterClass="com.hangum.tadpole.sql.dao.ResourceManagerDAO">
 	SELECT datas FROM user_db_resource_data
 	WHERE

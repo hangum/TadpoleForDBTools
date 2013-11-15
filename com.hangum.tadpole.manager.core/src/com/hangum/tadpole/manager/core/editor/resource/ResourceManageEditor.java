@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -28,6 +30,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -54,6 +58,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
@@ -63,6 +68,7 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.dao.ResourceManagerDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
@@ -83,6 +89,8 @@ public class ResourceManageEditor extends EditorPart {
 	private UserDBDAO userDB;
 	private Text textQuery;
 	private Text textTitle;
+	private ComboViewer comboViewer;
+	private Combo comboShare;
 	private TableViewer tableViewer;
 	private Table tableResource;
 	private Text textFilter;
@@ -90,6 +98,7 @@ public class ResourceManageEditor extends EditorPart {
 
 	List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
 	private TreeViewer treeViewer;
+	private Text textDescription;
 
 	public ResourceManageEditor() {
 		super();
@@ -159,20 +168,15 @@ public class ResourceManageEditor extends EditorPart {
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite compositeBody = new Composite(sashForm, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(2, false));
+		columnFilter = new DefaultTableColumnFilter();
 
-		treeViewer = new TreeViewer(compositeBody, SWT.BORDER);
+		SashForm sashForm_1 = new SashForm(sashForm, SWT.NONE);
+
+		treeViewer = new TreeViewer(sashForm_1, SWT.BORDER);
 		Tree treeDatabase = treeViewer.getTree();
-		GridData gd_treeDatabase = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_treeDatabase.widthHint = 126;
-		treeDatabase.setLayoutData(gd_treeDatabase);
 		treeDatabase.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 
-		Composite composite_1 = new Composite(compositeBody, SWT.NONE);
-		GridData gd_composite_1 = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_composite_1.widthHint = 407;
-		composite_1.setLayoutData(gd_composite_1);
+		Composite composite_1 = new Composite(sashForm_1, SWT.NONE);
 		composite_1.setLayout(new GridLayout(1, false));
 
 		Composite composite_2 = new Composite(composite_1, SWT.NONE);
@@ -185,17 +189,24 @@ public class ResourceManageEditor extends EditorPart {
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFilter.setText("Filter");
 
-		textFilter = new Text(composite_2, SWT.BORDER);
+		textFilter = new Text(composite_2, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textFilter.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.Selection) {
+					columnFilter.setSearchString(textFilter.getText());
+					tableViewer.refresh();
+				}
+			}
+		});
 
 		tableViewer = new TableViewer(composite_1, SWT.BORDER | SWT.FULL_SELECTION);
 		tableResource = tableViewer.getTable();
 		tableResource.setHeaderVisible(true);
 		tableResource.setLinesVisible(true);
 		tableResource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		createTableColumn();
-		columnFilter = new DefaultTableColumnFilter();
+		sashForm_1.setWeights(new int[] { 230, 359 });
 		tableViewer.addFilter(columnFilter);
 
 		Group grpQuery = new Group(sashForm, SWT.NONE);
@@ -208,40 +219,104 @@ public class ResourceManageEditor extends EditorPart {
 		grpQuery.setLayout(gl_grpQuery);
 
 		Composite composite = new Composite(grpQuery, SWT.NONE);
-		composite.setLayout(new GridLayout(6, false));
-		GridData gd_composite = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_composite.heightHint = 35;
-		composite.setLayoutData(gd_composite);
+		GridLayout gl_composite = new GridLayout(6, false);
+		gl_composite.marginHeight = 2;
+		gl_composite.marginWidth = 2;
+		gl_composite.verticalSpacing = 2;
+		composite.setLayout(gl_composite);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Label lblNewLabel = new Label(composite, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText("Share");
 
-		ComboViewer comboViewer = new ComboViewer(composite, SWT.NONE);
-		Combo comboShare = comboViewer.getCombo();
-		GridData gd_comboShare = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_comboShare.widthHint = 90;
-		comboShare.setLayoutData(gd_comboShare);
+		comboViewer = new ComboViewer(composite, SWT.NONE);
+		comboShare = comboViewer.getCombo();
+		comboShare.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboShare.setItems(new String[] { "PUBLIC", "PRIVATE" });
 
 		Label lblNewLabel_1 = new Label(composite, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_1.setText("Title");
 
 		textTitle = new Text(composite, SWT.BORDER);
-		GridData gd_textTitle = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_textTitle.widthHint = 195;
-		textTitle.setLayoutData(gd_textTitle);
+		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Button btnSave = new Button(composite, SWT.NONE);
+		btnSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO : SAVE...공유 구분및 제목 변경.
+				if (tableViewer.getSelection().isEmpty())
+					return;
+
+				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
+				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
+
+				try {
+					String share_type = comboShare.getText();
+					share_type = (share_type == null || "".equals(share_type)) ? "PUBLIC" : share_type;
+					dao.setShared_type(share_type);
+					dao.setRes_title(textTitle.getText());
+					dao.setDescription(textDescription.getText());
+					TadpoleSystem_UserDBResource.updateResourceHeader(dao);
+					reLoadResource();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnSave.setText("Save");
 
 		Button btnDelete = new Button(composite, SWT.NONE);
+		btnDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO : DELYN SET TO 'YES'
+				if (tableViewer.getSelection().isEmpty())
+					return;
+
+				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
+				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
+
+				// 기존에 사용하던 좌측 트리(디비목록)에 리소스를 표시하지 않을 경우에는 dao를 통일해서 하나만 쓰게 수정이
+				// 필요함.
+				UserDBResourceDAO userDBResource = new UserDBResourceDAO();
+				userDBResource.setResource_seq((int) dao.getResource_seq());
+				userDBResource.setName(dao.getRes_title());
+				userDBResource.setParent(userDB);
+
+				try {
+					TadpoleSystem_UserDBResource.delete(userDBResource);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnDelete.setText("Delete");
 
-		textQuery = new Text(grpQuery, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		Label lblDescription = new Label(composite, SWT.NONE);
+		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblDescription.setText("Description");
 
-		sashForm.setWeights(new int[] { 7, 3 });
+		textDescription = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
+		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1);
+		gd_textDescription.heightHint = 44;
+		textDescription.setLayoutData(gd_textDescription);
+
+		textQuery = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 6, 1));
+		new Label(composite, SWT.NONE);
+		new Label(composite, SWT.NONE);
+		new Label(composite, SWT.NONE);
+		new Label(composite, SWT.NONE);
+		new Label(composite, SWT.NONE);
+		new Label(composite, SWT.NONE);
+		sashForm.setWeights(new int[] { 179, 242 });
+
+		createTableColumn();
 
 		initUI();
 
@@ -259,12 +334,12 @@ public class ResourceManageEditor extends EditorPart {
 	private void createTableColumn() {
 
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
-		new TableViewColumnDefine("RESOURCE_SEQ", "Resource ID", 50, SWT.RIGHT) //
-				, new TableViewColumnDefine("RESOURCE_TYPES", "Resource Type", 60, SWT.CENTER) //
-				, new TableViewColumnDefine("USER_NAME", "User Name", 90, SWT.CENTER) //
-				, new TableViewColumnDefine("RES_TITLE", "Resource Title", 150, SWT.LEFT) //
-				, new TableViewColumnDefine("SHARED_TYPE", "Shared type", 70, SWT.CENTER) //
-				, new TableViewColumnDefine("CREATE_TIME", "Create time", 100, SWT.CENTER) //
+		new TableViewColumnDefine("RESOURCE_SEQ", "ID", 50, SWT.RIGHT) //
+				, new TableViewColumnDefine("RESOURCE_TYPES", "Type", 60, SWT.CENTER) //
+				, new TableViewColumnDefine("USER_NAME", "User", 90, SWT.CENTER) //
+				, new TableViewColumnDefine("RES_TITLE", "Subject", 150, SWT.LEFT) //
+				, new TableViewColumnDefine("SHARED_TYPE", "Share", 70, SWT.CENTER) //
+				, new TableViewColumnDefine("CREATE_TIME", "Create", 100, SWT.CENTER) //
 				, new TableViewColumnDefine("DESCRIPTION", "Description", 250, SWT.LEFT) //
 		};
 
@@ -309,6 +384,37 @@ public class ResourceManageEditor extends EditorPart {
 				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
 
+				SqlMapClient sqlClient;
+				try {
+					sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+					List<String> result = sqlClient.queryForList("userDbResourceData", dao); //$NON-NLS-1$
+
+					comboShare.select("PUBLIC".equals(dao.getShared_type()) ? 0 : 1);
+					textTitle.setText(dao.getRes_title());
+					textDescription.setText(dao.getDescription());
+					textQuery.setText("");
+					for (String data : result) {
+						textQuery.append(data);
+					}
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		});
+
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				if (tableViewer.getSelection().isEmpty())
+					return;
+
+				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
+				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
+
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if (PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
 
@@ -319,46 +425,25 @@ public class ResourceManageEditor extends EditorPart {
 						// RDBERDViewAction ea = new RDBERDViewAction();
 						// ea.run(dao);
 					}
-					
-					
-					SqlMapClient sqlClient;
-					try {
-						sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-						List<String> result = sqlClient.queryForList("userDbResourceData", dao); //$NON-NLS-1$
-						
-						textQuery.setText("");
-						for (String data:result){
-							textQuery.append(data);
-						}
-						
-						
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					
-				}else if (PublicTadpoleDefine.RESOURCE_TYPE.SQL.toString().equals(dao.getResource_types())) {
-					SqlMapClient sqlClient;
-					try {
-						sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-						List<String> result = sqlClient.queryForList("userDbResourceData", dao); //$NON-NLS-1$
-						
-						textQuery.setText("");
-						for (String data:result){
-							textQuery.append(data);
-						}
-						
-						
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	
+
+				} else if (PublicTadpoleDefine.RESOURCE_TYPE.SQL.toString().equals(dao.getResource_types())) {
+
+					QueryEditorAction qea = new QueryEditorAction();
+					UserDBResourceDAO ad = new UserDBResourceDAO();
+					ad.setResource_seq((int) dao.getResource_seq());
+					ad.setName(dao.getRes_title());
+					ad.setParent(userDB);
+					qea.run(ad);
+
 				}
 
 			}
 		});
+		
+		reLoadResource();
+	}
+
+	public void reLoadResource() {
 
 		try {
 			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
