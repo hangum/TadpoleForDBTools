@@ -41,7 +41,7 @@ public class DBCPConnectionManager {
 	
 	private DataSource makePool(final String userId, UserDBDAO userDB) {
 		GenericObjectPool connectionPool = new GenericObjectPool();
-		connectionPool.setMaxActive(10);
+		connectionPool.setMaxActive(2);
 		
 		String passwdDecrypt = "";
 		try {

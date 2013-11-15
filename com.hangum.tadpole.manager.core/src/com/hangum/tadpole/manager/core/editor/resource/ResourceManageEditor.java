@@ -59,6 +59,8 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
+import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
+import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
@@ -106,14 +108,10 @@ public class ResourceManageEditor extends EditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -127,13 +125,11 @@ public class ResourceManageEditor extends EditorPart {
 
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -308,12 +304,6 @@ public class ResourceManageEditor extends EditorPart {
 
 		textQuery = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 6, 1));
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
 		sashForm.setWeights(new int[] { 179, 242 });
 
 		createTableColumn();
@@ -384,9 +374,8 @@ public class ResourceManageEditor extends EditorPart {
 				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
 
-				SqlMapClient sqlClient;
 				try {
-					sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 					List<String> result = sqlClient.queryForList("userDbResourceData", dao); //$NON-NLS-1$
 
 					comboShare.select("PUBLIC".equals(dao.getShared_type()) ? 0 : 1);
@@ -398,8 +387,7 @@ public class ResourceManageEditor extends EditorPart {
 					}
 
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error("Resource detail", e);
 				}
 
 			}
@@ -417,13 +405,15 @@ public class ResourceManageEditor extends EditorPart {
 
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if (PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
-
+//					UserDBResourceDAO resourceDAO = new UserDBResourceDAO();
+					
+					
 					if (userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
-						// MongoDBERDViewAction ea = new MongoDBERDViewAction();
-						// ea.run(dao);
+						 MongoDBERDViewAction ea = new MongoDBERDViewAction();
+//						 ea.run(dao);
 					} else {
-						// RDBERDViewAction ea = new RDBERDViewAction();
-						// ea.run(dao);
+						 RDBERDViewAction ea = new RDBERDViewAction();
+//						 ea.run(dao);
 					}
 
 				} else if (PublicTadpoleDefine.RESOURCE_TYPE.SQL.toString().equals(dao.getResource_types())) {

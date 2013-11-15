@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -1500,8 +1502,9 @@ public class MainEditor extends EditorExtension {
 				sqlQuery += ";"; //$NON-NLS-1$
 			}
 			// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-			logger.debug(""+sqlQuery);
-			statement.execute(sqlQuery);//executeUpdate( sqlQuery );
+			if(logger.isDebugEnabled()) logger.debug(""+sqlQuery);
+			if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) statement.execute(sqlQuery);
+			else statement.executeUpdate(sqlQuery);
 			
 			// create table, drop table이면 작동하도록			
 			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$

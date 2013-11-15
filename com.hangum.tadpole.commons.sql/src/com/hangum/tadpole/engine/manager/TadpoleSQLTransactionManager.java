@@ -55,7 +55,7 @@ public class TadpoleSQLTransactionManager {
 	 */
 	public static Connection getInstance(final String userId, final UserDBDAO userDB, final boolean isAutoCommit) throws Exception {
 		
-		logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + " / " + userDB.getUsers() + "[isAutoCommit]: " + isAutoCommit);
+		if(logger.isDebugEnabled()) logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + " / " + userDB.getUsers() + "[isAutoCommit]: " + isAutoCommit);
 		
 		synchronized(dbManager) {
 			final String searchKey = getKey(userId, userDB);
@@ -70,16 +70,17 @@ public class TadpoleSQLTransactionManager {
 					
 					transactionDAO.setConn(conn);
 					dbManager.put(searchKey, transactionDAO);
-					logger.debug("\t New connection SQLMapSession." );
+					if(logger.isDebugEnabled())  logger.debug("\t New connection SQLMapSession." );
 				} catch(Exception e) {
 					logger.error("transaction connection", e);
 				}
 			} else {
-				logger.debug("\t Already register SQLMapSession." );
-				logger.debug("\t Is auto commit " + transactionDAO.getConn().getAutoCommit());
+				if(logger.isDebugEnabled()) {
+					logger.debug("\t Already register SQLMapSession." );
+					logger.debug("\t Is auto commit " + transactionDAO.getConn().getAutoCommit());
+				}
 			}
-
-			logger.debug("[conn code]" + transactionDAO.toString());
+			if(logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.toString());
 			
 			return transactionDAO.getConn();
 		}
@@ -136,9 +137,11 @@ public class TadpoleSQLTransactionManager {
 	 * @param userDB
 	 */
 	public static void rollback(final String userId, final UserDBDAO userDB) {
-		logger.debug("=============================================================================");
-		logger.debug("\t rollback [userId]" + userId );
-		logger.debug("=============================================================================");
+		if(logger.isDebugEnabled()) {
+			logger.debug("=============================================================================");
+			logger.debug("\t rollback [userId]" + userId );
+			logger.debug("=============================================================================");
+		}
 		
 		synchronized (dbManager) {
 			TransactionDAO transactionDAO = dbManager.get(getKey(userId, userDB));
@@ -146,7 +149,7 @@ public class TadpoleSQLTransactionManager {
 			if(transactionDAO != null) {
 				Connection conn = transactionDAO.getConn();
 				try {
-					logger.debug("\tIs auto commit " + conn.getAutoCommit());
+					if(logger.isDebugEnabled()) logger.debug("\tIs auto commit " + conn.getAutoCommit());
 					conn.rollback();
 				} catch(Exception e) {
 					logger.error("commit exception", e);
