@@ -64,7 +64,6 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		}
 		
 		// 사용자의 Transaction connection 이 있을 경우 commit 처리한다.
-		//TODO rollback을 해야 맞을까?
 		TadpoleSQLTransactionManager.executeCommit(SessionManager.getEMAIL());
 		
 		// standalone 모드일경우에는 프로그램 종료한다.
