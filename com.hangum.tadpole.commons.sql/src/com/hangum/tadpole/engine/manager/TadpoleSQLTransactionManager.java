@@ -12,11 +12,14 @@ package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.transaction.DBCPConnectionManager;
 import com.hangum.tadpole.engine.transaction.TransactionDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -41,6 +44,27 @@ public class TadpoleSQLTransactionManager {
 			transactionManager = new TadpoleSQLTransactionManager();
 			dbManager = new HashMap<String, TransactionDAO>();
 		} 
+	}
+	
+	/**
+	 * 사용자가 로그 아웃등으로 나갈때 transaction commit합니다. 
+	 * 
+	 * @param userId
+	 */
+	public static void executeCommit(final String userId) {
+		Set<String> keys = dbManager.keySet();
+		for (String key : keys) {
+			if(StringUtils.startsWith(key, userId + PublicTadpoleDefine.DELIMITER)) {
+				if(logger.isDebugEnabled()) logger.debug("== logout transaction start==");
+				
+				TransactionDAO transactionDAO = dbManager.get(key);
+				try {
+					transactionDAO.getConn().commit();
+				} catch(Exception e) {
+					logger.error("logout transaction commit", e);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -182,6 +206,6 @@ public class TadpoleSQLTransactionManager {
 	 * @return
 	 */
 	private static String getKey(final String userId, final UserDBDAO userDB) {
-		return userId + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
+		return userId + PublicTadpoleDefine.DELIMITER + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
 	}
 }

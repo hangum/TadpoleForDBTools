@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
@@ -61,6 +62,9 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		for (IEditorReference iEditorReference : references) {
 			page.closeEditor(iEditorReference.getEditor(false), true);
 		}
+		
+		// 사용자의 Transaction connection 이 있을 경우 commit 처리한다.
+		TadpoleSQLTransactionManager.executeCommit(SessionManager.getEMAIL());
 		
 		// standalone 모드일경우에는 프로그램 종료한다.
 		if(ApplicationArgumentUtils.isStandaloneMode()) {

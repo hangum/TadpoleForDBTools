@@ -947,8 +947,6 @@ public class MainEditor extends EditorExtension {
 				} catch(Exception e) {
 					logger.error(RequestInfoUtils.requestInfo("MainEditor browser init", strUserEMail), e); //$NON-NLS-1$
 				}
-
-				getUserDB().getDBDefine().getExt();
 				
 				String callCommand = TadpoleEditorUtils.makeCommand(getUserDB().getDBDefine().getExt(), getInitDefaultEditorStr(), getAssistList());
 				browserEvaluate(callCommand);
