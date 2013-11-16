@@ -42,9 +42,9 @@ public class DBCPConnectionManager {
 	private DataSource makePool(final String userId, UserDBDAO userDB) {
 		GenericObjectPool connectionPool = new GenericObjectPool();
 		connectionPool.setMaxActive(2);
-		connectionPool.setWhenExhaustedAction((byte)1);
-		connectionPool.setMaxWait(1000 * 60); // 1분대기.
-		connectionPool.setTimeBetweenEvictionRunsMillis(3 * 1000);
+//		connectionPool.setWhenExhaustedAction((byte)1);
+//		connectionPool.setMaxWait(1000 * 60); 					// 1분대기.
+//		connectionPool.setTimeBetweenEvictionRunsMillis(3 * 1000);
 		connectionPool.setTestWhileIdle(true);
 		
 		String passwdDecrypt = "";
