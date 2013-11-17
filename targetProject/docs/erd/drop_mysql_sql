@@ -45,3 +45,9 @@ DROP TABLE IF EXISTS `data_security` RESTRICT;
 
 -- 클래스 목록
 DROP TABLE IF EXISTS `security_class` RESTRICT;
+
+-- 노트 목록
+DROP TABLE IF EXISTS `notes` RESTRICT;
+
+-- 노트 디테일
+DROP TABLE IF EXISTS `notes_detail` RESTRICT;

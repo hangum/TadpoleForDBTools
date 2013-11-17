@@ -89,6 +89,8 @@ public class TadpoleMySQLDDL extends NLS {
 	public static String user_group_seq;
 	public static String user_info_data_seq;
 	public static String user_role_seq;
+	
+	
 
 	static {
 		// initialize resource bundle
