@@ -116,9 +116,17 @@ public class RelationUtil {
 			// 실제 레퍼런스를 생성합니다.
 			for (SQLiteRefTableDAO sqliteRefTableDAO : getSQLiteRefTbl(userDB)) {
 	
-				int indexKey = StringUtils.indexOf(sqliteRefTableDAO.getSql(), "FOREIGN KEY");
+				String strFullTextSQL = sqliteRefTableDAO.getSql();
+				if(logger.isDebugEnabled()) logger.debug("\t full text:" + strFullTextSQL);
+				
+				int indexKey = StringUtils.indexOf(strFullTextSQL, "FOREIGN KEY");
+				if(indexKey == -1) {
+					if(logger.isDebugEnabled()) logger.debug("Not found foreign keys.");
+					continue;
+				}
+				
+				
 				String forKey = sqliteRefTableDAO.getSql().substring(indexKey);
-				if(logger.isDebugEnabled()) logger.debug("\t full text:" + sqliteRefTableDAO.getSql());
 				if(logger.isDebugEnabled()) logger.debug("\t=================>[forKeys]\n" + forKey);
 				String[] foreignInfo =forKey.split("FOREIGN KEY");
 				
