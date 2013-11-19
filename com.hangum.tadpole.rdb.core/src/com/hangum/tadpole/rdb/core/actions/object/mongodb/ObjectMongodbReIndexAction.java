@@ -14,15 +14,18 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Object Explorer에서 사용하는 Mongodb reIndex
@@ -45,22 +48,20 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 	}
 
 	@Override
-	public void run() {
-		if(null != this.sel) {
-			String originalName = this.sel.getFirstElement().toString();
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+		String originalName = selection.getFirstElement().toString();
 
-			if(MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Confirm", Messages.ObjectMongodbReIndexAction_2)) {				 //$NON-NLS-1$
-				try {
-					MongoDBQuery.reIndexCollection(userDB, originalName);
-					
-				} catch (Exception e) {
-					logger.error("mongodb rename", e); //$NON-NLS-1$
-					
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(null, "Error","Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				
+		if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Confirm", Messages.ObjectMongodbReIndexAction_2)) { //$NON-NLS-1$
+			try {
+				MongoDBQuery.reIndexCollection(userDB, originalName);
+
+			} catch (Exception e) {
+				logger.error("mongodb rename", e); //$NON-NLS-1$
+
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
+
 		}
 		
 	}

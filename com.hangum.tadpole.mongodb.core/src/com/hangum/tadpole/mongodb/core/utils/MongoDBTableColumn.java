@@ -33,6 +33,27 @@ public class MongoDBTableColumn {
 	static Logger logger = Logger.getLogger(MongoDBTableColumn.class);
 	
 	/**
+	 * TableView에서 사용할 몽고디비 헤더를 정의한다. 
+	 *
+	 * @param dbObject
+	 * @param mapColumns
+	 * @return
+	 */
+	public static Map<Integer, String> getTabelColumnView(DBObject dbObject, Map<Integer, String> mapColumns) {
+		if(dbObject == null) return mapColumns;
+		
+		int i = mapColumns.size();
+		for (String name : dbObject.keySet()) {
+			if(!mapColumns.containsValue(name)) {
+				mapColumns.put(i, name);
+				i++;
+			}
+		}
+		
+		return mapColumns;
+	}
+	
+	/**
 	 * TableViewer의 컬럼 정보를 보여주도록 합니다.
 	 * 
 	 * @return
@@ -117,4 +138,5 @@ public class MongoDBTableColumn {
 		
 		column.setChildren(listChildField);
 	}
+
 }

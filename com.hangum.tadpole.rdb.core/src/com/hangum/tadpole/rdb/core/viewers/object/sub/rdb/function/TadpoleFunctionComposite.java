@@ -72,7 +72,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private static final Logger logger = Logger.getLogger(TadpoleFunctionComposite.class);
 	
 	private TableViewer functionTableViewer;
-	private ProcedureFunctionComparator fuctionComparator;
+	private ProcedureFunctionComparator functionComparator;
 	private List<ProcedureFunctionDAO> showFunction;
 	private ProcedureFunctionViewFilter functionFilter;
 
@@ -118,15 +118,14 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
-		fuctionComparator = new ProcedureFunctionComparator();
-		functionTableViewer.setSorter(fuctionComparator);
+		functionComparator = new ProcedureFunctionComparator();
+		functionTableViewer.setSorter(functionComparator);
+		functionComparator.setColumn(0);
 
-		createProcedureFunctionColumn(functionTableViewer, fuctionComparator);
+		createProcedureFunctionColumn(functionTableViewer, functionComparator);
 
 		functionTableViewer.setLabelProvider(new ProcedureFunctionLabelProvicer());
 		functionTableViewer.setContentProvider(new ArrayContentProvider());
-//		tableViewer.setInput(showFunction);
-		
 		
 		functionTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {

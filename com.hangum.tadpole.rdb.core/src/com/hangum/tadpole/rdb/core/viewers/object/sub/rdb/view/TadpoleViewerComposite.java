@@ -198,6 +198,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		// sorter
 		viewComparator = new ObjectComparator();
 		viewListViewer.setSorter(viewComparator);
+		viewComparator.setColumn(0);
 
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(viewListViewer, SWT.NONE);
 		TableColumn tblclmnTableName = tableViewerColumn.getColumn();

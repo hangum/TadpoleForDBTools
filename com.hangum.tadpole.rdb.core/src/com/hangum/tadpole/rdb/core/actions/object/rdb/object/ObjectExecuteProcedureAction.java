@@ -10,13 +10,15 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
-import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.executer.ProcedureExecuterManager;
 
 /**
@@ -31,7 +33,7 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ObjectExecuteProcedureAction.class);
+//	private static final Logger logger = Logger.getLogger(ObjectExecuteProcedureAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.execute.procedure";
 
@@ -42,12 +44,12 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run() {
-		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
 		
-		ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
-		if(pm.isExecuted(procedureDAO, getUserDB())) {
-			ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
+		ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
+		if(pm.isExecuted(procedureDAO, userDB)) {
+			ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, userDB, procedureDAO);
 			epd.open();
 		}
 	}// end method

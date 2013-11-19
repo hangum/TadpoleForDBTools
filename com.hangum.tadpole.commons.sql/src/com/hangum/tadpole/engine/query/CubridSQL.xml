@@ -44,9 +44,24 @@ SELECT class_name name FROM DB_CLASS WHERE 1 = 0
 	Key			: primary key, foreign key(예: PK, FK)
 	Default		: 기본값
 	Extra			: 특수컬럼(예: auto_increment)
+
+	show columns FROM $table$
  -->
 <select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
-	show columns FROM $table$
+		select 
+		a.attr_name as "field"
+		,a.data_type as "type"
+		, a.is_nullable as "null"
+		, a.default_value as "default"
+		, a.attr_type as "extra"
+		, (case when k.key_order &gt;= 0 then 'PK' else '' end) as "key"
+		, k.key_order
+		, k.asc_desc
+	from db_attribute a
+	    left join db_index x on a.class_name = x.class_name and x.is_primary_key = 'YES'
+	    left join db_index_key k on x.index_name = k.index_name and x.class_name = k.class_name and a.attr_name = k.key_attr_name
+	where a.class_name = #table#
+	order by a.def_order
 </select>
 
 <!-- 
@@ -160,9 +175,11 @@ SELECT
 	collation				:
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT  
-		sp_name AS name	
-	FROM db_stored_procedure
+	SELECT   
+		p.sp_name as "name"
+	  	, p.*
+	  FROM db_stored_procedure  p
+	 WHERE sp_type = 'PROCEDURE'
 </select>
 
 <!-- 
@@ -184,9 +201,11 @@ SELECT
 	collation				:
  -->
 <select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT  
-		sp_name AS name	
-	FROM db_stored_procedure
+	SELECT   
+		p.sp_name as "name"
+	  	, p.*
+	  FROM db_stored_procedure  p
+	 WHERE sp_type = 'FUNCTION'
 </select>
 
 <!-- 

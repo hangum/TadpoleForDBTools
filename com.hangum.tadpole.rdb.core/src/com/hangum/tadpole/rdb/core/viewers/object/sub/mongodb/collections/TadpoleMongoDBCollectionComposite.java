@@ -216,6 +216,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		// sorter
 		tableComparator = new MongoDBCollectionComparator();
 		tableListViewer.setSorter(tableComparator);
+		tableComparator.setColumn(0);
 
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();

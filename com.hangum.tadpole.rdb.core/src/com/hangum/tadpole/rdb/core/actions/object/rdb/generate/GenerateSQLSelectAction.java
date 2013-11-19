@@ -11,14 +11,17 @@
 package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * generate sql statement     
@@ -43,8 +46,8 @@ public class GenerateSQLSelectAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run() {
-		TableDAO tableDAO = (TableDAO)sel.getFirstElement();
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
 	}
 }

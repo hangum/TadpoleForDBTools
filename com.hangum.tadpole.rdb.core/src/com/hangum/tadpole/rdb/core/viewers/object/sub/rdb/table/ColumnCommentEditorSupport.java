@@ -151,7 +151,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 				stmt = javaConn.prepareStatement(query.toString());
 				
 				try{
-					stmt.executeQuery();
+					stmt.execute();
 				}catch(Exception e){
 					//  org.postgresql.util.PSQLException: No results were returned by the query.
 				}

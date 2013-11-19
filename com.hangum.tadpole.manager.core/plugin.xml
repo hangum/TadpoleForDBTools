@@ -17,6 +17,20 @@
             id="com.hangum.tadpole.manager.core.editor.manager.executed_sql"
             name="실행한 쿼리">
       </editor>
+      <editor
+            class="com.hangum.tadpole.manager.core.editor.resource.ResourceManageEditor"
+            default="false"
+            icon="resources/icons/resources.png"
+            id="com.hangum.tadpole.manager.core.editor.resource.manager"
+            name="Resource Manager">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.manager.core.editor.transaction.connection.TransactionConnectionListEditor"
+            default="false"
+            icon="resources/icons/transaction_db_status.png"
+            id="com.hangum.tadpole.manager.core.editor.transaction.connection.db"
+            name="DB Connection Manager">
+      </editor>
    </extension>
 
 </plugin>

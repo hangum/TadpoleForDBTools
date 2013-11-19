@@ -70,10 +70,10 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 			if (logger.isDebugEnabled())
 				logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB.getDbms_types()));
 
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT || 
-					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT || 
-					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT || 
-					DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || 
+					DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT || 
+					DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT || 
+					DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				return true;
 			} else {
 				return false;
@@ -162,7 +162,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 
 				query.append(" COMMENT ON COLUMN ").append(dao.getTable_name() + ".").append(dao.getColumn_name()).append(" IS '").append(dao.getColumn_comment()).append("'");
 
@@ -170,9 +170,9 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					logger.debug("query is " + query.toString());
 
 				stmt = javaConn.prepareStatement(query.toString());
-				stmt.executeQuery();
+				stmt.execute();
 
-			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT) {
+			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers());
 				query.append(",'table' , '").append(dao.getTable_name()).append("'");
 				query.append(",'column' , '").append(dao.getColumn_name()).append("'");
@@ -196,7 +196,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				}
-			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT) {
+			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo ");
 				query.append(",'table' , '").append(dao.getTable_name()).append("'");
 				query.append(",'column' , '").append(dao.getColumn_name()).append("'");
@@ -250,13 +250,13 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.POSTGRE_DEFAULT) {
+			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 				query.append(" COMMENT ON TABLE ").append(dao.getTable_name()).append(" IS '").append(dao.getTable_comment()).append("'");
 
 				stmt = javaConn.prepareStatement(query.toString());
-				stmt.executeQuery();
+				stmt.execute();
 
-			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_8_LE_DEFAULT) {
+			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
@@ -275,7 +275,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				}
-			} else if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MSSQL_DEFAULT) {
+			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo,'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {

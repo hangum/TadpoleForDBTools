@@ -13,6 +13,10 @@ package com.hangum.tadpole.engine.define;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -62,6 +66,8 @@ public enum DBDefine {
 	/** Aamazon RDS */
 	AMAZONRDS_DEFAULT
 	;	
+	
+	private static final Logger logger = Logger.getLogger(DBDefine.class);
 	
 	/** 환경정보가 있는 상대 위치 */
 	private final static String prefix 			= "com/hangum/tadpole/engine/config/";
@@ -193,11 +199,75 @@ public enum DBDefine {
 	}
 	
 	/**
+	 * 에디터에서 사용할 확장자를 만듭니다.
+	 * @return
+	 */
+	public String getExt() {
+		String extension = "tadpole_edit"; //$NON-NLS-1$
+		
+		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
+			extension += ".mysql"; //$NON-NLS-1$
+		} else if(this == DBDefine.ORACLE_DEFAULT) {
+			extension += ".oracle"; //$NON-NLS-1$
+		} else if(this == DBDefine.MSSQL_DEFAULT) {
+			extension += ".mssql"; //$NON-NLS-1$
+		} else if(this == DBDefine.SQLite_DEFAULT) {
+			extension += ".sqlite"; //$NON-NLS-1$
+		} else if(this == DBDefine.CUBRID_DEFAULT) {
+			extension += ".mysql"; //$NON-NLS-1$
+		} else if(this == DBDefine.HIVE_DEFAULT) {
+			extension += ".hql"; //$NON-NLS-1$
+		} else {
+			extension += ".postgresql"; //$NON-NLS-1$
+		}
+		
+		return extension;
+	}
+	
+	/**
 	 * 사용자 디비를 리턴한다.
 	 * @return
 	 */
 	public static List<DBDefine> userDBValues() {
+		List<DBDefine> listSupportDb = new ArrayList<DBDefine>();
+		
+		if(ApplicationArgumentUtils.isUseDB()) {
+			
+			try {
+				String strUserDB = ApplicationArgumentUtils.getUseDB();
+				if("all".equalsIgnoreCase(strUserDB)) listSupportDb = allUserUseDB();
+				else {
+					String[] arryUseDBTypes = StringUtils.split(strUserDB, ",");
+					
+					for (String strDBTyps : arryUseDBTypes) {
+						DBDefine tmpDBDefine = getDBDefine(strDBTyps);
+						if(tmpDBDefine != null) {
+							listSupportDb.add(tmpDBDefine); 
+						} else {
+							logger.error("*** Error : Not support DB. " + strDBTyps);
+						}
+					}
+				}
+				
+			} catch (Exception e) {
+				logger.error("System initialize exception", e);
+				System.exit(1);
+			}
+			
+		} else {
+			listSupportDb = allUserUseDB();
+		}
+		
+		return listSupportDb;
+	}
+	
+	/**
+	 * 사용자가 사용할 수 있는 모든 디비.
+	 * @return
+	 */
+	private static List<DBDefine> allUserUseDB() {
 		List<DBDefine> supportDb = new ArrayList<DBDefine>();
+		
 		supportDb.add(AMAZONRDS_DEFAULT);
 		
 		supportDb.add(CUBRID_DEFAULT);
@@ -212,7 +282,7 @@ public enum DBDefine {
 		
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
-		supportDb.add(SQLite_DEFAULT);		
+		supportDb.add(SQLite_DEFAULT);
 		
 		return supportDb;
 	}

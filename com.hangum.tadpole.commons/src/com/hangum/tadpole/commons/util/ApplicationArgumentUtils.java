@@ -63,6 +63,30 @@ public class ApplicationArgumentUtils {
 	public static String getDBPath() throws Exception {
 		return getValue("-dbPath");
 	}
+	
+	/**
+	 * 사용자 디비를 사용합니까?
+	 * @return
+	 */
+	public static boolean isUseDB() {
+		return checkString("-useDB");
+	}
+	
+	/**
+	 * 사용자 디비 목록을 가져옵니다.
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getUseDB() throws Exception {
+		return getValue("-useDB");
+	}
+	
+	public static boolean isDefaultDB() {
+		return checkString("-defaultDB");
+	}
+	public static String getDefaultDB() throws Exception {
+		return getValue("-defaultDB");
+	}
 
 	/**
 	 * <pre>

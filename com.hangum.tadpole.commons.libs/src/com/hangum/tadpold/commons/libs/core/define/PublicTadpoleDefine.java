@@ -25,7 +25,7 @@ public class PublicTadpoleDefine {
 	public static String DELIMITER = "||TADPOLE-DELIMITER||"; //$NON-NLS-1$
 	
 	/** 라인분리자 */
-	public static String LINE_SEPARATOR = System.getProperty("line.separator"); //$NON-NLS-1$
+	public static String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DILIMITER = ";"; //$NON-NLS-1$
@@ -65,7 +65,7 @@ public class PublicTadpoleDefine {
 	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE"; //$NON-NLS-1$
 	
 	/** Tadpole support browser list  */
-	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI, IE10};
+	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI, IE10, IE11};
 	
 	/** USER TYPE */
 	public static enum USER_TYPE {ADMIN, DBA, MANAGER, USER/*, GUEST*/};

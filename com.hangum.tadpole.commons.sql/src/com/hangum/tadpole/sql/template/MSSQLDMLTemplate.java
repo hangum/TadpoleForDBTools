@@ -26,7 +26,7 @@ public class MSSQLDMLTemplate {
 //	"select * from ( %s ) where ROWNUM > %s and ROWNUM <= %s";
 	
 	
-	public static final String TMP_EXPLAIN_EXTENDED = "explain extended  ";
+	public static final String TMP_EXPLAIN_EXTENDED = "SET SHOWPLAN_TEXT ";
 	
 	/** table  */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR +  

@@ -443,12 +443,74 @@ ORDER BY 1, 2
 <!-- 
 	SESSION LIST
  -->
-<select id="sessionList" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
-	SHOW PROCESSLIST
+<select id="getSessionGrant" resultClass="java.lang.Integer">
+select sum(case when privilege = 'ALTER SYSTEM' then 1 else 0 end) from Session_privs where 1=1
 </select>
 
+<select id="getSessionView" resultClass="java.lang.Integer">
+<![CDATA[
+SELECT count(*) FROM v$$session WHERE 1 = 1
+]]>
+</select>
+
+<select id="getVersion" resultClass="java.lang.Integer">
+<![CDATA[
+SELECT TO_NUMBER(SUBSTR (version, 1, INSTR (version, '.') - 1)) AS version
+  FROM (SELECT TRIM (SUBSTR (banner, INSTR (banner, CHR (9)) + 1, 10)) AS version
+          FROM v$$version
+         WHERE banner LIKE 'CORE%')
+]]>
+</select>
+
+<select id="sessionList_9" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
+<![CDATA[
+  SELECT s.sid || ',' || s.serial## AS id
+        ,s.username AS "USER"
+        ,s.osuser || ' of ' || s.machine AS HOST
+        ,s.schemaname AS db
+        ,SUBSTR (q.sql_text, 1, 30) || '...' AS command
+        ,s.logon_time AS time
+        ,s.status AS state
+        ,s.module || ' - ' || s.status || ' : ' || CHR (9) || CHR (13) || CHR (13) || q.sql_text AS info
+    FROM v$$session s
+         LEFT JOIN v$$process p
+            ON p.addr = s.paddr
+         LEFT JOIN v$$sql q
+            ON q.address IN DECODE (s.sql_address, NULL, s.prev_sql_addr, s.sql_address)
+   WHERE 1 = 1 AND s.username IS NOT NULL AND NVL (s.osuser, 'x') <> 'SYSTEM' AND s.TYPE <> 'BACKGROUND'
+ORDER BY s.module, s.username
+]]>
+</select> 
+
+<select id="sessionList" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
+<![CDATA[
+	  SELECT S.SID || ',' || S.SERIAL## AS ID
+	        ,s.USERNAME AS "USER"
+	        ,S.OSUSER || ' of ' || s.MACHINE AS HOST
+	        ,S.SCHEMANAME AS DB
+	        ,SUBSTR (Q.SQL_TEXT, 1, 30) || '...' AS COMMAND
+	        ,S.LOGON_TIME AS TIME
+	        ,S.STATE AS STATE
+	        ,S.MODULE || ' - ' || S.STATUS ||' : '||CHR(9)||CHR(13)||CHR(13)||  Q.SQL_FULLTEXT AS INFO
+	    FROM V$$SESSION s
+	         LEFT JOIN v$$PROCESS P
+	            ON P.ADDR = S.PADDR
+	         LEFT JOIN V$$SQL Q
+	            ON Q.SQL_ID IN DECODE(S.SQL_ID, NULL, S.PREV_SQL_ID, S.SQL_ID) 
+	   WHERE 1=1
+	   AND s.USERNAME IS NOT NULL 
+	   AND NVL(s.osuser, 'x') <> 'SYSTEM' 
+	   AND s.TYPE <> 'BACKGROUND'
+	ORDER BY S.MODULE, S.USERNAME
+]]>
+</select>
+
+<!-- 
+	ALTER SYSTEM DISCONNECT SESSION '123,9' POST_TRANSACTION IMMEDIATE
+
+ -->
 <select id="killProcess" parameterClass="java.lang.String">
-	kill #pid#
+	ALTER SYSTEM KILL SESSION '$spid$' IMMEDIATE
 </select>
 
 

@@ -10,22 +10,17 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util;
 
+import java.io.StringReader;
 import java.sql.ResultSet;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import kry.sql.format.SqlFormatRule;
-import kry.sql.util.StringUtil;
+import net.sf.jsqlparser.parser.CCJSqlParserManager;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.Select;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import zigen.sql.parser.INode;
-import zigen.sql.parser.ISqlParser;
-import zigen.sql.parser.SqlParser;
-import zigen.sql.parser.ast.ASTRoot;
-import zigen.sql.parser.ast.ASTSelectStatement;
-import zigen.sql.parser.ast.ASTStatement;
 
 /**
  * <pre>
@@ -70,85 +65,17 @@ public class SQLUtil {
 		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
 			return true;
 		} else {
-			ASTStatement st = findStatement(parserSql(strSQL));
-			if(st instanceof ASTSelectStatement) {
-				isStatement = true;
+			try {
+				CCJSqlParserManager parserManager = new CCJSqlParserManager();
+				Statement statement = parserManager.parse(new StringReader(strSQL));
+				
+				if(statement instanceof Select) return true;
+			} catch(Exception e) {
+				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]", e);
 			}
 		}
 		
 		return isStatement;
-	}
-	
-	/**
-	 * 쿼리가 execute문인지 검사합니다.
-	 * 
-	 * @param strSQL
-	 * @return
-	 */
-	public static boolean isNoStatement(String strSQL) {
-		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * parser sql
-	 * 
-	 * @param sql
-	 * @return
-	 */
-	public static INode parserSql(String sql) {
-		INode node = new ASTRoot();
-		ISqlParser parser = null;
-		
-		try {
-			parser = new SqlParser(sql, getSqlFormatRule());
-			parser.parse(node);
-		} catch(Exception e) {
-			logger.error("SQL Parser exeception", e);
-		} finally {
-			if(parser != null) parser = null;
-		}
-		
-		return node;
-	}
-	
-	/**
-	 * find statement
-	 * 
-	 * @param root
-	 * @return
-	 */
-	public static ASTStatement findStatement(INode root) {
-		int size = root.getChildrenSize();
-		for (int i = 0; i < root.getChildrenSize(); i++) {
-			INode n = root.getChild(i);
-			if (n instanceof ASTStatement) {
-				return (ASTStatement) n;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * get user sql rule
-	 * @return
-	 */
-	private static SqlFormatRule getSqlFormatRule() {
-		SqlFormatRule rule = new SqlFormatRule();
-		rule.setRemoveEmptyLine(true);
-		int tabSize = 4;
-		boolean optDecode = true;
-		boolean optIn = false;
-
-		rule.setIndentString(StringUtil.padLeft("", tabSize, ' '));
-		rule.setDecodeSpecialFormat(!optDecode);
-		rule.setInSpecialFormat(optIn);
-		rule.setOutSqlSeparator(SqlFormatRule.SQL_SEPARATOR_SEMICOLON);
-		
-		return rule;
 	}
 	
 	/**
@@ -194,11 +121,12 @@ public class SQLUtil {
 //			https://github.com/hangum/TadpoleForDBTools/issues/140 오류로 불럭지정하였습니다.
 //			TO DO 특정 쿼리에서는 주석이 있으면 오류인데..DB에서 쿼리를 실행받는 다양한 조건을 고려할 필요가 있습니다. 
 			
-//			// 문장의 -- 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
-//			exeSQL = delComment(exeSQL, "--");
-			
 			// 문장 의 // 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
-			exeSQL = delComment(exeSQL, "--");
+			/*
+			 *  mysql의 경우 주석문자 즉, -- 바로 다음 문자가 --와 붙어 있으면 주석으로 인식하지 않아 오류가 발생합니다. --comment 이면 주석으로 인식하지 않습니다.(다른 디비(mssql, oralce, pgsql)은 주석으로 인식합니다)
+			 *  고칠가 고민하지만, 실제 쿼리에서도 동일하게 오류로 처리할 것이기에 주석을 지우지 않고 놔둡니다. - 2013.11.11- (hangum)
+			 */
+//			exeSQL = delComment(exeSQL, "--");
 			
 			// 마지막 쿼리를 재 사용하기위해
 //			exeSQL = StringUtils.replace(exeSQL, "\r", " ");
@@ -216,37 +144,37 @@ public class SQLUtil {
 		return exeSQL;
 	}
 	
-	/**
-	 * 쿼리중에 주석을 제거합니다.
-	 * 
-	 * @param sql
-	 * @param comment
-	 * @return
-	 */
-	private static String delComment(String sql, String comment) {
-		try {
-			String[] linesSQL = sql.split("\n");
-			if(linesSQL.length > 0) {
-				StringBuffer tmpSQL = new StringBuffer();
-				for (String string : linesSQL) {
-					int idx = string.indexOf(comment);//"--");
-					if( idx == 0) {
-					} else if( idx > 0) {
-						tmpSQL.append(string.substring(0, idx-1)).append("\n");
-					} else {
-						tmpSQL.append(string).append("\n");
-					}
-				}
-				
-				return tmpSQL.toString();
-			}
-			
-		} catch(Exception e) {
-			logger.error("execute sql", e);
-		}
-	
-		return sql;
-	}
+//	/**
+//	 * 쿼리중에 주석을 제거합니다.
+//	 * 
+//	 * @param sql
+//	 * @param comment
+//	 * @return
+//	 */
+//	private static String delComment(String sql, String comment) {
+//		try {
+//			String[] linesSQL = sql.split("\n");
+//			if(linesSQL.length > 0) {
+//				StringBuffer tmpSQL = new StringBuffer();
+//				for (String string : linesSQL) {
+//					int idx = string.indexOf(comment);//"--");
+//					if( idx == 0) {
+//					} else if( idx > 0) {
+//						tmpSQL.append(string.substring(0, idx-1)).append("\n");
+//					} else {
+//						tmpSQL.append(string).append("\n");
+//					}
+//				}
+//				
+//				return tmpSQL.toString();
+//			}
+//			
+//		} catch(Exception e) {
+//			logger.error("execute sql", e);
+//		}
+//	
+//		return sql;
+//	}
 	
 	/**
 	 * db resource data를 저장할때 2000byte 단위로 저장하도록 합니다.

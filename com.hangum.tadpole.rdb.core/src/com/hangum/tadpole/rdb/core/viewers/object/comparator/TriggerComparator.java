@@ -36,22 +36,22 @@ public class TriggerComparator extends ObjectComparator {
 		int rc = ASCENDING;
 		switch (this.propertyIndex) {
 		case 0:
-			rc = tb1.getName().compareTo(tb2.getName());
+			rc = tb1.getName().toLowerCase().compareTo(tb2.getName().toLowerCase());
 			break;
 		case 1:
-			rc = tb1.getEvent().compareTo(tb2.getEvent());
+			rc = tb1.getEvent().toLowerCase().compareTo(tb2.getEvent().toLowerCase());
 			break;
 		case 2:
-			rc = tb1.getTable_name().compareTo(tb2.getTable_name());
+			rc = tb1.getTable_name().toLowerCase().compareTo(tb2.getTable_name().toLowerCase());
 			break;
 		case 3:
-			rc = tb1.getStatement().compareTo(tb2.getStatement());
+			rc = tb1.getStatement().toLowerCase().compareTo(tb2.getStatement().toLowerCase());
 			break;
 		case 4:
-			rc = tb1.getTiming().compareTo(tb2.getTiming());
+			rc = tb1.getTiming().toLowerCase().compareTo(tb2.getTiming().toLowerCase());
 			break;
 		case 5:
-			rc = tb1.getCreated().compareTo(tb2.getCreated());
+			rc = tb1.getCreated().toLowerCase().compareTo(tb2.getCreated().toLowerCase());
 			break;
 		}
 		if (direction == DESCENDING) {

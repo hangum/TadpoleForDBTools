@@ -34,7 +34,7 @@ public class DefaultComparator extends ObjectComparator {
 		String e1Val = tlprov.getColumnText(e1, propertyIndex) == null?"":tlprov.getColumnText(e1, propertyIndex);
 		String e2Val = tlprov.getColumnText(e2, propertyIndex) == null?"":tlprov.getColumnText(e2, propertyIndex);
 		
-		int rc = e1Val.compareTo(e2Val);
+		int rc = e1Val.toLowerCase().compareTo(e2Val.toLowerCase());
 		if (direction == DESCENDING) {
 			rc = -rc;
 		}

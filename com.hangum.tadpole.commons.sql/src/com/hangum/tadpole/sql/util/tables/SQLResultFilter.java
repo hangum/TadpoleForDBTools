@@ -44,13 +44,13 @@ public class SQLResultFilter extends ViewerFilter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		HashMap<Integer, String> model = (HashMap<Integer, String>)element;
+		HashMap<Integer, Object> model = (HashMap<Integer, Object>)element;
 		
 		if(filter.equals("*") || filter.equals("")) return true; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if(filter.indexOf("=") == -1) {	// 모든 컬럼에서 검색합니다. //$NON-NLS-1$
 			for(int i=0; i<model.size(); i++) {
-				String tmp = model.get(i) == null?"":model.get(i);
+				String tmp = model.get(i) == null?"":model.get(i).toString();
 				String key = ( tmp ).toLowerCase();
 				
 				if(!"".equals(key)) { //$NON-NLS-1$
@@ -68,7 +68,7 @@ public class SQLResultFilter extends ViewerFilter {
 					if("".equals(searchText)) return false; //$NON-NLS-1$
 					
 					int index = tableToHeaderInfo.get( columnName );
-					String key = ( model.get(index) ).toLowerCase();
+					String key = ( model.get(index) == null?"":model.get(index).toString() ).toLowerCase();
 	
 					if(!"".equals(key)) { //$NON-NLS-1$
 						if(key.matches(".*" + searchText.toLowerCase() + ".*")) return true; //$NON-NLS-1$ //$NON-NLS-2$

@@ -143,6 +143,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 
 		javascriptComparator = new DefaultComparator();
 		tableViewer.setSorter(javascriptComparator);
+		javascriptComparator.setColumn(0);
 
 		createMongoDBIndexesColumn(tableViewer, javascriptComparator);
 

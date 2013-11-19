@@ -60,6 +60,7 @@ public class Messages extends NLS {
 	public static String FindPasswordDialog_5;
 	public static String FindPasswordDialog_6;
 	public static String LoginDialog_lblNewLabel_text;
+	public static String UserInformationDialog_5;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
