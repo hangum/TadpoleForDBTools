@@ -22,6 +22,7 @@ import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -57,13 +58,13 @@ public class DBCPConnectionManager {
 
 		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
 		DataSource ds = new PoolingDataSource(connectionPool);
-		mapDataSource.put(getKey(userId, userDB), ds);
+		mapDataSource.put(TadpoleSQLTransactionManager.getKey(userId, userDB), ds);
 		
 		return ds;
 	}
 	
 	public DataSource getDataSource(final String userId, final UserDBDAO userDB) {
-		DataSource retDataSource = mapDataSource.get(getKey(userId, userDB));
+		DataSource retDataSource = mapDataSource.get(TadpoleSQLTransactionManager.getKey(userId, userDB));
 		if(retDataSource == null) { 
 			return makePool(userId, userDB);
 		}
@@ -71,13 +72,13 @@ public class DBCPConnectionManager {
 		return retDataSource;
 	}
 	
-	/**
-	 * map의 카를 가져옵니다.
-	 * @param userDB
-	 * @return
-	 */
-	private static String getKey(final String userId, final UserDBDAO userDB) {
-		return userId + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
-	}
+//	/**
+//	 * map의 카를 가져옵니다.
+//	 * @param userDB
+//	 * @return
+//	 */
+//	private static String getKey(final String userId, final UserDBDAO userDB) {
+//		return userId + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
+//	}
 
 }

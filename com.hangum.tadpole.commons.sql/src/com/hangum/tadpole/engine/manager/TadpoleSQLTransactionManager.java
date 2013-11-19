@@ -11,6 +11,7 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -45,6 +46,8 @@ public class TadpoleSQLTransactionManager {
 			dbManager = new HashMap<String, TransactionDAO>();
 		} 
 	}
+	
+	
 	
 	/**
 	 * 사용자가 로그 아웃등으로 나갈때 transaction commit합니다. 
@@ -89,10 +92,17 @@ public class TadpoleSQLTransactionManager {
 					DataSource ds = DBCPConnectionManager.getInstance().getDataSource(userId, userDB);
 					
 					transactionDAO = new TransactionDAO();
+					
 					Connection conn = ds.getConnection();
 					conn.setAutoCommit(false);
 					
 					transactionDAO.setConn(conn);
+					transactionDAO.setUserId(userId);
+					transactionDAO.setUserDB(userDB);
+					transactionDAO.setStartTransaction(new Date(System.currentTimeMillis()));
+					
+					transactionDAO.setKey(searchKey);
+					
 					dbManager.put(searchKey, transactionDAO);
 					if(logger.isDebugEnabled())  logger.debug("\t New connection SQLMapSession." );
 				} catch(Exception e) {
@@ -131,9 +141,11 @@ public class TadpoleSQLTransactionManager {
 	 * @param userDB
 	 */
 	public static void commit(final String userId, final UserDBDAO userDB) {
-		logger.debug("=============================================================================");
-		logger.debug("\t commit [userId]" + userId );
-		logger.debug("=============================================================================");
+		if(logger.isDebugEnabled()) {
+			logger.debug("=============================================================================");
+			logger.debug("\t commit [userId]" + getKey(userId, userDB) );
+			logger.debug("=============================================================================");
+		}
 		
 		synchronized (dbManager) {
 			TransactionDAO transactionDAO = dbManager.get(getKey(userId, userDB));
@@ -163,7 +175,7 @@ public class TadpoleSQLTransactionManager {
 	public static void rollback(final String userId, final UserDBDAO userDB) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("=============================================================================");
-			logger.debug("\t rollback [userId]" + userId );
+			logger.debug("\t rollback [userId]" + getKey(userId, userDB) );
 			logger.debug("=============================================================================");
 		}
 		
@@ -200,12 +212,20 @@ public class TadpoleSQLTransactionManager {
 		}
 	}
 	
+	public static HashMap<String, TransactionDAO> getDbManager() {
+		return dbManager;
+	}
+	
 	/**
 	 * map의 카를 가져옵니다.
 	 * @param userDB
 	 * @return
 	 */
-	private static String getKey(final String userId, final UserDBDAO userDB) {
-		return userId + PublicTadpoleDefine.DELIMITER + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
+	public static String getKey(final String userId, final UserDBDAO userDB) {
+		return userId + PublicTadpoleDefine.DELIMITER + 
+				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
+				userDB.getDbms_types() 		+ PublicTadpoleDefine.DELIMITER +
+				userDB.getSeq()  			+ PublicTadpoleDefine.DELIMITER +
+				userDB.getUsers() 			+ PublicTadpoleDefine.DELIMITER ;
 	}
 }

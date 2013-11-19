@@ -26,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -232,7 +230,7 @@ public class MainEditor extends EditorExtension {
 			
 			// fix : https://github.com/hangum/TadpoleForDBTools/issues/237
 			initDefaultEditorStr = qei.getDefaultStr();
-			if(!"".equals(initDefaultEditorStr)) {
+			if(!"".equals(initDefaultEditorStr)) { //$NON-NLS-1$
 				isFirstLoad = true;	
 			}
 			
@@ -377,7 +375,7 @@ public class MainEditor extends EditorExtension {
 		tltmAutoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				initAutoCommitAction(true);
+				initAutoCommitAction(false, true);
 			}
 		});
 		
@@ -483,8 +481,8 @@ public class MainEditor extends EditorExtension {
 				for (int i=0; i<tableResult.getColumnCount(); i++) {
 					if (item.getBounds(i).contains(event.x, event.y)) {
 						String strText = item.getText(i);
-						if(strText == null || "".equals(strText)) return;
-						strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))? (" " + strText + ""): (" '" + strText + "'");
+						if(strText == null || "".equals(strText)) return; //$NON-NLS-1$
+						strText = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						
 						//appendTextAtPosition(strText);
 						
@@ -512,7 +510,7 @@ public class MainEditor extends EditorExtension {
 				                dlg.open();
 	
 							} catch (Exception e) {
-								logger.error("Clob column echeck", e);
+								logger.error("Clob column echeck", e); //$NON-NLS-1$
 							}
 						}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
 							try {
@@ -550,15 +548,15 @@ public class MainEditor extends EditorExtension {
 								for (byte buf : b){
 									str.append(buf);
 								}
-								str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16));
+								str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
 								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), str.toString() );
 				                dlg.open();
 							} catch (Exception e) {
-								logger.error("Clob column echeck", e);
+								logger.error("Clob column echeck", e); //$NON-NLS-1$
 							}
 						}else{
 							appendTextAtPosition(strText);
-							logger.debug("\nColumn object type is" + columnObject.getClass().toString());
+							logger.debug("\nColumn object type is" + columnObject.getClass().toString()); //$NON-NLS-1$
 						}
 
 //		                TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), msg);
@@ -1002,7 +1000,7 @@ public class MainEditor extends EditorExtension {
 		}
 		
 		// 기존 에디터에서 auto commit button 이 어떻게 설정 되어 있는지 가져옵니다.
-		initAutoCommitAction(false);
+		initAutoCommitAction(true, false);
 		
 		tabFolderResult.setSelection(0);
 		
@@ -1013,13 +1011,22 @@ public class MainEditor extends EditorExtension {
 	/**
 	 * init auto commit button
 	 * 
+	 * @param isFirst
 	 * @param isRiseEvent
 	 */
-	private void initAutoCommitAction(boolean isRiseEvent) {
+	private void initAutoCommitAction(boolean isFirst, boolean isRiseEvent) {
 		if(isAutoCommit()) {
 			tltmAutoCommit.setToolTipText("Auto Commit true"); //$NON-NLS-1$
 			tltmAutoCommitCommit.setEnabled(false);
 			tltmAutoCommitRollback.setEnabled(false);
+			
+			if(!isFirst) {
+				if(MessageDialog.openConfirm(null, Messages.MainEditor_30, Messages.MainEditor_47)) {
+					TadpoleSQLTransactionManager.commit(strUserEMail, userDB);
+				} else {
+					TadpoleSQLTransactionManager.rollback(strUserEMail, userDB);
+				}
+			}
 		} else {
 			tltmAutoCommit.setToolTipText("Auto Commit false"); //$NON-NLS-1$
 			tltmAutoCommitCommit.setEnabled(true);
@@ -1360,12 +1367,12 @@ public class MainEditor extends EditorExtension {
 					rs = pstmt.executeQuery();
 				 } else if(DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
 					 stmt = javaConn.createStatement();
-					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "ON"));
+					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "ON")); //$NON-NLS-1$
 
 					 pstmt = javaConn.prepareStatement(requestQuery);
 					 rs = pstmt.executeQuery();
 
-					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "OFF"));
+					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "OFF")); //$NON-NLS-1$
 				} else {
 				
 					pstmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, requestQuery));
@@ -1389,7 +1396,7 @@ public class MainEditor extends EditorExtension {
 			
 			// 데이터셋에 추가 결과 셋이 있을경우 모두 fetch 하여 결과 그리드에 표시한다.
 			while(pstmt.getMoreResults()){  
-				if(logger.isDebugEnabled()) logger.debug("\n**********has more resultset1...***********");
+				if(logger.isDebugEnabled()) logger.debug("\n**********has more resultset1...***********"); //$NON-NLS-1$
 				sourceDataList.addAll(ResultSetUtils.getResultToList(pstmt.getResultSet(), queryResultCount, isResultComma));
 			}
 			
@@ -1495,12 +1502,12 @@ public class MainEditor extends EditorExtension {
 					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
 					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
 					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER")
+					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
 			) { //$NON-NLS-1$
 				sqlQuery += ";"; //$NON-NLS-1$
 			}
 			// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-			if(logger.isDebugEnabled()) logger.debug(""+sqlQuery);
+			if(logger.isDebugEnabled()) logger.debug(""+sqlQuery); //$NON-NLS-1$
 			if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) statement.execute(sqlQuery);
 			else statement.executeUpdate(sqlQuery);
 			
