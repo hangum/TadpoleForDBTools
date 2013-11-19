@@ -18,18 +18,18 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoContentProvider;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoLabelProvider;
+import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.sql.util.tables.TreeUtil;
@@ -56,6 +56,9 @@ public class FindOneDetailComposite extends Composite {
 	private List<MongodbTreeViewDTO> listTrees;
 	private TreeViewer treeViewerMongo;
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public FindOneDetailComposite(Composite parent, String collectionName, DBObject dbResultObject) {
 		this(parent, collectionName, dbResultObject, true);
 	}
@@ -86,12 +89,30 @@ public class FindOneDetailComposite extends Composite {
 		tree.setLinesVisible(true);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		Button btnViewSource = new Button(this, SWT.NONE);
+		btnViewSource.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		btnViewSource.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				showViewSource();
+			}
+		});
+		btnViewSource.setText("View Source");
+		
 		createTreeColumn();
 		
 		treeViewerMongo.setContentProvider(new TreeMongoContentProvider() );
 		treeViewerMongo.setLabelProvider(new TreeMongoLabelProvider());
 		
 		initData();
+	}
+	
+	/**
+	 * show view source 
+	 */
+	private void showViewSource() {
+		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName, this.dbResultObject.toString());
+		dialog.open();
 	}
 	
 	/**

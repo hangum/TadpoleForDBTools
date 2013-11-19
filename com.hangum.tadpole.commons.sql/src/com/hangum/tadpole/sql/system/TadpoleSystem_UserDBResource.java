@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.sql.dao.ResourceManagerDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDataDAO;
@@ -30,7 +31,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_UserDBResource {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBResource.class);
-	
+		
 	/**
 	 * 저장 
 	 * 
@@ -52,6 +53,18 @@ public class TadpoleSystem_UserDBResource {
 	}
 	
 	/**
+	 * update resource_title & shared_type
+	 * 
+	 * @param dbResource
+	 * @param content
+	 * @throws Exception
+	 */
+	public static void updateResourceHeader(ResourceManagerDAO userDBResource) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("userDbResourceUpdate", userDBResource); //$NON-NLS-1$
+	}
+	
+	/**
 	 * update 
 	 * 
 	 * @param dbResource
@@ -64,7 +77,7 @@ public class TadpoleSystem_UserDBResource {
 		
 		insertResourceData(userDBResource, contents);
 	}
-	
+
 	/**
 	 * resource data 
 	 * 
@@ -98,6 +111,20 @@ public class TadpoleSystem_UserDBResource {
 	}
 	
 	/**
+	 * 리소스 목록을 조회한다.
+	 * @param <ResourceManagerDAO>
+	 * @param <ResourceManagerDAO>
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<ResourceManagerDAO> userDbResource(UserDBDAO userDB) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (List<ResourceManagerDAO>)sqlClient.queryForList("userDbResourceManager", userDB); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 이름이 중복되었는지 검사
 	 * 
 	 * @param user_seq
@@ -107,14 +134,13 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws Exception
 	 */
 	public static boolean userDBResourceDuplication(PublicTadpoleDefine.RESOURCE_TYPE type, int user_seq, int db_seq, String filename) throws Exception {
-		UserDBResourceDAO erd = new UserDBResourceDAO();
-//		erd.setTypes(type.toString());
-//		erd.setUser_seq(user_seq);
-//		erd.setDb_seq(db_seq);
-//		erd.setFilename(filename);
+		UserDBResourceDAO dbResourceDAO = new UserDBResourceDAO();
+		dbResourceDAO.setResource_types(type.toString());
+		dbResourceDAO.setDb_seq(db_seq);
+		dbResourceDAO.setName(filename);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("userDBResourceDuplication", erd).size()  == 0; //$NON-NLS-1$
+		return sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).size()  == 0; //$NON-NLS-1$
 	}
 	
 	/**

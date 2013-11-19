@@ -35,25 +35,25 @@ public  class TableColumnComparator extends ObjectComparator  {
 		int rc = 0;
 		switch(propertyIndex) {
 		case 0:
-			rc = tc1.getName().compareToIgnoreCase(tc2.getName());
+			rc = tc1.getName().toLowerCase().compareToIgnoreCase(tc2.getName().toLowerCase());
 			break;
 		case 1:
-			rc = tc1.getType().compareToIgnoreCase(tc2.getType());
+			rc = tc1.getType().toLowerCase().compareToIgnoreCase(tc2.getType().toLowerCase());
 			break;
 		case 2:
-			rc = tc1.getKey().compareToIgnoreCase(tc2.getKey());
+			rc = tc1.getKey().toLowerCase().compareToIgnoreCase(tc2.getKey().toLowerCase());
 			break;
 		case 3:
-			rc = tc1.getComment().compareToIgnoreCase(tc2.getComment());
+			rc = tc1.getComment().toLowerCase().compareToIgnoreCase(tc2.getComment().toLowerCase());
 			break;
 		case 4:
-			rc = tc1.getNull().compareToIgnoreCase(tc2.getNull());
+			rc = tc1.getNull().toLowerCase().compareToIgnoreCase(tc2.getNull().toLowerCase());
 			break;
 		case 5:
-			rc = tc1.getDefault().compareToIgnoreCase(tc2.getDefault());
+			rc = tc1.getDefault().toLowerCase().compareToIgnoreCase(tc2.getDefault().toLowerCase());
 			break;
 		case 6:
-			rc = tc1.getExtra().compareToIgnoreCase(tc2.getExtra());
+			rc = tc1.getExtra().toLowerCase().compareToIgnoreCase(tc2.getExtra().toLowerCase());
 		}
 		
 				

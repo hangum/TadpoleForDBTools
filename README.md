@@ -4,7 +4,7 @@ Tadpole DB Hub
 
 Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Apache Hive, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases. 
 It enables you to handle typical DB over the World Wide Web
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1378098094391/home/TadpoleDBHub1.1.0.png?height=318&width=400)
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1382070638265/home/TadpoleOverView.png?height=308&width=400)
 
 1.RDB Feature
 -

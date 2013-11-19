@@ -20,9 +20,13 @@ public class TableDAO {
 	String name;
 	String comment="";
 	
+	/* MSSQL Server schema support */
+	String table_name = "";
+	String schema_name = "";
+	
 	/** hive */
 	String tab_name = "";
-	
+
 	/** mongoDB */
 	long rows = 0l;
 	long size = 0l;
@@ -41,6 +45,34 @@ public class TableDAO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the table_name
+	 */
+	public String getTable_name() {
+		return table_name;
+	}
+
+	/**
+	 * @param table_name the table_name to set
+	 */
+	public void setTable_name(String table_name) {
+		this.table_name = table_name;
+	}
+
+	/**
+	 * @return the schema_name
+	 */
+	public String getSchema_name() {
+		return schema_name;
+	}
+
+	/**
+	 * @param schema_name the schema_name to set
+	 */
+	public void setSchema_name(String schema_name) {
+		this.schema_name = schema_name;
 	}
 
 	public String getComment() {

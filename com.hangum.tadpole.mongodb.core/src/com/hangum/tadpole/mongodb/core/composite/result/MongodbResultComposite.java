@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -316,8 +317,6 @@ public class MongodbResultComposite extends Composite {
 					
 					FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName, dbObject);
 					dlg.open();
-//					TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, collectionName, JSONUtil.getPretty(jsonString));					 //$NON-NLS-1$ //$NON-NLS-2$
-//					dlg.open();
 				}
 			}
 		});
@@ -370,26 +369,33 @@ public class MongodbResultComposite extends Composite {
 		btnExportCSV.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				StringBuffer sbExportData = new StringBuffer();
+				StringBuffer sbExportDataBody = new StringBuffer();
 				
+				// fixed : https://github.com/hangum/TadpoleForDBTools/issues/284
 				// column 헤더추가.
+				String tmpStrHead = "";
 				TableColumn[] tcs = resultTableViewer.getTable().getColumns();
 				for (TableColumn tableColumn : tcs) {
-					sbExportData.append( tableColumn.getText()).append(","); //$NON-NLS-1$
+					tmpStrHead += tableColumn.getText() + ","; //$NON-NLS-1$
 				}
-				sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+				tmpStrHead = StringUtils.removeEnd(tmpStrHead, ",");
+				tmpStrHead += PublicTadpoleDefine.LINE_SEPARATOR; //$NON-NLS-1$
 				
 				// column 데이터 추가. 
 				for(int i=0; i<sourceDataList.size(); i++) {
+					String tmpData = "";
 					Map<Integer, Object> mapColumns = sourceDataList.get(i);
-					for(int j=0; j<mapColumns.size(); j++) {
-						sbExportData.append(mapColumns.get(j)).append(","); //$NON-NLS-1$
+					for(int j=0; j<tcs.length; j++) {
+						tmpData += mapColumns.get(j) + ","; //$NON-NLS-1$
 					}
-					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+					tmpData = StringUtils.removeEnd(tmpData, ",");
+					tmpData += PublicTadpoleDefine.LINE_SEPARATOR;
+					
+					sbExportDataBody.append(tmpData); //$NON-NLS-1$
 				}
 				
 				downloadServiceHandler.setName(userDB.getDisplay_name() + "_ResultSetExport.csv"); //$NON-NLS-1$
-				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
+				downloadServiceHandler.setByteContent((tmpStrHead + sbExportDataBody.toString()).getBytes());
 				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
 			}
 		});
@@ -672,17 +678,19 @@ public class MongodbResultComposite extends Composite {
 		mapColumns = new HashMap<Integer, String>();
 		sourceDataList = new ArrayList<Map<Integer, Object>>();
 		listTrees = new ArrayList<MongodbTreeViewDTO>();
+
+		// 헤더를 분석하여 만듭니다.
+		for(DBObject dbObject : iteResult) {
+			MongoDBTableColumn.getTabelColumnView(dbObject, mapColumns);
+		}
 		
 		for(DBObject dbObject : iteResult) {
-			// 초기 호출시 컬럼 정보 설정 되어 있지 않을때
-			if(mapColumns.size() == 0) mapColumns = MongoDBTableColumn.getTabelColumnView(dbObject);
-			
-			// append tree text columnInfo.get(key)
+			// append tree data columnInfo.get(key)
 			MongodbTreeViewDTO treeDto = new MongodbTreeViewDTO(dbObject, "(" + totCnt + ") {..}", "", "Document");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			parserTreeObject(dbObject, treeDto, dbObject);
 			listTrees.add(treeDto);
 							
-			// append table text
+			// append table data
 			HashMap<Integer, Object> dataMap = new HashMap<Integer, Object>();				
 			for(int i=0; i<mapColumns.size(); i++)	{
 				
@@ -1057,15 +1065,17 @@ public class MongodbResultComposite extends Composite {
 	 * error console
 	 */
 	public void consoleError() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName + " " + Messages.MongodbResultComposite_25, sbConsoleErrorMsg.toString());
-		dialog.open();
+		DBObject dbObject = (DBObject)JSON.parse(sbConsoleErrorMsg.toString());
+		FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName + " " + Messages.MongodbResultComposite_25, dbObject);
+		dlg.open();
 	}
 
 	/**
 	 * execute plan console
 	 */
 	public void consoleExecutePlan() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName  + " " +  Messages.MongodbResultComposite_26, sbConsoleExecuteMsg.toString());
-		dialog.open();
+		DBObject dbObject = (DBObject)JSON.parse(sbConsoleExecuteMsg.toString());
+		FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName + " " + Messages.MongodbResultComposite_26, dbObject);
+		dlg.open();
 	}
 }

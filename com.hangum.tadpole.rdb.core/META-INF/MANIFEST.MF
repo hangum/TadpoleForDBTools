@@ -27,8 +27,11 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.rdb.core,
  com.hangum.tadpole.rdb.core.actions.connections,
+ com.hangum.tadpole.rdb.core.actions.erd.mongodb,
+ com.hangum.tadpole.rdb.core.actions.erd.rdb,
  com.hangum.tadpole.rdb.core.actions.global,
  com.hangum.tadpole.rdb.core.dialog.dbconnect,
+ com.hangum.tadpole.rdb.core.editors.dbinfos.composites,
  com.hangum.tadpole.rdb.core.editors.intro,
  com.hangum.tadpole.rdb.core.editors.main,
  com.hangum.tadpole.rdb.core.util,

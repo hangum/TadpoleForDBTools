@@ -175,12 +175,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
 				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
-
-				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					if (null != is) {
-						TableDAO tableDAO = (TableDAO) is.getFirstElement();
-						FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
-					}
+				if (null != is) {
+					TableDAO tableDAO = (TableDAO) is.getFirstElement();
+					FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
 				}
 			}
 		});
@@ -233,6 +230,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// sorter
 		tableComparator = new TableComparator();
 		tableListViewer.setSorter(tableComparator);
+		tableComparator.setColumn(0);
 		
 		// auto table layout
 		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tableListViewer.getTable());

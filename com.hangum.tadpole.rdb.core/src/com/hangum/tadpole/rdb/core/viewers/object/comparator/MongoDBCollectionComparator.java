@@ -36,7 +36,7 @@ public class MongoDBCollectionComparator extends ObjectComparator  {
 		int rc = 0;
 		switch(propertyIndex) {
 		case 0:
-			rc = tb1.getName().compareToIgnoreCase(tb2.getName());
+			rc = tb1.getName().toLowerCase().compareToIgnoreCase(tb2.getName().toLowerCase());
 			break;
 		case 1:
 			rc = tb1.getRows() > tb2.getRows()?1:-1;

@@ -42,7 +42,7 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 	 */
 	@Override
 	protected Object doGetInitialContent(Object[] arguments) {
-		return editor.getInitExt() + ":ext:" + editor.getOrionText();
+		return editor.getUserDB().getDBDefine().getExt() + ":ext:" + editor.getOrionText();
 	}
 	
 	@Override

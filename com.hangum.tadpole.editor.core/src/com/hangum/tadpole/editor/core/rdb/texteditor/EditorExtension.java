@@ -15,7 +15,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.editor.core.IEditorExtension;
 import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
@@ -39,9 +38,6 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	protected Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */
 	protected EditorBrowserFunctionService editorService;
-	
-//	protected static final String DEV_DB_URL = "orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
-//	protected static final String REAL_DB_URL = "orion/tadpole/editor/REAL_RDBEmbeddededitor.html"; //$NON-NLS-1$
 
 	/** session에서 사용자 정보를 가져다 놓습니다.
 	 * No context available outside of the request service lifecycle.
@@ -57,7 +53,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/** oracle plan table 이름 */
 	protected String planTableName 	= GetPreferenceGeneral.getPlanTableName();
 	/** export delimit */
-	protected String exportDelimit = GetPreferenceGeneral.getExportDelimit().toLowerCase().equals("tab")?"	":GetPreferenceGeneral.getExportDelimit(); //$NON-NLS-1$ //$NON-NLS-2$
+	protected String exportDelimit = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit(); //$NON-NLS-1$ //$NON-NLS-2$
 	/** 결과 컬럼이 숫자이면 ,를 찍을 것인지 */
 	protected boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 	
@@ -116,30 +112,6 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	protected String getUserType() {
 		return strRoleType;
 	}
-	
-//	/**
-//	 * browser handler
-//	 */
-//	protected void addBrowserService() {
-//		if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.REAL) {
-//	    	browserQueryEditor.setUrl(REAL_DB_URL);
-//	    } else {
-//	    	browserQueryEditor.setUrl(DEV_DB_URL);
-//	    }
-//		
-//		registerBrowserFunctions();
-//		
-//		browserQueryEditor.addProgressListener(new ProgressListener() {
-//			public void completed( ProgressEvent event ) {
-//				try {
-//					browserEvaluate(IEditorBrowserFunction.JAVA_SCRIPT_GET_INITCONTAINER);
-//				} catch(Exception e) {
-//					logger.error("Error add browser function", e);
-//				}
-//			}
-//			public void changed( ProgressEvent event ) {}			
-//		});
-//	}
 	
 	/**
 	 * register browser function

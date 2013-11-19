@@ -11,12 +11,16 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.transaction.DBCPConnectionManager;
 import com.hangum.tadpole.engine.transaction.TransactionDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -43,6 +47,29 @@ public class TadpoleSQLTransactionManager {
 		} 
 	}
 	
+	
+	
+	/**
+	 * 사용자가 로그 아웃등으로 나갈때 transaction commit합니다. 
+	 * 
+	 * @param userId
+	 */
+	public static void executeCommit(final String userId) {
+		Set<String> keys = dbManager.keySet();
+		for (String key : keys) {
+			if(StringUtils.startsWith(key, userId + PublicTadpoleDefine.DELIMITER)) {
+				if(logger.isDebugEnabled()) logger.debug("== logout transaction start==");
+				
+				TransactionDAO transactionDAO = dbManager.get(key);
+				try {
+					transactionDAO.getConn().commit();
+				} catch(Exception e) {
+					logger.error("logout transaction commit", e);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * java.sql.connection을 생성하고 관리합니다.
 	 * 
@@ -55,31 +82,39 @@ public class TadpoleSQLTransactionManager {
 	 */
 	public static Connection getInstance(final String userId, final UserDBDAO userDB, final boolean isAutoCommit) throws Exception {
 		
-		logger.debug("[userId]" + userId + "[userDB]" + userId + "[isAutoCommit]: " + isAutoCommit);
+		if(logger.isDebugEnabled()) logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + " / " + userDB.getUsers() + "[isAutoCommit]: " + isAutoCommit);
 		
 		synchronized(dbManager) {
 			final String searchKey = getKey(userId, userDB);
 			TransactionDAO transactionDAO = dbManager.get(searchKey);
 			if(transactionDAO == null) {
 				try {
-					DataSource ds = DBCPConnectionManager.getInstance().getDataSource(userDB);
+					DataSource ds = DBCPConnectionManager.getInstance().getDataSource(userId, userDB);
 					
 					transactionDAO = new TransactionDAO();
+					
 					Connection conn = ds.getConnection();
 					conn.setAutoCommit(false);
 					
 					transactionDAO.setConn(conn);
+					transactionDAO.setUserId(userId);
+					transactionDAO.setUserDB(userDB);
+					transactionDAO.setStartTransaction(new Date(System.currentTimeMillis()));
+					
+					transactionDAO.setKey(searchKey);
+					
 					dbManager.put(searchKey, transactionDAO);
-					logger.debug("\t New connection SQLMapSession." );
+					if(logger.isDebugEnabled())  logger.debug("\t New connection SQLMapSession." );
 				} catch(Exception e) {
 					logger.error("transaction connection", e);
 				}
 			} else {
-				logger.debug("\t Already register SQLMapSession." );
-				logger.debug("\t Is auto commit " + transactionDAO.getConn().getAutoCommit());
+				if(logger.isDebugEnabled()) {
+					logger.debug("\t Already register SQLMapSession." );
+					logger.debug("\t Is auto commit " + transactionDAO.getConn().getAutoCommit());
+				}
 			}
-
-			logger.debug("[conn code]" + transactionDAO.toString());
+			if(logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.toString());
 			
 			return transactionDAO.getConn();
 		}
@@ -106,9 +141,11 @@ public class TadpoleSQLTransactionManager {
 	 * @param userDB
 	 */
 	public static void commit(final String userId, final UserDBDAO userDB) {
-		logger.debug("=============================================================================");
-		logger.debug("\t commit [userId]" + userId );
-		logger.debug("=============================================================================");
+		if(logger.isDebugEnabled()) {
+			logger.debug("=============================================================================");
+			logger.debug("\t commit [userId]" + getKey(userId, userDB) );
+			logger.debug("=============================================================================");
+		}
 		
 		synchronized (dbManager) {
 			TransactionDAO transactionDAO = dbManager.get(getKey(userId, userDB));
@@ -136,9 +173,11 @@ public class TadpoleSQLTransactionManager {
 	 * @param userDB
 	 */
 	public static void rollback(final String userId, final UserDBDAO userDB) {
-		logger.debug("=============================================================================");
-		logger.debug("\t rollback [userId]" + userId );
-		logger.debug("=============================================================================");
+		if(logger.isDebugEnabled()) {
+			logger.debug("=============================================================================");
+			logger.debug("\t rollback [userId]" + getKey(userId, userDB) );
+			logger.debug("=============================================================================");
+		}
 		
 		synchronized (dbManager) {
 			TransactionDAO transactionDAO = dbManager.get(getKey(userId, userDB));
@@ -146,7 +185,7 @@ public class TadpoleSQLTransactionManager {
 			if(transactionDAO != null) {
 				Connection conn = transactionDAO.getConn();
 				try {
-					logger.debug("\tIs auto commit " + conn.getAutoCommit());
+					if(logger.isDebugEnabled()) logger.debug("\tIs auto commit " + conn.getAutoCommit());
 					conn.rollback();
 				} catch(Exception e) {
 					logger.error("commit exception", e);
@@ -173,12 +212,20 @@ public class TadpoleSQLTransactionManager {
 		}
 	}
 	
+	public static HashMap<String, TransactionDAO> getDbManager() {
+		return dbManager;
+	}
+	
 	/**
 	 * map의 카를 가져옵니다.
 	 * @param userDB
 	 * @return
 	 */
-	private static String getKey(final String userId, final UserDBDAO userDB) {
-		return userId + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
+	public static String getKey(final String userId, final UserDBDAO userDB) {
+		return userId + PublicTadpoleDefine.DELIMITER + 
+				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
+				userDB.getDbms_types() 		+ PublicTadpoleDefine.DELIMITER +
+				userDB.getSeq()  			+ PublicTadpoleDefine.DELIMITER +
+				userDB.getUsers() 			+ PublicTadpoleDefine.DELIMITER ;
 	}
 }

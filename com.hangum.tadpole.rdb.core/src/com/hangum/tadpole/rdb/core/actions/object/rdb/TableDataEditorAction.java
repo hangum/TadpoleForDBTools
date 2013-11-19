@@ -17,6 +17,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -30,6 +31,7 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
 import com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -53,9 +55,8 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 	}
 	
 	@Override
-	public void run() {
-		TableDAO tableDAO = (TableDAO)sel.getFirstElement();
-		
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		try {
 			// get the table columns
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

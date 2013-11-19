@@ -99,7 +99,6 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private ObjectComparator packageProcFuncComparator;
 	private List showPackageProcFuncColumns;
 
-	
 	/**
 	 * procedure
 	 * 
@@ -181,6 +180,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 		packageComparator = new ProcedureFunctionComparator();
 		packageTableViewer.setSorter(packageComparator);
+		packageComparator.setColumn(0);
 
 		createProcedureFunctionColumn(packageTableViewer, packageComparator);
 

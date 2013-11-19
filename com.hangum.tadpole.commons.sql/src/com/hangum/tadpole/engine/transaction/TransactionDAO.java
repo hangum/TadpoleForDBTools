@@ -11,6 +11,9 @@
 package com.hangum.tadpole.engine.transaction;
 
 import java.sql.Connection;
+import java.sql.Date;
+
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * transaction dao
@@ -19,11 +22,49 @@ import java.sql.Connection;
  *
  */
 public class TransactionDAO {
+	
+	private String userId;
+	private UserDBDAO userDB;
+	private Date startTransaction;
+	private String key;
 
 	private Connection conn;
 	private boolean isTransaction;
 	
 	public TransactionDAO() {
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public UserDBDAO getUserDB() {
+		return userDB;
+	}
+
+	public void setUserDB(UserDBDAO userDB) {
+		this.userDB = userDB;
+	}
+	
+	public Date getStartTransaction() {
+		return startTransaction;
+	}
+
+	public void setStartTransaction(Date startTransaction) {
+		this.startTransaction = startTransaction;
+	}
+	
+	
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	/**
@@ -53,6 +94,7 @@ public class TransactionDAO {
 	public void setTransaction(boolean isTransaction) {
 		this.isTransaction = isTransaction;
 	}
+
 	
 	
 }

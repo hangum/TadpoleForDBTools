@@ -10,12 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
@@ -29,6 +30,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -40,7 +42,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ObjectCreatAction.class);
+//	private static final Logger logger = Logger.getLogger(ObjectCreatAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.creat";
 	
@@ -51,7 +53,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 	}
 
 	@Override
-	public void run() {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			
 			// others db
@@ -61,7 +63,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				
 				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
 				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
-					TableDAO tc = (TableDAO)sel.getFirstElement();
+					TableDAO tc = (TableDAO)selection.getFirstElement();
 					if(tc == null) cta.run(userDB, actionType);
 					else cta.run(userDB, tc.getComment());
 				} else {				

@@ -55,8 +55,10 @@ public class SessionListAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		if (DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT
+		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
+				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT ||
+				DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT  ||
+				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT 
 		) {
 			
 			try {

@@ -30,12 +30,11 @@
 				Use of the validation query can be problematic. If you have
 				difficulty, try without it.
 			-->
-			<!-- property name="Pool.ValidationQuery" value="select 1 from dual" />
+			<!-- property name="Pool.ValidationQuery" value="SELECT name FROM sqlite_master where 1 = 0" />
 			<property name="Pool.LogAbandoned" value="false" />
 			<property name="Pool.RemoveAbandoned" value="false" />
 			<property name="Pool.RemoveAbandonedTimeout" value="50000" />
-			 -->
-
+ 			-->
 		</dataSource>
 	</transactionManager>
 

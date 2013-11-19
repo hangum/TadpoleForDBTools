@@ -51,10 +51,21 @@ public class ResultSetUtils {
 			for(int i=0; i<rs.getMetaData().getColumnCount(); i++) {
 				final int intColIndex = i+1;
 				try {
-					String colValue = rs.getString(intColIndex) == null ?"":rs.getString(intColIndex); //$NON-NLS-1$
-					if(isPretty) colValue = prettyData(rs.getMetaData().getColumnType(intColIndex), rs.getObject(intColIndex));
-					
-					tmpRow.put(i, colValue);
+					Object obj = rs.getObject(intColIndex);
+					int type = rs.getMetaData().getColumnType(intColIndex);
+
+					if (RDBTypeToJavaTypeUtils.isNumberType(type)){
+						if(isPretty) { 
+							tmpRow.put(i, prettyData(type, obj));
+						}else{
+							tmpRow.put(i, obj);
+						}
+					}else if (RDBTypeToJavaTypeUtils.isCharType(type)){
+						tmpRow.put(i, obj == null?"":obj);
+					}else {
+						tmpRow.put(i, obj);					
+//						logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
+					}
 				} catch(Exception e) {
 					logger.error("ResutSet fetch error", e); //$NON-NLS-1$
 					tmpRow.put(i, ""); //$NON-NLS-1$

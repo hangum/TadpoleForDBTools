@@ -32,9 +32,9 @@
 				Use of the validation query can be problematic. If you have
 				difficulty, try without it.
 			-->
-			<!-- property name="Pool.ValidationQuery" 	value="select 1" />
+			<property name="Pool.ValidationQuery" 	value="select getdate()" />
 			<property name="Pool.testWhileIdle" 	value="true" />
-			<property name="Pool.timeBetweenEvictionRunsMillis" value="7200000"/-->
+			<property name="Pool.timeBetweenEvictionRunsMillis" value="7200000"/>
 			
 			<property name="Pool.LogAbandoned" 		value="true" />
 			<property name="Pool.RemoveAbandoned" 	value="true" />

@@ -35,10 +35,10 @@ public class TableComparator extends ObjectComparator {
 		int rc = ASCENDING;
 		switch (this.propertyIndex) {
 		case 0:
-			rc = tb1.getName().compareTo(tb2.getName());
+			rc = tb1.getName().toLowerCase().compareTo(tb2.getName().toLowerCase());
 			break;
 		case 1:
-			rc = tb1.getComment().compareTo(tb2.getComment());
+			rc = tb1.getComment().toLowerCase().compareTo(tb2.getComment().toLowerCase());
 			break;
 		}
 		if (direction == DESCENDING) {

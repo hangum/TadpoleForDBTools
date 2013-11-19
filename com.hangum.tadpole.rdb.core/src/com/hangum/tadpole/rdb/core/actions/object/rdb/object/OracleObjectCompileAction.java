@@ -14,16 +14,22 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -48,33 +54,39 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run() {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
 			if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {			
 				
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
-				ViewCompile();	
+				ViewCompile(selection, userDB);	
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
-				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)sel.getFirstElement();
-				OtherObjectCompile("PROCEDURE", dao.getName().trim().toUpperCase());			
+				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
+				OtherObjectCompile("PROCEDURE", dao.getName().trim().toUpperCase(), userDB);			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
-				PackageCompile();
+				packageCompile(selection, userDB);
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
-				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)sel.getFirstElement();
-				OtherObjectCompile("FUNCTION",  dao.getName().trim().toUpperCase());			
+				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
+				OtherObjectCompile("FUNCTION",  dao.getName().trim().toUpperCase(), userDB);			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
-				TriggerDAO dao = (TriggerDAO)sel.getFirstElement();
-				OtherObjectCompile("TRIGGER",  dao.getName().trim().toUpperCase());			
+				TriggerDAO dao = (TriggerDAO)selection.getFirstElement();
+				OtherObjectCompile("TRIGGER",  dao.getName().trim().toUpperCase(), userDB);			
 			} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
 			
 			}
 		}
 	}
 	
-	public void ViewCompile() {
-		String viewName = (String)sel.getFirstElement();
+	/**
+	 * view compile
+	 * 
+	 * @param selection
+	 * @param userDB
+	 */
+	public void ViewCompile(IStructuredSelection selection, UserDBDAO userDB) {
+		String viewName = (String)selection.getFirstElement();
 		
 		String sqlQuery = "ALTER VIEW " + userDB.getUsers() + "." + viewName.trim().toUpperCase() + " COMPILE ";
 
@@ -100,7 +112,10 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			MessageDialog.openError(null, "Compile result", result.toString());
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(viewName + " compile", e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", viewName + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
 			try { rs.close();} catch(Exception e) {}
 			try { statement.close();} catch(Exception e) {}
@@ -110,9 +125,14 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		}
 	}
 	
-	public void OtherObjectCompile(String objType, String objName) {
-		
-		
+	/**
+	 * other object compile
+	 * 
+	 * @param objType
+	 * @param objName
+	 * @param userDB
+	 */
+	public void OtherObjectCompile(String objType, String objName, UserDBDAO userDB) {
 		String sqlQuery = "ALTER "+objType+" " + userDB.getUsers() + "." + objName.trim().toUpperCase() + " COMPILE DEBUG ";
 
 		java.sql.Connection javaConn = null;
@@ -137,7 +157,10 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			MessageDialog.openError(null, "Compile result", result.toString());
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(objName + " compile", e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", objName + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
 			try { rs.close();} catch(Exception e) {}
 			try { statement.close();} catch(Exception e) {}
@@ -147,8 +170,15 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		}
 	}
 	
-	public void PackageCompile() {
-		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)sel.getFirstElement();
+	/**
+	 * package compile
+	 * 
+	 * @param selection
+	 * @param userDB
+	 */
+	public void packageCompile(IStructuredSelection selection, UserDBDAO userDB) {
+		
+		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
 		
 		String sqlQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + procedureDAO.getName().trim().toUpperCase() + " COMPILE DEBUG SPECIFICATION ";
 		String sqlBodyQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + procedureDAO.getName().trim().toUpperCase() + " COMPILE DEBUG BODY ";
@@ -178,7 +208,10 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(procedureDAO.getName() + " compile", e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", procedureDAO.getName() + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
 			try { rs.close();} catch(Exception e) {}
 			try { statement.close();} catch(Exception e) {}

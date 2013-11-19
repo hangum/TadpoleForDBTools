@@ -27,6 +27,8 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
+import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
+import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
@@ -46,7 +48,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction exitAction;
     
     private IAction saveAction;
-//    private IAction saveAsAction;
+    private IAction saveAsAction;
     
     private IAction connectAction;
     private IAction queryOpenAction;
@@ -55,8 +57,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** User permission action */
     private IAction userPermissionAction;
+    
+    /** transaction connection */
+    private IAction transactionConnectionAction;
+    
     /** executed sql */
     private IAction executedSQLAction;
+    
+    private IAction resourceManageAction;
     
     private IAction preferenceAction;
     private IAction aboutAction;
@@ -72,8 +80,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	saveAction = ActionFactory.SAVE.create(window);
     	register(saveAction);
     	
-//    	saveAsAction = ActionFactory.SAVE_AS.create(window);
-//    	register(saveAsAction);
+    	saveAsAction = ActionFactory.SAVE_AS.create(window);
+    	register(saveAsAction);
     	
     	connectAction = new ConnectDatabaseAction(window);
     	register(connectAction);
@@ -90,8 +98,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	userPermissionAction = new UserPermissionAction(window);
     	register(userPermissionAction);
     	
+    	transactionConnectionAction = new TransactionConnectionManagerAction(window);
+    	register(transactionConnectionAction);
+    	
     	executedSQLAction = new ExecutedSQLAction(window);
     	register(executedSQLAction);
+    	
+    	resourceManageAction = new ResourceManagerAction(window);
+    	register(resourceManageAction);
 
         exitAction = new ExitAction(window);
         register(exitAction);
@@ -154,7 +168,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         }
         
         toolbar.add(saveAction);
-//        toolbar.add(saveAsAction);
+        toolbar.add(saveAsAction);
         toolbar.add(new Separator());        
         
         toolbar.add(queryOpenAction);
@@ -167,9 +181,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
         	toolbar.add(userPermissionAction);
         	toolbar.add(new Separator());
+        	
         	toolbar.add(executedSQLAction);
             toolbar.add(new Separator());
+            
+            toolbar.add(transactionConnectionAction);
+            toolbar.add(new Separator());
         }
+        
+        toolbar.add(resourceManageAction);
+        toolbar.add(new Separator());
         
         toolbar.add(preferenceAction);
         toolbar.add(new Separator());

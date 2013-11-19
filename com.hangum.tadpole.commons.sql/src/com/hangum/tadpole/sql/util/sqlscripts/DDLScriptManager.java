@@ -27,6 +27,7 @@ import com.hangum.tadpole.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
 import com.hangum.tadpole.sql.util.sqlscripts.scripts.MSSQL_8_LE_DDLScript;
 import com.hangum.tadpole.sql.util.sqlscripts.scripts.MySqlDDLScript;
 import com.hangum.tadpole.sql.util.sqlscripts.scripts.OracleDDLScript;
+import com.hangum.tadpole.sql.util.sqlscripts.scripts.PostgreSQLDDLScript;
 import com.hangum.tadpole.sql.util.sqlscripts.scripts.SQLiteDDLScript;
 
 /**
@@ -78,6 +79,8 @@ public class DDLScriptManager {
 			rdbScript = new SQLiteDDLScript(userDB, actionType);
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT ) {
 			rdbScript = new OracleDDLScript(userDB, actionType);
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT ) {
+			rdbScript = new PostgreSQLDDLScript(userDB, actionType);
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);

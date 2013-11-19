@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.sessionlist;
+package com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql;
 
 import org.eclipse.jface.viewers.Viewer;
 
@@ -21,9 +21,9 @@ import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
  * @author hangum
  *
  */
-public class SessionListTableCompare extends ObjectComparator  {
+public class MySQLSessionListTableCompare extends ObjectComparator  {
 	
-	public SessionListTableCompare() {
+	public MySQLSessionListTableCompare() {
 		this.propertyIndex = 0;
 		direction = DESCENDING;
 	}

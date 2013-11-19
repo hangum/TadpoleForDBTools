@@ -22,7 +22,7 @@ public class PostgreDMLTemplate extends MySQLDMLTemplate {
 	public static final String TMP_GET_PARTDATA = "%s limit %s offset %s";
 
 	// plan_table	
-	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN PLAN INTO %s FOR ";
+	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN  ";
 
 	/** table */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE emp ( " + PublicTadpoleDefine.LINE_SEPARATOR + 

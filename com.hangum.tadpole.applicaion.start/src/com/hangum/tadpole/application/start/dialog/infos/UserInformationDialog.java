@@ -32,7 +32,7 @@ import com.swtdesigner.SWTResourceManager;
  */
 public class UserInformationDialog extends Dialog {
 	
-	private String userBroser = "";
+	private String userBroser = ""; //$NON-NLS-1$
 
 	/**
 	 * Create the dialog.
@@ -47,7 +47,7 @@ public class UserInformationDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Check Information");
+		newShell.setText("Check Information"); //$NON-NLS-1$
 	}
 
 	/**
@@ -62,11 +62,15 @@ public class UserInformationDialog extends Dialog {
 		// 
 		Label lblInformation = new Label(container, SWT.NONE);
 		lblInformation.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		lblInformation.setText("User browser is " + userBroser + ".");
+		lblInformation.setText("User browser is " + userBroser + "."); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		Label lblRecommand = new Label(container, SWT.NONE);
-		lblRecommand.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		lblRecommand.setText(Messages.LoginDialog_lblNewLabel_text);
+		lblRecommand.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		lblRecommand.setText(Messages.UserInformationDialog_5);
+		
+		Label lblRecommand2 = new Label(container, SWT.NONE);
+		lblRecommand2.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		lblRecommand2.setText(Messages.LoginDialog_lblNewLabel_text ); //$NON-NLS-1$
 
 		return container;
 	}
@@ -77,7 +81,7 @@ public class UserInformationDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
 	}
 
 	/**
@@ -85,7 +89,7 @@ public class UserInformationDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 150);
+		return new Point(450, 180);
 	}
 
 }

@@ -134,6 +134,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 
 		indexComparator = new DefaultComparator();
 		tableViewer.setSorter(indexComparator);
+		indexComparator.setColumn(0);
 
 		createMongoDBIndexesColumn(tableViewer, indexComparator);
 

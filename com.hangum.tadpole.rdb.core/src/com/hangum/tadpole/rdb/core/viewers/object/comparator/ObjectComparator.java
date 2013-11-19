@@ -49,7 +49,7 @@ public  class ObjectComparator extends ViewerSorter  {
 		String tb1 = e1.toString();
 		String tb2 = e2.toString();
 		
-		int rc = tb1.compareTo(tb2);		
+		int rc = tb1.toLowerCase().compareTo(tb2.toLowerCase());		
 		if (direction == DESCENDING) {
 			rc = -rc;
 		}

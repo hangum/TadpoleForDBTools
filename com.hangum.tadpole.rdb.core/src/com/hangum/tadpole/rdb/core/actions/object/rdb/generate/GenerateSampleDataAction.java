@@ -10,13 +10,15 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
-import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataGenerateDialog;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -28,7 +30,7 @@ public class GenerateSampleDataAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(GenerateSampleDataAction.class);
+//	private static final Logger logger = Logger.getLogger(GenerateSampleDataAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.generatesample.data";
 	
@@ -41,10 +43,10 @@ public class GenerateSampleDataAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run() {
-		TableDAO tableDao = (TableDAO)sel.getFirstElement();
+	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+		TableDAO tableDao = (TableDAO)selection.getFirstElement();
 		
-		SampleDataGenerateDialog dialog = new SampleDataGenerateDialog(window.getShell(), userDB, tableDao.getName());
+		SampleDataGenerateDialog dialog = new SampleDataGenerateDialog(getWindow().getShell(), userDB, tableDao.getName());
 		dialog.open();
 	}
 }

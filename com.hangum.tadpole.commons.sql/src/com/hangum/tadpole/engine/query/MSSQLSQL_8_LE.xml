@@ -105,7 +105,7 @@ ORDER BY a.id, b.colid
                    ON B.REFERENCED_OBJECT_ID = F.ID AND B.REFERENCED_COLUMN_ID = F.COLID
                 INNER JOIN SYS.SYSOBJECTS G
                    ON B.REFERENCED_OBJECT_ID = G.ID) X
-WHERE X.TABLE_NAME in ( $table$ )                     
+WHERE X.TABLE_NAME in ( #table# )                     
 GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 </select>
 
@@ -340,16 +340,16 @@ SELECT  CONSTRAINT_CATALOG
  -->
  
 <select id="getViewScript" resultClass="java.lang.String" parameterClass="java.lang.String">
-sp_helptext $object_name$
+sp_helptext '$object_name$'
 </select>
 <select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
-sp_helptext $object_name$
+sp_helptext '$object_name$'
 </select>
 <select id="getProcedureScript" resultClass="java.lang.String" parameterClass="java.lang.String">
-sp_helptext $object_name$
+sp_helptext '$object_name$'
 </select>
 <select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.lang.String">
-sp_helptext $object_name$
+sp_helptext '$object_name$'
 </select>
 
 <select id="getProcedureInParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">

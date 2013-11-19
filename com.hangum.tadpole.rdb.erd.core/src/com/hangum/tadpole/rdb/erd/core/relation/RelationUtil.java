@@ -116,12 +116,23 @@ public class RelationUtil {
 			// 실제 레퍼런스를 생성합니다.
 			for (SQLiteRefTableDAO sqliteRefTableDAO : getSQLiteRefTbl(userDB)) {
 	
-				int indexKey = StringUtils.indexOf(sqliteRefTableDAO.getSql(), "FOREIGN KEY");
-				String forKey = sqliteRefTableDAO.getSql().substring(indexKey);
-				if(logger.isDebugEnabled()) logger.debug("\t full text:" + sqliteRefTableDAO.getSql());
-				if(logger.isDebugEnabled()) logger.debug("\t=================>[forKeys]\n" + forKey);
-				String[] foreignInfo =forKey.split("FOREIGN KEY");
+				String strFullTextSQL = sqliteRefTableDAO.getSql();
+				if(logger.isDebugEnabled()) logger.debug("\t full text:" + strFullTextSQL);
 				
+				int indexKey = StringUtils.indexOf(strFullTextSQL, "FOREIGN KEY");
+				if(indexKey == -1) {
+					indexKey = StringUtils.indexOf(strFullTextSQL, "foreign key");
+					
+					if(indexKey == -1) {
+						if(logger.isDebugEnabled()) logger.debug("Not found foreign keys.");
+						continue;
+					}
+				}
+				
+				String forKey = sqliteRefTableDAO.getSql().substring(indexKey);
+				if(logger.isDebugEnabled()) logger.debug("\t=================>[forKeys]\n" + forKey);
+				String[] foreignInfo = forKey.split("FOREIGN KEY");
+				if(foreignInfo.length == 1) foreignInfo = forKey.split("foreign key");
 				
 				for(int i=1; i<foreignInfo.length; i++) {
 					try {
@@ -137,6 +148,7 @@ public class RelationUtil {
 						
 						// 참조 테이블,  REFERENCES 로 시작 하는 다음 부터 (까지
 						String refTbName = StringUtils.substringBetween(strForeign, "REFERENCES", "(");
+						if("".equals(refTbName) || null == refTbName) refTbName = StringUtils.substringBetween(strForeign, "references", "(");
 						
 						// 참조 컬럼,  refTbName의 끝나는 것부터 ) 까지...
 						String refCol	 = StringUtils.substringBetween(strForeign, refTbName+"(" , ")");
@@ -192,7 +204,7 @@ public class RelationUtil {
 				for(Relation relation : soTabMod.getOutgoingLinks()) {
 					
 					if( relation.getConstraint_name() != null && refTabDAO.getConstraint_name() != null ) {
-						if (relation.getConstraint_name().equals(refTabDAO.getConstraint_name())) {
+						if (relation.getConstraint_name().equalsIgnoreCase(refTabDAO.getConstraint_name())) {
 							isAlrealyAppend = true;
 							break;
 						}
@@ -201,7 +213,7 @@ public class RelationUtil {
 				for (Relation relation : soTabMod.getIncomingLinks()) {
 					
 					if( relation.getConstraint_name() != null && refTabDAO.getConstraint_name() != null ) {
-						if (relation.getConstraint_name().equals(refTabDAO.getConstraint_name())) {
+						if (relation.getConstraint_name().equalsIgnoreCase(refTabDAO.getConstraint_name())) {
 							isAlrealyAppend = true;
 							break;						
 						}
@@ -210,7 +222,7 @@ public class RelationUtil {
 				
 				// TODO 현재 자신의 테이블을 키로 가자고 있는 항목은 다음과 같은 이유로 제거 합니다. 
 				// java.lang.RuntimeException: Cycle detected in graph
-				if(refTabDAO.getTable_name().equals(refTabDAO.getReferenced_table_name())) continue;
+				if(refTabDAO.getTable_name().equalsIgnoreCase(refTabDAO.getReferenced_table_name())) continue;
 				
 				// 이미 추가 되어 있는가?
 				if(isAlrealyAppend) continue;
