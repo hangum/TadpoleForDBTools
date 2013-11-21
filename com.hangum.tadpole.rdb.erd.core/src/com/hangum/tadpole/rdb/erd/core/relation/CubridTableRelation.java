@@ -58,14 +58,21 @@ public class CubridTableRelation {
 				while (rs.next()) {
 		            
 		            ReferencedTableDAO ref = new ReferencedTableDAO();
-		            ref.setConstraint_name(rs.getString("FK_NAME"));
+		            if(rs.getString("FK_NAME") == null || "".equals(rs.getString("FK_NAME"))) ref.setConstraint_name(rs.getString("FK_NAME"));
+		            else ref.setConstraint_name(rs.getString("fk_name"));
 		            
 					// 테이블 명
-					ref.setTable_name(rs.getString("FKTABLE_NAME"));					
-					ref.setColumn_name(rs.getString("FKCOLUMN_NAME"));
+					if(rs.getString("FKTABLE_NAME") == null || "".equals(rs.getString("FKTABLE_NAME"))) ref.setTable_name(rs.getString("FKTABLE_NAME"));
+					else ref.setTable_name(rs.getString("fktable_name"));
 					
-					ref.setReferenced_table_name(rs.getString("PKTABLE_NAME"));
-					ref.setReferenced_column_name(rs.getString("PKCOLUMN_NAME"));
+					if(rs.getString("FKCOLUMN_NAME") == null || "".equals(rs.getString("FKCOLUMN_NAME"))) ref.setColumn_name(rs.getString("FKCOLUMN_NAME"));
+					else ref.setColumn_name(rs.getString("fkcolumn_name"));
+					
+					if(rs.getString("PKTABLE_NAME") == null || "".equals(rs.getString("PKTABLE_NAME"))) ref.setReferenced_table_name(rs.getString("PKTABLE_NAME"));
+					else ref.setReferenced_table_name(rs.getString("pktable_name"));
+					
+					if(rs.getString("PKCOLUMN_NAME") == null || "".equals(rs.getString("PKCOLUMN_NAME"))) ref.setReferenced_column_name(rs.getString("PKCOLUMN_NAME"));
+					else ref.setReferenced_column_name(rs.getString("pkcolumn_name"));
 					
 					if(logger.isDebugEnabled()) logger.debug(ref.toString());
 					
