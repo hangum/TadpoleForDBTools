@@ -42,7 +42,7 @@
       </editor>
       <editor
             class="com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor"
-            icon="resources/icons/database_table.png"
+            icon="resources/icons/table_editor.png"
             id="com.hangum.tadpole.rdb.core.editors.table.edit"
             name="%editor.name.2">
       </editor>
