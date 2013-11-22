@@ -46,6 +46,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFuncti
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index.TadpoleIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynonymComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
@@ -86,6 +87,7 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleIndexesComposite 	indexComposite 		= null;
 	private TadpoleViewerComposite 		viewComposite 		= null;
 	private TadpoleTableComposite 		tableComposite 		= null;
+	private TadpoleSynonymComposite 	synonymComposite 	= null;
 	
 	// mongodb
 	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
@@ -131,6 +133,9 @@ public class ExplorerViewer extends ViewPart {
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
 					tableComposite.filter(strSearchText);
+				
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.toString())) {
+					synonymComposite.filter(strSearchText);
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 					viewComposite.filter(strSearchText);					
@@ -232,6 +237,7 @@ public class ExplorerViewer extends ViewPart {
 		// 기존 사용자원을 반납합니다. 
 		if(null != tableComposite) tableComposite.dispose(); 
 		if(null != viewComposite) viewComposite.dispose(); 
+		if(null != synonymComposite) synonymComposite.dispose(); 
 		if(null != indexComposite) indexComposite.dispose(); 
 		if(null != procedureComposite) procedureComposite.dispose(); 
 		if(null != packageComposite) packageComposite.dispose(); 
@@ -322,6 +328,7 @@ public class ExplorerViewer extends ViewPart {
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
 			createTable();
 			createView();
+			createSynonym();
 			createIndexes();
 			createProcedure();
 			createPackage();
@@ -332,6 +339,8 @@ public class ExplorerViewer extends ViewPart {
 				tableComposite.getTableListViewer(),
 				tableComposite.getTableColumnViewer(),
 				viewComposite.getViewListViewer(), 
+				synonymComposite.getSynonymListViewer(),
+				synonymComposite.getSynonymColumnViewer(),
 				indexComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
 				packageComposite.getTableViewer(), 
@@ -381,6 +390,8 @@ public class ExplorerViewer extends ViewPart {
 //		} else
 		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 			refreshView(false);
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.toString())) {
+			refreshSynonym(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
 			refreshIndexes(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
@@ -476,6 +487,21 @@ public class ExplorerViewer extends ViewPart {
 		tableComposite = new TadpoleTableComposite(getSite(), tabFolderObject, userDB);
 		tableComposite.initAction();
 		tabFolderObject.setSelection(0);
+	}
+
+	/**
+	 * Synonym 정의
+	 */
+	private void createSynonym() {
+		synonymComposite = new TadpoleSynonymComposite(getSite(), tabFolderObject, userDB);
+		synonymComposite.initAction();
+	}
+
+	/**
+	 * Synonym 정보를 최신으로 리프레쉬합니다.
+	 */
+	public void refreshSynonym(boolean boolRefresh) {
+		synonymComposite.refreshSynonym(getUserDB(), boolRefresh);
 	}
 
 	/**
