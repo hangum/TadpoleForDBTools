@@ -86,6 +86,7 @@ public class PublicTadpoleDefine {
 	public static enum DB_ACTION {
 		TABLES, 
 		VIEWS, 
+		SYNONYM,
 		INDEXES, 
 		PROCEDURES,
 		PROCEDURE_PARAMETER,

@@ -374,6 +374,7 @@ public class Messages extends NLS {
 	public static String OthersConnectionMongoDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
+	public static String ObjectDeleteAction_synonym;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
