@@ -278,7 +278,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(refreshAction_Synonym);
 
-					if (null != is) {
+					if (!is.isEmpty()) {
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						OracleSynonymDAO synonymDAO = (OracleSynonymDAO) is.getFirstElement();
 						if (synonymDAO.getObject_type().startsWith("PROCEDURE") || synonymDAO.getObject_type().startsWith("FUNCTION")) {
