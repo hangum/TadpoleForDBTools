@@ -374,6 +374,13 @@ public class Messages extends NLS {
 	public static String OthersConnectionMongoDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
+	public static String ObjectDeleteAction_synonym;
+	public static String TableDirectEditorComposite_lblOrderBy_text;
+	public static String TableDirectEditorComposite_lblLimit_text;
+	public static String TableDirectEditorComposite_lblStart_text;
+	public static String TableDirectEditorComposite_lblEnd_text;
+	public static String TableDirectEditorComposite_text_text;
+	public static String TableDirectEditorComposite_textStart_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

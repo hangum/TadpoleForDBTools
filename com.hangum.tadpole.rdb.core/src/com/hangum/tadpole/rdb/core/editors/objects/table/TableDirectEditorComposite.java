@@ -117,6 +117,13 @@ public class TableDirectEditorComposite extends Composite {
 	private Text textWhere;
 	private Composite compositeTail;
 	private Button btnDdlSourceView;
+	private Label lblOrderBy;
+	private Text textOrderBy;
+	private Label lblLimit;
+	private Composite compositeLimit;
+	private Text textLimitStart;
+	private Label lblEnd;
+	private Text textLimitEnd;
 
 	/**
 	 * default composite
@@ -130,7 +137,12 @@ public class TableDirectEditorComposite extends Composite {
 	 */
 	public TableDirectEditorComposite(Composite parent, int style, final UserDBDAO userDB, final String initTableNameStr,  List<TableColumnDAO> columnList, Map<String, Boolean> primaryKEYListString) {
 		super(parent, style);
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 2;
+		gridLayout.horizontalSpacing = 2;
+		gridLayout.marginHeight = 2;
+		gridLayout.marginWidth = 2;
+		setLayout(gridLayout);
 		
 		// start initialize value
 		this.userDB = userDB;
@@ -142,10 +154,10 @@ public class TableDirectEditorComposite extends Composite {
 		Composite compositeBase = new Composite(this, SWT.NONE);
 		compositeBase.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeBase = new GridLayout(1, false);
-		gl_compositeBase.verticalSpacing = 2;
-		gl_compositeBase.horizontalSpacing = 2;
-		gl_compositeBase.marginHeight = 0;
-		gl_compositeBase.marginWidth = 2;
+		gl_compositeBase.verticalSpacing = 1;
+		gl_compositeBase.horizontalSpacing = 1;
+		gl_compositeBase.marginHeight = 1;
+		gl_compositeBase.marginWidth = 1;
 		compositeBase.setLayout(gl_compositeBase);
 		
 		toolBar = new ToolBar(compositeBase, SWT.FLAT | SWT.RIGHT);
@@ -190,7 +202,12 @@ public class TableDirectEditorComposite extends Composite {
 		tltmTablecomment.setText(TbUtils.NONE_MSG);
 		
 		Composite compositeBody = new Composite(compositeBase, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeBody = new GridLayout(2, false);
+		gl_compositeBody.horizontalSpacing = 1;
+		gl_compositeBody.verticalSpacing = 1;
+		gl_compositeBody.marginHeight = 1;
+		gl_compositeBody.marginWidth = 1;
+		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblWhere = new Label(compositeBody, SWT.NONE);
@@ -200,10 +217,70 @@ public class TableDirectEditorComposite extends Composite {
 		textWhere.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) changeWhere(textWhere.getText());
+				if(e.keyCode == SWT.Selection) initBusiness();
 			}
 		});
 		textWhere.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		lblOrderBy = new Label(compositeBody, SWT.NONE);
+		lblOrderBy.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOrderBy.setText(Messages.TableDirectEditorComposite_lblOrderBy_text);
+		
+		textOrderBy = new Text(compositeBody, SWT.BORDER);
+		textOrderBy.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) initBusiness();
+			}
+		});
+		textOrderBy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		lblLimit = new Label(compositeBody, SWT.NONE);
+		lblLimit.setText(Messages.TableDirectEditorComposite_lblLimit_text);
+		
+		compositeLimit = new Composite(compositeBody, SWT.NONE);
+		compositeLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeLimit = new GridLayout(4, false);
+		gl_compositeLimit.verticalSpacing = 1;
+		gl_compositeLimit.horizontalSpacing = 1;
+		gl_compositeLimit.marginHeight = 1;
+		gl_compositeLimit.marginWidth = 1;
+		compositeLimit.setLayout(gl_compositeLimit);
+		
+		Label lblStart = new Label(compositeLimit, SWT.NONE);
+		lblStart.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblStart.setBounds(0, 0, 59, 14);
+		lblStart.setText(Messages.TableDirectEditorComposite_lblStart_text);
+		
+		textLimitStart = new Text(compositeLimit, SWT.BORDER);
+		textLimitStart.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) initBusiness();
+			}
+		});
+		textLimitStart.setText(Messages.TableDirectEditorComposite_textStart_text);
+		GridData gd_textLimitStart = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gd_textLimitStart.widthHint = 40;
+		gd_textLimitStart.minimumWidth = 40;
+		textLimitStart.setLayoutData(gd_textLimitStart);
+		
+		lblEnd = new Label(compositeLimit, SWT.NONE);
+		lblEnd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblEnd.setText(Messages.TableDirectEditorComposite_lblEnd_text);
+		
+		textLimitEnd = new Text(compositeLimit, SWT.BORDER);
+		textLimitEnd.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) initBusiness();
+			}
+		});
+		textLimitEnd.setText(Messages.TableDirectEditorComposite_text_text);
+		GridData gd_textLimitEnd = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gd_textLimitEnd.minimumWidth = 40;
+		gd_textLimitEnd.widthHint = 40;
+		textLimitEnd.setLayoutData(gd_textLimitEnd);
 		
 		Label lblNewLabel = new Label(compositeBody, SWT.NONE);
 		lblNewLabel.setText(Messages.TableEditPart_3);
@@ -256,42 +333,29 @@ public class TableDirectEditorComposite extends Composite {
 		});
 		btnDdlSourceView.setText(Messages.TableDirectEditorComposite_btnDdlSourceView_text);
 		
-		initBusiness(StringUtils.trimToEmpty(textWhere.getText()));
+		initBusiness();
 	}
 	
 	/**
 	 * 에디터에 처음 데이터 호출할때로 초기화한다.
 	 */
 	public void refreshEditor() {
-		initBusiness(StringUtils.trimToEmpty(textWhere.getText()));
+		initBusiness();
 		initButtonCtrl();
-	}
-	
-	/**
-	 * where 조건 추가
-	 * 
-	 * @param where
-	 */
-	private void changeWhere(String where) {
-			
-		// 쿼리를 수정했으면...
-		if(!"".equals(getChangeQuery()) ) { //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.TableEditPart_5, Messages.TableViewerEditPart_1)) {
-				initBusiness(where);
-			}
-		} else {
-			initBusiness(where);
-		}
 	}
 	
 	/**
 	 * 테이블에 쿼리 하고, pk,fk 키의 값을 index로 매칭합니다.
 	 */
-	private void initBusiness(String whereSQL) {
+	private void initBusiness() {
+		
+		String strWhere = StringUtils.trimToEmpty(textWhere.getText());
+		String strOrder = StringUtils.trimToEmpty(textOrderBy.getText());
+		
 		try {
 			primaryKeyListIndex.clear();
 			// 쿼리 실행
-			runSQLSelect(whereSQL);
+			runSQLSelect(strWhere, strOrder);
 			
 			// 컬럼 중에 키 컬럼이 있는지 검사합니다.
 			for(int i=0; i<mapColumns.size(); i++) {
@@ -328,26 +392,29 @@ public class TableDirectEditorComposite extends Composite {
 	 * 
 	 * 1) ResultSetMetaData를 사용하여 데이터 컬럼 항목을 저장합니다.
 	 * 
-	 * @param requestQuery
-	 * @param startResultPos
-	 * @param endResultPos
+	 * @param strWhere
+	 * @param strOrderBy
 	 */
-	private void runSQLSelect(String whereSQL) throws Exception {
+	private void runSQLSelect(String strWhere, String strOrderBy) throws Exception {
 		String requestQuery = "SELECT * FROM " + initTableNameStr; //$NON-NLS-1$
-		if(!"".equals( whereSQL )) { //$NON-NLS-1$
-			requestQuery += " where " + whereSQL; //$NON-NLS-1$
+		if(!"".equals( strWhere )) requestQuery += " where " + strWhere; //$NON-NLS-1$
+		if(!"".equals( strOrderBy )) requestQuery += " order by " + strOrderBy; //$NON-NLS-1$
+		
+		int intStart = 0, intEnd = 500;
+
+		try {
+			intStart = Integer.parseInt(StringUtils.trimToEmpty(textLimitStart.getText()));
+		} catch(Exception e) {
+			textLimitStart.setText(""+intStart);
+		}
+		try {
+			intEnd = Integer.parseInt(StringUtils.trimToEmpty(textLimitEnd.getText()));
+		} catch(Exception e) {
+			textLimitEnd.setText(""+intEnd);
 		}
 		
-		// 임시코드를 넣습니다.
-		//
-		//
-		//
-		//
-//		if(DBDefine.MSSQL_DEFAULT != DBDefine.getDBDefine(userDB.getTypes())) {
-			requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, 0, 500);
-//		} else {
-//			requestQuery = requestQuery + " top 500";
-//		}
+		requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, intStart, intEnd);
+		if(logger.isDebugEnabled()) logger.debug("[table information query]" + requestQuery);
 		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
@@ -359,7 +426,7 @@ public class TableDirectEditorComposite extends Composite {
 			PreparedStatement stmt = null;
 			stmt = javaConn.prepareStatement(requestQuery);
 			
-			rs = stmt.executeQuery();//Query( selText );
+			rs = stmt.executeQuery();
 			
 			// table column의 정보
 			ResultSetMetaData  rsm = rs.getMetaData();
@@ -517,7 +584,7 @@ public class TableDirectEditorComposite extends Composite {
 			
 			// 정상적으로 모든 결과 처리 완료.
 			tltmSave.setEnabled(false);
-			initBusiness(textWhere.getText());
+			initBusiness();
 //			isDirty = false;
 //			
 //			isDirty = false;
@@ -733,5 +800,4 @@ public class TableDirectEditorComposite extends Composite {
 	@Override
 	protected void checkSubclass() {
 	}
-
 }

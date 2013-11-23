@@ -27,6 +27,7 @@ import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.sql.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.TadpoleSystemCommons;
 
@@ -85,6 +86,19 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 					TadpoleSystemCommons.executSQL(userDB, "drop view " + viewName); //$NON-NLS-1$
 					
 					refreshView();
+				} catch(Exception e) {
+					logger.error(Messages.ObjectDeleteAction_11, e);
+					exeMessage(Messages.ObjectDeleteAction_1, e);
+				}
+			}
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.SYNONYM) {
+			
+			OracleSynonymDAO dao = (OracleSynonymDAO)selection.getFirstElement();
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_8, dao.getSynonym_name() + Messages.ObjectDeleteAction_synonym)) {
+				try {
+					TadpoleSystemCommons.executSQL(userDB, "drop synonym " + dao.getTable_owner() + "." + dao.getSynonym_name()); //$NON-NLS-1$
+					
+					refreshSynonym();
 				} catch(Exception e) {
 					logger.error(Messages.ObjectDeleteAction_11, e);
 					exeMessage(Messages.ObjectDeleteAction_1, e);

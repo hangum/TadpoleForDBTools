@@ -44,6 +44,8 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 			refreshTable();
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
 			refreshView();
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.SYNONYM) {
+			refreshSynonym();
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			refreshIndexes();
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
