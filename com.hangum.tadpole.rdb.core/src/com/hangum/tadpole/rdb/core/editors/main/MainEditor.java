@@ -12,8 +12,6 @@ package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -75,6 +73,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
@@ -505,10 +504,9 @@ public class MainEditor extends EditorExtension {
 								
 								while ((readBuffer = bufferedReader.readLine())!= null)
 									clobContent.append(readBuffer);
-	
+
 								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), clobContent.toString());
-				                dlg.open();
-	
+					            dlg.open();									
 							} catch (Exception e) {
 								logger.error("Clob column echeck", e); //$NON-NLS-1$
 							}
@@ -516,29 +514,10 @@ public class MainEditor extends EditorExtension {
 							try {
 								Blob blob = (Blob) columnObject;
 								
-								int offset = -1;
-								int chunkSize = 1024;
-								long blobLength = blob.length();
-								if(chunkSize > blobLength) {
-									chunkSize = (int)blobLength;
-								}
-								char buffer[] = new char[chunkSize];
-								StringBuilder stringBuffer = new StringBuilder();
-								Reader reader = new InputStreamReader(blob.getBinaryStream());
-
-								while((offset = reader.read(buffer)) != -1) {
-									stringBuffer.append(buffer,0,offset);
-								}
-								
-								//byte[] bdata = blob.getBytes(1, (int) blob.length());
-								//String s = new String(bdata);
-								
-								// image view dialog 또는 파일로 다운로드 하는 기능 필요....
-								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), stringBuffer.toString());
+								TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(getSite().getShell(), tableResult.getColumn(i).getText(), blob.getBinaryStream());
 								dlg.open();								
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								logger.error("Blob column echeck", e); //$NON-NLS-1$
 							}
 		
 						}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
