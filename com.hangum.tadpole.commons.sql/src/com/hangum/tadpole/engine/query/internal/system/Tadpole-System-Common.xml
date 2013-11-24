@@ -699,5 +699,18 @@ SELECT
 		user_seq = #user_seq# AND
 		delyn = 'NO'
 </select>
-	
+
+
+<!-- 
+	=========================================================================================================
+	notes 정보.
+	=========================================================================================================
+ -->
+<select id="findReceiveNotes" resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO" parameterClass="java.lang.Integer">
+	SELECT * FROM notes
+	WHERE
+		receive_user_seq = #user_seq#
+	ORDER BY create_time
+</select>
+ 	
 </sqlMap>

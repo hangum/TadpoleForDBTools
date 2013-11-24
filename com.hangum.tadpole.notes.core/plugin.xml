@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.hangum.tadpole.notes.core.editors.NoteListEditors"
+            default="false"
+            id="com.hangum.tadpole.notes.core.editor.list"
+            name="Note List">
+      </editor>
+   </extension>
+
+</plugin>
