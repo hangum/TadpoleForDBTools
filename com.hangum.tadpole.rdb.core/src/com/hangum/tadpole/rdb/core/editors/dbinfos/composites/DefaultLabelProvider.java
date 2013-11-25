@@ -7,7 +7,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_KEY;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.sql.dao.rdb.AbstractDAO;
 import com.swtdesigner.ResourceManager;
@@ -31,15 +30,15 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 		AbstractDAO dao = (AbstractDAO) element;
 
 		if (columnIndex == 0) {
-			for (DB_KEY key : DB_KEY.values()) {
-				if (PublicTadpoleDefine.isPK(dao.getvalue(key.toString()))) {
+//			for (DB_KEY key : DB_KEY.values()) {
+				if (PublicTadpoleDefine.isPK(dao.getvalue("pk"))) {
 					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/primary_key_column.png"); //$NON-NLS-1$
-				} else if (PublicTadpoleDefine.isFK(dao.getvalue(key.toString()))) {
+				} else if (PublicTadpoleDefine.isFK(dao.getvalue("pk"))) {
 					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/foreign_key_column.png"); //$NON-NLS-1$
-				} else if (PublicTadpoleDefine.isMUL(dao.getvalue(key.toString()))) {
+				} else if (PublicTadpoleDefine.isMUL(dao.getvalue("pk"))) {
 					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/multi_key_column.png"); //$NON-NLS-1$
 				}
-			}
+//			}
 			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/column.png"); //$NON-NLS-1$
 		}
 
