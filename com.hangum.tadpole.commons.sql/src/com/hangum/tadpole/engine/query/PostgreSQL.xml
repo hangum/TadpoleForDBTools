@@ -335,7 +335,9 @@ FROM
 		AND attnum > 0 
 		AND NOT attisdropped )	as "column_comment"			
        ,(SELECT
-  			tc.constraint_type 
+  			case when max(tc.constraint_type) != min(tc.constraint_type)
+  			     then max(tc.constraint_type) || ',' || min(tc.constraint_type)
+                 else max(tc.constraint_type) end 
 			FROM 
    				 information_schema.table_constraints AS tc 
   				  JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
