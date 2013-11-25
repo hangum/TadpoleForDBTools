@@ -112,14 +112,25 @@ public class PublicTadpoleDefine {
 		if(DB_KEY.PRI.toString().equalsIgnoreCase(key)) return true;
 		if(DB_KEY.PK.toString().equalsIgnoreCase(key)) return true;
 		
+		// pgsql
+		if("PRIMARY KEY".equalsIgnoreCase(key)) return true;
+		
 		return false;
 	}
 	public static boolean isFK(String key) {
 		if(DB_KEY.FK.toString().equalsIgnoreCase(key)) return true;
+		
+		// pgsql
+		if("FOREIGN KEY".equalsIgnoreCase(key)) return true;
+		
 		return false;
 	}
 	public static boolean isMUL(String key) {
 		if(DB_KEY.MUL.toString().equalsIgnoreCase(key)) return true;
+		
+		// pgsql
+		if("PRIMARY KEY,FOREIGN KEY".equalsIgnoreCase(key)) return true;
+		
 		return false;
 	}
 	public static boolean isKEY(String key) {
