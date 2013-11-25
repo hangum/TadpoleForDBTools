@@ -15,6 +15,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IViewLayout;
 
+import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
@@ -34,6 +35,7 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IFolderLayout leftUnderFolder = layout.createFolder("id"+ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id"+ManagerViewer.ID);		
 		leftUnderFolder.addView(ExplorerViewer.ID);
+		leftUnderFolder.addView(NoteListViewPart.ID);
 		
 		// viewer closealbe false
 		IViewLayout viewManagerLayout = layout.getViewLayout(ManagerViewer.ID);
@@ -41,5 +43,8 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IViewLayout viewExplorerLayout = layout.getViewLayout(ExplorerViewer.ID);
 		viewExplorerLayout.setCloseable(false);
+		
+		IViewLayout viewNotesLayout = layout.getViewLayout(NoteListViewPart.ID);
+		viewNotesLayout.setCloseable(false);
 	}
 }

@@ -29,7 +29,7 @@ import com.hangum.tadpole.manager.core.editor.transaction.connection.Transaction
 import com.swtdesigner.ResourceManager;
 
 /**
- * Transaction DB Connection manager action
+ * DB Connection manager action
  * 
  * @author hangum
  *
@@ -47,8 +47,8 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 		this.window = window;
 		
 		setId(ID);
-		setText("Transaction Connections Manager");
-		setToolTipText("Transaction Connections Manager");
+		setText("Connections Manager");
+		setToolTipText("Connections Manager");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/transaction_db_status.png"));
 		setEnabled(true);
 	}
@@ -59,10 +59,10 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 			TransactionConnectionListEditorInput userMe = new TransactionConnectionListEditorInput();
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, TransactionConnectionListEditor.ID);
 		} catch (PartInitException e) {
-			logger.error("Resource Management editor", e); //$NON-NLS-1$
+			logger.error("Connections Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Resource Management editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Connections Management editor", errStatus); //$NON-NLS-1$
 		}
 	}
 

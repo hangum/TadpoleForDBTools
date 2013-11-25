@@ -15,6 +15,7 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.map.SQLMap;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -86,17 +87,24 @@ public class TadpoleSQLManager {
 	}
 	
 	/**
+	 * 현재 연결된 Connection pool 정보를 리턴합니다.
+	 * 
+	 * @return
+	 */
+	public static HashMap<String, SqlMapClient> getDbManager() {
+		return dbManager;
+	}
+	
+	/**
 	 * DB 정보를 삭제한다.
 	 * 
 	 * @param dbInfo
 	 */
 	public static void removeInstance(UserDBDAO dbInfo) {
-		
 		synchronized (dbManager) {
 			SqlMapClient sqlMapClient = dbManager.remove(getKey(dbInfo));
 			sqlMapClient = null;
 		}
-		
 	}
 	
 	/**
@@ -105,6 +113,10 @@ public class TadpoleSQLManager {
 	 * @return
 	 */
 	private static String getKey(UserDBDAO dbInfo) {
-		return dbInfo.getSeq() + dbInfo.getDbms_types()+dbInfo.getUrl()+dbInfo.getUsers()+dbInfo.getPasswd();
+		return dbInfo.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
+				dbInfo.getDbms_types()  + PublicTadpoleDefine.DELIMITER +
+				dbInfo.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
+				dbInfo.getUsers()  		+ PublicTadpoleDefine.DELIMITER +
+				dbInfo.getPasswd()  	+ PublicTadpoleDefine.DELIMITER;
 	}
 }

@@ -1619,7 +1619,7 @@ public class MainEditor extends EditorExtension {
 			TableUtil.packTable(tableResult);
 			resultFolderSel(RESULT_TAB_NAME.RESULT_SET);
 		} else {
-			listMessage.add(new TadpoleMessageDAO(new Date(), "success")); //$NON-NLS-1$
+			listMessage.add(new TadpoleMessageDAO(new Date(), "success. \n\n" + finalExecuteSQL)); //$NON-NLS-1$
 			tableViewerMessage.refresh(listMessage);
 			resultFolderSel(RESULT_TAB_NAME.TADPOLE_MESSAGE);
 		}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="tadpole-rap-2.1.0-emf-standalone" sequenceNumber="141">
+<?pde version="3.8"?><target name="tadpole-rap-2.1.0-emf-standalone" sequenceNumber="142">
 <locations>
 <location path="${git-tadpole}/targetProject/rap-gef-port-2.1" type="Directory"/>
 <location path="${git-tadpole}/targetProject/standalone-launcher${build_files}" type="Directory"/>
@@ -11,7 +11,7 @@
 <location path="${git-tadpole}/targetProject/fileupload" type="Directory"/>
 <location path="${git-tadpole}/targetProject/addons" type="Directory"/>
 <location path="${git-tadpole}/targetProject/eclipse-4.3-delta-pack" type="Directory"/>
-<location path="${git-tadpole}/targetProject/rap-2.1.1-RC3-20130902-1345" type="Directory"/>
 <location path="${git-tadpole}/targetProject/multiTab" type="Directory"/>
+<location path="${git-tadpole}/targetProject/rap-2.2.0-N-20131122-1633" type="Directory"/>
 </locations>
 </target>
