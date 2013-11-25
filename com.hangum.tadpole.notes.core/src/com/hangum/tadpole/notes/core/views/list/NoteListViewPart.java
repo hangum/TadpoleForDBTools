@@ -8,10 +8,11 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.notes.core.editors;
+package com.hangum.tadpole.notes.core.views.list;
+
+import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -21,6 +22,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -28,29 +30,28 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.EditorPart;
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.ui.part.ViewPart;
 
-import com.hangum.tadpole.engine.transaction.TransactionDAO;
+import com.hangum.tadpole.notes.core.Activator;
+import com.hangum.tadpole.sql.dao.system.NotesDAO;
+import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
+import com.swtdesigner.ResourceManager;
 
 /**
- * Notes list
+ * Notes
  * 
  * @author hangum
  *
  */
-public class NoteListEditors extends EditorPart {
-	public static final String ID = "com.hangum.tadpole.notes.core.editor.list";
-	private static final Logger logger = Logger.getLogger(NoteListEditors.class);
+public class NoteListViewPart extends ViewPart {
+	public static final String ID = "com.hangum.tadpole.notes.core.view.list";
+	private static final Logger logger = Logger.getLogger(NoteListViewPart.class);
 
 	private Combo comboTypes;
 	private TableViewer tableViewer;
 	private Text textFilter;
-
-	public NoteListEditors() {
+	
+	public NoteListViewPart() {
 		super();
 	}
 
@@ -75,10 +76,16 @@ public class NoteListEditors extends EditorPart {
 		toolBar.setBounds(0, 0, 88, 20);
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setText("Refresh");
+		tltmRefresh.setToolTipText("Refresh");
+		tltmRefresh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 		
 		ToolItem tltmCreate = new ToolItem(toolBar, SWT.NONE);
-		tltmCreate.setText("Create");
+		tltmCreate.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/notes_new.png")); //$NON-NLS-1$
+		tltmCreate.setToolTipText("Create");
+		
+		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmDelete.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/notes_delete.png")); //$NON-NLS-1$
+		tltmDelete.setToolTipText("Delete");
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(3, false);
@@ -104,7 +111,7 @@ public class NoteListEditors extends EditorPart {
 		comboTypes.add("Receive");
 		comboTypes.select(2);
 		
-		textFilter = new Text(compositeBody, SWT.BORDER);
+		textFilter = new Text(compositeBody, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
@@ -121,8 +128,16 @@ public class NoteListEditors extends EditorPart {
 		initData();
 	}
 	
+	/**
+	 * initialize data
+	 */
 	private void initData() {
-//		tableViewer.setInput();
+		try {
+			List<NotesDAO> listNotes = TadpoleSystem_Notes.getReceiveNoteList(1);
+			tableViewer.setInput(listNotes);
+		} catch(Exception e) {
+			logger.error("Get note list", e);
+		}
 	}
 	
 	/**
@@ -148,36 +163,8 @@ public class NoteListEditors extends EditorPart {
 	@Override
 	public void setFocus() {
 	}
-	
 
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-	}
-
-	@Override
-	public void doSaveAs() {
-	}
-
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		setSite(site);
-		setInput(input);
-		
-		NoteListEditorsInput iei = (NoteListEditorsInput)input;
-		setPartName(iei.getName());
-	}
-
-	@Override
-	public boolean isDirty() {
-		return false;
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
 }
-
 /**
  * note list label provider
  * 
@@ -193,13 +180,15 @@ class NoteListLabelProvider extends LabelProvider implements ITableLabelProvider
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		TransactionDAO dto = (TransactionDAO)element;
-
+		NotesDAO dto = (NotesDAO)element;
+//		{"Types", "Sender", "Receiver", "Is Read?", "create date", "Contents"};
 		switch(columnIndex) {
-		case 0: return dto.getUserDB().getDbms_types();
-		case 1: return dto.getUserDB().getDisplay_name();
-		case 2: return dto.getUserId();
-		case 3: return dto.getStartTransaction().toLocaleString();
+		case 0: return dto.getTypes();
+		case 1: return ""+dto.getSend_user_seq();
+		case 2: return ""+dto.getReceive_user_seq();
+		case 3: return dto.getIs_read();
+		case 4: return dto.getCreate_time();
+		case 5: return dto.getContents();
 		}
 		
 		return "*** not set column ***"; //$NON-NLS-1$

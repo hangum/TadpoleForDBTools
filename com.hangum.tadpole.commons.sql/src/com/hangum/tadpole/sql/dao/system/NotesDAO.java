@@ -21,8 +21,13 @@ import java.sql.Date;
 public class NotesDAO {
 	int seq;
 	String types;
+	
 	int send_user_seq;
+	String sendUserId;
+	
 	int receive_user_seq;
+	String receiveUserId;
+	
 	Date sender_date;
 	Date receiver_date;
 	String is_read;
@@ -61,12 +66,28 @@ public class NotesDAO {
 		this.send_user_seq = send_user_seq;
 	}
 
+	public String getSendUserId() {
+		return sendUserId;
+	}
+
+	public void setSendUserId(String sendUserId) {
+		this.sendUserId = sendUserId;
+	}
+
 	public int getReceive_user_seq() {
 		return receive_user_seq;
 	}
 
 	public void setReceive_user_seq(int receive_user_seq) {
 		this.receive_user_seq = receive_user_seq;
+	}
+
+	public String getReceiveUserId() {
+		return receiveUserId;
+	}
+
+	public void setReceiveUserId(String receiveUserId) {
+		this.receiveUserId = receiveUserId;
 	}
 
 	public Date getSender_date() {
@@ -132,5 +153,6 @@ public class NotesDAO {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
+
 
 }

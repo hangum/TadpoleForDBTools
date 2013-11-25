@@ -8,6 +8,9 @@ Bundle-Vendor: HANGUM
 Require-Bundle: org.eclipse.rap.ui;bundle-version="2.2.0",
  org.eclipse.core.runtime,
  com.hangum.tadpole.commons.libs;bundle-version="2.0.0",
- com.hangum.tadpole.engine;bundle-version="1.0.0"
+ com.hangum.tadpole.engine;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.utils;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: com.hangum.tadpole.notes.core.define,
+ com.hangum.tadpole.notes.core.views.list
