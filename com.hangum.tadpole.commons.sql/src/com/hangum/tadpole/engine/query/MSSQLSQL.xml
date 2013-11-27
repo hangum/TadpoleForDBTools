@@ -68,11 +68,14 @@ SELECT  b.name field,
         CASE WHEN b.isnullable = 0  then 'NO' 
              ELSE 'YES' 
         END notnull, 
-        d.keyno mskey,
+        case when d.keyno > 0 and f.keyno > 0 then 'MUL'
+		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
+			 when d.keyno is null and f.keyno > 0 then 'FK' else null end as [key],
         p.value as comment
 FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
-	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	LEFT JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	LEFT JOIN dbo.sysforeignkeys f ON a.id = f.fkeyid and b.colid = f.fkey 
 	LEFT JOIN sys.extended_properties AS p         ON p.major_id = a.id        AND p.minor_id = b.colid       AND p.class = 1
 WHERE 1 = 1
 	and a.id = object_id('$table$')
@@ -268,15 +271,18 @@ select
     , p.value as column_comment
     , c.name +  case  when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')'  end as data_type
     , case  when b.isnullable = 0 then 'NO' else 'YES'  end as nullable
-    , (case when x.is_primary_key ='true' then 'PK' else ''  end) as pk
-   from sys.tables  as tbl
+    , (case when d.keyno > 0 and f.keyno > 0 then 'MUL'
+		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
+			 when d.keyno is null and f.keyno > 0 then 'FK' else '' end) as pk   
+from sys.tables  as tbl
    left join sys.extended_properties as tp   on tp.major_id = tbl.object_id  and tp.minor_id = 0  and tp.class    = 1
    inner join sysobjects a  on tbl.object_id = a.id
    inner join syscolumns b  on a.id = b.id
    inner join systypes c on  b.xusertype = c.xusertype
-   left outer join dbo.sysindexkeys d  on  b.id  = d.id  and b.colid = d.colid  and indid   =1 
+   left join dbo.sysindexkeys d  on  b.id  = d.id  and b.colid = d.colid  and indid   =1 
    left join sys.extended_properties as p  on p.major_id     = a.id  and p.minor_id = b.colid  and p.class    = 1
-   left join sys.indexes x   on x.object_id    = a.id  and x.index_id = d.indid
+   left join sys.indexes x   on x.object_id = a.id  and x.index_id = d.indid
+   left join sys.sysforeignkeys f ON a.id = f.fkeyid and b.colid = f.fkey 
    order by tbl.name, b.colid
 </select>
 

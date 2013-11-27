@@ -63,11 +63,14 @@ SELECT  b.name field,
         CASE WHEN b.isnullable = 0  then 'NO' 
              ELSE 'YES' 
         END notnull, 
-        d.keyno mskey,
+        case when d.keyno > 0 and f.keyno > 0 then 'MUL'
+		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
+			 when d.keyno is null and f.keyno > 0 then 'FK' else null end as [key],
         t.value as comment
 FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
-	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	LEFT JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	LEFT JOIN dbo.sysforeignkeys f ON a.id = f.fkeyid and b.colid = f.fkey 
     left join sysproperties t on a.id = t.id and b.colid = t.smallid and t.type = '4'
         and t.name in ('ms_description', 'caption', 'comment')    	
 WHERE 
@@ -237,14 +240,17 @@ SELECT
 	      , b.name as column_name
 	       , c.name + case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')'  else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')'  end as data_type
 	       , case when b.isnullable = 0  then 'NO' else 'YES' end as nullable
-	       , d.keyno ispk
+           , case when d.keyno > 0 and f.keyno > 0 then 'MUL'
+		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
+			 when d.keyno is null and f.keyno > 0 then 'FK' else null end as pk
 	       , cc.value as column_comment
 	from sysobjects t
 			    left join sysproperties tc on t.id = tc.id	 and tc.type = '3'	
 	   inner join sysobjects a on t.id = a.id 
 	   INNER JOIN syscolumns b ON (a.id = b.id)
 		INNER JOIN systypes c ON (b.xusertype = c.xusertype)
-		left outer join dbo.sysindexkeys d on (b.id =d.id and b.colid = d.colid and indid =1)
+		left join dbo.sysindexkeys d on (b.id =d.id and b.colid = d.colid and indid =1)
+		LEFT JOIN dbo.sysforeignkeys f ON a.id = f.fkeyid and b.colid = f.fkey 
 	    left join sysproperties cc on a.id = cc.id and b.colid = cc.smallid and cc.type = '4'
 	        and cc.name in ('ms_description', 'caption', 'comment')    	
 	where 1=1
