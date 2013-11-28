@@ -143,7 +143,7 @@ public class DBLoginDialog extends Dialog {
 				// 초기 값이 잘못되어 ui가 잘못 생성되는것을 방지하기위한 코드.
 				if(-1 == comboDBList.getSelectionIndex()) comboDBList.select(0);;
 			} catch(Exception e) {
-				logger.error("find default db", e);
+				logger.error(Messages.DBLoginDialog_38, e);
 			}
 		} else {
 			comboDBList.select(0);
@@ -208,9 +208,13 @@ public class DBLoginDialog extends Dialog {
 	/**
 	 * add db
 	 */
-	private void addDB() {
-		if (!loginComposite.connection()) return;
-		this.retuserDb = loginComposite.getDBDTO();
+	private boolean addDB() {
+		if (loginComposite.connection()) {
+			this.retuserDb = loginComposite.getDBDTO();	
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@Override
@@ -218,10 +222,12 @@ public class DBLoginDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		if(TEST_CONNECTION_ID == buttonId) {
 			if(loginComposite.testConnection()) {
-				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
+				MessageDialog.openInformation(null, "Confirm", Messages.DBLoginDialog_42); //$NON-NLS-1$
 			}
 		} else if(ADD_NEW_CONNECTION_ID == buttonId) {
-			addDB();
+			if(addDB()) {
+				MessageDialog.openInformation(null, "Confirm", Messages.DBLoginDialog_47); //$NON-NLS-1$
+			}
 		}
 	}
 
@@ -236,10 +242,10 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, TEST_CONNECTION_ID, "Test Connection", false);
+		createButton(parent, TEST_CONNECTION_ID, Messages.DBLoginDialog_43, false);
 		
-		createButton(parent, IDialogConstants.OK_ID, "Add", true);
-		createButton(parent, ADD_NEW_CONNECTION_ID, "Add DB", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_44, true);
+		createButton(parent, ADD_NEW_CONNECTION_ID, Messages.DBLoginDialog_45, false);
 		
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLoginDialog_7, false);
 	}
