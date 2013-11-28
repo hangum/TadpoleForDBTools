@@ -86,6 +86,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.sqlite.SQLiteForeignKeyListDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
@@ -202,7 +203,44 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						mapParam.put("table", table.getName());
 
 						showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
-
+						if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)){
+							try{
+								List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
+								for (SQLiteForeignKeyListDAO fkeydao : foreignKeyList){
+									for (TableColumnDAO dao : showTableColumns){
+										if (dao.getName().equals(fkeydao.getFrom() ) ){
+											if (PublicTadpoleDefine.DB_KEY.PRI.equals(dao.getKey())){
+												dao.setKey("MUL");
+											}else{
+												dao.setKey("FK");
+											}
+										}	 
+									}
+								}
+							}catch(Exception e){
+								logger.debug("not found foreignkey for " + table.getName());
+							}
+						}
+						
+						/*
+						if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)){
+							try{
+								List<HashMap<String,String>> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
+								for (HashMap key: foreignKeyList){
+									for (TableColumnDAO dao : showTableColumns){
+										if (dao.getName().equals(key.get("from"))){
+											if (PublicTadpoleDefine.DB_KEY.PRI.equals(dao.getKey())){
+												dao.setKey("MUL");
+											}else{
+												dao.setKey("FK");
+											}
+										}	
+									}
+								}
+							}catch(Exception e){
+								logger.debug("not found foreignkey for " + table.getName());
+							}
+						}*/
 					} else
 						showTableColumns = null;
 
