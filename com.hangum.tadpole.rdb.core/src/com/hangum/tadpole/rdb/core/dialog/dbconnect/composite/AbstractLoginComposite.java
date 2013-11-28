@@ -151,7 +151,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
 			} catch (Exception e) {
-				logger.error("Add new database", e);
+				logger.error(Messages.AbstractLoginComposite_0, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
 				
@@ -293,13 +293,15 @@ public abstract class AbstractLoginComposite extends Composite {
 				MongoConnectionManager.getInstance(userDB);
 			}
 		} catch (Exception e) {
-			// If UserDBDao is not invalid, remove UserDBDao at internal cache
-			TadpoleSQLManager.removeInstance(loginInfo);
-			
 			logger.error("DB Connecting... ", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_26, e.getMessage());//Messages.AbstractLoginComposite_1);
-			
-			return false;
+			if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_26, e.getMessage() + Messages.AbstractLoginComposite_3 )) {
+				return true;
+			} else {
+				// If UserDBDao is not invalid, remove UserDBDao at internal cache
+				TadpoleSQLManager.removeInstance(loginInfo);
+
+				return false;
+			}
 		}
 		
 		return true;
