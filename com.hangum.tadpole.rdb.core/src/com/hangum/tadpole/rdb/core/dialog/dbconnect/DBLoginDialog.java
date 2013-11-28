@@ -52,8 +52,11 @@ public class DBLoginDialog extends Dialog {
 	private static final long serialVersionUID = 1327678815994219469L;
 	private static final Logger logger = Logger.getLogger(DBLoginDialog.class);
 	
-	
+	/** test connection button id */
 	public static final int TEST_CONNECTION_ID = IDialogConstants.CLIENT_ID + 1;
+	
+	/** add new connection button id */
+	public static final int ADD_NEW_CONNECTION_ID = TEST_CONNECTION_ID + 1;
 	
 	/** main composite */
 	private Composite container;
@@ -197,10 +200,17 @@ public class DBLoginDialog extends Dialog {
 
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
-		this.retuserDb = loginComposite.getDBDTO();
+		addDB();
 		
 		super.okPressed();
+	}
+	
+	/**
+	 * add db
+	 */
+	private void addDB() {
+		if (!loginComposite.connection()) return;
+		this.retuserDb = loginComposite.getDBDTO();
 	}
 	
 	@Override
@@ -210,6 +220,8 @@ public class DBLoginDialog extends Dialog {
 			if(loginComposite.testConnection()) {
 				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
 			}
+		} else if(ADD_NEW_CONNECTION_ID == buttonId) {
+			addDB();
 		}
 	}
 
@@ -225,7 +237,10 @@ public class DBLoginDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, TEST_CONNECTION_ID, "Test Connection", false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_6, true);
+		
+		createButton(parent, IDialogConstants.OK_ID, "Add", true);
+		createButton(parent, ADD_NEW_CONNECTION_ID, "Add DB", false);
+		
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLoginDialog_7, false);
 	}
 	/**
@@ -242,6 +257,6 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 540);
+		return new Point(500, 540);
 	}
 }
