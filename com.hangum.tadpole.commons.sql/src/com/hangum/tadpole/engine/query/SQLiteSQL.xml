@@ -45,6 +45,10 @@ SELECT name FROM sqlite_master where 1 = 0
 	 PRAGMA table_info($table$)
 </select>
 
+<select id="tableForeignKeyList" resultClass="com.hangum.tadpole.sql.dao.sqlite.SQLiteForeignKeyListDAO" parameterClass="java.util.HashMap">
+	 PRAGMA foreign_key_list($table$)
+</select>
+
 <!-- 
 	테이블간의 관계 목록 정보를 얻습니다.
 	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
