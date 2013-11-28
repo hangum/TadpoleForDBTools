@@ -221,26 +221,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 								logger.debug("not found foreignkey for " + table.getName());
 							}
 						}
-						
-						/*
-						if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)){
-							try{
-								List<HashMap<String,String>> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
-								for (HashMap key: foreignKeyList){
-									for (TableColumnDAO dao : showTableColumns){
-										if (dao.getName().equals(key.get("from"))){
-											if (PublicTadpoleDefine.DB_KEY.PRI.equals(dao.getKey())){
-												dao.setKey("MUL");
-											}else{
-												dao.setKey("FK");
-											}
-										}	
-									}
-								}
-							}catch(Exception e){
-								logger.debug("not found foreignkey for " + table.getName());
-							}
-						}*/
 					} else
 						showTableColumns = null;
 
