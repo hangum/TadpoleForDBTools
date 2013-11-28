@@ -200,7 +200,7 @@ public class DBLoginDialog extends Dialog {
 
 	@Override
 	protected void okPressed() {
-		addDB();
+		if(!addDB()) return;
 		
 		super.okPressed();
 	}
