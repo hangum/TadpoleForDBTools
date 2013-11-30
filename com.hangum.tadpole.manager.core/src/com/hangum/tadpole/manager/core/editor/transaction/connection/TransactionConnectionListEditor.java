@@ -117,7 +117,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		
 		// transaction CTabItem widget create
 		CTabItem tbtmTransactionConnection = new CTabItem(tabFolder, SWT.NONE);
-		tbtmTransactionConnection.setText("Transaction Connection");
+		tbtmTransactionConnection.setText("Transaction");
 		
 		Composite compositeTransactionConnection = new Composite(tabFolder, SWT.NONE);
 		tbtmTransactionConnection.setControl(compositeTransactionConnection);
