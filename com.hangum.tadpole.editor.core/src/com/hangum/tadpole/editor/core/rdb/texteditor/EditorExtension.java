@@ -53,7 +53,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/** oracle plan table 이름 */
 	protected String planTableName 	= GetPreferenceGeneral.getPlanTableName();
 	/** export delimit */
-	protected String exportDelimit = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit(); //$NON-NLS-1$ //$NON-NLS-2$
+	protected String exportDelimit = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$
 	/** 결과 컬럼이 숫자이면 ,를 찍을 것인지 */
 	protected boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 	
