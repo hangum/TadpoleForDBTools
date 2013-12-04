@@ -10,12 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.define;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.hangum.tadpold.commons.libs.core.Messages;
 
 /**
