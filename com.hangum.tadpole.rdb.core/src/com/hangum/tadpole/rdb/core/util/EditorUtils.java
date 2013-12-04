@@ -33,17 +33,23 @@ public class EditorUtils {
 	 * @param dao UserDBDAO
 	 * @return
 	 */
-	public static IEditorReference findSQLEditor(final UserDBDAO dao) {
-		IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+	public static IEditorPart findSQLEditor(final UserDBDAO dao) {
+		// First check active editor
+		IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		if (activeEditor instanceof MainEditor) {
+			MainEditor editor = (MainEditor) activeEditor;
+			if(editor.getUserDB().equals(dao)) {
+				return activeEditor;
+			}
+		}
 		
+		IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();		
 		for (IEditorReference iEditorReference : editors) {
-			
 			//  에디터를 검색한다.
 			if(MainEditor.ID.equals( iEditorReference.getId() )) {
-				
 				MainEditor editor = (MainEditor)iEditorReference.getEditor(false);
 				if(editor.getUserDB().getSeq() == dao.getSeq()) {
-					return iEditorReference;
+					return editor;
 				}
 			}
 		}
