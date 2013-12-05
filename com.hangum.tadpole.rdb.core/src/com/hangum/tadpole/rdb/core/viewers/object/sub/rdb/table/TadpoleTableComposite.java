@@ -209,7 +209,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 								for (SQLiteForeignKeyListDAO fkeydao : foreignKeyList){
 									for (TableColumnDAO dao : showTableColumns){
 										if (dao.getName().equals(fkeydao.getFrom() ) ){
-											if (PublicTadpoleDefine.DB_KEY.PRI.equals(dao.getKey())){
+											if (PublicTadpoleDefine.isPK(dao.getKey())){
 												dao.setKey("MUL");
 											}else{
 												dao.setKey("FK");

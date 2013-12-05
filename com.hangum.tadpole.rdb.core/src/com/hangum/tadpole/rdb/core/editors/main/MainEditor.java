@@ -600,7 +600,9 @@ public class MainEditor extends EditorExtension {
 				for(int i=0; i<sourceDataList.size(); i++) {
 					Map<Integer, Object> mapColumns = sourceDataList.get(i);
 					for(int j=0; j<mapColumns.size(); j++) {
-						sbExportData.append(mapColumns.get(j)).append(exportDelimit); //$NON-NLS-1$
+						String strContent = mapColumns.get(j)==null?"":mapColumns.get(j).toString();
+						if(strContent.length() == 0 ) strContent = " ";
+						sbExportData.append(strContent).append(exportDelimit); //$NON-NLS-1$
 					}
 					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				}

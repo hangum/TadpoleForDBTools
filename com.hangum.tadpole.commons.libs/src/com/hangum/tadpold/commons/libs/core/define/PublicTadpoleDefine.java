@@ -107,45 +107,81 @@ public class PublicTadpoleDefine {
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
 	
 	/** 디비들의 키 이름을 정의합니다 */
-	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
+//	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
+	
+	public static String[] DB_PRIMARY_KEY = {
+											"PRI", 
+											"PK", 
+											"PRIMARY KEY",	// pgsql
+											};
+	
+	public static String[] DB_FOREIGN_KEY = {
+											"FK", 
+											"FOREIGN KEY",	// pgsql
+											};
+	
+	public static String[] DB_MULTI_KEY = {
+											"MUL",
+											"PRIMARY KEY,FOREIGN KEY"	// pgsql
+										};
+	
+	
+	
+	/**
+	 * is primary key
+	 * @param key
+	 * @return
+	 */
 	public static boolean isPK(String key) {
-		if(DB_KEY.PRI.toString().equalsIgnoreCase(key)) return true;
-		if(DB_KEY.PK.toString().equalsIgnoreCase(key)) return true;
-		
-		// pgsql
-		if("PRIMARY KEY".equalsIgnoreCase(key)) return true;
+		for(String searchKey : DB_PRIMARY_KEY) {
+			if(searchKey.equalsIgnoreCase(key)) return true;
+		}
 		
 		return false;
 	}
+	
+	/**
+	 * is foreign key
+	 * @param key
+	 * @return
+	 */
 	public static boolean isFK(String key) {
-		if(DB_KEY.FK.toString().equalsIgnoreCase(key)) return true;
-		
-		// pgsql
-		if("FOREIGN KEY".equalsIgnoreCase(key)) return true;
+		for(String searchKey : DB_FOREIGN_KEY) {
+			if(searchKey.equalsIgnoreCase(key)) return true;
+		}
 		
 		return false;
 	}
+	
+	/**
+	 * is multi key
+	 * @param key
+	 * @return
+	 */
 	public static boolean isMUL(String key) {
-		if(DB_KEY.MUL.toString().equalsIgnoreCase(key)) return true;
-		
-		// pgsql
-		if("PRIMARY KEY,FOREIGN KEY".equalsIgnoreCase(key)) return true;
+		for(String searchKey : DB_MULTI_KEY) {
+			if(searchKey.equalsIgnoreCase(key)) return true;
+		}
 		
 		return false;
 	}
+	/**
+	 * is key
+	 * @param key
+	 * @return
+	 */
 	public static boolean isKEY(String key) {
 		return isKEY(key, YES_NO.NO.toString());
 	}
 	public static boolean isKEY(String key, String isNull) {
-		for(DB_KEY dbKEY : DB_KEY.values()) {
-			if(dbKEY.toString().equalsIgnoreCase(key)) {
-				// 컬럼이 null허용이면 false
-				if("YES".equals(isNull)) return false; //$NON-NLS-1$
-				return true;
-			}
-		}
+		boolean isReturn = true;
+
+		// 컬럼이 null허용이면 false
+		if(isPK(key)) if("YES".equals(isNull)) return false; //$NON-NLS-1$
+		if(isFK(key)) if("YES".equals(isNull)) return false; //$NON-NLS-1$
+		if(isMUL(key)) if("YES".equals(isNull)) return false; //$NON-NLS-1$
 		
-		return false;
+		return isReturn;
 	}
 	
 	/**

@@ -54,6 +54,54 @@ public class SQLUtil {
 	private static final String PATTERN_EXECUTE_CREATE = "^CREATE.*|^DECLARE.*";
 	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE + PATTERN_EXECUTE_UPDATE + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
+
+	private static final String PATTERN_COMMENT = "/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/";
+	private static final String PATTERN_COMMENT2 = "(--.*)|(//.*)";
+	
+	/** 허용되지 않는 sql 정의 */
+	private static final String[] NOT_ALLOWED_SQL = {
+		/* MSSQL- USE DATABASE명 */
+		"USE"
+		};
+	
+	/**
+	 * remove comment
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static String removeComment(String strSQL) {
+		if(null == strSQL) return "";
+		
+		String retStr = strSQL.replaceAll(PATTERN_COMMENT, "");
+		retStr = retStr.replaceAll(PATTERN_COMMENT2, "");
+		
+		return retStr;
+	}
+	
+	/**
+	 * 쿼리중에 허용하지 않는 쿼리 목록.
+	 * 쿼리문 위에 주석을 빼야... -- / ** * / / * * /
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static boolean isNotAllowed(String strSQL) {
+		boolean isRet = false;
+		strSQL = removeComment(strSQL);
+
+		String cmpSql = StringUtils.trim(strSQL);
+		
+		for (String strNAllSQL : NOT_ALLOWED_SQL) {
+			if(StringUtils.startsWith(cmpSql.toLowerCase(), strNAllSQL.toLowerCase())) {
+				return true;
+			}
+		}
+		
+		return isRet;
+	}
+	
+	
 	/**
 	 * 쿼리의 패턴이 <code>PATTERN_STATEMENT</code>인지?
 	 * 
@@ -62,6 +110,8 @@ public class SQLUtil {
 	 */
 	public static boolean isStatement(String strSQL) {
 		boolean isStatement = false;
+		
+		strSQL = removeComment(strSQL);
 		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
 			return true;
 		} else {

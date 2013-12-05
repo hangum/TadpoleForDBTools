@@ -14,8 +14,10 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
+	public static String AbstractLoginComposite_0;
 	public static String AbstractLoginComposite_1;
 	public static String AbstractLoginComposite_2;
+	public static String AbstractLoginComposite_3;
 	public static String AbstractLoginComposite_4;
 	public static String AbstractQueryAction_1;
 	public static String AWSRDSLoginComposite_0;
@@ -74,9 +76,15 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_35;
 	public static String DBLoginDialog_36;
 	public static String DBLoginDialog_37;
+	public static String DBLoginDialog_38;
 	public static String DBLoginDialog_39;
 	public static String DBLoginDialog_4;
 	public static String DBLoginDialog_40;
+	public static String DBLoginDialog_42;
+	public static String DBLoginDialog_43;
+	public static String DBLoginDialog_44;
+	public static String DBLoginDialog_45;
+	public static String DBLoginDialog_47;
 	public static String DBLoginDialog_5;
 	public static String DBLoginDialog_6;
 	public static String DBLoginDialog_7;

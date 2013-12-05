@@ -35,6 +35,7 @@ Program Argument
     
   
 VM Argument
+  -Dfile.encoding=UTF-8
   -Dorg.osgi.service.http.port=10081					: standalone 모드일경우 서버의 포트.
   -Declipse.ignoreApp=true 
   -Dosgi.noShutdown=true 

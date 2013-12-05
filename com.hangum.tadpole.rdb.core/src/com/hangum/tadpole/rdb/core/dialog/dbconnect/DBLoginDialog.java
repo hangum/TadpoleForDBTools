@@ -52,8 +52,11 @@ public class DBLoginDialog extends Dialog {
 	private static final long serialVersionUID = 1327678815994219469L;
 	private static final Logger logger = Logger.getLogger(DBLoginDialog.class);
 	
-	
+	/** test connection button id */
 	public static final int TEST_CONNECTION_ID = IDialogConstants.CLIENT_ID + 1;
+	
+	/** add new connection button id */
+	public static final int ADD_NEW_CONNECTION_ID = TEST_CONNECTION_ID + 1;
 	
 	/** main composite */
 	private Composite container;
@@ -140,7 +143,7 @@ public class DBLoginDialog extends Dialog {
 				// 초기 값이 잘못되어 ui가 잘못 생성되는것을 방지하기위한 코드.
 				if(-1 == comboDBList.getSelectionIndex()) comboDBList.select(0);;
 			} catch(Exception e) {
-				logger.error("find default db", e);
+				logger.error(Messages.DBLoginDialog_38, e);
 			}
 		} else {
 			comboDBList.select(0);
@@ -197,10 +200,21 @@ public class DBLoginDialog extends Dialog {
 
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
-		this.retuserDb = loginComposite.getDBDTO();
+		if(!addDB()) return;
 		
 		super.okPressed();
+	}
+	
+	/**
+	 * add db
+	 */
+	private boolean addDB() {
+		if (loginComposite.connection()) {
+			this.retuserDb = loginComposite.getDBDTO();	
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@Override
@@ -208,7 +222,11 @@ public class DBLoginDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		if(TEST_CONNECTION_ID == buttonId) {
 			if(loginComposite.testConnection()) {
-				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
+				MessageDialog.openInformation(null, "Confirm", Messages.DBLoginDialog_42); //$NON-NLS-1$
+			}
+		} else if(ADD_NEW_CONNECTION_ID == buttonId) {
+			if(addDB()) {
+				MessageDialog.openInformation(null, "Confirm", Messages.DBLoginDialog_47); //$NON-NLS-1$
 			}
 		}
 	}
@@ -224,8 +242,11 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, TEST_CONNECTION_ID, "Test Connection", false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_6, true);
+		createButton(parent, TEST_CONNECTION_ID, Messages.DBLoginDialog_43, false);
+		
+		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_44, true);
+		createButton(parent, ADD_NEW_CONNECTION_ID, Messages.DBLoginDialog_45, false);
+		
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLoginDialog_7, false);
 	}
 	/**
@@ -242,6 +263,6 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 540);
+		return new Point(500, 540);
 	}
 }
