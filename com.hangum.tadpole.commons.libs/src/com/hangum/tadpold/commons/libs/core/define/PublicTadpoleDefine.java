@@ -20,6 +20,11 @@ import com.hangum.tadpold.commons.libs.core.Messages;
  */
 public class PublicTadpoleDefine {
 	/**
+	 * PLAN Statement ID
+	 */
+	public static String STATEMENT_ID = "||TADPOLE-STATEMENT_ID||"; //$NON-NLS-1$
+
+	/**
 	 * 분리자
 	 */
 	public static String DELIMITER = "||TADPOLE-DELIMITER||"; //$NON-NLS-1$
