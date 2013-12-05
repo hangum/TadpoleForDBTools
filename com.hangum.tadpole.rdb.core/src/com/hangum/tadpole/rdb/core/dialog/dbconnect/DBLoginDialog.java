@@ -221,7 +221,7 @@ public class DBLoginDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
 		if(TEST_CONNECTION_ID == buttonId) {
-			if(loginComposite.testConnection()) {
+			if(loginComposite.testConnection(true)) {
 				MessageDialog.openInformation(null, "Confirm", Messages.DBLoginDialog_42); //$NON-NLS-1$
 			}
 		} else if(ADD_NEW_CONNECTION_ID == buttonId) {

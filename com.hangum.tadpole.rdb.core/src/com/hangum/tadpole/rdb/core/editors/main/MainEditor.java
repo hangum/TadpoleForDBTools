@@ -15,6 +15,7 @@ import java.io.File;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -122,6 +123,7 @@ import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -943,8 +945,13 @@ public class MainEditor extends EditorExtension {
 		String strTablelist = "select,select * from,"; //$NON-NLS-1$
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			List<TableDAO> showTables = null;
+			if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			} else {
+				showTables = TajoConnectionManager.tableList(userDB);
+			}
 
 			for (TableDAO tableDao : showTables) {
 				strTablelist += tableDao.getName() + ","; //$NON-NLS-1$
@@ -970,7 +977,7 @@ public class MainEditor extends EditorExtension {
 	 * initialize editor
 	 */
 	private void initEditor() {
-		if (DBDefine.getDBDefine(userDB) == DBDefine.HIVE_DEFAULT) {
+		if (userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			tltmAutoCommit.setEnabled(false);
 		}
 
@@ -1311,8 +1318,12 @@ public class MainEditor extends EditorExtension {
 		
 		try {
 			if(isAutoCommit) {
-				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-				javaConn = client.getDataSource().getConnection();
+				if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+					javaConn = client.getDataSource().getConnection();
+				} else {
+					javaConn = TajoConnectionManager.getConnection(userDB);
+				}
 			} else {
 				javaConn = TadpoleSQLTransactionManager.getInstance(strUserEMail, userDB, isAutoCommit);
 			}
@@ -1340,12 +1351,21 @@ public class MainEditor extends EditorExtension {
 					
 					return;
 					
-				} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
+				} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {					
+					// generation to statement id for query plan. 
+					pstmt = javaConn.prepareStatement("select USERENV('SESSIONID') from dual "); //$NON-NLS-1$
+					rs = pstmt.executeQuery(); 
+					String statement_id = "tadpole";
+					if (rs.next()) statement_id = rs.getString(1);
+					
+					pstmt = javaConn.prepareStatement("delete from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$
+					pstmt.execute(); 
+					
 					// 플랜결과를 디비에 저장합니다.
-					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
+					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName, javaConn, pstmt, statement_id);
 					// 저장된 결과를 가져와서 보여줍니다.
-					pstmt = javaConn.prepareStatement("select * from " + planTableName); //$NON-NLS-1$
-					rs = pstmt.executeQuery();
+					pstmt = javaConn.prepareStatement("select * from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$
+					rs = pstmt.executeQuery(); 
 				 } else if(DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
 					 stmt = javaConn.createStatement();
 					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "ON")); //$NON-NLS-1$

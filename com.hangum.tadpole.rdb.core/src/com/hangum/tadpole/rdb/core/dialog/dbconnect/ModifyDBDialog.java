@@ -133,7 +133,7 @@ public class ModifyDBDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
 		if(DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
-			if(loginComposite.testConnection()) {
+			if(loginComposite.testConnection(true)) {
 				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
 			}
 		}

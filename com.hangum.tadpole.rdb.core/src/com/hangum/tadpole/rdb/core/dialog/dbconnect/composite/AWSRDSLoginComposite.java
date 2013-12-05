@@ -251,7 +251,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	public boolean testConnection() {
+	public boolean testConnection(boolean isTest) {
 		if(!makeUserDBDao()) return false;
 		return true;
 	}

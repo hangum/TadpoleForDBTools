@@ -57,7 +57,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	protected OthersConnectionHiveGroup othersConnectionInfo;
 	
 	public HiveLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample Hive", DBDefine.HIVE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample Apache Hive", DBDefine.HIVE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	public HiveLoginComposite(String strDisplayName, DBDefine selectDB,

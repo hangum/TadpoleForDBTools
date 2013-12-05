@@ -60,6 +60,9 @@ public enum DBDefine {
 	/** hive */
 	HIVE_DEFAULT,
 	
+	/** tajo */
+	TAJO_DEFAULT,
+	
 	/** NO SQL */
 	MONGODB_DEFAULT,
 	
@@ -94,6 +97,7 @@ public enum DBDefine {
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
 			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
 			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
+			case TAJO_DEFAULT:			return prefix  + "TAJOConfig.xml";
 			default:
 				return "undefine db";
 		}
@@ -124,7 +128,8 @@ public enum DBDefine {
 		
 		else if(type.equalsIgnoreCase("MongoDB"))		return MONGODB_DEFAULT;
 		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
-		else if(type.equalsIgnoreCase("Hive")) 			return HIVE_DEFAULT;
+		else if(type.equalsIgnoreCase("Apache Hive")) 	return HIVE_DEFAULT;
+		else if(type.equalsIgnoreCase("Apache Tajo")) 	return TAJO_DEFAULT;
 		else return null;
 	}
 	
@@ -166,6 +171,8 @@ public enum DBDefine {
 			
 			case HIVE_DEFAULT:		return "jdbc:hive://%s:%s/%s";
 			
+			case TAJO_DEFAULT:		return "jdbc:tajo://%s:%s/%s";
+			
 			default:
 				return "undefine db";
 		}
@@ -192,7 +199,9 @@ public enum DBDefine {
 			
 			case AMAZONRDS_DEFAULT: 	return "AmazonRDS";
 			
-			case HIVE_DEFAULT: 			return "Hive";
+			case HIVE_DEFAULT: 			return "Apache Hive";
+			
+			case TAJO_DEFAULT: 			return "Apache Tajo";
 			default:
 				return "undefine db";
 		}
@@ -267,12 +276,12 @@ public enum DBDefine {
 	 */
 	private static List<DBDefine> allUserUseDB() {
 		List<DBDefine> supportDb = new ArrayList<DBDefine>();
-		
+
+		supportDb.add(HIVE_DEFAULT);
 		supportDb.add(AMAZONRDS_DEFAULT);
+		supportDb.add(TAJO_DEFAULT);
 		
 		supportDb.add(CUBRID_DEFAULT);
-		
-		supportDb.add(HIVE_DEFAULT);
 		
 		supportDb.add(MONGODB_DEFAULT);
 		

@@ -91,6 +91,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
@@ -196,15 +197,21 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 						if (selectTableName.equals(table.getName())) return;
 						selectTableName = table.getName();
-
-						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+						
 						Map<String, String> mapParam = new HashMap<String, String>();
 						mapParam.put("db", userDB.getDb());
 						mapParam.put("table", table.getName());
 
-						showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
-						if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)){
+						if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+							showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
+						} else {
+							showTableColumns = TajoConnectionManager.tableColumnList(userDB, mapParam);
+						}
+						
+						if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()){
 							try{
+								SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 								List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
 								for (SQLiteForeignKeyListDAO fkeydao : foreignKeyList){
 									for (TableColumnDAO dao : showTableColumns){
@@ -221,8 +228,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 								logger.debug("not found foreignkey for " + table.getName());
 							}
 						}
-					} else
+					} else {
 						showTableColumns = null;
+					}
 
 					tableColumnViewer.setInput(showTableColumns);
 					
@@ -564,8 +572,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * @throws Exception
 	 */
 	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		List<TableDAO> showTables = null;
+				
+		if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		} else {
+			showTables = TajoConnectionManager.tableList(userDB);
+		}
 		
 		/** filter 정보가 있으면 처리합니다. */
 		return filter(userDB, showTables);
