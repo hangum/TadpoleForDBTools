@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-cli-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/common/hadoop-auth-2.0.3-alpha.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/common/hadoop-common-2.0.3-alpha.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/hdfs/hadoop-hdfs-2.0.3-alpha.jar"/>

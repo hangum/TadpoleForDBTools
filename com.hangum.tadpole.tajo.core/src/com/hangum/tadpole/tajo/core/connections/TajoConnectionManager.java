@@ -3,9 +3,10 @@ package com.hangum.tadpole.tajo.core.connections;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtils;
 
 /**
  * 
@@ -33,23 +35,61 @@ public class TajoConnectionManager {
 	
 	/**
 	 * 
+	 * 
 	 * @param userDB
-	 * @return
+	 * @param requestQuery
 	 * @throws Exception
 	 */
-	public static Connection getConnection(UserDBDAO userDB) throws Exception {
-		Connection conn = null;
+	public static Map<String, Object> select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
+		Map<String, Object> retMap = new HashMap<String, Object>();
+		
+		java.sql.Connection javaConn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		
 		try {
-			conn = DriverManager.getConnection(userDB.getUrl());
-	    	return conn;
-		} catch(Exception e) {
-			logger.error("connection check", e);
-			throw e;
+			javaConn = DriverManager.getConnection(userDB.getUrl());
+			pstmt = javaConn.prepareStatement(requestQuery);
+			//  환경설정에서 원하는 조건을 입력하였을 경우.
+			rs = pstmt.executeQuery();
+			
+			// column의 data type을 얻습니다.
+			retMap.put("mapColumnType", ResultSetUtils.getColumnType(rs.getMetaData()));
+			
+			// column name을 얻습니다. 
+			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
+			retMap.put("mapColumns", ResultSetUtils.getColumnName(rs));
+			
+			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
+			retMap.put("sourceDataList", ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma));
+			
 		} finally {
+			try { if(pstmt != null) pstmt.close(); } catch(Exception e) {}
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 		}
+		
+		return retMap;
 	}
 	
+//	/**
+//	 * 
+//	 * @param userDB
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static Connection getConnection(UserDBDAO userDB) throws Exception {
+//		Connection conn = null;
+//		
+//		try {
+//			conn = DriverManager.getConnection(userDB.getUrl());
+//	    	return conn;
+//		} catch(Exception e) {
+//			logger.error("connection check", e);
+//			throw e;
+//		} finally {
+//		}
+//	}
 	
 	/**
 	 * 연결 테스트 합니다.

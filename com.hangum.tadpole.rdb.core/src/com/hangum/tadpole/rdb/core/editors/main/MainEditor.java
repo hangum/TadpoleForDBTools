@@ -15,7 +15,6 @@ import java.io.File;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -1308,6 +1307,23 @@ public class MainEditor extends EditorExtension {
 		
 		requestQuery = StringUtils.trimToEmpty(requestQuery);
 		
+		// is tajo
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			Map<String, Object> resultMap = TajoConnectionManager.select(userDB, requestQuery, pageNumber, isAutoCommit);
+			
+			mapColumnType = (Map<Integer, Integer>)resultMap.get("mapColumnType");
+			
+			// column name을 얻습니다. 
+			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
+			mapColumns = (Map<Integer, String>)resultMap.get("mapColumns");
+			
+			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
+			sourceDataList = (List<Map<Integer, Object>>)resultMap.get("sourceDataList");
+			
+			return;
+		}  
+		
+		// others db
 		// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 		if(transactionQuery(requestQuery)) return;
 		
@@ -1318,12 +1334,8 @@ public class MainEditor extends EditorExtension {
 		
 		try {
 			if(isAutoCommit) {
-				if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
-					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-					javaConn = client.getDataSource().getConnection();
-				} else {
-					javaConn = TajoConnectionManager.getConnection(userDB);
-				}
+				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+				javaConn = client.getDataSource().getConnection();
 			} else {
 				javaConn = TadpoleSQLTransactionManager.getInstance(strUserEMail, userDB, isAutoCommit);
 			}
@@ -1407,7 +1419,7 @@ public class MainEditor extends EditorExtension {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 
 			if(isAutoCommit) {
-				try { javaConn.close(); } catch(Exception e){}
+				try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 			}
 		}
 	}
@@ -1750,7 +1762,7 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public void setFocus() {
-//		setOrionTextFocus();
+		setOrionTextFocus();
 	}
 	
 	/**
