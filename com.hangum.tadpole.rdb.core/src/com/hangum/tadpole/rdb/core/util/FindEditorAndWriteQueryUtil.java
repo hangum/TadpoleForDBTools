@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -62,12 +61,12 @@ public class FindEditorAndWriteQueryUtil {
 //					// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
 //				}
 //			}
-						
-			IEditorReference reference = EditorUtils.findSQLEditor(userDB);
-			if(reference == null || isNewEditor) {				
+			
+			IEditorPart editor = EditorUtils.findSQLEditor(userDB);
+			if(editor == null || isNewEditor) {				
 				newSQLEditorOpen(userDB, lowSQL);		
 			} else {
-				appendSQLEditorOpen(reference, userDB, lowSQL);				
+				appendSQLEditorOpen(editor, userDB, lowSQL);				
 			}	// end reference
 		}	// end db
 	}
@@ -128,9 +127,9 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param userDB
 	 * @param lowSQL
 	 */
-	private static void appendSQLEditorOpen(IEditorReference reference, UserDBDAO userDB, String lowSQL) {
+	private static void appendSQLEditorOpen(IEditorPart editorPart, UserDBDAO userDB, String lowSQL) {
 		try {
-			MainEditor editor = (MainEditor)reference.getEditor(false);
+			MainEditor editor = (MainEditor)editorPart;
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
 			
 			editor.appendText(lowSQL);

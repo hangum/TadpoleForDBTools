@@ -49,7 +49,7 @@ public class TadpoleSystem_UserDBResource {
 		// content data를 저장합니다.
 		insertResourceData(retUserDBResource, contents);
 		
-		return userDBResource;
+		return retUserDBResource;
 	}
 	
 	/**
