@@ -22,10 +22,10 @@ public class NotesDAO {
 	int seq;
 	String types;
 	
-	int send_user_seq;
+	int sender_seq;
 	String sendUserId;
 	
-	int receive_user_seq;
+	int receiver_seq;
 	String receiveUserId;
 	
 	Date sender_date;
@@ -37,6 +37,7 @@ public class NotesDAO {
 	String delYn;
 	String create_time;
 	
+	String title;
 	String contents;
 	
 	public NotesDAO() {
@@ -58,12 +59,12 @@ public class NotesDAO {
 		this.types = types;
 	}
 
-	public int getSend_user_seq() {
-		return send_user_seq;
+	public int getSender_seq() {
+		return sender_seq;
 	}
 
-	public void setSend_user_seq(int send_user_seq) {
-		this.send_user_seq = send_user_seq;
+	public void setSender_seq(int sender_seq) {
+		this.sender_seq = sender_seq;
 	}
 
 	public String getSendUserId() {
@@ -74,12 +75,12 @@ public class NotesDAO {
 		this.sendUserId = sendUserId;
 	}
 
-	public int getReceive_user_seq() {
-		return receive_user_seq;
+	public int getReceiver_seq() {
+		return receiver_seq;
 	}
 
-	public void setReceive_user_seq(int receive_user_seq) {
-		this.receive_user_seq = receive_user_seq;
+	public void setReceiver_seq(int receiver_seq) {
+		this.receiver_seq = receiver_seq;
 	}
 
 	public String getReceiveUserId() {
@@ -154,5 +155,12 @@ public class NotesDAO {
 		this.contents = contents;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 }

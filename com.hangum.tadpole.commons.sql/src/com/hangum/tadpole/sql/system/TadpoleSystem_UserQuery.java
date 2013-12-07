@@ -22,7 +22,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -83,6 +82,24 @@ public class TadpoleSystem_UserQuery {
 		}
 			
 		return false;
+	}
+	
+	/**
+	 * 사용자 정보를 찾습니다.
+	 * 
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDAO findUser(String email) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDAO> listUser = sqlClient.queryForList("findUser", email); //$NON-NLS-1$
+		
+		if(listUser.size() == 0) {
+			throw new Exception("Not found user");
+		}
+		
+		return listUser.get(0);
 	}
 	
 	

@@ -19,6 +19,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,10 +32,13 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpole.notes.core.Activator;
+import com.hangum.tadpole.notes.core.dialogs.NewNoteDialog;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
 import com.swtdesigner.ResourceManager;
 
@@ -76,10 +81,23 @@ public class NoteListViewPart extends ViewPart {
 		toolBar.setBounds(0, 0, 88, 20);
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initData();
+			}
+		});
 		tltmRefresh.setToolTipText("Refresh");
 		tltmRefresh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 		
 		ToolItem tltmCreate = new ToolItem(toolBar, SWT.NONE);
+		tltmCreate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				NewNoteDialog dialog = new NewNoteDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+				dialog.open();
+			}
+		});
 		tltmCreate.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/notes_new.png")); //$NON-NLS-1$
 		tltmCreate.setToolTipText("Create");
 		
@@ -100,16 +118,21 @@ public class NoteListViewPart extends ViewPart {
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFilter.setText("Filter");
 		
-		comboTypes = new Combo(compositeBody, SWT.NONE);
+		comboTypes = new Combo(compositeBody, SWT.READ_ONLY);
+		comboTypes.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initData();
+			}
+		});
 		GridData gd_combo = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_combo.widthHint = 100;
 		gd_combo.minimumWidth = 100;
 		comboTypes.setLayoutData(gd_combo);
 		
-		comboTypes.add("All");
 		comboTypes.add("Send");
 		comboTypes.add("Receive");
-		comboTypes.select(2);
+		comboTypes.select(1);
 		
 		textFilter = new Text(compositeBody, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -133,7 +156,8 @@ public class NoteListViewPart extends ViewPart {
 	 */
 	private void initData() {
 		try {
-			List<NotesDAO> listNotes = TadpoleSystem_Notes.getReceiveNoteList(1);
+			List<NotesDAO> listNotes = TadpoleSystem_Notes.getNoteList(comboTypes.getText(), SessionManager.getSeq());
+			
 			tableViewer.setInput(listNotes);
 		} catch(Exception e) {
 			logger.error("Get note list", e);
@@ -144,8 +168,8 @@ public class NoteListViewPart extends ViewPart {
 	 * create columns
 	 */
 	private void createColumns() {
-		String[] names 	= {"Types", "Sender", "Receiver", "Is Read?", "create date", "Contents"};
-		int[] sizes		= {50, 120, 120, 30, 100, 200};
+		String[] names 	= {"User", "Is Read?", "create date", "Title"};
+		int[] sizes		= {160, 40, 100, 200};
 		
 		for(int i=0; i<names.length; i++) {
 			String name = names[i];
@@ -155,8 +179,7 @@ public class NoteListViewPart extends ViewPart {
 			TableColumn tblclmnEngine = tableViewerColumn.getColumn();
 			tblclmnEngine.setWidth(size);
 			tblclmnEngine.setText(name);
-			
-//			tblclmnEngine.addSelectionListener(getSelectionAdapter(tblclmnEngine, i));
+
 		}
 	}
 
@@ -181,14 +204,12 @@ class NoteListLabelProvider extends LabelProvider implements ITableLabelProvider
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		NotesDAO dto = (NotesDAO)element;
-//		{"Types", "Sender", "Receiver", "Is Read?", "create date", "Contents"};
+
 		switch(columnIndex) {
-		case 0: return dto.getTypes();
-		case 1: return ""+dto.getSend_user_seq();
-		case 2: return ""+dto.getReceive_user_seq();
-		case 3: return dto.getIs_read();
-		case 4: return dto.getCreate_time();
-		case 5: return dto.getContents();
+		case 0: return ""+dto.getReceiveUserId();
+		case 1: return dto.getIs_read();
+		case 2: return dto.getCreate_time();
+		case 3: return dto.getTitle();
 		}
 		
 		return "*** not set column ***"; //$NON-NLS-1$
