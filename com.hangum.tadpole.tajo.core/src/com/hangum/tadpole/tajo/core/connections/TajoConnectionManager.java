@@ -5,6 +5,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.ResultSetUtils;
+import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
 
 /**
  * 
@@ -24,14 +26,6 @@ import com.hangum.tadpole.sql.util.ResultSetUtils;
  */
 public class TajoConnectionManager {
 	private static final Logger logger = Logger.getLogger(TajoConnectionManager.class);
-	
-	static {
-		try {
-			Class.forName("org.apache.tajo.jdbc.TajoDriver");
-		} catch(Exception e) {
-			logger.error("Apache Tajo Class not found exception", e);
-		}
-	}
 	
 	/**
 	 * 
@@ -43,15 +37,25 @@ public class TajoConnectionManager {
 	public static Map<String, Object> select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
 		Map<String, Object> retMap = new HashMap<String, Object>();
 		
+		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
+		
 		java.sql.Connection javaConn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
 		try {
-			javaConn = DriverManager.getConnection(userDB.getUrl());
+			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			pstmt = javaConn.prepareStatement(requestQuery);
-			//  환경설정에서 원하는 조건을 입력하였을 경우.
 			rs = pstmt.executeQuery();
+			
+			System.out.println("===[result set]=================================================================================");
+			ResultSetMetaData  rsm = rs.getMetaData();
+			int columnCount = rsm.getColumnCount();
+			for(int i=0; i<columnCount; i++) {
+				System.out.println("[column info]" + i + "==> " +  rsm.getColumnLabel(i+1));
+			}
+			System.out.println("===[result set]=================================================================================");
+			
 			
 			// column의 data type을 얻습니다.
 			retMap.put("mapColumnType", ResultSetUtils.getColumnType(rs.getMetaData()));
@@ -72,25 +76,6 @@ public class TajoConnectionManager {
 		return retMap;
 	}
 	
-//	/**
-//	 * 
-//	 * @param userDB
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static Connection getConnection(UserDBDAO userDB) throws Exception {
-//		Connection conn = null;
-//		
-//		try {
-//			conn = DriverManager.getConnection(userDB.getUrl());
-//	    	return conn;
-//		} catch(Exception e) {
-//			logger.error("connection check", e);
-//			throw e;
-//		} finally {
-//		}
-//	}
-	
 	/**
 	 * 연결 테스트 합니다.
 	 * 
@@ -101,7 +86,7 @@ public class TajoConnectionManager {
 		ResultSet rs = null;
 		
 		try {
-			conn = DriverManager.getConnection(userDB.getUrl());
+			conn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			DatabaseMetaData dbmd = conn.getMetaData();
 	    	rs = dbmd.getTables(null, null, null, null);
 	    	
@@ -127,9 +112,9 @@ public class TajoConnectionManager {
 		ResultSet rs = null;
 		
 		try {
-			conn = DriverManager.getConnection(userDB.getUrl());
+			conn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			DatabaseMetaData dbmd = conn.getMetaData();
-	    	rs = dbmd.getTables(null, null, null, null);
+	    	rs = dbmd.getTables(userDB.getDb(), null, null, null);
 
 	    	
 	    	while(rs.next()) {
@@ -165,9 +150,10 @@ public class TajoConnectionManager {
 	 */
 	public static List<TableColumnDAO> tableColumnList(UserDBDAO userDB, Map<String, String> mapParam) throws Exception {
 		List<TableColumnDAO> showTableColumns = new ArrayList<TableColumnDAO>();
-		
 		Connection conn = null;
 		ResultSet rs = null;
+		
+		if(logger.isDebugEnabled()) logger.debug("\t Table name is " + mapParam.get("table"));
 		
 		try {
 			conn = DriverManager.getConnection(userDB.getUrl());
