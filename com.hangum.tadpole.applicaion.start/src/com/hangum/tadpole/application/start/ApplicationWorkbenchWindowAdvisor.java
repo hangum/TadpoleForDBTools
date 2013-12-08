@@ -28,6 +28,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -109,27 +110,32 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     		public void run() {
     			while(isUIThreadRunning) {
 				    
-    				try {
- 					     display.asyncExec( new Runnable() {
- 					    	public void run() {
- 					    		
- 					    		// note list
- 					    		List<NotesDAO> listNotes = NoteSystemAlert.getSystemNoteAlert();
- 					    		for (NotesDAO notesDAO : listNotes) {
- 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO);
- 									dialog.open();
-								}
- 					    		// note list 
- 					    		
- 					    	}
- 					    } );
-				    } catch(Exception e) {
-				    	logger.error("main ui call", e);
-				    } // end try
+    				if(display.isDisposed()) {
+    					isUIThreadRunning = false;
+    				} else {
     				
-    				try {
-						Thread.sleep(10 * 1000);								
-					} catch(Exception e){}	
+	    				try {
+	 					     display.asyncExec( new Runnable() {
+	 					    	public void run() {
+	 					    		
+	 					    		// note list
+	 					    		List<NotesDAO> listNotes = NoteSystemAlert.getSystemNoteAlert();
+	 					    		for (NotesDAO notesDAO : listNotes) {
+	 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO);
+	 									dialog.open();
+									}
+	 					    		// note list 
+	 					    		
+	 					    	}
+	 					    } );
+					    } catch(Exception e) {
+					    	logger.error("main ui call", e);
+					    } // end try
+    				
+	    				try {
+							Thread.sleep(10 * 1000);								
+	    				} catch(Exception e){}
+    				}
     			}	// end while
     		}	// end run
 		};
