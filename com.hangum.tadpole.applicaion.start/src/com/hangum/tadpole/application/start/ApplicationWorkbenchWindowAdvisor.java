@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.ExitConfirmation;
+import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
@@ -39,10 +40,13 @@ import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
+import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
@@ -54,6 +58,10 @@ import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	private static final Logger logger = Logger.getLogger(ApplicationWorkbenchWindowAdvisor.class);
+	
+	// UI callback
+	final ServerPushSession pushSession = new ServerPushSession();
+	private boolean isUIThreadRunning = true;
 
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
@@ -86,6 +94,47 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
     
         initSystem();
+        
+        mainUICallback();
+    }
+    
+    /**
+     * 시스템에서 사용자에게 메시지를 전해 줍니다.
+     * 
+     */
+    private void mainUICallback() {
+    	final Display display = PlatformUI.getWorkbench().getDisplay();
+    	
+    	Runnable runnable = new Runnable() {
+    		public void run() {
+    			while(isUIThreadRunning) {
+				    
+    				try {
+ 					     display.asyncExec( new Runnable() {
+ 					    	public void run() {
+ 					    		
+ 					    		// note list
+ 					    		List<NotesDAO> listNotes = NoteSystemAlert.getSystemNoteAlert();
+ 					    		for (NotesDAO notesDAO : listNotes) {
+ 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO);
+ 									dialog.open();
+								}
+ 					    		// note list 
+ 					    		
+ 					    	}
+ 					    } );
+				    } catch(Exception e) {
+				    	logger.error("main ui call", e);
+				    } // end try
+    				
+    				try {
+						Thread.sleep(10 * 1000);								
+					} catch(Exception e){}	
+    			}	// end while
+    		}	// end run
+		};
+    	pushSession.start();
+    	new Thread(runnable).start();
     }
     
     /**

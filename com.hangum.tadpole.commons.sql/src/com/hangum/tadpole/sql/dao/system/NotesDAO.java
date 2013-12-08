@@ -31,6 +31,7 @@ public class NotesDAO {
 	Date sender_date;
 	Date receiver_date;
 	String is_read;
+	String is_system_read;
 	String sender_delyn;
 	String receiver_delyn;
 	
@@ -38,7 +39,7 @@ public class NotesDAO {
 	String create_time;
 	
 	String title;
-	String contents;
+	String contents = "";
 	
 	public NotesDAO() {
 	}
@@ -161,6 +162,14 @@ public class NotesDAO {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getIs_system_read() {
+		return is_system_read;
+	}
+
+	public void setIs_system_read(String is_system_read) {
+		this.is_system_read = is_system_read;
 	}
 
 }

@@ -13,7 +13,10 @@ package com.hangum.tadpole.notes.core.views.list;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -37,10 +40,18 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpole.notes.core.Activator;
 import com.hangum.tadpole.notes.core.dialogs.NewNoteDialog;
+import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
 import com.swtdesigner.ResourceManager;
+
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Notes
@@ -55,6 +66,7 @@ public class NoteListViewPart extends ViewPart {
 	private Combo comboTypes;
 	private TableViewer tableViewer;
 	private Text textFilter;
+	private Combo comboRead;
 	
 	public NoteListViewPart() {
 		super();
@@ -95,18 +107,40 @@ public class NoteListViewPart extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				NewNoteDialog dialog = new NewNoteDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				dialog.open();
+				if(dialog.OK == dialog.open()) {
+					initData();
+				}
 			}
 		});
 		tltmCreate.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/notes_new.png")); //$NON-NLS-1$
 		tltmCreate.setToolTipText("Create");
 		
-		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
+		final ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
+				if(!iss.isEmpty()) {
+					try {
+						if(MessageDialog.openQuestion(null, "Confirm", "삭제하시겠습니까?")) {
+							NotesDAO noteDao = (NotesDAO)iss.getFirstElement();
+							TadpoleSystem_Notes.deleteNote(noteDao.getSeq());
+							
+							initData();
+						}
+					} catch(Exception ee) {
+						logger.error("delete note", ee);
+					}
+				}
+				
+			}
+		});
 		tltmDelete.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/notes_delete.png")); //$NON-NLS-1$
 		tltmDelete.setToolTipText("Delete");
+		tltmDelete.setEnabled(false);
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
-		GridLayout gl_compositeBody = new GridLayout(3, false);
+		GridLayout gl_compositeBody = new GridLayout(5, false);
 		gl_compositeBody.marginHeight = 1;
 		gl_compositeBody.verticalSpacing = 1;
 		gl_compositeBody.horizontalSpacing = 1;
@@ -134,14 +168,51 @@ public class NoteListViewPart extends ViewPart {
 		comboTypes.add("Receive");
 		comboTypes.select(1);
 		
+		comboRead = new Combo(compositeBody, SWT.READ_ONLY);
+		comboRead.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initData();
+			}
+		});
+		comboRead.add("Read");
+		comboRead.add("Not yet Read");
+		comboRead.select(1);
+		
+		new Label(compositeBody, SWT.NONE);
+		
 		textFilter = new Text(compositeBody, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+		textFilter.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) {
+					initData();
+				}
+			}
+		});
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				tltmDelete.setEnabled(true);
+			}
+		});
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
+				if(!iss.isEmpty()) {
+					ViewDialog dialog = new ViewDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), (NotesDAO)iss.getFirstElement());
+					if(Dialog.OK == dialog.open()) {
+						initData();
+					}
+				}
+			}
+		});
 		Table table = tableViewer.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 5, 1));
 		
 		createColumns();
 		
@@ -156,7 +227,7 @@ public class NoteListViewPart extends ViewPart {
 	 */
 	private void initData() {
 		try {
-			List<NotesDAO> listNotes = TadpoleSystem_Notes.getNoteList(comboTypes.getText(), SessionManager.getSeq());
+			List<NotesDAO> listNotes = TadpoleSystem_Notes.getNoteList(SessionManager.getSeq(), comboTypes.getText(), comboRead.getText(), textFilter.getText());
 			
 			tableViewer.setInput(listNotes);
 		} catch(Exception e) {
@@ -168,8 +239,8 @@ public class NoteListViewPart extends ViewPart {
 	 * create columns
 	 */
 	private void createColumns() {
-		String[] names 	= {"User", "Is Read?", "create date", "Title"};
-		int[] sizes		= {160, 40, 100, 200};
+		String[] names 	= {"User", "Title", "create date"};
+		int[] sizes		= {180,  300, 150};
 		
 		for(int i=0; i<names.length; i++) {
 			String name = names[i];
@@ -179,12 +250,12 @@ public class NoteListViewPart extends ViewPart {
 			TableColumn tblclmnEngine = tableViewerColumn.getColumn();
 			tblclmnEngine.setWidth(size);
 			tblclmnEngine.setText(name);
-
 		}
 	}
 
 	@Override
 	public void setFocus() {
+		tableViewer.getTable().setFocus();
 	}
 
 }
@@ -207,9 +278,8 @@ class NoteListLabelProvider extends LabelProvider implements ITableLabelProvider
 
 		switch(columnIndex) {
 		case 0: return ""+dto.getReceiveUserId();
-		case 1: return dto.getIs_read();
+		case 1: return dto.getTitle();
 		case 2: return dto.getCreate_time();
-		case 3: return dto.getTitle();
 		}
 		
 		return "*** not set column ***"; //$NON-NLS-1$

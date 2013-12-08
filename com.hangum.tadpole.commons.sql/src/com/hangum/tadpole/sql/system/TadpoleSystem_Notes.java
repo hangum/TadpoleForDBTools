@@ -33,19 +33,75 @@ public class TadpoleSystem_Notes {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_Notes.class);
 	
 	/**
-	 * receive note list
+	 * 사용자에게 알려야 할 노트 리스트를 
 	 * 
-	 * @param types
 	 * @param userSeq
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<NotesDAO> getNoteList(String types, int userSeq) throws Exception {
+	public static List<NotesDAO> getAlertNote(int userSeq) throws Exception {
+		// 리턴한다.
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<NotesDAO> retListNotes = sqlClient.queryForList("getAlertNote", userSeq);
+
+		//  받은 모든 노트를 읽음 처리.
+		if(!retListNotes.isEmpty()) sqlClient.update("noteSystemRead", userSeq);
+		
+		return retListNotes;
+	}
+	
+	/**
+	 * read system note
+	 * 
+	 * @param noteSeq
+	 * @throws Exception
+	 */
+	public static void readSystemNote(int noteSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.delete("noteSystemRead", noteSeq);
+	}
+	
+	/**
+	 * read note
+	 * 
+	 * @param noteSeq
+	 * @throws Exception
+	 */
+	public static void readNote(int noteSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.delete("noteRead", noteSeq);
+	}
+	
+	/**
+	 * note delete
+	 * 
+	 * @param noteSeq
+	 * @throws Exception
+	 */
+	public static void deleteNote(int noteSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.delete("noteDelete", noteSeq);
+	}
+	
+	/**
+	 * receive note list
+	 * 
+	 * @param userSeq
+	 * @param types
+	 * @param strRead
+	 * @param strTitle
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<NotesDAO> getNoteList(int userSeq, String types, String strRead, String strTitle) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		Map<String, Object> mapParam = new HashMap<String, Object>();
-		mapParam.put("types", types);
 		mapParam.put("userSeq", userSeq);
+		mapParam.put("types", types);
+		mapParam.put("strRead", strRead);
+		mapParam.put("strTitle", '%' + strTitle + '%');
 		
 		return (List<NotesDAO>)sqlClient.queryForList("findNotes", mapParam); //$NON-NLS-1$
 	}
@@ -92,5 +148,24 @@ public class TadpoleSystem_Notes {
 			noteDetailDao.setData(content);		
 			sqlClient.insert("noteDataInsert", noteDetailDao); //$NON-NLS-1$				
 		}
+	}
+	
+	/**
+	 * note data 
+	 * 
+	 * @param noteDAO
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getNoteData(NotesDAO noteDAO) throws Exception {
+		String retData = "";
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<NotesDetailDAO> listNoteDetail = sqlClient.queryForList("getNoteData", noteDAO.getSeq());
+		for (NotesDetailDAO notesDetailDAO : listNoteDetail) {
+			retData += notesDetailDAO.getData();
+		}
+		
+		return retData;
 	}
 }

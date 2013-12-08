@@ -27,12 +27,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.notes.core.Messages;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
+import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * new note dialog
@@ -48,13 +53,27 @@ public class NewNoteDialog extends Dialog {
 	private Text textContent;
 	private Text textTitle;
 	
+	private NotesDAO notesDAO;
+	
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @wbp.parser.constructor
 	 */
 	public NewNoteDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+	}
+	
+	/**
+	 * Create the dialog.
+	 * @param parentShell
+	 */
+	public NewNoteDialog(Shell parentShell, NotesDAO noteDAO) {
+		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		this.notesDAO  = noteDAO;
 	}
 
 	@Override
@@ -82,9 +101,19 @@ public class NewNoteDialog extends Dialog {
 		
 		Label lblTypes = new Label(compositeHead, SWT.NONE);
 		lblTypes.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTypes.setText("Types");
+		lblTypes.setText("Types"); //$NON-NLS-1$
 		
 		comboTypes = new Combo(compositeHead, SWT.NONE);
+		comboTypes.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(NotesDefine.TYPES.GROUP.toString().equals(comboTypes.getText())) {
+					comboUserName.setEnabled(false);
+				} else {
+					comboUserName.setEnabled(true);
+				}
+			}
+		});
 		comboTypes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for(NotesDefine.TYPES type: NotesDefine.TYPES.values()) {
 			comboTypes.add(type.toString());
@@ -104,13 +133,13 @@ public class NewNoteDialog extends Dialog {
 		compositeBody.setLayout(gl_compositeBody);
 		
 		Label lblTitle = new Label(compositeBody, SWT.NONE);
-		lblTitle.setText("Title");
+		lblTitle.setText("Title"); //$NON-NLS-1$
 		
 		textTitle = new Text(compositeBody, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblContent = new Label(compositeBody, SWT.NONE);
-		lblContent.setText("Content");
+		lblContent.setText("Content"); //$NON-NLS-1$
 		
 		textContent = new Text(compositeBody, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -123,22 +152,22 @@ public class NewNoteDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strSender = comboUserName.getText();
-		if("".equals(strSender)) {
-			MessageDialog.openConfirm(null, "Confirm", "사용자를 입력하여 주십시오.");
+		if("".equals(strSender)) { //$NON-NLS-1$
+			MessageDialog.openConfirm(null, "Confirm", Messages.NewNoteDialog_5); //$NON-NLS-1$
 			comboUserName.setFocus();
 			return;
 		}
 		
 		String strTitle = textTitle.getText();
-		if("".equals(strTitle)) {
-			MessageDialog.openConfirm(null, "Confirm", "제목을 입력하여 주십시오.");
+		if("".equals(strTitle)) { //$NON-NLS-1$
+			MessageDialog.openConfirm(null, "Confirm", Messages.NewNoteDialog_8); //$NON-NLS-1$
 			textTitle.setFocus();
 			return;
 		}
 		
 		String strContent = textContent.getText();
-		if("".equals(strContent)) {
-			MessageDialog.openConfirm(null, "Confirm", "내용을 입력하여 주십시오.");
+		if("".equals(strContent)) { //$NON-NLS-1$
+			MessageDialog.openConfirm(null, "Confirm", Messages.NewNoteDialog_11); //$NON-NLS-1$
 			textContent.setFocus();
 			return;
 		}
@@ -150,8 +179,8 @@ public class NewNoteDialog extends Dialog {
 			// User data save
 			TadpoleSystem_Notes.saveNote(comboTypes.getText(), SessionManager.getSeq(), userDao.getSeq(), strTitle, strContent);
 		} catch(Exception e) {
-			logger.error("note save", e);
-			MessageDialog.openError(null, "Confirm", e.getMessage());
+			logger.error("note save", e); //$NON-NLS-1$
+			MessageDialog.openError(null, "Confirm", e.getMessage()); //$NON-NLS-1$
 			return;
 		}
 		
@@ -162,20 +191,29 @@ public class NewNoteDialog extends Dialog {
 	 * initialize combo data
 	 */
 	private void initUI() {
-		comboUserName.add("All");
-		
+		// combo 초기화.
 		try {
 			List<UserGroupAUserDAO> listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
 			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
 				comboUserName.add(userGroupAUserDAO.getEmail());
 			}
-			
+			comboUserName.select(0);			
 		} catch(Exception e) {
-			logger.error("init user list", e);
+			logger.error("init user list", e); //$NON-NLS-1$
 		}
-
-		comboUserName.select(1);
-		textTitle.setFocus();
+		
+		// 대답할 때면. 
+		if(notesDAO != null) {
+			comboTypes.setText(notesDAO.getTypes());
+			comboUserName.setText(notesDAO.getReceiveUserId());
+			
+			textTitle.setText("RE] " + notesDAO.getTitle()); //$NON-NLS-1$
+			textContent.setText("\n\n----------------------------------------\n" + notesDAO.getContents()); //$NON-NLS-1$
+			
+			textContent.setFocus();
+		} else {
+			textTitle.setFocus();
+		}
 	}
 
 	/**
@@ -184,8 +222,8 @@ public class NewNoteDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Send", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, "Send", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false); //$NON-NLS-1$
 	}
 
 	/**
@@ -193,7 +231,7 @@ public class NewNoteDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(450, 500);
 	}
 
 }
