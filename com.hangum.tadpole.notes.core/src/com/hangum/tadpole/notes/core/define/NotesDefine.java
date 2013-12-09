@@ -21,5 +21,12 @@ public class NotesDefine {
 	/** notes type */
 	public enum TYPES { GROUP, PERSON };
 	
+	/**
+	 * 쪽지 타입
+	 * 
+	 * @author hangum
+	 *
+	 */
+	public enum NOTE_TYPES { SEND, RECEIVE };
 	
 }

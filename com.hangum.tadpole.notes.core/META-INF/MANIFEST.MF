@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole DB Hub Note Core
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.hangum.tadpole.notes.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.notes.core.Activator
-Bundle-Vendor: HANGUM
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.rap.ui;bundle-version="2.1.1",
  org.eclipse.core.runtime,
  com.hangum.tadpole.commons.libs;bundle-version="2.0.0",
@@ -13,5 +13,6 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="2.1.1",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.notes.core.alert,
+ com.hangum.tadpole.notes.core.define,
  com.hangum.tadpole.notes.core.dialogs,
  com.hangum.tadpole.notes.core.views.list

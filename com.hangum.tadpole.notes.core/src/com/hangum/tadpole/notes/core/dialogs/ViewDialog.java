@@ -23,6 +23,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.notes.core.Messages;
+import com.hangum.tadpole.notes.core.define.NotesDefine;
+import com.hangum.tadpole.notes.core.define.NotesDefine.NOTE_TYPES;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
 
@@ -36,6 +39,9 @@ public class ViewDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ViewDialog.class);
 
 	private NotesDAO noteDAO;
+	private NotesDefine.NOTE_TYPES noteType;
+	
+	private Label lblUser;
 	private Text textUser;
 	private Text textTitle;
 	private Text textContent;
@@ -44,17 +50,18 @@ public class ViewDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public ViewDialog(Shell parentShell, NotesDAO noteDAO) {
+	public ViewDialog(Shell parentShell, NotesDAO noteDAO, NotesDefine.NOTE_TYPES noteType) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.noteDAO = noteDAO;
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		this.noteType = noteType;
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Note"); //$NON-NLS-1$
+		newShell.setText(Messages.ViewDialog_5);
 	}
 
 	/**
@@ -74,9 +81,9 @@ public class ViewDialog extends Dialog {
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeHead.setLayout(new GridLayout(2, false));
 		
-		Label lblUser = new Label(compositeHead, SWT.NONE);
+		lblUser = new Label(compositeHead, SWT.NONE);
 		lblUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblUser.setText("User");
+		lblUser.setText(Messages.ViewDialog_0);
 		
 		textUser = new Text(compositeHead, SWT.BORDER);
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -86,14 +93,14 @@ public class ViewDialog extends Dialog {
 		compositeBody.setLayout(new GridLayout(2, false));
 		
 		Label lblTitle = new Label(compositeBody, SWT.NONE);
-		lblTitle.setText("Title");
+		lblTitle.setText(Messages.ViewDialog_1);
 		
 		textTitle = new Text(compositeBody, SWT.BORDER);
 		textTitle.setEditable(false);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblContent = new Label(compositeBody, SWT.NONE);
-		lblContent.setText("Content");
+		lblContent.setText(Messages.ViewDialog_2);
 		
 		textContent = new Text(compositeBody, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textContent.setEditable(false);
@@ -106,7 +113,7 @@ public class ViewDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		NewNoteDialog dialog = new NewNoteDialog(null, noteDAO);
+		NewNoteDialog dialog = new NewNoteDialog(null, noteDAO, textUser.getText());
 		dialog.open();
 		
 		super.okPressed();
@@ -124,11 +131,18 @@ public class ViewDialog extends Dialog {
 			noteDAO.setContents(TadpoleSystem_Notes.getNoteData(noteDAO));
 			
 			// 나머지 노트 내용을 체우고.
-			textUser.setText(noteDAO.getReceiveUserId());
+			if(noteType == NOTE_TYPES.SEND) {
+				lblUser.setText(Messages.ViewDialog_3);
+				textUser.setText(noteDAO.getReceiveUserId());
+			} else {
+				lblUser.setText(Messages.ViewDialog_4);
+				textUser.setText(noteDAO.getSendUserId());
+			}
+			
 			textTitle.setText(noteDAO.getTitle());
 			textContent.setText(noteDAO.getContents());
 		} catch(Exception e) {
-			logger.error("get note data", e);
+			logger.error("get note data", e); //$NON-NLS-1$
 		}
 	}
 
@@ -138,8 +152,8 @@ public class ViewDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Reply", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CLOSE", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.ViewDialog_6, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ViewDialog_7, false);
 	}
 
 	/**

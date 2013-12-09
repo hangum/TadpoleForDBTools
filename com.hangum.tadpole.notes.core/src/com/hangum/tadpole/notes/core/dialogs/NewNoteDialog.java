@@ -48,12 +48,13 @@ import org.eclipse.swt.events.SelectionEvent;
 public class NewNoteDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(NewNoteDialog.class);
 	
-	private Combo comboTypes;
+//	private Combo comboTypes;
 	private Combo comboUserName;
 	private Text textContent;
 	private Text textTitle;
 	
 	private NotesDAO notesDAO;
+	private String strReceiver;
 	
 	/**
 	 * Create the dialog.
@@ -69,17 +70,18 @@ public class NewNoteDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public NewNoteDialog(Shell parentShell, NotesDAO noteDAO) {
+	public NewNoteDialog(Shell parentShell, NotesDAO noteDAO, String strReceiver) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.notesDAO  = noteDAO;
+		this.strReceiver = strReceiver;
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("New Note"); //$NON-NLS-1$
+		newShell.setText(Messages.NewNoteDialog_1); 
 	}
 
 	/**
@@ -101,24 +103,24 @@ public class NewNoteDialog extends Dialog {
 		
 		Label lblTypes = new Label(compositeHead, SWT.NONE);
 		lblTypes.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTypes.setText("Types"); //$NON-NLS-1$
+		lblTypes.setText("User");//Messages.NewNoteDialog_2); 
 		
-		comboTypes = new Combo(compositeHead, SWT.NONE);
-		comboTypes.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(NotesDefine.TYPES.GROUP.toString().equals(comboTypes.getText())) {
-					comboUserName.setEnabled(false);
-				} else {
-					comboUserName.setEnabled(true);
-				}
-			}
-		});
-		comboTypes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for(NotesDefine.TYPES type: NotesDefine.TYPES.values()) {
-			comboTypes.add(type.toString());
-		}
-		comboTypes.select(1);
+//		comboTypes = new Combo(compositeHead, SWT.READ_ONLY);
+//		comboTypes.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				if(NotesDefine.TYPES.GROUP.toString().equals(comboTypes.getText())) {
+//					comboUserName.setEnabled(false);
+//				} else {
+//					comboUserName.setEnabled(true);
+//				}
+//			}
+//		});
+//		comboTypes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		for(NotesDefine.TYPES type: NotesDefine.TYPES.values()) {
+//			comboTypes.add(type.toString());
+//		}
+//		comboTypes.select(1);
 		
 		comboUserName = new Combo(compositeHead, SWT.NONE);
 		comboUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -133,13 +135,13 @@ public class NewNoteDialog extends Dialog {
 		compositeBody.setLayout(gl_compositeBody);
 		
 		Label lblTitle = new Label(compositeBody, SWT.NONE);
-		lblTitle.setText("Title"); //$NON-NLS-1$
+		lblTitle.setText(Messages.NewNoteDialog_3); 
 		
 		textTitle = new Text(compositeBody, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblContent = new Label(compositeBody, SWT.NONE);
-		lblContent.setText("Content"); //$NON-NLS-1$
+		lblContent.setText(Messages.NewNoteDialog_4); 
 		
 		textContent = new Text(compositeBody, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -151,36 +153,44 @@ public class NewNoteDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
+		// 사용자 검사.
 		String strSender = comboUserName.getText();
 		if("".equals(strSender)) { //$NON-NLS-1$
-			MessageDialog.openConfirm(null, "Confirm", Messages.NewNoteDialog_5); //$NON-NLS-1$
+			MessageDialog.openConfirm(null, Messages.NewNoteDialog_0, Messages.NewNoteDialog_5); 
 			comboUserName.setFocus();
 			return;
 		}
+		UserDAO userDao = null;
+		try {
+			userDao = TadpoleSystem_UserQuery.findUser(strSender);
+		} catch(Exception e) {
+			MessageDialog.openError(null, Messages.NewNoteDialog_0, e.getMessage()); 
+			return;
+		}
 		
+		// 타이틀 검사.
 		String strTitle = textTitle.getText();
-		if("".equals(strTitle)) { //$NON-NLS-1$
-			MessageDialog.openConfirm(null, "Confirm", Messages.NewNoteDialog_8); //$NON-NLS-1$
+		if("".equals(strTitle)) { 
+			MessageDialog.openConfirm(null, Messages.NewNoteDialog_0, Messages.NewNoteDialog_8); 
 			textTitle.setFocus();
 			return;
 		}
 		
+		// 내용 검사.
 		String strContent = textContent.getText();
-		if("".equals(strContent)) { //$NON-NLS-1$
-			MessageDialog.openConfirm(null, "Confirm", Messages.NewNoteDialog_11); //$NON-NLS-1$
+		if("".equals(strContent)) { 
+			MessageDialog.openConfirm(null, Messages.NewNoteDialog_0, Messages.NewNoteDialog_11); 
 			textContent.setFocus();
 			return;
 		}
 		
 		// find receive seq
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.findUser(strSender);
-			
 			// User data save
-			TadpoleSystem_Notes.saveNote(comboTypes.getText(), SessionManager.getSeq(), userDao.getSeq(), strTitle, strContent);
+			TadpoleSystem_Notes.saveNote(NotesDefine.TYPES.PERSON.toString(), SessionManager.getSeq(), userDao.getSeq(), strTitle, strContent);
 		} catch(Exception e) {
 			logger.error("note save", e); //$NON-NLS-1$
-			MessageDialog.openError(null, "Confirm", e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.NewNoteDialog_0, e.getMessage()); 
 			return;
 		}
 		
@@ -204,8 +214,8 @@ public class NewNoteDialog extends Dialog {
 		
 		// 대답할 때면. 
 		if(notesDAO != null) {
-			comboTypes.setText(notesDAO.getTypes());
-			comboUserName.setText(notesDAO.getReceiveUserId());
+//			comboTypes.setText(notesDAO.getTypes());
+			comboUserName.setText(strReceiver);
 			
 			textTitle.setText("RE] " + notesDAO.getTitle()); //$NON-NLS-1$
 			textContent.setText("\n\n----------------------------------------\n" + notesDAO.getContents()); //$NON-NLS-1$
@@ -222,8 +232,8 @@ public class NewNoteDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Send", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.NewNoteDialog_6, true); 
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.NewNoteDialog_7, false); 
 	}
 
 	/**
