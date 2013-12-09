@@ -133,7 +133,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					    } // end try
     				
 	    				try {
-							Thread.sleep(10 * 1500);								
+							Thread.sleep(15 * 1000);
 	    				} catch(Exception e){}
     				}
     			}	// end while
