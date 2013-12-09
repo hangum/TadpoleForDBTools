@@ -16,12 +16,18 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -44,17 +50,9 @@ import com.hangum.tadpole.notes.core.define.NotesDefine.NOTE_TYPES;
 import com.hangum.tadpole.notes.core.dialogs.NewNoteDialog;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
-import com.hangum.tadpole.sql.dao.system.NotesDetailDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
 import com.swtdesigner.ResourceManager;
-
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Notes
@@ -163,8 +161,8 @@ public class NoteListViewPart extends ViewPart {
 			}
 		});
 		GridData gd_combo = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_combo.widthHint = 100;
-		gd_combo.minimumWidth = 100;
+		gd_combo.widthHint = 80;
+		gd_combo.minimumWidth = 80;
 		comboTypes.setLayoutData(gd_combo);
 		
 		comboTypes.add(Messages.NoteListViewPart_8);
@@ -256,7 +254,7 @@ public class NoteListViewPart extends ViewPart {
 	 */
 	private void createColumns() {
 		String[] names 	= {Messages.NoteListViewPart_14, Messages.NoteListViewPart_15, Messages.NoteListViewPart_16};
-		int[] sizes		= {180,  300, 150};
+		int[] sizes		= {150,  300, 150};
 		
 		for(int i=0; i<names.length; i++) {
 			String name = names[i];
