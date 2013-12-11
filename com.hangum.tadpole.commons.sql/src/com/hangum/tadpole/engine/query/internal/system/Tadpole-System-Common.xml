@@ -474,7 +474,7 @@
 		db_seq = #seq#  AND
 		resource_types in ('ERD', 'SQL') AND
 		delYn = 'NO'		
-	ORDER BY name
+	ORDER BY resource_types, name
 </select>
 
 <select id="userDbResourceManager" resultClass="com.hangum.tadpole.sql.dao.ResourceManagerDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
