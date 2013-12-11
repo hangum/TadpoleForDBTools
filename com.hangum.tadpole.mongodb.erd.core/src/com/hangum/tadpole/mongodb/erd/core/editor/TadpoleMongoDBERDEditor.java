@@ -226,9 +226,9 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 		manager.setZoomLevels(zoomLevels);
 		
 		zoomContributions = new ArrayList<String>();
-		zoomContributions.add(ZoomManager.FIT_ALL);
-		zoomContributions.add(ZoomManager.FIT_HEIGHT);
-		zoomContributions.add(ZoomManager.FIT_WIDTH);
+//		zoomContributions.add(ZoomManager.FIT_ALL);
+//		zoomContributions.add(ZoomManager.FIT_HEIGHT);
+//		zoomContributions.add(ZoomManager.FIT_WIDTH);
 		manager.setZoomLevelContributions(zoomContributions);
 	}
 

@@ -194,38 +194,6 @@ public class SQLUtil {
 		return exeSQL;
 	}
 	
-//	/**
-//	 * 쿼리중에 주석을 제거합니다.
-//	 * 
-//	 * @param sql
-//	 * @param comment
-//	 * @return
-//	 */
-//	private static String delComment(String sql, String comment) {
-//		try {
-//			String[] linesSQL = sql.split("\n");
-//			if(linesSQL.length > 0) {
-//				StringBuffer tmpSQL = new StringBuffer();
-//				for (String string : linesSQL) {
-//					int idx = string.indexOf(comment);//"--");
-//					if( idx == 0) {
-//					} else if( idx > 0) {
-//						tmpSQL.append(string.substring(0, idx-1)).append("\n");
-//					} else {
-//						tmpSQL.append(string).append("\n");
-//					}
-//				}
-//				
-//				return tmpSQL.toString();
-//			}
-//			
-//		} catch(Exception e) {
-//			logger.error("execute sql", e);
-//		}
-//	
-//		return sql;
-//	}
-	
 	/**
 	 * db resource data를 저장할때 2000byte 단위로 저장하도록 합니다.
 	 * 
