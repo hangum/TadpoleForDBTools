@@ -248,7 +248,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public boolean connection() {
-		if(!testConnection()) return false;
+		if(!testConnection(false)) return false;
 		
 		// 기존 데이터 업데이트
 		if(getDataActionStatus() == DATA_STATUS.MODIFY) {

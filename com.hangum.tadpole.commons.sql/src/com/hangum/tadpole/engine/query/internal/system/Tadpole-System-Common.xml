@@ -97,6 +97,16 @@
 </select>
 
 <!-- 
+	find user
+ -->
+<select id="findUser" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="java.lang.String">
+	SELECT *
+	FROM user 
+	WHERE 
+		email = #email#
+</select>
+
+<!-- 
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
@@ -464,7 +474,7 @@
 		db_seq = #seq#  AND
 		resource_types in ('ERD', 'SQL') AND
 		delYn = 'NO'		
-	ORDER BY name
+	ORDER BY resource_types, name
 </select>
 
 <select id="userDbResourceManager" resultClass="com.hangum.tadpole.sql.dao.ResourceManagerDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
@@ -706,11 +716,133 @@ SELECT
 	notes 정보.
 	=========================================================================================================
  -->
-<select id="findReceiveNotes" resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO" parameterClass="java.lang.Integer">
-	SELECT * FROM notes
-	WHERE
-		receive_user_seq = #user_seq#
-	ORDER BY create_time
+<select id="findNotes" resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO" parameterClass="java.util.Map">
+	SELECT 
+		seq,
+	    types,
+	    sender_seq,
+		(select email from user
+		where  seq = sender_seq) sendUserId,
+	    receiver_seq,
+	    (select email from user
+		where  seq = receiver_seq) receiveUserId,
+		title,
+	    sender_date,
+	    receiver_date,
+	    is_read,
+	    sender_delyn,
+	    receiver_delyn,
+	    create_time,
+	    delyn  
+	FROM notes
+	<dynamic prepend="WHERE">
+		<isEqual prepend="AND" property="types" compareValue="Send">
+			sender_seq = #userSeq#
+		</isEqual>
+		<isEqual prepend="AND" property="types" compareValue="Receive">
+			receiver_seq = #userSeq#
+		</isEqual>
+		<isEqual prepend="AND" property="strRead" compareValue="Not yet Read">
+			is_read = 'NO'
+		</isEqual>
+		<isEqual prepend="AND" property="strRead" compareValue="Read">
+			is_read = 'YES'
+		</isEqual>
+		AND title like #strTitle#
+	</dynamic>
+		AND delyn = 'NO'
+	ORDER BY create_time DESC
 </select>
+
+<!-- 
+	note insert
+ -->
+<insert id="noteInsert" parameterClass="com.hangum.tadpole.sql.dao.system.NotesDAO">
+	 INSERT INTO notes (types, sender_seq, receiver_seq, sender_date, title) 
+ 	VALUES 
+ 	(#types#, #sender_seq#, #receiver_seq#, #sender_date#, #title#) 
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO">
+		SELECT * 
+		FROM notes 
+		WHERE types 		= #types# AND 
+			sender_seq 		= #sender_seq# AND 
+			receiver_seq 	= #receiver_seq# AND 
+			sender_date 	= #sender_date# AND
+			title 			= #title#
+	</selectKey>
+</insert>
  	
+<!-- 
+	note data를 저장합니다.
+ -->
+<insert id="noteDataInsert" parameterClass="com.hangum.tadpole.sql.dao.system.NotesDetailDAO">
+	INSERT INTO notes_detail(note_seq, data)
+	VALUES(#note_seq#, #data#)
+</insert>
+
+<!-- 
+	Get note content 
+ -->
+<select id="getNoteData" resultClass="com.hangum.tadpole.sql.dao.system.NotesDetailDAO" parameterClass="java.lang.Integer">
+	SELECT * FROM notes_detail
+	WHERE
+		note_seq = #note_seq#
+</select>
+
+<!-- 
+	delete note
+ -->
+<update id="noteDelete" parameterClass="java.lang.Integer">
+	UPDATE notes
+ 	SET   delyn= 'YES' 
+ 	WHERE 
+		seq = #note_seq# 
+</update>
+
+<!-- 
+	user note read
+ -->
+<update id="noteRead" parameterClass="java.lang.Integer">
+	UPDATE notes
+ 	SET   is_read = 'YES' 
+ 	WHERE 
+		seq = #note_seq#
+</update>
+
+<select id="getAlertNote" resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO" parameterClass="java.lang.Integer">
+	SELECT 
+		seq,
+	    types,
+	    sender_seq,
+		(select email from user
+		where  seq = sender_seq) sendUserId,
+	    receiver_seq,
+	    (select email from user
+		where  seq = receiver_seq) receiveUserId,
+		title,
+	    sender_date,
+	    receiver_date,
+	    is_read,
+	    sender_delyn,
+	    receiver_delyn,
+	    create_time,
+	    delyn
+	FROM notes 
+	WHERE  
+		receiver_seq 	= #receiver_seq#  
+	AND is_system_read = 'NO'
+</select>
+
+<!-- 
+	system note read
+ -->
+<update id="noteSystemRead" parameterClass="java.lang.Integer">
+	UPDATE notes
+ 	SET   is_system_read = 'YES' 
+ 	WHERE 
+		receiver_seq 	= #receiver_seq#  
+	AND is_system_read = 'NO'
+</update>
+
 </sqlMap>

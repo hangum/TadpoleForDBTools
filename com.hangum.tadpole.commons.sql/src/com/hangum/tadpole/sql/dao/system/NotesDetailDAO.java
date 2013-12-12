@@ -18,7 +18,7 @@ package com.hangum.tadpole.sql.dao.system;
  */
 public class NotesDetailDAO {
 	int seq;
-	int note_sea;
+	int note_seq;
 	String data;
 	
 	public NotesDetailDAO() {
@@ -32,12 +32,12 @@ public class NotesDetailDAO {
 		this.seq = seq;
 	}
 
-	public int getNote_sea() {
-		return note_sea;
+	public int getNote_seq() {
+		return note_seq;
 	}
 
-	public void setNote_sea(int note_sea) {
-		this.note_sea = note_sea;
+	public void setNote_seq(int note_seq) {
+		this.note_seq = note_seq;
 	}
 
 	public String getData() {

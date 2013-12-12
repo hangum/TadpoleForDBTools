@@ -119,7 +119,7 @@ public class DBLoginDialog extends Dialog {
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboDBList.setBackground(SWTResourceManager.getColor(255, 250, 205));
-		comboDBList.setVisibleItemCount(10);
+		comboDBList.setVisibleItemCount(11);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
@@ -221,7 +221,7 @@ public class DBLoginDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
 		if(TEST_CONNECTION_ID == buttonId) {
-			if(loginComposite.testConnection()) {
+			if(loginComposite.testConnection(true)) {
 				MessageDialog.openInformation(null, "Confirm", Messages.DBLoginDialog_42); //$NON-NLS-1$
 			}
 		} else if(ADD_NEW_CONNECTION_ID == buttonId) {

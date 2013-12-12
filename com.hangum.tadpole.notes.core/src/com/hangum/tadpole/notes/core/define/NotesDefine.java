@@ -19,7 +19,14 @@ package com.hangum.tadpole.notes.core.define;
 public class NotesDefine {
 
 	/** notes type */
-	public enum TYPE { SEND, RECEIVE };
+	public enum TYPES { GROUP, PERSON };
 	
+	/**
+	 * 쪽지 타입
+	 * 
+	 * @author hangum
+	 *
+	 */
+	public enum NOTE_TYPES { SEND, RECEIVE };
 	
 }

@@ -22,7 +22,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -62,7 +61,7 @@ public class TadpoleSystem_UserQuery {
 			
 			return userdb;
 		} else {
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_2);
+			throw new TadpoleRuntimeException("User already exists. Enter a new ID."); //$NON-NLS-1$
 		}
 	}
 	
@@ -85,6 +84,24 @@ public class TadpoleSystem_UserQuery {
 		return false;
 	}
 	
+	/**
+	 * 사용자 정보를 찾습니다.
+	 * 
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDAO findUser(String email) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDAO> listUser = sqlClient.queryForList("findUser", email); //$NON-NLS-1$
+		
+		if(listUser.size() == 0) {
+			throw new Exception(Messages.TadpoleSystem_UserQuery_0);
+		}
+		
+		return listUser.get(0);
+	}
+	
 	
 	/**
 	 * 로그인시 email, passwd 확인 
@@ -102,12 +119,12 @@ public class TadpoleSystem_UserQuery {
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$
 	
 		if(null == userInfo) {
-			throw new Exception(Messages.TadpoleSystem_UserQuery_9);
+			throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
 		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
-			throw new Exception(Messages.TadpoleSystem_UserQuery_1);
+			throw new Exception("Manager is being processed.\r\nPlease contact us."); //$NON-NLS-1$
 		} else {
 			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
-				throw new Exception(Messages.TadpoleSystem_UserQuery_9);
+				throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
 			}
 		}
 	
@@ -124,9 +141,9 @@ public class TadpoleSystem_UserQuery {
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("checkSecurityHint", login); //$NON-NLS-1$
 	
 		if(null == userInfo) {
-			throw new Exception(Messages.TadpoleSystem_UserQuery_9);
+			throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
 		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
-			throw new Exception(Messages.TadpoleSystem_UserQuery_1);
+			throw new Exception("Manager is being processed.\r\nPlease contact us."); //$NON-NLS-1$
 		} 
 	
 		return userInfo;

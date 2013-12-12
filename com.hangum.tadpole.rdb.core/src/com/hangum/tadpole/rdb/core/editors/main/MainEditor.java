@@ -122,6 +122,7 @@ import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -943,8 +944,13 @@ public class MainEditor extends EditorExtension {
 		String strTablelist = "select,select * from,"; //$NON-NLS-1$
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			List<TableDAO> showTables = null;
+			if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			} else {
+				showTables = TajoConnectionManager.tableList(userDB);
+			}
 
 			for (TableDAO tableDao : showTables) {
 				strTablelist += tableDao.getName() + ","; //$NON-NLS-1$
@@ -970,7 +976,7 @@ public class MainEditor extends EditorExtension {
 	 * initialize editor
 	 */
 	private void initEditor() {
-		if (DBDefine.getDBDefine(userDB) == DBDefine.HIVE_DEFAULT) {
+		if (userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			tltmAutoCommit.setEnabled(false);
 		}
 
@@ -1301,6 +1307,23 @@ public class MainEditor extends EditorExtension {
 		
 		requestQuery = StringUtils.trimToEmpty(requestQuery);
 		
+		// is tajo
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			Map<String, Object> resultMap = TajoConnectionManager.select(userDB, requestQuery, pageNumber, isAutoCommit);
+			
+			mapColumnType = (Map<Integer, Integer>)resultMap.get("mapColumnType");
+			
+			// column name을 얻습니다. 
+			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
+			mapColumns = (Map<Integer, String>)resultMap.get("mapColumns");
+			
+			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
+			sourceDataList = (List<Map<Integer, Object>>)resultMap.get("sourceDataList");
+			
+			return;
+		}  
+		
+		// others db
 		// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 		if(transactionQuery(requestQuery)) return;
 		
@@ -1396,7 +1419,7 @@ public class MainEditor extends EditorExtension {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 
 			if(isAutoCommit) {
-				try { javaConn.close(); } catch(Exception e){}
+				try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 			}
 		}
 	}
@@ -1739,7 +1762,7 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public void setFocus() {
-//		setOrionTextFocus();
+		setOrionTextFocus();
 	}
 	
 	/**

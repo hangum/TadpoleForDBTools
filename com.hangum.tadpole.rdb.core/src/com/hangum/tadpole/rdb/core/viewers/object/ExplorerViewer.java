@@ -295,9 +295,17 @@ public class ExplorerViewer extends ViewPart {
 				triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
-		
+			
+		} else if (dbDefine == DBDefine.TAJO_DEFAULT) {
+			createTable();
+			
+			arrayStructuredViewer = new StructuredViewer[] { 
+					tableComposite.getTableListViewer() 
+				};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
+			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
+				
 		// hive
 		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
 			createTable();
@@ -307,7 +315,6 @@ public class ExplorerViewer extends ViewPart {
 				tableComposite.getTableColumnViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 			
 		// mongodb

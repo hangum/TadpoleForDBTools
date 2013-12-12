@@ -7,7 +7,7 @@
             class="com.hangum.tadpole.notes.core.views.list.NoteListViewPart"
             icon="resources/icons/notes.png"
             id="com.hangum.tadpole.notes.core.view.list"
-            name="Notes"
+            name="%view.name"
             restorable="true">
       </view>
    </extension>

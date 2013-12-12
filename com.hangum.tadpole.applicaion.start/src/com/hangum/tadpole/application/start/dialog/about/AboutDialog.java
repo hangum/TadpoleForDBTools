@@ -102,6 +102,10 @@ public class AboutDialog extends Dialog {
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblNewLabel3.setText("Register Issue : <a href=\"https://github.com/hangum/TadpoleForDBTools/issues?state=open\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools/issues?state=open</a>");//Messages.AboutAction_4);
 		
+		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
+		lblLicenseLgpl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		lblLicenseLgpl.setText("License: <a href=\"http://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License\" target=\"_blank\">LGPL</a>");
+		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblNewLabel4.setText(Messages.AboutAction_5);

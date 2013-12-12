@@ -383,6 +383,7 @@ public class Messages extends NLS {
 	public static String OthersConnectionRDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
 	public static String ObjectDeleteAction_synonym;
+	public static String RDBInformationComposite_17;
 	public static String TableDirectEditorComposite_lblOrderBy_text;
 	public static String TableDirectEditorComposite_lblLimit_text;
 	public static String TableDirectEditorComposite_lblStart_text;
