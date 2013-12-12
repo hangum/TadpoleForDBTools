@@ -5,7 +5,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +28,28 @@ public class TajoConnectionManager {
 	private static final Logger logger = Logger.getLogger(TajoConnectionManager.class);
 	
 	/**
+	 * not select 
 	 * 
+	 * @param userDB
+	 * @param sqlQuery
+	 * @return
+	 */
+	public static void executeUpdate(UserDBDAO userDB, String sqlQuery) throws Exception {
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		try {
+			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
+			statement = javaConn.createStatement();
+			statement.executeUpdate(sqlQuery);
+		} finally {
+			try { if(statement != null) statement.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+		}
+	}
+	
+	/**
+	 * select
 	 * 
 	 * @param userDB
 	 * @param requestQuery
@@ -48,14 +69,11 @@ public class TajoConnectionManager {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-			System.out.println("===[result set]=================================================================================");
-			ResultSetMetaData  rsm = rs.getMetaData();
-			int columnCount = rsm.getColumnCount();
-			for(int i=0; i<columnCount; i++) {
-				System.out.println("[column info]" + i + "==> " +  rsm.getColumnLabel(i+1));
-			}
-			System.out.println("===[result set]=================================================================================");
-			
+//			ResultSetMetaData  rsm = rs.getMetaData();
+//			int columnCount = rsm.getColumnCount();
+//			for(int i=0; i<columnCount; i++) {
+//				System.out.println("[column info]" + i + "==> " +  rsm.getColumnLabel(i+1));
+//			}
 			
 			// column의 data type을 얻습니다.
 			retMap.put("mapColumnType", ResultSetUtils.getColumnType(rs.getMetaData()));
@@ -182,4 +200,5 @@ public class TajoConnectionManager {
 		
 		return showTableColumns;
 	}
+
 }
