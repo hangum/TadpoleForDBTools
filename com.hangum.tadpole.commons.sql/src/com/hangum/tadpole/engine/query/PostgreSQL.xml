@@ -310,11 +310,25 @@ FROM
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
-	SELECT a.table_name "name"
-	FROM information_schema.tables a
-	where a.table_schema = 'public' and 
-		a.table_type = 'BASE TABLE'
-	ORDER BY name 
+SELECT
+    relname as "name"
+    , relhasindex as has_index
+    , relisshared as is_shared
+    , relhaspkey as has_pk
+    , relhastriggers as has_triggers
+    , relhassubclass as has_subclass
+    , relhasrules as has_rules
+    , reloptions as options
+    ,pg_catalog.obj_description(oid,'pg_class') as "comment"
+  FROM pg_catalog.pg_class ‌
+  WHERE 1 = 1 
+    AND relkind IN ('r','')
+    AND relname IN (
+      SELECT a.table_name
+        FROM information_schema.tables a
+        WHERE a.table_schema = 'public' 
+          AND a.table_type = 'BASE TABLE' )
+  ORDER BY name
 </select>
 
 <!-- 
@@ -322,7 +336,7 @@ FROM
  -->
 <select id="columnInformation" resultClass="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
 	SELECT b.table_name
-	  , '' as table_comment
+	  , (select  pg_catalog.obj_description(cl.oid,'pg_class')  from pg_catalog.pg_class cl where cl.relname = a.table_name  ) as table_comment
 	  ,a.column_name
        ,a.data_type 
        ,a.is_nullable as nullable
