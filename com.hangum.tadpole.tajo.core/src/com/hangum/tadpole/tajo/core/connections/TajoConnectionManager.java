@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.tajo.core.connections;
 
 import java.sql.Connection;
@@ -20,6 +30,8 @@ import com.hangum.tadpole.sql.util.ResultSetUtils;
 import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
 
 /**
+ * apache tajo connection manager
+ * 현재는 jdbc이지만, 나중에는 native driver를 쓸수 있도록 별로 분리..
  * 
  * @author hangum
  *
@@ -84,6 +96,9 @@ public class TajoConnectionManager {
 			
 			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
 			retMap.put("sourceDataList", ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma));
+		} catch(Exception e) {
+			logger.error("Tajo select", e);
+			throw e;
 			
 		} finally {
 			try { if(pstmt != null) pstmt.close(); } catch(Exception e) {}
@@ -134,7 +149,6 @@ public class TajoConnectionManager {
 			DatabaseMetaData dbmd = conn.getMetaData();
 	    	rs = dbmd.getTables(userDB.getDb(), null, null, null);
 
-	    	
 	    	while(rs.next()) {
 	    		String strTBName = rs.getString("TABLE_NAME");
 //	    		logger.debug( rs.getString("TABLE_CAT") );
@@ -146,7 +160,6 @@ public class TajoConnectionManager {
 	    		TableDAO tdao = new TableDAO(strTBName, "");
 	    		showTables.add(tdao);
 	    	}
-	    	
 	    	
 		} catch(Exception e) {
 			logger.error("table list", e);
@@ -171,22 +184,18 @@ public class TajoConnectionManager {
 		Connection conn = null;
 		ResultSet rs = null;
 		
-		if(logger.isDebugEnabled()) logger.debug("\t Table name is " + mapParam.get("table"));
-		
 		try {
 			conn = DriverManager.getConnection(userDB.getUrl());
 			DatabaseMetaData dbmd = conn.getMetaData();
-	    	rs = dbmd.getColumns(null, mapParam.get("table"), null, null);
+	    	rs = dbmd.getColumns(userDB.getDb(), null, mapParam.get("table"), null);
 
 	    	while(rs.next()) {
 	    		TableColumnDAO tcDAO = new TableColumnDAO();
 	    		tcDAO.setName(rs.getString("COLUMN_NAME"));
 	    		tcDAO.setType(rs.getString("TYPE_NAME"));
 	    		
-//	    		ResultSetMetaData rsmd = rs.getMetaData();
-//	            for(int i = 0 ;i < rsmd.getColumnCount(); i++) {
-//	            	System.out.println(rs.getString(i + 1) + ": ");
-//	            }
+	    		tcDAO.setComment(rs.getString("REMARKS"));
+	    		
 	    		showTableColumns.add(tcDAO);
 	    	}
 	    	

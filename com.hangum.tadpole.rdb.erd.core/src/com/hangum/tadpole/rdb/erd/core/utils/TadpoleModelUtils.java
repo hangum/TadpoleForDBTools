@@ -17,6 +17,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.draw2d.geometry.Rectangle;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.erd.core.relation.RelationUtil;
 import com.hangum.tadpole.rdb.model.Column;
@@ -26,6 +27,7 @@ import com.hangum.tadpole.rdb.model.Table;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -152,8 +154,12 @@ public enum TadpoleModelUtils {
 	 * table 정보를 가져옵니다.
 	 */
 	public List<TableDAO> getTables() throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			return TajoConnectionManager.tableList(userDB);
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			return sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		}
 	}
 	
 	
@@ -165,13 +171,16 @@ public enum TadpoleModelUtils {
 	 * @throws Exception
 	 */
 	public List<TableColumnDAO> getColumns(String db, String strTBName) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("db", db);
 		param.put("table", strTBName);
-		
-		return sqlClient.queryForList("tableColumnList", param);
+
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			return TajoConnectionManager.tableColumnList(userDB, param);
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			return sqlClient.queryForList("tableColumnList", param);
+		}
 	}
 	
 }
