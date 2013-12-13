@@ -121,7 +121,7 @@ public class SQLUtil {
 				
 				if(statement instanceof Select) return true;
 			} catch(Exception e) {
-				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]", e);
+				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
 			}
 		}
 		

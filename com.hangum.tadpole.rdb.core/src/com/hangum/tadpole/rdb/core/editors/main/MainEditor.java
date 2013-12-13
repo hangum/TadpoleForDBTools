@@ -1555,7 +1555,7 @@ public class MainEditor extends EditorExtension {
 				net.sf.jsqlparser.statement.Statement stmt = CCJSqlParserUtil.parse(sqlQuery);
 				if(stmt instanceof Alter || stmt instanceof CreateTable || stmt instanceof Drop) refreshExplorerView();
 			} catch(Exception e) {
-				logger.error("CREATE, DROP, ALTER Query refersh error", e); //$NON-NLS-1$
+				logger.error("CREATE, DROP, ALTER Query refersh error" + sqlQuery); //$NON-NLS-1$
 			}
 //		}
 	}
