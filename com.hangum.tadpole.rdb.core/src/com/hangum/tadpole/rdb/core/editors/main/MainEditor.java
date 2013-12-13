@@ -24,6 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.alter.Alter;
+import net.sf.jsqlparser.statement.create.table.CreateTable;
+import net.sf.jsqlparser.statement.drop.Drop;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -1484,64 +1489,75 @@ public class MainEditor extends EditorExtension {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
-		// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
-		if(transactionQuery(sqlQuery)) return;
+		// is tajo
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			TajoConnectionManager.executeUpdate(userDB,sqlQuery);
+		} else { 
 		
-		java.sql.Connection javaConn = null;
-		Statement statement = null;
-		try {
-			if(isAutoCommit) {
-				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-				javaConn = client.getDataSource().getConnection();
-			} else {
-				javaConn = TadpoleSQLTransactionManager.getInstance(strUserEMail, userDB, isAutoCommit);
-			}
+			// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
+			if(transactionQuery(sqlQuery)) return;
 			
-			statement = javaConn.createStatement();
-			
-			final String checkSQL = sqlQuery.trim().toUpperCase();
-			// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
-			if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
-				sqlQuery = StringUtils.replaceOnce(sqlQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
-			
-			// 오라클의 경우 procedure, function, package, trigger의 경우 마지막에 ; 가 있어야 정상 프로시저로 인정됩니다. 
-			//
-			} else if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TRIGGER") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER OR") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
-			) { //$NON-NLS-1$
-				sqlQuery += ";"; //$NON-NLS-1$
-			}
-			// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-			if(logger.isDebugEnabled()) logger.debug(""+sqlQuery); //$NON-NLS-1$
-			if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) statement.execute(sqlQuery);
-			else statement.executeUpdate(sqlQuery);
-			
-			// create table, drop table이면 작동하도록			
-			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
-				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP")  || //$NON-NLS-1$
-				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "ALTER")) {  //$NON-NLS-1$
+			java.sql.Connection javaConn = null;
+			Statement statement = null;
+			try {
+				if(isAutoCommit) {
+					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+					javaConn = client.getDataSource().getConnection();
+				} else {
+					javaConn = TadpoleSQLTransactionManager.getInstance(strUserEMail, userDB, isAutoCommit);
+				}
 				
-				try {
-					refreshExplorerView();
-				} catch(Exception e) {
-					logger.error("CREATE, DROP, ALTER Query refersh error", e); //$NON-NLS-1$
+				statement = javaConn.createStatement();
+				
+				final String checkSQL = sqlQuery.trim().toUpperCase();
+				
+				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
+				if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
+						sqlQuery = StringUtils.replaceOnce(sqlQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TRIGGER") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER OR") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
+					) { //$NON-NLS-1$
+						sqlQuery += ";"; //$NON-NLS-1$
+					}
+				}
+				
+				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+				if(logger.isDebugEnabled()) logger.debug(""+sqlQuery); //$NON-NLS-1$
+				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) statement.execute(sqlQuery);
+				else statement.executeUpdate(sqlQuery);
+				
+			} finally {
+				try { statement.close();} catch(Exception e) {}
+	
+				if(isAutoCommit) {
+					try { javaConn.close(); } catch(Exception e){}
 				}
 			}
-		} finally {
-			try { statement.close();} catch(Exception e) {}
-
-			if(isAutoCommit) {
-				try { javaConn.close(); } catch(Exception e){}
+		}  	// end which db
+		
+		// create table, drop table이면 작동하도록			
+//		if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
+//			StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP")  || //$NON-NLS-1$
+//			StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "ALTER")) {  //$NON-NLS-1$
+			
+			try {
+				net.sf.jsqlparser.statement.Statement stmt = CCJSqlParserUtil.parse(sqlQuery);
+				if(stmt instanceof Alter || stmt instanceof CreateTable || stmt instanceof Drop) refreshExplorerView();
+			} catch(Exception e) {
+				logger.error("CREATE, DROP, ALTER Query refersh error", e); //$NON-NLS-1$
 			}
-		}		
+//		}
 	}
 
 	/**

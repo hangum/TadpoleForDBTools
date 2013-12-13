@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -34,6 +35,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
@@ -226,6 +228,14 @@ public class DBLoginDialog extends Dialog {
 			}
 		} else if(ADD_NEW_CONNECTION_ID == buttonId) {
 			if(addDB()) {
+				final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+				super.getShell().getDisplay().getCurrent().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						managerView.init();
+					}
+				});	// end display
+				
 				MessageDialog.openInformation(null, "Confirm", Messages.DBLoginDialog_47); //$NON-NLS-1$
 			}
 		}
@@ -244,8 +254,8 @@ public class DBLoginDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, TEST_CONNECTION_ID, Messages.DBLoginDialog_43, false);
 		
-		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_44, true);
 		createButton(parent, ADD_NEW_CONNECTION_ID, Messages.DBLoginDialog_45, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.DBLoginDialog_44, true);
 		
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLoginDialog_7, false);
 	}
@@ -263,6 +273,6 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 540);
+		return new Point(570, 540);
 	}
 }
