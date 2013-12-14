@@ -267,7 +267,7 @@ public class MainEditor extends EditorExtension {
 		parent.setLayout(gl_parent);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-		sashForm.setSashWidth(1);
+		sashForm.setSashWidth(4);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		final Composite compositeEditor = new Composite(sashForm, SWT.NONE);
