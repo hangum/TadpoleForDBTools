@@ -49,9 +49,13 @@ public class Messages extends NLS {
 
 	public static String NewUserDialog_25;
 
+	public static String NewUserDialog_26;
+
 	public static String NewUserDialog_27;
 	public static String NewUserDialog_3;
 	public static String NewUserDialog_4;
+
+	public static String NewUserDialog_5;
 	public static String NewUserDialog_6;
 	public static String NewUserDialog_7;
 	public static String NewUserDialog_8;

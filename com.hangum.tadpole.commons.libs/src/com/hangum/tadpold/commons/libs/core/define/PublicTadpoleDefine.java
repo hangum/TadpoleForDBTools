@@ -198,15 +198,14 @@ public class PublicTadpoleDefine {
 	 *
 	 */
 	public enum SecurityHint {
-		QUESTION0("", 0), 
-		QUESTION1(Messages.PublicTadpoleDefine_0, 1), 
-		QUESTION2(Messages.PublicTadpoleDefine_1, 2), 
-		QUESTION3(Messages.PublicTadpoleDefine_2, 3), 
-		QUESTION4(Messages.PublicTadpoleDefine_3, 4),
-		QUESTION5(Messages.PublicTadpoleDefine_4, 5),
-		QUESTION6(Messages.PublicTadpoleDefine_5, 6),
-		QUESTION7(Messages.PublicTadpoleDefine_6, 7), 
-		QUESTION8(Messages.PublicTadpoleDefine_7, 8);
+		QUESTION1(Messages.PublicTadpoleDefine_0, 0), 
+		QUESTION2(Messages.PublicTadpoleDefine_1, 1), 
+		QUESTION3(Messages.PublicTadpoleDefine_2, 2), 
+		QUESTION4(Messages.PublicTadpoleDefine_3, 3),
+		QUESTION5(Messages.PublicTadpoleDefine_4, 4),
+		QUESTION6(Messages.PublicTadpoleDefine_5, 5),
+		QUESTION7(Messages.PublicTadpoleDefine_6, 6), 
+		QUESTION8(Messages.PublicTadpoleDefine_7, 7);
 		
 		private String value;
 		private int order;

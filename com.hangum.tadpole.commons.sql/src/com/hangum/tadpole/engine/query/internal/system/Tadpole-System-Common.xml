@@ -134,10 +134,7 @@
 <select id="checkSecurityHint" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 	SELECT * 
 	FROM user 
-	WHERE 1=1
-		AND email = #email#
-		AND security_question = #security_question#
-		AND security_answer = #security_answer#
+	WHERE email = #email#
 </select>
 
 <!-- userDB의 manager 권한 리스트 -->

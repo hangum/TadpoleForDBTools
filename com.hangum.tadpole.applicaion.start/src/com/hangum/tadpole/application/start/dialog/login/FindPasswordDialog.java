@@ -107,7 +107,7 @@ public class FindPasswordDialog extends Dialog {
 	}
 
 	private boolean checkValidation() {
-		return !"".equals(textEmail.getText().trim()) && !"".equals(textAnswer.getText().trim()) && comboQuestion.getSelectionIndex() != -1 && comboQuestion.getSelectionIndex() != 0; //$NON-NLS-1$ //$NON-NLS-2$
+		return !"".equals(textEmail.getText().trim()) && !"".equals(textAnswer.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

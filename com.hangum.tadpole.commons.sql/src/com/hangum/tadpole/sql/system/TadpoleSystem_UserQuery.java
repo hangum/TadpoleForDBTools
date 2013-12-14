@@ -47,6 +47,9 @@ public class TadpoleSystem_UserQuery {
 		UserDAO loginDAO = new UserDAO(email, name, language, approvalYn, question, answer);
 		loginDAO.setPasswd(CipherManager.getInstance().encryption(passwd));
 		
+		loginDAO.setSecurity_question(CipherManager.getInstance().encryption(question));
+		loginDAO.setSecurity_answer(CipherManager.getInstance().encryption(answer));
+		
 		// Is test mode?
 		if(ApplicationArgumentUtils.isTestMode()) {
 			loginDAO.setApproval_yn(PublicTadpoleDefine.YES_NO.YES.toString());
@@ -131,11 +134,20 @@ public class TadpoleSystem_UserQuery {
 		return userInfo;
 	}
 	
+	/**
+	 * check security hint
+	 *  
+	 * @param email
+	 * @param question
+	 * @param answer
+	 * @return
+	 * @throws Exception
+	 */
 	public static UserDAO checkSecurityHint(String email, String question, String answer) throws Exception {
 		UserDAO login = new UserDAO();
 		login.setEmail(email);
-		login.setSecurity_question(question);
-		login.setSecurity_answer(answer);
+		login.setSecurity_question(CipherManager.getInstance().encryption(question));
+		login.setSecurity_answer(CipherManager.getInstance().encryption(answer));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("checkSecurityHint", login); //$NON-NLS-1$
@@ -144,9 +156,14 @@ public class TadpoleSystem_UserQuery {
 			throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
 		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
 			throw new Exception("Manager is being processed.\r\nPlease contact us."); //$NON-NLS-1$
-		} 
-	
-		return userInfo;
+		} else {
+			if(question.equals(CipherManager.getInstance().decryption(userInfo.getSecurity_question())) &&
+					answer.equals(CipherManager.getInstance().decryption(userInfo.getSecurity_answer())) ) {
+				return userInfo;
+			} else {
+				throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
+			}
+		}
 	}
 	
 	/**
@@ -221,8 +238,17 @@ public class TadpoleSystem_UserQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
 	}
-	
+
+	/**
+	 * 사용자 힌트 변경
+	 * 
+	 * @param user
+	 * @throws Exception
+	 */
 	public static void updateUserSecurityHint(UserDAO user) throws Exception {
+		user.setSecurity_question(CipherManager.getInstance().encryption(user.getSecurity_question()));
+		user.setSecurity_answer(CipherManager.getInstance().encryption(user.getSecurity_answer()));
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserSecurityHint", user); //$NON-NLS-1$
 	}
