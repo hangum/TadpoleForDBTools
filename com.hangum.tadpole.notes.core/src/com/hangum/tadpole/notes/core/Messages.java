@@ -36,6 +36,10 @@ public class Messages extends NLS {
 	public static String ViewDialog_5;
 	public static String ViewDialog_6;
 	public static String ViewDialog_7;
+	public static String NoteListViewPart_lblStart_text;
+	public static String NoteListViewPart_lblEnd_text;
+	public static String NoteListViewPart_lblStart_text_1;
+	public static String NoteListViewPart_label_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

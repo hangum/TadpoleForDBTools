@@ -747,7 +747,8 @@ SELECT
 		</isEqual>
 		AND title like #strTitle#
 	</dynamic>
-		AND delyn = 'NO'
+		AND delyn = 'NO' 
+<![CDATA[		AND create_time >= #startDate# AND create_time <= #endDate# ]]>	 
 	ORDER BY create_time DESC
 </select>
 

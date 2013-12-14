@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.notes.core.views.list;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -35,6 +36,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -68,6 +70,9 @@ public class NoteListViewPart extends ViewPart {
 	private TableViewer tableViewer;
 	private Text textFilter;
 	private Combo comboRead;
+	
+	private DateTime dateTimeStart;
+	private DateTime dateTimeEnd;
 	
 	public NoteListViewPart() {
 		super();
@@ -186,7 +191,7 @@ public class NoteListViewPart extends ViewPart {
 		comboRead.add(Messages.NoteListViewPart_11);
 		comboRead.setData(Messages.NoteListViewPart_11, "Not yet Read");
 		
-		comboRead.select(1);
+		comboRead.select(0);
 		
 		new Label(compositeBody, SWT.NONE);
 		
@@ -200,6 +205,25 @@ public class NoteListViewPart extends ViewPart {
 			}
 		});
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Composite compositeDate = new Composite(compositeBody, SWT.NONE);
+		compositeDate.setLayout(new GridLayout(4, false));
+		compositeDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		
+		Label lblStart = new Label(compositeDate, SWT.NONE);
+		lblStart.setText(Messages.NoteListViewPart_lblStart_text_1);
+		
+		dateTimeStart = new DateTime(compositeDate, SWT.BORDER);
+		
+		// 일주일전 시간을 얻는다.
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000));
+		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		Label label = new Label(compositeDate, SWT.NONE);
+		label.setText(Messages.NoteListViewPart_label_text);
+		
+		dateTimeEnd = new DateTime(compositeDate, SWT.BORDER);
 		
 		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -242,7 +266,16 @@ public class NoteListViewPart extends ViewPart {
 			String selComboType = comboTypes.getData(comboTypes.getText()).toString();
 			String selComboRead = comboRead.getData(comboRead.getText()).toString();
 			
-			List<NotesDAO> listNotes = TadpoleSystem_Notes.getNoteList(SessionManager.getSeq(), selComboType, selComboRead, textFilter.getText());
+			Calendar calendarStart = Calendar.getInstance();
+			calendarStart.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
+			
+			Calendar calendarEnd = Calendar.getInstance();
+			calendarEnd.set(dateTimeEnd.getYear(), dateTimeEnd.getMonth(), dateTimeEnd.getDay(), 23, 59, 59);
+			
+			List<NotesDAO> listNotes = TadpoleSystem_Notes.getNoteList(SessionManager.getSeq(), selComboType, 
+							selComboRead, textFilter.getText(),
+							calendarStart.getTime(), calendarEnd.getTime()
+					);
 			tableViewer.setInput(listNotes);
 		} catch(Exception e) {
 			logger.error("Get note list", e); //$NON-NLS-1$
