@@ -63,6 +63,8 @@ public class PublicTadpoleDefine {
 	
 	/** change resource save */
 	public static final String SAVE_FILE = "CHANGE_TADPOLE_RESOURE"; //$NON-NLS-1$
+	/** change add new db */
+	public static final String ADD_DB = "CHANGE_TADPOLE_ADD_DB";
 	
 	/** erd - select table */
 	public static final String SELECT_ERD_TABLE = "SELECT_ERD_TABLE_RESOURE"; //$NON-NLS-1$

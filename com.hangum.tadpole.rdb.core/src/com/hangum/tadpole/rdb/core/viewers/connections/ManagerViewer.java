@@ -162,6 +162,8 @@ public class ManagerViewer extends ViewPart {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty() ==  PublicTadpoleDefine.SAVE_FILE) {
 					addResource(Integer.parseInt( event.getNewValue().toString().split(":")[0] )); //$NON-NLS-1$
+				} else if (event.getProperty() ==  PublicTadpoleDefine.ADD_DB) {
+					init();
 				}
 			}
 		});
