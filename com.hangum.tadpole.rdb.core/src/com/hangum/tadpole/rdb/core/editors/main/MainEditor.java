@@ -1778,7 +1778,7 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public void setFocus() {
-		setOrionTextFocus();
+		if(isFirstLoad) setOrionTextFocus();
 	}
 	
 	/**
