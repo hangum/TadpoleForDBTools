@@ -64,6 +64,7 @@ public abstract class HiveBaseResultSet implements ResultSet {
   protected TRow row;
   protected List<String> columnNames;
   protected List<String> columnTypes;
+  protected List<JdbcColumnAttributes> columnAttributes;
 
   private TableSchema schema;
 
@@ -224,13 +225,20 @@ public abstract class HiveBaseResultSet implements ResultSet {
     if (obj == null) {
       return null;
     }
-
+    if (obj instanceof Date) {
+      return (Date) obj;
+    }
     try {
-      return Date.valueOf((String) obj);
+      if (obj instanceof String) {
+        return Date.valueOf((String)obj);
+      }
     } catch (Exception e) {
       throw new SQLException("Cannot convert column " + columnIndex
-              + " to date: " + e.toString());
+              + " to date: " + e.toString(), e);
     }
+    // If we fell through to here this is not a valid type conversion
+    throw new SQLException("Cannot convert column " + columnIndex
+        + " to date: Illegal conversion");
   }
 
   public Date getDate(String columnName) throws SQLException {
@@ -258,7 +266,7 @@ public abstract class HiveBaseResultSet implements ResultSet {
       throw new Exception("Illegal conversion");
     } catch (Exception e) {
       throw new SQLException("Cannot convert column " + columnIndex
-              + " to double: " + e.toString());
+              + " to double: " + e.toString(), e);
     }
   }
 
@@ -287,7 +295,7 @@ public abstract class HiveBaseResultSet implements ResultSet {
       throw new Exception("Illegal conversion");
     } catch (Exception e) {
       throw new SQLException("Cannot convert column " + columnIndex
-              + " to float: " + e.toString());
+              + " to float: " + e.toString(), e);
     }
   }
 
@@ -311,7 +319,9 @@ public abstract class HiveBaseResultSet implements ResultSet {
       }
       throw new Exception("Illegal conversion");
     } catch (Exception e) {
-      throw new SQLException("Cannot convert column " + columnIndex + " to integer" + e.toString());
+      throw new SQLException(
+          "Cannot convert column " + columnIndex + " to integer" + e.toString(),
+          e);
     }
   }
 
@@ -331,7 +341,9 @@ public abstract class HiveBaseResultSet implements ResultSet {
       }
       throw new Exception("Illegal conversion");
     } catch (Exception e) {
-      throw new SQLException("Cannot convert column " + columnIndex + " to long: " + e.toString());
+      throw new SQLException(
+          "Cannot convert column " + columnIndex + " to long: " + e.toString(),
+          e);
     }
   }
 
@@ -340,7 +352,7 @@ public abstract class HiveBaseResultSet implements ResultSet {
   }
 
   public ResultSetMetaData getMetaData() throws SQLException {
-    return new HiveResultSetMetaData(columnNames, columnTypes);
+    return new HiveResultSetMetaData(columnNames, columnTypes, columnAttributes);
   }
 
   public Reader getNCharacterStream(int arg0) throws SQLException {
@@ -430,6 +442,15 @@ public abstract class HiveBaseResultSet implements ResultSet {
     return null;
   }
 
+  private Date getDateValue(TStringValue tStringValue) {
+    if (tStringValue.isSetValue()) {
+      wasNull = false;
+      return Date.valueOf(tStringValue.getValue());
+    }
+    wasNull = true;
+    return null;
+  }
+
   private Timestamp getTimestampValue(TStringValue tStringValue) {
     if (tStringValue.isSetValue()) {
       wasNull = false;
@@ -489,12 +510,19 @@ public abstract class HiveBaseResultSet implements ResultSet {
       return getDoubleValue(tColumnValue.getDoubleVal());
     case STRING_TYPE:
       return getStringValue(tColumnValue.getStringVal());
+    case VARCHAR_TYPE:
+      return getStringValue(tColumnValue.getStringVal());
     case BINARY_TYPE:
       return getBinaryValue(tColumnValue.getStringVal());
+    case DATE_TYPE:
+      return getDateValue(tColumnValue.getStringVal());
     case TIMESTAMP_TYPE:
       return getTimestampValue(tColumnValue.getStringVal());
     case DECIMAL_TYPE:
       return getBigDecimalValue(tColumnValue.getStringVal());
+    case NULL_TYPE:
+      wasNull = true;
+      return null;
     default:
       throw new SQLException("Unrecognized column type:" + columnType);
     }
@@ -578,7 +606,7 @@ public abstract class HiveBaseResultSet implements ResultSet {
       throw new Exception("Illegal conversion");
     } catch (Exception e) {
       throw new SQLException("Cannot convert column " + columnIndex
-              + " to short: " + e.toString());
+              + " to short: " + e.toString(), e);
     }
   }
 
