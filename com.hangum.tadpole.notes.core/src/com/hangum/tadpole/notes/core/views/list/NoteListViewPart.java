@@ -274,7 +274,7 @@ public class NoteListViewPart extends ViewPart {
 			
 			List<NotesDAO> listNotes = TadpoleSystem_Notes.getNoteList(SessionManager.getSeq(), selComboType, 
 							selComboRead, textFilter.getText(),
-							calendarStart.getTime(), calendarEnd.getTime()
+							new java.sql.Date(calendarStart.getTimeInMillis()), new java.sql.Date(calendarEnd.getTimeInMillis())
 					);
 			tableViewer.setInput(listNotes);
 		} catch(Exception e) {

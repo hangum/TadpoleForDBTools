@@ -96,7 +96,7 @@ public class TadpoleSystem_Notes {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<NotesDAO> getNoteList(int userSeq, String types, String strRead, String strTitle, java.util.Date startDate, java.util.Date endDate) throws Exception {
+	public static List<NotesDAO> getNoteList(int userSeq, String types, String strRead, String strTitle, java.sql.Date startDate, java.sql.Date endDate) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		Map<String, Object> mapParam = new HashMap<String, Object>();
