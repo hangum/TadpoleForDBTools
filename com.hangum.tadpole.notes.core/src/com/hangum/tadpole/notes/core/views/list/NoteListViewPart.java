@@ -302,7 +302,7 @@ public class NoteListViewPart extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		tableViewer.getTable().setFocus();
+		textFilter.setFocus();
 	}
 
 }
