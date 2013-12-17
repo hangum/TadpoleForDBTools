@@ -267,7 +267,7 @@ public class MainEditor extends EditorExtension {
 		parent.setLayout(gl_parent);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-		sashForm.setSashWidth(1);
+		sashForm.setSashWidth(4);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		final Composite compositeEditor = new Composite(sashForm, SWT.NONE);
@@ -1509,14 +1509,14 @@ public class MainEditor extends EditorExtension {
 				
 				statement = javaConn.createStatement();
 				
-				final String checkSQL = sqlQuery.trim().toUpperCase();
-				
 				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
 				if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					final String checkSQL = sqlQuery.trim().toUpperCase();
 					if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
 						sqlQuery = StringUtils.replaceOnce(sqlQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+					final String checkSQL = sqlQuery.trim().toUpperCase();
 					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
 						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
 						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
@@ -1555,7 +1555,7 @@ public class MainEditor extends EditorExtension {
 				net.sf.jsqlparser.statement.Statement stmt = CCJSqlParserUtil.parse(sqlQuery);
 				if(stmt instanceof Alter || stmt instanceof CreateTable || stmt instanceof Drop) refreshExplorerView();
 			} catch(Exception e) {
-				logger.error("CREATE, DROP, ALTER Query refersh error", e); //$NON-NLS-1$
+				logger.error("CREATE, DROP, ALTER Query refersh error" + sqlQuery); //$NON-NLS-1$
 			}
 //		}
 	}
@@ -1778,7 +1778,7 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public void setFocus() {
-		setOrionTextFocus();
+		if(!isFirstLoad) setOrionTextFocus();
 	}
 	
 	/**

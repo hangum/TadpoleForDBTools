@@ -39,7 +39,6 @@ public class TadpoleSystemCommons {
 		if(logger.isDebugEnabled()) logger.debug("[executeSQL]" + selText);
 		
 		java.sql.Connection javaConn = null;
-		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();

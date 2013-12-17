@@ -98,7 +98,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 */
 	protected void setOrionTextFocus() {
 		try {
-			browserEvaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SET_FOCUS_FUNCTION);
+			browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SET_FOCUS_FUNCTION);
 		} catch(Exception e) {
 			// ignore exception
 		}

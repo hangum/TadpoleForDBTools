@@ -26,11 +26,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -228,13 +229,7 @@ public class DBLoginDialog extends Dialog {
 			}
 		} else if(ADD_NEW_CONNECTION_ID == buttonId) {
 			if(addDB()) {
-				final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-				super.getShell().getDisplay().getCurrent().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						managerView.init();
-					}
-				});	// end display
+				PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.ADD_DB, ""+retuserDb.getSeq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				
 				MessageDialog.openInformation(null, "Confirm", Messages.DBLoginDialog_47); //$NON-NLS-1$
 			}

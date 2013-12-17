@@ -450,40 +450,51 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
-					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-						if(DBDefine.getDBDefine(userDB) != DBDefine.HIVE_DEFAULT) manager.add(creatAction_Table);
-						manager.add(deleteAction_Table);
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					}	
-					
-					manager.add(refreshAction_Table);
-
-					// 현재는 oracle db만 데이터 수정 모드..
-					if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-						manager.add(generateSampleData);
-					}
-					
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(selectDMLAction);
-
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(selectStmtAction);
-					
-					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-						manager.add(insertStmtAction);
+					// hive & tajo
+					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+							manager.add(creatAction_Table);
+							manager.add(deleteAction_Table);
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						}	
 						
-						if(DBDefine.getDBDefine(userDB) != DBDefine.HIVE_DEFAULT) {
+						manager.add(refreshAction_Table);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(selectStmtAction);
+					// others rdb
+					} else {
+						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+							manager.add(creatAction_Table);
+							manager.add(deleteAction_Table);
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						}	
+						
+						manager.add(refreshAction_Table);
+	
+						// 현재는 oracle db만 데이터 수정 모드..
+						if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							manager.add(generateSampleData);
+						}
+						
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(selectDMLAction);
+	
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(selectStmtAction);
+						
+						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+							manager.add(insertStmtAction);
 							manager.add(updateStmtAction);
 							manager.add(deleteStmtAction);
-
+	
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(viewDDLAction);
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(tableDataEditorAction);
 						}
-					}
-				}
+					}	// if rdb
+				}	// if hive and tajo
 			}
 		});
 

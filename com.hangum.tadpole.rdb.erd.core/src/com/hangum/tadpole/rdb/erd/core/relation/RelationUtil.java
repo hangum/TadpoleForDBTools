@@ -71,6 +71,8 @@ public class RelationUtil {
 		
 		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, new ArrayList<ReferencedTableDAO>());
+		// tajo relation not set
+		} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			
 		} else {
 		
@@ -97,6 +99,7 @@ public class RelationUtil {
 			
 		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, new ArrayList<ReferencedTableDAO>());
+		} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			
 		} else {
 			calRelation(userDB, mapDBTables, db, getReferenceTable(userDB));
