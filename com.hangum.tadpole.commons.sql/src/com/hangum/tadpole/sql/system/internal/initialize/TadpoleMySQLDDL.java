@@ -90,6 +90,14 @@ public class TadpoleMySQLDDL extends NLS {
 	public static String user_info_data_seq;
 	public static String user_role_seq;
 	
+	public static String notes;
+	public static String notes_fk_receiver;
+	public static String notes_fk_sender;
+	public static String notes_pk;
+	
+	public static String notes_detail;
+	public static String notes_detail_fk;
+	public static String notes_detail_pk;
 	
 
 	static {
