@@ -29,4 +29,49 @@
 		WHERE  table_name = 'tadpole_system'
 	</select>
 	
+	<!-- 
+	=========================================================================================================
+	notes 정보.
+	=========================================================================================================
+ 	-->
+	<select id="findNotes" resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO" parameterClass="java.util.Map">
+		SELECT 
+			seq,
+		    types,
+		    sender_seq,
+			(select email from user
+			where  seq = sender_seq) sendUserId,
+		    receiver_seq,
+		    (select email from user
+			where  seq = receiver_seq) receiveUserId,
+			title,
+		    sender_date,
+		    receiver_date,
+		    is_read,
+		    sender_delyn,
+		    receiver_delyn,
+		    create_time,
+		    delyn  
+		FROM notes
+		<dynamic prepend="WHERE">
+			<isEqual prepend="AND" property="types" compareValue="Send">
+				sender_seq = #userSeq#
+			</isEqual>
+			<isEqual prepend="AND" property="types" compareValue="Receive">
+				receiver_seq = #userSeq#
+			</isEqual>
+			<isEqual prepend="AND" property="strRead" compareValue="Not yet Read">
+				is_read = 'NO'
+			</isEqual>
+			<isEqual prepend="AND" property="strRead" compareValue="Read">
+				is_read = 'YES'
+			</isEqual>
+			AND title like #strTitle#
+		</dynamic>
+			AND delyn = 'NO' 
+			<![CDATA[ 
+			 AND (sender_date between #startDate# AND  #endDate#)
+			 ]]>	 
+		ORDER BY create_time DESC
+	</select>
 </sqlMap>
