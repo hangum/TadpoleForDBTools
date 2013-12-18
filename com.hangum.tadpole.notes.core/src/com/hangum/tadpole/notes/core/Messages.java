@@ -40,6 +40,7 @@ public class Messages extends NLS {
 	public static String NoteListViewPart_lblEnd_text;
 	public static String NoteListViewPart_lblStart_text_1;
 	public static String NoteListViewPart_label_text;
+	public static String NoteListViewPart_button_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

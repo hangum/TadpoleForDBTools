@@ -55,6 +55,7 @@ import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
 import com.swtdesigner.ResourceManager;
+import org.eclipse.swt.widgets.Button;
 
 /**
  * Notes
@@ -207,7 +208,7 @@ public class NoteListViewPart extends ViewPart {
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Composite compositeDate = new Composite(compositeBody, SWT.NONE);
-		compositeDate.setLayout(new GridLayout(4, false));
+		compositeDate.setLayout(new GridLayout(5, false));
 		compositeDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
 		
 		Label lblStart = new Label(compositeDate, SWT.NONE);
@@ -224,6 +225,15 @@ public class NoteListViewPart extends ViewPart {
 		label.setText(Messages.NoteListViewPart_label_text);
 		
 		dateTimeEnd = new DateTime(compositeDate, SWT.BORDER);
+		
+		Button buttonSearch = new Button(compositeDate, SWT.NONE);
+		buttonSearch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initData();
+			}
+		});
+		buttonSearch.setText(Messages.NoteListViewPart_button_text);
 		
 		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {

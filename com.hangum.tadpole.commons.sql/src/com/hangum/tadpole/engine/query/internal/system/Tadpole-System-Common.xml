@@ -748,7 +748,7 @@ SELECT
 		AND title like #strTitle#
 	</dynamic>
 		AND delyn = 'NO' 
-<![CDATA[		AND create_time >= #startDate# AND create_time <= #endDate# ]]>	 
+		<![CDATA[ AND strftime('%Y%m%d',create_time) BETWEEN strftime('%Y%m%d','$startDate$') AND strftime('%Y%m%d','$endDate$')  ]]>	 
 	ORDER BY create_time DESC
 </select>
 
