@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * ResultSet utils
  * 
@@ -58,12 +60,12 @@ public class ResultSetUtils {
 						if(isPretty) { 
 							tmpRow.put(i, prettyData(type, obj));
 						}else{
-							tmpRow.put(i, obj);
+							tmpRow.put(i, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 						}
 					}else if (RDBTypeToJavaTypeUtils.isCharType(type)){
-						tmpRow.put(i, obj == null?"":obj);
+						tmpRow.put(i, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 					}else {
-						tmpRow.put(i, obj);					
+						tmpRow.put(i, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 //						logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
 					}
 				} catch(Exception e) {
