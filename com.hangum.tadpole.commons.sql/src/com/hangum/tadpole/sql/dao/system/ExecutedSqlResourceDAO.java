@@ -33,8 +33,17 @@ public class ExecutedSqlResourceDAO {
 
      Date create_time;
      String delYn;
+     String ipAddress;
      
 	public ExecutedSqlResourceDAO() {
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 
 	/**
