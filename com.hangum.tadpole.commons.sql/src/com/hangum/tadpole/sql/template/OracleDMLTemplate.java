@@ -22,7 +22,7 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 	public static final String TMP_GET_PARTDATA = "select * from (%s) where ROWNUM > %s and ROWNUM <= %s";
 
 	// plan_table	
-	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN PLAN INTO " + PublicTadpoleDefine.DELIMITER + " FOR ";
+	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN PLAN set statement_id = '" + PublicTadpoleDefine.STATEMENT_ID + "' INTO " + PublicTadpoleDefine.DELIMITER + " FOR ";
 
 	/** procedure */
 	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE or replace PROCEDURE simpleproc2 (param1 out INT) " + PublicTadpoleDefine.LINE_SEPARATOR +

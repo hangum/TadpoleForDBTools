@@ -55,6 +55,10 @@ public class PermissionChecker {
 	public static boolean isExecute(String strUserType, UserDBDAO userDB, String strSQL) {
 		boolean boolReturn = false;
 		
+		if(SQLUtil.isNotAllowed(strSQL)) {
+			return false;
+		}
+		
 		DBOperationType opType = DBOperationType.valueOf(userDB.getOperation_type());
 		
 		// 디비권한이 read only connection 옵션이 선택되었으면 statement문만 권한을 허락합니다.

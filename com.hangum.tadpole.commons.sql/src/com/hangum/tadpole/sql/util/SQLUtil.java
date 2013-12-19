@@ -54,6 +54,54 @@ public class SQLUtil {
 	private static final String PATTERN_EXECUTE_CREATE = "^CREATE.*|^DECLARE.*";
 	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE + PATTERN_EXECUTE_UPDATE + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
+
+	private static final String PATTERN_COMMENT = "/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/";
+	private static final String PATTERN_COMMENT2 = "(--.*)|(//.*)";
+	
+	/** 허용되지 않는 sql 정의 */
+	private static final String[] NOT_ALLOWED_SQL = {
+		/* MSSQL- USE DATABASE명 */
+		"USE"
+		};
+	
+	/**
+	 * remove comment
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static String removeComment(String strSQL) {
+		if(null == strSQL) return "";
+		
+		String retStr = strSQL.replaceAll(PATTERN_COMMENT, "");
+		retStr = retStr.replaceAll(PATTERN_COMMENT2, "");
+		
+		return retStr;
+	}
+	
+	/**
+	 * 쿼리중에 허용하지 않는 쿼리 목록.
+	 * 쿼리문 위에 주석을 빼야... -- / ** * / / * * /
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static boolean isNotAllowed(String strSQL) {
+		boolean isRet = false;
+		strSQL = removeComment(strSQL);
+
+		String cmpSql = StringUtils.trim(strSQL);
+		
+		for (String strNAllSQL : NOT_ALLOWED_SQL) {
+			if(StringUtils.startsWith(cmpSql.toLowerCase(), strNAllSQL.toLowerCase())) {
+				return true;
+			}
+		}
+		
+		return isRet;
+	}
+	
+	
 	/**
 	 * 쿼리의 패턴이 <code>PATTERN_STATEMENT</code>인지?
 	 * 
@@ -62,6 +110,8 @@ public class SQLUtil {
 	 */
 	public static boolean isStatement(String strSQL) {
 		boolean isStatement = false;
+		
+		strSQL = removeComment(strSQL);
 		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
 			return true;
 		} else {
@@ -71,7 +121,7 @@ public class SQLUtil {
 				
 				if(statement instanceof Select) return true;
 			} catch(Exception e) {
-				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]", e);
+				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
 			}
 		}
 		
@@ -143,38 +193,6 @@ public class SQLUtil {
 		
 		return exeSQL;
 	}
-	
-//	/**
-//	 * 쿼리중에 주석을 제거합니다.
-//	 * 
-//	 * @param sql
-//	 * @param comment
-//	 * @return
-//	 */
-//	private static String delComment(String sql, String comment) {
-//		try {
-//			String[] linesSQL = sql.split("\n");
-//			if(linesSQL.length > 0) {
-//				StringBuffer tmpSQL = new StringBuffer();
-//				for (String string : linesSQL) {
-//					int idx = string.indexOf(comment);//"--");
-//					if( idx == 0) {
-//					} else if( idx > 0) {
-//						tmpSQL.append(string.substring(0, idx-1)).append("\n");
-//					} else {
-//						tmpSQL.append(string).append("\n");
-//					}
-//				}
-//				
-//				return tmpSQL.toString();
-//			}
-//			
-//		} catch(Exception e) {
-//			logger.error("execute sql", e);
-//		}
-//	
-//		return sql;
-//	}
 	
 	/**
 	 * db resource data를 저장할때 2000byte 단위로 저장하도록 합니다.

@@ -21,12 +21,14 @@ import org.eclipse.core.runtime.Status;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -55,8 +57,13 @@ public class GenerateDDLScriptUtils {
 			parameter.put("db", userDB.getDb());
 			parameter.put("table", tableDAO.getName());
 			
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
+			List<TableColumnDAO> showTableColumns = null;
+			if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
+			} else {
+				showTableColumns = TajoConnectionManager.tableColumnList(userDB, parameter);
+			}
 			
 			sbSQL.append(" SELECT "); //$NON-NLS-1$
 			for (int i=0; i<showTableColumns.size(); i++) {

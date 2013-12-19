@@ -20,12 +20,18 @@ import com.hangum.tadpold.commons.libs.core.Messages;
  */
 public class PublicTadpoleDefine {
 	/**
+	 * PLAN Statement ID
+	 */
+	public static String STATEMENT_ID = "||TADPOLE-STATEMENT_ID||"; //$NON-NLS-1$
+
+	/**
 	 * 분리자
 	 */
 	public static String DELIMITER = "||TADPOLE-DELIMITER||"; //$NON-NLS-1$
 	
 	/** 라인분리자 */
 	public static String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$
+	public static String DOUBLE_LINE_SEPARATOR = LINE_SEPARATOR + LINE_SEPARATOR;
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DILIMITER = ";"; //$NON-NLS-1$
@@ -46,8 +52,8 @@ public class PublicTadpoleDefine {
 	/** 외부 계정으로 올챙이가 접속 할때의 외부 계정 리스트. 현재는 external_account 의 type에 사용. */
 	public enum EXTERNAL_ACCOUNT {AMAZONRDS};
 	
-//	/** 올챙이가 지원 하는 디비 타입을 정의 합니다  */
-//	public enum DB_TYPE {DB, NOSQL};
+	/** NULL VALUE */
+	public static final String DEFINE_NULL_VALUE = "{null}";
 
 	/** yes, no */
 	public static enum YES_NO {YES, NO}; 
@@ -57,6 +63,8 @@ public class PublicTadpoleDefine {
 	
 	/** change resource save */
 	public static final String SAVE_FILE = "CHANGE_TADPOLE_RESOURE"; //$NON-NLS-1$
+	/** change add new db */
+	public static final String ADD_DB = "CHANGE_TADPOLE_ADD_DB";
 	
 	/** erd - select table */
 	public static final String SELECT_ERD_TABLE = "SELECT_ERD_TABLE_RESOURE"; //$NON-NLS-1$
@@ -86,6 +94,7 @@ public class PublicTadpoleDefine {
 	public static enum DB_ACTION {
 		TABLES, 
 		VIEWS, 
+		SYNONYM,
 		INDEXES, 
 		PROCEDURES,
 		PROCEDURE_PARAMETER,
@@ -106,34 +115,81 @@ public class PublicTadpoleDefine {
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
 	
 	/** 디비들의 키 이름을 정의합니다 */
-	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
+//	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
+	
+	public static String[] DB_PRIMARY_KEY = {
+											"PRI", 
+											"PK", 
+											"PRIMARY KEY",	// pgsql
+											};
+	
+	public static String[] DB_FOREIGN_KEY = {
+											"FK", 
+											"FOREIGN KEY",	// pgsql
+											};
+	
+	public static String[] DB_MULTI_KEY = {
+											"MUL",
+											"PRIMARY KEY,FOREIGN KEY"	// pgsql
+										};
+	
+	
+	
+	/**
+	 * is primary key
+	 * @param key
+	 * @return
+	 */
 	public static boolean isPK(String key) {
-		if(DB_KEY.PRI.toString().equalsIgnoreCase(key)) return true;
-		if(DB_KEY.PK.toString().equalsIgnoreCase(key)) return true;
+		for(String searchKey : DB_PRIMARY_KEY) {
+			if(searchKey.equalsIgnoreCase(key)) return true;
+		}
 		
 		return false;
 	}
+	
+	/**
+	 * is foreign key
+	 * @param key
+	 * @return
+	 */
 	public static boolean isFK(String key) {
-		if(DB_KEY.FK.toString().equalsIgnoreCase(key)) return true;
+		for(String searchKey : DB_FOREIGN_KEY) {
+			if(searchKey.equalsIgnoreCase(key)) return true;
+		}
+		
 		return false;
 	}
+	
+	/**
+	 * is multi key
+	 * @param key
+	 * @return
+	 */
 	public static boolean isMUL(String key) {
-		if(DB_KEY.MUL.toString().equalsIgnoreCase(key)) return true;
+		for(String searchKey : DB_MULTI_KEY) {
+			if(searchKey.equalsIgnoreCase(key)) return true;
+		}
+		
 		return false;
 	}
+	/**
+	 * is key
+	 * @param key
+	 * @return
+	 */
 	public static boolean isKEY(String key) {
 		return isKEY(key, YES_NO.NO.toString());
 	}
 	public static boolean isKEY(String key, String isNull) {
-		for(DB_KEY dbKEY : DB_KEY.values()) {
-			if(dbKEY.toString().equalsIgnoreCase(key)) {
-				// 컬럼이 null허용이면 false
-				if("YES".equals(isNull)) return false; //$NON-NLS-1$
-				return true;
-			}
-		}
+		boolean isReturn = true;
+
+		// 컬럼이 null허용이면 false
+		if(isPK(key)) if("YES".equals(isNull)) return false; //$NON-NLS-1$
+		if(isFK(key)) if("YES".equals(isNull)) return false; //$NON-NLS-1$
+		if(isMUL(key)) if("YES".equals(isNull)) return false; //$NON-NLS-1$
 		
-		return false;
+		return isReturn;
 	}
 	
 	/**
@@ -144,15 +200,14 @@ public class PublicTadpoleDefine {
 	 *
 	 */
 	public enum SecurityHint {
-		QUESTION0("", 0), 
-		QUESTION1(Messages.PublicTadpoleDefine_0, 1), 
-		QUESTION2(Messages.PublicTadpoleDefine_1, 2), 
-		QUESTION3(Messages.PublicTadpoleDefine_2, 3), 
-		QUESTION4(Messages.PublicTadpoleDefine_3, 4),
-		QUESTION5(Messages.PublicTadpoleDefine_4, 5),
-		QUESTION6(Messages.PublicTadpoleDefine_5, 6),
-		QUESTION7(Messages.PublicTadpoleDefine_6, 7), 
-		QUESTION8(Messages.PublicTadpoleDefine_7, 8);
+		QUESTION1(Messages.PublicTadpoleDefine_0, 0), 
+		QUESTION2(Messages.PublicTadpoleDefine_1, 1), 
+		QUESTION3(Messages.PublicTadpoleDefine_2, 2), 
+		QUESTION4(Messages.PublicTadpoleDefine_3, 3),
+		QUESTION5(Messages.PublicTadpoleDefine_4, 4),
+		QUESTION6(Messages.PublicTadpoleDefine_5, 5),
+		QUESTION7(Messages.PublicTadpoleDefine_6, 6), 
+		QUESTION8(Messages.PublicTadpoleDefine_7, 7);
 		
 		private String value;
 		private int order;

@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpold.commons.libs.core.dao.KeyValueDAO;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
@@ -66,12 +67,12 @@ public class RDBInformationComposite extends Composite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvInformation, SWT.NONE);
 		TableColumn tblclmnName = tableViewerColumn.getColumn();
 		tblclmnName.setWidth(130);
-		tblclmnName.setText("Name");
+		tblclmnName.setText("Name"); //$NON-NLS-1$
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvInformation, SWT.NONE);
 		TableColumn tblclmnValue = tableViewerColumn_1.getColumn();
 		tblclmnValue.setWidth(300);
-		tblclmnValue.setText("Value");
+		tblclmnValue.setText("Value"); //$NON-NLS-1$
 		
 		tvInformation.setContentProvider(new ArrayContentProvider());
 		tvInformation.setLabelProvider(new RDBInformationLabelProvider());
@@ -85,30 +86,30 @@ public class RDBInformationComposite extends Composite {
 	private void initUI() {
 		listInfo = new ArrayList<KeyValueDAO>();
 		
-		listInfo.add(new KeyValueDAO("Operation type", 	userDB.getOperation_type()));
-		listInfo.add(new KeyValueDAO("Group Name", 		userDB.getGroup_name()));
-		listInfo.add(new KeyValueDAO("Display Name", 	userDB.getDisplay_name()));
+		listInfo.add(new KeyValueDAO("Operation type", 	userDB.getOperation_type())); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("Group Name", 		userDB.getGroup_name())); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("Display Name", 	userDB.getDisplay_name())); //$NON-NLS-1$
 		
-		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getShowUrl(SessionManager.getRepresentRole())));
+		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getShowUrl(SessionManager.getRepresentRole()))); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getShowHost(SessionManager.getRepresentRole()) + "/" + userDB.getShowPort(SessionManager.getRepresentRole())));
+			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getShowHost(SessionManager.getRepresentRole()) + "/" + userDB.getShowPort(SessionManager.getRepresentRole()))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		listInfo.add(new KeyValueDAO("Database", 		userDB.getShowDb(SessionManager.getRepresentRole())));
+		listInfo.add(new KeyValueDAO("Database", 		userDB.getShowDb(SessionManager.getRepresentRole()))); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("User",	 		userDB.getShowUsers(SessionManager.getRepresentRole())));
+			listInfo.add(new KeyValueDAO("User",	 		userDB.getShowUsers(SessionManager.getRepresentRole()))); //$NON-NLS-1$
 		}
 		
-		listInfo.add(new KeyValueDAO("Read Only", 		userDB.getIs_readOnlyConnect()));
-		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter()));
-		if("YES".equals(userDB.getIs_table_filter())) {
-			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include()));
-			listInfo.add(new KeyValueDAO("\tExclude Filter",	userDB.getTable_filter_exclude()));
+		listInfo.add(new KeyValueDAO("Read Only", 		userDB.getIs_readOnlyConnect())); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter())); //$NON-NLS-1$
+		if("YES".equals(userDB.getIs_table_filter())) { //$NON-NLS-1$
+			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include())); //$NON-NLS-1$
+			listInfo.add(new KeyValueDAO("\tExclude Filter",	userDB.getTable_filter_exclude())); //$NON-NLS-1$
 		}
 		// 몽고디비는 없으므로.. 
 		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
-			listInfo.add(new KeyValueDAO("Auto Commit",		userDB.getIs_autocommit()));
-			listInfo.add(new KeyValueDAO("Profile", 		userDB.getIs_profile()));
-			listInfo.add(new KeyValueDAO("Select문 이외 문자 실행시 묻기", 	userDB.getQuestion_dml()));
+			listInfo.add(new KeyValueDAO("Auto Commit",		userDB.getIs_autocommit())); //$NON-NLS-1$
+			listInfo.add(new KeyValueDAO("Profile", 		userDB.getIs_profile())); //$NON-NLS-1$
+			listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_17, 	userDB.getQuestion_dml()));
 		}
 	}
 
@@ -139,7 +140,7 @@ class RDBInformationLabelProvider extends LabelProvider implements ITableLabelPr
 		case 1: return dao.getValue();
 		}
 		
-		return "*** not set column ***";
+		return "*** not set column ***"; //$NON-NLS-1$
 	}
 	
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/sql/parser/jsqlparser-0.8.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sql/formatter/kry.sql.format_1.0.0.v20101023.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/sql/parser/jsqlparser-0.8.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/log4j/log4j-1.2.16.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/httpcomponents-client-4.1.1/httpclient-4.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/httpcomponents-client-4.1.1/httpcore-4.1.jar"/>

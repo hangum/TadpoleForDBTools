@@ -2,15 +2,15 @@ Tadpole DB Hub
 ==
 
 
-Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Apache Hive, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases. 
+Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases. 
 It enables you to handle typical DB over the World Wide Web
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1382070638265/home/TadpoleOverView.png?height=308&width=400)
+![screenshot](https://sites.google.com/site/tadpole10image/_/rsrc/1387452720774/commons/TadpoleDBHub-v1.2.0.png?height=309&width=400)
 
 1.RDB Feature
 -
-* Intuitive web interface (Safari, Chrome, IE 10, Firefox, Opera) recommended IE
+* Intuitive web interface (Safari, Chrome, IE 10, Firefox)
 * User Management (Admin, Manager, User)
-* Support Apache Hive, Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
+* Support Apache Hive, Apache Tajo, Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
 * Download query result 
 * SQL Syntax Highlighting
@@ -27,7 +27,7 @@ It enables you to handle typical DB over the World Wide Web
 
 2.MongoDB Feature
 -
-* Intuitive web interface (Safari, Chrome, IE, Firefox, Opera)
+* Intuitive web interface (Safari, Chrome, IE, Firefox)
 * User Management (Admin, Manager, User)
 * MongoDB User Management
 * Query View(Tree, Table, Text) 

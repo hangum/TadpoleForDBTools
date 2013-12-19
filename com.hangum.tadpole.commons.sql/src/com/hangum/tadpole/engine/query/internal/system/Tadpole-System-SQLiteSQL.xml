@@ -30,5 +30,69 @@
 			type = 'table' and 
 			name = 'tadpole_system'  
 	</select>
+	
+	<!-- 
+	=========================================================================================================
+	notes 정보.
+	=========================================================================================================
+ 	-->
+	<select id="findNotes" resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO" parameterClass="java.util.Map">
+		SELECT 
+			n.seq,
+		    n.types,
+		    n.sender_seq,
+			su.email as sendUserId,
+		    n.receiver_seq,
+		    ru.email as receiveUserId,
+			n.title,
+		    n.sender_date,
+		    n.receiver_date,
+		    n.is_read,
+		    n.sender_delyn,
+		    n.receiver_delyn,
+		    n.create_time,
+		    n.delyn  
+		FROM notes n
+			left join user su on su.seq = n.sender_seq
+			left join user ru on ru.seq = n.receiver_seq
+		<dynamic prepend="WHERE">
+			<isEqual prepend="AND" property="types" compareValue="Send">
+				n.sender_seq = #userSeq#
+			</isEqual>
+			<isEqual prepend="AND" property="types" compareValue="Receive">
+				n.receiver_seq = #userSeq#
+			</isEqual>
+			<isEqual prepend="AND" property="strRead" compareValue="Not yet Read">
+				n.is_read = 'NO'
+			</isEqual>
+			<isEqual prepend="AND" property="strRead" compareValue="Read">
+				n.is_read = 'YES'
+			</isEqual>
+			<isNotEmpty prepend="AND" property="strTitle" >
+				n.title like #strTitle#
+			</isNotEmpty>			
+		</dynamic>
+			AND n.delyn = 'NO' 
+			AND n.sender_date BETWEEN Datetime('$startDate$') AND Datetime('$endDate$') 	 
+		ORDER BY n.create_time DESC
+	</select>
 
+	<!-- 
+		note insert
+	 -->
+	<insert id="noteInsert" parameterClass="com.hangum.tadpole.sql.dao.system.NotesDAO">
+		 INSERT INTO notes (types, sender_seq, receiver_seq, sender_date, title, create_time) 
+	 	VALUES 
+	 	(#types#, #sender_seq#, #receiver_seq#, datetime('$sender_date$', 'localtime'), #title#, datetime('now', 'localtime') ) 
+		
+		<selectKey resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO">
+			SELECT * 
+			FROM notes 
+			WHERE types 		= #types#  
+			 AND sender_seq 	= #sender_seq#  
+			 AND receiver_seq 	= #receiver_seq#  
+			 AND sender_date 	= datetime('$sender_date$', 'localtime')
+			 AND title 			= #title#
+		</selectKey>
+	</insert>	
 </sqlMap>

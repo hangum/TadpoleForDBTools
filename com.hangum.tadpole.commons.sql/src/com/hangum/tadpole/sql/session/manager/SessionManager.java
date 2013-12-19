@@ -118,8 +118,10 @@ public class SessionManager {
 					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepDBARole = PublicTadpoleDefine.USER_TYPE.DBA.toString();
+					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepUserRole = PublicTadpoleDefine.USER_TYPE.USER.toString();
+					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				}
 				
 				strGroupSeqs += userRoleDAO.getGroup_seq() + ",";
