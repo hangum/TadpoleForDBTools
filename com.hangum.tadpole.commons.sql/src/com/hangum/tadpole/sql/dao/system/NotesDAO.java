@@ -96,8 +96,8 @@ public class NotesDAO {
 		return sender_date;
 	}
 
-	public void setSender_date(Date sender_date) {
-		this.sender_date = sender_date;
+	public void setSender_date(Date date) {
+		this.sender_date = date;
 	}
 
 	public Date getReceiver_date() {
