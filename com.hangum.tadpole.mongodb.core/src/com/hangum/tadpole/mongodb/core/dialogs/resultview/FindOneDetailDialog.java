@@ -105,6 +105,7 @@ public class FindOneDetailDialog extends Dialog {
 	
 	private void initData() {
 		textColName.setText(collectionName);
+		textColName.setFocus();
 	}
 	/**
 	 * Create contents of the button bar.

@@ -283,11 +283,24 @@ public class ManagerViewer extends ViewPart {
 			// user_resource_data 목록을 추가해 줍니다.
 			try {
 				List<UserDBResourceDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
-				if(null != listUserDBResources) {
+				if(!listUserDBResources.isEmpty()) {
+					
+					List<UserDBResourceDAO> listRealResource = new ArrayList<UserDBResourceDAO>();
 					for (UserDBResourceDAO userDBResourceDAO : listUserDBResources) {
-						userDBResourceDAO.setParent(userDB);
+						if(PublicTadpoleDefine.SHARED_TYPE.PUBLIC.toString().equals(userDBResourceDAO.getShared_type())) {
+							userDBResourceDAO.setParent(userDB);
+							listRealResource.add(userDBResourceDAO);
+						} else {
+							
+							// 리소스 중에서 개인 리소스만 넣도록 합니다.
+							if(SessionManager.getSeq() == userDBResourceDAO.getUser_seq()) {
+								userDBResourceDAO.setParent(userDB);
+								listRealResource.add(userDBResourceDAO);
+							}
+						}
 					}
-					userDB.setListUserDBErd(listUserDBResources);
+					
+					userDB.setListUserDBErd(listRealResource);
 					managerTV.expandToLevel(userDB, 3);
 				}
 				

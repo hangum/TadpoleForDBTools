@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.system;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -20,6 +22,7 @@ import com.hangum.tadpole.sql.dao.ResourceManagerDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDataDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -106,8 +109,11 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws Exception
 	 */
 	public static List<UserDBResourceDAO> userDbErdTree(UserDBDAO userDB) throws Exception {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("seq", 		userDB.getSeq());
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (List<UserDBResourceDAO>)sqlClient.queryForList("userDbResourceTree", userDB); //$NON-NLS-1$
+		return (List<UserDBResourceDAO>)sqlClient.queryForList("userDbResourceTree", queryMap); //$NON-NLS-1$
 	}
 	
 	/**

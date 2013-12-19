@@ -472,10 +472,9 @@
 	</selectKey>
 </insert>
 
-<select id="userDbResourceTree" resultClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+<select id="userDbResourceTree" resultClass="com.hangum.tadpole.sql.dao.system.UserDBResourceDAO" parameterClass="java.util.Map">
 	SELECT * FROM user_db_resource
 	WHERE
-		user_seq = #user_seq# and
 		db_seq = #seq#  AND
 		resource_types in ('ERD', 'SQL') AND
 		delYn = 'NO'		
@@ -737,25 +736,6 @@ SELECT
 		
 		<![CDATA[ AND strftime('%Y%m%d',create_time) BETWEEN strftime('%Y%m%d','$startDate$') AND strftime('%Y%m%d','$endDate$')  ]]>
 	-->
-
-<!-- 
-	note insert
- -->
-<insert id="noteInsert" parameterClass="com.hangum.tadpole.sql.dao.system.NotesDAO">
-	 INSERT INTO notes (types, sender_seq, receiver_seq, sender_date, title, create_time) 
- 	VALUES 
- 	(#types#, #sender_seq#, #receiver_seq#, #sender_date#, #title#, now()) 
-	
-	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.NotesDAO">
-		SELECT * 
-		FROM notes 
-		WHERE types 		= #types# AND 
-			sender_seq 		= #sender_seq# AND 
-			receiver_seq 	= #receiver_seq# AND 
-			sender_date 	= #sender_date# AND
-			title 			= #title#
-	</selectKey>
-</insert>
  	
 <!-- 
 	note data를 저장합니다.

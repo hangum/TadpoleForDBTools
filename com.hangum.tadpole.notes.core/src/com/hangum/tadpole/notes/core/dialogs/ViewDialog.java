@@ -42,6 +42,7 @@ public class ViewDialog extends Dialog {
 	private NotesDefine.NOTE_TYPES noteType;
 	
 	private Label lblUser;
+	private Label lblTypes;
 	private Text textUser;
 	private Text textTitle;
 	private Text textContent;
@@ -79,11 +80,14 @@ public class ViewDialog extends Dialog {
 		
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(2, false));
+		compositeHead.setLayout(new GridLayout(3, false));
 		
 		lblUser = new Label(compositeHead, SWT.NONE);
 		lblUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblUser.setText(Messages.ViewDialog_0);
+		
+		lblTypes = new Label(compositeHead, SWT.NONE);
+		lblTypes.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		textUser = new Text(compositeHead, SWT.BORDER);
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -102,7 +106,7 @@ public class ViewDialog extends Dialog {
 		Label lblContent = new Label(compositeBody, SWT.NONE);
 		lblContent.setText(Messages.ViewDialog_2);
 		
-		textContent = new Text(compositeBody, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textContent = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textContent.setEditable(false);
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
@@ -139,6 +143,7 @@ public class ViewDialog extends Dialog {
 				textUser.setText(noteDAO.getSendUserId());
 			}
 			
+			lblTypes.setText(noteDAO.getTypes());
 			textTitle.setText(noteDAO.getTitle());
 			textContent.setText(noteDAO.getContents());
 		} catch(Exception e) {

@@ -11,6 +11,7 @@
 package com.hangum.tadpole.sql.system;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,40 +97,49 @@ public class TadpoleSystem_Notes {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<NotesDAO> getNoteList(int userSeq, String types, String strRead, String strTitle, java.sql.Date startDate, java.sql.Date endDate) throws Exception {
+	public static List<NotesDAO> getNoteList(int userSeq, String types, String strRead, String strTitle, Date startDate, Date endDate) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		Map<String, Object> mapParam = new HashMap<String, Object>();
 		mapParam.put("userSeq", userSeq);
 		mapParam.put("types", types);
 		mapParam.put("strRead", strRead);
-		mapParam.put("strTitle", '%' + strTitle + '%');
-		mapParam.put("startDate", startDate);
-		mapParam.put("endDate", endDate);
+		mapParam.put("strTitle", "".equals(strTitle) ? "" : "%" + strTitle + '%');
+		mapParam.put("startDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startDate));
+		mapParam.put("endDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endDate));
 		
 		return (List<NotesDAO>)sqlClient.queryForList("findNotes", mapParam); //$NON-NLS-1$
 	}
 	
 	/**
 	 * 
-	 * 
+	 * @param types
+	 * @param List<String> listAllUser
 	 * @param senderSeq
 	 * @param receiveSeq
 	 * @param title
 	 * @param strContent
 	 * @throws Exception
 	 */
-	public static void saveNote(String types, int senderSeq, int receiveSeq, String title, String strContent) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
+	public static void saveNote(String types, List<Integer> listAllUserSeq,  int senderSeq, int receiveSeq, String title, String strContent) throws Exception {
 		
 		NotesDAO noteDao = new NotesDAO();
 		noteDao.setTypes(types);
 		noteDao.setSender_seq(senderSeq);
 		noteDao.setReceiver_seq(receiveSeq);
 		noteDao.setTitle(title);
-		noteDao.setSender_date(new Date(System.currentTimeMillis()));
+		noteDao.setSender_date(new java.sql.Date(System.currentTimeMillis()));
 		
-		noteDao =  (NotesDAO)sqlClient.insert("noteInsert", noteDao); //$NON-NLS-1$
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		// com.hangum.tadpole.notes.core.define.NotesDefine.TYPES.PERSON
+		if("PERSON".equals(types)) {
+			noteDao =  (NotesDAO)sqlClient.insert("noteInsert", noteDao); //$NON-NLS-1$
+		} else {
+			for(int userSeq: listAllUserSeq) {
+				noteDao.setReceiver_seq(userSeq);
+				noteDao =  (NotesDAO)sqlClient.insert("noteInsert", noteDao); //$NON-NLS-1$
+			}
+		}
 		
 		NotesDetailDAO detailDao = new NotesDetailDAO();
 		detailDao.setNote_seq(noteDao.getSeq());
