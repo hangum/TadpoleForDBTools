@@ -221,7 +221,7 @@ public class NewNoteDialog extends Dialog {
 			comboUserName.setText(strReceiver);
 			
 			if(NotesDefine.TYPES.GROUP.toString().equals(notesDAO.getTypes())) {
-				comboTypes.setEnabled(false);
+				comboUserName.setEnabled(false);
 			}
 			
 			textTitle.setText("RE] " + notesDAO.getTitle()); //$NON-NLS-1$
