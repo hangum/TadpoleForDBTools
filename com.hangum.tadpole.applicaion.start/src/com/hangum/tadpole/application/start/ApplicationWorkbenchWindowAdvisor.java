@@ -43,6 +43,7 @@ import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
+import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
@@ -120,10 +121,17 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 					    		
 	 					    		// note list
 	 					    		List<NotesDAO> listNotes = NoteSystemAlert.getSystemNoteAlert();
-	 					    		for (NotesDAO notesDAO : listNotes) {
-	 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO, NotesDefine.NOTE_TYPES.RECEIVE);
-	 									dialog.open();
-									}
+	 					    		if(!listNotes.isEmpty()) {
+	 					    			// refresh note view
+	 					    			NoteListViewPart nlvPart = (NoteListViewPart)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(NoteListViewPart.ID);
+	 					    			nlvPart.initData();
+
+	 					    			// show note 
+	 					    			for (NotesDAO notesDAO : listNotes) {
+		 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO, NotesDefine.NOTE_TYPES.RECEIVE);
+		 									dialog.open();
+										}	 					    			
+	 					    		}
 	 					    		// note list 
 	 					    		
 	 					    	}

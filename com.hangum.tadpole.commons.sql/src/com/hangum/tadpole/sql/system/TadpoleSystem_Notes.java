@@ -10,8 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.system;
 
-import java.text.SimpleDateFormat;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,26 +113,33 @@ public class TadpoleSystem_Notes {
 	
 	/**
 	 * 
-	 * 
+	 * @param types
+	 * @param List<String> listAllUser
 	 * @param senderSeq
 	 * @param receiveSeq
 	 * @param title
 	 * @param strContent
 	 * @throws Exception
 	 */
-	public static void saveNote(String types, int senderSeq, int receiveSeq, String title, String strContent) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());	
-		
-		Date now = new java.sql.Date(System.currentTimeMillis());
+	public static void saveNote(String types, List<Integer> listAllUserSeq,  int senderSeq, int receiveSeq, String title, String strContent) throws Exception {
 		
 		NotesDAO noteDao = new NotesDAO();
 		noteDao.setTypes(types);
 		noteDao.setSender_seq(senderSeq);
 		noteDao.setReceiver_seq(receiveSeq);
 		noteDao.setTitle(title);
-		noteDao.setSender_date(now);
+		noteDao.setSender_date(new java.sql.Date(System.currentTimeMillis()));
 		
-		noteDao =  (NotesDAO)sqlClient.insert("noteInsert", noteDao); //$NON-NLS-1$
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		// com.hangum.tadpole.notes.core.define.NotesDefine.TYPES.PERSON
+		if("PERSON".equals(types)) {
+			noteDao =  (NotesDAO)sqlClient.insert("noteInsert", noteDao); //$NON-NLS-1$
+		} else {
+			for(int userSeq: listAllUserSeq) {
+				noteDao.setReceiver_seq(userSeq);
+				noteDao =  (NotesDAO)sqlClient.insert("noteInsert", noteDao); //$NON-NLS-1$
+			}
+		}
 		
 		NotesDetailDAO detailDao = new NotesDetailDAO();
 		detailDao.setNote_seq(noteDao.getSeq());
