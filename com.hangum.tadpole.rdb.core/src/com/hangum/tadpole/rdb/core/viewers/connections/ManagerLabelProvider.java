@@ -75,7 +75,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			else if(DBDefine.MONGODB_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
 			
-			else if(DBDefine.HIVE_DEFAULT == dbType) 
+			else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
 			
 			else if(DBDefine.TAJO_DEFAULT == dbType) 
