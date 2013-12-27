@@ -271,7 +271,7 @@ public class NoteListViewPart extends ViewPart {
 	/**
 	 * initialize data
 	 */
-	private void initData() {
+	public void initData() {
 		try {
 			String selComboType = comboTypes.getData(comboTypes.getText()).toString();
 			String selComboRead = comboRead.getData(comboRead.getText()).toString();

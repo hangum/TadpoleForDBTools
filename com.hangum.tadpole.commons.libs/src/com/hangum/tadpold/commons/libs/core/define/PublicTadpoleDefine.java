@@ -53,7 +53,7 @@ public class PublicTadpoleDefine {
 	public enum EXTERNAL_ACCOUNT {AMAZONRDS};
 	
 	/** NULL VALUE */
-	public static final String DEFINE_NULL_VALUE = "[null value]";
+	public static final String DEFINE_NULL_VALUE = "{null}";
 
 	/** yes, no */
 	public static enum YES_NO {YES, NO}; 

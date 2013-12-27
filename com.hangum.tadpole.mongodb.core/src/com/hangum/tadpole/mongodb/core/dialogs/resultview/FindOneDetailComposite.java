@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 
-import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoContentProvider;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoLabelProvider;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
@@ -111,7 +110,7 @@ public class FindOneDetailComposite extends Composite {
 	 * show view source 
 	 */
 	private void showViewSource() {
-		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName, this.dbResultObject.toString());
+		TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), collectionName, this.dbResultObject == null?"":this.dbResultObject.toString());
 		dialog.open();
 	}
 	
