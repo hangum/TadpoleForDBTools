@@ -18,8 +18,10 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditor;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditorInput;
+import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
 
 /**
  * This workbench advisor creates the window advisor, and specifies
@@ -39,8 +41,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public void postStartup() {
-//		open source is alwary view.
-//		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(GetPreferenceGeneral.getDefaultHomePageUse())) {			
+		if(PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE.equals(GetPreferenceGeneral.getDefaultHomePageUse())) {			
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {
 				IntroEditorInput mei = new IntroEditorInput();
@@ -48,10 +49,9 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 			} catch (PartInitException e) {
 				logger.error("Default home page", e);
 			};
-//		}
-//		
+		}
 	}
-	
+
 //	@Override
 //	public boolean preShutdown() {
 //		if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "확인", "종료하시겠습니까?") ) {

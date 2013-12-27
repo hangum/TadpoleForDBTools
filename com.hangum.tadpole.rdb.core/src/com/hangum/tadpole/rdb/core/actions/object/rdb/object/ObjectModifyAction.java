@@ -51,7 +51,7 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 	public ObjectModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Alert " + title); //$NON-NLS-1$
+		setText("Alter " + title); //$NON-NLS-1$
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 				
 				FindEditorAndWriteQueryUtil.run(userDB, strScript, true);		
 			} catch(Exception e) {
-				logger.error("alert ddl script", e);
+				logger.error("Alter ddl script", e);
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", selection.getFirstElement() + " Load scipt error", errStatus); //$NON-NLS-1$

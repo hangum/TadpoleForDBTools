@@ -205,18 +205,6 @@ public class NewUserDialog extends Dialog {
 			comboQuestion.setData(q.getOrderIndex()+q.toString(), q.getKey());
 		}
 		comboQuestion.select(0);
-		comboQuestion.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int index = comboQuestion.getSelectionIndex();
-				if (index == -1 || index == 0) {
-					textAnswer.setText(""); //$NON-NLS-1$
-					textAnswer.setEnabled(false);
-				} else {
-					textAnswer.setEnabled(true);
-				}
-			}
-		});
 		
 		Label lblAnswer = new Label(container, SWT.NONE);
 		lblAnswer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -224,7 +212,6 @@ public class NewUserDialog extends Dialog {
 
 		textAnswer = new Text(container, SWT.BORDER);
 		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textAnswer.setEnabled(false);
 		
 		initUserGroup();
 		
@@ -287,7 +274,7 @@ public class NewUserDialog extends Dialog {
 		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
 		String answer = StringUtils.trimToEmpty(textAnswer.getText());
 		
-		if(!validation(strEmail, passwd, rePasswd, name)) return;
+		if(!validation(strEmail, passwd, rePasswd, name, questionKey, answer)) return;
 		
 		// user 입력시 
 		UserGroupDAO groupDAO = new UserGroupDAO();
@@ -345,7 +332,7 @@ public class NewUserDialog extends Dialog {
 	 * @param rePasswd
 	 * @param name
 	 */
-	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
+	private boolean validation(String strEmail, String strPass, String rePasswd, String name, String questionKey, String answer) {
 
 		if(btnManager != null && btnManager.getSelection()) {
 			if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
@@ -370,6 +357,10 @@ public class NewUserDialog extends Dialog {
 		} else if(!isEmail(strEmail)) {
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);
 			textEMail.setFocus();
+			return false;
+		} else if("".equals(answer)) { //$NON-NLS-1$
+			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_26);
+			textAnswer.setFocus();
 			return false;
 		}
 		

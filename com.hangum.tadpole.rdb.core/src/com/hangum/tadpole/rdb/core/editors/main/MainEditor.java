@@ -12,8 +12,6 @@ package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -25,6 +23,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.alter.Alter;
+import net.sf.jsqlparser.statement.create.table.CreateTable;
+import net.sf.jsqlparser.statement.drop.Drop;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -75,6 +78,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
@@ -123,6 +127,7 @@ import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -262,7 +267,7 @@ public class MainEditor extends EditorExtension {
 		parent.setLayout(gl_parent);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-		sashForm.setSashWidth(1);
+		sashForm.setSashWidth(4);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		final Composite compositeEditor = new Composite(sashForm, SWT.NONE);
@@ -505,10 +510,9 @@ public class MainEditor extends EditorExtension {
 								
 								while ((readBuffer = bufferedReader.readLine())!= null)
 									clobContent.append(readBuffer);
-	
+
 								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), clobContent.toString());
-				                dlg.open();
-	
+					            dlg.open();									
 							} catch (Exception e) {
 								logger.error("Clob column echeck", e); //$NON-NLS-1$
 							}
@@ -516,29 +520,10 @@ public class MainEditor extends EditorExtension {
 							try {
 								Blob blob = (Blob) columnObject;
 								
-								int offset = -1;
-								int chunkSize = 1024;
-								long blobLength = blob.length();
-								if(chunkSize > blobLength) {
-									chunkSize = (int)blobLength;
-								}
-								char buffer[] = new char[chunkSize];
-								StringBuilder stringBuffer = new StringBuilder();
-								Reader reader = new InputStreamReader(blob.getBinaryStream());
-
-								while((offset = reader.read(buffer)) != -1) {
-									stringBuffer.append(buffer,0,offset);
-								}
-								
-								//byte[] bdata = blob.getBytes(1, (int) blob.length());
-								//String s = new String(bdata);
-								
-								// image view dialog 또는 파일로 다운로드 하는 기능 필요....
-								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), stringBuffer.toString());
+								TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(getSite().getShell(), tableResult.getColumn(i).getText(), blob.getBinaryStream());
 								dlg.open();								
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								logger.error("Blob column echeck", e); //$NON-NLS-1$
 							}
 		
 						}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
@@ -621,7 +606,9 @@ public class MainEditor extends EditorExtension {
 				for(int i=0; i<sourceDataList.size(); i++) {
 					Map<Integer, Object> mapColumns = sourceDataList.get(i);
 					for(int j=0; j<mapColumns.size(); j++) {
-						sbExportData.append(mapColumns.get(j)).append(exportDelimit); //$NON-NLS-1$
+						String strContent = mapColumns.get(j)==null?"":mapColumns.get(j).toString();
+						if(strContent.length() == 0 ) strContent = " ";
+						sbExportData.append(strContent).append(exportDelimit); //$NON-NLS-1$
 					}
 					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				}
@@ -962,8 +949,13 @@ public class MainEditor extends EditorExtension {
 		String strTablelist = "select,select * from,"; //$NON-NLS-1$
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			List<TableDAO> showTables = null;
+			if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			} else {
+				showTables = TajoConnectionManager.tableList(userDB);
+			}
 
 			for (TableDAO tableDao : showTables) {
 				strTablelist += tableDao.getName() + ","; //$NON-NLS-1$
@@ -989,7 +981,7 @@ public class MainEditor extends EditorExtension {
 	 * initialize editor
 	 */
 	private void initEditor() {
-		if (DBDefine.getDBDefine(userDB) == DBDefine.HIVE_DEFAULT) {
+		if (userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			tltmAutoCommit.setEnabled(false);
 		}
 
@@ -1320,6 +1312,23 @@ public class MainEditor extends EditorExtension {
 		
 		requestQuery = StringUtils.trimToEmpty(requestQuery);
 		
+		// is tajo
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			Map<String, Object> resultMap = TajoConnectionManager.select(userDB, requestQuery, pageNumber, isAutoCommit);
+			
+			mapColumnType = (Map<Integer, Integer>)resultMap.get("mapColumnType");
+			
+			// column name을 얻습니다. 
+			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
+			mapColumns = (Map<Integer, String>)resultMap.get("mapColumns");
+			
+			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
+			sourceDataList = (List<Map<Integer, Object>>)resultMap.get("sourceDataList");
+			
+			return;
+		}  
+		
+		// others db
 		// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 		if(transactionQuery(requestQuery)) return;
 		
@@ -1359,12 +1368,21 @@ public class MainEditor extends EditorExtension {
 					
 					return;
 					
-				} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
+				} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {					
+					// generation to statement id for query plan. 
+					pstmt = javaConn.prepareStatement("select USERENV('SESSIONID') from dual "); //$NON-NLS-1$
+					rs = pstmt.executeQuery(); 
+					String statement_id = "tadpole";
+					if (rs.next()) statement_id = rs.getString(1);
+					
+					pstmt = javaConn.prepareStatement("delete from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$
+					pstmt.execute(); 
+					
 					// 플랜결과를 디비에 저장합니다.
-					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName);
+					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName, javaConn, pstmt, statement_id);
 					// 저장된 결과를 가져와서 보여줍니다.
-					pstmt = javaConn.prepareStatement("select * from " + planTableName); //$NON-NLS-1$
-					rs = pstmt.executeQuery();
+					pstmt = javaConn.prepareStatement("select * from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$
+					rs = pstmt.executeQuery(); 
 				 } else if(DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
 					 stmt = javaConn.createStatement();
 					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "ON")); //$NON-NLS-1$
@@ -1406,7 +1424,7 @@ public class MainEditor extends EditorExtension {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 
 			if(isAutoCommit) {
-				try { javaConn.close(); } catch(Exception e){}
+				try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 			}
 		}
 	}
@@ -1471,64 +1489,75 @@ public class MainEditor extends EditorExtension {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
-		// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
-		if(transactionQuery(sqlQuery)) return;
+		// is tajo
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			TajoConnectionManager.executeUpdate(userDB,sqlQuery);
+		} else { 
 		
-		java.sql.Connection javaConn = null;
-		Statement statement = null;
-		try {
-			if(isAutoCommit) {
-				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-				javaConn = client.getDataSource().getConnection();
-			} else {
-				javaConn = TadpoleSQLTransactionManager.getInstance(strUserEMail, userDB, isAutoCommit);
-			}
+			// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
+			if(transactionQuery(sqlQuery)) return;
 			
-			statement = javaConn.createStatement();
-			
-			final String checkSQL = sqlQuery.trim().toUpperCase();
-			// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다. 
-			if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
-				sqlQuery = StringUtils.replaceOnce(sqlQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
-			
-			// 오라클의 경우 procedure, function, package, trigger의 경우 마지막에 ; 가 있어야 정상 프로시저로 인정됩니다. 
-			//
-			} else if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TRIGGER") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER OR") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
-					StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
-			) { //$NON-NLS-1$
-				sqlQuery += ";"; //$NON-NLS-1$
-			}
-			// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-			if(logger.isDebugEnabled()) logger.debug(""+sqlQuery); //$NON-NLS-1$
-			if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) statement.execute(sqlQuery);
-			else statement.executeUpdate(sqlQuery);
-			
-			// create table, drop table이면 작동하도록			
-			if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
-				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP")  || //$NON-NLS-1$
-				StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "ALTER")) {  //$NON-NLS-1$
+			java.sql.Connection javaConn = null;
+			Statement statement = null;
+			try {
+				if(isAutoCommit) {
+					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+					javaConn = client.getDataSource().getConnection();
+				} else {
+					javaConn = TadpoleSQLTransactionManager.getInstance(strUserEMail, userDB, isAutoCommit);
+				}
 				
-				try {
-					refreshExplorerView();
-				} catch(Exception e) {
-					logger.error("CREATE, DROP, ALTER Query refersh error", e); //$NON-NLS-1$
+				statement = javaConn.createStatement();
+				
+				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
+				if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					final String checkSQL = sqlQuery.trim().toUpperCase();
+					if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
+						sqlQuery = StringUtils.replaceOnce(sqlQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+					final String checkSQL = sqlQuery.trim().toUpperCase();
+					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TRIGGER") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER OR") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
+					) { //$NON-NLS-1$
+						sqlQuery += ";"; //$NON-NLS-1$
+					}
+				}
+				
+				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+				if(logger.isDebugEnabled()) logger.debug(""+sqlQuery); //$NON-NLS-1$
+				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) statement.execute(sqlQuery);
+				else statement.executeUpdate(sqlQuery);
+				
+			} finally {
+				try { statement.close();} catch(Exception e) {}
+	
+				if(isAutoCommit) {
+					try { javaConn.close(); } catch(Exception e){}
 				}
 			}
-		} finally {
-			try { statement.close();} catch(Exception e) {}
-
-			if(isAutoCommit) {
-				try { javaConn.close(); } catch(Exception e){}
+		}  	// end which db
+		
+		// create table, drop table이면 작동하도록			
+//		if(StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "CREATE") ||  //$NON-NLS-1$
+//			StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "DROP")  || //$NON-NLS-1$
+//			StringUtils.startsWith(sqlQuery.trim().toUpperCase(), "ALTER")) {  //$NON-NLS-1$
+			
+			try {
+				net.sf.jsqlparser.statement.Statement stmt = CCJSqlParserUtil.parse(sqlQuery);
+				if(stmt instanceof Alter || stmt instanceof CreateTable || stmt instanceof Drop) refreshExplorerView();
+			} catch(Exception e) {
+				logger.error("CREATE, DROP, ALTER Query refersh error" + sqlQuery); //$NON-NLS-1$
 			}
-		}		
+//		}
 	}
 
 	/**
@@ -1640,7 +1669,7 @@ public class MainEditor extends EditorExtension {
 			TableUtil.packTable(tableResult);
 			resultFolderSel(RESULT_TAB_NAME.RESULT_SET);
 		} else {
-			listMessage.add(new TadpoleMessageDAO(new Date(), "success")); //$NON-NLS-1$
+			listMessage.add(new TadpoleMessageDAO(new Date(), "success. \n\n" + finalExecuteSQL)); //$NON-NLS-1$
 			tableViewerMessage.refresh(listMessage);
 			resultFolderSel(RESULT_TAB_NAME.TADPOLE_MESSAGE);
 		}
@@ -1749,7 +1778,7 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public void setFocus() {
-//		setOrionTextFocus();
+		if(!isFirstLoad) setOrionTextFocus();
 	}
 	
 	/**

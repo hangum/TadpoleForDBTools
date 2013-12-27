@@ -54,7 +54,7 @@ public class TadpoleSQLTransactionManager {
 	 * 
 	 * @param userId
 	 */
-	public static void executeCommit(final String userId) {
+	public static void executeRollback(final String userId) {
 		Set<String> keys = dbManager.keySet();
 		for (String key : keys) {
 			if(StringUtils.startsWith(key, userId + PublicTadpoleDefine.DELIMITER)) {
@@ -62,7 +62,7 @@ public class TadpoleSQLTransactionManager {
 				
 				TransactionDAO transactionDAO = dbManager.get(key);
 				try {
-					transactionDAO.getConn().commit();
+					transactionDAO.getConn().rollback();
 				} catch(Exception e) {
 					logger.error("logout transaction commit", e);
 				}

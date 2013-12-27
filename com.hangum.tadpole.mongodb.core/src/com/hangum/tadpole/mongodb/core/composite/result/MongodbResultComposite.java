@@ -376,9 +376,9 @@ public class MongodbResultComposite extends Composite {
 				String tmpStrHead = "";
 				TableColumn[] tcs = resultTableViewer.getTable().getColumns();
 				for (TableColumn tableColumn : tcs) {
-					tmpStrHead += tableColumn.getText() + ","; //$NON-NLS-1$
+					tmpStrHead += tableColumn.getText() + ", "; //$NON-NLS-1$
 				}
-				tmpStrHead = StringUtils.removeEnd(tmpStrHead, ",");
+				tmpStrHead = StringUtils.removeEnd(tmpStrHead, ", ");
 				tmpStrHead += PublicTadpoleDefine.LINE_SEPARATOR; //$NON-NLS-1$
 				
 				// column 데이터 추가. 
@@ -386,9 +386,9 @@ public class MongodbResultComposite extends Composite {
 					String tmpData = "";
 					Map<Integer, Object> mapColumns = sourceDataList.get(i);
 					for(int j=0; j<tcs.length; j++) {
-						tmpData += mapColumns.get(j) + ","; //$NON-NLS-1$
+						tmpData += mapColumns.get(j) + ", "; //$NON-NLS-1$
 					}
-					tmpData = StringUtils.removeEnd(tmpData, ",");
+					tmpData = StringUtils.removeEnd(tmpData, ", ");
 					tmpData += PublicTadpoleDefine.LINE_SEPARATOR;
 					
 					sbExportDataBody.append(tmpData); //$NON-NLS-1$

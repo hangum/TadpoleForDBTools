@@ -86,10 +86,12 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.sql.dao.sqlite.SQLiteForeignKeyListDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
@@ -195,16 +197,40 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 						if (selectTableName.equals(table.getName())) return;
 						selectTableName = table.getName();
-
-						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+						
 						Map<String, String> mapParam = new HashMap<String, String>();
 						mapParam.put("db", userDB.getDb());
 						mapParam.put("table", table.getName());
 
-						showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
-
-					} else
+						if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+							showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
+						} else {
+							showTableColumns = TajoConnectionManager.tableColumnList(userDB, mapParam);
+						}
+						
+						if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()){
+							try{
+								SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+								List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
+								for (SQLiteForeignKeyListDAO fkeydao : foreignKeyList){
+									for (TableColumnDAO dao : showTableColumns){
+										if (dao.getName().equals(fkeydao.getFrom() ) ){
+											if (PublicTadpoleDefine.isPK(dao.getKey())){
+												dao.setKey("MUL");
+											}else{
+												dao.setKey("FK");
+											}
+										}	 
+									}
+								}
+							}catch(Exception e){
+								logger.debug("not found foreignkey for " + table.getName());
+							}
+						}
+					} else {
 						showTableColumns = null;
+					}
 
 					tableColumnViewer.setInput(showTableColumns);
 					
@@ -424,40 +450,51 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
-					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-						if(DBDefine.getDBDefine(userDB) != DBDefine.HIVE_DEFAULT) manager.add(creatAction_Table);
-						manager.add(deleteAction_Table);
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					}	
-					
-					manager.add(refreshAction_Table);
-
-					// 현재는 oracle db만 데이터 수정 모드..
-					if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-						manager.add(generateSampleData);
-					}
-					
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(selectDMLAction);
-
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(selectStmtAction);
-					
-					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-						manager.add(insertStmtAction);
+					// hive & tajo
+					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+							manager.add(creatAction_Table);
+							manager.add(deleteAction_Table);
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						}	
 						
-						if(DBDefine.getDBDefine(userDB) != DBDefine.HIVE_DEFAULT) {
+						manager.add(refreshAction_Table);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(selectStmtAction);
+					// others rdb
+					} else {
+						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+							manager.add(creatAction_Table);
+							manager.add(deleteAction_Table);
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						}	
+						
+						manager.add(refreshAction_Table);
+	
+						// 현재는 oracle db만 데이터 수정 모드..
+						if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							manager.add(generateSampleData);
+						}
+						
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(selectDMLAction);
+	
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+						manager.add(selectStmtAction);
+						
+						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
+							manager.add(insertStmtAction);
 							manager.add(updateStmtAction);
 							manager.add(deleteStmtAction);
-
+	
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(viewDDLAction);
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(tableDataEditorAction);
 						}
-					}
-				}
+					}	// if rdb
+				}	// if hive and tajo
 			}
 		});
 
@@ -546,8 +583,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * @throws Exception
 	 */
 	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		List<TableDAO> showTables = null;
+				
+		if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		} else {
+			showTables = TajoConnectionManager.tableList(userDB);
+		}
 		
 		/** filter 정보가 있으면 처리합니다. */
 		return filter(userDB, showTables);

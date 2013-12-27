@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
@@ -155,23 +156,12 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 
 		textAnswer = new Text(container, SWT.BORDER);
 		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textAnswer.setText(StringUtils.trimToEmpty(SessionManager.getSecurityAnswer()));
+		textAnswer.setText(CipherManager.getInstance().decryption(SessionManager.getSecurityAnswer()));
 
 		// because of reference of textAnswer
 		comboQuestion.select(0);
-		comboQuestion.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int index = comboQuestion.getSelectionIndex();
-				if (index == -1 || index == 0) {
-					textAnswer.setText(""); //$NON-NLS-1$
-					textAnswer.setEnabled(false);
-				} else {
-					textAnswer.setEnabled(true);
-				}
-			}
-		});
-		String questionKey = SessionManager.getSecurityQuestion();
+		
+		String questionKey = CipherManager.getInstance().decryption(SessionManager.getSecurityQuestion());
 		if (null!= questionKey && !"".equals(questionKey.trim())) { //$NON-NLS-1$
 			try {
 				SecurityHint question = PublicTadpoleDefine.SecurityHint.valueOf(questionKey);

@@ -72,7 +72,7 @@ public class TableInformationEditor extends EditorPart {
 		
 		DBTableEditorInput qei = (DBTableEditorInput)input;
 		userDB = qei.getUserDB();
-		setPartName("[" + qei.getName() + "] Table information");		 //$NON-NLS-1$
+		setPartName("[" + qei.getName() + "] Table Editor");		 //$NON-NLS-1$
 		
 		initTableNameStr = qei.getName();
 		columnList = qei.getShowTableColumns();
@@ -98,10 +98,10 @@ public class TableInformationEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		GridLayout gl_parent = new GridLayout(1, false);
-		gl_parent.marginHeight = 2;
-		gl_parent.verticalSpacing = 2;
-		gl_parent.horizontalSpacing = 2;
-		gl_parent.marginWidth = 2;
+		gl_parent.marginHeight = 1;
+		gl_parent.verticalSpacing = 1;
+		gl_parent.horizontalSpacing = 1;
+		gl_parent.marginWidth = 1;
 		parent.setLayout(gl_parent);
 		
 		CTabFolder tabFolder = new CTabFolder(parent, SWT.NONE);
@@ -111,10 +111,10 @@ public class TableInformationEditor extends EditorPart {
 		
 		//======================================================================
 		GridLayout gl_compositeTableData = new GridLayout(1, false);
-		gl_compositeTableData.verticalSpacing = 2;
-		gl_compositeTableData.horizontalSpacing = 2;
-		gl_compositeTableData.marginHeight = 2;
-		gl_compositeTableData.marginWidth = 2;
+		gl_compositeTableData.verticalSpacing = 1;
+		gl_compositeTableData.horizontalSpacing = 1;
+		gl_compositeTableData.marginHeight = 1;
+		gl_compositeTableData.marginWidth = 1;
 		//======================================================================
 
 		//[table data composite start]///////////////////////////////		

@@ -18,17 +18,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -43,6 +40,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.transaction.TransactionDAO;
 import com.hangum.tadpole.manager.core.Activator;
@@ -58,40 +56,14 @@ public class TransactionConnectionListEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.manager.core.editor.transaction.connection.db";
 
 	private TableViewer tableViewer;
-	private TableComparator tableComparator;
+	private TransactioonTableComparator tableComparator;
 	
 	private ToolItem tltmCommit;
 	private ToolItem tltmRollback;
+	private Table tableCon;
 
 	public TransactionConnectionListEditor() {
 		super();
-	}
-
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-	}
-
-	@Override
-	public void doSaveAs() {
-	}
-
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		setSite(site);
-		setInput(input);
-
-		TransactionConnectionListEditorInput esqli = (TransactionConnectionListEditorInput) input;
-		setPartName(esqli.getName());
-	}
-
-	@Override
-	public boolean isDirty() {
-		return false;
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
 	}
 
 	@Override
@@ -103,7 +75,73 @@ public class TransactionConnectionListEditor extends EditorPart {
 		gl_parent.marginWidth = 1;
 		parent.setLayout(gl_parent);
 		
-		Composite compositeToolbar = new Composite(parent, SWT.NONE);
+		CTabFolder tabFolder = new CTabFolder(parent, SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setBorderVisible(false);		
+		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
+		
+//		CTabItem tbtmConnectionPool = new CTabItem(tabFolder, SWT.NONE);
+//		tbtmConnectionPool.setText("Connection Pool");
+//		
+//		Composite compositeConnectionPool = new Composite(tabFolder, SWT.NONE);
+//		tbtmConnectionPool.setControl(compositeConnectionPool);
+//		GridLayout gl_compositeConnectionPool = new GridLayout(1, false);
+//		gl_compositeConnectionPool.verticalSpacing = 1;
+//		gl_compositeConnectionPool.horizontalSpacing = 1;
+//		gl_compositeConnectionPool.marginHeight = 1;
+//		gl_compositeConnectionPool.marginWidth = 1;
+//		compositeConnectionPool.setLayout(gl_compositeConnectionPool);
+//		
+//		Composite compositeCToolbar = new Composite(compositeConnectionPool, SWT.NONE);
+//		compositeCToolbar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+//		GridLayout gl_compositeCToolbar = new GridLayout(1, false);
+//		gl_compositeCToolbar.verticalSpacing = 1;
+//		gl_compositeCToolbar.horizontalSpacing = 1;
+//		gl_compositeCToolbar.marginHeight = 1;
+//		gl_compositeCToolbar.marginWidth = 1;
+//		compositeCToolbar.setLayout(gl_compositeCToolbar);
+//		
+//		ToolBar toolBar = new ToolBar(compositeCToolbar, SWT.FLAT | SWT.RIGHT);
+//		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//		ToolItem tltmCRefresh = new ToolItem(toolBar, SWT.NONE);
+//		tltmCRefresh.setText("Refresh");
+//		
+//		TableViewer tableViewerCon = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
+//		tableCon = tableViewerCon.getTable();
+//		tableCon.setLinesVisible(true);
+//		tableCon.setHeaderVisible(true);
+//		tableCon.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		
+		
+		// transaction CTabItem widget create
+		CTabItem tbtmTransactionConnection = new CTabItem(tabFolder, SWT.NONE);
+		tbtmTransactionConnection.setText("Transaction");
+		
+		Composite compositeTransactionConnection = new Composite(tabFolder, SWT.NONE);
+		tbtmTransactionConnection.setControl(compositeTransactionConnection);
+		GridLayout gl_compositeTransactionConnection = new GridLayout(1, false);
+		gl_compositeTransactionConnection.verticalSpacing = 1;
+		gl_compositeTransactionConnection.horizontalSpacing = 1;
+		gl_compositeTransactionConnection.marginHeight = 1;
+		gl_compositeTransactionConnection.marginWidth = 1;
+		compositeTransactionConnection.setLayout(gl_compositeTransactionConnection);
+		
+		// create transaction composite
+		createTransactionComposite(compositeTransactionConnection);
+		
+		// default folder selection
+		tabFolder.setSelection(0);
+	}
+	
+	/**
+	 * create transaction composite
+	 * 
+	 * @param compositeTransactionConnection
+	 */
+	private void createTransactionComposite(Composite compositeTransactionConnection) {
+		Composite compositeToolbar = new Composite(compositeTransactionConnection, SWT.NONE);
 		compositeToolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeToolbar = new GridLayout(1, false);
 		gl_compositeToolbar.verticalSpacing = 1;
@@ -120,7 +158,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				initUI();
+				initTransactionUI();
 			}
 		});
 		tltmRefresh.setToolTipText("Refresh");
@@ -153,7 +191,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tltmRollback.setEnabled(false);
 		tltmRollback.setText("Rollback");
 		
-		Composite compositeBody = new Composite(parent, SWT.NONE);
+		Composite compositeBody = new Composite(compositeTransactionConnection, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeBody = new GridLayout(1, false);
 		gl_compositeBody.verticalSpacing = 1;
@@ -174,7 +212,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		// sorter
-		tableComparator = new TableComparator();
+		tableComparator = new TransactioonTableComparator();
 		tableViewer.setSorter(tableComparator);
 		tableComparator.setColumn(0);
 		
@@ -183,7 +221,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new TransactionConnectionListLabelProvider());
 		
-		initUI();
+		initTransactionUI();
 	}
 	
 	/**
@@ -199,7 +237,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			if(isCommit) TadpoleSQLTransactionManager.commit(tdao.getUserId(), tdao.getUserDB());
 			else TadpoleSQLTransactionManager.rollback(tdao.getUserId(), tdao.getUserDB());
 			
-			initUI();
+			initTransactionUI();
 		} catch (Exception e1) {
 			logger.error("Transaction is commit " + isCommit + "[user db]" +  tdao.getUserDB(), e1);
 			
@@ -221,7 +259,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 	/**
 	 * transaction dao list
 	 */
-	private void initUI() {
+	private void initTransactionUI() {
 		transactionBtnInit(false);
 		tableViewer.setInput(TadpoleSQLTransactionManager.getDbManager().values());
 	}
@@ -273,90 +311,30 @@ public class TransactionConnectionListEditor extends EditorPart {
 	public void setFocus() {
 	}
 
-}
-
-/**
- * Transaction Connection Manager Labelprovider
- * @author hangum
- *
- */
-class TransactionConnectionListLabelProvider extends LabelProvider implements ITableLabelProvider {
-
 	@Override
-	public Image getColumnImage(Object element, int columnIndex) {
-		return null;
+	public void doSave(IProgressMonitor monitor) {
 	}
 
 	@Override
-	public String getColumnText(Object element, int columnIndex) {
-		TransactionDAO dto = (TransactionDAO)element;
-
-		switch(columnIndex) {
-		case 0: return dto.getUserDB().getDbms_types();
-		case 1: return dto.getUserDB().getDisplay_name();
-		case 2: return dto.getUserId();
-		case 3: return dto.getStartTransaction().toLocaleString();
-		}
-		
-		return "*** not set column ***"; //$NON-NLS-1$
-	}
-	
-}
-
-/**
- * compartor
- * 
- * @author hangum
- *
- */
-class TableComparator extends ViewerSorter  {
-	protected int propertyIndex;
-	protected static final int DESCENDING = 1;
-	protected static final int ASCENDING = -1;
-	protected int direction = DESCENDING;
-	
-	public TableComparator() {
-		this.propertyIndex = 0;
-		direction = DESCENDING;
+	public void doSaveAs() {
 	}
 
-	public int getDirection() {
-		return direction == 1 ? SWT.DOWN : SWT.UP;
-	}
-	
-	public void setColumn(int column) {
-		if(column == this.propertyIndex) {
-			direction = 1 - direction;
-		} else {
-			this.propertyIndex = column;
-			direction = DESCENDING;
-		}
-	}
-	
 	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		TransactionDAO dao1 = (TransactionDAO) e1;
-		TransactionDAO dao2 = (TransactionDAO) e2;
-		
-		int rc = ASCENDING;
-		switch (this.propertyIndex) {
-		case 0:
-			rc = dao1.getUserDB().getDbms_types().toLowerCase().compareTo(dao2.getUserDB().getDbms_types().toLowerCase());
-			break;
-		case 1:
-			rc = dao1.getUserDB().getDisplay_name().toLowerCase().compareTo(dao2.getUserDB().getDisplay_name().toLowerCase());
-			break;
-		case 2:
-			rc = dao1.getUserId().toLowerCase().compareTo(dao2.getUserId().toLowerCase());
-			break;
-		case 3:
-			rc = dao1.getStartTransaction().toLocaleString().compareTo(dao2.getStartTransaction().toLocaleString().toLowerCase());
-			break;
-		}
-		
-		if (direction == DESCENDING) {
-			rc = -rc;
-		}
-		return rc;
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+		setSite(site);
+		setInput(input);
+
+		TransactionConnectionListEditorInput esqli = (TransactionConnectionListEditorInput) input;
+		setPartName(esqli.getName());
+	}
+
+	@Override
+	public boolean isDirty() {
+		return false;
+	}
+
+	@Override
+	public boolean isSaveAsAllowed() {
+		return false;
 	}
 }

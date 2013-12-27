@@ -125,24 +125,24 @@ public class TablesComposite extends Composite {
 	 * table column head를 생성합니다.
 	 */
 	private void createColumn() {
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
-			DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT
+		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
+			DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT
 		) {
 			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "collation", "Created", "Comment"};
 			int[] size = {120, 70, 70, 100, 120, 120, 220};
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 			String[] name = {"Name", "Rows", "Lock"};
 			int[] size = {120, 70, 70};
 			int[] align = {SWT.LEFT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
 		} else {
-			String[] name = {"Name", "comment"};
-			int[] size = {120, 70};
-			int[] align = {SWT.LEFT, SWT.LEFT};
+			String[] name = {"Name", "comment", "Index", "Shared", "Primary Key", "Triggers", "Sub Class", "Rules", "Option"};
+			int[] size = {120, 150, 60, 60, 100, 80, 80, 60, 60};
+			int[] align = {SWT.LEFT, SWT.LEFT, SWT.CENTER, SWT.CENTER, SWT.CENTER, SWT.CENTER, SWT.CENTER, SWT.CENTER, SWT.CENTER};
 			
 			createColumn(name, size, align);
 		}
@@ -206,8 +206,8 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 	public String getColumnText(Object element, int columnIndex) {
 		Map resultMap = (HashMap)element;
 		
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MARIADB_DEFAULT
+		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
+				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT
 		) {
 			switch(columnIndex) {
 			case 0: return ""+resultMap.get("TABLE_NAME");
@@ -218,7 +218,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 5: return ""+resultMap.get("CREATE_TIME");
 			case 6: return ""+resultMap.get("TABLE_COMMENT");
 			}
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.ORACLE_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 			switch(columnIndex) {
 			case 0: return ""+resultMap.get("TABLE_NAME");
 			case 1: return NumberFormatUtils.commaFormat(""+resultMap.get("NUM_ROWS"));
@@ -226,8 +226,15 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			}
 		} else {
 			switch(columnIndex) {
-			case 0: return ""+resultMap.get("name");
+		    case 0: return ""+resultMap.get("name");
 			case 1: return StringUtils.replace(""+resultMap.get("comment"), "null", "");
+			case 2: return "true".equals(""+resultMap.get("has_index")) ? "has" : "";
+			case 3: return "true".equals(""+resultMap.get("is_shared")) ? "has" : "";
+			case 4: return "true".equals(""+resultMap.get("has_pk")) ? "has" : "";
+			case 5: return "true".equals(""+resultMap.get("has_triggers")) ? "has" : "";
+			case 6: return "true".equals(""+resultMap.get("has_subclass")) ? "has" : "";
+			case 7: return "true".equals(""+resultMap.get("has_rules")) ? "has" : "";
+			case 8: return StringUtils.replace(""+resultMap.get("options"), "null", "");
 			}
 		}
 		

@@ -554,7 +554,7 @@ public class HiveConnection implements java.sql.Connection {
 
   public void rollback() throws SQLException {
     // TODO Auto-generated method stub
-//    throw new SQLException("Method not supported");
+    throw new SQLException("Method not supported");
   }
 
   /*
@@ -565,7 +565,7 @@ public class HiveConnection implements java.sql.Connection {
 
   public void rollback(Savepoint savepoint) throws SQLException {
     // TODO Auto-generated method stub
-//    throw new SQLException("Method not supported");
+    throw new SQLException("Method not supported");
   }
 
   /*
@@ -587,7 +587,7 @@ public class HiveConnection implements java.sql.Connection {
 
   public void setCatalog(String catalog) throws SQLException {
     // TODO Auto-generated method stub
-//    throw new SQLException("Method not supported");
+    throw new SQLException("Method not supported");
   }
 
   /*
@@ -599,7 +599,7 @@ public class HiveConnection implements java.sql.Connection {
   public void setClientInfo(Properties properties)
       throws SQLClientInfoException {
     // TODO Auto-generated method stub
-//    throw new SQLClientInfoException("Method not supported", null);
+    throw new SQLClientInfoException("Method not supported", null);
   }
 
   /*
@@ -611,7 +611,7 @@ public class HiveConnection implements java.sql.Connection {
   public void setClientInfo(String name, String value)
       throws SQLClientInfoException {
     // TODO Auto-generated method stub
-//    throw new SQLClientInfoException("Method not supported", null);
+    throw new SQLClientInfoException("Method not supported", null);
   }
 
   /*
@@ -622,12 +622,12 @@ public class HiveConnection implements java.sql.Connection {
 
   public void setHoldability(int holdability) throws SQLException {
     // TODO Auto-generated method stub
-//    throw new SQLException("Method not supported");
+    throw new SQLException("Method not supported");
   }
 
   public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
     // JDK 1.7
-//    throw new SQLException("Method not supported");
+    throw new SQLException("Method not supported");
   }
 
   /*

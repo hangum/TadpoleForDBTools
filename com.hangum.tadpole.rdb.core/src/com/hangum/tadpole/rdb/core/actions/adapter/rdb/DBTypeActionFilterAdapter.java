@@ -43,7 +43,7 @@ public class DBTypeActionFilterAdapter implements IActionFilter {
 			if(DB_TYPE.equals(name)) {
 				String[] dbTypes = StringUtils.split(value, ",");
 				for (String dbType : dbTypes) {
-					if(userDB.getDbms_types().toLowerCase().equals(dbType)) {
+					if(userDB.getDbms_types().equalsIgnoreCase(dbType)) {
 						return true;
 					}
 				}
@@ -52,7 +52,7 @@ public class DBTypeActionFilterAdapter implements IActionFilter {
 			} else if(USER_TYPE.equals(name)) {
 				String[] userTypes = StringUtils.split(value, ",");
 				for (String userType : userTypes) {
-					if(SessionManager.getRoleType(userDB.getGroup_seq()).toLowerCase().equals(userType)) {
+					if(SessionManager.getRoleType(userDB.getGroup_seq()).equalsIgnoreCase(userType)) {
 						return true;
 					}
 				}

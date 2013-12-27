@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -18,40 +19,50 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.sql.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.executer.ProcedureExecuterManager;
 
 /**
  * Object Explorer에서 사용하는 공통 action
  * 
- *  Procedure를 실행합니다.
+ * Procedure를 실행합니다.
  * 
  * @author hangum
- *
+ * 
  */
 public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(ObjectExecuteProcedureAction.class);
+	private static final Logger logger = Logger.getLogger(ObjectExecuteProcedureAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.execute.procedure";
 
 	public ObjectExecuteProcedureAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Execute "  + title);
+		setText("Execute " + title);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
-		
+		logger.debug("ObjectExecuteProcedureAction run...");
+		ProcedureFunctionDAO procedureDAO;
+		if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
+			OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();
+			procedureDAO = new ProcedureFunctionDAO();
+			procedureDAO.setName(synonym.getName());
+			if (synonym.getObject_type().startsWith("PACKAGE"))
+				procedureDAO.setPackagename(synonym.getName());
+		} else {
+			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
+		}
 		ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
-		if(pm.isExecuted(procedureDAO, userDB)) {
+		if (pm.isExecuted(procedureDAO, userDB)) {
 			ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, userDB, procedureDAO);
 			epd.open();
 		}
 	}// end method
-	
+
 }

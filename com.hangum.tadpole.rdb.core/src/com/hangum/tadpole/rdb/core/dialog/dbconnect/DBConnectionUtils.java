@@ -28,6 +28,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MySQLLoginComposit
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.TajoLoginComposite;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -87,6 +88,8 @@ public class DBConnectionUtils {
 			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
 			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+		} else if(dbDefine == DBDefine.TAJO_DEFAULT) {
+			loginComposite = new TajoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		}
 		loginComposite.setDataActionStatus(dataStatus);
 		

@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.metastore.api.FieldSchema;
 import org.apache.hadoop.hive.metastore.api.Schema;
@@ -46,7 +48,7 @@ import org.apache.hadoop.io.BytesWritable;
  */
 public class HiveQueryResultSet extends HiveBaseResultSet {
 
-//  public static final Log LOG = LogFactory.getLog(HiveQueryResultSet.class);
+  public static final Log LOG = LogFactory.getLog(HiveQueryResultSet.class);
 
   private HiveInterface client;
   private SerDe serde;
@@ -99,11 +101,11 @@ public class HiveQueryResultSet extends HiveBaseResultSet {
       serde = new LazySimpleSerDe();
       Properties props = new Properties();
       if (names.length() > 0) {
-//        LOG.debug("Column names: " + names);
+        LOG.debug("Column names: " + names);
         props.setProperty(serdeConstants.LIST_COLUMNS, names);
       }
       if (types.length() > 0) {
-//        LOG.debug("Column types: " + types);
+        LOG.debug("Column types: " + types);
         props.setProperty(serdeConstants.LIST_COLUMN_TYPES, types);
       }
       serde.initialize(new Configuration(), props);
@@ -145,9 +147,9 @@ public class HiveQueryResultSet extends HiveBaseResultSet {
       }
 
       rowsFetched++;
-//      if (LOG.isDebugEnabled()) {
-//        LOG.debug("Fetched row string: " + rowStr);
-//      }
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Fetched row string: " + rowStr);
+      }
 
       StructObjectInspector soi = (StructObjectInspector) serde.getObjectInspector();
       List<? extends StructField> fieldRefs = soi.getAllStructFieldRefs();
@@ -161,9 +163,9 @@ public class HiveQueryResultSet extends HiveBaseResultSet {
         row.set(i, convertLazyToJava(obj, oi));
       }
 
-//      if (LOG.isDebugEnabled()) {
-//        LOG.debug("Deserialized row: " + row);
-//      }
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Deserialized row: " + row);
+      }
     } catch (HiveServerException e) {
       if (e.getErrorCode() == 0) { // error code == 0 means reached the EOF
         return false;

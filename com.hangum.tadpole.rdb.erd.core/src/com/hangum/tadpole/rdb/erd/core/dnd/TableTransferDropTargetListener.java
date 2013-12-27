@@ -31,6 +31,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.relation.RelationUtil;
@@ -41,6 +42,7 @@ import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.Table;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -163,24 +165,16 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	 * @throws Exception
 	 */
 	public List<TableColumnDAO> getColumns(String strTBName) throws Exception {
-//		if(DBDefine.getDBDefine(userDB.getTypes()) != DBDefine.MONGODB_DEFAULT) {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("db", userDB.getDb()); //$NON-NLS-1$
+		param.put("table", strTBName);			 //$NON-NLS-1$
+
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			return TajoConnectionManager.tableColumnList(userDB, param);
+		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			
-			Map<String, String> param = new HashMap<String, String>();
-			param.put("db", userDB.getDb()); //$NON-NLS-1$
-			param.put("table", strTBName);			 //$NON-NLS-1$
-			
 			return sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
-//		} else if(DBDefine.getDBDefine(userDB.getTypes()) == DBDefine.MONGODB_DEFAULT) {
-//			
-//			Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-//			com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-//			DBCollection coll = mongoDB.getCollection(strTBName);
-//										
-//			return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
-//		} 
-		
-//		return null;
+		}
 	}
 
 }

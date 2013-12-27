@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!--
+	Hadoop 2.2.0 버전
+	tajo-0.8.0 으로 초기 작업을 시작했습니다. - 13.12.01
+	
+	http://tajo.incubator.apache.org/tajo-0.8.0-doc.html
+	
+	jdbc example
+	https://git-wip-us.apache.org/repos/asf?p=incubator-tajo.git;a=blob;f=tajo-core/tajo-core-backend/src/test/java/org/apache/tajo/jdbc/TestTajoJdbc.java;h=98a7ed2516008d002fd388f8892faab2bc8c3e28;hb=342fd47ffd2a30f4941256ac4a5bc95707004599
+	
+	@author hangum	
+ --> 
+<sqlMap namespace="Apache_Tajo_query">
+
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+	\d
+</select>
+
+<!-- 
+	table 이름
+ -->
+<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	\d
+</select>
+
+<!-- 
+	table, view의 컬럼 정보
+ -->
+<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+	 \d $table$
+</select>
+
+</sqlMap>

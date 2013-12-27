@@ -30,10 +30,10 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.swtdesigner.ResourceManager;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
+import com.swtdesigner.ResourceManager;
 
 /**
  * 기본 introduction
@@ -49,9 +49,6 @@ public class IntroEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.intor"; //$NON-NLS-1$
 	private Text textURL;
 	private Browser browser;
-	
-	/** default main home */
-	public static String[] ARRAY_DEFAULT_MAIN_HOME_PAGE = {PreferenceDefine.DEFAULT_HOME_PAGE_VALUE};//, "http://www.pitmongo.co.kr/"};
 	
 	/** default dona home */
 	public static String[] ARRAY_DONATION_HOME_PAGE = {"www.osci.kr", "http://www.xenonix.com"}; //$NON-NLS-1$ //$NON-NLS-2$
@@ -174,12 +171,8 @@ public class IntroEditor extends EditorPart {
 	 * broswer set
 	 */
 	private void setBrowserURL() {
-		int selectRandom = (int)(Math.random() * ARRAY_DEFAULT_MAIN_HOME_PAGE.length);
-//		logger.info("[select home]" + ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]); //$NON-NLS-1$
-		browser.setUrl(ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
-		
-		textURL.setText(ARRAY_DEFAULT_MAIN_HOME_PAGE[selectRandom]);
-
+		setBrowserURL(GetPreferenceGeneral.getDefaultHomePage());
+		textURL.setText(GetPreferenceGeneral.getDefaultHomePage());
 	}
 	
 	/**
@@ -188,6 +181,8 @@ public class IntroEditor extends EditorPart {
 	 * @param url
 	 */
 	private void setBrowserURL(String url) {
+		if(logger.isDebugEnabled()) logger.debug("Default home url is " + url);
+		
 		boolean boolStartHttp = StringUtils.startsWith(url, "http"); //$NON-NLS-1$
 		if(boolStartHttp) browser.setUrl(url);
 		else browser.setUrl("http://" + url); //$NON-NLS-1$

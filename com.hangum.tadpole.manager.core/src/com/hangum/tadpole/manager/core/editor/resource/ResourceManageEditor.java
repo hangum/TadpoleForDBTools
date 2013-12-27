@@ -293,8 +293,7 @@ public class ResourceManageEditor extends EditorPart {
 				try {
 					TadpoleSystem_UserDBResource.delete(userDBResource);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					logger.error("Resource delete " + dao.toString(), e1);
 				}
 			}
 		});

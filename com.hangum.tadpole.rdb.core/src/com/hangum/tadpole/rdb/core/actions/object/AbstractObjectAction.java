@@ -100,6 +100,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * Synonym 최신정보로 갱신
+	 */
+	protected void refreshSynonym() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshSynonym(true);		
+	}
+	
+	/**
 	 * Indexes 최신정보로 갱신
 	 */
 	protected void refreshIndexes() {

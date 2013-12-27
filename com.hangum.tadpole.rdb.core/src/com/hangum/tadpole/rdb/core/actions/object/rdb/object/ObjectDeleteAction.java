@@ -27,8 +27,10 @@ import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.sql.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.TadpoleSystemCommons;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -55,10 +57,14 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			TableDAO dao = (TableDAO)selection.getFirstElement();
 
-			if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {
 					try {
-						TadpoleSystemCommons.executSQL(userDB, "drop table " + dao.getName()); //$NON-NLS-1$
+						if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+							TajoConnectionManager.executeUpdate(userDB, "drop table " + dao.getName());
+						} else {
+							TadpoleSystemCommons.executSQL(userDB, "drop table " + dao.getName()); //$NON-NLS-1$
+						}
 						refreshTable();
 					} catch(Exception e) {
 						logger.error(Messages.ObjectDeleteAction_5, e);
@@ -66,7 +72,7 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 					}
 				}
 
-			} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
+			} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {
 					try {
 						MongoDBQuery.dropCollection(userDB, dao.getName());
@@ -90,13 +96,26 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 					exeMessage(Messages.ObjectDeleteAction_1, e);
 				}
 			}
+		} else if(actionType == PublicTadpoleDefine.DB_ACTION.SYNONYM) {
+			
+			OracleSynonymDAO dao = (OracleSynonymDAO)selection.getFirstElement();
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_8, dao.getSynonym_name() + Messages.ObjectDeleteAction_synonym)) {
+				try {
+					TadpoleSystemCommons.executSQL(userDB, "drop synonym " + dao.getTable_owner() + "." + dao.getSynonym_name()); //$NON-NLS-1$
+					
+					refreshSynonym();
+				} catch(Exception e) {
+					logger.error(Messages.ObjectDeleteAction_11, e);
+					exeMessage(Messages.ObjectDeleteAction_1, e);
+				}
+			}
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			if(selection.getFirstElement() instanceof InformationSchemaDAO) {			
 				InformationSchemaDAO indexDAO = (InformationSchemaDAO)selection.getFirstElement();
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_14, indexDAO.getTABLE_NAME()+ Messages.ObjectDeleteAction_15 + indexDAO.getINDEX_NAME() + Messages.ObjectDeleteAction_16)) {
 					
 					try {
-						if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.POSTGRE_DEFAULT) {
+						if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT) {
 							TadpoleSystemCommons.executSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							TadpoleSystemCommons.executSQL(userDB, "drop index " + indexDAO.getINDEX_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
