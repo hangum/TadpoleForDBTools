@@ -120,7 +120,8 @@ public class HiveConnection implements java.sql.Connection {
       }
     }
     isClosed = false;
-    configureConnection(uri.split("/")[1]);
+    if(!uri.isEmpty()) configureConnection(uri.split("/")[1]);
+    else configureConnection(null);
   }
   
  
@@ -134,11 +135,13 @@ public class HiveConnection implements java.sql.Connection {
     stmt.execute(
         "set hive.fetch.output.serde = org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe");
     stmt.close();
-    
+
     //  db select statement
-    stmt = createStatement();
-    stmt.execute("use " + dbName);
-    stmt.close();
+    if(null != null) {
+	    stmt = createStatement();
+	    stmt.execute("use " + dbName);
+	    stmt.close();
+    }
   }
 
   /*
