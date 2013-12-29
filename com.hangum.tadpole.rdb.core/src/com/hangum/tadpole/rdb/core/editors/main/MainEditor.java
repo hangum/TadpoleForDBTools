@@ -1412,10 +1412,13 @@ public class MainEditor extends EditorExtension {
 			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
 			sourceDataList = ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma);
 			
-			// 데이터셋에 추가 결과 셋이 있을경우 모두 fetch 하여 결과 그리드에 표시한다.
-			while(pstmt.getMoreResults()){  
-				if(logger.isDebugEnabled()) logger.debug("\n**********has more resultset1...***********"); //$NON-NLS-1$
-				sourceDataList.addAll(ResultSetUtils.getResultToList(pstmt.getResultSet(), queryResultCount, isResultComma));
+			if(userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) {
+			} else {
+				// 데이터셋에 추가 결과 셋이 있을경우 모두 fetch 하여 결과 그리드에 표시한다.
+				while(pstmt.getMoreResults()){  
+					if(logger.isDebugEnabled()) logger.debug("\n**********has more resultset1...***********"); //$NON-NLS-1$
+					sourceDataList.addAll(ResultSetUtils.getResultToList(pstmt.getResultSet(), queryResultCount, isResultComma));
+				}
 			}
 			
 		} finally {
