@@ -954,7 +954,7 @@ public class MainEditor extends EditorExtension {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 			} else {
-				showTables = TajoConnectionManager.tableList(userDB);
+				showTables = new TajoConnectionManager().tableList(userDB);
 			}
 
 			for (TableDAO tableDao : showTables) {
@@ -1314,7 +1314,7 @@ public class MainEditor extends EditorExtension {
 		
 		// is tajo
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			Map<String, Object> resultMap = TajoConnectionManager.select(userDB, requestQuery, pageNumber, isAutoCommit);
+			Map<String, Object> resultMap = new TajoConnectionManager().select(userDB, requestQuery, pageNumber, isAutoCommit);
 			
 			mapColumnType = (Map<Integer, Integer>)resultMap.get("mapColumnType");
 			
@@ -1491,7 +1491,7 @@ public class MainEditor extends EditorExtension {
 		
 		// is tajo
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			TajoConnectionManager.executeUpdate(userDB,sqlQuery);
+			new TajoConnectionManager().executeUpdate(userDB,sqlQuery);
 		} else { 
 		
 			// commit나 rollback 명령을 만나면 수행하고 리턴합니다.

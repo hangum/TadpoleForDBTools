@@ -52,7 +52,7 @@ public class ConnectionPoolManager {
 	
 	private static DataSource makePool(UserDBDAO userDB) {
 		GenericObjectPool connectionPool = new GenericObjectPool();
-		connectionPool.setMaxActive(2);
+		connectionPool.setMaxActive(5);
 //		connectionPool.setWhenExhaustedAction((byte)1);
 //		connectionPool.setMaxWait(1000 * 60); 					// 1분대기.
 //		connectionPool.setTimeBetweenEvictionRunsMillis(3 * 1000);
