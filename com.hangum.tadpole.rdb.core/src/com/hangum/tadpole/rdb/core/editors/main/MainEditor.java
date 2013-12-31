@@ -1160,15 +1160,15 @@ public class MainEditor extends EditorExtension {
 		final boolean isAutoCommit = isAutoCommit();
 		
 		final String strArayExecuteQuery = tmpArayExecuteQuery;
-
+		final SQLHistoryDAO executingSQLDAO = new SQLHistoryDAO();
+		
 		// job
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(Messages.MainEditor_46, IProgressMonitor.UNKNOWN);
+				monitor.beginTask(Messages.MainEditor_46 + " [" + finalExecuteSQL + "]", IProgressMonitor.UNKNOWN);
 				
-				SQLHistoryDAO executingSQLHistoryDAO = new SQLHistoryDAO();
-				executingSQLHistoryDAO.setStartDateExecute(new Date());
+				executingSQLDAO.setStartDateExecute(new Date());
 				
 				try {
 					// 페이지를 초기화 합니다.
@@ -1176,7 +1176,7 @@ public class MainEditor extends EditorExtension {
 					
 					if(intExecuteQueryType == ALL_QUERY_EXECUTE) {
 						
-						executingSQLHistoryDAO.setStrSQLText(strArayExecuteQuery);
+						executingSQLDAO.setStrSQLText(strArayExecuteQuery);
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
 							runSQLExecuteBatch(listStrExecuteQuery, isAutoCommit);
@@ -1188,36 +1188,36 @@ public class MainEditor extends EditorExtension {
 						
 						// select 문장 실행
 						if(isStatement) { //$NON-NLS-1$
-							executingSQLHistoryDAO = new SQLHistoryDAO();
-							executingSQLHistoryDAO.setStartDateExecute(new Date());
+							executingSQLDAO.setStartDateExecute(new Date());
+							executingSQLDAO.setStrSQLText(finalExecuteSQL);
 							
 							runSQLSelect(finalExecuteSQL, isAutoCommit);
-							executingSQLHistoryDAO.setRows(sourceDataList.size());
+							executingSQLDAO.setRows(sourceDataList.size());
 						}
 					} else {
-						executingSQLHistoryDAO.setStrSQLText(finalExecuteSQL);
+						executingSQLDAO.setStrSQLText(finalExecuteSQL);
 						
 						if(isStatement) {
 							runSQLSelect(finalExecuteSQL, isAutoCommit);
-							executingSQLHistoryDAO.setRows(sourceDataList.size());
+							executingSQLDAO.setRows(sourceDataList.size());
 						} else {
 							runSQLOther(finalExecuteSQL, isAutoCommit);
 						}
 					}
 					
-					executingSQLHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.S.toString()); //$NON-NLS-1$
+					executingSQLDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.S.toString()); //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + finalExecuteSQL, e);
 					
-					executingSQLHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
-					executingSQLHistoryDAO.setMesssage(e.getMessage());
+					executingSQLDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
+					executingSQLDAO.setMesssage(e.getMessage());
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
 				} finally {
 					monitor.done();
 					
-					executingSQLHistoryDAO.setEndDateExecute(new Date());
-					listExecutingSqltHistoryDao.add(executingSQLHistoryDAO);
+					executingSQLDAO.setEndDateExecute(new Date());
+					listExecutingSqltHistoryDao.add(executingSQLDAO);
 				}
 				
 				/////////////////////////////////////////////////////////////////////////////////////////
@@ -1234,7 +1234,7 @@ public class MainEditor extends EditorExtension {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
 							// table에 데이터 표시
-							executeFinish(finalExecuteSQL);
+							executeFinish(executingSQLDAO);
 							
 							// 쿼리 실행후에 결과 테이블에 포커스가 가도록
 							setOrionTextFocus();
@@ -1587,12 +1587,12 @@ public class MainEditor extends EditorExtension {
 	 * 1) 마지막 쿼리를 받아서 selct 문일 경우 쿼리 네비게이션을 확성화 해준다.
 	 * 2) filter를 설정한다.
 	 * 
-	 * @param lastQuery 실행된 마지막 쿼리
+	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
-	private void executeFinish(String finalExecuteSQL) {
+	private void executeFinish(SQLHistoryDAO executingSQLDAO) {
 		setFilter();
 		
-		if(SQLUtil.isStatement(finalExecuteSQL)) {			
+		if(SQLUtil.isStatement(executingSQLDAO.getStrSQLText())) {			
 			btnPrev.setEnabled(false);
 			if( sourceDataList.size() < queryPageCount ) btnNext.setEnabled(false);
 			else btnNext.setEnabled(true);
@@ -1602,7 +1602,7 @@ public class MainEditor extends EditorExtension {
 		}
 		
 		// 쿼리의 결과를 화면에 출력합니다.
-		setResultTable(finalExecuteSQL);
+		setResultTable(executingSQLDAO);
 	}
 	
 	/**
@@ -1634,8 +1634,8 @@ public class MainEditor extends EditorExtension {
 	/**
 	 * 쿼리의 결과를 화면에 출력하거나 정리 합니다.
 	 */
-	private void setResultTable(String finalExecuteSQL) {
-		if(SQLUtil.isStatement(finalExecuteSQL)) {			
+	private void setResultTable(SQLHistoryDAO executingSQLDAO) {
+		if(SQLUtil.isStatement(executingSQLDAO.getStrSQLText())) {			
 			// table data를 생성한다.
 			sqlSorter = new SQLResultSorter(-999);
 			
@@ -1664,15 +1664,17 @@ public class MainEditor extends EditorExtension {
 			sqlResultTableViewer.setSorter(sqlSorter);
 			
 			// 메시지를 출력합니다.
-			tableResult.setToolTipText(sourceDataList.size() + Messages.MainEditor_33);
+			long longExecuteTime = executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime();
+			String strResultMsg = sourceDataList.size() + " " + Messages.MainEditor_33 + "[" + longExecuteTime + " ms]";
+			tableResult.setToolTipText(strResultMsg);
+			sqlResultStatusLabel.setText(sourceDataList.size()  + " " +  Messages.MainEditor_33 + "[" + longExecuteTime + " ms]");
 			sqlFilter.setTable(tableResult);
-			sqlResultStatusLabel.setText(sourceDataList.size() + Messages.MainEditor_33);
 			
 			// Pack the columns
 			TableUtil.packTable(tableResult);
 			resultFolderSel(RESULT_TAB_NAME.RESULT_SET);
 		} else {
-			listMessage.add(new TadpoleMessageDAO(new Date(), "success. \n\n" + finalExecuteSQL)); //$NON-NLS-1$
+			listMessage.add(new TadpoleMessageDAO(new Date(), "success. \n\n" + executingSQLDAO.getStrSQLText())); //$NON-NLS-1$
 			tableViewerMessage.refresh(listMessage);
 			resultFolderSel(RESULT_TAB_NAME.TADPOLE_MESSAGE);
 		}
