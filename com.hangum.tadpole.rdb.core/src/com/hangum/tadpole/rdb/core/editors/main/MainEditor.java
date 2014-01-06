@@ -63,6 +63,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -656,7 +657,7 @@ public class MainEditor extends EditorExtension {
 		tableViewerSQLHistory.getTable().setLayout(layoutColumnLayout);
 		
 		SQLHistorySorter sorterHistory = new SQLHistorySorter();
-		SQLHistoryCreateColumn.createTableHistoryColumn(tableViewerSQLHistory, sorterHistory, layoutColumnLayout);
+		SQLHistoryCreateColumn.createTableHistoryColumn(tableViewerSQLHistory, sorterHistory, layoutColumnLayout, false);
 		
 		tableViewerSQLHistory.setLabelProvider(new SQLHistoryLabelProvider());
 		tableViewerSQLHistory.setContentProvider(new ArrayContentProvider());
@@ -1162,6 +1163,7 @@ public class MainEditor extends EditorExtension {
 		final String strArayExecuteQuery = tmpArayExecuteQuery;
 		final SQLHistoryDAO executingSQLDAO = new SQLHistoryDAO();
 		
+		final String ipaddress = RWT.getRequest().getRemoteAddr();
 		// job
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
@@ -1169,7 +1171,7 @@ public class MainEditor extends EditorExtension {
 				monitor.beginTask(Messages.MainEditor_46 + " [" + finalExecuteSQL + "]", IProgressMonitor.UNKNOWN);
 				
 				executingSQLDAO.setStartDateExecute(new Date());
-				
+				executingSQLDAO.setIpAddress(ipaddress);
 				try {
 					// 페이지를 초기화 합니다.
 					pageNumber = 1;	
@@ -1190,7 +1192,8 @@ public class MainEditor extends EditorExtension {
 						if(isStatement) { //$NON-NLS-1$
 							executingSQLDAO.setStartDateExecute(new Date());
 							executingSQLDAO.setStrSQLText(finalExecuteSQL);
-							
+							executingSQLDAO.setIpAddress(ipaddress);
+
 							runSQLSelect(finalExecuteSQL, isAutoCommit);
 							executingSQLDAO.setRows(sourceDataList.size());
 						}
@@ -1204,7 +1207,6 @@ public class MainEditor extends EditorExtension {
 							runSQLOther(finalExecuteSQL, isAutoCommit);
 						}
 					}
-					
 					executingSQLDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.S.toString()); //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + finalExecuteSQL, e);

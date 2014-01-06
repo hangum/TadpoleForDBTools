@@ -21,7 +21,10 @@ public class Messages extends NLS {
 	public static String SQLHistoryCreateColumn_3;
 	public static String SQLHistoryCreateColumn_4;
 	public static String SQLHistoryCreateColumn_5;
-	
+	public static String SQLHistoryCreateColumn_6;
+	public static String SQLHistoryCreateColumn_7;
+	public static String SQLHistoryCreateColumn_8;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
