@@ -61,7 +61,7 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_2, dao.getName() + Messages.ObjectDeleteAction_3)) {
 					try {
 						if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-							TajoConnectionManager.executeUpdate(userDB, "drop table " + dao.getName());
+							new TajoConnectionManager().executeUpdate(userDB, "drop table " + dao.getName());
 						} else {
 							TadpoleSystemCommons.executSQL(userDB, "drop table " + dao.getName()); //$NON-NLS-1$
 						}

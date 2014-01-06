@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.engine.connections.ConnectionInterfact;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -36,7 +37,7 @@ import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
  * @author hangum
  *
  */
-public class TajoConnectionManager {
+public class TajoConnectionManager implements ConnectionInterfact {
 	private static final Logger logger = Logger.getLogger(TajoConnectionManager.class);
 	
 	/**
@@ -46,7 +47,7 @@ public class TajoConnectionManager {
 	 * @param sqlQuery
 	 * @return
 	 */
-	public static void executeUpdate(UserDBDAO userDB, String sqlQuery) throws Exception {
+	public void executeUpdate(UserDBDAO userDB, String sqlQuery) throws Exception {
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
 		
@@ -67,7 +68,7 @@ public class TajoConnectionManager {
 	 * @param requestQuery
 	 * @throws Exception
 	 */
-	public static Map<String, Object> select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
+	public Map<String, Object> select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
 		Map<String, Object> retMap = new HashMap<String, Object>();
 		
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
@@ -114,7 +115,7 @@ public class TajoConnectionManager {
 	 * 
 	 * @param userDB
 	 */
-	public static void connectionCheck(UserDBDAO userDB) throws Exception {
+	public void connectionCheck(UserDBDAO userDB) throws Exception {
 		Connection conn = null;
 		ResultSet rs = null;
 		
@@ -138,7 +139,7 @@ public class TajoConnectionManager {
 	 * @param userDB
 	 * @throws Exception
 	 */
-	public static List<TableDAO> tableList(UserDBDAO userDB) throws Exception {
+	public List<TableDAO> tableList(UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
 		Connection conn = null;
@@ -179,7 +180,7 @@ public class TajoConnectionManager {
 	 * @param tbName
 	 * @throws Exception
 	 */
-	public static List<TableColumnDAO> tableColumnList(UserDBDAO userDB, Map<String, String> mapParam) throws Exception {
+	public List<TableColumnDAO> tableColumnList(UserDBDAO userDB, Map<String, String> mapParam) throws Exception {
 		List<TableColumnDAO> showTableColumns = new ArrayList<TableColumnDAO>();
 		Connection conn = null;
 		ResultSet rs = null;

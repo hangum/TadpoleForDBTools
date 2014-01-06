@@ -13,7 +13,7 @@ package com.hangum.tadpole.commons.dialogs.message.dao;
 import java.util.Date;
 
 /**
- * query history
+ * 실행 쿼리와 쿼리 결과를 포함하는 dao
  * 
  * @author hangum
  * 

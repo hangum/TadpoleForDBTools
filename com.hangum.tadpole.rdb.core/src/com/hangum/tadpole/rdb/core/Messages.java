@@ -390,6 +390,7 @@ public class Messages extends NLS {
 	public static String TableDirectEditorComposite_lblEnd_text;
 	public static String TableDirectEditorComposite_text_text;
 	public static String TableDirectEditorComposite_textStart_text;
+	public static String HiveLoginComposite_lblDriverType_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

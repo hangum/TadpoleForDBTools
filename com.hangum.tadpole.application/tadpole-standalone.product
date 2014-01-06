@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-standalone -test -debuglog -useDB all -defaultDB MySQL</programArgs>
+      <programArgs>-standalone -test -useDB all -defaultDB MySQL</programArgs>
       <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1 -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer</vmArgs>
    </launcherArgs>
 

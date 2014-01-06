@@ -62,7 +62,7 @@ public class GenerateDDLScriptUtils {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
 			} else {
-				showTableColumns = TajoConnectionManager.tableColumnList(userDB, parameter);
+				showTableColumns = new TajoConnectionManager().tableColumnList(userDB, parameter);
 			}
 			
 			sbSQL.append(" SELECT "); //$NON-NLS-1$

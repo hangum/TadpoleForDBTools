@@ -87,7 +87,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowProgressIndicator(false);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
         
-        // Browser screen max, not min.
+        // fullscreen
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(false);
     
@@ -223,6 +223,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     @Override
     public void postWindowOpen() {
+    	// fullscreen
+    	getWindowConfigurer().getWindow().getShell().setMaximized(true);;
+    	   
     	// If login after does not DB exist, DB connect Dialog open.
     	try {
     		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
