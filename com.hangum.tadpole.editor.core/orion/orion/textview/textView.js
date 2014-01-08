@@ -3276,16 +3276,17 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				*/
 				c = "\uFEFF"; //$NON-NLS-0$
 			}
-			if (isWebkit) {
-				/*
-				* Feature in WekKit. Adding a regular white space to the line will
-				* cause the longest line in the view to wrap even though "pre" is set.
-				* The fix is to use the zero-width non-joiner character (\u200C) instead.
-				* Note: To not use \uFEFF because in old version of Chrome this character 
-				* shows a glyph;
-				*/
-				c = "\u200C"; //$NON-NLS-0$
-			}
+			// remove this code - hangu m.2014-01-08
+//			if (isWebkit) {
+//				/*
+//				* Feature in WekKit. Adding a regular white space to the line will
+//				* cause the longest line in the view to wrap even though "pre" is set.
+//				* The fix is to use the zero-width non-joiner character (\u200C) instead.
+//				* Note: To not use \uFEFF because in old version of Chrome this character 
+//				* shows a glyph;
+//				*/
+//				c = "\u200C"; //$NON-NLS-0$
+//			}
 			ranges.push({text: c, style: this._metrics.largestFontStyle, ignoreChars: 1});
 			
 			var range, span, style, oldSpan, oldStyle, text, oldText, end = 0, oldEnd = 0, next;
