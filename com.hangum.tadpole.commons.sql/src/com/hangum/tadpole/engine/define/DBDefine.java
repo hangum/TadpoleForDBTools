@@ -59,6 +59,7 @@ public enum DBDefine {
 	
 	/** hive */
 	HIVE_DEFAULT,
+	HIVE2_DEFAULT,
 	
 	/** tajo */
 	TAJO_DEFAULT,
@@ -97,6 +98,7 @@ public enum DBDefine {
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
 			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
 			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
+			case HIVE2_DEFAULT:			return prefix + "HIVE2Config.xml";
 			case TAJO_DEFAULT:			return prefix  + "TAJOConfig.xml";
 			default:
 				return "undefine db";
@@ -129,6 +131,8 @@ public enum DBDefine {
 		else if(type.equalsIgnoreCase("MongoDB"))		return MONGODB_DEFAULT;
 		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
 		else if(type.equalsIgnoreCase("Apache Hive")) 	return HIVE_DEFAULT;
+		else if(type.equalsIgnoreCase("Apache Hive2")) 	return HIVE2_DEFAULT;
+		
 		else if(type.equalsIgnoreCase("Apache Tajo")) 	return TAJO_DEFAULT;
 		else return null;
 	}
@@ -170,6 +174,7 @@ public enum DBDefine {
 			case MONGODB_DEFAULT:	return "%s:%s/%s";
 			
 			case HIVE_DEFAULT:		return "jdbc:hive://%s:%s/%s";
+			case HIVE2_DEFAULT:		return "jdbc:hive2://%s:%s/%s";
 			
 			case TAJO_DEFAULT:		return "jdbc:tajo://%s:%s/%s";
 			
@@ -200,6 +205,7 @@ public enum DBDefine {
 			case AMAZONRDS_DEFAULT: 	return "AmazonRDS";
 			
 			case HIVE_DEFAULT: 			return "Apache Hive";
+			case HIVE2_DEFAULT: 			return "Apache Hive2";
 			
 			case TAJO_DEFAULT: 			return "Apache Tajo";
 			default:
@@ -218,13 +224,13 @@ public enum DBDefine {
 			extension += ".mysql"; //$NON-NLS-1$
 		} else if(this == DBDefine.ORACLE_DEFAULT) {
 			extension += ".oracle"; //$NON-NLS-1$
-		} else if(this == DBDefine.MSSQL_DEFAULT) {
+		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
 			extension += ".mssql"; //$NON-NLS-1$
 		} else if(this == DBDefine.SQLite_DEFAULT) {
 			extension += ".sqlite"; //$NON-NLS-1$
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
 			extension += ".mysql"; //$NON-NLS-1$
-		} else if(this == DBDefine.HIVE_DEFAULT) {
+		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			extension += ".hql"; //$NON-NLS-1$
 		} else {
 			extension += ".postgresql"; //$NON-NLS-1$

@@ -8,7 +8,7 @@
 	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-java-driver-2.11.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/sqlite/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-dbcp-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-dbcp-1.4.jar" sourcepath="/Users/hangum/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-pool-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/ibatis-2.3.4.726.jar" sourcepath="C:/Documents and Settings/Jang/바탕 화면/src/ibatis-src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>

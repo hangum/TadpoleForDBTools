@@ -43,7 +43,9 @@ public class SQLHistoryFilter extends ViewerFilter {
 		if(sqlDAO.getMesssage().toLowerCase().matches(searchString)) return true;
 		if(sqlDAO.getResult().toLowerCase().matches(searchString)) return true;
 		if((""+sqlDAO.getRows()).toLowerCase().matches(searchString)) return true;
-		
+		if((""+sqlDAO.getUserName()).toLowerCase().matches(searchString)) return true;
+		if((""+sqlDAO.getDbName()).toLowerCase().matches(searchString)) return true;
+		if((""+sqlDAO.getIpAddress()).toLowerCase().matches(searchString)) return true;
 		return false;
 	}
 	

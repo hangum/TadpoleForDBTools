@@ -131,7 +131,7 @@ public class HiveConnection implements java.sql.Connection {
     // open client session
     openSession();
 
-    configureConnection();
+    configureConnection(connParams);
   }
 
   private void openTransport() throws SQLException {
@@ -249,7 +249,7 @@ public class HiveConnection implements java.sql.Connection {
     isClosed = false;
   }
 
-  private void configureConnection() throws SQLException {
+  private void configureConnection(Utils.JdbcConnectionParams connParams) throws SQLException {
     // set the hive variable in session state for local mode
     if (isEmbeddedMode) {
       if (!hiveVarMap.isEmpty()) {
@@ -268,6 +268,11 @@ public class HiveConnection implements java.sql.Connection {
       }
       stmt.close();
     }
+    
+    //  db select statement - hangum, 12/28/13
+    Statement stmt = createStatement();
+    stmt.execute("use " + connParams.getDbName());
+    stmt.close();
   }
 
   /**
