@@ -95,9 +95,32 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
     	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
     
-        initSystem();
+    	checkSupportBrowser();
+    	
+        login();
         
         mainUICallback();
+    }
+    
+    /**
+     * system initialize
+     */
+    private void checkSupportBrowser() {
+	//    	try {
+	//    	// Add HttpListener(User data collection
+	//		System.out.println("================= start add session ==========================");
+	//		TadpoleSessionListener listener = new TadpoleSessionListener();
+	//		RWT.getUISession().getHttpSession().getServletContext().addListener(listener);//"com.hangum.tadpole.application.start.sessions.TadpoleSessionListener");
+	//		System.out.println("================= end add session ==========================");
+	//	} catch(Exception e) {
+	//		e.printStackTrace();
+	//	}
+				
+		// Show Information Dialog(Is not Firefox, Chrome, Safari)
+		if(!RequestInfoUtils.isSupportBrowser()) {
+			UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), RequestInfoUtils.getUserBrowser());
+			uiDialog.open();
+		}
     }
     
     /**
@@ -152,37 +175,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     /**
-     * System initialize 
+     * login 
      */
-    private void initSystem() {
-//    	try {
-//	    	// Add HttpListener(User data collection
-//			System.out.println("================= start add session ==========================");
-//			TadpoleSessionListener listener = new TadpoleSessionListener();
-//			RWT.getUISession().getHttpSession().getServletContext().addListener(listener);//"com.hangum.tadpole.application.start.sessions.TadpoleSessionListener");
-//			System.out.println("================= end add session ==========================");
-//    	} catch(Exception e) {
-//    		e.printStackTrace();
-//    	}
-    			
-    	// Show Information Dialog(Is not Firefox, Chrome, Safari)
-    	String isBrowser = RequestInfoUtils.isTadpoleRunning();
-    	if(!"".equals(isBrowser)) {
-    		UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), isBrowser);
-    		uiDialog.open();
-    	}
-    	
-    	// If the system table does not exist, create a table.
-    	try {
-    		TadpoleSystemInitializer.initSystem();
-    	} catch(Exception e) {
-    		logger.error("System initialize", e); //$NON-NLS-1$
-    		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
-    		
-    		System.exit(0);
-    	}
-    	
+    private void login() {
     	// If you already login?
     	if(0 == SessionManager.getSeq()) {
     	

@@ -35,20 +35,21 @@ public class RequestInfoUtils {
 	 * 
 	 * @return
 	 */
-	public static String isTadpoleRunning() {
+	public static boolean isSupportBrowser() {
 		ServletUserAgent sua = new ServletUserAgent();
 		sua.detect(RWT.getRequest());
 
 		String strBrowser = sua.getBrowserType().toString();
 		for(PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER supportBrowser: PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER.values()) {
 			if("IE".equals(strBrowser)) {
-				if(10 >= sua.getMajorVersion()) return "";
+				if(10 > sua.getMajorVersion()) return false;
+				else return true;
 			} else {
-				if(strBrowser.equalsIgnoreCase(supportBrowser.toString())) return "";
+				if(strBrowser.equalsIgnoreCase(supportBrowser.toString())) return true;
 			}
 		}
 		
-		return strBrowser;
+		return false;
 	}
 
 	/**
