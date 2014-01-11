@@ -63,7 +63,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -1853,8 +1852,6 @@ public class MainEditor extends EditorExtension {
 		// 저장을 호출합니다.
 		try {
 			Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
-//			if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
-//			}
 		} catch(SWTException e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
 		}
@@ -1889,13 +1886,14 @@ public class MainEditor extends EditorExtension {
 				userSetDBResource = getFileName();
 				if(userSetDBResource == null) return false;
 			}
+			
 			return saveData(newContents);
 			
 		// save as
 		} if(userSetDBResource != null) {
 			boolean isSucc =  saveData(newContents);
 			if(isSucc) userSetDBResource = null;
-			
+
 		// update
 		} else {
 			try {
@@ -1909,7 +1907,7 @@ public class MainEditor extends EditorExtension {
 				return false;
 			}
 		}
-
+		
 		return true;
 	}
 	

@@ -98,12 +98,33 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	checkSupportBrowser();
     	
         login();
-        
-        mainUICallback();
+    }
+    
+    @Override
+    public void postWindowOpen() {
+    	// fullscreen
+    	getWindowConfigurer().getWindow().getShell().setMaximized(true);;
+    	
+    	// main ui callback thread
+    	mainUICallback();
+    	   
+    	// If login after does not DB exist, DB connect Dialog open.
+    	try {
+    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+    			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+	    		if(0 == mv.getAllTreeList().size()) {
+	    			ConnectDatabase cd = new ConnectDatabase();
+	    			cd.run();
+	    		}
+    		}
+    	} catch(Exception e) {
+    		logger.error("Is DB list?", e); //$NON-NLS-1$
+    	}    	
     }
     
     /**
-     * system initialize
+     * check support browser
      */
     private void checkSupportBrowser() {
 	//    	try {
@@ -214,26 +235,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    		}
 	    	}
     	} 
-    }
-    
-    @Override
-    public void postWindowOpen() {
-    	// fullscreen
-    	getWindowConfigurer().getWindow().getShell().setMaximized(true);;
-    	   
-    	// If login after does not DB exist, DB connect Dialog open.
-    	try {
-    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
-    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
-    			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-	    		if(0 == mv.getAllTreeList().size()) {
-	    			ConnectDatabase cd = new ConnectDatabase();
-	    			cd.run();
-	    		}
-    		}
-    	} catch(Exception e) {
-    		logger.error("Is DB list?", e); //$NON-NLS-1$
-    	}    	
     }
     
     /**

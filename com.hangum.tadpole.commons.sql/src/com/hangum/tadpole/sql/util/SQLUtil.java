@@ -113,36 +113,38 @@ public class SQLUtil {
 		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
 			return true;
 		} else {
-			try {
-				// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
-				// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
-				if(!isEnglish(strSQL)) return false;
-				
-				CCJSqlParserManager parserManager = new CCJSqlParserManager();
-				Statement statement = parserManager.parse(new StringReader(strSQL));
-				if(statement instanceof Select) return true;
-			} catch(Exception e) {
-				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
-			}
+//			add issue https://github.com/JSQLParser/JSqlParser/issues/31
+//			try {
+//				// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
+//				// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
+//				if(!isEnglish(strSQL)) return false;
+//				
+//				CCJSqlParserManager parserManager = new CCJSqlParserManager();
+//				Statement statement = parserManager.parse(new StringReader(strSQL));
+//				if(statement instanceof Select) return true;
+//			} catch(Exception e) {
+//				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
+//			}
+			return false;
 		}
 		
-		return false;
+//		return false;
 	}
 	
-	/**
-	 * 영문인지 검사합니다.
-	 * @param strValue
-	 * @return
-	 */
-	public static boolean isEnglish(String strValue) {
-		if(strValue == null || strValue.length() == 0) return false;
-		
-		char charVal = strValue.charAt(0);
-		if(charVal >= 65 && charVal <= 90) return true; 	// 소문자
-		if(charVal >= 97 && charVal <= 122) return true; 	// 대문자 
-		
-		return false;
-	}
+//	/**
+//	 * 영문인지 검사합니다.
+//	 * @param strValue
+//	 * @return
+//	 */
+//	public static boolean isEnglish(String strValue) {
+//		if(strValue == null || strValue.length() == 0) return false;
+//		
+//		char charVal = strValue.charAt(0);
+//		if(charVal >= 65 && charVal <= 90) return true; 	// 소문자
+//		if(charVal >= 97 && charVal <= 122) return true; 	// 대문자 
+//		
+//		return false;
+//	}
 	
 	/**
 	 * INSERT 문을 생성합니다.
