@@ -3276,16 +3276,17 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				*/
 				c = "\uFEFF"; //$NON-NLS-0$
 			}
-			if (isWebkit) {
-				/*
-				* Feature in WekKit. Adding a regular white space to the line will
-				* cause the longest line in the view to wrap even though "pre" is set.
-				* The fix is to use the zero-width non-joiner character (\u200C) instead.
-				* Note: To not use \uFEFF because in old version of Chrome this character 
-				* shows a glyph;
-				*/
-				c = "\u200C"; //$NON-NLS-0$
-			}
+			// remove this code - hangu m.2014-01-08
+//			if (isWebkit) {
+//				/*
+//				* Feature in WekKit. Adding a regular white space to the line will
+//				* cause the longest line in the view to wrap even though "pre" is set.
+//				* The fix is to use the zero-width non-joiner character (\u200C) instead.
+//				* Note: To not use \uFEFF because in old version of Chrome this character 
+//				* shows a glyph;
+//				*/
+//				c = "\u200C"; //$NON-NLS-0$
+//			}
 			ranges.push({text: c, style: this._metrics.largestFontStyle, ignoreChars: 1});
 			
 			var range, span, style, oldSpan, oldStyle, text, oldText, end = 0, oldEnd = 0, next;
@@ -3864,10 +3865,15 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		_getClipboardText: function (event, handler) {
 			var delimiter = this._model.getLineDelimiter();
 			var clipboadText, text;
-			if (window.clipboardData) {
-				//IE
+			// IE
+			var clipboardData = window.clipboardData;
+			// WebKit and Firefox > 21
+			if (!clipboardData && event) {
+				clipboardData = event.clipboardData;
+			}
+			if (clipboardData) {
 				clipboadText = [];
-				text = window.clipboardData.getData("Text"); //$NON-NLS-0$
+				text = clipboardData.getData(isIE ? "Text" : "text/plain"); //$NON-NLS-1$"//$NON-NLS-0$
 				this._convertDelimiter(text, function(t) {clipboadText.push(t);}, function() {clipboadText.push(delimiter);});
 				text = clipboadText.join("");
 				if (handler) { handler(text); }
@@ -3876,6 +3882,15 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (isFirefox) {
 				this._ignoreFocus = true;
 				var clipboardDiv = this._clipboardDiv;
+				var document = this._rootDiv.ownerDocument;
+				if (!clipboardDiv) {
+					clipboardDiv = document.createElement("div"); //$NON-NLS-0$ util.createElement(document, "div"); //$NON-NLS-0$
+					this._clipboardDiv = clipboardDiv;
+					clipboardDiv.style.position = "fixed"; //$NON-NLS-0$
+					clipboardDiv.style.whiteSpace = "pre"; //$NON-NLS-0$
+					clipboardDiv.style.left = "-1000px"; //$NON-NLS-0$
+					this._rootDiv.appendChild(clipboardDiv);
+				}
 				clipboardDiv.innerHTML = "<pre contenteditable=''></pre>"; //$NON-NLS-0$
 				clipboardDiv.firstChild.focus();
 				var self = this;
@@ -3886,7 +3901,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					self._convertDelimiter(noteText, function(t) {clipboadText.push(t);}, function() {clipboadText.push(delimiter);});
 					return clipboadText.join("");
 				};
-				
+		
 				/* Try execCommand first. Works on firefox with clipboard permission. */
 				var result = false;
 				this._ignorePaste = true;
@@ -3928,24 +3943,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				}
 				return text;
 			}
-			//webkit
-			if (event && event.clipboardData) {
-				/*
-				* Webkit (Chrome/Safari) allows getData during the paste event
-				* Note: setData is not allowed, not even during copy/cut event
-				*/
-				clipboadText = [];
-				text = event.clipboardData.getData("text/plain"); //$NON-NLS-0$
-				this._convertDelimiter(text, function(t) {clipboadText.push(t);}, function() {clipboadText.push(delimiter);});
-				text = clipboadText.join("");
-				if (text && handler) {
-					handler(text);
-				}
-				return text;
-			} else {
-				//TODO try paste using extension (Chrome only)
-			}
-			return "";
 		},
 		_getDOMText: function(lineIndex) {
 			var child = this._getLineNode(lineIndex);

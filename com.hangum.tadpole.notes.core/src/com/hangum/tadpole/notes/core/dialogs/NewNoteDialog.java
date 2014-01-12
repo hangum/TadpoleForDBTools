@@ -125,7 +125,6 @@ public class NewNoteDialog extends Dialog {
 		
 		comboUserName = new Combo(compositeHead, SWT.NONE);
 		comboUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeHead, SWT.NONE);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

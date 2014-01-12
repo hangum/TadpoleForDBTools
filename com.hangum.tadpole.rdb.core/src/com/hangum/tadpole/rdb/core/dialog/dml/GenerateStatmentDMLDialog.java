@@ -191,7 +191,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		tcColumnName.setText("Column Name");
 		tvColumnName.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 0, this));
 
-		TableViewerColumn tvColumnDataType = new TableViewerColumn(tableViewer, SWT.CENTER);
+		TableViewerColumn tvColumnDataType = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcDataType = tvColumnDataType.getColumn();
 		tcDataType.setWidth(120);
 		tcDataType.setText("Data Type");

@@ -80,7 +80,12 @@ public class ViewDialog extends Dialog {
 		
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(3, false));
+		GridLayout gl_compositeHead = new GridLayout(3, false);
+		gl_compositeHead.verticalSpacing = 2;
+		gl_compositeHead.horizontalSpacing = 2;
+		gl_compositeHead.marginHeight = 2;
+		gl_compositeHead.marginWidth = 2;
+		compositeHead.setLayout(gl_compositeHead);
 		
 		lblUser = new Label(compositeHead, SWT.NONE);
 		lblUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -111,6 +116,8 @@ public class ViewDialog extends Dialog {
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		initData();
+		
+		textTitle.setFocus();
 		
 		return container;
 	}

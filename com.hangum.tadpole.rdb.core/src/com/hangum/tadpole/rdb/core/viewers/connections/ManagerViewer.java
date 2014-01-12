@@ -323,7 +323,7 @@ public class ManagerViewer extends ViewPart {
 			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
-					userDB.getListUserDBErd().clear();
+					if(userDB.getListUserDBErd() != null) userDB.getListUserDBErd().clear();
 					try {
 						List<UserDBResourceDAO> listUserDBErd = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
 						if(null != listUserDBErd) {

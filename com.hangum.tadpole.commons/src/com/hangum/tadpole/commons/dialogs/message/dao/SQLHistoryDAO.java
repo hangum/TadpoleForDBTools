@@ -13,28 +13,51 @@ package com.hangum.tadpole.commons.dialogs.message.dao;
 import java.util.Date;
 
 /**
- * query history
+ * 실행 쿼리와 쿼리 결과를 포함하는 dao
  * 
  * @author hangum
- *
+ * 
  */
 public class SQLHistoryDAO {
 	int seq;
-	
+
 	/** Execute start time */
 	Date startDateExecute;
-	
+
 	/** execute sql text */
 	String strSQLText;
-	
+
 	Date endDateExecute;
 	int rows;
 	String result;
 	String messsage;
+
+	String userName;
+	String dbName;
+	int dbSeq;
+	String ipAddress;
 	
+
 	public SQLHistoryDAO(Date dateExecute, String strSQLText, Date endDateExecute, int rows, String result, String message) {
+		this.userName = "";
+		this.dbName = "";
 		this.startDateExecute = dateExecute;
-		this.strSQLText = strSQLText;		
+		this.strSQLText = strSQLText;
+		this.endDateExecute = endDateExecute;
+		this.rows = rows;
+		this.result = result;
+		this.messsage = message;
+	}
+
+	// Sql history for executedSqlEditor
+	public SQLHistoryDAO(String userName, String dbName, Date dateExecute, String strSQLText, Date endDateExecute, int rows, String result, String message,
+			String ipAddress, int dbSeq) {
+		this.userName = userName;
+		this.dbName = dbName;
+		this.ipAddress = ipAddress;
+		this.dbSeq = dbSeq;
+		this.startDateExecute = dateExecute;
+		this.strSQLText = strSQLText;
 		this.endDateExecute = endDateExecute;
 		this.rows = rows;
 		this.result = result;
@@ -44,6 +67,37 @@ public class SQLHistoryDAO {
 	public SQLHistoryDAO() {
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
+	
+	public int getDbSeq() {
+		return dbSeq;
+	}
+
+	public void setDbSeq(int dbSeq) {
+		this.dbSeq = dbSeq;
+	}
 
 	public int getSeq() {
 		return seq;
@@ -69,7 +123,8 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param startDateExecute the startDateExecute to set
+	 * @param startDateExecute
+	 *            the startDateExecute to set
 	 */
 	public void setStartDateExecute(Date startDateExecute) {
 		this.startDateExecute = startDateExecute;
@@ -83,7 +138,8 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param endDateExecute the endDateExecute to set
+	 * @param endDateExecute
+	 *            the endDateExecute to set
 	 */
 	public void setEndDateExecute(Date endDateExecute) {
 		this.endDateExecute = endDateExecute;
@@ -97,7 +153,8 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param rows the rows to set
+	 * @param rows
+	 *            the rows to set
 	 */
 	public void setRows(int rows) {
 		this.rows = rows;
@@ -111,7 +168,8 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param result the result to set
+	 * @param result
+	 *            the result to set
 	 */
 	public void setResult(String result) {
 		this.result = result;
@@ -125,11 +183,11 @@ public class SQLHistoryDAO {
 	}
 
 	/**
-	 * @param messsage the messsage to set
+	 * @param messsage
+	 *            the messsage to set
 	 */
 	public void setMesssage(String messsage) {
 		this.messsage = messsage;
 	}
 
-	
 }

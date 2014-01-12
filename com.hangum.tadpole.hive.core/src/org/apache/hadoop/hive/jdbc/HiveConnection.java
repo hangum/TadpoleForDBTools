@@ -23,14 +23,15 @@ import org.apache.hadoop.hive.metastore.api.MetaException;
 import org.apache.hadoop.hive.service.HiveClient;
 import org.apache.hadoop.hive.service.HiveInterface;
 import org.apache.hadoop.hive.service.HiveServer;
+import org.apache.hive.jdbc.Utils;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
-import java.util.concurrent.Executor;
 
+import java.util.concurrent.Executor;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -75,7 +76,7 @@ public class HiveConnection implements java.sql.Connection {
           + e.getMessage(), "08S01",e);
     }
     isClosed = false;
-    configureConnection();
+    configureConnection(null);
   }
 
   /**
@@ -119,7 +120,8 @@ public class HiveConnection implements java.sql.Connection {
       }
     }
     isClosed = false;
-    configureConnection();
+    if(!uri.isEmpty()) configureConnection(uri.split("/")[1]);
+    else configureConnection(null);
   }
   
  
@@ -128,11 +130,18 @@ public class HiveConnection implements java.sql.Connection {
     throw new SQLException("Method not supported");
   }
 
-  private void configureConnection() throws SQLException {
+  private void configureConnection(String dbName) throws SQLException {
     Statement stmt = createStatement();
     stmt.execute(
         "set hive.fetch.output.serde = org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe");
     stmt.close();
+
+    //  db select statement
+    if(null != null) {
+	    stmt = createStatement();
+	    stmt.execute("use " + dbName);
+	    stmt.close();
+    }
   }
 
   /*

@@ -155,7 +155,7 @@ public enum TadpoleModelUtils {
 	 */
 	public List<TableDAO> getTables() throws Exception {
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			return TajoConnectionManager.tableList(userDB);
+			return new TajoConnectionManager().tableList(userDB);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			return sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
@@ -176,7 +176,7 @@ public enum TadpoleModelUtils {
 		param.put("table", strTBName);
 
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			return TajoConnectionManager.tableColumnList(userDB, param);
+			return new TajoConnectionManager().tableColumnList(userDB, param);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			return sqlClient.queryForList("tableColumnList", param);

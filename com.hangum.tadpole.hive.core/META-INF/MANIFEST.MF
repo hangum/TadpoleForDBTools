@@ -20,4 +20,5 @@ Bundle-ClassPath: .,
  libs/driver/hive/hadoop-core-1.0.3.jar
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"
-Export-Package: org.apache.hadoop.hive.jdbc
+Export-Package: org.apache.hadoop.hive.jdbc,
+ org.apache.hive.jdbc
