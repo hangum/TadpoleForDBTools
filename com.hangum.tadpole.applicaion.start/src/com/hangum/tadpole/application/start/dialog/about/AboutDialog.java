@@ -108,7 +108,7 @@ public class AboutDialog extends Dialog {
 		
 		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
 		lblLicenseLgpl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblLicenseLgpl.setText("License: <a href=\"http://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License\" target=\"_blank\">LGPL</a>");
+		lblLicenseLgpl.setText("License: <a href=\"http://www.gnu.org/licenses/why-not-lgpl.en.html\" target=\"_blank\">LGPL</a>");
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
