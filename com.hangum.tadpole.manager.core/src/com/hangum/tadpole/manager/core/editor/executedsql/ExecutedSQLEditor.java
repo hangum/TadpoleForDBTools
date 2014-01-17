@@ -191,11 +191,11 @@ public class ExecutedSQLEditor extends EditorPart {
 		lblDate.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		lblDate.setText("<b>Search date</b>");
 
-		dateTimeStart = new DateTime(compositeHead2, SWT.BORDER);
+		dateTimeStart = new DateTime(compositeHead2, SWT.BORDER | SWT.DROP_DOWN);
 		Label label = new Label(compositeHead2, SWT.NONE);
 		label.setText("~");
 
-		dateTimeEnd = new DateTime(compositeHead2, SWT.BORDER);
+		dateTimeEnd = new DateTime(compositeHead2, SWT.BORDER | SWT.DROP_DOWN);
 		new Label(compositeHead2, SWT.NONE);
 
 		Label lblDuring = new Label(compositeHead2, SWT.RIGHT);
