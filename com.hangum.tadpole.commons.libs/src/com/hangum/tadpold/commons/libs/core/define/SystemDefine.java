@@ -11,7 +11,7 @@
 package com.hangum.tadpold.commons.libs.core.define;
 
 /**
- * 시스템 정보를 init합니다.
+ * 시스템 정보를 정의합니다.
  * 
  * @author hangum
  *
@@ -19,8 +19,8 @@ package com.hangum.tadpold.commons.libs.core.define;
 public class SystemDefine {
 	
 	public static final String NAME = "Tadpole DB Hub";
-	public static final String MAJOR_VERSION = "1.2.2(Living)";
-	public static final String SUB_VERSION = "Build" + "(S0)";	
+	public static final String MAJOR_VERSION = "1.2.2 (Living)";
+	public static final String SUB_VERSION = "Build " + "(S0)";	
 	public static final String RELEASE_DATE = "2014.01.12";
 	public static final String INFORMATION = "https://github.com/hangum/TadpoleForDBTools/wiki";
 	
