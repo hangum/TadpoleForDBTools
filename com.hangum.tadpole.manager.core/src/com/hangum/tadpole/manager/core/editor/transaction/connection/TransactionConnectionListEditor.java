@@ -79,7 +79,8 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolder.setBorderVisible(false);		
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
-		
+
+		// connection pool list
 //		CTabItem tbtmConnectionPool = new CTabItem(tabFolder, SWT.NONE);
 //		tbtmConnectionPool.setText("Connection Pool");
 //		
@@ -92,28 +93,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 //		gl_compositeConnectionPool.marginWidth = 1;
 //		compositeConnectionPool.setLayout(gl_compositeConnectionPool);
 //		
-//		Composite compositeCToolbar = new Composite(compositeConnectionPool, SWT.NONE);
-//		compositeCToolbar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-//		GridLayout gl_compositeCToolbar = new GridLayout(1, false);
-//		gl_compositeCToolbar.verticalSpacing = 1;
-//		gl_compositeCToolbar.horizontalSpacing = 1;
-//		gl_compositeCToolbar.marginHeight = 1;
-//		gl_compositeCToolbar.marginWidth = 1;
-//		compositeCToolbar.setLayout(gl_compositeCToolbar);
-//		
-//		ToolBar toolBar = new ToolBar(compositeCToolbar, SWT.FLAT | SWT.RIGHT);
-//		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		
-//		ToolItem tltmCRefresh = new ToolItem(toolBar, SWT.NONE);
-//		tltmCRefresh.setText("Refresh");
-//		
-//		TableViewer tableViewerCon = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
-//		tableCon = tableViewerCon.getTable();
-//		tableCon.setLinesVisible(true);
-//		tableCon.setHeaderVisible(true);
-//		tableCon.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		
+//		createConnectionPoolComposite(compositeConnectionPool);
 		
 		// transaction CTabItem widget create
 		CTabItem tbtmTransactionConnection = new CTabItem(tabFolder, SWT.NONE);
@@ -133,6 +113,34 @@ public class TransactionConnectionListEditor extends EditorPart {
 		
 		// default folder selection
 		tabFolder.setSelection(0);
+	}
+	
+	/**
+	 * connection pool composite
+	 * 
+	 * @param composte
+	 */
+	private void createConnectionPoolComposite(Composite compositeConnectionPool) {
+		Composite compositeCToolbar = new Composite(compositeConnectionPool, SWT.NONE);
+		compositeCToolbar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		GridLayout gl_compositeCToolbar = new GridLayout(1, false);
+		gl_compositeCToolbar.verticalSpacing = 1;
+		gl_compositeCToolbar.horizontalSpacing = 1;
+		gl_compositeCToolbar.marginHeight = 1;
+		gl_compositeCToolbar.marginWidth = 1;
+		compositeCToolbar.setLayout(gl_compositeCToolbar);
+		
+		ToolBar toolBar = new ToolBar(compositeCToolbar, SWT.FLAT | SWT.RIGHT);
+		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		ToolItem tltmCRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmCRefresh.setText("Refresh");
+		
+		TableViewer tableViewerCon = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
+		tableCon = tableViewerCon.getTable();
+		tableCon.setLinesVisible(true);
+		tableCon.setHeaderVisible(true);
+		tableCon.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	}
 	
 	/**
