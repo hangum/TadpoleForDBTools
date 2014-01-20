@@ -56,6 +56,7 @@ import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.commons.util.fileupload.FileUploadDialog;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
@@ -68,6 +69,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.swtdesigner.ResourceManager;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 DB List composite
@@ -517,6 +519,43 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 	
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
+		String RDB_CORE_PLUGIN_ID = "com.hangum.tadpole.rdb.core"; //$NON-NLS-1$
+		
+		if(columnIndex == 1) {
+			DBDefine dbType = ((UserDBDAO)element).getDBDefine();
+			if(DBDefine.MYSQL_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MARIADB_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.ORACLE_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.SQLite_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MSSQL_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.CUBRID_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MONGODB_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.TAJO_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/tajo-add.jpg"); //$NON-NLS-1$
+			else
+				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/database-add.png"); //$NON-NLS-1$
+		}
+		
 		return null;
 	}
 
