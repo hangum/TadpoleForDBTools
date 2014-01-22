@@ -10,9 +10,16 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.global;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.Client;
+import org.eclipse.rap.rwt.client.service.ExitConfirmation;
+import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
@@ -38,6 +45,7 @@ import com.swtdesigner.ResourceManager;
  *
  */
 public class ExitAction extends Action implements ISelectionListener, IWorkbenchAction {
+	private static final Logger logger = Logger.getLogger(ExitAction.class);
 	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.ExitAction"; //$NON-NLS-1$
 	
@@ -56,33 +64,59 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 
 	@Override
 	public void run() {
-		// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에 내용이 있다면 묻도록 수정.)
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
-		IEditorReference[] references = page.getEditorReferences();
-		for (IEditorReference iEditorReference : references) {
-			page.closeEditor(iEditorReference.getEditor(false), true);
-		}
 		
-		// standalone 모드일경우에는 프로그램 종료한다.
-		if(ApplicationArgumentUtils.isStandaloneMode()) {
-			if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
-				afterTransactionProcess();
-				System.exit(0);
+		if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
+			// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에 내용이 있다면 묻도록 수정.)
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
+			IEditorReference[] references = page.getEditorReferences();
+			for (IEditorReference iEditorReference : references) {
+				page.closeEditor(iEditorReference.getEditor(false), true);
 			}
-		// 서버모드 일 경우 프로그램 로그아웃한다.
-		} else {
-			if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
-				afterTransactionProcess();
+			
+			// standalone 모드일경우에는 프로그램 종료한다.
+			if(ApplicationArgumentUtils.isStandaloneMode()) {
+				beforeLogoutAction();
+				System.exit(0);
+			// 서버모드 일 경우 프로그램 로그아웃한다.
+			} else {
+				beforeLogoutAction();
 				SessionManager.logout();
 			}
 		}
 	}
 	
 	/**
-	 * 사용자의 Transaction connection 이 있을 경우 commit 처리한다.
+	 * 로그아웃 전처리를 합니다 
+	 * 
+	 * <pre>
+	 * 1. 사용자의 Transaction connection 이 있을 경우 rollbak 처리한다.
+	 * 2. 페이지를 다른 쪽으로 이동합니다.
+	 * 
+	 * </pre> 
 	 */
-	private void afterTransactionProcess() {
+	private void beforeLogoutAction() {
 		TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
+		
+//		HttpServletResponse hsr = RWT.getResponse();
+//		try {
+////			hsr.setHeader("Pragma","no-cache");
+////			hsr.setHeader("Cache-Control","no-cache");
+////			hsr.addHeader("Cache-Control","no-store");
+////			hsr.setDateHeader("Expires", 0);
+//			
+////			hsr.sendRedirect("http://daum.net");
+//			
+//			Client client = RWT.getClient();
+//			JavaScriptExecutor executor = client.getService( JavaScriptExecutor.class );
+//			if( executor != null ) {
+//			  executor.execute("parent.window.location.href=\"" + "http://daum.net" + "\";");
+//			}
+//		} catch (Exception e) {
+//			logger.error("logout redirect", e);
+//			
+//			// ignore message
+//		}
+		
 	}
 	
 	@Override
@@ -91,8 +125,6 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
