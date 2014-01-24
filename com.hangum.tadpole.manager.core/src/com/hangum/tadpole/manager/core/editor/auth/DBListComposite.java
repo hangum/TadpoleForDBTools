@@ -135,7 +135,9 @@ public class DBListComposite extends Composite {
 		tltmRefresh.setToolTipText("Refresh");
 
 		// access control
-		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())) {
+		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole()) || 
+				PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())
+				) {
 			final ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 			tltmAdd.setImage(ImageUtils.getAdd());
 			tltmAdd.addSelectionListener(new SelectionAdapter() {
