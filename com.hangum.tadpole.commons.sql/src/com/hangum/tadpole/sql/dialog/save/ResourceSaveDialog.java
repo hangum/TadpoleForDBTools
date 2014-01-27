@@ -180,7 +180,7 @@ public class ResourceSaveDialog extends Dialog {
 	 */
 	public String isValid() {
 		int len = textName.getText().trim().length();
-		if(len < 5) return "The name must enter at least 5 characters."; //$NON-NLS-1$
+		if(len < 3) return "The name must enter at least 3 characters."; //$NON-NLS-1$
 		
 		return null;
 	}

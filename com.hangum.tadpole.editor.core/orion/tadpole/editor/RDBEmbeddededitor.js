@@ -66,7 +66,7 @@ var sqlContentAssistProvider;
 //var jsContentAssistProvider;
 
 function initEmbeddedEditor(){
-	console.log('set initEmbedded editor');
+//	console.log('set initEmbedded editor');
 	
 	define([
 		"require", 
