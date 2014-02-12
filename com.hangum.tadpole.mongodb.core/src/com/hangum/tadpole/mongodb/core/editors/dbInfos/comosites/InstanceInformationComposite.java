@@ -586,11 +586,18 @@ public class InstanceInformationComposite extends Composite {
 		barChartConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	    barChartConnection.setBarWidth(25);
 
+	    int current 	= 0;
+	    int available 	= 0;
+	    float floatCurrent = 0f;
+	    
+	    // nullPointExcepiton check - https://github.com/hangum/TadpoleForDBTools/issues/361 
 	    DBObject cursorConnections = (DBObject)commandResult.get("connections");
-	    int current 	= ENumberUtils.toInt(cursorConnections.get("current"));
-	    int available 	= ENumberUtils.toInt(cursorConnections.get("available"));
-	    float floatCurrent = (float)current / (float)available;
-
+	    if(cursorConnections != null) {
+	    	current 	= ENumberUtils.toInt(cursorConnections.get("current"));
+		    available 	= ENumberUtils.toInt(cursorConnections.get("available"));
+		    floatCurrent = (float)current / (float)available;	
+	    }
+	    
 	    ChartItem itemAvailable = new ChartItem(barChartConnection);
 	    itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
 	    itemAvailable.setColor(colors.next());
