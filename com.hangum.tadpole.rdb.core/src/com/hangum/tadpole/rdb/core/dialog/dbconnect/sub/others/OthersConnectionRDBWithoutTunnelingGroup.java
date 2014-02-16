@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -18,13 +21,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilterDialog;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.ExtensionBrowserURLDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
+import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
 
 /**
  * Others connection info
@@ -32,7 +37,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnect
  * @author hangum
  *
  */
-public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
+public class OthersConnectionRDBWithoutTunnelingGroup extends AbstractOthersConnection {
 	
 	private OthersConnectionInfoDAO otherConnectionDAO = new OthersConnectionInfoDAO();
 	
@@ -43,16 +48,17 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 	private Button btnProfiler;
 	private Button btnExecuteQuestionDml;
 	private Button btnShowTables;
+	private Button btnExternalBrowser;
 
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public OthersConnectionRDBWithoutTunnelingGroup(Composite parent, int style) {
-		super(parent, style);
+	public OthersConnectionRDBWithoutTunnelingGroup(Composite parent, int style, DBDefine selectDB) {
+		super(parent, style, selectDB);
 		setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_0);
-		GridLayout gridLayout = new GridLayout(3, false);
+		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -84,6 +90,19 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 		});
 		btnTableFilters.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_3);
 		
+		btnExternalBrowser = new Button(this, SWT.NONE);
+		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ExtensionBrowserURLDialog dialog = new ExtensionBrowserURLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), getDefaultExternalBrowserInfo());
+				if(Dialog.OK == dialog.open()) {
+					otherConnectionDAO.setExterBrowser(dialog.isEnable());
+					otherConnectionDAO.setListExterBroswer(dialog.getListExterBroswer());
+				}
+			}
+		});
+		btnExternalBrowser.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_btnExternalBrowser_text);
+		
 		btnProfiler = new Button(this, SWT.CHECK);
 		btnProfiler.setSelection(true);
 		btnProfiler.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_4);
@@ -93,6 +112,7 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 		btnShowTables.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text);
 		
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
+		btnExecuteQuestionDml.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_5);
 		
 	}
@@ -151,7 +171,7 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends Group {
 	}
 
 	@Override
-	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
+	public List<ExternalBrowserInfoDAO> getDefaultExternalBrowserInfo() {
+		return new ArrayList<ExternalBrowserInfoDAO>();
 	}
 }

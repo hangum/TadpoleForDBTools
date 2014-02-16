@@ -176,7 +176,7 @@ public class ExplorerViewer extends ViewPart {
 		compositeBody.setLayout(gl_compositeBody);
 
 		tabFolderObject = new CTabFolder(compositeBody, SWT.NONE);
-		tabFolderObject.setBorderVisible(false);		
+		tabFolderObject.setBorderVisible(false);
 		tabFolderObject.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
 		tabFolderObject.addSelectionListener(new SelectionAdapter() {

@@ -532,43 +532,49 @@ public class InstanceInformationComposite extends Composite {
 		barChartNetwork.setLayout(new GridLayout(1, false));
 		barChartNetwork.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	    barChartNetwork.setBarWidth(25);
-
-	    DBObject cursorConnections = (DBObject)commandResult.get("network");
-	    int bytesIn 	= ENumberUtils.toInt(cursorConnections.get("bytesIn"));
-	    int bytesOut 	= ENumberUtils.toInt(cursorConnections.get("bytesOut"));
-	    int numRequests = ENumberUtils.toInt(cursorConnections.get("numRequests"));
-
-	    float floatBI = 0f, floatBO = 0f, floatNf = 0f;
-	    if(bytesIn < bytesOut) {
-	    	floatBI = (float)bytesIn / (float)bytesOut;	    	
-	    	floatBO = 0.8f;
-	    	floatNf = (float)numRequests / (float)bytesOut;
-	    } else {
-	    	floatBI = 0.0f;	    	
-	    	floatBO = (float)bytesOut / (float)bytesIn;
-	    	floatNf = (float)numRequests / (float)bytesIn;
-	    }
-
-	    ChartItem itemAvailable = new ChartItem(barChartNetwork);
-	    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")");
-	    itemAvailable.setColor(colors.next());
-	    itemAvailable.setValue(floatBI);
-
-	    ChartItem itemCurrent = new ChartItem(barChartNetwork);
-	    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")");
-	    itemCurrent.setColor(colors.next());
-	    itemCurrent.setValue(floatBO);
 	    
-	    ChartItem itemNumRequests = new ChartItem(barChartNetwork);
-	    itemNumRequests.setText("Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")");
-	    itemNumRequests.setColor(colors.next());
-	    itemNumRequests.setValue(floatNf);
+	    try {
+		    DBObject cursorConnections = (DBObject)commandResult.get("network");
+		    int bytesIn 	= ENumberUtils.toInt(cursorConnections.get("bytesIn"));
+		    int bytesOut 	= ENumberUtils.toInt(cursorConnections.get("bytesOut"));
+		    int numRequests = ENumberUtils.toInt(cursorConnections.get("numRequests"));
+	
+		    float floatBI = 0f, floatBO = 0f, floatNf = 0f;
+		    if(bytesIn < bytesOut) {
+		    	floatBI = (float)bytesIn / (float)bytesOut;	    	
+		    	floatBO = 0.8f;
+		    	floatNf = (float)numRequests / (float)bytesOut;
+		    } else {
+		    	floatBI = 0.0f;	    	
+		    	floatBO = (float)bytesOut / (float)bytesIn;
+		    	floatNf = (float)numRequests / (float)bytesIn;
+		    }
+	
+		    ChartItem itemAvailable = new ChartItem(barChartNetwork);
+		    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")");
+		    itemAvailable.setColor(colors.next());
+		    itemAvailable.setValue(floatBI);
+	
+		    ChartItem itemCurrent = new ChartItem(barChartNetwork);
+		    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")");
+		    itemCurrent.setColor(colors.next());
+		    itemCurrent.setValue(floatBO);
+		    
+		    ChartItem itemNumRequests = new ChartItem(barChartNetwork);
+		    itemNumRequests.setText("Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")");
+		    itemNumRequests.setColor(colors.next());
+		    itemNumRequests.setValue(floatNf);
+	    } catch(Exception e) {
+	    	logger.error("Network information", e);
+	    }
 	}
 	
 	/**
 	 * create connection pie chart
 	 */
 	private void createConnectionChart(Composite cmpConnections, CommandResult commandResult) {
+		logger.debug("=============start create newtrok Information================================================");
+		
 		Group compositeConnection = new Group(cmpConnections, SWT.NONE);
 		compositeConnection.setLayout(new GridLayout(1, false));
 		compositeConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -590,23 +596,29 @@ public class InstanceInformationComposite extends Composite {
 	    int available 	= 0;
 	    float floatCurrent = 0f;
 	    
-	    // nullPointExcepiton check - https://github.com/hangum/TadpoleForDBTools/issues/361 
-	    DBObject cursorConnections = (DBObject)commandResult.get("connections");
-	    if(cursorConnections != null) {
-	    	current 	= ENumberUtils.toInt(cursorConnections.get("current"));
-		    available 	= ENumberUtils.toInt(cursorConnections.get("available"));
-		    floatCurrent = (float)current / (float)available;	
+	    try {
+		    // nullPointExcepiton check - https://github.com/hangum/TadpoleForDBTools/issues/361 
+		    DBObject cursorConnections = (DBObject)commandResult.get("connections");
+		    if(cursorConnections != null) {
+		    	current 	= ENumberUtils.toInt(cursorConnections.get("current"));
+			    available 	= ENumberUtils.toInt(cursorConnections.get("available"));
+			    floatCurrent = (float)current / (float)available;	
+		    }
+		    
+		    ChartItem itemAvailable = new ChartItem(barChartConnection);
+		    itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
+		    itemAvailable.setColor(colors.next());
+		    itemAvailable.setValue(0.80f);
+	
+		    ChartItem itemCurrent = new ChartItem(barChartConnection);
+		    itemCurrent.setText("Current (" + NumberFormatUtils.commaFormat(current) + ")");
+		    itemCurrent.setColor(colors.next());
+		    itemCurrent.setValue(floatCurrent);
+	    } catch(Exception e) {
+	    	logger.error("Crate Connection chart", e);
 	    }
 	    
-	    ChartItem itemAvailable = new ChartItem(barChartConnection);
-	    itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
-	    itemAvailable.setColor(colors.next());
-	    itemAvailable.setValue(0.80f);
-
-	    ChartItem itemCurrent = new ChartItem(barChartConnection);
-	    itemCurrent.setText("Current (" + NumberFormatUtils.commaFormat(current) + ")");
-	    itemCurrent.setColor(colors.next());
-	    itemCurrent.setValue(floatCurrent);
+	    logger.debug("=============start create newtrok Information [end]================================================");
 	}
 	
 	/**

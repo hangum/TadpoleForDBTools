@@ -391,6 +391,10 @@ public class Messages extends NLS {
 	public static String TableDirectEditorComposite_text_text;
 	public static String TableDirectEditorComposite_textStart_text;
 	public static String HiveLoginComposite_lblDriverType_text;
+	public static String OthersConnectionBigDataGroup_btnExtensionBrowser_text;
+	public static String OthersConnectionBigDataGroup_btnExternalBrowser_text;
+	public static String OthersConnectionMongoDBGroup_btnExternalBrowser_text;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_btnExternalBrowser_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
