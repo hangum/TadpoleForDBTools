@@ -15,13 +15,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -67,7 +65,9 @@ public class ExternalBrowserEditor extends EditorPart {
 		tfMain.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 	
 		for(ExternalBrowserInfoDAO dao : listExternalBrowser) {
-			if(dao.getIs_used().equals(PublicTadpoleDefine.YES_NO.YES.toString())) createExtBrowser(dao);
+			if(dao.getIs_used().equals(PublicTadpoleDefine.YES_NO.YES.toString())) {
+				createExtBrowser(dao);
+			}
 		}
 		
 		tfMain.setSelection(0);
@@ -80,32 +80,10 @@ public class ExternalBrowserEditor extends EditorPart {
 	private void createExtBrowser(ExternalBrowserInfoDAO dao) {
 		CTabItem tbtmNewtab = new CTabItem(tfMain, SWT.NONE);
 		tbtmNewtab.setText(dao.getName());
+		tbtmNewtab.setToolTipText(dao.getComment());
 		
-		Composite compositeNewTab = new Composite(tfMain, SWT.NONE);
-		tbtmNewtab.setControl(compositeNewTab);
-		GridLayout gl_compositeNewTab = new GridLayout(1, false);
-		gl_compositeNewTab.verticalSpacing = 2;
-		gl_compositeNewTab.horizontalSpacing = 2;
-		gl_compositeNewTab.marginHeight = 2;
-		gl_compositeNewTab.marginWidth = 2;
-		compositeNewTab.setLayout(gl_compositeNewTab);		
-		
-		Composite compositeHead = new Composite(compositeNewTab, SWT.NONE);
-		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeHead = new GridLayout(2, false);
-		gl_compositeHead.verticalSpacing = 2;
-		gl_compositeHead.horizontalSpacing = 2;
-		gl_compositeHead.marginHeight = 2;
-		gl_compositeHead.marginWidth = 2;
-		compositeHead.setLayout(gl_compositeHead);
-		
-		Text text = new Text(compositeHead, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		text.setText(dao.getUrl());
-		
-		Browser browser = new Browser(compositeNewTab, SWT.NONE);
-		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		browser.setUrl(dao.getUrl());
+		Composite compositeHead = new ExtBrowserWidget(tfMain, SWT.NONE, dao.getUrl());
+		tbtmNewtab.setControl(compositeHead);
 	}
 
 	@Override
