@@ -78,8 +78,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    	String prop = IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS;
 //    	PlatformUI.getPreferenceStore().setValue(prop, false);
     	
-        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();        
-        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
+        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
+        
+        // fixed remove this line(https://github.com/hangum/TadpoleForDBTools/issues/350)
+//        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
         configurer.setShowCoolBar(true);
         configurer.setShowStatusLine(false);
         configurer.setShowMenuBar(false);
