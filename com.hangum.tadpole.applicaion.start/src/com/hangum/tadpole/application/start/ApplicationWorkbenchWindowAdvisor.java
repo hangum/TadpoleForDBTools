@@ -17,15 +17,12 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.ExitConfirmation;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -38,14 +35,12 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
 import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
@@ -80,7 +75,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
         
-        // fixed remove this line(https://github.com/hangum/TadpoleForDBTools/issues/350)
+        // remove this line(fixed at https://github.com/hangum/TadpoleForDBTools/issues/350)
 //        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
         configurer.setShowCoolBar(true);
         configurer.setShowStatusLine(false);
