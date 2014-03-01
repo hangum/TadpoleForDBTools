@@ -2,24 +2,26 @@
  * tadpole ace editor extension.
  * 
  *  ace example at https://github.com/ajaxorg/ace/wiki/Embedding-API
+ *  단축키 목록은 : https://www.dokuwiki.org/plugin:aceeditor 를 참고하고 수정해 가도록 합니다. 기본 에디터의 단축키 맵팽과 흡사합니다. 
  */
 var editorService = {
 	/** initialize editor */
 	initEditor : function(varExt){},
+	
 	/** set editor focus */
 	setFocus : function() {},
 
 //	/** define font */
 //	SetFont : 0,
 //	setFont : function(varFontName, varFontSize){},
-	
-	SetTabSize : 5,
+//	
+//	SetTabSize : 5,
 	setTabSize : function(varTabSize) {},
-	
-	GET_ALL_TEXT : 10,
+//	
+//	GET_ALL_TEXT : 10,
 	getAllText : function() {},
-	
-	GET_SELECTED_TEXT : 11,
+//	
+//	GET_SELECTED_TEXT : 11,
 	getSelectedText : function(varDelimiter) {},
 	
 	/** insert text */
@@ -35,17 +37,17 @@ var editorService = {
 	reNewText : function(varText) {},
 	
 	/** help dialog */
-	HELP_POPUP : 60,
+	HELP_POPUP : "60",
 	helpDialog : function() {},
 	
 	/** dirty chage event */
-	DIRTY_CHANGED : 1,
+	DIRTY_CHANGED 		: "1",
 		
-	SAVE : 20,
-	EXECUTE_QUERY 		: 25,
-	EXECUTE_ALL_QUERY 	: 26,
-	EXECUTE_PLAN  		: 30,
-	EXECUTE_FORMAT		: 35
+	SAVE 				: "15",
+	EXECUTE_QUERY 		: "25",
+	EXECUTE_ALL_QUERY 	: "26",
+	EXECUTE_PLAN  		: "30",
+	EXECUTE_FORMAT		: "35"
 };
 
 var editor;
@@ -56,8 +58,14 @@ var editor;
 {
 	ace.require("ace/ext/language_tools");
 	editor = ace.edit("editor");
+	document.getElementById('editor').style.fontSize= '12px';
+	
+	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
+    // create a simple selection status indicator
+    var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
+    
 	editor.setTheme("ace/theme/eclipse");
-	editor.setShowPrintMargin(false);
+	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	editor.resize();
 	
@@ -92,7 +100,7 @@ editorService.setFocus = function() {
  * 에디터 dirty_change
  */
 editor.getSession().on('change', function() {
-	console.log('Editor change event');
+//	console.log('Editor change event');
 	try {
 		AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
 	} catch(e) {
@@ -109,8 +117,7 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
     exec: function(editor) {
     	console.log("Save query");
-    	
-    	getAllTextJava(editorService.SAVE);
+    	AceEditorBrowserHandler(editorService.SAVE, editorService.getAllText());
     },
     readOnly: false
 });
@@ -119,11 +126,11 @@ editor.commands.addCommand({
  */
 editor.commands.addCommand({
     name: 'executeQuery',
-    bindKey: {win: 'F5',  mac: 'F5'},
+    bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
-    	console.log("execute query");
+    	console.log("execute query -f5");
     	
-    	getSelectedTextJava(editorService.EXECUTE_QUERY);
+    	AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
     },
     readOnly: false
 });
@@ -134,9 +141,9 @@ editor.commands.addCommand({
     name: 'executePlan',
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
-    	console.log("execute plan");
+    	console.log("execute plan = ctrl-e");
     	
-    	getSelectedTextJava(editorService.EXECUTE_PLAN);
+    	AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
     },
     readOnly: false
 });
@@ -149,7 +156,7 @@ editor.commands.addCommand({
     exec: function(editor) {
     	console.log("format");
     	
-    	getSelectedTextJava(editorService.EXECUTE_FORMAT);
+    	editor.setValue(editorService.getSelectedText(';'));
     },
     readOnly: false
 });
@@ -257,9 +264,9 @@ editorService.getAllText = function() {
 	
 	return varEditorContent;
 };
-getAllTextJava = function() {
-	AceEditorBrowserHandler(editorService.GET_ALL_TEXT, editorService.getAllText());
-};
+//getAllTextJava = function() {
+//	AceEditorBrowserHandler(editorService.GET_ALL_TEXT, editorService.getAllText());
+//};
 
 /**
  * 수행해야할 작업 목록을 가져옵니다.
@@ -352,9 +359,9 @@ editorService.getSelectedText = function(varDelimiter) {
 		console.log(e);
 	}
 };
-getSelectedTextJava = function() {
-	AceEditorBrowserHandler(editorService.GET_SELECTED_TEXT, editorService.getSelectedText(";"));
-};
+//getSelectedTextJava = function() {
+//	AceEditorBrowserHandler(editorService.GET_SELECTED_TEXT, editorService.getSelectedText(";"));
+//};
 
 
 /**
@@ -387,5 +394,15 @@ editorService.reNewText = function(varText) {
  */
 editorService.helpDialog = function() {
 	console.log("** called help dialog ");
-	AceEditorBrowserHandler(editorService.HELP_POPUP);
+
+//	
+//	단축키를 좀더 정리해서 에디터에 삽입합시다.
+//	
+//	AceEditorBrowserHandler(editorService.HELP_POPUP);
+
+	ace.config.loadModule("ace/ext/keybinding_menu", function(module) {
+        module.init(editor);
+        editor.showKeyboardShortcuts()
+    })
+    
 };

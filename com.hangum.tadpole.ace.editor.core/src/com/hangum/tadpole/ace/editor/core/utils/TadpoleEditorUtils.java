@@ -37,7 +37,9 @@ public class TadpoleEditorUtils {
 		try {
 			strInitContent = StringUtils.replace(initContent, "\r\n", "\\n");
 			strInitContent = StringUtils.replace(strInitContent, PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
-			strInitContent = StringUtils.replace(strInitContent, "\"", "'");
+			strInitContent = StringUtils.replace(strInitContent, "\'", "\\\'");
+			strInitContent = StringUtils.replace(strInitContent, "\"", "\\\'");
+			
 		} catch(Exception e) {
 			logger.error("Tadpole Editor grant utils", e);
 		}
@@ -45,19 +47,19 @@ public class TadpoleEditorUtils {
 		return strInitContent;
 	}
 	
-	/**
-	 * edito init command
-	 * 
-	 * @param ext
-	 * @param initContent
-	 * @param initAssist
-	 * @return
-	 */
-	public static String makeCommand(String ext, String initContent, String initAssist) {
-		String strContent = getGrantText(initContent);
-		String strAssis = getGrantText(initAssist);
-		String strCommand = "setInitialContent(\"" + ext + "\", \"" + strContent + "\", \"" + strAssis + "\" );";
-		
-		return strCommand;
-	}
+//	/**
+//	 * edito init command
+//	 * 
+//	 * @param ext
+//	 * @param initContent
+//	 * @param initAssist
+//	 * @return
+//	 */
+//	public static String makeCommand(String ext, String initContent, String initAssist) {
+//		String strContent = getGrantText(initContent);
+//		String strAssis = getGrantText(initAssist);
+//		String strCommand = "setInitialContent(\"" + ext + "\", \"" + strContent + "\", \"" + strAssis + "\" );";
+//		
+//		return strCommand;
+//	}
 }

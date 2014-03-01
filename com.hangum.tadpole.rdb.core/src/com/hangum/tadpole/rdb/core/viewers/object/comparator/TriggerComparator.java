@@ -12,7 +12,6 @@ package com.hangum.tadpole.rdb.core.viewers.object.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
 
 /**

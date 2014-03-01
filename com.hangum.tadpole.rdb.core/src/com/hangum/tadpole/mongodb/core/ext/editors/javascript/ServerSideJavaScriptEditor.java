@@ -44,7 +44,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.ace.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
-import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -368,8 +367,8 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 					e.printStackTrace();
 				}
 
-				String callCommand = TadpoleEditorUtils.makeCommand("mapreduce.js", getInputJavaScriptContent(), "");
-				browserEvaluate(callCommand);
+//				String callCommand = TadpoleEditorUtils.makeCommand("mapreduce.js", getInputJavaScriptContent(), "");
+//				browserEvaluate(callCommand);
 			}
 			public void changed( ProgressEvent event ) {}
 		});

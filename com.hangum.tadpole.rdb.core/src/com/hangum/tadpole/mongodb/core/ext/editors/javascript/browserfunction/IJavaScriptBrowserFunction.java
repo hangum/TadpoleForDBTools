@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction;
 
-import com.hangum.tadpold.commons.libs.core.browser.TadpoleBrowserFunction;
 
 /**
  * editor browser function 정의 
@@ -18,7 +17,7 @@ import com.hangum.tadpold.commons.libs.core.browser.TadpoleBrowserFunction;
  * @author hangum
  *
  */
-public interface IJavaScriptBrowserFunction extends TadpoleBrowserFunction {
+public interface IJavaScriptBrowserFunction {
 	
 	public static final int DIRTY_CHANGED 			= 1;
 //	public static final int GET_CONTENT_NAME 		= 5;

@@ -57,17 +57,6 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/** 결과 컬럼이 숫자이면 ,를 찍을 것인지 */
 	protected boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 	
-//	/** 에디터의 모든 쿼리를 수행합니다. */
-//	public static int ALL_QUERY_EXECUTE 	= -998;
-//	/** 부분 쿼리 블럭을 수행합니다 */
-//	public static int BLOCK_QUERY_EXECUTE 	= -999;
-
-//    /** 에디터의 텍스트 */
-//    protected String queryText = ""; //$NON-NLS-1$
-//    
-//    /** query append 텍스트 */
-//    protected String appendQueryText = ""; //$NON-NLS-1$
-	
 	/** 현재 에디터에서 처리해야하는 디비 정보. */
 	protected UserDBDAO userDB;
 	
@@ -79,40 +68,59 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 		return userDB;
 	}
 	
+	public void browserEvaluate(String command) {
+		browserEvaluate(command, "");
+	}
 	/** 
 	 * browser function call
 	 * 
 	 *  @param command brower command
+	 *  @param args command argument
 	 */
-	public void browserEvaluate(String command) {
+	public void browserEvaluate(String command, String args) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("\t ### send command is : " + command);
+			logger.debug("\t ### send command is : [command] " + command + ", [args]" + args);
 		}
 		
 		try {
-			browserQueryEditor.evaluate(makeGrantCommand(command));
+			browserQueryEditor.evaluate(String.format(command, makeGrantCommand(args)));
 		} catch(Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", strUserEMail), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
-	private String makeGrantCommand(String command) {
-		return TadpoleEditorUtils.getGrantText(command);
+	/**
+	 * 
+	 * @param command
+	 * @return
+	 */
+	public String browserEvaluateToStr(String command) {
+		return browserEvaluateToStr(command, "");
 	}
 	
-	public String browserEvaluateToStr(String command) {
+	/**
+	 * 
+	 * @param command
+	 * @param args
+	 * @return
+	 */
+	public String browserEvaluateToStr(String command, String args) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("\t ### send command is : " + command);
 		}
 		
 		try {
-			Object ret = browserQueryEditor.evaluate(makeGrantCommand(command));
+			Object ret = browserQueryEditor.evaluate(String.format(command, makeGrantCommand(args)));
 			return ret.toString();
 		} catch(Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", strUserEMail), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		return "";
+	}
+	
+	private String makeGrantCommand(String command) {
+		return TadpoleEditorUtils.getGrantText(command);
 	}
 	
 	/**
@@ -148,15 +156,6 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 			editorService.dispose();
 		}
 	}
-	
-//	/////[query 추가]/////////////////////////////////////////////////////////////////////////////
-//	public String getAppendQueryText() {
-//		return appendQueryText;
-//	}
-//	public void setAppendQueryText(String appendQueryText) {
-//		this.appendQueryText = appendQueryText;
-//	}
-	//////////////////////////////////////////////////////////////////////////////////	
 	
 	@Override
 	public void dispose() {

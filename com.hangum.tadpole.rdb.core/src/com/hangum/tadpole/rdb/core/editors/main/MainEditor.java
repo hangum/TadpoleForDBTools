@@ -896,7 +896,7 @@ public class MainEditor extends EditorExtension {
 	 */
 	public void appendTextAtPosition(String strText) {
 		try {
-			browserEvaluate(String.format(EditorFunctionService.INSERT_TEXT, strText));
+			browserEvaluate(EditorFunctionService.INSERT_TEXT, strText);
 		} catch(Exception ee){
 			logger.error("query text at position" , ee); //$NON-NLS-1$
 		}
@@ -909,7 +909,7 @@ public class MainEditor extends EditorExtension {
 	 */
 	public void appendText(String strText) {
 		try {
-			browserEvaluate(String.format(EditorFunctionService.APPEND_TEXT, strText));
+			browserEvaluate(EditorFunctionService.APPEND_TEXT, strText);
 		} catch(Exception ee){
 			logger.error("query text" , ee); //$NON-NLS-1$
 		}
@@ -943,16 +943,8 @@ public class MainEditor extends EditorExtension {
 		browserQueryEditor.addProgressListener(new ProgressListener() {
 			@Override
 			public void completed( ProgressEvent event ) {
-				
-//				try {
-//					browserQueryEditor.evaluate("getEditor();"); //$NON-NLS-1$
-//				} catch(Exception e) {
-//					logger.error(RequestInfoUtils.requestInfo("MainEditor browser init", strUserEMail), e); //$NON-NLS-1$
-//				}
-//				
-//				String callCommand = TadpoleEditorUtils.makeCommand(getUserDB().getDBDefine().getExt(), getInitDefaultEditorStr(), getAssistList());
 				if(!"".equals(getInitDefaultEditorStr())) {
-					browserEvaluate(String.format(IEditorFunction.INSERT_TEXT, getInitDefaultEditorStr()));
+					browserEvaluate(IEditorFunction.INSERT_TEXT, getInitDefaultEditorStr());
 				}
 			}
 			public void changed( ProgressEvent event ) {}			
@@ -1805,42 +1797,6 @@ public class MainEditor extends EditorExtension {
 		if(!isFirstLoad) setOrionTextFocus();
 	}
 	
-//	/**
-//	 * orion text
-//	 * 
-//	 * @return
-//	 */
-//	public String getOrionText() {
-//		return queryText;
-//	}
-//	
-//	/**
-//	 * orion editor cursor position
-//	 * 
-//	 * @return
-//	 */
-//	public int getOrionEditorCursorPosition() {
-//		return this.queryEditorCursorPoistion;
-//	}
-//	
-//	/**
-//	 * set orion editor cursor position
-//	 * 
-//	 * @param queryTextPoistion
-//	 */
-//	public void setOrionEditorCursorPostion(int queryTextPoistion) {
-//		this.queryEditorCursorPoistion = queryTextPoistion;
-//	}
-//	
-//	/**
-//	 * set orion text
-//	 * 
-//	 * @param queryText
-//	 */
-//	public void setOrionText(String queryText) {
-//		this.queryText = queryText;
-//	}
-	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
@@ -1851,12 +1807,8 @@ public class MainEditor extends EditorExtension {
 		
 		// 저장을 호출합니다.
 		try {
-//			Object resultObj = browserQueryEditor.evaluate(EditorFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
 			String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 			performSave(strQuery);
-//			if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
-//				monitor.setCanceled(true);
-//			}
 		} catch(SWTException e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
 			monitor.setCanceled(true);
@@ -1871,7 +1823,6 @@ public class MainEditor extends EditorExtension {
 		
 		// 저장을 호출합니다.
 		try {
-//			Object resultObj = browserQueryEditor.evaluate(EditorFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
 			String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 			performSave(strQuery);
 		} catch(SWTException e) {

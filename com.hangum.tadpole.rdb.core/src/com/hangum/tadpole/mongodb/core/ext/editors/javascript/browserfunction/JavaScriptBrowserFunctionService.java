@@ -17,7 +17,6 @@ import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
-import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 
 /**
@@ -112,38 +111,38 @@ public class JavaScriptBrowserFunctionService extends BrowserFunction implements
 	
 	private void doExecuteQuery(Object[] arguments) {
 		
-		if (arguments.length == 2 && (arguments[1] instanceof String)) {
+//		if (arguments.length == 2 && (arguments[1] instanceof String)) {
 			String newContents = (String) arguments[1];
-			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
+//			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
-			editor.executeEval(queryStruct[1]);
-		}
+			editor.executeEval(newContents);
+//		}
 	}
 	
-	private String doExecuteFormat(Object[] arguments) {
-		String newContents = (String) arguments[1];
-		
-		try {
-			newContents = JSONUtil.getPretty(newContents );			
-			return newContents;						
-		} catch (Exception e) {
-			logger.error("sql format", e);
-		}
-		
-		return newContents;
-	}
+//	private String doExecuteFormat(Object[] arguments) {
+//		String newContents = (String) arguments[1];
+//		
+//		try {
+//			newContents = JSONUtil.getPretty(newContents );			
+//			return newContents;						
+//		} catch (Exception e) {
+//			logger.error("sql format", e);
+//		}
+//		
+//		return newContents;
+//	}
 
 	/**
 	 * download sql
 	 * @param arguments
 	 */
 	private void downloadJavaScript(Object[] arguments) {
-		if (arguments.length == 2 && (arguments[1] instanceof String)) {
+//		if (arguments.length == 2 && (arguments[1] instanceof String)) {
 			String newContents = (String) arguments[1];
-			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
+//			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
-			editor.downloadJavaScript(editor.getUserDB().getDisplay_name() + ".js",  queryStruct[1]);
-		}
+			editor.downloadJavaScript(editor.getUserDB().getDisplay_name() + ".js",  newContents);
+//		}
 	}
 
 	/**

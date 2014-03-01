@@ -16,7 +16,6 @@ Bundle-ClassPath: .,
  libs/sql/formatter/kry.sql.format_1.0.0.v20101023.jar,
  libs/sql/parser/jsqlparser-0.8.7.jar
 Export-Package: .,
- com.hangum.tadpold.commons.libs.core.browser,
  com.hangum.tadpold.commons.libs.core.dao,
  com.hangum.tadpold.commons.libs.core.define,
  com.hangum.tadpold.commons.libs.core.utils,

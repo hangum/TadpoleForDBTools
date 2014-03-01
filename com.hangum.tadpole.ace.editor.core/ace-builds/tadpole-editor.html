@@ -14,7 +14,6 @@
     body {
         overflow: hidden;
     }
-    
     #editor { 
         margin: 0;
         position: absolute;
@@ -23,15 +22,36 @@
         left: 0;
         right: 0;
     }
+    #statusBar {
+        margin: 0;
+        font-size : 12px;
+        padding: 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 15px;
+        background-color: rgb(245, 245, 245);
+        color: gray;
+    }
+    .ace_status-indicator {
+        color: gray;
+        position: absolute;
+        right: 0;
+        border-left: 1px solid;
+    }
   </style>
 </head>
-<body>
 
-<pre id="editor"></pre>
-    
-<script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="src-noconflict/ext-language_tools.js"></script>
+	<body>
+		<pre id="editor"></pre>
+		<div id="statusBar"></div>
+		    
+		<script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="src-noconflict/ext-language_tools.js"></script>
+		<script src="src-noconflict/ext-statusbar.js"></script>
+		
+		<script src="tadpole-extension.js" type="text/javascript" charset="utf-8"></script>
+	</body>
 
-<script src="tadpole-extension.js" type="text/javascript" charset="utf-8"></script>
-</body>
 </html>

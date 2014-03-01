@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.ace.editor.core.texteditor.function;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
@@ -34,9 +35,9 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 	@Override
 	public Object function(Object[] arguments) {
 		
-		int action = Integer.parseInt(arguments[0].toString());
+		int intActionId =  NumberUtils.toInt(arguments[0].toString());
 		
-		switch (action) {
+		switch (intActionId) {
 			case DIRTY_CHANGED:
 				doDirtyChanged(arguments);
 				break;
@@ -47,16 +48,16 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 			case SAVE:
 				return doSave(arguments);
 				
-			case SAVE_S:
-				return doSaveS(arguments);
+//			case SAVE_S:
+//				return doSaveS(arguments);
 			
 			case EXECUTE_QUERY:
 				doExecuteQuery(arguments);
 				break;
-				
-			case EXECUTE_ALL_QUERY:
-				doExecuteAllQuery(arguments);
-				break;
+//				
+//			case EXECUTE_ALL_QUERY:
+//				doExecuteAllQuery(arguments);
+//				break;
 				
 			case EXECUTE_PLAN:
 				doExecutePlan(arguments);
@@ -110,13 +111,13 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 	 */
 	protected abstract Object doSave(Object[] arguments);
 
-	/**
-	 * short cut save called 
-	 * 
-	 * @param arguments
-	 * @return
-	 */
-	protected abstract Object doSaveS(Object[] arguments);
+//	/**
+//	 * short cut save called 
+//	 * 
+//	 * @param arguments
+//	 * @return
+//	 */
+//	protected abstract Object doSaveS(Object[] arguments);
 
 	/**
 	 * ediror dirty change event
@@ -133,12 +134,12 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 	 */
 	protected abstract void doExecuteQuery(Object[] arguments);
 
-	/**
-	 * execute all query
-	 * 
-	 * @param arguments
-	 */
-	protected abstract void doExecuteAllQuery(Object[] arguments);
+//	/**
+//	 * execute all query
+//	 * 
+//	 * @param arguments
+//	 */
+//	protected abstract void doExecuteAllQuery(Object[] arguments);
 	
 	/**
 	 * execute plan
@@ -162,19 +163,19 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 //	 * @return
 //	 */
 //	protected abstract  String appendQueryText(Object[] arguments);
-	
-	/**
-	 * sql to application text
-	 * 
-	 * @param arguments
-	 */
-	protected abstract void sqlToApplication(Object[] arguments);
-
-	/**
-	 * download sql
-	 * @param arguments
-	 */
-	protected abstract void downloadSQL(Object[] arguments);
+//	
+//	/**
+//	 * sql to application text
+//	 * 
+//	 * @param arguments
+//	 */
+//	protected abstract void sqlToApplication(Object[] arguments);
+//
+//	/**
+//	 * download sql
+//	 * @param arguments
+//	 */
+//	protected abstract void downloadSQL(Object[] arguments);
 	
 	/**
 	 * 쿼리 히스토리 페이지로 이동합니다.
