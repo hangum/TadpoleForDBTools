@@ -15,11 +15,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.editor.core.dialogs.help.RDBShortcutHelpDialog;
-import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.editors.main.RequestQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**
@@ -28,7 +29,7 @@ import com.hangum.tadpole.sql.format.SQLFormater;
  * @author hangum
  *
  */
-public class MainEditorBrowserFunctionService extends EditorBrowserFunctionService {
+public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	private static final Logger logger = Logger.getLogger(MainEditorBrowserFunctionService.class);
 	protected MainEditor editor;
 
@@ -37,13 +38,13 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 		this.editor = editor;
 	}
 	
-	/**
-	 * editor initialize
-	 */
-	@Override
-	protected Object doGetInitialContent(Object[] arguments) {
-		return editor.getUserDB().getDBDefine().getExt() + ":ext:" + editor.getOrionText();
-	}
+//	/**
+//	 * editor initialize
+//	 */
+//	@Override
+//	protected Object doGetInitialContent(Object[] arguments) {
+//		return editor.getUserDB().getDBDefine().getExt() + ":ext:" + editor.getOrionText();
+//	}
 	
 	@Override
 	protected Object doSave(Object[] arguments) {
@@ -68,12 +69,12 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 	}
 
 	@Override
-	protected Object doDirtyChanged(Object[] arguments) {
-		if (arguments.length == 2 && (arguments[1] instanceof Boolean)) {
-			editor.setDirty((Boolean) arguments[1]);
-		}
-		
-		return editor.isDirty();
+	protected void doDirtyChanged(Object[] arguments) {
+//		if (arguments.length == 2 && (arguments[1] instanceof Boolean)) {
+			editor.setDirty(true);
+//		}
+//		
+//		return editor.isDirty();
 	}
 	
 	@Override
@@ -83,10 +84,12 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 			String newContents = (String) arguments[1];
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
-			editor.setOrionText(queryStruct[1]);
-			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
-			
-			editor.executeCommand(PublicTadpoleDefine.QUERY_MODE.DEFAULT);
+//			editor.setOrionText(queryStruct[1]);
+//			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
+//			editor.executeCommand(EditorDefine.QUERY_MODE.QUERY);
+//			
+			RequestQuery rq = new RequestQuery(queryStruct[1], EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.ALL);
+			editor.executeCommand(rq);
 		}
 	}
 	
@@ -97,10 +100,12 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 			
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
-			editor.setOrionText(queryStruct[1]);
-			editor.setOrionEditorCursorPostion(MainEditor.ALL_QUERY_EXECUTE);
+//			editor.setOrionText(queryStruct[1]);
+//			editor.setOrionEditorCursorPostion(MainEditor.ALL_QUERY_EXECUTE);
+//			editor.executeCommand(EditorDefine.QUERY_MODE.DEFAULT);
 			
-			editor.executeCommand(PublicTadpoleDefine.QUERY_MODE.DEFAULT);
+			RequestQuery rq = new RequestQuery(queryStruct[1], EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.ALL);
+			editor.executeCommand(rq);
 		}
 	}
 	
@@ -114,10 +119,13 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 			String newContents = (String) arguments[1];
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
-			editor.setOrionText(queryStruct[1]);
-			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
+//			editor.setOrionText(queryStruct[1]);
+//			editor.setOrionEditorCursorPostion(new Integer(queryStruct[0]));
+//			
+//			editor.executeCommand(EditorDefine.QUERY_MODE.EXPLAIN_PLAN);
 			
-			editor.executeCommand(PublicTadpoleDefine.QUERY_MODE.EXPLAIN_PLAN);
+			RequestQuery rq = new RequestQuery(queryStruct[1], EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE);
+			editor.executeCommand(rq);
 		}
 	}
 	
@@ -139,16 +147,16 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 		return newContents;
 	}
 	
-	/**
-	 * append sql text
-	 * 
-	 * @param arguments
-	 * @return
-	 */
-	@Override
-	protected String appendQueryText(Object[] arguments) {
-		return editor.getAppendQueryText();
-	}
+//	/**
+//	 * append sql text
+//	 * 
+//	 * @param arguments
+//	 * @return
+//	 */
+//	@Override
+//	protected String appendQueryText(Object[] arguments) {
+//		return editor.getAppendQueryText();
+//	}
 	
 	/**
 	 * SQL to Application(java or php)
@@ -160,7 +168,7 @@ public class MainEditorBrowserFunctionService extends EditorBrowserFunctionServi
 			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
 			
 			// dialog open
-			SQLToStringDialog dialog = new SQLToStringDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), PublicTadpoleDefine.SQL_TO_APPLICATION.Java_StringBuffer.toString(), queryStruct[1]);
+			SQLToStringDialog dialog = new SQLToStringDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer.toString(), queryStruct[1]);
 			dialog.open();
 			
 		}

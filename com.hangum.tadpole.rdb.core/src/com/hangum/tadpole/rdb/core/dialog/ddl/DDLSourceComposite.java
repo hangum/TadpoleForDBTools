@@ -14,10 +14,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
-import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
-
 import org.eclipse.swt.widgets.Label;
+
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 
 /**
  * Table summary composite
@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Label;
 public class DDLSourceComposite extends Composite {
 	
 	private Label labelTable;
-	private JsonTadpoleEditor ddlSource;
+	private TadpoleEditorWidget ddlSource;
 
 	/**
 	 * Create the composite.
@@ -52,7 +52,7 @@ public class DDLSourceComposite extends Composite {
 		labelTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		labelTable.setText(tableName);
 		
-		ddlSource = new JsonTadpoleEditor(compositeBasic, SWT.BORDER, initDDL, "");
+		ddlSource = new TadpoleEditorWidget(compositeBasic, SWT.BORDER, EditorDefine.EXT_JSON, initDDL, "");
 		ddlSource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 	}
 	

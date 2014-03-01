@@ -43,14 +43,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
+import com.hangum.tadpole.ace.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
-import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
-import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -242,10 +242,10 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	
 		if(!"".equals(save_id)) {
 			try {
-				Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
-				if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
-					monitor.setCanceled(true);
-				}
+//				Object resultObj = browserQueryEditor.evaluate(EditorFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
+//				if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
+//					monitor.setCanceled(true);
+//				}
 			} catch(SWTException e) {
 				logger.error(RequestInfoUtils.requestInfo("doSave exception", SessionManager.getEMAIL()), e); //$NON-NLS-1$
 				monitor.setCanceled(true);

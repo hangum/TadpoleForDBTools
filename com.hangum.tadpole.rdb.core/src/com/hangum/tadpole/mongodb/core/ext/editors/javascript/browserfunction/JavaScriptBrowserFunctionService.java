@@ -16,8 +16,8 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.ace.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.commons.util.JSONUtil;
-import com.hangum.tadpole.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 
 /**
