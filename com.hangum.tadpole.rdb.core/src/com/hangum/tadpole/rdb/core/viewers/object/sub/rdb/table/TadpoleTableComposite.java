@@ -79,7 +79,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;

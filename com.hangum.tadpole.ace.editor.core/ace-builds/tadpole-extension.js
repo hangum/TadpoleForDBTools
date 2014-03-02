@@ -84,16 +84,20 @@ var editor;
  */
 editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 	
-//	var keyWordList = editor.getKeywords() + "|" + varAddKeyword;
-//	
-//	console.log("\t " + keyWordList);
-	
-	// 확장자 지정.
-	editor.getSession().setMode(varExt);
-	
-	// 초기 데이터를 입력.
-	editor.insert(varInitText);
-	editor.focus();
+	try {
+	//	var keyWordList = editor.getKeywords() + "|" + varAddKeyword;
+	//	
+	//	console.log("\t " + keyWordList);
+		
+		// 확장자 지정.
+		editor.getSession().setMode(varExt);
+		
+		// 초기 데이터를 입력.
+		editor.insert(varInitText);
+		editor.focus();
+	} catch(e) {
+		console.log(e);
+	}
 };
 
 /**
@@ -123,8 +127,12 @@ editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
     exec: function(editor) {
-    	console.log("Save query");
-    	AceEditorBrowserHandler(editorService.SAVE, editorService.getAllText());
+//    	console.log("Save query");
+    	try {
+    		AceEditorBrowserHandler(editorService.SAVE, editorService.getAllText());
+    	}catch(e) {
+    		console.log(e);
+    	}
     },
     readOnly: false
 });
@@ -135,9 +143,12 @@ editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
-    	console.log("execute query -f5");
-    	
-    	AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+//    	console.log("execute query -f5");
+    	try {
+    		AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+    	} catch(e) {
+    		console.log(e);
+    	}
     },
     readOnly: false
 });
@@ -148,9 +159,12 @@ editor.commands.addCommand({
     name: 'executePlan',
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
-    	console.log("execute plan = ctrl-e");
-    	
-    	AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
+//    	console.log("execute plan = ctrl-e");
+    	try {
+    		AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
+	    } catch(e) {
+			console.log(e);
+		}
     },
     readOnly: false
 });
@@ -161,9 +175,12 @@ editor.commands.addCommand({
     name: 'format',
     bindKey: {win: 'Ctrl-Shift-F',  mac: 'Command-Shift-F'},
     exec: function(editor) {
-    	console.log("format");
-    	
-    	editor.setValue(editorService.getSelectedText(';'));
+//    	console.log("format");
+    	try {
+    		editor.setValue(editorService.getSelectedText(';'));
+    	} catch(e) {
+    		console.log(e);
+    	}
     },
     readOnly: false
 });
@@ -174,7 +191,7 @@ editor.commands.addCommand({
     name: 'changeLowCase',
     bindKey: {win: 'Ctrl-Shift-Y',  mac: 'Command-Shift-Y'},
     exec: function(editor) {
-    	console.log("Change Low Cage ");
+//    	console.log("Change Low Cage ");
     	editor.toLowerCase();
     },
     readOnly: false
@@ -186,7 +203,7 @@ editor.commands.addCommand({
     name: 'changeUpperCase',
     bindKey: {win: 'Ctrl-Shift-X',  mac: 'Command-Shift-X'},
     exec: function(editor) {
-    	console.log("Change Upper case");
+//    	console.log("Change Upper case");
     	editor.toUpperCase();
     },
     readOnly: false
@@ -198,8 +215,12 @@ editor.commands.addCommand({
     name: 'helpDialog',
     bindKey: {win: 'Ctrl-Shift-L',  mac: 'Command-Shift-L'},
     exec: function(editor) {
-    	console.log("Show shortcut dialog");
-    	editorService.helpDialog();
+//    	console.log("Show shortcut dialog");
+    	try {
+    		editorService.helpDialog();
+    	} catch(e) {
+    		console.log(e);
+    	}
     },
     readOnly: false
 });
@@ -210,7 +231,7 @@ editor.commands.addCommand({
     name: 'cleagePage',
     bindKey: {win: 'Ctrl-F7',  mac: 'Command-F7'},
     exec: function(editor) {
-    	console.log("Clear page");
+//    	console.log("Clear page");
     	editor.setValue("");
     },
     readOnly: false
@@ -226,7 +247,7 @@ editor.commands.addCommand({
  * 폰트 종류와 사이즈가 변화가 있으면 에디터가 깨지는 현상이 있음. 
  */
 editorService.setFont = function(varFontName, varFontSize) {
-	console.log("##Define setFont(" + varFontName + ", " + varFontSize + ")");
+//	console.log("##Define setFont(" + varFontName + ", " + varFontSize + ")");
 	
 	try {
 		document.getElementById('editor').style.fontSize= varFontSize + 'px';
@@ -240,7 +261,7 @@ editorService.setFont = function(varFontName, varFontSize) {
  * define tab size
  */
 editorService.setTabSize = function(varTabSize) {
-	console.log("##Define tab size (" + varTabSize + ")");
+//	console.log("##Define tab size (" + varTabSize + ")");
 	
 	try {
 		editor.getSession().setTabSize(varTabSize);
@@ -253,9 +274,8 @@ editorService.setTabSize = function(varTabSize) {
  * getAllText
  */
 editorService.getAllText = function() {
-	console.log("######################## called getAllText() method ######################");
+//	console.log("######################## called getAllText() method ######################");
 	var varEditorContent = editor.getValue();
-	
 	return varEditorContent;
 };
 
@@ -337,7 +357,8 @@ editorService.getSelectedText = function(varDelimiter) {
 			}
 			
 			// 쿼리 내용이 없다면..
-			if(strReturnQuery.trim() == '') {
+			strReturnQuery = strReturnQuery.trim();
+			if(strReturnQuery == '') {
 				console.log('\t##[Caution] query not found, so add all editor text');
 				strReturnQuery = varEditorContent;
 			}
@@ -351,7 +372,6 @@ editorService.getSelectedText = function(varDelimiter) {
 			return strReturnQuery;
 		}
 	} catch(e) {
-		console.log("******************* Rise exception **********************************************")
 		console.log(e);
 	}
 };
@@ -360,23 +380,34 @@ editorService.getSelectedText = function(varDelimiter) {
  * insert text
  */
 editorService.insertText = function(varText) {
-	console.log("**insertText " + varText);
+//	console.log("**insertText " + varText);
 	
-	editor.insert(varText);
-	editor.focus();
+	try {
+		editor.insert(varText);
+		editor.focus();
+	} catch(e) {
+		console.log(e);
+	}
 };
 
 editorService.addText = function(varText) {
-	console.log("**addText " + varText);
+//	console.log("**addText " + varText);
 	
-	editor.navigateLineEnd();
-	
-	editor.insert("\n" + varText);
-	editor.focus();
+	try {
+		if("" == editor.getValue()) {
+			editor.insert(varText);
+		} else {
+			editor.insert("\n" + varText);
+		}
+		
+		editor.focus();
+	} catch(e) {
+		console.log(e);
+	}
 };
 
 editorService.reNewText = function(varText) {
-	console.log("**rwNewText " + varText);
+//	console.log("**rwNewText " + varText);
 	
 	editor.setValue(varText);
 }
@@ -385,12 +416,16 @@ editorService.reNewText = function(varText) {
  * help dilaog
  */
 editorService.helpDialog = function() {
-	console.log("** called help dialog ");
+//	console.log("** called help dialog ");
 
 //	
 //	단축키를 좀더 정리해서 에디터에 삽입합시다.
 //	
-	AceEditorBrowserHandler(editorService.HELP_POPUP);
+	try {
+		AceEditorBrowserHandler(editorService.HELP_POPUP);
+	} catch(e) {
+		console.log(e);
+	}
 
 //	ace.config.loadModule("ace/ext/keybinding_menu", function(module) {
 //        module.init(editor);
