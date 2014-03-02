@@ -10,29 +10,20 @@
  ******************************************************************************/
 package com.hangum.tadpole.ace.editor.core.dialogs.help;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
-
-import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 
 /**
  * sql editor 단축키 도움말.
@@ -43,7 +34,7 @@ import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
  * @author hangum
  *
  */
-public class RDBShortcutHelpDialog extends Dialog {
+public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	/**
 	 * Logger for this class
 	 */
@@ -53,7 +44,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 	protected Shell shlEditorShortcutDialog;
 	
 	protected TableViewer tableViewer;
-	protected List<ShortcutHelpDAO> listShortcut = new ArrayList<ShortcutHelpDAO>();
+	
 
 	/**
 	 * Create the dialog.
@@ -130,7 +121,7 @@ public class RDBShortcutHelpDialog extends Dialog {
 		initData();
 		
 		//
-		tableViewer.getTable().setSelection(0);//setSelection(new StructuredSelection(listShortcut.get(0)), true);
+		tableViewer.getTable().setSelection(0);
 		tableViewer.getTable().setFocus();
 	}
 	
@@ -138,57 +129,13 @@ public class RDBShortcutHelpDialog extends Dialog {
 	 * 단축키 데이터
 	 */
 	private void initData() {
-		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
-		
-		listShortcut.add( new ShortcutHelpDAO("Add Block Comment", 	prefixOSShortcut +"+ /"));
-		
-		listShortcut.add( new ShortcutHelpDAO("Save", 			prefixOSShortcut + "+ S") 		);
-		listShortcut.add( new ShortcutHelpDAO("SQL Assist", 	prefixOSShortcut + "+ Space") 		);
-		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	prefixOSShortcut + "+ enter") 	);
-		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	"F5") 				);
-		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	prefixOSShortcut + "+ E") 		);
-		listShortcut.add( new ShortcutHelpDAO("Delete Line", 	prefixOSShortcut + "+ D") 		);
-		listShortcut.add( new ShortcutHelpDAO("Query Format", 	prefixOSShortcut + "+ Shift + F") );
-		listShortcut.add( new ShortcutHelpDAO("Query History", 	prefixOSShortcut + "+ H") 		);
-		
-		listShortcut.add( new ShortcutHelpDAO("Go to Line", 	prefixOSShortcut + "+ L") 		);
-		
-		listShortcut.add( new ShortcutHelpDAO("To Lower case", 	prefixOSShortcut + "+ Shift + Y") );
-		listShortcut.add( new ShortcutHelpDAO("To Upper case", 	prefixOSShortcut + "+ Shift + X") );
-		listShortcut.add( new ShortcutHelpDAO("Shortcut Help", 	prefixOSShortcut + "+ Shift + L") );
-		
-		listShortcut.add( new ShortcutHelpDAO("Clear page", 	"F7") 				);
-		listShortcut.add( new ShortcutHelpDAO("Select All", 	prefixOSShortcut + "+ A") 		);
-		listShortcut.add( new ShortcutHelpDAO("Go to Line", 	prefixOSShortcut + "+ L") 		);
-		listShortcut.add( new ShortcutHelpDAO("Copy text", 		prefixOSShortcut + "+ C") 		);
-		listShortcut.add( new ShortcutHelpDAO("Past text", 		prefixOSShortcut + "+ V") 		);
+		super.initShortList();
+		listShortcut.add( new ShortcutHelpDAO("Save", 			prefixCtrlShortcut + "+ S") 		);
+		listShortcut.add( new ShortcutHelpDAO("SQL Assist", 	prefixCtrlShortcut + "+ Space") 		);
+		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	prefixCtrlShortcut + "+ enter") 	);
+		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	prefixCtrlShortcut + "+ E") 		);
+		listShortcut.add( new ShortcutHelpDAO("Query Format", 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") );
 		
 		tableViewer.refresh(listShortcut);		
 	}
-}
-
-/**
- * label provider
- * @author hangum
- *
- */
-class ShortcutLabelProvider extends LabelProvider implements ITableLabelProvider {
-	@Override
-	public Image getColumnImage(Object element, int columnIndex) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getColumnText(Object element, int columnIndex) {
-		ShortcutHelpDAO dao = (ShortcutHelpDAO)element;
-		
-		switch(columnIndex) {
-		case 0: return dao.getName();
-		case 1: return dao.getKey();
-		}
-		
-		return "*** not set column ***";
-	}
-	
 }

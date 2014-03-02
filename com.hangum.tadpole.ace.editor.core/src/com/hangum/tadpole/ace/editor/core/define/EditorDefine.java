@@ -27,6 +27,9 @@ public class EditorDefine {
 	 */
 	public static String EXT_JSON = "ace/mode/json";
 	
+	/** 에디터에서 사용할 java script */
+	public static String EXT_JAVASCRIPT = "ace/mode/javascript";
+	
 	/** query editor에서 실행 모드 */
 	public static enum QUERY_MODE {QUERY, EXPLAIN_PLAN};
 	

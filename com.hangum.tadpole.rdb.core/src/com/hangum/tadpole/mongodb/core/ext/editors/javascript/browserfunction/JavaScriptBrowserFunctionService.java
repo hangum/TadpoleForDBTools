@@ -13,10 +13,10 @@ package com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 
 /**
@@ -25,131 +25,55 @@ import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScri
  * @author hangum
  *
  */
-public class JavaScriptBrowserFunctionService extends BrowserFunction implements IJavaScriptBrowserFunction {
+public class JavaScriptBrowserFunctionService extends EditorFunctionService {
 	private static final Logger logger = Logger.getLogger(JavaScriptBrowserFunctionService.class);
         
 	private ServerSideJavaScriptEditor editor;
 
 	public JavaScriptBrowserFunctionService(Browser browser, String name, ServerSideJavaScriptEditor editor) {
-		super(browser, name);
+		super(browser, name, editor);
 		this.editor = editor;
-	}
-	
-	@Override
-	public Object function(Object[] arguments) {
-		int action = Integer.parseInt(arguments[0].toString());
-		
-		switch (action) {
-			case DIRTY_CHANGED:
-				return doDirtyChanged(arguments);
-				
-//			case GET_CONTENT_NAME:
-//				return doGetContentName(arguments);
-
-			case GET_INITIAL_CONTENT:
-				return doGetInitialContent(arguments);
-
-			case SAVE:
-				return doSave(arguments);
-				
-			case SAVE_S:
-				return doSaveS(arguments);
-				
-//			case STATUS_CHANGED:
-//				return doStatusChanged(arguments);
-			
-			case EXECUTE_QUERY:
-				doExecuteQuery(arguments);
-				break;
-				
-			case DOWNLOAD_SQL:
-				downloadJavaScript(arguments);
-				break;
-				
-			case HELP_POPUP:
-				helpPopup();
-				break;
-				
-			default:
-				return null;
-		}
-		
-		return null;
-	}
-	
-	private Object doGetInitialContent(Object[] arguments) {
-		return "mongojavascript.js" + ":ext:" + editor.getInputJavaScriptContent();
-	}
-	
-	private Object doSave(Object[] arguments) {
-		boolean result = false;
-		if (arguments.length == 2 && (arguments[1] instanceof String)) {
-			String newContents = (String) arguments[1];
-			result = editor.performSave(newContents);
-		}
-		
-		return result;
-	}
-	
-	private Object doSaveS(Object[] arguments) {
-		boolean result = false;
-		if (arguments.length == 2 && (arguments[1] instanceof String)) {
-			String newContents = (String) arguments[1];
-			result = editor.performSave(newContents);
-		}
-		
-		return result;
-	}
-
-	private Object doDirtyChanged(Object[] arguments) {
-		if (arguments.length == 2 && (arguments[1] instanceof Boolean)) {
-			editor.setDirty((Boolean) arguments[1]);
-		}
-		
-		return editor.isDirty();
-	}
-	
-	private void doExecuteQuery(Object[] arguments) {
-		
-//		if (arguments.length == 2 && (arguments[1] instanceof String)) {
-			String newContents = (String) arguments[1];
-//			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
-			
-			editor.executeEval(newContents);
-//		}
-	}
-	
-//	private String doExecuteFormat(Object[] arguments) {
-//		String newContents = (String) arguments[1];
-//		
-//		try {
-//			newContents = JSONUtil.getPretty(newContents );			
-//			return newContents;						
-//		} catch (Exception e) {
-//			logger.error("sql format", e);
-//		}
-//		
-//		return newContents;
-//	}
-
-	/**
-	 * download sql
-	 * @param arguments
-	 */
-	private void downloadJavaScript(Object[] arguments) {
-//		if (arguments.length == 2 && (arguments[1] instanceof String)) {
-			String newContents = (String) arguments[1];
-//			String[] queryStruct = newContents.split(CARET_QUERY_DELIMIT);
-			
-			editor.downloadJavaScript(editor.getUserDB().getDisplay_name() + ".js",  newContents);
-//		}
 	}
 
 	/**
 	 * help popup
 	 */
-	private void helpPopup() {
+	protected void helpPopup() {
 		MongoDBShortcutHelpDialog dialog = new MongoDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
 		dialog.open();
+	}
+
+	@Override
+	protected Object doSave(Object[] arguments) {
+		boolean result = false;
+		try {
+			String newContents = (String) arguments[1];
+			result = editor.performSave(newContents);
+		} catch(Exception e) {
+			logger.error("do not save", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	protected void doDirtyChanged(Object[] arguments) {
+		editor.setDirty(true);
+		
+	}
+
+	@Override
+	protected void doExecuteQuery(Object[] arguments) {
+		logger.debug("======= doExecuteQuery*** === ***");
+	}
+
+	@Override
+	protected void doExecutePlan(Object[] arguments) {
+		
+	}
+
+	@Override
+	protected String doExecuteFormat(Object[] arguments) {
+		return "";
 	}
 }

@@ -40,9 +40,11 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected Object doSave(Object[] arguments) {
 		boolean result = false;
-		if (arguments.length == 2 && (arguments[1] instanceof String)) {
+		try {
 			String newContents = (String) arguments[1];
 			result = editor.performSave(newContents);
+		} catch(Exception e) {
+			logger.error("do not save", e);
 		}
 		
 		return result;
@@ -89,14 +91,6 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		
 		return newContents;
 	}
-
-	/**
-	 * 쿼리 히스토리 페이지로 이동합니다.
-	 */
-	@Override
-	protected void moveHistoryPage() {
-		editor.selectHistoryPage();
-	}
 	
 	/**
 	 * help popup
@@ -105,6 +99,8 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	protected void helpPopup() {
 		RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
 		dialog.open();
+		
+		editor.setFocus();
 	}
 
 }

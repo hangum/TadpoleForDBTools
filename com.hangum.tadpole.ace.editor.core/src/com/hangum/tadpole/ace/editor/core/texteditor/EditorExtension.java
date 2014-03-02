@@ -77,13 +77,13 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 *  @param command brower command
 	 *  @param args command argument
 	 */
-	public void browserEvaluate(String command, String args) {
+	public void browserEvaluate(String command, String ... args) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("\t ### send command is : [command] " + command + ", [args]" + args);
 		}
 		
 		try {
-			browserQueryEditor.evaluate(String.format(command, makeGrantCommand(args)));
+			browserQueryEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
 		} catch(Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", strUserEMail), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -104,13 +104,13 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 * @param args
 	 * @return
 	 */
-	public String browserEvaluateToStr(String command, String args) {
+	public String browserEvaluateToStr(String command, String ... args) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("\t ### send command is : " + command);
 		}
 		
 		try {
-			Object ret = browserQueryEditor.evaluate(String.format(command, makeGrantCommand(args)));
+			Object ret = browserQueryEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
 			return ret.toString();
 		} catch(Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", strUserEMail), e); //$NON-NLS-1$ //$NON-NLS-2$
@@ -119,16 +119,12 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 		return "";
 	}
 	
-	private String makeGrantCommand(String command) {
-		return TadpoleEditorUtils.getGrantText(command);
-	}
-	
 	/**
 	 * orion text setfocus
 	 */
 	protected void setOrionTextFocus() {
 		try {
-			browserQueryEditor.evaluate(EditorFunctionService.SET_FOCUS_FUNCTION);
+			browserQueryEditor.evaluate(EditorFunctionService.SET_FOCUS);
 		} catch(Exception e) {
 			// ignore exception
 		}

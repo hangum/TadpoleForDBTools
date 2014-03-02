@@ -13,8 +13,6 @@ package com.hangum.tadpole.ace.editor.core.dialogs.help;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Shell;
 
-import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
-
 /**
  * mongodb editor 단축키 도움말.  
  * 
@@ -45,21 +43,9 @@ public class MongoDBShortcutHelpDialog extends RDBShortcutHelpDialog {
 	 * 단축키 데이터
 	 */
 	private void initData() {
-		listShortcut.clear();
-		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
-		listShortcut.add( new ShortcutHelpDAO("Collection Assist", 	prefixOSShortcut + "+ Space") 	);
+		super.initShortList();
+		listShortcut.add(new ShortcutHelpDAO("Collection Assist", 	prefixCtrlShortcut + "+ Space"));
 		
-		listShortcut.add( new ShortcutHelpDAO("To Lower case", 	prefixOSShortcut + "+ Shift + Y") );
-		listShortcut.add( new ShortcutHelpDAO("To Upper case", 	prefixOSShortcut + "+ Shift + X") );
-		listShortcut.add( new ShortcutHelpDAO("Shortcut Help", 	prefixOSShortcut + "+ Shift + L") );
-		
-		listShortcut.add( new ShortcutHelpDAO("Clear page", 	"F7") 				);
-		listShortcut.add( new ShortcutHelpDAO("Select All", 	prefixOSShortcut + "+ A") 		);
-		listShortcut.add( new ShortcutHelpDAO("Go to Line", 	prefixOSShortcut + "+ L") 		);
-		listShortcut.add( new ShortcutHelpDAO("Copy text", 		prefixOSShortcut + "+ C") 		);
-		listShortcut.add( new ShortcutHelpDAO("Past text", 		prefixOSShortcut + "+ V") 		);
-		
-		listShortcut.add( new ShortcutHelpDAO("Delete Line",	prefixOSShortcut + "+ D") 		);		
 		tableViewer.refresh(listShortcut);		
 	}
 	

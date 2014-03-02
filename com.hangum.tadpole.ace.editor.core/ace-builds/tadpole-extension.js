@@ -6,7 +6,7 @@
  */
 var editorService = {
 	/** initialize editor */
-	initEditor : function(varExt){},
+	initEditor : function(varExt, varKeyword, varInitText){},
 	
 	/** set editor focus */
 	setFocus : function() {},
@@ -14,14 +14,9 @@ var editorService = {
 //	/** define font */
 //	SetFont : 0,
 //	setFont : function(varFontName, varFontSize){},
-//	
-//	SetTabSize : 5,
+
 	setTabSize : function(varTabSize) {},
-//	
-//	GET_ALL_TEXT : 10,
 	getAllText : function() {},
-//	
-//	GET_SELECTED_TEXT : 11,
 	getSelectedText : function(varDelimiter) {},
 	
 	/** insert text */
@@ -69,7 +64,7 @@ var editor;
 	editor.setHighlightActiveLine(true);
 	editor.resize();
 	
-	editor.getSession().setMode("ace/mode/sql");
+//	editor.getSession().setMode("ace/mode/sql");
 	
 	// auto completion
 	editor.setOptions({
@@ -82,11 +77,22 @@ var editor;
 };
 
 /**
- * 에디터를 초기화 합니다. 
+ * 에디터를 초기화 합니다.
+ * 
+ *  add keyWord 
+	var highlightWords = "word1|word2|word3|phrase one|phrase number two|etc";
  */
-editorService.initEditor = function(varExt) {
+editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
+	
+//	var keyWordList = editor.getKeywords() + "|" + varAddKeyword;
+//	
+//	console.log("\t " + keyWordList);
+	
 	// 확장자 지정.
 	editor.getSession().setMode(varExt);
+	
+	// 초기 데이터를 입력.
+	editor.setValue(varInitText);
 };
 
 /**
@@ -157,18 +163,6 @@ editor.commands.addCommand({
     	console.log("format");
     	
     	editor.setValue(editorService.getSelectedText(';'));
-    },
-    readOnly: false
-});
-/*
- * 실행한 쿼리창으로 이동.
- */
-editor.commands.addCommand({
-    name: 'moveHistoryWindow',
-    bindKey: {win: 'Ctrl-H',  mac: 'Command-H'},
-    exec: function(editor) {
-    	console.log("move to history page");
-//    	editorService.getContent();
     },
     readOnly: false
 });
@@ -260,13 +254,9 @@ editorService.setTabSize = function(varTabSize) {
 editorService.getAllText = function() {
 	console.log("######################## called getAllText() method ######################");
 	var varEditorContent = editor.getValue();
-	console.log("\t editor content value is ==> " + varEditorContent);
 	
 	return varEditorContent;
 };
-//getAllTextJava = function() {
-//	AceEditorBrowserHandler(editorService.GET_ALL_TEXT, editorService.getAllText());
-//};
 
 /**
  * 수행해야할 작업 목록을 가져옵니다.
@@ -359,10 +349,6 @@ editorService.getSelectedText = function(varDelimiter) {
 		console.log(e);
 	}
 };
-//getSelectedTextJava = function() {
-//	AceEditorBrowserHandler(editorService.GET_SELECTED_TEXT, editorService.getSelectedText(";"));
-//};
-
 
 /**
  * insert text
@@ -398,11 +384,11 @@ editorService.helpDialog = function() {
 //	
 //	단축키를 좀더 정리해서 에디터에 삽입합시다.
 //	
-//	AceEditorBrowserHandler(editorService.HELP_POPUP);
+	AceEditorBrowserHandler(editorService.HELP_POPUP);
 
-	ace.config.loadModule("ace/ext/keybinding_menu", function(module) {
-        module.init(editor);
-        editor.showKeyboardShortcuts()
-    })
+//	ace.config.loadModule("ace/ext/keybinding_menu", function(module) {
+//        module.init(editor);
+//        editor.showKeyboardShortcuts()
+//    })
     
 };

@@ -300,6 +300,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				DBInformationDialog dialog = new DBInformationDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 				dialog.open();
+				setFocus();
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
@@ -310,7 +311,7 @@ public class MainEditor extends EditorExtension {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(String.format(EditorFunctionService.SELECTED_TEXT, ";"));
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, ";");
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.NONE);
 				executeCommand(reqQuery);
@@ -337,7 +338,7 @@ public class MainEditor extends EditorExtension {
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(String.format(EditorFunctionService.SELECTED_TEXT, ";"));
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, ";");
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE);
 				executeCommand(reqQuery);
@@ -355,8 +356,7 @@ public class MainEditor extends EditorExtension {
 				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 				
 				try {
-					String strFormatSQL = SQLFormater.format(strQuery);
-					browserEvaluate(String.format(EditorFunctionService.RE_NEW_TEXT, strFormatSQL));
+					browserEvaluate(EditorFunctionService.RE_NEW_TEXT, SQLFormater.format(strQuery));
 				} catch(Exception ee) {
 					logger.error("sql format", ee);
 				}
@@ -374,6 +374,7 @@ public class MainEditor extends EditorExtension {
 				
 				SQLToStringDialog dialog = new SQLToStringDialog(null, EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer.toString(), strQuery);
 				dialog.open();
+				setFocus();
 			}
 		});
 	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
@@ -386,8 +387,12 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				if(!MessageDialog.openConfirm(null, "Conforim", "Do you want SQL Download?")) return;
 		
-				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-				downloadExtFile(getUserDB().getDisplay_name()+".sql", strQuery);
+				try {
+					String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+					downloadExtFile(getUserDB().getDisplay_name()+".sql", strQuery);
+				} catch(Exception ee) {
+					logger.error("Download SQL", ee);
+				}
 			}
 		});
 		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
@@ -436,6 +441,8 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
 				dialog.open();
+				
+				setFocus();
 			}
 		});
 		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, prefixOSShortcut));
@@ -943,8 +950,13 @@ public class MainEditor extends EditorExtension {
 		browserQueryEditor.addProgressListener(new ProgressListener() {
 			@Override
 			public void completed( ProgressEvent event ) {
-				if(!"".equals(getInitDefaultEditorStr())) {
-					browserEvaluate(IEditorFunction.INSERT_TEXT, getInitDefaultEditorStr());
+				try {
+//					content assist기능에 테이블 정보 넣는 것은 잠시 보류합니다.
+//					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, getAssistList(), getInitDefaultEditorStr());
+					
+					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, "", getInitDefaultEditorStr());
+				} catch(Exception ee) {
+					logger.error("rdb editor initialize ", ee);
 				}
 			}
 			public void changed( ProgressEvent event ) {}			
@@ -957,7 +969,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private String getAssistList() {
-		String strTablelist = "select,select * from,"; //$NON-NLS-1$
+		String strTablelist = ""; //$NON-NLS-1$
 		
 		try {
 			List<TableDAO> showTables = null;
@@ -969,9 +981,9 @@ public class MainEditor extends EditorExtension {
 			}
 
 			for (TableDAO tableDao : showTables) {
-				strTablelist += tableDao.getName() + ","; //$NON-NLS-1$
+				strTablelist += tableDao.getName() + "|"; //$NON-NLS-1$
 			}
-			strTablelist = StringUtils.removeEnd(strTablelist, ","); //$NON-NLS-1$
+			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
 			
 		} catch(Exception e) {
 			logger.error("MainEditor get the table list", e); //$NON-NLS-1$

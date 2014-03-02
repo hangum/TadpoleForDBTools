@@ -179,7 +179,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
+					// 테이블 스크립트가 아니라 테이블 명이 에디터에 들어가도록 수정.
+					FindEditorAndWriteQueryUtil.runAtPosition(tableDAO.getName());//GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
 				}
 			}
 		});

@@ -47,6 +47,20 @@ public class TadpoleEditorUtils {
 		return strInitContent;
 	}
 	
+	/**
+	 * Argument를 java script가 허용한 argument로 만듭니다.
+	 * @param args
+	 * @return
+	 */
+	public static String[] makeGrantArgs(String ... args) {
+		String[] grantsARgs = new String[args.length];
+		for(int i=0; i<args.length; i++) {
+			grantsARgs[i] = getGrantText(args[i]);
+		}
+		
+		return grantsARgs;
+	}
+	
 //	/**
 //	 * edito init command
 //	 * 

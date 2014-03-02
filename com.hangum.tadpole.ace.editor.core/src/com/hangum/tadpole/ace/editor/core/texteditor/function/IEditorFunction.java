@@ -35,22 +35,31 @@ public interface IEditorFunction  {
     public static final String EDITOR_SERVICE_MAP = "editorService";
     public static final String EDITOR_SERVICE_HANDLER = "AceEditorBrowserHandler";
     
+    /**
+     * 에디터를 초기화 합니다. 
+     * 
+     * @param 확장자
+     * @param 추가하려는 키워드
+     * @param 초기텍스트
+     */
+    public static final String INITIALIZE = EDITOR_SERVICE_MAP + ".initEditor('%s', '%s', '%s');";
+    
     /** 쿼리 - 2014.3.1 (hangum) */
-    public static final String SELECTED_TEXT = "return " + EDITOR_SERVICE_MAP + ".getSelectedText('%s')";
+    public static final String SELECTED_TEXT = "return " + EDITOR_SERVICE_MAP + ".getSelectedText('%s');";
     
     /** 쿼리 창의 모든 쿼리 - 2014.3.1 (hangum) */
-    public static final String ALL_TEXT = "return " + EDITOR_SERVICE_MAP + ".getAllText()";
+    public static final String ALL_TEXT = "return " + EDITOR_SERVICE_MAP + ".getAllText();";
     
     /** 쿼리 추가 - 2014.3.1(hangum) */
-    public static final String APPEND_TEXT = EDITOR_SERVICE_MAP + ".addText('%s')";
+    public static final String APPEND_TEXT = EDITOR_SERVICE_MAP + ".addText('%s');";
     
     /** 현재 커서 포인트에 쿼리 추가 - 2014.3.1(hangum) */
-    public static final String INSERT_TEXT = EDITOR_SERVICE_MAP + ".insertText('%s')";
+    public static final String INSERT_TEXT = EDITOR_SERVICE_MAP + ".insertText('%s');";
     
     /** 에디터에 기존 텍스트를 없애고 새롭게 데이터를 채웁니다 */
-    public static final String RE_NEW_TEXT = EDITOR_SERVICE_MAP + ".reNewText('%s')";
+    public static final String RE_NEW_TEXT = EDITOR_SERVICE_MAP + ".reNewText('%s');";
     
     /** TEXT FOCUS */
-    public static final String SET_FOCUS_FUNCTION = EDITOR_SERVICE_MAP + ".setFocus()";
+    public static final String SET_FOCUS = EDITOR_SERVICE_MAP + ".setFocus();";
     
 }
