@@ -135,7 +135,6 @@
       <plugin id="com.hangum.tadpole.aws.rds.commons.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.cipher.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.commons.sql.test" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.hive.core" autoStart="true" startLevel="0" />

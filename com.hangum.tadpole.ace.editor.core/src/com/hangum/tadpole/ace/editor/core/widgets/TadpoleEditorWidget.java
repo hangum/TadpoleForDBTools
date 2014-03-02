@@ -38,9 +38,6 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleEditorWidget.class);
 	
-//	/** editor url resource */
-//	private static final String EDITOR_URL = "orion/tadpole/editor/tadpole-editor.html";
-	
 //	/** 초기에 사용할 확장자를 지정합니다. */
 //	private String initExt;
 	

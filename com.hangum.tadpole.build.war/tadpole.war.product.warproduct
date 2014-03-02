@@ -136,7 +136,7 @@
 
    <warConfiguration webXml="/com.hangum.tadpole.build.war/WEB-INF/web.xml" launchIni="/com.hangum.tadpole.build.war/WEB-INF/launch.ini">
    <libraries>
-      <library path="org.eclipse.equinox.servletbridge_1.2.300.v20130508-1243.jar" fromTarget="true"/>
+      <library path="org.eclipse.equinox.servletbridge_1.3.0.v20131217-1400.jar" fromTarget="true"/>
    </libraries>
    </warConfiguration>
 </product>
