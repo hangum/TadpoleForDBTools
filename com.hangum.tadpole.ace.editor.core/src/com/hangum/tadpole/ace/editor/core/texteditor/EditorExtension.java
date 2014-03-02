@@ -68,6 +68,11 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 		return userDB;
 	}
 	
+	/**
+	 * command
+	 * 
+	 * @param command
+	 */
 	public void browserEvaluate(String command) {
 		browserEvaluate(command, "");
 	}

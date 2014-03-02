@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.util.JSONUtil;
-import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.mongodb.core.Messages;
 
 /**
@@ -33,7 +33,7 @@ import com.hangum.tadpole.mongodb.core.Messages;
  */
 public class TadpoleSimpleMessageDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(TadpoleSimpleMessageDialog.class);
-	private JsonTadpoleEditor tadpoleEditor;
+	private TadpoleEditorWidget tadpoleEditor;
 	
 	String title;
 	String content;
@@ -73,7 +73,7 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
-		tadpoleEditor = new JsonTadpoleEditor(compositeBody, SWT.BORDER, "", "");
+		tadpoleEditor = new TadpoleEditorWidget(compositeBody, SWT.BORDER, JSONUtil.getPretty(content), "");
 		tadpoleEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();
@@ -82,11 +82,11 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 	}
 	
 	private void initUI() {
-		try {
-			tadpoleEditor.setText(JSONUtil.getPretty(content));
-		} catch(Exception e) {
-			logger.error("server status", e); //$NON-NLS-1$
-		}
+//		try {
+//			tadpoleEditor.setText(JSONUtil.getPretty(content));
+//		} catch(Exception e) {
+//			logger.error("server status", e); //$NON-NLS-1$
+//		}
 	}
 
 	/**
@@ -103,6 +103,6 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 422);
+		return new Point(500, 450);
 	}
 }

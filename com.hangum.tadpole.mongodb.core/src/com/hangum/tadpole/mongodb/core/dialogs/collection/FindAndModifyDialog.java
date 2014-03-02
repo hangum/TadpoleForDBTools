@@ -28,10 +28,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.help.HelpDefine;
 import com.hangum.tadpole.commons.util.HelpUtils;
-import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -58,10 +58,10 @@ public class FindAndModifyDialog extends Dialog {
 	private UserDBDAO userDB;
 	private String collName;
 	
-	private JsonTadpoleEditor textQuery;
-	private JsonTadpoleEditor textFields;
-	private JsonTadpoleEditor textSort;
-	private JsonTadpoleEditor textUpdate;
+	private TadpoleEditorWidget textQuery;
+	private TadpoleEditorWidget textFields;
+	private TadpoleEditorWidget textSort;
+	private TadpoleEditorWidget textUpdate;
 	
 	private Button btnRemove;
 	private Button btnReturnNew;
@@ -123,7 +123,7 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel.setText("{Query}");
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, collName);
-		textQuery = new JsonTadpoleEditor(compositeQuery, SWT.BORDER, "", strAssist);
+		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, "", strAssist);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeField = new Composite(compositeBody, SWT.NONE);
@@ -141,7 +141,7 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel_1.setLayoutData(gd_lblNewLabel_1);
 		lblNewLabel_1.setText("{Field}");
 		
-		textFields = new JsonTadpoleEditor(compositeField, SWT.BORDER, "", strAssist);
+		textFields = new TadpoleEditorWidget(compositeField, SWT.BORDER, "", strAssist);
 		textFields.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeSort = new Composite(compositeBody, SWT.NONE);
@@ -159,7 +159,7 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel_2.setLayoutData(gd_lblNewLabel_2);
 		lblNewLabel_2.setText("{Sort}");
 		
-		textSort = new JsonTadpoleEditor(compositeSort, SWT.BORDER, "", strAssist);
+		textSort = new TadpoleEditorWidget(compositeSort, SWT.BORDER, "", strAssist);
 		textSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeUpdate = new Composite(compositeBody, SWT.NONE);
@@ -177,7 +177,7 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel_3.setLayoutData(gd_lblNewLabel_3);
 		lblNewLabel_3.setText("{Update}");
 		
-		textUpdate = new JsonTadpoleEditor(compositeUpdate, SWT.BORDER, "", strAssist);
+		textUpdate = new TadpoleEditorWidget(compositeUpdate, SWT.BORDER, "", strAssist);
 		textUpdate.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeOthers = new Composite(container, SWT.NONE);

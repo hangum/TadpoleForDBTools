@@ -36,9 +36,9 @@ public class TadpoleEditorFunctionService extends BrowserFunction {
 	public Object function(Object[] arguments) {
 		int action = Integer.parseInt(arguments[0].toString());
 		
-		if(logger.isDebugEnabled()) {
-			logger.debug("Action ID is " + action);
-		}
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("Action ID is " + action);
+//		}
 		
 		switch(action) {
 		

@@ -20,23 +20,29 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.texteditor.IEditorExtension;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
+import com.hangum.tadpole.ace.editor.core.utils.EvaluateWidgets;
+
 /**
  * tadpole editor 
  * 
  * @author hangum
  *
  */
-public class TadpoleEditorWidget extends Composite {
+public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExtension {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleEditorWidget.class);
 	
-	/** editor url resource */
-	private static final String EDITOR_URL = "orion/tadpole/editor/tadpole-editor.html";
+//	/** editor url resource */
+//	private static final String EDITOR_URL = "orion/tadpole/editor/tadpole-editor.html";
 	
-	/** 초기에 사용할 확장자를 지정합니다. */
-	private String initExt;
+//	/** 초기에 사용할 확장자를 지정합니다. */
+//	private String initExt;
 	
 	/** 초기설정 텍스트 */
 	private String initContent;
@@ -46,10 +52,10 @@ public class TadpoleEditorWidget extends Composite {
 	 */
 	private String initAssist;
 	
-	/**
-	 * 에디터를 보여줄 browser
-	 */
-	private Browser browserEditor;
+//	/**
+//	 * 에디터를 보여줄 browser
+//	 */
+//	private Browser browserEditor;
 	
 	/**
 	 * browser function 서비스 핸들러.
@@ -63,7 +69,7 @@ public class TadpoleEditorWidget extends Composite {
 	 * @param initContent
 	 * @param initAssist
 	 */
-	public TadpoleEditorWidget(Composite parent, int style, String initExt, String initContent, String initAssist) {
+	public TadpoleEditorWidget(Composite parent, int style, String initContent, String initAssist) {
 		super(parent, style);
 		
 		GridLayout gridLayout = new GridLayout(1, false);
@@ -95,10 +101,13 @@ public class TadpoleEditorWidget extends Composite {
 	 * add browser function
 	 */
 	private void addBrowserHandler() {
+		browserEditor.setUrl(DEV_DB_URL);
+		registerBrowserFunctions();
+		
 		browserEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					registerBrowserFunctions();    		  
+					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, "", initContent);
 				} catch(Exception e) {
 					logger.error("browser initialize", e);	  
 				}
@@ -107,12 +116,11 @@ public class TadpoleEditorWidget extends Composite {
 		 });
 	}
 
-
 	/**
 	 * register browser function
 	 */
 	private void registerBrowserFunctions() {
-		editorService = new TadpoleEditorFunctionService(browserEditor, "AceEditorBrowserHandler", this);
+		editorService = new TadpoleEditorFunctionService(browserEditor, EditorFunctionService.EDITOR_SERVICE_HANDLER, this);
 	}
 
 	/**
@@ -131,17 +139,17 @@ public class TadpoleEditorWidget extends Composite {
 		super.dispose();
 	}
 
-	@Override
-	protected void checkSubclass() {
-	}
-
 	/**
 	 * set text
 	 * 
 	 * @param strDdl
 	 */
 	public void setText(String strDdl) {
-		
+		try {
+			browserEvaluate(EditorFunctionService.RE_NEW_TEXT, strDdl);
+		} catch(Exception e) {
+			logger.error("setText()", e);
+		}
 	}
 
 	/**
@@ -149,7 +157,12 @@ public class TadpoleEditorWidget extends Composite {
 	 * @return
 	 */
 	public String getText() {
-		return null;
+		try {
+			return browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+		} catch(Exception e) {
+			logger.error("getText()", e);
+		}
+		return "";
 	}
 
 }

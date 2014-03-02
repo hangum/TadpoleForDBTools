@@ -16,7 +16,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 
 /**
@@ -52,7 +51,7 @@ public class DDLSourceComposite extends Composite {
 		labelTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		labelTable.setText(tableName);
 		
-		ddlSource = new TadpoleEditorWidget(compositeBasic, SWT.BORDER, EditorDefine.EXT_JSON, initDDL, "");
+		ddlSource = new TadpoleEditorWidget(compositeBasic, SWT.BORDER, initDDL, "");
 		ddlSource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 	}
 	

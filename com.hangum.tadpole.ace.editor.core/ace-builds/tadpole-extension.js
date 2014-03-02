@@ -92,7 +92,8 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 	editor.getSession().setMode(varExt);
 	
 	// 초기 데이터를 입력.
-	editor.setValue(varInitText);
+	editor.insert(varInitText);
+	editor.focus();
 };
 
 /**
