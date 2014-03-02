@@ -32,13 +32,13 @@
    </vm>
 
    <plugins>
+      <plugin id="com.hangum.tadpole.ace.editor.core"/>
       <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.aws.rds.commons.core"/>
       <plugin id="com.hangum.tadpole.cipher.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.utils"/>
-      <plugin id="com.hangum.tadpole.editor.core"/>
       <plugin id="com.hangum.tadpole.engine"/>
       <plugin id="com.hangum.tadpole.hive.core"/>
       <plugin id="com.hangum.tadpole.importdb"/>
@@ -129,6 +129,7 @@
    </features>
 
    <configurations>
+      <plugin id="com.hangum.tadpole.ace.editor.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.aws.rds.commons.core" autoStart="true" startLevel="0" />
@@ -136,7 +137,6 @@
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.sql.test" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.editor.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.hive.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.importdb" autoStart="true" startLevel="0" />
