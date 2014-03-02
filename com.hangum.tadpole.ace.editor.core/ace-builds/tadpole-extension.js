@@ -341,6 +341,11 @@ editorService.getSelectedText = function(varDelimiter) {
 				console.log('\t##[Caution] query not found, so add all editor text');
 				strReturnQuery = varEditorContent;
 			}
+			
+			// 마지막으로 구분 문자가있다면 빼줍니다.
+			if(strReturnQuery.substring(strReturnQuery.length - 1) == varDelimiter) {
+				strReturnQuery = strReturnQuery.substring(0, strReturnQuery.length - 1);
+			}
 			console.log("===========>>>>>" + strReturnQuery);
 			
 			return strReturnQuery;
