@@ -30,23 +30,19 @@ public class SQLFormatRule {
 	 */
 	public static SqlFormatRule getSqlFormatRule() {
 		SqlFormatRule rule = new SqlFormatRule();
-		rule.setRemoveEmptyLine(true);
-		int tabSize = Integer.parseInt(GetPreferenceGeneral.getDefaultTabSize());
-		boolean optDecode = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatDecode());// true;
-		boolean optIn = Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn());//false;
-
-		rule.setIndentString(StringUtil.padLeft("", tabSize, ' '));
-		rule.setDecodeSpecialFormat(!optDecode);
-		rule.setInSpecialFormat(optIn);
+		
+		rule.setIndentString(StringUtil.padLeft("", Integer.parseInt(GetPreferenceGeneral.getDefaultTabSize()), ' '));
+		rule.setDecodeSpecialFormat(!Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatDecode()));
+		rule.setInSpecialFormat(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn()));
 		rule.setOutSqlSeparator(SqlFormatRule.SQL_SEPARATOR_SEMICOLON);
-		rule.setRemoveEmptyLine(true);
-		rule.setIndentEmptyLine(true);
+		rule.setRemoveEmptyLine(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatRemoveEmptyLine()));
+		rule.setIndentEmptyLine(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatRemoveEmptyLine()));
 		rule.setConvertName(ISqlFormatRule.CONVERT_STRING_NONE);
 		rule.setConvertKeyword(ISqlFormatRule.CONVERT_STRING_NONE);
-		rule.setNewLineBeforeAndOr(false);
-		rule.setNewLineBeforeComma(false);
+		rule.setNewLineBeforeAndOr(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeAndOr()));
+		rule.setNewLineBeforeComma(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeComma()));
 		
-		rule.setWordBreak(false);
+		rule.setWordBreak(true);
 		
 		return rule;
 	}

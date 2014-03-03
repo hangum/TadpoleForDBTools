@@ -104,6 +104,21 @@ public class GetPreferenceGeneral {
 			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
 			return userInfo.getValue0();
 		}
+		
+		public static String getSQLFormatNewLineBeforeAndOr() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE);
+			return userInfo.getValue0();
+		}
+		
+		public static String getSQLFormatNewLineBeforeComma() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE);
+			return userInfo.getValue0();
+		}
+		
+		public static String getSQLFormatRemoveEmptyLine() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE);
+			return userInfo.getValue0();
+		}
 	
 	///////////////// mongodb 설정 ////////////////////////////////////////////////////////////////////////////
 		/** preference mongodb default limit */

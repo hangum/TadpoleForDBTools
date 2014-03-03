@@ -90,6 +90,9 @@ public class Messages extends NLS {
 
 	public static String SQLFormatterPreferencePage_4;
 	public static String RDBPreferencePage_lblNumberColumnAdd_text;
+	public static String SQLFormatterPreferencePage_btnCheckButton_text;
+	public static String SQLFormatterPreferencePage_btnNewLineBefore_text;
+	public static String SQLFormatterPreferencePage_btnRemoveEmptyLine_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

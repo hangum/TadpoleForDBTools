@@ -42,6 +42,9 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 	private Combo comboTabsize;
 	private Button btnNoInsertNewDecode;
 	private Button btnNoInsertNewIn;
+	private Button btnNewLineBefeoreAndOr;
+	private Button btnNewLineBeforeComma;
+	private Button btnRemoveEmptyLine;
 
 	/**
 	 * Create the preference page.
@@ -83,6 +86,19 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		btnNoInsertNewIn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnNoInsertNewIn.setText(Messages.SQLFormatterPreferencePage_4);
 		
+		
+		btnNewLineBefeoreAndOr = new Button(container, SWT.CHECK);
+		btnNewLineBefeoreAndOr.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnNewLineBefeoreAndOr.setText(Messages.SQLFormatterPreferencePage_btnCheckButton_text);
+		
+		btnNewLineBeforeComma = new Button(container, SWT.CHECK);
+		btnNewLineBeforeComma.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnNewLineBeforeComma.setText(Messages.SQLFormatterPreferencePage_btnNewLineBefore_text);
+		
+		btnRemoveEmptyLine = new Button(container, SWT.CHECK);
+		btnRemoveEmptyLine.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnRemoveEmptyLine.setText(Messages.SQLFormatterPreferencePage_btnRemoveEmptyLine_text);
+		
 		initDefaultValue();
 
 		return container;
@@ -94,6 +110,10 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		String txtNoInsertDecode = ""+btnNoInsertNewDecode.getSelection(); //$NON-NLS-1$
 		String txtNoInsertIn = ""+btnNoInsertNewIn.getSelection(); //$NON-NLS-1$
 		
+		String txtNewLineBefeoreAndOr = ""+btnNewLineBefeoreAndOr.getSelection();
+		String txtNewLineBefeoreComma = ""+btnNewLineBeforeComma.getSelection();
+		String txtRemoveEmptyLine = ""+btnRemoveEmptyLine.getSelection();
+		
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateSQLFormatterInfoData(txtTabSize, txtNoInsertDecode, txtNoInsertIn);
@@ -101,7 +121,12 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE, txtTabSize);
 			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE, txtNoInsertDecode);
-			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE, txtNoInsertIn);			
+			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE, txtNoInsertIn);	
+			
+			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE, txtNewLineBefeoreAndOr);	
+			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE, txtNewLineBefeoreComma);	
+			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE, txtRemoveEmptyLine);	
+			
 		} catch(Exception e) {
 			logger.error("SQLFormatter preference saveing", e);
 			
@@ -120,6 +145,10 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		
 		btnNoInsertNewDecode.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatDecode()));
 		btnNoInsertNewIn.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn()));
+		
+		btnNewLineBefeoreAndOr.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeAndOr()));
+		btnNewLineBeforeComma.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeComma()));
+		btnRemoveEmptyLine.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatRemoveEmptyLine()));
 	}
 
 	@Override
