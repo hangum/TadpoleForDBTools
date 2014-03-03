@@ -344,6 +344,14 @@ public class TadpoleSystem_UserInfoData {
 				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE_VALUE);
 				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 				
+				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE);
+				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE);
+				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+				
+				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE);
+				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE);
+				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+				
 	}
 	
 }

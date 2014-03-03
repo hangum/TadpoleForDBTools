@@ -119,6 +119,16 @@ public class GetPreferenceGeneral {
 			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE);
 			return userInfo.getValue0();
 		}
+		
+		public static String getSQLFormatWordBreak() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE);
+			return userInfo.getValue0();
+		}
+		
+		public static String getSQLFormatWordWidth() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE);
+			return userInfo.getValue0();
+		}
 	
 	///////////////// mongodb 설정 ////////////////////////////////////////////////////////////////////////////
 		/** preference mongodb default limit */

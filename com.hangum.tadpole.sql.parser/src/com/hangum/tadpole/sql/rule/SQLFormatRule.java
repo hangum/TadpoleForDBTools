@@ -42,7 +42,12 @@ public class SQLFormatRule {
 		rule.setNewLineBeforeAndOr(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeAndOr()));
 		rule.setNewLineBeforeComma(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeComma()));
 		
-		rule.setWordBreak(true);
+		rule.setWordBreak(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatWordBreak()));
+		try {
+			rule.setWidth(Integer.parseInt(GetPreferenceGeneral.getSQLFormatWordWidth()));
+		} catch(NumberFormatException nfe) {
+			rule.setWidth(80);
+		}
 		
 		return rule;
 	}

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
@@ -30,6 +31,8 @@ import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
 
+import org.eclipse.swt.widgets.Text;
+
 /**
  * SQL formatter preference page
  * 
@@ -45,6 +48,8 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 	private Button btnNewLineBefeoreAndOr;
 	private Button btnNewLineBeforeComma;
 	private Button btnRemoveEmptyLine;
+	private Button btnWordBreak;
+	private Text textWidth;
 
 	/**
 	 * Create the preference page.
@@ -99,6 +104,13 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		btnRemoveEmptyLine.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnRemoveEmptyLine.setText(Messages.SQLFormatterPreferencePage_btnRemoveEmptyLine_text);
 		
+		btnWordBreak = new Button(container, SWT.CHECK);
+		btnWordBreak.setText(Messages.SQLFormatterPreferencePage_btnWordBreak_text);
+		
+		textWidth = new Text(container, SWT.BORDER);
+		textWidth.setText(Messages.SQLFormatterPreferencePage_text_text);
+		textWidth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		initDefaultValue();
 
 		return container;
@@ -114,6 +126,15 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		String txtNewLineBefeoreComma = ""+btnNewLineBeforeComma.getSelection();
 		String txtRemoveEmptyLine = ""+btnRemoveEmptyLine.getSelection();
 		
+		String txtWordbreak = ""+btnWordBreak.getSelection();
+		String strTextWidth = textWidth.getText();
+		
+		if(!NumberUtils.isNumber(textWidth.getText())) {
+			MessageDialog.openError(getShell(), "Confirm", "Please enter number."); //$NON-NLS-1$
+			textWidth.setFocus();
+			return false;
+		}
+		
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateSQLFormatterInfoData(txtTabSize, txtNoInsertDecode, txtNoInsertIn);
@@ -126,6 +147,9 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE, txtNewLineBefeoreAndOr);	
 			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE, txtNewLineBefeoreComma);	
 			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE, txtRemoveEmptyLine);	
+			
+			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE, txtWordbreak);	
+			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE, strTextWidth);	
 			
 		} catch(Exception e) {
 			logger.error("SQLFormatter preference saveing", e);
@@ -149,6 +173,10 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		btnNewLineBefeoreAndOr.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeAndOr()));
 		btnNewLineBeforeComma.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeComma()));
 		btnRemoveEmptyLine.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatRemoveEmptyLine()));
+		
+		btnWordBreak.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatWordBreak()));
+		textWidth.setText(GetPreferenceGeneral.getSQLFormatWordWidth());
+		
 	}
 
 	@Override
