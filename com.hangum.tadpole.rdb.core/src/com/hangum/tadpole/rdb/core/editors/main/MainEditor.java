@@ -168,7 +168,7 @@ public class MainEditor extends EditorExtension {
 	private DownloadServiceHandler downloadServiceHandler;
 	
 	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
-	private String initDefaultEditorStr = "";
+	private String initDefaultEditorStr = ""; //$NON-NLS-1$
 	
 	/** query 결과의 컬럼 정보 HashMap -- table의 헤더를 생성하는 용도 <column index, Data> */
 	private Map<Integer, String> mapColumns = null;
@@ -311,7 +311,7 @@ public class MainEditor extends EditorExtension {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, ";");
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, ";"); //$NON-NLS-1$
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.NONE);
 				executeCommand(reqQuery);
@@ -338,7 +338,7 @@ public class MainEditor extends EditorExtension {
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, ";");
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, ";"); //$NON-NLS-1$
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE);
 				executeCommand(reqQuery);
@@ -358,7 +358,7 @@ public class MainEditor extends EditorExtension {
 				try {
 					browserEvaluate(EditorFunctionService.RE_NEW_TEXT, SQLFormater.format(strQuery));
 				} catch(Exception ee) {
-					logger.error("sql format", ee);
+					logger.error("sql format", ee); //$NON-NLS-1$
 				}
 			}
 		});
@@ -385,17 +385,17 @@ public class MainEditor extends EditorExtension {
 		tltmDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!MessageDialog.openConfirm(null, "Conforim", "Do you want SQL Download?")) return;
+				if(!MessageDialog.openConfirm(null, Messages.MainEditor_38, Messages.MainEditor_39)) return;
 		
 				try {
 					String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-					downloadExtFile(getUserDB().getDisplay_name()+".sql", strQuery);
+					downloadExtFile(getUserDB().getDisplay_name()+".sql", strQuery); //$NON-NLS-1$
 				} catch(Exception ee) {
-					logger.error("Download SQL", ee);
+					logger.error("Download SQL", ee); //$NON-NLS-1$
 				}
 			}
 		});
-		tltmDownload.setToolTipText("Download SQL"); //$NON-NLS-1$
+		tltmDownload.setToolTipText(Messages.MainEditor_42);
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmAutoCommit = new ToolItem(toolBar, SWT.CHECK);
@@ -632,8 +632,8 @@ public class MainEditor extends EditorExtension {
 				for(int i=0; i<sourceDataList.size(); i++) {
 					Map<Integer, Object> mapColumns = sourceDataList.get(i);
 					for(int j=0; j<mapColumns.size(); j++) {
-						String strContent = mapColumns.get(j)==null?"":mapColumns.get(j).toString();
-						if(strContent.length() == 0 ) strContent = " ";
+						String strContent = mapColumns.get(j)==null?"":mapColumns.get(j).toString(); //$NON-NLS-1$
+						if(strContent.length() == 0 ) strContent = " "; //$NON-NLS-1$
 						sbExportData.append(strContent).append(exportDelimit); //$NON-NLS-1$
 					}
 					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
@@ -954,9 +954,9 @@ public class MainEditor extends EditorExtension {
 //					content assist기능에 테이블 정보 넣는 것은 잠시 보류합니다.
 //					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, getAssistList(), getInitDefaultEditorStr());
 					
-					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, "", getInitDefaultEditorStr());
+					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, "", getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
-					logger.error("rdb editor initialize ", ee);
+					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
 			}
 			public void changed( ProgressEvent event ) {}			
@@ -1188,7 +1188,7 @@ public class MainEditor extends EditorExtension {
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(Messages.MainEditor_46 + " [" + finalExecuteSQL + "]", IProgressMonitor.UNKNOWN);
+				monitor.beginTask(Messages.MainEditor_46 + " [" + finalExecuteSQL + "]", IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				executingSQLDAO.setStartDateExecute(new Date());
 				executingSQLDAO.setIpAddress(ipaddress);
@@ -1338,14 +1338,14 @@ public class MainEditor extends EditorExtension {
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 			Map<String, Object> resultMap = new TajoConnectionManager().select(userDB, requestQuery, pageNumber, isAutoCommit);
 			
-			mapColumnType = (Map<Integer, Integer>)resultMap.get("mapColumnType");
+			mapColumnType = (Map<Integer, Integer>)resultMap.get("mapColumnType"); //$NON-NLS-1$
 			
 			// column name을 얻습니다. 
 			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
-			mapColumns = (Map<Integer, String>)resultMap.get("mapColumns");
+			mapColumns = (Map<Integer, String>)resultMap.get("mapColumns"); //$NON-NLS-1$
 			
 			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-			sourceDataList = (List<Map<Integer, Object>>)resultMap.get("sourceDataList");
+			sourceDataList = (List<Map<Integer, Object>>)resultMap.get("sourceDataList"); //$NON-NLS-1$
 			
 			return;
 		}  
@@ -1395,16 +1395,16 @@ public class MainEditor extends EditorExtension {
 					// generation to statement id for query plan. 
 					pstmt = javaConn.prepareStatement("select USERENV('SESSIONID') from dual "); //$NON-NLS-1$
 					rs = pstmt.executeQuery(); 
-					String statement_id = "tadpole";
+					String statement_id = "tadpole"; //$NON-NLS-1$
 					if (rs.next()) statement_id = rs.getString(1);
 					
-					pstmt = javaConn.prepareStatement("delete from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$
+					pstmt = javaConn.prepareStatement("delete from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					pstmt.execute(); 
 					
 					// 플랜결과를 디비에 저장합니다.
 					OracleExecutePlanUtils.plan(userDB, requestQuery, planTableName, javaConn, pstmt, statement_id);
 					// 저장된 결과를 가져와서 보여줍니다.
-					pstmt = javaConn.prepareStatement("select * from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$
+					pstmt = javaConn.prepareStatement("select * from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					rs = pstmt.executeQuery(); 
 				 } else if(DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
 					 stmt = javaConn.createStatement();
@@ -1688,9 +1688,9 @@ public class MainEditor extends EditorExtension {
 			
 			// 메시지를 출력합니다.
 			long longExecuteTime = executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime();
-			String strResultMsg = sourceDataList.size() + " " + Messages.MainEditor_33 + "[" + longExecuteTime + " ms]";
+			String strResultMsg = sourceDataList.size() + " " + Messages.MainEditor_33 + "[" + longExecuteTime + " ms]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			tableResult.setToolTipText(strResultMsg);
-			sqlResultStatusLabel.setText(sourceDataList.size()  + " " +  Messages.MainEditor_33 + "[" + longExecuteTime + " ms]");
+			sqlResultStatusLabel.setText(sourceDataList.size()  + " " +  Messages.MainEditor_33 + "[" + longExecuteTime + " ms]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			sqlFilter.setTable(tableResult);
 			
 			// Pack the columns

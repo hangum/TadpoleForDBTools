@@ -124,7 +124,10 @@ public class Messages extends NLS {
 	public static String MainEditor_31;
 	public static String MainEditor_32;
 	public static String MainEditor_33;
+	public static String MainEditor_38;
+	public static String MainEditor_39;
 	public static String MainEditor_4;
+	public static String MainEditor_42;
 	public static String MainEditor_43;
 	public static String MainEditor_45;
 	public static String MainEditor_46;
