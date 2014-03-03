@@ -13,6 +13,9 @@ package com.hangum.tadpole.ace.editor.core.dialogs.help;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.commons.util.ServletUserAgent;
+
 /**
  * mongodb editor 단축키 도움말.  
  * 
@@ -44,7 +47,11 @@ public class MongoDBShortcutHelpDialog extends RDBShortcutHelpDialog {
 	 */
 	private void initData() {
 		super.initShortList();
-		listShortcut.add(new ShortcutHelpDAO("Collection Assist", 	prefixCtrlShortcut + "+ Space"));
+		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
+			listShortcut.add( new ShortcutHelpDAO("Content Assist", 	"Ctrl + Space|Option + Space ") 		);
+		} else {
+			listShortcut.add( new ShortcutHelpDAO("Content Assist", 	"Ctrl + Space") 		);
+		}
 		
 		tableViewer.refresh(listShortcut);		
 	}

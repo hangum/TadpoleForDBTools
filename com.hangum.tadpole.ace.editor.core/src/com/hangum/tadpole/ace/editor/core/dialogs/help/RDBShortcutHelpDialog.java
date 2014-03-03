@@ -25,6 +25,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.commons.util.ServletUserAgent;
+
 /**
  * sql editor 단축키 도움말.
  * 
@@ -131,7 +134,12 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	private void initData() {
 		super.initShortList();
 		listShortcut.add( new ShortcutHelpDAO("Save", 			prefixCtrlShortcut + "+ S") 		);
-		listShortcut.add( new ShortcutHelpDAO("SQL Assist", 	prefixCtrlShortcut + "+ Space") 		);
+		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
+			listShortcut.add( new ShortcutHelpDAO("Content Assist", 	"Ctrl + Space|Option + Space ") 		);
+		} else {
+			listShortcut.add( new ShortcutHelpDAO("Content Assist", 	"Ctrl + Space") 		);
+		}
+		
 		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	prefixCtrlShortcut + "+ enter") 	);
 		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	prefixCtrlShortcut + "+ E") 		);
 		listShortcut.add( new ShortcutHelpDAO("Query Format", 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") );
