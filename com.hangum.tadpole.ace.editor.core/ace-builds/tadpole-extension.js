@@ -6,7 +6,7 @@
  */
 var editorService = {
 	/** initialize editor */
-	initEditor : function(varExt, varKeyword, varInitText){},
+	initEditor : function(varExt, varKeyword, varInitText) {},
 	
 	/** set editor focus */
 	setFocus : function() {},
@@ -14,6 +14,9 @@ var editorService = {
 //	/** define font */
 //	SetFont : 0,
 //	setFont : function(varFontName, varFontSize){},
+	
+	/** 자바에서 저장했을때 호출 합니다 */
+	saveData : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -46,6 +49,7 @@ var editorService = {
 };
 
 var editor;
+var isEdited = false;
 
 /**
  * initialize editor
@@ -60,9 +64,9 @@ var editor;
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
     
 	editor.setTheme("ace/theme/eclipse");
-	editor.setShowPrintMargin(true);
+	editor.setShowPrintMargin(false);
 	editor.setHighlightActiveLine(true);
-	editor.resize();
+//	editor.resize();
 	
 //	editor.getSession().setMode("ace/mode/sql");
 	
@@ -73,7 +77,7 @@ var editor;
 	});
 	
 	// bookmarker
-	editor.getSession().setFoldStyle("markbegin");
+//	editor.getSession().setFoldStyle("markbegin");
 };
 
 /**
@@ -82,12 +86,11 @@ var editor;
  *  add keyWord 
 	var highlightWords = "word1|word2|word3|phrase one|phrase number two|etc";
  */
+//var isFirstData = false;
 editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 	
 	try {
-	//	var keyWordList = editor.getKeywords() + "|" + varAddKeyword;
-	//	
-	//	console.log("\t " + keyWordList);
+//		isFirstData = ('' !== varInitText.trim())?true:false;
 		
 		// 확장자 지정.
 		editor.getSession().setMode(varExt);
@@ -111,13 +114,27 @@ editorService.setFocus = function() {
  * 에디터 dirty_change
  */
 editor.getSession().on('change', function() {
-//	console.log('Editor change event');
-	try {
-		AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
-	} catch(e) {
-		console.log(e);
+
+//	console.log("====[change event][isEdited]" + isEdited + "[isFirstData]" + isFirstData) ;
+	if(isEdited == false){// && isFirstData == false) {
+		try {
+			AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
+		} catch(e) {
+			console.log(e);
+		}
+		
+		isEdited = true;
 	}
+	
+//	isFirstData = false;
 });
+
+/**
+ * 자바에서 에디터가 저장되었을때 에디터 수정 메시지를 받기위해 호출되어 집니다.
+ */
+editorService.saveData = function() {
+	isEdited = false;
+}
 
 //==[ Define short key ]======================================================================================================================
 /**
@@ -130,6 +147,7 @@ editor.commands.addCommand({
 //    	console.log("Save query");
     	try {
     		AceEditorBrowserHandler(editorService.SAVE, editorService.getAllText());
+    		editor.focus();
     	}catch(e) {
     		console.log(e);
     	}
@@ -177,7 +195,8 @@ editor.commands.addCommand({
     exec: function(editor) {
 //    	console.log("format");
     	try {
-    		editor.setValue(editorService.getSelectedText(';'));
+    		var varFormat = AceEditorBrowserHandler(editorService.EXECUTE_FORMAT, editorService.getAllText());
+    		editor.setValue(varFormat);
     	} catch(e) {
     		console.log(e);
     	}
@@ -275,8 +294,7 @@ editorService.setTabSize = function(varTabSize) {
  */
 editorService.getAllText = function() {
 //	console.log("######################## called getAllText() method ######################");
-	var varEditorContent = editor.getValue();
-	return varEditorContent;
+	return editor.getValue();
 };
 
 /**
@@ -363,10 +381,10 @@ editorService.getSelectedText = function(varDelimiter) {
 				strReturnQuery = varEditorContent;
 			}
 			
-			// 마지막으로 구분 문자가있다면 빼줍니다.
-			if(strReturnQuery.substring(strReturnQuery.length - 1) == varDelimiter) {
-				strReturnQuery = strReturnQuery.substring(0, strReturnQuery.length - 1);
-			}
+//			// 마지막으로 구분 문자가있다면 빼줍니다.
+//			if(strReturnQuery.substring(strReturnQuery.length - 1) == varDelimiter) {
+//				strReturnQuery = strReturnQuery.substring(0, strReturnQuery.length - 1);
+//			}
 			console.log("===========>>>>>" + strReturnQuery);
 			
 			return strReturnQuery;
@@ -410,7 +428,7 @@ editorService.reNewText = function(varText) {
 //	console.log("**rwNewText " + varText);
 	
 	editor.setValue(varText);
-}
+};
 
 /**
  * help dilaog
