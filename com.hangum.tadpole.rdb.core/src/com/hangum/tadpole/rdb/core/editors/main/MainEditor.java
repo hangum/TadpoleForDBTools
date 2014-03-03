@@ -161,7 +161,7 @@ public class MainEditor extends EditorExtension {
 	private UserDBResourceDAO userSetDBResource; //$NON-NLS-1$
 	
 	/** save mode */
-	private boolean isFirstLoad = false;
+//	private boolean isFirstLoad = false;
 	private boolean isDirty = false;
 	
 	/** download servcie handler. */
@@ -232,13 +232,13 @@ public class MainEditor extends EditorExtension {
 			setPartName(qei.getName());
 			
 			// fix : https://github.com/hangum/TadpoleForDBTools/issues/237
-			if(!"".equals(getInitDefaultEditorStr())) { //$NON-NLS-1$
-				isFirstLoad = true;	
-			}
+//			if(!"".equals(getInitDefaultEditorStr())) { //$NON-NLS-1$
+//				isFirstLoad = true;	
+//			}
 			
 		} else {
 			setPartName(dBResource.getName());
-			isFirstLoad = true;
+//			isFirstLoad = true;
 		}
 	}
 	
@@ -1806,7 +1806,8 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public void setFocus() {
-		if(!isFirstLoad) setOrionTextFocus();
+//		if(!isFirstLoad) 
+			setOrionTextFocus();
 	}
 	
 	@Override
@@ -1862,6 +1863,8 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	public boolean performSave(String newContents) {
+		browserEvaluate(IEditorFunction.SAVE_DATA);
+		
 		// new save
 		if(dBResource == null) {
 			// editor가 저장 가능 상태인지 검사합니다.
@@ -1930,15 +1933,16 @@ public class MainEditor extends EditorExtension {
 	
 	/** save property dirty */
 	public void setDirty(Boolean newValue) {
+		
 //		logger.debug("[setdirty][isFirstLoad]" + isFirstLoad + "[newValue]" + newValue + "[isDirty]"+ isDirty);
-		if(!isFirstLoad) {
+//		if(!isFirstLoad) {
 			if(isDirty != newValue) {
 				isDirty = newValue;
 				firePropertyChange(PROP_DIRTY);
 			}
-		}
-		
-		isFirstLoad = false;
+//		}
+//		
+//		isFirstLoad = false;
 	}
 	
 	@Override

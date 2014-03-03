@@ -82,9 +82,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		String newContents = (String) arguments[1];
 		
 		try {
-			newContents = SQLFormater.format(newContents );
-			
-			return newContents;						
+			return SQLFormater.format(newContents );						
 		} catch (Exception e) {
 			logger.error("sql format", e);
 		}

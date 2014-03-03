@@ -39,6 +39,7 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 		
 		switch (intActionId) {
 			case DIRTY_CHANGED:
+				logger.debug("=#################################################################===Rise dirth change");
 				doDirtyChanged(arguments);
 				break;
 

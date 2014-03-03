@@ -62,4 +62,10 @@ public interface IEditorFunction  {
     /** TEXT FOCUS */
     public static final String SET_FOCUS = EDITOR_SERVICE_MAP + ".setFocus();";
     
+    /**
+     * 데이터 저장.
+     * 
+     */
+    public static final String SAVE_DATA = EDITOR_SERVICE_MAP + ".saveData();";
+    
 }
