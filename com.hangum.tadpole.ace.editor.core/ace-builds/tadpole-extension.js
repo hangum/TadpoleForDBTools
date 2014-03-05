@@ -60,15 +60,11 @@ var isEdited = false;
 	document.getElementById('editor').style.fontSize= '12px';
 	
 	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
-    // create a simple selection status indicator
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
     
 	editor.setTheme("ace/theme/eclipse");
 	editor.setShowPrintMargin(false);
 	editor.setHighlightActiveLine(true);
-//	editor.resize();
-	
-//	editor.getSession().setMode("ace/mode/sql");
 	
 	// auto completion
 	editor.setOptions({
@@ -86,48 +82,55 @@ var isEdited = false;
  *  add keyWord 
 	var highlightWords = "word1|word2|word3|phrase one|phrase number two|etc";
  */
-//var isFirstData = false;
 editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
-	
 	try {
-//		isFirstData = ('' !== varInitText.trim())?true:false;
-		
 		// 확장자 지정.
-		editor.getSession().setMode(varExt);
 		
-		// 초기 데이터를 입력.
-		editor.insert(varInitText);
+		EditSession = ace.require("ace/edit_session").EditSession;
+		var newEditSession = new EditSession(varInitText); 
+		editor.setSession(newEditSession);
+		editor.getSession().setMode(varExt);
+		editor.getSession().on('change', function() {
+			console.log('\t############################################################################ [isEdited]  ' + isEdited);
+			
+//			console.log("\t====[change event][isEdited]" + isEdited + "[intFirstCallCount]" + intFirstCallCount) ;
+			if(!isEdited) {
+				try {
+					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
+				} catch(e) {
+					console.log(e);
+				}
+
+				isEdited = true;
+			}
+			
+		});
+		
 		editor.focus();
+		
 	} catch(e) {
 		console.log(e);
 	}
 };
 
 /**
- * set editor focue
- */
-editorService.setFocus = function() {
-	editor.focus();
-};
-
-/**
  * 에디터 dirty_change
  */
-editor.getSession().on('change', function() {
-
-//	console.log("====[change event][isEdited]" + isEdited + "[isFirstData]" + isFirstData) ;
-	if(isEdited == false){// && isFirstData == false) {
-		try {
-			AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
-		} catch(e) {
-			console.log(e);
-		}
-		
-		isEdited = true;
-	}
-	
-//	isFirstData = false;
-});
+//editor.getSession().on('change', function() {
+//	console.log('\t############################################################################ [isEdited]  ' + isEdited);
+//	
+////	console.log("\t====[change event][isEdited]" + isEdited + "[intFirstCallCount]" + intFirstCallCount) ;
+//	if(!isEdited) {
+//		try {
+//			AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
+//		} catch(e) {
+//			console.log(e);
+//		}
+//
+//		isEdited = true;
+//	}
+//	
+//});
 
 /**
  * 자바에서 에디터가 저장되었을때 에디터 수정 메시지를 받기위해 호출되어 집니다.
@@ -135,6 +138,13 @@ editor.getSession().on('change', function() {
 editorService.saveData = function() {
 	isEdited = false;
 }
+
+/**
+ * set editor focue
+ */
+editorService.setFocus = function() {
+	editor.focus();
+};
 
 //==[ Define short key ]======================================================================================================================
 /**
@@ -146,8 +156,9 @@ editor.commands.addCommand({
     exec: function(editor) {
 //    	console.log("Save query");
     	try {
-    		AceEditorBrowserHandler(editorService.SAVE, editorService.getAllText());
-    		editor.focus();
+    		var boolDoSave = AceEditorBrowserHandler(editorService.SAVE, editorService.getAllText());
+    		if(boolDoSave) editorService.saveData();
+//    		editor.focus();
     	}catch(e) {
     		console.log(e);
     	}
@@ -280,20 +291,13 @@ editorService.setFont = function(varFontName, varFontSize) {
  * define tab size
  */
 editorService.setTabSize = function(varTabSize) {
-//	console.log("##Define tab size (" + varTabSize + ")");
-	
-	try {
-		editor.getSession().setTabSize(varTabSize);
-	} catch(e) {
-		console.log(e);
-	}
+	editor.getSession().setTabSize(varTabSize);
 } 
 
 /**
  * getAllText
  */
 editorService.getAllText = function() {
-//	console.log("######################## called getAllText() method ######################");
 	return editor.getValue();
 };
 
@@ -310,84 +314,48 @@ editorService.getSelectedText = function(varDelimiter) {
 	console.log("####### called getQueryText() method demiliter is " + varDelimiter);
 	
 	var varEditorContent = editor.getValue();
-//	console.log("\t editor content value is ==> " + varEditorContent);
 	if("" == varEditorContent) return "";
 	
 	try {
+		// 선택된 텍스트가 있다면 우선적으로 리턴합니다.
 		var varSelectionContent = editor.getSelectedText();
-//		console.log("\t selection Content is ==> " + varSelectionContent + ".");
 		if("" != varSelectionContent)  {
 			return varSelectionContent;
+			
+		// 선택된 텍스트가 없다면 구분자 만큼 넘겨줍니다.
 		} else {
+			var strReturnSQL = "";
 			
-			// 행번호를 가져온다.
-			var intRowCursornPostion = editor.getCursorPosition().row;
-			var strReturnQuery = "";
-			
-			// 쿼리의 시작부분을 찾는다.
-			var intStartLine = intRowCursornPostion-1;
-			var arryPreQuery = new Array();
-			var intArrayPostion = 0;
-			for(i=intStartLine; i>=0; i--) {
-				// console.log("\t find text row number : " + i);
+			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
+			if(startQueryLine.lastIndexOf(varDelimiter) != -1) {
+				// 선택된 행에 종료 문자가 있다면 
+					// 행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
+					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
+				console.log(" [1] 선택된 행에 종료 문자가 있다면 .................. ");
 				
-				var startQueryLine = editor.session.getLine(i);
-				var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-				if(lastIndexOf != -1) {
-					arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
-					console.log('\t\t==> 검색 쿼리.' + startQueryLine.substring(lastIndexOf+1));
-					break;
-				} else {
-					console.log("\t not found text " + startQueryLine);
-					arryPreQuery[intArrayPostion] = startQueryLine;
-				}
+				//
+				// 자신보다 한 행위의 쿼리를 읽어 들입니다.
+				//
+				console.log("========== 선택된 행에 종료 문자가 있다면===");
+				strReturnSQL = findPreviousChar((editor.getCursorPosition().row -1), varDelimiter);
+				console.log("[findPreviousSQL is " + strReturnSQL);
+
+				strReturnSQL += startQueryLine.substring(0, startQueryLine.lastIndexOf(varDelimiter));
+				console.log("[fully SQL is " + strReturnSQL);
 				
-				intArrayPostion++;
-			}
-			
-			// 쿼리 앞 부분의 데이터를 처리합니다. 
-			for(i=0; i<intArrayPostion; i++) {
-				// 배열은 0부터 시작하므로 -1을 하였습니다.
-				//
-				// 쿼리의 배열을 역순으로 집어 넣어서 역순으로 가져오면서 쿼리를 만들어야 합니다. 
-				// [0] select 
- 				// [1]  * from test
-				//
-				strReturnQuery += arryPreQuery[ (intArrayPostion-i)-1 ];
-			}
-			
-			// 라인 종료 지점에 종료 문자가 있다면  해당 쿼리가 종료인것이다.
-			if(editor.session.getLine(intRowCursornPostion).indexOf(varDelimiter) >= 0) {
-				console.log(" 하나의 쿼리는 ==>" + strReturnQuery);
-				strReturnQuery += editor.session.getLine(intRowCursornPostion);
-			// 쿼리의 종료 지점을 찾습니다.
 			} else {
-				for(i=intRowCursornPostion; i<editor.session.getLength(); i++) {
-					var startQueryLine = editor.session.getLine(i);
-					var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-					if(lastIndexOf != -1) {
-						strReturnQuery += startQueryLine.substring(0, lastIndexOf);
-						break;
-					} else {
-						strReturnQuery += startQueryLine + "\n";
-					}
-				}
+				console.log(" [2] 선택된 행에 종료 문자가 없다면 .................. ");
+				// 선택된 행에 종료 문자가 없다면
+				strReturnSQL = findPreviousChar((editor.getCursorPosition().row -1), varDelimiter);
+				console.log("[findPreviousSQL is " + strReturnSQL);
+				
+				strReturnSQL += startQueryLine + "\n";
+				
+				strReturnSQL += findNextCharacter((editor.getCursorPosition().row +1), varDelimiter);
+				console.log("[findNextSQL is " + strReturnSQL);
 			}
-			
-			// 쿼리 내용이 없다면..
-			strReturnQuery = strReturnQuery.trim();
-			if(strReturnQuery == '') {
-				console.log('\t##[Caution] query not found, so add all editor text');
-				strReturnQuery = varEditorContent;
-			}
-			
-//			// 마지막으로 구분 문자가있다면 빼줍니다.
-//			if(strReturnQuery.substring(strReturnQuery.length - 1) == varDelimiter) {
-//				strReturnQuery = strReturnQuery.substring(0, strReturnQuery.length - 1);
-//			}
-			console.log("===========>>>>>" + strReturnQuery);
-			
-			return strReturnQuery;
+
+			return strReturnSQL;
 		}
 	} catch(e) {
 		console.log(e);
@@ -395,11 +363,92 @@ editorService.getSelectedText = function(varDelimiter) {
 };
 
 /**
+ * 선택된 행에 종료 문자가 있다면 
+ *		행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
+ *		종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
+ * 
+ * @param varLineNum
+ * @param varDelimiter
+ */
+findPreviousChar = function(varLineNum, varDelimiter) {
+	var strReturnQuery = "";
+	
+	var arryPreQuery = new Array();
+	var intArrayPostion = 0;
+	for(var i=varLineNum; i>=0; i--) {
+		var startQueryLine = editor.session.getLine(i);
+		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
+		if(lastIndexOf != -1) {
+			arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
+			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+			break;
+		} else {
+			console.log("\t not found text " + startQueryLine);
+			arryPreQuery[intArrayPostion] = startQueryLine;
+		}
+		
+		intArrayPostion++;
+	}
+	
+	for(i=0; i<arryPreQuery.length; i++) {
+		// 배열은 0부터 시작하므로 -1을 하였습니다.
+		//
+		// 쿼리의 배열을 역순으로 집어 넣어서 역순으로 가져오면서 쿼리를 만들어야 합니다. 
+		// [0] select 
+			// [1]  * from test
+		//
+		strReturnQuery += arryPreQuery[ (arryPreQuery.length-i)-1 ] + "\n";
+	}
+	
+	return strReturnQuery;
+};
+
+/**
+ * 행부터 아래로 찾아가면서 종료 문자를 찾는다.
+ * 	종료 문자가 없다면 아래의 모든 행이 포함될 텍스트 이다.
+ * 
+ * @param varLineNum
+ * @param varDelimiter
+ */
+findNextCharacter = function(varLineNum, varDelimiter) {
+	var strReturnQuery = "";
+	
+	var intRowCount = editor.session.getLength();
+	
+	var arryPreQuery = new Array();
+	var intArrayPostion = 0;
+	for(var i=varLineNum; i<intRowCount; i++) {
+		var startQueryLine = editor.session.getLine(i);
+		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
+		if(lastIndexOf != -1) {
+			arryPreQuery[intArrayPostion] = startQueryLine.substring(0, lastIndexOf+1);
+			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+			break;
+		} else {
+			console.log("\t not found text " + startQueryLine);
+			arryPreQuery[intArrayPostion] = startQueryLine;
+		}
+		
+		intArrayPostion++;
+	}
+	
+	for(i=0; i<arryPreQuery.length; i++) {
+		// 배열은 0부터 시작하므로 -1을 하였습니다.
+		//
+		// 쿼리의 배열을 역순으로 집어 넣어서 역순으로 가져오면서 쿼리를 만들어야 합니다. 
+		// [0] select 
+			// [1]  * from test
+		//
+		strReturnQuery += arryPreQuery[i] + "\n";
+	}
+	
+	return strReturnQuery;
+};
+
+/**
  * insert text
  */
 editorService.insertText = function(varText) {
-//	console.log("**insertText " + varText);
-	
 	try {
 		editor.insert(varText);
 		editor.focus();
@@ -409,15 +458,9 @@ editorService.insertText = function(varText) {
 };
 
 editorService.addText = function(varText) {
-//	console.log("**addText " + varText);
-	
 	try {
-		if("" == editor.getValue()) {
-			editor.insert(varText);
-		} else {
-			editor.insert("\n" + varText);
-		}
-		
+		if("" == editor.getValue()) editor.insert(varText);
+		else editor.insert("\n" + varText);
 		editor.focus();
 	} catch(e) {
 		console.log(e);
@@ -425,8 +468,6 @@ editorService.addText = function(varText) {
 };
 
 editorService.reNewText = function(varText) {
-//	console.log("**rwNewText " + varText);
-	
 	editor.setValue(varText);
 };
 
@@ -434,11 +475,6 @@ editorService.reNewText = function(varText) {
  * help dilaog
  */
 editorService.helpDialog = function() {
-//	console.log("** called help dialog ");
-
-//	
-//	단축키를 좀더 정리해서 에디터에 삽입합시다.
-//	
 	try {
 		AceEditorBrowserHandler(editorService.HELP_POPUP);
 	} catch(e) {

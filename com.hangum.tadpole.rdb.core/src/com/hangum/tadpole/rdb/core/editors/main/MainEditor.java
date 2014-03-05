@@ -116,7 +116,6 @@ import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
-import com.hangum.tadpole.sql.template.DBOperationType;
 import com.hangum.tadpole.sql.util.PartQueryUtil;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.sql.util.ResultSetUtils;
@@ -232,9 +231,7 @@ public class MainEditor extends EditorExtension {
 			setPartName(qei.getName());
 			
 			// fix : https://github.com/hangum/TadpoleForDBTools/issues/237
-//			if(!"".equals(getInitDefaultEditorStr())) { //$NON-NLS-1$
-//				isFirstLoad = true;	
-//			}
+//			if(!"".equals(getInitDefaultEditorStr())) isFirstLoad = true; //$NON-NLS-1$
 			
 		} else {
 			setPartName(dBResource.getName());
@@ -311,7 +308,7 @@ public class MainEditor extends EditorExtension {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, ";"); //$NON-NLS-1$
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, QUERY_DELIMITER); //$NON-NLS-1$
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.NONE);
 				executeCommand(reqQuery);
@@ -338,7 +335,7 @@ public class MainEditor extends EditorExtension {
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, ";"); //$NON-NLS-1$
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, QUERY_DELIMITER); //$NON-NLS-1$
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE);
 				executeCommand(reqQuery);
@@ -939,12 +936,11 @@ public class MainEditor extends EditorExtension {
 	 * browser handler
 	 */
 	protected void addBrowserService() {
-		if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.PRODUCTION) {
+//		if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.PRODUCTION) {
 	    	browserQueryEditor.setUrl(REAL_DB_URL);
-	    } else {
-	    	browserQueryEditor.setUrl(DEV_DB_URL);
-	    }
-		
+//	    } else {
+//	    	browserQueryEditor.setUrl(DEV_DB_URL);
+//	    }
 		registerBrowserFunctions();
 		
 		browserQueryEditor.addProgressListener(new ProgressListener() {
@@ -1333,6 +1329,7 @@ public class MainEditor extends EditorExtension {
 		}
 		
 		String requestQuery = StringUtils.trimToEmpty(reqQuery.getSql());
+		requestQuery = StringUtils.removeEnd(requestQuery, QUERY_DELIMITER);
 		
 		// is tajo
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
@@ -1554,7 +1551,7 @@ public class MainEditor extends EditorExtension {
 						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
 						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
 					) { //$NON-NLS-1$
-						sqlQuery += ";"; //$NON-NLS-1$
+						sqlQuery += QUERY_DELIMITER; //$NON-NLS-1$
 					}
 				}
 				
@@ -1806,8 +1803,7 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	public void setFocus() {
-//		if(!isFirstLoad) 
-			setOrionTextFocus();
+		setOrionTextFocus();
 	}
 	
 	@Override
@@ -1821,7 +1817,9 @@ public class MainEditor extends EditorExtension {
 		// 저장을 호출합니다.
 		try {
 			String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-			performSave(strQuery);
+			if(performSave(strQuery)) {
+				browserEvaluate(IEditorFunction.SAVE_DATA);
+			}
 		} catch(SWTException e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
 			monitor.setCanceled(true);
@@ -1837,7 +1835,9 @@ public class MainEditor extends EditorExtension {
 		// 저장을 호출합니다.
 		try {
 			String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-			performSave(strQuery);
+			if(performSave(strQuery)) {
+				browserEvaluate(IEditorFunction.SAVE_DATA);
+			}
 		} catch(SWTException e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
 		}
@@ -1863,7 +1863,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	public boolean performSave(String newContents) {
-		browserEvaluate(IEditorFunction.SAVE_DATA);
+		boolean boolReturnVal = false;
 		
 		// new save
 		if(dBResource == null) {
@@ -1875,28 +1875,29 @@ public class MainEditor extends EditorExtension {
 				if(userSetDBResource == null) return false;
 			}
 			
-			return saveData(newContents);
+			boolReturnVal = saveData(newContents);
 			
 		// save as
 		} if(userSetDBResource != null) {
-			boolean isSucc =  saveData(newContents);
-			if(isSucc) userSetDBResource = null;
+			boolReturnVal = saveData(newContents);
+			if(boolReturnVal) userSetDBResource = null;
 
 		// update
 		} else {
 			try {
 				TadpoleSystem_UserDBResource.updateResource(dBResource, newContents);
+				boolReturnVal = true;
 				setDirty(false);
 			} catch (Exception e) {
 				logger.error("update file", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
 				
-				return false;
+				boolReturnVal = false;
 			}
 		}
 		
-		return true;
+		return boolReturnVal;
 	}
 	
 	/**
@@ -1933,15 +1934,14 @@ public class MainEditor extends EditorExtension {
 	
 	/** save property dirty */
 	public void setDirty(Boolean newValue) {
-		
-//		logger.debug("[setdirty][isFirstLoad]" + isFirstLoad + "[newValue]" + newValue + "[isDirty]"+ isDirty);
+		logger.debug("============ setdirty===================");
+//		logger.debug("\t\t[setdirty][isFirstLoad]" + isFirstLoad + "[newValue]" + newValue + "[isDirty]"+ isDirty);
 //		if(!isFirstLoad) {
 			if(isDirty != newValue) {
 				isDirty = newValue;
 				firePropertyChange(PROP_DIRTY);
 			}
 //		}
-//		
 //		isFirstLoad = false;
 	}
 	

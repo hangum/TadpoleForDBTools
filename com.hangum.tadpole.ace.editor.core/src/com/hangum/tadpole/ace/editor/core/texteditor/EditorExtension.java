@@ -57,6 +57,8 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/** 결과 컬럼이 숫자이면 ,를 찍을 것인지 */
 	protected boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 	
+	protected String QUERY_DELIMITER = ";";
+	
 	/** 현재 에디터에서 처리해야하는 디비 정보. */
 	protected UserDBDAO userDB;
 	
@@ -116,7 +118,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 		
 		try {
 			Object ret = browserQueryEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
-			return ret.toString();
+			if(ret != null) return ret.toString();
 		} catch(Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", strUserEMail), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
