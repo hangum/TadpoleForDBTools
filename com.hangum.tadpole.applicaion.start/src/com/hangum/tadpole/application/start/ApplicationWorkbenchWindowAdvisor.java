@@ -78,10 +78,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // remove this line(fixed at https://github.com/hangum/TadpoleForDBTools/issues/350)
 //        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
         configurer.setShowCoolBar(true);
-        configurer.setShowStatusLine(false);
+        configurer.setShowStatusLine(true);
         configurer.setShowMenuBar(false);
-        
-        configurer.setShowProgressIndicator(false);
+        configurer.setShowProgressIndicator(true);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
         
         // fullscreen

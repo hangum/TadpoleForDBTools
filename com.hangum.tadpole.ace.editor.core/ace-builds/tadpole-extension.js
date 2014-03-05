@@ -63,7 +63,7 @@ var isEdited = false;
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
     
 	editor.setTheme("ace/theme/eclipse");
-	editor.setShowPrintMargin(false);
+	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
 	// auto completion
@@ -86,11 +86,14 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 	try {
 		// 확장자 지정.
 		
-		EditSession = ace.require("ace/edit_session").EditSession;
-		var newEditSession = new EditSession(varInitText); 
-		editor.setSession(newEditSession);
-		editor.getSession().setMode(varExt);
-		editor.getSession().on('change', function() {
+		var EditSession = ace.require("ace/edit_session").EditSession;
+		var UndoManager = ace.require("./undomanager").UndoManager;
+
+		var doc = new EditSession(varInitText);
+		
+		doc.setUndoManager(new UndoManager());
+		doc.setMode(varExt);
+		doc.on('change', function() {
 			console.log('\t############################################################################ [isEdited]  ' + isEdited);
 			
 //			console.log("\t====[change event][isEdited]" + isEdited + "[intFirstCallCount]" + intFirstCallCount) ;
@@ -100,14 +103,12 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 				} catch(e) {
 					console.log(e);
 				}
-
 				isEdited = true;
 			}
-			
 		});
 		
+		editor.setSession(doc);
 		editor.focus();
-		
 	} catch(e) {
 		console.log(e);
 	}
@@ -266,6 +267,22 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
+///*
+// * 에디터 창 전체 지우기.
+// */
+//editor.commands.addCommand({
+//    name: 'e-undo',
+//    bindKey: {win: 'Ctrl-Z',  mac: 'Command-Z'},
+//    exec: function(editor) {
+//    	try {
+//	    	console.log("undo execute..");
+//	    	editor.undo();
+//    	} catch(e) {
+//    		console.log(e);
+//    	}
+//    },
+//    readOnly: false
+//});
 //==[ Define short key ]======================================================================================================================
 
 
