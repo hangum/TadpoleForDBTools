@@ -90,12 +90,10 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 		var UndoManager = ace.require("./undomanager").UndoManager;
 
 		var doc = new EditSession(varInitText);
-		
 		doc.setUndoManager(new UndoManager());
 		doc.setMode(varExt);
 		doc.on('change', function() {
-			console.log('\t############################################################################ [isEdited]  ' + isEdited);
-			
+//			console.log('\t############################################################################ [isEdited]  ' + isEdited);
 //			console.log("\t====[change event][isEdited]" + isEdited + "[intFirstCallCount]" + intFirstCallCount) ;
 			if(!isEdited) {
 				try {
@@ -113,25 +111,6 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 		console.log(e);
 	}
 };
-
-/**
- * 에디터 dirty_change
- */
-//editor.getSession().on('change', function() {
-//	console.log('\t############################################################################ [isEdited]  ' + isEdited);
-//	
-////	console.log("\t====[change event][isEdited]" + isEdited + "[intFirstCallCount]" + intFirstCallCount) ;
-//	if(!isEdited) {
-//		try {
-//			AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
-//		} catch(e) {
-//			console.log(e);
-//		}
-//
-//		isEdited = true;
-//	}
-//	
-//});
 
 /**
  * 자바에서 에디터가 저장되었을때 에디터 수정 메시지를 받기위해 호출되어 집니다.
@@ -371,6 +350,19 @@ editorService.getSelectedText = function(varDelimiter) {
 				strReturnSQL += findNextCharacter((editor.getCursorPosition().row +1), varDelimiter);
 				console.log("[findNextSQL is " + strReturnSQL);
 			}
+			
+			// 만약에 쿼리를 발견하지 못했다면, 자신의 윗행으로 찾아 마지막 종료 문자의 쿼리를 찾습니다.
+			if(strReturnSQL.trim() == "") {
+				var intDelimiterLineNumber = findPreviousLineText(editor.getCursorPosition().row, varDelimiter);
+				if(-1 !== intDelimiterLineNumber) {
+					strReturnSQL = findPreviousChar(intDelimiterLineNumber, varDelimiter);
+					console.log("[findPreviousSQL is " + strReturnSQL);
+	
+					startQueryLine = editor.session.getLine(intDelimiterLineNumber);
+					strReturnSQL += startQueryLine.substring(0, startQueryLine.lastIndexOf(varDelimiter));
+					console.log("[fully SQL is " + strReturnSQL);
+				}
+			}
 
 			return strReturnSQL;
 		}
@@ -378,6 +370,25 @@ editorService.getSelectedText = function(varDelimiter) {
 		console.log(e);
 	}
 };
+
+/**
+ * 선택 행의 위쪽으로 분리자가 있는 행의 번호를 리턴합니다.
+ * @param varLineNum
+ * @param varDelimiter 
+ */
+findPreviousLineText = function(varLineNum, varDelimiter) {
+	
+	for(var i=varLineNum; i>=0; i--) {
+		var startQueryLine = editor.session.getLine(i);
+		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
+		if(lastIndexOf != -1) {
+			return i;
+			break;
+		}
+	}
+	
+	return -1;
+}
 
 /**
  * 선택된 행에 종료 문자가 있다면 

@@ -1120,6 +1120,7 @@ public class MainEditor extends EditorExtension {
 				
 				// 쿼리 텍스트에 쿼리 이외의 특수 문자를 제거
 				executeLastSQL = SQLUtil.executeQuery(strSQL);
+				reqQuery.setSql(executeLastSQL);
 				
 				// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 				if(!SQLUtil.isStatement(executeLastSQL)) {

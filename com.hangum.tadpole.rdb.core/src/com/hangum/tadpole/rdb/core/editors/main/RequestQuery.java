@@ -21,6 +21,8 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
  *
  */
 public class RequestQuery {
+	/** 초기 입력 받은 sql */
+	private String originalSql = "";
 	
 	/** use query */
 	private String sql = "";
@@ -40,8 +42,9 @@ public class RequestQuery {
 	 * @param mode 전체인지, 부분인지 {@code EditorDefine.QUERY_MODE}
 	 * @param type 쿼리, 실행 계획인지 {@code EditorDefine.EXECUTE_TYPE}
 	 */
-	public RequestQuery(String sql, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type) {
-		this.sql = sql;
+	public RequestQuery(String originalSql, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type) {
+		this.originalSql = originalSql;
+		this.sql = originalSql;
 		this.mode = mode;
 		this.type = type;
 	}
@@ -102,4 +105,17 @@ public class RequestQuery {
 		this.type = type;
 	}
 
+	/**
+	 * @return the originalSql
+	 */
+	public String getOriginalSql() {
+		return originalSql;
+	}
+
+	/**
+	 * @param originalSql the originalSql to set
+	 */
+	public void setOriginalSql(String originalSql) {
+		this.originalSql = originalSql;
+	}
 }
