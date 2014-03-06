@@ -20,6 +20,9 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class PreferenceDefine {
 	
+	/**시스템이 초기화 되었는지 정의 */
+	public static final String IS_TADPOLE_INITIALIZE = "IS_TADPOLE_INITIALIZE";
+	
 	/** export시 데이터 분리자. */
 	public static final String EXPORT_DILIMITER = "EXPORT_DILIMITER";
 	public static final String EXPORT_DILIMITER_VALUE = ",";

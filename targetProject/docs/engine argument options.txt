@@ -32,7 +32,7 @@ Program Argument
 					*/
  -defaultDB     : 디비 입력시 선택디비 나열:
  				: ex : -defaultDB MySQL
-    
+ -forceSystemInitialize : 시스테의 초기테이블 데이터 생성을 항상 점검합니다.  일반적으로 한번만 합니다.  검사는 프리퍼런스에 하구요.
   
 VM Argument
   -Dfile.encoding=UTF-8
