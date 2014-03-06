@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * <pre>
  *  java.sql.ResultSet과 ResultSetMeta를 TableViewer로 바꾸기 위해 가공하는 Util
@@ -173,12 +175,14 @@ public class SQLUtil {
 	}
 	
 	/**
-	 * 쿼리 텍스트에 쿼리 이외의 특수 문자를 제거해 줍니다.
+	 * 쿼리를 jdbc에서 실행 가능한 쿼리로 보정합니다.
 	 * 
 	 * @param exeSQL
 	 * @return
 	 */
-	public static String executeQuery(String exeSQL) {
+	public static String sqlExecutable(String exeSQL) {
+		
+//		tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
 		try {
 //			
 //			https://github.com/hangum/TadpoleForDBTools/issues/140 오류로 불럭지정하였습니다.
@@ -198,7 +202,9 @@ public class SQLUtil {
 //			exeSQL = exeSQL.replaceAll("(\r\n|\n|\r)", " ");
 			
 			// 모든 쿼리에 공백 주석 제거
+			exeSQL = removeComment(exeSQL);
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
+			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DILIMITER);
 			
 		} catch(Exception e) {
 			logger.error("query execute", e);

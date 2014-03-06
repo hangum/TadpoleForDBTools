@@ -246,22 +246,6 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
-///*
-// * 에디터 창 전체 지우기.
-// */
-//editor.commands.addCommand({
-//    name: 'e-undo',
-//    bindKey: {win: 'Ctrl-Z',  mac: 'Command-Z'},
-//    exec: function(editor) {
-//    	try {
-//	    	console.log("undo execute..");
-//	    	editor.undo();
-//    	} catch(e) {
-//    		console.log(e);
-//    	}
-//    },
-//    readOnly: false
-//});
 //==[ Define short key ]======================================================================================================================
 
 
@@ -355,7 +339,7 @@ editorService.getSelectedText = function(varDelimiter) {
 			if(strReturnSQL.trim() == "") {
 				var intDelimiterLineNumber = findPreviousLineText(editor.getCursorPosition().row, varDelimiter);
 				if(-1 !== intDelimiterLineNumber) {
-					strReturnSQL = findPreviousChar(intDelimiterLineNumber, varDelimiter);
+					strReturnSQL = findPreviousChar(intDelimiterLineNumber-1, varDelimiter);
 					console.log("[findPreviousSQL is " + strReturnSQL);
 	
 					startQueryLine = editor.session.getLine(intDelimiterLineNumber);

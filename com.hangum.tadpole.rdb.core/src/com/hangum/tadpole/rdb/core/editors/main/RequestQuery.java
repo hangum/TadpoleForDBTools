@@ -12,7 +12,10 @@ package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.util.Date;
 
+import org.eclipse.rap.rwt.RWT;
+
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.sql.util.SQLUtil;
 
 /**
  * 에디터에서 사용자가 실행하려는 쿼리 정보를 정의합니다. 
@@ -21,10 +24,16 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
  *
  */
 public class RequestQuery {
+	/** 쿼리 실행자 ip */	
+	private String userIp = ""; 
+	
+	/** 요청 쿼리가 오토 커밋이었는지 */
+	private boolean isAutoCommit = false;
+	
 	/** 초기 입력 받은 sql */
 	private String originalSql = "";
 	
-	/** use query */
+	/** 에디터가 실행 가능한 쿼리로 수정한 */
 	private String sql = "";
 	
 	/** Execute start time */
@@ -42,11 +51,14 @@ public class RequestQuery {
 	 * @param mode 전체인지, 부분인지 {@code EditorDefine.QUERY_MODE}
 	 * @param type 쿼리, 실행 계획인지 {@code EditorDefine.EXECUTE_TYPE}
 	 */
-	public RequestQuery(String originalSql, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type) {
+	public RequestQuery(String originalSql, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type, boolean isAutoCommit) {
+		this.userIp = RWT.getRequest().getRemoteAddr();
+		
 		this.originalSql = originalSql;
-		this.sql = originalSql;
+		this.sql = SQLUtil.sqlExecutable(originalSql);
 		this.mode = mode;
 		this.type = type;
+		this.isAutoCommit = isAutoCommit;
 	}
 
 	/**
@@ -118,4 +130,33 @@ public class RequestQuery {
 	public void setOriginalSql(String originalSql) {
 		this.originalSql = originalSql;
 	}
+
+	/**
+	 * @return the isAutoCommit
+	 */
+	public boolean isAutoCommit() {
+		return isAutoCommit;
+	}
+
+	/**
+	 * @param isAutoCommit the isAutoCommit to set
+	 */
+	public void setAutoCommit(boolean isAutoCommit) {
+		this.isAutoCommit = isAutoCommit;
+	}
+
+	/**
+	 * @return the userIp
+	 */
+	public String getUserIp() {
+		return userIp;
+	}
+
+	/**
+	 * @param userIp the userIp to set
+	 */
+	public void setUserIp(String userIp) {
+		this.userIp = userIp;
+	}
+	
 }
