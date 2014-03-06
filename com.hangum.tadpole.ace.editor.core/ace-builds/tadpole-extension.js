@@ -1,6 +1,5 @@
 /**
  * tadpole ace editor extension.
- * 
  *  ace example at https://github.com/ajaxorg/ace/wiki/Embedding-API
  *  단축키 목록은 : https://www.dokuwiki.org/plugin:aceeditor 를 참고하고 수정해 가도록 합니다. 기본 에디터의 단축키 맵팽과 흡사합니다. 
  */
@@ -51,9 +50,7 @@ var editorService = {
 var editor;
 var isEdited = false;
 
-/**
- * initialize editor
- */
+/** initialize editor */
 {
 	ace.require("ace/ext/language_tools");
 	editor = ace.edit("editor");
@@ -66,26 +63,15 @@ var isEdited = false;
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
-	// auto completion
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
 	    enableSnippets: true
 	});
-	
-	// bookmarker
-//	editor.getSession().setFoldStyle("markbegin");
 };
 
-/**
- * 에디터를 초기화 합니다.
- * 
- *  add keyWord 
-	var highlightWords = "word1|word2|word3|phrase one|phrase number two|etc";
- */
+/** 에디터를 초기화 합니다. */
 editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 	try {
-		// 확장자 지정.
-		
 		var EditSession = ace.require("ace/edit_session").EditSession;
 		var UndoManager = ace.require("./undomanager").UndoManager;
 
@@ -93,8 +79,6 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 		doc.setUndoManager(new UndoManager());
 		doc.setMode(varExt);
 		doc.on('change', function() {
-//			console.log('\t############################################################################ [isEdited]  ' + isEdited);
-//			console.log("\t====[change event][isEdited]" + isEdited + "[intFirstCallCount]" + intFirstCallCount) ;
 			if(!isEdited) {
 				try {
 					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
@@ -112,47 +96,33 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 	}
 };
 
-/**
- * 자바에서 에디터가 저장되었을때 에디터 수정 메시지를 받기위해 호출되어 집니다.
- */
+/**  자바에서 에디터가 저장되었을때 에디터 수정 메시지를 받기위해 호출되어 집니다. */
 editorService.saveData = function() {
 	isEdited = false;
 }
-
-/**
- * set editor focue
- */
+/** set editor focus */
 editorService.setFocus = function() {
 	editor.focus();
 };
 
 //==[ Define short key ]======================================================================================================================
-/**
- *  execute
- */
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
     exec: function(editor) {
-//    	console.log("Save query");
     	try {
     		var boolDoSave = AceEditorBrowserHandler(editorService.SAVE, editorService.getAllText());
     		if(boolDoSave) editorService.saveData();
-//    		editor.focus();
     	}catch(e) {
     		console.log(e);
     	}
     },
     readOnly: false
 });
-/**
- *  execute
- */
 editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
-//    	console.log("execute query -f5");
     	try {
     		AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
     	} catch(e) {
@@ -161,14 +131,10 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
-/*
- * execute plan
- */
 editor.commands.addCommand({
     name: 'executePlan',
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
-//    	console.log("execute plan = ctrl-e");
     	try {
     		AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
 	    } catch(e) {
@@ -177,14 +143,10 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
-/*
- * format 
- */
 editor.commands.addCommand({
     name: 'format',
     bindKey: {win: 'Ctrl-Shift-F',  mac: 'Command-Shift-F'},
     exec: function(editor) {
-//    	console.log("format");
     	try {
     		var varFormat = AceEditorBrowserHandler(editorService.EXECUTE_FORMAT, editorService.getAllText());
     		editor.setValue(varFormat);
@@ -194,38 +156,26 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
-/*
- * 블럭지정한 부분을 소문자로.
- */
 editor.commands.addCommand({
     name: 'changeLowCase',
     bindKey: {win: 'Ctrl-Shift-Y',  mac: 'Command-Shift-Y'},
     exec: function(editor) {
-//    	console.log("Change Low Cage ");
     	editor.toLowerCase();
     },
     readOnly: false
 });
-/*
- * 블럭지정한 부분을 소문자로.
- */
 editor.commands.addCommand({
     name: 'changeUpperCase',
     bindKey: {win: 'Ctrl-Shift-X',  mac: 'Command-Shift-X'},
     exec: function(editor) {
-//    	console.log("Change Upper case");
     	editor.toUpperCase();
     },
     readOnly: false
 });
-/*
- * 단축키 도움말창으로 이동.
- */
 editor.commands.addCommand({
     name: 'helpDialog',
     bindKey: {win: 'Ctrl-Shift-L',  mac: 'Command-Shift-L'},
     exec: function(editor) {
-//    	console.log("Show shortcut dialog");
     	try {
     		editorService.helpDialog();
     	} catch(e) {
@@ -234,31 +184,20 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
-/*
- * 에디터 창 전체 지우기.
- */
 editor.commands.addCommand({
     name: 'cleagePage',
     bindKey: {win: 'Ctrl-F7',  mac: 'Command-F7'},
     exec: function(editor) {
-//    	console.log("Clear page");
     	editor.setValue("");
     },
     readOnly: false
 });
-//==[ Define short key ]======================================================================================================================
-
-
-//==[ Define method ]======================================================================================================================
 
 /**
  * define font information
- * 
  * 폰트 종류와 사이즈가 변화가 있으면 에디터가 깨지는 현상이 있음. 
  */
 editorService.setFont = function(varFontName, varFontSize) {
-//	console.log("##Define setFont(" + varFontName + ", " + varFontSize + ")");
-	
 	try {
 		document.getElementById('editor').style.fontSize= varFontSize + 'px';
 		document.getElementById('editor').style.fontFamily= varFontName;
@@ -266,21 +205,14 @@ editorService.setFont = function(varFontName, varFontSize) {
 		console.log(e);
 	}
 };
-
-/**
- * define tab size
- */
+/** define tab size */
 editorService.setTabSize = function(varTabSize) {
 	editor.getSession().setTabSize(varTabSize);
-} 
-
-/**
- * getAllText
- */
+};
+/** getAllText */
 editorService.getAllText = function() {
 	return editor.getValue();
 };
-
 /**
  * 수행해야할 작업 목록을 가져옵니다.
  * 
@@ -291,8 +223,6 @@ editorService.getAllText = function() {
  * @param varDelimiter 구분자.
  */
 editorService.getSelectedText = function(varDelimiter) {
-	console.log("####### called getQueryText() method demiliter is " + varDelimiter);
-	
 	var varEditorContent = editor.getValue();
 	if("" == varEditorContent) return "";
 	
@@ -361,7 +291,6 @@ editorService.getSelectedText = function(varDelimiter) {
  * @param varDelimiter 
  */
 findPreviousLineText = function(varLineNum, varDelimiter) {
-	
 	for(var i=varLineNum; i>=0; i--) {
 		var startQueryLine = editor.session.getLine(i);
 		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
@@ -370,7 +299,6 @@ findPreviousLineText = function(varLineNum, varDelimiter) {
 			break;
 		}
 	}
-	
 	return -1;
 }
 
@@ -468,7 +396,6 @@ editorService.insertText = function(varText) {
 		console.log(e);
 	}
 };
-
 editorService.addText = function(varText) {
 	try {
 		if("" == editor.getValue()) editor.insert(varText);
@@ -478,14 +405,10 @@ editorService.addText = function(varText) {
 		console.log(e);
 	}
 };
-
 editorService.reNewText = function(varText) {
 	editor.setValue(varText);
 };
-
-/**
- * help dilaog
- */
+/**  help dilaog */
 editorService.helpDialog = function() {
 	try {
 		AceEditorBrowserHandler(editorService.HELP_POPUP);
@@ -497,5 +420,4 @@ editorService.helpDialog = function() {
 //        module.init(editor);
 //        editor.showKeyboardShortcuts()
 //    })
-    
 };
