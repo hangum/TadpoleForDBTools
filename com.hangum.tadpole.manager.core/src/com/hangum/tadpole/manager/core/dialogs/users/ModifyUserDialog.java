@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
@@ -194,7 +195,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		comboApproval.setText(userDAO.getApproval_yn());
 		comboDel.setText(userDAO.getDelYn());
-		String question = userDAO.getSecurity_question();
+		String question = CipherManager.getInstance().decryption(userDAO.getSecurity_question());
 		if (null!= question && !"".equals(question.trim())) {
 			try {
 				SecurityHint questionKey = PublicTadpoleDefine.SecurityHint.valueOf(question);
@@ -203,7 +204,7 @@ public class ModifyUserDialog extends Dialog {
 				// skip
 			}
 		}
-		textAnswer.setText(StringUtils.trimToEmpty(userDAO.getSecurity_answer()));
+		textAnswer.setText(CipherManager.getInstance().decryption(userDAO.getSecurity_answer()));
 	}
 	
 	@Override

@@ -85,7 +85,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		textFile = new Text(grpConnectionType, SWT.BORDER);
 		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		othersConnectionInfo = new OthersConnectionRDBWithoutTunnelingGroup(this, SWT.NONE);
+		othersConnectionInfo = new OthersConnectionRDBWithoutTunnelingGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		init();
@@ -177,6 +177,9 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
 		
 		return true;
 	}

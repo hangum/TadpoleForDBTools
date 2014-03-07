@@ -12,6 +12,8 @@ package com.hangum.tadpole.commons.dialogs.message.dao;
 
 import java.util.Date;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * 실행 쿼리와 쿼리 결과를 포함하는 dao
  * 
@@ -29,7 +31,7 @@ public class SQLHistoryDAO {
 
 	Date endDateExecute;
 	int rows;
-	String result;
+	String result = PublicTadpoleDefine.SUCCESS_FAIL.S.toString();
 	String messsage;
 
 	String userName;

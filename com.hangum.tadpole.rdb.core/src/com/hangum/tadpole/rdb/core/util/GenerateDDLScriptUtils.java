@@ -10,12 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
-import org.apache.log4j.Logger;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -65,7 +64,7 @@ public class GenerateDDLScriptUtils {
 				showTableColumns = new TajoConnectionManager().tableColumnList(userDB, parameter);
 			}
 			
-			sbSQL.append(" SELECT "); //$NON-NLS-1$
+			sbSQL.append("SELECT "); //$NON-NLS-1$
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				sbSQL.append(dao.getField());
@@ -74,7 +73,7 @@ public class GenerateDDLScriptUtils {
 				if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
 				else sbSQL.append(" "); //$NON-NLS-1$
 			}
-			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getName() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "FROM " + tableDAO.getName() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 			
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLSelectAction_8, e);

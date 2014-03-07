@@ -105,12 +105,6 @@ public class PublicTadpoleDefine {
 		PACKAGES
 	};
 	
-	/** query editor에서 실행 모드 */
-	public static enum QUERY_MODE {DEFAULT, EXPLAIN_PLAN};
-
-	/** sql을 각 언어로 컨버팅 해줍니다 */
-	public static enum SQL_TO_APPLICATION {Java_StringBuffer, PHP};
-	
 	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
 	

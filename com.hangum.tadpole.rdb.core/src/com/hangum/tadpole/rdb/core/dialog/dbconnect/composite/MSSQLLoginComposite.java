@@ -159,7 +159,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE);
+		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		init();

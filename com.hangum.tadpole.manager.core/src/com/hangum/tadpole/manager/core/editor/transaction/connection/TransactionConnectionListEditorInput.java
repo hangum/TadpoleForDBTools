@@ -34,7 +34,7 @@ public class TransactionConnectionListEditorInput implements IEditorInput {
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		return null;
+		return ImageDescriptor.getMissingImageDescriptor();
 	}
 
 	@Override

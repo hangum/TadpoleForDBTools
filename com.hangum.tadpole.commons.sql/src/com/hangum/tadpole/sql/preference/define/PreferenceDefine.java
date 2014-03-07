@@ -20,6 +20,9 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class PreferenceDefine {
 	
+	/**시스템이 초기화 되었는지 정의 */
+	public static final String IS_TADPOLE_INITIALIZE = "IS_TADPOLE_INITIALIZE";
+	
 	/** export시 데이터 분리자. */
 	public static final String EXPORT_DILIMITER = "EXPORT_DILIMITER";
 	public static final String EXPORT_DILIMITER_VALUE = ",";
@@ -57,8 +60,22 @@ public class PreferenceDefine {
 		
 		public static final String SQL_FORMATTER_IN_PREFERENCE = "SQL_FORMATTER_IN_PREFERENCE";
 		public static final String SQL_FORMATTER_IN_PREFERENCE_VALUE = "false";
-	
-	
+		
+		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE 	= "SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE";
+		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE_VALUE = "false";
+		
+		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE 	= "SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE";
+		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE_VALUE = "false";
+		
+		public static final String SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE 	= "SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE";
+		public static final String SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE_VALUE = "true";
+		
+		public static final String SQL_FORMATTER_WORD_BREAK_PREFERENCE 	= "SQL_FORMATTER_WORD_BREAK_PREFERENCE";
+		public static final String SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE = "true";
+		
+		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE 	= "SQL_FORMATTER_WORD_WIDTH_PREFERENCE";
+		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "80";
+		
 	/** SESSION TIME OUT */
 	public static final String SESSION_DFEAULT_PREFERENCE = "SESSION_DFEAULT_PREFERENCE";
 	/** SESSION SERVER TIME OUT */

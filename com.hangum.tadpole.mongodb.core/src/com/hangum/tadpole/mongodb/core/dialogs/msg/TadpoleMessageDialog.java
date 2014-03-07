@@ -23,8 +23,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.util.JSONUtil;
-import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.mongodb.core.Messages;
 
 /**
@@ -35,7 +35,7 @@ import com.hangum.tadpole.mongodb.core.Messages;
  */
 public class TadpoleMessageDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(TadpoleMessageDialog.class);
-	private JsonTadpoleEditor textMessage;
+	private TadpoleEditorWidget textMessage;
 	
 	String title;
 	String head;
@@ -85,7 +85,7 @@ public class TadpoleMessageDialog extends Dialog {
 		lblMessage.setText(Messages.TadpoleMessageDialog_2);
 		new Label(container, SWT.NONE);
 		
-		textMessage = new JsonTadpoleEditor(container, SWT.BORDER, "", "");// | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMessage = new TadpoleEditorWidget(container, SWT.BORDER, "", "");
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		initUI();

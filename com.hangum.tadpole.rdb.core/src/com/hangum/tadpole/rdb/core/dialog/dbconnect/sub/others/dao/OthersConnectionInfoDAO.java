@@ -10,6 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
+
 /**
  * Others Database Connection information dialog
  * 
@@ -28,6 +33,10 @@ public class OthersConnectionInfoDAO {
 	boolean isTableFilter = false;
 	String strTableFilterInclude = "";
 	String strTableFilterExclude = "";
+	
+	/** 시스템 브라우저에서 사용 할 url을 기록합니다 */
+	boolean isExterBrowser = false;
+	List<ExternalBrowserInfoDAO> listExterBroswer = new ArrayList<ExternalBrowserInfoDAO>();
 
 	public OthersConnectionInfoDAO() {
 	}
@@ -144,4 +153,32 @@ public class OthersConnectionInfoDAO {
 		this.isShowTables = isShowTables;
 	}
 	
+	/**
+	 * @return the isExterBrowser
+	 */
+	public boolean isExterBrowser() {
+		return isExterBrowser;
+	}
+
+	/**
+	 * @param isExterBrowser the isExterBrowser to set
+	 */
+	public void setExterBrowser(boolean isExterBrowser) {
+		this.isExterBrowser = isExterBrowser;
+	}
+
+	/**
+	 * @return the listExterBroswer
+	 */
+	public List<ExternalBrowserInfoDAO> getListExterBroswer() {
+		return listExterBroswer;
+	}
+
+	/**
+	 * @param listExterBroswer the listExterBroswer to set
+	 */
+	public void setListExterBroswer(List<ExternalBrowserInfoDAO> listExterBroswer) {
+		this.listExterBroswer = listExterBroswer;
+	}
+
 }

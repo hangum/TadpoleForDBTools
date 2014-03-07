@@ -64,7 +64,7 @@ public class TadpoleSystem_UserQuery {
 			
 			return userdb;
 		} else {
-			throw new TadpoleRuntimeException("User already exists. Enter a new ID."); //$NON-NLS-1$
+			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_3);
 		}
 	}
 	
@@ -122,12 +122,12 @@ public class TadpoleSystem_UserQuery {
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$
 	
 		if(null == userInfo) {
-			throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
-		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
-			throw new Exception("Manager is being processed.\r\nPlease contact us."); //$NON-NLS-1$
+			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
+		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) {
+			throw new Exception(Messages.TadpoleSystem_UserQuery_6);
 		} else {
 			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
-				throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
+				throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 			}
 		}
 	
@@ -153,15 +153,15 @@ public class TadpoleSystem_UserQuery {
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("checkSecurityHint", login); //$NON-NLS-1$
 	
 		if(null == userInfo) {
-			throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
+			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
-			throw new Exception("Manager is being processed.\r\nPlease contact us."); //$NON-NLS-1$
+			throw new Exception(Messages.TadpoleSystem_UserQuery_6);
 		} else {
 			if(question.equals(CipherManager.getInstance().decryption(userInfo.getSecurity_question())) &&
 					answer.equals(CipherManager.getInstance().decryption(userInfo.getSecurity_answer())) ) {
 				return userInfo;
 			} else {
-				throw new Exception("Please check the information you have entered."); //$NON-NLS-1$
+				throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 			}
 		}
 	}
