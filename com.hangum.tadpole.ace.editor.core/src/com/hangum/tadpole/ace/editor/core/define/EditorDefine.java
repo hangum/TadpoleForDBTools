@@ -26,10 +26,12 @@ public class EditorDefine {
 	 * 에디터에서 사용할 확장자로 json을 지정.
 	 */
 	public static String EXT_JSON = "ace/mode/json";
+	/** 에디터에서 사용할 json의 initialize text */ 
+	public static String JSON_INITIALIZE_TXT = "{\n\n}";
 	
 	/** 에디터에서 사용할 java script */
 	public static String EXT_JAVASCRIPT = "ace/mode/javascript";
-	
+		
 	/** query editor에서 실행 모드 */
 	public static enum QUERY_MODE {QUERY, EXPLAIN_PLAN};
 	

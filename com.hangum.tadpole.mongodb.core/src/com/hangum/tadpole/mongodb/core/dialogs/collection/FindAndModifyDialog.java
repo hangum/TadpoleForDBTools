@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.help.HelpDefine;
@@ -123,7 +124,7 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel.setText("{Query}");
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, collName);
-		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, "", strAssist);
+		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeField = new Composite(compositeBody, SWT.NONE);
@@ -141,7 +142,7 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel_1.setLayoutData(gd_lblNewLabel_1);
 		lblNewLabel_1.setText("{Field}");
 		
-		textFields = new TadpoleEditorWidget(compositeField, SWT.BORDER, "", strAssist);
+		textFields = new TadpoleEditorWidget(compositeField, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textFields.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeSort = new Composite(compositeBody, SWT.NONE);
@@ -159,7 +160,7 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel_2.setLayoutData(gd_lblNewLabel_2);
 		lblNewLabel_2.setText("{Sort}");
 		
-		textSort = new TadpoleEditorWidget(compositeSort, SWT.BORDER, "", strAssist);
+		textSort = new TadpoleEditorWidget(compositeSort, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeUpdate = new Composite(compositeBody, SWT.NONE);
@@ -177,7 +178,7 @@ public class FindAndModifyDialog extends Dialog {
 		lblNewLabel_3.setLayoutData(gd_lblNewLabel_3);
 		lblNewLabel_3.setText("{Update}");
 		
-		textUpdate = new TadpoleEditorWidget(compositeUpdate, SWT.BORDER, "", strAssist);
+		textUpdate = new TadpoleEditorWidget(compositeUpdate, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textUpdate.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeOthers = new Composite(container, SWT.NONE);

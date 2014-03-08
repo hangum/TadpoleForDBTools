@@ -38,21 +38,15 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleEditorWidget.class);
 	
-//	/** 초기에 사용할 확장자를 지정합니다. */
-//	private String initExt;
+	private String initExt = "";
 	
 	/** 초기설정 텍스트 */
-	private String initContent;
+	private String initContent = "";
 	
 	/**
 	 * 초기 content assist 
 	 */
-	private String initAssist;
-	
-//	/**
-//	 * 에디터를 보여줄 browser
-//	 */
-//	private Browser browserEditor;
+	private String initAssist = "";
 	
 	/**
 	 * browser function 서비스 핸들러.
@@ -63,10 +57,11 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 	 * Create the composite.
 	 * @param parent
 	 * @param style
+	 * @param initExt
 	 * @param initContent
 	 * @param initAssist
 	 */
-	public TadpoleEditorWidget(Composite parent, int style, String initContent, String initAssist) {
+	public TadpoleEditorWidget(Composite parent, int style, String initExt, String initContent, String initAssist) {
 		super(parent, style);
 		
 		GridLayout gridLayout = new GridLayout(1, false);
@@ -77,6 +72,12 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 		setLayout(gridLayout);
 		setBackgroundMode(SWT.INHERIT_FORCE);
 		
+		this.initExt = initExt;
+		if(initExt == EditorDefine.EXT_JSON) {
+			if("".equals(initContent)) {
+				initContent = EditorDefine.JSON_INITIALIZE_TXT;
+			}
+		}
 		this.initContent = initContent;
 		this.initAssist = initAssist;
 		
@@ -104,7 +105,7 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 		browserEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, "", initContent);
+					browserEvaluate(IEditorFunction.INITIALIZE, initExt, "", initContent);
 				} catch(Exception e) {
 					logger.error("browser initialize", e);	  
 				}
@@ -160,6 +161,16 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 			logger.error("getText()", e);
 		}
 		return "";
+	}
+	
+//	@Override
+//	public boolean setFocus() {
+//		browserEvaluate(IEditorFunction.SET_FOCUS);
+//		return true;
+//	}
+	
+	public void setBrowserFocus() {
+		browserEvaluate(IEditorFunction.SET_FOCUS);
 	}
 
 }

@@ -34,10 +34,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
 import com.hangum.tadpole.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
@@ -214,11 +214,11 @@ public class ExecuteProcedureDialog extends Dialog {
 		try {
 			boolean ret = procedureExecutor.exec(parameterList);
 			if(ret) {
-				List<ResultSetTableViewerDAO> listResultDao = procedureExecutor.getResultDAO();
+				List<ResultSetUtilDAO> listResultDao = procedureExecutor.getResultDAO();
 				sqlResultTableViewer = new TableViewer[listResultDao.size()];
 				
 				for(int i=0; i<listResultDao.size(); i++) {
-					ResultSetTableViewerDAO resultDao = listResultDao.get(i);
+					ResultSetUtilDAO resultDao = listResultDao.get(i);
 					
 					sqlResultTableViewer[i] = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION);
 					Table table = sqlResultTableViewer[i].getTable();
@@ -228,11 +228,11 @@ public class ExecuteProcedureDialog extends Dialog {
 					
 					sqlSorter = new SQLResultSorter(-999);
 					
-					SQLResultLabelProvider.createTableColumn(sqlResultTableViewer[i], resultDao.getMapColumns(), resultDao.getMapColumnType(), sqlSorter);
+					SQLResultLabelProvider.createTableColumn(sqlResultTableViewer[i], resultDao, sqlSorter);
 					sqlResultTableViewer[i].setLabelProvider(new SQLResultLabelProvider());
-					sqlResultTableViewer[i].setContentProvider(new SQLResultContentProvider(resultDao.getSourceDataList()));
+					sqlResultTableViewer[i].setContentProvider(new SQLResultContentProvider(resultDao.getDataList()));
 					
-					sqlResultTableViewer[i].setInput(resultDao.getSourceDataList());
+					sqlResultTableViewer[i].setInput(resultDao.getDataList());
 					sqlResultTableViewer[i].setSorter(sqlSorter);
 					
 					TableUtil.packTable(sqlResultTableViewer[i].getTable());

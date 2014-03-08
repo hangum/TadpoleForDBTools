@@ -35,6 +35,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.mongodb.core.Messages;
@@ -126,19 +127,19 @@ public class MongoDBTableEditor extends EditorPart {
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
-		textBasicFind = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, "", strAssist);
+		textBasicFind = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
 		Label lblfield = new Label(compositeBasicHead, SWT.NONE);
 		lblfield.setText(Messages.MongoDBTableEditor_1);
 		
-		textBasicField = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, "", strAssist);
+		textBasicField = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblsort = new Label(compositeBasicHead, SWT.NONE);
 		lblsort.setText(Messages.MongoDBTableEditor_2);
 		
-		textBasicSort = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, "", strAssist);
+		textBasicSort = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBasicSearch = new Composite(compositeBasic, SWT.NONE);
