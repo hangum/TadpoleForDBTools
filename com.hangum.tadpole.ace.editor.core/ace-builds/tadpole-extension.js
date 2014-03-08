@@ -1,7 +1,7 @@
 /**
  * tadpole ace editor extension.
  *  ace example at https://github.com/ajaxorg/ace/wiki/Embedding-API
- *  단축키 목록은 : https://www.dokuwiki.org/plugin:aceeditor 를 참고하고 수정해 가도록 합니다. 기본 에디터의 단축키 맵팽과 흡사합니다. 
+ *  Default keyboard shortcuts : https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts 
  */
 var editorService = {
 	/** initialize editor */
@@ -119,6 +119,7 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
+
 editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},

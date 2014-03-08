@@ -1074,20 +1074,18 @@ public class MainEditor extends EditorExtension {
 			if(isDMLQuestion) if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) return; //$NON-NLS-1$
 		}
 				
+		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO executingSQLDAO = new SQLHistoryDAO();
-		
-		// job
-		Job job = new Job(Messages.MainEditor_45) {
+		final Job jobQueryManager = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(Messages.MainEditor_46 + " [" + reqQuery.getSql() + "]", IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
+				monitor.beginTask(reqQuery.getSql(), IProgressMonitor.UNKNOWN);
 				
 				executingSQLDAO.setStartDateExecute(new Date());
 				executingSQLDAO.setIpAddress(reqQuery.getUserIp());
 				try {
 					// 페이지를 초기화 합니다.
-					pageNumber = 1;	
-					
+					pageNumber = 1;						
 					if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {
 						
 						executingSQLDAO.setStrSQLText(reqQuery.getOriginalSql());
@@ -1127,7 +1125,6 @@ public class MainEditor extends EditorExtension {
 							runSQLOther(reqQuery);
 						}
 					}
-
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
@@ -1147,8 +1144,7 @@ public class MainEditor extends EditorExtension {
 		};
 		
 		// job의 event를 처리해 줍니다.
-		job.addJobChangeListener(new JobChangeAdapter() {
-			
+		jobQueryManager.addJobChangeListener(new JobChangeAdapter() {
 			public void done(IJobChangeEvent event) {
 				final IJobChangeEvent jobEvent = event; 
 				getSite().getShell().getDisplay().asyncExec(new Runnable() {
@@ -1163,7 +1159,8 @@ public class MainEditor extends EditorExtension {
 						// 쿼리 후 화면 정리 작업을 합니다.
 						afterQueryInit(executingSQLDAO, reqQuery);
 						
-						// 쿼리 실행후에 결과 테이블에 포커스가 가도록
+						// 주의) 일반적으로는 포커스가 잘 가지만, 
+						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
 						setOrionTextFocus();
 					}
 				});	// end display.asyncExec
@@ -1171,9 +1168,27 @@ public class MainEditor extends EditorExtension {
 			
 		});	// end job
 		
-		job.setName(userDB.getDisplay_name());
-		job.setUser(true);
-		job.schedule();
+		jobQueryManager.setPriority(Job.INTERACTIVE);
+		jobQueryManager.setName(userDB.getDisplay_name());
+		jobQueryManager.setUser(true);
+		jobQueryManager.schedule();
+		
+//		// job이 끝날때까지 대기합니다.
+//		logger.info("===[job Manager state start]==" + new Date().getTime());
+//		getSite().getShell().getDisplay().syncExec(new Runnable() {
+//			public void run() {
+//				while(true) {
+//					IStatus jobStatus = jobQueryManager.getResult();
+//		//			logger.info("\t\t Job status is " + jobStatus);
+//					if(jobStatus != null) break;
+//					
+//					try {
+//						Thread.sleep(100);
+//					} catch(Exception e) {}
+//				}
+//			}
+//		});
+//		logger.info("===[Job manager state end]==" +  + new Date().getTime());
 	}
 	/**
 	 * 쿼리 후 실행결과를 히스토리화면과 프로파일에 저장합니다.
