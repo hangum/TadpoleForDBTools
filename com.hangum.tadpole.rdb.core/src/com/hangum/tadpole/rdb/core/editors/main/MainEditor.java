@@ -1156,12 +1156,15 @@ public class MainEditor extends EditorExtension {
 							resultTableInit();
 							executeErrorProgress(jobEvent.getResult().getMessage());
 						}
+						
 						// 쿼리 후 화면 정리 작업을 합니다.
 						afterQueryInit(executingSQLDAO, reqQuery);
 						
 						// 주의) 일반적으로는 포커스가 잘 가지만, 
 						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
 						setOrionTextFocus();
+						
+						browserEvaluate(EditorFunctionService.EXECUTE_DONE);
 					}
 				});	// end display.asyncExec
 			}	// end done

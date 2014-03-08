@@ -16,6 +16,7 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
+	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -48,7 +49,10 @@ var editorService = {
 };
 
 var editor;
+/** 에디터가 저장 할 수 있는 상태인지 */
 var isEdited = false;
+/** 자바에서 처리가 끝났는지 */
+var isJavaRunning = false;
 
 /** initialize editor */
 {
@@ -100,6 +104,9 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 editorService.saveData = function() {
 	isEdited = false;
 }
+editorService.executeFlag = function() {
+	isJavaRunning = false;
+}
 /** set editor focus */
 editorService.setFocus = function() {
 	editor.focus();
@@ -119,13 +126,15 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
-
 editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-    		AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+    		if(!isJavaRunning) {
+    			isJavaRunning = true;
+    			var retResulr = AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+    		}
     	} catch(e) {
     		console.log(e);
     	}
@@ -137,7 +146,10 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
     	try {
-    		AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
+    		if(!isJavaRunning) {
+    			isJavaRunning = true;
+    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
+    		}
 	    } catch(e) {
 			console.log(e);
 		}
@@ -321,10 +333,10 @@ findPreviousChar = function(varLineNum, varDelimiter) {
 		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
 		if(lastIndexOf != -1) {
 			arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
-			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
 			break;
 		} else {
-			console.log("\t not found text " + startQueryLine);
+//			console.log("\t not found text " + startQueryLine);
 			arryPreQuery[intArrayPostion] = startQueryLine;
 		}
 		
@@ -363,10 +375,10 @@ findNextCharacter = function(varLineNum, varDelimiter) {
 		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
 		if(lastIndexOf != -1) {
 			arryPreQuery[intArrayPostion] = startQueryLine.substring(0, lastIndexOf+1);
-			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
 			break;
 		} else {
-			console.log("\t not found text " + startQueryLine);
+//			console.log("\t not found text " + startQueryLine);
 			arryPreQuery[intArrayPostion] = startQueryLine;
 		}
 		

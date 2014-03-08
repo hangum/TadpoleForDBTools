@@ -64,8 +64,9 @@ public interface IEditorFunction  {
     
     /**
      * 데이터 저장.
-     * 
      */
     public static final String SAVE_DATA = EDITOR_SERVICE_MAP + ".saveData();";
+    
+    public static final String EXECUTE_DONE = EDITOR_SERVICE_MAP + ".executeFlag();";
     
 }
