@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.JSONUtil;
@@ -95,7 +96,7 @@ public class NewDocumentDialog extends Dialog {
 		lblDataStructure.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblDataStructure.setText("JSON Type Document"); //$NON-NLS-1$
 		
-		textContent = new TadpoleEditorWidget(container, SWT.BORDER, "", "");		
+		textContent = new TadpoleEditorWidget(container, SWT.BORDER, EditorDefine.EXT_JSON, "", "");		
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		textContent.setFocus();

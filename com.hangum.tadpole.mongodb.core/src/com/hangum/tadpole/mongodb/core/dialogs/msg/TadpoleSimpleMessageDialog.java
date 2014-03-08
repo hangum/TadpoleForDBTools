@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.mongodb.core.Messages;
@@ -73,7 +74,7 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
-		tadpoleEditor = new TadpoleEditorWidget(compositeBody, SWT.BORDER, JSONUtil.getPretty(content), "");
+		tadpoleEditor = new TadpoleEditorWidget(compositeBody, SWT.BORDER, EditorDefine.EXT_JSON, JSONUtil.getPretty(content), "");
 		tadpoleEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();

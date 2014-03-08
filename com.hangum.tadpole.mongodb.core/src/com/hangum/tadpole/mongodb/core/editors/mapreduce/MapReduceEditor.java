@@ -34,6 +34,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
@@ -128,7 +129,7 @@ public class MapReduceEditor extends EditorPart {
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
-		textMap = new TadpoleEditorWidget(grpMap, SWT.BORDER, "", strAssist);
+		textMap = new TadpoleEditorWidget(grpMap, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textMap.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpReduce = new Group(sashFormMRF, SWT.NONE);
@@ -140,7 +141,7 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpReduce.marginWidth = 1;
 		grpReduce.setLayout(gl_grpReduce);
 		
-		textReduce = new TadpoleEditorWidget(grpReduce, SWT.BORDER, "", strAssist);
+		textReduce = new TadpoleEditorWidget(grpReduce, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textReduce.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Group grpFinalize = new Group(sashFormMRF, SWT.NONE);
@@ -152,7 +153,7 @@ public class MapReduceEditor extends EditorPart {
 		gl_grpFinalize.marginWidth = 1;
 		grpFinalize.setLayout(gl_grpFinalize);
 		
-		textFinalize = new TadpoleEditorWidget(grpFinalize, SWT.BORDER, "", strAssist);
+		textFinalize = new TadpoleEditorWidget(grpFinalize, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textFinalize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		sashFormMRF.setWeights(new int[] {4, 4, 2});
@@ -181,14 +182,14 @@ public class MapReduceEditor extends EditorPart {
 		lblQuery.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblQuery.setText("Query");
 		
-		textQuery = new TadpoleEditorWidget(grpInput, SWT.BORDER, "", strAssist);
+		textQuery = new TadpoleEditorWidget(grpInput, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblSort = new Label(grpInput, SWT.NONE);
 		lblSort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSort.setText("Sort");
 		
-		textSort = new TadpoleEditorWidget(grpInput, SWT.BORDER, "", strAssist);
+		textSort = new TadpoleEditorWidget(grpInput, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
 		textSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblLimit = new Label(grpInput, SWT.NONE);

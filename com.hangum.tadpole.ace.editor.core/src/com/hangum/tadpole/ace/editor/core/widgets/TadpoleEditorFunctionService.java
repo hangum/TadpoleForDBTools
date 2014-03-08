@@ -39,10 +39,9 @@ public class TadpoleEditorFunctionService extends BrowserFunction {
 //		if(logger.isDebugEnabled()) {
 //			logger.debug("Action ID is " + action);
 //		}
-		
-		switch(action) {
-		
-		}
+//		
+//		switch(action) {
+//		}
 		
 		return null;
 	}

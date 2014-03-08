@@ -78,7 +78,7 @@ Demo Site
  
 Download
 -
-* https://tadpoledbhub.atlassian.net/wiki/display/TADPOLE/Download
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.0/?
  
 License
 -

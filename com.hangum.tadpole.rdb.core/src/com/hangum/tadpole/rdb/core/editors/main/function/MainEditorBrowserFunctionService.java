@@ -57,7 +57,6 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	
 	@Override
 	protected void doExecuteQuery(Object[] arguments) {
-		
 		String strSQL = (String) arguments[1];
 		RequestQuery rq = new RequestQuery(strSQL, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
 		editor.executeCommand(rq);
@@ -68,7 +67,6 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 */
 	@Override
 	protected void doExecutePlan(Object[] arguments) {
-		
 		String strSQL = (String) arguments[1];
 		RequestQuery rq = new RequestQuery(strSQL, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
 		editor.executeCommand(rq);

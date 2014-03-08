@@ -18,10 +18,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.dao.ResultSetTableViewerDAO;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
 import com.hangum.tadpole.sql.util.ResultSetUtils;
 import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 
@@ -47,7 +47,7 @@ public abstract class ProcedureExecutor {
 	protected ProcedureFunctionDAO procedureDAO;
 	
 	/** result dao */
-	protected List<ResultSetTableViewerDAO> resultDAO = new ArrayList<ResultSetTableViewerDAO>();
+	protected List<ResultSetUtilDAO> resultDAO = new ArrayList<ResultSetUtilDAO>();
 
 	/**
 	 * procedure executor
@@ -166,7 +166,7 @@ public abstract class ProcedureExecutor {
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
 		List<Map<Integer, Object>> sourceDataList = ResultSetUtils.getResultToList(rs, 1000, true);
 
-		ResultSetTableViewerDAO resultSet = new ResultSetTableViewerDAO(mapColumns, mapColumnType, sourceDataList);
+		ResultSetUtilDAO resultSet = new ResultSetUtilDAO(mapColumns, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -198,7 +198,7 @@ public abstract class ProcedureExecutor {
 		mapColumnType.put(4, java.sql.Types.DOUBLE);
 		mapColumnType.put(5, java.sql.Types.VARCHAR);
 		
-		ResultSetTableViewerDAO resultSet = new ResultSetTableViewerDAO(mapColumns, mapColumnType, sourceDataList);
+		ResultSetUtilDAO resultSet = new ResultSetUtilDAO(mapColumns, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -209,14 +209,14 @@ public abstract class ProcedureExecutor {
 	/**
 	 * @return the resultDAO
 	 */
-	public List<ResultSetTableViewerDAO> getResultDAO() {
+	public List<ResultSetUtilDAO> getResultDAO() {
 		return resultDAO;
 	}
 
 	/**
 	 * @param resultDAO the resultDAO to set
 	 */
-	public void addResultDAO(ResultSetTableViewerDAO resultDAO) {
+	public void addResultDAO(ResultSetUtilDAO resultDAO) {
 		this.resultDAO.add(resultDAO);
 	}
 

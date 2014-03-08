@@ -1,7 +1,7 @@
 /**
  * tadpole ace editor extension.
  *  ace example at https://github.com/ajaxorg/ace/wiki/Embedding-API
- *  단축키 목록은 : https://www.dokuwiki.org/plugin:aceeditor 를 참고하고 수정해 가도록 합니다. 기본 에디터의 단축키 맵팽과 흡사합니다. 
+ *  Default keyboard shortcuts : https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts 
  */
 var editorService = {
 	/** initialize editor */
@@ -16,6 +16,7 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
+	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -48,7 +49,10 @@ var editorService = {
 };
 
 var editor;
+/** 에디터가 저장 할 수 있는 상태인지 */
 var isEdited = false;
+/** 자바에서 처리가 끝났는지 */
+var isJavaRunning = false;
 
 /** initialize editor */
 {
@@ -100,6 +104,9 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 editorService.saveData = function() {
 	isEdited = false;
 }
+editorService.executeFlag = function() {
+	isJavaRunning = false;
+}
 /** set editor focus */
 editorService.setFocus = function() {
 	editor.focus();
@@ -124,7 +131,10 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-    		AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+    		if(!isJavaRunning) {
+    			isJavaRunning = true;
+    			var retResulr = AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+    		}
     	} catch(e) {
     		console.log(e);
     	}
@@ -136,7 +146,10 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
     	try {
-    		AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
+    		if(!isJavaRunning) {
+    			isJavaRunning = true;
+    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
+    		}
 	    } catch(e) {
 			console.log(e);
 		}
@@ -241,28 +254,28 @@ editorService.getSelectedText = function(varDelimiter) {
 				// 선택된 행에 종료 문자가 있다면 
 					// 행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
 					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
-				console.log(" [1] 선택된 행에 종료 문자가 있다면 .................. ");
+//				console.log(" [1] 선택된 행에 종료 문자가 있다면 .................. ");
 				
 				//
 				// 자신보다 한 행위의 쿼리를 읽어 들입니다.
 				//
-				console.log("========== 선택된 행에 종료 문자가 있다면===");
+//				console.log("========== 선택된 행에 종료 문자가 있다면===");
 				strReturnSQL = findPreviousChar((editor.getCursorPosition().row -1), varDelimiter);
-				console.log("[findPreviousSQL is " + strReturnSQL);
+//				console.log("[findPreviousSQL is " + strReturnSQL);
 
 				strReturnSQL += startQueryLine.substring(0, startQueryLine.lastIndexOf(varDelimiter));
-				console.log("[fully SQL is " + strReturnSQL);
+//				console.log("[fully SQL is " + strReturnSQL);
 				
 			} else {
-				console.log(" [2] 선택된 행에 종료 문자가 없다면 .................. ");
+//				console.log(" [2] 선택된 행에 종료 문자가 없다면 .................. ");
 				// 선택된 행에 종료 문자가 없다면
 				strReturnSQL = findPreviousChar((editor.getCursorPosition().row -1), varDelimiter);
-				console.log("[findPreviousSQL is " + strReturnSQL);
+//				console.log("[findPreviousSQL is " + strReturnSQL);
 				
 				strReturnSQL += startQueryLine + "\n";
 				
 				strReturnSQL += findNextCharacter((editor.getCursorPosition().row +1), varDelimiter);
-				console.log("[findNextSQL is " + strReturnSQL);
+//				console.log("[findNextSQL is " + strReturnSQL);
 			}
 			
 			// 만약에 쿼리를 발견하지 못했다면, 자신의 윗행으로 찾아 마지막 종료 문자의 쿼리를 찾습니다.
@@ -270,11 +283,11 @@ editorService.getSelectedText = function(varDelimiter) {
 				var intDelimiterLineNumber = findPreviousLineText(editor.getCursorPosition().row, varDelimiter);
 				if(-1 !== intDelimiterLineNumber) {
 					strReturnSQL = findPreviousChar(intDelimiterLineNumber-1, varDelimiter);
-					console.log("[findPreviousSQL is " + strReturnSQL);
+//					console.log("[findPreviousSQL is " + strReturnSQL);
 	
 					startQueryLine = editor.session.getLine(intDelimiterLineNumber);
 					strReturnSQL += startQueryLine.substring(0, startQueryLine.lastIndexOf(varDelimiter));
-					console.log("[fully SQL is " + strReturnSQL);
+//					console.log("[fully SQL is " + strReturnSQL);
 				}
 			}
 
@@ -320,10 +333,10 @@ findPreviousChar = function(varLineNum, varDelimiter) {
 		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
 		if(lastIndexOf != -1) {
 			arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
-			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
 			break;
 		} else {
-			console.log("\t not found text " + startQueryLine);
+//			console.log("\t not found text " + startQueryLine);
 			arryPreQuery[intArrayPostion] = startQueryLine;
 		}
 		
@@ -362,10 +375,10 @@ findNextCharacter = function(varLineNum, varDelimiter) {
 		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
 		if(lastIndexOf != -1) {
 			arryPreQuery[intArrayPostion] = startQueryLine.substring(0, lastIndexOf+1);
-			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
 			break;
 		} else {
-			console.log("\t not found text " + startQueryLine);
+//			console.log("\t not found text " + startQueryLine);
 			arryPreQuery[intArrayPostion] = startQueryLine;
 		}
 		
