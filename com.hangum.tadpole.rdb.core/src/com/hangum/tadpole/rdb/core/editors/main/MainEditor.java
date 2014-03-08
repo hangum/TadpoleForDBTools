@@ -1175,23 +1175,6 @@ public class MainEditor extends EditorExtension {
 		jobQueryManager.setName(userDB.getDisplay_name());
 		jobQueryManager.setUser(true);
 		jobQueryManager.schedule();
-		
-//		// job이 끝날때까지 대기합니다.
-//		logger.info("===[job Manager state start]==" + new Date().getTime());
-//		getSite().getShell().getDisplay().syncExec(new Runnable() {
-//			public void run() {
-//				while(true) {
-//					IStatus jobStatus = jobQueryManager.getResult();
-//		//			logger.info("\t\t Job status is " + jobStatus);
-//					if(jobStatus != null) break;
-//					
-//					try {
-//						Thread.sleep(100);
-//					} catch(Exception e) {}
-//				}
-//			}
-//		});
-//		logger.info("===[Job manager state end]==" +  + new Date().getTime());
 	}
 	/**
 	 * 쿼리 후 실행결과를 히스토리화면과 프로파일에 저장합니다.
