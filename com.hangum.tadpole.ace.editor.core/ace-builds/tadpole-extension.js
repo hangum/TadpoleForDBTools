@@ -254,28 +254,28 @@ editorService.getSelectedText = function(varDelimiter) {
 				// 선택된 행에 종료 문자가 있다면 
 					// 행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
 					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
-				console.log(" [1] 선택된 행에 종료 문자가 있다면 .................. ");
+//				console.log(" [1] 선택된 행에 종료 문자가 있다면 .................. ");
 				
 				//
 				// 자신보다 한 행위의 쿼리를 읽어 들입니다.
 				//
-				console.log("========== 선택된 행에 종료 문자가 있다면===");
+//				console.log("========== 선택된 행에 종료 문자가 있다면===");
 				strReturnSQL = findPreviousChar((editor.getCursorPosition().row -1), varDelimiter);
-				console.log("[findPreviousSQL is " + strReturnSQL);
+//				console.log("[findPreviousSQL is " + strReturnSQL);
 
 				strReturnSQL += startQueryLine.substring(0, startQueryLine.lastIndexOf(varDelimiter));
-				console.log("[fully SQL is " + strReturnSQL);
+//				console.log("[fully SQL is " + strReturnSQL);
 				
 			} else {
-				console.log(" [2] 선택된 행에 종료 문자가 없다면 .................. ");
+//				console.log(" [2] 선택된 행에 종료 문자가 없다면 .................. ");
 				// 선택된 행에 종료 문자가 없다면
 				strReturnSQL = findPreviousChar((editor.getCursorPosition().row -1), varDelimiter);
-				console.log("[findPreviousSQL is " + strReturnSQL);
+//				console.log("[findPreviousSQL is " + strReturnSQL);
 				
 				strReturnSQL += startQueryLine + "\n";
 				
 				strReturnSQL += findNextCharacter((editor.getCursorPosition().row +1), varDelimiter);
-				console.log("[findNextSQL is " + strReturnSQL);
+//				console.log("[findNextSQL is " + strReturnSQL);
 			}
 			
 			// 만약에 쿼리를 발견하지 못했다면, 자신의 윗행으로 찾아 마지막 종료 문자의 쿼리를 찾습니다.
@@ -283,11 +283,11 @@ editorService.getSelectedText = function(varDelimiter) {
 				var intDelimiterLineNumber = findPreviousLineText(editor.getCursorPosition().row, varDelimiter);
 				if(-1 !== intDelimiterLineNumber) {
 					strReturnSQL = findPreviousChar(intDelimiterLineNumber-1, varDelimiter);
-					console.log("[findPreviousSQL is " + strReturnSQL);
+//					console.log("[findPreviousSQL is " + strReturnSQL);
 	
 					startQueryLine = editor.session.getLine(intDelimiterLineNumber);
 					strReturnSQL += startQueryLine.substring(0, startQueryLine.lastIndexOf(varDelimiter));
-					console.log("[fully SQL is " + strReturnSQL);
+//					console.log("[fully SQL is " + strReturnSQL);
 				}
 			}
 

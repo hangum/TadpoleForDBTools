@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -850,7 +851,7 @@ public class MainEditor extends EditorExtension {
 					}	// end seq
 				} // end if(event.getProperty()
 			} //
-		}); // end property change
+		}); // end property change		
 	}
 	
 	/**
