@@ -176,7 +176,7 @@ public class ExplorerViewer extends ViewPart {
 		compositeBody.setLayout(gl_compositeBody);
 
 		tabFolderObject = new CTabFolder(compositeBody, SWT.NONE);
-		tabFolderObject.setBorderVisible(false);		
+		tabFolderObject.setBorderVisible(false);
 		tabFolderObject.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
 		tabFolderObject.addSelectionListener(new SelectionAdapter() {
@@ -307,7 +307,7 @@ public class ExplorerViewer extends ViewPart {
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 				
 		// hive
-		} else if (dbDefine == DBDefine.HIVE_DEFAULT) {
+		} else if (dbDefine == DBDefine.HIVE_DEFAULT || dbDefine == DBDefine.HIVE2_DEFAULT) {
 			createTable();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 

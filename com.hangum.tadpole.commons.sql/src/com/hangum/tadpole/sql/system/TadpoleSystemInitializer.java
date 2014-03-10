@@ -165,18 +165,19 @@ public class TadpoleSystemInitializer {
 		if (SystemDefine.MAJOR_VERSION.equals(tsdao.getMajor_version()) && SystemDefine.SUB_VERSION.equals(tsdao.getSub_version())) {
 			return true;
 		} else {
-			logger.info("System migration start....");
-			
-			// 1.0.0 ~ 1.1.1까지의 버전을 마이그레이션 합니다.
-			if("1.0.0".equals(tsdao.getMajor_version()) || "1.0.1".equals(tsdao.getMajor_version()) || "1.1.0".equals(tsdao.getMajor_version()) || "1.1.1".equals(tsdao.getMajor_version())) {
-				SystemMigration migr = new SystemMigration100to111();
-				migr.migration(SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION);
-				
-				migr = new SystemMigration100to112();
-				migr.migration(SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION);
-			}
-
-			logger.info("System migration end....");
+//			 현재 동작하지 않으므로 블럭 처리 합니다. - hangum 14.03.07
+//			logger.info("System migration start....");
+//			
+//			// 1.0.0 ~ 1.1.1까지의 버전을 마이그레이션 합니다.
+//			if("1.0.0".equals(tsdao.getMajor_version()) || "1.0.1".equals(tsdao.getMajor_version()) || "1.1.0".equals(tsdao.getMajor_version()) || "1.1.1".equals(tsdao.getMajor_version())) {
+//				SystemMigration migr = new SystemMigration100to111();
+//				migr.migration(SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION);
+//				
+//				migr = new SystemMigration100to112();
+//				migr.migration(SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION);
+//			}
+//
+//			logger.info("System migration end....");
 
 			return true;
 		}

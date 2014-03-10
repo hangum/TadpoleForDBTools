@@ -31,7 +31,6 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * RDB 디비 summary 정보를 출력하는 composite.

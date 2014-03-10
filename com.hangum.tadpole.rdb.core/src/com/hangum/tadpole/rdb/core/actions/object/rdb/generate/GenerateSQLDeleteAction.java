@@ -62,8 +62,8 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
 			
-			sbSQL.append(" DELETE FROM " + tableDAO.getName() + " "); //$NON-NLS-1$ //$NON-NLS-2$
-			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+			sbSQL.append("DELETE FROM " + tableDAO.getName() + " "); //$NON-NLS-1$ //$NON-NLS-2$
+			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 			int cnt = 0;
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);

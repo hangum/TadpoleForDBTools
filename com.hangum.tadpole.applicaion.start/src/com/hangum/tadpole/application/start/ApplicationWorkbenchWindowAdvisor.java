@@ -17,15 +17,12 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.ExitConfirmation;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -38,14 +35,12 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
 import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
@@ -78,16 +73,17 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    	String prop = IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS;
 //    	PlatformUI.getPreferenceStore().setValue(prop, false);
     	
-        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();        
-        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
-        configurer.setShowCoolBar(true);
-        configurer.setShowStatusLine(false);
-        configurer.setShowMenuBar(false);
+        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
         
-        configurer.setShowProgressIndicator(false);
+        // remove this line(fixed at https://github.com/hangum/TadpoleForDBTools/issues/350)
+//        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
+        configurer.setShowCoolBar(true);
+        configurer.setShowStatusLine(true);
+        configurer.setShowMenuBar(false);
+        configurer.setShowProgressIndicator(true);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
         
-        // Browser screen max, not min.
+        // fullscreen
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(false);
     
@@ -95,9 +91,53 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
     	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
     
-        initSystem();
-        
-        mainUICallback();
+//    	checkSupportBrowser();
+    	
+        login();
+    }
+    
+    @Override
+    public void postWindowOpen() {
+    	// fullscreen
+    	getWindowConfigurer().getWindow().getShell().setMaximized(true);;
+    	
+    	// main ui callback thread
+    	mainUICallback();
+    	   
+    	// If login after does not DB exist, DB connect Dialog open.
+    	try {
+    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+    			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+	    		if(0 == mv.getAllTreeList().size()) {
+	    			ConnectDatabase cd = new ConnectDatabase();
+	    			cd.run();
+	    		}
+    		}
+    	} catch(Exception e) {
+    		logger.error("Is DB list?", e); //$NON-NLS-1$
+    	}    	
+    }
+    
+    /**
+     * check support browser
+     */
+    private void checkSupportBrowser() {
+	//    	try {
+	//    	// Add HttpListener(User data collection
+	//		System.out.println("================= start add session ==========================");
+	//		TadpoleSessionListener listener = new TadpoleSessionListener();
+	//		RWT.getUISession().getHttpSession().getServletContext().addListener(listener);//"com.hangum.tadpole.application.start.sessions.TadpoleSessionListener");
+	//		System.out.println("================= end add session ==========================");
+	//	} catch(Exception e) {
+	//		e.printStackTrace();
+	//	}
+				
+		// Show Information Dialog(Is not Firefox, Chrome, Safari)
+		if(!RequestInfoUtils.isSupportBrowser()) {
+			UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), RequestInfoUtils.getUserBrowser());
+			uiDialog.open();
+		}
     }
     
     /**
@@ -152,37 +192,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     /**
-     * System initialize 
+     * login 
      */
-    private void initSystem() {
-//    	try {
-//	    	// Add HttpListener(User data collection
-//			System.out.println("================= start add session ==========================");
-//			TadpoleSessionListener listener = new TadpoleSessionListener();
-//			RWT.getUISession().getHttpSession().getServletContext().addListener(listener);//"com.hangum.tadpole.application.start.sessions.TadpoleSessionListener");
-//			System.out.println("================= end add session ==========================");
-//    	} catch(Exception e) {
-//    		e.printStackTrace();
-//    	}
-    			
-    	// Show Information Dialog(Is not Firefox, Chrome, Safari)
-    	String isBrowser = RequestInfoUtils.isTadpoleRunning();
-    	if(!"".equals(isBrowser)) {
-    		UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), isBrowser);
-    		uiDialog.open();
-    	}
-    	
-    	// If the system table does not exist, create a table.
-    	try {
-    		TadpoleSystemInitializer.initSystem();
-    	} catch(Exception e) {
-    		logger.error("System initialize", e); //$NON-NLS-1$
-    		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
-    		
-    		System.exit(0);
-    	}
-    	
+    private void login() {
     	// If you already login?
     	if(0 == SessionManager.getSeq()) {
     	
@@ -219,23 +231,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    		}
 	    	}
     	} 
-    }
-    
-    @Override
-    public void postWindowOpen() {
-    	// If login after does not DB exist, DB connect Dialog open.
-    	try {
-    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
-    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
-    			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-	    		if(0 == mv.getAllTreeList().size()) {
-	    			ConnectDatabase cd = new ConnectDatabase();
-	    			cd.run();
-	    		}
-    		}
-    	} catch(Exception e) {
-    		logger.error("Is DB list?", e); //$NON-NLS-1$
-    	}    	
     }
     
     /**

@@ -10,17 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util;
 
-import java.io.StringReader;
 import java.sql.ResultSet;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import net.sf.jsqlparser.parser.CCJSqlParserManager;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.Select;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * <pre>
@@ -109,24 +106,42 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static boolean isStatement(String strSQL) {
-		boolean isStatement = false;
-		
 		strSQL = removeComment(strSQL);
 		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
 			return true;
 		} else {
-			try {
-				CCJSqlParserManager parserManager = new CCJSqlParserManager();
-				Statement statement = parserManager.parse(new StringReader(strSQL));
-				
-				if(statement instanceof Select) return true;
-			} catch(Exception e) {
-				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
-			}
+//			add issue https://github.com/JSQLParser/JSqlParser/issues/31
+//			try {
+//				// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
+//				// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
+//				if(!isEnglish(strSQL)) return false;
+//				
+//				CCJSqlParserManager parserManager = new CCJSqlParserManager();
+//				Statement statement = parserManager.parse(new StringReader(strSQL));
+//				if(statement instanceof Select) return true;
+//			} catch(Exception e) {
+//				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
+//			}
+			return false;
 		}
 		
-		return isStatement;
+//		return false;
 	}
+	
+//	/**
+//	 * 영문인지 검사합니다.
+//	 * @param strValue
+//	 * @return
+//	 */
+//	public static boolean isEnglish(String strValue) {
+//		if(strValue == null || strValue.length() == 0) return false;
+//		
+//		char charVal = strValue.charAt(0);
+//		if(charVal >= 65 && charVal <= 90) return true; 	// 소문자
+//		if(charVal >= 97 && charVal <= 122) return true; 	// 대문자 
+//		
+//		return false;
+//	}
 	
 	/**
 	 * INSERT 문을 생성합니다.
@@ -160,12 +175,14 @@ public class SQLUtil {
 	}
 	
 	/**
-	 * 쿼리 텍스트에 쿼리 이외의 특수 문자를 제거해 줍니다.
+	 * 쿼리를 jdbc에서 실행 가능한 쿼리로 보정합니다.
 	 * 
 	 * @param exeSQL
 	 * @return
 	 */
-	public static String executeQuery(String exeSQL) {
+	public static String sqlExecutable(String exeSQL) {
+		
+//		tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
 		try {
 //			
 //			https://github.com/hangum/TadpoleForDBTools/issues/140 오류로 불럭지정하였습니다.
@@ -185,7 +202,9 @@ public class SQLUtil {
 //			exeSQL = exeSQL.replaceAll("(\r\n|\n|\r)", " ");
 			
 			// 모든 쿼리에 공백 주석 제거
+			exeSQL = removeComment(exeSQL);
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
+			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DILIMITER);
 			
 		} catch(Exception e) {
 			logger.error("query execute", e);

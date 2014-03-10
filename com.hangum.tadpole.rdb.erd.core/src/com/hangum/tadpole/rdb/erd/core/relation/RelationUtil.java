@@ -255,11 +255,10 @@ public class RelationUtil {
 				for (Column column : tarTabMod.getColumns()) targetColumnMap.put(column.getField(), column);
 				
 				// source 컬럼 정보
-				Column col = sourceColumnsMap.get(refTabDAO.getColumn_name());
-				
+				Column col = sourceColumnsMap.get(refTabDAO.getColumn_name().replaceAll(",", ""));
 				
 				// target 컬럼 정보
-				Column colR = targetColumnMap.get(refTabDAO.getReferenced_column_name());
+				Column colR = targetColumnMap.get(refTabDAO.getReferenced_column_name().replaceAll(",", ""));
 				if(logger.isDebugEnabled()) {
 					if(col == null || colR == null) {
 						logger.debug("###[table index]###############################################################################");

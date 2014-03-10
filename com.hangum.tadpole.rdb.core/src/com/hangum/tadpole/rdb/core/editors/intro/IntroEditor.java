@@ -51,7 +51,7 @@ public class IntroEditor extends EditorPart {
 	private Browser browser;
 	
 	/** default dona home */
-	public static String[] ARRAY_DONATION_HOME_PAGE = {"www.osci.kr", "http://www.xenonix.com"}; //$NON-NLS-1$ //$NON-NLS-2$
+//	public static String[] ARRAY_DONATION_HOME_PAGE = {"http://www.xenonix.com"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public IntroEditor() {
 		super();
@@ -125,7 +125,7 @@ public class IntroEditor extends EditorPart {
 		Group grpDonor = new Group(parent, SWT.BORDER);
 		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.IntroEditor_0);
-		GridLayout gl_grpDonor = new GridLayout(3, false);
+		GridLayout gl_grpDonor = new GridLayout(2, false);
 		gl_grpDonor.verticalSpacing = 2;
 		gl_grpDonor.marginHeight = 2;
 		gl_grpDonor.horizontalSpacing = 2;
@@ -136,8 +136,8 @@ public class IntroEditor extends EditorPart {
 //		lblWwwcubridorg.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 //		lblWwwcubridorg.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/CUBRID.png")); //$NON-NLS-1$
 
-		CLabel lblOpenSourceCunsulting = new CLabel(grpDonor, SWT.BORDER);
-		lblOpenSourceCunsulting.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/OpenSourceConsulting.png")); //$NON-NLS-1$
+//		CLabel lblOpenSourceCunsulting = new CLabel(grpDonor, SWT.BORDER);
+//		lblOpenSourceCunsulting.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/OpenSourceConsulting.png")); //$NON-NLS-1$
 		
 		CLabel lblXenonix = new CLabel(grpDonor, SWT.BORDER);
 		lblXenonix.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/xenonix_logo.png")); //$NON-NLS-1$
@@ -151,9 +151,9 @@ public class IntroEditor extends EditorPart {
 //		labelCubrid.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 //		labelCubrid.setText(Messages.IntroEditor_label_text);
 		
-		CLabel labelOsci = new CLabel(grpDonor, SWT.NONE);
-		labelOsci.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		labelOsci.setText(Messages.IntroEditor_label_1_text);
+//		CLabel labelOsci = new CLabel(grpDonor, SWT.NONE);
+//		labelOsci.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+//		labelOsci.setText(Messages.IntroEditor_label_1_text);
 		
 		CLabel labelXenonix = new CLabel(grpDonor, SWT.NONE);
 		labelXenonix.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -162,7 +162,7 @@ public class IntroEditor extends EditorPart {
 		// dumy 
 		CLabel labelAllDonerList= new CLabel(grpDonor, SWT.NONE);
 		labelAllDonerList.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		labelAllDonerList.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List' target='_blank'>All donor and Donation method</a>");
+		labelAllDonerList.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List' target='_blank'>All donor</a>");
 		
 		setBrowserURL();		
 	}

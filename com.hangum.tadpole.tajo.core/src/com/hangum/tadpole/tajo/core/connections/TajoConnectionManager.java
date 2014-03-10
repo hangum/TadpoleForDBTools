@@ -17,16 +17,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.engine.connections.ConnectionInterfact;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtils;
+import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
 import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
 
 /**
@@ -36,7 +36,7 @@ import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
  * @author hangum
  *
  */
-public class TajoConnectionManager {
+public class TajoConnectionManager implements ConnectionInterfact {
 	private static final Logger logger = Logger.getLogger(TajoConnectionManager.class);
 	
 	/**
@@ -46,7 +46,7 @@ public class TajoConnectionManager {
 	 * @param sqlQuery
 	 * @return
 	 */
-	public static void executeUpdate(UserDBDAO userDB, String sqlQuery) throws Exception {
+	public void executeUpdate(UserDBDAO userDB, String sqlQuery) throws Exception {
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
 		
@@ -65,10 +65,13 @@ public class TajoConnectionManager {
 	 * 
 	 * @param userDB
 	 * @param requestQuery
+	 * @param queryResultCount
+	 * @param isResultComma
+	 * 
 	 * @throws Exception
 	 */
-	public static Map<String, Object> select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
-		Map<String, Object> retMap = new HashMap<String, Object>();
+	public ResultSetUtilDAO select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
+		ResultSetUtilDAO retResultQuery = null;
 		
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
 		
@@ -81,21 +84,7 @@ public class TajoConnectionManager {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-//			ResultSetMetaData  rsm = rs.getMetaData();
-//			int columnCount = rsm.getColumnCount();
-//			for(int i=0; i<columnCount; i++) {
-//				System.out.println("[column info]" + i + "==> " +  rsm.getColumnLabel(i+1));
-//			}
-			
-			// column의 data type을 얻습니다.
-			retMap.put("mapColumnType", ResultSetUtils.getColumnType(rs.getMetaData()));
-			
-			// column name을 얻습니다. 
-			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
-			retMap.put("mapColumns", ResultSetUtils.getColumnName(rs));
-			
-			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-			retMap.put("sourceDataList", ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma));
+			return new ResultSetUtilDAO(rs, queryResultCount, isResultComma);
 		} catch(Exception e) {
 			logger.error("Tajo select", e);
 			throw e;
@@ -105,8 +94,6 @@ public class TajoConnectionManager {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 		}
-		
-		return retMap;
 	}
 	
 	/**
@@ -114,7 +101,7 @@ public class TajoConnectionManager {
 	 * 
 	 * @param userDB
 	 */
-	public static void connectionCheck(UserDBDAO userDB) throws Exception {
+	public void connectionCheck(UserDBDAO userDB) throws Exception {
 		Connection conn = null;
 		ResultSet rs = null;
 		
@@ -138,7 +125,7 @@ public class TajoConnectionManager {
 	 * @param userDB
 	 * @throws Exception
 	 */
-	public static List<TableDAO> tableList(UserDBDAO userDB) throws Exception {
+	public List<TableDAO> tableList(UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
 		Connection conn = null;
@@ -179,7 +166,7 @@ public class TajoConnectionManager {
 	 * @param tbName
 	 * @throws Exception
 	 */
-	public static List<TableColumnDAO> tableColumnList(UserDBDAO userDB, Map<String, String> mapParam) throws Exception {
+	public List<TableColumnDAO> tableColumnList(UserDBDAO userDB, Map<String, String> mapParam) throws Exception {
 		List<TableColumnDAO> showTableColumns = new ArrayList<TableColumnDAO>();
 		Connection conn = null;
 		ResultSet rs = null;

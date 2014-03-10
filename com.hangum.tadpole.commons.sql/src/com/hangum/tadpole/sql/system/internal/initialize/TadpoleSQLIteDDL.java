@@ -33,6 +33,8 @@ public class TadpoleSQLIteDDL extends NLS {
 	
 	public static String notes;
 	public static String notes_detail;
+	
+	public static String external_browser_info;
 
 	static {
 		// initialize resource bundle

@@ -75,7 +75,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			else if(DBDefine.MONGODB_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
 			
-			else if(DBDefine.HIVE_DEFAULT == dbType) 
+			else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
 			
 			else if(DBDefine.TAJO_DEFAULT == dbType) 
@@ -107,9 +107,9 @@ public class ManagerLabelProvider extends LabelProvider {
 			
 			String retText = "";
 			if(DBOperationType.PRODUCTION.toString().equals(dao.getOperation_type())) {
-				retText = PRODUCTION_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 1) + "] " + END_TAG;
+				retText = PRODUCTION_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 3) + "] " + END_TAG;
 			} else {
-				retText = DEVELOPMENT_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 1) + "] " + END_TAG;
+				retText = DEVELOPMENT_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 3) + "] " + END_TAG;
 			}
 			
 			// 자신의 디비만 보이도록 수정
@@ -124,7 +124,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			String strComment = "".equals(dao.getDescription())?"":" (" + dao.getDescription() + ")";
 			
-			return "[" + dao.getShared_type() + "] " + dao.getName() + strComment;
+			return "[" + StringUtils.substring(dao.getShared_type(), 0, 3) + "] " + dao.getName() + strComment;
 		}
 		
 		return "## not set ##"; //$NON-NLS-1$

@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,7 +32,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionHiveGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionBigDataGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
@@ -47,14 +48,14 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(TajoLoginComposite.class);
+	private static final Logger logger = Logger.getLogger(TajoLoginComposite.class);
 	protected Text textHost;
 	protected Text textUser;
 	protected Text textPassword;
 	protected Text textDatabase;
 	protected Text textPort;
 	
-	protected OthersConnectionHiveGroup othersConnectionInfo;
+	protected OthersConnectionBigDataGroup othersConnectionInfo;
 	
 	public TajoLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
 		super("Sample Apache Tajo", DBDefine.TAJO_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
@@ -150,7 +151,7 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		othersConnectionInfo = new OthersConnectionHiveGroup(this, SWT.NONE);
+		othersConnectionInfo = new OthersConnectionBigDataGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		init();
@@ -199,6 +200,9 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 				}
 			}
 		}
+		
+		// Initialize otherConnectionComposite
+		othersConnectionInfo.callBackUIInit(textHost.getText());
 		
 		textHost.setFocus();
 	}
@@ -255,6 +259,13 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
+		
 		return true;
+	}
+
+	public String getTextHost() {
+		return textHost.getText();
 	}
 }

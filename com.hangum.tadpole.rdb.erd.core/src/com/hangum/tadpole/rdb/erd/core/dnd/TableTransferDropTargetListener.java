@@ -170,7 +170,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 		param.put("table", strTBName);			 //$NON-NLS-1$
 
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-			return TajoConnectionManager.tableColumnList(userDB, param);
+			return new TajoConnectionManager().tableColumnList(userDB, param);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			return sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$

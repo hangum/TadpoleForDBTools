@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.BrowserActivator;
@@ -82,11 +83,14 @@ public class AboutDialog extends Dialog {
 		composite_1.setLayout(new GridLayout(1, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Label lblNewLabel = new Label(composite_1, SWT.NONE);
-		lblNewLabel.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION);
-		
-		Label lblReleaseDate = new Label(composite_1, SWT.NONE);
-		lblReleaseDate.setText(Messages.AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE);
+		// Thanks, stariki
+		Text txtVersion = new Text(composite_1, SWT.NONE) ;
+		txtVersion.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION);
+		txtVersion.setEditable(false);
+
+		Text txtRleaseDate = new Text(composite_1, SWT.NONE) ;
+		txtRleaseDate.setText(Messages.AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE);
+		txtRleaseDate.setEditable(false);
 		
 		Label label = new Label(composite_1, SWT.NONE);
 		
@@ -104,7 +108,7 @@ public class AboutDialog extends Dialog {
 		
 		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
 		lblLicenseLgpl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblLicenseLgpl.setText("License: <a href=\"http://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License\" target=\"_blank\">LGPL</a>");
+		lblLicenseLgpl.setText("License: <a href=\"http://www.gnu.org/licenses/why-not-lgpl.en.html\" target=\"_blank\">LGPL</a>");
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );

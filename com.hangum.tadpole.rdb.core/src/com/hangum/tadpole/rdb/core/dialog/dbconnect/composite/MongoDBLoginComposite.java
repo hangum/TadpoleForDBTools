@@ -176,7 +176,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		comboLocale.setVisibleItemCount(12);
 		comboLocale.select(0);
 
-		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE);
+		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		init();
@@ -225,6 +225,9 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 				}
 			}
 		}
+		
+		//
+		othersConnectionInfo.callBackUIInit(textHost.getText(), textPort.getText());
 		
 		textHost.setFocus();
 	}
@@ -279,6 +282,9 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
 		
 		return true;
 	}

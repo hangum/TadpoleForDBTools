@@ -17,12 +17,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.custom.CTabFolder;
@@ -41,16 +41,17 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
+import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
-import com.hangum.tadpole.editor.core.rdb.texteditor.function.EditorBrowserFunctionService;
-import com.hangum.tadpole.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -71,7 +72,7 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class ServerSideJavaScriptEditor extends EditorPart {
+public class ServerSideJavaScriptEditor extends EditorExtension {
 	/**
 	 * Logger for this class
 	 */
@@ -84,11 +85,6 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	/** save field */
 	private boolean isFirstLoad = false;
 	private boolean isDirty = false;
-	
-	private static final String URL = "orion/tadpole/editor/mongoDBEmbeddededitor.html"; //$NON-NLS-1$
-	private Browser browserQueryEditor;
-	/** browser.browserFunction의 서비스 헨들러 */
-	private JavaScriptBrowserFunctionService editorService;
 	
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
@@ -144,6 +140,8 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				DBInformationDialog dialog = new DBInformationDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 				dialog.open();
+				
+				setFocus();
 			}
 		});
 		
@@ -155,7 +153,12 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_SCRIPT_EXECUTE_QUERY_FUNCTION);
+				try {
+					String strContent = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+					executeEval(strContent);
+				} catch(Exception ee) {
+					logger.error("Execute JS", ee);
+				}
 			}
 		});
 		
@@ -166,7 +169,14 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 		tltmDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				browserEvaluate(JavaScriptBrowserFunctionService.JAVA_DOWNLOAD_SQL);
+				if(!MessageDialog.openConfirm(null, "Conforim", "Do you want SQL Download?")) return;
+				
+				try {
+					String strJSContent = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+					downloadJavaScript(getUserDB().getDisplay_name() + ".js",  strJSContent);
+				} catch(Exception ee) {
+					logger.error("Download JS", ee);
+				}
 			}
 		});
 		tltmDownload.setToolTipText("Download JavaScript"); //$NON-NLS-1$
@@ -180,14 +190,15 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				MongoDBShortcutHelpDialog dialog = new MongoDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
 				dialog.open();
+				
+				setFocus();
 			}
 		});
 		tltmHelp.setToolTipText("Editor Shortcut Help"); //$NON-NLS-1$
 		
 		browserQueryEditor = new Browser(compositeBody, SWT.BORDER);
 		browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		addBrowserHandler();
-		browserQueryEditor.setUrl(URL);
+		addBrowserService();
 		
 		Composite compositeTail = new Composite(sashForm, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -242,10 +253,10 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	
 		if(!"".equals(save_id)) {
 			try {
-				Object resultObj = browserQueryEditor.evaluate(EditorBrowserFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
-				if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
-					monitor.setCanceled(true);
-				}
+//				Object resultObj = browserQueryEditor.evaluate(EditorFunctionService.JAVA_SCRIPT_SAVE_FUNCTION);
+//				if(!(resultObj instanceof Boolean && (Boolean) resultObj)) {
+//					monitor.setCanceled(true);
+//				}
 			} catch(SWTException e) {
 				logger.error(RequestInfoUtils.requestInfo("doSave exception", SessionManager.getEMAIL()), e); //$NON-NLS-1$
 				monitor.setCanceled(true);
@@ -357,19 +368,14 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	/**
 	 * browser initialize 
 	 */
-	private void addBrowserHandler() {
+	private void addBrowserService() {
+		browserQueryEditor.setUrl(DEV_DB_URL);
+		
 		registerBrowserFunctions();
 		
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
-				try {
-					browserQueryEditor.evaluate("getEditor();");
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-
-				String callCommand = TadpoleEditorUtils.makeCommand("mapreduce.js", getInputJavaScriptContent(), "");
-				browserEvaluate(callCommand);
+				browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_JAVASCRIPT, "", getInputJavaScriptContent());
 			}
 			public void changed( ProgressEvent event ) {}
 		});
@@ -391,26 +397,17 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	/**
 	 * register browser function
 	 */
-	private void registerBrowserFunctions() {
-		editorService = new JavaScriptBrowserFunctionService(browserQueryEditor, JavaScriptBrowserFunctionService.EDITOR_SERVICE_HANDLER, this);
+	protected void registerBrowserFunctions() {
+		editorService = new JavaScriptBrowserFunctionService(browserQueryEditor, EditorFunctionService.EDITOR_SERVICE_HANDLER, this);
 	}
 	
-	/**
-	 * unregister browser function
-	 */
-	private void unregisterBrowserFunctions() {
-		if(editorService != null && editorService instanceof BrowserFunction) {
-			editorService.dispose();
-		}
-	}
-
 	@Override
 	public void setFocus() {
+		setOrionTextFocus();
 	}
 	
 	@Override
 	public void dispose() {
-		unregisterBrowserFunctions();
 		unregisterServiceHandler();
 		super.dispose();
 	}
@@ -482,7 +479,7 @@ public class ServerSideJavaScriptEditor extends EditorPart {
 	 * 
 	 * @param strJavaScript
 	 */
-	public void executeEval(String strJavaScript) {
+	private void executeEval(String strJavaScript) {
 		Object[] arryArgs = null;//{25, 34};
 		logger.debug("[original javascript]" + strJavaScript);
 		

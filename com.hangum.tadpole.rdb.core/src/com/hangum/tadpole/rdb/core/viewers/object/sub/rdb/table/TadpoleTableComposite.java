@@ -79,7 +79,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
@@ -179,7 +178,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
+					// 테이블 스크립트가 아니라 테이블 명이 에디터에 들어가도록 수정.
+					FindEditorAndWriteQueryUtil.runAtPosition(tableDAO.getName());//GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
 				}
 			}
 		});
@@ -206,7 +206,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 						} else {
-							showTableColumns = TajoConnectionManager.tableColumnList(userDB, mapParam);
+							showTableColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);
 						}
 						
 						if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()){
@@ -585,11 +585,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
 				
-		if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			showTables = new TajoConnectionManager().tableList(userDB);
 		} else {
-			showTables = TajoConnectionManager.tableList(userDB);
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$			
 		}
 		
 		/** filter 정보가 있으면 처리합니다. */

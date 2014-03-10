@@ -295,7 +295,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			if(DBDefine.getDBDefine(loginInfo) == DBDefine.MONGODB_DEFAULT) {
 				MongoConnectionManager.getInstance(userDB);
 			} else if(DBDefine.getDBDefine(loginInfo) == DBDefine.TAJO_DEFAULT) {
-				TajoConnectionManager.connectionCheck(loginInfo);
+				new TajoConnectionManager().connectionCheck(loginInfo);
 			} else {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
 				sqlClient.queryForList("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$

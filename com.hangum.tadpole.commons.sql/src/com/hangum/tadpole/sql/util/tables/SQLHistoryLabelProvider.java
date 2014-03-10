@@ -47,6 +47,9 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 				case 3: return ""+historyDAO.getRows();
 				case 4: return historyDAO.getResult();
 				case 5: return historyDAO.getMesssage();
+				case 6: return historyDAO.getUserName();
+				case 7: return historyDAO.getDbName();
+				case 8: return historyDAO.getIpAddress();
 			}
 		} else if(element instanceof TadpoleMessageDAO) {
 			TadpoleMessageDAO messageDAO = (TadpoleMessageDAO)element;

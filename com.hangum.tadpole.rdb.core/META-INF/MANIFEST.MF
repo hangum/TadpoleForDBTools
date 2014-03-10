@@ -20,10 +20,10 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.3.2",
  org.eclipse.rap.gef;bundle-version="0.1.0",
  com.hangum.tadpole.importdb;bundle-version="1.0.0",
  com.hangum.tadpole.mongodb.erd.core;bundle-version="1.0.0",
- com.hangum.tadpole.editor.core;bundle-version="1.0.0",
  com.hangum.tadpole.aws.rds.commons.core;bundle-version="1.0.0",
  com.hangum.tadpole.hive.core;bundle-version="1.0.0",
- com.hangum.tadpole.tajo.core;bundle-version="1.0.0"
+ com.hangum.tadpole.tajo.core;bundle-version="1.0.0",
+ com.hangum.tadpole.ace.editor.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.rdb.core,

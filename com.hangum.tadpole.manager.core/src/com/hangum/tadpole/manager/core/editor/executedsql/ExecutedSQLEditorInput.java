@@ -50,7 +50,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		return null;
+		return ImageDescriptor.getMissingImageDescriptor();
 	}
 
 	@Override
@@ -75,5 +75,4 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 	public UserDBDAO getUserDBDAO() {
 		return userDBDAO;
 	}
-
 }

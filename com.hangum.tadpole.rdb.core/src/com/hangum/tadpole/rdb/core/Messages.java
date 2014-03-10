@@ -124,7 +124,10 @@ public class Messages extends NLS {
 	public static String MainEditor_31;
 	public static String MainEditor_32;
 	public static String MainEditor_33;
+	public static String MainEditor_38;
+	public static String MainEditor_39;
 	public static String MainEditor_4;
+	public static String MainEditor_42;
 	public static String MainEditor_43;
 	public static String MainEditor_45;
 	public static String MainEditor_46;
@@ -390,6 +393,11 @@ public class Messages extends NLS {
 	public static String TableDirectEditorComposite_lblEnd_text;
 	public static String TableDirectEditorComposite_text_text;
 	public static String TableDirectEditorComposite_textStart_text;
+	public static String HiveLoginComposite_lblDriverType_text;
+	public static String OthersConnectionBigDataGroup_btnExtensionBrowser_text;
+	public static String OthersConnectionBigDataGroup_btnExternalBrowser_text;
+	public static String OthersConnectionMongoDBGroup_btnExternalBrowser_text;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_btnExternalBrowser_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

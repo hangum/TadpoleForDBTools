@@ -31,7 +31,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionHiveGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionBigDataGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
@@ -48,14 +48,20 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	 * Logger for this class
 	 */
 //	private static final Logger logger = Logger.getLogger(HiveLoginComposite.class);
+	
+	protected Combo comboDriverType;
+	
 	protected Text textHost;
 	protected Text textUser;
 	protected Text textPassword;
 	protected Text textDatabase;
 	protected Text textPort;
 	
-	protected OthersConnectionHiveGroup othersConnectionInfo;
+	protected OthersConnectionBigDataGroup othersConnectionInfo;
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public HiveLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
 		super("Sample Apache Hive", DBDefine.HIVE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
@@ -93,6 +99,19 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		grpConnectionType.setLayout(new GridLayout(3, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.MSSQLLoginComposite_grpConnectionType_text);
+		
+		Label lblDriverType = new Label(grpConnectionType, SWT.NONE);
+		lblDriverType.setText(Messages.HiveLoginComposite_lblDriverType_text);
+		
+		comboDriverType = new Combo(grpConnectionType, SWT.READ_ONLY);
+		comboDriverType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboDriverType.add("Hive Server 1");
+		comboDriverType.setData("Hive Server 1", DBDefine.HIVE_DEFAULT);
+		
+		comboDriverType.add("Hive Server 2");
+		comboDriverType.setData("Hive Server 2", DBDefine.HIVE2_DEFAULT);
+		
+		comboDriverType.select(1);
 		
 		Label lblHost = new Label(grpConnectionType, SWT.NONE);
 		lblHost.setText(Messages.DBLoginDialog_1);
@@ -150,7 +169,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		othersConnectionInfo = new OthersConnectionHiveGroup(this, SWT.NONE);
+		othersConnectionInfo = new OthersConnectionBigDataGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		init();
@@ -175,11 +194,11 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("127.0.0.1");
+			textHost.setText("192.168.56.101");
 			textPort.setText("10000");
-			textDatabase.setText("default");
-			textUser.setText("");
-			textPassword.setText("");
+			textDatabase.setText("sbx");
+			textUser.setText("root");
+			textPassword.setText("duroah");
 			
 		} else {
 			textPort.setText("10000");
@@ -199,6 +218,9 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 				}
 			}
 		}
+		
+		// Initialize otherConnectionComposite
+		othersConnectionInfo.callBackUIInit(textHost.getText());
 		
 		textHost.setFocus();
 	}
@@ -223,15 +245,17 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	public boolean makeUserDBDao() {
 		if(!isValidateInput()) return false;
 		
+		DBDefine selectDB = (DBDefine)comboDriverType.getData(comboDriverType.getText());
+		
 		final String dbUrl = String.format(
-				getSelectDB().getDB_URL_INFO(), 
+				selectDB.getDB_URL_INFO(), 
 				StringUtils.trimToEmpty(textHost.getText()), 
 				StringUtils.trimToEmpty(textPort.getText()), 
 				StringUtils.trimToEmpty(textDatabase.getText())
 			);
 
 		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setDbms_types(selectDB.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
 		userDB.setGroup_seq(SessionManager.getGroupSeq());
@@ -256,6 +280,13 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
+		
 		return true;
+	}
+	
+	public String getTextHost() {
+		return textHost.getText();
 	}
 }

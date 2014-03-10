@@ -43,6 +43,9 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_9;
 	
 	public static String TadpoleSystem_UserQuery_0;
+	public static String TadpoleSystem_UserQuery_3;
+	public static String TadpoleSystem_UserQuery_5;
+	public static String TadpoleSystem_UserQuery_6;
 	
 	static {
 		// initialize resource bundle

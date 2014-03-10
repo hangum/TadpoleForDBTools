@@ -13,6 +13,7 @@ package com.hangum.tadpole.sql.dao.system;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -48,6 +49,7 @@ public class UserDBDAO {
     
 	protected String dbms_types;
 	protected String url;
+	
 	public String getShowUrl(String userType) {
 		return PermissionChecker.isShow(userType)?getUrl():"jdbc:*************************";
 	}
@@ -100,7 +102,9 @@ public class UserDBDAO {
 	protected String is_showtables = "";
 	
 	protected String is_table_filter = "";
-
+	protected String is_external_browser = "";
+	protected List<ExternalBrowserInfoDAO> listExternalBrowserdao = new ArrayList<ExternalBrowserInfoDAO>();
+	
 	protected String table_filter_include = "";
 	protected String table_filter_exclude = "";
     
@@ -521,4 +525,34 @@ public class UserDBDAO {
 	public void setIs_table_filter(String is_table_filter) {
 		this.is_table_filter = is_table_filter;
 	}
+
+	/**
+	 * @return the is_external_browser
+	 */
+	public String getIs_external_browser() {
+		return is_external_browser;
+	}
+
+	/**
+	 * @param is_external_browser the is_external_browser to set
+	 */
+	public void setIs_external_browser(String is_external_browser) {
+		this.is_external_browser = is_external_browser;
+	}
+
+	/**
+	 * @return the listExternalBrowserdao
+	 */
+	public List<ExternalBrowserInfoDAO> getListExternalBrowserdao() {
+		return listExternalBrowserdao;
+	}
+
+	/**
+	 * @param listExternalBrowserdao the listExternalBrowserdao to set
+	 */
+	public void setListExternalBrowserdao(
+			List<ExternalBrowserInfoDAO> listExternalBrowserdao) {
+		this.listExternalBrowserdao = listExternalBrowserdao;
+	}
+
 }

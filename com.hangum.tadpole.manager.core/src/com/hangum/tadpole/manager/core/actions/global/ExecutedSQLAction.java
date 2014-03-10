@@ -58,8 +58,8 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 	@Override
 	public void run() {
 		try {
-			ExecutedSQLEditorInput userMe = new ExecutedSQLEditorInput();
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, ExecutedSQLEditor.ID);
+			ExecutedSQLEditorInput executedSQL = new ExecutedSQLEditorInput();
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(executedSQL, ExecutedSQLEditor.ID);
 		} catch (PartInitException e) {
 			logger.error("ExecutedSQL Management editor", e); //$NON-NLS-1$
 			

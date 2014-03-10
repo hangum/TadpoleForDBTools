@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBOriginalDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
@@ -146,6 +147,8 @@ public class TadpoleSystem_UserDBQuery {
 		
 		userEncryptDao.setIs_profile(userDb.getIs_profile());
 		userEncryptDao.setQuestion_dml(userDb.getQuestion_dml());
+		
+		userEncryptDao.setIs_external_browser(userDb.getIs_external_browser());
 		//
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -158,6 +161,11 @@ public class TadpoleSystem_UserDBQuery {
 		
 		// 데이터베이스 확장속성 등록
 		sqlClient.insert("userDBEXTInsert", userDb);
+		
+		for(ExternalBrowserInfoDAO extDao : userDb.getListExternalBrowserdao()) {
+			extDao.setDb_seq(userDb.getSeq());
+			sqlClient.insert("externalBrowserInsert", extDao);
+		}
 		
 		return insertedUserDB;
 	}
@@ -256,6 +264,20 @@ public class TadpoleSystem_UserDBQuery {
 	public static List<UserDBDAO> getAllUserDB() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return  (List<UserDBDAO>)sqlClient.queryForList("userDBPermissions"); //$NON-NLS-1$
+	}
+	
+	/**
+	 * Get instance of database by sequence id
+	 * 
+	 * @param dbSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDBDAO getUserDBInstance(int dbSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserDBDAO userDB =  (UserDBDAO)sqlClient.queryForObject("userDBInstance", dbSeq);
+		
+		return userDB;
 	}
 	
 	/**

@@ -12,6 +12,8 @@ package com.hangum.tadpole.commons.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.math.NumberUtils;
+
 /**
  * <pre>
  * 		servlet.getRequest("User-Agent")를 정보를 가지고 사용자 브라우저의 종류와 os정보를 사용합니다.
@@ -145,6 +147,22 @@ public class ServletUserAgent {
                     fullVersion = userAgentStr.substring(userAgentStr.indexOf("MSIE ")+5);
                     fullVersion = fullVersion.substring(0, fullVersion.indexOf(";")).trim();
                     majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
+                } else if (userAgentStr.contains("Trident")) {
+                	Browser_Type = BROWSER_TYPE.IE;
+
+//                	Internet Explorer 11
+//                	Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko  
+//                	Internet Explorer 10
+//                	Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+                	if(userAgentStr.contains("Trident/6.0")) {
+                        fullVersion = "10";
+                        majorVersion = 10;	
+                	} else {
+                		fullVersion = userAgentStr.substring(userAgentStr.indexOf("rv:"));
+                        fullVersion = fullVersion.substring(3, fullVersion.indexOf(")")).trim();
+                        majorVersion = (int)NumberUtils.toFloat(fullVersion);
+                	}
+                    
                 }
             } catch (NumberFormatException nfe) {
                 fullVersion = null;

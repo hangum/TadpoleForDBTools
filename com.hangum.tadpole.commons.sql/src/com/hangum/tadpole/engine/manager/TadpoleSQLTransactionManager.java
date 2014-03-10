@@ -75,14 +75,13 @@ public class TadpoleSQLTransactionManager {
 	 * 
 	 * @param userId
 	 * @param userDB
-	 * @param isAutoCommit
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public static Connection getInstance(final String userId, final UserDBDAO userDB, final boolean isAutoCommit) throws Exception {
+	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
 		
-		if(logger.isDebugEnabled()) logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + " / " + userDB.getUsers() + "[isAutoCommit]: " + isAutoCommit);
+		if(logger.isDebugEnabled()) logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + " / " + userDB.getUsers());
 		
 		synchronized(dbManager) {
 			final String searchKey = getKey(userId, userDB);
@@ -120,19 +119,19 @@ public class TadpoleSQLTransactionManager {
 		}
 	}
 	
-	/**
-	 * 
-	 * 
-	 * @param userId
-	 * @param userDB
-	 * @return
-	 * @throws Exception
-	 */
-	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
-		synchronized (dbManager) {
-			return dbManager.get(getKey(userId, userDB)).getConn();
-		}
-	}
+//	/**
+//	 * 
+//	 * 
+//	 * @param userId
+//	 * @param userDB
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
+//		synchronized (dbManager) {
+//			return dbManager.get(getKey(userId, userDB)).getConn();
+//		}
+//	}
 
 	/**
 	 * transaction commit

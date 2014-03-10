@@ -29,6 +29,7 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726.jar,
 Export-Package: 
  com.hangum.tadpole.engine,
  com.hangum.tadpole.engine.connect,
+ com.hangum.tadpole.engine.connections,
  com.hangum.tadpole.engine.define,
  com.hangum.tadpole.engine.ibatis,
  com.hangum.tadpole.engine.manager,
