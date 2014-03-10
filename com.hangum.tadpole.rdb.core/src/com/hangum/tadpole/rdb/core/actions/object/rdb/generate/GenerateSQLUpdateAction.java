@@ -56,7 +56,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
 			
-			sbSQL.append(" UPDATE " + tableDAO.getName() + PublicTadpoleDefine.LINE_SEPARATOR + " SET "); //$NON-NLS-1$ //$NON-NLS-2$
+			sbSQL.append("UPDATE " + tableDAO.getName() + PublicTadpoleDefine.LINE_SEPARATOR + "\tSET "); //$NON-NLS-1$ //$NON-NLS-2$
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				sbSQL.append(dao.getField());
@@ -66,7 +66,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 				else sbSQL.append("=? "); //$NON-NLS-1$
 			}
 
-			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 			int cnt = 0;
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);

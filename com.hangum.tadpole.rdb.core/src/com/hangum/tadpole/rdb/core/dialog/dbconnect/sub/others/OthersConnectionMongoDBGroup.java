@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
@@ -18,14 +21,17 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilterDialog;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.SSHTunnelingDialog;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.ExtensionBrowserURLDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
+import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
 
 /**
  * Others connection info
@@ -33,28 +39,33 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnect
  * @author hangum
  *
  */
-public class OthersConnectionMongoDBGroup extends Group {
+public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(OthersConnectionMongoDBGroup.class);
 	
+	private String strIp = "", strPort = "";
 	private OthersConnectionInfoDAO otherConnectionDAO = new OthersConnectionInfoDAO();
 	
 	private Button btnTableFilters;
 	private Button btnReadOnlyConnection;
-	private Button btnTunneling;
 	private Button btnShowTables;
+	private Button btnExternalBrowser;
 
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
+	 * @param selectDB
+	 * @param strIp
+	 * @param strPort
 	 */
-	public OthersConnectionMongoDBGroup(Composite parent, int style) {
-		super(parent, style);
+	public OthersConnectionMongoDBGroup(Composite parent, int style, DBDefine selectDB) {
+		super(parent, style, selectDB);
+		
 		setText(Messages.OthersConnectionMongoDBGroup_0);
-		GridLayout gridLayout = new GridLayout(4, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -63,10 +74,6 @@ public class OthersConnectionMongoDBGroup extends Group {
 		
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setText(Messages.OthersConnectionMongoDBGroup_1);
-		
-		btnShowTables = new Button(this, SWT.CHECK);
-		btnShowTables.setSelection(true);
-		btnShowTables.setText(Messages.OthersConnectionMongoDBGroup_btnShowTables_text);
 		
 		btnTableFilters = new Button(this, SWT.NONE);
 		btnTableFilters.addSelectionListener(new SelectionAdapter() {
@@ -84,16 +91,35 @@ public class OthersConnectionMongoDBGroup extends Group {
 		});
 		btnTableFilters.setText(Messages.OthersConnectionMongoDBGroup_2);
 		
-		btnTunneling = new Button(this, SWT.NONE);
-		btnTunneling.setEnabled(false);
-		btnTunneling.setText(Messages.OthersConnectionMongoDBGroup_3);
-		btnTunneling.addSelectionListener(new SelectionAdapter() {
+		btnExternalBrowser = new Button(this, SWT.NONE);
+		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SSHTunnelingDialog sshTunnelingDialog = new SSHTunnelingDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				sshTunnelingDialog.open();
+				ExtensionBrowserURLDialog dialog = new ExtensionBrowserURLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), getDefaultExternalBrowserInfo());
+				if(Dialog.OK == dialog.open()) {
+					otherConnectionDAO.setExterBrowser(dialog.isEnable());
+					otherConnectionDAO.setListExterBroswer(dialog.getListExterBroswer());
+				}
 			}
 		});
+		btnExternalBrowser.setText(Messages.OthersConnectionMongoDBGroup_btnExternalBrowser_text);
+		new Label(this, SWT.NONE);
+		
+		btnShowTables = new Button(this, SWT.CHECK);
+		btnShowTables.setSelection(true);
+		btnShowTables.setText(Messages.OthersConnectionMongoDBGroup_btnShowTables_text);
+		new Label(this, SWT.NONE);
+	}
+	
+	/**
+	 * Callback Initialize UI
+	 * 
+	 * @param strIp
+	 * @param strPort
+	 */
+	public void callBackUIInit(String strIp, String strPort) {
+		setStrIp(strIp);
+		setStrPort(strPort);
 	}
 	
 	/**
@@ -138,7 +164,50 @@ public class OthersConnectionMongoDBGroup extends Group {
 	}
 
 	@Override
-	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
+	public List<ExternalBrowserInfoDAO> getDefaultExternalBrowserInfo() {
+		List<ExternalBrowserInfoDAO> listBrowser = new ArrayList<ExternalBrowserInfoDAO>();
+		
+		int intPort = 27017;
+		try {
+			intPort = (Integer.parseInt(strPort) + 1000);
+		} catch(Exception e) {
+			// ignore exception
+		}
+		
+		ExternalBrowserInfoDAO extBrowserDAO = new ExternalBrowserInfoDAO();
+		extBrowserDAO.setName("AdminBrowser");
+		extBrowserDAO.setUrl(String.format("http://%s:%s", strIp, intPort));
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		listBrowser.add(extBrowserDAO);
+		
+		return listBrowser;
+	}
+
+	/**
+	 * @return the strIp
+	 */
+	public String getStrIp() {
+		return strIp;
+	}
+
+	/**
+	 * @param strIp the strIp to set
+	 */
+	public void setStrIp(String strIp) {
+		this.strIp = strIp;
+	}
+
+	/**
+	 * @return the strPort
+	 */
+	public String getStrPort() {
+		return strPort;
+	}
+
+	/**
+	 * @param strPort the strPort to set
+	 */
+	public void setStrPort(String strPort) {
+		this.strPort = strPort;
 	}
 }

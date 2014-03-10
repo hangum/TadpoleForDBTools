@@ -17,7 +17,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ import com.hangum.tadpole.engine.connections.ConnectionInterfact;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtils;
+import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
 import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
 
 /**
@@ -66,10 +65,13 @@ public class TajoConnectionManager implements ConnectionInterfact {
 	 * 
 	 * @param userDB
 	 * @param requestQuery
+	 * @param queryResultCount
+	 * @param isResultComma
+	 * 
 	 * @throws Exception
 	 */
-	public Map<String, Object> select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
-		Map<String, Object> retMap = new HashMap<String, Object>();
+	public ResultSetUtilDAO select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
+		ResultSetUtilDAO retResultQuery = null;
 		
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
 		
@@ -82,21 +84,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-//			ResultSetMetaData  rsm = rs.getMetaData();
-//			int columnCount = rsm.getColumnCount();
-//			for(int i=0; i<columnCount; i++) {
-//				System.out.println("[column info]" + i + "==> " +  rsm.getColumnLabel(i+1));
-//			}
-			
-			// column의 data type을 얻습니다.
-			retMap.put("mapColumnType", ResultSetUtils.getColumnType(rs.getMetaData()));
-			
-			// column name을 얻습니다. 
-			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
-			retMap.put("mapColumns", ResultSetUtils.getColumnName(rs));
-			
-			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-			retMap.put("sourceDataList", ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma));
+			return new ResultSetUtilDAO(rs, queryResultCount, isResultComma);
 		} catch(Exception e) {
 			logger.error("Tajo select", e);
 			throw e;
@@ -106,8 +94,6 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 		}
-		
-		return retMap;
 	}
 	
 	/**

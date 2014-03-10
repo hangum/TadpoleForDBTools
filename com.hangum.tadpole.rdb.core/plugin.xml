@@ -73,6 +73,13 @@
             id="com.hangum.tadpole.rdb.core.editor.objects.tableinfo"
             name="Table Information">
       </editor>
+      <editor
+            class="com.hangum.tadpole.rdb.core.editors.externalbrowser.ExternalBrowserEditor"
+            default="false"
+            icon="resources/icons/commons/internet_browser.png"
+            id="com.hangum.tadpole.rdb.core.editor.externalBrowser"
+            name="External Browser">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
@@ -286,6 +293,12 @@
                label="DB Information"
                menubarPath="menu.admin/admin">
          </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.commons.ExtensionBrowserAction"
+               icon="resources/icons/commons/internet_browser.png"
+               id="com.hangum.tadpole.rdb.core.action.extensionBrowser"
+               label="Admin Browser">
+         </action>
             <!--
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"
@@ -383,6 +396,17 @@
                id="com.hangum.tadpole.erd.action.all"
                label="%action.label.10"
                menubarPath="menu.erd/erd">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.commons.ExtensionBrowserAction"
+               icon="resources/icons/commons/internet_browser.png"
+               id="com.hangum.tadpole.rdb.core.action.extensionBrowser"
+               label="Admin Browser">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
@@ -489,31 +513,7 @@
                id="com.hangum.tadpole.rdb.core.action.rdb.dbInformation"
                label="DB Information"
                menubarPath="menu.admin/admin">
-         </action>
-         <action
-               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbWebConsoleAction"
-               icon="resources/icons/web-management.png"
-               id="com.hangum.tadpole.rdb.core.action.nosql.monogodb.top"
-               label="%action.label.14"
-               menubarPath="additions">
-            <enablement>
-               <objectClass
-                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
-               </objectClass>
-            </enablement>
-         </action>
-         <action
-               class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbUserManagerAction"
-               icon="resources/icons/add_user.png"
-               id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.adduser"
-               label="%action.label.18"
-               menubarPath="menu.admin/admin">
-            <enablement>
-               <objectClass
-                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
-               </objectClass>
-            </enablement>
-         </action>
+         </action>tion>
          <action
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbProfillingAction"
                icon="resources/icons/profile.png"
@@ -580,6 +580,17 @@
                id="com.hangum.tadpole.erd.action.all"
                label="%action.label.21"
                menubarPath="menu.nosql.erd/erd">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.commons.ExtensionBrowserAction"
+               icon="resources/icons/commons/internet_browser.png"
+               id="com.hangum.tadpole.rdb.core.action.extensionBrowser"
+               label="Admin Browser">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.sql.dao.system.UserDBDAO">

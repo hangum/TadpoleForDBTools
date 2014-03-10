@@ -11,7 +11,6 @@
 package com.hangum.tadpole.sql.util.tables;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -26,6 +25,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
 
 /**
  * SQLResult의 LabelProvider
@@ -54,9 +54,8 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	/**
 	 * table의 Column을 생성한다.
 	 */
-	public static void createTableColumn(final TableViewer tableViewer, 
-										final Map<Integer, String> mapColumns, 
-										final Map<Integer, Integer> mapColumnType, 
+	public static void createTableColumn(final TableViewer tableViewer,
+										final ResultSetUtilDAO rsDAO,
 										final SQLResultSorter tableSorter) {
 		// 기존 column을 삭제한다.
 		Table table = tableViewer.getTable();
@@ -65,16 +64,16 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			table.getColumn(0).dispose();
 		}
 		
-		if(mapColumns == null) return;
+		if(rsDAO.getColumnName() == null) return;
 			
 		try {			
-			for(int i=0; i<mapColumns.size(); i++) {
+			for(int i=0; i<rsDAO.getColumnName().size(); i++) {
 				final int index = i;
-				final int columnAlign = RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))?SWT.RIGHT:SWT.LEFT;
+				final int columnAlign = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))?SWT.RIGHT:SWT.LEFT;
 				
 				final TableViewerColumn tv = new TableViewerColumn(tableViewer, columnAlign);
 				final TableColumn tc = tv.getColumn();
-				tc.setText( mapColumns.get(i) );
+				tc.setText( rsDAO.getColumnName().get(i) );
 				
 				tc.setResizable(true);
 				tc.setMoveable(true);
@@ -101,6 +100,5 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			logger.error("SQLResult TableViewer", e);
 		}		
 	}
-	
 	
 }

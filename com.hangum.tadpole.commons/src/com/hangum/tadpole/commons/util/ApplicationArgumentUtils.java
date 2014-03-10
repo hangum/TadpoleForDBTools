@@ -27,6 +27,15 @@ public class ApplicationArgumentUtils {
 	private static final Logger logger = Logger.getLogger(ApplicationArgumentUtils.class);
 	
 	/**
+	 * 시스템의 테이블 초기 데이터를 초기화 루틴을 탈것인지 검사합니다.
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean isForceSystemInitialize() {
+		return checkString("-forceSystemInitialize");
+	}
+	
+	/**
 	 * 엔진이 외부 디비를 사용 할 것인지?
 	 * @return
 	 * @throws Exception

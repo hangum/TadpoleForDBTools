@@ -51,7 +51,7 @@ public class TableInformationEditor extends EditorPart {
 	
 	///////////
 	private TableDirectEditorComposite compositeTableData;
-	private DDLSourceComposite compositeDdl;
+//	private DDLSourceComposite compositeDdl;
 
 	public TableInformationEditor() {
 		super();

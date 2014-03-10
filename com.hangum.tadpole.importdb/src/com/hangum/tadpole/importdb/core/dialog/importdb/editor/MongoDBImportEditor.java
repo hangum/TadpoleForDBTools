@@ -37,9 +37,10 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.editor.core.widgets.editor.json.JsonTadpoleEditor;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.Messages;
@@ -69,7 +70,7 @@ public class MongoDBImportEditor extends EditorPart {
 	private CTabFolder tabFolderQuery;
 
 	private UserDBDAO targetDBDAO = null;
-	private JsonTadpoleEditor textQuery;
+	private TadpoleEditorWidget textQuery;
 	private Text textCollectionName;
 	
 	private Combo comboDBList;
@@ -199,7 +200,7 @@ public class MongoDBImportEditor extends EditorPart {
 		tabItemQuery.setControl(compositeQuery);
 		compositeQuery.setLayout(new GridLayout(1, false));
 		
-		textQuery = new JsonTadpoleEditor(compositeQuery, SWT.BORDER, "", "");
+		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, EditorDefine.EXT_SQL, "", "");
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeQueryTail = new Composite(compositeQuery, SWT.NONE);

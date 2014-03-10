@@ -48,6 +48,12 @@ public class DBConnectTablesFilterDialog extends Dialog {
 	public DBConnectTablesFilterDialog(Shell parentShell) {
 		super(parentShell);
 	}
+	
+	@Override
+	public void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Table Filter Dialog");
+	}
 
 	/**
 	 * Create contents of the dialog.
@@ -58,6 +64,7 @@ public class DBConnectTablesFilterDialog extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 		
 		btnEnable = new Button(container, SWT.CHECK);
+		btnEnable.setSelection(true);
 		btnEnable.setText("Enable");
 		
 		Group grpInclude = new Group(container, SWT.NONE);
@@ -75,6 +82,8 @@ public class DBConnectTablesFilterDialog extends Dialog {
 		
 		textExclude = new Text(grpExclude, SWT.BORDER | SWT.MULTI);
 		textExclude.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		btnEnable.setFocus();
 
 		return container;
 	}

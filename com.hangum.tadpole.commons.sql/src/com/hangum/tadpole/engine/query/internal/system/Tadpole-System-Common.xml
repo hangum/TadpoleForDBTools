@@ -351,11 +351,11 @@
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBOriginalDAO">
 	INSERT INTO user_db( 
 	user_seq, ext_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
-	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables
+	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser
 	)
 	VALUES(
 	#user_seq#, #ext_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
-	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables# 
+	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#
 	)
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
@@ -450,6 +450,26 @@
 		delYn = 'YES'
 	WHERE seq = #seq#
 </update>
+
+<!-- 
+	============================================================================================================================
+	external_browser_info
+	============================================================================================================================
+ -->
+<!-- 
+	사용자 확장 브라우저의 데이터. 
+ -->
+<insert id="externalBrowserInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO">
+	INSERT INTO external_browser_info(db_seq, is_used, name, url, comment)
+	VALUES (#db_seq#, #is_used#, #name#, #url#, #comment#)
+</insert>
+
+<select id="getExternalBrowser" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" resultClass="com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO">
+	SELECT * FROM external_browser_info 
+	WHERE 
+		db_seq = #seq#
+	ORDER BY seq
+</select>
 
 <!-- 
 	============================================================================================================================

@@ -56,8 +56,8 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 	@Override
 	public void run() {
 		try {
-			TransactionConnectionListEditorInput userMe = new TransactionConnectionListEditorInput();
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, TransactionConnectionListEditor.ID);
+			TransactionConnectionListEditorInput transactionInput = new TransactionConnectionListEditorInput();
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(transactionInput, TransactionConnectionListEditor.ID);
 		} catch (PartInitException e) {
 			logger.error("Connections Management editor", e); //$NON-NLS-1$
 			

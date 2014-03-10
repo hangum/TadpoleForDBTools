@@ -31,7 +31,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionHiveGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionBigDataGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
@@ -57,7 +57,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	protected Text textDatabase;
 	protected Text textPort;
 	
-	protected OthersConnectionHiveGroup othersConnectionInfo;
+	protected OthersConnectionBigDataGroup othersConnectionInfo;
 	
 	/**
 	 * @wbp.parser.constructor
@@ -169,7 +169,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		othersConnectionInfo = new OthersConnectionHiveGroup(this, SWT.NONE);
+		othersConnectionInfo = new OthersConnectionBigDataGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		init();
@@ -218,6 +218,9 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 				}
 			}
 		}
+		
+		// Initialize otherConnectionComposite
+		othersConnectionInfo.callBackUIInit(textHost.getText());
 		
 		textHost.setFocus();
 	}
@@ -277,6 +280,13 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
+		
 		return true;
+	}
+	
+	public String getTextHost() {
+		return textHost.getText();
 	}
 }

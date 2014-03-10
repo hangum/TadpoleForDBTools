@@ -10,16 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.global;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.Client;
-import org.eclipse.rap.rwt.client.service.ExitConfirmation;
-import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
