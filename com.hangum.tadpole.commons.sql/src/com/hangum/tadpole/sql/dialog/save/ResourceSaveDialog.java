@@ -112,7 +112,6 @@ public class ResourceSaveDialog extends Dialog {
 		comboSharedType.select(0);
 		
 		Label lblDescription = new Label(container, SWT.NONE);
-		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDescription.setText(Messages.ResourceSaveDialog_2);
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
