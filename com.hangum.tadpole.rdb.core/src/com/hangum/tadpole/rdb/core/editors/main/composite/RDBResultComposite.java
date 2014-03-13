@@ -135,8 +135,8 @@ public class RDBResultComposite extends Composite {
 		tabFolderResult.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());		
 		
 		// tab 의 index를 설정한다.
-		tabFolderResult.setData(EditorDefine.RESULT_TAB.RESULT_SET.toString(), 0);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB.SQL_RECALL.toString(), 1);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.RESULT_SET.toString(), 		0);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.SQL_RECALL.toString(), 		1);
 		tabFolderResult.setData(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE.toString(), 2);
 		
 		CTabItem tbtmResult = new CTabItem(tabFolderResult, SWT.NONE);
@@ -571,8 +571,6 @@ public class RDBResultComposite extends Composite {
 	public void resultFolderSel(final EditorDefine.RESULT_TAB selectTab) {
 		int index = (Integer)tabFolderResult.getData(selectTab.toString());
 		
-		logger.debug("\t [tabFolderResult.getSelectionIndex()]"  + tabFolderResult.getSelectionIndex() + "[index]" + index);
-		
 		if(tabFolderResult.getSelectionIndex() != index) {
 			tabFolderResult.setSelection(index);
 		}
@@ -625,7 +623,7 @@ public class RDBResultComposite extends Composite {
 			
 			// 메시지를 출력합니다.
 			long longExecuteTime = executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime();
-			String strResultMsg = rsDAO.getDataList().size() + " " + Messages.MainEditor_33 + "[" + longExecuteTime + " ms]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			String strResultMsg = String.format("%s %s [%s ms]", rsDAO.getDataList().size(), Messages.MainEditor_33, longExecuteTime); //$NON-NLS-1$
 			tvQueryResult.getTable().setToolTipText(strResultMsg);
 			lblQueryResultStatus.setText(strResultMsg);
 			sqlFilter.setTable(tvQueryResult.getTable());
@@ -746,10 +744,6 @@ public class RDBResultComposite extends Composite {
 	 * 결과 테이블을 초기화 상태로 만듭니다.
 	 */
 	public void resultTableInit() {
-//		// rs set의 결과를 테이블에 출력하기 위해 입력한다.
-//		sourceDataList = new ArrayList<Map<Integer, Object>>();
-		
-		// 마지막 쿼리에 데이터를 정리 합니다.
 		tvQueryResult.setLabelProvider( new SQLResultLabelProvider() );
 		tvQueryResult.setContentProvider(new SQLResultContentProvider(null) );
 		tvQueryResult.setInput(null);			
@@ -782,20 +776,6 @@ public class RDBResultComposite extends Composite {
 		downloadServiceHandler.setByteContent(newContents.getBytes());
 		
 		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
-	}
-	
-	/**
-	 * sql history 를 선택합니다.
-	 */
-	public void selectHistoryPage() {
-		resultFolderSel(EditorDefine.RESULT_TAB.SQL_RECALL);
-		
-		// table 데이터가 있으면 첫번째 데이터를 선택합니다.
-		if(listSQLHistory.size() >= 1) {
-			Table tb = tvSQLHistory.getTable();
-			tb.select(0);
-			tb.setFocus();
-		}
 	}
 	
 	public UserDBDAO getUserDB() {

@@ -532,6 +532,8 @@ public class MainEditor extends EditorExtension {
 	 * 쿼리를 수행합니다.
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		rsDAO = new ResultSetUtilDAO();
+		
 		try {
 			if("".equals(reqQuery.getSql().trim())) return;
 			
@@ -557,7 +559,6 @@ public class MainEditor extends EditorExtension {
 			finallyEndExecuteCommand();
 		}
 				
-		rsDAO = new ResultSetUtilDAO();
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
 		final Job jobQueryManager = new Job(Messages.MainEditor_45) {

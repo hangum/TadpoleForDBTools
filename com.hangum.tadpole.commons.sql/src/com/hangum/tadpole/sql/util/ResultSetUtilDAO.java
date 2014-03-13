@@ -105,5 +105,4 @@ public class ResultSetUtilDAO {
 	public void addDataAll(List<Map<Integer, Object>> resultToList) {
 		this.dataList.addAll(resultToList);
 	}
-
 }
