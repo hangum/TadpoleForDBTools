@@ -23,6 +23,8 @@ import java.util.Map;
  *
  */
 public class ResultSetUtilDAO {
+	/** 쿼리 결과 페이지 로케이션 */
+	private int pageNumber = 1;
 
 	/** 
 	 * column 이름. <columnIndex, name>

@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 public class EvaluateWidgets extends Composite {
 	private static final Logger logger = Logger.getLogger(EvaluateWidgets.class);
 	protected Browser browserEditor = null;
+	private BrowserFunctionUtil bfUtils = null;
 	
 	/**
 	 * 
@@ -31,62 +32,12 @@ public class EvaluateWidgets extends Composite {
 	 */
 	public EvaluateWidgets(Composite parent, int style) {
 		super(parent, style);
+		
+		bfUtils = new BrowserFunctionUtil(browserEditor);
 	}
 	
-	/**
-	 * command
-	 * 
-	 * @param command
-	 */
-	public void browserEvaluate(String command) {
-		browserEvaluate(command, "");
-	}
-	/** 
-	 * browser function call
-	 * 
-	 *  @param command brower command
-	 *  @param args command argument
-	 */
-	public void browserEvaluate(String command, String ... args) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("\t ### send command is : [command] " + command + ", [args]" + args);
-		}
-		
-		try {
-			browserEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
-		} catch(Exception e) {
-			logger.error("browser evaluate [ " + command + " ]\r\n", e); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
-	
-	/**
-	 * 
-	 * @param command
-	 * @return
-	 */
-	public String browserEvaluateToStr(String command) {
-		return browserEvaluateToStr(command, "");
-	}
-	
-	/**
-	 * 
-	 * @param command
-	 * @param args
-	 * @return
-	 */
-	public String browserEvaluateToStr(String command, String ... args) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("\t ### send command is : " + command);
-		}
-		
-		try {
-			Object ret = browserEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
-			return ret.toString();
-		} catch(Exception e) {
-			logger.error("browser evaluate [ " + command + " ]\r\n", e); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		
-		return "";
+	public BrowserFunctionUtil getBfUtils() {
+		return bfUtils;
 	}
 	
 	@Override
