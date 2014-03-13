@@ -59,7 +59,6 @@ import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.SQLDefine;
-import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
@@ -84,12 +83,10 @@ import com.swtdesigner.SWTResourceManager;
  */
 public class RDBResultComposite extends Composite {
 	/**  Logger for this class. */
-	private static final Logger logger = Logger.getLogger(MainEditor.class);
+	private static final Logger logger = Logger.getLogger(RDBResultComposite.class);
 	
 	private MainEditor mainEditor = null;
 	
-	/** 현재 에디터에서 처리해야하는 디비 정보. */
-	protected UserDBDAO userDB;
 	/** 쿼리 호출 후 결과 dao */
 	private ResultSetUtilDAO rsDAO = new ResultSetUtilDAO();
 	
@@ -130,17 +127,17 @@ public class RDBResultComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public RDBResultComposite(Composite compositeResult, int style) {
-		super(compositeResult, style);
+	public RDBResultComposite(Composite ssahFormComposite, int style) {
+		super(ssahFormComposite, style);
 		
-		tabFolderResult = new CTabFolder(compositeResult, SWT.NONE);
+		tabFolderResult = new CTabFolder(ssahFormComposite, SWT.NONE);
 		tabFolderResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolderResult.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());		
 		
 		// tab 의 index를 설정한다.
-		tabFolderResult.setData(EditorDefine.RESULT_TAB_NAME.RESULT_SET.toString(), 0);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB_NAME.SQL_RECALL.toString(), 1);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB_NAME.TADPOLE_MESSAGE.toString(), 2);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.RESULT_SET.toString(), 0);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.SQL_RECALL.toString(), 1);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE.toString(), 2);
 		
 		CTabItem tbtmResult = new CTabItem(tabFolderResult, SWT.NONE);
 		tbtmResult.setText(Messages.MainEditor_7);
@@ -148,14 +145,10 @@ public class RDBResultComposite extends Composite {
 		Composite compositeQueryResult = new Composite(tabFolderResult, SWT.NONE);
 		tbtmResult.setControl(compositeQueryResult);
 		
-		GridLayout gl_compositeQueryResultBtn = new GridLayout(2, false);
+		GridLayout gl_compositeQueryResultBtn = new GridLayout(1, false);
 		gl_compositeQueryResultBtn.marginWidth = 1;
 		gl_compositeQueryResultBtn.marginHeight = 0;
 		compositeQueryResult.setLayout(gl_compositeQueryResultBtn);
-		
-		Label lblFilter = new Label(compositeQueryResult, SWT.NONE);
-		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.MainEditor_lblFilter_text);
 		
 		textFilter = new Text(compositeQueryResult,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.addKeyListener(new KeyAdapter() {
@@ -301,7 +294,7 @@ public class RDBResultComposite extends Composite {
 					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR);
 				}
 				
-				downloadExtFile(userDB.getDisplay_name() + "_SQLResultExport.csv", sbExportData.toString()); //$NON-NLS-1$
+				downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", sbExportData.toString()); //$NON-NLS-1$
 			}
 		});
 		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);
@@ -402,7 +395,7 @@ public class RDBResultComposite extends Composite {
 					sbExportData.append( dao.getStrSQLText() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadExtFile(userDB.getDisplay_name() + "_RecallSQLExport.txt", sbExportData.toString()); //$NON-NLS-1$
+				downloadExtFile(getUserDB().getDisplay_name() + "_RecallSQLExport.txt", sbExportData.toString()); //$NON-NLS-1$
 			}
 		});
 		btnSetEditor.setText(Messages.MainEditor_17);
@@ -504,7 +497,7 @@ public class RDBResultComposite extends Composite {
 					sbExportData.append( dao.getStrMessage() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				}
 				
-				downloadExtFile(userDB.getDisplay_name() + "_Message.txt", sbExportData.toString()); //$NON-NLS-1$
+				downloadExtFile(getUserDB().getDisplay_name() + "_Message.txt", sbExportData.toString()); //$NON-NLS-1$
 			}
 		});
 		btnExportMessage.setText(Messages.MainEditor_43);
@@ -564,13 +557,10 @@ public class RDBResultComposite extends Composite {
 	 * @param msg
 	 */
 	public void executeErrorProgress(final String msg) {
-		TadpoleMessageDAO message = new TadpoleMessageDAO(new Date(), msg);
-		listMessage.add(message);
+		resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 		
+		listMessage.add(new TadpoleMessageDAO(new Date(), msg));
 		tableViewerMessage.refresh();
-		resultFolderSel(EditorDefine.RESULT_TAB_NAME.TADPOLE_MESSAGE);
-		
-		mainEditor.setOrionTextFocus();
 	}
 	
 	/**
@@ -578,8 +568,11 @@ public class RDBResultComposite extends Composite {
 	 * 
 	 * @param selectTab
 	 */
-	public void resultFolderSel(final EditorDefine.RESULT_TAB_NAME selectTab) {
+	public void resultFolderSel(final EditorDefine.RESULT_TAB selectTab) {
 		int index = (Integer)tabFolderResult.getData(selectTab.toString());
+		
+		logger.debug("\t [tabFolderResult.getSelectionIndex()]"  + tabFolderResult.getSelectionIndex() + "[index]" + index);
+		
 		if(tabFolderResult.getSelectionIndex() != index) {
 			tabFolderResult.setSelection(index);
 		}
@@ -616,17 +609,17 @@ public class RDBResultComposite extends Composite {
 			if(readCount < -1) readCount = rsDAO.getDataList().size();
 			else if(readCount > mainEditor.getQueryPageCount()) readCount = mainEditor.getQueryPageCount();
 			
-			if(logger.isDebugEnabled()) {
-				logger.debug("====[first][start]================================================================="); //$NON-NLS-1$
-				logger.debug("[total count]" + rsDAO.getDataList().size() + "[first][readCount]" + readCount); //$NON-NLS-1$ //$NON-NLS-2$
-				logger.debug("====[first][stop]================================================================="); //$NON-NLS-1$
-			}
+//			if(logger.isDebugEnabled()) {
+//				logger.debug("====[first][start]================================================================="); //$NON-NLS-1$
+//				logger.debug("[total count]" + rsDAO.getDataList().size() + "[first][readCount]" + readCount); //$NON-NLS-1$ //$NON-NLS-2$
+//				logger.debug("====[first][stop]================================================================="); //$NON-NLS-1$
+//			}
 				
 			for(int i=0; i<readCount; i++) {
 				showList.add(rsDAO.getDataList().get(i));
 			}
-			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
 			
+			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
 			tvQueryResult.setInput(showList);
 			tvQueryResult.setSorter(sqlSorter);
 			
@@ -634,16 +627,16 @@ public class RDBResultComposite extends Composite {
 			long longExecuteTime = executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime();
 			String strResultMsg = rsDAO.getDataList().size() + " " + Messages.MainEditor_33 + "[" + longExecuteTime + " ms]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			tvQueryResult.getTable().setToolTipText(strResultMsg);
-			lblQueryResultStatus.setText(rsDAO.getDataList().size()  + " " +  Messages.MainEditor_33 + "[" + longExecuteTime + " ms]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			lblQueryResultStatus.setText(strResultMsg);
 			sqlFilter.setTable(tvQueryResult.getTable());
 			
 			// Pack the columns
 			TableUtil.packTable(tvQueryResult.getTable());
-			resultFolderSel(EditorDefine.RESULT_TAB_NAME.RESULT_SET);
+			resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		} else {
 			listMessage.add(new TadpoleMessageDAO(new Date(), "success. \n\n" + executingSQLDAO.getStrSQLText())); //$NON-NLS-1$
 			tableViewerMessage.refresh(listMessage);
-			resultFolderSel(EditorDefine.RESULT_TAB_NAME.TADPOLE_MESSAGE);
+			resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 		}
 	}
 	
@@ -795,7 +788,7 @@ public class RDBResultComposite extends Composite {
 	 * sql history 를 선택합니다.
 	 */
 	public void selectHistoryPage() {
-		resultFolderSel(EditorDefine.RESULT_TAB_NAME.SQL_RECALL);
+		resultFolderSel(EditorDefine.RESULT_TAB.SQL_RECALL);
 		
 		// table 데이터가 있으면 첫번째 데이터를 선택합니다.
 		if(listSQLHistory.size() >= 1) {
@@ -806,7 +799,7 @@ public class RDBResultComposite extends Composite {
 	}
 	
 	public UserDBDAO getUserDB() {
-		return userDB;
+		return mainEditor.getUserDB();
 	}
 	
 	@Override

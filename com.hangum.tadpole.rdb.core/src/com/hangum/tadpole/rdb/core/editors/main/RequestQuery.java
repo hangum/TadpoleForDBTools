@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
-import java.util.Date;
-
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
@@ -35,9 +33,6 @@ public class RequestQuery {
 	
 	/** 에디터가 실행 가능한 쿼리로 수정한 */
 	private String sql = "";
-	
-	/** Execute start time */
-	private Date startDateExecute = new Date();
 	
 	/** 사용자 쿼리를 지정한다 */
 	private EditorDefine.QUERY_MODE mode = EditorDefine.QUERY_MODE.QUERY;
@@ -73,20 +68,6 @@ public class RequestQuery {
 	 */
 	public void setSql(String sql) {
 		this.sql = sql;
-	}
-
-	/**
-	 * @return the startDateExecute
-	 */
-	public Date getStartDateExecute() {
-		return startDateExecute;
-	}
-
-	/**
-	 * @param startDateExecute the startDateExecute to set
-	 */
-	public void setStartDateExecute(Date startDateExecute) {
-		this.startDateExecute = startDateExecute;
 	}
 
 	/**
