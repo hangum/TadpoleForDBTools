@@ -52,11 +52,19 @@ public class ResultSetUtilDAO {
 		this.dataList = dataList;
 	}
 
+	/**
+	 * 메인에디터에서 보여주기위한 정보를 만듭니다.
+	 * 
+	 * @param rs
+	 * @param queryResultCount
+	 * @param isResultComma
+	 * @throws Exception
+	 */
 	public ResultSetUtilDAO(ResultSet rs, int queryResultCount, boolean isResultComma) throws Exception {
 		if(rs != null) {
-			columnName = ResultSetUtils.getColumnName(rs);
-			columnType = ResultSetUtils.getColumnType(rs.getMetaData());
-			dataList = ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma);
+			columnName = ResultSetUtils.getColumnName(true, rs);
+			columnType = ResultSetUtils.getColumnType(true, rs.getMetaData());
+			dataList = ResultSetUtils.getResultToList(true, rs, queryResultCount, isResultComma);
 		}
 	}
 

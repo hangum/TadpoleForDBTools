@@ -35,13 +35,27 @@ public class ResultSetUtils {
 	/**
 	 * ResultSet to List
 	 * 
+	 * @param rs
+	 * @param limitCount
+	 * @param isPretty
+	 * @return
+	 * @throws SQLException
+	 */
+	public static List<Map<Integer, Object>> getResultToList(final ResultSet rs, final int limitCount, final boolean isPretty) throws SQLException {
+		return getResultToList(false, rs, limitCount, isPretty);
+	}
+	
+	/**
+	 * ResultSet to List
+	 * 
+	 * @param isShowRowNum 첫번째 컬럼의 로우 넘버를 추가할 것인지.
 	 * @param rs ResultSet
 	 * @param limitCount 
 	 * @param isPretty 
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<Map<Integer, Object>> getResultToList(final ResultSet rs, final int limitCount, final boolean isPretty) throws SQLException {
+	public static List<Map<Integer, Object>> getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, final boolean isPretty) throws SQLException {
 		List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer, Object>>();
 		Map<Integer, Object> tmpRow = null;
 		
@@ -49,6 +63,12 @@ public class ResultSetUtils {
 		int rowCnt = 0;
 		while(rs.next()) {
 			tmpRow = new HashMap<Integer, Object>();
+			
+			int intStartIndex = 0;
+			if(isShowRowNum) {
+				intStartIndex++;
+				tmpRow.put(0, rowCnt+1);
+			}
 			
 			for(int i=0; i<rs.getMetaData().getColumnCount(); i++) {
 				final int intColIndex = i+1;
@@ -58,19 +78,19 @@ public class ResultSetUtils {
 
 					if (RDBTypeToJavaTypeUtils.isNumberType(type)){
 						if(isPretty) { 
-							tmpRow.put(i, prettyData(type, obj));
+							tmpRow.put(i+intStartIndex, prettyData(type, obj));
 						}else{
-							tmpRow.put(i, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
+							tmpRow.put(i+intStartIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 						}
 					}else if (RDBTypeToJavaTypeUtils.isCharType(type)){
-						tmpRow.put(i, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
+						tmpRow.put(i+intStartIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 					}else {
-						tmpRow.put(i, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
+						tmpRow.put(i+intStartIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 //						logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
 					}
 				} catch(Exception e) {
 					logger.error("ResutSet fetch error", e); //$NON-NLS-1$
-					tmpRow.put(i, ""); //$NON-NLS-1$
+					tmpRow.put(i+intStartIndex, ""); //$NON-NLS-1$
 				}
 			}
 			
@@ -108,14 +128,32 @@ public class ResultSetUtils {
 	}
 	
 	/**
-	 * get column types
+	 * get column type
 	 * 
 	 * @param rsm
 	 * @return
 	 * @throws SQLException
 	 */
 	public static Map<Integer, Integer> getColumnType(ResultSetMetaData rsm) throws SQLException {
+		return getColumnType(false, rsm);
+	}
+	
+	/**
+	 * get column types
+	 * 
+	 * @param isShowRowNum 로우넘 보여주기위해 첫번째 컬럼을 추가하는 데이터를 만듭니다.
+	 * @param rsm
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Map<Integer, Integer> getColumnType(boolean isShowRowNum, ResultSetMetaData rsm) throws SQLException {
 		Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
+		int intStartIndex = 0;
+		
+		if(isShowRowNum) {
+			intStartIndex++;
+			mapColumnType.put(0, java.sql.Types.VARCHAR);
+		}
 		
 		for(int i=0;i<rsm.getColumnCount(); i++) {
 //			logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
@@ -138,7 +176,7 @@ public class ResultSetUtils {
 //			logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
 //			logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
 //			logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
-			mapColumnType.put(i, rsm.getColumnType(i+1));
+			mapColumnType.put(i+intStartIndex, rsm.getColumnType(i+1));
 			
 //			logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
 //			logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
@@ -149,6 +187,32 @@ public class ResultSetUtils {
 		
 		return mapColumnType; 
 	}
+	
+	/**
+	 * 컬럼에 rownumber를 추가할 것인지.
+	 * 
+	 * @param isShowRowNum
+	 * @param rs
+	 * @return
+	 * @throws Exception
+	 */
+	public static Map<Integer, String> getColumnName(boolean isShowRowNum, ResultSet rs) throws Exception {
+		Map<Integer, String> mapColumnName = new HashMap<Integer, String>();
+		int intStartIndex = 0;
+		
+		if(isShowRowNum) {
+			intStartIndex++;
+			mapColumnName.put(0, "#");
+		}
+		
+		ResultSetMetaData  rsm = rs.getMetaData();
+		int columnCount = rsm.getColumnCount();
+		for(int i=0; i<columnCount; i++) {
+			mapColumnName.put(i+intStartIndex, rsm.getColumnLabel(i+1));
+		}
+		
+		return mapColumnName;
+	}
 
 	/**
 	 * metadata를 바탕으로 결과를 컬럼 정보를 수집힌다.
@@ -157,16 +221,6 @@ public class ResultSetUtils {
 	 * @return index순번에 컬럼명
 	 */
 	public static Map<Integer, String> getColumnName(ResultSet rs) throws Exception {
-		Map<Integer, String> mapColumnName = new HashMap<Integer, String>();
-		
-		ResultSetMetaData  rsm = rs.getMetaData();
-		int columnCount = rsm.getColumnCount();
-		for(int i=0; i<columnCount; i++) {
-			mapColumnName.put(i, rsm.getColumnLabel(i+1));
-		}
-		
-		return mapColumnName;
+		return getColumnName(false, rs);
 	}
-
-	
 }

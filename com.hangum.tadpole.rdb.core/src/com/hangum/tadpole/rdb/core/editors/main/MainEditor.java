@@ -372,11 +372,9 @@ public class MainEditor extends EditorExtension {
 						if(seq == userDB.getSeq()) {
 							tiAutoCommit.setSelection(boolUseAutocommit);
 							if(!boolUseAutocommit) {
-//								tiAutoCommit.setToolTipText("Transaction Enable");
 								tiAutoCommitCommit.setEnabled(false);
 								tiAutoCommitRollback.setEnabled(false);
 							} else {
-//								tiAutoCommit.setToolTipText("Transaction Disable");
 								tiAutoCommitCommit.setEnabled(true);
 								tiAutoCommitRollback.setEnabled(true);
 							}
@@ -496,7 +494,6 @@ public class MainEditor extends EditorExtension {
 	 */
 	private void initAutoCommitAction(boolean isFirst, boolean isRiseEvent) {
 		if(isAutoCommit()) {
-//			tiAutoCommit.setToolTipText("Transaction Enable"); //$NON-NLS-1$
 			tiAutoCommitCommit.setEnabled(false);
 			tiAutoCommitRollback.setEnabled(false);
 			
@@ -508,7 +505,6 @@ public class MainEditor extends EditorExtension {
 				}
 			}
 		} else {
-//			tiAutoCommit.setToolTipText("Transaction Disable"); //$NON-NLS-1$
 			tiAutoCommitCommit.setEnabled(true);
 			tiAutoCommitRollback.setEnabled(true);
 		}

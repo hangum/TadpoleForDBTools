@@ -396,6 +396,8 @@ public class Messages extends NLS {
 	public static String OthersConnectionBigDataGroup_btnExternalBrowser_text;
 	public static String OthersConnectionMongoDBGroup_btnExternalBrowser_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnExternalBrowser_text;
+	public static String RDBResultComposite_lblNewLabel_text;
+	public static String RDBResultComposite_lblNewLabel_text_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
