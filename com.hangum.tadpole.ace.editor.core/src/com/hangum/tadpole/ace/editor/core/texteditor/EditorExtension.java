@@ -39,9 +39,9 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/** browser.browserFunction의 서비스 헨들러 */
 	protected EditorFunctionService editorService;
 
-//	/** session에서 사용자 정보를 가져다 놓습니다.
-//	 * No context available outside of the request service lifecycle.
-//	 */
+	/** session에서 사용자 정보를 가져다 놓습니다.
+	 * No context available outside of the request service lifecycle.
+	 */
 	protected final String strUserEMail = SessionManager.getEMAIL();
 	protected String strRoleType = "";
 	protected final int intUserSeq = SessionManager.getSeq();
@@ -56,8 +56,6 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 ////	protected String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$
 	/** 결과 컬럼이 숫자이면 ,를 찍을 것인지 */
 	protected boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
-	
-//	protected String QUERY_DELIMITER = ";";
 	
 	/** 현재 에디터에서 처리해야하는 디비 정보. */
 	protected UserDBDAO userDB;

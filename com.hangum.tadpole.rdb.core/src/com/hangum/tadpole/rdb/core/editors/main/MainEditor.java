@@ -107,8 +107,6 @@ public class MainEditor extends EditorExtension {
 	private String initDefaultEditorStr = ""; //$NON-NLS-1$
 	/** resource 정보. */
 	private UserDBResourceDAO dBResource;
-	/** first save UserDBResource object */
-	private UserDBResourceDAO userSetDBResource; //$NON-NLS-1$
 	
 	/** save mode */
 	private boolean isDirty = false;
@@ -958,49 +956,12 @@ public class MainEditor extends EditorExtension {
 		setOrionTextFocus();
 	}
 	
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
-		if(dBResource == null) {
-			userSetDBResource = getFileName();
-			if(userSetDBResource == null) return;
-		}
-		
-		// 저장을 호출합니다.
-		try {
-			String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-			if(performSave(strQuery)) {
-				browserEvaluate(IEditorFunction.SAVE_DATA);
-			}
-		} catch(SWTException e) {
-			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
-			monitor.setCanceled(true);
-		}
-	}
-	
-	@Override
-	public void doSaveAs() {
-		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
-		userSetDBResource = getFileName();
-		if(userSetDBResource == null) return;
-		
-		// 저장을 호출합니다.
-		try {
-			String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-			if(performSave(strQuery)) {
-				browserEvaluate(IEditorFunction.SAVE_DATA);
-			}
-		} catch(SWTException e) {
-			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
-		}
-	}
-
 	/**
 	 * new file name
 	 * @return
 	 */
-	private UserDBResourceDAO getFileName() {
-		ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
+	private UserDBResourceDAO getFileName(UserDBResourceDAO initDBResource) {
+		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
 		if(rsDialog.open() == Window.OK) {
 			return rsDialog.getRetResourceDao();
 		} else {
@@ -1009,69 +970,104 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
-	 * save
+	 * 데이터를 저장합니다.
+	 * 
+	 * @param strContentData
+	 * @return
+	 */
+	public boolean calledDoSave(String strContentData) {
+		boolean isSaved = false;
+		
+		try {
+			// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
+			if(dBResource == null) {
+				UserDBResourceDAO newDBResource = getFileName(null);
+				if(newDBResource == null) return false;
+
+				isSaved = saveResourceData(newDBResource, strContentData);
+			// 업데이트 일때.
+			} else {
+				isSaved = updateResourceDate(strContentData);
+			}
+			
+		} catch(SWTException e) {
+			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
+		} finally {
+			if(isSaved) {
+				setDirty(false);
+				browserEvaluate(IEditorFunction.SAVE_DATA);	
+			}
+		}
+		
+		return isSaved;
+	}
+	
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		String strEditorAllText = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+		calledDoSave(strEditorAllText);
+	}
+	
+	@Override
+	public void doSaveAs() {
+		boolean isSaved = false;
+		
+		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
+		UserDBResourceDAO newDBResource = getFileName(dBResource);
+		if(newDBResource == null) return;
+		
+		// 저장을 호출합니다.
+		try {
+			String strEditorAllText = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+			isSaved = saveResourceData(newDBResource, strEditorAllText);
+		} catch(SWTException e) {
+			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
+		} finally {
+			if(isSaved) {
+				setDirty(false);
+				browserEvaluate(IEditorFunction.SAVE_DATA);	
+			}
+		}
+	}
+
+	/**
+	 * 데이터를 수정합니다.
 	 * 
 	 * @param newContents
 	 * @return
 	 */
-	public boolean performSave(String newContents) {
-		boolean boolReturnVal = false;
-		
-		// new save
-		if(dBResource == null) {
-			// editor가 저장 가능 상태인지 검사합니다.
-			if(!isDirty()) return false; 
+	private boolean updateResourceDate(String newContents) {
+		try {
+			TadpoleSystem_UserDBResource.updateResource(dBResource, newContents);
+			return true;
+		} catch (Exception e) {
+			logger.error("update file", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
 			
-			if(userSetDBResource == null) {
-				userSetDBResource = getFileName();
-				if(userSetDBResource == null) return false;
-			}
-			
-			boolReturnVal = saveData(newContents);
-			
-		// save as
-		} if(userSetDBResource != null) {
-			boolReturnVal = saveData(newContents);
-			if(boolReturnVal) userSetDBResource = null;
-
-		// update
-		} else {
-			try {
-				TadpoleSystem_UserDBResource.updateResource(dBResource, newContents);
-				boolReturnVal = true;
-				setDirty(false);
-			} catch (Exception e) {
-				logger.error("update file", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
-				
-				boolReturnVal = false;
-			}
+			return false;
 		}
-		
-		return boolReturnVal;
 	}
 	
 	/**
 	 * save data
 	 * 
+	 * @param newDBResource 저장 하려는 리소스
 	 * @param newContents
 	 * @return
 	 */
-	private boolean saveData(String newContents) {
+	private boolean saveResourceData(UserDBResourceDAO newDBResource, String newContents) {
 		try {
 			// db 저장
-			dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, userSetDBResource, newContents);
+			dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, newDBResource, newContents);
 			dBResource.setParent(userDB);
 			
 			// title 수정
-			setPartName(userSetDBResource.getName());
+			setPartName(dBResource.getName());
 			
 			// tree 갱신
 			PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+dBResource.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			setDirty(false);
 			
-			userSetDBResource = null;
 		} catch (Exception e) {
 			logger.error("save data", e); //$NON-NLS-1$
 
