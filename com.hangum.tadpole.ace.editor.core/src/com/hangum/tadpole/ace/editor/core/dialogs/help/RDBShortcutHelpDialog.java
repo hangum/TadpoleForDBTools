@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.ace.editor.core.Messages;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ServletUserAgent;
 
@@ -79,9 +80,9 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	 * Create contents of the dialog.
 	 */
 	public void createContents() {
-		shlEditorShortcutDialog = new Shell(getParent(), SWT.CLOSE | SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		shlEditorShortcutDialog.setText("Shortcuts Information Dialog");
-		shlEditorShortcutDialog.setSize(280, 300);
+		shlEditorShortcutDialog = new Shell(getParent(), SWT.CLOSE | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		shlEditorShortcutDialog.setText(Messages.RDBShortcutHelpDialog_0);
+		shlEditorShortcutDialog.setSize(280, 330);
 		shlEditorShortcutDialog.setLayout(new GridLayout(1, false));
 
 		// shell을 오른쪽 하단에 놓을수 있도록 합니다.
@@ -110,12 +111,12 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnDescription = tableViewerColumn.getColumn();
 		tblclmnDescription.setWidth(100);
-		tblclmnDescription.setText("Description");
+		tblclmnDescription.setText(Messages.RDBShortcutHelpDialog_1);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnKey = tableViewerColumn_1.getColumn();
 		tblclmnKey.setWidth(220);
-		tblclmnKey.setText("Key");
+		tblclmnKey.setText(Messages.RDBShortcutHelpDialog_2);
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ShortcutLabelProvider());
@@ -123,7 +124,6 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 		
 		initData();
 		
-		//
 		tableViewer.getTable().setSelection(0);
 		tableViewer.getTable().setFocus();
 	}
@@ -133,16 +133,16 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	 */
 	private void initData() {
 		super.initShortList();
-		listShortcut.add( new ShortcutHelpDAO("Save", 			prefixCtrlShortcut + "+ S") 		);
+		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_4, 			prefixCtrlShortcut + "+ S") 		);
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
-			listShortcut.add( new ShortcutHelpDAO("Content Assist", 	"Ctrl + Space|Option + Space ") 		);
+			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		);
 		} else {
-			listShortcut.add( new ShortcutHelpDAO("Content Assist", 	"Ctrl + Space") 		);
+			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$
 		}
 		
-		listShortcut.add( new ShortcutHelpDAO("Execute Query", 	prefixCtrlShortcut + "+ enter") 	);
-		listShortcut.add( new ShortcutHelpDAO("Execute Plan", 	prefixCtrlShortcut + "+ E") 		);
-		listShortcut.add( new ShortcutHelpDAO("Query Format", 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") );
+		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$
+		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$
+		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
 		
 		tableViewer.refresh(listShortcut);		
 	}
