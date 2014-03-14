@@ -93,6 +93,8 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 		browserEditor = new Browser(compositeServerStatus, SWT.NONE);
 		browserEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		addBrowserHandler();
+		
+		super.initWidget();
 	}
 	
 	/**

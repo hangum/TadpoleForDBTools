@@ -32,7 +32,9 @@ public class EvaluateWidgets extends Composite {
 	 */
 	public EvaluateWidgets(Composite parent, int style) {
 		super(parent, style);
-		
+	}
+	
+	public void initWidget() {
 		bfUtils = new BrowserFunctionUtil(browserEditor);
 	}
 	

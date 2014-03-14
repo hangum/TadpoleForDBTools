@@ -22,7 +22,7 @@ import java.util.Map;
  * @author hangum
  *
  */
-public class ResultSetUtilDAO {
+public class ResultSetUtilDTO {
 
 	/** 
 	 * column 이름. <columnIndex, name>
@@ -37,7 +37,7 @@ public class ResultSetUtilDAO {
 	 */
 	private List<Map<Integer, Object>> dataList = new ArrayList<Map<Integer,Object>>();
 	
-	public ResultSetUtilDAO() {
+	public ResultSetUtilDTO() {
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class ResultSetUtilDAO {
 	 * @param mapColumnType
 	 * @param sourceDataList
 	 */
-	public ResultSetUtilDAO(Map<Integer, String> columnName, Map<Integer, Integer> columnType, List<Map<Integer, Object>> dataList) {
+	public ResultSetUtilDTO(Map<Integer, String> columnName, Map<Integer, Integer> columnType, List<Map<Integer, Object>> dataList) {
 		this.columnName = columnName;
 		this.columnType = columnType;
 		this.dataList = dataList;
@@ -55,16 +55,17 @@ public class ResultSetUtilDAO {
 	/**
 	 * 메인에디터에서 보여주기위한 정보를 만듭니다.
 	 * 
+	 * @param isShowRownum
 	 * @param rs
 	 * @param queryResultCount
 	 * @param isResultComma
 	 * @throws Exception
 	 */
-	public ResultSetUtilDAO(ResultSet rs, int queryResultCount, boolean isResultComma) throws Exception {
+	public ResultSetUtilDTO(boolean isShowRownum, ResultSet rs, int queryResultCount, boolean isResultComma) throws Exception {
 		if(rs != null) {
-			columnName = ResultSetUtils.getColumnName(true, rs);
-			columnType = ResultSetUtils.getColumnType(true, rs.getMetaData());
-			dataList = ResultSetUtils.getResultToList(true, rs, queryResultCount, isResultComma);
+			columnName = ResultSetUtils.getColumnName(isShowRownum, rs);
+			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
+			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, queryResultCount, isResultComma);
 		}
 	}
 

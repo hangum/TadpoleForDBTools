@@ -152,7 +152,7 @@ public class ResultSetUtils {
 		
 		if(isShowRowNum) {
 			intStartIndex++;
-			mapColumnType.put(0, java.sql.Types.VARCHAR);
+			mapColumnType.put(0, java.sql.Types.INTEGER);
 		}
 		
 		for(int i=0;i<rsm.getColumnCount(); i++) {

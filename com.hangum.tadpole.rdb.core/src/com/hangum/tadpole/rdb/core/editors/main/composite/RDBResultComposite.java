@@ -62,7 +62,7 @@ import com.hangum.tadpole.rdb.core.editors.main.SQLDefine;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
-import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
@@ -88,7 +88,7 @@ public class RDBResultComposite extends Composite {
 	private MainEditor mainEditor = null;
 	
 	/** 쿼리 호출 후 결과 dao */
-	private ResultSetUtilDAO rsDAO = new ResultSetUtilDAO();
+	private ResultSetUtilDTO rsDAO = new ResultSetUtilDTO();
 	
 	/** query 결과 창 */
 	private CTabFolder tabFolderResult;
@@ -644,7 +644,7 @@ public class RDBResultComposite extends Composite {
 	 * 
 	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
-	public void executeFinish(SQLHistoryDAO executingSQLDAO, ResultSetUtilDAO rsDAO) {
+	public void executeFinish(SQLHistoryDAO executingSQLDAO, ResultSetUtilDTO rsDAO) {
 		this.rsDAO = rsDAO;
 		setFilter();
 		

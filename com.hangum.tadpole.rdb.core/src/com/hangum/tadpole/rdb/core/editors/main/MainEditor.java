@@ -78,7 +78,7 @@ import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.PartQueryUtil;
-import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
 import com.hangum.tadpole.sql.util.ResultSetUtils;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
@@ -112,7 +112,7 @@ public class MainEditor extends EditorExtension {
 	private boolean isDirty = false;
 	
 	/** 쿼리 호출 후 결과 dao */
-	private ResultSetUtilDAO rsDAO = new ResultSetUtilDAO();
+	private ResultSetUtilDTO rsDAO = new ResultSetUtilDTO();
 	    
 	public MainEditor() {
 		super();
@@ -526,7 +526,7 @@ public class MainEditor extends EditorExtension {
 	 * 쿼리를 수행합니다.
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
-		rsDAO = new ResultSetUtilDAO();
+		rsDAO = new ResultSetUtilDTO();
 		
 		try {
 			if("".equals(reqQuery.getSql().trim())) return;
@@ -701,7 +701,7 @@ public class MainEditor extends EditorExtension {
 	 * @param requestQuery
 	 */
 	private void runSQLSelect(final RequestQuery reqQuery) throws Exception {
-		rsDAO = new ResultSetUtilDAO();
+		rsDAO = new ResultSetUtilDTO();
 		if(!PermissionChecker.isExecute(getUserType(), userDB, reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
@@ -783,7 +783,7 @@ public class MainEditor extends EditorExtension {
 			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////
-			rsDAO = new ResultSetUtilDAO(rs, queryResultCount, isResultComma);
+			rsDAO = new ResultSetUtilDTO(true, rs, queryResultCount, isResultComma);
 			
 			if(userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) {
 			} else {

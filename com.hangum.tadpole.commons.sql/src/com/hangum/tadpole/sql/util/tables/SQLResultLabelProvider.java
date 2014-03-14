@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
-import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
 
 /**
  * SQLResult의 LabelProvider
@@ -55,7 +55,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * table의 Column을 생성한다.
 	 */
 	public static void createTableColumn(final TableViewer tableViewer,
-										final ResultSetUtilDAO rsDAO,
+										final ResultSetUtilDTO rsDAO,
 										final SQLResultSorter tableSorter) {
 		// 기존 column을 삭제한다.
 		Table table = tableViewer.getTable();
