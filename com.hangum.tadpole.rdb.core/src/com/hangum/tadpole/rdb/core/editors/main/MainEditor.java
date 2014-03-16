@@ -731,10 +731,11 @@ public class MainEditor extends EditorExtension {
 			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.QUERY) {
 				
 				String tmpExeQuery = reqQuery.getSql();
-				if(reqQuery.getSql().toUpperCase().startsWith("SELECT")) { //$NON-NLS-1$
-					tmpExeQuery = PartQueryUtil.makeSelect(userDB, reqQuery.getSql(), 0, queryResultCount);
-					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + reqQuery.getSql()); //$NON-NLS-1$
-				}
+//				https://github.com/hangum/TadpoleForDBTools/issues/363 SQL 파서를 제대로 갖출때까지는 로직을 막습니다.
+//				if(reqQuery.getSql().toUpperCase().startsWith("SELECT")) { //$NON-NLS-1$
+//					tmpExeQuery = PartQueryUtil.makeSelect(userDB, reqQuery.getSql(), 0, queryResultCount);
+//					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + reqQuery.getSql()); //$NON-NLS-1$
+//				}
 				
 				pstmt = javaConn.prepareStatement(tmpExeQuery);
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
