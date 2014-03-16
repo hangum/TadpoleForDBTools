@@ -13,6 +13,7 @@ package com.hangum.tadpole.sql.util.tables;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -20,12 +21,14 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
+import com.swtdesigner.ResourceManager;
 
 /**
  * SQLResult의 LabelProvider
@@ -33,11 +36,24 @@ import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
  * @author hangum
  *
  */
-public class SQLResultLabelProvider extends LabelProvider implements ITableLabelProvider {
+public class SQLResultLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(SQLResultLabelProvider.class);
+	
+
+	@Override
+	public Color getForeground(Object element, int columnIndex) {
+		return null;
+	}
+
+	@Override
+	public Color getBackground(Object element, int columnIndex) {
+		if(columnIndex == 0) return ResourceManager.getColor(SWT.COLOR_GRAY);
+		
+		return null;
+	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;

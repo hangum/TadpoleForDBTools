@@ -628,9 +628,9 @@ public class MainEditor extends EditorExtension {
 				getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							compositeResult.executeFinish(sqlHistoryDAO, rsDAO);
+							compositeResult.executeFinish(reqQuery, sqlHistoryDAO, rsDAO);
 						} else {
-							compositeResult.executeErrorProgress(jobEvent.getResult().getMessage());
+							compositeResult.executeErrorProgress(reqQuery, jobEvent.getResult().getMessage());
 						}
 						
 						// 쿼리 후 화면 정리 작업을 합니다.
@@ -729,15 +729,15 @@ public class MainEditor extends EditorExtension {
 			}
 			
 			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.QUERY) {
-				
-				String tmpExeQuery = reqQuery.getSql();
+
 //				https://github.com/hangum/TadpoleForDBTools/issues/363 SQL 파서를 제대로 갖출때까지는 로직을 막습니다.
+//				String tmpExeQuery = reqQuery.getSql();
 //				if(reqQuery.getSql().toUpperCase().startsWith("SELECT")) { //$NON-NLS-1$
 //					tmpExeQuery = PartQueryUtil.makeSelect(userDB, reqQuery.getSql(), 0, queryResultCount);
 //					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + reqQuery.getSql()); //$NON-NLS-1$
 //				}
 				
-				pstmt = javaConn.prepareStatement(tmpExeQuery);
+				pstmt = javaConn.prepareStatement(reqQuery.getSql());
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
 				rs = pstmt.executeQuery();
 				

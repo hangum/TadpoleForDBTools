@@ -22,10 +22,16 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -58,7 +64,9 @@ import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.editors.main.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.SQLDefine;
+import com.hangum.tadpole.rdb.core.editors.main.dialogs.QueryResultSQLDialog;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
@@ -86,6 +94,9 @@ public class RDBResultComposite extends Composite {
 	private static final Logger logger = Logger.getLogger(RDBResultComposite.class);
 	
 	private MainEditor mainEditor = null;
+	
+	/** 사용자가 요청한 쿼리 */
+	private RequestQuery reqQuery = null;
 	
 	/** 쿼리 호출 후 결과 dao */
 	private ResultSetUtilDTO rsDAO = new ResultSetUtilDTO();
@@ -160,7 +171,7 @@ public class RDBResultComposite extends Composite {
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tvQueryResult = new TableViewer(compositeQueryResult, SWT.BORDER | SWT.SINGLE);
+		tvQueryResult = new TableViewer(compositeQueryResult, SWT.BORDER | SWT.FULL_SELECTION);
 		tvQueryResult.setUseHashlookup(true);
 		final Table tableResult = tvQueryResult.getTable();
 		tableResult.addListener(SWT.MouseDoubleClick, new Listener() {
@@ -225,7 +236,7 @@ public class RDBResultComposite extends Composite {
 							}
 						}else{
 							appendTextAtPosition(strText);
-							logger.debug("\nColumn object type is" + columnObject.getClass().toString()); //$NON-NLS-1$
+//							if(logger.isDebugEnabled()) logger.debug("\nColumn object type is" + columnObject.getClass().toString()); //$NON-NLS-1$
 						}
 					}
 				}
@@ -238,9 +249,13 @@ public class RDBResultComposite extends Composite {
 		
 		sqlFilter.setTable(tableResult);
 		
+		// single column select start
+		TableUtil.makeSelectSingleColumn(tvQueryResult);
+	    // single column select end
+		
 		Composite compositeBtn = new Composite(compositeQueryResult, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(5, false);
+		GridLayout gl_compositeBtn = new GridLayout(6, false);
 		gl_compositeBtn.marginWidth = 1;
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
@@ -298,6 +313,15 @@ public class RDBResultComposite extends Composite {
 			}
 		});
 		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);
+		
+		Button btnSql = new Button(compositeBtn, SWT.NONE);
+		btnSql.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				queryDialogOpen();
+			}
+		});
+		btnSql.setText(Messages.RDBResultComposite_btnSql_text);
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
@@ -434,6 +458,7 @@ public class RDBResultComposite extends Composite {
 			}
 		});
 		btnRefresh.setText(Messages.MainEditor_24);
+		new Label(compositeRecallBtn, SWT.NONE);
 		
 		///////////////////// tab Message //////////////////////////
 		CTabItem tbtmMessage = new CTabItem(tabFolderResult, SWT.NONE);
@@ -556,7 +581,8 @@ public class RDBResultComposite extends Composite {
 	 * error message 추가한다.
 	 * @param msg
 	 */
-	public void executeErrorProgress(final String msg) {
+	public void executeErrorProgress(final RequestQuery reqQuery, final String msg) {
+		this.reqQuery = reqQuery;
 		resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 		
 		listMessage.add(new TadpoleMessageDAO(new Date(), msg));
@@ -622,8 +648,8 @@ public class RDBResultComposite extends Composite {
 			tvQueryResult.setSorter(sqlSorter);
 			
 			// 메시지를 출력합니다.
-			long longExecuteTime = executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime();
-			String strResultMsg = String.format("%s %s [%s ms]", rsDAO.getDataList().size(), Messages.MainEditor_33, longExecuteTime); //$NON-NLS-1$
+			float longExecuteTime = (executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime()) / 1000f;
+			String strResultMsg = String.format("%s %s (%s%s)", rsDAO.getDataList().size(), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
 			tvQueryResult.getTable().setToolTipText(strResultMsg);
 			lblQueryResultStatus.setText(strResultMsg);
 			sqlFilter.setTable(tvQueryResult.getTable());
@@ -644,7 +670,8 @@ public class RDBResultComposite extends Composite {
 	 * 
 	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
-	public void executeFinish(SQLHistoryDAO executingSQLDAO, ResultSetUtilDTO rsDAO) {
+	public void executeFinish(final RequestQuery reqQuery, SQLHistoryDAO executingSQLDAO, ResultSetUtilDTO rsDAO) {
+		this.reqQuery = reqQuery;
 		this.rsDAO = rsDAO;
 		setFilter();
 		
@@ -794,6 +821,14 @@ public class RDBResultComposite extends Composite {
 	
 	public TableViewer getTvSQLHistory() {
 		return tvSQLHistory;
+	}
+	
+	/**
+	 * 사용자가 호출한 쿼리 결과를 다이얼로그에 표시합니다.
+	 */
+	private void queryDialogOpen() {
+		QueryResultSQLDialog qrsDialog = new QueryResultSQLDialog(null, reqQuery);
+		qrsDialog.open();
 	}
 
 	@Override

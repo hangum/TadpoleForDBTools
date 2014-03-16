@@ -202,7 +202,7 @@ public class ResultSetUtils {
 		
 		if(isShowRowNum) {
 			intStartIndex++;
-			mapColumnName.put(0, "#");
+			mapColumnName.put(0, "");
 		}
 		
 		ResultSetMetaData  rsm = rs.getMetaData();
