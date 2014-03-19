@@ -42,7 +42,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		boolean result = false;
 		try {
 			String newContents = (String) arguments[1];
-			result = editor.performSave(newContents);
+			result = editor.calledDoSave(newContents);
 		} catch(Exception e) {
 			logger.error("do not save", e);
 		}

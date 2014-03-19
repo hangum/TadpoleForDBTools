@@ -13,6 +13,8 @@ package com.hangum.tadpole.sql.dao.system;
 
 import java.util.Date;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * user_db_resource dao
  * 
@@ -26,9 +28,9 @@ public class UserDBResourceDAO {
 	int user_seq;
 	int db_seq;
 	int group_seq;
-	String name;
-	String shared_type;
-	String description;
+	String name = "";
+	String shared_type = PublicTadpoleDefine.SHARED_TYPE.PUBLIC.toString();
+	String description = "";
 	
 	Date create_time;
 	String delYn;

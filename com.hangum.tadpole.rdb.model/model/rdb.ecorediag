@@ -38,7 +38,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wPWIWEXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="rdb.ecore#//DB"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wPWImEXEeKdzNKG3DKo1g" x="847" y="392"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wPWImEXEeKdzNKG3DKo1g" x="549" y="412"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wRLUGEXEeKdzNKG3DKo1g" type="1001">
     <children xmi:type="notation:Node" xmi:id="_2wRLU2EXEeKdzNKG3DKo1g" type="4001"/>
@@ -70,7 +70,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wRLUWEXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="rdb.ecore#//Table"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wRLUmEXEeKdzNKG3DKo1g" x="630" y="230"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wRLUmEXEeKdzNKG3DKo1g" x="332" y="250"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wRyZmEXEeKdzNKG3DKo1g" type="1001">
     <children xmi:type="notation:Node" xmi:id="_2wSZcGEXEeKdzNKG3DKo1g" type="4001"/>
@@ -118,14 +118,14 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wRyZ2EXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="rdb.ecore#//Column"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wRyaGEXEeKdzNKG3DKo1g" x="386"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wRyaGEXEeKdzNKG3DKo1g" x="88" y="20"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wTnlGEXEeKdzNKG3DKo1g" type="1004">
     <children xmi:type="notation:Node" xmi:id="_2wTnl2EXEeKdzNKG3DKo1g" type="4008"/>
     <children xmi:type="notation:Node" xmi:id="_2wUOoGEXEeKdzNKG3DKo1g" type="4009"/>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wTnlWEXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EDataType" href="rdb.ecore#//Rectangle"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wTnlmEXEeKdzNKG3DKo1g"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wTnlmEXEeKdzNKG3DKo1g" x="18" y="316"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wUOoWEXEeKdzNKG3DKo1g" type="1001">
     <children xmi:type="notation:Node" xmi:id="_2wUOpGEXEeKdzNKG3DKo1g" type="4001"/>
@@ -169,14 +169,14 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wUOomEXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="rdb.ecore#//Relation"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wUOo2EXEeKdzNKG3DKo1g" x="798"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wUOo2EXEeKdzNKG3DKo1g" x="500" y="20"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wVcwmEXEeKdzNKG3DKo1g" type="1004">
     <children xmi:type="notation:Node" xmi:id="_2wVcxWEXEeKdzNKG3DKo1g" type="4008"/>
     <children xmi:type="notation:Node" xmi:id="_2wVcxmEXEeKdzNKG3DKo1g" type="4009"/>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wVcw2EXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EDataType" href="rdb.ecore#//Point"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wVcxGEXEeKdzNKG3DKo1g" x="1097"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wVcxGEXEeKdzNKG3DKo1g" x="704" y="8"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wWD0GEXEeKdzNKG3DKo1g" type="1005">
     <children xmi:type="notation:Node" xmi:id="_2wWD02EXEeKdzNKG3DKo1g" type="4010"/>
@@ -203,7 +203,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wWD0WEXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EEnum" href="rdb.ecore#//RelationKind"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wWD0mEXEeKdzNKG3DKo1g" x="1456"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wWD0mEXEeKdzNKG3DKo1g" x="792" y="104"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wWq5mEXEeKdzNKG3DKo1g" type="1001">
     <children xmi:type="notation:Node" xmi:id="_2wXR8GEXEeKdzNKG3DKo1g" type="4001"/>
@@ -219,7 +219,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wWq52EXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="rdb.ecore#//View"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wWq6GEXEeKdzNKG3DKo1g" x="662" y="392"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wWq6GEXEeKdzNKG3DKo1g" x="344" y="424"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wXR-WEXEeKdzNKG3DKo1g" type="1001">
     <children xmi:type="notation:Node" xmi:id="_2wXR_GEXEeKdzNKG3DKo1g" type="4001"/>
@@ -243,7 +243,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wXR-mEXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="rdb.ecore#//ERDInfo"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wXR-2EXEeKdzNKG3DKo1g" x="1091" y="230"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wXR-2EXEeKdzNKG3DKo1g" x="776" y="248"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_2wX5CGEXEeKdzNKG3DKo1g" type="1001">
     <children xmi:type="notation:Node" xmi:id="_2wYgEGEXEeKdzNKG3DKo1g" type="4001"/>
@@ -263,7 +263,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2wX5CWEXEeKdzNKG3DKo1g" fontColor="4210752" fontName="맑은 고딕" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="rdb.ecore#//UserComment"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wX5CmEXEeKdzNKG3DKo1g" x="597"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2wX5CmEXEeKdzNKG3DKo1g" x="299" y="20"/>
   </children>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_2v7NEWEXEeKdzNKG3DKo1g"/>
   <element xmi:type="ecore:EPackage" href="rdb.ecore#/"/>

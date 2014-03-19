@@ -146,7 +146,6 @@ public class Messages extends NLS {
 	public static String MainEditor_72;
 	public static String MainEditor_8;
 	public static String MainEditor_9;
-	public static String MainEditor_lblFilter_text;
 	public static String MainEditor_tltmDropdownItem_text;
 	public static String DBLoginDialog_btnPing_text;
 	public static String DeleteDBAction_1;
@@ -163,7 +162,6 @@ public class Messages extends NLS {
 	public static String ExitAction_1;
 	public static String ExitAction_2;
 	public static String ExitAction_3;
-	public static String ExplorerViewer_0;
 	public static String ExplorerViewer_1;
 	public static String ExplorerViewer_29;
 	public static String ExplorerViewer_39;
@@ -398,6 +396,8 @@ public class Messages extends NLS {
 	public static String OthersConnectionBigDataGroup_btnExternalBrowser_text;
 	public static String OthersConnectionMongoDBGroup_btnExternalBrowser_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnExternalBrowser_text;
+	public static String RDBResultComposite_lblNewLabel_text;
+	public static String RDBResultComposite_lblNewLabel_text_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

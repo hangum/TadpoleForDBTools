@@ -16,7 +16,7 @@ import java.util.Map;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
 
 /**
  * 올챙이에서 jdbc로 연결하지 못하는 Connection의 interface를 정합니다.
@@ -42,7 +42,7 @@ public interface ConnectionInterfact {
 	 * @param requestQuery
 	 * @throws Exception
 	 */
-	public ResultSetUtilDAO select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception;
+	public ResultSetUtilDTO select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception;
 	
 	/**
 	 * 연결 테스트 합니다.

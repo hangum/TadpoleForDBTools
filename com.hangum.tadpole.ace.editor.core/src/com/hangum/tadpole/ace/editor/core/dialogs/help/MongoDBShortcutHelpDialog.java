@@ -13,6 +13,7 @@ package com.hangum.tadpole.ace.editor.core.dialogs.help;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.ace.editor.core.Messages;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ServletUserAgent;
 
@@ -48,9 +49,9 @@ public class MongoDBShortcutHelpDialog extends RDBShortcutHelpDialog {
 	private void initData() {
 		super.initShortList();
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
-			listShortcut.add( new ShortcutHelpDAO("Content Assist", 	"Ctrl + Space|Option + Space ") 		);
+			listShortcut.add( new ShortcutHelpDAO(Messages.MongoDBShortcutHelpDialog_0, 	"Ctrl + Space|Option + Space ") 		); //$NON-NLS-2$
 		} else {
-			listShortcut.add( new ShortcutHelpDAO("Content Assist", 	"Ctrl + Space") 		);
+			listShortcut.add( new ShortcutHelpDAO(Messages.MongoDBShortcutHelpDialog_2, 	"Ctrl + Space") 		); //$NON-NLS-2$
 		}
 		
 		tableViewer.refresh(listShortcut);		

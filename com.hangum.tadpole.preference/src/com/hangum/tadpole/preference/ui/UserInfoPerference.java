@@ -198,12 +198,12 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		try {
 			if (isPasswordUpdated) {
 				TadpoleSystem_UserQuery.updateUserPassword(user);
-				SessionManager.updateSessionAttribute(SessionManager.SESSEION_NAME.LOGIN_PASSWORD.toString(), user.getPasswd());			
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), user.getPasswd());			
 			}
 			
 			TadpoleSystem_UserQuery.updateUserSecurityHint(user);
-			SessionManager.updateSessionAttribute(SessionManager.SESSEION_NAME.SECURITY_QUESTION.toString(), questionKey);			
-			SessionManager.updateSessionAttribute(SessionManager.SESSEION_NAME.SECURITY_ANSWER.toString(), answer);
+			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_QUESTION.toString(), questionKey);			
+			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_ANSWER.toString(), answer);
 			
 			//fix https://github.com/hangum/TadpoleForDBTools/issues/243
 			SessionManager.setPassword(user.getPasswd());
