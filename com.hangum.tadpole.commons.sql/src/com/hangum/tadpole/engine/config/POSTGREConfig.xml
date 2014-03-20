@@ -14,35 +14,22 @@
     "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 
 <sqlMapConfig>
-	<settings cacheModelsEnabled="true"
-              enhancementEnabled="true"
-              lazyLoadingEnabled="true"
-              maxRequests="128"
-              maxSessions="10"
-              maxTransactions="5"
-              useStatementNamespaces="false"
-              defaultStatementTimeout="5"
-              statementCachingEnabled="true"
-              classInfoCacheEnabled="true" />
-              
-	<transactionManager type="EXTERNAL">
-		<dataSource type="SIMPLE">
+
+	<transactionManager type="JDBC">
+		<dataSource type="DBCP">
 			<property name="JDBC.Driver" 			value="org.postgresql.Driver" />
 			<property name="JDBC.ConnectionURL" 	value="${JDBC.ConnectionURL}" />
 			<property name="JDBC.Username" 			value="${JDBC.Username}" />
 			<property name="JDBC.Password" 			value="${JDBC.Password}" />
-			<property name="JDBC.DefaultAutoCommit" value="true"/>
 
 			<!--OPTIONAL PROPERTIES BELOW -->
-			<property name="Pool.MaximumActiveConnections" 	value="30" />
-			<property name="Pool.MaximumIdleConnections" 	value="5" />
-			<property name="Pool.MaximumWait" 				value="1000" />
-			
+			<property name="Pool.MaximumActiveConnections" 	value="3" />
+			<property name="Pool.MaximumIdleConnections" 	value="1" />
+			<property name="Pool.MaximumWait" 				value="60000" />
 			<!--
 				Use of the validation query can be problematic. If you have
 				difficulty, try without it.
 			-->
-			<!-- 
 			<property name="Pool.ValidationQuery" 	value="select 1" />
 			<property name="Pool.testWhileIdle" 	value="true" />
 			<property name="Pool.timeBetweenEvictionRunsMillis" value="7200000"/>
@@ -50,14 +37,7 @@
 			<property name="Pool.LogAbandoned" 		value="true" />
 			<property name="Pool.RemoveAbandoned" 	value="true" />
 			<property name="Pool.RemoveAbandonedTimeout" value="50000" />
- 			-->
- 			
- 			<property name="Pool.TimeToWait" value="500" />
-            <property name="Pool.PingQuery" value="select 1" />
-            <property name="Pool.PingEnabled" value="true" />
-            <property name="Pool.PingConnectionsOlderThan" value="1" />
-            <property name="Pool.PingConnectionsNotUsedFor" value="1" />
-            <property name="Driver.SetBigStringTryClob" value="true"/>
+
 		</dataSource>
 	</transactionManager>
 
