@@ -105,7 +105,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleTableComposite.class);
 	
-	/** select table name */
+	/** selected table name */
 	private String selectTableName = ""; //$NON-NLS-1$
 
 	// table info
@@ -508,6 +508,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public void refreshTable(final UserDBDAO selectUserDb, boolean boolRefresh) {
 		if(!boolRefresh) if(selectUserDb == null) return;
 		this.userDB = selectUserDb;
+		
+		selectTableName = "";
 		
 		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
 		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) {

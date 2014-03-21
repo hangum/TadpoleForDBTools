@@ -88,6 +88,7 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
 				} catch(e) {
 					console.log(e);
+					editorService.executeFlag();
 				}
 				isEdited = true;
 			}
@@ -131,12 +132,19 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
+    		console.log("Before isJavaRunning value is " + isJavaRunning);
+    		
     		if(!isJavaRunning) {
-    			isJavaRunning = true;
+    			console.log("\t\t1. if in a isJavaRunning value is " + isJavaRunning);
     			var retResulr = AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+    			editorService.executeFlag();
+    			console.log("\t\t2. if in a isJavaRunning value is " + isJavaRunning);
     		}
+    		console.log("After isJavaRunning value is " + isJavaRunning);
     	} catch(e) {
     		console.log(e);
+    		console.log("Rise exception sett isJavaRunning ");
+    		editorService.executeFlag();
     	}
     },
     readOnly: false

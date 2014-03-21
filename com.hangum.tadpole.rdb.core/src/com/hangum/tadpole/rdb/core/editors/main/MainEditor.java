@@ -10,18 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.math.BigInteger;
-import java.sql.Blob;
-import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -34,41 +29,22 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -78,17 +54,10 @@ import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
-import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
-import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
-import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
-import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
-import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
-import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
@@ -96,8 +65,8 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
+import com.hangum.tadpole.rdb.core.editors.main.composite.RDBResultComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
-import com.hangum.tadpole.rdb.core.editors.main.sub.MainEditorHelper;
 import com.hangum.tadpole.rdb.core.util.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
@@ -109,28 +78,15 @@ import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.PartQueryUtil;
-import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
-import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
 import com.hangum.tadpole.sql.util.ResultSetUtils;
 import com.hangum.tadpole.sql.util.SQLUtil;
-import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
-import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
-import com.hangum.tadpole.sql.util.tables.SQLHistoryLabelProvider;
-import com.hangum.tadpole.sql.util.tables.SQLHistorySorter;
-import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
-import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
-import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
-import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
-import com.swtdesigner.SWTResourceManager;
 
 /**
  * 쿼리 수행 및 검색 창.
- * 
- * 에디터는 org.eclipse.orion.client-20120810-1752 로 작업.
  * 
  * @author hangum
  *
@@ -143,49 +99,20 @@ public class MainEditor extends EditorExtension {
 	
 	/** toolbar auto commit */
 	private ToolItem tiAutoCommit = null, tiAutoCommitCommit = null, tiAutoCommitRollback = null;
-	/** 이전, 이후 버튼 */
-	private Button btnPrev, btnNext;
-	
+
+	/** result tab */
+	private RDBResultComposite compositeResult;
+
+	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
+	private String initDefaultEditorStr = ""; //$NON-NLS-1$
 	/** resource 정보. */
 	private UserDBResourceDAO dBResource;
-	/** first save UserDBResource object */
-	private UserDBResourceDAO userSetDBResource; //$NON-NLS-1$
 	
 	/** save mode */
 	private boolean isDirty = false;
-	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
-	private String initDefaultEditorStr = ""; //$NON-NLS-1$
 	
 	/** 쿼리 호출 후 결과 dao */
-	private ResultSetUtilDAO rsDAO = new ResultSetUtilDAO();
-	/** 쿼리 결과 페이지 로케이션 */
-	private int pageNumber = 1;
-	
-	/** 결과 filter */
-	private Text textFilter;
-	private SQLResultFilter sqlFilter = new SQLResultFilter();
-	private SQLResultSorter sqlSorter;
-	private Label lblQueryResultStatus;
-	private TableViewer tvQueryResult;
-	
-	/** query 결과 창 */
-	private CTabFolder tabFolderResult;
-
-	/** download servcie handler. */
-	private DownloadServiceHandler downloadServiceHandler;
-	/** 쿼리결과 export */
-	private Button btnSQLResultExport;
-    /** content download를 위한 더미 composite */
-    private Composite compositeDumy;
-	
-	/** query history */
-	private TableViewer tvSQLHistory;
-	private List<SQLHistoryDAO> listSQLHistory = new ArrayList<SQLHistoryDAO>();
-	private Text textHistoryFilter;
-	
-	/** tadpole message */
-	private TableViewer tableViewerMessage;
-	private List<TadpoleMessageDAO> listMessage = new ArrayList<TadpoleMessageDAO>();
+	private ResultSetUtilDTO rsDAO = new ResultSetUtilDTO();
 	    
 	public MainEditor() {
 		super();
@@ -238,25 +165,22 @@ public class MainEditor extends EditorExtension {
 		gl_compositeEditor.marginWidth = 0;
 		compositeEditor.setLayout(gl_compositeEditor);
 		
-		// Shortcut prefix
-		String prefixOSShortcut = ShortcutPrefixUtils.getCtrlShortcut();
-		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
-		toolBar.setToolTipText(String.format(Messages.MainEditor_toolBar_toolTipText, prefixOSShortcut));
+		toolBar.setToolTipText(String.format(Messages.MainEditor_toolBar_toolTipText, ShortcutPrefixUtils.getCtrlShortcut()));
 		
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
+		tltmConnectURL.setToolTipText("Connection Information");
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
-		tltmConnectURL.setToolTipText("Connection Information"); //$NON-NLS-1$
 		
 		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
 			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
-				tltmConnectURL.setText("Connect [ " + fileName + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
+				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName));
 			} else {
-				tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getUsers() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers()));
 			}	
 		} else {
-			tltmConnectURL.setText("Connect Information"); //$NON-NLS-1$ //$NON-NLS-2$
+			tltmConnectURL.setText(userDB.getDbms_types());
 		}
 		
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
@@ -270,12 +194,12 @@ public class MainEditor extends EditorExtension {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, prefixOSShortcut));
+		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, ShortcutPrefixUtils.getCtrlShortcut()));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png")); //$NON-NLS-1$
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, QUERY_DELIMITER); //$NON-NLS-1$
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, SQLDefine.QUERY_DELIMITER); //$NON-NLS-1$
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
 				executeCommand(reqQuery);
@@ -302,14 +226,14 @@ public class MainEditor extends EditorExtension {
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, QUERY_DELIMITER); //$NON-NLS-1$
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, SQLDefine.QUERY_DELIMITER); //$NON-NLS-1$
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
 				executeCommand(reqQuery);
 				
 			}
 		});
-		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, prefixOSShortcut));
+		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, ShortcutPrefixUtils.getCtrlShortcut()));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
@@ -326,7 +250,7 @@ public class MainEditor extends EditorExtension {
 				}
 			}
 		});
-		tltmSort.setToolTipText(String.format(Messages.MainEditor_4, prefixOSShortcut));
+		tltmSort.setToolTipText(String.format(Messages.MainEditor_4, ShortcutPrefixUtils.getCtrlShortcut()));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSQLToApplication = new ToolItem(toolBar, SWT.NONE);
@@ -341,7 +265,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
+	    tltmSQLToApplication.setToolTipText("SQL statement to Application code");
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
@@ -353,7 +277,7 @@ public class MainEditor extends EditorExtension {
 		
 				try {
 					String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-					downloadExtFile(getUserDB().getDisplay_name()+".sql", strQuery); //$NON-NLS-1$
+					compositeResult.downloadExtFile(getUserDB().getDisplay_name()+".sql", strQuery); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("Download SQL", ee); //$NON-NLS-1$
 				}
@@ -364,7 +288,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommit = new ToolItem(toolBar, SWT.CHECK);
 		tiAutoCommit.setSelection(false);
-		tiAutoCommit.setText("Auto Commit"); //$NON-NLS-1$
+		tiAutoCommit.setText("Transaction start");
 		tiAutoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -374,7 +298,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText("Commit"); //$NON-NLS-1$
+		tiAutoCommitCommit.setText("Commit");
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -386,7 +310,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitRollback.setSelection(false);
-		tiAutoCommitRollback.setText("Rollback"); //$NON-NLS-1$
+		tiAutoCommitRollback.setText("Rollback");
 		tiAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -395,7 +319,6 @@ public class MainEditor extends EditorExtension {
 				TadpoleSQLTransactionManager.rollback(strUserEMail, userDB);
 			}
 		});
-		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
@@ -409,416 +332,26 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, prefixOSShortcut));
-		
+		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, ShortcutPrefixUtils.getCtrlShortcut()));
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
 	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	    
 	    
-	    addBrowserService();	    
+	    addBrowserService();
 	    
-//		createStatusLine();
-	    ////// orion editor end /////////////////////////////////////////////////////////////////////////////
-		
-		Composite compositeResult = new Composite(sashForm, SWT.NONE);
+	    Composite compositeSashForm = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 0;
 		gl_compositeResult.horizontalSpacing = 0;
 		gl_compositeResult.marginHeight = 0;
 		gl_compositeResult.marginWidth = 0;
-		compositeResult.setLayout(gl_compositeResult);
-		
-		tabFolderResult = new CTabFolder(compositeResult, SWT.NONE);
-		tabFolderResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tabFolderResult.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());		
-		
-		// tab 의 index를 설정한다.
-		tabFolderResult.setData(EditorDefine.RESULT_TAB_NAME.RESULT_SET.toString(), 0);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB_NAME.SQL_RECALL.toString(), 1);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB_NAME.TADPOLE_MESSAGE.toString(), 2);
-		
-		CTabItem tbtmResult = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmResult.setText(Messages.MainEditor_7);
-		
-		Composite compositeQueryResult = new Composite(tabFolderResult, SWT.NONE);
-		tbtmResult.setControl(compositeQueryResult);
-		
-		GridLayout gl_compositeQueryResultBtn = new GridLayout(2, false);
-		gl_compositeQueryResultBtn.marginWidth = 1;
-		gl_compositeQueryResultBtn.marginHeight = 0;
-		compositeQueryResult.setLayout(gl_compositeQueryResultBtn);
-		
-		Label lblFilter = new Label(compositeQueryResult, SWT.NONE);
-		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.MainEditor_lblFilter_text);
-		
-		textFilter = new Text(compositeQueryResult,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
-		textFilter.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) setFilter();
-			}
-		});
-		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tvQueryResult = new TableViewer(compositeQueryResult, SWT.BORDER | SWT.SINGLE);
-		tvQueryResult.setUseHashlookup(true);
-		final Table tableResult = tvQueryResult.getTable();
-		tableResult.addListener(SWT.MouseDoubleClick, new Listener() {
-		    public void handleEvent(Event event) {
-		    	TableItem[] selection = tableResult.getSelection();
-				if (selection.length != 1) return;
-				
-				TableItem item = tableResult.getSelection()[0];
-				for (int i=0; i<tableResult.getColumnCount(); i++) {
-					if (item.getBounds(i).contains(event.x, event.y)) {
-						String strText = item.getText(i);
-						if(strText == null || "".equals(strText)) return; //$NON-NLS-1$
-						strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						
-						//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
-						Map<Integer, Object> mapColumns = rsDAO.getDataList().get(tableResult.getSelectionIndex());
-						Object columnObject = mapColumns.get(i);
-						
-						// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
-						//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
-						if (columnObject != null && columnObject instanceof java.sql.Clob ){
-							Clob cl = (Clob) columnObject;
-	
-							StringBuffer clobContent = new StringBuffer();
-							String readBuffer = new String();
-	
-							// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
-							BufferedReader bufferedReader;
-							try {
-								bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
-								
-								while ((readBuffer = bufferedReader.readLine())!= null)
-									clobContent.append(readBuffer);
-
-								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), clobContent.toString());
-					            dlg.open();									
-							} catch (Exception e) {
-								logger.error("Clob column echeck", e); //$NON-NLS-1$
-							}
-						}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
-							try {
-								Blob blob = (Blob) columnObject;
-								
-								TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(getSite().getShell(), tableResult.getColumn(i).getText(), blob.getBinaryStream());
-								dlg.open();								
-							} catch (Exception e) {
-								logger.error("Blob column echeck", e); //$NON-NLS-1$
-							}
-		
-						}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
-							byte[] b = (byte[])columnObject;
-							StringBuffer str = new StringBuffer();
-							try {
-								for (byte buf : b){
-									str.append(buf);
-								}
-								str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
-								TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(getSite().getShell(), tableResult.getColumn(i).getText(), str.toString() );
-				                dlg.open();
-							} catch (Exception e) {
-								logger.error("Clob column echeck", e); //$NON-NLS-1$
-							}
-						}else{
-							appendTextAtPosition(strText);
-							logger.debug("\nColumn object type is" + columnObject.getClass().toString()); //$NON-NLS-1$
-						}
-					}
-				}
-		    }
-		});
-		
-		tableResult.setLinesVisible(true);
-		tableResult.setHeaderVisible(true);
-		tableResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
-		sqlFilter.setTable(tableResult);
-		
-		Composite compositeBtn = new Composite(compositeQueryResult, SWT.NONE);
-		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(5, false);
-		gl_compositeBtn.marginWidth = 1;
-		gl_compositeBtn.marginHeight = 0;
-		compositeBtn.setLayout(gl_compositeBtn);
-		
-		btnPrev = new Button(compositeBtn, SWT.NONE);
-		btnPrev.setEnabled(false);
-		btnPrev.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				btnPrev();
-			}
-		});
-		btnPrev.setText(Messages.MainEditor_8);
-		
-		btnNext = new Button(compositeBtn, SWT.NONE);
-		btnNext.setEnabled(false);
-		btnNext.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				btnNext();
-			}
-		});
-		btnNext.setText(Messages.MainEditor_9);
-		
-		compositeDumy = new Composite(compositeBtn, SWT.NONE);
-		compositeDumy.setLayout(new GridLayout(1, false));
-		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		
-		btnSQLResultExport = new Button(compositeBtn, SWT.NONE);
-		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// 분리자 정보를 가져옵니다.
-				StringBuffer sbExportData = new StringBuffer();
-					
-				// column 헤더추가.
-				TableColumn[] tcs = tvQueryResult.getTable().getColumns();
-				for (TableColumn tableColumn : tcs) {
-					sbExportData.append( tableColumn.getText()).append(EXPORT_DEMILITER);
-				}
-				sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
-				
-				// column 데이터 추가 
-				for(int i=0; i<rsDAO.getDataList().size(); i++) {
-					Map<Integer, Object> mapColumns = rsDAO.getDataList().get(i);
-					for(int j=0; j<mapColumns.size(); j++) {
-						String strContent = mapColumns.get(j)==null?"":mapColumns.get(j).toString(); //$NON-NLS-1$
-						if(strContent.length() == 0 ) strContent = " "; //$NON-NLS-1$
-						sbExportData.append(strContent).append(EXPORT_DEMILITER); //$NON-NLS-1$
-					}
-					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR);
-				}
-				
-				downloadExtFile(userDB.getDisplay_name() + "_SQLResultExport.csv", sbExportData.toString()); //$NON-NLS-1$
-			}
-		});
-		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);
-		
-		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
-		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-
-		///////////////////// tab item //////////////////////////
-		CTabItem tbtmNewItem = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmNewItem.setText(Messages.MainEditor_10);
-		
-		Composite compositeSQLHistory = new Composite(tabFolderResult, SWT.NONE);
-		tbtmNewItem.setControl(compositeSQLHistory);
-		GridLayout gl_compositeSQLHistory = new GridLayout(1, false);
-		gl_compositeSQLHistory.marginHeight = 0;
-		gl_compositeSQLHistory.marginWidth = 1;
-		gl_compositeSQLHistory.marginBottom = 0;
-		compositeSQLHistory.setLayout(gl_compositeSQLHistory);
-		
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tvSQLHistory = new TableViewer(compositeSQLHistory, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-		tvSQLHistory.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				
-				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				if(!is.isEmpty()) {
-					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
-				}
-			}
-		});
-		
-		Table tableSQLHistory = tvSQLHistory.getTable();
-		tableSQLHistory.setLinesVisible(true);
-		tableSQLHistory.setHeaderVisible(true);
-		tableSQLHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableSQLHistory.setSortDirection(SWT.DOWN);
-		
-		// auto column layout
-		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tvSQLHistory.getTable());
-		tvSQLHistory.getTable().setLayout(layoutColumnLayout);
-		
-		SQLHistorySorter sorterHistory = new SQLHistorySorter();
-		SQLHistoryCreateColumn.createTableHistoryColumn(tvSQLHistory, sorterHistory, layoutColumnLayout, false);
-		
-		tvSQLHistory.setLabelProvider(new SQLHistoryLabelProvider());
-		tvSQLHistory.setContentProvider(new ArrayContentProvider());
-		tvSQLHistory.setInput(listSQLHistory);
-		tvSQLHistory.setSorter(sorterHistory);
-		
-		Composite compositeRecallBtn = new Composite(compositeSQLHistory, SWT.NONE);
-		compositeRecallBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeRecallBtn = new GridLayout(8, false);
-		gl_compositeRecallBtn.marginWidth = 1;
-		gl_compositeRecallBtn.marginHeight = 0;
-		compositeRecallBtn.setLayout(gl_compositeRecallBtn);
-		
-		final Button btnExportHistory = new Button(compositeRecallBtn, SWT.NONE);
-		btnExportHistory.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnExportHistory.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
-				IStructuredSelection is = (IStructuredSelection)tvSQLHistory.getSelection();
-				if(!is.isEmpty()) {
-					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
-				} else {
-					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
-				}
-			}
-		});
-		btnExportHistory.setText(Messages.MainEditor_12);
-		
-		Button btnDetailView = new Button(compositeRecallBtn, SWT.NONE);
-		btnDetailView.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection is = (IStructuredSelection)tvSQLHistory.getSelection();
-				Object selElement = is.getFirstElement();
-				if(selElement instanceof SQLHistoryDAO) {
-					SQLHistoryDAO tmd = (SQLHistoryDAO)selElement;
-					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getSite().getShell(), Messages.MainEditor_11, SQLHistoryLabelProvider.dateToStr(tmd.getStartDateExecute()), tmd.getStrSQLText() );
-					dlg.open();
-				} else {
-					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
-				}
-			}
-		});
-		btnDetailView.setText(Messages.MainEditor_btnDetailView_text);
-		
-		Button btnSetEditor = new Button(compositeRecallBtn, SWT.NONE);
-		btnSetEditor.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnSetEditor.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				StringBuffer sbExportData = new StringBuffer();
-				
-				for(SQLHistoryDAO dao : listSQLHistory) {
-					sbExportData.append( dao.getStrSQLText() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
-				}
-				
-				downloadExtFile(userDB.getDisplay_name() + "_RecallSQLExport.txt", sbExportData.toString()); //$NON-NLS-1$
-			}
-		});
-		btnSetEditor.setText(Messages.MainEditor_17);
-		
-		// table clear
-		Button btnHistoyClear = new Button(compositeRecallBtn, SWT.NONE);
-		btnHistoyClear.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnHistoyClear.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				listSQLHistory.clear();
-				tvSQLHistory.refresh();
-			}
-		});
-		btnHistoyClear.setText(Messages.MainEditor_btnClear_text);
-		
-		Label labelDumyRecal = new Label(compositeRecallBtn, SWT.NONE);
-		labelDumyRecal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		textHistoryFilter = new Text(compositeRecallBtn, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
-		textHistoryFilter.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) refreshSqlHistory();
-			}
-		});
-		textHistoryFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		// refresh
-		Button btnRefresh = new Button(compositeRecallBtn, SWT.NONE);
-		btnRefresh.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnRefresh.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				refreshSqlHistory();
-			}
-		});
-		btnRefresh.setText(Messages.MainEditor_24);
-		
-		///////////////////// tab Message //////////////////////////
-		CTabItem tbtmMessage = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmMessage.setText(Messages.MainEditor_0);
-		
-		Composite compositeMessage = new Composite(tabFolderResult, SWT.NONE);
-		tbtmMessage.setControl(compositeMessage);
-		GridLayout gl_compositeMessage = new GridLayout(1, false);
-		gl_compositeMessage.marginWidth = 1;
-		gl_compositeMessage.marginHeight = 0;
-		compositeMessage.setLayout(gl_compositeMessage);
-		
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tableViewerMessage = new TableViewer(compositeMessage, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-		tableViewerMessage.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				
-				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				Object selElement = is.getFirstElement();
-				if(selElement instanceof TadpoleMessageDAO) {
-					TadpoleMessageDAO tmd = (TadpoleMessageDAO)selElement;
-					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getSite().getShell(), Messages.MainEditor_20, SQLHistoryLabelProvider.dateToStr(tmd.getDateExecute()), tmd.getStrMessage());
-					dlg.open();
-				}
-			}
-		});
-		Table tableMessage = tableViewerMessage.getTable();
-		tableMessage.setLinesVisible(true);
-		tableMessage.setHeaderVisible(true);
-		tableMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableMessage.setSortDirection(SWT.DOWN);
-		
-		// auto column layout
-		AutoResizeTableLayout layoutColumnLayoutMsg = new AutoResizeTableLayout(tableViewerMessage.getTable());
-		tableViewerMessage.getTable().setLayout(layoutColumnLayoutMsg);
-		
-		SQLHistorySorter sorterMessage = new SQLHistorySorter();
-		MainEditorHelper.createTableMessageColumn(tableViewerMessage, sorterMessage, layoutColumnLayoutMsg);
-		
-		tableViewerMessage.setLabelProvider(new SQLHistoryLabelProvider());
-		tableViewerMessage.setContentProvider(new ArrayContentProvider());
-		tableViewerMessage.setInput(listMessage);
-		tableViewerMessage.setComparator(sorterMessage);
-		
-		Composite compositeMessageSub = new Composite(compositeMessage, SWT.NONE);
-		compositeMessageSub.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		GridLayout gl_compositeMessageSubBtn = new GridLayout(3, false);
-		gl_compositeMessageSubBtn.marginWidth = 1;
-		gl_compositeMessageSubBtn.marginHeight = 0;
-		compositeMessageSub.setLayout(gl_compositeMessageSubBtn);
-		
-		Button btnExportMessage = new Button(compositeMessageSub, SWT.NONE);
-		btnExportMessage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnExportMessage.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				StringBuffer sbExportData = new StringBuffer();
-				
-				for(TadpoleMessageDAO dao : listMessage) {
-					sbExportData.append( dao.getStrMessage() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
-				}
-				
-				downloadExtFile(userDB.getDisplay_name() + "_Message.txt", sbExportData.toString()); //$NON-NLS-1$
-			}
-		});
-		btnExportMessage.setText(Messages.MainEditor_43);
-		
-		Label labelMsgDumy = new Label(compositeMessageSub, SWT.NONE);
-		labelMsgDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Button btnMessageViewClear = new Button(compositeMessageSub, SWT.NONE);
-		btnMessageViewClear.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				listMessage.clear();
-				tableViewerMessage.refresh();
-			}
-		});
-		btnMessageViewClear.setText(Messages.MainEditor_btnClear_text);
-		/////////////////////// end tap item /////////////////////////////////////////////
+		compositeSashForm.setLayout(gl_compositeResult);
+	    
+	    compositeResult = new RDBResultComposite(compositeSashForm, SWT.NONE);
+	    compositeResult.setLayout(gl_compositeResult);
+	    compositeResult.setMainEditor(this);
 		
 		sashForm.setWeights(new int[] {65, 35});
 		initEditor();
@@ -839,11 +372,9 @@ public class MainEditor extends EditorExtension {
 						if(seq == userDB.getSeq()) {
 							tiAutoCommit.setSelection(boolUseAutocommit);
 							if(!boolUseAutocommit) {
-								tiAutoCommit.setToolTipText("Auto Commit true"); //$NON-NLS-1$
 								tiAutoCommitCommit.setEnabled(false);
 								tiAutoCommitRollback.setEnabled(false);
 							} else {
-								tiAutoCommit.setToolTipText("Auto Commit false"); //$NON-NLS-1$
 								tiAutoCommitCommit.setEnabled(true);
 								tiAutoCommitRollback.setEnabled(true);
 							}
@@ -854,9 +385,12 @@ public class MainEditor extends EditorExtension {
 		}); // end property change		
 	}
 	
+	public Browser getBrowserQueryEditor() {
+		return browserQueryEditor;
+	}
+	
 	/**
 	 * append text at position
-	 * 
 	 * @param strText
 	 */
 	public void appendTextAtPosition(String strText) {
@@ -877,19 +411,6 @@ public class MainEditor extends EditorExtension {
 			browserEvaluate(EditorFunctionService.APPEND_TEXT, strText);
 		} catch(Exception ee){
 			logger.error("query text" , ee); //$NON-NLS-1$
-		}
-	}
-	
-	/**
-	 * refresh sql history table 
-	 */
-	private void refreshSqlHistory() {
-		try {
-			listSQLHistory.clear();
-			listSQLHistory.addAll( TadpoleSystem_ExecutedSQL.getExecuteQueryHistory(user_seq, getUserDB().getSeq(), textHistoryFilter.getText().trim()) );
-			tvSQLHistory.refresh();
-		} catch(Exception ee) {
-			logger.error("Executed SQL History call", ee); //$NON-NLS-1$
 		}
 	}
 	
@@ -946,12 +467,6 @@ public class MainEditor extends EditorExtension {
 //		
 //		return strTablelist;
 //	}
-	
-	/** Define.QUERY_MODE 명령을 내립니다 */
-	public void executeCommand(RequestQuery reqQuery) {
-		execute(reqQuery);
-		resultFolderSel(EditorDefine.RESULT_TAB_NAME.RESULT_SET);
-	}
 
 	/**
 	 * initialize editor
@@ -969,11 +484,6 @@ public class MainEditor extends EditorExtension {
 		
 		// 기존 에디터에서 auto commit button 이 어떻게 설정 되어 있는지 가져옵니다.
 		initAutoCommitAction(true, false);
-		
-		tabFolderResult.setSelection(0);
-		
-		registerServiceHandler();
-		setInitDefaultEditorStr(initDefaultEditorStr);
 	}
 	
 	/**
@@ -984,7 +494,6 @@ public class MainEditor extends EditorExtension {
 	 */
 	private void initAutoCommitAction(boolean isFirst, boolean isRiseEvent) {
 		if(isAutoCommit()) {
-			tiAutoCommit.setToolTipText("Auto Commit true"); //$NON-NLS-1$
 			tiAutoCommitCommit.setEnabled(false);
 			tiAutoCommitRollback.setEnabled(false);
 			
@@ -996,7 +505,6 @@ public class MainEditor extends EditorExtension {
 				}
 			}
 		} else {
-			tiAutoCommit.setToolTipText("Auto Commit false"); //$NON-NLS-1$
 			tiAutoCommitCommit.setEnabled(true);
 			tiAutoCommitRollback.setEnabled(true);
 		}
@@ -1006,70 +514,59 @@ public class MainEditor extends EditorExtension {
 			PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.AUTOCOMMIT_USE, userDB.getSeq() + "||" + tiAutoCommit.getSelection() + "||" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
-
-	/** registery service handler */
-	private void registerServiceHandler() {
-		downloadServiceHandler = new DownloadServiceHandler();
-		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
-	}
 	
 	/**
-	 * sql history를 텍스트로 만듭니다.
-	 * @return
-	 * @throws Exception
+	 * 에디터를 실행 후에 마지막으로 실행해 주어야 하는 코드.
 	 */
-	private String getHistoryTabelSelectData() {
-		StringBuffer sbData = new StringBuffer();
-		
-		for(TableItem ti : tvSQLHistory.getTable().getSelection()) {
-			sbData.append(ti.getText(1));
-		}
-		
-		return sbData.toString();
+	private void finallyEndExecuteCommand() {
+		browserEvaluate(EditorFunctionService.EXECUTE_DONE);
 	}
 	
 	/**
 	 * 쿼리를 수행합니다.
-	 * 
-	 * text중에 블럭으로 되어 있는 부분만 쿼리를 수행합니다.
-	 * PublicTadpoleDefine.SQL_DILIMITER 를 기준으로 여러개로 나누어 쿼리를 수행합니다.
-	 * 
 	 */
-	private void execute(final RequestQuery reqQuery) {
-		if("".equals(reqQuery.getSql().trim())) return;		 //$NON-NLS-1$
+	public void executeCommand(final RequestQuery reqQuery) {
+		rsDAO = new ResultSetUtilDTO();
 		
-		// 실행해도 되는지 묻는다.
-		boolean isDMLQuestion = false;
-		if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {						
-			for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DILIMITER)) {							
-				if(!SQLUtil.isStatement(strSQL)) {
-					isDMLQuestion = true;
-					break;
+		try {
+			if("".equals(reqQuery.getSql().trim())) return;
+			
+			// 실행해도 되는지 묻는다.
+			boolean isDMLQuestion = false;
+			if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {						
+				for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DILIMITER)) {							
+					if(!SQLUtil.isStatement(strSQL)) {
+						isDMLQuestion = true;
+						break;
+					}
 				}
+			} else {
+				if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
 			}
-		} else {
-			if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
-		}
-		// 실행해도 되는지 묻는다.
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getQuestion_dml())) {
-			if(isDMLQuestion) if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) return; //$NON-NLS-1$
+			// 실행해도 되는지 묻는다.
+			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getQuestion_dml())) {
+				if(isDMLQuestion) if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) return; //$NON-NLS-1$
+			}
+		} catch(Exception e) {
+			logger.error("executeCommand", e);
+		} finally {
+			finallyEndExecuteCommand();
 		}
 				
 		// 쿼리를 실행 합니다. 
-		final SQLHistoryDAO executingSQLDAO = new SQLHistoryDAO();
+		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
 		final Job jobQueryManager = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(reqQuery.getSql(), IProgressMonitor.UNKNOWN);
 				
-				executingSQLDAO.setStartDateExecute(new Date());
-				executingSQLDAO.setIpAddress(reqQuery.getUserIp());
+				sqlHistoryDAO.setStartDateExecute(new Date());
+				sqlHistoryDAO.setIpAddress(reqQuery.getUserIp());
 				try {
-					// 페이지를 초기화 합니다.
-					pageNumber = 1;						
+						
 					if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {
 						
-						executingSQLDAO.setStrSQLText(reqQuery.getOriginalSql());
+						sqlHistoryDAO.setStrSQLText(reqQuery.getOriginalSql());
 						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DILIMITER)) {
 							String strExeSQL = SQLUtil.sqlExecutable(strSQL);
@@ -1089,19 +586,19 @@ public class MainEditor extends EditorExtension {
 						
 						// select 문장 실행
 						if(SQLUtil.isStatement(reqQuery.getSql())) { //$NON-NLS-1$
-							executingSQLDAO.setStartDateExecute(new Date());
-							executingSQLDAO.setStrSQLText(reqQuery.getSql());
-							executingSQLDAO.setIpAddress(reqQuery.getUserIp());
+							sqlHistoryDAO.setStartDateExecute(new Date());
+							sqlHistoryDAO.setStrSQLText(reqQuery.getSql());
+							sqlHistoryDAO.setIpAddress(reqQuery.getUserIp());
 
 							runSQLSelect(reqQuery);
-							executingSQLDAO.setRows(rsDAO.getDataList().size());
+							sqlHistoryDAO.setRows(rsDAO.getDataList().size());
 						}
 					} else {
-						executingSQLDAO.setStrSQLText(reqQuery.getSql());
+						sqlHistoryDAO.setStrSQLText(reqQuery.getSql());
 						
 						if(SQLUtil.isStatement(reqQuery.getSql())) {
 							runSQLSelect(reqQuery);
-							executingSQLDAO.setRows(rsDAO.getDataList().size());
+							sqlHistoryDAO.setRows(rsDAO.getDataList().size());
 						} else {
 							runSQLOther(reqQuery);
 						}
@@ -1109,14 +606,14 @@ public class MainEditor extends EditorExtension {
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
-					executingSQLDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
-					executingSQLDAO.setMesssage(e.getMessage());
+					sqlHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
+					sqlHistoryDAO.setMesssage(e.getMessage());
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
 				} finally {
 					monitor.done();
 					
-					executingSQLDAO.setEndDateExecute(new Date());
+					sqlHistoryDAO.setEndDateExecute(new Date());
 				}
 				
 				/////////////////////////////////////////////////////////////////////////////////////////
@@ -1131,22 +628,20 @@ public class MainEditor extends EditorExtension {
 				getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							// table에 데이터 표시
-							executeFinish(executingSQLDAO);
+							compositeResult.executeFinish(reqQuery, sqlHistoryDAO, rsDAO);
 						} else {
-							resultTableInit();
-							executeErrorProgress(jobEvent.getResult().getMessage());
+							compositeResult.executeErrorProgress(reqQuery, jobEvent.getResult().getMessage());
 						}
 						
 						// 쿼리 후 화면 정리 작업을 합니다.
-						afterQueryInit(executingSQLDAO, reqQuery);
+						afterQueryInit(sqlHistoryDAO, reqQuery);
 						
 						// 주의) 일반적으로는 포커스가 잘 가지만, 
 						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
 						setOrionTextFocus();
 						
 						// ace editor에게 작업이 끝났음을 알립니다.
-						browserEvaluate(EditorFunctionService.EXECUTE_DONE);
+						finallyEndExecuteCommand();
 					}
 				});	// end display.asyncExec
 			}	// end done
@@ -1163,13 +658,13 @@ public class MainEditor extends EditorExtension {
 	 */
 	private void afterQueryInit(SQLHistoryDAO sqltHistoryDao, final RequestQuery reqQuery) {
 		try {
-			TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(user_seq, userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, sqltHistoryDao);
+			TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(intUserSeq, userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, sqltHistoryDao);
 		} catch(Exception e) {
 			logger.error("save the user query", e); //$NON-NLS-1$
 		}
 		
-		listSQLHistory.add(sqltHistoryDao);
-		tvSQLHistory.refresh();
+		compositeResult.getListSQLHistory().add(sqltHistoryDao);
+		compositeResult.getTvSQLHistory().refresh();
 	}
 	
 	/**
@@ -1206,14 +701,14 @@ public class MainEditor extends EditorExtension {
 	 * @param requestQuery
 	 */
 	private void runSQLSelect(final RequestQuery reqQuery) throws Exception {
-		rsDAO = new ResultSetUtilDAO();
+		rsDAO = new ResultSetUtilDTO();
 		if(!PermissionChecker.isExecute(getUserType(), userDB, reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
 		// is tajo
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			rsDAO = new TajoConnectionManager().select(userDB, reqQuery.getSql(), pageNumber, reqQuery.isAutoCommit());
+			rsDAO = new TajoConnectionManager().select(userDB, reqQuery.getSql(), queryResultCount, reqQuery.isAutoCommit());
 			return;
 		}  
 		
@@ -1234,14 +729,15 @@ public class MainEditor extends EditorExtension {
 			}
 			
 			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.QUERY) {
+
+//				https://github.com/hangum/TadpoleForDBTools/issues/363 SQL 파서를 제대로 갖출때까지는 로직을 막습니다.
+//				String tmpExeQuery = reqQuery.getSql();
+//				if(reqQuery.getSql().toUpperCase().startsWith("SELECT")) { //$NON-NLS-1$
+//					tmpExeQuery = PartQueryUtil.makeSelect(userDB, reqQuery.getSql(), 0, queryResultCount);
+//					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + reqQuery.getSql()); //$NON-NLS-1$
+//				}
 				
-				String tmpExeQuery = reqQuery.getSql();
-				if(reqQuery.getSql().toUpperCase().startsWith("SELECT")) { //$NON-NLS-1$
-					tmpExeQuery = PartQueryUtil.makeSelect(userDB, reqQuery.getSql(), 0, queryResultCount);
-					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + reqQuery.getSql()); //$NON-NLS-1$
-				}
-				
-				pstmt = javaConn.prepareStatement(tmpExeQuery);
+				pstmt = javaConn.prepareStatement(reqQuery.getSql());
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
 				rs = pstmt.executeQuery();
 				
@@ -1288,18 +784,7 @@ public class MainEditor extends EditorExtension {
 			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-//			// column의 data type을 얻습니다.
-//			mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData());
-//			
-//			// column name을 얻습니다. 
-//			// sqlite에서는 metadata를 얻은 후에 resultset을 얻어야 에러(SQLite JDBC: inconsistent internal state)가 나지 않습니다.
-//			mapColumns = ResultSetUtils.getColumnName(rs);
-//			
-//			// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-//			sourceDataList = ResultSetUtils.getResultToList(rs, queryResultCount, isResultComma);
-			rsDAO = new ResultSetUtilDAO(rs, queryResultCount, isResultComma);
+			rsDAO = new ResultSetUtilDTO(true, rs, queryResultCount, isResultComma);
 			
 			if(userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) {
 			} else {
@@ -1418,7 +903,7 @@ public class MainEditor extends EditorExtension {
 						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
 						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
 					) { //$NON-NLS-1$
-						reqQuery.setSql(reqQuery.getSql() + QUERY_DELIMITER); //$NON-NLS-1$
+						reqQuery.setSql(reqQuery.getSql() + SQLDefine.QUERY_DELIMITER); //$NON-NLS-1$
 					}
 				}
 				
@@ -1462,253 +947,18 @@ public class MainEditor extends EditorExtension {
 			
 		});
 	}
-	
-	/**
-	 * 1) 마지막 쿼리를 받아서 selct 문일 경우 쿼리 네비게이션을 확성화 해준다.
-	 * 2) filter를 설정한다.
-	 * 
-	 * @param executingSQLDAO 실행된 마지막 쿼리
-	 */
-	private void executeFinish(SQLHistoryDAO executingSQLDAO) {
-		setFilter();
-		
-		if(SQLUtil.isStatement(executingSQLDAO.getStrSQLText())) {			
-			btnPrev.setEnabled(false);
-			if( rsDAO.getDataList().size() < queryPageCount ) btnNext.setEnabled(false);
-			else btnNext.setEnabled(true);
-		} else {
-			btnPrev.setEnabled(false);
-			btnNext.setEnabled(false);
-		}
-		
-		// 쿼리의 결과를 화면에 출력합니다.
-		setResultTable(executingSQLDAO);
-	}
-	
-	/**
-	 * error message 추가한다.
-	 * @param msg
-	 */
-	private void executeErrorProgress(final String msg) {
-		TadpoleMessageDAO message = new TadpoleMessageDAO(new Date(), msg);
-		listMessage.add(message);
-		
-		tableViewerMessage.refresh();
-		resultFolderSel(EditorDefine.RESULT_TAB_NAME.TADPOLE_MESSAGE);
-		
-		setOrionTextFocus();
-	}
-	
-	/**
-	 * tab을 선택합니다.
-	 * 
-	 * @param selectTab
-	 */
-	private void resultFolderSel(final EditorDefine.RESULT_TAB_NAME selectTab) {
-		int index = (Integer)tabFolderResult.getData(selectTab.toString());
-		if(tabFolderResult.getSelectionIndex() != index) {
-			tabFolderResult.setSelection(index);
-		}
-	}
-	
-	/**
-	 * 쿼리의 결과를 화면에 출력하거나 정리 합니다.
-	 */
-	private void setResultTable(SQLHistoryDAO executingSQLDAO) {
-		if(SQLUtil.isStatement(executingSQLDAO.getStrSQLText())) {			
-			// table data를 생성한다.
-			sqlSorter = new SQLResultSorter(-999);
-			
-			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter);
-			tvQueryResult.setLabelProvider(new SQLResultLabelProvider());
-			tvQueryResult.setContentProvider(new SQLResultContentProvider(rsDAO.getDataList()));
-			
-			// 쿼리 결과를 사용자가 설정 한 만큼 보여준다. 
-			List<Map<Integer, Object>>  showList = new ArrayList<Map<Integer,Object>>();
-			int readCount = (rsDAO.getDataList().size()+1) - queryPageCount;
-			if(readCount < -1) readCount = rsDAO.getDataList().size();
-			else if(readCount > queryPageCount) readCount = queryPageCount;
-			
-			if(logger.isDebugEnabled()) {
-				logger.debug("====[first][start]================================================================="); //$NON-NLS-1$
-				logger.debug("[total count]" + rsDAO.getDataList().size() + "[first][readCount]" + readCount); //$NON-NLS-1$ //$NON-NLS-2$
-				logger.debug("====[first][stop]================================================================="); //$NON-NLS-1$
-			}
-				
-			for(int i=0; i<readCount; i++) {
-				showList.add(rsDAO.getDataList().get(i));
-			}
-			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
-			
-			tvQueryResult.setInput(showList);
-			tvQueryResult.setSorter(sqlSorter);
-			
-			// 메시지를 출력합니다.
-			long longExecuteTime = executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime();
-			String strResultMsg = rsDAO.getDataList().size() + " " + Messages.MainEditor_33 + "[" + longExecuteTime + " ms]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			tvQueryResult.getTable().setToolTipText(strResultMsg);
-			lblQueryResultStatus.setText(rsDAO.getDataList().size()  + " " +  Messages.MainEditor_33 + "[" + longExecuteTime + " ms]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			sqlFilter.setTable(tvQueryResult.getTable());
-			
-			// Pack the columns
-			TableUtil.packTable(tvQueryResult.getTable());
-			resultFolderSel(EditorDefine.RESULT_TAB_NAME.RESULT_SET);
-		} else {
-			listMessage.add(new TadpoleMessageDAO(new Date(), "success. \n\n" + executingSQLDAO.getStrSQLText())); //$NON-NLS-1$
-			tableViewerMessage.refresh(listMessage);
-			resultFolderSel(EditorDefine.RESULT_TAB_NAME.TADPOLE_MESSAGE);
-		}
-	}
-	
-	/**
-	 * 다음 버튼 처리
-	 * 
-	 * pageLocation
-	 * 
-	 */
-	private void btnNext() {
-		// table data를 생성한다.
-		sqlSorter = new SQLResultSorter(-999);
-		
-		List<Map<Integer, Object>>  showList = new ArrayList<Map<Integer,Object>>();
-		
-		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
-		int startCount 	= queryPageCount * pageNumber;
-		int endCount 	= queryPageCount * (pageNumber+1);
-		if(logger.isDebugEnabled()) logger.debug("btnNext ======> [start point]" + startCount + "\t [endCount]" + endCount); //$NON-NLS-1$ //$NON-NLS-2$
-		
-		//  
-		if(endCount >= (rsDAO.getDataList().size()+1)) {
-			endCount = rsDAO.getDataList().size();
-			
-			// 다음 버튼을 비활성화 한다.
-			btnNext.setEnabled(false);
-		}
-		
-		// 데이터 출력.
-		for(int i=startCount; i<endCount; i++) {
-			showList.add(rsDAO.getDataList().get(i));
-		}
-		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
-		
-		tvQueryResult.setInput(showList);
-		tvQueryResult.setSorter(sqlSorter);
-		
-		// Pack the columns
-		TableUtil.packTable(tvQueryResult.getTable());
-		
-		// page 번호를 하나 추가한다.
-		pageNumber++;
-		if(!btnPrev.getEnabled()) btnPrev.setEnabled(true);
-	}
-	
-	/**
-	 * 이전 버튼 처리
-	 */
-	private void btnPrev() {
-		// table data를 생성한다.
-		sqlSorter = new SQLResultSorter(-999);		
-		List<Map<Integer, Object>>  showList = new ArrayList<Map<Integer,Object>>();
-		
-		// 쿼리 결과를 사용자가 설정 한 만큼 보여준다.
-		int startCount 	= queryPageCount * (pageNumber-2);
-		int endCount 	= queryPageCount * (pageNumber-1);
-		if(logger.isDebugEnabled()) logger.debug("btnPrev ======> [start point]" + startCount + "\t [endCount]" + endCount); //$NON-NLS-1$ //$NON-NLS-2$
-		
-		if(startCount <= 0) {
-			startCount = 0;
-			endCount = queryPageCount;
-			
-			btnPrev.setEnabled(false);
-		}
-		
-		// 데이터 출력.
-		for(int i=startCount; i<endCount; i++) {
-			showList.add(rsDAO.getDataList().get(i));
-		}
-		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
-		
-		tvQueryResult.setInput(showList);
-		tvQueryResult.setSorter(sqlSorter);
-		
-		// Pack the columns
-		TableUtil.packTable(tvQueryResult.getTable());
-		
-		// page 번호를 하나 추가한다.
-		pageNumber--;
-		if(!btnNext.getEnabled()) btnNext.setEnabled(true);
-	}
-	
-	/**
-	 * 결과 테이블을 초기화 상태로 만듭니다.
-	 */
-	private void resultTableInit() {
-//		// rs set의 결과를 테이블에 출력하기 위해 입력한다.
-//		sourceDataList = new ArrayList<Map<Integer, Object>>();
-		
-		// 마지막 쿼리에 데이터를 정리 합니다.
-		tvQueryResult.setLabelProvider( new SQLResultLabelProvider() );
-		tvQueryResult.setContentProvider(new SQLResultContentProvider(null) );
-		tvQueryResult.setInput(null);			
-		lblQueryResultStatus.setText(Messages.MainEditor_28 );
-	}
-	
-	/**
-	 * 필터를 설정합니다.
-	 */
-	private void setFilter() {
-		sqlFilter.setFilter(textFilter.getText());
-		tvQueryResult.addFilter( sqlFilter );
-	}
 
 	@Override
 	public void setFocus() {
 		setOrionTextFocus();
 	}
 	
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
-		if(dBResource == null) {
-			userSetDBResource = getFileName();
-			if(userSetDBResource == null) return;
-		}
-		
-		// 저장을 호출합니다.
-		try {
-			String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-			if(performSave(strQuery)) {
-				browserEvaluate(IEditorFunction.SAVE_DATA);
-			}
-		} catch(SWTException e) {
-			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
-			monitor.setCanceled(true);
-		}
-	}
-	
-	@Override
-	public void doSaveAs() {
-		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
-		userSetDBResource = getFileName();
-		if(userSetDBResource == null) return;
-		
-		// 저장을 호출합니다.
-		try {
-			String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-			if(performSave(strQuery)) {
-				browserEvaluate(IEditorFunction.SAVE_DATA);
-			}
-		} catch(SWTException e) {
-			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
-		}
-	}
-
 	/**
 	 * new file name
 	 * @return
 	 */
-	private UserDBResourceDAO getFileName() {
-		ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
+	private UserDBResourceDAO getFileName(UserDBResourceDAO initDBResource) {
+		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
 		if(rsDialog.open() == Window.OK) {
 			return rsDialog.getRetResourceDao();
 		} else {
@@ -1717,69 +967,104 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
-	 * save
+	 * 데이터를 저장합니다.
+	 * 
+	 * @param strContentData
+	 * @return
+	 */
+	public boolean calledDoSave(String strContentData) {
+		boolean isSaved = false;
+		
+		try {
+			// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
+			if(dBResource == null) {
+				UserDBResourceDAO newDBResource = getFileName(null);
+				if(newDBResource == null) return false;
+
+				isSaved = saveResourceData(newDBResource, strContentData);
+			// 업데이트 일때.
+			} else {
+				isSaved = updateResourceDate(strContentData);
+			}
+			
+		} catch(SWTException e) {
+			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
+		} finally {
+			if(isSaved) {
+				setDirty(false);
+				browserEvaluate(IEditorFunction.SAVE_DATA);	
+			}
+		}
+		
+		return isSaved;
+	}
+	
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		String strEditorAllText = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+		calledDoSave(strEditorAllText);
+	}
+	
+	@Override
+	public void doSaveAs() {
+		boolean isSaved = false;
+		
+		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
+		UserDBResourceDAO newDBResource = getFileName(dBResource);
+		if(newDBResource == null) return;
+		
+		// 저장을 호출합니다.
+		try {
+			String strEditorAllText = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+			isSaved = saveResourceData(newDBResource, strEditorAllText);
+		} catch(SWTException e) {
+			logger.error(RequestInfoUtils.requestInfo("doSave exception", strUserEMail), e); //$NON-NLS-1$
+		} finally {
+			if(isSaved) {
+				setDirty(false);
+				browserEvaluate(IEditorFunction.SAVE_DATA);	
+			}
+		}
+	}
+
+	/**
+	 * 데이터를 수정합니다.
 	 * 
 	 * @param newContents
 	 * @return
 	 */
-	public boolean performSave(String newContents) {
-		boolean boolReturnVal = false;
-		
-		// new save
-		if(dBResource == null) {
-			// editor가 저장 가능 상태인지 검사합니다.
-			if(!isDirty()) return false; 
+	private boolean updateResourceDate(String newContents) {
+		try {
+			TadpoleSystem_UserDBResource.updateResource(dBResource, newContents);
+			return true;
+		} catch (Exception e) {
+			logger.error("update file", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
 			
-			if(userSetDBResource == null) {
-				userSetDBResource = getFileName();
-				if(userSetDBResource == null) return false;
-			}
-			
-			boolReturnVal = saveData(newContents);
-			
-		// save as
-		} if(userSetDBResource != null) {
-			boolReturnVal = saveData(newContents);
-			if(boolReturnVal) userSetDBResource = null;
-
-		// update
-		} else {
-			try {
-				TadpoleSystem_UserDBResource.updateResource(dBResource, newContents);
-				boolReturnVal = true;
-				setDirty(false);
-			} catch (Exception e) {
-				logger.error("update file", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
-				
-				boolReturnVal = false;
-			}
+			return false;
 		}
-		
-		return boolReturnVal;
 	}
 	
 	/**
 	 * save data
 	 * 
+	 * @param newDBResource 저장 하려는 리소스
 	 * @param newContents
 	 * @return
 	 */
-	private boolean saveData(String newContents) {
+	private boolean saveResourceData(UserDBResourceDAO newDBResource, String newContents) {
 		try {
 			// db 저장
-			dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, userSetDBResource, newContents);
+			dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, newDBResource, newContents);
 			dBResource.setParent(userDB);
 			
 			// title 수정
-			setPartName(userSetDBResource.getName());
+			setPartName(dBResource.getName());
 			
 			// tree 갱신
 			PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+dBResource.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			setDirty(false);
 			
-			userSetDBResource = null;
 		} catch (Exception e) {
 			logger.error("save data", e); //$NON-NLS-1$
 
@@ -1802,45 +1087,17 @@ public class MainEditor extends EditorExtension {
 	
 	@Override
 	public void dispose() {
-		unregisterServiceHandler();
 		super.dispose();
 	}
 
-	/** download service handler call */
-	private void unregisterServiceHandler() {
-		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
-		downloadServiceHandler = null;
-	}
-	
 	public UserDBResourceDAO getdBResource() {
 		return dBResource;
+	}	
+	public int getUserSeq() {
+		return intUserSeq;
 	}
-
-	/**
-	 * download external file
-	 * 
-	 * @param fileName
-	 * @param newContents
-	 */
-	public void downloadExtFile(String fileName, String newContents) {
-		downloadServiceHandler.setName(fileName);
-		downloadServiceHandler.setByteContent(newContents.getBytes());
-		
-		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
-	}
-	
-	/**
-	 * sql history 를 선택합니다.
-	 */
-	public void selectHistoryPage() {
-		resultFolderSel(EditorDefine.RESULT_TAB_NAME.SQL_RECALL);
-		
-		// table 데이터가 있으면 첫번째 데이터를 선택합니다.
-		if(listSQLHistory.size() >= 1) {
-			Table tb = tvSQLHistory.getTable();
-			tb.select(0);
-			tb.setFocus();
-		}
+	public int getQueryPageCount() {
+		return queryPageCount;
 	}
 
 	@Override
@@ -1854,9 +1111,5 @@ public class MainEditor extends EditorExtension {
 	 */
 	public String getInitDefaultEditorStr() {
 		return initDefaultEditorStr;
-	}
-	/** 에디터 로드할때 초기 텍스트를 설정합니다 */
-	public void setInitDefaultEditorStr(String initDefaultEditorStr) {
-		this.initDefaultEditorStr = initDefaultEditorStr;
 	}
 }

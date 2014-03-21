@@ -44,7 +44,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 */
 	protected final String strUserEMail = SessionManager.getEMAIL();
 	protected String strRoleType = "";
-	protected final int user_seq = SessionManager.getSeq();
+	protected final int intUserSeq = SessionManager.getSeq();
 	
 	/** 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */
 	protected int queryResultCount 	= GetPreferenceGeneral.getQueryResultCount();
@@ -52,12 +52,10 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	protected int queryPageCount 		= GetPreferenceGeneral.getPageCount();
 	/** oracle plan table 이름 */
 	protected String planTableName 	= GetPreferenceGeneral.getPlanTableName();
-	/** export delimit */
-	protected String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$
+////	/** export delimit */
+////	protected String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$
 	/** 결과 컬럼이 숫자이면 ,를 찍을 것인지 */
 	protected boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
-	
-	protected String QUERY_DELIMITER = ";";
 	
 	/** 현재 에디터에서 처리해야하는 디비 정보. */
 	protected UserDBDAO userDB;
@@ -129,7 +127,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/**
 	 * orion text setfocus
 	 */
-	protected void setOrionTextFocus() {
+	public void setOrionTextFocus() {
 		try {
 			browserQueryEditor.evaluate(EditorFunctionService.SET_FOCUS);
 		} catch(Exception e) {

@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
+import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
 import com.hangum.tadpole.sql.util.ResultSetUtils;
 import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 
@@ -47,7 +47,7 @@ public abstract class ProcedureExecutor {
 	protected ProcedureFunctionDAO procedureDAO;
 	
 	/** result dao */
-	protected List<ResultSetUtilDAO> resultDAO = new ArrayList<ResultSetUtilDAO>();
+	protected List<ResultSetUtilDTO> resultDAO = new ArrayList<ResultSetUtilDTO>();
 
 	/**
 	 * procedure executor
@@ -166,7 +166,7 @@ public abstract class ProcedureExecutor {
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
 		List<Map<Integer, Object>> sourceDataList = ResultSetUtils.getResultToList(rs, 1000, true);
 
-		ResultSetUtilDAO resultSet = new ResultSetUtilDAO(mapColumns, mapColumnType, sourceDataList);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(mapColumns, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -198,7 +198,7 @@ public abstract class ProcedureExecutor {
 		mapColumnType.put(4, java.sql.Types.DOUBLE);
 		mapColumnType.put(5, java.sql.Types.VARCHAR);
 		
-		ResultSetUtilDAO resultSet = new ResultSetUtilDAO(mapColumns, mapColumnType, sourceDataList);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(mapColumns, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -209,14 +209,14 @@ public abstract class ProcedureExecutor {
 	/**
 	 * @return the resultDAO
 	 */
-	public List<ResultSetUtilDAO> getResultDAO() {
+	public List<ResultSetUtilDTO> getResultDAO() {
 		return resultDAO;
 	}
 
 	/**
 	 * @param resultDAO the resultDAO to set
 	 */
-	public void addResultDAO(ResultSetUtilDAO resultDAO) {
+	public void addResultDAO(ResultSetUtilDTO resultDAO) {
 		this.resultDAO.add(resultDAO);
 	}
 

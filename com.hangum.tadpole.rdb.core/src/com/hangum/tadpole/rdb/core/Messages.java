@@ -14,6 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
+	public static String MainEditor_74;
 	public static String AbstractLoginComposite_0;
 	public static String AbstractLoginComposite_1;
 	public static String AbstractLoginComposite_2;
@@ -146,7 +147,6 @@ public class Messages extends NLS {
 	public static String MainEditor_72;
 	public static String MainEditor_8;
 	public static String MainEditor_9;
-	public static String MainEditor_lblFilter_text;
 	public static String MainEditor_tltmDropdownItem_text;
 	public static String DBLoginDialog_btnPing_text;
 	public static String DeleteDBAction_1;
@@ -163,7 +163,6 @@ public class Messages extends NLS {
 	public static String ExitAction_1;
 	public static String ExitAction_2;
 	public static String ExitAction_3;
-	public static String ExplorerViewer_0;
 	public static String ExplorerViewer_1;
 	public static String ExplorerViewer_29;
 	public static String ExplorerViewer_39;
@@ -254,6 +253,8 @@ public class Messages extends NLS {
 	public static String QueryEditPart_7;
 	public static String QueryEditPart_8;
 	public static String QueryEditPart_9;
+	public static String QueryResultSQLDialog_0;
+	public static String QueryResultSQLDialog_2;
 	public static String SQLiteLoginComposite_0;
 	public static String SQLiteLoginComposite_1;
 	public static String SQLiteLoginComposite_10;
@@ -398,6 +399,9 @@ public class Messages extends NLS {
 	public static String OthersConnectionBigDataGroup_btnExternalBrowser_text;
 	public static String OthersConnectionMongoDBGroup_btnExternalBrowser_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnExternalBrowser_text;
+	public static String RDBResultComposite_lblNewLabel_text;
+	public static String RDBResultComposite_lblNewLabel_text_1;
+	public static String RDBResultComposite_btnSql_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

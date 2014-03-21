@@ -47,17 +47,17 @@ public class SessionManager {
 	 * 
 	 * @author hangum
 	 */
-	public static enum SESSEION_NAME {	/* 자신의 메니저 그룹 */		GROUP_SEQ, 
-										/* 자신이 속한 그룹종류 */	GROUP_SEQS, 
-										/* 자신의 유저 seq */		USER_SEQ, 
-																LOGIN_EMAIL, 
-																LOGIN_PASSWORD, 
-																LOGIN_NAME, 
-										/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
-										/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
-																USER_INFO_DATA,
-																SECURITY_QUESTION,
-																SECURITY_ANSWER}
+	public static enum NAME {	/* 자신의 메니저 그룹 */		GROUP_SEQ, 
+								/* 자신이 속한 그룹종류 */	GROUP_SEQS, 
+								/* 자신의 유저 seq */		USER_SEQ, 
+														LOGIN_EMAIL, 
+														LOGIN_PASSWORD, 
+														LOGIN_NAME, 
+								/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
+								/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
+														USER_INFO_DATA,
+														SECURITY_QUESTION,
+														SECURITY_ANSWER}
 
 	/**
 	 * is login?
@@ -111,24 +111,24 @@ public class SessionManager {
 				if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepAdminRole = PublicTadpoleDefine.USER_TYPE.ADMIN.toString();
 					
-					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
+					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepManagerRole = PublicTadpoleDefine.USER_TYPE.MANAGER.toString();
 					
-					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
+					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepDBARole = PublicTadpoleDefine.USER_TYPE.DBA.toString();
-					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
+					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(userRoleDAO.getRole_type())) {
 					tmpStrRepUserRole = PublicTadpoleDefine.USER_TYPE.USER.toString();
-					sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
+					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				}
 				
 				strGroupSeqs += userRoleDAO.getGroup_seq() + ",";
 			}
 
 			strGroupSeqs = StringUtils.removeEnd(strGroupSeqs, ",");
-			sStore.setAttribute(SESSEION_NAME.GROUP_SEQS.toString(), strGroupSeqs);
+			sStore.setAttribute(NAME.GROUP_SEQS.toString(), strGroupSeqs);
 			
 			// 대표 role을 찾는다.
 			if(!"".equals(tmpStrRepAdminRole)) strRepresentRole = tmpStrRepAdminRole;
@@ -137,8 +137,8 @@ public class SessionManager {
 			else if(!"".equals(tmpStrRepUserRole)) strRepresentRole = tmpStrRepUserRole;
 			
 			// session 에 등록.
-			sStore.setAttribute(SESSEION_NAME.REPRESENT_ROLE_TYPE.toString(), strRepresentRole);
-			sStore.setAttribute(SESSEION_NAME.ROLE_TYPE.toString(), mapUserRole);
+			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), strRepresentRole);
+			sStore.setAttribute(NAME.ROLE_TYPE.toString(), mapUserRole);
 			
 		} catch(Exception e) {
 			logger.error("find user rold", e);
@@ -153,14 +153,14 @@ public class SessionManager {
 //		}
 		
 //		sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), groupSeq);		
-		sStore.setAttribute(SESSEION_NAME.USER_SEQ.toString(), loginUserDao.getSeq());
+		sStore.setAttribute(NAME.USER_SEQ.toString(), loginUserDao.getSeq());
 //		sStore.setAttribute(SESSEION_NAME.GROUP_NAME.toString(), groupName);
-		sStore.setAttribute(SESSEION_NAME.LOGIN_EMAIL.toString(), loginUserDao.getEmail());
-		sStore.setAttribute(SESSEION_NAME.LOGIN_PASSWORD.toString(), loginUserDao.getPasswd());
-		sStore.setAttribute(SESSEION_NAME.LOGIN_NAME.toString(), loginUserDao.getName());
-		sStore.setAttribute(SESSEION_NAME.SECURITY_ANSWER.toString(), loginUserDao.getSecurity_answer());
-		sStore.setAttribute(SESSEION_NAME.SECURITY_QUESTION.toString(), loginUserDao.getSecurity_question());
-		
+		sStore.setAttribute(NAME.LOGIN_EMAIL.toString(), loginUserDao.getEmail());
+		sStore.setAttribute(NAME.LOGIN_PASSWORD.toString(), loginUserDao.getPasswd());
+		sStore.setAttribute(NAME.LOGIN_NAME.toString(), loginUserDao.getName());
+		sStore.setAttribute(NAME.SECURITY_ANSWER.toString(), loginUserDao.getSecurity_answer());
+		sStore.setAttribute(NAME.SECURITY_QUESTION.toString(), loginUserDao.getSecurity_question());
+
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public class SessionManager {
 	 */
 	public static void setPassword(String strPasswd) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		sStore.setAttribute(SESSEION_NAME.LOGIN_PASSWORD.toString(), strPasswd);
+		sStore.setAttribute(NAME.LOGIN_PASSWORD.toString(), strPasswd);
 	}
 	
 	/**
@@ -179,17 +179,17 @@ public class SessionManager {
 	 */
 	public static String getGroupSeqs() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(SESSEION_NAME.GROUP_SEQS.toString());
+		return (String)sStore.getAttribute(NAME.GROUP_SEQS.toString());
 	}
 	
 	public static int getGroupSeq() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (Integer)sStore.getAttribute(SESSEION_NAME.GROUP_SEQ.toString());
+		return (Integer)sStore.getAttribute(NAME.GROUP_SEQ.toString());
 	}
 	
 	public static int getSeq() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		Object obj = sStore.getAttribute(SESSEION_NAME.USER_SEQ.toString());
+		Object obj = sStore.getAttribute(NAME.USER_SEQ.toString());
 		
 		if(obj == null) return 0;
 		else return (Integer)obj;
@@ -202,27 +202,27 @@ public class SessionManager {
 	
 	public static String getEMAIL() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(SESSEION_NAME.LOGIN_EMAIL.toString());
+		return (String)sStore.getAttribute(NAME.LOGIN_EMAIL.toString());
 	}
 	
 	public static String getPassword() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(SESSEION_NAME.LOGIN_PASSWORD.toString());
+		return (String)sStore.getAttribute(NAME.LOGIN_PASSWORD.toString());
 	}
 	
 	public static String getName() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(SESSEION_NAME.LOGIN_NAME.toString());
+		return (String)sStore.getAttribute(NAME.LOGIN_NAME.toString());
 	}
 	
 	public static String getSecurityQuestion() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(SESSEION_NAME.SECURITY_QUESTION.toString());
+		return (String)sStore.getAttribute(NAME.SECURITY_QUESTION.toString());
 	}
 	
 	public static String getSecurityAnswer() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(SESSEION_NAME.SECURITY_ANSWER.toString());
+		return (String)sStore.getAttribute(NAME.SECURITY_ANSWER.toString());
 	}
 	/**
 	 * db에 해당하는 자신의 role을 가지고 옵니다.
@@ -232,7 +232,7 @@ public class SessionManager {
 	 */
 	public static String getRoleType(int groupSeq) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(SESSEION_NAME.ROLE_TYPE.toString());
+		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(NAME.ROLE_TYPE.toString());
 		
 		return mapUserRole.get(groupSeq);
 	}
@@ -257,7 +257,7 @@ public class SessionManager {
 	public static String getRepresentRole() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		
-		return (String)sStore.getAttribute(SESSEION_NAME.REPRESENT_ROLE_TYPE.toString());
+		return (String)sStore.getAttribute(NAME.REPRESENT_ROLE_TYPE.toString());
 	}
 	
 	/**
@@ -266,7 +266,7 @@ public class SessionManager {
 	 */
 	public static Map<Integer, String> getAllRoleType() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(SESSEION_NAME.ROLE_TYPE.toString());
+		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(NAME.ROLE_TYPE.toString());
 		
 		return mapUserRole;
 	}
@@ -281,7 +281,7 @@ public class SessionManager {
 	 */
 	public static void setUserInfos(Map<String, Object> mapUserInfo) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		sStore.setAttribute(SESSEION_NAME.USER_INFO_DATA.toString(), mapUserInfo);		
+		sStore.setAttribute(NAME.USER_INFO_DATA.toString(), mapUserInfo);		
 	}
 	
 	/**
@@ -291,7 +291,7 @@ public class SessionManager {
 	 */
 	public static void setUserInfo(String key, String obj) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(SESSEION_NAME.USER_INFO_DATA.toString());
+		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.toString());
 		UserInfoDataDAO userInfoDataDAO = (UserInfoDataDAO)mapUserInfoData.get(key);
 		if(userInfoDataDAO == null) {
 			userInfoDataDAO = new UserInfoDataDAO();
@@ -310,7 +310,7 @@ public class SessionManager {
 			
 		mapUserInfoData.put(key, userInfoDataDAO);
 		
-		sStore.setAttribute(SESSEION_NAME.USER_INFO_DATA.toString(), mapUserInfoData);
+		sStore.setAttribute(NAME.USER_INFO_DATA.toString(), mapUserInfoData);
 	}
 	
 	/**
@@ -321,7 +321,7 @@ public class SessionManager {
 	 */
 	public static UserInfoDataDAO getUserInfo(String key) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(SESSEION_NAME.USER_INFO_DATA.toString());
+		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.toString());
 		
 		return (UserInfoDataDAO)mapUserInfoData.get(key);
 	}

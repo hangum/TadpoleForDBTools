@@ -285,7 +285,6 @@ public class UserDBDAO {
 		this.delYn = delYn;
 	}
 
-
 	/**
 	 * @return the dbms_types
 	 */
