@@ -78,7 +78,7 @@ public class ResultSetUtils {
 
 					if (RDBTypeToJavaTypeUtils.isNumberType(type)){
 						if(isPretty) { 
-							tmpRow.put(i+intStartIndex, prettyData(type, obj));
+							tmpRow.put(i+intStartIndex, addComma(type, obj));
 						}else{
 							tmpRow.put(i+intStartIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 						}
@@ -111,20 +111,19 @@ public class ResultSetUtils {
 	 * @param value
 	 * @return
 	 */
-	public static String prettyData(int columnType, Object value) {
-		if(RDBTypeToJavaTypeUtils.isNumberType(columnType)) {
-			try{
-				NumberFormat pf = NumberFormat.getNumberInstance();
-				String val = pf.format(value);
-				
-				return val;
-			} catch(Exception e){
+	public static String addComma(int columnType, Object value) {
+		
+		try{
+			NumberFormat nf = NumberFormat.getNumberInstance();
+			String val = nf.format(value.toString());
+			
+			return val;
+		} catch(Exception e){
 //				logger.error("pretty data", e); //$NON-NLS-1$
 //				ignore exception
-			}			
-		} 
+		}			
 
-		return value==null?"":value.toString(); //$NON-NLS-1$
+		return value==null?PublicTadpoleDefine.DEFINE_NULL_VALUE:value.toString(); //$NON-NLS-1$
 	}
 	
 	/**
@@ -202,7 +201,7 @@ public class ResultSetUtils {
 		
 		if(isShowRowNum) {
 			intStartIndex++;
-			mapColumnName.put(0, "");
+			mapColumnName.put(0, "#");
 		}
 		
 		ResultSetMetaData  rsm = rs.getMetaData();

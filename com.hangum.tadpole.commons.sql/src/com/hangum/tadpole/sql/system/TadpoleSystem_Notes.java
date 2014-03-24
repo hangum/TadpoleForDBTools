@@ -45,8 +45,8 @@ public class TadpoleSystem_Notes {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<NotesDAO> retListNotes = sqlClient.queryForList("getAlertNote", userSeq);
 
-		//  받은 모든 노트를 읽음 처리.
-		if(!retListNotes.isEmpty()) sqlClient.update("noteSystemRead", userSeq);
+//		//  받은 모든 노트를 읽음 처리.
+//		if(!retListNotes.isEmpty()) sqlClient.update("noteSystemRead", userSeq);
 		
 		return retListNotes;
 	}

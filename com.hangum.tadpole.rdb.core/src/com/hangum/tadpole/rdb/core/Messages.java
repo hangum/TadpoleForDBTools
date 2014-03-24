@@ -402,6 +402,10 @@ public class Messages extends NLS {
 	public static String RDBResultComposite_lblNewLabel_text;
 	public static String RDBResultComposite_lblNewLabel_text_1;
 	public static String RDBResultComposite_btnSql_text;
+	public static String RDBResultComposite_btnStp_text;
+	public static String RDBResultComposite_lblNewLabel_text_2;
+	public static String RDBResultComposite_lblNewLabel_text_3;
+	public static String RDBResultComposite_lblNewLabel_text_4;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

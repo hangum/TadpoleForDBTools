@@ -210,7 +210,7 @@ public class SQLUtil {
 			logger.error("query execute", e);
 		}
 		
-		return exeSQL;
+		return exeSQL.trim();
 	}
 	
 	/**

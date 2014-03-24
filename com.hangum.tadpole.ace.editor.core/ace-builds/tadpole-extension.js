@@ -58,7 +58,7 @@ var isJavaRunning = false;
 {
 	ace.require("ace/ext/language_tools");
 	editor = ace.edit("editor");
-	document.getElementById('editor').style.fontSize= '12px';
+	document.getElementById('editor').style.fontSize= '11px';
 	
 	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
@@ -88,7 +88,6 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
 				} catch(e) {
 					console.log(e);
-					editorService.executeFlag();
 				}
 				isEdited = true;
 			}
@@ -105,12 +104,13 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 editorService.saveData = function() {
 	isEdited = false;
 }
-editorService.executeFlag = function() {
-	isJavaRunning = false;
-}
 /** set editor focus */
 editorService.setFocus = function() {
 	editor.focus();
+};
+editorService.executeFlag = function() {
+//	console.log('\t end java program....');
+	isJavaRunning = false;
 };
 
 //==[ Define short key ]======================================================================================================================
@@ -132,18 +132,16 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-    		console.log("Before isJavaRunning value is " + isJavaRunning);
+//    		console.log("\t [start]Execute query => " + isJavaRunning);
     		
     		if(!isJavaRunning) {
-    			console.log("\t\t1. if in a isJavaRunning value is " + isJavaRunning);
-    			var retResulr = AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
-    			editorService.executeFlag();
-    			console.log("\t\t2. if in a isJavaRunning value is " + isJavaRunning);
+    			isJavaRunning = true;
+    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+//    		} else {
+//    			console.log("\t Can not execute query");
     		}
-    		console.log("After isJavaRunning value is " + isJavaRunning);
     	} catch(e) {
     		console.log(e);
-    		console.log("Rise exception sett isJavaRunning ");
     		editorService.executeFlag();
     	}
     },
@@ -160,6 +158,7 @@ editor.commands.addCommand({
     		}
 	    } catch(e) {
 			console.log(e);
+			editorService.executeFlag();
 		}
     },
     readOnly: false

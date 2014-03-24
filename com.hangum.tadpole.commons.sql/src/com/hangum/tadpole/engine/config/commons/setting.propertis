@@ -1,0 +1,8 @@
+<settings cacheModelsEnabled="true" 
+		enhancementEnabled="true"
+		lazyLoadingEnabled="false" 
+		maxRequests="512" 
+		maxSessions="256"
+		maxTransactions="16" 
+		useStatementNamespaces="false" 
+/>

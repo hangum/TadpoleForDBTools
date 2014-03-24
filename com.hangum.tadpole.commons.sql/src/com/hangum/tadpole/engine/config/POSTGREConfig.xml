@@ -14,18 +14,20 @@
     "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 
 <sqlMapConfig>
-
+	<!--  set setting options -->
+	<properties resource="com/hangum/tadpole/engine/config/commons/setting.propertis"/>
+	
 	<transactionManager type="JDBC">
-		<dataSource type="DBCP">
+		<dataSource type="SIMPLE">
 			<property name="JDBC.Driver" 			value="org.postgresql.Driver" />
 			<property name="JDBC.ConnectionURL" 	value="${JDBC.ConnectionURL}" />
 			<property name="JDBC.Username" 			value="${JDBC.Username}" />
 			<property name="JDBC.Password" 			value="${JDBC.Password}" />
 
 			<!--OPTIONAL PROPERTIES BELOW -->
-			<property name="Pool.MaximumActiveConnections" 	value="3" />
-			<property name="Pool.MaximumIdleConnections" 	value="1" />
-			<property name="Pool.MaximumWait" 				value="60000" />
+			<property name="Pool.MaximumActiveConnections" value="50" />
+			<property name="Pool.MaximumIdleConnections" value="5" />
+			<property name="Pool.MaximumWait" value="1000" />
 			<!--
 				Use of the validation query can be problematic. If you have
 				difficulty, try without it.
