@@ -54,6 +54,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
@@ -426,17 +427,17 @@ public class ResultSetComposite extends Composite {
 						// 주의) 일반적으로는 포커스가 잘 가지만, 
 						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
 						getRdbResultComposite().setOrionTextFocus();
-						
+
 						// ace editor에게 작업이 끝났음을 알립니다.
-//						finallyEndExecuteCommand();
+						finallyEndExecuteCommand();
 					}
 				});	// end display.asyncExec
 			}	// end done
 			
 		});	// end job
 		
-		jobQueryManager.setPriority(Job.SHORT);
-		jobQueryManager.setName(getUserDB().getDisplay_name());
+		jobQueryManager.setPriority(Job.INTERACTIVE);
+		jobQueryManager.setName(getUserDB().getDisplay_name() + reqQuery.getOriginalSql());
 		jobQueryManager.schedule();
 	}
 	
@@ -501,12 +502,12 @@ public class ResultSetComposite extends Composite {
 		return getRdbResultComposite().getUserDB();
 	}
 	
-//	/**
-//	 * 에디터를 실행 후에 마지막으로 실행해 주어야 하는 코드.
-//	 */
-//	private void finallyEndExecuteCommand() {
-//		mainEditor.browserEvaluate(EditorFunctionService.EXECUTE_DONE);
-//	}
+	/**
+	 * 에디터를 실행 후에 마지막으로 실행해 주어야 하는 코드.
+	 */
+	private void finallyEndExecuteCommand() {
+		getRdbResultComposite().browserEvaluate(EditorFunctionService.EXECUTE_DONE);
+	}
 	
 	/**
 	 * control progress 
@@ -566,9 +567,11 @@ public class ResultSetComposite extends Composite {
 //					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + reqQuery.getSql()); //$NON-NLS-1$
 //				}
 				
+				long startPreparedStatement = System.currentTimeMillis();
 				pstmt = javaConn.prepareStatement(reqQuery.getSql());
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
 				rs = pstmt.executeQuery();
+				if(logger.isDebugEnabled()) logger.debug("\t\t Query Time " + (System.currentTimeMillis() - startPreparedStatement) + " mis");
 				
 			// explain
 			}  else if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
@@ -613,7 +616,9 @@ public class ResultSetComposite extends Composite {
 			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////
+			long longStartResultPath = System.currentTimeMillis();
 			rsDAO = new ResultSetUtilDTO(true, rs, getQueryPageCount(), getIsResultComma());
+			if(logger.isDebugEnabled()) logger.debug("\t\t ResultSet pageh time " + (System.currentTimeMillis() - longStartResultPath) + " mis");
 			
 			if(getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT) {
 			} else {

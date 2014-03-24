@@ -16,7 +16,7 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
-//	executeFlag : function() {},
+	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -51,8 +51,8 @@ var editorService = {
 var editor;
 /** 에디터가 저장 할 수 있는 상태인지 */
 var isEdited = false;
-///** 자바에서 처리가 끝났는지 */
-//var isJavaRunning = false;
+/** 자바에서 처리가 끝났는지 */
+var isJavaRunning = false;
 
 /** initialize editor */
 {
@@ -88,7 +88,6 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
 				} catch(e) {
 					console.log(e);
-//					editorService.executeFlag();
 				}
 				isEdited = true;
 			}
@@ -105,12 +104,13 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 editorService.saveData = function() {
 	isEdited = false;
 }
-//editorService.executeFlag = function() {
-//	isJavaRunning = false;
-//}
 /** set editor focus */
 editorService.setFocus = function() {
 	editor.focus();
+};
+editorService.executeFlag = function() {
+//	console.log('\t end java program....');
+	isJavaRunning = false;
 };
 
 //==[ Define short key ]======================================================================================================================
@@ -132,19 +132,17 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-//    		console.log("Before isJavaRunning value is " + isJavaRunning);
+//    		console.log("\t [start]Execute query => " + isJavaRunning);
     		
-//    		if(!isJavaRunning) {
-//    			console.log("\t\t1. if in a isJavaRunning value is " + isJavaRunning);
-    			var retResulr = AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
-//    			editorService.executeFlag();
-//    			console.log("\t\t2. if in a isJavaRunning value is " + isJavaRunning);
-//    		}
-//    		console.log("After isJavaRunning value is " + isJavaRunning);
+    		if(!isJavaRunning) {
+    			isJavaRunning = true;
+    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+//    		} else {
+//    			console.log("\t Can not execute query");
+    		}
     	} catch(e) {
     		console.log(e);
-    		console.log("Rise exception sett isJavaRunning ");
-//    		editorService.executeFlag();
+    		editorService.executeFlag();
     	}
     },
     readOnly: false
@@ -154,12 +152,13 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
     	try {
-//    		if(!isJavaRunning) {
-//    			isJavaRunning = true;
+    		if(!isJavaRunning) {
+    			isJavaRunning = true;
     			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
-//    		}
+    		}
 	    } catch(e) {
 			console.log(e);
+			editorService.executeFlag();
 		}
     },
     readOnly: false

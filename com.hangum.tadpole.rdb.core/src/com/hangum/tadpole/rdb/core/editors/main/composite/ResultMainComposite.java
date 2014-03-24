@@ -137,9 +137,12 @@ public class ResultMainComposite extends Composite {
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		
 		// 쿼리를 이미 실행 중이라면 무시합니다.
 		if(compositeResultSet.getJobQueryManager() != null) {
+			logger.debug("===> job state is : " + compositeResultSet.getJobQueryManager().getState());
 			if(Job.RUNNING == compositeResultSet.getJobQueryManager().getState()) {
+				logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");
 				return;
 			}
 		}
@@ -232,6 +235,10 @@ public class ResultMainComposite extends Composite {
 	
 	@Override
 	protected void checkSubclass() {
+	}
+
+	public void browserEvaluate(String command) {
+		mainEditor.browserEvaluate(command);
 	}
 
 }
