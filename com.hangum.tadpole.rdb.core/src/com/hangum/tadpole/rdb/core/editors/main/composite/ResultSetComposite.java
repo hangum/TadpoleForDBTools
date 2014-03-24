@@ -558,6 +558,13 @@ public class ResultSetComposite extends Composite {
 				javaConn = TadpoleSQLTransactionManager.getInstance(getUserEMail(), getUserDB());
 			}
 			
+			if(logger.isDebugEnabled()) {
+				logger.debug("\t[start]=======================================================================================================");
+				logger.debug("\t\t [query ing] " + reqQuery.getSql());
+			}
+			
+			long startPreparedStatement = System.currentTimeMillis();
+			
 			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.QUERY) {
 
 //				https://github.com/hangum/TadpoleForDBTools/issues/363 SQL 파서를 제대로 갖출때까지는 로직을 막습니다.
@@ -567,11 +574,9 @@ public class ResultSetComposite extends Composite {
 //					if(logger.isDebugEnabled()) logger.debug("[SELECT] " + reqQuery.getSql()); //$NON-NLS-1$
 //				}
 				
-				long startPreparedStatement = System.currentTimeMillis();
 				pstmt = javaConn.prepareStatement(reqQuery.getSql());
 				//  환경설정에서 원하는 조건을 입력하였을 경우.
 				rs = pstmt.executeQuery();
-				if(logger.isDebugEnabled()) logger.debug("\t\t Query Time " + (System.currentTimeMillis() - startPreparedStatement) + " mis");
 				
 			// explain
 			}  else if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
@@ -614,11 +619,18 @@ public class ResultSetComposite extends Composite {
 					
 				}
 			}
+			
+			if(logger.isDebugEnabled()) {
+				logger.debug("\t\t Querying Time : " + (System.currentTimeMillis() - startPreparedStatement) + " mis");
+			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////
 			long longStartResultPath = System.currentTimeMillis();
 			rsDAO = new ResultSetUtilDTO(true, rs, getQueryPageCount(), getIsResultComma());
-			if(logger.isDebugEnabled()) logger.debug("\t\t ResultSet pageh time " + (System.currentTimeMillis() - longStartResultPath) + " mis");
+			if(logger.isDebugEnabled()) {
+				logger.debug("\t\t ResultSet patch time : " + (System.currentTimeMillis() - longStartResultPath) + " mis");
+				logger.debug("\t[end]=======================================================================================================");
+			}
 			
 			if(getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT) {
 			} else {
