@@ -23,7 +23,6 @@ import java.util.Map;
  *
  */
 public class ResultSetUtilDTO {
-
 	/** 
 	 * column 이름. <columnIndex, name>
 	 */
@@ -57,15 +56,15 @@ public class ResultSetUtilDTO {
 	 * 
 	 * @param isShowRownum
 	 * @param rs
-	 * @param queryResultCount
+	 * @param limitCount
 	 * @param isResultComma
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO(boolean isShowRownum, ResultSet rs, int queryResultCount, boolean isResultComma) throws Exception {
+	public ResultSetUtilDTO(boolean isShowRownum, ResultSet rs, int limitCount, boolean isResultComma) throws Exception {
 		if(rs != null) {
 			columnName = ResultSetUtils.getColumnName(isShowRownum, rs);
 			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
-			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, queryResultCount, isResultComma);
+			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount, isResultComma);
 		}
 	}
 

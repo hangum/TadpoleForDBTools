@@ -18,7 +18,6 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.session.manager.SessionManager;
 
@@ -42,20 +41,17 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/** session에서 사용자 정보를 가져다 놓습니다.
 	 * No context available outside of the request service lifecycle.
 	 */
-	protected final String strUserEMail = SessionManager.getEMAIL();
-	protected String strRoleType = "";
-	protected final int intUserSeq = SessionManager.getSeq();
+	/**
+	 * 사용자 email
+	 */
+	private final String userEMail 		= SessionManager.getEMAIL();
 	
-	/** 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */
-	protected int queryResultCount 	= GetPreferenceGeneral.getQueryResultCount();
-	/** 쿼리 결과를 page당 처리 하는 카운트 */
-	protected int queryPageCount 		= GetPreferenceGeneral.getPageCount();
-	/** oracle plan table 이름 */
-	protected String planTableName 	= GetPreferenceGeneral.getPlanTableName();
-////	/** export delimit */
-////	protected String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$
-	/** 결과 컬럼이 숫자이면 ,를 찍을 것인지 */
-	protected boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
+	/**
+	 * 사용자 seq
+	 */
+	private final int userSeq 			= SessionManager.getSeq();
+	protected String strRoleType 		= "";
+	protected final int intUserSeq 		= SessionManager.getSeq();
 	
 	/** 현재 에디터에서 처리해야하는 디비 정보. */
 	protected UserDBDAO userDB;
@@ -66,6 +62,14 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	
 	public UserDBDAO getUserDB() {
 		return userDB;
+	}
+	
+	public String getUserEMail() {
+		return userEMail;
+	}
+	
+	public int getUserSeq() {
+		return userSeq;
 	}
 	
 	/**
@@ -90,7 +94,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 		try {
 			browserQueryEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
 		} catch(Exception e) {
-			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", strUserEMail), e); //$NON-NLS-1$ //$NON-NLS-2$
+			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", getUserEMail()), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
@@ -118,7 +122,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 			Object ret = browserQueryEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
 			if(ret != null) return ret.toString();
 		} catch(Exception e) {
-			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", strUserEMail), e); //$NON-NLS-1$ //$NON-NLS-2$
+			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", getUserEMail()), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		return "";
@@ -140,7 +144,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 * 
 	 * @return
 	 */
-	protected String getUserType() {
+	public String getUserType() {
 		return strRoleType;
 	}
 	

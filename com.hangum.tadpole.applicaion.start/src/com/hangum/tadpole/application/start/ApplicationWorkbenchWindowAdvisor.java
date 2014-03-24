@@ -78,9 +78,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // remove this line(fixed at https://github.com/hangum/TadpoleForDBTools/issues/350)
 //        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
         configurer.setShowCoolBar(true);
-        configurer.setShowStatusLine(true);
+        configurer.setShowStatusLine(false);
         configurer.setShowMenuBar(false);
-        configurer.setShowProgressIndicator(true);
+        configurer.setShowProgressIndicator(false);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
         
         // fullscreen
@@ -134,10 +134,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	//	}
 				
 		// Show Information Dialog(Is not Firefox, Chrome, Safari)
-		if(!RequestInfoUtils.isSupportBrowser()) {
-			UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), RequestInfoUtils.getUserBrowser());
-			uiDialog.open();
-		}
+//		if(!RequestInfoUtils.isSupportBrowser()) {
+//			UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), RequestInfoUtils.getUserBrowser());
+//			uiDialog.open();
+//		}
     }
     
     /**
@@ -181,7 +181,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					    } // end try
     				
 	    				try {
-							Thread.sleep(30 * 1000);
+							Thread.sleep(10 * 1000);
 	    				} catch(Exception e){}
     				}
     			}	// end while

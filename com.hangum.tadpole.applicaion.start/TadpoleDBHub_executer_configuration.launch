@@ -6,7 +6,7 @@
 <booleanAttribute key="automaticValidate" value="false"/>
 <stringAttribute key="bootstrap" value=""/>
 <stringAttribute key="checked" value="[NONE]"/>
-<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="clearConfig" value="true"/>
 <booleanAttribute key="clearws" value="false"/>
 <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/TadpoleDBHub_executer_configuration"/>
 <booleanAttribute key="default" value="true"/>
@@ -16,7 +16,7 @@
 <booleanAttribute key="includeOptional" value="true"/>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console  -forceSystemInitialize -test -defaultDB MySQL -debuglog -nl ko"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console  -forceSystemInitialize -test -defaultDB MySQL -debuglog  -registryMultiLanguage -nl es"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#10;-Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info"/>
 <stringAttribute key="org.eclipse.rap.launch.browserMode" value="EXTERNAL"/>
@@ -37,5 +37,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.hangum.tadpole.ace.core@default:default,com.hangum.tadpole.ace.editor.core@default:default,com.hangum.tadpole.applicaion.start@default:default,com.hangum.tadpole.application@default:default,com.hangum.tadpole.aws.rds.commons.core@default:default,com.hangum.tadpole.cipher.core@default:default,com.hangum.tadpole.commons.libs@default:default,com.hangum.tadpole.commons.utils@default:default,com.hangum.tadpole.engine@default:default,com.hangum.tadpole.hive.core@default:default,com.hangum.tadpole.importdb@default:default,com.hangum.tadpole.manager.core@default:default,com.hangum.tadpole.mongodb.core.ext@default:default,com.hangum.tadpole.mongodb.core@default:default,com.hangum.tadpole.mongodb.erd.core@default:default,com.hangum.tadpole.mongodb.model@default:default,com.hangum.tadpole.notes.core@default:default,com.hangum.tadpole.preference@default:default,com.hangum.tadpole.rdb.core.ext@default:default,com.hangum.tadpole.rdb.core@default:default,com.hangum.tadpole.rdb.erd.core@default:default,com.hangum.tadpole.rdb.model@default:default,com.hangum.tadpole.sql.parser@default:default,com.hangum.tadpole.tajo.core@default:default"/>
+<stringAttribute key="workspace_bundles" value="com.hangum.tadpole.ace.editor.core@default:default,com.hangum.tadpole.applicaion.start@default:default,com.hangum.tadpole.application@default:default,com.hangum.tadpole.aws.rds.commons.core@default:default,com.hangum.tadpole.cipher.core@default:default,com.hangum.tadpole.commons.libs@default:default,com.hangum.tadpole.commons.utils@default:default,com.hangum.tadpole.engine@default:default,com.hangum.tadpole.hive.core@default:default,com.hangum.tadpole.importdb@default:default,com.hangum.tadpole.manager.core@default:default,com.hangum.tadpole.mongodb.core.ext@default:default,com.hangum.tadpole.mongodb.core@default:default,com.hangum.tadpole.mongodb.erd.core@default:default,com.hangum.tadpole.mongodb.model@default:default,com.hangum.tadpole.notes.core@default:default,com.hangum.tadpole.preference@default:default,com.hangum.tadpole.rdb.core.ext@default:default,com.hangum.tadpole.rdb.core@default:default,com.hangum.tadpole.rdb.erd.core@default:default,com.hangum.tadpole.rdb.model@default:default,com.hangum.tadpole.sql.parser@default:default,com.hangum.tadpole.tajo.core@default:default"/>
 </launchConfiguration>
