@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 
 /**
@@ -36,7 +37,7 @@ public class MongoDBCollectionComparator extends ObjectComparator  {
 		int rc = 0;
 		switch(propertyIndex) {
 		case 0:
-			rc = tb1.getName().toLowerCase().compareToIgnoreCase(tb2.getName().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getName(), tb2.getName());
 			break;
 		case 1:
 			rc = tb1.getRows() > tb2.getRows()?1:-1;

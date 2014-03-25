@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
+
 /**
  * sql select의 sorter
  * 
@@ -66,9 +68,8 @@ public class SQLResultSorter extends ViewerSorter {
 			
 			rc = long1.compareTo(long2);
 		} catch(NumberFormatException nfe) {
-			rc = search1.toLowerCase().compareTo(search2.toLowerCase());
+			rc = NullSafeComparator.compare(search1, search2);
 		}
-		
 
 		if (direction == DESCENDING) {
 			rc = -rc;

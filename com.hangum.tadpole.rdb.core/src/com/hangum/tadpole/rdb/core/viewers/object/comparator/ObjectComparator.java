@@ -14,6 +14,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
+
 /**
  * sort를 위한 최상위 클래서(기본으로 table 사용)
  * 
@@ -49,7 +51,7 @@ public  class ObjectComparator extends ViewerSorter  {
 		String tb1 = e1.toString();
 		String tb2 = e2.toString();
 		
-		int rc = tb1.toLowerCase().compareTo(tb2.toLowerCase());		
+		int rc = NullSafeComparator.compare(tb1, tb2);		
 		if (direction == DESCENDING) {
 			rc = -rc;
 		}

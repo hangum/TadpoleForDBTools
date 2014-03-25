@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.rdb.core.Messages;
