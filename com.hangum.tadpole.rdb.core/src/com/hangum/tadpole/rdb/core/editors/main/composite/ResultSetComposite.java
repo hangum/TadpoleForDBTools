@@ -14,10 +14,14 @@ import java.io.BufferedReader;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,6 +58,9 @@ import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
@@ -64,6 +71,7 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteSelect;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
@@ -73,6 +81,8 @@ import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
+import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
+import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -140,8 +150,14 @@ public class ResultSetComposite extends Composite {
 		progressBarQuery.setSelection(0);
 		
 		btnStopQuery = new Button(composite, SWT.NONE);
+		btnStopQuery.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				isRunning = false;
+			}
+		});
 		btnStopQuery.setText(Messages.RDBResultComposite_btnStp_text);
-		btnStopQuery.setEnabled(false);
+//		btnStopQuery.setEnabled(false);
 		
 		textFilter.addKeyListener(new KeyAdapter() {
 			@Override
@@ -280,6 +296,9 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		new Label(compositeBtn, SWT.NONE);
+		new Label(compositeBtn, SWT.NONE);
+		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
 	}
@@ -304,6 +323,8 @@ public class ResultSetComposite extends Composite {
 		this.rsDAO = new QueryExecuteResultDTO();
 		sqlFilter.setFilter("");
 		textFilter.setText("");
+		
+		setControlProgress(true);
 
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
@@ -410,13 +431,99 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.schedule();
 	}
 	
+	private boolean isRunning = true;
 	private QueryExecuteResultDTO runSelect() throws Exception {
-		ExecuteSelect es = new ExecuteSelect();
-		QueryExecuteResultDTO rsDAO = es.runSQLSelect(reqQuery, getUserDB(), getUserType(), getUserEMail(), getQueryPageCount(), getIsResultComma());
+		if(!PermissionChecker.isExecute(getUserType(), getUserDB(), reqQuery.getSql())) {
+			throw new Exception(Messages.MainEditor_21);
+		}
+//		btnStopQuery.getDisplay().asyncExec(new Runnable() {
+//			@Override
+//			public void run() {
+//				setControlProgress(true);
+//			} 	// end run
+//		});		
+		
+		isRunning = true;
+		ResultSet rs = null;
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		try {
+			if(reqQuery.isAutoCommit()) {
+				SqlMapClient client = TadpoleSQLManager.getInstance(getUserDB());
+				javaConn = client.getDataSource().getConnection();
+			} else {
+				if(DBDefine.TAJO_DEFAULT == getUserDB().getDBDefine()) {
+					javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
+				} else {
+					javaConn = TadpoleSQLTransactionManager.getInstance(getUserEMail(), getUserDB());
+				}
+			}
+			
+			statement = javaConn.createStatement();
+			final Statement stmt = statement;
+			Thread stopCheckThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					int i = 0;
+					
+					while(isRunning) {
+						final int progressAdd = i++; 
+						
+						try {
+							btnStopQuery.getDisplay().asyncExec(new Runnable() {
+								@Override
+								public void run() {
+									logger.debug("[----------------------------------------------------progressAdd]"+ progressAdd);
+									progressBarQuery.setSelection(progressAdd);
+									
+								}
+							});
+							
+							logger.debug("=====> " + isRunning);
+							Thread.sleep(100);
+							if(!isRunning) stmt.cancel();
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+					}
+				} 	// end run
+			});
+			stopCheckThread.start();
+			logger.debug("== start stop thread====");
+			
+			ExecuteSelect es = new ExecuteSelect();
+			rs = es.runSQLSelect(stmt, reqQuery);
+			isRunning = false;
+			
+			rsDAO = new QueryExecuteResultDTO(true, rs, getQueryPageCount(), getIsResultComma());
+			
+			
+//			if(getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT) {
+//			} else {
+//				// 데이터셋에 추가 결과 셋이 있을경우 모두 fetch 하여 결과 그리드에 표시한다.
+//				while(rs.getMoreResults()){  
+//					rsDAO.getDataList().getData().addAll(ResultSetUtils.getResultToList(pstmt.getResultSet(), queryPageCount, isResultComma).getData());
+//				}
+//			}
+			
+		} finally {
+			
+//			try { if(statement != null) pstmt.close(); } catch(Exception e) {}
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+
+			if(reqQuery.isAutoCommit()) {
+				try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+			}
+		}
+		
+//		ExecuteSelect es = new ExecuteSelect();
+//		es.runSQLSelect(reqQuery, getUserDB(), getUserType(), getUserEMail(), getQueryPageCount(), getIsResultComma());
+		
 		
 		return rsDAO;
 	}
-	
+
 	private int getQueryPageCount() {
 		return easyPreferenceData.getQueryPageCount();
 	}
@@ -438,6 +545,7 @@ public class ResultSetComposite extends Composite {
 	 * 에디터를 실행 후에 마지막으로 실행해 주어야 하는 코드.
 	 */
 	private void finallyEndExecuteCommand() {
+		setControlProgress(false);
 		getRdbResultComposite().browserEvaluate(EditorFunctionService.EXECUTE_DONE);
 	}
 	
@@ -448,11 +556,11 @@ public class ResultSetComposite extends Composite {
 	 */
 	public void setControlProgress(boolean isStart) {
 		if(isStart) {
-			progressBarQuery.setMinimum(0);
-			btnStopQuery.setEnabled(true);
+			progressBarQuery.setSelection(0);
+//			btnStopQuery.setEnabled(true);
 		} else {
-			progressBarQuery.setMinimum(100);
-			btnStopQuery.setEnabled(true);
+			progressBarQuery.setSelection(100);
+//			btnStopQuery.setEnabled(false);
 		}
 	}
 	
