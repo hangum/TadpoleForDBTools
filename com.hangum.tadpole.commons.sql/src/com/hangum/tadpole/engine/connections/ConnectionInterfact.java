@@ -16,7 +16,7 @@ import java.util.Map;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
+import com.hangum.tadpole.sql.util.resultset.ResultSetUtilDTO;
 
 /**
  * 올챙이에서 jdbc로 연결하지 못하는 Connection의 interface를 정합니다.

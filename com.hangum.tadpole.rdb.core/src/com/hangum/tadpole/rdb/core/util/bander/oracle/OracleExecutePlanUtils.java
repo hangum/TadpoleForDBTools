@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.util;
+package com.hangum.tadpole.rdb.core.util.bander.oracle;
 
 import java.sql.PreparedStatement;
 

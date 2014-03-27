@@ -8,20 +8,19 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.util;
+package com.hangum.tadpole.sql.util.resultset;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 
 /**
  * ResultSet utils
@@ -41,12 +40,14 @@ public class ResultSetUtils {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<Map<Integer, Object>> getResultToList(final ResultSet rs, final int limitCount, final boolean isPretty) throws SQLException {
+	public static TadpoleResultSet getResultToList(final ResultSet rs, final int limitCount, final boolean isPretty) throws SQLException {
 		return getResultToList(false, rs, limitCount, isPretty);
 	}
 	
 	/**
 	 * ResultSet to List
+	 * 
+	 * 
 	 * 
 	 * @param isShowRowNum 첫번째 컬럼의 로우 넘버를 추가할 것인지.
 	 * @param rs ResultSet
@@ -55,8 +56,9 @@ public class ResultSetUtils {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<Map<Integer, Object>> getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, final boolean isPretty) throws SQLException {
-		List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer, Object>>();
+	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, final boolean isPretty) throws SQLException {
+		TadpoleResultSet returnRS = new TadpoleResultSet();
+//		List<Map<Integer, Object>> returnDataList = new ArrayList<Map<Integer, Object>>();
 		Map<Integer, Object> tmpRow = null;
 		
 		// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
@@ -94,14 +96,17 @@ public class ResultSetUtils {
 				}
 			}
 			
-			sourceDataList.add(tmpRow);
+			returnRS.getData().add(tmpRow);
 			
 			// 쿼리 검색 결과 만큼만 결과셋을 받습니다. (hive driver는 getRow를 지원하지 않습니다) --;; 2013.08.19, hangum
 //			if(limitCount == rs.getRow()) break;
-			if(limitCount == rowCnt++) break;
+			if(limitCount == rowCnt++) {
+				returnRS.setEndOfRead(false);
+				break;
+			}
 		}
 		
-		return sourceDataList;
+		return returnRS;
 	}
 	
 	/**

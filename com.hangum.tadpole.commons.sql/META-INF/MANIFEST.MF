@@ -56,6 +56,7 @@ Export-Package:
  com.hangum.tadpole.sql.util,
  com.hangum.tadpole.sql.util.executer,
  com.hangum.tadpole.sql.util.executer.procedure,
+ com.hangum.tadpole.sql.util.resultset,
  com.hangum.tadpole.sql.util.sqlscripts,
  com.hangum.tadpole.sql.util.sqlscripts.scripts,
  com.hangum.tadpole.sql.util.tables,

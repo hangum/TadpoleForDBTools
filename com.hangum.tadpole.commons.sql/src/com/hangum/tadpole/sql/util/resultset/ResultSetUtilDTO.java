@@ -8,10 +8,9 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.util;
+package com.hangum.tadpole.sql.util.resultset;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,9 @@ public class ResultSetUtilDTO {
 	/**
 	 * data <columnIndex, data>
 	 */
-	private List<Map<Integer, Object>> dataList = new ArrayList<Map<Integer,Object>>();
+	private TadpoleResultSet dataList = new TadpoleResultSet();
+	
+	
 	
 	public ResultSetUtilDTO() {
 	}
@@ -45,7 +46,7 @@ public class ResultSetUtilDTO {
 	 * @param mapColumnType
 	 * @param sourceDataList
 	 */
-	public ResultSetUtilDTO(Map<Integer, String> columnName, Map<Integer, Integer> columnType, List<Map<Integer, Object>> dataList) {
+	public ResultSetUtilDTO(Map<Integer, String> columnName, Map<Integer, Integer> columnType, TadpoleResultSet dataList) {
 		this.columnName = columnName;
 		this.columnType = columnType;
 		this.dataList = dataList;
@@ -99,18 +100,18 @@ public class ResultSetUtilDTO {
 	/**
 	 * @return the dataList
 	 */
-	public List<Map<Integer, Object>> getDataList() {
+	public final TadpoleResultSet getDataList() {
 		return dataList;
 	}
 
 	/**
 	 * @param dataList the dataList to set
 	 */
-	public void setDataList(List<Map<Integer, Object>> dataList) {
+	public final void setDataList(TadpoleResultSet dataList) {
 		this.dataList = dataList;
 	}
 
 	public void addDataAll(List<Map<Integer, Object>> resultToList) {
-		this.dataList.addAll(resultToList);
+		this.dataList.getData().addAll(resultToList);
 	}
 }

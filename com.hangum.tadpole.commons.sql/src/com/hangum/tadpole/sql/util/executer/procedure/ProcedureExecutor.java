@@ -21,8 +21,9 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
-import com.hangum.tadpole.sql.util.ResultSetUtils;
+import com.hangum.tadpole.sql.util.resultset.ResultSetUtilDTO;
+import com.hangum.tadpole.sql.util.resultset.ResultSetUtils;
+import com.hangum.tadpole.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 
 /**
@@ -164,7 +165,7 @@ public abstract class ProcedureExecutor {
 	protected void setResultCursor(ResultSet rs) throws Exception {
 		Map<Integer, String> mapColumns = ResultSetUtils.getColumnName(rs);
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
-		List<Map<Integer, Object>> sourceDataList = ResultSetUtils.getResultToList(rs, 1000, true);
+		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(rs, 1000, true);
 
 		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(mapColumns, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
@@ -181,7 +182,7 @@ public abstract class ProcedureExecutor {
 	 *  
 	 *  @param List<Map<Integer, Object>> sourceDataList
 	 */
-	protected void setResultNoCursor(List<Map<Integer, Object>> sourceDataList) throws Exception {
+	protected void setResultNoCursor(TadpoleResultSet sourceDataList) throws Exception {
 		Map<Integer, String> mapColumns = new HashMap<Integer, String>();
 		mapColumns.put(0, "Seq");
 		mapColumns.put(1, "Name");

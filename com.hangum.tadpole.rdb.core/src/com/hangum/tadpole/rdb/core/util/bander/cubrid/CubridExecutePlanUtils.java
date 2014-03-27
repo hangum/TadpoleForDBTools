@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.util;
+package com.hangum.tadpole.rdb.core.util.bander.cubrid;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.resultset.TadpoleResultSet;
 
 import cubrid.jdbc.driver.CUBRIDStatement;
 
@@ -110,13 +111,14 @@ public class CubridExecutePlanUtils {
 	 * @param data
 	 * @return
 	 */
-	public static List<Map<Integer, Object>> getMakeData(String data) {
+	public static TadpoleResultSet getMakeData(String data) {
 		List<Map<Integer, Object>> sourceDataList = new ArrayList<Map<Integer, Object>>();
 		
 		HashMap<Integer, Object> tmpRs = new HashMap<Integer, Object>();
 		tmpRs.put(0, data);		
 		sourceDataList.add(tmpRs);
-		
-		return sourceDataList;
+
+		TadpoleResultSet trs = new TadpoleResultSet(sourceDataList);
+		return trs;
 	}
 }
