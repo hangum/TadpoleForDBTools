@@ -100,9 +100,9 @@ public class TadpoleSystem_Notes {
 		} catch(Exception e) {
 			logger.error("Read user note", e);
 		} finally {
-			try { rs.close();} catch(Exception e) {}
-			try { stmt.close();} catch(Exception e) {}
-			try { javaConn.close(); } catch(Exception e) {}
+			try { if(rs != null) rs.close();} catch(Exception e) {}
+			try { if(stmt != null) stmt.close();} catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 		}
 		
 		return retListNotes;
@@ -116,7 +116,7 @@ public class TadpoleSystem_Notes {
 	 */
 	public static void readSystemNote(int noteSeq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.delete("noteSystemRead", noteSeq);
+		sqlClient.update("noteSystemRead", noteSeq);
 	}
 	
 	/**
@@ -127,7 +127,7 @@ public class TadpoleSystem_Notes {
 	 */
 	public static void readNote(int noteSeq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.delete("noteRead", noteSeq);
+		sqlClient.update("noteRead", noteSeq);
 	}
 	
 	/**

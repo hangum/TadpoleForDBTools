@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -460,8 +458,8 @@ public class ResultSetComposite extends Composite {
 				@Override
 				public void run() {
 					int i = 0;
-					logger.debug("===================================================================================================");
-					logger.debug("\t First call the Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
+//					logger.debug("===================================================================================================");
+//					logger.debug("\t First call the Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
 					
 					while(isCheckRunning) {
 						if(i>100) i = 0;
@@ -476,15 +474,15 @@ public class ResultSetComposite extends Composite {
 							});
 							
 							Thread.sleep(50);
-							logger.debug(" Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
+//							logger.debug(" Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
 							if(!isUserInterrupt) stmt.cancel();
 						} catch(Exception e) {
 							logger.error("isCheckThread exception", e);
 						}
 					}   // end while
 					
-					logger.debug("\t end call the Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
-					logger.debug("===================================================================================================");
+//					logger.debug("\t end call the Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
+//					logger.debug("===================================================================================================");
 				} 	// end run
 			});
 			stopCheckThread.start();

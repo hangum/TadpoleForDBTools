@@ -132,14 +132,11 @@ public class ViewDialog extends Dialog {
 	
 	@Override
 	protected void cancelPressed() {
-		readNote();
-
 		super.cancelPressed();
 	}
 	
 	@Override
 	protected void okPressed() {
-		readNote();
 		NewNoteDialog dialog = new NewNoteDialog(null, noteDAO, textUser.getText());
 		dialog.open();
 		
@@ -152,6 +149,7 @@ public class ViewDialog extends Dialog {
 	private void initData() {
 		try {
 			// note를 읽음 상태 처리 합니다.
+			readNote();
 			TadpoleSystem_Notes.readNote(noteDAO.getSeq());
 
 			// note의 디테일 정보를 가져오고.
