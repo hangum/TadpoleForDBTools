@@ -153,11 +153,11 @@ public class ResultSetComposite extends Composite {
 		btnStopQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				isRunning = false;
+				isUserInterrupt = false;
 			}
 		});
 		btnStopQuery.setText(Messages.RDBResultComposite_btnStp_text);
-//		btnStopQuery.setEnabled(false);
+		btnStopQuery.setEnabled(false);
 		
 		textFilter.addKeyListener(new KeyAdapter() {
 			@Override
@@ -324,7 +324,7 @@ public class ResultSetComposite extends Composite {
 		sqlFilter.setFilter("");
 		textFilter.setText("");
 		
-		setControlProgress(true);
+		controlProgress(true);
 
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
@@ -431,19 +431,13 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.schedule();
 	}
 	
-	private boolean isRunning = true;
+	private boolean isCheckRunning = true;
+	private boolean isUserInterrupt = false;
 	private QueryExecuteResultDTO runSelect() throws Exception {
 		if(!PermissionChecker.isExecute(getUserType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
-//		btnStopQuery.getDisplay().asyncExec(new Runnable() {
-//			@Override
-//			public void run() {
-//				setControlProgress(true);
-//			} 	// end run
-//		});		
 		
-		isRunning = true;
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -466,36 +460,39 @@ public class ResultSetComposite extends Composite {
 				@Override
 				public void run() {
 					int i = 0;
+					logger.debug("===================================================================================================");
+					logger.debug("\t First call the Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
 					
-					while(isRunning) {
+					while(isCheckRunning) {
+						if(i>100) i = 0;
 						final int progressAdd = i++; 
 						
 						try {
 							btnStopQuery.getDisplay().asyncExec(new Runnable() {
 								@Override
 								public void run() {
-									logger.debug("[----------------------------------------------------progressAdd]"+ progressAdd);
 									progressBarQuery.setSelection(progressAdd);
-									
 								}
 							});
 							
-							logger.debug("=====> " + isRunning);
-							Thread.sleep(100);
-							if(!isRunning) stmt.cancel();
+							Thread.sleep(50);
+							logger.debug(" Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
+							if(!isUserInterrupt) stmt.cancel();
 						} catch(Exception e) {
-							e.printStackTrace();
+							logger.error("isCheckThread exception", e);
 						}
-					}
+					}   // end while
+					
+					logger.debug("\t end call the Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
+					logger.debug("===================================================================================================");
 				} 	// end run
 			});
 			stopCheckThread.start();
-			logger.debug("== start stop thread====");
 			
 			ExecuteSelect es = new ExecuteSelect();
 			rs = es.runSQLSelect(stmt, reqQuery);
-			isRunning = false;
-			
+			isCheckRunning = false;
+					
 			rsDAO = new QueryExecuteResultDTO(true, rs, getQueryPageCount(), getIsResultComma());
 			
 			
@@ -508,18 +505,13 @@ public class ResultSetComposite extends Composite {
 //			}
 			
 		} finally {
-			
-//			try { if(statement != null) pstmt.close(); } catch(Exception e) {}
+			try { if(statement != null) statement.close(); } catch(Exception e) {}
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 
 			if(reqQuery.isAutoCommit()) {
 				try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 			}
 		}
-		
-//		ExecuteSelect es = new ExecuteSelect();
-//		es.runSQLSelect(reqQuery, getUserDB(), getUserType(), getUserEMail(), getQueryPageCount(), getIsResultComma());
-		
 		
 		return rsDAO;
 	}
@@ -545,7 +537,7 @@ public class ResultSetComposite extends Composite {
 	 * 에디터를 실행 후에 마지막으로 실행해 주어야 하는 코드.
 	 */
 	private void finallyEndExecuteCommand() {
-		setControlProgress(false);
+		controlProgress(false);
 		getRdbResultComposite().browserEvaluate(EditorFunctionService.EXECUTE_DONE);
 	}
 	
@@ -554,13 +546,19 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param isStart
 	 */
-	public void setControlProgress(boolean isStart) {
+	private void controlProgress(final boolean isStart) {
 		if(isStart) {
+			isCheckRunning = true;
+			isUserInterrupt = true;
+			
 			progressBarQuery.setSelection(0);
-//			btnStopQuery.setEnabled(true);
+			btnStopQuery.setEnabled(true);
 		} else {
+			isCheckRunning = false;
+			isUserInterrupt = false;
+			
 			progressBarQuery.setSelection(100);
-//			btnStopQuery.setEnabled(false);
+			btnStopQuery.setEnabled(false);
 		}
 	}
 	

@@ -169,9 +169,7 @@ public class ResultMainComposite extends Composite {
 		}
 		
 		// 실제 쿼리 실행.
-		compositeResultSet.setControlProgress(true);
 		compositeResultSet.executeCommand(reqQuery);
-		compositeResultSet.setControlProgress(false);
 	}
 	
 	/**

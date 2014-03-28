@@ -100,10 +100,12 @@ public class ResultSetUtils {
 			
 			// 쿼리 검색 결과 만큼만 결과셋을 받습니다. (hive driver는 getRow를 지원하지 않습니다) --;; 2013.08.19, hangum
 //			if(limitCount == rs.getRow()) break;
-			if(limitCount == rowCnt++) {
+			if(limitCount == (rowCnt+1)) {
 				returnRS.setEndOfRead(false);
 				break;
 			}
+			
+			rowCnt++;
 		}
 		
 		return returnRS;
