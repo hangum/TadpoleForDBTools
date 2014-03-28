@@ -12,6 +12,7 @@ package com.hangum.tadpole.sql.system;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,25 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_Notes {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_Notes.class);
+	public static final String SQL_NOTE_LIST = "SELECT 				" + 
+										"			seq, 		" +
+										"		    types, 		" +
+										"		    sender_seq, " +
+										"			(select email from user where  seq = sender_seq) sendUserId, " +
+										"		    receiver_seq, " +
+										"		    (select email from user where  seq = receiver_seq) receiveUserId, " +
+										"			title, " +
+										"		    sender_date, " +
+										"		    receiver_date, " +
+										"		    is_read, " +
+										"		    sender_delyn, " +
+										"		    receiver_delyn, " +
+										"		    create_time, " +
+										"		    delyn " +
+										"		FROM notes  " +
+										"		WHERE   " +
+										"			receiver_seq 	= ? " +  
+										"		AND is_system_read = 'NO'";
 	
 	/**
 	 * 사용자에게 알려야 할 노트 리스트를 
@@ -41,12 +61,49 @@ public class TadpoleSystem_Notes {
 	 * @throws Exception
 	 */
 	public static List<NotesDAO> getAlertNote(int userSeq) throws Exception {
+		List<NotesDAO> retListNotes = new ArrayList<NotesDAO>(); 
+				
 		// 리턴한다.
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<NotesDAO> retListNotes = sqlClient.queryForList("getAlertNote", userSeq);
-
-//		//  받은 모든 노트를 읽음 처리.
-//		if(!retListNotes.isEmpty()) sqlClient.update("noteSystemRead", userSeq);
+		java.sql.Connection javaConn = null;
+		java.sql.PreparedStatement stmt = null;
+		java.sql.ResultSet rs = null;
+		
+		try {
+			SqlMapClient client = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+			javaConn = client.getDataSource().getConnection();
+			stmt = javaConn.prepareStatement(SQL_NOTE_LIST);
+			stmt.setInt(1, userSeq);
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				NotesDAO noteDao = new NotesDAO();
+				noteDao.setSeq(rs.getInt("seq"));
+				noteDao.setTypes(rs.getString("types"));
+				noteDao.setSender_seq(rs.getInt("sender_seq"));
+				noteDao.setSendUserId(rs.getString("sendUserId"));
+				noteDao.setReceiver_seq(rs.getInt("receiver_seq"));
+				noteDao.setReceiveUserId(rs.getString("receiveUserId"));
+				
+				noteDao.setTitle(rs.getString("title"));
+				
+				noteDao.setSender_date(rs.getDate("sender_date"));
+				noteDao.setReceiver_date(rs.getDate("receiver_date"));
+				noteDao.setIs_read(rs.getString("is_read"));
+				noteDao.setSender_delyn(rs.getString("sender_delyn"));
+				noteDao.setReceiver_delyn(rs.getString("receiver_delyn"));
+				noteDao.setCreate_time(rs.getString("create_time"));
+				noteDao.setDelYn(rs.getString("delyn"));
+				
+				retListNotes.add(noteDao);
+			}
+			
+		} catch(Exception e) {
+			logger.error("Read user note", e);
+		} finally {
+			try { rs.close();} catch(Exception e) {}
+			try { stmt.close();} catch(Exception e) {}
+			try { javaConn.close(); } catch(Exception e) {}
+		}
 		
 		return retListNotes;
 	}

@@ -122,8 +122,24 @@ public class ViewDialog extends Dialog {
 		return container;
 	}
 	
+	private void readNote() {
+		try {
+			TadpoleSystem_Notes.readSystemNote(noteDAO.getSeq());
+		} catch(Exception e) {
+			logger.error("note readable exception", e);
+		}
+	}
+	
+	@Override
+	protected void cancelPressed() {
+		readNote();
+
+		super.cancelPressed();
+	}
+	
 	@Override
 	protected void okPressed() {
+		readNote();
 		NewNoteDialog dialog = new NewNoteDialog(null, noteDAO, textUser.getText());
 		dialog.open();
 		

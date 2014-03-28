@@ -33,9 +33,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
-import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
@@ -181,7 +179,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					    } // end try
     				
 	    				try {
-							Thread.sleep(10 * 1000);
+							Thread.sleep(20 * 1000);
 	    				} catch(Exception e){}
     				}
     			}	// end while
