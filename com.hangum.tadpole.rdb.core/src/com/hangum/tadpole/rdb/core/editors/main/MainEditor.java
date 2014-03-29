@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -91,6 +92,8 @@ public class MainEditor extends EditorExtension {
 	
 	/** save mode */
 	private boolean isDirty = false;
+	
+	private ISelectionListener pageSelectionListener;
 	    
 	public MainEditor() {
 		super();
@@ -109,6 +112,7 @@ public class MainEditor extends EditorExtension {
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
+		
 	}
 	
 	@Override
@@ -331,6 +335,8 @@ public class MainEditor extends EditorExtension {
 		sashForm.setWeights(new int[] {65, 35});
 		initEditor();
 		
+		
+
 		// autocommit true 혹은 false값이 바뀌었을때..
 		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
@@ -359,6 +365,7 @@ public class MainEditor extends EditorExtension {
 			} //
 		}); // end property change		
 	}
+	
 	
 	public Browser getBrowserQueryEditor() {
 		return browserQueryEditor;

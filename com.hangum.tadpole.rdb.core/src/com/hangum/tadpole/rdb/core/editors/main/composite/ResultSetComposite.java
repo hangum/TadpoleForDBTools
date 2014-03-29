@@ -250,9 +250,16 @@ public class ResultSetComposite extends Composite {
 		TableUtil.makeSelectSingleColumn(tvQueryResult);
 	    // single column select end
 		
+//		ScrollBar vBarLeft = tableResult.getVerticalBar();
+//		vBarLeft.addListener(SWT.Selection, new Listener() {
+//			public void handleEvent(Event event) {
+//				System.out.println("vBarleft listener is " + tableResult.getTopIndex());
+//			}
+//		});
+		
 		Composite compositeBtn = new Composite(this, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(6, false);
+		GridLayout gl_compositeBtn = new GridLayout(4, false);
 		gl_compositeBtn.marginWidth = 1;
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
@@ -294,8 +301,6 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		new Label(compositeBtn, SWT.NONE);
-		new Label(compositeBtn, SWT.NONE);
 		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
