@@ -27,6 +27,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**
  * 쿼리 생성관련 유틸입니다.
@@ -55,11 +56,11 @@ public class FindEditorAndWriteQueryUtil {
 		} else {
 
 //			if(isFormating) {
-//				try {
-//					lowSQL = SQLFormater.format(lowSQL);
-//				} catch(Exception e) {
-//					// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
-//				}
+				try {
+					lowSQL = SQLFormater.format(lowSQL);
+				} catch(Exception e) {
+					// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
+				}
 //			}
 			
 			IEditorPart editor = EditorUtils.findSQLEditor(userDB);
@@ -157,7 +158,6 @@ public class FindEditorAndWriteQueryUtil {
 				editor.appendTextAtPosition(strAppendText);
 			}
 		}
-		
 	}
 	
 }
