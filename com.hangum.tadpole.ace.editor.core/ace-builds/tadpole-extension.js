@@ -58,7 +58,7 @@ var isJavaRunning = false;
 {
 	ace.require("ace/ext/language_tools");
 	editor = ace.edit("editor");
-	document.getElementById('editor').style.fontSize= '11px';
+	document.getElementById('editor').style.fontSize= '12px';
 	
 	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
