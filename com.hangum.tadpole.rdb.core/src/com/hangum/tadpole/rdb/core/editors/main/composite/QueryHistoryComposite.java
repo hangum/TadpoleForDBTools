@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -78,13 +79,12 @@ public class QueryHistoryComposite extends Composite {
 				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(!is.isEmpty()) {
-					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
+					appendText(getHistoryTabelSelectData());
 				}
 			}
 		});
 		
 		Table tableSQLHistory = tvSQLHistory.getTable();
-		
 		tableSQLHistory.setLinesVisible(true);
 		tableSQLHistory.setHeaderVisible(true);
 		tableSQLHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
