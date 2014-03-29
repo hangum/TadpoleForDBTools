@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -92,8 +91,6 @@ public class MainEditor extends EditorExtension {
 	
 	/** save mode */
 	private boolean isDirty = false;
-	
-	private ISelectionListener pageSelectionListener;
 	    
 	public MainEditor() {
 		super();

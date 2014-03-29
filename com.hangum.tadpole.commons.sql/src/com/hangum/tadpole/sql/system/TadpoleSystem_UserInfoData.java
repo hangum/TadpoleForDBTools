@@ -293,6 +293,11 @@ public class TadpoleSystem_UserInfoData {
 		userInfoData.setValue0(PreferenceDefine.ORACLE_PLAN_TABLE_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
+		// RDB 결과 테이블의 폰트 설정.
+		userInfoData.setName(PreferenceDefine.RDB_RESULT_FONT);
+		userInfoData.setValue0(PreferenceDefine.RDB_RESULT_FONT_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		
 		// RDB 결과가 숫자 컬럼이면 ,를 찍도록 합니다.
 		userInfoData.setName(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
 		userInfoData.setValue0(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA_VALUE);

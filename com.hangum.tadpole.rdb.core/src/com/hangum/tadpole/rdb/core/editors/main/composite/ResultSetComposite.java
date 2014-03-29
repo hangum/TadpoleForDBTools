@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -59,6 +60,7 @@ import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
@@ -81,6 +83,7 @@ import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -93,6 +96,9 @@ public class ResultSetComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
 	private UserPreference easyPreferenceData = new UserPreference();
+	
+	/** 결과 페이지에서 사용할 폰트 지정 */
+	private final String PREFERENCE_USER_FONT 	= GetPreferenceGeneral.getRDBResultFont();
 	
 	/** execute job */
 	private Job jobQueryManager = null;
@@ -167,6 +173,16 @@ public class ResultSetComposite extends Composite {
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tvQueryResult = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		final Table tableResult = tvQueryResult.getTable();
+
+		if(!"".equals(PREFERENCE_USER_FONT)) {
+			try {
+				String[] arryFontInfo = StringUtils.split(PREFERENCE_USER_FONT, "|");
+				tableResult.setFont(ResourceManager.getFont(arryFontInfo[0], Integer.parseInt(arryFontInfo[1]), Integer.parseInt(arryFontInfo[2])));
+			} catch(Exception e) {
+				logger.error("Fail User font set", e);
+			}
+		}
+		
 		tableResult.addListener(SWT.MouseDoubleClick, new Listener() {
 		    public void handleEvent(Event event) {
 		    	TableItem[] selection = tableResult.getSelection();

@@ -117,4 +117,8 @@ public class PreferenceDefine {
 	/** RDB 결과 테이블의 결과에서 ,를 붙일 것인지 지정 할 수 있도록 */
 	public static final String RDB_RESULT_NUMBER_IS_COMMA = "RDB_RESULT_NUMBER_IS_COMMA";
 	public static final String RDB_RESULT_NUMBER_IS_COMMA_VALUE = PublicTadpoleDefine.YES_NO.YES.toString();
+	
+	/** RDB 결과 테이블의 폰트를 설정합니다 */
+	public static final String RDB_RESULT_FONT = "RDB_RESULT_FONT";
+	public static final String RDB_RESULT_FONT_VALUE = "";
 }
