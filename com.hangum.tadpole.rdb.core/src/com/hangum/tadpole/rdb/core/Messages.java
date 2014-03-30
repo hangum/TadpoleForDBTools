@@ -164,6 +164,7 @@ public class Messages extends NLS {
 	public static String ExitAction_1;
 	public static String ExitAction_2;
 	public static String ExitAction_3;
+	public static String ExplorerViewer_0;
 	public static String ExplorerViewer_1;
 	public static String ExplorerViewer_29;
 	public static String ExplorerViewer_39;
@@ -308,6 +309,7 @@ public class Messages extends NLS {
 	public static String MainEditorInput_0;
 	public static String MainEditorInput_3;
 	public static String MainEditorInput_4;
+	public static String ManagerViewer_0;
 	public static String ManagerViewer_10;
 	public static String ManagerViewer_4;
 	public static String ManagerViewer_6;

@@ -81,6 +81,8 @@ public class NoteListViewPart extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		setPartName(Messages.NoteListViewPart_0);
+		
 		GridLayout gl_parent = new GridLayout(1, false);
 		gl_parent.verticalSpacing = 1;
 		gl_parent.horizontalSpacing = 1;
@@ -172,10 +174,10 @@ public class NoteListViewPart extends ViewPart {
 		comboTypes.setLayoutData(gd_combo);
 		
 		comboTypes.add(Messages.NoteListViewPart_8);
-		comboTypes.setData(Messages.NoteListViewPart_8, "Send");
+		comboTypes.setData(Messages.NoteListViewPart_8, "Send"); //$NON-NLS-1$
 		
 		comboTypes.add(Messages.NoteListViewPart_9);
-		comboTypes.setData(Messages.NoteListViewPart_9, "Receive");
+		comboTypes.setData(Messages.NoteListViewPart_9, "Receive"); //$NON-NLS-1$
 		
 		comboTypes.select(1);
 		
@@ -187,10 +189,10 @@ public class NoteListViewPart extends ViewPart {
 			}
 		});
 		comboRead.add(Messages.NoteListViewPart_10);
-		comboRead.setData(Messages.NoteListViewPart_10, "Read");
+		comboRead.setData(Messages.NoteListViewPart_10, "Read"); //$NON-NLS-1$
 		
 		comboRead.add(Messages.NoteListViewPart_11);
-		comboRead.setData(Messages.NoteListViewPart_11, "Not yet Read");
+		comboRead.setData(Messages.NoteListViewPart_11, "Not yet Read"); //$NON-NLS-1$
 		
 		comboRead.select(0);
 		
@@ -247,7 +249,7 @@ public class NoteListViewPart extends ViewPart {
 				if(!iss.isEmpty()) {
 					
 					String selComboType = (String)comboTypes.getData(comboTypes.getText());
-					NOTE_TYPES noteType = selComboType.equals("Send")?NOTE_TYPES.SEND:NOTE_TYPES.RECEIVE;
+					NOTE_TYPES noteType = selComboType.equals("Send")?NOTE_TYPES.SEND:NOTE_TYPES.RECEIVE; //$NON-NLS-1$
 					ViewDialog dialog = new ViewDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), (NotesDAO)iss.getFirstElement(), noteType);
 					if(Dialog.OK == dialog.open()) {
 						initData();
