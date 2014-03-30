@@ -84,8 +84,8 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		textSelectLimit = new Text(container, SWT.BORDER);
 		textSelectLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setText(Messages.DefaultPreferencePage_other_labelText_1);
+//		Label lblNewLabel_1 = new Label(container, SWT.NONE);
+//		lblNewLabel_1.setText(Messages.DefaultPreferencePage_other_labelText_1);
 		
 //		textResultPage = new Text(container, SWT.BORDER);		
 //		textResultPage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
