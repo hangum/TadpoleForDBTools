@@ -76,7 +76,7 @@ Demo Site
 * Amazon EC2 micro (very slow) http://goo.gl/BhwQe
  
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.0/?
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.1/
  
 License
 -
