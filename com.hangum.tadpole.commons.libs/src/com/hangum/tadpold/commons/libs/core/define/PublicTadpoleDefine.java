@@ -23,7 +23,7 @@ public class PublicTadpoleDefine {
 	 * PLAN Statement ID
 	 */
 	public static String STATEMENT_ID = "||TADPOLE-STATEMENT_ID||"; //$NON-NLS-1$
-
+	
 	/**
 	 * 분리자
 	 */
@@ -54,6 +54,9 @@ public class PublicTadpoleDefine {
 	
 	/** NULL VALUE */
 	public static final String DEFINE_NULL_VALUE = "{null}";
+	
+	/** 쿼리 실행 결과  */
+	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};
 
 	/** yes, no */
 	public static enum YES_NO {YES, NO}; 

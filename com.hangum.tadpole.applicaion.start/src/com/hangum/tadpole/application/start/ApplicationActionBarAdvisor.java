@@ -177,17 +177,21 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         toolbar.add(deleteResourceAction);
         toolbar.add(new Separator());
-        
+
         if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
         	toolbar.add(userPermissionAction);
         	toolbar.add(new Separator());
-        	
-        	toolbar.add(executedSQLAction);
-            toolbar.add(new Separator());
+        }
+        
+    
+    	toolbar.add(executedSQLAction);
+        toolbar.add(new Separator());
             
+        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
             toolbar.add(transactionConnectionAction);
             toolbar.add(new Separator());
         }
+        
         
         toolbar.add(resourceManageAction);
         toolbar.add(new Separator());

@@ -46,9 +46,9 @@ public class PreferenceDefine {
 	/** 검색 결과 페이지 당 보여주는 갯수 */
 	public static final String SELECT_RESULT_PAGE_PREFERENCE = "SELECT_RESULT_PAGE_PREFERENCE";
 	/** select 결과를 페이지에 출력 디폴트 값 */
-	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 100;
+	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 200;
 	/** select 결과를 페이지에 출력 최대 값 */
-	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 200;
+	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 400;
 	
 	//SQLFormatterPreferencePage 
 		/** default tab size */
@@ -117,4 +117,8 @@ public class PreferenceDefine {
 	/** RDB 결과 테이블의 결과에서 ,를 붙일 것인지 지정 할 수 있도록 */
 	public static final String RDB_RESULT_NUMBER_IS_COMMA = "RDB_RESULT_NUMBER_IS_COMMA";
 	public static final String RDB_RESULT_NUMBER_IS_COMMA_VALUE = PublicTadpoleDefine.YES_NO.YES.toString();
+	
+	/** RDB 결과 테이블의 폰트를 설정합니다 */
+	public static final String RDB_RESULT_FONT = "RDB_RESULT_FONT";
+	public static final String RDB_RESULT_FONT_VALUE = "";
 }

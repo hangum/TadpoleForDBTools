@@ -57,6 +57,7 @@ import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryFilter;
@@ -86,6 +87,7 @@ public class ExecutedSQLEditor extends EditorPart {
 	private UserDAO userDAO;
 	private UserDBDAO userDBDAO;
 
+	private Button btnUserAllCheck;
 	private Combo comboUserName;
 	private Combo comboDisplayName;
 	private Text textMillis;
@@ -132,8 +134,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		lblUser.setLayoutData(gd_lblUser);
 		lblUser.setText("<b>User</b>");
 
-		final Button btnUserAllCheck = new Button(compositeHead2, SWT.CHECK);
-		btnUserAllCheck.setSelection(true);
+		btnUserAllCheck = new Button(compositeHead2, SWT.CHECK);
 		GridData gd_btnBtnuserallcheck = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
 		gd_btnBtnuserallcheck.minimumWidth = 45;
 		gd_btnBtnuserallcheck.widthHint = 45;
@@ -339,8 +340,18 @@ public class ExecutedSQLEditor extends EditorPart {
 	 * Initial configuration setting of widgets
 	 */
 	private void initBehavior() {
-		comboDisplayName.setEnabled(false);
-		comboUserName.setEnabled(false);
+		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+			btnUserAllCheck.setSelection(true);
+			
+			comboDisplayName.setEnabled(false);
+			comboUserName.setEnabled(false);
+		} else {
+			btnUserAllCheck.setSelection(false);
+			btnUserAllCheck.setEnabled(false);
+			
+			comboDisplayName.setEnabled(false);
+			comboUserName.setEnabled(true);
+		}
 	}
 
 	/**
@@ -425,13 +436,22 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void initUIData() {
 
 		try {
-			// user information
-			List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
-			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-				String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
+			// 어드민 권한이면 모든 정보를 다 표현합니다.
+			if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+				List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
+				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
+					String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
+					comboUserName.add(name);
+					comboUserName.setData(name, userGroupAUserDAO.getSeq());
+				}
+			// 개발자 권한일 경우에는 본인만 표시합니다.
+			} else {
+				String name = SessionManager.getName() + " (" + SessionManager.getEMAIL() + ")";
+				
 				comboUserName.add(name);
-				comboUserName.setData(name, userGroupAUserDAO.getSeq());
+				comboUserName.setData(name, SessionManager.getSeq());
 			}
+			
 			if (userDAO == null) {
 				comboUserName.select(0);
 			} else {

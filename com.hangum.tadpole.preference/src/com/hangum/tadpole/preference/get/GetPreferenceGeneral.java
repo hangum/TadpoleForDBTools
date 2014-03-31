@@ -88,6 +88,15 @@ public class GetPreferenceGeneral {
 		return userInfo.getValue0();
 	}
 	
+	/**
+	 * RDB ResultSet font info
+	 * @return
+	 */
+	public static String getRDBResultFont() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_FONT);
+		return userInfo.getValue0();
+	}
+	
 	///////////////// sql formatter 설정 ////////////////////////////////////////////////////////////////////////////
 		/** tab size */	
 		public static String getDefaultTabSize() {
@@ -176,4 +185,5 @@ public class GetPreferenceGeneral {
 		public static boolean getISRDBNumberIsComma() {
 			return getRDBNumberISComma().equals(PublicTadpoleDefine.YES_NO.YES.toString())?true:false;
 		}
+		
 }

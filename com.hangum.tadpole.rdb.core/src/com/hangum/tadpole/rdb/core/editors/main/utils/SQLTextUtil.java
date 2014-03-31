@@ -13,8 +13,6 @@ package com.hangum.tadpole.rdb.core.editors.main.utils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-
 /**
  * sql text util
  * 

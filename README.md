@@ -73,12 +73,10 @@ Document
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
 Demo Site
--
-* Amazon EC2 micro(very slow) http://goo.gl/BhwQe
+* Amazon EC2 micro (very slow) http://goo.gl/BhwQe
  
 Download
--
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.0/?
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.1/
  
 License
 -
@@ -86,8 +84,8 @@ License
 
 Contacts
 -
+* Home : https://sites.google.com/site/tadpolefordb/
 * Email: adi.tadpole@gmail.com
-* site : https://sites.google.com/site/tadpolefordb/
 * google talk : hangum@gmail.com
 
 Contributor
@@ -96,8 +94,9 @@ Contributor
 * develo (suhyunjun@gmail.com)
 * hangum (hangum@gmail.com)
 * darkcanol@gmail.com
+* Billy (sangmo.gu@gmail.com)
+* Wahyu Kristianto (w.kristories@gmail.com) : Indonesia localization
 
 Donation
-- 
-Paypal(paypal.com) : hangum@gmail.com
+- Paypal(paypal.com) : hangum@gmail.com
 - Show Donor List(https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List)

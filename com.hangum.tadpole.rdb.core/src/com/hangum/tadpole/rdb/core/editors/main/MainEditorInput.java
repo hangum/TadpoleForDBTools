@@ -10,16 +10,21 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * main editor의 input
@@ -116,6 +121,16 @@ public class MainEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
+
+		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+				String fileName = new File(userDB.getDb()).getName();			
+				return String.format(userDB.getDbms_types() + " - %s", fileName);
+			} else {
+				return String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers());
+			}	
+		}
+		
 		return userDB.getDisplay_name();
 	}
 

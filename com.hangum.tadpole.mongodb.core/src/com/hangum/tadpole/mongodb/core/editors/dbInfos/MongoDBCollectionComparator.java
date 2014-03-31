@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.mongodb.core.dto.MongoDBCollectionInfoDTO;
 
 /**
@@ -57,7 +58,7 @@ public class MongoDBCollectionComparator extends ViewerSorter {
 			
 			switch (propertyIndex) {
 			case 0:
-				rc = m1.getName().compareTo(m2.getName());
+				rc = NullSafeComparator.compare(m1.getName(), m2.getName());
 				break;
 			case 1:
 				

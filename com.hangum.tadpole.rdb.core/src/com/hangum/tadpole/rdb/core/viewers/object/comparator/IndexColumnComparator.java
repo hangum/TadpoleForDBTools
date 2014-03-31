@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
 
 /**
@@ -35,13 +36,13 @@ public  class IndexColumnComparator extends ObjectComparator  {
 		int rc = 0;
 		switch(propertyIndex) {
 		case 0:
-			rc = tc1.getSEQ_IN_INDEX().toLowerCase().compareToIgnoreCase(tc2.getSEQ_IN_INDEX().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getSEQ_IN_INDEX(), tc2.getSEQ_IN_INDEX());
 			break;
 		case 1:
-			rc = tc1.getCOLUMN_NAME().toLowerCase().compareToIgnoreCase(tc2.getCOLUMN_NAME().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getCOLUMN_NAME(), tc2.getCOLUMN_NAME());
 			break;
 		case 2:
-			rc = tc1.getCOMMENT().toLowerCase().compareToIgnoreCase(tc2.getCOMMENT().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getCOMMENT(), tc2.getCOMMENT());
 			break;		
 		}
 		

@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
 
 /**
@@ -35,22 +36,22 @@ public class TriggerComparator extends ObjectComparator {
 		int rc = ASCENDING;
 		switch (this.propertyIndex) {
 		case 0:
-			rc = tb1.getName().toLowerCase().compareTo(tb2.getName().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getName(), tb2.getName());
 			break;
 		case 1:
-			rc = tb1.getEvent().toLowerCase().compareTo(tb2.getEvent().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getEvent(), tb2.getEvent());
 			break;
 		case 2:
-			rc = tb1.getTable_name().toLowerCase().compareTo(tb2.getTable_name().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getTable_name(), tb2.getTable_name());
 			break;
 		case 3:
-			rc = tb1.getStatement().toLowerCase().compareTo(tb2.getStatement().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getStatement(), tb2.getStatement());
 			break;
 		case 4:
-			rc = tb1.getTiming().toLowerCase().compareTo(tb2.getTiming().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getTiming(), tb2.getTiming());
 			break;
 		case 5:
-			rc = tb1.getCreated().toLowerCase().compareTo(tb2.getCreated().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getCreated(), tb2.getCreated());
 			break;
 		}
 		if (direction == DESCENDING) {

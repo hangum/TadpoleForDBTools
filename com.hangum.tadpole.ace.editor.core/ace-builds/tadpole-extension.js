@@ -104,12 +104,13 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 editorService.saveData = function() {
 	isEdited = false;
 }
-editorService.executeFlag = function() {
-	isJavaRunning = false;
-}
 /** set editor focus */
 editorService.setFocus = function() {
 	editor.focus();
+};
+editorService.executeFlag = function() {
+//	console.log('\t end java program....');
+	isJavaRunning = false;
 };
 
 //==[ Define short key ]======================================================================================================================
@@ -131,12 +132,17 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
+//    		console.log("\t [start]Execute query => " + isJavaRunning);
+    		
     		if(!isJavaRunning) {
     			isJavaRunning = true;
-    			var retResulr = AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+//    		} else {
+//    			console.log("\t Can not execute query");
     		}
     	} catch(e) {
     		console.log(e);
+    		editorService.executeFlag();
     	}
     },
     readOnly: false
@@ -152,6 +158,7 @@ editor.commands.addCommand({
     		}
 	    } catch(e) {
 			console.log(e);
+			editorService.executeFlag();
 		}
     },
     readOnly: false

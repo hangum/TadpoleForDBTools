@@ -28,7 +28,7 @@ public class SessionManagerListener implements HttpSessionListener {
 	public void sessionCreated(HttpSessionEvent se) {
 		logger.debug("new user login " + se.getSession().getId());
 		
-		Object email = se.getSession().getAttribute(SessionManager.SESSEION_NAME.LOGIN_EMAIL.toString());
+		Object email = se.getSession().getAttribute(SessionManager.NAME.LOGIN_EMAIL.toString());
 		if(email != null) {
 			sessionIds.put(email.toString(), se.getSession().getId());
 		}
@@ -38,7 +38,7 @@ public class SessionManagerListener implements HttpSessionListener {
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
-		Object email = se.getSession().getAttribute(SessionManager.SESSEION_NAME.LOGIN_EMAIL.toString());
+		Object email = se.getSession().getAttribute(SessionManager.NAME.LOGIN_EMAIL.toString());
 		if(email != null) {
 			sessionIds.remove(email.toString());
 		}

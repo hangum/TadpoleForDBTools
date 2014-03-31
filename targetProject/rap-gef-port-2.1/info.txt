@@ -1,0 +1,2 @@
+### Change information ###
+[com.ibm.icu.text] Remove max version number 

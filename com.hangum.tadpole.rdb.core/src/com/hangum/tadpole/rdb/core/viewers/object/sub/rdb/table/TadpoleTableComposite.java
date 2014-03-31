@@ -79,6 +79,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
@@ -105,7 +106,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleTableComposite.class);
 	
-	/** select table name */
+	/** selected table name */
 	private String selectTableName = ""; //$NON-NLS-1$
 
 	// table info
@@ -178,8 +179,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
-					// 테이블 스크립트가 아니라 테이블 명이 에디터에 들어가도록 수정.
-					FindEditorAndWriteQueryUtil.runAtPosition(tableDAO.getName());//GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
+					FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
 				}
 			}
 		});
@@ -508,6 +508,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public void refreshTable(final UserDBDAO selectUserDb, boolean boolRefresh) {
 		if(!boolRefresh) if(selectUserDb == null) return;
 		this.userDB = selectUserDb;
+		
+		selectTableName = "";
 		
 		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
 		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) {

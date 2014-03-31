@@ -194,6 +194,8 @@ public class LoginDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("Login exception", e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
+			
+			textEMail.setFocus();
 			return;
 		}	
 		

@@ -46,5 +46,6 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IViewLayout viewNotesLayout = layout.getViewLayout(NoteListViewPart.ID);
 		viewNotesLayout.setCloseable(false);
+		
 	}
 }

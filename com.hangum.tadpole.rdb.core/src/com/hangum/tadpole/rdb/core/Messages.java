@@ -14,6 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
+	public static String MainEditor_74;
 	public static String AbstractLoginComposite_0;
 	public static String AbstractLoginComposite_1;
 	public static String AbstractLoginComposite_2;
@@ -124,6 +125,7 @@ public class Messages extends NLS {
 	public static String MainEditor_31;
 	public static String MainEditor_32;
 	public static String MainEditor_33;
+	public static String MainEditor_34;
 	public static String MainEditor_38;
 	public static String MainEditor_39;
 	public static String MainEditor_4;
@@ -146,7 +148,6 @@ public class Messages extends NLS {
 	public static String MainEditor_72;
 	public static String MainEditor_8;
 	public static String MainEditor_9;
-	public static String MainEditor_lblFilter_text;
 	public static String MainEditor_tltmDropdownItem_text;
 	public static String DBLoginDialog_btnPing_text;
 	public static String DeleteDBAction_1;
@@ -173,6 +174,10 @@ public class Messages extends NLS {
 	public static String ExplorerViewer_76;
 	public static String ExplorerViewer_81;
 	public static String ExplorerViewer_86;
+	public static String ExtensionBrowserURLDialog_0;
+	public static String ExtensionBrowserURLDialog_18;
+	public static String ExtensionBrowserURLDialog_21;
+	public static String ExtensionBrowserURLDialog_23;
 	public static String GenerateSQLDeleteAction_0;
 	public static String GenerateSQLDeleteAction_10;
 	public static String GenerateSQLInsertAction_0;
@@ -254,6 +259,8 @@ public class Messages extends NLS {
 	public static String QueryEditPart_7;
 	public static String QueryEditPart_8;
 	public static String QueryEditPart_9;
+	public static String QueryResultSQLDialog_0;
+	public static String QueryResultSQLDialog_2;
 	public static String SQLiteLoginComposite_0;
 	public static String SQLiteLoginComposite_1;
 	public static String SQLiteLoginComposite_10;
@@ -302,6 +309,7 @@ public class Messages extends NLS {
 	public static String MainEditorInput_0;
 	public static String MainEditorInput_3;
 	public static String MainEditorInput_4;
+	public static String ManagerViewer_0;
 	public static String ManagerViewer_10;
 	public static String ManagerViewer_4;
 	public static String ManagerViewer_6;
@@ -398,6 +406,13 @@ public class Messages extends NLS {
 	public static String OthersConnectionBigDataGroup_btnExternalBrowser_text;
 	public static String OthersConnectionMongoDBGroup_btnExternalBrowser_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnExternalBrowser_text;
+	public static String RDBResultComposite_lblNewLabel_text;
+	public static String RDBResultComposite_lblNewLabel_text_1;
+	public static String RDBResultComposite_btnSql_text;
+	public static String RDBResultComposite_btnStp_text;
+	public static String RDBResultComposite_lblNewLabel_text_2;
+	public static String RDBResultComposite_lblNewLabel_text_3;
+	public static String RDBResultComposite_lblNewLabel_text_4;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

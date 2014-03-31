@@ -26,7 +26,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -100,6 +99,8 @@ public class ExplorerViewer extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		setPartName(Messages.ExplorerViewer_0);
+		
 		GridLayout gl_parent = new GridLayout(1, false);
 		gl_parent.marginWidth = 1;
 		gl_parent.verticalSpacing = 0;
@@ -109,16 +110,12 @@ public class ExplorerViewer extends ViewPart {
 
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeSearch = new GridLayout(2, false);
+		GridLayout gl_compositeSearch = new GridLayout(1, false);
 		gl_compositeSearch.horizontalSpacing = 2;
 		gl_compositeSearch.verticalSpacing = 2;
 		gl_compositeSearch.marginHeight = 2;
 		gl_compositeSearch.marginWidth = 2;
 		compositeSearch.setLayout(gl_compositeSearch);
-
-		Label lblNewLabel = new Label(compositeSearch, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.ExplorerViewer_0);
 
 		// filter를 설정합니다.
 		textSearch = new Text(compositeSearch, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
