@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -36,10 +35,10 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
@@ -192,6 +191,8 @@ public class QueryHistoryComposite extends Composite {
 			}
 		});
 		btnRefresh.setText(Messages.MainEditor_24);
+		
+//		findHistoryData();
 	}
 	
 	/**
@@ -239,11 +240,12 @@ public class QueryHistoryComposite extends Composite {
 	}
 	
 	/**
-	 * refresh sql history table 
+	 * 해당일에 실행했던 쿼리를 보여줍니다.
+	 * 
+	 * reference https://github.com/hangum/TadpoleForDBTools/issues/387
 	 */
-	private void refreshSqlHistory() {
+	public void findHistoryData() {
 		try {
-			listSQLHistory.clear();
 			listSQLHistory.addAll(TadpoleSystem_ExecutedSQL.getExecuteQueryHistory(
 									getRdbResultComposite().getUserSeq(), 
 									getRdbResultComposite().getUserDB().getSeq(), 
@@ -252,6 +254,14 @@ public class QueryHistoryComposite extends Composite {
 		} catch(Exception ee) {
 			logger.error("Executed SQL History call", ee); //$NON-NLS-1$
 		}
+	}
+	
+	/**
+	 * refresh sql history table 
+	 */
+	private void refreshSqlHistory() {
+		listSQLHistory.clear();
+		findHistoryData();
 	}
 	
 	private void appendText(String cmd) {
