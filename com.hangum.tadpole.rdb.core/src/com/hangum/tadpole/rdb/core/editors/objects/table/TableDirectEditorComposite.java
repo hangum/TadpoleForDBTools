@@ -59,7 +59,7 @@ import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.PartQueryUtil;
-import com.hangum.tadpole.sql.util.ResultSetUtils;
+import com.hangum.tadpole.sql.util.resultset.ResultSetUtils;
 import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultFilter;

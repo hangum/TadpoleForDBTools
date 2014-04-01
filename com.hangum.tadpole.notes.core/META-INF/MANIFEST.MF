@@ -16,3 +16,4 @@ Export-Package: com.hangum.tadpole.notes.core.alert,
  com.hangum.tadpole.notes.core.define,
  com.hangum.tadpole.notes.core.dialogs,
  com.hangum.tadpole.notes.core.views.list
+Bundle-Localization: /OSGI-INF/l10n/bundle

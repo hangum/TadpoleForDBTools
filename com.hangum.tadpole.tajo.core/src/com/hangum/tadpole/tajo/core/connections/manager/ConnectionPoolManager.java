@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.tajo.core.connections.internal;
+package com.hangum.tadpole.tajo.core.connections.manager;
 
 import java.util.HashMap;
 import java.util.Map;

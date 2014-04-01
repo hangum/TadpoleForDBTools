@@ -122,6 +122,19 @@ public class ViewDialog extends Dialog {
 		return container;
 	}
 	
+	private void readNote() {
+		try {
+			TadpoleSystem_Notes.readSystemNote(noteDAO.getSeq());
+		} catch(Exception e) {
+			logger.error("note readable exception", e);
+		}
+	}
+	
+	@Override
+	protected void cancelPressed() {
+		super.cancelPressed();
+	}
+	
 	@Override
 	protected void okPressed() {
 		NewNoteDialog dialog = new NewNoteDialog(null, noteDAO, textUser.getText());
@@ -136,6 +149,7 @@ public class ViewDialog extends Dialog {
 	private void initData() {
 		try {
 			// note를 읽음 상태 처리 합니다.
+			readNote();
 			TadpoleSystem_Notes.readNote(noteDAO.getSeq());
 
 			// note의 디테일 정보를 가져오고.

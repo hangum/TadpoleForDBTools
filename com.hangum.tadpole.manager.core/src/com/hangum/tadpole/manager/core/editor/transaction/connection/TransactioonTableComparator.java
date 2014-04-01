@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.engine.transaction.TransactionDAO;
 
 /**
@@ -54,16 +55,16 @@ public class TransactioonTableComparator extends ViewerSorter  {
 		int rc = ASCENDING;
 		switch (this.propertyIndex) {
 		case 0:
-			rc = dao1.getUserDB().getDbms_types().toLowerCase().compareTo(dao2.getUserDB().getDbms_types().toLowerCase());
+			rc = NullSafeComparator.compare(dao1.getUserDB().getDbms_types(), dao2.getUserDB().getDbms_types());
 			break;
 		case 1:
-			rc = dao1.getUserDB().getDisplay_name().toLowerCase().compareTo(dao2.getUserDB().getDisplay_name().toLowerCase());
+			rc = NullSafeComparator.compare(dao1.getUserDB().getDisplay_name(), dao2.getUserDB().getDisplay_name());
 			break;
 		case 2:
-			rc = dao1.getUserId().toLowerCase().compareTo(dao2.getUserId().toLowerCase());
+			rc = NullSafeComparator.compare(dao1.getUserId(), dao2.getUserId());
 			break;
 		case 3:
-			rc = dao1.getStartTransaction().toLocaleString().compareTo(dao2.getStartTransaction().toLocaleString().toLowerCase());
+			rc = NullSafeComparator.compare(dao1.getStartTransaction(), dao2.getStartTransaction());
 			break;
 		}
 		

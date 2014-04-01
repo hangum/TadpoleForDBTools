@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 
 /**
@@ -35,34 +36,34 @@ public class ProcedureFunctionComparator extends ObjectComparator {
 		int rc = ASCENDING;
 		switch (propertyIndex) {
 		case 0:
-			rc = tb1.getName().toLowerCase().compareTo(tb2.getName().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getName(), tb2.getName());
 			break;
 		case 1:
-			rc = tb1.getDefiner().toLowerCase().compareTo(tb2.getDefiner().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getDefiner(), tb2.getDefiner());
 			break;
 		case 2:
-			rc = tb1.getModified().toLowerCase().compareTo(tb2.getModified().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getModified(), tb2.getModified());
 			break;
 		case 3:
-			rc = tb1.getCreated().toLowerCase().compareTo(tb2.getCreated().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getCreated(), tb2.getCreated());
 			break;
 		case 4:
-			rc = tb1.getSecurity_type().toLowerCase().compareTo(tb2.getSecurity_type().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getSecurity_type(), tb2.getSecurity_type());
 			break;
 		case 5:
-			rc = tb1.getComment().toLowerCase().compareTo(tb2.getComment().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getComment(), tb2.getComment());
 			break;
 		case 6:
-			rc = tb1.getCharacter_set_client().toLowerCase().compareTo(tb2.getCharacter_set_client().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getCharacter_set_client(), tb2.getCharacter_set_client());
 			break;
 		case 7:
-			rc = tb1.getCollation_connection().toLowerCase().compareTo(tb2.getCollation_connection().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getCollation_connection(), tb2.getCollation_connection());
 			break;
 		case 8:
-			rc = tb1.getDatabase().toLowerCase().compareTo(tb2.getDatabase().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getDatabase(), tb2.getDatabase());
 			break;
 		case 9:
-			rc = tb1.getCollation().toLowerCase().compareTo(tb2.getCollation().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getCollation(), tb2.getCollation());
 			break;
 		}
 

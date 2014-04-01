@@ -825,7 +825,7 @@ SELECT
 	UPDATE notes
  	SET   is_system_read = 'YES' 
  	WHERE 
-		receiver_seq 	= #receiver_seq#  
+		seq 	= #note_seq#  
 	AND is_system_read = 'NO'
 </update>
 

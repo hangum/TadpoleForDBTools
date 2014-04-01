@@ -70,6 +70,7 @@ Bundle-ClassPath: libs/common/hadoop-auth-2.0.3-alpha.jar,
  .,
  libs/tajo-lib/commons-cli-1.2.jar,
  libs/tajo-lib/commons-dbcp-1.4.jar
-Export-Package: com.hangum.tadpole.tajo.core.connections
+Export-Package: com.hangum.tadpole.tajo.core.connections,
+ com.hangum.tadpole.tajo.core.connections.manager
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"

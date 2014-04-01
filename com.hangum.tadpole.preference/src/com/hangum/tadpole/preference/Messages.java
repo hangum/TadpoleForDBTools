@@ -95,6 +95,9 @@ public class Messages extends NLS {
 	public static String SQLFormatterPreferencePage_btnRemoveEmptyLine_text;
 	public static String SQLFormatterPreferencePage_btnWordBreak_text;
 	public static String SQLFormatterPreferencePage_text_text;
+	public static String RDBPreferencePage_lblResultViewFont_text;
+	public static String RDBPreferencePage_btnNewButton_text;
+	public static String RDBPreferencePage_lblNewLabel_3_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

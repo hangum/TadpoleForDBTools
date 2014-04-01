@@ -38,7 +38,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
@@ -78,7 +78,7 @@ public class QueryHistoryComposite extends Composite {
 				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(!is.isEmpty()) {
-					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
+					appendText(getHistoryTabelSelectData());
 				}
 			}
 		});
@@ -191,6 +191,8 @@ public class QueryHistoryComposite extends Composite {
 			}
 		});
 		btnRefresh.setText(Messages.MainEditor_24);
+		
+//		findHistoryData();
 	}
 	
 	/**
@@ -238,11 +240,12 @@ public class QueryHistoryComposite extends Composite {
 	}
 	
 	/**
-	 * refresh sql history table 
+	 * 해당일에 실행했던 쿼리를 보여줍니다.
+	 * 
+	 * reference https://github.com/hangum/TadpoleForDBTools/issues/387
 	 */
-	private void refreshSqlHistory() {
+	public void findHistoryData() {
 		try {
-			listSQLHistory.clear();
 			listSQLHistory.addAll(TadpoleSystem_ExecutedSQL.getExecuteQueryHistory(
 									getRdbResultComposite().getUserSeq(), 
 									getRdbResultComposite().getUserDB().getSeq(), 
@@ -251,6 +254,14 @@ public class QueryHistoryComposite extends Composite {
 		} catch(Exception ee) {
 			logger.error("Executed SQL History call", ee); //$NON-NLS-1$
 		}
+	}
+	
+	/**
+	 * refresh sql history table 
+	 */
+	private void refreshSqlHistory() {
+		listSQLHistory.clear();
+		findHistoryData();
 	}
 	
 	private void appendText(String cmd) {

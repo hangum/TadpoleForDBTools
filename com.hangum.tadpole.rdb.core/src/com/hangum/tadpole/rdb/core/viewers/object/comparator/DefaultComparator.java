@@ -14,6 +14,8 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
+
 /**
  * default comparator
  * @author hangum
@@ -34,7 +36,7 @@ public class DefaultComparator extends ObjectComparator {
 		String e1Val = tlprov.getColumnText(e1, propertyIndex) == null?"":tlprov.getColumnText(e1, propertyIndex);
 		String e2Val = tlprov.getColumnText(e2, propertyIndex) == null?"":tlprov.getColumnText(e2, propertyIndex);
 		
-		int rc = e1Val.toLowerCase().compareTo(e2Val.toLowerCase());
+		int rc = NullSafeComparator.compare(e1Val, e2Val);
 		if (direction == DESCENDING) {
 			rc = -rc;
 		}

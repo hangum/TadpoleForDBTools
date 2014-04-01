@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
-import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
+import com.hangum.tadpole.sql.util.resultset.ResultSetUtilDTO;
 import com.swtdesigner.ResourceManager;
 
 /**

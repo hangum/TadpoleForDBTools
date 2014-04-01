@@ -125,6 +125,7 @@ public class Messages extends NLS {
 	public static String MainEditor_31;
 	public static String MainEditor_32;
 	public static String MainEditor_33;
+	public static String MainEditor_34;
 	public static String MainEditor_38;
 	public static String MainEditor_39;
 	public static String MainEditor_4;
@@ -163,6 +164,7 @@ public class Messages extends NLS {
 	public static String ExitAction_1;
 	public static String ExitAction_2;
 	public static String ExitAction_3;
+	public static String ExplorerViewer_0;
 	public static String ExplorerViewer_1;
 	public static String ExplorerViewer_29;
 	public static String ExplorerViewer_39;
@@ -172,6 +174,10 @@ public class Messages extends NLS {
 	public static String ExplorerViewer_76;
 	public static String ExplorerViewer_81;
 	public static String ExplorerViewer_86;
+	public static String ExtensionBrowserURLDialog_0;
+	public static String ExtensionBrowserURLDialog_18;
+	public static String ExtensionBrowserURLDialog_21;
+	public static String ExtensionBrowserURLDialog_23;
 	public static String GenerateSQLDeleteAction_0;
 	public static String GenerateSQLDeleteAction_10;
 	public static String GenerateSQLInsertAction_0;
@@ -303,6 +309,7 @@ public class Messages extends NLS {
 	public static String MainEditorInput_0;
 	public static String MainEditorInput_3;
 	public static String MainEditorInput_4;
+	public static String ManagerViewer_0;
 	public static String ManagerViewer_10;
 	public static String ManagerViewer_4;
 	public static String ManagerViewer_6;

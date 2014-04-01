@@ -125,6 +125,13 @@ public class ResultMainComposite extends Composite {
 	}
 	
 	/**
+	 * main composite
+	 */
+	public void initMainComposite() {
+		compositeQueryHistory.findHistoryData();
+	}
+	
+	/**
 	 * set main editor
 	 * @param mainEditor
 	 */
@@ -169,9 +176,7 @@ public class ResultMainComposite extends Composite {
 		}
 		
 		// 실제 쿼리 실행.
-		compositeResultSet.setControlProgress(true);
 		compositeResultSet.executeCommand(reqQuery);
-		compositeResultSet.setControlProgress(false);
 	}
 	
 	/**

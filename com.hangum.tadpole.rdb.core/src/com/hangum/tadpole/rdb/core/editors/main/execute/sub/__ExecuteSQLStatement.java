@@ -8,15 +8,15 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.main;
+package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_EXECUTE_STATUS;
-import com.hangum.tadpole.rdb.core.editors.main.utils.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
  * Statme manager
@@ -24,7 +24,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
  * @author hangum
  * 
  */
-public class ExecuteSQLStatement implements Runnable {
+public class __ExecuteSQLStatement implements Runnable {
 	private Statement stmt = null;
 	private RequestQuery reqQuery;
 	private QueryExecuteResultDTO rsDAO = new QueryExecuteResultDTO();
@@ -35,7 +35,7 @@ public class ExecuteSQLStatement implements Runnable {
 	 * @param userDB
 	 * @param reqQuery
 	 */
-	public ExecuteSQLStatement(Statement stmt, RequestQuery reqQuery) {
+	public __ExecuteSQLStatement(Statement stmt, RequestQuery reqQuery) {
 		this.stmt = stmt;
 		this.reqQuery = reqQuery;
 	}

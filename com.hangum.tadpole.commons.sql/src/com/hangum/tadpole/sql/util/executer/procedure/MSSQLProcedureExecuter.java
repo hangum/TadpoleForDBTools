@@ -24,6 +24,7 @@ import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.sql.util.resultset.TadpoleResultSet;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -173,7 +174,7 @@ public class MSSQLProcedureExecuter extends ProcedureExecutor {
 					sourceDataList.add(tmpRow);
 				}
 				
-				setResultNoCursor(sourceDataList);
+				setResultNoCursor(new TadpoleResultSet(sourceDataList));
 			}
 			
 			return true;

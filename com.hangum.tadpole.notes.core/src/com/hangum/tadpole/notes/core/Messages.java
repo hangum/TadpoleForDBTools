@@ -14,6 +14,7 @@ public class Messages extends NLS {
 	public static String NewNoteDialog_6;
 	public static String NewNoteDialog_7;
 	public static String NewNoteDialog_8;
+	public static String NoteListViewPart_0;
 	public static String NoteListViewPart_1;
 	public static String NoteListViewPart_10;
 	public static String NoteListViewPart_11;

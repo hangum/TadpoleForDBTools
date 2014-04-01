@@ -8,15 +8,13 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.main.utils;
+package com.hangum.tadpole.sql.util.resultset;
 
 import java.sql.ResultSet;
-import java.util.List;
 import java.util.Map;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_EXECUTE_STATUS;
-import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
 
 /**
  * 쿼리 실행결과 dto
@@ -31,14 +29,11 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 	public QueryExecuteResultDTO() {
 	}
 
-	public QueryExecuteResultDTO(Map<Integer, String> columnName,
-			Map<Integer, Integer> columnType,
-			List<Map<Integer, Object>> dataList) {
+	public QueryExecuteResultDTO(Map<Integer, String> columnName, Map<Integer, Integer> columnType, TadpoleResultSet dataList) {
 		super(columnName, columnType, dataList);
 	}
 
-	public QueryExecuteResultDTO(boolean isShowRownum, ResultSet rs,
-			int queryResultCount, boolean isResultComma) throws Exception {
+	public QueryExecuteResultDTO(boolean isShowRownum, ResultSet rs, int queryResultCount, boolean isResultComma) throws Exception {
 		super(isShowRownum, rs, queryResultCount, isResultComma);
 	}
 

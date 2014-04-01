@@ -16,11 +16,13 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -46,8 +48,11 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	private static final Logger logger = Logger.getLogger(RDBPreferencePage.class);
 	
 	private Text textSelectLimit;
-	private Text textResultPage;
+//	private Text textResultPage;
 	private Text textOraclePlan;
+	
+	private Label lblUserFont;
+	
 	private Combo comboRDBNumberComma;
 
 	public RDBPreferencePage() {
@@ -79,11 +84,28 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		textSelectLimit = new Text(container, SWT.BORDER);
 		textSelectLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setText(Messages.DefaultPreferencePage_other_labelText_1);
+//		Label lblNewLabel_1 = new Label(container, SWT.NONE);
+//		lblNewLabel_1.setText(Messages.DefaultPreferencePage_other_labelText_1);
 		
-		textResultPage = new Text(container, SWT.BORDER);		
-		textResultPage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		textResultPage = new Text(container, SWT.BORDER);		
+//		textResultPage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblResultViewFont = new Label(container, SWT.NONE);
+		lblResultViewFont.setText(Messages.RDBPreferencePage_lblResultViewFont_text);
+		
+		lblUserFont = new Label(container, SWT.NONE);
+		lblUserFont.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblUserFont.setText("");
+		new Label(container, SWT.NONE);
+		
+		Button btnNewButton = new Button(container, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setFontData();
+			}
+		});
+		btnNewButton.setText(Messages.RDBPreferencePage_btnNewButton_text);
 		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -111,12 +133,24 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		return container;
 	}
 	
+	/**
+	 * 사용자 폰트를 설정합니다.
+	 */
+	private void setFontData() {
+		FontDialog fd = new FontDialog(getShell(), SWT.NONE);
+		FontData fdFont = fd.open();
+		if(fdFont != null) {
+			lblUserFont.setText(fdFont.getName()+"|"+fdFont.getHeight()+"|"+fdFont.getStyle());
+		}
+	}
+	
 	@Override
 	public boolean performOk() {
 		String txtSelectLimit = textSelectLimit.getText();
-		String txtResultPage = textResultPage.getText();
+//		String txtResultPage = textResultPage.getText();
 		String txtOraclePlan = textOraclePlan.getText();
 		String txtRDBNumberColumnIsComman = comboRDBNumberComma.getText();
+		String txtFontInfo = lblUserFont.getText();
 		
 		try {
 			Integer.parseInt(txtSelectLimit);
@@ -125,12 +159,12 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			return false;
 		}
 		
-		try {
-			Integer.parseInt(txtResultPage);
-		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_other_labelText_1 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
-			return false;
-		}
+//		try {
+//			Integer.parseInt(txtResultPage);
+//		} catch(Exception e) {
+//			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_other_labelText_1 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
+//			return false;
+//		}
 		
 		if("".equals(txtOraclePlan)) { //$NON-NLS-1$
 			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_3);			 //$NON-NLS-1$
@@ -139,13 +173,16 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		// 테이블에 저장 
 		try {
-			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtSelectLimit, txtResultPage, txtOraclePlan, txtRDBNumberColumnIsComman);
+			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtSelectLimit, /*txtResultPage,*/ txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT, txtSelectLimit);
-			SessionManager.setUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, txtResultPage);
+//			SessionManager.setUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, txtResultPage);
 			SessionManager.setUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE, txtOraclePlan);		
-			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, txtRDBNumberColumnIsComman);;
+			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, txtRDBNumberColumnIsComman);
+			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_FONT, txtFontInfo);
+			
+			
 		} catch(Exception e) {
 			logger.error("RDBPreference saveing", e);
 			
@@ -181,9 +218,12 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	 */
 	private void initDefaultValue() {
 		textSelectLimit.setText( "" + GetPreferenceGeneral.getQueryResultCount() ); //$NON-NLS-1$
-		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
+//		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
 		textOraclePlan.setText( GetPreferenceGeneral.getPlanTableName() );
 		comboRDBNumberComma.setText(GetPreferenceGeneral.getRDBNumberISComma());
+		
+		String strFontInfo = GetPreferenceGeneral.getRDBResultFont();
+		lblUserFont.setText(strFontInfo);
 	}
 	
 	public static String planTable = 

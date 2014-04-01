@@ -26,8 +26,8 @@ import com.hangum.tadpole.engine.connections.ConnectionInterfact;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtilDTO;
-import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
+import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 
 /**
  * apache tajo connection manager
@@ -70,7 +70,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 	 * 
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO select(UserDBDAO userDB, String requestQuery, int limitCount, boolean isResultComma) throws Exception {
+	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, int limitCount, boolean isResultComma) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
 		
 		java.sql.Connection javaConn = null;
@@ -82,7 +82,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-			return new ResultSetUtilDTO(true, rs, limitCount, isResultComma);
+			return new QueryExecuteResultDTO(true, rs, limitCount, isResultComma);
 		} catch(Exception e) {
 			logger.error("Tajo select", e);
 			throw e;

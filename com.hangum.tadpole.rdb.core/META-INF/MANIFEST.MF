@@ -40,3 +40,4 @@ Export-Package: com.hangum.tadpole.rdb.core,
  com.hangum.tadpole.rdb.core.viewers.object
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"
+Bundle-Localization: OSGI-INF/l10n/bundle

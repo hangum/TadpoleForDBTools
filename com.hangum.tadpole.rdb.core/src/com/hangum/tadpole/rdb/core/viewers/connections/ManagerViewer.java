@@ -80,6 +80,9 @@ public class ManagerViewer extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		
+		setPartName(Messages.ManagerViewer_0);
+		
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.verticalSpacing = 0;
@@ -188,7 +191,7 @@ public class ManagerViewer extends ViewPart {
 			}
 			
 		} catch (Exception e) {
-			logger.error("initialize Managerview", e);
+			logger.error("initialize Managerview", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
