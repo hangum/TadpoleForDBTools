@@ -35,7 +35,7 @@ public class TadpoleSystemChecker {
 	 * @return
 	 */
 	public static void checker() throws Exception {
-		double dblJavaVersion = Double.parseDouble(JAVA_VERSION.substring(0, 2));
+		double dblJavaVersion = Double.parseDouble(JAVA_VERSION.substring(0, 3));
 		
 		// mac 일경우 jvm 1.7 이상 동작 환경.
 		if(isMac()) {

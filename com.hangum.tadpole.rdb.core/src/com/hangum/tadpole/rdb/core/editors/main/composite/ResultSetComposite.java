@@ -463,14 +463,14 @@ public class ResultSetComposite extends Composite {
 		
 		try {
 			if(reqQuery.isAutoCommit()) {
-				SqlMapClient client = TadpoleSQLManager.getInstance(getUserDB());
-				javaConn = client.getDataSource().getConnection();
-			} else {
 				if(DBDefine.TAJO_DEFAULT == getUserDB().getDBDefine()) {
 					javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
 				} else {
-					javaConn = TadpoleSQLTransactionManager.getInstance(getUserEMail(), getUserDB());
+					SqlMapClient client = TadpoleSQLManager.getInstance(getUserDB());
+					javaConn = client.getDataSource().getConnection();
 				}
+			} else {
+				javaConn = TadpoleSQLTransactionManager.getInstance(getUserEMail(), getUserDB());
 			}
 			
 			statement = javaConn.createStatement();
