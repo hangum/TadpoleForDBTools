@@ -512,7 +512,7 @@ public class ResultSetComposite extends Composite {
 			rs = es.runSQLSelect(stmt, reqQuery);
 			isCheckRunning = false;
 					
-			rsDAO = new QueryExecuteResultDTO(true, rs, getQueryPageCount(), getIsResultComma());
+			rsDAO = new QueryExecuteResultDTO(true, rs, getQueryResultCount(), getIsResultComma());
 			
 			
 //			if(getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT) {
@@ -535,8 +535,8 @@ public class ResultSetComposite extends Composite {
 		return rsDAO;
 	}
 
-	private int getQueryPageCount() {
-		return easyPreferenceData.getQueryPageCount();
+	private int getQueryResultCount() {
+		return easyPreferenceData.getQueryResultCount();
 	}
 
 	/**
@@ -624,7 +624,7 @@ public class ResultSetComposite extends Composite {
 			} else {
 				// 
 				// 데이터가 한계가 넘어 갔습니다.
-				String strMsg = String.format(Messages.MainEditor_34, getQueryPageCount());
+				String strMsg = String.format(Messages.MainEditor_34, getQueryResultCount());
 				strResultMsg = String.format("%s (%s%s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
 			}
 			

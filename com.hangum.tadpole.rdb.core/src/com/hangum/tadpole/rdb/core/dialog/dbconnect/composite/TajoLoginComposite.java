@@ -176,7 +176,7 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("tajo-vm");
+			textHost.setText("127.0.0.1");
 			textPort.setText("26002");
 			textDatabase.setText("default");
 			textUser.setText("");
