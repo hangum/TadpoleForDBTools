@@ -36,6 +36,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -58,6 +60,7 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
@@ -95,7 +98,7 @@ public class MainEditor extends EditorExtension {
 	public MainEditor() {
 		super();
 	}
-
+	
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);
@@ -358,7 +361,47 @@ public class MainEditor extends EditorExtension {
 					}	// end seq
 				} // end if(event.getProperty()
 			} //
-		}); // end property change		
+		}); // end property change
+
+//		getEditorSite().getPage().addPartListener(new IPartListener2() {
+//			
+//			@Override
+//			public void partVisible(IWorkbenchPartReference partRef) {
+//			}
+//			
+//			@Override
+//			public void partOpened(IWorkbenchPartReference partRef) {
+//			}
+//			
+//			@Override
+//			public void partInputChanged(IWorkbenchPartReference partRef) {
+//			}
+//			
+//			@Override
+//			public void partHidden(IWorkbenchPartReference partRef) {
+//			}
+//			
+//			@Override
+//			public void partDeactivated(IWorkbenchPartReference partRef) {
+//			}
+//			
+//			@Override
+//			public void partClosed(IWorkbenchPartReference partRef) {
+//			}
+//			
+//			@Override
+//			public void partBroughtToTop(IWorkbenchPartReference partRef) {
+//			}
+//			
+//			@Override
+//			public void partActivated(IWorkbenchPartReference partRef) {
+//				if(ID == partRef.getId()) {
+//					MainEditor me = (MainEditor)partRef.getPage();
+//					UserDBDAO userDB = me.getUserDB();
+//					
+//				}
+//			}
+//		});
 	}
 	
 	
