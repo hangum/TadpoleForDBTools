@@ -125,6 +125,13 @@ public class ResultMainComposite extends Composite {
 	}
 	
 	/**
+	 * main composite
+	 */
+	public void initMainComposite() {
+		compositeQueryHistory.findHistoryData();
+	}
+	
+	/**
 	 * set main editor
 	 * @param mainEditor
 	 */

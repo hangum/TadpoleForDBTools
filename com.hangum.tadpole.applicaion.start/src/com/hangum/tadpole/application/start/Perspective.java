@@ -15,6 +15,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IViewLayout;
 
+import com.hamgum.tadpole.help.core.views.HelpViewPart;
 import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
@@ -32,6 +33,7 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IFolderLayout leftFolder = layout.createFolder("id"+ManagerViewer.ID, IPageLayout.LEFT, 0.30f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
+		layout.addView(HelpViewPart.ID, IPageLayout.RIGHT, 0.61f, IPageLayout.ID_EDITOR_AREA);
 		
 		IFolderLayout leftUnderFolder = layout.createFolder("id"+ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id"+ManagerViewer.ID);		
 		leftUnderFolder.addView(ExplorerViewer.ID);

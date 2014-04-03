@@ -82,7 +82,7 @@ public class MainEditor extends EditorExtension {
 	private ToolItem tiAutoCommit = null, tiAutoCommitCommit = null, tiAutoCommitRollback = null;
 
 	/** result tab */
-	private ResultMainComposite compResult;
+	private ResultMainComposite resultMainComposite;
 
 	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
 	private String initDefaultEditorStr = ""; //$NON-NLS-1$
@@ -320,20 +320,18 @@ public class MainEditor extends EditorExtension {
 	    
 	    addBrowserService();
 	    
-	    compResult = new ResultMainComposite(sashForm, SWT.BORDER);
+	    resultMainComposite = new ResultMainComposite(sashForm, SWT.BORDER);
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 0;
 		gl_compositeResult.horizontalSpacing = 0;
 		gl_compositeResult.marginHeight = 0;
 		gl_compositeResult.marginWidth = 0;
-	    compResult.setLayout(gl_compositeResult);
-	    compResult.setMainEditor(this);
+	    resultMainComposite.setLayout(gl_compositeResult);
+	    resultMainComposite.setMainEditor(this);
 		
 		sashForm.setWeights(new int[] {65, 35});
 		initEditor();
 		
-		
-
 		// autocommit true 혹은 false값이 바뀌었을때..
 		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
@@ -463,6 +461,9 @@ public class MainEditor extends EditorExtension {
 		
 		// 기존 에디터에서 auto commit button 이 어떻게 설정 되어 있는지 가져옵니다.
 		initAutoCommitAction(true, false);
+		
+		// 
+		resultMainComposite.initMainComposite();
 	}
 	
 	/**
@@ -495,7 +496,7 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	public void executeCommand(final RequestQuery reqQuery) {
-		compResult.executeCommand(reqQuery);
+		resultMainComposite.executeCommand(reqQuery);
 	}
 	/**
 	 * auto commit 

@@ -32,6 +32,7 @@
    </vm>
 
    <plugins>
+      <plugin id="com.hamgum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.ace.editor.core"/>
       <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
@@ -129,6 +130,7 @@
    </features>
 
    <configurations>
+      <plugin id="com.hamgum.tadpole.help.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.ace.editor.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
