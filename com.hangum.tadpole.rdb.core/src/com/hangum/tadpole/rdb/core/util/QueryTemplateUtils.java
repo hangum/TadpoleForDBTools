@@ -112,7 +112,9 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB) || 
+				DBDefine.HIVE2_DEFAULT == DBDefine.getDBDefine(userDB)
+				) {
 			if(initAction == PublicTadpoleDefine.DB_ACTION.TABLES) {
 				defaultStr =  HIVEDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.VIEWS) {

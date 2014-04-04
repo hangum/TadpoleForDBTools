@@ -194,14 +194,14 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("192.168.56.101");
-			textPort.setText("10000");
-			textDatabase.setText("sbx");
-			textUser.setText("root");
-			textPassword.setText("duroah");
+			textHost.setText("127.0.0.1");
+			textPort.setText("10002");
+			textDatabase.setText("testdb");
+			textUser.setText("hangum");
+			textPassword.setText("");
 			
 		} else {
-			textPort.setText("10000");
+			textPort.setText("10002");
 		}
 		
 		 Combo comboGroup = preDBInfo.getComboGroup();

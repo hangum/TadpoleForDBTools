@@ -32,7 +32,6 @@ public class HIVEDMLTemplate {
 	/** table - mysql */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE   sample_table   (  " + PublicTadpoleDefine.LINE_SEPARATOR + 
 						 " id int,   " + PublicTadpoleDefine.LINE_SEPARATOR +
-						 " dtDontQuery string, " + PublicTadpoleDefine.LINE_SEPARATOR +
 						 " name string  " + PublicTadpoleDefine.LINE_SEPARATOR +
 						" );";
 	
