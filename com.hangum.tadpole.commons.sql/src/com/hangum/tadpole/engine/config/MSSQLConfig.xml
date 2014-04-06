@@ -18,7 +18,7 @@
 	<properties resource="com/hangum/tadpole/engine/config/commons/setting.propertis"/>
 	
 	<transactionManager type="JDBC">
-		<dataSource type="SIMPLE">
+		<dataSource type="DBCP">
 			<property name="JDBC.Driver" 			value="net.sourceforge.jtds.jdbc.Driver" />
 			<property name="JDBC.ConnectionURL" 	value="${JDBC.ConnectionURL}" />
 			<property name="JDBC.Username" 			value="${JDBC.Username}" />
