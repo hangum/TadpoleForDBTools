@@ -168,6 +168,9 @@ public enum DBDefine {
 			
 			case SQLite_DEFAULT:	return "jdbc:sqlite:/%s";
 			case CUBRID_DEFAULT:	return "jdbc:cubrid:%s:%s:%s:::";
+			/*
+			 * postgresql이 ssl 을 지원할 경우 는 ?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory 를 써줘야합니다. 
+			 */
 			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
 			
 			/** http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html */

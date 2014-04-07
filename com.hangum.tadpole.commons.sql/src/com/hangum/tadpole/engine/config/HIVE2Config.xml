@@ -15,10 +15,10 @@
 
 <sqlMapConfig>
 	<!--  set setting options -->
-	<properties resource="com/hangum/tadpole/engine/config/commons/setting.propertis"/>
+	<!-- properties resource="com/hangum/tadpole/engine/config/commons/setting.propertis"/-->
 	
 	<transactionManager type="JDBC">
-		<dataSource type="SIMPLE">
+		<dataSource type="DBCP">
 			<property name="JDBC.Driver" value="org.apache.hive.jdbc.HiveDriver" />
 			<property name="JDBC.ConnectionURL" value="${JDBC.ConnectionURL}" />
 			<property name="JDBC.Username" value="${JDBC.Username}" />
@@ -32,7 +32,7 @@
 				Use of the validation query can be problematic. If you have
 				difficulty, try without it.
 			-->
-			<property name="Pool.ValidationQuery" value="show tables" />
+			<property name="Pool.ValidationQuery" value="show databases" />
 			<property name="Pool.LogAbandoned" value="false" />
 			<property name="Pool.RemoveAbandoned" value="false" />
 			<property name="Pool.RemoveAbandonedTimeout" value="50000" />
