@@ -152,7 +152,7 @@ public class MainEditor extends EditorExtension {
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		
 		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
 				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName));
 			} else {

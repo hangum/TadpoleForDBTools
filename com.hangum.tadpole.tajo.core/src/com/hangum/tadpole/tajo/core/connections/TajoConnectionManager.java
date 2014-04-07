@@ -40,6 +40,19 @@ public class TajoConnectionManager implements ConnectionInterfact {
 	private static final Logger logger = Logger.getLogger(TajoConnectionManager.class);
 	
 	/**
+	 * java.sql.connection을 생성하고 관리합니다.
+	 * 
+	 * @param userDB
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static Connection getInstance(final UserDBDAO userDB) throws Exception {
+		java.sql.Connection javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
+			
+		return javaConn;
+	}
+	/**
 	 * not select 
 	 * 
 	 * @param userDB
