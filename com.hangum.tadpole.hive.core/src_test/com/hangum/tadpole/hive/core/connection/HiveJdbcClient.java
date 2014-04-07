@@ -25,7 +25,7 @@ public class HiveJdbcClient {
 		
 		try {
 			System.out.println("===Connection start===========================================");
-			Connection con = DriverManager.getConnection("jdbc:hive://192.168.56.101:10000/default", "", "");
+			Connection con = DriverManager.getConnection("jdbc:hive://127.0.0.1:10000/default", "", "");
 			System.out.println("===Connection send===========================================");
 			
 			Statement stmt = con.createStatement();

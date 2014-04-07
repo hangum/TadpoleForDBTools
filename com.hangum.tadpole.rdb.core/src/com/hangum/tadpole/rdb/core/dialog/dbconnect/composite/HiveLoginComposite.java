@@ -112,6 +112,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		comboDriverType.setData("Hive Server 2", DBDefine.HIVE2_DEFAULT);
 		
 		comboDriverType.select(1);
+		comboDriverType.setEnabled(false);
 		
 		Label lblHost = new Label(grpConnectionType, SWT.NONE);
 		lblHost.setText(Messages.DBLoginDialog_1);

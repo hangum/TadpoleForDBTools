@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,8 +28,21 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
  * @author hangum
  *
  */
-public class ExecuteSelect {
+public class ExecuteSelect {//extends AbstractExecutorService {
 	private static final Logger logger = Logger.getLogger(ExecuteSelect.class);
+	private static ExecuteSelect executeSelect = null;
+	private ExecutorService execService = Executors.newCachedThreadPool();
+	
+	private ExecuteSelect() {
+	}
+	
+	public static ExecuteSelect getInstance() {
+		if(executeSelect == null) {
+			executeSelect = new ExecuteSelect();
+		}
+		
+		return executeSelect;
+	}
 	
 	/**
 	 * select문을 실행합니다.
@@ -40,7 +54,6 @@ public class ExecuteSelect {
 			final RequestQuery reqQuery
 	) throws Exception {
 		
-		ExecutorService execService = Executors.newCachedThreadPool();
 		Future<ResultSet> queryFuture = execService.submit(new Callable<ResultSet>() {
 			@Override
 			public ResultSet call() throws Exception {
@@ -52,4 +65,19 @@ public class ExecuteSelect {
 		return queryFuture.get();
 	}
 	
+	/**
+	 * shutdown
+	 */
+	public void shutdown() {
+//		try {
+//			logger.debug("Execute thread sate is " + execService.isShutdown());
+//			
+//			List<Runnable> listRunnable = execService.shutdownNow();
+//			logger.debug("Execute thread sate is " + execService.isShutdown());
+//			
+//		} catch(Exception e) {
+//			logger.error("Query execute service", e);
+//		}
+		execService.shutdown();
+	}
 }

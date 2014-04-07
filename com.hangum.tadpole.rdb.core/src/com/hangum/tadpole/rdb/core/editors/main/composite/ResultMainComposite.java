@@ -144,12 +144,13 @@ public class ResultMainComposite extends Composite {
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		logger.debug("==> executeQuery start " + reqQuery);
 		
 		// 쿼리를 이미 실행 중이라면 무시합니다.
 		if(compositeResultSet.getJobQueryManager() != null) {
 			logger.debug("===> job state is : " + compositeResultSet.getJobQueryManager().getState());
 			if(Job.RUNNING == compositeResultSet.getJobQueryManager().getState()) {
-				logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");logger.debug("================= return running job ");
+				logger.debug("================= return running query job ");
 				return;
 			}
 		}
@@ -174,6 +175,9 @@ public class ResultMainComposite extends Composite {
 		
 			if(isDMLQuestion) if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) return; //$NON-NLS-1$
 		}
+		
+		// tab을 처음으로 이동합니다. 
+		resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		// 실제 쿼리 실행.
 		compositeResultSet.executeCommand(reqQuery);

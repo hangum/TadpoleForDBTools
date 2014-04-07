@@ -122,7 +122,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		btnCreatePlanTable.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TadpoleSimpleMessageDialog planDialog = new TadpoleSimpleMessageDialog(getShell(), textOraclePlan.getText(), planTable);
+				TadpoleSimpleMessageDialog planDialog = new TadpoleSimpleMessageDialog(getShell(), textOraclePlan.getText(), ORACLE_PLAN_TABLE);
 				planDialog.open();
 			}
 		});
@@ -226,7 +226,8 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		lblUserFont.setText(strFontInfo);
 	}
 	
-	public static String planTable = 
+	/** ORACLE PLAN TABLE */
+	private static final String ORACLE_PLAN_TABLE = 
 			" CREATE TABLE plan_table (							  \r\n" + 
 					"         STATEMENT_ID       VARCHAR2(30),    \r\n" + 
 					"         plan_id            NUMBER,          \r\n" + 
