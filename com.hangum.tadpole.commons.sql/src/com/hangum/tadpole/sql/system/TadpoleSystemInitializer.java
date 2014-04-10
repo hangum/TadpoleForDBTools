@@ -34,9 +34,6 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
 import com.hangum.tadpole.sql.system.internal.initialize.TadpoleMySQLDDL;
 import com.hangum.tadpole.sql.system.internal.initialize.TadpoleSQLIteDDL;
-import com.hangum.tadpole.sql.system.internal.migration.SystemMigration;
-import com.hangum.tadpole.sql.system.internal.migration.SystemMigration100to111;
-import com.hangum.tadpole.sql.system.internal.migration.SystemMigration100to112;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

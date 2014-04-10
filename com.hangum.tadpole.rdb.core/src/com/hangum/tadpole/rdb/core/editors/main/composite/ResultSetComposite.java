@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -67,7 +71,6 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
-import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteSelect;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -158,6 +161,7 @@ public class ResultSetComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				isUserInterrupt = false;
+				
 			}
 		});
 		btnStopQuery.setText(Messages.RDBResultComposite_btnStp_text);
@@ -448,84 +452,57 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.setPriority(Job.INTERACTIVE);
 		jobQueryManager.setName(getUserDB().getDisplay_name() + reqQuery.getOriginalSql());
 		jobQueryManager.schedule();
+		
 	}
 	
 	private boolean isCheckRunning = true;
 	private boolean isUserInterrupt = false;
+	private ExecutorService execServiceQuery = null;
+	private ExecutorService esCheckStop = null; 
 	private QueryExecuteResultDTO runSelect() throws Exception {
 		if(!PermissionChecker.isExecute(getUserType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
-		ResultSet rs = null;
+		ResultSet resultSet = null;
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
 		
 		try {
-			if(reqQuery.isAutoCommit()) {
-				SqlMapClient client = TadpoleSQLManager.getInstance(getUserDB());
-				javaConn = client.getDataSource().getConnection();
+			if(DBDefine.TAJO_DEFAULT == getUserDB().getDBDefine()) {
+				javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
 			} else {
-				if(DBDefine.TAJO_DEFAULT == getUserDB().getDBDefine()) {
-					javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
+				if(reqQuery.isAutoCommit()) {
+					SqlMapClient client = TadpoleSQLManager.getInstance(getUserDB());
+					javaConn = client.getDataSource().getConnection();
 				} else {
 					javaConn = TadpoleSQLTransactionManager.getInstance(getUserEMail(), getUserDB());
 				}
 			}
-			
 			statement = javaConn.createStatement();
-			final Statement stmt = statement;
-			Thread stopCheckThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					int i = 0;
-//					logger.debug("===================================================================================================");
-//					logger.debug("\t First call the Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
+			
+			// check stop thread
+			logger.debug("\t===== start stop query ==========================");
+			esCheckStop = Executors.newSingleThreadExecutor();
+			esCheckStop.execute(new CheckStopThread(statement));
+			
+			logger.debug("\t===== start query ==========================");
+			// execute query
+			execServiceQuery = Executors.newSingleThreadExecutor();
+			resultSet = runSQLSelect(statement, reqQuery);
+
+			logger.debug("\t======== execute end =================================");
 					
-					while(isCheckRunning) {
-						if(i>100) i = 0;
-						final int progressAdd = i++; 
-						
-						try {
-							btnStopQuery.getDisplay().asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									progressBarQuery.setSelection(progressAdd);
-								}
-							});
-							
-							Thread.sleep(50);
-//							logger.debug(" Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
-							if(!isUserInterrupt) stmt.cancel();
-						} catch(Exception e) {
-							logger.error("isCheckThread exception", e);
-						}
-					}   // end while
-					
-//					logger.debug("\t end call the Check thread is =====> [isCheckRunning]" + isCheckRunning + "\t[isUserInterrupt]" + isUserInterrupt);
-//					logger.debug("===================================================================================================");
-				} 	// end run
-			});
-			stopCheckThread.start();
-			
-			ExecuteSelect es = new ExecuteSelect();
-			rs = es.runSQLSelect(stmt, reqQuery);
-			isCheckRunning = false;
-					
-			rsDAO = new QueryExecuteResultDTO(true, rs, getQueryPageCount(), getIsResultComma());
-			
-			
-//			if(getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT) {
-//			} else {
-//				// 데이터셋에 추가 결과 셋이 있을경우 모두 fetch 하여 결과 그리드에 표시한다.
-//				while(rs.getMoreResults()){  
-//					rsDAO.getDataList().getData().addAll(ResultSetUtils.getResultToList(pstmt.getResultSet(), queryPageCount, isResultComma).getData());
-//				}
-//			}
-			
+			rsDAO = new QueryExecuteResultDTO(true, resultSet, getQueryResultCount(), getIsResultComma());
+		} catch(Exception e) {
+			logger.error("execute query", e);
+			throw e;
 		} finally {
+			logger.debug("\t====> execute select finally=======================");
+			isCheckRunning = false;
+			
 			try { if(statement != null) statement.close(); } catch(Exception e) {}
-			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(resultSet != null) resultSet.close(); } catch(Exception e) {}
 
 			if(reqQuery.isAutoCommit()) {
 				try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
@@ -534,9 +511,80 @@ public class ResultSetComposite extends Composite {
 		
 		return rsDAO;
 	}
+	
+	/**
+	 * select문을 실행합니다.
+	 * 
+	 * @param requestQuery
+	 */
+	public ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws Exception {
+		
+		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
+			@Override
+			public ResultSet call() throws Exception {
+				statement.execute(reqQuery.getSql());
+				return statement.getResultSet();
+			}
+		});
+		
+		return queryFuture.get();
+	}
 
-	private int getQueryPageCount() {
-		return easyPreferenceData.getQueryPageCount();
+	/**
+	 * check stop thread
+	 * @author hangum
+	 *
+	 */
+	private class CheckStopThread extends Thread {
+		private Statement stmt = null;
+		
+		public CheckStopThread(Statement stmt) {
+			super("CheckStopThread is "+ stmt.toString());
+			this.stmt = stmt;
+		}
+		
+		@Override
+		public void run() {
+			int i = 0;
+			
+			try {
+				while(isCheckRunning) {
+					if(i>100) i = 0;
+					final int progressAdd = i++; 
+					
+					btnStopQuery.getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							progressBarQuery.setSelection(progressAdd);
+						}
+					});
+					
+					Thread.sleep(50);
+					
+					// Is user stop?
+					if(!isUserInterrupt) {
+						stmt.cancel();
+						
+						isCheckRunning = false;
+						
+						try {
+							logger.debug("User stop operation is [statement close] " + stmt.isClosed());
+							if(!stmt.isClosed()) execServiceQuery.shutdown();
+						} catch(Exception ee) {
+							logger.error("Execute stop", ee);
+						}
+					}
+					
+				}   // end while
+			} catch(Exception e) {
+				logger.error("isCheckThread exception", e);
+				isCheckRunning = false;
+			}
+		} 	// end run
+	}	// end method
+
+	private int getQueryResultCount() {
+		return easyPreferenceData.getQueryResultCount();
 	}
 
 	/**
@@ -571,7 +619,14 @@ public class ResultSetComposite extends Composite {
 			isUserInterrupt = true;
 			
 			progressBarQuery.setSelection(0);
-			btnStopQuery.setEnabled(true);
+			
+			// HIVE, TAJO는 CANCLE 기능이 없습니다. 
+			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT ||
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
+					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+			) {
+				btnStopQuery.setEnabled(true);
+			}
 		} else {
 			isCheckRunning = false;
 			isUserInterrupt = false;
@@ -624,7 +679,7 @@ public class ResultSetComposite extends Composite {
 			} else {
 				// 
 				// 데이터가 한계가 넘어 갔습니다.
-				String strMsg = String.format(Messages.MainEditor_34, getQueryPageCount());
+				String strMsg = String.format(Messages.MainEditor_34, getQueryResultCount());
 				strResultMsg = String.format("%s (%s%s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
 			}
 			

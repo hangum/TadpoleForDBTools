@@ -42,10 +42,11 @@ public class UserPreference {
 	 */
 	private final int queryResultCount 	= GetPreferenceGeneral.getQueryResultCount();
 	
-	/** 
-	 * 쿼리 결과를 page당 처리 하는 카운트 
-	 */
-	private final int queryPageCount 	= GetPreferenceGeneral.getPageCount();
+//	/** 
+//	 * 쿼리 결과를 page당 처리 하는 카운트
+//	 * @deprecated 
+//	 */
+//	private final int queryPageCount 	= GetPreferenceGeneral.getPageCount();
 
 	/** 
 	 * oracle plan table 이름 
@@ -78,12 +79,12 @@ public class UserPreference {
 		return queryResultCount;
 	}
 
-	/**
-	 * @return the queryPageCount
-	 */
-	public final int getQueryPageCount() {
-		return queryPageCount;
-	}
+//	/**
+//	 * @return the queryPageCount
+//	 */
+//	public final int getQueryPageCount() {
+//		return queryPageCount;
+//	}
 
 	/**
 	 * @return the planTableName
