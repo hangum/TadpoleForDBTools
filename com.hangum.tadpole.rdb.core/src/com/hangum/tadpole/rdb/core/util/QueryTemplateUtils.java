@@ -19,6 +19,7 @@ import com.hangum.tadpole.sql.template.MySQLDMLTemplate;
 import com.hangum.tadpole.sql.template.OracleDMLTemplate;
 import com.hangum.tadpole.sql.template.PostgreDMLTemplate;
 import com.hangum.tadpole.sql.template.SQLiteDMLTemplate;
+import com.hangum.tadpole.sql.template.TAJODMLTemplate;
 
 /**
  * db에 다른 템플릿 쿼리를 생성합니다.
@@ -120,7 +121,10 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.DB_ACTION.VIEWS) {
 				defaultStr =  HIVEDMLTemplate.TMP_CREATE_VIEW_STMT;
 			}
+		} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			defaultStr =  TAJODMLTemplate.TMP_CREATE_TABLE_STMT;
 		}
+				
 		
 //		else if(DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
 //		

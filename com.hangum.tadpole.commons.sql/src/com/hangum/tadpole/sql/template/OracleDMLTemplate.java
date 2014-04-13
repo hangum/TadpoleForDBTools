@@ -20,6 +20,12 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class OracleDMLTemplate extends MySQLDMLTemplate {
 	public static final String TMP_GET_PARTDATA = "select * from (%s) where ROWNUM > %s and ROWNUM <= %s";
+	
+	/** table - oracle */
+	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE   sample_table   (  " + PublicTadpoleDefine.LINE_SEPARATOR + 
+						 " id number primary key,   " + PublicTadpoleDefine.LINE_SEPARATOR +
+						 " name varchar2(30)  " + PublicTadpoleDefine.LINE_SEPARATOR +
+						" );";
 
 	// plan_table	
 	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN PLAN set statement_id = '" + PublicTadpoleDefine.STATEMENT_ID + "' INTO " + PublicTadpoleDefine.DELIMITER + " FOR ";

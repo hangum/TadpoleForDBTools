@@ -10,12 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.manager;
 
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.connections.TadpoleConnectionInfo;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.map.SQLMap;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -32,6 +34,7 @@ public class TadpoleSQLManager {
 	
 	/** db 인스턴스를 가지고 있는 아이 */
 	private static HashMap<String, SqlMapClient> dbManager = null;
+	private static HashMap<String, TadpoleConnectionInfo> dbConnectionInfo = new HashMap<String, TadpoleConnectionInfo>();
 	private static TadpoleSQLManager tadpoleSQLManager = null;
 	
 	static {
@@ -44,7 +47,13 @@ public class TadpoleSQLManager {
 	private TadpoleSQLManager() {}
 	
 	/**
+	 * <pre>
 	 * DB 정보를 생성한다.
+	 * 
+	 * 엔진환경에서 가지고 있어야 하는 것으로서 데이터베이스 부가정보를 가지고 있어야 할듯합니다.
+	 * 	테이블의 "나 '가 대소문자 유무등을 환경정보로가지고 있어야겟습니다.
+	 * 
+	 * </pre>
 	 * 
 	 * @param dbInfo
 	 * @return
@@ -54,13 +63,15 @@ public class TadpoleSQLManager {
 		SqlMapClient sqlMapClient = null;
 		
 		synchronized (dbManager) {
+			
+			Connection conn = null;
 			try {
 				
 				String searchKey = getKey(dbInfo);
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
 
-					// oracle 일 경우 로케일을 설정합니다.
+					// oracle 일 경우 로케일을 설정 
 					try { 
 						if(DBDefine.getDBDefine(dbInfo) == DBDefine.ORACLE_DEFAULT) {
 							if(dbInfo.getLocale() != null && !"".equals(dbInfo.getLocale())) {
@@ -70,20 +81,40 @@ public class TadpoleSQLManager {
 					} catch(Exception e) {
 						logger.error("set locale error", e);
 					}
+					// oracle 일 경우 locale 설정 
 					
-					// oracle 일 경우 locale 설정
 					sqlMapClient = SQLMap.getInstance(dbInfo);
 					dbManager.put(searchKey, sqlMapClient);
+
+					// connection의 부가 정보를 기록합니다.. 
+					conn = sqlMapClient.getDataSource().getConnection();
+					TadpoleConnectionInfo tci = new TadpoleConnectionInfo();
+					
+					
+					tci.setIdentifierQuoteString(conn.getMetaData().getIdentifierQuoteString());
+					dbConnectionInfo.put(searchKey, tci);
 				}
 				
 			} catch(Exception e) {
 				logger.error("get DB Instance", e);
 				
 				throw new Exception(e);
+			} finally {
+				try { if(conn != null) conn.close(); } catch(Exception e) {}
 			}
 		}
 
 		return sqlMapClient;
+	}
+	
+	/**
+	 * 
+	 * @param dbInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public static TadpoleConnectionInfo getConnectionInfo(UserDBDAO dbInfo) throws Exception {
+		return dbConnectionInfo.get(getKey(dbInfo));
 	}
 	
 	/**
@@ -102,8 +133,11 @@ public class TadpoleSQLManager {
 	 */
 	public static void removeInstance(UserDBDAO dbInfo) {
 		synchronized (dbManager) {
-			SqlMapClient sqlMapClient = dbManager.remove(getKey(dbInfo));
+			String key = getKey(dbInfo);
+			SqlMapClient sqlMapClient = dbManager.remove(key);
 			sqlMapClient = null;
+			
+			dbConnectionInfo.remove(key);
 		}
 	}
 	

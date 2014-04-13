@@ -22,18 +22,19 @@ import java.util.Properties;
  * @author hangum
  *
  */
-public class OracleConnectTest {
+public class OracleConnectTest extends AbstractDriverInfo {
 
 	public static void main(String args[]) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@192.168.61.129:1521:XE";
+			String url = "jdbc:oracle:thin:@192.168.32.128:1521:XE";
 	
 			Properties props = new Properties();
-			props.setProperty("user", "scott");
-			props.setProperty("password", "tiger");
+			props.setProperty("user", "HR");
+			props.setProperty("password", "tadpole");
 	
 			Connection conn = DriverManager.getConnection(url, props);
+			printMetaData(conn.getMetaData());
 	
 			PreparedStatement preStatement = conn.prepareStatement("select * from v$version");
 			ResultSet result = preStatement.executeQuery();

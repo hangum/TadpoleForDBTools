@@ -10,9 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.system;
 
-import org.apache.log4j.Logger;
-
 import java.sql.Statement;
+
+import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -30,26 +30,54 @@ public class TadpoleSystemCommons {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleSystemCommons.class);
 
+//	/**
+//	 * smtm.execute문의 쿼리를 날립니다. 즉 select 이외의 문...
+//	 * 
+//	 * @param selText
+//	 */
+//	public static boolean executSQL(UserDBDAO userDB, String selText) throws Exception {
+//		if(logger.isDebugEnabled()) logger.debug("[executeSQL]" + selText);
+//		
+//		Connection javaConn = null;
+//		Statement stmt = null;
+//		try {
+//			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+//			javaConn = client.getDataSource().getConnection();
+//			stmt = javaConn.createStatement();
+//
+//			return stmt.execute( selText );
+//		} finally {
+//			try { if(stmt != null) stmt.close(); } catch(Exception e){}
+//			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+//		}
+//	}
+
 	/**
-	 * smtm.execute문의 쿼리를 날립니다. 즉 select 이외의 문...
+	 * 쿼리중에 quote sql을 반영해서 작업합니다.
 	 * 
-	 * @param selText
+	 * @param userDB
+	 * @param strDML
+	 * @param args
 	 */
-	public static void executSQL(UserDBDAO userDB, String selText) throws Exception {
-		if(logger.isDebugEnabled()) logger.debug("[executeSQL]" + selText);
-		
+	public static boolean executSQL(UserDBDAO userDB, String strDML, String ... args) throws Exception {
 		java.sql.Connection javaConn = null;
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
-			Statement stmt = javaConn.createStatement();
-			boolean result =  stmt.execute( selText );
-	
-		} finally {
-			try { javaConn.close(); } catch(Exception e){
-				// igonr exception
+			String quoteString = TadpoleSQLManager.getConnectionInfo(userDB).getIdentifierQuoteString();
+			String[] queryArg = new String[args.length];
+			for(int i=0; i<queryArg.length; i++) {
+				queryArg[i] = quoteString + args[i] + quoteString;
 			}
-		}		
+			
+			if(logger.isDebugEnabled()) logger.debug(String.format(strDML, queryArg));
+			
+			Statement stmt = javaConn.createStatement();
+
+			return stmt.execute(String.format(strDML, queryArg));
+		} finally {
+			try { javaConn.close(); } catch(Exception e) {}
+		}
 	}
 }

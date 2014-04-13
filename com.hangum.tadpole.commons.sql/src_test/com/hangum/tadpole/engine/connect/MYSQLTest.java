@@ -13,32 +13,23 @@ package com.hangum.tadpole.engine.connect;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class PostgresTest extends AbstractDriverInfo {
+public class MYSQLTest extends AbstractDriverInfo {
 	public static void main(String[] args) throws Exception {
 
-		String url = "jdbc:postgresql:tadpole";
-		String usr = "tadpole";
+//		String url = "jdbc:mysql://14.63.212.152:13306/tester";
+//		String usr = "tester";
+//		String pwd = "1234";
+		String url = "jdbc:mysql://192.168.32.128:3306/tadpole";
+		String usr = "root";
 		String pwd = "tadpole";
 
-		Class.forName("org.postgresql.Driver");
+		Class.forName("com.mysql.jdbc.Driver");
 
 		// -- 1
 		Connection conn = DriverManager.getConnection(url, usr, pwd);
 		printMetaData(conn.getMetaData());
 		
 		conn.close();
-
-//		// -- 2
-//		url = "jdbc:postgresql://localhost/test";
-//		conn = DriverManager.getConnection(url, usr, pwd);
-//		System.out.println(conn);
-//		conn.close();
-//
-//		// -- 3
-//		url = "jdbc:postgresql://localhost:5432/test";
-//		conn = DriverManager.getConnection(url, usr, pwd);
-//		System.out.println(conn);
-//		conn.close();
 
 	}
 }

@@ -73,6 +73,22 @@ public class TajoConnectionManager implements ConnectionInterfact {
 		}
 	}
 	
+	public void executeUpdate(UserDBDAO userDB, String string, String name) throws Exception {
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		try {
+			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
+			String quoteString = javaConn.getMetaData().getIdentifierQuoteString();
+			
+			statement = javaConn.createStatement();
+			statement.executeUpdate(String.format(string, quoteString + name + quoteString));
+		} finally {
+			try { if(statement != null) statement.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+		}
+	}
+	
 	/**
 	 * select
 	 * 

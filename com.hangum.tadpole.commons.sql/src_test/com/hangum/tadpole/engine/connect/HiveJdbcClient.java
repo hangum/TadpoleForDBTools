@@ -22,7 +22,7 @@ public class HiveJdbcClient {
 		}
 		
 		System.out.println("===Connection start===========================================");
-		Connection con = DriverManager.getConnection("jdbc:hive://localhost:10000/default", "", "");
+		Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10002/testdb", "hangum", "xxx");
 		System.out.println("===Connection send===========================================");
 		
 		Statement stmt = con.createStatement();

@@ -109,7 +109,6 @@ public class MainEditor extends EditorExtension {
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
-		
 	}
 	
 	@Override

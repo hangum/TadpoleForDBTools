@@ -87,10 +87,10 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	
 	@Override
 	public boolean performOk() {
-		String txtSessionTime = textSessionTime.getText();
+		String txtSessionTime 	= textSessionTime.getText();
 		String txtExportDelimit = textExportDelimit.getText();
-		String txtHomePage = textHomePage.getText();
-		String txtHomePageUse = ""+btnCheckButtonHomepage.getSelection();
+		String txtHomePage 		= textHomePage.getText();
+		String txtHomePageUse 	= ""+btnCheckButtonHomepage.getSelection();
 		
 		try {
 			Integer.parseInt(txtSessionTime);
