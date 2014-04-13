@@ -418,8 +418,12 @@ editorService.insertText = function(varText) {
 };
 editorService.addText = function(varText) {
 	try {
-		if("" == editor.getValue()) editor.insert(varText);
-		else editor.insert("\n" + varText);
+		if("" == editor.getValue()) {
+			editor.insert(varText);
+		} else {
+			editor.gotoLine(editor.session.getLength()+1);
+			editor.insert("\n" + varText);
+		}
 		editor.focus();
 	} catch(e) {
 		console.log(e);
