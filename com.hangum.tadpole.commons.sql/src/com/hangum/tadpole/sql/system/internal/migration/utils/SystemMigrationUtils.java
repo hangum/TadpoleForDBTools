@@ -15,7 +15,7 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

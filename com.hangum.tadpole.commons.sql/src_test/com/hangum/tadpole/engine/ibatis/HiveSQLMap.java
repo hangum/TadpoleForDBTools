@@ -7,10 +7,10 @@ import java.util.List;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.map.SQLMap;
+import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 public class HiveSQLMap {

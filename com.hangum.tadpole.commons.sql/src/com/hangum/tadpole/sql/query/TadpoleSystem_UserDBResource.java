@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.system;
+package com.hangum.tadpole.sql.query;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,11 +18,11 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.ResourceManagerDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDataDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 

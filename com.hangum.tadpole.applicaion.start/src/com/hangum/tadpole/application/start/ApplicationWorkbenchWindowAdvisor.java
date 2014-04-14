@@ -41,12 +41,12 @@ import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
  * Configures the initial size and appearance of a workbench window.

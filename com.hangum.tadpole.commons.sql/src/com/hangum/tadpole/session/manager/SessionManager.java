@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.session.manager;
+package com.hangum.tadpole.session.manager;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -25,8 +25,8 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.dao.system.UserRoleDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserRole;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
  * tadpole의 session manager입니다

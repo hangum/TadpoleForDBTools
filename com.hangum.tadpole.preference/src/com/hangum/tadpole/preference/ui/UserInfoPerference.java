@@ -33,9 +33,9 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.preference.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
  * 사용자 정보 수정

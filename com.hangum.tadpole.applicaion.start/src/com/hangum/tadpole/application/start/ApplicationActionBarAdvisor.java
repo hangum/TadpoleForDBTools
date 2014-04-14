@@ -36,7 +36,7 @@ import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenDBRelationAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenQueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.global.PreferenceAction;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**

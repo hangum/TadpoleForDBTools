@@ -30,7 +30,7 @@ import com.hangum.tadpole.rdb.core.editors.externalbrowser.ExternalBrowserEditor
 import com.hangum.tadpole.rdb.core.editors.externalbrowser.ExternalBrowserInput;
 import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_ExternalBrowser;
+import com.hangum.tadpole.sql.query.TadpoleSystem_ExternalBrowser;
 
 /**
  * Extension browser Action

@@ -38,7 +38,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
+import com.hangum.tadpole.sql.query.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryLabelProvider;

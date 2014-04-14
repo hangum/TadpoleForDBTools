@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.system;
+package com.hangum.tadpole.sql.query;
 
 import java.sql.Statement;
 
@@ -65,17 +65,17 @@ public class TadpoleSystemCommons {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
-			String quoteString = TadpoleSQLManager.getConnectionInfo(userDB).getIdentifierQuoteString();
-			String[] queryArg = new String[args.length];
-			for(int i=0; i<queryArg.length; i++) {
-				queryArg[i] = quoteString + args[i] + quoteString;
-			}
+//			String quoteString = TadpoleSQLManager.getConnectionInfo(userDB).getIdentifierQuoteString();
+//			String[] queryArg = new String[args.length];
+//			for(int i=0; i<queryArg.length; i++) {
+//				queryArg[i] = quoteString + args[i] + quoteString;
+//			}
 			
-			if(logger.isDebugEnabled()) logger.debug(String.format(strDML, queryArg));
+			if(logger.isDebugEnabled()) logger.debug(String.format(strDML, args));
 			
 			Statement stmt = javaConn.createStatement();
 
-			return stmt.execute(String.format(strDML, queryArg));
+			return stmt.execute(String.format(strDML, args));
 		} finally {
 			try { javaConn.close(); } catch(Exception e) {}
 		}

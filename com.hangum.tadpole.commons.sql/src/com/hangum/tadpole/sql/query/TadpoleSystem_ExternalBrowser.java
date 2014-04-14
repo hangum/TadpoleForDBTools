@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.system;
+package com.hangum.tadpole.sql.query;
 
 import java.util.List;
 

@@ -19,7 +19,7 @@ package com.hangum.tadpole.sql.template;
  * @author hangum
  *
  */
-public class TAJODMLTemplate {
+public class TAJODMLTemplate extends AbstractDMLTemplate {
 	
 	/**  
 	 * preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.

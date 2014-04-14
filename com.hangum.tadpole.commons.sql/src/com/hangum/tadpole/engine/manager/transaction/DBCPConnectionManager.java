@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.transaction;
+package com.hangum.tadpole.engine.manager.transaction;
 
 import java.util.HashMap;
 import java.util.Map;

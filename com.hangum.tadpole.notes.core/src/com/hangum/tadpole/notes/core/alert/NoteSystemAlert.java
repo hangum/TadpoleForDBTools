@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
+import com.hangum.tadpole.sql.query.TadpoleSystem_Notes;
 
 /**
  * note system alert

@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.connections;
+package com.hangum.tadpole.engine.query.surface;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.resultset.ResultSetUtilDTO;
 
 /**
- * 올챙이에서 jdbc로 연결하지 못하는 Connection의 interface를 정합니다.
+ * 올챙이에서 jdbc로 연결하지 못하는 데이터베이스의 Connection의 interface를 정합니다.
  * 
  * @author hangum
  *

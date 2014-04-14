@@ -1,4 +1,4 @@
-package com.hangum.tadpole.sql.session.manager;
+package com.hangum.tadpole.session.manager;
 
 import org.apache.log4j.Logger;
 
@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * collect login session

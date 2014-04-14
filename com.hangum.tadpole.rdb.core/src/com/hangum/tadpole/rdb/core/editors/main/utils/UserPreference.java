@@ -11,7 +11,7 @@
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * SQLDefine

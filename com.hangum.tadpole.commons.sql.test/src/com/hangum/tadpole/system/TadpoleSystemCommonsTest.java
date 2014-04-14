@@ -10,13 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
-import com.hangum.tadpole.sql.system.TadpoleSystemCommons;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystemCommons;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 
 import junit.framework.TestCase;
 
 /**
- * {@link com.hangum.tadpole.sql.system.TadpoleSystemCommons 시스템쿼리}
+ * {@link com.hangum.tadpole.sql.query.TadpoleSystemCommons 시스템쿼리}
  * 
  * @author hangum
  *
@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 public class TadpoleSystemCommonsTest extends TestCase {
 
 	/**
-	 * {@link com.hangum.tadpole.sql.system.TadpoleSystemCommons#executSQL(com.hangum.db.dao.system.UserDBDAO, String) 쿼리실행(select 제외)}executeSQL
+	 * {@link com.hangum.tadpole.sql.query.TadpoleSystemCommons#executSQL(com.hangum.db.dao.system.UserDBDAO, String) 쿼리실행(select 제외)}executeSQL
 	 */
 	public void testExecutSQL() {
 		try {

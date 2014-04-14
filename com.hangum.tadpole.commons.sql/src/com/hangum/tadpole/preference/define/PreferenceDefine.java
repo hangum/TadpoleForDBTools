@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.preference.define;
+package com.hangum.tadpole.preference.define;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 

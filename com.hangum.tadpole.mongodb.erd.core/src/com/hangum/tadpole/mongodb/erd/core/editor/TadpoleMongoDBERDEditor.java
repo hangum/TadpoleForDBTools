@@ -63,11 +63,11 @@ import com.hangum.tadpole.mongodb.erd.stanalone.Activator;
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.MongodbFactory;
 import com.hangum.tadpole.mongodb.model.MongodbPackage;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 
 /**
  * Tadpole DB Hub ERD editor

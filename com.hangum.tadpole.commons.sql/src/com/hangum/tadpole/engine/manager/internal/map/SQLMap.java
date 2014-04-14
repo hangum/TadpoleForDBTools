@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.map;
+package com.hangum.tadpole.engine.manager.internal.map;
 
 import java.io.InputStream;
 import java.io.StringReader;

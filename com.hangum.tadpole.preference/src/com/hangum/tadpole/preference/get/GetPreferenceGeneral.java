@@ -11,9 +11,9 @@
 package com.hangum.tadpole.preference.get;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 
 /**
  * preference의 일반적인 정보를 얻습니다.

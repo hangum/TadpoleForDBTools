@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.sql.datetype;
+package com.hangum.tadpole.sql.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
