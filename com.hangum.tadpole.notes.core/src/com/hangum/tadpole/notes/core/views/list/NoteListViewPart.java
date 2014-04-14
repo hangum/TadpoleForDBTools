@@ -51,10 +51,11 @@ import com.hangum.tadpole.notes.core.Messages;
 import com.hangum.tadpole.notes.core.define.NotesDefine.NOTE_TYPES;
 import com.hangum.tadpole.notes.core.dialogs.NewNoteDialog;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
+import com.hangum.tadpole.sql.query.TadpoleSystem_Notes;
 import com.swtdesigner.ResourceManager;
+
 import org.eclipse.swt.widgets.Button;
 
 /**

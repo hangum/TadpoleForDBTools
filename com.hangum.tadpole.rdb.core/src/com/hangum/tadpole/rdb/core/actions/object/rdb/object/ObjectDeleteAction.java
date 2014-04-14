@@ -29,7 +29,7 @@ import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.sql.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystemCommons;
+import com.hangum.tadpole.sql.query.TadpoleSystemCommons;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 
 /**

@@ -17,10 +17,10 @@ import org.eclipse.swt.graphics.Image;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.template.DBOperationType;
 import com.swtdesigner.ResourceManager;
 

@@ -42,7 +42,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-import com.hangum.tadpole.engine.transaction.TransactionDAO;
+import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 import com.hangum.tadpole.manager.core.Activator;
 
 /**

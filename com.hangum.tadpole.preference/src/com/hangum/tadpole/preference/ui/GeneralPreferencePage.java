@@ -25,10 +25,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.preference.Messages;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
 
 /**
  * general preference
@@ -87,10 +87,10 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	
 	@Override
 	public boolean performOk() {
-		String txtSessionTime = textSessionTime.getText();
+		String txtSessionTime 	= textSessionTime.getText();
 		String txtExportDelimit = textExportDelimit.getText();
-		String txtHomePage = textHomePage.getText();
-		String txtHomePageUse = ""+btnCheckButtonHomepage.getSelection();
+		String txtHomePage 		= textHomePage.getText();
+		String txtHomePageUse 	= ""+btnCheckButtonHomepage.getSelection();
 		
 		try {
 			Integer.parseInt(txtSessionTime);

@@ -30,7 +30,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityH
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 
 /**

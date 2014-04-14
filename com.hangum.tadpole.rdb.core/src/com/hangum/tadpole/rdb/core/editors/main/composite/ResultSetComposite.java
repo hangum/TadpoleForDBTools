@@ -482,23 +482,23 @@ public class ResultSetComposite extends Composite {
 			statement = javaConn.createStatement();
 			
 			// check stop thread
-			logger.debug("\t===== start stop query ==========================");
+			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
 			esCheckStop = Executors.newSingleThreadExecutor();
 			esCheckStop.execute(new CheckStopThread(statement));
 			
-			logger.debug("\t===== start query ==========================");
+			if(logger.isDebugEnabled()) logger.debug("\t===== start query ==========================");
 			// execute query
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
 
-			logger.debug("\t======== execute end =================================");
+			if(logger.isDebugEnabled()) logger.debug("\t======== execute end =================================");
 					
 			rsDAO = new QueryExecuteResultDTO(true, resultSet, getQueryResultCount(), getIsResultComma());
 		} catch(Exception e) {
-			logger.error("execute query", e);
+			if(logger.isDebugEnabled()) logger.error("execute query", e);
 			throw e;
 		} finally {
-			logger.debug("\t====> execute select finally=======================");
+			if(logger.isDebugEnabled()) logger.debug("\t====> execute select finally=======================");
 			isCheckRunning = false;
 			
 			try { if(statement != null) statement.close(); } catch(Exception e) {}

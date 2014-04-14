@@ -18,10 +18,10 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditor;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditorInput;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
 
 /**
  * This workbench advisor creates the window advisor, and specifies

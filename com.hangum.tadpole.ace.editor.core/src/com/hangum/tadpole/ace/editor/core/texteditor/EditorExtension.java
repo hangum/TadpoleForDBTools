@@ -18,8 +18,8 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 
 /**
  * Editor의 확장을 정의한다.
