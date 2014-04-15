@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -213,6 +214,26 @@ public enum DBDefine {
 			case TAJO_DEFAULT: 			return "Apache Tajo";
 			default:
 				return "undefine db";
+		}
+	}
+	
+	/**
+	 * 각 DB의 metadata를 넘겨줍니다.
+	 * Reference at https://github.com/hangum/TadpoleForDBTools/issues/412
+	 * 
+	 * @return
+	 */
+	public TadpoleMetaData getMetaData() {
+		switch ( this ) {
+			case ORACLE_DEFAULT:		return new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
+			case MSSQL_DEFAULT:			return new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
+			case MSSQL_8_LE_DEFAULT:	return new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
+			
+			case SQLite_DEFAULT:		return new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
+			case POSTGRE_DEFAULT:		return new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.UPPERCASE_BLANK);
+			case TAJO_DEFAULT: 			return new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.UPPERCASE_BLANK);
+			default:
+				return new TadpoleMetaData("'", TadpoleMetaData.STORES_FIELD_TYPE.NONE);
 		}
 	}
 	

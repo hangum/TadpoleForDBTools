@@ -18,6 +18,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSER;
+import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.resultset.ResultSetUtils;
 
 /**
@@ -212,6 +215,54 @@ public class SQLUtil {
 		}
 		
 		return exeSQL.trim();
+	}
+	
+	/**
+	 * 쿼리에 사용 할 Table name을 만듭니다.
+	 * 
+	 * @param userDB
+	 * @param tableName
+	 * @return
+	 */
+	public static String makeIdentifierName(UserDBDAO userDB, String tableName) {
+		String retStr = tableName;
+		TadpoleMetaData tmd = userDB.getDBDefine().getMetaData();
+		
+		switch(tmd.getSTORE_TYPE()) {
+//		case NONE: 
+//			retStr = tableName;
+//			break;
+		case BLANK: 
+			if(tableName.matches(".*\\s.*")) {
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		case LOWCASE_BLANK:
+			if(tableName.matches(".*[a-z\\s].*")) {
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		case UPPERCASE_BLANK:
+			if(tableName.matches(".*[A-Z\\s].*")) {
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		}  
+		
+		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
+		
+		return retStr;
+	}
+	
+	private static String makeFullyTableName(String tableName, String strIdentifier) {
+		String retStr = "";
+		
+		for(String chunk : StringUtils.split(tableName, '.')) {
+			retStr += strIdentifier + chunk + strIdentifier + ".";
+		}
+		retStr = StringUtils.removeEnd(retStr, ".");
+		
+		return retStr;
 	}
 	
 	/**

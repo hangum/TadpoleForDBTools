@@ -10,9 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -23,15 +21,20 @@ import org.eclipse.ui.IWorkbenchWindow;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
+/**
+ * dml update action
+ * 
+ * @author hangum
+ *
+ */
 public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 	/**
 	 * Logger for this class
@@ -49,17 +52,11 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 		try {
 			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 			
-			Map<String, String> parameter = new HashMap<String, String>();
-			parameter.put("db", userDB.getDb());
-			parameter.put("table", tableDAO.getName());
-			
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-			
-			sbSQL.append("UPDATE " + tableDAO.getName() + PublicTadpoleDefine.LINE_SEPARATOR + "\tSET "); //$NON-NLS-1$ //$NON-NLS-2$
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+			sbSQL.append("UPDATE " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR + "\tSET "); //$NON-NLS-1$ //$NON-NLS-2$
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
-				sbSQL.append(dao.getField());
+				sbSQL.append(dao.getSysName());
 				
 				// 마지막 컬럼에는 ,를 않넣어주어야하니까 
 				if(i < (showTableColumns.size()-1)) sbSQL.append("= ?,  ");  //$NON-NLS-1$

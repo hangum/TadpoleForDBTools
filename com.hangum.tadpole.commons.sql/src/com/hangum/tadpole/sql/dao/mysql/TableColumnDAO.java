@@ -29,6 +29,8 @@ package com.hangum.tadpole.sql.dao.mysql;
  *
  */
 public class TableColumnDAO {
+	String sysName = "";
+	
 	// MySQL, Oracle 사용하는 컬럼.
 	String Field = "";
 	String Type= "";
@@ -62,6 +64,20 @@ public class TableColumnDAO {
 		this.Field = name;
 		this.Type = type;
 		this.Key = index;
+	}
+	
+	/**
+	 * @return the sysName
+	 */
+	public final String getSysName() {
+		return sysName;
+	}
+
+	/**
+	 * @param sysName the sysName to set
+	 */
+	public final void setSysName(String sysName) {
+		this.sysName = sysName;
 	}
 
 	public String getField() {
@@ -199,4 +215,5 @@ public class TableColumnDAO {
 		setType(data_type);
 	}
 
+	
 }

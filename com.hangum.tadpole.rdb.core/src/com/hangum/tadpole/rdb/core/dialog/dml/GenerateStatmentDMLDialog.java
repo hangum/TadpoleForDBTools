@@ -11,9 +11,7 @@
 package com.hangum.tadpole.rdb.core.dialog.dml;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -41,11 +39,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
+import com.hangum.tadpole.sql.util.SQLUtil;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -59,7 +58,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	private String genSQL = "";
 	
 	private UserDBDAO userDB;
-	private String tableName;
+	private TableDAO tableDAO;
 	private TableViewer tableViewer;
 	private Text textTableAlias;
 	private Text textQuery;
@@ -77,18 +76,18 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 * 
 	 * @param parentShell
 	 */
-	public GenerateStatmentDMLDialog(Shell parentShell, UserDBDAO userDB, String tableName) {
+	public GenerateStatmentDMLDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 
 		this.userDB = userDB;
-		this.tableName = tableName;
+		this.tableDAO = tableDAO;
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(this.tableName + " DML Generator"); //$NON-NLS-1$
+		newShell.setText("DML Generator"); //$NON-NLS-1$
 	}
 
 	/**
@@ -297,26 +296,21 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 	private void initData() {
 		try {
-			Map<String, String> parameter = new HashMap<String, String>();
-			parameter.put("db", userDB.getDb());
-			parameter.put("table", tableName);
-
-			lblTableName.setText(tableName);
-			this.textTableAlias.setText("a");
-
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
 			List<ExtendTableColumnDAO> newTableColumns = new ArrayList<ExtendTableColumnDAO>();
 
-			ExtendTableColumnDAO newTableDAO = new ExtendTableColumnDAO("*", "", "", textTableAlias.getText().trim());// (ExtendTableColumnDAO)tableColumnDAO;
+			ExtendTableColumnDAO newTableDAO = new ExtendTableColumnDAO("*", "", "", textTableAlias.getText().trim());
 			newTableDAO.setCheck(true);
 
 			newTableColumns.add(newTableDAO);
 			for (TableColumnDAO tableColumnDAO : showTableColumns) {
-				newTableDAO = new ExtendTableColumnDAO(tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey(), textTableAlias.getText().trim());// (ExtendTableColumnDAO)tableColumnDAO;
+				String strSysName = SQLUtil.makeIdentifierName(userDB, tableColumnDAO.getField());
+				newTableDAO = new ExtendTableColumnDAO(tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey(), textTableAlias.getText().trim());
+				newTableDAO.setSysName(strSysName);
+				
 				newTableColumns.add(newTableDAO);
 			}
-
+			
 			tableViewer.setInput(newTableColumns);
 
 			tableViewer.refresh();
@@ -343,14 +337,14 @@ public class GenerateStatmentDMLDialog extends Dialog {
 					resultSQL.append("\t, ");
 				}
 				if ("*".equals(allDao.getField())) {
-					resultSQL.append(allDao.getColumnNamebyTableAlias()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append(allDao.getSysName()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 				} else {
-					resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" as ").append(allDao.getColumnAlias()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append(allDao.getSysName()).append(" as ").append(allDao.getColumnAlias()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 				}
 				cnt++;
 			}
 		}
-		resultSQL.append("  FROM " + this.tableName + " " + this.textTableAlias.getText().trim()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+		resultSQL.append("  FROM " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 		cnt = 0;
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) {
@@ -381,7 +375,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("UPDATE " + this.tableName + " " + this.textTableAlias.getText().trim() + PublicTadpoleDefine.LINE_SEPARATOR);
+		resultSQL.append("UPDATE " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim() + PublicTadpoleDefine.LINE_SEPARATOR);
 
 		ExtendTableColumnDAO firstDao = (ExtendTableColumnDAO) tableViewer.getElementAt(0);
 		if (firstDao.isCheck()) {
@@ -454,7 +448,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("INSERT INTO " + this.tableName + " ( " + PublicTadpoleDefine.LINE_SEPARATOR);
+		resultSQL.append("INSERT INTO " + tableDAO.getSysName() + " ( " + PublicTadpoleDefine.LINE_SEPARATOR);
 
 		ExtendTableColumnDAO firstDao = (ExtendTableColumnDAO) tableViewer.getElementAt(0);
 		if (firstDao.isCheck()) {
@@ -466,7 +460,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 					resultSQL.append(", ");
 				}
-				resultSQL.append(allDao.getField()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+				resultSQL.append(allDao.getSysName()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 				;
 				cnt++;
 
@@ -480,7 +474,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 						resultSQL.append(", ");
 					}
-					resultSQL.append(allDao.getField()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append(allDao.getSysName()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 					;
 					cnt++;
 				}
@@ -491,7 +485,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		if (firstDao.isCheck()) {
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
-				if ("*".equals(allDao.getField())) {
+				if ("*".equals(allDao.getSysName())) {
 					continue;
 				}
 				if (cnt > 0) {
@@ -541,7 +535,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("DELETE FROM  " + this.tableName + PublicTadpoleDefine.LINE_SEPARATOR);
+		resultSQL.append("DELETE FROM  " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR);
 
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) {
@@ -551,7 +545,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				} else {
 					resultSQL.append("\t AND ");
 				}
-				resultSQL.append(allDao.getField()).append(" = ? ");
+				resultSQL.append(allDao.getSysName()).append(" = ? ");
 				if (chkComment.getSelection()) {
 					resultSQL.append("/* " + allDao.getType() + " */").append(PublicTadpoleDefine.LINE_SEPARATOR);
 				} else {
@@ -616,7 +610,7 @@ class GenerateLabelProvider extends LabelProvider implements ITableLabelProvider
 		case 2:
 			return dao.getKey();
 		case 3:
-			return dao.getColumnAlias();
+			return dao.getSysName();
 		}
 
 		return "*** not set column value ***";
