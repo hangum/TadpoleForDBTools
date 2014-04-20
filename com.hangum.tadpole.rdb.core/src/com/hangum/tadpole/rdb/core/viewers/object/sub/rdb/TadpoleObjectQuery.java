@@ -78,7 +78,7 @@ public class TadpoleObjectQuery {
 					}
 				}
 			}catch(Exception e){
-				logger.error("not found foreignkey for " + table.getName(), e);
+				logger.error("not found foreignkey for " + table.getName());
 			}
 		}
 		

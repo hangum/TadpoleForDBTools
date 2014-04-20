@@ -43,7 +43,16 @@ public class TadpoleMetaData {
 	private String identifierQuoteString = "";
 	private STORES_FIELD_TYPE STORE_TYPE = STORES_FIELD_TYPE.NONE;
 	
+	/**
+	 * {@link java.sql.DatabaseMetaData#getSQLKeywords()}
+	 */
+	private String keywords = "";
 
+	/**
+	 * 
+	 * @param identifierQuoteString
+	 * @param STORE_TYPE
+	 */
 	public TadpoleMetaData(String identifierQuoteString, STORES_FIELD_TYPE STORE_TYPE) {
 		this.identifierQuoteString = identifierQuoteString;
 		this.STORE_TYPE = STORE_TYPE;
@@ -80,6 +89,20 @@ public class TadpoleMetaData {
 	public final void setSTORE_TYPE(STORES_FIELD_TYPE sTORE_TYPE) {
 		STORE_TYPE = sTORE_TYPE;
 	}
-	
-	
+
+
+	/**
+	 * @return the keywords
+	 */
+	public final String getKeywords() {
+		return keywords;
+	}
+
+
+	/**
+	 * @param keywords the keywords to set
+	 */
+	public final void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
 }

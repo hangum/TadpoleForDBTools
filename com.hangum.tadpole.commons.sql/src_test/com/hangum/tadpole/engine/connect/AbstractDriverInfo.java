@@ -17,6 +17,8 @@ public class AbstractDriverInfo {
 		System.out.println("\t storesMixedCaseQuotedIdentifiers : " +  dmd.storesMixedCaseQuotedIdentifiers() );
 		System.out.println("\t storesUpperCaseIdentifiers : " +  dmd.storesUpperCaseIdentifiers() );
 		System.out.println("\t storesUpperCaseQuotedIdentifiers : " +  dmd.storesUpperCaseQuotedIdentifiers() );
+		
+		System.out.println("\t SQL keywords : " + dmd.getSQLKeywords());
 		System.out.println("-------------------------------------------------------");
 		
 	}

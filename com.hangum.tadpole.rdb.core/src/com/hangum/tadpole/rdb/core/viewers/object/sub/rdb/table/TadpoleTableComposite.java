@@ -217,7 +217,16 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$
+					
+					// initialize table columns
+					showTableColumns.clear();
+					tableColumnViewer.setInput(showTableColumns);
+					tableColumnComparator = new TableColumnComparator();
+					tableColumnViewer.setSorter(tableColumnComparator);
+					tableColumnViewer.refresh();
+					TableUtil.packTable(tableColumnViewer.getTable());
 
+					// show error message
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
 				}
