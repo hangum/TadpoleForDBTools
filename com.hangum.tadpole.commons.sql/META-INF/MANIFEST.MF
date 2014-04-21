@@ -27,6 +27,7 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726.jar,
  libs/driver/mariadb/mariadb-java-client-1.1.7.jar,
  libs/driver/mongodb/mongo-java-driver-2.12.0.jar
 Export-Package: 
+ com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.engine,
  com.hangum.tadpole.engine.connect,
  com.hangum.tadpole.engine.define,

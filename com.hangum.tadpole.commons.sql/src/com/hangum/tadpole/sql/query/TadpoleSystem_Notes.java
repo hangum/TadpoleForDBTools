@@ -11,6 +11,7 @@
 package com.hangum.tadpole.sql.query;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,8 +87,8 @@ public class TadpoleSystem_Notes {
 				
 				noteDao.setTitle(rs.getString("title"));
 				
-				noteDao.setSender_date(rs.getDate("sender_date"));
-				noteDao.setReceiver_date(rs.getDate("receiver_date"));
+				noteDao.setSender_date(rs.getTimestamp("sender_date"));
+				noteDao.setReceiver_date(rs.getTimestamp("receiver_date"));
 				noteDao.setIs_read(rs.getString("is_read"));
 				noteDao.setSender_delyn(rs.getString("sender_delyn"));
 				noteDao.setReceiver_delyn(rs.getString("receiver_delyn"));
@@ -185,7 +186,8 @@ public class TadpoleSystem_Notes {
 		noteDao.setSender_seq(senderSeq);
 		noteDao.setReceiver_seq(receiveSeq);
 		noteDao.setTitle(title);
-		noteDao.setSender_date(new java.sql.Date(System.currentTimeMillis()));
+		
+		noteDao.setSender_date(new java.sql.Timestamp(System.currentTimeMillis()));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		// com.hangum.tadpole.notes.core.define.NotesDefine.TYPES.PERSON

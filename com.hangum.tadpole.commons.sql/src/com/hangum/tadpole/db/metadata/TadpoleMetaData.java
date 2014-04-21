@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.db;
+package com.hangum.tadpole.db.metadata;
 
 /**
  * {@link java.sql.DatabaseMetaData} 를 올챙이에 맡게 정의하였습니다.
@@ -42,4 +42,67 @@ public class TadpoleMetaData {
 	 */
 	private String identifierQuoteString = "";
 	private STORES_FIELD_TYPE STORE_TYPE = STORES_FIELD_TYPE.NONE;
+	
+	/**
+	 * {@link java.sql.DatabaseMetaData#getSQLKeywords()}
+	 */
+	private String keywords = "";
+
+	/**
+	 * 
+	 * @param identifierQuoteString
+	 * @param STORE_TYPE
+	 */
+	public TadpoleMetaData(String identifierQuoteString, STORES_FIELD_TYPE STORE_TYPE) {
+		this.identifierQuoteString = identifierQuoteString;
+		this.STORE_TYPE = STORE_TYPE;
+	}
+
+
+	/**
+	 * @return the identifierQuoteString
+	 */
+	public final String getIdentifierQuoteString() {
+		return identifierQuoteString;
+	}
+
+
+	/**
+	 * @param identifierQuoteString the identifierQuoteString to set
+	 */
+	public final void setIdentifierQuoteString(String identifierQuoteString) {
+		this.identifierQuoteString = identifierQuoteString;
+	}
+
+
+	/**
+	 * @return the sTORE_TYPE
+	 */
+	public final STORES_FIELD_TYPE getSTORE_TYPE() {
+		return STORE_TYPE;
+	}
+
+
+	/**
+	 * @param sTORE_TYPE the sTORE_TYPE to set
+	 */
+	public final void setSTORE_TYPE(STORES_FIELD_TYPE sTORE_TYPE) {
+		STORE_TYPE = sTORE_TYPE;
+	}
+
+
+	/**
+	 * @return the keywords
+	 */
+	public final String getKeywords() {
+		return keywords;
+	}
+
+
+	/**
+	 * @param keywords the keywords to set
+	 */
+	public final void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
 }

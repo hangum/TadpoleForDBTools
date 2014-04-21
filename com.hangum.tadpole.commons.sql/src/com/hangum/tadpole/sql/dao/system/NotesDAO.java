@@ -11,6 +11,7 @@
 package com.hangum.tadpole.sql.dao.system;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * notes
@@ -28,8 +29,8 @@ public class NotesDAO {
 	int receiver_seq;
 	String receiveUserId;
 	
-	Date sender_date;
-	Date receiver_date;
+	Timestamp sender_date;
+	Timestamp receiver_date;
 	String is_read;
 	String is_system_read;
 	String sender_delyn;
@@ -92,19 +93,31 @@ public class NotesDAO {
 		this.receiveUserId = receiveUserId;
 	}
 
-	public Date getSender_date() {
+	/**
+	 * @return the sender_date
+	 */
+	public final Timestamp getSender_date() {
 		return sender_date;
 	}
 
-	public void setSender_date(Date date) {
-		this.sender_date = date;
+	/**
+	 * @param sender_date the sender_date to set
+	 */
+	public final void setSender_date(Timestamp sender_date) {
+		this.sender_date = sender_date;
 	}
 
-	public Date getReceiver_date() {
+	/**
+	 * @return the receiver_date
+	 */
+	public final Timestamp getReceiver_date() {
 		return receiver_date;
 	}
 
-	public void setReceiver_date(Date receiver_date) {
+	/**
+	 * @param receiver_date the receiver_date to set
+	 */
+	public final void setReceiver_date(Timestamp receiver_date) {
 		this.receiver_date = receiver_date;
 	}
 
