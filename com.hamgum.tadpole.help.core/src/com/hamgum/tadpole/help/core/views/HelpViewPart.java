@@ -46,7 +46,8 @@ public class HelpViewPart extends ViewPart {
 		// ------------- shortcut keys --------------------------------------------
 		
 		// mongodb manual ( http://docs.mongodb.org/manual/ )
-		
+		// PgSQL ( http://www.postgresql.org/docs/current/static/sql-select.html )
+		 
 		tabFolder.setSelection(0);
 	}
 	

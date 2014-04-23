@@ -481,17 +481,17 @@ public class ResultSetComposite extends Composite {
 			}
 			statement = javaConn.createStatement();
 			
-			// check stop thread
-			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
+//			// check stop thread
+//			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
 			esCheckStop = Executors.newSingleThreadExecutor();
 			esCheckStop.execute(new CheckStopThread(statement));
 			
-			if(logger.isDebugEnabled()) logger.debug("\t===== start query ==========================");
-			// execute query
+//			if(logger.isDebugEnabled()) logger.debug("\t===== start query ==========================");
+//			// execute query
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
 
-			if(logger.isDebugEnabled()) logger.debug("\t======== execute end =================================");
+//			if(logger.isDebugEnabled()) logger.debug("\t======== execute end =================================");
 					
 			rsDAO = new QueryExecuteResultDTO(true, resultSet, getQueryResultCount(), getIsResultComma());
 		} catch(Exception e) {
