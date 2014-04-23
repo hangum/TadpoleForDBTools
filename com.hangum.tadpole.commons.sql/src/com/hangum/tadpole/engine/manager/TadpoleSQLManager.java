@@ -67,8 +67,8 @@ public class TadpoleSQLManager {
 		Connection conn = null;
 		
 		synchronized (dbManager) {
+			String searchKey = getKey(dbInfo);
 			try {
-				String searchKey = getKey(dbInfo);
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
 
@@ -95,6 +95,8 @@ public class TadpoleSQLManager {
 				
 			} catch(Exception e) {
 				logger.error("get DB Instance", e);
+				
+				dbManager.remove(searchKey);
 				
 				throw new Exception(e);
 			} finally {
