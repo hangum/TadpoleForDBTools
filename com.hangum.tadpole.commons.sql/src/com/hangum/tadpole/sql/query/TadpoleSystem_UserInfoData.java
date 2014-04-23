@@ -158,7 +158,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtRDBNumberColumnIsComman RDB의 결과테이블이 숫자 컬럼인 경우 ,를 넣을 것인지?
 	 * @param txtFontInfo font information
 	 */
-	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String oraclePlan, String txtRDBNumberColumnIsComman, String txtFontInfo) throws Exception {
+	public static void updateRDBUserInfoData(String limitSelect, /*String resultSelect,*/ String oraclePlan, String txtRDBNumberColumnIsComman, String txtFontInfo) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getSeq());
@@ -168,10 +168,10 @@ public class TadpoleSystem_UserInfoData {
 		userInfoData.setValue0(limitSelect);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
-		// 검색 결과 페이지 당 보여주는 갯수 
-		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
-		userInfoData.setValue0(resultSelect);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+//		// 검색 결과 페이지 당 보여주는 갯수 
+//		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
+//		userInfoData.setValue0(resultSelect);
+//		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// ORACLE PLAN TABLE 
 		userInfoData.setName(PreferenceDefine.ORACLE_PLAN_TABLE);
