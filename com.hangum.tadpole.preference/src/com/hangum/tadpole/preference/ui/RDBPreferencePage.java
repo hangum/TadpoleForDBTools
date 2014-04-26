@@ -218,7 +218,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	 */
 	private void initDefaultValue() {
 		textSelectLimit.setText( "" + GetPreferenceGeneral.getQueryResultCount() ); //$NON-NLS-1$
-//		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
+		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
 		textOraclePlan.setText( GetPreferenceGeneral.getPlanTableName() );
 		comboRDBNumberComma.setText(GetPreferenceGeneral.getRDBNumberISComma());
 		
