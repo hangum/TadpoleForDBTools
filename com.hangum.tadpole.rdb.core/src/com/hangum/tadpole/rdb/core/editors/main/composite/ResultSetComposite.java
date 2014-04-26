@@ -635,7 +635,6 @@ public class ResultSetComposite extends Composite {
 	 */
 	private void finallyEndExecuteCommand() {
 		controlProgress(false);
-		getRdbResultComposite().browserEvaluate(EditorFunctionService.EXECUTE_DONE);
 	}
 	
 	/**
