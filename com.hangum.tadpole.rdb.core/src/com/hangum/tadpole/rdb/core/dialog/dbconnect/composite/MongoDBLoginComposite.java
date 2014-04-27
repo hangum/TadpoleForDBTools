@@ -202,11 +202,11 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
-			textHost.setText("127.0.0.1"); //$NON-NLS-1$
+			textHost.setText("dbs004.mongosoup.de"); //$NON-NLS-1$
 			textPort.setText("27017");			 //$NON-NLS-1$
-			textDatabase.setText("test"); //$NON-NLS-1$
-			textUser.setText(""); //$NON-NLS-1$
-			textPassword.setText(""); //$NON-NLS-1$
+			textDatabase.setText("cc_uRkAeyCDcSSi"); //$NON-NLS-1$
+			textUser.setText("uRkAeyCDcSSi"); //$NON-NLS-1$
+			textPassword.setText("NdPYZyWsZwhm"); //$NON-NLS-1$
 			
 		} else {
 			textPort.setText("27017");			 //$NON-NLS-1$
