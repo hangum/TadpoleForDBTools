@@ -18,6 +18,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.draw2d.geometry.Rectangle;
 
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.mongodb.erd.core.relation.RelationUtil;
 import com.hangum.tadpole.mongodb.model.Column;
@@ -176,20 +177,7 @@ public enum TadpoleModelUtils {
 	 * table 정보를 가져옵니다.
 	 */
 	public List<TableDAO> getTables() throws Exception {
-		List<TableDAO> showTables = new ArrayList<TableDAO>();
-		
-		Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-		com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-		
-		for (String col : mongoDB.getCollectionNames()) {
-			TableDAO dao = new TableDAO();
-			dao.setName(col);
-			
-			showTables.add(dao);
-		}
-		
-		return showTables;
-
+		return MongoDBQuery.listCollection(userDB);
 	}
 	
 	
@@ -201,12 +189,7 @@ public enum TadpoleModelUtils {
 	 * @throws Exception
 	 */
 	public List<CollectionFieldDAO> getColumns(String db, String strTBName) throws Exception {
-
-		Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-		com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-		DBCollection coll = mongoDB.getCollection(strTBName);
-									
-		return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
+		return MongoDBQuery.collectionColumn(userDB, strTBName);
 	}
 	
 }
