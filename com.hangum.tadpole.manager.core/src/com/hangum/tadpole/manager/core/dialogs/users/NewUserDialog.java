@@ -37,12 +37,12 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserGroupQuery;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserRole;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserGroupQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
  * Add new user Dialog

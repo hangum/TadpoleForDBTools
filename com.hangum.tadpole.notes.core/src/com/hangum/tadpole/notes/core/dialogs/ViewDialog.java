@@ -27,7 +27,7 @@ import com.hangum.tadpole.notes.core.Messages;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.define.NotesDefine.NOTE_TYPES;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
+import com.hangum.tadpole.sql.query.TadpoleSystem_Notes;
 
 /**
  * 쪽지 내용을 보고 답변을 보내는 dialog

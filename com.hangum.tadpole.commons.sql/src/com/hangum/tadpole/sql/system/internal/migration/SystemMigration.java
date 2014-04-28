@@ -12,7 +12,7 @@ package com.hangum.tadpole.sql.system.internal.migration;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.sql.system.TadpoleSystemQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystemQuery;
 
 /**
  * System abstract class

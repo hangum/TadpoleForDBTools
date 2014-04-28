@@ -12,12 +12,12 @@ package com.hangum.tadpole.system;
 
 import java.io.File;
 
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 
 import junit.framework.TestCase;
 
 /**
- * {@link com.hangum.tadpole.sql.system.TadpoleSystemInitializer 시스템엔진디비 초기화}
+ * {@link com.hangum.tadpole.sql.query.TadpoleSystemInitializer 시스템엔진디비 초기화}
  * 
  * @author hangum
  *
@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 public class TadpoleSystemConnectorTest extends TestCase {
 
 	/**
-	 * {@link com.hangum.tadpole.sql.system.TadpoleSystemInitializer#createSystemTable() 시스템엔진디비 초기화}
+	 * {@link com.hangum.tadpole.sql.query.TadpoleSystemInitializer#createSystemTable() 시스템엔진디비 초기화}
 	 * 
 	 */
 	public void testCreateSystemTable() {

@@ -34,9 +34,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
-import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
@@ -183,11 +182,11 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("127.0.0.1");
+			textHost.setText("ec2-54-225-255-208.compute-1.amazonaws.com");
 			textPort.setText("5432");
-			textDatabase.setText("tadpole");
-			textUser.setText("tadpole");
-			textPassword.setText("tadpole");
+			textDatabase.setText("daiune4ju9eqio");
+			textUser.setText("iagtyrdnybmqnx");
+			textPassword.setText("LDZJIFugFQESxjFDFC-j-xPNsy");
 			
 		} else {
 			textPort.setText("5432");

@@ -14,12 +14,12 @@ import java.sql.Statement;
 
 import junit.framework.TestCase;
 
-import com.hangum.tadpole.engine.map.SQLMap;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * {@link com.hangum.tadpole.engine.map.SQLMap SQLMap을 테스트합니다.}
+ * {@link com.hangum.tadpole.engine.manager.internal.map.SQLMap SQLMap을 테스트합니다.}
  * 
  * @author hangum
  *
@@ -27,7 +27,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class SQLMapTest extends TestCase {
 
 	/**
-	 * {@link com.hangum.tadpole.engine.map.SQLMap#getInstance(com.hangum.db.dao.system.UserDBDAO) SQLMap을 테스트합니다.}
+	 * {@link com.hangum.tadpole.engine.manager.internal.map.SQLMap#getInstance(com.hangum.db.dao.system.UserDBDAO) SQLMap을 테스트합니다.}
 	 */
 	public void testGetInstance() {
 		java.sql.Connection javaConn = null;

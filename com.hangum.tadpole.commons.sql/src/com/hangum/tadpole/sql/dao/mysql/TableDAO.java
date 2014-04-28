@@ -17,6 +17,14 @@ package com.hangum.tadpole.sql.dao.mysql;
  *
  */
 public class TableDAO {
+	/** 
+	 * 시스템에서 쿼리에 사용할 이름을 정의 .
+	 * 보여줄때는 {@link TableDAO#name}을 사용하고, 쿼리를 사용할때는 . 
+	 * 
+	 * 자세한 사항은 https://github.com/hangum/TadpoleForDBTools/issues/412 를 참고합니다.
+	 */
+	String sysName = "";
+	
 	String name;
 	String comment="";
 	
@@ -106,6 +114,20 @@ public class TableDAO {
 
 	public void setSize(long size) {
 		this.size = size;
+	}
+
+	/**
+	 * @return the sysName
+	 */
+	public final String getSysName() {
+		return sysName;
+	}
+
+	/**
+	 * @param sysName the sysName to set
+	 */
+	public final void setSysName(String sysName) {
+		this.sysName = sysName;
 	}
 
 }

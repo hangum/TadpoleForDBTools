@@ -14,8 +14,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hamgum.tadpole.help.core.views.sub.shortcutkey.ShortcutKeyComposite;
@@ -46,6 +44,8 @@ public class HelpViewPart extends ViewPart {
 		Composite composite = new ShortcutKeyComposite(tabFolder, SWT.NONE);
 		tabItem.setControl(composite);
 		// ------------- shortcut keys --------------------------------------------
+		
+		// mongodb manual ( http://docs.mongodb.org/manual/ )
 		
 		tabFolder.setSelection(0);
 	}

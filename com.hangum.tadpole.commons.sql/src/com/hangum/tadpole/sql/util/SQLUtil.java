@@ -18,6 +18,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.resultset.ResultSetUtils;
 
 /**
@@ -212,6 +215,73 @@ public class SQLUtil {
 		}
 		
 		return exeSQL.trim();
+	}
+	
+	/**
+	 * 쿼리에 사용 할 Table name을 만듭니다.
+	 * 
+	 * @param userDB
+	 * @param tableName
+	 * @return
+	 */
+	public static String makeIdentifierName(UserDBDAO userDB, String tableName) {
+		boolean isChanged = false;
+		String retStr = tableName;
+		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
+		
+		switch(tmd.getSTORE_TYPE()) {
+//		case NONE: 
+//			retStr = tableName;
+//			break;
+		case BLANK: 
+			if(tableName.matches(".*\\s.*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		case LOWCASE_BLANK:
+			if(tableName.matches(".*[a-z\\s].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		case UPPERCASE_BLANK:
+			if(tableName.matches(".*[A-Z\\s].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		}
+			
+		// Is keywords?
+		// schema.tableName
+		if(!isChanged) {
+			String[] arryRetStr = StringUtils.split(retStr, ".");
+			if(arryRetStr.length == 1) {
+				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[0]+",")) {
+					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+				}
+			} else {
+				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[1]+",")) {
+					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+				}
+			}
+		}
+		
+//		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
+		
+		return retStr;
+	}
+	
+	private static String makeFullyTableName(String tableName, String strIdentifier) {
+		String retStr = "";
+		
+		for(String chunk : StringUtils.split(tableName, '.')) {
+			retStr += strIdentifier + chunk + strIdentifier + ".";
+		}
+		retStr = StringUtils.removeEnd(retStr, ".");
+		
+		return retStr;
 	}
 	
 	/**

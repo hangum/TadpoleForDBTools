@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
