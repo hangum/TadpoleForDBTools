@@ -12,7 +12,6 @@ package com.hangum.tadpole.sql.query;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Statement;
 import java.util.List;
@@ -28,7 +27,6 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.Messages;
-import com.hangum.tadpole.sql.dao.system.TadpoleSystemDAO;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
@@ -74,8 +72,7 @@ public class TadpoleSystemInitializer {
 	public static final String ADMIN_NAME = "tadpole-admin"; //$NON-NLS-1$
 
 	/**
-	 * 시스템 시작환경이 디비를 공유모드로 사용할지 환경을 선택합니다. -dbServer
-	 * /Users/hangum/git/TadpoleForDBTools/targetProject/TadpoleEngine.cfg
+	 * 시스템 시작환경이 디비를 공유모드로 사용할지 환경을 선택합니다. -dbServer 데이터베이스암호화 정보.
 	 */
 	static {
 		String dbServerPath = "";
@@ -100,12 +97,11 @@ public class TadpoleSystemInitializer {
 		} else {
 			try {
 				dbServerPath = ApplicationArgumentUtils.getDbServer();
-				if (!new File(dbServerPath).exists()) {
-					logger.error("DBServer file not found. " + dbServerPath);
-					System.exit(1);
+				if("".equals(dbServerPath) || null == dbServerPath) {
+					throw new Exception("Not found dbServerPath values.");
 				}
-			} catch (Exception e) {
-				logger.error("Tadpole Argument error. check ini file is -dbServer value. ", e);
+			} catch(Exception e) {
+				logger.error("Tadpole Argument error. check ini file is -dbServer value. ");
 				System.exit(1);
 			}
 		}
@@ -158,10 +154,10 @@ public class TadpoleSystemInitializer {
 	 * System 버전과 application 버전을 채크합니다.
 	 */
 	private static boolean systemCheck() throws Exception {
-		TadpoleSystemDAO tsdao = TadpoleSystemQuery.getSystemInfo();
-		if (SystemDefine.MAJOR_VERSION.equals(tsdao.getMajor_version()) && SystemDefine.SUB_VERSION.equals(tsdao.getSub_version())) {
-			return true;
-		} else {
+//		TadpoleSystemDAO tsdao = TadpoleSystemQuery.getSystemInfo();
+//		if (SystemDefine.MAJOR_VERSION.equals(tsdao.getMajor_version()) && SystemDefine.SUB_VERSION.equals(tsdao.getSub_version())) {
+//			return true;
+//		} else {
 //			 현재 동작하지 않으므로 블럭 처리 합니다. - hangum 14.03.07
 //			logger.info("System migration start....");
 //			
@@ -177,7 +173,7 @@ public class TadpoleSystemInitializer {
 //			logger.info("System migration end....");
 
 			return true;
-		}
+//		}
 	}
 
 	/**
@@ -281,16 +277,10 @@ public class TadpoleSystemInitializer {
 			tadpoleEngineDB.setUsers(""); //$NON-NLS-1$			
 
 		} else {
-			FileInputStream fis = null;
 			try {
-				// get file
-				fis = new FileInputStream(dbServerPath);
-				int available = fis.available();
-				byte[] readData = new byte[available];
-				fis.read(readData, 0, available);
 
 				// decrypt
-				String propData = CipherManager.getInstance().decryption(new String(readData));
+				String propData = CipherManager.getInstance().decryption(dbServerPath);
 				InputStream is = new ByteArrayInputStream(propData.getBytes());
 
 				// properties
@@ -312,20 +302,9 @@ public class TadpoleSystemInitializer {
 				tadpoleEngineDB.setUsers(user);
 				tadpoleEngineDB.setPasswd(passwd);
 
-//				if (logger.isDebugEnabled()) {
-//					logger.debug("[which DB]" + whichDB);
-//					logger.debug(tadpoleEngineDB.toString());
-//				}
-
 			} catch (Exception ioe) {
 				logger.error("File not found exception or file encrypt exception. check the exist file." + dbServerPath, ioe);
 				System.exit(0);
-			} finally {
-				if (fis != null)
-					try {
-						fis.close();
-					} catch (Exception e) {
-					}
 			}
 
 		} // is local db?
