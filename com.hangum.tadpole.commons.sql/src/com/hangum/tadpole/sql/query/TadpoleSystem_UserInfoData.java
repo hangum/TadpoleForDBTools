@@ -251,6 +251,25 @@ public class TadpoleSystem_UserInfoData {
 		
 	}
 	
+	
+	/**
+	 * Update User info data
+	 * 
+	 * @param key
+	 * @param value0
+	 * @throws Exception
+	 */
+	public static void updateUserInfoData(String key, String value0) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(SessionManager.getSeq());
+		
+		userInfoData.setName(key);
+		userInfoData.setValue0(value0);
+		sqlClient.update("userInfoDataUpdate", userInfoData);
+	}
+	
+	
 	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
 	 * 
