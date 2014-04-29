@@ -26,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -34,6 +35,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
+import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
 import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
@@ -114,7 +116,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     		}
     	} catch(Exception e) {
     		logger.error("Is DB list?", e); //$NON-NLS-1$
-    	}    	
+    	}
+    	
     }
     
     /**
@@ -221,6 +224,17 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
 					SessionManager.setUserInfos(mapUserInfoData);
+					if ("".equals(SessionManager.getPerspective())) {
+						String persp;
+						SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
+						
+						if (Dialog.OK == dialog.open()) {
+							persp = dialog.getResult();
+						} else {
+							persp = Perspective.DEFAULT;
+						}
+						SessionManager.setPerspective(persp);
+					}
 					
 					initSession();
 					

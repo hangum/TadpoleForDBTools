@@ -27,6 +27,7 @@ import com.hangum.tadpole.rdb.model.Table;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.SQLUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -109,7 +110,7 @@ public enum TadpoleModelUtils {
 			tableModel.setConstraints(prevRectangle);
 			
 			// column add
-			List<TableColumnDAO> columnList = getColumns(userDB.getDb(), table.getName());
+			List<TableColumnDAO> columnList = getColumns(userDB.getDb(), table);
 			for (TableColumnDAO columnDAO : columnList) {
 				
 				Column column = factory.createColumn();
@@ -154,12 +155,21 @@ public enum TadpoleModelUtils {
 	 * table 정보를 가져옵니다.
 	 */
 	public List<TableDAO> getTables() throws Exception {
+		List<TableDAO> showTables = null;
+		
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			return new TajoConnectionManager().tableList(userDB);
+			showTables = new TajoConnectionManager().tableList(userDB);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			return sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 		}
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(TableDAO td : showTables) {
+			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+		}
+		
+		return showTables;
 	}
 	
 	
@@ -170,10 +180,14 @@ public enum TadpoleModelUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<TableColumnDAO> getColumns(String db, String strTBName) throws Exception {
+	public List<TableColumnDAO> getColumns(String db, TableDAO table) throws Exception {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("db", db);
-		param.put("table", strTBName);
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			param.put("table", table.getSysName());
+		} else {
+			param.put("table", table.getName());
+		}
 
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 			return new TajoConnectionManager().tableColumnList(userDB, param);

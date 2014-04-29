@@ -13,6 +13,7 @@ package com.hangum.tadpole.session.manager;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.Attributes.Name;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpSessionContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
@@ -57,7 +60,7 @@ public class SessionManager {
 								/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
 														USER_INFO_DATA,
 														SECURITY_QUESTION,
-														SECURITY_ANSWER}
+														SECURITY_ANSWER, PERSPECTIVE}
 
 	/**
 	 * is login?
@@ -160,7 +163,7 @@ public class SessionManager {
 		sStore.setAttribute(NAME.LOGIN_NAME.toString(), loginUserDao.getName());
 		sStore.setAttribute(NAME.SECURITY_ANSWER.toString(), loginUserDao.getSecurity_answer());
 		sStore.setAttribute(NAME.SECURITY_QUESTION.toString(), loginUserDao.getSecurity_question());
-
+		sStore.setAttribute(NAME.PERSPECTIVE.toString(), "default");
 	}
 	
 	/**
@@ -357,7 +360,30 @@ public class SessionManager {
 			
 		} catch(Exception e) {
 			logger.error("user session invalidate", e);
-			
+		}
+	}
+	
+	public static String getPerspective() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(NAME.PERSPECTIVE.toString());
+		return userInfo == null ? "" : userInfo.getValue0();
+	}
+	
+	public static void setPerspective(String persp) { 
+		// db update 
+		try {
+			TadpoleSystem_UserInfoData.updateUserInfoData(NAME.PERSPECTIVE.toString(), persp);
+			// session update
+			SessionManager.setUserInfo(NAME.PERSPECTIVE.toString(), persp);
+			SessionManager.resetPerspective();
+		} catch (Exception e) {
+			logger.error("Error change perspective", e);
+		}
+	}
+	
+	public static void resetPerspective() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			window.getActivePage().resetPerspective();	
 		}
 	}
 }

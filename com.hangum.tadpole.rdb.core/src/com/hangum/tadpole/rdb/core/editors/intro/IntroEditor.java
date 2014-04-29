@@ -32,7 +32,6 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -122,15 +121,15 @@ public class IntroEditor extends EditorPart {
 		browser = new Browser(compositeBody, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Group grpDonor = new Group(parent, SWT.BORDER);
-		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.IntroEditor_0);
-		GridLayout gl_grpDonor = new GridLayout(2, false);
-		gl_grpDonor.verticalSpacing = 2;
-		gl_grpDonor.marginHeight = 2;
-		gl_grpDonor.horizontalSpacing = 2;
-		gl_grpDonor.marginWidth = 2;
-		grpDonor.setLayout(gl_grpDonor);
+//		Group grpDonor = new Group(parent, SWT.BORDER);
+//		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+//		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.IntroEditor_0);
+//		GridLayout gl_grpDonor = new GridLayout(2, false);
+//		gl_grpDonor.verticalSpacing = 2;
+//		gl_grpDonor.marginHeight = 2;
+//		gl_grpDonor.horizontalSpacing = 2;
+//		gl_grpDonor.marginWidth = 2;
+//		grpDonor.setLayout(gl_grpDonor);
 		
 //		CLabel lblWwwcubridorg = new CLabel(grpDonor, SWT.BORDER);
 //		lblWwwcubridorg.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -138,31 +137,31 @@ public class IntroEditor extends EditorPart {
 
 //		CLabel lblOpenSourceCunsulting = new CLabel(grpDonor, SWT.BORDER);
 //		lblOpenSourceCunsulting.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/OpenSourceConsulting.png")); //$NON-NLS-1$
-		
-		CLabel lblXenonix = new CLabel(grpDonor, SWT.BORDER);
-		lblXenonix.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/xenonix_logo.png")); //$NON-NLS-1$
-		
-		// dumy 
-		CLabel lblTadpole = new CLabel(grpDonor, SWT.BORDER);
-//		lblTadpole.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/TadpoleDBHub.png")); //$NON-NLS-1$
-		
-//		// image text
-//		CLabel labelCubrid = new CLabel(grpDonor, SWT.NONE);
-//		labelCubrid.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-//		labelCubrid.setText(Messages.IntroEditor_label_text);
-		
-//		CLabel labelOsci = new CLabel(grpDonor, SWT.NONE);
-//		labelOsci.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-//		labelOsci.setText(Messages.IntroEditor_label_1_text);
-		
-		CLabel labelXenonix = new CLabel(grpDonor, SWT.NONE);
-		labelXenonix.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		labelXenonix.setText("<a href='http://www.xenonix.com' target='_blank'>http://www.xenonix.com</a>");
-		
-		// dumy 
-		CLabel labelAllDonerList= new CLabel(grpDonor, SWT.NONE);
-		labelAllDonerList.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		labelAllDonerList.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List' target='_blank'>All donor</a>");
+//		
+//		CLabel lblXenonix = new CLabel(grpDonor, SWT.BORDER);
+//		lblXenonix.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/xenonix_logo.png")); //$NON-NLS-1$
+//		
+//		// dumy 
+//		CLabel lblTadpole = new CLabel(grpDonor, SWT.BORDER);
+////		lblTadpole.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/donor/TadpoleDBHub.png")); //$NON-NLS-1$
+//		
+////		// image text
+////		CLabel labelCubrid = new CLabel(grpDonor, SWT.NONE);
+////		labelCubrid.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+////		labelCubrid.setText(Messages.IntroEditor_label_text);
+//		
+////		CLabel labelOsci = new CLabel(grpDonor, SWT.NONE);
+////		labelOsci.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+////		labelOsci.setText(Messages.IntroEditor_label_1_text);
+//		
+//		CLabel labelXenonix = new CLabel(grpDonor, SWT.NONE);
+//		labelXenonix.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+//		labelXenonix.setText("<a href='http://www.xenonix.com' target='_blank'>http://www.xenonix.com</a>");
+//		
+//		// dumy 
+//		CLabel labelAllDonerList= new CLabel(grpDonor, SWT.NONE);
+//		labelAllDonerList.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+//		labelAllDonerList.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List' target='_blank'>All donor</a>");
 		
 		setBrowserURL();		
 	}

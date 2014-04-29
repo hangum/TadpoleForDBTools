@@ -158,7 +158,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtRDBNumberColumnIsComman RDB의 결과테이블이 숫자 컬럼인 경우 ,를 넣을 것인지?
 	 * @param txtFontInfo font information
 	 */
-	public static void updateRDBUserInfoData(String limitSelect, /*String resultSelect,*/ String oraclePlan, String txtRDBNumberColumnIsComman, String txtFontInfo) throws Exception {
+	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String oraclePlan, String txtRDBNumberColumnIsComman, String txtFontInfo) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getSeq());
@@ -168,10 +168,10 @@ public class TadpoleSystem_UserInfoData {
 		userInfoData.setValue0(limitSelect);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
-//		// 검색 결과 페이지 당 보여주는 갯수 
-//		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
-//		userInfoData.setValue0(resultSelect);
-//		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		// 검색 결과 페이지 당 보여주는 갯수 
+		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
+		userInfoData.setValue0(resultSelect);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// ORACLE PLAN TABLE 
 		userInfoData.setName(PreferenceDefine.ORACLE_PLAN_TABLE);
@@ -250,6 +250,25 @@ public class TadpoleSystem_UserInfoData {
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 	}
+	
+	
+	/**
+	 * Update User info data
+	 * 
+	 * @param key
+	 * @param value0
+	 * @throws Exception
+	 */
+	public static void updateUserInfoData(String key, String value0) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(SessionManager.getSeq());
+		
+		userInfoData.setName(key);
+		userInfoData.setValue0(value0);
+		sqlClient.update("userInfoDataUpdate", userInfoData);
+	}
+	
 	
 	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
