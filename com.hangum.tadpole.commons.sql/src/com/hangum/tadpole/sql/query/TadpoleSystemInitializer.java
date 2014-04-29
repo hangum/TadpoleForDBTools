@@ -196,7 +196,7 @@ public class TadpoleSystemInitializer {
 
 			Object obj = null;
 			if (ApplicationArgumentUtils.isDBServer()) {
-				logger.info("*** MySQL System Teable creation ***");
+				logger.info("*** Remote DB System Teable creation ***");
 				obj = new TadpoleMySQLDDL();
 			} else {
 				logger.info("*** SQLite System Teable creation ***");
@@ -295,12 +295,27 @@ public class TadpoleSystemInitializer {
 				String passwd = prop.getProperty("password").trim();
 
 				// make userDB
-				tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
-				tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
-				tadpoleEngineDB.setDb(database);
-				tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
-				tadpoleEngineDB.setUsers(user);
-				tadpoleEngineDB.setPasswd(passwd);
+				if("MYSQL".equalsIgnoreCase(whichDB)) {
+					tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
+					tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
+					tadpoleEngineDB.setDb(database);
+					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
+					tadpoleEngineDB.setUsers(user);
+					tadpoleEngineDB.setPasswd(passwd);
+				} else if("PGSQL".equalsIgnoreCase(whichDB)) {
+					tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
+					tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
+					
+					String isSSL = prop.getProperty("isSSL");
+					if("true".equals(isSSL)) {
+						tadpoleEngineDB.setUrl( tadpoleEngineDB.getUrl() + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
+					}
+					
+					tadpoleEngineDB.setDb(database);
+					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
+					tadpoleEngineDB.setUsers(user);
+					tadpoleEngineDB.setPasswd(passwd);
+				}
 
 			} catch (Exception ioe) {
 				logger.error("File not found exception or file encrypt exception. check the exist file." + dbServerPath, ioe);
