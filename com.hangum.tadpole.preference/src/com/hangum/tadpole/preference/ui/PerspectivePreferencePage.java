@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
 import org.apache.log4j.Logger;
@@ -12,8 +22,15 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
 
+/**
+ * select perspective
+ * 
+ * @author hangum
+ *
+ */
 public class PerspectivePreferencePage extends PreferencePage implements IWorkbenchPreferencePage{
 
 	private static final Logger logger = Logger.getLogger(PerspectivePreferencePage.class);
@@ -49,9 +66,15 @@ public class PerspectivePreferencePage extends PreferencePage implements IWorkbe
 		
 		btnManager = new Button(grpSelectPerspective, SWT.RADIO);
 		btnManager.setText("Manager");
+		if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+			btnManager.setEnabled(false);
+		}
 		
 		btnAdmin = new Button(grpSelectPerspective, SWT.RADIO);
 		btnAdmin.setText("Administrator");
+		if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+			btnAdmin.setEnabled(false);
+		}
 		
 		setSelectedButton();
 		

@@ -13,7 +13,6 @@ package com.hangum.tadpole.session.manager;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.Attributes.Name;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
