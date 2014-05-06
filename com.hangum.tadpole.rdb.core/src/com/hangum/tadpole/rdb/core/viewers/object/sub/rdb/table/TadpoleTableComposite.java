@@ -573,6 +573,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			showTables = new TajoConnectionManager().tableList(userDB);
+
+			// sql keyword를 설정합니다.
+			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
+				TadpoleSQLManager.setMetaData(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getKeyworkd(userDB));
+			}
+			
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$			
