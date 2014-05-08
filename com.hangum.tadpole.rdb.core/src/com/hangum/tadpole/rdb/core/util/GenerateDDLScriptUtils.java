@@ -36,19 +36,11 @@ public class GenerateDDLScriptUtils {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(GenerateDDLScriptUtils.class); 
-
-	/** 
-	 * table script
-	 * 
-	 * @param userDB
-	 * @param tableDAO
-	 * @return
-	 */
-	public static String genTableScript(UserDBDAO userDB, TableDAO tableDAO) {
+	
+	
+	public static String genTableScript(UserDBDAO userDB, TableDAO tableDAO, List<TableColumnDAO> showTableColumns) {
 		StringBuffer sbSQL = new StringBuffer();
 		try {
-			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
-			
 			sbSQL.append("SELECT "); //$NON-NLS-1$
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
@@ -70,5 +62,26 @@ public class GenerateDDLScriptUtils {
 		}
 		
 		return sbSQL.toString();
+	}
+
+	/** 
+	 * table script
+	 * 
+	 * @param userDB
+	 * @param tableDAO
+	 * @return
+	 */
+	public static String genTableScript(UserDBDAO userDB, TableDAO tableDAO) {
+		try {
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+			return genTableScript(userDB, tableDAO, showTableColumns);
+		} catch(Exception e) {
+			logger.error(Messages.GenerateSQLSelectAction_8, e);
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
+		}
+		
+		return "";
 	}
 }
