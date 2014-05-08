@@ -82,6 +82,13 @@ public class GetPreferenceGeneral {
 		return Integer.parseInt( userInfo.getValue0() );
 	}
 	
+	/** query time out */
+	public static int getQueryTimeOut() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SELECT_QUERY_TIMEOUT);
+		if(null == userInfo) return PreferenceDefine.SELECT_QUERY_TIMEOUT_VALUE;
+		return Integer.parseInt( userInfo.getValue0() );
+	}
+	
 	/** rdb 쿼리 결과를 page당 처리 하는 카운트 */
 	public static String getPlanTableName() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE);

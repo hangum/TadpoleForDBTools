@@ -50,6 +50,11 @@ public class PreferenceDefine {
 //	/** select 결과를 페이지에 출력 최대 값 */
 //	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 400;
 	
+	/** select 쿼리 타임 아웃  */ 
+	public static final String SELECT_QUERY_TIMEOUT = "SELECT_QUERY_TIMEOUT";
+	/** select 쿼리 타임 아웃  디폴트 값 */
+	public static final int SELECT_QUERY_TIMEOUT_VALUE = 60;
+	
 	//SQLFormatterPreferencePage 
 		/** default tab size */
 		public static final String DEFAULT_TAB_SIZE_PREFERENCE = "DEFAULT_TAB_SIZE_PREFERENCE";

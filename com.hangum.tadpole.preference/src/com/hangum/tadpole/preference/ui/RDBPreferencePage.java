@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
@@ -107,6 +109,13 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		});
 		btnNewButton.setText(Messages.RDBPreferencePage_btnNewButton_text);
 		
+		Label lblQueryTimeout = new Label(container, SWT.NONE);
+		lblQueryTimeout.setText(Messages.RDBPreferencePage_lblQueryTimeout_text);
+		
+		textQueryTimeout = new Text(container, SWT.BORDER);
+		textQueryTimeout.setText(Messages.RDBPreferencePage_text_text);
+		textQueryTimeout.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		label.setText(""); //$NON-NLS-1$
@@ -148,21 +157,23 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	public boolean performOk() {
 		String txtSelectLimit = textSelectLimit.getText();
 		String txtResultPage = textResultPage.getText();
+		String txtQueryTimtout = textQueryTimeout.getText();
 		String txtOraclePlan = textOraclePlan.getText();
 		String txtRDBNumberColumnIsComman = comboRDBNumberComma.getText();
 		String txtFontInfo = lblUserFont.getText();
 		
-		try {
-			Integer.parseInt(txtSelectLimit);
-		} catch(Exception e) {
+		if(!NumberUtils.isNumber(txtSelectLimit)) {
 			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_0 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
-		try {
-			Integer.parseInt(txtResultPage);
-		} catch(Exception e) {
+		if(!NumberUtils.isNumber(txtResultPage)) {
 			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_other_labelText_1 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
+			return false;
+		}
+		
+		if(!NumberUtils.isNumber(txtQueryTimtout)) {
+			MessageDialog.openError(getShell(), "Confirm", "Query timeout is " + Messages.RDBPreferencePage_0);
 			return false;
 		}
 		
@@ -173,11 +184,13 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		// 테이블에 저장 
 		try {
-			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtSelectLimit, txtResultPage, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo);
+			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT, txtSelectLimit);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, txtResultPage);
+			SessionManager.setUserInfo(PreferenceDefine.SELECT_QUERY_TIMEOUT, txtQueryTimtout);
+			
 			SessionManager.setUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE, txtOraclePlan);		
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, txtRDBNumberColumnIsComman);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_FONT, txtFontInfo);
@@ -219,6 +232,8 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	private void initDefaultValue() {
 		textSelectLimit.setText( "" + GetPreferenceGeneral.getQueryResultCount() ); //$NON-NLS-1$
 		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
+		textQueryTimeout.setText( "" + GetPreferenceGeneral.getQueryTimeOut() );
+		
 		textOraclePlan.setText( GetPreferenceGeneral.getPlanTableName() );
 		comboRDBNumberComma.setText(GetPreferenceGeneral.getRDBNumberISComma());
 		
@@ -265,5 +280,6 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 					"         TIME               NUMERIC,         \r\n" + 
 					"         qblock_name        VARCHAR2(30)     \r\n" + 
 					" ) ";
+	private Text textQueryTimeout;
 }
 

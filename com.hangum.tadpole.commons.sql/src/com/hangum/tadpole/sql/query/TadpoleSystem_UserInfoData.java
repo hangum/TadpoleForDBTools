@@ -151,14 +151,14 @@ public class TadpoleSystem_UserInfoData {
 	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
 	 * 
-	 * @param userdb
 	 * @param limitSelect
 	 * @param resultSelect
+	 * @param queryTimeout
 	 * @param oraclePlan
 	 * @param txtRDBNumberColumnIsComman RDB의 결과테이블이 숫자 컬럼인 경우 ,를 넣을 것인지?
 	 * @param txtFontInfo font information
 	 */
-	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String oraclePlan, String txtRDBNumberColumnIsComman, String txtFontInfo) throws Exception {
+	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, String txtRDBNumberColumnIsComman, String txtFontInfo) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getSeq());
@@ -171,6 +171,11 @@ public class TadpoleSystem_UserInfoData {
 		// 검색 결과 페이지 당 보여주는 갯수 
 		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
 		userInfoData.setValue0(resultSelect);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		// query time out
+		userInfoData.setName(PreferenceDefine.SELECT_QUERY_TIMEOUT);
+		userInfoData.setValue0(queryTimeout);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// ORACLE PLAN TABLE 
@@ -311,6 +316,11 @@ public class TadpoleSystem_UserInfoData {
 		// 검색 결과 페이지 당 보여주는 갯수 
 		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
 		userInfoData.setValue0(""+PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		
+		// query time out
+		userInfoData.setName(PreferenceDefine.SELECT_QUERY_TIMEOUT);
+		userInfoData.setValue0(""+PreferenceDefine.SELECT_QUERY_TIMEOUT_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// ORACLE PLAN TABLE 
