@@ -10,10 +10,24 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.get;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.http.cookie.SM;
+import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
+
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
  * preference의 일반적인 정보를 얻습니다.
@@ -22,7 +36,59 @@ import com.hangum.tadpole.sql.session.manager.SessionManager;
  *
  */
 public class GetPreferenceGeneral {
+	private static final Logger logger = Logger.getLogger(GetPreferenceGeneral.class);
+	
 	////////////////// 일반 설정 ///////////////////////////////////////////////////////////////////////////
+	
+	public static String getValue(String key, Object defaultValue) {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(key);
+		if(null == userInfo) return defaultValue.toString();
+		else if("".equals(userInfo.getValue0())) return defaultValue.toString();
+		
+		return userInfo.getValue0();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static SMTPDTO getSMTPINFO() {
+		SMTPDTO dto = new SMTPDTO();
+		
+		HttpSession sStore = RWT.getRequest().getSession();
+		dto = (SMTPDTO)sStore.getAttribute("smtpinfo");
+		
+		if(dto == null) {
+			dto = new SMTPDTO();
+			
+			try {
+				UserDAO userDao = TadpoleSystem_UserQuery.getAdmin();
+				List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
+				Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
+				for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
+					mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
+				}
+			
+				dto.setHost(getValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
+				dto.setPort(getValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
+				dto.setEmail(getValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
+				dto.setPasswd(getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
+				
+				sStore.setAttribute("smtpinfo", dto);
+			} catch (Exception e) {
+				logger.error("get stmt info", e);
+			}
+		}
+		
+		return dto;
+	}
+	
+	private static String getValue(Map<String, UserInfoDataDAO> mapUserInfoData, String key, String defaultValue) {
+		UserInfoDataDAO userInfoDao = mapUserInfoData.get(key);
+		if(null == userInfoDao) return defaultValue;
+		else return userInfoDao.getValue0();
+	}
+	
 	/**
 	 * session time out 
 	 * @return
@@ -79,6 +145,13 @@ public class GetPreferenceGeneral {
 	/** rdb 쿼리 결과를 page당 처리 하는 카운트 */
 	public static int getPageCount() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
+		return Integer.parseInt( userInfo.getValue0() );
+	}
+	
+	/** query time out */
+	public static int getQueryTimeOut() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SELECT_QUERY_TIMEOUT);
+		if(null == userInfo) return PreferenceDefine.SELECT_QUERY_TIMEOUT_VALUE;
 		return Integer.parseInt( userInfo.getValue0() );
 	}
 	

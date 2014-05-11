@@ -32,7 +32,7 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 
 /**
  * delete database action.

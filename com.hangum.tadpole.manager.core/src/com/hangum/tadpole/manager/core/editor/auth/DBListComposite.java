@@ -65,10 +65,10 @@ import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.ResourceManager;
 
 /**

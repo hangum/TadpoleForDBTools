@@ -26,11 +26,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 
 /**
  * Resource save dialog

@@ -11,9 +11,7 @@
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -84,11 +82,12 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.sqlite.SQLiteForeignKeyListDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.util.SQLUtil;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
@@ -152,6 +151,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		createWidget(tabFolderObject);
 	}
 	
+	public List<TableColumnDAO> getShowTableColumns() {
+		return showTableColumns;
+	}
+	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmTable.setText("Tables"); //$NON-NLS-1$
@@ -170,8 +173,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);// SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
@@ -179,7 +181,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO));
+					FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, showTableColumns));
 				}
 			}
 		});
@@ -198,38 +200,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						if (selectTableName.equals(table.getName())) return;
 						selectTableName = table.getName();
 						
-						Map<String, String> mapParam = new HashMap<String, String>();
-						mapParam.put("db", userDB.getDb());
-						mapParam.put("table", table.getName());
-
-						if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
-							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-							showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
-						} else {
-							showTableColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);
-						}
+						showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
 						
-						if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()){
-							try{
-								SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-								List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
-								for (SQLiteForeignKeyListDAO fkeydao : foreignKeyList){
-									for (TableColumnDAO dao : showTableColumns){
-										if (dao.getName().equals(fkeydao.getFrom() ) ){
-											if (PublicTadpoleDefine.isPK(dao.getKey())){
-												dao.setKey("MUL");
-											}else{
-												dao.setKey("FK");
-											}
-										}	 
-									}
-								}
-							}catch(Exception e){
-								logger.debug("not found foreignkey for " + table.getName());
-							}
-						}
 					} else {
 						showTableColumns = null;
+						selectTableName = "";
 					}
 
 					tableColumnViewer.setInput(showTableColumns);
@@ -242,7 +217,16 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$
+					
+					// initialize table columns
+					showTableColumns.clear();
+					tableColumnViewer.setInput(showTableColumns);
+					tableColumnComparator = new TableColumnComparator();
+					tableColumnViewer.setSorter(tableColumnComparator);
+					tableColumnViewer.refresh();
+					TableUtil.packTable(tableColumnViewer.getTable());
 
+					// show error message
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
 				}
@@ -589,6 +573,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			showTables = new TajoConnectionManager().tableList(userDB);
+
+			// sql keyword를 설정합니다.
+			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
+				TadpoleSQLManager.setMetaData(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getKeyworkd(userDB));
+			}
 			
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -596,7 +585,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		}
 		
 		/** filter 정보가 있으면 처리합니다. */
-		return filter(userDB, showTables);
+		List<TableDAO> listTables = filter(userDB, showTables);
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(TableDAO td : listTables) {
+			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+		}
+		
+		return listTables;
 	}
 	
 	/**

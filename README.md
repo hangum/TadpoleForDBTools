@@ -73,10 +73,10 @@ Document
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
 Demo Site
-* Amazon EC2 micro (very slow) http://goo.gl/BhwQe
+*  http://goo.gl/BhwQe
  
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.2
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.4/
  
 License
 -

@@ -34,6 +34,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
+import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
 import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
@@ -41,12 +42,12 @@ import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
  * Configures the initial size and appearance of a workbench window.
@@ -114,7 +115,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     		}
     	} catch(Exception e) {
     		logger.error("Is DB list?", e); //$NON-NLS-1$
-    	}    	
+    	}
+    	
     }
     
     /**
@@ -215,12 +217,30 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	} else {
 	    		try {
 		    		// Stored user session.
-					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
+					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
 					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
 					SessionManager.setUserInfos(mapUserInfoData);
+					
+					if ("".equals(SessionManager.getPerspective())) {
+					
+						// user 사용자는 default perspective를 사용합니다.
+						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+							SessionManager.setPerspective(Perspective.DEFAULT);
+						} else {
+							String persp;
+							SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
+							
+							if (Dialog.OK == dialog.open()) {
+								persp = dialog.getResult();
+							} else {
+								persp = Perspective.DEFAULT;
+							}
+							SessionManager.setPerspective(persp);
+						}
+					}
 					
 					initSession();
 					

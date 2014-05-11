@@ -28,5 +28,10 @@
             id="com.hangum.tadpole.preference.page.mongodb"
             name="MongoDB">
       </page>
+      <page
+            class="com.hangum.tadpole.preference.ui.PerspectivePreferencePage"
+            id="com.hangum.tadpole.preference.page.perspective"
+            name="Perspective">
+      </page>
    </extension>
 </plugin>

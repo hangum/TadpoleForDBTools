@@ -13,10 +13,10 @@ package com.hangum.tadpole.engine.connect;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class PostgresTest {
+public class PostgresTest extends AbstractDriverInfo {
 	public static void main(String[] args) throws Exception {
 
-		String url = "jdbc:postgresql:test";
+		String url = "jdbc:postgresql:tadpole";
 		String usr = "tadpole";
 		String pwd = "tadpole";
 
@@ -24,20 +24,21 @@ public class PostgresTest {
 
 		// -- 1
 		Connection conn = DriverManager.getConnection(url, usr, pwd);
-		System.out.println(conn);
+		printMetaData(conn.getMetaData());
+		
 		conn.close();
 
-		// -- 2
-		url = "jdbc:postgresql://localhost/test";
-		conn = DriverManager.getConnection(url, usr, pwd);
-		System.out.println(conn);
-		conn.close();
-
-		// -- 3
-		url = "jdbc:postgresql://localhost:5432/test";
-		conn = DriverManager.getConnection(url, usr, pwd);
-		System.out.println(conn);
-		conn.close();
+//		// -- 2
+//		url = "jdbc:postgresql://localhost/test";
+//		conn = DriverManager.getConnection(url, usr, pwd);
+//		System.out.println(conn);
+//		conn.close();
+//
+//		// -- 3
+//		url = "jdbc:postgresql://localhost:5432/test";
+//		conn = DriverManager.getConnection(url, usr, pwd);
+//		System.out.println(conn);
+//		conn.close();
 
 	}
 }

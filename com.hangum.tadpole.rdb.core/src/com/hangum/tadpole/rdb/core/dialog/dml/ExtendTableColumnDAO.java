@@ -37,7 +37,7 @@ public class ExtendTableColumnDAO extends TableColumnDAO {
 	}
 
 	public String getColumnAlias() {
-		return columnAlias == null || columnAlias.length() == 0 ? this.getField().toLowerCase() : columnAlias.toLowerCase();
+		return columnAlias == null || columnAlias.length() == 0 ? this.getSysName().toLowerCase() : columnAlias.toLowerCase();
 	}
 
 	public void setColumnAlias(String columnAlias) {
@@ -49,7 +49,7 @@ public class ExtendTableColumnDAO extends TableColumnDAO {
 	}
 
 	public String getColumnNamebyTableAlias() {
-		return tableAlias == null || tableAlias.length() == 0 ? this.getField(): tableAlias + "." + this.getField() ;
+		return tableAlias == null || tableAlias.length() == 0 ? this.getSysName(): tableAlias + "." + this.getField() ;
 	}
 	
 	public void setTableAlias(String tableAlias) {

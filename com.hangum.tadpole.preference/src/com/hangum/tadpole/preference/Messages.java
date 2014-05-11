@@ -98,6 +98,14 @@ public class Messages extends NLS {
 	public static String RDBPreferencePage_lblResultViewFont_text;
 	public static String RDBPreferencePage_btnNewButton_text;
 	public static String RDBPreferencePage_lblNewLabel_3_text;
+	public static String RDBPreferencePage_lblQueryTimeout_text;
+	public static String RDBPreferencePage_text_text;
+	public static String GeneralPreferencePage_grpEmailAccount_text;
+	public static String GeneralPreferencePage_lblSmtpServer_text;
+	public static String GeneralPreferencePage_lblPort_text;
+	public static String GeneralPreferencePage_lblAccount_text;
+	public static String GeneralPreferencePage_lblPassword_text;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -18,7 +18,7 @@
 	database connection test 
  -->
 <select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
-SELECT class_name name FROM DB_CLASS WHERE 1 = 0 
+SELECT 1
 </select>
 
 <!-- 

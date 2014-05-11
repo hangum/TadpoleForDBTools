@@ -53,12 +53,12 @@ import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**

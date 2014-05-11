@@ -54,10 +54,10 @@ import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 사용자리스트 화면

@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.connections.ConnectionInterfact;
+import com.hangum.tadpole.engine.query.surface.ConnectionInterfact;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -52,6 +52,25 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			
 		return javaConn;
 	}
+	
+	/**
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getKeyworkd(final UserDBDAO userDB) throws Exception {
+		String strKeyWord = "";
+		java.sql.Connection javaConn = getInstance(userDB);
+		try {
+			strKeyWord = javaConn.getMetaData().getSQLKeywords();
+		} finally {
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+		}
+		
+		return strKeyWord;
+	}
+	
 	/**
 	 * not select 
 	 * 
@@ -67,6 +86,22 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			statement = javaConn.createStatement();
 			statement.executeUpdate(sqlQuery);
+		} finally {
+			try { if(statement != null) statement.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+		}
+	}
+	
+	public void executeUpdate(UserDBDAO userDB, String string, String name) throws Exception {
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		try {
+			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
+			String quoteString = javaConn.getMetaData().getIdentifierQuoteString();
+			
+			statement = javaConn.createStatement();
+			statement.executeUpdate(String.format(string, quoteString + name + quoteString));
 		} finally {
 			try { if(statement != null) statement.close(); } catch(Exception e) {}
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}

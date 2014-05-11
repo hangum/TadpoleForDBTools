@@ -50,7 +50,7 @@ import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.MongoDBCollectio
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.QueryToMongoDBImport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.RDBTableToMongoDBImport;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 
 /**
  * mongodb import

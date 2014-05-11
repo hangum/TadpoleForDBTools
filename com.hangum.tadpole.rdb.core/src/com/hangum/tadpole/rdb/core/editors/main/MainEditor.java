@@ -58,11 +58,11 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.swtdesigner.ResourceManager;
 
@@ -109,7 +109,6 @@ public class MainEditor extends EditorExtension {
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
-		
 	}
 	
 	@Override
@@ -359,48 +358,7 @@ public class MainEditor extends EditorExtension {
 				} // end if(event.getProperty()
 			} //
 		}); // end property change
-
-//		getEditorSite().getPage().addPartListener(new IPartListener2() {
-//			
-//			@Override
-//			public void partVisible(IWorkbenchPartReference partRef) {
-//			}
-//			
-//			@Override
-//			public void partOpened(IWorkbenchPartReference partRef) {
-//			}
-//			
-//			@Override
-//			public void partInputChanged(IWorkbenchPartReference partRef) {
-//			}
-//			
-//			@Override
-//			public void partHidden(IWorkbenchPartReference partRef) {
-//			}
-//			
-//			@Override
-//			public void partDeactivated(IWorkbenchPartReference partRef) {
-//			}
-//			
-//			@Override
-//			public void partClosed(IWorkbenchPartReference partRef) {
-//			}
-//			
-//			@Override
-//			public void partBroughtToTop(IWorkbenchPartReference partRef) {
-//			}
-//			
-//			@Override
-//			public void partActivated(IWorkbenchPartReference partRef) {
-//				if(ID == partRef.getId()) {
-//					MainEditor me = (MainEditor)partRef.getPage();
-//					UserDBDAO userDB = me.getUserDB();
-//					
-//				}
-//			}
-//		});
 	}
-	
 	
 	public Browser getBrowserQueryEditor() {
 		return browserQueryEditor;

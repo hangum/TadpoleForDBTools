@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
@@ -48,14 +49,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
@@ -71,6 +73,8 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
+import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
+import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -79,7 +83,6 @@ import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.sql.util.resultset.TadpoleResultSet;
-import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
@@ -102,6 +105,8 @@ public class ResultSetComposite extends Composite {
 	
 	/** 결과 페이지에서 사용할 폰트 지정 */
 	private final String PREFERENCE_USER_FONT 	= GetPreferenceGeneral.getRDBResultFont();
+	/** query time out */
+	private final int queryTimeOut = GetPreferenceGeneral.getQueryTimeOut();
 	
 	/** execute job */
 	private Job jobQueryManager = null;
@@ -161,7 +166,6 @@ public class ResultSetComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				isUserInterrupt = false;
-				
 			}
 		});
 		btnStopQuery.setText(Messages.RDBResultComposite_btnStp_text);
@@ -270,12 +274,17 @@ public class ResultSetComposite extends Composite {
 		TableUtil.makeSelectSingleColumn(tvQueryResult);
 	    // single column select end
 		
-//		ScrollBar vBarLeft = tableResult.getVerticalBar();
-//		vBarLeft.addListener(SWT.Selection, new Listener() {
-//			public void handleEvent(Event event) {
-//				System.out.println("vBarleft listener is " + tableResult.getTopIndex());
-//			}
-//		});
+		tableResult.getVerticalBar().addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				caclTableData();
+			}
+		});
+		tableResult.addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				caclTableData();
+			}
+		});
 		
 		Composite compositeBtn = new Composite(this, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -325,6 +334,28 @@ public class ResultSetComposite extends Composite {
 		
 		registerServiceHandler();
 	}
+
+	/**
+	 * scroll data에 맞게 데이터를 출력합니다. 
+	 */
+	private void caclTableData() {
+		final Table tableResult = tvQueryResult.getTable();
+		int tableRowCnt = tableResult.getBounds().height / tableResult.getItemHeight();
+		// 만약에(테이블 위치 인덱스 + 테이블에 표시된로우 수 + 1) 보다 전체 아이템 수가 크면).
+		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
+
+			final TadpoleResultSet trs = rsDAO.getDataList();
+			if(logger.isDebugEnabled()) logger.debug("====> refresh data " + trs.getData().size() +":"+ tableResult.getItemCount());
+			if(trs.getData().size() > tableResult.getItemCount()) {
+				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + getPageCount()));
+				if(trs.getData().size() > (tableResult.getItemCount() + getPageCount())) {
+					tvQueryResult.setInput(trs.getData().subList(0, tableResult.getItemCount() + getPageCount()));
+				} else {
+					tvQueryResult.setInput(trs.getData());
+				}
+			}
+		}
+	}
 	
 	/**
 	 * set parent composite
@@ -348,7 +379,25 @@ public class ResultSetComposite extends Composite {
 		textFilter.setText("");
 		
 		controlProgress(true);
-
+		final Shell runShell = textFilter.getShell();
+		
+		if(reqQuery.getType() != EditorDefine.EXECUTE_TYPE.ALL) {
+			try {
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
+				if (epd.getParamCount() > 0){
+					epd.open();
+					ParameterObject paramObj = epd.getParameterObject();
+					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+					logger.debug("===> " + repSQL);
+					reqQuery.setSql(repSQL);
+					
+					epd.close();
+				}
+			} catch(Exception e) {
+				logger.error("Parameter parse", e);
+			}
+		}
+		
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
 		jobQueryManager = new Job(Messages.MainEditor_45) {
@@ -387,7 +436,6 @@ public class ResultSetComposite extends Composite {
 							sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
-						
 						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 						if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							TransactionManger.transactionQuery(reqQuery.getSql(), getUserEMail(), getUserDB());// userEmail, userDB)) return null;
@@ -452,7 +500,6 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.setPriority(Job.INTERACTIVE);
 		jobQueryManager.setName(getUserDB().getDisplay_name() + reqQuery.getOriginalSql());
 		jobQueryManager.schedule();
-		
 	}
 	
 	private boolean isCheckRunning = true;
@@ -480,25 +527,26 @@ public class ResultSetComposite extends Composite {
 				}
 			}
 			statement = javaConn.createStatement();
+			statement.setQueryTimeout(queryTimeOut);
 			
 			// check stop thread
-			logger.debug("\t===== start stop query ==========================");
+//			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
 			esCheckStop = Executors.newSingleThreadExecutor();
 			esCheckStop.execute(new CheckStopThread(statement));
 			
-			logger.debug("\t===== start query ==========================");
+//			if(logger.isDebugEnabled()) logger.debug("\t===== start query ==========================");
 			// execute query
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
 
-			logger.debug("\t======== execute end =================================");
+//			if(logger.isDebugEnabled()) logger.debug("\t======== execute end =================================");
 					
 			rsDAO = new QueryExecuteResultDTO(true, resultSet, getQueryResultCount(), getIsResultComma());
 		} catch(Exception e) {
-			logger.error("execute query", e);
+			if(logger.isDebugEnabled()) logger.error("execute query", e);
 			throw e;
 		} finally {
-			logger.debug("\t====> execute select finally=======================");
+//			if(logger.isDebugEnabled()) logger.debug("\t====> execute select finally=======================");
 			isCheckRunning = false;
 			
 			try { if(statement != null) statement.close(); } catch(Exception e) {}
@@ -586,6 +634,9 @@ public class ResultSetComposite extends Composite {
 	private int getQueryResultCount() {
 		return easyPreferenceData.getQueryResultCount();
 	}
+	private int getPageCount() {
+		return easyPreferenceData.getQueryPageCount();
+	}
 
 	/**
 	 * error message 추가한다.
@@ -605,7 +656,6 @@ public class ResultSetComposite extends Composite {
 	 */
 	private void finallyEndExecuteCommand() {
 		controlProgress(false);
-		getRdbResultComposite().browserEvaluate(EditorFunctionService.EXECUTE_DONE);
 	}
 	
 	/**
@@ -665,10 +715,14 @@ public class ResultSetComposite extends Composite {
 			sqlSorter = new SQLResultSorter(-999);
 			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter);
 			tvQueryResult.setLabelProvider(new SQLResultLabelProvider());
-			tvQueryResult.setContentProvider(new SQLResultContentProvider(trs.getData()));
+			tvQueryResult.setContentProvider(new ArrayContentProvider());// SQLResultContentProvider(trs.getData().subList(0, getPageCount())));
 			
 			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
-			tvQueryResult.setInput(trs.getData());
+			if(trs.getData().size() > getPageCount()) {
+				tvQueryResult.setInput(trs.getData().subList(0, getPageCount()));	
+			} else {
+				tvQueryResult.setInput(trs.getData());
+			}
 			tvQueryResult.setSorter(sqlSorter);
 			
 			// 메시지를 출력합니다.
