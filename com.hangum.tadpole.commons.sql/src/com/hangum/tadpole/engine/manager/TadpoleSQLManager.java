@@ -90,7 +90,7 @@ public class TadpoleSQLManager {
 					
 					// metadata를 가져와서 저장해 놓습니다.
 					conn = sqlMapClient.getDataSource().getConnection(); 
-					dbMetadata.put(searchKey, getMetaData(dbInfo, conn.getMetaData()));
+					setMetaData(searchKey, dbInfo, conn.getMetaData().getSQLKeywords());
 				}
 				
 			} catch(Exception e) {
@@ -112,7 +112,7 @@ public class TadpoleSQLManager {
 	 * 
 	 * @return
 	 */
-	private static TadpoleMetaData getMetaData(final UserDBDAO dbInfo, DatabaseMetaData dmd) throws Exception {
+	public static void setMetaData(String searchKey, final UserDBDAO dbInfo, String sqlKeywords) throws Exception {
 		TadpoleMetaData tmd = null;
 		
 		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다. 
@@ -143,11 +143,12 @@ public class TadpoleSQLManager {
 				dbInfo.getDBDefine() == DBDefine.HIVE2_DEFAULT
 		) {
 			// not support this methods
+			tmd.setKeywords("");
 		} else {
-			tmd.setKeywords(dmd.getSQLKeywords());
+			tmd.setKeywords(sqlKeywords);
 		}
 		
-		return tmd;
+		dbMetadata.put(searchKey, tmd);
 	}
 	
 	/**
@@ -157,6 +158,9 @@ public class TadpoleSQLManager {
 	 */
 	public static Map<String, SqlMapClient> getDbManager() {
 		return dbManager;
+	}
+	public static Map<String, TadpoleMetaData> getDbMetadata() {
+		return dbMetadata;
 	}
 	
 	/**
@@ -185,7 +189,7 @@ public class TadpoleSQLManager {
 	 * @param dbInfo
 	 * @return
 	 */
-	private static String getKey(UserDBDAO dbInfo) {
+	public static String getKey(UserDBDAO dbInfo) {
 		return dbInfo.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
 				dbInfo.getDbms_types()  + PublicTadpoleDefine.DELIMITER +
 				dbInfo.getUrl()  		+ PublicTadpoleDefine.DELIMITER +

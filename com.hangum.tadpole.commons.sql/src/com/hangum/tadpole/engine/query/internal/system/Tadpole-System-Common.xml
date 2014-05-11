@@ -137,11 +137,19 @@
 	WHERE email = #email#
 </select>
 
+<select id="getAdmin" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	select a.* from user a,  user_role b
+	where 
+	 	b.role_type = 'ADMIN'
+	 and a.seq = b.user_seq;
+</select>
+
 <!-- userDB의 manager 권한 리스트 -->
 <select id="groupManager" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="java.lang.Integer">
-	select * from user
-	where group_seq = #group_seq#
-	and user_type='MANAGER'
+	select a.* from user a,  user_role b
+	where b.group_seq = #group_seq#
+	and b.role_type = 'MANAGER'
+	and a.seq = b.user_seq;
 </select>
 
 <!-- 
@@ -596,20 +604,19 @@ SELECT
 	user_info_data 정보를 설정합니다.
 	=========================================================================================================
  -->
-<select id="allUserInfoData" resultClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO" parameterClass="java.lang.Integer">
+<!-- <select id="allUserInfoData" resultClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO" parameterClass="java.lang.Integer">
 	SELECT * FROM user_info_data
 	WHERE
 		user_seq = #user_seq#
-</select>
+< /select>-->
 
 <!-- 
 	사용자 정보를 가져온다. 
  -->
-<select id="getUserInfoData" resultClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO">
+<select id="getUserInfoData" resultClass="com.hangum.tadpole.sql.dao.system.UserInfoDataDAO" parameterClass="java.lang.Integer">
 	SELECT * FROM user_info_data
 	WHERE
-		user_seq = #user_seq# AND
-		name = #name#
+		user_seq = #user_seq#
 </select>
 
 <!-- 

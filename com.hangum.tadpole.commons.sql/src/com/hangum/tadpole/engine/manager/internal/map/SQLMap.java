@@ -16,7 +16,6 @@ import java.io.StringReader;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
@@ -50,7 +49,7 @@ public class SQLMap {
 	 * @throws Exception
 	 */
 	private static String getConfig(UserDBDAO dbInfo) throws Exception {
-		String config = getFileToString(DBDefine.getDBDefine(dbInfo.getDbms_types()).getLocation());
+		String config = getFileToString(dbInfo.getDBDefine().getLocation());
 		
 		config = config.replace(URL, StringEscapeUtils.escapeXml(dbInfo.getUrl()));	
 		config = config.replace(USERNAME, StringEscapeUtils.escapeXml(dbInfo.getUsers()));

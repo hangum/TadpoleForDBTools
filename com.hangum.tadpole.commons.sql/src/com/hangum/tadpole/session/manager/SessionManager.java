@@ -13,7 +13,6 @@ package com.hangum.tadpole.session.manager;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.Attributes.Name;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
@@ -146,14 +145,6 @@ public class SessionManager {
 		} catch(Exception e) {
 			logger.error("find user rold", e);
 		}
-		
-//		UserDAO groupManagerUser =  TadpoleSystem_UserQuery.getGroupManager(loginUserDao.getGroup_seq());
-//		String groupName = "";
-//		try {
-//			groupName = TadpoleSystem_UserGroupQuery.findGroupName(groupSeq);
-//		} catch(Exception e) {
-//			logger.error("Session group name", e);
-//		}
 		
 //		sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), groupSeq);		
 		sStore.setAttribute(NAME.USER_SEQ.toString(), loginUserDao.getSeq());

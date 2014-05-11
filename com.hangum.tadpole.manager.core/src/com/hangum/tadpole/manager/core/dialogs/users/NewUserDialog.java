@@ -35,8 +35,12 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
+import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
+import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpold.commons.libs.core.mails.template.NewUserMailBodyTemplate;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
@@ -306,14 +310,15 @@ public class NewUserDialog extends Dialog {
 			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn.toString(), questionKey, answer);
 			
 			// user_role 입력.
-			TadpoleSystem_UserRole.newUserRole(groupDAO.getSeq(), newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
+			TadpoleSystem_UserRole.newUserRole(groupDAO.getSeq(), newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), 
+					PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 			
 			if(!ApplicationArgumentUtils.isTestMode()) {
 				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
 			}
 			
-//			// 정상이면 session에 로그인 정보를 입력하고 
-//			SessionManager.newLogin(loginDAO.getSeq(), strEmail, name, loginDAO.getUser_type());
+			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
+			
 		} catch (Exception e) {
 			logger.error(Messages.NewUserDialog_8, e);
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_14, e.getMessage());
@@ -321,6 +326,31 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		super.okPressed();
+	}
+	
+	private void sendEmail(PublicTadpoleDefine.USER_TYPE userType, int groupSeq, String groupName, String name, String email) {
+		try {
+			UserDAO userDao = null;
+			if(PublicTadpoleDefine.USER_TYPE.MANAGER == userType) {
+				userDao = TadpoleSystem_UserQuery.getAdmin();
+			} else {
+				userDao = TadpoleSystem_UserQuery.getGroupManager(groupSeq);
+			}
+			
+			// manager 에게 메일을 보낸다.
+			EmailDTO emailDao = new EmailDTO();
+			emailDao.setSubject("Add new Tadpole user.");
+			// 
+			// 그룹, 사용자, 권한.
+			// 
+			emailDao.setContent(NewUserMailBodyTemplate.getContent(groupName, name, email));
+			emailDao.setTo(userDao.getEmail());
+			
+			SendEmails sendEmail = new SendEmails(GetPreferenceGeneral.getSMTPINFO());
+			sendEmail.sendMail(emailDao);
+		} catch(Exception e) {
+			logger.error("Error send email", e);
+		}
 	}
 	
 	/**

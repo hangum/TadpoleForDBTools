@@ -26,7 +26,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -218,22 +217,29 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	} else {
 	    		try {
 		    		// Stored user session.
-					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
+					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
 					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
 					SessionManager.setUserInfos(mapUserInfoData);
+					
 					if ("".equals(SessionManager.getPerspective())) {
-						String persp;
-						SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
-						
-						if (Dialog.OK == dialog.open()) {
-							persp = dialog.getResult();
+					
+						// user 사용자는 default perspective를 사용합니다.
+						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+							SessionManager.setPerspective(Perspective.DEFAULT);
 						} else {
-							persp = Perspective.DEFAULT;
+							String persp;
+							SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
+							
+							if (Dialog.OK == dialog.open()) {
+								persp = dialog.getResult();
+							} else {
+								persp = Perspective.DEFAULT;
+							}
+							SessionManager.setPerspective(persp);
 						}
-						SessionManager.setPerspective(persp);
 					}
 					
 					initSession();

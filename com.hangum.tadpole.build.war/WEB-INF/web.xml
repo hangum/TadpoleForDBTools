@@ -30,12 +30,5 @@
     <servlet-name>equinoxbridgeservlet</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
-  
-  <!-- 
-  	session listener
-   -->
-  <!--  listener>
-		<listener-class>com.hangum.tadpole.session.manager.SessionManagerListener</listener-class>
-	</listener-->
-  
+
 </web-app>

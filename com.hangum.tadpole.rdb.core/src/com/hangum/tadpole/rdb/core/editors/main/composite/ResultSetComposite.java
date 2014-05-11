@@ -49,15 +49,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.internal.SwitchToWindowMenu;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
@@ -73,6 +73,8 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
+import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
+import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -103,6 +105,8 @@ public class ResultSetComposite extends Composite {
 	
 	/** 결과 페이지에서 사용할 폰트 지정 */
 	private final String PREFERENCE_USER_FONT 	= GetPreferenceGeneral.getRDBResultFont();
+	/** query time out */
+	private final int queryTimeOut = GetPreferenceGeneral.getQueryTimeOut();
 	
 	/** execute job */
 	private Job jobQueryManager = null;
@@ -375,7 +379,25 @@ public class ResultSetComposite extends Composite {
 		textFilter.setText("");
 		
 		controlProgress(true);
-
+		final Shell runShell = textFilter.getShell();
+		
+		if(reqQuery.getType() != EditorDefine.EXECUTE_TYPE.ALL) {
+			try {
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
+				if (epd.getParamCount() > 0){
+					epd.open();
+					ParameterObject paramObj = epd.getParameterObject();
+					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+					logger.debug("===> " + repSQL);
+					reqQuery.setSql(repSQL);
+					
+					epd.close();
+				}
+			} catch(Exception e) {
+				logger.error("Parameter parse", e);
+			}
+		}
+		
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
 		jobQueryManager = new Job(Messages.MainEditor_45) {
@@ -414,7 +436,6 @@ public class ResultSetComposite extends Composite {
 							sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
-						
 						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 						if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							TransactionManger.transactionQuery(reqQuery.getSql(), getUserEMail(), getUserDB());// userEmail, userDB)) return null;
@@ -479,7 +500,6 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.setPriority(Job.INTERACTIVE);
 		jobQueryManager.setName(getUserDB().getDisplay_name() + reqQuery.getOriginalSql());
 		jobQueryManager.schedule();
-		
 	}
 	
 	private boolean isCheckRunning = true;
@@ -507,6 +527,7 @@ public class ResultSetComposite extends Composite {
 				}
 			}
 			statement = javaConn.createStatement();
+			statement.setQueryTimeout(queryTimeOut);
 			
 			// check stop thread
 //			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");

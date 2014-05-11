@@ -32,11 +32,12 @@ import com.hangum.tadpole.cipher.core.manager.CipherManager;
  */
 public class BasicEntryPoint extends AbstractEntryPoint {
 	private static String defaultContent = "DB=MYSQL \r\n"
-						+ "ip=192.168.32.128 \r\n" 
+						+ "ip=127.0.01 \r\n" 
 						+ "port=3306 \r\n"
-						+ "database=k1 \r\n" 
+						+ "database=tadpole \r\n" 
 						+ "user=root \r\n" 
-						+ "password=tadpole";
+						+ "password=tadpole  \r\n" 
+						+ "isSSL=true" ;
 	private Text txtOriginal;
 	private Text textEncrypt;
 

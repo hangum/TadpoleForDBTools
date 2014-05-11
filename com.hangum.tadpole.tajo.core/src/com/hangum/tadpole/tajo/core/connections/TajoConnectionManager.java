@@ -52,6 +52,25 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			
 		return javaConn;
 	}
+	
+	/**
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getKeyworkd(final UserDBDAO userDB) throws Exception {
+		String strKeyWord = "";
+		java.sql.Connection javaConn = getInstance(userDB);
+		try {
+			strKeyWord = javaConn.getMetaData().getSQLKeywords();
+		} finally {
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+		}
+		
+		return strKeyWord;
+	}
+	
 	/**
 	 * not select 
 	 * 

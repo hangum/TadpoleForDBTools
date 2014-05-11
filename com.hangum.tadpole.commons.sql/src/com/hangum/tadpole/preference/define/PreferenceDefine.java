@@ -29,7 +29,7 @@ public class PreferenceDefine {
 	
 	/** default home page */
 	public static final String DEFAULT_HOME_PAGE 		= "DEFAULT_HOME_PAGE";
-	public static final String DEFAULT_HOME_PAGE_VALUE 	= "https://sites.google.com/site/tadpolefordb/home";//"https://www.github.com/hangum/TadpoleForDBTools/wiki";
+	public static final String DEFAULT_HOME_PAGE_VALUE 	= "http://hangum.github.io/TadpoleForDBTools/";//https://sites.google.com/site/tadpolefordb/home";//"https://www.github.com/hangum/TadpoleForDBTools/wiki";
 //	public static final String DEFAULT_HOME_PAGE_EN_VALUE 	= "https://sites.google.com/site/tadpolefordbtoolsen";
 	
 	/** default home page use */
@@ -49,6 +49,11 @@ public class PreferenceDefine {
 	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 50;
 //	/** select 결과를 페이지에 출력 최대 값 */
 //	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 400;
+	
+	/** select 쿼리 타임 아웃  */ 
+	public static final String SELECT_QUERY_TIMEOUT = "SELECT_QUERY_TIMEOUT";
+	/** select 쿼리 타임 아웃  디폴트 값 */
+	public static final int SELECT_QUERY_TIMEOUT_VALUE = 60;
 	
 	//SQLFormatterPreferencePage 
 		/** default tab size */
@@ -87,6 +92,20 @@ public class PreferenceDefine {
 	/** MAX SESSION TIME OUT */
 	public static final int SESSION_DEFAULT_MAX_PREFERENEC_VALUE = 999999;
 	
+	
+	// set smtp information
+		public static final String SMTP_HOST_NAME 		= "SMTP_HOST_NAME";
+		public static final String SMTP_HOST_NAME_VALUE = "smtp.googlemail.com";
+		
+		public static final String SMTP_PORT 			= "SMTP_PORT";
+		public static final String SMTP_PORT_VALUE 		= "465";
+		
+		public static final String SMTP_EMAIL 			= "SMTP_EMAIL";
+		public static final String SMTP_EMAIL_VALUE 	= "tadpole.sender@gmail.com";
+		
+		public static final String SMTP_PASSWD 			= "SMTP_PASSWD";
+		public static final String SMTP_PASSWD_VALUE 	= "tadpoleadmin";
+		
 	/** ORACLE PLAN TABLE */
 	public static final String ORACLE_PLAN_TABLE = "ORACLE_PLAN_TABLE";
 	/** ORACLE PLAN TABLE VALUE */
