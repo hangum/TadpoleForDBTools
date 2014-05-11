@@ -167,6 +167,17 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
+	 * get admin
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDAO getAdmin() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (UserDAO)sqlClient.queryForObject("getAdmin"); //$NON-NLS-1$
+	}
+	
+	/**
 	 * group의 manager 정보를 리턴합니다.
 	 * 
 	 * @param groupSeq

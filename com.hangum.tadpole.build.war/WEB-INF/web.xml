@@ -20,7 +20,7 @@
          the -console parameter to enabled OSGi console access.  -->
     <init-param>
       <param-name>commandline</param-name>
-      <param-value>-registryMultiLanguage -test -useDB all -defaultDB MySQL -ws rap</param-value>     
+      <param-value>-registryMultiLanguage <!-- -console --></param-value>     
     </init-param>
 
     <load-on-startup>1</load-on-startup>    
@@ -30,12 +30,5 @@
     <servlet-name>equinoxbridgeservlet</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
-  
-  <!-- 
-  	session listener
-   -->
-  <!--  listener>
-		<listener-class>com.hangum.tadpole.session.manager.SessionManagerListener</listener-class>
-	</listener-->
-  
+
 </web-app>

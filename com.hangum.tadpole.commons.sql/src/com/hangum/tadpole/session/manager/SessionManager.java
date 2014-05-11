@@ -146,14 +146,6 @@ public class SessionManager {
 			logger.error("find user rold", e);
 		}
 		
-//		UserDAO groupManagerUser =  TadpoleSystem_UserQuery.getGroupManager(loginUserDao.getGroup_seq());
-//		String groupName = "";
-//		try {
-//			groupName = TadpoleSystem_UserGroupQuery.findGroupName(groupSeq);
-//		} catch(Exception e) {
-//			logger.error("Session group name", e);
-//		}
-		
 //		sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), groupSeq);		
 		sStore.setAttribute(NAME.USER_SEQ.toString(), loginUserDao.getSeq());
 //		sStore.setAttribute(SESSEION_NAME.GROUP_NAME.toString(), groupName);

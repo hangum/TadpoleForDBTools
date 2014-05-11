@@ -14,3 +14,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.preference.get
 Bundle-ClassPath: .
+Import-Package: javax.servlet;version="2.4.0",
+ javax.servlet.http;version="2.4.0"

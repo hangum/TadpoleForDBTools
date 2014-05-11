@@ -217,7 +217,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	} else {
 	    		try {
 		    		// Stored user session.
-					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
+					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
 					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);

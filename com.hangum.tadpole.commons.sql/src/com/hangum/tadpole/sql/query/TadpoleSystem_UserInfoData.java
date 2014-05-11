@@ -36,26 +36,24 @@ public class TadpoleSystem_UserInfoData {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserInfoData.class);
 
 	/**
-	 * 모든 사용자 정보 데이터. 
+	 * 사용자 정보 데이터. 
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public static List allUserInfoData() throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("allUserInfoData", SessionManager.getSeq()); //$NON-NLS-1$
+	public static List<UserInfoDataDAO> getUserInfoData() throws Exception {
+		return getUserInfoData(SessionManager.getSeq());
 	}
-	
 	/**
 	 * 사용자 정보 데이터. 
 	 * 
-	 * @param key
+	 * @param userSeq
 	 * @return
 	 * @throws Exception
 	 */
-	public static Object getUserInfoData(String key) throws Exception {
+	public static List<UserInfoDataDAO> getUserInfoData(int userSeq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForObject("getUserInfoData", SessionManager.getSeq()); //$NON-NLS-1$
+		return sqlClient.queryForList("getUserInfoData", userSeq); //$NON-NLS-1$
 	}
 	
 	/**
@@ -79,75 +77,25 @@ public class TadpoleSystem_UserInfoData {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("userInfoDataInsert", listUserData); //$NON-NLS-1$
 	}
+	
 
 	/**
-	 * general 정보의 session time을 저장합니다.
+	 * update key, value
 	 * 
-	 * @param sessionTimeOut
-	 * @throws Exception
-	 */
-	public static void updateGeneralUserInfoData(String sessionTimeOut) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getSeq());
-		
-		// 	select 제한  갯수		
-		userInfoData.setName(PreferenceDefine.SESSION_DFEAULT_PREFERENCE);
-		userInfoData.setValue0(sessionTimeOut);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-	}
-	
-	/**
-	 * general 정보의 export delimit을 저장합니다.
-	 * 
-	 * @param sessionTimeOut
-	 * @throws Exception
-	 */
-	public static void updateGeneralExportDelimitData(String delimit) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getSeq());
-		
-		// 	select 제한  갯수		
-		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
-		userInfoData.setValue0(delimit);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-	}
-	
-	/**
-	 * default home page
-	 * 
-	 * @param url
-	 * @throws Exception
-	 */
-	public static void updateDefaultHomePage(String url) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getSeq());
-		
-		// 	select 제한  갯수		
-		userInfoData.setName(PreferenceDefine.DEFAULT_HOME_PAGE);
-		userInfoData.setValue0(url);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-	}
-	
-	/**
-	 * default home page
-	 * 
+	 * @param key
 	 * @param use
 	 * @throws Exception
 	 */
-	public static void updateDefaultHomePageUse(String use) throws Exception {
+	public static void updateValue(String key, String use) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getSeq());
 		
-		// 	select 제한  갯수		
-		userInfoData.setName(PreferenceDefine.DEFAULT_HOME_PAGE_USE);
+		userInfoData.setName(key);//PreferenceDefine.DEFAULT_HOME_PAGE_USE);
 		userInfoData.setValue0(use);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
 	 * 
@@ -395,4 +343,3 @@ public class TadpoleSystem_UserInfoData {
 	}
 	
 }
- 
