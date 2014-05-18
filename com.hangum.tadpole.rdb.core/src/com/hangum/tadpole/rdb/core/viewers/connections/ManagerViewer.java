@@ -179,13 +179,16 @@ public class ManagerViewer extends ViewPart {
 		treeList.clear();
 		
 		try {
-			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
-			for (String groupName : groupNames) {
-				ManagerListDTO parent = new ManagerListDTO(groupName);
-				treeList.add(parent);
-			}
-
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+			// 그룹 이름을 생성합니다.
+			List<String> groupNames = new ArrayList<String>();
+			for (UserDBDAO userDBDAO : userDBS) {
+				if(!groupNames.contains(userDBDAO.getGroup_name())) {
+					groupNames.add(userDBDAO.getGroup_name());
+				}
+			}
+			
+			// 그룹의 자세한 항목을 넣습니다.
 			for (UserDBDAO userDBDAO : userDBS) {
 				addUserDB(userDBDAO, false);
 			}
