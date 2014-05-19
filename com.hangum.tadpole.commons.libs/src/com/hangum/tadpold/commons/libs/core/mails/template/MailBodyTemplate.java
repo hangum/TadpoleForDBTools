@@ -10,12 +10,15 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.mails.template;
 
+import java.sql.ResultSetMetaData;
+
 /**
  * default mail template
  * 
  * @author hangum
- *
+ * 
  */
 public interface MailBodyTemplate {
-//	<html>The apache logo - <img src=\"cid:" + cid + "\"></html>
+	// <html>The apache logo - <img src=\"cid:" + cid + "\"></html>
+
 }
