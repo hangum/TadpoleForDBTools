@@ -21,6 +21,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexDAO;
 import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
@@ -30,6 +31,7 @@ import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.sql.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemCommons;
+import com.hangum.tadpole.sql.query.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 
 /**
@@ -59,12 +61,17 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_2, Messages.ObjectDeleteAction_3)) {
+					String strSQL = "drop table " + dao.getSysName();
 					try {
 						if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-							new TajoConnectionManager().executeUpdate(userDB, "drop table " + dao.getSysName());
+							new TajoConnectionManager().executeUpdate(userDB, strSQL);
 						} else {
-							TadpoleSystemCommons.executSQL(userDB, "drop table " + dao.getSysName()); //$NON-NLS-1$
+							TadpoleSystemCommons.executSQL(userDB, strSQL); //$NON-NLS-1$
 						}
+						
+						//
+						TadpoleSystem_SchemaHistory.save(SessionManager.getSeq(), userDB, strSQL);
+						
 						refreshTable();
 					} catch(Exception e) {
 						logger.error(Messages.ObjectDeleteAction_5, e);
