@@ -413,6 +413,12 @@ public class TableDirectEditorComposite extends Composite {
 			textLimitEnd.setText(""+intEnd);
 		}
 		
+		if((intEnd - intStart) > 500) {
+			MessageDialog.openWarning(null, "Information", "Can not be more than 500.");
+			textLimitStart.setFocus();
+			return;
+		}
+		
 		requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, intStart, intEnd);
 		if(logger.isDebugEnabled()) logger.debug("[table information query]" + requestQuery);
 		

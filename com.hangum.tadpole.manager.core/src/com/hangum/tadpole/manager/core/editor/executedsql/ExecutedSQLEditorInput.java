@@ -55,7 +55,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Executed SQL Management";
+		return "SQL Audit";
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Executed SQL Management";
+		return "SQL Audit";
 	}
 	
 	public UserDAO getUserDAO() {

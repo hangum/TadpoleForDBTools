@@ -645,6 +645,52 @@ SELECT
 
 <!-- 
 	=========================================================================================================
+	schema_history 정보를 설정합니다.
+	=========================================================================================================
+ -->
+ <select id="getSchemaHistoryDetail" resultClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO" parameterClass="java.lang.Integer">
+     select * from schema_history_detail where schema_seq = #seq#
+ </select>
+ 
+<select id="getSchemaHistory" resultClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO" parameterClass="java.util.Map">
+    <![CDATA[
+	    select a.name, b.*
+	    from
+	    	user a, 
+	    	schema_history b
+	    where 
+	    	del_yn = 'NO' 				AND
+	    	a.seq = b.user_seq 			AND 
+	    	db_seq = #db_seq# 			AND
+	    	
+	    	object_id like #objectId# 	AND
+	    	work_type like #workType# 	AND
+	    	object_type like #objectType# AND
+	    	
+	    	create_date >= #startTime# 	AND  
+	        create_date <= #endTime#
+	    order by create_date desc
+	]]>	
+</select>
+
+<insert id="sqlHistoryInsert" parameterClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO">
+    INSERT INTO schema_history(db_seq, user_seq, object_id, work_type, object_type, create_date)
+	VALUES (#db_seq#, #user_seq#, #object_id#, #work_type#, #object_type#, #create_date#)
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO">
+		SELECT * 
+		FROM schema_history 
+		WHERE user_seq = #user_seq# AND
+			db_seq = #db_seq# AND 
+			create_date = #create_date#
+	</selectKey>
+</insert>
+<insert id="sqlHistoryDataInsert" parameterClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO">
+	INSERT INTO schema_history_detail(schema_seq, source)
+	VALUES(#schema_seq#, #source#)
+</insert>
+<!-- 
+	=========================================================================================================
 	executed_sql_resource 정보를 설정합니다.
 	=========================================================================================================
  -->

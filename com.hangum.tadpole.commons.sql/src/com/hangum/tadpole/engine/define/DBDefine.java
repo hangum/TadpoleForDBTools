@@ -45,7 +45,6 @@ public enum DBDefine {
 	/** Tadpole System DB */
 	TADPOLE_SYSTEM_DEFAULT,
 	TADPOLE_SYSTEM_MYSQL_DEFAULT,
-	TADPOLE_SYSTEM_PGSQL_DEFAULT,
 	
 	/** USER DB */
 	ORACLE_DEFAULT,
@@ -87,7 +86,6 @@ public enum DBDefine {
 		switch ( this ) {
 			case TADPOLE_SYSTEM_DEFAULT: return prefix_system + "TadpoleSystem-SQLite-Config.xml";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
-			case TADPOLE_SYSTEM_PGSQL_DEFAULT: return prefix_system + "TadpoleSystem-PGSQL-Config.xml";
 			
 			case ORACLE_DEFAULT:	return prefix + "OracleConfig.xml";
 			case MSSQL_DEFAULT:		return prefix + "MSSQLConfig.xml";
@@ -117,7 +115,6 @@ public enum DBDefine {
 		
 		if(type.equalsIgnoreCase("TadpoleSystem")) 		return TADPOLE_SYSTEM_DEFAULT;
 		if(type.equalsIgnoreCase("TadpoleSystem_MYSQL")) 	return TADPOLE_SYSTEM_MYSQL_DEFAULT;
-		if(type.equalsIgnoreCase("TadpoleSystem_PGSQL")) 	return TADPOLE_SYSTEM_PGSQL_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
 		
@@ -160,7 +157,6 @@ public enum DBDefine {
 		switch ( this ) {
 			case TADPOLE_SYSTEM_DEFAULT:		return "jdbc:sqlite:/%s";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
-			case TADPOLE_SYSTEM_PGSQL_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";
 			
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
 			
@@ -194,7 +190,6 @@ public enum DBDefine {
 		switch ( this ) {
 			case TADPOLE_SYSTEM_DEFAULT:		return "TadpoleSystem";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: 	return "TadpoleSystem_MYSQL";
-			case TADPOLE_SYSTEM_PGSQL_DEFAULT: 	return "TadpoleSystem_PGSQL";
 		
 			case ORACLE_DEFAULT:		return "Oracle";
 			
