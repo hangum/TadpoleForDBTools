@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.dao.system;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 /**

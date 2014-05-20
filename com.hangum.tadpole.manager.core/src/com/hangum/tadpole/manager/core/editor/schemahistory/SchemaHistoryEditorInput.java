@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2014 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,34 +8,20 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.editor.executedsql;
+package com.hangum.tadpole.manager.core.editor.schemahistory;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-
 /**
- * Executed SQL Editor input
+ * Schema History Editor input
  * 
  * @author hangum
  *
  */
-public class ExecutedSQLEditorInput implements IEditorInput {
-	private UserDAO userDAO;
-	private UserDBDAO userDBDAO;
-
-	public ExecutedSQLEditorInput(UserDAO selectUserDAO) {
-		this.userDAO = selectUserDAO;
-	}
-	
-	public ExecutedSQLEditorInput() {
-	}
-
-	public ExecutedSQLEditorInput(UserDBDAO userDBDAO) {
-		this.userDBDAO = userDBDAO;
+public class SchemaHistoryEditorInput implements IEditorInput {
+	public SchemaHistoryEditorInput() {
 	}
 
 	@Override
@@ -55,7 +41,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "SQL Audit";
+		return "Schema History";
 	}
 
 	@Override
@@ -65,14 +51,6 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "SQL Audit";
-	}
-	
-	public UserDAO getUserDAO() {
-		return userDAO;
-	}
-	
-	public UserDBDAO getUserDBDAO() {
-		return userDBDAO;
+		return "Schema History";
 	}
 }

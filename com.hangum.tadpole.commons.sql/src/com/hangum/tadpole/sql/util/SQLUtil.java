@@ -53,7 +53,7 @@ public class SQLUtil {
 	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
 	private static final String PATTERN_EXECUTE_UPDATE = "^INSERT.*|^UPDATE.*|^DELETET.*|^MERGE.*|^COMMIT.*|^ROLLBACK.*|^SAVEPOINT.*";
 	private static final String PATTERN_EXECUTE_CREATE = "^CREATE.*|^DECLARE.*";
-	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE + PATTERN_EXECUTE_UPDATE + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE /*+ PATTERN_EXECUTE_UPDATE*/ + "|" + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 
 	private static final String PATTERN_COMMENT = "/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/";
@@ -100,6 +100,21 @@ public class SQLUtil {
 		}
 		
 		return isRet;
+	}
+	
+	/**
+	 * execute query
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static boolean isExecute(String strSQL) {
+		strSQL = removeComment(strSQL);
+		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	

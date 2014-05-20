@@ -56,11 +56,11 @@ public class FindEditorAndWriteQueryUtil {
 		} else {
 
 //			if(isFormating) {
-				try {
-					lowSQL = SQLFormater.format(lowSQL);
-				} catch(Exception e) {
-					// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
-				}
+//				try {
+//					lowSQL = SQLFormater.format(lowSQL);
+//				} catch(Exception e) {
+//					// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
+//				}
 //			}
 			
 			IEditorPart editor = EditorUtils.findSQLEditor(userDB);

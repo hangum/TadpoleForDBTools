@@ -28,6 +28,7 @@ import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
+import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
@@ -63,6 +64,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** executed sql */
     private IAction executedSQLAction;
+    
+    /** schema history */
+    private IAction schemaHistoryAction;
     
     private IAction resourceManageAction;
     
@@ -103,6 +107,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	executedSQLAction = new ExecutedSQLAction(window);
     	register(executedSQLAction);
+    	
+    	schemaHistoryAction = new SchemaHistoryAction(window);
+    	register(schemaHistoryAction);
     	
     	resourceManageAction = new ResourceManagerAction(window);
     	register(resourceManageAction);
@@ -185,6 +192,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
     
     	toolbar.add(executedSQLAction);
+        toolbar.add(new Separator());
+        
+        toolbar.add(schemaHistoryAction);
         toolbar.add(new Separator());
             
         if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {

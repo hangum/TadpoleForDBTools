@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-java-driver-2.12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-java-driver-2.12.0.jar" sourcepath="/Users/hangum/.m2/repository/org/mongodb/mongo-java-driver/2.12.0/mongo-java-driver-2.12.0-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mariadb/mariadb-java-client-1.1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mssql/jtds-1.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/postgreSQL/postgresql-9.3-1100.jdbc4.jar"/>
