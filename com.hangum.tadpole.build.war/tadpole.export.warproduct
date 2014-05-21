@@ -6,8 +6,8 @@
       <plugin id="com.hamgum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.ace.core"/>
       <plugin id="com.hangum.tadpole.ace.editor.core"/>
-      <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
+      <plugin id="com.hangum.tadpole.applicattion.start"/>
       <plugin id="com.hangum.tadpole.aws.rds.commons.core"/>
       <plugin id="com.hangum.tadpole.cipher.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
@@ -78,8 +78,8 @@
       <plugin id="com.hamgum.tadpole.help.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.ace.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.ace.editor.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.applicattion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.aws.rds.commons.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.cipher.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
