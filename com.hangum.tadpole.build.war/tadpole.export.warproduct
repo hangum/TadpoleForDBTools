@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="tadpole-war" useFeatures="false" includeLaunchers="false">
+<product name="tadpole" useFeatures="false" includeLaunchers="false">
    <plugins>
       <plugin id="com.hamgum.tadpole.help.core"/>
-      <plugin id="com.hangum.example.ctabfolder.core"/>
+      <plugin id="com.hangum.tadpole.ace.core"/>
       <plugin id="com.hangum.tadpole.ace.editor.core"/>
       <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
@@ -20,7 +20,6 @@
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
       <plugin id="com.hangum.tadpole.mongodb.erd.core"/>
       <plugin id="com.hangum.tadpole.mongodb.model"/>
-      <plugin id="com.hangum.tadpole.monitoring.core"/>
       <plugin id="com.hangum.tadpole.notes.core"/>
       <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.hangum.tadpole.rdb.core"/>
@@ -73,12 +72,11 @@
       <plugin id="org.eclipse.rap.ui"/>
       <plugin id="org.eclipse.rap.ui.views"/>
       <plugin id="org.eclipse.rap.ui.workbench"/>
-      <plugin id="war-sample"/>
    </plugins>
 
    <configurations>
       <plugin id="com.hamgum.tadpole.help.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.example.ctabfolder.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.ace.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.ace.editor.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
@@ -94,7 +92,6 @@
       <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.monitoring.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.notes.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />
@@ -146,10 +143,9 @@
       <plugin id="org.eclipse.rap.ui" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.views" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.workbench" autoStart="true" startLevel="0" />
-      <plugin id="war-sample" autoStart="true" startLevel="0" />
    </configurations>
 
-   <warConfiguration webXml="/war-sample/WEB-INF/web.xml" launchIni="/war-sample/WEB-INF/launch.ini">
+   <warConfiguration webXml="/com.hangum.tadpole.build.war/WEB-INF/web.xml" launchIni="/com.hangum.tadpole.build.war/WEB-INF/launch.ini">
    <libraries>
       <library path="org.eclipse.equinox.servletbridge_1.3.0.v20140430-1556.jar" fromTarget="true"/>
    </libraries>
