@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tadpole Application Start
-Bundle-SymbolicName: com.hangum.tadpole.applicaion.start;singleton:=true
+Bundle-SymbolicName: com.hangum.tadpole.applicattion.start;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: hangum.com
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
