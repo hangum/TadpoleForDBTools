@@ -18,4 +18,7 @@ package com.hangum.tadpole.application.start;
  */
 public class BrowserActivator {
 	public static final String ID = "com.hangum.tadpole.applicaion.start";
+	
+	/** 이미지를 가져다 쓰기위해서 어플리케이션 아이디를 디파인 했습니다. */
+	public static final String APPLICTION_ID = "com.hangum.tadpole.application";
 }

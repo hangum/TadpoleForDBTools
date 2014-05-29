@@ -62,7 +62,7 @@ public class ChangePasswordDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/forgot-password.png")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblNewLabel.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/forgot-password.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblNewLabel.widthHint = 128;
 		gd_lblNewLabel.heightHint = 128;
