@@ -34,12 +34,12 @@ public class PreferenceDefine {
 	
 	/** default home page use */
 	public static final String DEFAULT_HOME_PAGE_USE 		= "DEFAULT_HOME_PAGE_USE";
-	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "true";
+	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "false";
 	
 	/** select 제한  갯수 */ 
 	public static final String SELECT_LIMIT_COUNT = "SELECT_LIMIT_COUNT";
 	/** select 디폴트 값 */
-	public static final int SELECT_SELECT_LIMIT_COUNT_VALUE = 200;
+	public static final int SELECT_SELECT_LIMIT_COUNT_VALUE = 500;
 //	/** 한번에 select 할수 있는 최대 값 */
 //	public static final int SELECT_SELECT_LIMIT_COUNT_MAX_PREFERENCE_VALUE = 200;
 	
