@@ -263,16 +263,20 @@ public class DBListComposite extends Composite {
 		colUserType.getColumn().setText("DB Type");
 		
 		TreeViewerColumn colEmail = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colEmail.getColumn().setWidth(200);
+		colEmail.getColumn().setWidth(150);
 		colEmail.getColumn().setText("DB Name");
 		
 		TreeViewerColumn colName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colName.getColumn().setWidth(150);
+		colName.getColumn().setWidth(200);
 		colName.getColumn().setText("DB Info");
 		
 		TreeViewerColumn colApproval = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colApproval.getColumn().setWidth(60);
+		colApproval.getColumn().setWidth(70);
 		colApproval.getColumn().setText("User");
+		
+		TreeViewerColumn colVisible = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		colVisible.getColumn().setWidth(40);
+		colVisible.getColumn().setText("Visible");
 		
 		TreeViewerColumn colCreateTime = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colCreateTime.getColumn().setWidth(120);
@@ -574,7 +578,8 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 			if("".equals(userDB.getHost())) return userDB.getUrl();
 			return userDB.getHost() + ":"  + userDB.getPort();
 		case 4: return userDB.getUsers();
-		case 5: return ""+userDB.getCreate_time();
+		case 5: return userDB.getIs_visible();
+		case 6: return ""+userDB.getCreate_time();
 		}
 		
 		return "*** not set column ***";
