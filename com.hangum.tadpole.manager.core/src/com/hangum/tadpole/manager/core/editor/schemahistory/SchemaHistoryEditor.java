@@ -41,12 +41,15 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.ResourceManager;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Schema History
@@ -105,6 +108,8 @@ public class SchemaHistoryEditor extends EditorPart {
 		
 		textObjectType = new Combo(compositeHead, SWT.BORDER);
 		textObjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textObjectType.setVisibleItemCount(7);
+		
 		textObjectType.add("");
 		textObjectType.add("TABLE");
 		textObjectType.add("VIEW");
@@ -156,6 +161,22 @@ public class SchemaHistoryEditor extends EditorPart {
 		compositeList.setLayout(new GridLayout(1, false));
 		
 		tableViewer = new TableViewer(compositeList, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				try {
+					IStructuredSelection ss = (IStructuredSelection)tableViewer.getSelection();
+					if(!ss.isEmpty()) {
+						SchemaHistoryDAO dao = (SchemaHistoryDAO)ss.getFirstElement();
+						String strSQL = getSQL(dao.getSeq());
+						textDateLeft.setText(dao.getCreate_date().toLocaleString());
+						textLeftSQL.setText(strSQL);
+							
+					}
+				} catch(Exception e) {
+					logger.error("select change tree", e);
+				}
+			}
+		});
 		Table table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -301,8 +322,10 @@ public class SchemaHistoryEditor extends EditorPart {
 		try {
 			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : listUserDBDAO) {
-				comboDisplayName.add(userDBDAO.getDisplay_name());
-				comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
+				if(userDBDAO.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+					comboDisplayName.add(userDBDAO.getDisplay_name());
+					comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
+				}
 			}
 			comboDisplayName.select(0);
 			

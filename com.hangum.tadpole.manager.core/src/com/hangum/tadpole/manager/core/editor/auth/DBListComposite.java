@@ -64,6 +64,8 @@ import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput
 import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
+import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -90,6 +92,7 @@ public class DBListComposite extends Composite {
 	private Text textSearch;
 	
 	private ToolItem tltmQueryHistory;
+	private ToolItem tltmSQLEditor;
 	private ToolItem tltmModify;
 	private ToolItem tltmDBDelete;
 	
@@ -207,6 +210,18 @@ public class DBListComposite extends Composite {
 		});
 		tltmQueryHistory.setEnabled(false);
 		tltmQueryHistory.setToolTipText("Query History");
+		
+		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
+		tltmSQLEditor.setImage(ImageUtils.getSQLEditor()); //$NON-NLS-1$
+		tltmSQLEditor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				sqlEditor();
+			}
+		});
+		tltmSQLEditor.setEnabled(false);
+		tltmSQLEditor.setToolTipText("SQL Editor");
+		
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
@@ -242,6 +257,7 @@ public class DBListComposite extends Composite {
 				if(tltmModify != null) tltmModify.setEnabled(true);
 				if(tltmDBDelete != null) tltmDBDelete.setEnabled(true);
 				tltmQueryHistory.setEnabled(true);
+				tltmSQLEditor.setEnabled(true);
 			}
 		});
 		treeViewerDBList.addDoubleClickListener(new IDoubleClickListener() {
@@ -416,6 +432,26 @@ public class DBListComposite extends Composite {
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", "Query History", errStatus); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	/**
+	 * SQL editor
+	 */
+	private void sqlEditor() {
+		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+		if(ss != null) {
+			 UserDBDAO userDBDAO = ((UserDBDAO)ss.getFirstElement());
+			
+			try {
+				MainEditorInput esei = new MainEditorInput(userDBDAO);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, MainEditor.ID, false);
+			} catch(Exception e) {
+				logger.error("SQL Editor open", e); //$NON-NLS-1$
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Editor", errStatus); //$NON-NLS-1$
 			}
 		}
 	}
