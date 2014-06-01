@@ -341,6 +341,15 @@
 	SELECT * FROM user_db 
 	WHERE 
 		group_seq in (#group_seqs#) AND
+		delYn = 'NO' AND
+		is_visible = 'YES'
+	ORDER BY group_name
+</select>
+
+<select id="userDBManager" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
+	SELECT * FROM user_db 
+	WHERE 
+		group_seq in (#group_seqs#) AND
 		delYn = 'NO'
 	ORDER BY group_name
 </select>
@@ -359,11 +368,11 @@
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBOriginalDAO">
 	INSERT INTO user_db( 
 	user_seq, ext_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
-	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser
+	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser, is_visible, is_summary_report
 	)
 	VALUES(
 	#user_seq#, #ext_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
-	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#
+	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#, #is_visible#, #is_summary_report#
 	)
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
@@ -420,7 +429,9 @@
 		question_dml			= #question_dml#,
 		is_readOnlyConnect		= #is_readOnlyConnect#,
 		is_autocommit			= #is_autocommit#,
-		is_showtables			= #is_showtables#
+		is_showtables			= #is_showtables#,
+		is_visible				= #is_visible#,
+		is_summary_report		= #is_summary_report#
 	WHERE seq = #seq#	
 </update>
 

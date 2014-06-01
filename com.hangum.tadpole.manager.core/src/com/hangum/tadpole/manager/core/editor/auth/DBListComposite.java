@@ -430,7 +430,7 @@ public class DBListComposite extends Composite {
 			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
 					|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())
 			) {	// manager, dba
-				listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB(SessionManager.getGroupSeqs());
+				listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDBManager(SessionManager.getGroupSeqs());
 			} else {	// admin 
 				listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB();
 			}
