@@ -63,7 +63,7 @@ public class FindPasswordDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/forgot-password.png")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblNewLabel.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/forgot-password.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		lblNewLabel.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 
 		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);

@@ -64,6 +64,8 @@ import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput
 import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
+import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -90,6 +92,7 @@ public class DBListComposite extends Composite {
 	private Text textSearch;
 	
 	private ToolItem tltmQueryHistory;
+	private ToolItem tltmSQLEditor;
 	private ToolItem tltmModify;
 	private ToolItem tltmDBDelete;
 	
@@ -207,6 +210,18 @@ public class DBListComposite extends Composite {
 		});
 		tltmQueryHistory.setEnabled(false);
 		tltmQueryHistory.setToolTipText("Query History");
+		
+		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
+		tltmSQLEditor.setImage(ImageUtils.getSQLEditor()); //$NON-NLS-1$
+		tltmSQLEditor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				sqlEditor();
+			}
+		});
+		tltmSQLEditor.setEnabled(false);
+		tltmSQLEditor.setToolTipText("SQL Editor");
+		
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
@@ -242,6 +257,7 @@ public class DBListComposite extends Composite {
 				if(tltmModify != null) tltmModify.setEnabled(true);
 				if(tltmDBDelete != null) tltmDBDelete.setEnabled(true);
 				tltmQueryHistory.setEnabled(true);
+				tltmSQLEditor.setEnabled(true);
 			}
 		});
 		treeViewerDBList.addDoubleClickListener(new IDoubleClickListener() {
@@ -263,16 +279,20 @@ public class DBListComposite extends Composite {
 		colUserType.getColumn().setText("DB Type");
 		
 		TreeViewerColumn colEmail = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colEmail.getColumn().setWidth(200);
+		colEmail.getColumn().setWidth(150);
 		colEmail.getColumn().setText("DB Name");
 		
 		TreeViewerColumn colName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colName.getColumn().setWidth(150);
+		colName.getColumn().setWidth(200);
 		colName.getColumn().setText("DB Info");
 		
 		TreeViewerColumn colApproval = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colApproval.getColumn().setWidth(60);
+		colApproval.getColumn().setWidth(70);
 		colApproval.getColumn().setText("User");
+		
+		TreeViewerColumn colVisible = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		colVisible.getColumn().setWidth(40);
+		colVisible.getColumn().setText("Visible");
 		
 		TreeViewerColumn colCreateTime = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colCreateTime.getColumn().setWidth(120);
@@ -417,6 +437,26 @@ public class DBListComposite extends Composite {
 	}
 	
 	/**
+	 * SQL editor
+	 */
+	private void sqlEditor() {
+		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+		if(ss != null) {
+			 UserDBDAO userDBDAO = ((UserDBDAO)ss.getFirstElement());
+			
+			try {
+				MainEditorInput esei = new MainEditorInput(userDBDAO);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, MainEditor.ID, false);
+			} catch(Exception e) {
+				logger.error("SQL Editor open", e); //$NON-NLS-1$
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Editor", errStatus); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	/**
 	 * 데이터를 초기화 합니다.
 	 * 
 	 * 1. 사용자 계정 중에 어드민 계정이 있는 지 검색 합니다.
@@ -430,7 +470,7 @@ public class DBListComposite extends Composite {
 			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
 					|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())
 			) {	// manager, dba
-				listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB(SessionManager.getGroupSeqs());
+				listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDBManager(SessionManager.getGroupSeqs());
 			} else {	// admin 
 				listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDB();
 			}
@@ -574,7 +614,8 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 			if("".equals(userDB.getHost())) return userDB.getUrl();
 			return userDB.getHost() + ":"  + userDB.getPort();
 		case 4: return userDB.getUsers();
-		case 5: return ""+userDB.getCreate_time();
+		case 5: return userDB.getIs_visible();
+		case 6: return ""+userDB.getCreate_time();
 		}
 		
 		return "*** not set column ***";

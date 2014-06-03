@@ -34,8 +34,8 @@
    <plugins>
       <plugin id="com.hamgum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.ace.editor.core"/>
-      <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
+      <plugin id="com.hangum.tadpole.applicattion.start"/>
       <plugin id="com.hangum.tadpole.aws.rds.commons.core"/>
       <plugin id="com.hangum.tadpole.cipher.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
@@ -48,6 +48,7 @@
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
       <plugin id="com.hangum.tadpole.mongodb.erd.core"/>
       <plugin id="com.hangum.tadpole.mongodb.model"/>
+      <plugin id="com.hangum.tadpole.monitoring.core"/>
       <plugin id="com.hangum.tadpole.notes.core"/>
       <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.hangum.tadpole.rdb.core"/>
@@ -132,8 +133,8 @@
    <configurations>
       <plugin id="com.hamgum.tadpole.help.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.ace.editor.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.applicattion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.aws.rds.commons.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.cipher.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
@@ -147,6 +148,7 @@
       <plugin id="com.hangum.tadpole.mongodb.core.test" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.monitoring.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.notes.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />

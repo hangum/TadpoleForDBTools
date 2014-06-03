@@ -33,8 +33,8 @@
 				difficulty, try without it.
 			-->
 			<property name="Pool.ValidationQuery" value="show tables" />
-			<property name="Pool.LogAbandoned" value="false" />
-			<property name="Pool.RemoveAbandoned" value="false" />
+			<property name="Pool.LogAbandoned" value="true" />
+			<property name="Pool.RemoveAbandoned" value="true" />
 			<property name="Pool.RemoveAbandonedTimeout" value="50000" />
 
 		</dataSource>

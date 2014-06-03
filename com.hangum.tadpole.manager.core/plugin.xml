@@ -15,7 +15,7 @@
             default="false"
             icon="resources/icons/queryhistory.png"
             id="com.hangum.tadpole.manager.core.editor.manager.executed_sql"
-            name="실행한 쿼리">
+            name="SQL Audit">
       </editor>
       <editor
             class="com.hangum.tadpole.manager.core.editor.resource.ResourceManageEditor"
@@ -30,6 +30,13 @@
             icon="resources/icons/transaction_db_status.png"
             id="com.hangum.tadpole.manager.core.editor.transaction.connection.db"
             name="DB Connection Manager">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.manager.core.editor.schemahistory.SchemaHistoryEditor"
+            default="false"
+            icon="resources/icons/schema_history.png"
+            id="com.hangum.tadpole.manager.core.editor.schemahistory"
+            name="Schema History">
       </editor>
    </extension>
 

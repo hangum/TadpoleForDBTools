@@ -287,12 +287,12 @@ public class TadpoleSystemInitializer {
 				Properties prop = new Properties();
 				prop.load(is);
 
-				String whichDB = prop.getProperty("DB").trim();
-				String ip = prop.getProperty("ip").trim();
-				String port = prop.getProperty("port").trim();
+				String whichDB 	= prop.getProperty("DB").trim();
+				String ip 		= prop.getProperty("ip").trim();
+				String port 	= prop.getProperty("port").trim();
 				String database = prop.getProperty("database").trim();
-				String user = prop.getProperty("user").trim();
-				String passwd = prop.getProperty("password").trim();
+				String user 	= prop.getProperty("user").trim();
+				String passwd 	= prop.getProperty("password").trim();
 
 				// make userDB
 				if("MYSQL".equalsIgnoreCase(whichDB)) {
@@ -302,19 +302,19 @@ public class TadpoleSystemInitializer {
 					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
 					tadpoleEngineDB.setUsers(user);
 					tadpoleEngineDB.setPasswd(passwd);
-				} else if("PGSQL".equalsIgnoreCase(whichDB)) {
-					tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
-					tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
-					
-					String isSSL = prop.getProperty("isSSL");
-					if("true".equals(isSSL)) {
-						tadpoleEngineDB.setUrl( tadpoleEngineDB.getUrl() + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
-					}
-					
-					tadpoleEngineDB.setDb(database);
-					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
-					tadpoleEngineDB.setUsers(user);
-					tadpoleEngineDB.setPasswd(passwd);
+//				} else if("PGSQL".equalsIgnoreCase(whichDB)) {
+//					tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
+//					tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
+//					
+//					String isSSL = prop.getProperty("isSSL");
+//					if("true".equals(isSSL)) {
+//						tadpoleEngineDB.setUrl( tadpoleEngineDB.getUrl() + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
+//					}
+//					
+//					tadpoleEngineDB.setDb(database);
+//					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
+//					tadpoleEngineDB.setUsers(user);
+//					tadpoleEngineDB.setPasswd(passwd);
 				}
 
 			} catch (Exception ioe) {

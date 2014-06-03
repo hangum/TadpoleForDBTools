@@ -149,6 +149,9 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setQuestion_dml(userDb.getQuestion_dml());
 		
 		userEncryptDao.setIs_external_browser(userDb.getIs_external_browser());
+		
+		userEncryptDao.setIs_visible(userDb.getIs_visible());
+		userEncryptDao.setIs_summary_report(userDb.getIs_summary_report());
 		//
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -212,6 +215,9 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setIs_profile(newUserDb.getIs_profile());
 		userEncryptDao.setQuestion_dml(newUserDb.getQuestion_dml());
 		
+		userEncryptDao.setIs_visible(newUserDb.getIs_visible());
+		userEncryptDao.setIs_summary_report(newUserDb.getIs_summary_report());
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBUpdate", userEncryptDao); //$NON-NLS-1$
 		
@@ -267,6 +273,17 @@ public class TadpoleSystem_UserDBQuery {
 	}
 	
 	/**
+	 * 일별 보고서 종류.
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDBDAO> getDailySummaryReportDB() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return  (List<UserDBDAO>)sqlClient.queryForList("dailySummaryReportDB"); //$NON-NLS-1$
+	}
+	
+	
+	/**
 	 * Get instance of database by sequence id
 	 * 
 	 * @param dbSeq
@@ -288,6 +305,16 @@ public class TadpoleSystem_UserDBQuery {
 	public static List<UserDBDAO> getAllUserDB(String userSeq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return  (List<UserDBDAO>)sqlClient.queryForList("userDB", ""+userSeq); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 유저의 디비를 보여 줍니다.
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDBDAO> getAllUserDBManager(String userSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return  (List<UserDBDAO>)sqlClient.queryForList("userDBManager", ""+userSeq); //$NON-NLS-1$
 	}
 	
 	/**

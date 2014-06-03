@@ -34,6 +34,9 @@ public class OthersConnectionInfoDAO {
 	String strTableFilterInclude = "";
 	String strTableFilterExclude = "";
 	
+	boolean isVisible = true;
+	boolean isSummaryReport = true;
+	
 	/** 시스템 브라우저에서 사용 할 url을 기록합니다 */
 	boolean isExterBrowser = false;
 	List<ExternalBrowserInfoDAO> listExterBroswer = new ArrayList<ExternalBrowserInfoDAO>();
@@ -181,4 +184,20 @@ public class OthersConnectionInfoDAO {
 		this.listExterBroswer = listExterBroswer;
 	}
 
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+
+	public boolean isSummaryReport() {
+		return isSummaryReport;
+	}
+
+	public void setSummaryReport(boolean isSummaryReport) {
+		this.isSummaryReport = isSummaryReport;
+	}
+	
 }

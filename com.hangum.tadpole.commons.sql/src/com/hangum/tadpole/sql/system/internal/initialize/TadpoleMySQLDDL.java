@@ -106,6 +106,16 @@ public class TadpoleMySQLDDL extends NLS {
 	public static String external_browser_info_seq;
 	public static String external_browser_info_fk;
 	
+	
+	public static String schema_history;
+	public static String schema_history_pk;
+	public static String schema_history_seq;
+	public static String schema_history_fk_dbseq;
+	
+	public static String schema_history_detail;
+	public static String schema_history_detail_fk_userseq;
+	public static String schema_history_detail_pk;
+	public static String schema_history_detail_seq;
 
 	static {
 		// initialize resource bundle

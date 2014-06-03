@@ -150,8 +150,7 @@ public class DBInformationDialog extends Dialog {
 		}
 		selGroupName = userDB.getGroup_name();
 		
-		DBDefine dbDefine = DBDefine.getDBDefine(userDB);
-		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, groupName, selGroupName, userDB);
+		loginComposite = DBConnectionUtils.getDBConnection(userDB.getDBDefine(), compositeBody, groupName, selGroupName, userDB);
 		compositeBody.layout();
 		container.layout();
 	}

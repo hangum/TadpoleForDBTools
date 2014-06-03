@@ -78,6 +78,7 @@ import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.query.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.sql.util.SQLUtil;
@@ -388,7 +389,7 @@ public class ResultSetComposite extends Composite {
 					epd.open();
 					ParameterObject paramObj = epd.getParameterObject();
 					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-					logger.debug("===> " + repSQL);
+					if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL);
 					reqQuery.setSql(repSQL);
 					
 					epd.close();
@@ -448,6 +449,15 @@ public class ResultSetComposite extends Composite {
 							}
 						} else {
 							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getUserType(), getUserEMail());
+						}
+					}
+					
+					// working schema_history 에 history 를 남깁니다.
+					if(SQLUtil.isExecute(reqQuery.getSql())) {
+						try {
+							TadpoleSystem_SchemaHistory.save(getUserSeq(), getUserDB(), reqQuery.getSql());
+						} catch(Exception e) {
+							logger.error("save schemahistory", e);
 						}
 					}
 					
@@ -700,6 +710,9 @@ public class ResultSetComposite extends Composite {
 
 	private String getUserEMail() {
 		return easyPreferenceData.getUserEMail();
+	}
+	private int getUserSeq() {
+		return easyPreferenceData.getUserSeq();
 	}
 
 	/**

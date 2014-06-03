@@ -264,6 +264,18 @@ public class TadpoleSystem_UserQuery {
 		sqlClient.update("updateUserSecurityHint", user); //$NON-NLS-1$
 	}
 	
+	/**
+	 * 사용자 정보.
+	 * 
+	 * @param userSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDAO getUserInfo(int userSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (UserDAO)sqlClient.queryForObject("getUserInfo", userSeq); //$NON-NLS-1$
+	}
+	
 //	/**
 //	 * 유저삭제
 //	 * @param user

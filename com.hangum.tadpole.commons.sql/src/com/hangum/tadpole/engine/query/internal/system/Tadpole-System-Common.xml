@@ -166,6 +166,16 @@
 </select>
 
 <!-- 
+	사용자 정보.
+ -->
+<select id="getUserInfo" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM user 
+	WHERE seq = #seq#
+</select>
+
+
+<!-- 
 	권한별 유저 리스트
  -->
  <select id="userListPermissions" resultClass="com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO">
@@ -336,8 +346,28 @@
 	ORDER BY group_name
 </select>
 
+<!-- 
+일별 보고서 레포트.
+ -->
+<select id="dailySummaryReportDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	SELECT * FROM user_db 
+	WHERE 
+		is_summary_report = 'YES' AND
+		delYn = 'NO'
+	ORDER BY group_name
+</select>
+
 <!--  UserDB의 리스트 -->
 <select id="userDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
+	SELECT * FROM user_db 
+	WHERE 
+		group_seq in (#group_seqs#) AND
+		delYn = 'NO' AND
+		is_visible = 'YES'
+	ORDER BY group_name
+</select>
+
+<select id="userDBManager" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
 	SELECT * FROM user_db 
 	WHERE 
 		group_seq in (#group_seqs#) AND
@@ -359,11 +389,11 @@
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBOriginalDAO">
 	INSERT INTO user_db( 
 	user_seq, ext_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, 
-	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser
+	is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser, is_visible, is_summary_report
 	)
 	VALUES(
 	#user_seq#, #ext_seq#, #group_seq#, #operation_type#, #dbms_types#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
-	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#
+	#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#, #is_visible#, #is_summary_report#
 	)
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
@@ -420,7 +450,9 @@
 		question_dml			= #question_dml#,
 		is_readOnlyConnect		= #is_readOnlyConnect#,
 		is_autocommit			= #is_autocommit#,
-		is_showtables			= #is_showtables#
+		is_showtables			= #is_showtables#,
+		is_visible				= #is_visible#,
+		is_summary_report		= #is_summary_report#
 	WHERE seq = #seq#	
 </update>
 
@@ -643,6 +675,52 @@ SELECT
 		name = #name#
 </update>
 
+<!-- 
+	=========================================================================================================
+	schema_history 정보를 설정합니다.
+	=========================================================================================================
+ -->
+ <select id="getSchemaHistoryDetail" resultClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO" parameterClass="java.lang.Integer">
+     select * from schema_history_detail where schema_seq = #seq#
+ </select>
+ 
+<select id="getSchemaHistory" resultClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO" parameterClass="java.util.Map">
+    <![CDATA[
+	    select a.name, b.*
+	    from
+	    	user a, 
+	    	schema_history b
+	    where 
+	    	del_yn = 'NO' 				AND
+	    	a.seq = b.user_seq 			AND 
+	    	db_seq = #db_seq# 			AND
+	    	
+	    	object_id like #objectId# 	AND
+	    	work_type like #workType# 	AND
+	    	object_type like #objectType# AND
+	    	
+	    	create_date >= #startTime# 	AND  
+	        create_date <= #endTime#
+	    order by create_date desc
+	]]>	
+</select>
+
+<insert id="sqlHistoryInsert" parameterClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO">
+    INSERT INTO schema_history(db_seq, user_seq, object_id, work_type, object_type, create_date)
+	VALUES (#db_seq#, #user_seq#, #object_id#, #work_type#, #object_type#, #create_date#)
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO">
+		SELECT * 
+		FROM schema_history 
+		WHERE user_seq = #user_seq# AND
+			db_seq = #db_seq# AND 
+			create_date = #create_date#
+	</selectKey>
+</insert>
+<insert id="sqlHistoryDataInsert" parameterClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO">
+	INSERT INTO schema_history_detail(schema_seq, source)
+	VALUES(#schema_seq#, #source#)
+</insert>
 <!-- 
 	=========================================================================================================
 	executed_sql_resource 정보를 설정합니다.
