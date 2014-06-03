@@ -11,7 +11,6 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

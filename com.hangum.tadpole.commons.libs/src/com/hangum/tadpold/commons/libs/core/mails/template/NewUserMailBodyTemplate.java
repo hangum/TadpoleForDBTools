@@ -16,19 +16,12 @@ package com.hangum.tadpold.commons.libs.core.mails.template;
  * @author hangum
  *
  */
-public class NewUserMailBodyTemplate implements MailBodyTemplate {
+public class NewUserMailBodyTemplate extends MailBodyTemplate {
 
-	public static String getContent(String groupName, String strName, String strEmail) {
+	public String getContent(String groupName, String strName, String strEmail) {
 		StringBuffer strContent = new StringBuffer("<html>");
 		
-		// 환영메시지.
-		strContent.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
-			strContent.append("<tr>");strContent.append("<td width='100' valign='top'>");
-			strContent.append("User has been added.\n Please check.");
-			strContent.append("</td>");
-			strContent.append("</tr>");
-			strContent.append("<br>");
-		strContent.append("</table>");
+		strContent.append(makeHead("User has been added.\n Please check."));
 
 		// 메시지.
 		strContent.append("<table border='1' cellpadding='0' cellspacing='0' width='100%'>");
@@ -62,15 +55,7 @@ public class NewUserMailBodyTemplate implements MailBodyTemplate {
 		strContent.append("</table>");
 		
 		
-		// 꼬리.
-		strContent.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
-			strContent.append("<br>");
-			strContent.append("<tr>");
-			strContent.append("<td width='100' valign='top'>");
-			strContent.append("* Tadpole DB Hub (http://hangum.github.io/TadpoleForDBTools/)");
-			strContent.append("</td>");
-			strContent.append("</tr>");
-		strContent.append("</table>");
+		strContent.append(makeTail());
 	
 		//
 		strContent.append("</html>");

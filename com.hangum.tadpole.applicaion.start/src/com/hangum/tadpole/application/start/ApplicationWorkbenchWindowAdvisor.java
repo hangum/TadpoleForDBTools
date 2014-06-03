@@ -48,6 +48,7 @@ import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.summary.report.DBSummaryReporter;
 
 /**
  * Configures the initial size and appearance of a workbench window.
@@ -68,6 +69,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     public void preWindowOpen() {
+    	try {
+			DBSummaryReporter.executer();
+		} catch(Exception e) {
+			logger.error("summary report", e);
+		}
+    	
 //    	not support rap yet.
 //    	String prop = IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS;
 //    	PlatformUI.getPreferenceStore().setValue(prop, false);
@@ -247,6 +254,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    		} catch(Exception e) {
 	    			logger.error("session set", e); //$NON-NLS-1$
 	    		}
+	    		
 	    	}
     	} 
     }

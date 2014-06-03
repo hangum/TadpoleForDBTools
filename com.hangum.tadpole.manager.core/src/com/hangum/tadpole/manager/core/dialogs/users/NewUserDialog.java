@@ -328,6 +328,14 @@ public class NewUserDialog extends Dialog {
 		super.okPressed();
 	}
 	
+	/**
+	 * 
+	 * @param userType
+	 * @param groupSeq
+	 * @param groupName
+	 * @param name
+	 * @param email
+	 */
 	private void sendEmail(PublicTadpoleDefine.USER_TYPE userType, int groupSeq, String groupName, String name, String email) {
 		try {
 			UserDAO userDao = null;
@@ -343,10 +351,12 @@ public class NewUserDialog extends Dialog {
 			// 
 			// 그룹, 사용자, 권한.
 			// 
-			emailDao.setContent(NewUserMailBodyTemplate.getContent(groupName, name, email));
+			NewUserMailBodyTemplate mailContent = new NewUserMailBodyTemplate();
+			String strContent = mailContent.getContent(groupName, name, email);
+			emailDao.setContent(strContent);
 			emailDao.setTo(userDao.getEmail());
 			
-			SendEmails sendEmail = new SendEmails(GetPreferenceGeneral.getSMTPINFO());
+			SendEmails sendEmail = new SendEmails(GetPreferenceGeneral.getSessionSMTPINFO());
 			sendEmail.sendMail(emailDao);
 		} catch(Exception e) {
 			logger.error("Error send email", e);

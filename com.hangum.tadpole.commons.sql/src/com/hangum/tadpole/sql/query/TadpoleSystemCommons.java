@@ -77,7 +77,7 @@ public class TadpoleSystemCommons {
 
 			return stmt.execute(String.format(strDML, args));
 		} finally {
-			try { javaConn.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 		}
 	}
 }

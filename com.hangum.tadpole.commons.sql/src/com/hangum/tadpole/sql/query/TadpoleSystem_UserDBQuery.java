@@ -273,6 +273,17 @@ public class TadpoleSystem_UserDBQuery {
 	}
 	
 	/**
+	 * 일별 보고서 종류.
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDBDAO> getDailySummaryReportDB() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return  (List<UserDBDAO>)sqlClient.queryForList("dailySummaryReportDB"); //$NON-NLS-1$
+	}
+	
+	
+	/**
 	 * Get instance of database by sequence id
 	 * 
 	 * @param dbSeq

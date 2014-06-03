@@ -166,6 +166,16 @@
 </select>
 
 <!-- 
+	사용자 정보.
+ -->
+<select id="getUserInfo" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM user 
+	WHERE seq = #seq#
+</select>
+
+
+<!-- 
 	권한별 유저 리스트
  -->
  <select id="userListPermissions" resultClass="com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO">
@@ -332,6 +342,17 @@
 <select id="userDBPermissions" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
 	SELECT * FROM user_db 
 	WHERE 
+		delYn = 'NO'
+	ORDER BY group_name
+</select>
+
+<!-- 
+일별 보고서 레포트.
+ -->
+<select id="dailySummaryReportDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+	SELECT * FROM user_db 
+	WHERE 
+		is_summary_report = 'YES' AND
 		delYn = 'NO'
 	ORDER BY group_name
 </select>
