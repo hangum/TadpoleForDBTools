@@ -346,7 +346,7 @@ public class SessionManager {
 			while(ids.hasMoreElements()) {
 				String id = (String)ids.nextElement();
 				
-				logger.debug("==========================> " + hsc.getSession(id));
+				if(logger.isDebugEnabled()) logger.debug("==========================> " + hsc.getSession(id));
 			}
 			
 		} catch(Exception e) {

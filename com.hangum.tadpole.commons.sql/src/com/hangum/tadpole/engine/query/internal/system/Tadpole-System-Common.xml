@@ -361,7 +361,7 @@
 <select id="userDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
 	SELECT * FROM user_db 
 	WHERE 
-		group_seq in (#group_seqs#) AND
+		group_seq in ($group_seqs$) AND
 		delYn = 'NO' AND
 		is_visible = 'YES'
 	ORDER BY group_name
