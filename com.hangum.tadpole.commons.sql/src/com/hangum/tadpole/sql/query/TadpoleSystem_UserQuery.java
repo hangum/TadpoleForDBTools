@@ -88,6 +88,19 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
+	 * search like email 
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDAO> findLikeUser(String email) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDAO> listUser = sqlClient.queryForList("findLikeUser", "%" + email + "%"); //$NON-NLS-1$
+		
+		return listUser;
+	}
+	
+	/**
 	 * 사용자 정보를 찾습니다.
 	 * 
 	 * @param email

@@ -50,8 +50,8 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.dialogs.users.FindUserDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
-import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -276,10 +276,10 @@ public class UserListComposite extends Composite {
 	 * add user
 	 */
 	private void addUser() {
-		NewUserDialog dialog = new NewUserDialog(getShell(), PublicTadpoleDefine.YES_NO.YES);
-		if(Dialog.OK == dialog.open()) {
-			initUI();
-		}
+		FindUserDialog dialog = new FindUserDialog(getShell());
+		dialog.open();
+		
+		initUI();
 	}
 	
 	/**
