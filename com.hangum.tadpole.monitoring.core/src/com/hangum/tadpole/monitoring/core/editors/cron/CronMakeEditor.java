@@ -33,12 +33,10 @@ public class CronMakeEditor extends EditorPart {
 	private Table table;
 
 	public CronMakeEditor() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -146,13 +144,11 @@ public class CronMakeEditor extends EditorPart {
 		btnMakeJob.setText("Make Job");
 
 		sashForm.setWeights(new int[] {3, 3, 4});
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
 
 	}
 }

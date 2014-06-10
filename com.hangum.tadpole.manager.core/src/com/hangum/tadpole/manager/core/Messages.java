@@ -15,6 +15,10 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.manager.core.messages"; //$NON-NLS-1$
 
+	public static String FindUserDialog_4;
+
+	public static String FindUserDialog_6;
+
 	public static String ModifyUserDialog_12;
 
 	public static String ModifyUserDialog_13;

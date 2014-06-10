@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.summary.report;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -56,8 +58,8 @@ public class DailySummaryReportJOB implements Job {
 				
 				
 				// 현재(14.06.02)는 mysql 일 경우만 섬머리 레포트를 보여줍니다.
-				if(userDBDAO.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDBDAO.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-					if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDBDAO.getIs_summary_report())) {
+				if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDBDAO.getIs_summary_report())) {
+					if(userDBDAO.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDBDAO.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
 						String strSummarySQl = MySQLSummaryReport.getSQL(userDBDAO.getDb());
 						String[] arrySQLS = StringUtils.split(strSummarySQl, ";");
@@ -74,13 +76,9 @@ public class DailySummaryReportJOB implements Job {
 						// 보고서를 보냅니다.						
 						sendEmail(userDBDAO, mailContent);
 						
-						logger.debug(
-								mailContent
-								);
-						
-						
-					}	// end mysql db
-				}	// if mysql
+						if(logger.isDebugEnabled()) logger.debug(mailContent);
+					} // end mysql db
+				}	// if yes
 			}	// for (UserDBDAO userDBDAO
 			
 		} catch (Exception e) {

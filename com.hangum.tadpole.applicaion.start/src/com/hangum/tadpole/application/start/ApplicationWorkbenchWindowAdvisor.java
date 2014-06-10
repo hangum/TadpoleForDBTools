@@ -93,9 +93,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(false);
     
-        // Set system exist message.
-        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
-    	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
+//        // Set system exist message.
+//        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
+//    	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
     	
 //    	checkSupportBrowser();
     	

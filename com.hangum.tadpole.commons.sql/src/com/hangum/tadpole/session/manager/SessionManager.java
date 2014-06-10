@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.session.manager;
 
+import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +21,12 @@ import javax.servlet.http.HttpSessionContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.dao.system.UserRoleDAO;
@@ -181,6 +184,10 @@ public class SessionManager {
 		return (Integer)sStore.getAttribute(NAME.GROUP_SEQ.toString());
 	}
 	
+	public static void setSeq(int seq) {
+		HttpSession sStore = RWT.getRequest().getSession();
+		sStore.setAttribute(NAME.USER_SEQ.toString(), seq);
+	}
 	public static int getSeq() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		Object obj = sStore.getAttribute(NAME.USER_SEQ.toString());
@@ -325,13 +332,19 @@ public class SessionManager {
 	 */
 	public static void logout() {
 		try {
-			HttpSession sStore = RWT.getRequest().getSession();
-			sStore.invalidate();
+//			HttpSession sStore = RWT.getRequest().getSession();
+//			sStore.invalidate();
+			HttpSession sStore = RWT.getRequest().getSession();			
+			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
+		
+	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", SystemDefine.INFORMATION);
+	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
+	     	executor.execute("setTimeout('"+browserText+"', 50)" );
+			
 		} catch(Exception e) {
 			// ignore exception
 		}
 	}
-	
 	
 	/**
 	 * 사용자 session을 invalidate시킵니다.
@@ -340,13 +353,12 @@ public class SessionManager {
 		try {
 			HttpSession sStore = RWT.getRequest().getSession();
 			
-			
 			HttpSessionContext hsc = sStore.getSessionContext();
 			Enumeration ids = hsc.getIds();
 			while(ids.hasMoreElements()) {
 				String id = (String)ids.nextElement();
 				
-				logger.debug("==========================> " + hsc.getSession(id));
+				if(logger.isDebugEnabled()) logger.debug("==========================> " + hsc.getSession(id));
 			}
 			
 		} catch(Exception e) {

@@ -54,4 +54,23 @@ public class TadpoleSystem_UserRole {
 		return groupRoles;
 	}
 	
+	/**
+	 * 사용자 그룹에 속한 유저가 있는지 검사합니다.
+	 * 
+	 * @param fineGroupSeq
+	 * @param userSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean findGroupUserRole(int fineGroupSeq, int userSeq) throws Exception {
+		UserRoleDAO userRoleDao = new UserRoleDAO();
+		userRoleDao.setGroup_seq(fineGroupSeq);
+		userRoleDao.setUser_seq(userSeq);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserRoleDAO> groupRoles = (List<UserRoleDAO>)sqlClient.queryForList("findGroupUserRole", userRoleDao); //$NON-NLS-1$
+		
+		return groupRoles.size() == 0 ? false:true;
+	}
+	
 }
