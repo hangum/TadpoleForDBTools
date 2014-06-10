@@ -316,9 +316,9 @@ public class NewUserDialog extends Dialog {
 			TadpoleSystem_UserRole.newUserRole(groupDAO.getSeq(), newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), 
 					PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 			
-			if(!ApplicationArgumentUtils.isTestMode()) {
-				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
-			}
+//			if(!ApplicationArgumentUtils.isTestMode()) {
+//				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
+//			}
 			
 			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
 			
