@@ -75,4 +75,8 @@ public class ImageUtils {
 	public static Image getQueryHistory() {
 		return ResourceManager.getPluginImage(ImageUtils.IMAGE_Activator_ID, "resources/icons/queryhistory.png");
 	}
+	
+	public static Image getSQLEditor() {
+		return ResourceManager.getPluginImage(ImageUtils.IMAGE_Activator_ID, "resources/icons/sql-query.png");
+	}
 }

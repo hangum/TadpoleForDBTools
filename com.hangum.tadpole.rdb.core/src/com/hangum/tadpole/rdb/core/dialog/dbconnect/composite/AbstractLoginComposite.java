@@ -32,7 +32,8 @@ import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
@@ -58,7 +59,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	protected String displayName = ""; //$NON-NLS-1$
 	
 	protected PreConnectionInfoGroup preDBInfo;
-	protected OthersConnectionRDBGroup othersConnectionInfo;
+	protected OthersConnectionGroup othersConnectionInfo;
 	
 	protected String strOtherGroupName = "Other Group"; //$NON-NLS-1$
 	protected String selGroupName = ""; //$NON-NLS-1$
@@ -416,4 +417,31 @@ public abstract class AbstractLoginComposite extends Composite {
 		return selGroupName;
 	}
 	
+	public OthersConnectionGroup getOthersConnectionInfo() {
+		return othersConnectionInfo;
+	}
+	
+	/**
+	 * Set others connection info
+	 */
+	protected void setOtherConnectionInfo() {
+		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+		
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
+		
+		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+	}
+
 }

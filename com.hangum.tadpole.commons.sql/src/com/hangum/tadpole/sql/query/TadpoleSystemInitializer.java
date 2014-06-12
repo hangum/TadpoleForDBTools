@@ -293,7 +293,7 @@ public class TadpoleSystemInitializer {
 				String database = prop.getProperty("database").trim();
 				String user 	= prop.getProperty("user").trim();
 				String passwd 	= prop.getProperty("password").trim();
-
+				
 				// make userDB
 				if("MYSQL".equalsIgnoreCase(whichDB)) {
 					tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());

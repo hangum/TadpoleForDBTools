@@ -16,7 +16,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.http.cookie.SM;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
@@ -52,7 +51,7 @@ public class GetPreferenceGeneral {
 	 * 
 	 * @return
 	 */
-	public static SMTPDTO getSMTPINFO() {
+	public static SMTPDTO getSessionSMTPINFO() {
 		SMTPDTO dto = new SMTPDTO();
 		
 		HttpSession sStore = RWT.getRequest().getSession();
@@ -78,6 +77,29 @@ public class GetPreferenceGeneral {
 			} catch (Exception e) {
 				logger.error("get stmt info", e);
 			}
+		}
+		
+		return dto;
+	}
+	
+	public static SMTPDTO getSMTPINFO() {
+		SMTPDTO dto = new SMTPDTO();
+		
+		try {
+			UserDAO userDao = TadpoleSystem_UserQuery.getAdmin();
+			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
+			Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
+			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
+				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
+			}
+		
+			dto.setHost(getValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
+			dto.setPort(getValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
+			dto.setEmail(getValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
+			dto.setPasswd(getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
+			
+		} catch (Exception e) {
+			logger.error("get stmt info", e);
 		}
 		
 		return dto;

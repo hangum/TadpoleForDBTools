@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -22,6 +21,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FontDialog;
@@ -37,8 +37,6 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.preference.internal.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
-
-import org.eclipse.swt.widgets.Combo;
 
 /**
  * rdb preference

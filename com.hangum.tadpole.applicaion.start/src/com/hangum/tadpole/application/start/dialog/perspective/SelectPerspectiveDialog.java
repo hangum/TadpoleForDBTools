@@ -62,7 +62,7 @@ public class SelectPerspectiveDialog extends Dialog {
 		Label lblIcon = new Label(container, SWT.NONE);
 		lblIcon.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		lblIcon.setText("icon");
-		lblIcon.setImage(ResourceManager.getPluginImageDescriptor(BrowserActivator.ID, "resources/icons/TadpoleForDBTools_log.png").createImage());
+		lblIcon.setImage(ResourceManager.getPluginImageDescriptor(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools_log.png").createImage());
 
 		Label lblYouDoNot = new Label(container, SWT.WRAP);
 		lblYouDoNot.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true, 1, 1));

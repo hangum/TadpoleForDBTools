@@ -98,8 +98,17 @@ public class TadpoleSystem_SchemaHistory {
 			
 			String[] arrSQL = StringUtils.split(strWorkSQL);
 			String strWorkType = arrSQL[0];
+			
+			// object type
 			String strObjecType = arrSQL[1];
-			String strObjectId = arrSQL[2];
+			
+			// objectId
+			String strObjectId = StringUtils.remove(arrSQL[2], "(");
+						
+			if(StringUtils.equalsIgnoreCase("or", strObjecType)) {
+				strObjecType = arrSQL[3];
+				strObjectId = StringUtils.remove(arrSQL[4], "(");
+			} 
 			
 			SchemaHistoryDAO sHistory = new SchemaHistoryDAO();
 			sHistory.setDb_seq(userDB.getSeq());

@@ -413,6 +413,16 @@ public class Messages extends NLS {
 	public static String RDBResultComposite_lblNewLabel_text_2;
 	public static String RDBResultComposite_lblNewLabel_text_3;
 	public static String RDBResultComposite_lblNewLabel_text_4;
+	public static String OthersConnectionRDBGroup_btnIsVisible_text;
+	public static String OthersConnectionRDBGroup_btnSendMonitoring_text;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_btnIsVisible_text;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_btnSendMonitoring_text;
+	public static String OthersConnectionMongoDBGroup_btnIsVisible_text;
+	public static String OthersConnectionMongoDBGroup_btnSendMonitoring_text;
+	public static String OthersConnectionBigDataGroup_btnIsVisible_text;
+	public static String OthersConnectionBigDataGroup_btnSendMonitoring_text;
+	public static String OthersConnectionMongoDBGroup_btnCheckButton_text;
+	public static String OthersConnectionMongoDBGroup_btnIsVisible_1_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

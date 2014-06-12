@@ -133,7 +133,7 @@ public class LoginDialog extends Dialog {
 	}
 
 	private void newUser() {
-		NewUserDialog newUser = new NewUserDialog(getParentShell(), PublicTadpoleDefine.YES_NO.NO);
+		NewUserDialog newUser = new NewUserDialog(getParentShell(), PublicTadpoleDefine.YES_NO.YES);
 		newUser.open();
 	}
 	

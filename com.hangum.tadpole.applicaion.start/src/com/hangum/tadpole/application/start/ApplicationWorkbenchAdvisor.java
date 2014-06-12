@@ -18,7 +18,6 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditor;
 import com.hangum.tadpole.rdb.core.editors.intro.IntroEditorInput;
@@ -42,8 +41,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public void postStartup() {
-		
-		if(PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE.equals(GetPreferenceGeneral.getDefaultHomePageUse())) {			
+		if(Boolean.parseBoolean(GetPreferenceGeneral.getDefaultHomePageUse())) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {
 				IntroEditorInput mei = new IntroEditorInput();

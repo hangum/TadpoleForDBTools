@@ -45,5 +45,5 @@
 		they are here (com.domain.data...)
 	-->
 	<sqlMap resource="com/hangum/tadpole/engine/query/MySQL.xml" />
-
+	<!-- sqlMap resource="com/hangum/tadpole/engine/query/MySQL_Summary.xml" /-->
 </sqlMapConfig>

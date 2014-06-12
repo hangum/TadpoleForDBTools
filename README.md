@@ -76,7 +76,7 @@ Demo Site
 *  http://goo.gl/BhwQe
  
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.4/
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.5/
  
 License
 -

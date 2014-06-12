@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.mails.template;
 
-import java.sql.ResultSetMetaData;
 
 /**
  * default mail template
@@ -18,7 +17,37 @@ import java.sql.ResultSetMetaData;
  * @author hangum
  * 
  */
-public interface MailBodyTemplate {
+public abstract class MailBodyTemplate {
 	// <html>The apache logo - <img src=\"cid:" + cid + "\"></html>
 
+	protected String makeHead(String title) {
+		StringBuffer strContent = new StringBuffer();
+		
+		// 환영메시지.
+		strContent.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
+			strContent.append("<tr>");
+			strContent.append("<td width='100' valign='top'>");
+			strContent.append(title);//"User has been added.\n Please check.");
+			strContent.append("</td>");
+			strContent.append("</tr>");
+			strContent.append("<br>");
+		strContent.append("</table>");
+		
+		return strContent.toString();
+	}
+	
+	protected String makeTail() {
+		StringBuffer strContent = new StringBuffer();
+
+		strContent.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
+			strContent.append("<br>");
+			strContent.append("<tr>");
+			strContent.append("<td width='100' valign='top'>");
+			strContent.append("* Tadpole DB Hub (http://hangum.github.io/TadpoleForDBTools/)");
+			strContent.append("</td>");
+			strContent.append("</tr>");
+		strContent.append("</table>");
+		
+		return strContent.toString();
+	}
 }
