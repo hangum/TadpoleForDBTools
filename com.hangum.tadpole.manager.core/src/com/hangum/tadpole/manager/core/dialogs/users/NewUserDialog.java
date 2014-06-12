@@ -128,6 +128,7 @@ public class NewUserDialog extends Dialog {
 				}
 			});
 			btnManager.setText(Messages.NewUserDialog_btnManager_text_1);
+			btnManager.setSelection(true);
 		}
 		
 		btnDBA = new Button(composite, SWT.RADIO);
@@ -138,6 +139,7 @@ public class NewUserDialog extends Dialog {
 			}
 		});
 		btnDBA.setText("DBA"); //$NON-NLS-1$
+		btnDBA.setEnabled(false);
 		
 		btnUser = new Button(composite, SWT.RADIO);
 		btnUser.addSelectionListener(new SelectionAdapter() {
@@ -147,7 +149,8 @@ public class NewUserDialog extends Dialog {
 			}
 		});
 		btnUser.setText(Messages.NewUserDialog_btnUser_text);
-		btnUser.setSelection(true);
+		btnUser.setSelection(false);
+		btnUser.setEnabled(false);
 		
 		Label lblGroupName = new Label(container, SWT.NONE);
 		lblGroupName.setText(Messages.NewUserDialog_lblNewLabel_text);
@@ -313,9 +316,9 @@ public class NewUserDialog extends Dialog {
 			TadpoleSystem_UserRole.newUserRole(groupDAO.getSeq(), newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), 
 					PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 			
-			if(!ApplicationArgumentUtils.isTestMode()) {
-				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
-			}
+//			if(!ApplicationArgumentUtils.isTestMode()) {
+//				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
+//			}
 			
 			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
 			
