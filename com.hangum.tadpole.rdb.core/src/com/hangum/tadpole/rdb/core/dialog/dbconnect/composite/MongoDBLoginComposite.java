@@ -198,7 +198,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			textPassword.setText(oldUserDB.getPasswd());
 			
 			textReplicaSet.setText(oldUserDB.getExt1()==null?"":oldUserDB.getExt1());
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			

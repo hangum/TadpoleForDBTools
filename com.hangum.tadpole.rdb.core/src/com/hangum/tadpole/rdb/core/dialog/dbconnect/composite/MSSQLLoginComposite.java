@@ -179,7 +179,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			

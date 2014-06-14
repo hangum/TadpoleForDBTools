@@ -189,7 +189,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
 			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		 } else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			

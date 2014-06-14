@@ -9,7 +9,8 @@
 #     hangum - initial API and implementation
 #-------------------------------------------------------------------------------
 Program Argument
-  -test			: 테스트 데이터를 로드할것인지 (ex: 예제 데이터 베이스 정보 노출)
+  -test			: 테스트 데이터를 로드할것인지 (ex: 로그인시 관리자, 개발자 계정 보이기, 예제 데이터 베이스 정보 노출)
+  -testDB		:  예제 데이터 베이스 정보 노출
   -standalone 	: 독립 실행모드인지 (ex: 서버 종료 모드, 시작시 브라우저 자동 노출)
   -debuglog 	: log4j 로그레벨이 debug모드. 아니면 info
   -dbPath		: local db(sqlite)일 경우 path 
