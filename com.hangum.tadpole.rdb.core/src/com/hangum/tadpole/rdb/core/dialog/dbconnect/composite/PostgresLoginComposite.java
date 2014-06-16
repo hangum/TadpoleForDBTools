@@ -189,6 +189,8 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textUser.setText("iagtyrdnybmqnx");
 			textPassword.setText("LDZJIFugFQESxjFDFC-j-xPNsy");
 			
+			comboSSL.setText("YES");
+			
 		} else {
 			textPort.setText("5432");
 		}

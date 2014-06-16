@@ -66,7 +66,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 	public void run(UserDBDAO userDB) {
 		
 		// mongodb인지 검사하여..
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			MainEditorInput mei = new MainEditorInput(userDB);
 			
 			try {
@@ -77,7 +77,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			MongoDBInfosInput mongoInput = new MongoDBInfosInput(userDB, MongoDBInfosEditor.PAGES.COLLECTION_SUMMERY);
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mongoInput, MongoDBInfosEditor.ID);

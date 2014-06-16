@@ -379,23 +379,27 @@ public class ResultSetComposite extends Composite {
 		sqlFilter.setFilter("");
 		textFilter.setText("");
 		
+		if(logger.isDebugEnabled()) logger.debug("Start query ========================= " + System.currentTimeMillis() );
+		
 		controlProgress(true);
 		final Shell runShell = textFilter.getShell();
 		
 		if(reqQuery.getType() != EditorDefine.EXECUTE_TYPE.ALL) {
-			try {
-				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
-				if (epd.getParamCount() > 0){
-					epd.open();
-					ParameterObject paramObj = epd.getParameterObject();
-					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-					if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL);
-					reqQuery.setSql(repSQL);
-					
-					epd.close();
+			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)) {
+				try {
+					ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
+					if (epd.getParamCount() > 0){
+						epd.open();
+						ParameterObject paramObj = epd.getParameterObject();
+						String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+						if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL);
+						reqQuery.setSql(repSQL);
+						
+						epd.close();
+					}
+				} catch(Exception e) {
+					logger.error("Parameter parse", e);
 				}
-			} catch(Exception e) {
-				logger.error("Parameter parse", e);
 			}
 		}
 		
@@ -460,6 +464,8 @@ public class ResultSetComposite extends Composite {
 							logger.error("save schemahistory", e);
 						}
 					}
+					
+					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  );
 					
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
@@ -537,7 +543,20 @@ public class ResultSetComposite extends Composite {
 				}
 			}
 			statement = javaConn.createStatement();
-			statement.setQueryTimeout(queryTimeOut);
+			
+			statement.setFetchSize(getQueryResultCount());
+			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
+					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT
+			)) {
+				statement.setQueryTimeout(queryTimeOut);
+			}
+			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
+					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)) 
+			{
+				statement.setMaxRows(getQueryResultCount());
+			}
 			
 			// check stop thread
 //			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
@@ -548,7 +567,7 @@ public class ResultSetComposite extends Composite {
 			// execute query
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
-
+			
 //			if(logger.isDebugEnabled()) logger.debug("\t======== execute end =================================");
 					
 			rsDAO = new QueryExecuteResultDTO(true, resultSet, getQueryResultCount(), getIsResultComma());
