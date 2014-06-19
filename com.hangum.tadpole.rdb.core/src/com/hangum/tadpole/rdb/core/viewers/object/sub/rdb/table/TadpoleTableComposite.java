@@ -324,7 +324,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 				if (null != is) {
 					TableColumnDAO tableDAO = (TableColumnDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.runAtPosition(tableDAO.getField());
+					FindEditorAndWriteQueryUtil.runAtPosition(StringUtils.trim(tableDAO.getField()));
 				}
 			}
 		});
