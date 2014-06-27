@@ -33,7 +33,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
@@ -48,12 +55,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
@@ -69,6 +80,8 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.global.OpenSingleDataDialogAction;
+import com.hangum.tadpole.rdb.core.dialog.record.RecordViewDialog;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -137,6 +150,8 @@ public class ResultSetComposite extends Composite {
 	private Button btnSQLResultExport;
     /** content download를 위한 더미 composite */
     private Composite compositeDumy;
+    
+    private OpenSingleDataDialogAction openSingleDataAction;
 
 	/**
 	 * Create the composite.
@@ -268,6 +283,7 @@ public class ResultSetComposite extends Composite {
 		tableResult.setLinesVisible(true);
 		tableResult.setHeaderVisible(true);
 		tableResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		createResultMenu();
 		
 		sqlFilter.setTable(tableResult);
 		
@@ -289,7 +305,7 @@ public class ResultSetComposite extends Composite {
 		
 		Composite compositeBtn = new Composite(this, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(4, false);
+		GridLayout gl_compositeBtn = new GridLayout(5, false);
 		gl_compositeBtn.marginWidth = 1;
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
@@ -298,7 +314,22 @@ public class ResultSetComposite extends Composite {
 		compositeDumy.setLayout(new GridLayout(1, false));
 		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
+		btnDetailView = new Button(compositeBtn, SWT.NONE);
+		GridData gd_btnDetailView = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnDetailView.widthHint = 80;
+		btnDetailView.setLayoutData(gd_btnDetailView);
+		btnDetailView.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openSingleRecordViewDialog();
+			}
+		});
+		btnDetailView.setText("View detail");
+		
 		btnSQLResultExport = new Button(compositeBtn, SWT.NONE);
+		GridData gd_btnSQLResultExport = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnSQLResultExport.widthHint = 80;
+		btnSQLResultExport.setLayoutData(gd_btnSQLResultExport);
 		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -334,6 +365,48 @@ public class ResultSetComposite extends Composite {
 		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
+	}
+	
+	/**
+	 * Open Single recode view.
+	 * Just view detail data.
+	 */
+	private void openSingleRecordViewDialog() {
+		// selection sevice를 이용할 수 없어 중복되는 코드 생성이 필요해서 작성.
+		openSingleDataAction.selectionChanged(rsDAO, tvQueryResult.getSelection());
+		if (openSingleDataAction.isEnabled()) {
+			openSingleDataAction.run();
+		} else {
+			MessageDialog.openWarning(getShell(), "Warning", "Select row data");
+		}
+	}
+	
+	private void createResultMenu() {
+		openSingleDataAction = new OpenSingleDataDialogAction();
+		// menu
+		final MenuManager menuMgr = new MenuManager("#PopupMenu", "ResultSet"); //$NON-NLS-1$
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				manager.add(openSingleDataAction);
+			}
+		});
+
+		tvQueryResult.getTable().setMenu(menuMgr.createContextMenu(tvQueryResult.getTable()));
+
+		// 
+		// 본 Composite는 Editor에서 최초 생성되는데, 에디터가 site()에 등록되지 않은 상태에서
+		// selection service에 접근할 수 없어서 임시로 selection 이벤트가 발생할때마다 
+		// 직접 action selection 메소드를 호출하도록 수정함.
+		// 또한, 쿼리 실행할 때 마다 rsDAO 값도 변경되므로, selectoin이 변경될때 마다 같이
+		// 전달해 준다. 
+		tvQueryResult.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				openSingleDataAction.selectionChanged(rsDAO, event.getSelection());
+			}
+		});
 	}
 
 	/**
@@ -522,6 +595,7 @@ public class ResultSetComposite extends Composite {
 	private boolean isUserInterrupt = false;
 	private ExecutorService execServiceQuery = null;
 	private ExecutorService esCheckStop = null; 
+	private Button btnDetailView;
 	private QueryExecuteResultDTO runSelect() throws Exception {
 		if(!PermissionChecker.isExecute(getUserType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
