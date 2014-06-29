@@ -16,6 +16,17 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class TadpoleSystem_UserRole {
 	
 	/**
+	 * 탈퇴.
+	 * @param userSeq
+	 * @throws Exception
+	 */
+	public static void withdrawal(int userSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("userWithdrawal", userSeq); //$NON-NLS-1$
+		sqlClient.update("dbWithdrawal", userSeq); //$NON-NLS-1$
+	}
+	
+	/**
 	 * insert data the user_goup_role.
 	 * 
 	 * @param groupSeq

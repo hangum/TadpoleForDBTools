@@ -129,13 +129,31 @@
 </insert>
 
 <!-- 
+탈퇴.
+ -->
+ <update id="userWithdrawal" parameterClass="java.lang.Integer">
+	UPDATE user
+ 	SET   delyn= 'YES' 
+ 	WHERE 
+		seq = #seq# 
+</update>
+<update id="dbWithdrawal" parameterClass="java.lang.Integer">
+	UPDATE user_db
+ 	SET   delyn= 'YES' 
+ 	WHERE 
+		user_seq = #seq# 
+</update>
+
+
+<!-- 
 	로그인
  -->
 <select id="login" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 	SELECT * 
 	FROM user 
 	WHERE 
-		email = #email#
+			email = #email#
+		AND delyn = 'NO'
 </select>
 
 <!-- 
@@ -821,7 +839,7 @@ SELECT
 	=========================================================================================================
 	user_rol 정보를 설정합니다.
 	=========================================================================================================
- -->
+ --> 
 <insert id="userUserRoleInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
 	INSERT INTO user_role(group_seq, user_seq, role_type, name)
 	VALUES(#group_seq#, #user_seq#, #role_type#, #name#)

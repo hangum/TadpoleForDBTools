@@ -30,10 +30,16 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
+
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * 사용자 정보 수정
@@ -158,6 +164,26 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 
 		// because of reference of textAnswer
 		comboQuestion.select(0);
+		new Label(container, SWT.NONE);
+		
+		Button buttonWithdrawal = new Button(container, SWT.NONE);
+		buttonWithdrawal.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserInfoPerference_9)) { //$NON-NLS-1$
+					try {
+						TadpoleSystem_UserRole.withdrawal(SessionManager.getGroupSeq());
+						
+						TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
+						SessionManager.logout();
+					} catch (Exception e1) {
+						logger.error("user withdrawal", e1);
+					}
+				}
+					
+			}
+		});
+		buttonWithdrawal.setText(Messages.UserInfoPerference_button_text);
 		
 		String questionKey = CipherManager.getInstance().decryption(SessionManager.getSecurityQuestion());
 		if (null!= questionKey && !"".equals(questionKey.trim())) { //$NON-NLS-1$
