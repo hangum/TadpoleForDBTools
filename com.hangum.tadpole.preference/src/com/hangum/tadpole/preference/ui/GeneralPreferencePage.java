@@ -117,7 +117,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		textPasswd = new Text(grpEmailAccount, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		if(!PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())) {
+		if(SessionManager.isAdmin()) {
 			grpEmailAccount.setVisible(false);
 		}
 		

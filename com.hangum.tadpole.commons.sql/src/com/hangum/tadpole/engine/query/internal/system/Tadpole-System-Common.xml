@@ -387,7 +387,7 @@
 	FROM user_db a
 		, user_db_ext b 
 	WHERE 
-		group_seq in (#group_seqs#) AND
+		group_seq in ($group_seqs$) AND
 		a.seq = b.seq AND
 		delYn = 'NO'
 	ORDER BY group_name

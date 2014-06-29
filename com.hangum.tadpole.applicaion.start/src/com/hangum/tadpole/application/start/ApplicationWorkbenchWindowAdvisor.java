@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.service.ExitConfirmation;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -31,7 +30,6 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
@@ -112,14 +110,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	   
     	// If login after does not DB exist, DB connect Dialog open.
     	try {
-    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
-    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+//    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+//    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
     			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
 	    		if(0 == mv.getAllTreeList().size()) {
 	    			ConnectDatabase cd = new ConnectDatabase();
 	    			cd.run();
 	    		}
-    		}
+//    		}
     	} catch(Exception e) {
     		logger.error("Is DB list?", e); //$NON-NLS-1$
     	}
@@ -233,10 +231,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					
 					if ("".equals(SessionManager.getPerspective())) {
 					
-						// user 사용자는 default perspective를 사용합니다.
-						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
-							SessionManager.setPerspective(Perspective.DEFAULT);
-						} else {
+//						// user 사용자는 default perspective를 사용합니다.
+//						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+//							SessionManager.setPerspective(Perspective.DEFAULT);
+//						} else {
 							String persp;
 							SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
 							
@@ -246,7 +244,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 								persp = Perspective.DEFAULT;
 							}
 							SessionManager.setPerspective(persp);
-						}
+//						}
 					}
 					
 					initSession();

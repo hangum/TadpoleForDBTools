@@ -66,13 +66,13 @@ public class PerspectivePreferencePage extends PreferencePage implements IWorkbe
 		
 		btnManager = new Button(grpSelectPerspective, SWT.RADIO);
 		btnManager.setText("Manager");
-		if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+//		if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
 			btnManager.setEnabled(false);
-		}
+//		}
 		
 		btnAdmin = new Button(grpSelectPerspective, SWT.RADIO);
 		btnAdmin.setText("Administrator");
-		if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+		if(SessionManager.isAdmin()) {
 			btnAdmin.setEnabled(false);
 		}
 		
