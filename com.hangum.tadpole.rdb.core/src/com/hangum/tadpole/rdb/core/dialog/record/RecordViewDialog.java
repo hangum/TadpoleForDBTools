@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     billy.goo - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.record;
 
 import java.util.HashMap;
@@ -22,6 +32,16 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 
+/**
+ * Query Result 창에서 데이터 선택히 한 창에서 조회할수 있게
+ * 해주는 창입니다. 
+ * 
+ * 이 창에서는 네비게이터 버튼을 이용해 다른 데이터로 이동할 수 
+ * 있습니다. 
+ * 
+ * @author billy.goo
+ *
+ */
 public class RecordViewDialog extends Dialog {
 
 	private QueryExecuteResultDTO dto;

@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     hangum - initial API and implementation
+ *     billy.goo - add dialog to view detail record
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
@@ -381,6 +382,9 @@ public class ResultSetComposite extends Composite {
 		}
 	}
 	
+	/**
+	 * tvQueryResult 테이블 뷰어에 메뉴 추가하기 
+	 */
 	private void createResultMenu() {
 		openSingleDataAction = new OpenSingleDataDialogAction();
 		// menu
