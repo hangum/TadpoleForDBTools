@@ -435,7 +435,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
 					// hive & tajo
-					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || 
+							userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || 
+									userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 							manager.add(creatAction_Table);
 							manager.add(deleteAction_Table);

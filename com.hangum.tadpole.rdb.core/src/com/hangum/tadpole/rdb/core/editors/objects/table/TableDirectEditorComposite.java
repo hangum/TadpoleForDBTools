@@ -50,6 +50,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.XMLUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
@@ -431,6 +432,7 @@ public class TableDirectEditorComposite extends Composite {
 			
 			PreparedStatement stmt = null;
 			stmt = javaConn.prepareStatement(requestQuery);
+			stmt.setMaxRows(GetPreferenceGeneral.getSelectLimitCount());
 			
 			rs = stmt.executeQuery();
 			

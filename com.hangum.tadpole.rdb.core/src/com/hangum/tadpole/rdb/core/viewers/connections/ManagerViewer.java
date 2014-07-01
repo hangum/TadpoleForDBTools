@@ -59,7 +59,6 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * connection manager 정보를 
@@ -140,8 +139,6 @@ public class ManagerViewer extends ViewPart {
 					ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
 					cda.runConnectionDialog(is);
 				}
-				
-				
 			}
 		});
 		Tree tree = managerTV.getTree();
