@@ -961,4 +961,15 @@ SELECT
 	AND is_system_read = 'NO'
 </update>
 
+<!-- 
+	=========================================================================================================
+	schedule 정보.
+	=========================================================================================================
+ -->
+<insert id="scheduleMainInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO">
+	INSERT INTO schedule_main 	(seq, user_seq, db_seq, title, desc, cron_exp) 
+	VALUES 						(#seq#, #user_seq#, #db_seq#, #title#, #desc#, #cron_exp#); 
+</insert>
+
+
 </sqlMap>

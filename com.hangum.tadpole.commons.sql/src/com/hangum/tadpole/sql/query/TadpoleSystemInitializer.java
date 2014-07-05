@@ -209,7 +209,7 @@ public class TadpoleSystemInitializer {
 				//targetDDL = new String(targetDDL.getBytes(), "ISO-8859-1");
 				createMsg = "System Table create [" + targetDDL + "]";
 				stmt.execute(targetDDL);
-				logger.info("\n System Table create ==>> " + field.getName());
+				logger.info(" ==>> " + field.getName());
 			}
 
 		} catch (Exception e) {

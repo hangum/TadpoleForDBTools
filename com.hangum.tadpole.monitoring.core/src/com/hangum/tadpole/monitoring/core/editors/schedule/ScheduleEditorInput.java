@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.monitoring.core.editors.monitoring;
+package com.hangum.tadpole.monitoring.core.editors.schedule;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -20,7 +20,7 @@ import org.eclipse.ui.IPersistableElement;
  * @author hangum
  *
  */
-public class MonitoringEditorInput implements IEditorInput {
+public class ScheduleEditorInput implements IEditorInput {
 
 	@Override
 	public Object getAdapter(Class adapter) {
@@ -39,7 +39,7 @@ public class MonitoringEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "DB Monitoring";
+		return "Schedule";
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class MonitoringEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "DB Monitoring";
+		return "Schedule";
 	}
 
 }
