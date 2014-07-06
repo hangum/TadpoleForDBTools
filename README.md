@@ -2,7 +2,7 @@ Tadpole DB Hub
 ==
 
 
-Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases. 
+Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
 It enables you to handle typical DB over the World Wide Web
 ![screenshot](https://sites.google.com/site/tadpole10image/_/rsrc/1387452720774/commons/TadpoleDBHub-v1.2.0.png?height=309&width=400)
 
@@ -12,7 +12,7 @@ It enables you to handle typical DB over the World Wide Web
 * User Management (Admin, Manager, User)
 * Support Apache Hive, Apache Tajo, Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
-* Download query result 
+* Download query result
 * SQL Syntax Highlighting
 * SQL Formatting
 * SQL Statement <-> Java, PHP String Literal Each Convert
@@ -30,10 +30,10 @@ It enables you to handle typical DB over the World Wide Web
 * Intuitive web interface (Safari, Chrome, IE, Firefox)
 * User Management (Admin, Manager, User)
 * MongoDB User Management
-* Query View(Tree, Table, Text) 
+* Query View(Tree, Table, Text)
 * Show query plan and console
-* Download query result 
-* GridFS(Insert, Delete, Download) 
+* Download query result
+* GridFS(Insert, Delete, Download)
 * Server Status
 * Top
 * Web Console
@@ -49,7 +49,7 @@ Environment
 -
 * more than Java 1.6.x
 * support system standalone : linux.gtk.x86, linux.gtk.x86_64, acosx.cocoa.x86, macosx.cocoa.x86_64, win32.x86, win32.x86_64
-* support system server : tomcat 6.x 
+* support system server : tomcat 6.x
 
 Demo Video
 -
@@ -59,7 +59,7 @@ Demo Video
 
 Document
 -
-* Developer Guide 
+* Developer Guide
  - English : https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-Eng
  - Korea  : https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-kor
 * RDB User Guide
@@ -69,15 +69,15 @@ Document
 * MongoDB User Guide
  - English : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor
  - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Eng
-* RDB Tutorial 
+* RDB Tutorial
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
 Demo Site
-*  http://goo.gl/BhwQe
- 
+*  http://tadpoledb.com
+
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.5/
- 
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.6/
+
 License
 -
 * LGPL(Lesser General Public License)
