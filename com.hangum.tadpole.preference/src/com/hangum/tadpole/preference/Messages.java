@@ -38,6 +38,8 @@ public class Messages extends NLS {
 	public static String UserInfoPerference_5;
 	public static String UserInfoPerference_6;
 	public static String UserInfoPerference_8;
+
+	public static String UserInfoPerference_9;
 	
 	public static String DefaultPreferencePage_other_labelText;
 	public static String DefaultPreferencePage_stringFieldEditor_stringValue;
@@ -105,6 +107,7 @@ public class Messages extends NLS {
 	public static String GeneralPreferencePage_lblPort_text;
 	public static String GeneralPreferencePage_lblAccount_text;
 	public static String GeneralPreferencePage_lblPassword_text;
+	public static String UserInfoPerference_button_text;
 	
 	static {
 		// initialize resource bundle

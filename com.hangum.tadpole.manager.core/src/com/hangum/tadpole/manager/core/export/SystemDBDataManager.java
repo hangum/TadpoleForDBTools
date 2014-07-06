@@ -66,8 +66,10 @@ public class SystemDBDataManager {
 		Gson gson = new Gson();
 		
 		for (UserDBDAO userDBDAO : listUserDB) {
-			retStr += gson.toJson(userDBDAO);
-			retStr += PublicTadpoleDefine.LINE_SEPARATOR;
+			if(userDBDAO.getGroup_seq() == SessionManager.getGroupSeq()) {
+				retStr += gson.toJson(userDBDAO);
+				retStr += PublicTadpoleDefine.LINE_SEPARATOR;
+			}
 		}
 		
 		return retStr;

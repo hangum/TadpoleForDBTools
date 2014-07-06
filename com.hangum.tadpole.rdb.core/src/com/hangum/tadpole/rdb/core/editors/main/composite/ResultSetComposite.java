@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     hangum - initial API and implementation
+ *     billy.goo - add dialog to view detail record
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
@@ -33,7 +34,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
@@ -69,6 +76,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.global.OpenSingleDataDialogAction;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -76,7 +84,7 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
@@ -102,12 +110,11 @@ import com.swtdesigner.SWTResourceManager;
 public class ResultSetComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
-	private UserPreference easyPreferenceData = new UserPreference();
 	
-	/** 결과 페이지에서 사용할 폰트 지정 */
-	private final String PREFERENCE_USER_FONT 	= GetPreferenceGeneral.getRDBResultFont();
-	/** query time out */
-	private final int queryTimeOut = GetPreferenceGeneral.getQueryTimeOut();
+//	/** 결과 페이지에서 사용할 폰트 지정 */
+//	private final String PREFERENCE_USER_FONT 	= GetPreferenceGeneral.getRDBResultFont();
+//	/** query time out */
+//	private final int queryTimeOut = GetPreferenceGeneral.getQueryTimeOut();
 	
 	/** execute job */
 	private Job jobQueryManager = null;
@@ -137,6 +144,8 @@ public class ResultSetComposite extends Composite {
 	private Button btnSQLResultExport;
     /** content download를 위한 더미 composite */
     private Composite compositeDumy;
+    
+    private OpenSingleDataDialogAction openSingleDataAction;
 
 	/**
 	 * Create the composite.
@@ -183,6 +192,7 @@ public class ResultSetComposite extends Composite {
 		tvQueryResult = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		final Table tableResult = tvQueryResult.getTable();
 
+		final String PREFERENCE_USER_FONT = GetPreferenceGeneral.getRDBResultFont();
 		if(!"".equals(PREFERENCE_USER_FONT)) {
 			try {
 				String[] arryFontInfo = StringUtils.split(PREFERENCE_USER_FONT, "|");
@@ -268,6 +278,7 @@ public class ResultSetComposite extends Composite {
 		tableResult.setLinesVisible(true);
 		tableResult.setHeaderVisible(true);
 		tableResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		createResultMenu();
 		
 		sqlFilter.setTable(tableResult);
 		
@@ -289,7 +300,7 @@ public class ResultSetComposite extends Composite {
 		
 		Composite compositeBtn = new Composite(this, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(4, false);
+		GridLayout gl_compositeBtn = new GridLayout(5, false);
 		gl_compositeBtn.marginWidth = 1;
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
@@ -298,17 +309,34 @@ public class ResultSetComposite extends Composite {
 		compositeDumy.setLayout(new GridLayout(1, false));
 		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
+		btnDetailView = new Button(compositeBtn, SWT.NONE);
+		GridData gd_btnDetailView = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnDetailView.widthHint = 80;
+		btnDetailView.setLayoutData(gd_btnDetailView);
+		btnDetailView.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openSingleRecordViewDialog();
+			}
+		});
+		btnDetailView.setText("View detail");
+		
 		btnSQLResultExport = new Button(compositeBtn, SWT.NONE);
+		GridData gd_btnSQLResultExport = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnSQLResultExport.widthHint = 80;
+		btnSQLResultExport.setLayoutData(gd_btnSQLResultExport);
 		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " ";
+				
 				// 분리자 정보를 가져옵니다.
 				StringBuffer sbExportData = new StringBuffer();
 					
 				// column 헤더추가.
 				TableColumn[] tcs = tvQueryResult.getTable().getColumns();
 				for (TableColumn tableColumn : tcs) {
-					sbExportData.append( tableColumn.getText()).append(UserPreference.EXPORT_DEMILITER);
+					sbExportData.append( tableColumn.getText()).append(EXPORT_DEMILITER);
 				}
 				sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				
@@ -319,7 +347,7 @@ public class ResultSetComposite extends Composite {
 					for(int j=0; j<mapColumns.size(); j++) {
 						String strContent = mapColumns.get(j)==null?"":mapColumns.get(j).toString(); //$NON-NLS-1$
 						if(strContent.length() == 0 ) strContent = " "; //$NON-NLS-1$
-						sbExportData.append(strContent).append(UserPreference.EXPORT_DEMILITER); //$NON-NLS-1$
+						sbExportData.append(strContent).append(EXPORT_DEMILITER); //$NON-NLS-1$
 					}
 					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR);
 				}
@@ -335,6 +363,51 @@ public class ResultSetComposite extends Composite {
 		
 		registerServiceHandler();
 	}
+	
+	/**
+	 * Open Single recode view.
+	 * Just view detail data.
+	 */
+	private void openSingleRecordViewDialog() {
+		// selection sevice를 이용할 수 없어 중복되는 코드 생성이 필요해서 작성.
+		openSingleDataAction.selectionChanged(rsDAO, tvQueryResult.getSelection());
+		if (openSingleDataAction.isEnabled()) {
+			openSingleDataAction.run();
+		} else {
+			MessageDialog.openWarning(getShell(), "Warning", "Select row data");
+		}
+	}
+	
+	/**
+	 * tvQueryResult 테이블 뷰어에 메뉴 추가하기 
+	 */
+	private void createResultMenu() {
+		openSingleDataAction = new OpenSingleDataDialogAction();
+		// menu
+		final MenuManager menuMgr = new MenuManager("#PopupMenu", "ResultSet"); //$NON-NLS-1$
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				manager.add(openSingleDataAction);
+			}
+		});
+
+		tvQueryResult.getTable().setMenu(menuMgr.createContextMenu(tvQueryResult.getTable()));
+
+		// 
+		// 본 Composite는 Editor에서 최초 생성되는데, 에디터가 site()에 등록되지 않은 상태에서
+		// selection service에 접근할 수 없어서 임시로 selection 이벤트가 발생할때마다 
+		// 직접 action selection 메소드를 호출하도록 수정함.
+		// 또한, 쿼리 실행할 때 마다 rsDAO 값도 변경되므로, selectoin이 변경될때 마다 같이
+		// 전달해 준다. 
+		tvQueryResult.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				openSingleDataAction.selectionChanged(rsDAO, event.getSelection());
+			}
+		});
+	}
 
 	/**
 	 * scroll data에 맞게 데이터를 출력합니다. 
@@ -348,9 +421,9 @@ public class ResultSetComposite extends Composite {
 			final TadpoleResultSet trs = rsDAO.getDataList();
 			if(logger.isDebugEnabled()) logger.debug("====> refresh data " + trs.getData().size() +":"+ tableResult.getItemCount());
 			if(trs.getData().size() > tableResult.getItemCount()) {
-				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + getPageCount()));
-				if(trs.getData().size() > (tableResult.getItemCount() + getPageCount())) {
-					tvQueryResult.setInput(trs.getData().subList(0, tableResult.getItemCount() + getPageCount()));
+				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount()));
+				if(trs.getData().size() > (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())) {
+					tvQueryResult.setInput(trs.getData().subList(0, tableResult.getItemCount() + GetPreferenceGeneral.getPageCount()));
 				} else {
 					tvQueryResult.setInput(trs.getData());
 				}
@@ -379,28 +452,39 @@ public class ResultSetComposite extends Composite {
 		sqlFilter.setFilter("");
 		textFilter.setText("");
 		
+		if(logger.isDebugEnabled()) logger.debug("Start query ========================= " + System.currentTimeMillis() );
+		
 		controlProgress(true);
 		final Shell runShell = textFilter.getShell();
 		
 		if(reqQuery.getType() != EditorDefine.EXECUTE_TYPE.ALL) {
-			try {
-				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
-				if (epd.getParamCount() > 0){
-					epd.open();
-					ParameterObject paramObj = epd.getParameterObject();
-					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-					if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL);
-					reqQuery.setSql(repSQL);
-					
-					epd.close();
+			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)) {
+				try {
+					ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
+					if (epd.getParamCount() > 0){
+						epd.open();
+						ParameterObject paramObj = epd.getParameterObject();
+						String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+						if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL);
+						reqQuery.setSql(repSQL);
+						
+						epd.close();
+					}
+				} catch(Exception e) {
+					logger.error("Parameter parse", e);
 				}
-			} catch(Exception e) {
-				logger.error("Parameter parse", e);
 			}
 		}
 		
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
+		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
+		final boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
+		final String strPlanTBName = GetPreferenceGeneral.getPlanTableName();
+		final int intUserSeq 		= SessionManager.getSeq();
+		final String strUserEmail 	= SessionManager.getEMAIL();
+		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
+		
 		jobQueryManager = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
@@ -428,38 +512,40 @@ public class ResultSetComposite extends Composite {
 						
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
-							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getUserType(), getUserEMail());
+							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getUserType(), strUserEmail);
 						}
 						
 						// select 문장 실행
 						if(SQLUtil.isStatement(reqQuery.getSql())) { //$NON-NLS-1$
-							rsDAO = runSelect();
+							rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, isResultComma);
 							sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
 						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 						if(TransactionManger.isTransaction(reqQuery.getSql())) {
-							TransactionManger.transactionQuery(reqQuery.getSql(), getUserEMail(), getUserDB());// userEmail, userDB)) return null;
+							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());// userEmail, userDB)) return null;
 						} else if(SQLUtil.isStatement(reqQuery.getSql())) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
-								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), getPlanTableName());
+								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
 							} else {
-								rsDAO = runSelect();
+								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, isResultComma);
 								sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 							}
 						} else {
-							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getUserType(), getUserEMail());
+							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getUserType(), strUserEmail);
 						}
 					}
 					
 					// working schema_history 에 history 를 남깁니다.
 					if(SQLUtil.isExecute(reqQuery.getSql())) {
 						try {
-							TadpoleSystem_SchemaHistory.save(getUserSeq(), getUserDB(), reqQuery.getSql());
+							TadpoleSystem_SchemaHistory.save(intUserSeq, getUserDB(), reqQuery.getSql());
 						} catch(Exception e) {
 							logger.error("save schemahistory", e);
 						}
 					}
+					
+					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  );
 					
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
@@ -516,7 +602,8 @@ public class ResultSetComposite extends Composite {
 	private boolean isUserInterrupt = false;
 	private ExecutorService execServiceQuery = null;
 	private ExecutorService esCheckStop = null; 
-	private QueryExecuteResultDTO runSelect() throws Exception {
+	private Button btnDetailView;
+	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final boolean isResultComma) throws Exception {
 		if(!PermissionChecker.isExecute(getUserType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
@@ -533,11 +620,24 @@ public class ResultSetComposite extends Composite {
 					SqlMapClient client = TadpoleSQLManager.getInstance(getUserDB());
 					javaConn = client.getDataSource().getConnection();
 				} else {
-					javaConn = TadpoleSQLTransactionManager.getInstance(getUserEMail(), getUserDB());
+					javaConn = TadpoleSQLTransactionManager.getInstance(strUserEmail, getUserDB());
 				}
 			}
 			statement = javaConn.createStatement();
-			statement.setQueryTimeout(queryTimeOut);
+			
+			statement.setFetchSize(intSelectLimitCnt);
+			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
+					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT
+			)) {
+				statement.setQueryTimeout(queryTimeOut);
+//			}
+//			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
+//					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
+//					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)) 
+//			{
+				statement.setMaxRows(intSelectLimitCnt);
+			}
 			
 			// check stop thread
 //			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
@@ -548,10 +648,10 @@ public class ResultSetComposite extends Composite {
 			// execute query
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
-
+			
 //			if(logger.isDebugEnabled()) logger.debug("\t======== execute end =================================");
 					
-			rsDAO = new QueryExecuteResultDTO(true, resultSet, getQueryResultCount(), getIsResultComma());
+			rsDAO = new QueryExecuteResultDTO(true, resultSet, intSelectLimitCnt, isResultComma);
 		} catch(Exception e) {
 			if(logger.isDebugEnabled()) logger.error("execute query", e);
 			throw e;
@@ -641,12 +741,12 @@ public class ResultSetComposite extends Composite {
 		} 	// end run
 	}	// end method
 
-	private int getQueryResultCount() {
-		return easyPreferenceData.getQueryResultCount();
-	}
-	private int getPageCount() {
-		return easyPreferenceData.getQueryPageCount();
-	}
+//	private int getQueryResultCount() {
+//		return easyPreferenceData.getQueryResultCount();
+//	}
+//	private int getPageCount() {
+//		return easyPreferenceData.getQueryPageCount();
+//	}
 
 	/**
 	 * error message 추가한다.
@@ -696,24 +796,24 @@ public class ResultSetComposite extends Composite {
 		}
 	}
 	
-	private boolean getIsResultComma() {
-		return easyPreferenceData.isResultComma();
-	}
+//	private boolean getIsResultComma() {
+//		return easyPreferenceData.isResultComma();
+//	}
 
-	private String getPlanTableName() {
-		return easyPreferenceData.getPlanTableName();
-	}
+//	private String getPlanTableName() {
+//		return easyPreferenceData.getPlanTableName();
+//	}
 
 	private String getUserType() {
 		return null;
 	}
 
-	private String getUserEMail() {
-		return easyPreferenceData.getUserEMail();
-	}
-	private int getUserSeq() {
-		return easyPreferenceData.getUserSeq();
-	}
+//	private String getUserEMail() {
+//		return easyPreferenceData.getUserEMail();
+//	}
+//	private int getUserSeq() {
+//		return easyPreferenceData.getUserSeq();
+//	}
 
 	/**
 	 * 쿼리 결과를 화면에 출력합니다.
@@ -731,8 +831,8 @@ public class ResultSetComposite extends Composite {
 			tvQueryResult.setContentProvider(new ArrayContentProvider());// SQLResultContentProvider(trs.getData().subList(0, getPageCount())));
 			
 			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
-			if(trs.getData().size() > getPageCount()) {
-				tvQueryResult.setInput(trs.getData().subList(0, getPageCount()));	
+			if(trs.getData().size() > GetPreferenceGeneral.getPageCount()) {
+				tvQueryResult.setInput(trs.getData().subList(0, GetPreferenceGeneral.getPageCount()));	
 			} else {
 				tvQueryResult.setInput(trs.getData());
 			}
@@ -746,7 +846,7 @@ public class ResultSetComposite extends Composite {
 			} else {
 				// 
 				// 데이터가 한계가 넘어 갔습니다.
-				String strMsg = String.format(Messages.MainEditor_34, getQueryResultCount());
+				String strMsg = String.format(Messages.MainEditor_34, GetPreferenceGeneral.getSelectLimitCount());
 				strResultMsg = String.format("%s (%s%s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
 			}
 			

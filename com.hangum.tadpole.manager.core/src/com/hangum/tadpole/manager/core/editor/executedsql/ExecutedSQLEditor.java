@@ -340,18 +340,18 @@ public class ExecutedSQLEditor extends EditorPart {
 	 * Initial configuration setting of widgets
 	 */
 	private void initBehavior() {
-		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+//		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
 			btnUserAllCheck.setSelection(true);
 			
 			comboDisplayName.setEnabled(false);
 			comboUserName.setEnabled(false);
-		} else {
-			btnUserAllCheck.setSelection(false);
-			btnUserAllCheck.setEnabled(false);
-			
-			comboDisplayName.setEnabled(false);
-			comboUserName.setEnabled(true);
-		}
+//		} else {
+//			btnUserAllCheck.setSelection(false);
+//			btnUserAllCheck.setEnabled(false);
+//			
+//			comboDisplayName.setEnabled(false);
+//			comboUserName.setEnabled(true);
+//		}
 	}
 
 	/**
@@ -436,21 +436,21 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void initUIData() {
 
 		try {
-			// 어드민 권한이면 모든 정보를 다 표현합니다.
-			if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+//			// 어드민 권한이면 모든 정보를 다 표현합니다.
+//			if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
 				List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
 				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
 					String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
 					comboUserName.add(name);
 					comboUserName.setData(name, userGroupAUserDAO.getSeq());
 				}
-			// 개발자 권한일 경우에는 본인만 표시합니다.
-			} else {
-				String name = SessionManager.getName() + " (" + SessionManager.getEMAIL() + ")";
-				
-				comboUserName.add(name);
-				comboUserName.setData(name, SessionManager.getSeq());
-			}
+//			// 개발자 권한일 경우에는 본인만 표시합니다.
+//			} else {
+//				String name = SessionManager.getName() + " (" + SessionManager.getEMAIL() + ")";
+//				
+//				comboUserName.add(name);
+//				comboUserName.setData(name, SessionManager.getSeq());
+//			}
 			
 			if (userDAO == null) {
 				comboUserName.select(0);

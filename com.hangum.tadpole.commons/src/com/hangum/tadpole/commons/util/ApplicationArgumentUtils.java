@@ -11,7 +11,6 @@
 package com.hangum.tadpole.commons.util;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.core.runtime.Platform;
 
 /**
@@ -133,6 +132,15 @@ public class ApplicationArgumentUtils {
 	}
 	
 	/**
+	 * testDB 모드이면
+	 * 
+	 * @return
+	 */
+	public static boolean isTestDBMode() {
+		return checkString("-testDB");
+	}
+	
+	/**
 	 * check debug mode
 	 */
 	public static boolean isDebugMode() {
@@ -156,7 +164,6 @@ public class ApplicationArgumentUtils {
 	
 		throw new Exception("Can't find argument. Find key is " + key);
 	}
-	
 	/**
 	 * runtime시에 argument가 있는지 검사합니다.
 	 * 
@@ -167,7 +174,7 @@ public class ApplicationArgumentUtils {
 		String[] applicationArgs = Platform.getApplicationArgs();
 		
 		for (String string : applicationArgs) {
-			if( string.startsWith(checkString) ) return true;
+			if( string.equalsIgnoreCase(checkString) ) return true;
 		}
 		
 		return false;

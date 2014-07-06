@@ -29,7 +29,7 @@ public class DailySummaryReport extends MailBodyTemplate {
 	public String makeFullSummaryReport(String displayName, String fullText) {
 		StringBuffer sb = new StringBuffer("<html>");
 		
-		sb.append( makeHead(displayName + " Summary Report.") ); 
+		sb.append( makeHead(displayName + "  Report.") ); 
 		sb.append( fullText );
 		sb.append( makeTail() );
 		

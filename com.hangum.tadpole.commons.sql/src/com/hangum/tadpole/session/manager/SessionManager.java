@@ -11,6 +11,7 @@
 package com.hangum.tadpole.session.manager;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.dao.system.UserRoleDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
@@ -58,7 +60,7 @@ public class SessionManager {
 														LOGIN_EMAIL, 
 														LOGIN_PASSWORD, 
 														LOGIN_NAME, 
-								/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
+//								/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
 								/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
 														USER_INFO_DATA,
 														SECURITY_QUESTION,
@@ -99,12 +101,11 @@ public class SessionManager {
 		
 //		 user의 대표 role과 전체 role을 세션에 저장합니다. 
 //		 이것은 user role이 manager일 경우만 디비의 등록 추가 수정이 가능하여 자신이 속한 그룹의 role을 찾는 것입니다.
-		String strRepresentRole 	= PublicTadpoleDefine.USER_TYPE.USER.toString();
-		String tmpStrRepAdminRole 	= "";
-		String tmpStrRepManagerRole = "";
-		String tmpStrRepDBARole 	= "";
-		String tmpStrRepUserRole 	= "";
+//		String strRepresentRole 	= PublicTadpoleDefine.USER_TYPE.USER.toString();
+//		String tmpStrRepAdminRole 	= ""; 
 		
+		
+		Map<Integer, String> mapRoleType = new HashMap<Integer, String>();
 		// 내가 속한 모든 그룹 순번이고, 이것은 사용할수 있는 디비를 조회하는 용도로 사용하기 위해 세션에 입력합니다.
 		String strGroupSeqs = "";
 		
@@ -114,20 +115,17 @@ public class SessionManager {
 				mapUserRole.put(userRoleDAO.getGroup_seq(), userRoleDAO.getRole_type());
 				
 				if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(userRoleDAO.getRole_type())) {
-					tmpStrRepAdminRole = PublicTadpoleDefine.USER_TYPE.ADMIN.toString();
-					
 					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(userRoleDAO.getRole_type())) {
-					tmpStrRepManagerRole = PublicTadpoleDefine.USER_TYPE.MANAGER.toString();
-					
-					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
-				} else if(PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(userRoleDAO.getRole_type())) {
-					tmpStrRepDBARole = PublicTadpoleDefine.USER_TYPE.DBA.toString();
-					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
-				} else if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(userRoleDAO.getRole_type())) {
-					tmpStrRepUserRole = PublicTadpoleDefine.USER_TYPE.USER.toString();
 					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				}
+//				} else if(PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(userRoleDAO.getRole_type())) {
+//					tmpStrRepDBARole = PublicTadpoleDefine.USER_TYPE.DBA.toString();
+//					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
+//				} else if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(userRoleDAO.getRole_type())) {
+//					tmpStrRepUserRole = PublicTadpoleDefine.USER_TYPE.USER.toString();
+//					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
+//				}
 				
 				strGroupSeqs += userRoleDAO.getGroup_seq() + ",";
 			}
@@ -135,14 +133,14 @@ public class SessionManager {
 			strGroupSeqs = StringUtils.removeEnd(strGroupSeqs, ",");
 			sStore.setAttribute(NAME.GROUP_SEQS.toString(), strGroupSeqs);
 			
-			// 대표 role을 찾는다.
-			if(!"".equals(tmpStrRepAdminRole)) strRepresentRole = tmpStrRepAdminRole;
-			else if(!"".equals(tmpStrRepManagerRole)) strRepresentRole = tmpStrRepManagerRole;
-			else if(!"".equals(tmpStrRepDBARole)) strRepresentRole = tmpStrRepDBARole;
-			else if(!"".equals(tmpStrRepUserRole)) strRepresentRole = tmpStrRepUserRole;
-			
-			// session 에 등록.
-			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), strRepresentRole);
+//			// 대표 role을 찾는다.
+//			if(!"".equals(tmpStrRepAdminRole)) strRepresentRole = tmpStrRepAdminRole;
+//			else if(!"".equals(tmpStrRepManagerRole)) strRepresentRole = tmpStrRepManagerRole;
+//			else if(!"".equals(tmpStrRepDBARole)) strRepresentRole = tmpStrRepDBARole;
+//			else if(!"".equals(tmpStrRepUserRole)) strRepresentRole = tmpStrRepUserRole;
+//			
+//			// session 에 등록.
+//			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), strRepresentRole);
 			sStore.setAttribute(NAME.ROLE_TYPE.toString(), mapUserRole);
 			
 		} catch(Exception e) {
@@ -231,34 +229,40 @@ public class SessionManager {
 	 * @param groupSeq
 	 * @return
 	 */
-	public static String getRoleType(int groupSeq) {
+	public static String getRoleType(UserDBDAO userDB) {
 		HttpSession sStore = RWT.getRequest().getSession();
 		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(NAME.ROLE_TYPE.toString());
 		
-		return mapUserRole.get(groupSeq);
+		return mapUserRole.get(userDB.getGroup_seq());
 	}
 	
-	/**
-	 * 자신이 대표 권한을 리턴합니다.
-	 * 
-	 * <pre>
-	 * 권한 중복일 경우
-	 * admin이면서 manager일수는 없습니다. 
-	 * 	1) admin
-	 *  2) manager 
-	 *  3) dba 
-	 *  4) user
-	 * 
-	 * group당 manager권한은 반듯이 하나입니다.
-	 * manager권한이 정지되면 그룹을 수정 못하는 것으로.
-	 * </pre>
-	 * 
-	 * @return
-	 */
-	public static String getRepresentRole() {
-		HttpSession sStore = RWT.getRequest().getSession();
-		
-		return (String)sStore.getAttribute(NAME.REPRESENT_ROLE_TYPE.toString());
+//	/**
+//	 * 자신이 대표 권한을 리턴합니다.
+//	 * 
+//	 * <pre>
+//	 * 권한 중복일 경우
+//	 * admin이면서 manager일수는 없습니다. 
+//	 * 	1) admin
+//	 *  2) manager 
+//	 *  3) dba 
+//	 *  4) user
+//	 * 
+//	 * group당 manager권한은 반듯이 하나입니다.
+//	 * manager권한이 정지되면 그룹을 수정 못하는 것으로.
+//	 * </pre>
+//	 * 
+//	 * @return
+//	 */
+//	public static String getRepresentRole() {
+//		HttpSession sStore = RWT.getRequest().getSession();
+//		
+//		return (String)sStore.getAttribute(NAME.REPRESENT_ROLE_TYPE.toString());
+//	}
+	
+	public static boolean isAdmin() {
+		Map<Integer, String> mapUserRole = getAllRoleType();
+		Collection<String> collValues = mapUserRole.values();
+		return collValues.contains(PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 	}
 	
 	/**
@@ -337,11 +341,10 @@ public class SessionManager {
 			HttpSession sStore = RWT.getRequest().getSession();			
 			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
 		
-			String defaultUrl = MessageFormat.format("{0}://{1}:{2}",
-					new Object[] { RWT.getRequest().getScheme(), RWT.getRequest().getLocalName(), Integer.toString(RWT.getRequest().getLocalPort()),RWT.getRequest().getRequestURI() });
-	     System.out.println("Default URL: " + defaultUrl);
+//			String defaultUrl = MessageFormat.format("{0}://{1}:{2}",
+//					new Object[] { RWT.getRequest().getScheme(), RWT.getRequest().getLocalName(), Integer.toString(RWT.getRequest().getLocalPort()),RWT.getRequest().getRequestURI() });
 	     
-	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", defaultUrl);
+	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", SystemDefine.INFORMATION);
 	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
 	     	executor.execute("setTimeout('"+browserText+"', 50)" );
 			

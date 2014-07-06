@@ -179,7 +179,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
@@ -188,6 +188,8 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textDatabase.setText("daiune4ju9eqio");
 			textUser.setText("iagtyrdnybmqnx");
 			textPassword.setText("LDZJIFugFQESxjFDFC-j-xPNsy");
+			
+			comboSSL.setText("YES");
 			
 		} else {
 			textPort.setText("5432");

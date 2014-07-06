@@ -99,7 +99,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			othersConnectionInfo.setUserData(oldUserDB);
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 			
 			preDBInfo.setTextDisplayName(getDisplayName());
 			

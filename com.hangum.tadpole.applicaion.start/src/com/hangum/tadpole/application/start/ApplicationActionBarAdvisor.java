@@ -31,14 +31,13 @@ import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
+import com.hangum.tadpole.monitoring.core.actions.schedule.ScheduleAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenDBRelationAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenQueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.global.PreferenceAction;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * Define at action, toolbar, menu
@@ -64,6 +63,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** executed sql */
     private IAction executedSQLAction;
+    
+    /** schedule action */
+    private IAction scheduleAction;
     
     /** schema history */
     private IAction schemaHistoryAction;
@@ -107,6 +109,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	executedSQLAction = new ExecutedSQLAction(window);
     	register(executedSQLAction);
+    	
+    	scheduleAction = new ScheduleAction(window);
+    	register(scheduleAction);
     	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
@@ -169,10 +174,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main"));
         
-        if(PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
+//        if(PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
 	        toolbar.add(connectAction);
 	        toolbar.add(new Separator());
-        }
+//        }
         
         toolbar.add(saveAction);
         toolbar.add(saveAsAction);
@@ -185,23 +190,24 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(deleteResourceAction);
         toolbar.add(new Separator());
 
-        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+//        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
         	toolbar.add(userPermissionAction);
         	toolbar.add(new Separator());
-        }
+//        }
         
-    
     	toolbar.add(executedSQLAction);
+        toolbar.add(new Separator());
+        
+        toolbar.add(scheduleAction);
         toolbar.add(new Separator());
         
         toolbar.add(schemaHistoryAction);
         toolbar.add(new Separator());
             
-        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+//        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
             toolbar.add(transactionConnectionAction);
             toolbar.add(new Separator());
-        }
-        
+//        }
         
         toolbar.add(resourceManageAction);
         toolbar.add(new Separator());

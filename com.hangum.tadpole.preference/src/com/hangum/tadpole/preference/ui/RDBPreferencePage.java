@@ -228,7 +228,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	 * 초기값을 설정 합니다.
 	 */
 	private void initDefaultValue() {
-		textSelectLimit.setText( "" + GetPreferenceGeneral.getQueryResultCount() ); //$NON-NLS-1$
+		textSelectLimit.setText( "" + GetPreferenceGeneral.getSelectLimitCount() ); //$NON-NLS-1$
 		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
 		textQueryTimeout.setText( "" + GetPreferenceGeneral.getQueryTimeOut() );
 		

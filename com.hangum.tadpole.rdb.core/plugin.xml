@@ -299,6 +299,12 @@
                id="com.hangum.tadpole.rdb.core.action.extensionBrowser"
                label="Admin Browser">
          </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.commons.ScheduleCreateAction"
+               icon="resources/icons/commons/schedule.png"
+               id="com.hangum.tadpole.rdb.core.action.schedule"
+               label="Create schedule">
+         </action>
             <!--
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"

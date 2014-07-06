@@ -136,8 +136,6 @@ public class TadpoleSystem_UserQuery {
 	
 		if(null == userInfo) {
 			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
-		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) {
-			throw new Exception(Messages.TadpoleSystem_UserQuery_6);
 		} else {
 			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
 				throw new Exception(Messages.TadpoleSystem_UserQuery_5);

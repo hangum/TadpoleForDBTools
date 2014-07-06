@@ -60,7 +60,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			

@@ -276,7 +276,7 @@ public class SQLUtil {
 				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[0]+",")) {
 					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
 				}
-			} else {
+			} else if(arryRetStr.length > 1){
 				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[1]+",")) {
 					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
 				}

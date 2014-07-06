@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +94,7 @@ import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * RDB table composite
@@ -280,11 +282,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 
 			public int getToolTipDisplayDelayTime(Object object) {
-				return 5000;
+				return 100;
 			}
 
 			public int getToolTipTimeDisplayed(Object object) {
-				return 1000;
+				return 5000;
 			}
 
 			public void update(ViewerCell cell) {
@@ -324,7 +326,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 				if (null != is) {
 					TableColumnDAO tableDAO = (TableColumnDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.runAtPosition(tableDAO.getField());
+					FindEditorAndWriteQueryUtil.runAtPosition(StringUtils.trim(tableDAO.getField()));
 				}
 			}
 		});
@@ -435,7 +437,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
 					// hive & tajo
-					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || 
+							userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || 
+									userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 							manager.add(creatAction_Table);
 							manager.add(deleteAction_Table);

@@ -50,13 +50,11 @@ public class LoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
 	
 	private int ID_NEW_USER = IDialogConstants.CLIENT_ID 	+ 1;
-	private int ID_GUEST_USER = IDialogConstants.CLIENT_ID 	+ 2;
 	private int ID_ADMIN_USER = IDialogConstants.CLIENT_ID 	+ 3;
 	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID + 4;
 	
 	private Text textEMail;
 	private Text textPasswd;
-//	private Combo comboLocalization;
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -154,11 +152,7 @@ public class LoginDialog extends Dialog {
 		 } else {
 			String userId = "", password = ""; //$NON-NLS-1$ //$NON-NLS-2$
 			
-			if(buttonId == ID_GUEST_USER) {
-				userId = TadpoleSystemInitializer.GUEST_EMAIL;
-				password = TadpoleSystemInitializer.GUEST_PASSWD;
-			
-			} else if(buttonId == ID_ADMIN_USER) {
+			if(buttonId == ID_ADMIN_USER) {
 				userId = TadpoleSystemInitializer.ADMIN_EMAIL;
 				password = TadpoleSystemInitializer.ADMIN_PASSWD;
 				
@@ -242,7 +236,6 @@ public class LoginDialog extends Dialog {
 		// -test 일 경우만 ..
 		if(ApplicationArgumentUtils.isTestMode()) {
 			createButton(parent, ID_MANAGER_USER, Messages.LoginDialog_12, false);
-			createButton(parent, ID_GUEST_USER, Messages.LoginDialog_13, false);
 		}
 		
 		createButton(parent, ID_NEW_USER, Messages.LoginDialog_16, false);

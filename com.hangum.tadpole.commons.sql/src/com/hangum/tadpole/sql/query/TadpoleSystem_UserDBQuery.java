@@ -154,6 +154,8 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setIs_summary_report(userDb.getIs_summary_report());
 		//
 		
+		userEncryptDao.setExt1(userDb.getExt1());
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDBDAO insertedUserDB = (UserDBDAO)sqlClient.insert("userDBInsert", userEncryptDao); //$NON-NLS-1$
 		
@@ -217,6 +219,8 @@ public class TadpoleSystem_UserDBQuery {
 		
 		userEncryptDao.setIs_visible(newUserDb.getIs_visible());
 		userEncryptDao.setIs_summary_report(newUserDb.getIs_summary_report());
+		
+		userEncryptDao.setExt1(newUserDb.getExt1());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBUpdate", userEncryptDao); //$NON-NLS-1$

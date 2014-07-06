@@ -74,6 +74,9 @@ public class Perspective implements IPerspectiveFactory {
 				defaultPerspective(layout);
 			}
 		}
+	
+//		get의 outline을 보일것인지? 현재는 썸네일이 블렉으로 보여주어서 블럭을 해 놓습니다. 
+//		layout.addStandaloneView(IPageLayout.ID_OUTLINE, true, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 	}
 
 	public void adminPerspective(IPageLayout layout) {

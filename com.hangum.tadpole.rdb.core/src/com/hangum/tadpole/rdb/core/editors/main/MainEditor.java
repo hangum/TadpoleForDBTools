@@ -105,7 +105,7 @@ public class MainEditor extends EditorExtension {
 		userDB = qei.getUserDB();
 		initDefaultEditorStr = qei.getDefaultStr();
 
-		strRoleType = SessionManager.getRoleType(userDB.getGroup_seq());
+		strRoleType = SessionManager.getRoleType(userDB);
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
@@ -150,7 +150,7 @@ public class MainEditor extends EditorExtension {
 		tltmConnectURL.setToolTipText("Connection Information");
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		
-		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
 			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
 				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName));

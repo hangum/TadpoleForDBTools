@@ -67,7 +67,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		super(parent, style, selectDB);
 		
 		setText(Messages.OthersConnectionMongoDBGroup_0);
-		GridLayout gridLayout = new GridLayout(3, false);
+		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -106,6 +106,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		});
 		btnExternalBrowser.setText(Messages.OthersConnectionMongoDBGroup_btnExternalBrowser_text);
 		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
 		
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
@@ -118,8 +119,6 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		btnSendMonitoring = new Button(this, SWT.CHECK);
 		btnSendMonitoring.setEnabled(false);
 		btnSendMonitoring.setText(Messages.OthersConnectionMongoDBGroup_btnSendMonitoring_text);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
 	}
 	
 	/**
