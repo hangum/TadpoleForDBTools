@@ -150,7 +150,7 @@ public class TadpoleSystem_Schedule {
 		dao.setUser_seq(SessionManager.getSeq());
 		dao.setDb_seq(userDB.getSeq());
 		dao.setTitle(title);
-		dao.setDesc(desc);
+		dao.setDescription(desc);
 		dao.setCron_exp(cronExp);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

@@ -21,7 +21,7 @@ public class ScheduleDAO {
 	int schedule_main_seq;
 	int send_seq;
 	String name = "";
-	String desc = "";
+	String description = "";
 	String delyn = "";
 	
 	String sql = "";
@@ -61,12 +61,12 @@ public class ScheduleDAO {
 		this.name = name;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getDelyn() {

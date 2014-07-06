@@ -967,8 +967,8 @@ SELECT
 	=========================================================================================================
  -->
 <insert id="scheduleMainInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO">
-	INSERT INTO schedule_main 	(user_seq, db_seq, title, desc, cron_exp) 
-	VALUES 						(#user_seq#, #db_seq#, #title#, #desc#, #cron_exp#);
+	INSERT INTO schedule_main 	(user_seq, db_seq, title, description, cron_exp) 
+	VALUES 						(#user_seq#, #db_seq#, #title#, #description#, #cron_exp#);
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO">
 		SELECT * 
@@ -976,15 +976,15 @@ SELECT
 		WHERE user_seq = #user_seq# AND 
 			db_seq = #db_seq# AND 
 			title = #title# AND 
-			desc = #desc# AND
+			description = #description# AND
 			cron_exp = #cron_exp# AND
 			delYn = 'NO'
 	</selectKey> 
 </insert>
 
 <insert id="scheduleInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ScheduleDAO">
-	INSERT INTO schedule (schedule_main_seq, send_seq, name, desc) 
-	VALUES (#schedule_main_seq#, #send_seq#, #name#, #desc#) 
+	INSERT INTO schedule (schedule_main_seq, send_seq, name, description) 
+	VALUES (#schedule_main_seq#, #send_seq#, #name#, #description#) 
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.ScheduleDAO">
 		SELECT * 
@@ -992,7 +992,7 @@ SELECT
 		WHERE schedule_main_seq = #schedule_main_seq# AND 
 			send_seq = #send_seq# AND 
 			name = #name# AND 
-			desc = #desc# AND
+			description = #description# AND
 			delYn = 'NO'
 	</selectKey> 
 </insert>

@@ -60,7 +60,7 @@ public class UserJOB implements Job {
 					sbMailContent.append( DailySummaryReportJOB.executSQL(userDB, scheduleDAO.getName(), scheduleDAO.getSql()) );
 				} catch(Exception e) {
 					sbMailContent.append( "Rise Exception :\n" + e.getMessage() );
-					strMessage += e.getMessage();
+					strMessage += e.getMessage() + "\n";
 					isResult = false;
 				}
 			}

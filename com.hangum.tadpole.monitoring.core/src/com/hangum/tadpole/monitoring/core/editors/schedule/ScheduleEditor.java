@@ -257,7 +257,7 @@ class ScheduleLabelProvider extends LabelProvider implements ITableLabelProvider
 		switch(columnIndex) {
 		case 0: return dao.getTitle();
 		case 1: return dao.getCron_exp();
-		case 2: return dao.getDesc();
+		case 2: return dao.getDescription();
 		}
 		return null;
 	}

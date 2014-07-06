@@ -101,7 +101,7 @@ public class AddSQLDialog extends Dialog {
 	
 	private void initUI() {
 		textTitle.setText(dao.getName());
-		textDesc.setText(dao.getDesc());
+		textDesc.setText(dao.getDescription());
 		textSQL.setText(dao.getSql());
 	}
 	
@@ -124,7 +124,7 @@ public class AddSQLDialog extends Dialog {
 		}
 		
 		dao.setName(txtTitle);
-		dao.setDesc(txtDesc);
+		dao.setDescription(txtDesc);
 		dao.setSql(txtSQL);
 		
 		super.okPressed();

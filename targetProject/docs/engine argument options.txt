@@ -14,7 +14,7 @@ Program Argument
   -standalone 	: 독립 실행모드인지 (ex: 서버 종료 모드, 시작시 브라우저 자동 노출)
   -debuglog 	: log4j 로그레벨이 debug모드. 아니면 info
   -dbPath		: local db(sqlite)일 경우 path 
-  -dbServer 	0t//bB9qlWgGXTTF9sAwWOc3RYoWToZRp9fir0oasXQWOskWOUwsQyP1EfZKO0Myhao3kOPdddZvC+CkOVQATaPne9B6XVs/ZpJe4mdFBwzyFW8Q8JoSOg==
+  -dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
   				: 엔진디비를 지정한 디비 정보를 사용합니다. 디폴트는 내부 sqlite 디비를 사용합니다. 
   -useDB		: 올챙이 시스템에서 지원하는 디비중에서 이용하고자하는 디비를 기록합니다. 모두다 사용할 경우 all 혹은 option을 적지않습니다.
   				: 현재 지원되는디비는 다음과 같습니다.  아래의 값들 중에 return 다음 값들을 ,로 구분하여 입력합니다.

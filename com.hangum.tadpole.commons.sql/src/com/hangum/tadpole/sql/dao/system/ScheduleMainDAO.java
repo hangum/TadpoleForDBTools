@@ -22,10 +22,9 @@ public class ScheduleMainDAO {
 	int user_seq;
 	int db_seq;
 	String title;
-	String desc;
+	String description;
 	String cron_exp;
 	Timestamp create_time;
-	Timestamp mod_time;
 	String delyn;
 	
 	public ScheduleMainDAO() {
@@ -63,12 +62,12 @@ public class ScheduleMainDAO {
 		this.title = title;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getCron_exp() {
@@ -85,14 +84,6 @@ public class ScheduleMainDAO {
 
 	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
-	}
-
-	public Timestamp getMod_time() {
-		return mod_time;
-	}
-
-	public void setMod_time(Timestamp mod_time) {
-		this.mod_time = mod_time;
 	}
 
 	public String getDelyn() {
