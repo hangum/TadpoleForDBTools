@@ -1023,6 +1023,11 @@ SELECT
 		delYn = 'NO'
 </select>
 
+<update id="deleteScheduleMain" parameterClass="java.lang.Integer">
+	UPDATE schedule_main SET delYn = 'YES'
+	WHERE seq = #seq# 
+</update>
+
 <select id="getSchedule" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleDAO" parameterClass="java.lang.Integer">
 	SELECT * 
 	FROM schedule 
@@ -1034,6 +1039,18 @@ SELECT
 	SELECT * 
 	FROM schedule_detail 
 	WHERE schedule_seq = #schedule_seq#
+</select>
+
+<select id="getUserScheduleMain" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM schedule_main 
+	WHERE user_seq = #seq# AND 
+		delYn = 'NO'
+</select>
+
+<select id="getScheduleResult" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleResultDAO" parameterClass="java.lang.Integer">
+	SELECT * FROM schedule_result
+	where schedule_main_seq = #seq#
 </select>
 
 </sqlMap>

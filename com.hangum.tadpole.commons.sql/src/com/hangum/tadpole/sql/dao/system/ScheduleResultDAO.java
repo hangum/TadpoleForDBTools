@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.dao.system;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
@@ -22,7 +23,7 @@ public class ScheduleResultDAO {
 	int schedule_main_seq;
 	String result;
 	String description;
-	Timestamp create_time;
+	Date create_time;
 	
 	public ScheduleResultDAO() {
 	}
@@ -59,14 +60,12 @@ public class ScheduleResultDAO {
 		this.description = description;
 	}
 
-	public Timestamp getCreate_time() {
+	public Date getCreate_time() {
 		return create_time;
 	}
 
-	public void setCreate_time(Timestamp create_time) {
+	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
-	
-	
 
 }

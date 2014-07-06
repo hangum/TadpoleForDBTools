@@ -36,6 +36,28 @@ public class TadpoleSystem_Schedule {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_Schedule.class);
 	
 	/**
+	 * delete schedule
+	 * 
+	 * @param seq
+	 * @throws Exception
+	 */
+	public static void deleteSchedule(int seq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("deleteScheduleMain", seq);
+	}
+	
+	/**
+	 * get result
+	 * @param seq
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<ScheduleResultDAO> getScheduleResult(int seq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getScheduleResult", seq);
+	}
+	
+	/**
 	 * schedule result
 	 * 
 	 * @param seq
@@ -64,8 +86,18 @@ public class TadpoleSystem_Schedule {
 	}
 	
 	/**
-	 * find schedule main
+	 * find user schedule
 	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<ScheduleMainDAO> findUserScheduleMain() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getUserScheduleMain", SessionManager.getSeq());
+	}
+	
+	/**
+	 * find schedule main
 	 * 
 	 * @param seq {@link ScheduleMainDAO#getSeq()}
 	 * @return

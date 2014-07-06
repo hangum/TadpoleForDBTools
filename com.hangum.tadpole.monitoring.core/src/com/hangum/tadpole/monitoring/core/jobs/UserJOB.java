@@ -48,6 +48,8 @@ public class UserJOB implements Job {
 		int dbSeq = NumberUtils.createInteger(keys[0]);
 		int scheduleSeq = NumberUtils.createInteger(keys[1]);
 		
+		boolean isResult = true;
+		String strMessage = "";
 		try {
 			UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(dbSeq);
 			ScheduleMainDAO scheduleMainDao = TadpoleSystem_Schedule.findScheduleMain(scheduleSeq);
@@ -58,6 +60,8 @@ public class UserJOB implements Job {
 					sbMailContent.append( DailySummaryReportJOB.executSQL(userDB, scheduleDAO.getName(), scheduleDAO.getSql()) );
 				} catch(Exception e) {
 					sbMailContent.append( "Rise Exception :\n" + e.getMessage() );
+					strMessage += e.getMessage();
+					isResult = false;
 				}
 			}
 //			
@@ -66,12 +70,12 @@ public class UserJOB implements Job {
 			
 			DailySummaryReportJOB.sendEmail(scheduleMainDao.getTitle(), scheduleMainDao.getUser_seq(), mailContent);;
 			
-			TadpoleSystem_Schedule.saveScheduleResult(scheduleSeq, true, "");
+			TadpoleSystem_Schedule.saveScheduleResult(scheduleSeq, isResult, strMessage);
 		} catch (Exception e) {
 			logger.error("execute User Job", e);
 			
 			try {
-				TadpoleSystem_Schedule.saveScheduleResult(scheduleSeq, false, e.getMessage());
+				TadpoleSystem_Schedule.saveScheduleResult(scheduleSeq, false, strMessage + e.getMessage());
 			} catch (Exception e1) {
 				logger.error("save schedule result", e1);
 			}
