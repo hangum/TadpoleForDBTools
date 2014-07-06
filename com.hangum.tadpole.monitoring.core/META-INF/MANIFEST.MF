@@ -21,4 +21,5 @@ Bundle-ClassPath: lib/log4j-1.2.16.jar,
  .
 Export-Package: com.hangum.tadpole.monitoring.core.actions.schedule,
  com.hangum.tadpole.monitoring.core.dialogs.schedule,
+ com.hangum.tadpole.monitoring.core.manager,
  com.hangum.tadpole.summary.report

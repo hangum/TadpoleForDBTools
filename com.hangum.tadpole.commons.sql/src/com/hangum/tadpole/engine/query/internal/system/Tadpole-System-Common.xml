@@ -967,9 +967,68 @@ SELECT
 	=========================================================================================================
  -->
 <insert id="scheduleMainInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO">
-	INSERT INTO schedule_main 	(seq, user_seq, db_seq, title, desc, cron_exp) 
-	VALUES 						(#seq#, #user_seq#, #db_seq#, #title#, #desc#, #cron_exp#); 
+	INSERT INTO schedule_main 	(user_seq, db_seq, title, desc, cron_exp) 
+	VALUES 						(#user_seq#, #db_seq#, #title#, #desc#, #cron_exp#);
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO">
+		SELECT * 
+		FROM schedule_main 
+		WHERE user_seq = #user_seq# AND 
+			db_seq = #db_seq# AND 
+			title = #title# AND 
+			desc = #desc# AND
+			cron_exp = #cron_exp# AND
+			delYn = 'NO'
+	</selectKey> 
 </insert>
 
+<insert id="scheduleInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ScheduleDAO">
+	INSERT INTO schedule (schedule_main_seq, send_seq, name, desc) 
+	VALUES (#schedule_main_seq#, #send_seq#, #name#, #desc#) 
+	
+	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.ScheduleDAO">
+		SELECT * 
+		FROM schedule 
+		WHERE schedule_main_seq = #schedule_main_seq# AND 
+			send_seq = #send_seq# AND 
+			name = #name# AND 
+			desc = #desc# AND
+			delYn = 'NO'
+	</selectKey> 
+</insert>
+
+<insert id="scheduleDetailInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ScheduleDetailDAO">
+	INSERT INTO schedule_detail (schedule_seq, datas) 
+	VALUES (#schedule_seq#, #datas#); 
+</insert>
+
+<select id="getAllScheduleMain" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO">
+	SELECT a.* 
+	FROM schedule_main a, user_db b 
+	WHERE  
+		a.user_seq = b.seq AND
+		b.delYn = 'NO' AND
+		a.delYn = 'NO'
+</select>
+
+<select id="getScheduleMain" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM schedule_main 
+	WHERE seq = #seq# AND 
+		delYn = 'NO'
+</select>
+
+<select id="getSchedule" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM schedule 
+	WHERE schedule_main_seq = #seq# AND
+		delYn = 'NO'
+</select>
+
+<select id="getScheduleDetail" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleDetailDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM schedule_detail 
+	WHERE schedule_seq = #schedule_seq#
+</select>
 
 </sqlMap>

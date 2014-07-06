@@ -33,6 +33,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
+import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
 import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
@@ -68,9 +69,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     public void preWindowOpen() {
     	try {
+    		logger.info("Schedule start.........");
 			DBSummaryReporter.executer();
+			ScheduleManager.getInstance();
 		} catch(Exception e) {
-			logger.error("summary report", e);
+			logger.error("Schedule", e);
 		}
     	
 //    	not support rap yet.

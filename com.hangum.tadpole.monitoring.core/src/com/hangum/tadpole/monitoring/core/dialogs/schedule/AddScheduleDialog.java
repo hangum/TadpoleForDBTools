@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -49,7 +50,9 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.quartz.CronExpression;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
 import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
+import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
 
@@ -60,6 +63,8 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
  *
  */
 public class AddScheduleDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(AddScheduleDialog.class);
+	
 	private List<ScheduleDAO> listSchedule = new ArrayList<ScheduleDAO>();
 	private UserDBDAO userDB;
 	private Text textTitle;
@@ -101,7 +106,7 @@ public class AddScheduleDialog extends Dialog {
 		gridLayout.marginHeight = 5;
 		gridLayout.marginWidth = 5;
 		
-		Composite compositeHead = new Composite(container, SWT.NONE);
+		Composite compositeHead = new Composite(container, SWT.BORDER);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeHead.setLayout(new GridLayout(3, false));
 		
@@ -142,7 +147,7 @@ public class AddScheduleDialog extends Dialog {
 		gd_textViewSchedule.heightHint = 60;
 		textViewSchedule.setLayoutData(gd_textViewSchedule);
 		
-		Composite compositeBody = new Composite(container, SWT.NONE);
+		Composite compositeBody = new Composite(container, SWT.BORDER);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
@@ -264,13 +269,13 @@ public class AddScheduleDialog extends Dialog {
 		String txtCronExp = StringUtils.trim(textCronExp.getText());
 		
 		if(StringUtils.isEmpty(txtTitle)) {
-			MessageDialog.openError(null, "Error", "Title is empty. Check user text.");
+			MessageDialog.openError(null, "Error", "Title is empty. Check title field.");
 			textTitle.setFocus();
 			return;
 		}
 		
 		if(!CronExpression.isValidExpression(txtCronExp)) {
-			MessageDialog.openError(null, "Error", "Cron Expression is not valid. Check your a text.");
+			MessageDialog.openError(null, "Error", "Cron Expression is not valid. Check Cron Expression.");
 			textCronExp.setFocus();
 			return;
 		}
@@ -280,7 +285,20 @@ public class AddScheduleDialog extends Dialog {
 			return;
 		}
 		
-		TadpoleSystem_Schedule.addSchedule(userDB, txtTitle, txtDescription, txtCronExp, listSchedule);
+		try {
+			if(!MessageDialog.openConfirm(null, "Confirm", "Job을 등록하시겠습니까?")) return;
+			ScheduleMainDAO dao = TadpoleSystem_Schedule.addSchedule(userDB, txtTitle, txtDescription, txtCronExp, listSchedule);
+			
+			// cron manager 등록.
+			Date nextJob = ScheduleManager.getInstance().newJob(userDB, dao);
+			
+			MessageDialog.openInformation(null, "Confirm", "Schedule이 등록되었습니다. \n다음 실행: " + convPretty(nextJob));
+			
+		} catch (Exception e) {
+			logger.error("save schedule", e);
+			MessageDialog.openError(null, "Error", e.getMessage());
+			return;
+		}
 
 		super.okPressed();
 	}
