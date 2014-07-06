@@ -15,11 +15,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
 import com.hangum.tadpole.sql.dao.system.ScheduleDetailDAO;
 import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
+import com.hangum.tadpole.sql.dao.system.ScheduleResultDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -32,6 +34,23 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_Schedule {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_Schedule.class);
+	
+	/**
+	 * schedule result
+	 * 
+	 * @param seq
+	 * @param isResult
+	 * @param msg
+	 */
+	public static void saveScheduleResult(int seq, boolean isResult, String msg) throws Exception {
+		ScheduleResultDAO dao = new ScheduleResultDAO();
+		dao.setSchedule_main_seq(seq);
+		dao.setResult(isResult?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		dao.setDescription(msg);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.insert("scheduleResultInsert", dao);
+	}
 	
 	/**
 	 * get all schedule 

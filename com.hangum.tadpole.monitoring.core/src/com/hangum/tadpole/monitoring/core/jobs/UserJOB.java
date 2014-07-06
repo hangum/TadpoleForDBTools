@@ -13,6 +13,7 @@ package com.hangum.tadpole.monitoring.core.jobs;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -44,9 +45,12 @@ public class UserJOB implements Job {
 		logger.debug("start job is " + strKey);
 		String[] keys = StringUtils.split( StringUtils.removeStart(strKey, "DEFAULT."), PublicTadpoleDefine.DELIMITER);
 		
+		int dbSeq = NumberUtils.createInteger(keys[0]);
+		int scheduleSeq = NumberUtils.createInteger(keys[1]);
+		
 		try {
-			UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(Integer.parseInt(keys[0]));
-			ScheduleMainDAO scheduleMainDao = TadpoleSystem_Schedule.findScheduleMain(Integer.parseInt(keys[1]));
+			UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(dbSeq);
+			ScheduleMainDAO scheduleMainDao = TadpoleSystem_Schedule.findScheduleMain(scheduleSeq);
 			List<ScheduleDAO> listSchedule = TadpoleSystem_Schedule.findSchedule(scheduleMainDao.getSeq());
 			
 			for (ScheduleDAO scheduleDAO : listSchedule) {
@@ -62,8 +66,15 @@ public class UserJOB implements Job {
 			
 			DailySummaryReportJOB.sendEmail(scheduleMainDao.getTitle(), scheduleMainDao.getUser_seq(), mailContent);;
 			
+			TadpoleSystem_Schedule.saveScheduleResult(scheduleSeq, true, "");
 		} catch (Exception e) {
 			logger.error("execute User Job", e);
+			
+			try {
+				TadpoleSystem_Schedule.saveScheduleResult(scheduleSeq, false, e.getMessage());
+			} catch (Exception e1) {
+				logger.error("save schedule result", e1);
+			}
 		}
 		
 	}

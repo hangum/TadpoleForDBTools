@@ -1002,6 +1002,11 @@ SELECT
 	VALUES (#schedule_seq#, #datas#); 
 </insert>
 
+<insert id="scheduleResultInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ScheduleResultDAO">
+	INSERT INTO schedule_result (schedule_main_seq, result, description) 
+	VALUES (#schedule_main_seq#, #result#, #description#); 
+</insert>
+
 <select id="getAllScheduleMain" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO">
 	SELECT a.* 
 	FROM schedule_main a, user_db b 

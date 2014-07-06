@@ -21,7 +21,7 @@ public class ScheduleResultDAO {
 	int seq;
 	int schedule_main_seq;
 	String result;
-	String descritpion;
+	String description;
 	Timestamp create_time;
 	
 	public ScheduleResultDAO() {
@@ -51,12 +51,12 @@ public class ScheduleResultDAO {
 		this.result = result;
 	}
 
-	public String getDescritpion() {
-		return descritpion;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDescritpion(String descritpion) {
-		this.descritpion = descritpion;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Timestamp getCreate_time() {
