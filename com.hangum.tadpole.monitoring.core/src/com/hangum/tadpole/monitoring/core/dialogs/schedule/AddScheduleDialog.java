@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.quartz.CronExpression;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
 import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
 import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
@@ -111,21 +112,21 @@ public class AddScheduleDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(3, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
-		lblTitle.setText("Title");
+		lblTitle.setText(Messages.AddScheduleDialog_0);
 		
 		textTitle = new Text(compositeHead, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
-		lblDescription.setText("Description");
+		lblDescription.setText(Messages.AddScheduleDialog_1);
 		
 		textDescription = new Text(compositeHead, SWT.BORDER);
 		textDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblCronExpression = new Label(compositeHead, SWT.NONE);
-		lblCronExpression.setText("<a href='http://www.cronmaker.com/' target='_blank'>Cron Expression</a>");
+		lblCronExpression.setText("<a href='http://www.cronmaker.com/' target='_blank'>Cron Expression</a>"); //$NON-NLS-1$
 		lblCronExpression.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 
 		
@@ -139,7 +140,7 @@ public class AddScheduleDialog extends Dialog {
 				showExp();
 			}
 		});
-		btnViewSchedule.setText("View Schedule");
+		btnViewSchedule.setText(Messages.AddScheduleDialog_3);
 		new Label(compositeHead, SWT.NONE);
 		
 		textViewSchedule = new Text(compositeHead, SWT.BORDER | SWT.MULTI);
@@ -165,7 +166,7 @@ public class AddScheduleDialog extends Dialog {
 				}
 			}
 		});
-		tltmAdd.setText("Add");
+		tltmAdd.setText(Messages.AddScheduleDialog_4);
 		
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.addSelectionListener(new SelectionAdapter() {
@@ -182,7 +183,7 @@ public class AddScheduleDialog extends Dialog {
 			}
 		});
 		tltmModify.setEnabled(false);
-		tltmModify.setText("Modify");
+		tltmModify.setText(Messages.AddScheduleDialog_5);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmDelete.addSelectionListener(new SelectionAdapter() {
@@ -190,7 +191,7 @@ public class AddScheduleDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
 				if(!iss.isEmpty()) {
-					if(MessageDialog.openConfirm(null, "Confirm", "Are you delete?")) return;
+					if(MessageDialog.openConfirm(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_7)) return;
 		
 					ScheduleDAO dao = (ScheduleDAO)iss.getFirstElement();
 					listSchedule.remove(dao);
@@ -199,7 +200,7 @@ public class AddScheduleDialog extends Dialog {
 			}
 		});
 		tltmDelete.setEnabled(false);
-		tltmDelete.setText("Delete");
+		tltmDelete.setText(Messages.AddScheduleDialog_8);
 		
 		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -220,12 +221,12 @@ public class AddScheduleDialog extends Dialog {
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnTitle = tableViewerColumn_1.getColumn();
 		tblclmnTitle.setWidth(100);
-		tblclmnTitle.setText("Title");
+		tblclmnTitle.setText(Messages.AddScheduleDialog_9);
 		
 		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnSql = tableViewerColumn_2.getColumn();
 		tblclmnSql.setWidth(273);
-		tblclmnSql.setText("SQL");
+		tblclmnSql.setText(Messages.AddScheduleDialog_10);
 		
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewer.setLabelProvider(new AddScheduleLableProvider());
@@ -252,13 +253,13 @@ public class AddScheduleDialog extends Dialog {
 	        
 	        textViewSchedule.setText(sbStr.toString());
 		} catch (ParseException e) {
-			MessageDialog.openError(null, "Confirm", "Check Cron Expression.");
+			MessageDialog.openError(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_12);
 			textCronExp.setFocus();
 		}
 	}
 	
 	private String convPretty(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
 		return sdf.format(date);
 	}
 	
@@ -269,34 +270,34 @@ public class AddScheduleDialog extends Dialog {
 		String txtCronExp = StringUtils.trim(textCronExp.getText());
 		
 		if(StringUtils.isEmpty(txtTitle)) {
-			MessageDialog.openError(null, "Error", "Title is empty. Check title field.");
+			MessageDialog.openError(null, Messages.AddScheduleDialog_14, Messages.AddScheduleDialog_15);
 			textTitle.setFocus();
 			return;
 		}
 		
 		if(!CronExpression.isValidExpression(txtCronExp)) {
-			MessageDialog.openError(null, "Error", "Cron Expression is not valid. Check Cron Expression.");
+			MessageDialog.openError(null, Messages.AddScheduleDialog_16, Messages.AddScheduleDialog_17);
 			textCronExp.setFocus();
 			return;
 		}
 		
 		if(listSchedule.size() == 0) {
-			MessageDialog.openError(null, "Error", "Please add SQL.");
+			MessageDialog.openError(null, Messages.AddScheduleDialog_16, Messages.AddScheduleDialog_19);
 			return;
 		}
 		
 		try {
-			if(!MessageDialog.openConfirm(null, "Confirm", "Job을 등록하시겠습니까?")) return;
+			if(!MessageDialog.openConfirm(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_21)) return;
 			ScheduleMainDAO dao = TadpoleSystem_Schedule.addSchedule(userDB, txtTitle, txtDescription, txtCronExp, listSchedule);
 			
 			// cron manager 등록.
 			Date nextJob = ScheduleManager.getInstance().newJob(userDB, dao);
 			
-			MessageDialog.openInformation(null, "Confirm", "Schedule이 등록되었습니다. \n다음 실행: " + convPretty(nextJob));
+			MessageDialog.openInformation(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_23 + convPretty(nextJob));
 			
 		} catch (Exception e) {
-			logger.error("save schedule", e);
-			MessageDialog.openError(null, "Error", e.getMessage());
+			logger.error("save schedule", e); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.AddScheduleDialog_25, e.getMessage());
 			return;
 		}
 
@@ -309,8 +310,8 @@ public class AddScheduleDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", false);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.AddScheduleDialog_26, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.AddScheduleDialog_27, false);
 	}
 
 	/**
@@ -329,12 +330,12 @@ class AddScheduleLableProvider extends LabelProvider implements ITableLabelProvi
 		ScheduleDAO dao = (ScheduleDAO)element;
 		
 		switch(columnIndex) {
-		case 0: return ""+dao.getSend_seq();
+		case 0: return ""+dao.getSend_seq(); //$NON-NLS-1$
 		case 1: return dao.getName();
 		case 2: return dao.getSql();
 		}
 		
-		return "*** not set column ***";
+		return "*** not set column ***"; //$NON-NLS-1$
 	}
 
 	@Override
