@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
 
 /**
@@ -78,19 +79,19 @@ public class AddSQLDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblSubTitle = new Label(container, SWT.NONE);
-		lblSubTitle.setText("Sub Title");
+		lblSubTitle.setText(Messages.AddSQLDialog_0);
 		
 		textTitle = new Text(container, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDesc = new Label(container, SWT.NONE);
-		lblDesc.setText("Desc");
+		lblDesc.setText(Messages.AddSQLDialog_1);
 		
 		textDesc = new Text(container, SWT.BORDER);
 		textDesc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSql = new Label(container, SWT.NONE);
-		lblSql.setText("SQL");
+		lblSql.setText(Messages.AddSQLDialog_2);
 		
 		textSQL = new Text(container, SWT.BORDER | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -112,13 +113,13 @@ public class AddSQLDialog extends Dialog {
 		String txtSQL = StringUtils.trimToEmpty(textSQL.getText());
 		
 		if(StringUtils.isEmpty(txtTitle)) {
-			MessageDialog.openError(null, "Error", "Title is empty. Check your a text.");
+			MessageDialog.openError(null, Messages.AddSQLDialog_3, Messages.AddSQLDialog_4);
 			textTitle.setFocus();
 			return;
 		}
 		
 		if(StringUtils.isEmpty(txtSQL)) {
-			MessageDialog.openError(null, "Error", "SQL is empty. Check your a text.");
+			MessageDialog.openError(null, Messages.AddSQLDialog_3, Messages.AddSQLDialog_6);
 			textSQL.setFocus();
 			return;
 		}
@@ -140,8 +141,8 @@ public class AddSQLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.AddSQLDialog_7, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.AddSQLDialog_8, false);
 	}
 
 	/**

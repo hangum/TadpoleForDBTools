@@ -43,6 +43,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.sql.dao.system.ScheduleResultDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
@@ -55,7 +56,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
  */
 public class ScheduleEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(ScheduleEditor.class);
-	public static final String ID = "com.hangum.tadpole.monitoring.core.editor.schedule";
+	public static final String ID = "com.hangum.tadpole.monitoring.core.editor.schedule"; //$NON-NLS-1$
 	
 	private List<ScheduleMainDAO> listScheduleMain = new ArrayList<ScheduleMainDAO>();
 	private TableViewer tableViewerList;
@@ -73,7 +74,7 @@ public class ScheduleEditor extends EditorPart {
 		compositeHead.setLayout(new GridLayout(1, false));
 		
 		Label lblInfo = new Label(compositeHead, SWT.NONE);
-		lblInfo.setText("Scheduel Info");
+		lblInfo.setText(Messages.ScheduleEditor_1);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -91,7 +92,7 @@ public class ScheduleEditor extends EditorPart {
 				refreshSchedule();
 			}
 		});
-		tltmRefresh.setText("Refresh");
+		tltmRefresh.setText(Messages.ScheduleEditor_2);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmDelete.setEnabled(false);
@@ -103,18 +104,18 @@ public class ScheduleEditor extends EditorPart {
 					
 					ScheduleMainDAO dao = (ScheduleMainDAO)iss.getFirstElement();
 					
-					if(!MessageDialog.openQuestion(null, "Confirm", "삭제하시겠습니까?")) return;
+					if(!MessageDialog.openQuestion(null, Messages.ScheduleEditor_3, Messages.ScheduleEditor_4)) return;
 					try {
 						TadpoleSystem_Schedule.deleteSchedule(dao.getSeq());
 						
 						refreshSchedule();
 					} catch (Exception e1) {
-						logger.error("delete schedule", e1);
+						logger.error("delete schedule", e1); //$NON-NLS-1$
 					}
 				}
 			}
 		});
-		tltmDelete.setText("Delete");
+		tltmDelete.setText(Messages.ScheduleEditor_6);
 		
 		tableViewerList = new TableViewer(compositeList, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewerList.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -129,7 +130,7 @@ public class ScheduleEditor extends EditorPart {
 						List<ScheduleResultDAO> listResult = TadpoleSystem_Schedule.getScheduleResult(dao.getSeq());
 						tvResult.setInput(listResult);
 					} catch (Exception e) {
-						logger.error("get schedule result", e);
+						logger.error("get schedule result", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -142,17 +143,17 @@ public class ScheduleEditor extends EditorPart {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnName = tableViewerColumn.getColumn();
 		tblclmnName.setWidth(100);
-		tblclmnName.setText("Name");
+		tblclmnName.setText(Messages.ScheduleEditor_8);
 		
 		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnDescription = tableViewerColumn_2.getColumn();
 		tblclmnDescription.setWidth(100);
-		tblclmnDescription.setText("Cron Expression");
+		tblclmnDescription.setText(Messages.ScheduleEditor_9);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnCreateDate = tableViewerColumn_1.getColumn();
 		tblclmnCreateDate.setWidth(100);
-		tblclmnCreateDate.setText("Description");
+		tblclmnCreateDate.setText(Messages.ScheduleEditor_10);
 		
 		Composite composite = new Composite(sashForm, SWT.BORDER);
 		composite.setLayout(new GridLayout(1, false));
@@ -166,17 +167,17 @@ public class ScheduleEditor extends EditorPart {
 		TableViewerColumn tableViewerColumn_3 = new TableViewerColumn(tvResult, SWT.NONE);
 		TableColumn tblclmnResult = tableViewerColumn_3.getColumn();
 		tblclmnResult.setWidth(52);
-		tblclmnResult.setText("Result");
+		tblclmnResult.setText(Messages.ScheduleEditor_11);
 		
 		TableViewerColumn tableViewerColumn_4 = new TableViewerColumn(tvResult, SWT.NONE);
 		TableColumn tblclmnMessage = tableViewerColumn_4.getColumn();
 		tblclmnMessage.setWidth(231);
-		tblclmnMessage.setText("Message");
+		tblclmnMessage.setText(Messages.ScheduleEditor_12);
 		
 		TableViewerColumn tableViewerColumn_5 = new TableViewerColumn(tvResult, SWT.NONE);
 		TableColumn tblclmnDate = tableViewerColumn_5.getColumn();
 		tblclmnDate.setWidth(100);
-		tblclmnDate.setText("Date");
+		tblclmnDate.setText(Messages.ScheduleEditor_13);
 		
 		tableViewerList.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewerList.setLabelProvider(new ScheduleLabelProvider());
@@ -202,7 +203,7 @@ public class ScheduleEditor extends EditorPart {
 			List<ScheduleResultDAO> listResult = new ArrayList<ScheduleResultDAO>();
 			tvResult.setInput(listResult);
 		} catch (Exception e) {
-			logger.error("find schedule main", e);
+			logger.error("find schedule main", e); //$NON-NLS-1$
 		}
 	}
 
@@ -279,7 +280,7 @@ class ResultLabelProvider  extends LabelProvider implements ITableLabelProvider 
 		case 0: return dao.getResult();
 		case 1: return dao.getDescription();
 		case 2: 
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
 			return sdf.format(dao.getCreate_time().getTime());
 		}
 		return null;
