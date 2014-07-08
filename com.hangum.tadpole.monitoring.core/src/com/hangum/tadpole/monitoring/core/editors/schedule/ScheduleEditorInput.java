@@ -31,6 +31,12 @@ public class ScheduleEditorInput implements IEditorInput {
 	public boolean exists() {
 		return false;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof ScheduleEditorInput) ) return false;
+		return ((ScheduleEditorInput)obj).getName().equals(getName());
+	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {

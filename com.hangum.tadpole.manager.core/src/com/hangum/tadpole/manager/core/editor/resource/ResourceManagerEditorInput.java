@@ -31,6 +31,12 @@ public class ResourceManagerEditorInput implements IEditorInput {
 	public boolean exists() {
 		return false;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof ResourceManagerEditorInput) ) return false;
+		return ((ResourceManagerEditorInput)obj).getName().equals(getName());
+	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
