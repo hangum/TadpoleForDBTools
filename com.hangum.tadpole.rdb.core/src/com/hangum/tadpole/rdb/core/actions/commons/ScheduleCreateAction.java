@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.monitoring.core.dialogs.schedule.AddScheduleDialog;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -41,7 +42,7 @@ public class ScheduleCreateAction implements IViewActionDelegate {
 		if(!iss.isEmpty()) {
 			UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
 			
-			AddScheduleDialog dialog = new AddScheduleDialog(null, userDB);
+			AddScheduleDialog dialog = new AddScheduleDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 			dialog.open();
 		}
 	}

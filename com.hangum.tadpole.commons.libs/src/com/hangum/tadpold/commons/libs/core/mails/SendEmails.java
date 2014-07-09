@@ -37,7 +37,7 @@ public class SendEmails {
 	 * 
 	 * @param emailDao
 	 */
-	public void sendMail(EmailDTO emailDao) {
+	public void sendMail(EmailDTO emailDao) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("Add new message");
 		
 		try {
@@ -58,6 +58,7 @@ public class SendEmails {
 			
 		} catch(Exception e) {
 			logger.error("send email", e);
+			throw e;
 		}
 	}
 }

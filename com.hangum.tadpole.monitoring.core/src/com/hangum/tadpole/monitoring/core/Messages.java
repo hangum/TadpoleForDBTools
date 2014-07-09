@@ -44,6 +44,7 @@ public class Messages extends NLS {
 	public static String ScheduleEditor_6;
 	public static String ScheduleEditor_8;
 	public static String ScheduleEditor_9;
+	public static String ScheduleEditor_tltmModify_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

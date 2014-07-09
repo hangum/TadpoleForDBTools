@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -44,9 +45,13 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.monitoring.core.Messages;
+import com.hangum.tadpole.monitoring.core.dialogs.schedule.AddScheduleDialog;
+import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
 import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.sql.dao.system.ScheduleResultDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 
 /**
  * Tadpole Monitoring editor
@@ -61,6 +66,8 @@ public class ScheduleEditor extends EditorPart {
 	private List<ScheduleMainDAO> listScheduleMain = new ArrayList<ScheduleMainDAO>();
 	private TableViewer tableViewerList;
 	private TableViewer tvResult;
+
+	private ToolItem tltmModify;
 	private ToolItem tltmDelete;
 	
 	public ScheduleEditor() {
@@ -80,8 +87,9 @@ public class ScheduleEditor extends EditorPart {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		sashForm.setOrientation(SWT.HORIZONTAL);
 		
-		Composite compositeList = new Composite(sashForm, SWT.BORDER);
+		Group compositeList = new Group(sashForm, SWT.NONE);
 		compositeList.setLayout(new GridLayout(1, false));
+		compositeList.setText("Schedule List");
 		
 		ToolBar toolBar = new ToolBar(compositeList, SWT.FLAT | SWT.RIGHT);
 		
@@ -93,6 +101,27 @@ public class ScheduleEditor extends EditorPart {
 			}
 		});
 		tltmRefresh.setText(Messages.ScheduleEditor_2);
+		
+		tltmModify = new ToolItem(toolBar, SWT.NONE);
+		tltmModify.setEnabled(false);
+		tltmModify.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection iss = (IStructuredSelection)tableViewerList.getSelection();
+				if(!iss.isEmpty()) {
+					try {
+						ScheduleMainDAO dao = (ScheduleMainDAO)iss.getFirstElement();
+						UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(dao.getDb_seq());
+						AddScheduleDialog dialog = new AddScheduleDialog(null, userDB, dao);
+						dialog.open();
+						
+					} catch(Exception e1) {
+						logger.error("modify schedule", e1);
+					}
+				}
+			}
+		});
+		tltmModify.setText(Messages.ScheduleEditor_tltmModify_text);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmDelete.setEnabled(false);
@@ -106,6 +135,9 @@ public class ScheduleEditor extends EditorPart {
 					
 					if(!MessageDialog.openQuestion(null, Messages.ScheduleEditor_3, Messages.ScheduleEditor_4)) return;
 					try {
+						UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(dao.getDb_seq());
+						ScheduleManager.getInstance().deleteJob(userDB, dao);
+						
 						TadpoleSystem_Schedule.deleteSchedule(dao.getSeq());
 						
 						refreshSchedule();
@@ -123,7 +155,7 @@ public class ScheduleEditor extends EditorPart {
 				IStructuredSelection iss = (IStructuredSelection)event.getSelection();
 				if(!iss.isEmpty()) {
 					tltmDelete.setEnabled(true);
-//					tltmModify.setEnabled(true);
+					tltmModify.setEnabled(true);
 					
 					ScheduleMainDAO dao = (ScheduleMainDAO)iss.getFirstElement();
 					try {
@@ -152,13 +184,14 @@ public class ScheduleEditor extends EditorPart {
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnCreateDate = tableViewerColumn_1.getColumn();
-		tblclmnCreateDate.setWidth(100);
+		tblclmnCreateDate.setWidth(200);
 		tblclmnCreateDate.setText(Messages.ScheduleEditor_10);
 		
-		Composite composite = new Composite(sashForm, SWT.BORDER);
-		composite.setLayout(new GridLayout(1, false));
+		Group compositeResult = new Group(sashForm, SWT.NONE);
+		compositeResult.setLayout(new GridLayout(1, false));
+		compositeResult.setText("Schedule Result");
 		
-		tvResult = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
+		tvResult = new TableViewer(compositeResult, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvResult.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -171,12 +204,12 @@ public class ScheduleEditor extends EditorPart {
 		
 		TableViewerColumn tableViewerColumn_4 = new TableViewerColumn(tvResult, SWT.NONE);
 		TableColumn tblclmnMessage = tableViewerColumn_4.getColumn();
-		tblclmnMessage.setWidth(231);
+		tblclmnMessage.setWidth(240);
 		tblclmnMessage.setText(Messages.ScheduleEditor_12);
 		
 		TableViewerColumn tableViewerColumn_5 = new TableViewerColumn(tvResult, SWT.NONE);
 		TableColumn tblclmnDate = tableViewerColumn_5.getColumn();
-		tblclmnDate.setWidth(100);
+		tblclmnDate.setWidth(140);
 		tblclmnDate.setText(Messages.ScheduleEditor_13);
 		
 		tableViewerList.setContentProvider(ArrayContentProvider.getInstance());

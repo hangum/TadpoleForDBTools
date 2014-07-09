@@ -11,6 +11,7 @@
 <sqlMapConfig>
 	<!--  set setting options -->
 	<properties resource="com/hangum/tadpole/engine/config/commons/setting.propertis"/>
+<typehandler callback="com.ibatis.sqlmap.engine.type.SqlTimestampTypeHandler" javatype="java.util.Date"></typehandler> 
 
 	<transactionManager type="JDBC">
 		<dataSource type="DBCP">

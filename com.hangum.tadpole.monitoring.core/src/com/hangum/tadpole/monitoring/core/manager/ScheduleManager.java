@@ -69,6 +69,26 @@ public class ScheduleManager {
 		
 		return manager;
 	}
+	
+	/**
+	 * remove job
+	 * 
+	 * @param userDB
+	 * @param scheduleMainDao
+	 * @return
+	 */
+	public boolean deleteJob(final UserDBDAO userDB, final ScheduleMainDAO scheduleMainDao) {
+		boolean isRemove = true;
+		String strKey = makeJobkey(userDB, scheduleMainDao);
+		
+		try {
+			manager.scheduler.deleteJob(new JobKey(strKey));
+		} catch (SchedulerException e) {
+			logger.error("delete job", e);
+			isRemove = false;
+		}
+		return isRemove;
+	}
 
 	/**
 	 * find job
