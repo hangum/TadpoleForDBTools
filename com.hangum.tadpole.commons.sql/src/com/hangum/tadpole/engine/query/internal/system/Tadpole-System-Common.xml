@@ -120,8 +120,8 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
-	INSERT INTO user(email, passwd, name, language, approval_yn, security_question, security_answer)
-	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#, #security_question#, #security_answer#)
+	INSERT INTO user(email, passwd, name, language, approval_yn, security_question, security_answer, use_otp, otp_secret)
+	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#, #security_question#, #security_answer#, #use_otp#, #otp_secret#)
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 		select * from user where email = #email# 
@@ -276,7 +276,7 @@
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 	UPDATE user SET
-		passwd = #passwd#
+		passwd = #passwd#, use_otp = 'NO'
 	WHERE seq = #seq#
 </update>
 
@@ -290,6 +290,15 @@
 	WHERE seq = #seq#
 </update>
 
+<!-- 
+	Change user otp code
+ -->
+<update id="updateUserOTPCode" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	UPDATE user SET
+		use_otp = #use_otp#, 
+		otp_secret = #otp_secret#
+	WHERE seq = #seq#
+</update>
 
 <!-- 
 	유저를 삭제합니다.

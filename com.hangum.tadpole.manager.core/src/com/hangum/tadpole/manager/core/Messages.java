@@ -56,8 +56,14 @@ public class Messages extends NLS {
 	public static String NewUserDialog_26;
 
 	public static String NewUserDialog_27;
+
+	public static String NewUserDialog_28;
 	public static String NewUserDialog_3;
 	public static String NewUserDialog_4;
+
+	public static String NewUserDialog_40;
+
+	public static String NewUserDialog_42;
 
 	public static String NewUserDialog_5;
 	public static String NewUserDialog_6;
@@ -72,6 +78,17 @@ public class Messages extends NLS {
 	public static String NewUserDialog_lblLanguage_text;
 
 	public static String SystemDBDataManager_8;
+	public static String NewUserDialog_lblGoogleOpt_text;
+	public static String NewUserDialog_btnCheckButton_text;
+	public static String NewUserDialog_btnGetOptCode_text;
+	public static String NewUserDialog_lblAccessKey_text;
+	public static String NewUserDialog_lblNewLabel_text_1;
+	public static String NewUserDialog_grpGoogleOtp_text;
+	public static String NewUserDialog_lblAccessKey_1_text;
+	public static String NewUserDialog_lblQrcodeUrl_text;
+	public static String NewUserDialog_text_1_text;
+	public static String NewUserDialog_lblOtpCdoe_text;
+	public static String NewUserDialog_text_2_text;
 	
 	static {
 		// initialize resource bundle
