@@ -4,7 +4,7 @@ Bundle-Name: Tadpole DB Hub commons libs
 Bundle-SymbolicName: com.hangum.tadpole.commons.libs
 Bundle-Version: 2.0.0
 Bundle-Vendor: hangum.com
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  libs/apache/commons/commons-fileupload-1.2.2.jar,
  libs/apache/commons/commons-io-2.4.jar,
