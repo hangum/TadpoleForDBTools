@@ -307,7 +307,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 				textOTPCode.setFocus();
 				return false;
 			}
-			if(!GoogleAuthManager.getInstance().isValidate(secretKey, NumberUtils.toInt(textOTPCode.getText()))) {
+			if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
 				MessageDialog.openError(getShell(), "Error", Messages.UserInfoPerference_16); //$NON-NLS-1$
 				textOTPCode.setFocus();
 				return false;
