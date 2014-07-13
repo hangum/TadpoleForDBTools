@@ -120,8 +120,8 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
-	INSERT INTO user(email, passwd, name, language, approval_yn, security_question, security_answer)
-	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#, #security_question#, #security_answer#)
+	INSERT INTO user(email, passwd, name, language, approval_yn, security_question, security_answer, use_otp, otp_secret)
+	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#, #security_question#, #security_answer#, #use_otp#, #otp_secret#)
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 		select * from user where email = #email# 
@@ -276,7 +276,7 @@
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 	UPDATE user SET
-		passwd = #passwd#
+		passwd = #passwd#, use_otp = 'NO'
 	WHERE seq = #seq#
 </update>
 
@@ -290,6 +290,15 @@
 	WHERE seq = #seq#
 </update>
 
+<!-- 
+	Change user otp code
+ -->
+<update id="updateUserOTPCode" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	UPDATE user SET
+		use_otp = #use_otp#, 
+		otp_secret = #otp_secret#
+	WHERE seq = #seq#
+</update>
 
 <!-- 
 	유저를 삭제합니다.
@@ -1023,8 +1032,22 @@ SELECT
 		delYn = 'NO'
 </select>
 
+<update id="scheduleMainUpdate" parameterClass="com.hangum.tadpole.sql.dao.system.ScheduleMainDAO">
+	UPDATE schedule_main 
+	SET 
+		title = #title#,  description = #description#,  cron_exp = #cron_exp#
+	WHERE seq = #seq#
+</update>
+
+<update id="deleteSchedule" parameterClass="java.lang.Integer">
+	UPDATE schedule 
+	SET delYn = 'YES'
+	WHERE schedule_main_seq = #seq#
+</update>
+
 <update id="deleteScheduleMain" parameterClass="java.lang.Integer">
-	UPDATE schedule_main SET delYn = 'YES'
+	UPDATE schedule_main 
+	SET delYn = 'YES'
 	WHERE seq = #seq# 
 </update>
 
@@ -1033,6 +1056,7 @@ SELECT
 	FROM schedule 
 	WHERE schedule_main_seq = #seq# AND
 		delYn = 'NO'
+	ORDER BY send_seq
 </select>
 
 <select id="getScheduleDetail" resultClass="com.hangum.tadpole.sql.dao.system.ScheduleDetailDAO" parameterClass="java.lang.Integer">

@@ -76,7 +76,7 @@ Demo Site
 *  http://tadpoledb.com
 
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.6/
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.7/
 
 License
 -

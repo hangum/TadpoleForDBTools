@@ -14,6 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.manager.core.editor.transaction.connection.TransactionConnectionListEditorInput;
+
 /**
  * Schema History Editor input
  * 
@@ -32,6 +34,12 @@ public class SchemaHistoryEditorInput implements IEditorInput {
 	@Override
 	public boolean exists() {
 		return false;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof SchemaHistoryEditorInput) ) return false;
+		return ((SchemaHistoryEditorInput)obj).getName().equals(getName());
 	}
 
 	@Override

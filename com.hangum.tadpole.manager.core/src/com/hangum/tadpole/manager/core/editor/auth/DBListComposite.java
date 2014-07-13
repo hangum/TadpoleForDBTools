@@ -255,6 +255,7 @@ public class DBListComposite extends Composite {
 			public void selectionChanged(SelectionChangedEvent event) {
 				
 				IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+				if(ss.isEmpty()) return;
 				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 				if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
 					tltmModify.setEnabled(true);

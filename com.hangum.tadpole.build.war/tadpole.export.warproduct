@@ -4,7 +4,6 @@
 <product name="tadpole" useFeatures="false" includeLaunchers="false">
    <plugins>
       <plugin id="com.hamgum.tadpole.help.core"/>
-      <plugin id="com.hangum.tadpole.ace.core"/>
       <plugin id="com.hangum.tadpole.ace.editor.core"/>
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.applicattion.start"/>
@@ -77,7 +76,6 @@
 
    <configurations>
       <plugin id="com.hamgum.tadpole.help.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.ace.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.ace.editor.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.applicattion.start" autoStart="true" startLevel="0" />

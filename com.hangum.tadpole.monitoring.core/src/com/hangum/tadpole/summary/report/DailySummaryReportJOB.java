@@ -90,7 +90,7 @@ public class DailySummaryReportJOB implements Job {
 	 * @param userSeq
 	 * @param strContent
 	 */
-	public static void sendEmail(String title, int userSeq, String strContent) {
+	public static void sendEmail(String title, int userSeq, String strContent) throws Exception {
 		try {
 			UserDAO userDao = TadpoleSystem_UserQuery.getUserInfo(userSeq);
 			
@@ -104,6 +104,7 @@ public class DailySummaryReportJOB implements Job {
 			sendEmail.sendMail(emailDao);
 		} catch(Exception e) {
 			logger.error("Error send email", e);
+			throw e;
 		}
 	}
 	

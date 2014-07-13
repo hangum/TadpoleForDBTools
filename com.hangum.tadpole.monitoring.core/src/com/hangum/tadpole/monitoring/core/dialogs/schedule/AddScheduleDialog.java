@@ -17,11 +17,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -29,6 +32,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -76,6 +80,8 @@ public class AddScheduleDialog extends Dialog {
 	
 	private ToolItem tltmModify;
 	private ToolItem tltmDelete;
+	
+	private ScheduleMainDAO scheduleDao;
 
 	/**
 	 * Create the dialog.
@@ -88,6 +94,21 @@ public class AddScheduleDialog extends Dialog {
 		this.userDB = userDB;
 	}
 	
+	/**
+	 * modify data dialog
+	 * 
+	 * @param parentShell
+	 * @param userDB
+	 * @param dao
+	 */
+	public AddScheduleDialog(Shell parentShell, UserDBDAO userDB, ScheduleMainDAO dao) {
+		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+
+		this.userDB = userDB;
+		this.scheduleDao = dao;
+	}
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -99,7 +120,7 @@ public class AddScheduleDialog extends Dialog {
 	 * @param parent
 	 */
 	@Override
-	protected Control createDialogArea(Composite parent) {
+	protected Control createDialogArea(final Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.verticalSpacing = 5;
@@ -154,11 +175,11 @@ public class AddScheduleDialog extends Dialog {
 		
 		ToolBar toolBar = new ToolBar(compositeBody, SWT.FLAT | SWT.RIGHT);
 		
-		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+		final ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 		tltmAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AddSQLDialog dialog = new AddSQLDialog(null, listSchedule.size());
+				AddSQLDialog dialog = new AddSQLDialog(parent.getShell(), listSchedule.size());
 				if(Dialog.OK == dialog.open()) {
 					listSchedule.add(dialog.getDao());
 					
@@ -177,7 +198,7 @@ public class AddScheduleDialog extends Dialog {
 					ScheduleDAO dao = (ScheduleDAO)iss.getFirstElement();
 					AddSQLDialog dialog = new AddSQLDialog(null, dao);
 					if(Dialog.OK == dialog.open()) {
-						tableViewer.refresh();						
+						tableViewer.refresh(dialog.getDao());						
 					}
 				}
 			}
@@ -191,7 +212,7 @@ public class AddScheduleDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
 				if(!iss.isEmpty()) {
-					if(MessageDialog.openConfirm(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_7)) return;
+					if(!MessageDialog.openConfirm(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_7)) return;
 		
 					ScheduleDAO dao = (ScheduleDAO)iss.getFirstElement();
 					listSchedule.remove(dao);
@@ -215,6 +236,7 @@ public class AddScheduleDialog extends Dialog {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+		tableViewerColumn.setEditingSupport(new SQLOrderEditingSupport(tableViewer));
 		TableColumn tblclmnSeq = tableViewerColumn.getColumn();
 		tblclmnSeq.setWidth(50);
 		
@@ -231,8 +253,29 @@ public class AddScheduleDialog extends Dialog {
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewer.setLabelProvider(new AddScheduleLableProvider());
 		tableViewer.setInput(listSchedule);
+		
+		initData();
 
 		return container;
+	}
+	
+	/**
+	 * initialize data
+	 */
+	private void initData() {
+		// 데이터가 수정이면. 
+		if(scheduleDao != null) {
+			this.textTitle.setText( scheduleDao.getTitle() );
+			this.textDescription.setText( scheduleDao.getDescription() );
+			this.textCronExp.setText(  scheduleDao.getCron_exp() );
+			
+			try {
+				listSchedule = TadpoleSystem_Schedule.findSchedule(scheduleDao.getSeq());
+				tableViewer.setInput(listSchedule);
+			} catch (Exception e) {
+				logger.error("get Schedule data", e);
+			}
+		}
 	}
 	
 	/**
@@ -285,20 +328,47 @@ public class AddScheduleDialog extends Dialog {
 			MessageDialog.openError(null, Messages.AddScheduleDialog_16, Messages.AddScheduleDialog_19);
 			return;
 		}
-		
-		try {
-			if(!MessageDialog.openConfirm(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_21)) return;
-			ScheduleMainDAO dao = TadpoleSystem_Schedule.addSchedule(userDB, txtTitle, txtDescription, txtCronExp, listSchedule);
-			
-			// cron manager 등록.
-			Date nextJob = ScheduleManager.getInstance().newJob(userDB, dao);
-			
-			MessageDialog.openInformation(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_23 + convPretty(nextJob));
-			
-		} catch (Exception e) {
-			logger.error("save schedule", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.AddScheduleDialog_25, e.getMessage());
-			return;
+
+		// 데이터 저장.
+		if(scheduleDao == null) {
+			try {
+				if(!MessageDialog.openConfirm(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_21)) return;
+				ScheduleMainDAO dao = TadpoleSystem_Schedule.addSchedule(userDB, txtTitle, txtDescription, txtCronExp, listSchedule);
+				
+				// cron manager 등록.
+				Date nextJob = ScheduleManager.getInstance().newJob(userDB, dao);
+				
+				MessageDialog.openInformation(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_23 + convPretty(nextJob));
+				
+			} catch (Exception e) {
+				logger.error("save schedule", e); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.AddScheduleDialog_25, e.getMessage());
+				return;
+			}
+		// 데이터 수정.
+		} else {
+			try {
+				if(!MessageDialog.openConfirm(null, Messages.AddScheduleDialog_20, "데이터를 수정하시겠습니까?")) return;
+				
+				// remove job
+				ScheduleManager.getInstance().deleteJob(userDB, scheduleDao);
+				
+				scheduleDao.setTitle(txtTitle);
+				scheduleDao.setDescription(txtDescription);
+				scheduleDao.setCron_exp(txtCronExp);
+				
+				TadpoleSystem_Schedule.modifySchedule(userDB, scheduleDao, listSchedule);
+				
+				// cron manager 등록.
+				Date nextJob = ScheduleManager.getInstance().newJob(userDB, scheduleDao);
+				
+				MessageDialog.openInformation(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_23 + convPretty(nextJob));
+				
+			} catch (Exception e) {
+				logger.error("save schedule", e); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.AddScheduleDialog_25, e.getMessage());
+				return;
+			}
 		}
 
 		super.okPressed();
@@ -324,6 +394,11 @@ public class AddScheduleDialog extends Dialog {
 }
 
 
+/**
+ * schedule label provider
+ * @author hangum
+ *
+ */
 class AddScheduleLableProvider extends LabelProvider implements ITableLabelProvider {
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
@@ -341,6 +416,54 @@ class AddScheduleLableProvider extends LabelProvider implements ITableLabelProvi
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
+	}
+	
+}
+
+/**
+ * sql order editing support
+ * 
+ * @author hangum
+ *
+ */
+class SQLOrderEditingSupport extends EditingSupport {
+	private final TableViewer viewer;
+	private final CellEditor editor;
+	
+	public SQLOrderEditingSupport(TableViewer viewer) {
+		super(viewer);
+		this.viewer = viewer;
+		this.editor = new TextCellEditor(viewer.getTable());
+	}
+
+	@Override
+	protected CellEditor getCellEditor(Object element) {
+		return editor;
+	}
+
+	@Override
+	protected boolean canEdit(Object element) {
+		return true;
+	}
+
+	@Override
+	protected Object getValue(Object element) {
+		ScheduleDAO dao = (ScheduleDAO)element;
+		return String.valueOf(dao.getSend_seq());
+	}
+
+	@Override
+	protected void setValue(Object element, Object value) {
+		ScheduleDAO dao = (ScheduleDAO)element;
+		
+		if(!NumberUtils.isNumber(value.toString())) {
+			MessageDialog.openError(null, "Confirm", "Is not number value.");
+			return;
+		}
+		
+		
+		dao.setSend_seq(NumberUtils.toInt(value.toString()));
+		viewer.update(dao, null);
 	}
 	
 }

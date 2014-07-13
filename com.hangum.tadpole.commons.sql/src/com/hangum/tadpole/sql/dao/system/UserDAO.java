@@ -27,17 +27,22 @@ public class UserDAO {
 	String approval_yn;
 	String security_question;
 	String security_answer;
+	
+	String use_otp;
+	String otp_secret;
 
 	public UserDAO() {
 	}
 
-	public UserDAO(String email, String name, String language, String approval_yn, String security_question, String security_answer) {
+	public UserDAO(String email, String name, String language, String approval_yn, String security_question, String security_answer, String use_opt, String otp_secret) {
 		this.email = email;
 		this.name = name;
 		this.language = language;
 		this.approval_yn = approval_yn;
 		this.security_question = security_question;
 		this.security_answer = security_answer;
+		this.use_otp = use_opt;
+		this.otp_secret = otp_secret;
 	}
 
 	public int getSeq() {
@@ -132,6 +137,22 @@ public class UserDAO {
 
 	public void setSecurity_answer(String security_answer) {
 		this.security_answer = security_answer;
+	}
+
+	public String getUse_otp() {
+		return use_otp;
+	}
+
+	public void setUse_otp(String use_otp) {
+		this.use_otp = use_otp;
+	}
+
+	public String getOtp_secret() {
+		return otp_secret;
+	}
+
+	public void setOtp_secret(String otp_secret) {
+		this.otp_secret = otp_secret;
 	}
 
 }

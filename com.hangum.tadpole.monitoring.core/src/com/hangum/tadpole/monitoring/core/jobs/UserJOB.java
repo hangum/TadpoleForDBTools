@@ -64,7 +64,7 @@ public class UserJOB implements Job {
 					isResult = false;
 				}
 			}
-//			
+
 			DailySummaryReport report = new DailySummaryReport();
 			String mailContent = report.makeFullSummaryReport(scheduleMainDao.getTitle(), sbMailContent.toString());
 			

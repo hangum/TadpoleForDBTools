@@ -11,6 +11,7 @@
 package com.hangum.tadpole.application.start.dialog.login;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -31,10 +32,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.SWTResourceManager;
@@ -184,7 +187,17 @@ public class LoginDialog extends Dialog {
 		if(!validation(strEmail, strPass)) return;
 		
 		try {
-			SessionManager.addSession(TadpoleSystem_UserQuery.login(strEmail, strPass));
+			UserDAO userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
+			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDao.getUse_otp())) {
+				OTPLoginDialog otpDialog = new OTPLoginDialog(getShell());
+				otpDialog.open(); 
+
+				if(!GoogleAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
+					throw new Exception(Messages.LoginDialog_2);
+				}
+			} 
+			
+			SessionManager.addSession(userDao);
 		} catch (Exception e) {
 			logger.error("Login exception", e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());

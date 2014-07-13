@@ -29,6 +29,10 @@ public class Messages extends NLS {
 
 	public static String UserInfoPerference_13;
 
+	public static String UserInfoPerference_15;
+
+	public static String UserInfoPerference_16;
+
 	public static String UserInfoPerference_2;
 
 	public static String UserInfoPerference_3;
@@ -108,6 +112,14 @@ public class Messages extends NLS {
 	public static String GeneralPreferencePage_lblAccount_text;
 	public static String GeneralPreferencePage_lblPassword_text;
 	public static String UserInfoPerference_button_text;
+	public static String UserInfoPerference_grpGoogleAuth_text;
+	public static String UserInfoPerference_btnGoogleOtp_text;
+	public static String UserInfoPerference_lblSecretKey_text;
+	public static String UserInfoPerference_lblNewLabel_text;
+	public static String UserInfoPerference_btnGoogleOtp_text_1;
+	public static String UserInfoPerference_lblSecretKey_text_1;
+	public static String UserInfoPerference_lblQrcodeUrl_text;
+	public static String UserInfoPerference_lblOptCode_text;
 	
 	static {
 		// initialize resource bundle

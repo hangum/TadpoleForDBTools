@@ -175,4 +175,43 @@ public class TadpoleSystem_Schedule {
 		
 		return dao;
 	}
+	
+	/**
+	 * 데이터 수정.
+	 * @param userDB
+	 * @param title
+	 * @param desc
+	 * @param cronExp
+	 * @param listSchedule
+	 * @return
+	 * @throws Exception
+	 */
+	public static ScheduleMainDAO modifySchedule(final UserDBDAO userDB, ScheduleMainDAO scheduleDao, List<ScheduleDAO> listSchedule) throws Exception {
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("scheduleMainUpdate", scheduleDao);
+		
+		// 기존 데이터를 삭제합니다.
+		sqlClient.update("deleteSchedule", scheduleDao.getSeq());
+		
+		// save schedule
+		for (ScheduleDAO scheduleDAO : listSchedule) {
+			scheduleDAO.setSchedule_main_seq(scheduleDao.getSeq());
+			ScheduleDAO retScheduleDAO = (ScheduleDAO)sqlClient.insert("scheduleInsert", scheduleDAO);
+			
+			// sql 
+			String[] sqls = SQLUtil.makeResourceDataArays(scheduleDAO.getSql());
+			ScheduleDetailDAO detailDao = null;
+			for (String sql : sqls) {
+				detailDao = new ScheduleDetailDAO();
+				detailDao.setSchedule_seq(retScheduleDAO.getSeq());
+				detailDao.setDatas(sql);
+				
+				sqlClient.insert("scheduleDetailInsert", detailDao);	
+			}
+		}
+		
+		return scheduleDao;
+	}
+	
 }

@@ -31,6 +31,12 @@ public class TransactionConnectionListEditorInput implements IEditorInput {
 	public boolean exists() {
 		return false;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof TransactionConnectionListEditorInput) ) return false;
+		return ((TransactionConnectionListEditorInput)obj).getName().equals(getName());
+	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {

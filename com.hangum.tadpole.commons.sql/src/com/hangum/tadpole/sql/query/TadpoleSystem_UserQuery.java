@@ -40,11 +40,15 @@ public class TadpoleSystem_UserQuery {
 	 * @param passwd
 	 * @param name
 	 * @param approvalYn
+	 * @param question
+	 * @param answer
+	 * @param use_opt
+	 * @param opt_secret
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDAO newUser(String email, String passwd, String name, String language, String approvalYn, String question, String answer) throws Exception {
-		UserDAO loginDAO = new UserDAO(email, name, language, approvalYn, question, answer);
+	public static UserDAO newUser(String email, String passwd, String name, String language, String approvalYn, String question, String answer, String use_opt, String opt_secret) throws Exception {
+		UserDAO loginDAO = new UserDAO(email, name, language, approvalYn, question, answer, use_opt, opt_secret);
 		loginDAO.setPasswd(CipherManager.getInstance().encryption(passwd));
 		
 		loginDAO.setSecurity_question(CipherManager.getInstance().encryption(question));
@@ -259,6 +263,17 @@ public class TadpoleSystem_UserQuery {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 사용자 힌트 변경
+	 * 
+	 * @param user
+	 * @throws Exception
+	 */
+	public static void updateUserOTPCode(UserDAO user) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserOTPCode", user); //$NON-NLS-1$
 	}
 
 	/**

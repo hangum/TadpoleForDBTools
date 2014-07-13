@@ -11,9 +11,11 @@
 package com.hangum.tadpole.preference.ui;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -29,6 +31,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
+import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.preference.Messages;
@@ -40,6 +43,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Group;
 
 /**
  * 사용자 정보 수정
@@ -58,6 +62,13 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 	
 	private Combo comboQuestion;
 	private Text textAnswer;
+	
+	/** OTP code */
+	private String secretKey = ""; //$NON-NLS-1$
+	private Button btnGetOptCode;
+	private Text textSecretKey;
+	private Text textQRCodeURL;
+	private Text textOTPCode;
 
 	/**
 	 * Create the preference page.
@@ -161,10 +172,62 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		textAnswer = new Text(container, SWT.BORDER);
 		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textAnswer.setText(CipherManager.getInstance().decryption(SessionManager.getSecurityAnswer()));
+		
 
 		// because of reference of textAnswer
 		comboQuestion.select(0);
-		new Label(container, SWT.NONE);
+		
+		// google auth
+		Group grpGoogleAuth = new Group(container, SWT.NONE);
+		grpGoogleAuth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		grpGoogleAuth.setText(Messages.UserInfoPerference_grpGoogleAuth_text);
+		grpGoogleAuth.setLayout(new GridLayout(2, false));
+		
+		btnGetOptCode = new Button(grpGoogleAuth, SWT.CHECK);
+		btnGetOptCode.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				generateGoogleOTP();
+			}
+		});
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(SessionManager.getUseOTP())) {
+			btnGetOptCode.setSelection(true);
+		}
+		btnGetOptCode.setText(Messages.UserInfoPerference_btnGoogleOtp_text_1);
+		new Label(grpGoogleAuth, SWT.NONE);
+		
+		Label lblSecretKey = new Label(grpGoogleAuth, SWT.NONE);
+		lblSecretKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSecretKey.setText(Messages.UserInfoPerference_lblSecretKey_text_1);
+		
+		textSecretKey = new Text(grpGoogleAuth, SWT.BORDER);
+		textSecretKey.setText(SessionManager.getOTPSecretKey());
+		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblQrcodeUrl = new Label(grpGoogleAuth, SWT.NONE);
+		lblQrcodeUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblQrcodeUrl.setText("<a href='https://code.google.com/p/google-authenticator/' target='_blank'>" + Messages.UserInfoPerference_lblQrcodeUrl_text + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblQrcodeUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		textQRCodeURL = new Text(grpGoogleAuth, SWT.BORDER | SWT.WRAP | SWT.MULTI);
+		GridData gd_textQRCodeURL = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_textQRCodeURL.heightHint = 50;
+		textQRCodeURL.setLayoutData(gd_textQRCodeURL);
+		
+		if(btnGetOptCode.getSelection()) {
+			String strEmail = textEmail.getText();
+			String[] strUserDomain = StringUtils.split(strEmail, "@"); //$NON-NLS-1$
+			String strURL = GoogleAuthManager.getInstance().getURL(strUserDomain[0], strUserDomain[1], secretKey);
+			
+			textQRCodeURL.setText(strURL);
+		}
+		
+		Label lblOptCode = new Label(grpGoogleAuth, SWT.NONE);
+		lblOptCode.setText("OTP Code");
+		lblOptCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		
+		textOTPCode = new Text(grpGoogleAuth, SWT.BORDER);
+		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Button buttonWithdrawal = new Button(container, SWT.NONE);
 		buttonWithdrawal.addSelectionListener(new SelectionAdapter() {
@@ -177,13 +240,14 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 						TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
 						SessionManager.logout();
 					} catch (Exception e1) {
-						logger.error("user withdrawal", e1);
+						logger.error("user withdrawal", e1); //$NON-NLS-1$
 					}
 				}
 					
 			}
 		});
 		buttonWithdrawal.setText(Messages.UserInfoPerference_button_text);
+		new Label(container, SWT.NONE);
 		
 		String questionKey = CipherManager.getInstance().decryption(SessionManager.getSecurityQuestion());
 		if (null!= questionKey && !"".equals(questionKey.trim())) { //$NON-NLS-1$
@@ -197,6 +261,30 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 
 		return container;
 	}
+	
+	/**
+	 * generate google otp 
+	 */
+	private void generateGoogleOTP() {
+		if(!btnGetOptCode.getSelection()) {
+			textSecretKey.setText(""); //$NON-NLS-1$
+			textQRCodeURL.setText(""); //$NON-NLS-1$
+			
+			return;
+		}
+		secretKey = GoogleAuthManager.getInstance().getSecretKey();
+		
+		String strEmail = textEmail.getText();
+		String[] strUserDomain = StringUtils.split(strEmail, "@"); //$NON-NLS-1$
+		String strURL = GoogleAuthManager.getInstance().getURL(strUserDomain[0], strUserDomain[1], secretKey);
+		if(logger.isDebugEnabled()) {
+			logger.debug("user is " + strUserDomain[0] + ", domain is " + strUserDomain[1] + ", secretkey is " + secretKey); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			logger.debug("url is " + strURL); //$NON-NLS-1$
+		}
+		
+		textSecretKey.setText(secretKey);
+		textQRCodeURL.setText(strURL);
+	}
 
 	
 	@Override
@@ -205,10 +293,25 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		String rePass = textRePassword.getText().trim();
 		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
 		String answer = StringUtils.trimToEmpty(textAnswer.getText());
+		String useOTP = btnGetOptCode.getSelection()?"YES":"NO";
+		String otpSecretKey = textSecretKey.getText();
 		
 		if(!pass.equals(rePass)) {
 			MessageDialog.openError(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_6);
 			return false;
+		}
+		
+		if(btnGetOptCode.getSelection()) {
+			if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
+				MessageDialog.openError(getShell(), "Error", Messages.UserInfoPerference_15); //$NON-NLS-1$
+				textOTPCode.setFocus();
+				return false;
+			}
+			if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
+				MessageDialog.openError(getShell(), "Error", Messages.UserInfoPerference_16); //$NON-NLS-1$
+				textOTPCode.setFocus();
+				return false;
+			}
 		}
 		// Password double check
 		boolean isPasswordUpdated = !pass.equals(SessionManager.getPassword());
@@ -219,6 +322,9 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		user.setSecurity_question(questionKey);
 		user.setSecurity_answer(answer);
 		
+		user.setUse_otp(useOTP);
+		user.setOtp_secret(otpSecretKey);
+		
 		try {
 			if (isPasswordUpdated) {
 				TadpoleSystem_UserQuery.updateUserPassword(user);
@@ -226,8 +332,12 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 			}
 			
 			TadpoleSystem_UserQuery.updateUserSecurityHint(user);
-			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_QUESTION.toString(), questionKey);			
-			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_ANSWER.toString(), answer);
+			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_QUESTION.toString(), CipherManager.getInstance().encryption(questionKey));			
+			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_ANSWER.toString(), CipherManager.getInstance().encryption(answer));
+			
+			TadpoleSystem_UserQuery.updateUserOTPCode(user);
+			SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.toString(), useOTP);			
+			SessionManager.updateSessionAttribute(SessionManager.NAME.OTP_SECRET_KEY.toString(), otpSecretKey);
 			
 			//fix https://github.com/hangum/TadpoleForDBTools/issues/243
 			SessionManager.setPassword(user.getPasswd());
