@@ -52,16 +52,16 @@ public class Application implements EntryPoint {
 		// 개발환경일 경우 검사하지 않습니다.
 		// TODO 시스템 환경에따른 코드변화가 필요합니다.
 		//
-		// 시스템 동작가능한 환경인지 오류 확인.
-		if(!ApplicationArgumentUtils.envDev()) {
-			try {
-				TadpoleSystemChecker.checker();
-			} catch (Exception e) {
-				logger.error("System Initialize Checker", e); //$NON-NLS-1$
-				MessageDialog.openError(null, "System Initialize Error", Messages.Application_2 + e.getMessage()); //$NON-NLS-1$
-				System.exit(0);
-			}
-		}
+//		// 시스템 동작가능한 환경인지 오류 확인.
+//		if(!ApplicationArgumentUtils.envDev()) {
+//			try {
+//				TadpoleSystemChecker.checker();
+//			} catch (Exception e) {
+//				logger.error("System Initialize Checker", e); //$NON-NLS-1$
+//				MessageDialog.openError(null, "System Initialize Error", Messages.Application_2 + e.getMessage()); //$NON-NLS-1$
+//				System.exit(0);
+//			}
+//		}
 		
 		// 시스템 초기 데이터 베이스 생성.
 		boolean isTadpoleInitialize = PlatformUI.getPreferenceStore().getBoolean(PreferenceDefine.IS_TADPOLE_INITIALIZE);
