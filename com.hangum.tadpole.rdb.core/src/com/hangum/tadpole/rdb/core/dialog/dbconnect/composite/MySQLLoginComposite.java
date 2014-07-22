@@ -150,7 +150,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
-		comboLocale = new Combo(grpConnectionType, SWT.READ_ONLY);
+		comboLocale = new Combo(grpConnectionType, SWT.NONE);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			
 		for(String val : DBLocaleUtils.getMySQLList()) {
@@ -181,7 +181,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textDatabase.setText(oldUserDB.getDb());
 			textPort.setText(oldUserDB.getPort());
 			
-			comboLocale.setText(DBLocaleUtils.findMySQLFullLocale(oldUserDB.getLocale()));
+			comboLocale.setText(oldUserDB.getLocale());
 			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
@@ -238,9 +238,8 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		if(!isValidateInput()) return false;
 
 		String dbUrl = "";
-		String locale = StringUtils.trimToEmpty(comboLocale.getText());
-		String selectLocale = "";
-		if(locale.equals("") || DBLocaleUtils.NONE_TXT.equals(locale)) {
+		String selectLocale = StringUtils.trimToEmpty(comboLocale.getText());
+		if(selectLocale.equals("") || DBLocaleUtils.NONE_TXT.equals(selectLocale)) {
 			dbUrl = String.format(
 						getSelectDB().getDB_URL_INFO(), 
 						StringUtils.trimToEmpty(textHost.getText()), 
@@ -248,13 +247,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 						StringUtils.trimToEmpty(textDatabase.getText())
 					);
 		} else {			
-			selectLocale = StringUtils.substringBefore(StringUtils.trimToEmpty(comboLocale.getText()), "|");			
 			
 			dbUrl = String.format(
 						getSelectDB().getDB_URL_INFO(), 
 						StringUtils.trimToEmpty(textHost.getText()), 
 						StringUtils.trimToEmpty(textPort.getText()), 
-						StringUtils.trimToEmpty(textDatabase.getText()) + "?useUnicode=false&characterEncoding=" + StringUtils.trimToEmpty(selectLocale));
+						StringUtils.trimToEmpty(textDatabase.getText()) + "?useUnicode=false&characterEncoding=" + selectLocale);
 		}
 		
 		userDB = new UserDBDAO();

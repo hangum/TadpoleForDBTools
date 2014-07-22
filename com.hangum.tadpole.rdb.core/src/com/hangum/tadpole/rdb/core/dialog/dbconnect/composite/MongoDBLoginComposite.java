@@ -169,7 +169,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
-		comboLocale = new Combo(grpConnectionType, SWT.READ_ONLY);
+		comboLocale = new Combo(grpConnectionType, SWT.NONE);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			
 		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
