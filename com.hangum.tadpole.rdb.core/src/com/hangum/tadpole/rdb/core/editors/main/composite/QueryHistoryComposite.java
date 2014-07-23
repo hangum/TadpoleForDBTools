@@ -115,7 +115,7 @@ public class QueryHistoryComposite extends Composite {
 				
 				IStructuredSelection is = (IStructuredSelection)tvSQLHistory.getSelection();
 				if(!is.isEmpty()) {
-					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
+					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DELIMITER);
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}

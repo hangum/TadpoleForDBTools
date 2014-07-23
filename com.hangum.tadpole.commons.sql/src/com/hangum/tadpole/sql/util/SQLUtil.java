@@ -223,7 +223,7 @@ public class SQLUtil {
 			// 모든 쿼리에 공백 주석 제거
 			exeSQL = removeComment(exeSQL);
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
-			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DILIMITER);
+			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
 			
 		} catch(Exception e) {
 			logger.error("query execute", e);

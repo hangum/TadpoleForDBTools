@@ -34,7 +34,7 @@ public class PublicTadpoleDefine {
 	public static String DOUBLE_LINE_SEPARATOR = LINE_SEPARATOR + LINE_SEPARATOR;
 
 	/**  쿼리 구분자 */
-	public static final String SQL_DILIMITER = ";"; //$NON-NLS-1$
+	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$
 	
 	/** tadpole url */
 	public static String TADPOLE_URL = "http://127.0.0.1:%s/tadpole";//db?startup=tadpole"; //$NON-NLS-1$

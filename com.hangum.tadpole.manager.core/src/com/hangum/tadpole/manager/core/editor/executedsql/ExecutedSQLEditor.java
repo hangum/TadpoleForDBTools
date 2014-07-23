@@ -374,7 +374,7 @@ public class ExecutedSQLEditor extends EditorPart {
 					}
 				}
 				
-				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DILIMITER);
+				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DELIMITER);
 			} catch (Exception e) {
 				logger.error("find editor and write query", e);
 			}

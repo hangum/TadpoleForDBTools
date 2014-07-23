@@ -728,7 +728,7 @@ public class TableDirectEditorComposite extends Composite {
 	 */
 	private String makeDelete(int rowSeq, Map<Integer, Object> tmpRs) {
 		String deleteStmt = "DELETE FROM " + initTableNameStr + " \r\n WHERE "; //$NON-NLS-1$ //$NON-NLS-2$
-		deleteStmt += getWhereMake(rowSeq)  + PublicTadpoleDefine.SQL_DILIMITER; //$NON-NLS-1$
+		deleteStmt += getWhereMake(rowSeq)  + PublicTadpoleDefine.SQL_DELIMITER; //$NON-NLS-1$
 		
 		return deleteStmt;
 	}
@@ -752,7 +752,7 @@ public class TableDirectEditorComposite extends Composite {
 		}
 		updateStmt = StringUtils.chompLast(updateStmt, ", "); //$NON-NLS-1$
 		
-		updateStmt += " WHERE " + getWhereMake(rowSeq) + PublicTadpoleDefine.SQL_DILIMITER; //$NON-NLS-1$ //$NON-NLS-2$
+		updateStmt += " WHERE " + getWhereMake(rowSeq) + PublicTadpoleDefine.SQL_DELIMITER; //$NON-NLS-1$ //$NON-NLS-2$
 		return updateStmt;
 	}
 	

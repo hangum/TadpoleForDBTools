@@ -176,7 +176,7 @@ public class SQLToStringDialog extends Dialog {
 	}
 	
 	private String[] parseSQL() {
-		String[] arry = sql.split(PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
+		String[] arry = sql.split(PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 		 if( arry.length == 1) {
 			 String ars[] = { sql };
 			 return ars;
