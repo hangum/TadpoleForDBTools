@@ -1,0 +1,2781 @@
+/*******************************************************************************
+ * Copyright (c) 2008, 2014 Innoopract Informationssysteme GmbH and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Innoopract Informationssysteme GmbH - initial API and implementation
+ *    EclipseSource - ongoing development
+ ******************************************************************************/
+
+/* RAP 1.4 default theme for all widgets */
+
+* {
+  color: #4a4a4a;
+  background-color: white;
+  background-image: none;
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+}
+
+*:disabled {
+  color: #CFCFCF;
+}
+
+Widget-ToolTip {
+  padding: 1px 3px 2px 3px;
+  background-color: #dae9f7;
+  border: 1px solid #00589f;
+  border-radius: 2px 2px 2px 2px;
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  color: #4a4a4a;
+  opacity: 1;
+  animation: fadeIn 200ms linear, fadeOut 600ms ease-out;
+  box-shadow: 3px 4px 2px rgba( 0, 0, 0, 0.3 );
+  text-align: left;
+}
+
+Widget-ToolTip-Pointer {
+  background-image: none;
+}
+
+Display {
+  rwt-shadow-color: #a7a6aa;
+  rwt-highlight-color: #ffffff;
+  rwt-darkshadow-color: #85878c;
+  rwt-lightshadow-color: #dcdfe4;
+  rwt-thinborder-color: #aca899;
+  rwt-selectionmarker-color: #fec83c;
+  rwt-infobackground-color: #ffffff;
+
+  rwt-error-image: url( theme/resources/dialog/error.png );
+  rwt-information-image: url( theme/resources/dialog/information.png );
+  rwt-question-image: url( theme/resources/dialog/question.png );
+  rwt-warning-image: url( theme/resources/dialog/warning.png );
+  rwt-working-image: url( theme/resources/dialog/information.png );
+
+  rwt-fontlist: 11px 'Segoe UI', Corbel, Calibri, Tahoma, 'Lucida Sans Unicode';
+
+  background-image: url( theme/resources/display/browser_bg.png );
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+}
+
+/* Default theme for all controls */
+
+* {
+  border: none;
+  padding: 0px;
+}
+
+*[BORDER] {
+  border: 1px solid #a4a4a4;
+}
+
+/* Default theme for all composites */
+
+Composite {
+  padding: 0px;
+  opacity: 1;
+  background-color: #ffffff;
+  background-image: none;
+  background-repeat: repeat;
+  background-position: left top;
+  border: none;
+  box-shadow: none;
+  animation: none;
+}
+
+Composite[BORDER] {
+  background-color: white;
+  background-image: none;
+}
+
+/* Button default theme */
+
+Button {
+  background-image: none;
+  background-repeat: repeat;
+  background-position: left top;
+  padding: 4px 5px;
+  spacing: 2px;
+  cursor: default;
+  animation: none;
+  color: #4a4a4a;
+  background-color: white;
+  opacity: 1;
+  text-shadow: none;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+Button[PUSH], Button[TOGGLE], Button[BORDER] {
+  border: 1px solid #A4A4A4;
+  border-radius: 3px;
+  padding: 2px 5px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #ffffff )
+  );
+  animation: hoverOut 500ms ease-out;
+  cursor: pointer;
+}
+
+Button[ARROW], Button[ARROW][BORDER] {
+  border: 1px solid #A4A4A4;
+  border-radius: 3px;
+  padding: 4px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #ffffff )
+  );
+  animation: hoverOut 500ms ease-out;
+  cursor: pointer;
+}
+
+Button[ARROW]:default,
+Button[PUSH]:default,
+Button[TOGGLE]:default {
+  background-color: white;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #ffffff )
+  );
+  border: 1px solid #A4A4A4;
+}
+
+Button[ARROW]:disabled, Button[PUSH]:disabled, Button[TOGGLE]:disabled {
+  cursor: default;
+}
+
+Button[ARROW]:hover, Button[PUSH]:hover, Button[TOGGLE]:hover {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+}
+
+Button[ARROW]:pressed, Button[PUSH]:pressed, Button[TOGGLE]:pressed {
+  animation: none;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+  padding: 4px 5px 2px 7px;
+}
+
+Button[TOGGLE]:selected {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 30%, #f0f0f0 ),
+    color-stop( 70%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+Button[TOGGLE]:selected:hover {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+Button[CHECK], Button[RADIO] {
+  spacing: 4px;
+}
+
+Button[CHECK][BORDER], Button[RADIO][BORDER] {
+  background-image: none;
+}
+
+Button-CheckIcon {
+  background-image: url( theme/resources/button/check-unselected.png );
+}
+
+Button-CheckIcon:hover {
+  background-image: url( theme/resources/button/check-unselected-hover.png );
+}
+
+Button-CheckIcon:selected {
+  background-image: url( theme/resources/button/check-selected.png );
+}
+
+Button-CheckIcon:selected:hover {
+  background-image: url( theme/resources/button/check-selected-hover.png );
+}
+
+Button-CheckIcon:selected:grayed {
+  background-image: url( theme/resources/button/check-grayed.png );
+}
+
+Button-CheckIcon:selected:grayed:hover {
+  background-image: url( theme/resources/button/check-grayed-hover.png );
+}
+
+Button-RadioIcon {
+  background-image: url( theme/resources/button/radio-unselected.png );
+}
+
+Button-RadioIcon:hover {
+  background-image: url( theme/resources/button/radio-unselected-hover.png );
+}
+
+Button-RadioIcon:selected {
+  background-image: url( theme/resources/button/radio-selected.png );
+}
+
+Button-RadioIcon:selected:hover {
+  background-image: url( theme/resources/button/radio-selected-hover.png );
+}
+
+Button-ArrowIcon[UP] {
+  background-image: url( theme/resources/button/arrow-up.png );
+}
+
+Button-ArrowIcon[DOWN] {
+  background-image: url( theme/resources/button/arrow-down.png );
+}
+
+Button-ArrowIcon[LEFT] {
+  background-image: url( theme/resources/button/arrow-left.png );
+}
+
+Button-ArrowIcon[RIGHT] {
+  background-image: url( theme/resources/button/arrow-right.png );
+}
+
+Button-FocusIndicator[ARROW], Button-FocusIndicator[PUSH], Button-FocusIndicator[TOGGLE] {
+  background-color: transparent;
+  border: 1px dotted #b8b8b8;
+  margin: 2px;
+  padding: 0px;
+  opacity: 1;
+}
+
+Button-FocusIndicator[CHECK], Button-FocusIndicator[RADIO] {
+  background-color: transparent;
+  border: 1px dotted #b8b8b8;
+  padding: 2px 2px 2px 1px;
+  margin: 0px;
+  opacity: 1;
+}
+
+/* Combo default theme */
+
+Combo {
+  border: 1px solid #c1c1c1;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  background-color: #fcfcfc;
+  color: #464a4e;
+  border-radius: 2px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e2e2e2 ),
+    color-stop( 15%, #f8f8f8 ),
+    to( #fbfbfb )
+  );
+  text-shadow: none;
+  box-shadow: none;
+}
+
+Combo[BORDER] {
+  border: 1px solid #c1c1c1;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+Combo[BORDER]:focused {
+  box-shadow: none;
+  border: 1px solid #c1c1c1;
+}
+
+Combo-Button {
+  cursor: default;
+  background-color: transparent;
+  border: none;
+  border-left: none;
+  border-radius: 0px 2px 2px 0px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+  width: 18px;
+}
+
+Combo-Button:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+Combo-Button-Icon {
+  background-image: url( theme/resources/ccombo/down.png );
+}
+
+Combo-Button-Icon:hover {
+  background-image: url( theme/resources/ccombo/down-hover.png );
+}
+
+Combo-List {
+  border: 1px solid #c1c1c1;
+  border-radius: 0px 0px 2px 2px;
+  box-shadow: 3px 3px 3px rgba( 0, 0, 0, 0.4 );
+}
+
+Combo-List-Item {
+  color: inherit;
+  background-color: transparent;
+  background-image: none;
+  text-decoration: none;
+  text-shadow: none;
+  padding: 3px 5px;
+}
+
+Combo-List-Item:hover {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #dae9f7 ),
+    to( #d2e0ee )
+  );
+}
+
+Combo-List-Item:selected {
+  color: white;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #0078Bf ),
+    to( #00589f )
+  );
+}
+
+Combo-Field {
+  padding: 2px 3px;
+}
+
+Combo-FocusIndicator {
+  background-color: transparent;
+  border: 1px dotted #b8b8b8;
+  margin: 1px 19px 1px 1px;
+  opacity: 1;
+}
+
+/* DropDown default theme */
+
+DropDown {
+  border: 1px solid #c1c1c1;
+  border-radius: 0px;
+  box-shadow: none;
+}
+
+DropDown-Item {
+  color: inherit;
+  background-color: transparent;
+  background-image: none;
+  text-decoration: none;
+  text-shadow: none;
+  padding: 3px 5px;
+}
+
+DropDown-Item:hover {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #dae9f7 ),
+    to( #d2e0ee )
+  );
+}
+
+DropDown-Item:selected {
+  color: white;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #0078Bf ),
+    to( #00589f )
+  );
+}
+
+/* CoolBar default theme */
+
+CoolBar {
+  background-image: none;
+}
+
+CoolItem-Handle {
+  border: 1px outset;
+  width: 4px;
+}
+
+/* CTabFolder default theme */
+
+CTabFolder {
+  border-color: #A4A4A4;
+  border-radius: 2px;
+}
+
+CTabItem {
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  color: #4a4a4a;
+  background-color: white;
+  background-image: none;
+  padding: 2px 4px;
+  spacing: 4px;
+  text-shadow: none;
+}
+
+CTabItem:selected {
+  color: white;
+  background-color: #00589f;
+}
+
+/* Do not gray out disabled CTabItems, this is SWT behavior */
+CTabItem:disabled {
+  color: black;
+}
+
+CTabFolder-DropDownButton-Icon {
+  background-image: url( theme/resources/ctabfolder/ctabfolder-dropdown.png );
+}
+
+CTabFolder-DropDownButton-Icon:hover {
+  background-image: url( theme/resources/ctabfolder/ctabfolder-dropdown-hover.png );
+}
+
+/* Group default theme */
+
+Group {
+  color: #4a4a4a;
+  background-color: white;
+}
+
+Group-Frame {
+  margin: 8px 0px 0px;
+  padding: 8px 2px 2px;
+  border: 1px solid #cccccc;
+  border-radius: 2px 2px 2px 2px;
+}
+
+Group-Label {
+  padding: 0px 3px 0px 4px;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  background-color: transparent;
+  background-image: none;
+  background-repeat: repeat;
+  background-position: left top;
+  border: none;
+  border-radius: 0;
+  color: #464a4e;
+  margin: 1px 10px;
+  text-shadow: none;
+}
+
+/* Label default theme */
+
+Label {
+  color: #4a4a4a;
+  background-color: white;
+  background-image: none;
+  background-repeat: repeat;
+  background-position: left top;
+  border: none;
+  text-decoration: none;
+  cursor: default;
+  opacity: 1;
+  text-shadow: none;
+}
+
+Label[BORDER] {
+  border: 1px solid #a4a4a4;
+  border-radius: 2px;
+}
+
+Label-SeparatorLine {
+  background-image: none;
+  background-color: transparent;
+  border: 1px solid #a4a4a4;
+  border-radius: 0px;
+  width: 2px;
+}
+
+Label-SeparatorLine[SHADOW_IN] {
+  border: 1px inset;
+}
+
+Label-SeparatorLine[SHADOW_OUT] {
+  border: 1px outset;
+}
+
+/* Link default theme */
+
+Link {
+  color: #4a4a4a;
+  background-color: #ffffff;
+  background-image: none;
+  background-repeat: repeat;
+  background-position: left top;
+  text-shadow: none;
+}
+
+Link-Hyperlink {
+  color: #00589f;
+  text-shadow: none;
+  text-decoration: underline;
+}
+
+Link-Hyperlink:disabled {
+  color: #959595;
+}
+
+/* List default theme */
+
+List {
+  background-color: white;
+  border: none;
+  color: #4a4a4a;
+}
+
+List[BORDER] {
+  border: 1px solid #a4a4a4;
+}
+
+List-Item {
+  background-color: transparent;
+  color: inherit;
+  background-image: none;
+  text-shadow: none;
+  padding: 3px 5px;
+}
+
+List-Item:hover {
+  background-color: #dae9f7;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #dae9f7 ),
+    to( #d2e0ee )
+  );
+}
+
+List-Item:selected {
+  color: white;
+  background-color: #00589f;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #0078Bf ),
+    to( #00589f )
+  );
+}
+
+List-Item:selected:unfocused {
+  background-color: #959595;
+  color: white;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #A5A5A5 ),
+    to( #858585 )
+  );
+}
+
+List-Item:even {
+  background-color: #f3f3f4;
+}
+
+List-Item:even:hover {
+  background-color: #dae9f7;
+}
+
+List-Item:even:selected {
+  color: white;
+  background-color: #00589f;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #0078Bf ),
+    to( #00589f )
+  );
+}
+
+List-Item:even:selected:unfocused {
+  background-color: #959595;
+  color: white;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #A5A5A5 ),
+    to( #858585 )
+  );
+}
+
+/* Menu default theme */
+
+Menu {
+  background-image: none;
+  padding: 2px 0px;
+  opacity: 1;
+  animation: none;
+  color: #0059a5;
+  background-color: white;
+  border: 1px #0059a5;
+  border-radius: 2px;
+  box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+}
+
+MenuItem {
+  background-image: none;
+  color: black;
+  background-color: transparent;
+  opacity: 1;
+  text-shadow: none;
+  padding: 2px 4px;
+}
+
+MenuItem[SEPARATOR] {
+  padding: 0px 3px;
+}
+
+MenuItem:hover {
+  background-color: #dae9f7;
+  color: #4a4a4a;
+}
+
+MenuItem:pressed {
+  background-color: #00589f;
+  color: white;
+}
+
+MenuItem-CheckIcon {
+  background-image: url( theme/resources/menu/checkbox.gif );
+}
+
+MenuItem-RadioIcon {
+  background-image: url( theme/resources/menu/radiobutton.gif );
+}
+
+MenuItem-CascadeIcon {
+  background-image: url( theme/resources/menu/arrow.gif );
+}
+
+/* ProgressBar default theme */
+
+ProgressBar {
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #A4A4A4;
+  border-radius: 2px;
+  width: 16px;
+}
+
+ProgressBar-Indicator {
+  background-color: #00589f;
+  background-image: none;
+  border: none;
+  opacity: 1;
+}
+
+ProgressBar-Indicator:paused {
+  background-color: #ebebeb;
+}
+
+ProgressBar-Indicator:error {
+  background-color: #cb2020;
+}
+
+/* Shell default theme */
+
+Shell {
+  animation: none;
+  border: 1px black;
+  background-color: white;
+  padding: 0px;
+  background-image: none;
+  opacity: 1;
+  box-shadow: none;
+}
+
+Shell[TITLE], Shell[BORDER] {
+  box-shadow: 5px 5px 3px rgba( 0, 0, 0, 0.5 );
+  background-color: white;
+  border: 2px solid #005092;
+  border-radius: 5px 5px 0px 0px;
+  padding: 5px;
+}
+
+Shell[BORDER]:inactive, Shell[TITLE]:inactive {
+  border: 2px solid #4b4b4b;
+  box-shadow: none;
+}
+
+Shell:maximized, Shell:maximized:inactive {
+  border: none;
+  box-shadow: none;
+  border-radius: 0px 0px 0px 0px;
+}
+
+Shell-DisplayOverlay {
+  animation: fadeIn 200ms linear, fadeOut 400ms ease-out;
+  background-image: none;
+  background-color: #808080;
+  opacity: 0.2;
+}
+
+/* Shell titlebar */
+
+Shell-Titlebar {
+  background-color: #0080c0;
+  background-gradient-color: #0080c0;
+  color: white;
+  background-image: gradient( linear, left top, left bottom, from( #005fac ), to( #005092 ) );
+  padding: 2px 5px 2px;
+  margin: 0px;
+  height: 22px;
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  border: none;
+  border-radius: 1px 1px 0px 0px;
+  text-shadow: none;
+}
+
+Shell-Titlebar:inactive {
+  background-color: #7996a5;
+  background-gradient-color: #7996a5;
+  color: #aaaaaa;
+  background-image: gradient( linear, left top, left bottom,
+                              from( #595959 ), to( #4b4b4b ) );
+}
+
+/* Shell buttons */
+
+/* Minimize button */
+
+Shell-MinButton {
+  background-image: url( theme/resources/window/shell-min.png );
+  margin: 0px 6px 0px 0px;
+}
+
+Shell-MinButton:hover {
+  background-image: url( theme/resources/window/shell-min-hover.png );
+}
+
+Shell-MinButton:inactive {
+  background-image: url( theme/resources/window/shell-min.png );
+  margin: 0px 6px 0px 0px;
+}
+
+Shell-MinButton:inactive:hover {
+  background-image: url( theme/resources/window/shell-min-hover.png );
+}
+
+/* Maximize button */
+
+Shell-MaxButton {
+  background-image: url( theme/resources/window/shell-max.png );
+  margin: 0px 6px 0px 0px;
+}
+
+Shell-MaxButton:hover {
+  background-image: url( theme/resources/window/shell-max-hover.png );
+}
+
+Shell-MaxButton:inactive {
+  background-image: url( theme/resources/window/shell-max.png );
+  margin: 0px 6px 0px 0px;
+}
+
+Shell-MaxButton:inactive:hover {
+  background-image: url( theme/resources/window/shell-max-hover.png );
+}
+
+/* Restore button */
+
+Shell-MaxButton:maximized {
+  background-image: url( theme/resources/window/shell-restore.png );
+}
+
+Shell-MaxButton:maximized:hover {
+  background-image: url( theme/resources/window/shell-restore-hover.png );
+}
+
+Shell-MaxButton:maximized:inactive {
+  background-image: url( theme/resources/window/shell-restore.png );
+}
+
+Shell-MaxButton:maximized:inactive:hover {
+  background-image: url( theme/resources/window/shell-restore-hover.png );
+}
+
+/* Close button */
+
+Shell-CloseButton {
+  background-image: url( theme/resources/window/shell-close.png );
+  margin: 0px 5px 0px 0px;
+}
+
+Shell-CloseButton:hover {
+  background-image: url( theme/resources/window/shell-close-hover.png );
+}
+
+Shell-CloseButton:inactive {
+  background-image: url( theme/resources/window/shell-close.png );
+  margin: 0px 5px 0px 0px;
+}
+
+Shell-CloseButton:inactive:hover {
+  background-image: url( theme/resources/window/shell-close-hover.png );
+}
+
+/* Spinner default theme */
+
+Spinner {
+  border: none;
+  padding: 1px 2px;
+  color: #464a4e;
+  background-color: #fcfcfc;
+  background-image: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+Spinner[BORDER]:focused {
+  box-shadow: none;
+  border: none;
+}
+
+Spinner[BORDER]:focused {
+  box-shadow: none;
+  border: 1px solid #a4a4a4;
+}
+
+Spinner-Field {
+  padding: 2px 3px;
+}
+
+Spinner[BORDER] {
+  border: 1px solid #a4a4a4;
+  border-radius: 2px 2px 2px 2px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e2e2e2 ),
+    color-stop( 15%, #f8f8f8 ),
+    to( #fbfbfb )
+  );
+}
+
+Spinner-UpButton {
+  background-color: transparent;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    to( #e0e0e0 )
+  );
+  width: 18px;
+  border: none;
+  border-left: none;
+  border-radius: 0px 2px 0px 0px;
+  cursor: default;
+}
+
+Spinner-UpButton:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+Spinner-UpButton-Icon {
+  background-image: url( theme/resources/spinner/up.png );
+}
+
+Spinner-UpButton-Icon:hover {
+  background-image: url( theme/resources/spinner/up-hover.png );
+}
+
+Spinner-DownButton {
+  background-color: transparent;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    to( #ffffff )
+  );
+  width: 18px;
+  border: none;
+  border-left: none;
+  border-radius: 0px 0px 2px 0px;
+  cursor: default;
+}
+
+Spinner-DownButton:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #b0b0b0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #ffffff )
+  );
+}
+
+Spinner-DownButton-Icon {
+  background-image: url( theme/resources/spinner/down.png );
+}
+
+Spinner-DownButton-Icon:hover {
+  background-image: url( theme/resources/spinner/down-hover.png );
+}
+
+/* TabFolder default theme */
+
+TabFolder {
+  border: none;
+}
+
+TabFolder[BORDER] {
+  border: 1px solid #a4a4a4;
+}
+
+TabFolder-ContentContainer {
+  border: 1px solid #a4a4a4;
+}
+
+TabItem {
+  background-color: white;
+  border-top-color: white;
+  border-bottom-color: white;
+  background-image: none;
+  text-shadow: none;
+  padding : 2px 6px 2px 5px;
+}
+
+TabItem:selected {
+  background-color: white;
+  border-top-color: #00589f;
+  border-bottom-color: #00589f;
+  background-image: none;
+  padding : 2px 8px 3px 7px;
+}
+
+TabItem:hover {
+  background-color: #dae9f7;
+  background-image: none;
+}
+
+/* Table default theme */
+
+Table {
+  background-color: white;
+  background-image: none;
+  color: #4a4a4a;
+  border: none;
+}
+
+Table[BORDER] {
+  border: 1px solid #a4a4a4;
+}
+
+TableItem {
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+  text-shadow: none;
+  background-image: none;
+}
+
+TableItem:linesvisible:even {
+  background-color: #f3f3f4;
+}
+
+Table-RowOverlay {
+  background-color: transparent;
+  color: inherit;
+  background-image: none;
+}
+
+Table-RowOverlay:hover {
+  background-color: #dae9f7;
+}
+
+Table-RowOverlay:selected {
+  color: white;
+  background-color: #00589f;
+}
+
+Table-RowOverlay:selected:unfocused {
+  background-color: #959595;
+  color: #ffffff;
+}
+
+Table-RowOverlay:linesvisible:even:hover {
+  background-color: #dae9f7;
+}
+
+Table-RowOverlay:linesvisible:even:selected {
+  background-color: #00589f;
+  color: white;
+}
+
+Table-RowOverlay:linesvisible:even:selected:unfocused {
+  background-color: #959595;
+  color: #ffffff;
+}
+
+TableColumn {
+  background-color: #f8f8ff;
+  padding: 1px 2px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #fbfcfd ),
+    to( #ececec )
+  );
+  color: #666666;
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  border-bottom:none;
+  text-shadow: none;
+}
+
+TableColumn:hover {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #f4f5f6 ),
+    to( #e6e6e6 )
+  );
+  border-bottom: none;
+}
+
+TableColumn-SortIndicator {
+  background-image: none;
+}
+
+TableColumn-SortIndicator:up {
+  background-image: url( theme/resources/column/sort-indicator-up.png );
+}
+
+TableColumn-SortIndicator:down {
+  background-image: url( theme/resources/column/sort-indicator-down.png );
+}
+
+Table-Cell {
+  spacing: 3px;
+  padding: 4px 3px 3px 3px;
+}
+
+Table-GridLine {
+  color: #dedede;
+}
+
+Table-GridLine:horizontal {
+  color: transparent;
+}
+
+Table-Checkbox {
+  /*
+  For backward compatibility we have to keep the width property.
+  Deprecated, use "margin" instead.
+  */
+  width: 21px;
+  margin: 0px;
+  background-image: url( theme/resources/button/check-unselected.png );
+}
+
+Table-Checkbox:hover {
+  background-image: url( theme/resources/button/check-unselected-hover.png );
+}
+
+Table-Checkbox:checked {
+  background-image: url( theme/resources/button/check-selected.png );
+}
+
+Table-Checkbox:checked:hover {
+  background-image: url( theme/resources/button/check-selected-hover.png );
+}
+
+Table-Checkbox:checked:grayed {
+  background-image: url( theme/resources/button/check-grayed.png );
+}
+
+Table-Checkbox:checked:grayed:hover {
+  background-image: url( theme/resources/button/check-grayed-hover.png );
+}
+
+/* Text default theme */
+
+Text {
+  border: none;
+  padding: 2px 3px;
+  color: #464a4e;
+  background-color: #fcfcfc;
+  background-image: none;
+  background-repeat: repeat;
+  background-position: left top;
+  text-shadow: none;
+  box-shadow: none
+}
+
+Text[BORDER] {
+  border: 1px solid #a4a4a4;
+  border-radius: 2px 2px 2px 2px;
+  box-shadow: none;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e2e2e2 ),
+    color-stop( 15%, #f8f8f8 ),
+    to( #fbfbfb )
+  );
+}
+
+Text[BORDER]:focused,
+TEXT[MULTI][BORDER]:focused {
+  box-shadow: none;
+  border: 1px solid #a4a4a4;
+}
+
+Text[SINGLE] {
+  /* padding: 2px 3px; */
+}
+
+Text[MULTI] {
+  /* padding: 0px 0px 0px 3px; */
+  background-image: none;
+}
+
+Text[MULTI][BORDER] {
+  /* padding: 0px 0px 0px 4px; */
+  box-shadow: none;
+}
+
+Text[BORDER]:focused,
+Text[MULTI]:focused,
+Text[MULTI][BORDER]:focused {
+ border: 1px solid #a4a4a4;
+  box-shadow: none;
+}
+
+Text-Message {
+  color: #a7a6aa;
+  text-shadow: none;
+}
+
+Text-Search-Icon {
+  background-image: url( theme/resources/text/find.png );
+  spacing: 3px;
+}
+
+Text-Cancel-Icon {
+  background-image: url( theme/resources/text/clear.gif );
+  spacing: 3px;
+}
+
+/* ToolBar default theme */
+
+ToolBar {
+  color: black;
+  padding: 0px;
+  spacing: 0px;
+  background-color: #ffffff;
+  background-image: none;
+  border: none;
+  opacity: 1;
+}
+
+ToolBar[BORDER] {
+  border: 1px solid #a4a4a4;
+  border-radius: 2px;
+}
+
+ToolItem {
+  color: inherit;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  border-radius: 0px;
+  padding: 2px 3px;
+  spacing: 4px;
+  opacity: 1;
+  animation: none;
+  text-shadow: none;
+}
+
+ToolItem[FLAT] {
+  border: none;
+  padding: 3px 4px;
+}
+
+ToolItem:hover {
+  background-color: white;
+  border: 1px solid #a4a4a4;
+  border-radius: 2px 2px 2px 2px;
+  padding: 2px 3px;
+}
+
+ToolItem:pressed, ToolItem:selected {
+  border: 1px solid #a4a4a4;
+  border-radius: 2px;
+  padding: 3px 2px 1px 4px;
+  background-image: url( theme/resources/toolbar/dotted_white.gif );
+}
+
+ToolItem-DropDownIcon {
+  background-image: url( theme/resources/arrows/down.gif );
+  border: none;
+}
+
+ToolItem-DropDownIcon:hover {
+  border: 1px inset;
+}
+
+ToolItem-Separator {
+  width: 4px;
+}
+
+/* Tree default theme */
+
+Tree {
+  background-color: white;
+  border: none;
+  color: #4a4a4a;
+}
+
+Tree[BORDER] {
+  border: 1px solid #a4a4a4;
+}
+
+TreeItem {
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+  text-shadow: none;
+  background-image: none;
+}
+
+TreeItem:linesvisible:even {
+  background-color: #f3f3f4;
+}
+
+Tree-RowOverlay {
+  background-color: transparent;
+  color: inherit;
+  background-image: none;
+}
+
+Tree-RowOverlay:hover {
+  background-color: #dae9f7;
+}
+
+Tree-RowOverlay:selected {
+  background-color: #00589f;
+  color: #ffffff;
+}
+
+Tree-RowOverlay:selected:unfocused {
+  background-color: #959595;
+  color: #ffffff;
+}
+
+Tree-RowOverlay:linesvisible:even:hover {
+  background-color: #dae9f7;
+}
+
+Tree-RowOverlay:linesvisible:even:selected {
+  background-color: #00589f;
+  color: white;
+}
+
+Tree-RowOverlay:linesvisible:even:selected:unfocused {
+  background-color: #959595;
+  color: #ffffff;
+}
+
+TreeColumn {
+  background-color: #f8f8ff;
+  padding: 1px 2px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #fbfcfd ),
+    to( #ececec )
+  );
+  color: #666666;
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  border-bottom:none;
+  text-shadow: none;
+}
+
+TreeColumn:hover {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #f4f5f6 ),
+    to( #e6e6e6 )
+  );
+  border-bottom:none;
+}
+
+TreeColumn-SortIndicator {
+  background-image: none;
+}
+
+TreeColumn-SortIndicator:up {
+  background-image: url( theme/resources/column/sort-indicator-up.png );
+}
+
+TreeColumn-SortIndicator:down {
+  background-image: url( theme/resources/column/sort-indicator-down.png );
+}
+
+Tree-Cell {
+  spacing: 3px;
+  padding: 2px 3px 3px 3px;
+}
+
+Tree-GridLine {
+  color: #d0d0d0;
+}
+
+Tree-GridLine:horizontal {
+  color: transparent;
+}
+
+Tree-Checkbox {
+  margin: 0px 2px 0px 0px;
+  background-image: url( theme/resources/button/check-unselected.png );
+}
+
+Tree-Checkbox:hover {
+  background-image: url( theme/resources/button/check-unselected-hover.png );
+}
+
+Tree-Checkbox:checked {
+  background-image: url( theme/resources/button/check-selected.png );
+}
+
+Tree-Checkbox:checked:hover {
+  background-image: url( theme/resources/button/check-selected-hover.png );
+}
+
+Tree-Checkbox:checked:grayed {
+  background-image: url( theme/resources/button/check-grayed.png );
+}
+
+Tree-Checkbox:checked:grayed:hover {
+  background-image: url( theme/resources/button/check-grayed-hover.png );
+}
+
+Tree-Indent {
+  width: 16px;
+  background-image: none;
+}
+
+Tree-Indent:collapsed {
+  background-image: url( theme/resources/tree/tree-collapsed.png );
+}
+
+Tree-Indent:collapsed:hover {
+  background-image: url( theme/resources/tree/tree-collapsed-hover.png );
+}
+
+Tree-Indent:expanded {
+  background-image: url( theme/resources/tree/tree-expanded.png );
+}
+
+Tree-Indent:expanded:hover {
+  background-image: url( theme/resources/tree/tree-expanded-hover.png );
+}
+
+Tree-Indent:line {
+  background-image: none;
+}
+
+Tree-Indent:first {
+  background-image: none;
+}
+
+Tree-Indent:first:collapsed {
+  background-image: url( theme/resources/tree/tree-collapsed.png );
+}
+
+Tree-Indent:first:collapsed:hover {
+  background-image: url( theme/resources/tree/tree-collapsed-hover.png );
+}
+
+Tree-Indent:first:expanded {
+  background-image: url( theme/resources/tree/tree-expanded.png );
+}
+
+Tree-Indent:first:expanded:hover {
+  background-image: url( theme/resources/tree/tree-expanded-hover.png );
+}
+
+Tree-Indent:last {
+  background-image: none;
+}
+
+Tree-Indent:last:collapsed {
+  background-image: url( theme/resources/tree/tree-collapsed.png );
+}
+
+Tree-Indent:last:collapsed:hover {
+  background-image: url( theme/resources/tree/tree-collapsed-hover.png );
+}
+
+Tree-Indent:last:expanded {
+  background-image: url( theme/resources/tree/tree-expanded.png );
+}
+
+Tree-Indent:last:expanded:hover {
+  background-image: url( theme/resources/tree/tree-expanded-hover.png );
+}
+
+Tree-Indent:first:last {
+  background-image: none;
+}
+
+Tree-Indent:first:last:collapsed {
+  background-image: url( theme/resources/tree/tree-collapsed.png );
+}
+
+Tree-Indent:first:last:collapsed:hover {
+  background-image: url( theme/resources/tree/tree-collapsed-hover.png );
+}
+
+Tree-Indent:first:last:expanded {
+  background-image: url( theme/resources/tree/tree-expanded.png );
+}
+
+Tree-Indent:first:last:expanded:hover {
+  background-image: url( theme/resources/tree/tree-expanded-hover.png );
+}
+
+/* Scale default theme */
+
+Scale {
+  background-color: white;
+  border-radius: 0;
+}
+
+Scale-Thumb {
+  background-color: #00589f;
+  border: 1px solid #a4a4a4;
+  border-radius: 2px 2px 2px 2px;
+}
+
+/* DateTime default theme */
+
+DateTime {
+  color: #464a4e;
+  background-color: #fcfcfc;
+  border: none;
+  padding: 1px 2px;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  background-image: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+DateTime-Field {
+  color: inherit;
+  background-color: transparent;
+  padding: 2px 3px;
+  text-shadow: none;
+}
+
+DateTime[BORDER] {
+  border: 1px solid #a4a4a4;
+  border-radius: 2px 2px 2px 2px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e2e2e2 ),
+    color-stop( 15%, #f8f8f8 ),
+    to( #fbfbfb )
+  );
+}
+
+DateTime[BORDER]:focused {
+  border: 1px solid #a4a4a4;
+}
+
+DateTime-Calendar-Day {
+  color: inherit;
+  background-color: transparent;
+  text-shadow: none;
+}
+
+DateTime-Field:selected, DateTime-Calendar-Day:selected {
+  background-color: #D2D2D2;
+  color: #4a4a4a;
+}
+
+DateTime-Calendar-Day:selected:hover {
+  background-color: #00569c;
+  color: white;
+}
+
+DateTime-Calendar-Day:selected:unfocused {
+  background-color: #c0c0c0;
+}
+
+DateTime-Calendar-Day:otherMonth {
+  background-color: transparent;
+  color: #808080;
+}
+
+DateTime-Calendar-Day:hover {
+  background-color: #d9e3f3;
+}
+
+DateTime-Calendar-Navbar {
+  border: none;
+  border-radius: 0;
+  background-color: #00569c;
+  color: white;
+  font: bold 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  text-shadow: none;
+  background-image: none;
+}
+
+DateTime-Calendar-PreviousMonthButton {
+  background-image: url( theme/resources/calendar/lastMonth.png );
+  cursor: default;
+}
+
+DateTime-Calendar-PreviousMonthButton:hover {
+  background-image: url( theme/resources/calendar/lastMonth-hover.png );
+}
+
+DateTime-Calendar-NextMonthButton {
+  background-image: url( theme/resources/calendar/nextMonth.png );
+  cursor: default;
+}
+
+DateTime-Calendar-NextMonthButton:hover {
+  background-image: url( theme/resources/calendar/nextMonth-hover.png );
+}
+
+DateTime-Calendar-PreviousYearButton {
+  background-image: url( theme/resources/calendar/lastYear.png );
+  cursor: default;
+}
+
+DateTime-Calendar-PreviousYearButton:hover {
+  background-image: url( theme/resources/calendar/lastYear-hover.png );
+}
+
+DateTime-Calendar-NextYearButton {
+  background-image: url( theme/resources/calendar/nextYear.png );
+  cursor: default;
+}
+
+DateTime-Calendar-NextYearButton:hover {
+  background-image: url( theme/resources/calendar/nextYear-hover.png );
+}
+
+DateTime-UpButton {
+  background-color: transparent;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    to( #e0e0e0 )
+  );
+  width: 18px;
+  border: none;
+  border-left: none;
+  border-radius: 0px 2px 0px 0px;
+  cursor: default;
+}
+
+DateTime-UpButton:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+DateTime-UpButton-Icon {
+  background-image: url( theme/resources/spinner/up.png );
+}
+
+DateTime-UpButton-Icon:hover {
+  background-image: url( theme/resources/spinner/up-hover.png );
+}
+
+DateTime-DownButton {
+  background-color: transparent;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    to( #ffffff )
+  );
+  width: 18px;
+  border: none;
+  border-left: none;
+  border-radius: 0px 0px 2px 0px;
+  cursor: default;
+}
+
+DateTime-DownButton:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #b0b0b0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #ffffff )
+  );
+}
+
+DateTime-DropDownButton {
+  cursor: default;
+  background-color: transparent;
+  border: none;
+  border-left: none;
+  border-radius: 0px 2px 2px 0px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+  width: 18px;
+}
+
+DateTime-DropDownButton-Icon {
+  background-image: url( theme/resources/spinner/down.png );
+}
+
+DateTime-DropDownButton-Icon:hover {
+  background-image: url( theme/resources/spinner/down-hover.png );
+}
+
+DateTime-DownButton-Icon {
+  background-image: url( theme/resources/spinner/down.png );
+}
+
+DateTime-DownButton-Icon:hover {
+  background-image: url( theme/resources/spinner/down-hover.png );
+}
+
+
+DateTime-DropDownCalendar {
+  border: 1px #a7a6aa;
+}
+
+/* ExpandBar default theme */
+
+ExpandBar {
+  color: #4a4a4a;
+  background-color: white;
+}
+
+ExpandBar[BORDER] {
+  border: 1px solid #C1C1C1;
+  border-radius: 0;
+}
+
+ExpandItem {
+  border: 1px solid #c1c1c1;
+  border-radius: 0;
+}
+
+ExpandItem-Header {
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 55%, #e0e0e0 ),
+    to( #f0f0f0 )
+  );
+  text-shadow: none;
+}
+
+ExpandItem-Header:disabled {
+  cursor: default;
+}
+
+ExpandItem-Button {
+  background-image: url( theme/resources/expanditem/expanditem-expand.png );
+}
+
+ExpandItem-Button:hover {
+  background-image: url( theme/resources/expanditem/expanditem-expand-hover.png );
+}
+
+ExpandItem-Button:expanded {
+  background-image: url( theme/resources/expanditem/expanditem-collapse.png );
+}
+
+ExpandItem-Button:expanded:hover {
+  background-image: url( theme/resources/expanditem/expanditem-collapse-hover.png );
+}
+
+/* Sash default theme */
+
+Sash {
+  border: none;
+  background-image: none;
+  background-color: transparent;
+}
+
+Sash[BORDER] {
+  border: 1px solid #a4a4a4;
+}
+
+Sash:hover {
+  background-color: #dae9f7;
+}
+
+Sash-Handle {
+  background-image: none;
+}
+
+/* Slider default theme */
+
+Slider {
+  border: none;
+  border-radius: 0;
+  background-color: #f3f3f4;
+}
+
+/* Thumb */
+
+Slider-Thumb {
+  background-color: transparent;
+  border: 1px solid #a4a4a4;
+  border-radius: 2px 2px 2px 2px;
+  background-image: none;
+}
+
+Slider-Thumb[HORIZONTAL] {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+}
+
+Slider-Thumb[HORIZONTAL]:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+Slider-Thumb[VERTICAL] {
+  background-image: gradient(
+    linear, left top, right top,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+}
+
+Slider-Thumb[VERTICAL]:pressed {
+  background-image: gradient(
+    linear, left top, right top,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+/* Buttons */
+
+Slider-UpButton, Slider-DownButton {
+  background-color: transparent;
+  border: 1px solid #a4a4a4;
+  cursor: default;
+  padding: 0;
+}
+
+Slider-UpButton[HORIZONTAL], Slider-DownButton[HORIZONTAL] {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+}
+
+Slider-UpButton[VERTICAL], Slider-DownButton[VERTICAL] {
+  background-image: gradient(
+    linear, left top, right top,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+}
+
+Slider-UpButton[HORIZONTAL]:pressed, Slider-DownButton[HORIZONTAL]:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+Slider-UpButton[VERTICAL]:pressed, Slider-DownButton[VERTICAL]:pressed {
+  background-image: gradient(
+    linear, left top, right top,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+/* Rounded Borders */
+
+Slider-UpButton[HORIZONTAL] {
+  border-radius: 0px 2px 2px 0px;
+}
+
+Slider-UpButton[VERTICAL] {
+  border-radius: 0px 0px 2px 2px;
+}
+
+Slider-DownButton[HORIZONTAL] {
+  border-radius: 2px 0px 0px 2px;
+}
+
+Slider-DownButton[VERTICAL] {
+  border-radius: 2px 2px 0px 0px;
+}
+
+/* Button Icons */
+
+Slider-UpButton-Icon[HORIZONTAL] {
+  background-image: url( theme/resources/slider/right.png );
+}
+
+Slider-UpButton-Icon[HORIZONTAL]:hover {
+  background-image: url( theme/resources/slider/right-hover.png );
+}
+
+Slider-UpButton-Icon[VERTICAL] {
+  background-image: url( theme/resources/spinner/down.png );
+}
+
+Slider-UpButton-Icon[VERTICAL]:hover {
+  background-image: url( theme/resources/spinner/down-hover.png );
+}
+
+Slider-DownButton-Icon[HORIZONTAL] {
+  background-image: url( theme/resources/slider/left.png );
+}
+
+Slider-DownButton-Icon[HORIZONTAL]:hover {
+  background-image: url( theme/resources/slider/left-hover.png );
+}
+
+Slider-DownButton-Icon[VERTICAL] {
+  background-image: url( theme/resources/spinner/up.png );
+}
+
+Slider-DownButton-Icon[VERTICAL]:hover {
+  background-image: url( theme/resources/spinner/up-hover.png );
+}
+
+/* ToolTip default theme */
+
+ToolTip {
+  cursor: default;
+  border: 1px solid #a4a4a4;
+  border-radius: 5px 5px 5px 5px;
+  padding: 3px 3px 3px 3px;
+  opacity: 1;
+  color: #000000;
+  background-image : gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    to( #e4e5f0 )
+  );
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  background-color: #fcfcfc;
+  animation: fadeIn 200ms linear, fadeOut 600ms ease-out;
+  box-shadow: 4px 4px 2px rgba( 0, 0, 0, 0.4 );
+}
+
+ToolTip-Image[ICON_ERROR] {
+  background-image: url( theme/resources/tooltip/error.png );
+}
+
+ToolTip-Image[ICON_INFORMATION] {
+  background-image: url( theme/resources/tooltip/information.png );
+}
+
+ToolTip-Image[ICON_WARNING] {
+  background-image: url( theme/resources/tooltip/warning.png );
+}
+
+ToolTip-Text {
+  color: #003399;
+  font: bold 14px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  text-shadow: none;
+}
+
+ToolTip-Message {
+  color: #000000;
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  text-shadow: none;
+}
+
+/* CCombo default theme */
+
+CCombo {
+  border: none;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  background-color: #fcfcfc;
+  color: #464a4e;
+  border-radius: 0;
+  background-image: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+CCombo[BORDER] {
+  border: 1px solid #c1c1c1;
+  border-radius: 2px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e2e2e2 ),
+    color-stop( 15%, #f8f8f8 ),
+    to( #fbfbfb )
+  );
+  box-shadow: none;
+}
+
+CCombo[BORDER]:focused {
+  box-shadow: none;
+  border: none;
+}
+
+CCombo[BORDER]:focused {
+  box-shadow: none;
+  border: 1px solid #c1c1c1;
+}
+
+CCombo-Button {
+  cursor: default;
+  background-color: transparent;
+  border: none;
+  border-left: none;
+  border-radius: 0px 2px 2px 0px;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+  width: 18px;
+}
+
+CCombo-Button:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+CCombo-Button-Icon {
+  background-image: url( theme/resources/ccombo/down.png );
+}
+
+CCombo-Button-Icon:hover {
+  background-image: url( theme/resources/ccombo/down-hover.png );
+}
+
+CCombo-Button[FLAT] {
+  border: none;
+}
+
+CCombo-Button[FLAT]:hover {
+  border: 1px outset;
+}
+
+CCombo-List {
+  border: 1px solid #c1c1c1;
+  border-radius: 0px 0px 2px 2px;
+  box-shadow: 3px 3px 3px rgba( 0, 0, 0, 0.4 );
+}
+
+CCombo-List-Item {
+  color: inherit;
+  background-color: transparent;
+  background-image: none;
+  text-decoration: none;
+  text-shadow: none;
+  padding: 3px 5px;
+}
+
+CCombo-List-Item:hover {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #dae9f7 ),
+    to( #d2e0ee )
+  );
+}
+
+CCombo-List-Item:selected {
+  color: white;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #0078Bf ),
+    to( #00589f )
+  );
+}
+
+CCombo-Field {
+  padding: 2px 3px;
+}
+
+CCombo-FocusIndicator {
+  background-color: transparent;
+  border: 1px dotted #b8b8b8;
+  margin: 1px 19px 1px 1px;
+  opacity: 1;
+}
+
+/* CLabel default theme */
+
+CLabel {
+  color: #4a4a4a;
+  background-color: white;
+  background-image: none;
+  background-repeat: repeat;
+  background-position: left top;
+  border: none;
+  padding: 3px;
+  spacing: 5px;
+  cursor: default;
+  opacity: 1;
+  text-shadow: none;
+}
+
+CLabel[BORDER] {
+  border: 1px solid #a4a4a4;
+  border-radius: 2px;
+}
+
+/* Browser default theme */
+
+Browser {
+  border: none;
+}
+
+Browser[BORDER] {
+  border: 1px solid #a4a4a4;
+}
+
+/* ScrollBar default theme */
+
+ScrollBar {
+  border: none;
+  background-color: #f3f3f4;
+  border-radius: 3px 3px 3px 3px;
+  width: 15px;
+  background-image: none;
+}
+
+ScrollBar-Thumb {
+  background-color: transparent;
+  border: 1px solid #b4b4b4;
+  border-radius: 0px;
+  background-image: none;
+  min-height: 20px;
+}
+
+ScrollBar-Thumb:pressed {
+  border: 1px solid #999999;
+}
+
+ScrollBar-UpButton, ScrollBar-DownButton {
+  background-color: transparent;
+  border: 1px solid #b4b4b4;
+  cursor: default;
+}
+
+/* Rounded Borders */
+
+ScrollBar-UpButton[HORIZONTAL] {
+  border-radius: 0px 3px 3px 0px;
+}
+
+ScrollBar-UpButton[VERTICAL] {
+  border-radius: 0px 0px 3px 3px;
+}
+
+ScrollBar-DownButton[HORIZONTAL] {
+  border-radius: 3px 0px 0px 3px;
+}
+
+ScrollBar-DownButton[VERTICAL] {
+  border-radius: 3px 3px 0px 0px;
+}
+
+/* Icons */
+
+ScrollBar-Thumb-Icon[VERTICAL] {
+  background-image: url( theme/resources/scrollbar/v-knob.png );
+}
+
+ScrollBar-Thumb-Icon[HORIZONTAL] {
+  background-image: url( theme/resources/scrollbar/h-knob.png );
+}
+
+ScrollBar-UpButton-Icon[VERTICAL] {
+  background-image: url( theme/resources/spinner/down.png );
+}
+
+ScrollBar-UpButton-Icon[VERTICAL]:hover {
+  background-image: url( theme/resources/spinner/down-hover.png );
+}
+
+ScrollBar-UpButton-Icon[HORIZONTAL] {
+  background-image: url( theme/resources/scrollbar/right.png );
+}
+
+ScrollBar-UpButton-Icon[HORIZONTAL]:hover {
+  background-image: url( theme/resources/scrollbar/right-hover.png );
+}
+
+ScrollBar-DownButton-Icon[VERTICAL] {
+  background-image: url( theme/resources/spinner/up.png );
+}
+
+ScrollBar-DownButton-Icon[VERTICAL]:hover {
+  background-image: url( theme/resources/spinner/up-hover.png );
+}
+
+ScrollBar-DownButton-Icon[HORIZONTAL] {
+  background-image: url( theme/resources/scrollbar/left.png );
+}
+
+ScrollBar-DownButton-Icon[HORIZONTAL]:hover {
+  background-image: url( theme/resources/scrollbar/left-hover.png );
+}
+
+/* Gradients */
+
+ScrollBar-Thumb[VERTICAL], ScrollBar-UpButton[VERTICAL], ScrollBar-DownButton[VERTICAL] {
+  background-image: gradient(
+    linear, left top, right top,
+    from( #ffffff ),
+    color-stop( 38%, #f0f0f0 ),
+    color-stop( 62%, #e0e0e0 ),
+    to( #ffffff )
+  );
+}
+
+ScrollBar-Thumb[VERTICAL]:hover, ScrollBar-UpButton[VERTICAL]:hover, ScrollBar-DownButton[VERTICAL]:hover {
+  background-image: gradient(
+    linear, left top, right top,
+    from( #ffffff ),
+    color-stop( 42%, #f0f0f0 ),
+    color-stop( 58%, #e0e0e0 ),
+    to( #cccccc )
+  );
+}
+
+ScrollBar-Thumb[VERTICAL]:pressed, ScrollBar-UpButton[VERTICAL]:pressed, ScrollBar-DownButton[VERTICAL]:pressed {
+  background-image: gradient(
+    linear, left top, right top,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+ScrollBar-Thumb[HORIZONTAL], ScrollBar-UpButton[HORIZONTAL], ScrollBar-DownButton[HORIZONTAL] {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 38%, #f0f0f0 ),
+    color-stop( 62%, #e0e0e0 ),
+    to( #ffffff )
+  );
+}
+
+ScrollBar-Thumb[HORIZONTAL]:hover, ScrollBar-UpButton[HORIZONTAL]:hover, ScrollBar-DownButton[HORIZONTAL]:hover{
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 42%, #f0f0f0 ),
+    color-stop( 58%, #e0e0e0 ),
+    to( #cccccc )
+  );
+}
+
+ScrollBar-Thumb[HORIZONTAL]:pressed, ScrollBar-UpButton[HORIZONTAL]:pressed, ScrollBar-DownButton[HORIZONTAL]:pressed {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+}
+
+/******************************************************************************
+ * Custom variants for workbench styling
+ ******************************************************************************/
+
+/* Button */
+
+Button.clearButton {
+  color: #4a4a4a;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  padding: 2px;
+}
+
+Button.clearButton:pressed, Button.clearButton:hover {
+  background-image: none;
+}
+
+Button-FocusIndicator.clearButton {
+  border: none;
+}
+
+Button.configMenuButton {
+  color: #4a4a4a;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  padding: 1px;
+}
+
+Button.configMenuButton:hover, Button.configMenuButton:selected, Button.configMenuButton:pressed {
+  background-image: none;
+}
+
+Button-FocusIndicator.configMenuButton{
+  border: none;
+}
+
+Button.viewClose {
+  color: #4a4a4a;
+  background-color: transparent;
+  background-image: url( img/business/stack_tab_active_close_active.png );
+  border: none;
+  padding: 2px;
+}
+
+Button.viewClose:pressed {
+  background-image: url( img/business/stack_tab_active_close_active.png );
+}
+
+Button.viewClose:hover {
+  background-image: url( img/business/stack_tab_active_close_active_hover.png );
+}
+
+Button-FocusIndicator.viewClose {
+  border: none;
+}
+
+Button.viewCloseInactive {
+  color: #4a4a4a;
+  background-color: transparent;
+  background-image: url( img/business/stack_tab_inactive_close_active.png );
+  border: none;
+}
+
+Button.viewCloseInactive:pressed {
+  background-image: url( img/business/stack_tab_inactive_close_active.png );
+}
+
+Button.viewCloseInactive:hover {
+  background-image: url( img/business/stack_tab_inactive_close_active_hover.png );
+}
+
+Button-FocusIndicator.viewCloseInactive {
+  border: none;
+}
+
+Button.toolbarOverflowInactive {
+  color: #4a4a4a;
+  background-color: transparent;
+  background-image: url( img/business/toolbar_overflow.png );
+  border: none;
+  padding: 2px;
+}
+
+Button.toolbarOverflowInactive:pressed {
+  background-image: url( img/business/toolbar_overflow.png );
+}
+
+Button.toolbarOverflowInactive:hover {
+  background-image: url( img/business/toolbar_overflow_hover.png );
+}
+
+Button-FocusIndicator.toolbarOverflowInactive {
+  border: none;
+}
+
+Button.toolbarOverflowActive {
+  color: #4a4a4a;
+  background-color: transparent;
+  background-image: url( img/business/toolbar_overflow_active.png );
+  border: none;
+  padding: 2px;
+}
+
+Button.toolbarOverflowActive:pressed {
+  background-image: url( img/business/toolbar_overflow_active.png );
+}
+
+Button.toolbarOverflowActive:hover {
+  background-image: url( img/business/toolbar_overflow_hover_active.png );
+}
+
+Button-FocusIndicator.toolbarOverflowActive {
+  border: none;
+}
+
+Button.partActive {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  color: #fcfcfc;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+}
+
+Button.partActive:pressed, Button.partActive:hover {
+  background-image: none;
+}
+
+Button-FocusIndicator.partActive {
+  border: none;
+}
+
+Button.partInactive {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  color: #666666;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+}
+
+Button.partInactive:pressed, Button.partInactive:hover {
+  background-image: none;
+}
+
+Button-FocusIndicator.partInactive {
+  border: none;
+}
+
+Button.partInActiveActive {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  color: #fcfcfc;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+}
+
+Button.partInActiveActive:pressed, Button.partInActiveActive:hover {
+  background-image: none;
+}
+
+Button-FocusIndicator.partInActiveActive {
+  border: none;
+}
+
+Button.perspective {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  color: #005091;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+}
+
+Button.perspective:hover {
+  font: bold 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  background-image: none;
+}
+
+Button.perspective:pressed {
+  background-image: none;
+}
+
+Button-FocusIndicator.perspective {
+  border: none;
+}
+
+Button.perspectiveActive {
+  color: #005091;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  font: bold 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+}
+
+Button.perspectiveActive:pressed, Button.perspectiveActive:hover {
+  background-image: none;
+}
+
+Button-FocusIndicator.perspectiveActive {
+  border: none;
+}
+
+Button.tabOverflowActive {
+  color: #4a4a4a;
+  background-color: transparent;
+  border: none;
+  padding: 2px;
+  background-image: url( img/business/stack_tab_overflow_active.png );
+}
+
+Button.tabOverflowActive:pressed {
+  background-image: url( img/business/stack_tab_overflow_active.png );
+}
+
+Button.tabOverflowActive:hover {
+  background-image: url( img/business/stack_tab_overflow_active_hover.png );
+}
+
+Button-FocusIndicator.tabOverflowActive {
+  border: none;
+}
+
+Button.tabOverflowInactive {
+  color: #4a4a4a;
+  background-color: transparent;
+  border: none;
+  padding: 2px;
+  background-image: url( img/business/stack_tab_overflow_inactive.png );
+}
+
+Button.tabOverflowInactive:pressed {
+  background-image: url( img/business/stack_tab_overflow_inactive.png );
+}
+
+Button.tabOverflowInactive:hover {
+  background-image: url( img/business/stack_tab_overflow_inactive_hover.png );
+}
+
+Button-FocusIndicator.tabOverflowInactive {
+  border: none;
+}
+
+/* Shell */
+
+.shellGray {
+  background-color: #ebebeb;
+}
+
+Shell.toolbarLayer {
+  background-color: #ffffff;
+  border: none;
+}
+
+Shell-DisplayOverlay.confDialog {
+  animation: fadeIn 150ms linear, fadeOut 400ms ease-out;
+  background-image: none;
+  background-color: #999999;
+  opacity: 0.5;
+}
+
+/* Label */
+
+Label.menuBorder {
+  background-color: #dddddd;
+}
+
+Label.stackBorder {
+  background-color: #ebebeb;
+}
+
+Label.standaloneView {
+  background-color: transparent;
+  border: none;
+  color: #666666;
+  font: 11px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+}
+
+/* Custom Variants */
+
+.compGray {
+  background-color: #ebebeb;
+}
+
+.compTrans {
+  background-color: transparent;
+}
+
+.partBorder {
+  border: #eb0000;
+}
+
+/* Composite */
+
+Composite.tabActive {
+  border: 1px solid #00589f;
+  border-radius: 0px 7px 0px 0px;
+}
+
+Composite.tabInactive {
+  border: 1px solid #949494;
+  border-radius: 0px 7px 0px 0px;
+}
+
+Composite.inactiveButton {
+  background-color: transparent;
+  border: none;
+}
+
+/* Header Toolbar */
+
+ToolBar.header-toolbar {
+  padding: 0px 0px 0px 5px;
+  color: white;
+  spacing: 25px;
+}
+
+ToolItem.header-toolbar {
+  color: white;
+  border: none;
+  padding: 3px 5px 3px 7px;
+  spacing: 10px;
+}
+
+ToolItem.header-toolbar:hover {
+  background-color: transparent;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #196eb3 ),
+    to( #00447a )
+  );
+  color: white;
+  border: 1px solid #004e8d;
+  padding: 3px 5px 3px 7px;
+}
+
+ToolItem-DropDownIcon.header-toolbar {
+  background-image: url( img/business/toolbar_arrow.png );
+  border: none;
+}
+
+ToolItem-DropDownIcon.header-toolbar:hover {
+  background-image: url( img/business/toolbar_arrow.png );
+  border: 1px solid #004e8d;
+}
+
+Menu.header-toolbar {
+  color: #3b8fc2;
+  background-color: white;
+  border: 1px solid #005499;
+  border-radius: 0px 0px 2px 2px;
+}
+
+MenuItem.header-toolbar {
+  color: #004277;
+}
+
+MenuItem.header-toolbar:hover {
+  color: #0369bc;
+  background-color: transparent;
+}
+
+
+/* Header overflow toolbar */
+
+ToolItem.header-overflow {
+  color: #004277;
+  border: none;
+  padding: 0px 25px 0px 0px;
+}
+
+ToolItem.header-overflow:hover {
+  background-color: transparent;
+  color: #0369bc;
+  border: none;
+}
+
+ToolItem-DropDownIcon.header-overflow {
+  background-image: url( img/business/toolbar_overflow_arrow.png );
+}
+
+ToolItem-DropDownIcon.header-overflow:hover {
+  background-image: url( img/business/toolbar_overflow_arrow.png );
+  border: none;
+}
+
+Menu.header-overflow {
+  color: #656565;
+  background-color: white;
+  border: 1px #005499;
+  border-radius: 2px;
+}
+
+MenuItem.header-overflow {
+  color: #004277;
+}
+
+MenuItem.header-overflow:hover {
+  color: #0369bc;
+  background-color: transparent;
+}
+
+/* MenuBar */
+
+ToolBar.menuBar {
+  background-color: transparent;
+  padding: 0px;
+  color: #0059a5;
+  spacing: 25px;
+}
+
+ToolItem.menuBar {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  color: #0059a5;
+  padding: 0px 10px 0px 10px;
+  spacing: 5px;
+}
+
+ToolItem.menuBar:hover {
+  background-color: transparent;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    to( #f1f1f1 )
+  );
+  border: 1px solid #cccccc;
+  border-radius: 2px 2px 0px 0px;
+  color: #0059a5;
+  padding: 0px 10px 0px 10px;
+}
+
+ToolItem-DropDownIcon.menuBar {
+  background-image: url( img/business/menu_arrow.png );
+}
+
+ToolItem-DropDownIcon.menuBar:hover {
+  background-image: url( img/business/menu_arrow.png );
+  border: 1px solid #cccccc;
+}
+
+Menu.menuBar {
+  color: #0059a5;
+  background-color: white;
+  border: 1px solid #cccccc;
+  border-radius: 0px 0px 2px 2px;
+}
+
+MenuItem.menuBar {
+  color: #004277;
+}
+
+MenuItem.menuBar:hover {
+  color: #0369bc;
+  background-color: transparent;
+}
+
+/* View ToolBar */
+
+ToolBar.viewToolbar {
+  background-color: transparent;
+  padding: 1px 2px;
+  spacing: 2px;
+}
+
+ToolItem.viewToolbar {
+  border: none;
+}
+
+ToolItem:selected.viewToolbar {
+  padding: 0px;
+  border: 1px solid #0059a5;
+}
+
+ToolItem-DropDownIcon.viewToolbar {
+  background-image: url( img/business/viewMenu.png );
+  border: none;
+}
+
+/* FileUpload */
+
+FileUpload {
+  font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
+  border: 1px solid #A4A4A4;
+  border-radius: 3px;
+  padding: 2px 5px;
+  spacing: 2px;
+  color: #4a4a4a;
+  background-color: #ffffff;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #ffffff )
+  );
+  background-repeat: repeat;
+  background-position: left top;
+  animation: hoverOut 500ms ease-out;
+  cursor: pointer;
+  text-shadow: none;
+  opacity: 1;
+}
+
+FileUpload:disabled {
+  cursor: default;
+}
+
+FileUpload:hover {
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #ffffff ),
+    color-stop( 48%, #f0f0f0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #cccccc )
+  );
+}
+
+FileUpload:pressed {
+  animation: none;
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #e0e0e0 ),
+    color-stop( 52%, #e0e0e0 ),
+    to( #b0b0b0 )
+  );
+  padding: 4px 5px 2px 7px;
+}
+
+FileUpload-FocusIndicator {
+  background-color: transparent;
+  border: 1px dotted #b8b8b8;
+  margin: 2px;
+  padding: 0px;
+  opacity: 1;
+}
+
+SystemMessage-DisplayOverlay {
+  background-color: rgba( 128, 128, 128, 0.3 );
+  background-image: none;
+}
