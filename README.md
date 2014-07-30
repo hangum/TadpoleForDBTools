@@ -67,8 +67,8 @@ Document
  - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Kor
  - Indonesia : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID
 * MongoDB User Guide
- - English : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor
- - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Eng
+ - English : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Eng
+ - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor
 * RDB Tutorial
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
