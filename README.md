@@ -67,13 +67,16 @@ Document
  - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Kor
  - Indonesia : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID
 * MongoDB User Guide
- - English : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor
- - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Eng
+ - English : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Eng
+ - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor
 * RDB Tutorial
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
 Demo Site
 *  http://tadpoledb.com
+
+Chrome web Store
+*  https://chrome.google.com/webstore/detail/tadpoledbcom/nhfaneohnnijkdpgmiddcgbcgpjgdjnc?utm_source=gmail
 
 Download
 * https://sourceforge.net/projects/tadpoledbhub/files/v1.3.7/
