@@ -48,7 +48,7 @@ public class SendEmails {
 			email.setSSLOnConnect(true);
 	
 			
-			email.setFrom(smtpDto.getEmail(), "Admin(Tadpole DB Hub)");
+			email.setFrom(smtpDto.getEmail(), "Tadpole DB Hub");
 			email.setSubject(emailDao.getSubject());
 			
 			// set the html message
