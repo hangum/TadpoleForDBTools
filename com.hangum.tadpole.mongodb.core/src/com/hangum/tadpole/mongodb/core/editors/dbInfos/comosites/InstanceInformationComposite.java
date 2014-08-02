@@ -470,7 +470,7 @@ public class InstanceInformationComposite extends Composite {
 		compositeMemory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeMemory.setText("Memory");
 		
-		ColorStream colors = Colors.cat10Colors(compositeMemory.getDisplay()).loop();
+		ColorStream colors = Colors.cat20Colors(compositeMemory.getDisplay()).loop();
 		
 		barChartMemory = new BarChart(compositeMemory, SWT.NONE);
 		barChartMemory.setLayout(new GridLayout(1, false));
@@ -530,7 +530,7 @@ public class InstanceInformationComposite extends Composite {
 		compositeNetwork.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeNetwork.setText("Network");
 		
-		ColorStream colors = Colors.cat10Colors(compositeNetwork.getDisplay()).loop();
+		ColorStream colors = Colors.cat20Colors(compositeNetwork.getDisplay()).loop();
 		
 		barChartNetwork = new BarChart(compositeNetwork, SWT.NONE);
 		barChartNetwork.setLayout(new GridLayout(1, false));
@@ -588,7 +588,7 @@ public class InstanceInformationComposite extends Composite {
 		compositeConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeConnection.setText("Connections");
 		
-		ColorStream colors = Colors.cat10Colors(compositeConnection.getDisplay()).loop();
+		ColorStream colors = Colors.cat20Colors(compositeConnection.getDisplay()).loop();
 		
 		barChartConnection = new BarChart(compositeConnection, SWT.NONE );
 		GridLayout gl_grpConnectionInfo = new GridLayout(1, false);
@@ -638,7 +638,7 @@ public class InstanceInformationComposite extends Composite {
 		compositeCursor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeCursor.setText("Cursors");
 		
-		ColorStream colors = Colors.cat10Colors(compositeCursor.getDisplay()).loop();
+		ColorStream colors = Colors.cat20Colors(compositeCursor.getDisplay()).loop();
 		
 		pieChartCursors = new PieChart(compositeCursor, SWT.NONE);
 		GridLayout gl_grpConnectionInfo = new GridLayout(1, false);
