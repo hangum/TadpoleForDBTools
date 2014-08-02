@@ -11,11 +11,11 @@
 package com.hangum.tadpole.application.start.dialog.login;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -27,12 +27,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
+import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
@@ -40,6 +42,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -67,6 +70,7 @@ public class LoginDialog extends Dialog {
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.LoginDialog_0);
+		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png"));
 	}
 
 	/**
@@ -77,30 +81,44 @@ public class LoginDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
+		gridLayout.numColumns = 2;
 		gridLayout.verticalSpacing = 5;
 		gridLayout.horizontalSpacing = 5;
 		gridLayout.marginHeight = 5;
 		gridLayout.marginWidth = 5;
-		gridLayout.numColumns = 2;
 		
-		Label lblPleaseSignIn = new Label(container, SWT.NONE);
+		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
+		compositeLeftBtn.setLayout(new GridLayout(1, false));
+		
+		Button button = new Button(compositeLeftBtn, SWT.PUSH);
+		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		button.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TadpoleOverView.png"));
+		button.setBounds(0, 0, 95, 28);
+		
+		Composite compositeLogin = new Composite(container, SWT.NONE);
+		compositeLogin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeLogin.setLayout(new GridLayout(2, false));
+		
+		Label lblPleaseSignIn = new Label(compositeLogin, SWT.NONE);
 		lblPleaseSignIn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblPleaseSignIn.setText(Messages.LoginDialog_lblPleaseSignIn_text);
 		
-		Label lblEmail = new Label(container, SWT.NONE);
+		Label lblEmail = new Label(compositeLogin, SWT.NONE);
 		lblEmail.setText(Messages.LoginDialog_1);
 		
-		textEMail = new Text(container, SWT.BORDER);
+		textEMail = new Text(compositeLogin, SWT.BORDER);
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-//		Label lblLoginImage = new Label(container, SWT.NONE);
+		textEMail.setFocus();
+		
+//		Label lblLoginImage = new Label(compositeLogin, SWT.NONE);
 //		lblLoginImage.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 2));
 //		lblLoginImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/LoginManager.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		
-		Label lblPassword = new Label(container, SWT.NONE);
+		Label lblPassword = new Label(compositeLogin, SWT.NONE);
 		lblPassword.setText(Messages.LoginDialog_4);
 		
-		textPasswd = new Text(container, SWT.BORDER | SWT.PASSWORD);
+		textPasswd = new Text(compositeLogin, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -110,17 +128,17 @@ public class LoginDialog extends Dialog {
 			}
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		new Label(container, SWT.NONE);
-		Label lblRecommand = new Label(container, SWT.NONE);
+
+		Label lblRecommand = new Label(compositeLogin, SWT.NONE);
+		lblRecommand.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblRecommand.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		lblRecommand.setText(Messages.LoginDialog_lblNewLabel_text);
+		new Label(compositeLogin, SWT.NONE);
 
-		new Label(container, SWT.NONE);
-
-		Button btnFindPassword = new Button(container, SWT.PUSH);
+		Button btnFindPassword = new Button(compositeLogin, SWT.PUSH);
 		btnFindPassword.setText(Messages.LoginDialog_lblFindPassword);
 		setButtonLayoutData(btnFindPassword);
+		
 		btnFindPassword.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -128,9 +146,66 @@ public class LoginDialog extends Dialog {
 			}
 		});
 		
-		textEMail.setFocus();
-	
-		return container;
+		Group compositeLetter = new Group(container, SWT.NONE);
+		compositeLetter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		GridLayout gl_compositeLetter = new GridLayout(2, false);
+		compositeLetter.setLayout(gl_compositeLetter);
+		compositeLetter.setText(Messages.LoginDialog_grpShowInformation_text);
+		
+		Label lblSite = new Label(compositeLetter, SWT.NONE);
+		lblSite.setText(Messages.LoginDialog_lblSite_text);
+		
+		Label lblNewLabel = new Label(compositeLetter, SWT.NONE);
+		lblNewLabel.setText("<a href='" + Messages.LoginDialog_lblNewLabel_text_1 + "' target='_blank'>" + Messages.LoginDialog_lblNewLabel_text_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblNewLabel.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		Label lblUserGuide = new Label(compositeLetter, SWT.NONE);
+		lblUserGuide.setText(Messages.LoginDialog_lblUserGuide_text);
+		
+		Composite compositeUserGide = new Composite(compositeLetter, SWT.NONE);
+		compositeUserGide.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeUserGide = new GridLayout(3, false);
+		gl_compositeUserGide.verticalSpacing = 1;
+		gl_compositeUserGide.horizontalSpacing = 1;
+		gl_compositeUserGide.marginHeight = 1;
+		gl_compositeUserGide.marginWidth = 1;
+		compositeUserGide.setLayout(gl_compositeUserGide);
+		
+		Label lblUserKor = new Label(compositeUserGide, SWT.NONE);
+		lblUserKor.setText("<a href='https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=2621445' target='_blank'>(Korean)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblUserKor.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		Label lblUserEng = new Label(compositeUserGide, SWT.NONE);
+		lblUserEng.setSize(607, 14);
+		lblUserEng.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Eng' target='_blank'>(English)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblUserEng.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		Label lblUserIndonesia = new Label(compositeUserGide, SWT.NONE);
+		lblUserIndonesia.setSize(611, 14);
+		lblUserIndonesia.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID' target='_blank'>(Indonesia)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblUserIndonesia.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		Label lblIssues = new Label(compositeLetter, SWT.NONE);
+		lblIssues.setText(Messages.LoginDialog_lblIssues_text);
+		
+		Label lblIssue = new Label(compositeLetter, SWT.NONE);
+		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>https://github.com/hangum/TadpoleForDBTools/issues</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		Label lblDownload = new Label(compositeLetter, SWT.NONE);
+		lblDownload.setText(Messages.LoginDialog_lblDownload_text);
+		
+		Label lblDownloadUrl = new Label(compositeLetter, SWT.NONE);
+		lblDownloadUrl.setText("<a href='https://www.facebook.com/groups/tadpoledbhub/' target='_blank'>https://www.facebook.com/groups/tadpoledbhub/</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblDownloadUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		Group grpSponser = new Group(container, SWT.NONE);
+		grpSponser.setLayout(new GridLayout(1, false));
+		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
+
+		return compositeLogin;
 	}
 
 	private void newUser() {
@@ -146,9 +221,9 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		 if(buttonId == ID_NEW_USER) {
-				newUser();
+			newUser();
 				
-				return;
+			return;
 		 } else if(buttonId == IDialogConstants.OK_ID) {
 			 okPressed();
 			 
@@ -260,7 +335,6 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(526, 230);
+		return new Point(626, 430);
 	}
-	
 }
