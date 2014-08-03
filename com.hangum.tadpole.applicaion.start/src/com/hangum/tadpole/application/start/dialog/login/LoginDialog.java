@@ -55,9 +55,9 @@ import com.swtdesigner.SWTResourceManager;
 public class LoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
 	
-	private int ID_NEW_USER = IDialogConstants.CLIENT_ID 	+ 1;
-	private int ID_ADMIN_USER = IDialogConstants.CLIENT_ID 	+ 3;
-	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID + 4;
+	private int ID_NEW_USER		 = IDialogConstants.CLIENT_ID 	+ 1;
+	private int ID_ADMIN_USER 	= IDialogConstants.CLIENT_ID 	+ 3;
+	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID 	+ 4;
 	
 	private Text textEMail;
 	private Text textPasswd;
