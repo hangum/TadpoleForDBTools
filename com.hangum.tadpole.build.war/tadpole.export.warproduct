@@ -58,17 +58,16 @@
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.rap.addons.d3chart"/>
+      <plugin id="org.eclipse.rap.addons.filedialog"/>
+      <plugin id="org.eclipse.rap.addons.fileupload"/>
       <plugin id="org.eclipse.rap.design.example"/>
       <plugin id="org.eclipse.rap.draw2d"/>
       <plugin id="org.eclipse.rap.draw2d.compatibility"/>
       <plugin id="org.eclipse.rap.gef"/>
-      <plugin id="org.eclipse.rap.jettycustomizer" fragment="true"/>
       <plugin id="org.eclipse.rap.jface"/>
       <plugin id="org.eclipse.rap.jface.databinding"/>
       <plugin id="org.eclipse.rap.rwt"/>
       <plugin id="org.eclipse.rap.rwt.osgi"/>
-      <plugin id="org.eclipse.rap.rwt.supplemental.filedialog"/>
-      <plugin id="org.eclipse.rap.rwt.supplemental.fileupload"/>
       <plugin id="org.eclipse.rap.ui"/>
       <plugin id="org.eclipse.rap.ui.views"/>
       <plugin id="org.eclipse.rap.ui.workbench"/>
@@ -130,6 +129,8 @@
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.addons.d3chart" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.addons.filedialog" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.addons.fileupload" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.design.example" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.draw2d" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.draw2d.compatibility" autoStart="true" startLevel="0" />
@@ -138,8 +139,6 @@
       <plugin id="org.eclipse.rap.jface.databinding" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.rwt" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.rwt.osgi" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.rap.rwt.supplemental.filedialog" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.rap.rwt.supplemental.fileupload" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.views" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.workbench" autoStart="true" startLevel="0" />
