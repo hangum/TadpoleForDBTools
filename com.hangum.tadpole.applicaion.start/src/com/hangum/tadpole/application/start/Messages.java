@@ -79,6 +79,8 @@ public class Messages extends NLS {
 	public static String LoginDialog_lblDownload_text;
 	public static String LoginDialog_lblHttpsourceforgenetprojectstadpoledbhub_text;
 	public static String LoginDialog_lblDownloadUrl_text;
+	public static String LoginDialog_lblContact_text;
+	public static String LoginDialog_lblContact_text_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -199,6 +199,13 @@ public class LoginDialog extends Dialog {
 		lblDownloadUrl.setText("<a href='https://www.facebook.com/groups/tadpoledbhub/' target='_blank'>https://www.facebook.com/groups/tadpoledbhub/</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblDownloadUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
+		Label lblContact = new Label(compositeLetter, SWT.NONE);
+		lblContact.setText(Messages.LoginDialog_lblContact_text_1);
+		
+		Label lblContactUrl = new Label(compositeLetter, SWT.NONE);
+		lblContactUrl.setText("<a href='mailto:adi.tadpole@gmail.com'>adi.tadpole@gmail.com</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
 		Group grpSponser = new Group(container, SWT.NONE);
 		grpSponser.setLayout(new GridLayout(1, false));
 		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
