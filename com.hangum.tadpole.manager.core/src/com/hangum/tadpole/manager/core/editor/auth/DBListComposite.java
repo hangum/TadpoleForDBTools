@@ -10,11 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.editor.auth;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -54,7 +52,6 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.commons.util.fileupload.FileUploadDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.manager.core.Activator;
@@ -384,23 +381,23 @@ public class DBListComposite extends Composite {
 	 * import db list
 	 */
 	private void importDB() {
-		FileUploadDialog fud = new FileUploadDialog(this.getShell());
-		if(Dialog.OK == fud.open()) {
-			
-			try {
-				String abstFile = fud.getListFiles().get(0);
-				String fileContetn = FileUtils.readFileToString(new File(abstFile));
-				
-				SystemDBDataManager.importUserDB(fileContetn);
-				
-				treeViewerDBList.setInput(initData());
-				refreshConnections();
-			} catch(Exception e) {
-				logger.error("Import DB exception", e);
-				
-				MessageDialog.openError(null, "Error", e.getMessage());
-			}
-		}
+//		FileUploadDialog fud = new FileUploadDialog(this.getShell());
+//		if(Dialog.OK == fud.open()) {
+//			
+//			try {
+//				String abstFile = fud.getListFiles().get(0);
+//				String fileContetn = FileUtils.readFileToString(new File(abstFile));
+//				
+//				SystemDBDataManager.importUserDB(fileContetn);
+//				
+//				treeViewerDBList.setInput(initData());
+//				refreshConnections();
+//			} catch(Exception e) {
+//				logger.error("Import DB exception", e);
+//				
+//				MessageDialog.openError(null, "Error", e.getMessage());
+//			}
+//		}
 	}
 	
 	/**

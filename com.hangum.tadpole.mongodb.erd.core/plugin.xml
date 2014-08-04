@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
+   <!--extension
          point="org.eclipse.rap.ui.entrypoint">
       <entrypoint
             class="com.hangum.tadpole.mongodb.erd.stanalone.Application"
@@ -27,7 +27,7 @@
             class="com.hangum.tadpole.mongodb.erd.stanalone.Perspective"
             id="com.hangum.tadpole.erd.core.perspective">
       </perspective>
-   </extension>
+   </extension-->
    <extension
          point="org.eclipse.ui.editors">
       <editor
