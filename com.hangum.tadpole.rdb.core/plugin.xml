@@ -329,6 +329,28 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
+            id="com.hangum.tadpole.rdb.core.objectContribution.rdb.sqlite.ext"
+            objectClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.connections.ext.DownloadSQLiteDBAction"
+               icon="resources/icons/download.png"
+               id="com.hangum.tadpole.rdb.core.action.sqlite.download"
+               label="DB Download">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.sql.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <visibility>
+            <objectState
+                  name="db_type"
+                  value="sqlite">
+            </objectState>
+         </visibility>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.hive"
             objectClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
 <menu
