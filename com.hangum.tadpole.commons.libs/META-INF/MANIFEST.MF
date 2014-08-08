@@ -98,4 +98,5 @@ Export-Package: .,
  org.apache.http.util,
  org.apache.log4j
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
- org.eclipse.rap.ui;bundle-version="2.1.0"
+ org.eclipse.rap.ui;bundle-version="2.1.0",
+ org.apache.commons.io;bundle-version="2.2.0"

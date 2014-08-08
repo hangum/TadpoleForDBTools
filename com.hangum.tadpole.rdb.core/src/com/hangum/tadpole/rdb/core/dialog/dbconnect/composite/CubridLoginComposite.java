@@ -94,8 +94,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	}
 	
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 		
 		String dbUrl = "";
 		String selectLocale = StringUtils.trimToEmpty(comboLocale.getText());

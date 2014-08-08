@@ -10,9 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
+import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -170,7 +173,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * 
 	 * @return
 	 */
-	public abstract boolean isValidateInput();
+	public abstract boolean isValidateInput(boolean isTest);
 	
 	/**
 	 * test connection
@@ -180,7 +183,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @throws Exception
 	 */
 	public boolean testConnection(boolean isTest) {
-		if(!makeUserDBDao()) return false;
+		if(!makeUserDBDao(isTest)) return false;
 		if(!isValidateDatabase(userDB, isTest)) return false;
 		
 		return true;
@@ -190,7 +193,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * 1. input validation
 	 * 2. make UserDBDAO
 	 */
-	public abstract boolean makeUserDBDao();
+	public abstract boolean makeUserDBDao(boolean isTest);
 	
 	/**
 	 * DB 가 정상 연결되었을때 객체
@@ -295,8 +298,21 @@ public abstract class AbstractLoginComposite extends Composite {
 		try {
 			if(DBDefine.getDBDefine(loginInfo) == DBDefine.MONGODB_DEFAULT) {
 				MongoConnectionManager.getInstance(userDB);
+				
 			} else if(DBDefine.getDBDefine(loginInfo) == DBDefine.TAJO_DEFAULT) {
 				new TajoConnectionManager().connectionCheck(loginInfo);
+				
+			} else if(DBDefine.getDBDefine(loginInfo) == DBDefine.SQLite_DEFAULT) {
+				String strFileLoc = StringUtils.difference(StringUtils.remove(loginInfo.getDBDefine().getDB_URL_INFO(), "%s"), loginInfo.getUrl());
+				File fileDB = new File(strFileLoc);
+				if(fileDB.exists()) {
+					List<String> strArr = FileUtils.readLines(fileDB);
+					
+					if(!StringUtils.contains(strArr.get(0), "SQLite format")) {
+						throw new SQLException("Doesn't SQLite files.");
+					}
+				}
+				
 			} else {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
 				sqlClient.queryForList("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$

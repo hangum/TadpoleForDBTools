@@ -221,7 +221,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	 * 
 	 * @return
 	 */
-	public boolean isValidateInput() {
+	public boolean isValidateInput(boolean isTest) {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -234,8 +234,8 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 
 		String dbUrl = "";
 		String selectLocale = StringUtils.trimToEmpty(comboLocale.getText());

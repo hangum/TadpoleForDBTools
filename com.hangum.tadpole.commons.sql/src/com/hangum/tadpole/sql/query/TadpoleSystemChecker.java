@@ -22,6 +22,7 @@ import com.hangum.tadpole.sql.Messages;
  * 1. 맥일 경우 jvm 1.7이상 기타 시스템일 경우 1.6 이상 동작환경인지 검사합니다.
  *
  * @author hangum
+ * @deprecated java 1.7 이상 사용하여서 더이상 사용하지 않습니다.
  *
  */
 public class TadpoleSystemChecker {

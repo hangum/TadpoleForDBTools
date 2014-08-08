@@ -423,6 +423,11 @@ public class Messages extends NLS {
 	public static String OthersConnectionBigDataGroup_btnSendMonitoring_text;
 	public static String OthersConnectionMongoDBGroup_btnCheckButton_text;
 	public static String OthersConnectionMongoDBGroup_btnIsVisible_1_text;
+	public static String SQLiteLoginComposite_btnCreation_text;
+	public static String SQLiteLoginComposite_btnFileupload_text;
+	public static String SQLiteLoginComposite_btnFileUpload_text;
+	public static String SQLiteLoginComposite_btnCreationDb_text;
+	public static String SQLiteLoginComposite_text_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

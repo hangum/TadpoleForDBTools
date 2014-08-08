@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.define;
 
+import org.apache.commons.io.IOUtils;
+
 import com.hangum.tadpold.commons.libs.core.Messages;
 
 /**
@@ -32,6 +34,9 @@ public class PublicTadpoleDefine {
 	/** 라인분리자 */
 	public static String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$
 	public static String DOUBLE_LINE_SEPARATOR = LINE_SEPARATOR + LINE_SEPARATOR;
+	
+	/** DIR SEPARATOR */
+	public static char DIR_SEPARATOR = IOUtils.DIR_SEPARATOR;
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$
