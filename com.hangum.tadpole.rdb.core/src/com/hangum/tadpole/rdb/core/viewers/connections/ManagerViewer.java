@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -437,9 +438,10 @@ public class ManagerViewer extends ViewPart {
 	 * SQLite file download
 	 */
 	public void download(final UserDBDAO userDB) {
-		File dbFile = new File(userDB.getDb());
-				
 		try {
+			String strFileLoc = StringUtils.difference(StringUtils.remove(userDB.getDBDefine().getDB_URL_INFO(), "%s"), userDB.getUrl());
+			File dbFile = new File(strFileLoc);
+			
 			byte[] arrayData = FileUtils.readFileToByteArray(dbFile);
 			
 			downloadServiceHandler.setContentType("");
