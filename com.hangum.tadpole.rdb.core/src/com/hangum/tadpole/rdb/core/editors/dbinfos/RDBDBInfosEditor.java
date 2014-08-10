@@ -23,6 +23,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnsComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.RDBInformationComposite;
@@ -118,6 +119,8 @@ public class RDBDBInfosEditor extends EditorPart {
 
 		tabFolder.setSelection(0);
 		
+		// google analytic
+		AnalyticCaller.track(RDBDBInfosEditor.ID, userDB.getDbms_types());
 	}
 
 	@Override

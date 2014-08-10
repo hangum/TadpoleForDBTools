@@ -8,8 +8,9 @@ Bundle-Vendor: hangum.com
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.4.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
- org.eclipse.rap.rwt.supplemental.filedialog;bundle-version="2.0.0",
- org.eclipse.rap.rwt.supplemental.fileupload;bundle-version="2.0.0"
+ org.eclipse.rap.addons.filedialog;bundle-version="0.6.0",
+ org.eclipse.rap.addons.fileupload;bundle-version="0.6.0",
+ org.apache.commons.io;bundle-version="2.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
@@ -25,6 +26,7 @@ Export-Package: com.google.gson,
  com.hangum.tadpole.commons.dialogs.message.dao,
  com.hangum.tadpole.commons.exception,
  com.hangum.tadpole.commons.exception.dialog,
+ com.hangum.tadpole.commons.google.analytics,
  com.hangum.tadpole.commons.help,
  com.hangum.tadpole.commons.log,
  com.hangum.tadpole.commons.start,

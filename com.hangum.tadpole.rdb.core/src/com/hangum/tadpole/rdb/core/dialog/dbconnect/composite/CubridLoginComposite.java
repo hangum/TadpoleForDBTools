@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.template.DBOperationType;
@@ -93,15 +94,25 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	}
 	
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 		
-		final String dbUrl = String.format(
+		String dbUrl = "";
+		String selectLocale = StringUtils.trimToEmpty(comboLocale.getText());
+		if(selectLocale.equals("") || DBLocaleUtils.NONE_TXT.equals(selectLocale)) {
+			dbUrl = String.format(
 				getSelectDB().getDB_URL_INFO(), 
 				StringUtils.trimToEmpty(textHost.getText()), 
 				StringUtils.trimToEmpty(textPort.getText()), 
 				StringUtils.trimToEmpty(textDatabase.getText())
 			);
+		} else {
+			dbUrl = String.format(
+					getSelectDB().getDB_URL_INFO(), 
+					StringUtils.trimToEmpty(textHost.getText()), 
+					StringUtils.trimToEmpty(textPort.getText()), 
+					StringUtils.trimToEmpty(textDatabase.getText())) + "?charset=" + selectLocale;
+		}
 
 		userDB = new UserDBDAO();
 		userDB.setDbms_types(getSelectDB().getDBToString());

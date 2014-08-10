@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.importdb.Activator;
@@ -177,6 +178,9 @@ public class TableColumnLIstComposite extends Composite {
 		
 		tableViewer.setInput(listTables);
 		tableViewer.refresh();
+		
+		// google analytic
+		AnalyticCaller.track("TableColumnLIstComposite");
 	}
 	
 	public List<ModTableDAO> getListTables() {

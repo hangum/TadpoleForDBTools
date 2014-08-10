@@ -363,7 +363,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				cnt++;
 			}
 		}
-		resultSQL.append(PublicTadpoleDefine.SQL_DILIMITER);
+		resultSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 
 		return resultSQL.toString();
 	}
@@ -436,7 +436,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				cnt++;
 			}
 		}
-		resultSQL.append(PublicTadpoleDefine.SQL_DILIMITER);
+		resultSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 
 		return resultSQL.toString();
 	}
@@ -523,7 +523,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		}
 
 		resultSQL.append(")");
-		resultSQL.append(PublicTadpoleDefine.SQL_DILIMITER);
+		resultSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 
 		return resultSQL.toString();
 	}
@@ -554,7 +554,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				cnt++;
 			}
 		}
-		resultSQL.append(PublicTadpoleDefine.SQL_DILIMITER);
+		resultSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 
 		return resultSQL.toString();
 	}

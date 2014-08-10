@@ -252,12 +252,12 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	public boolean testConnection(boolean isTest) {
-		if(!makeUserDBDao()) return false;
+		if(!makeUserDBDao(isTest)) return false;
 		return true;
 	}
 	
 	@Override
-	public boolean isValidateInput() {
+	public boolean isValidateInput(boolean isTest) {
 		String strAccesskey = textAccesskey.getText().trim();
 		String strSecretkey = textSecretKey.getText().trim();
 		
@@ -275,8 +275,8 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 		
 		return true;
 	}

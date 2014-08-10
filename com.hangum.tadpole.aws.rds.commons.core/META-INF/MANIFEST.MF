@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.hangum.tadpole.engine;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: libs/aws-java-sdk-1.4.7.jar,
- .
+Bundle-ClassPath: .,
+ libs/aws-java-sdk-1.4.7.jar
 Export-Package: com.hangum.tadpole.aws.rds.commons.core,
  com.hangum.tadpole.aws.rds.commons.core.utils

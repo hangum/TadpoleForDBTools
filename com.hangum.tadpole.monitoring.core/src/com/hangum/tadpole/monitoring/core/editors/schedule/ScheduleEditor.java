@@ -219,7 +219,6 @@ public class ScheduleEditor extends EditorPart {
 		tvResult.setLabelProvider(new ResultLabelProvider());
 		
 		initUI();
-		
 
 		sashForm.setWeights(new int[] {4, 6});
 		

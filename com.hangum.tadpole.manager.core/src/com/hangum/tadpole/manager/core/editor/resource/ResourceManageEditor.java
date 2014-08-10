@@ -55,6 +55,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -435,6 +436,8 @@ public class ResourceManageEditor extends EditorPart {
 		});
 		reLoadResource();
 		
+		// google analytic
+		AnalyticCaller.track(ResourceManageEditor.ID);
 	}
 
 	public void reLoadResource() {

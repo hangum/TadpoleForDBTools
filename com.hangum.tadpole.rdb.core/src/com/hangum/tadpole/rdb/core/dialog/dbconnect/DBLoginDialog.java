@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -188,6 +189,9 @@ public class DBLoginDialog extends Dialog {
 		createDBWidget(userDB);
 		compositeBody.layout();
 		container.layout();
+		
+		// google analytic
+		AnalyticCaller.track("DBLoginDialog");
 	}
 	
 	/**

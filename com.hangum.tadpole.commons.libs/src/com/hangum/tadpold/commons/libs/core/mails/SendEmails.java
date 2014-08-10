@@ -47,7 +47,8 @@ public class SendEmails {
 			email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));
 			email.setSSLOnConnect(true);
 	
-			email.setFrom(smtpDto.getEmail());
+			
+			email.setFrom(smtpDto.getEmail(), "Tadpole DB Hub");
 			email.setSubject(emailDao.getSubject());
 			
 			// set the html message

@@ -65,6 +65,22 @@ public class Messages extends NLS {
 	public static String OTPLoginDialog_0;
 	public static String OTPLoginDialog_3;
 	public static String UserInformationDialog_5;
+	public static String LoginDialog_lblWelcomeDbHub_text;
+	public static String LoginDialog_grpShowInformation_text;
+	public static String LoginDialog_grpSponser_text;
+	public static String LoginDialog_lblSite_text;
+	public static String LoginDialog_lblUserGuide_text;
+	public static String LoginDialog_lblNewLabel_text_1;
+	public static String LoginDialog_lblkorHttpstadpoledbhubatlassiannetwikipagesviewpageactionpageid_text;
+	public static String LoginDialog_lblHttpsgithubcomhangumtadpolefordbtoolswikirdbuserguideeng_text;
+	public static String LoginDialog_lblindonesiaHttpsgithubcomhangumtadpolefordbtoolswikirdbuserguideid_text;
+	public static String LoginDialog_lblIssues_text;
+	public static String LoginDialog_lblHttpsgithubcomhangumtadpolefordbtoolsissues_text;
+	public static String LoginDialog_lblDownload_text;
+	public static String LoginDialog_lblHttpsourceforgenetprojectstadpoledbhub_text;
+	public static String LoginDialog_lblDownloadUrl_text;
+	public static String LoginDialog_lblContact_text;
+	public static String LoginDialog_lblContact_text_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

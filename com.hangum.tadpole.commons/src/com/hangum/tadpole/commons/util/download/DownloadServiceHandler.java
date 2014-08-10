@@ -49,7 +49,7 @@ public class DownloadServiceHandler implements ServiceHandler {
 			// Set response headers
 			resp.setContentType(contentType);
 			resp.setContentLength(getByteContent().length);
-			resp.setHeader("Content-Disposition", "attachment; filename=" + "\"" + getName() + "\"" + PublicTadpoleDefine.SQL_DILIMITER);
+			resp.setHeader("Content-Disposition", "attachment; filename=" + "\"" + getName() + "\"" + PublicTadpoleDefine.SQL_DELIMITER);
 			resp.flushBuffer();
 			// Copy documentation to responce's output stream.
 			os = resp.getOutputStream();

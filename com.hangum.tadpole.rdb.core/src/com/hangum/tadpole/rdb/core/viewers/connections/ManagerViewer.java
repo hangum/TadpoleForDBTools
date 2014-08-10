@@ -10,9 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -43,6 +46,9 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -70,8 +76,12 @@ public class ManagerViewer extends ViewPart {
 	private static final Logger logger = Logger.getLogger(ManagerViewer.class);
 	public static String ID = "com.hangum.tadpole.rdb.core.view.connection.manager"; //$NON-NLS-1$
 	
-	List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
-	TreeViewer managerTV;
+	private Composite compositeMainComposite;
+	private List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
+	private TreeViewer managerTV;
+	
+	/** download servcie handler. */
+	private DownloadServiceHandler downloadServiceHandler;
 	
 	public ManagerViewer() {
 		super();
@@ -82,21 +92,24 @@ public class ManagerViewer extends ViewPart {
 		
 		setPartName(Messages.ManagerViewer_0);
 		
-		Composite composite = new Composite(parent, SWT.NONE);
+		compositeMainComposite = new Composite(parent, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.verticalSpacing = 0;
 		gl_composite.horizontalSpacing = 0;
 		gl_composite.marginHeight = 0;
 		gl_composite.marginWidth = 0;
-		composite.setLayout(gl_composite);
+		compositeMainComposite.setLayout(gl_composite);
 		
-		managerTV = new TreeViewer(composite, SWT.NONE);
+		managerTV = new TreeViewer(compositeMainComposite, SWT.NONE);
 		managerTV.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(is.getFirstElement() instanceof UserDBDAO) {
-					addUserResouceData((UserDBDAO)is.getFirstElement());
+					UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
+					addUserResouceData(userDB);
+					
+					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_types());
 				}
 				
 				//
@@ -152,6 +165,7 @@ public class ManagerViewer extends ViewPart {
 		
 		createPopupMenu();
 		
+		registerServiceHandler();
 		init();
 		
 		// db에 erd가 추가되었을 경우 
@@ -197,6 +211,8 @@ public class ManagerViewer extends ViewPart {
 
 		managerTV.refresh();
 		managerTV.expandToLevel(2);
+		
+		AnalyticCaller.track(ManagerViewer.ID);
 	}
 
 	/**
@@ -415,6 +431,34 @@ public class ManagerViewer extends ViewPart {
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_10, errStatus); //$NON-NLS-1$
 			}
+		}
+	}
+	
+	/** registery service handler */
+	private void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	
+	/**
+	 * SQLite file download
+	 */
+	public void download(final UserDBDAO userDB) {
+		try {
+			String strFileLoc = StringUtils.difference(StringUtils.remove(userDB.getDBDefine().getDB_URL_INFO(), "%s"), userDB.getUrl());
+			File dbFile = new File(strFileLoc);
+			
+			byte[] arrayData = FileUtils.readFileToByteArray(dbFile);
+			
+			downloadServiceHandler.setContentType("");
+			downloadServiceHandler.setName(dbFile.getName()); //$NON-NLS-1$
+			downloadServiceHandler.setByteContent(arrayData);
+			DownloadUtils.provideDownload(compositeMainComposite, downloadServiceHandler.getId());
+		} catch(Exception e) {
+			logger.error("GridFS Download exception", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "DB Download Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

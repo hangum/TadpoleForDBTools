@@ -75,6 +75,9 @@ Document
 Demo Site
 *  http://tadpoledb.com
 
+Chrome web Store
+*  https://chrome.google.com/webstore/detail/tadpoledbcom/nhfaneohnnijkdpgmiddcgbcgpjgdjnc?utm_source=gmail
+
 Download
 * https://sourceforge.net/projects/tadpoledbhub/files/v1.3.7/
 

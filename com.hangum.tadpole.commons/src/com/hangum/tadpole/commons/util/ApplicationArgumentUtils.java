@@ -10,8 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
+
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * 시스템 시작 유틸 
@@ -25,17 +29,33 @@ public class ApplicationArgumentUtils {
 	 */
 	private static final Logger logger = Logger.getLogger(ApplicationArgumentUtils.class);
 	
+//	/**
+//	 * 시스템이 개발환경인지?
+//	 * 
+//	 * 올챙이 실행환경이 mac 1.7이상, 그외 1.6 이상이다 보니, 
+//	 * 맥 환경 개발자들이 1.6 환경을 맞추면 시스템 개발환경을 설정하기어려워 -dev가 들어 있는 환경에서는 System checker가 동작하지 않도록 하기위해 사용합니다.
+//	 * ps) 일괄적으로 1.7로 올리면 좋겠다...
+//	 * 
+//	 * @return
+//	 */
+//	public static boolean envDev() {
+//		return checkString("-envDev");
+//	}
+	
 	/**
-	 * 시스템이 개발환경인지?
-	 * 
-	 * 올챙이 실행환경이 mac 1.7이상, 그외 1.6 이상이다 보니, 
-	 * 맥 환경 개발자들이 1.6 환경을 맞추면 시스템 개발환경을 설정하기어려워 -dev가 들어 있는 환경에서는 System checker가 동작하지 않도록 하기위해 사용합니다.
-	 * ps) 일괄적으로 1.7로 올리면 좋겠다...
-	 * 
+	 * 리소스 디렉토리 루트 정보를 리턴합니다.
 	 * @return
 	 */
-	public static boolean envDev() {
-		return checkString("-envDev");
+	public static String getResourcesDir() {
+		String strResourceDir = "";
+		
+		try {
+			strResourceDir = getValue("-resourcesDir");
+		} catch(Exception e) {
+			strResourceDir = FileUtils.getUserDirectoryPath() + IOUtils.DIR_SEPARATOR + "tadpole";
+		}
+		
+		return strResourceDir + IOUtils.DIR_SEPARATOR;
 	}
 	
 	/**

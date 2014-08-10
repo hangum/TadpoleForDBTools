@@ -27,6 +27,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -135,6 +136,7 @@ public class TableInformationEditor extends EditorPart {
 //		//[DDL composite end]/////////////////////////////////
 		
 		tabFolder.setSelection(0);
+		
 	}
 
 	@Override

@@ -52,6 +52,7 @@ import org.xml.sax.InputSource;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
 import com.hangum.tadpole.rdb.erd.core.actions.TableSelectionAction;
@@ -310,6 +311,9 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 			setPartName(isAllTable?"All " + userDB.getDisplay_name():userDB.getDisplay_name());
 			setTitleToolTip(userDB.getDisplay_name());
 		}
+		
+		// google analytic
+		AnalyticCaller.track(TadpoleRDBEditor.ID, userDB.getDbms_types());
 	}
 	
 //	@Override

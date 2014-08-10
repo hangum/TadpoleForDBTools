@@ -52,7 +52,7 @@ public class GenerateDDLScriptUtils {
 				else sbSQL.append(" "); //$NON-NLS-1$
 			}
 			
-			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getSysName() + PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getSysName() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
 			
 		} catch(Exception e) {

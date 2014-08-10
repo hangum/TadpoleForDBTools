@@ -49,6 +49,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
@@ -57,7 +58,6 @@ import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryFilter;
@@ -334,6 +334,9 @@ public class ExecutedSQLEditor extends EditorPart {
 		initBehavior();
 
 		search();
+		
+		// google analytic
+		AnalyticCaller.track(ExecutedSQLEditor.ID);
 	}
 
 	/**
@@ -374,7 +377,7 @@ public class ExecutedSQLEditor extends EditorPart {
 					}
 				}
 				
-				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DILIMITER);
+				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DELIMITER);
 			} catch (Exception e) {
 				logger.error("find editor and write query", e);
 			}
