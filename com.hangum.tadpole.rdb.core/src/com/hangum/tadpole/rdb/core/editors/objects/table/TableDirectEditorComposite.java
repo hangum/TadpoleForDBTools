@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.XMLUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -386,6 +387,8 @@ public class TableDirectEditorComposite extends Composite {
 			return;
 		}
 		
+		// google analytic
+		AnalyticCaller.track("TableDirectEditorComposite");
 	}
 
 	/**

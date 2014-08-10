@@ -46,6 +46,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -105,7 +106,10 @@ public class ManagerViewer extends ViewPart {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(is.getFirstElement() instanceof UserDBDAO) {
-					addUserResouceData((UserDBDAO)is.getFirstElement());
+					UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
+					addUserResouceData(userDB);
+					
+					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_types());
 				}
 				
 				//
@@ -207,6 +211,8 @@ public class ManagerViewer extends ViewPart {
 
 		managerTV.refresh();
 		managerTV.expandToLevel(2);
+		
+		AnalyticCaller.track(ManagerViewer.ID);
 	}
 
 	/**

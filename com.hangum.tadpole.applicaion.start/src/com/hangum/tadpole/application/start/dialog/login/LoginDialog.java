@@ -36,6 +36,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -211,7 +212,11 @@ public class LoginDialog extends Dialog {
 		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
-
+		
+		
+		AnalyticCaller.track("login");
+		
+		
 		return compositeLogin;
 	}
 

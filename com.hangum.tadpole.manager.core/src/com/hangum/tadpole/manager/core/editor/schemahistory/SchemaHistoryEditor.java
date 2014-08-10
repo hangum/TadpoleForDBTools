@@ -16,9 +16,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -41,6 +43,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO;
@@ -48,8 +51,6 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.ResourceManager;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Schema History
@@ -339,6 +340,9 @@ public class SchemaHistoryEditor extends EditorPart {
 		}
 		
 		search();
+		
+		// google analytic
+		AnalyticCaller.track(SchemaHistoryEditor.ID);
 	}
 	
 	/**

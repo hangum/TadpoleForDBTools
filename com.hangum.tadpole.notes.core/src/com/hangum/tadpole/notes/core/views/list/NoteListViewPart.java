@@ -34,6 +34,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
@@ -46,6 +47,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.notes.core.Activator;
 import com.hangum.tadpole.notes.core.Messages;
 import com.hangum.tadpole.notes.core.define.NotesDefine.NOTE_TYPES;
@@ -55,8 +57,6 @@ import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_Notes;
 import com.swtdesigner.ResourceManager;
-
-import org.eclipse.swt.widgets.Button;
 
 /**
  * Notes
@@ -293,6 +293,9 @@ public class NoteListViewPart extends ViewPart {
 		} catch(Exception e) {
 			logger.error("Get note list", e); //$NON-NLS-1$
 		}
+		
+		// google analytic
+		AnalyticCaller.track(NoteListViewPart.ID);
 	}
 	
 	/**

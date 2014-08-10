@@ -22,6 +22,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 
 /**
@@ -103,6 +104,9 @@ public class UserManagementEditor extends EditorPart {
 		compositeDBList.setLayout(new GridLayout(1, false));
 		
 		tabFolder.setSelection(0);
+		
+		// google analytic
+		AnalyticCaller.track(UserManagementEditor.ID);
 	}
 
 	@Override

@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.quartz.CronExpression;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
 import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
@@ -276,6 +277,9 @@ public class AddScheduleDialog extends Dialog {
 				logger.error("get Schedule data", e);
 			}
 		}
+		
+		// google analytic
+		AnalyticCaller.track("AddScheduleDialog");
 	}
 	
 	/**

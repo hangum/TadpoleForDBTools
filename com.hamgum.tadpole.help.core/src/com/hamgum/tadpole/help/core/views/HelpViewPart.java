@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hamgum.tadpole.help.core.views.sub.shortcutkey.ShortcutKeyComposite;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 
 /**
@@ -48,6 +49,9 @@ public class HelpViewPart extends ViewPart {
 		// mongodb manual ( http://docs.mongodb.org/manual/ )
 		
 		tabFolder.setSelection(0);
+		
+		// google analytic
+		AnalyticCaller.track(HelpViewPart.ID);
 	}
 	
 	@Override
