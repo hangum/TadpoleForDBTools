@@ -59,7 +59,6 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
@@ -500,6 +499,9 @@ public class MainEditor extends EditorExtension {
 	
 	public void executeCommand(final RequestQuery reqQuery) {
 		resultMainComposite.executeCommand(reqQuery);
+		
+		// google analytic
+		AnalyticCaller.track(MainEditor.ID, "executeCommand");
 	}
 	/**
 	 * auto commit 
