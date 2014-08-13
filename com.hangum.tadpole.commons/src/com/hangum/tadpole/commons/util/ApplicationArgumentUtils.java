@@ -172,6 +172,15 @@ public class ApplicationArgumentUtils {
 	}
 	
 	/**
+	 * IS Google Analytics use?
+	 * 
+	 * @return
+	 */
+	public static boolean isGAON() {
+		return checkString("-GAON");
+	}
+	
+	/**
 	 * runtime시에 argument의 value를 리턴합니다.
 	 * 
 	 * @param key
