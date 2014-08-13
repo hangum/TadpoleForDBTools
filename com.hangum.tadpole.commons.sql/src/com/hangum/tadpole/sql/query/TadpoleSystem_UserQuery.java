@@ -141,7 +141,11 @@ public class TadpoleSystem_UserQuery {
 		if(null == userInfo) {
 			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 		} else {
-			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+			try {
+				if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+					throw new Exception(Messages.TadpoleSystem_UserQuery_5);
+				}
+			} catch(Exception e) {
 				throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 			}
 		}

@@ -12,6 +12,8 @@ package com.hangum.tadpole.cipher.core.utils;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+
 /**
  * Encryption, Decryption utils
  * 
@@ -21,7 +23,7 @@ import org.jasypt.util.text.BasicTextEncryptor;
  */
 public class EncryptiDecryptUtil implements DefaultEncryptDecrypt {
 	/** default encrypt password */
-	final static String DEFAULT_ENCRYPT_PASSWORD = "heechan.tadpole.owner.son";
+	final static String DEFAULT_ENCRYPT_PASSWORD = ApplicationArgumentUtils.getPasswd();
 	
 	/**
 	 * encryption

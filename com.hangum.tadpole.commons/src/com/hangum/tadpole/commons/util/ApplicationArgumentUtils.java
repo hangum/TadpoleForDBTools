@@ -28,20 +28,24 @@ public class ApplicationArgumentUtils {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ApplicationArgumentUtils.class);
-	
-//	/**
-//	 * 시스템이 개발환경인지?
-//	 * 
-//	 * 올챙이 실행환경이 mac 1.7이상, 그외 1.6 이상이다 보니, 
-//	 * 맥 환경 개발자들이 1.6 환경을 맞추면 시스템 개발환경을 설정하기어려워 -dev가 들어 있는 환경에서는 System checker가 동작하지 않도록 하기위해 사용합니다.
-//	 * ps) 일괄적으로 1.7로 올리면 좋겠다...
-//	 * 
-//	 * @return
-//	 */
-//	public static boolean envDev() {
-//		return checkString("-envDev");
-//	}
-	
+
+	/**
+	 * engine에서 사용하는 패스워드.
+	 * 
+	 * @return
+	 */
+	public static String getPasswd() {
+		String passwd = "";
+		
+		try {
+			passwd = getValue("-passwd");
+		} catch(Exception e) {
+			passwd = "heechan.tadpole.owner.son";
+		}
+		
+		return passwd;
+	}
+
 	/**
 	 * 리소스 디렉토리 루트 정보를 리턴합니다.
 	 * @return

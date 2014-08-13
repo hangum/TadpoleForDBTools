@@ -11,7 +11,6 @@
 package com.hangum.tadpole.commons.google.analytics;
 
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.Client;
 import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 
 /**
