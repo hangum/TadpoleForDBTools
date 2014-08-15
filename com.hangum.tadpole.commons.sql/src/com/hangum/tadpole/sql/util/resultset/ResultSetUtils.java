@@ -74,20 +74,23 @@ public class ResultSetUtils {
 			
 			for(int i=0; i<rs.getMetaData().getColumnCount(); i++) {
 				final int intColIndex = i+1;
+				final int intShowColIndex = i + intStartIndex;
 				try {
 					Object obj = rs.getObject(intColIndex);
 					int type = rs.getMetaData().getColumnType(intColIndex);
 
 					if (RDBTypeToJavaTypeUtils.isNumberType(type)){
 						if(isPretty) { 
-							tmpRow.put(i+intStartIndex, addComma(type, obj));
+							tmpRow.put(intShowColIndex, addComma(type, obj.toString()));
 						}else{
-							tmpRow.put(i+intStartIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
+							tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 						}
 					}else if (RDBTypeToJavaTypeUtils.isCharType(type)){
-						tmpRow.put(i+intStartIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
+						tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
+					} else if (type == java.sql.Types.ROWID) {
+						tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:rs.getString(intColIndex));
 					}else {
-						tmpRow.put(i+intStartIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
+						tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 //						logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
 					}
 				} catch(Exception e) {
