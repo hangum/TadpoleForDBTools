@@ -631,11 +631,6 @@ public class ResultSetComposite extends Composite {
 					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT
 			)) {
 				statement.setQueryTimeout(queryTimeOut);
-//			}
-//			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-//					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-//					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)) 
-//			{
 				statement.setMaxRows(intSelectLimitCnt);
 			}
 			

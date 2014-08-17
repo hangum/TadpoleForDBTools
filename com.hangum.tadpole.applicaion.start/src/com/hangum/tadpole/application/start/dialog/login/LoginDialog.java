@@ -10,17 +10,28 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,6 +41,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -42,6 +55,7 @@ import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -62,6 +76,8 @@ public class LoginDialog extends Dialog {
 	
 	private Text textEMail;
 	private Text textPasswd;
+
+	private TableViewer tableViewer;
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -91,10 +107,9 @@ public class LoginDialog extends Dialog {
 		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
 		compositeLeftBtn.setLayout(new GridLayout(1, false));
 		
-		Button button = new Button(compositeLeftBtn, SWT.PUSH);
+		Button button = new Button(compositeLeftBtn, SWT.NONE);
 		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		button.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TadpoleOverView.png"));
-		button.setBounds(0, 0, 95, 28);
 		
 		Composite compositeLogin = new Composite(container, SWT.NONE);
 		compositeLogin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -110,12 +125,6 @@ public class LoginDialog extends Dialog {
 		textEMail = new Text(compositeLogin, SWT.BORDER);
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		textEMail.setFocus();
-		
-//		Label lblLoginImage = new Label(compositeLogin, SWT.NONE);
-//		lblLoginImage.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 2));
-//		lblLoginImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/LoginManager.png")); //$NON-NLS-1$ //$NON-NLS-2$
-		
 		Label lblPassword = new Label(compositeLogin, SWT.NONE);
 		lblPassword.setText(Messages.LoginDialog_4);
 		
@@ -130,12 +139,7 @@ public class LoginDialog extends Dialog {
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label lblRecommand = new Label(compositeLogin, SWT.NONE);
-		lblRecommand.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		lblRecommand.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		lblRecommand.setText(Messages.LoginDialog_lblNewLabel_text);
 		new Label(compositeLogin, SWT.NONE);
-
 		Button btnFindPassword = new Button(compositeLogin, SWT.PUSH);
 		btnFindPassword.setText(Messages.LoginDialog_lblFindPassword);
 		setButtonLayoutData(btnFindPassword);
@@ -193,13 +197,6 @@ public class LoginDialog extends Dialog {
 		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>https://github.com/hangum/TadpoleForDBTools/issues</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblDownload = new Label(compositeLetter, SWT.NONE);
-		lblDownload.setText(Messages.LoginDialog_lblDownload_text);
-		
-		Label lblDownloadUrl = new Label(compositeLetter, SWT.NONE);
-		lblDownloadUrl.setText("<a href='https://www.facebook.com/groups/tadpoledbhub/' target='_blank'>https://www.facebook.com/groups/tadpoledbhub/</a>"); //$NON-NLS-1$ //$NON-NLS-2$
-		lblDownloadUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
-		
 		Label lblContact = new Label(compositeLetter, SWT.NONE);
 		lblContact.setText(Messages.LoginDialog_lblContact_text_1);
 		
@@ -213,11 +210,46 @@ public class LoginDialog extends Dialog {
 		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
 		
+		tableViewer = new TableViewer(grpSponser, SWT.NONE | SWT.FULL_SELECTION);
+		Table table = tableViewer.getTable();
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+		TableColumn tblclmnSeq = tableViewerColumn.getColumn();
+		tblclmnSeq.setWidth(120);
+		tblclmnSeq.setText(Messages.LoginDialog_tblclmnSeq_text);
+		
+		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
+		TableColumn tblclmnName = tableViewerColumn_1.getColumn();
+		tblclmnName.setWidth(100);
+		tblclmnName.setText(Messages.LoginDialog_tblclmnName_text);
+
+		tableViewer.setContentProvider(new ArrayContentProvider());
+		tableViewer.setLabelProvider(new RegisteredDBLabelprovider());
+		tableViewer.setInput(getInitData());
+
+		textEMail.setFocus();
 		AnalyticCaller.track("login");
 		
-		
 		return compositeLogin;
+	}
+	
+	/**
+	 * registered database
+	 * 
+	 * @return
+	 */
+	private List getInitData() {
+		List retList = new ArrayList();
+		try {
+			retList = TadpoleSystem_UserDBQuery.getRegisteredDB();
+		} catch (Exception e) {
+			logger.error("getRegistered db", e);
+		}
+		
+		return retList;
 	}
 
 	private void newUser() {
@@ -338,7 +370,8 @@ public class LoginDialog extends Dialog {
 			createButton(parent, ID_MANAGER_USER, Messages.LoginDialog_12, false);
 		}
 		
-		createButton(parent, ID_NEW_USER, Messages.LoginDialog_16, false);
+		Button button = createButton(parent, ID_NEW_USER, Messages.LoginDialog_16, false);
+		button.setText(Messages.LoginDialog_button_text);
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
 
@@ -347,6 +380,27 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(626, 430);
+		return new Point(500, 500);
 	}
+}
+
+class RegisteredDBLabelprovider extends LabelProvider implements ITableLabelProvider {
+
+	@Override
+	public Image getColumnImage(Object element, int columnIndex) {
+		return null;
+	}
+
+	@Override
+	public String getColumnText(Object element, int columnIndex) {
+		Map<String, Object> retMap = (HashMap<String, Object>)element;
+		
+		switch(columnIndex) {
+		case 0: return ""+retMap.get("dbms_types");
+		case 1: return ""+retMap.get("tot");
+		}
+		
+		return "*** not set column ***";
+	}
+	
 }

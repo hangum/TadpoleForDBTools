@@ -324,7 +324,6 @@ public class Messages extends NLS {
 	public static String TableViewerEditPart_0;
 	public static String TableViewerEditPart_1;
 	public static String TableViewerEditPart_10;
-	public static String TableViewerEditPart_11;
 	public static String TableViewerEditPart_2;
 	public static String TableViewerEditPart_3;
 	public static String TableViewerEditPart_7;
@@ -427,6 +426,7 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_btnFileupload_text;
 	public static String SQLiteLoginComposite_btnFileUpload_text;
 	public static String SQLiteLoginComposite_btnCreationDb_text;
+	public static String TableDirectEditorComposite_tltmRefersh_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

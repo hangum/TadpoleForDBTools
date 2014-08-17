@@ -24,7 +24,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 public class TbUtils {
 
 	/** table modify type */
-	public static enum TABLE_MOD_TYPE {NONE, EDITOR};
+//	public static enum TABLE_MOD_TYPE {NONE, EDITOR};
 	public static String NONE_MSG 	= Messages.TbUtils_0;
 	public static String EDITOR_MSG = Messages.TbUtils_1;
 	
@@ -33,9 +33,9 @@ public class TbUtils {
 	/** 컬럼 헤더 */
 	public static String getColumnText(COLUMN_MOD_TYPE type) {
 		if(type == COLUMN_MOD_TYPE.INSERT) {
-			return "<em style='color:rgb(0, 255, 0)'>INSERT</em>"; //$NON-NLS-1$
+			return "<em style='color:rgb(0, 0, 255)'>INSERT</em>"; //$NON-NLS-1$
 		} else if(type == COLUMN_MOD_TYPE.UPDATE) {
-			return "<em style='color:rgb(0, 255, 0)'>UPDATE</em>"; //$NON-NLS-1$
+			return "<em style='color:rgb(0, 0, 255)'>UPDATE</em>"; //$NON-NLS-1$
 		} else if(type == COLUMN_MOD_TYPE.DELETE) {
 			return "<em style='color:rgb(255, 0, 0)'>DELETE</em>"; //$NON-NLS-1$
 		}

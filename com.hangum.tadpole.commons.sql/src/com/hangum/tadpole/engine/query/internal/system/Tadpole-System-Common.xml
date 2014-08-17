@@ -312,6 +312,16 @@
 	user db
 	============================================================================================================================
  -->
+ <!-- 
+ registered database
+  -->
+ <select id="getRegisteredDB" resultClass="java.util.HashMap">
+ 	SELECT dbms_types, count(*) tot
+	FROM user_db
+	GROUP BY dbms_types
+	ORDER BY tot desc
+ </select>
+ 
    <!-- 
  		기디비 등록할 수 있는지 검사합니다.
   -->

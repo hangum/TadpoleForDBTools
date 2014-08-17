@@ -39,6 +39,14 @@ public class ImageUtils {
 	public static final Image getAdd() {
 		return ResourceManager.getPluginImage(ImageUtils.IMAGE_Activator_ID, "resources/icons/add.png");
 	}
+	
+	/**
+	 * delete image
+	 * @return
+	 */
+	public static Image getSave() {
+		return ResourceManager.getPluginImage(ImageUtils.IMAGE_Activator_ID, "resources/icons/save.png");
+	}
 
 	/**
 	 * delete image
