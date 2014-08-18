@@ -51,7 +51,9 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
@@ -388,6 +390,44 @@ class RegisteredDBLabelprovider extends LabelProvider implements ITableLabelProv
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
+		Map<String, Object> retMap = (HashMap<String, Object>)element;
+		
+		switch(columnIndex) {
+		case 0: 
+			String dbmsType = ""+retMap.get("dbms_types");
+			DBDefine dbType = DBDefine.getDBDefine(dbmsType);
+			
+			if(DBDefine.MYSQL_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MARIADB_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.ORACLE_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.SQLite_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MSSQL_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.CUBRID_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.MONGODB_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
+			
+			else if(DBDefine.TAJO_DEFAULT == dbType) 
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/tajo-add.jpg"); //$NON-NLS-1$
+		}
+		
 		return null;
 	}
 
