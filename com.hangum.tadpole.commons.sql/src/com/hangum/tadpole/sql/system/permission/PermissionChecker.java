@@ -85,6 +85,22 @@ public class PermissionChecker {
 	}
 	
 	/**
+	 * isadmin
+	 * 
+	 * @param strUserType
+	 * @return
+	 */
+	public static boolean isAdmin(String strUserType) {
+		boolean boolReturn = false;
+		
+		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType)) { 
+			boolReturn = true;
+		}
+		
+		return boolReturn;
+	}
+	
+	/**
 	 * Manager이상의 권한이 있는 사용자만 보여준다.
 	 * 
 	 * @param strUserType

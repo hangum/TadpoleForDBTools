@@ -26,6 +26,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
+import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
 import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
@@ -38,6 +39,8 @@ import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenDBRelationAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenQueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.global.PreferenceAction;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * Define at action, toolbar, menu
@@ -54,6 +57,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction queryOpenAction;
     private IAction dbRelationOpenAction;
     private IAction deleteResourceAction;
+    
+    /** send message */
+    private IAction sendMessageAction;
     
     /** User permission action */
     private IAction userPermissionAction;
@@ -100,6 +106,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	deleteResourceAction = new DeleteResourceAction(window);
     	register(deleteResourceAction);
+    	
+    	sendMessageAction = new SendMessageAction(window);
+    	register(sendMessageAction);
     	
     	userPermissionAction = new UserPermissionAction(window);
     	register(userPermissionAction);
@@ -189,6 +198,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         toolbar.add(deleteResourceAction);
         toolbar.add(new Separator());
+        
+        if(PermissionChecker.isAdmin(SessionManager.getRepresentRole())) {        
+	        toolbar.add(sendMessageAction);
+	        toolbar.add(new Separator());
+        }
 
 //        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
         	toolbar.add(userPermissionAction);
