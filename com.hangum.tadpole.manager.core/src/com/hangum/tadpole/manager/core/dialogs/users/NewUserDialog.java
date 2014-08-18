@@ -85,7 +85,7 @@ public class NewUserDialog extends Dialog {
 	private Text textAnswer;
 
 	/** OTP code */
-	private String secretKey = "";
+	private String secretKey = ""; //$NON-NLS-1$
 	private Button btnGetOptCode;
 	private Label lblSecretKey;
 	private Text textSecretKey;
@@ -379,7 +379,6 @@ public class NewUserDialog extends Dialog {
 				return;
 			}
 		}
-
 		
 		// user 입력시 
 		UserGroupDAO groupDAO = new UserGroupDAO();
@@ -407,7 +406,6 @@ public class NewUserDialog extends Dialog {
 			}
 		}
 		
-		
 		try {
 			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn.toString(), questionKey, answer, 
 					btnGetOptCode.getSelection()?"YES":"NO", textSecretKey.getText()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -421,6 +419,8 @@ public class NewUserDialog extends Dialog {
 //			}
 			
 			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
+			
+			MessageDialog.openInformation(null, "Confirm", Messages.NewUserDialog_31); //$NON-NLS-1$
 			
 		} catch (Exception e) {
 			logger.error(Messages.NewUserDialog_8, e);

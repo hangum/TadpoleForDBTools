@@ -41,13 +41,6 @@
             name="%editor.name.0">
       </editor>
       <editor
-            class="com.hangum.tadpole.rdb.core.editors.objecteditor.ObjectMainEditor"
-            default="false"
-            icon="resources/icons/editor/object_editor.png"
-            id="com.hangum.tadpole.rdb.core.editor.object"
-            name="Object Editor">
-      </editor>
-      <editor
             class="com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor"
             icon="resources/icons/table_editor.png"
             id="com.hangum.tadpole.rdb.core.editors.table.edit"
