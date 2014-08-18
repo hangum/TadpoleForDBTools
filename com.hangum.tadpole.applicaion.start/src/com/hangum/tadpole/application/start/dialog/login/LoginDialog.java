@@ -153,6 +153,32 @@ public class LoginDialog extends Dialog {
 			}
 		});
 		
+		Group grpSponser = new Group(container, SWT.NONE);
+		grpSponser.setLayout(new GridLayout(1, false));
+		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
+		
+		tableViewer = new TableViewer(grpSponser, SWT.NONE | SWT.FULL_SELECTION);
+		Table table = tableViewer.getTable();
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+		TableColumn tblclmnSeq = tableViewerColumn.getColumn();
+		tblclmnSeq.setWidth(120);
+		tblclmnSeq.setText(Messages.LoginDialog_tblclmnSeq_text);
+		
+		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
+		TableColumn tblclmnName = tableViewerColumn_1.getColumn();
+		tblclmnName.setWidth(100);
+		tblclmnName.setText(Messages.LoginDialog_tblclmnName_text);
+
+		tableViewer.setContentProvider(new ArrayContentProvider());
+		tableViewer.setLabelProvider(new RegisteredDBLabelprovider());
+		tableViewer.setInput(getInitData());
+		
 		Group compositeLetter = new Group(container, SWT.NONE);
 		compositeLetter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		GridLayout gl_compositeLetter = new GridLayout(2, false);
@@ -206,32 +232,6 @@ public class LoginDialog extends Dialog {
 		lblContactUrl.setText("<a href='mailto:adi.tadpole@gmail.com'>adi.tadpole@gmail.com</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Group grpSponser = new Group(container, SWT.NONE);
-		grpSponser.setLayout(new GridLayout(1, false));
-		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
-		
-		tableViewer = new TableViewer(grpSponser, SWT.NONE | SWT.FULL_SELECTION);
-		Table table = tableViewer.getTable();
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-		TableColumn tblclmnSeq = tableViewerColumn.getColumn();
-		tblclmnSeq.setWidth(120);
-		tblclmnSeq.setText(Messages.LoginDialog_tblclmnSeq_text);
-		
-		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
-		TableColumn tblclmnName = tableViewerColumn_1.getColumn();
-		tblclmnName.setWidth(100);
-		tblclmnName.setText(Messages.LoginDialog_tblclmnName_text);
-
-		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setLabelProvider(new RegisteredDBLabelprovider());
-		tableViewer.setInput(getInitData());
-
 		textEMail.setFocus();
 		AnalyticCaller.track("login");
 		
