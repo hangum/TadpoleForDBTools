@@ -183,7 +183,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, showTableColumns));
+					FindEditorAndWriteQueryUtil.run(userDB, 
+							GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, showTableColumns),
+							PublicTadpoleDefine.DB_ACTION.TABLES);
 				}
 			}
 		});

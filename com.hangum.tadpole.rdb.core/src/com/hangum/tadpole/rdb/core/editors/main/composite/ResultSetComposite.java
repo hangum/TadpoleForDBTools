@@ -111,11 +111,6 @@ public class ResultSetComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
 	
-//	/** 결과 페이지에서 사용할 폰트 지정 */
-//	private final String PREFERENCE_USER_FONT 	= GetPreferenceGeneral.getRDBResultFont();
-//	/** query time out */
-//	private final int queryTimeOut = GetPreferenceGeneral.getQueryTimeOut();
-	
 	/** execute job */
 	private Job jobQueryManager = null;
 

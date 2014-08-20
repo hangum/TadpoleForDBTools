@@ -151,7 +151,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + viewName + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 							
 							//
-							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
+							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.DB_ACTION.VIEWS);
 						} catch(Exception e) {
 							logger.error(Messages.GenerateSQLSelectAction_8, e);
 							

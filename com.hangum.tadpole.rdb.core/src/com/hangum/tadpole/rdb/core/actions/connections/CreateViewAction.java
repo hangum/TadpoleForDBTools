@@ -33,7 +33,9 @@ public class CreateViewAction extends AbstractQueryAction {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.VIEWS));
+		FindEditorAndWriteQueryUtil.run(userDB, 
+				QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.VIEWS),
+				PublicTadpoleDefine.DB_ACTION.VIEWS);
 	}
 
 

@@ -40,6 +40,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
@@ -87,6 +88,13 @@ public class MainEditor extends EditorExtension {
 
 	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
 	private String initDefaultEditorStr = ""; //$NON-NLS-1$
+	
+	/** 현재 edito가 열린 상태 
+	 * 테이블에서 열렸으면 모든 쿼리를 구분자(;) 로 실행합니다.
+	 * 트리거, 프로시저에서 열렸으면 에디터 전체를 하나의 쿼리로 실행합니다. 
+	 */
+	private DB_ACTION dbAction;
+	
 	/** resource 정보. */
 	private UserDBResourceDAO dBResource;
 	
@@ -105,6 +113,7 @@ public class MainEditor extends EditorExtension {
 		MainEditorInput qei = (MainEditorInput)input;
 		userDB = qei.getUserDB();
 		initDefaultEditorStr = qei.getDefaultStr();
+		dbAction = qei.getDbAction();
 
 		strRoleType = SessionManager.getRoleType(userDB);
 		dBResource = qei.getResourceDAO();
@@ -652,7 +661,39 @@ public class MainEditor extends EditorExtension {
 	public void dispose() {
 		super.dispose();
 	}
+	
+	/**
+	 * 에디터의 성격을 정의 합니다.
+	 * 
+	 * @return
+	 */
+	public DB_ACTION getDbAction() {
+		return dbAction;
+	}
+	
+	/**
+	 * 에디터에서 쿼리 실행 단위 조절.
+	 * 
+	 * https://github.com/hangum/TadpoleForDBTools/issues/466
+	 * 
+	 * @return
+	 */
+	public boolean isSELECTEditor() {
+		if(getDbAction() == DB_ACTION.TABLES ||
+				getDbAction() == DB_ACTION.VIEWS ||
+				getDbAction() == DB_ACTION.SYNONYM ||
+				getDbAction() == DB_ACTION.INDEXES) {
+			return true;
+		}
+		
+		return false;
+	}
 
+	/**
+	 * get Resource
+	 * 
+	 * @return
+	 */
 	public UserDBResourceDAO getdBResource() {
 		return dBResource;
 	}	

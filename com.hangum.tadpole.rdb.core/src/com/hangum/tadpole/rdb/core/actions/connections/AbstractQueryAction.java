@@ -132,7 +132,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 	 * @param actionType
 	 */
 	public void run(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
-		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, actionType));
+		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, actionType), actionType);
 	}
 	
 	/**
@@ -141,8 +141,8 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 	 * @param userDB
 	 * @param actionType
 	 */
-	public void run(UserDBDAO userDB, String strSql) {
-		FindEditorAndWriteQueryUtil.run(userDB, strSql);
+	public void run(UserDBDAO userDB, String strSql, PublicTadpoleDefine.DB_ACTION actionType) {
+		FindEditorAndWriteQueryUtil.run(userDB, strSql, actionType);
 	}
 	
 

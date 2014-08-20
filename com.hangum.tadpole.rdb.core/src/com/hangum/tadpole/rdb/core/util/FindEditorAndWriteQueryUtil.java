@@ -18,6 +18,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
@@ -47,9 +48,9 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param userDB
 	 * @param lowSQL
 	 * @param isNewEditor 항상 새로운 창으로 엽니다.
-	 * @param isFormating sql formatting
+	 * @param initAction action이 호출된곳.
 	 */
-	public static void run(UserDBDAO userDB, String lowSQL, boolean isNewEditor) {
+	public static void run(UserDBDAO userDB, String lowSQL, boolean isNewEditor, PublicTadpoleDefine.DB_ACTION initAction) {
 		
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			newMongoDBEditorOpen(userDB, lowSQL);
@@ -65,7 +66,7 @@ public class FindEditorAndWriteQueryUtil {
 			
 			IEditorPart editor = EditorUtils.findSQLEditor(userDB);
 			if(editor == null || isNewEditor) {				
-				newSQLEditorOpen(userDB, lowSQL);		
+				newSQLEditorOpen(userDB, lowSQL, initAction);		
 			} else {
 				appendSQLEditorOpen(editor, userDB, lowSQL);				
 			}	// end reference
@@ -78,9 +79,10 @@ public class FindEditorAndWriteQueryUtil {
 	 * 
 	 * @param userDB
 	 * @param lowSQL
+	 * @param initAction
 	 */
-	public static void run(UserDBDAO userDB, String lowSQL) {
-		run(userDB, lowSQL, false);
+	public static void run(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
+		run(userDB, lowSQL, false, initAction);
 	}
 	
 	/**
@@ -108,10 +110,11 @@ public class FindEditorAndWriteQueryUtil {
 	 * 
 	 * @param userDB
 	 * @param lowSQL
+	 * @param initAction
 	 */
-	private static void newSQLEditorOpen(UserDBDAO userDB, String lowSQL) {
+	private static void newSQLEditorOpen(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
 		try {
-			MainEditorInput mei = new MainEditorInput(userDB, lowSQL);
+			MainEditorInput mei = new MainEditorInput(userDB, lowSQL, initAction);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);
 		} catch (PartInitException e) {
 			logger.error("new editor open", e); //$NON-NLS-1$

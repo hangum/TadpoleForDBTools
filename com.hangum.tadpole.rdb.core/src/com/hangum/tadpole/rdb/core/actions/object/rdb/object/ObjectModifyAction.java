@@ -64,7 +64,7 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
 				TableDAO tc = (TableDAO)selection.getFirstElement();
 				if(tc == null) cta.run(userDB, actionType);
-				else cta.run(userDB, tc.getComment());
+				else cta.run(userDB, tc.getComment(), actionType);
 			} else {				
 				cta.run(userDB, actionType);
 			}
@@ -86,7 +86,7 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 					strScript = StringUtils.replaceOnce(strScript, "create", "alter");
 				}
 				
-				FindEditorAndWriteQueryUtil.run(userDB, strScript, true);		
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, true, actionType);		
 			} catch(Exception e) {
 				logger.error("Alter ddl script", e);
 				

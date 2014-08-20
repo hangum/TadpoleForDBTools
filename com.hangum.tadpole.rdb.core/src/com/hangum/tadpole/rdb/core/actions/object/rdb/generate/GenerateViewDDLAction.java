@@ -95,7 +95,7 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 				obj = selection.getFirstElement();
 			}
 
-			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(obj), true);
+			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(obj), true, actionType);
 		} catch (Exception e) {
 			logger.error("view ddl", e);
 			MessageDialog.openError(null, "Confirm", "Not support this function.");
