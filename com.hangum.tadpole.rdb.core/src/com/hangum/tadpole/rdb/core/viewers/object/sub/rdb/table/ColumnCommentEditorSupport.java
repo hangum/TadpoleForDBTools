@@ -144,7 +144,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 				
-				query.append(" COMMENT ON COLUMN ").append(tableDAO.getName()+".").append(dao.getField()).append(" IS '").append(dao.getComment()).append("'");
+				query.append(" COMMENT ON COLUMN ").append(tableDAO.getSysName()+".").append(dao.getField()).append(" IS '").append(dao.getComment()).append("'");
 
 				if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 				
@@ -158,8 +158,8 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers());
-				query.append(",'table' , '").append(tableDAO.getName()).append("'");
-				query.append(",'column' , '").append(dao.getField()).append("'");
+				query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
+				query.append(",'column' , '").append(dao.getSysName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
 					stmt.execute();
@@ -171,8 +171,8 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 				try {
 					query = new StringBuffer();
 					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers());
-					query.append(",'table' , '").append(tableDAO.getName()).append("'");
-					query.append(",'column', '").append(dao.getField()).append("'");
+					query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
+					query.append(",'column', '").append(dao.getSysName()).append("'");
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {
@@ -180,9 +180,9 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 					logger.error("Comment add error ", e);
 				}
 			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
-				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo ");
-				query.append(",'table' , '").append(tableDAO.getName()).append("'");
-				query.append(",'column' , '").append(dao.getField()).append("'");
+				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , " + tableDAO.getSchema_name());
+				query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
+				query.append(",'column' , '").append(dao.getSysName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
 					stmt.execute();
@@ -193,9 +193,9 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 				try {
 					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' , dbo ");
-					query.append(",'table' , '").append(tableDAO.getName()).append("'");
-					query.append(",'column', '").append(dao.getField()).append("'");
+					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' , " + tableDAO.getSchema_name());
+					query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
+					query.append(",'column', '").append(dao.getSysName()).append("'");
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {
