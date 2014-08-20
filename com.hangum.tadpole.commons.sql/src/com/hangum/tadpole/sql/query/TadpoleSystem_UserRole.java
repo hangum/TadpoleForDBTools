@@ -52,6 +52,18 @@ public class TadpoleSystem_UserRole {
 	}
 	
 	/**
+	 * 대표 role을 리턴합니다.
+	 * 
+	 * @param userDao
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserRoleDAO representUserRole(UserDAO userDao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (UserRoleDAO)sqlClient.queryForObject("representUserRole", userDao.getSeq()); 
+	}
+	
+	/**
 	 * 사용자 user_role중에 admin, dab, manager 롤을 찾습니다.
 	 * 
 	 * @param loginUserDao

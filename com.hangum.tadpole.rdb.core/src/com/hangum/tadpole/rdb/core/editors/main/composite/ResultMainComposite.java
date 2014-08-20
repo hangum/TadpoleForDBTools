@@ -138,6 +138,7 @@ public class ResultMainComposite extends Composite {
 	 */
 	public void setMainEditor(MainEditor mainEditor) {
 		this.mainEditor = mainEditor;
+		this.compositeResultSet.setSelect(mainEditor.isSELECTEditor());
 	}
 	
 	/**

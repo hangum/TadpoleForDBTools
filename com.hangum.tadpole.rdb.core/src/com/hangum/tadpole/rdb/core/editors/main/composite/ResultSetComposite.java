@@ -111,6 +111,11 @@ public class ResultSetComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
 	
+	/**
+	 * 에디터가 select 에디터인지 즉 구분자로 쿼리를 검색하는 상태인지 나타냅니다.
+	 */
+	private boolean isSelect = true;
+	
 	/** execute job */
 	private Job jobQueryManager = null;
 
@@ -141,11 +146,13 @@ public class ResultSetComposite extends Composite {
     private Composite compositeDumy;
     
     private OpenSingleDataDialogAction openSingleDataAction;
-
+    
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
+	 * @param isSelect
 	 */
 	public ResultSetComposite(Composite parent, int style) {
 		super(parent, style);
@@ -490,7 +497,7 @@ public class ResultSetComposite extends Composite {
 				sqlHistoryDAO.setStrSQLText(reqQuery.getOriginalSql());
 				
 				try {
-						
+					
 					if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
@@ -914,4 +921,9 @@ public class ResultSetComposite extends Composite {
 	@Override
 	protected void checkSubclass() {
 	}
+	
+	public void setSelect(boolean isSelect) {
+		this.isSelect = isSelect;
+	}
+
 }

@@ -896,6 +896,17 @@ SELECT
 </select>
 
 <!-- 
+	대표 role을 검색합니다. 
+ -->
+<select id="representUserRole" resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO" parameterClass="java.lang.Integer">
+	select c.* from user_role a, user_group b, user_role c
+	where a.user_seq = #user_seq#
+	and a.group_seq = b.seq
+	and b.seq = c.group_seq
+	and c.user_seq = a.seq 
+</select>
+
+<!-- 
 	사용자 그룹에 속한 유저가 있는지 검사합니다. 
  -->
 <select id="findGroupUserRole" resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">

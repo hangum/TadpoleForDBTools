@@ -119,11 +119,6 @@ public class SessionManager {
 					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				}
 				
-				// 본래 자신의  role을 넣습니다.
-				if(loginUserDao.getSeq() == userRoleDAO.getUser_seq()) {
-					sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), userRoleDAO.getRole_type());
-				}
-				
 				strGroupSeqs += userRoleDAO.getGroup_seq() + ",";
 			}
 
@@ -132,6 +127,10 @@ public class SessionManager {
 			
 //			// session 에 등록.
 			sStore.setAttribute(NAME.ROLE_TYPE.toString(), mapUserRole);
+			
+			// 본래 자신의  role을 넣습니다.
+			UserRoleDAO representUserRole = TadpoleSystem_UserRole.representUserRole(loginUserDao);
+			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), representUserRole.getRole_type());
 			
 		} catch(Exception e) {
 			logger.error("find user rold", e);
