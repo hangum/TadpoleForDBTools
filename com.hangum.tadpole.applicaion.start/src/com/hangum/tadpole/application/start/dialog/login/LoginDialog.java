@@ -355,7 +355,8 @@ public class LoginDialog extends Dialog {
 			createButton(parent, ID_MANAGER_USER, Messages.LoginDialog_12, false);
 		}
 		
-		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text, false);
+		Button button = createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text, false);
+		button.setText(Messages.LoginDialog_button_text_1);
 		createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
