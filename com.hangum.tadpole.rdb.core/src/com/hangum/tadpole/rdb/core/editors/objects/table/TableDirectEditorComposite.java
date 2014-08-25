@@ -166,7 +166,7 @@ public class TableDirectEditorComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(tltmSave.getEnabled()) {
-					if(!MessageDialog.openConfirm(null, "Confirm", "데이터가 수정되었습니다. 초기화 하시겠습니까?")) return;
+					if(!MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_1)) return; //$NON-NLS-1$
 				}
 				
 				refreshEditor();
@@ -290,7 +290,7 @@ public class TableDirectEditorComposite extends Composite {
 					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.TABLES);
 					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(tableDao), PublicTadpoleDefine.DB_ACTION.TABLES);
 				} catch(Exception ee) {
-					MessageDialog.openError(null, "Confirm", ee.getMessage());
+					MessageDialog.openError(null, "Confirm", ee.getMessage()); //$NON-NLS-1$
 				}
 			}
 		});
@@ -343,7 +343,7 @@ public class TableDirectEditorComposite extends Composite {
 		}
 		
 		// google analytic
-		AnalyticCaller.track("TableDirectEditorComposite");
+		AnalyticCaller.track("TableDirectEditorComposite"); //$NON-NLS-1$
 	}
 
 	/**
@@ -355,24 +355,24 @@ public class TableDirectEditorComposite extends Composite {
 	 * @param strOrderBy
 	 */
 	private void runSQLSelect(String strWhere, String strOrderBy) throws Exception {
-		String requestQuery = "SELECT ";
+		String requestQuery = "SELECT "; //$NON-NLS-1$
 		
 		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			requestQuery += " rowid, ";
+			requestQuery += " rowid, "; //$NON-NLS-1$
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-			requestQuery += " ctid, ";
+			requestQuery += " ctid, "; //$NON-NLS-1$
 		}
 		
 		for(int i=0 ; i<columnList.size(); i++) {
 			TableColumnDAO tabledao = columnList.get(i);
 			requestQuery += tabledao.getName();
-			if(i < (columnList.size()-1)) requestQuery += ",";
+			if(i < (columnList.size()-1)) requestQuery += ","; //$NON-NLS-1$
 		}
 		requestQuery += "  FROM " + tableDao.getSysName(); //$NON-NLS-1$
 
 		
-		if(!"".equals( strWhere )) requestQuery += " where " + strWhere; //$NON-NLS-1$
-		if(!"".equals( strOrderBy )) requestQuery += " order by " + strOrderBy; //$NON-NLS-1$
+		if(!"".equals( strWhere )) requestQuery += " where " + strWhere; //$NON-NLS-1$ //$NON-NLS-2$
+		if(!"".equals( strOrderBy )) requestQuery += " order by " + strOrderBy; //$NON-NLS-1$ //$NON-NLS-2$
 			
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
@@ -410,10 +410,10 @@ public class TableDirectEditorComposite extends Composite {
 				
 				for(int i=1;i<columnCount+1; i++) {					
 					try {
-						tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i) == null?"":rs.getString(i)));
+						tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i) == null?"":rs.getString(i))); //$NON-NLS-1$
 					} catch(Exception e) {
-						logger.error("ResutSet fetch error", e);
-						tmpRs.put(i, "");
+						logger.error("ResutSet fetch error", e); //$NON-NLS-1$
+						tmpRs.put(i, ""); //$NON-NLS-1$
 					}
 				}
 				
@@ -524,7 +524,7 @@ public class TableDirectEditorComposite extends Composite {
 	 */
 	private void saveTableData() {
 		String strQuery = getChangeQuery();
-		if("".equals(strQuery)) return;
+		if("".equals(strQuery)) return; //$NON-NLS-1$
 		
 		String[] querys = SQLTextUtil.delLineChar(strQuery).split(";"); //$NON-NLS-1$
 		
@@ -546,8 +546,8 @@ public class TableDirectEditorComposite extends Composite {
 				logger.info("exe query [" + querys[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			
 				
-				if(StringUtils.startsWithIgnoreCase(querys[i], "update") || 
-						StringUtils.startsWithIgnoreCase(querys[i], "delete")) isUpdateOrDelete = true;
+				if(StringUtils.startsWithIgnoreCase(querys[i], "update") ||  //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(querys[i], "delete")) isUpdateOrDelete = true; //$NON-NLS-1$
 				
 				lastExeQuery = querys[i] ;
 				stmt.addBatch(querys[i] );
@@ -561,12 +561,12 @@ public class TableDirectEditorComposite extends Composite {
 					selectDB == DBDefine.MSSQL_DEFAULT ||
 					selectDB == DBDefine.MSSQL_8_LE_DEFAULT) {
 					
-					isUpdateed = MessageDialog.openConfirm(null, "Confirm", "데이터가 여러건 수정될 수 있습니다. \n 저장 하시겠습니까?");
+					isUpdateed = MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_17); //$NON-NLS-1$
 				} else {
-					isUpdateed = MessageDialog.openConfirm(null, "Confirm", "저장하시겠습니까?");
+					isUpdateed = MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_19); //$NON-NLS-1$
 				}
 			} else {
-				isUpdateed = MessageDialog.openConfirm(null, "Confirm", "저장하시겠습니까?");
+				isUpdateed = MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_19); //$NON-NLS-1$
 			}
 			
 			if(isUpdateed) {
@@ -707,9 +707,9 @@ public class TableDirectEditorComposite extends Composite {
 		 * 
 		 */
 		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			strWhere = " rowid = '" + orgRs.get(1) + "'";
+			strWhere = " rowid = '" + orgRs.get(1) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if( userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-			strWhere = " ctid = '" + orgRs.get(1) + "'";
+			strWhere = " ctid = '" + orgRs.get(1) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			if(!primaryKeyListIndex.isEmpty()) {
 				for(int i=0; i<primaryKeyListIndex.size(); i++) {
@@ -720,7 +720,7 @@ public class TableDirectEditorComposite extends Composite {
 				}
 			} else {
 				for(int i=1; i<tmpRs.size(); i++) {
-					strWhere += mapColumns.get(i-1) + " = '" + TbUtils.getOriginalData(orgRs.get(i).toString() + "'");
+					strWhere += mapColumns.get(i-1) + " = '" + TbUtils.getOriginalData(orgRs.get(i).toString() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					if(i < (tmpRs.size()-1)) strWhere += " AND "; //$NON-NLS-1$
 				}
@@ -738,11 +738,11 @@ public class TableDirectEditorComposite extends Composite {
 	 * @return
 	 */
 	private String makeDelete(int rowSeq, Map<Integer, Object> tmpRs) {
-		String deleteStmt = "DELETE FROM " + tableDao.getSysName();
-		deleteStmt += " WHERE  (" + getWhereMake(rowSeq, tmpRs) + ") ";
+		String deleteStmt = "DELETE FROM " + tableDao.getSysName(); //$NON-NLS-1$
+		deleteStmt += " WHERE  (" + getWhereMake(rowSeq, tmpRs) + ") "; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-			deleteStmt += "LIMIT 1";
+			deleteStmt += "LIMIT 1"; //$NON-NLS-1$
 		}
 		
 		return deleteStmt + PublicTadpoleDefine.SQL_DELIMITER ;
@@ -767,7 +767,7 @@ public class TableDirectEditorComposite extends Composite {
 		}
 		updateStmt = StringUtils.chompLast(updateStmt, ", "); //$NON-NLS-1$
 		
-		updateStmt += " WHERE (" + getWhereMake(rowSeq, tmpRs) + ")";
+		updateStmt += " WHERE (" + getWhereMake(rowSeq, tmpRs) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			updateStmt += " LIMIT 1"; //$NON-NLS-1$ //$NON-NLS-2$

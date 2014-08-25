@@ -387,6 +387,9 @@ public class Messages extends NLS {
 	public static String PreDBInfoComposite_this_text;
 	public static String MSSQLLoginComposite_grpConnectionType_text;
 	public static String MSSQLLoginComposite_preDBInfo_text;
+	public static String TableDirectEditorComposite_1;
+	public static String TableDirectEditorComposite_17;
+	public static String TableDirectEditorComposite_19;
 	public static String TableDirectEditorComposite_tltmDdlSourceView_text;
 	public static String TableDirectEditorComposite_btnDdlSourceView_text;
 	public static String OthersConnectionMongoDBGroup_btnShowTables_text;

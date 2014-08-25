@@ -10,11 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
-import javax.lang.model.type.ExecutableType;
-
 import org.eclipse.rap.rwt.RWT;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.sql.util.SQLUtil;
@@ -145,6 +142,20 @@ public class RequestQuery {
 	 */
 	public void setUserIp(String userIp) {
 		this.userIp = userIp;
+	}
+
+	/**
+	 * @return the dbAction
+	 */
+	public DB_ACTION getDbAction() {
+		return dbAction;
+	}
+
+	/**
+	 * @param dbAction the dbAction to set
+	 */
+	public void setDbAction(DB_ACTION dbAction) {
+		this.dbAction = dbAction;
 	}
 	
 }
