@@ -66,6 +66,7 @@ import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
+import com.hangum.tadpole.sql.util.SQLUtil;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -87,16 +88,13 @@ public class MainEditor extends EditorExtension {
 	private ResultMainComposite resultMainComposite;
 
 	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
-	private String initDefaultEditorStr = ""; //$NON-NLS-1$
+	protected String initDefaultEditorStr = ""; //$NON-NLS-1$
 	
-	/** 현재 edito가 열린 상태 
-	 * 테이블에서 열렸으면 모든 쿼리를 구분자(;) 로 실행합니다.
-	 * 트리거, 프로시저에서 열렸으면 에디터 전체를 하나의 쿼리로 실행합니다. 
-	 */
-	private DB_ACTION dbAction;
+	/** 현재 editor가 열린 상태. 즉 table, view, index 등의 상태. */
+	protected DB_ACTION dbAction;
 	
 	/** resource 정보. */
-	private UserDBResourceDAO dBResource;
+	protected UserDBResourceDAO dBResource;
 	
 	/** save mode */
 	private boolean isDirty = false;
@@ -187,27 +185,34 @@ public class MainEditor extends EditorExtension {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, UserPreference.QUERY_DELIMITER); //$NON-NLS-1$
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, UserPreference.QUERY_DELIMITER);
 				
-				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
+				EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
+				if( Boolean.parseBoolean( browserEvaluateToStr(EditorFunctionService.IS_BLOCK_TEXT) ) ) {
+					executeType = EditorDefine.EXECUTE_TYPE.BLOCK;
+				}
+				
+				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, executeType, isAutoCommit());
 				executeCommand(reqQuery);
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
-		ToolItem tltmExecuteAll = new ToolItem(toolBar, SWT.NONE);
-		tltmExecuteAll.setToolTipText(Messages.MainEditor_tltmExecuteAll_text);
-		tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query-all.png")); //$NON-NLS-1$
-		tltmExecuteAll.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
-				
-				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.ALL, isAutoCommit());
-				executeCommand(reqQuery);
-			}
-		});
-		new ToolItem(toolBar, SWT.SEPARATOR);
+		if(SQLUtil.isSELECTEditor(dbAction)) {
+			ToolItem tltmExecuteAll = new ToolItem(toolBar, SWT.NONE);
+			tltmExecuteAll.setToolTipText(Messages.MainEditor_tltmExecuteAll_text);
+			tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query-all.png")); //$NON-NLS-1$
+			tltmExecuteAll.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+					
+					RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.ALL, isAutoCommit());
+					executeCommand(reqQuery);
+				}
+			});
+			new ToolItem(toolBar, SWT.SEPARATOR);
+		}
 	
 		ToolItem tltmExplainPlanctrl = new ToolItem(toolBar, SWT.NONE);
 		tltmExplainPlanctrl.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/execute_plan.png")); //$NON-NLS-1$
@@ -216,7 +221,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, UserPreference.QUERY_DELIMITER); //$NON-NLS-1$
 				
-				RequestQuery reqQuery = new RequestQuery(strQuery, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
+				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
 				executeCommand(reqQuery);
 				
 			}
@@ -415,7 +420,7 @@ public class MainEditor extends EditorExtension {
 			public void completed( ProgressEvent event ) {
 				try {
 //					content assist기능에 테이블 정보 넣는 것은 잠시 보류합니다.
-					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, "", getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, dbAction.toString(), "", getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
@@ -671,24 +676,6 @@ public class MainEditor extends EditorExtension {
 		return dbAction;
 	}
 	
-	/**
-	 * 에디터에서 쿼리 실행 단위 조절.
-	 * 
-	 * https://github.com/hangum/TadpoleForDBTools/issues/466
-	 * 
-	 * @return
-	 */
-	public boolean isSELECTEditor() {
-		if(getDbAction() == DB_ACTION.TABLES ||
-				getDbAction() == DB_ACTION.VIEWS ||
-				getDbAction() == DB_ACTION.SYNONYM ||
-				getDbAction() == DB_ACTION.INDEXES) {
-			return true;
-		}
-		
-		return false;
-	}
-
 	/**
 	 * get Resource
 	 * 

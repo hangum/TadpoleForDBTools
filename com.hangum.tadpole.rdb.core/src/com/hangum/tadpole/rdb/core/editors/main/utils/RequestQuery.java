@@ -10,8 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
+import javax.lang.model.type.ExecutableType;
+
 import org.eclipse.rap.rwt.RWT;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.sql.util.SQLUtil;
 
@@ -34,6 +38,8 @@ public class RequestQuery {
 	/** 에디터가 실행 가능한 쿼리로 수정한 */
 	private String sql = "";
 	
+	private DB_ACTION dbAction = DB_ACTION.TABLES;
+	
 	/** 사용자 쿼리를 지정한다 */
 	private EditorDefine.QUERY_MODE mode = EditorDefine.QUERY_MODE.QUERY;
 			
@@ -46,10 +52,11 @@ public class RequestQuery {
 	 * @param mode 전체인지, 부분인지 {@code EditorDefine.QUERY_MODE}
 	 * @param type 쿼리, 실행 계획인지 {@code EditorDefine.EXECUTE_TYPE}
 	 */
-	public RequestQuery(String originalSql, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type, boolean isAutoCommit) {
+	public RequestQuery(String originalSql, DB_ACTION dbAction, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type, boolean isAutoCommit) {
 		this.userIp = RWT.getRequest().getRemoteAddr();
 		
 		this.originalSql = originalSql;
+		this.dbAction = dbAction;
 		this.sql = SQLUtil.sqlExecutable(originalSql);
 		this.mode = mode;
 		this.type = type;

@@ -345,7 +345,7 @@ public class SessionManager {
 //			String defaultUrl = MessageFormat.format("{0}://{1}:{2}",
 //					new Object[] { RWT.getRequest().getScheme(), RWT.getRequest().getLocalName(), Integer.toString(RWT.getRequest().getLocalPort()),RWT.getRequest().getRequestURI() });
 	     
-	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", SystemDefine.INFORMATION);
+	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", "www.tadpoledb.com");
 	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
 	     	executor.execute("setTimeout('"+browserText+"', 50)" );
 			

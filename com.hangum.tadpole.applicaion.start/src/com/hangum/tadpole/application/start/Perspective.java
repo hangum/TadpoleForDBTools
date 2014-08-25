@@ -30,7 +30,7 @@ import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditor;
 import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditorInput;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
-import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
+//import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -89,7 +89,7 @@ public class Perspective implements IPerspectiveFactory {
 
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
-		leftUnderFolder.addView(NoteListViewPart.ID);
+//		leftUnderFolder.addView(NoteListViewPart.ID);
 		
 		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
 		rightFolder.addView(HelpViewPart.ID);
@@ -98,7 +98,7 @@ public class Perspective implements IPerspectiveFactory {
 		layout.getViewLayout(HelpViewPart.ID).setCloseable(false);
 		layout.getViewLayout(ManagerViewer.ID).setCloseable(false);
 		layout.getViewLayout(ExplorerViewer.ID).setCloseable(false);
-		layout.getViewLayout(NoteListViewPart.ID).setCloseable(false);
+//		layout.getViewLayout(NoteListViewPart.ID).setCloseable(false);
 		openEditor(UserManagementEditor.ID);
 	}
 
@@ -113,7 +113,7 @@ public class Perspective implements IPerspectiveFactory {
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
 
-		leftUnderFolder.addView(NoteListViewPart.ID);
+//		leftUnderFolder.addView(NoteListViewPart.ID);
 
 		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
 		rightFolder.addView(HelpViewPart.ID);
@@ -122,7 +122,7 @@ public class Perspective implements IPerspectiveFactory {
 		layout.getViewLayout(HelpViewPart.ID).setCloseable(false);
 		layout.getViewLayout(ManagerViewer.ID).setCloseable(false);
 		layout.getViewLayout(ExplorerViewer.ID).setCloseable(false);
-		layout.getViewLayout(NoteListViewPart.ID).setCloseable(false);
+//		layout.getViewLayout(NoteListViewPart.ID).setCloseable(false);
 		
 		openEditor(ExecutedSQLEditor.ID);
 	}
@@ -138,13 +138,13 @@ public class Perspective implements IPerspectiveFactory {
 
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
-		leftUnderFolder.addView(NoteListViewPart.ID);
+//		leftUnderFolder.addView(NoteListViewPart.ID);
 
 		// viewer closealbe false
 		layout.getViewLayout(HelpViewPart.ID).setCloseable(false);
 		layout.getViewLayout(ManagerViewer.ID).setCloseable(false);
 		layout.getViewLayout(ExplorerViewer.ID).setCloseable(false);
-		layout.getViewLayout(NoteListViewPart.ID).setCloseable(false);
+//		layout.getViewLayout(NoteListViewPart.ID).setCloseable(false);
 	}
 
 	private void openEditor(String id) {

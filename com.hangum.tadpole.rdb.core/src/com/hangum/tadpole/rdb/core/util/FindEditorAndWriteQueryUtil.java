@@ -27,8 +27,10 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
+import com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditor;
+import com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditorInput;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.format.SQLFormater;
+import com.hangum.tadpole.sql.util.SQLUtil;
 
 /**
  * 쿼리 생성관련 유틸입니다.
@@ -63,13 +65,18 @@ public class FindEditorAndWriteQueryUtil {
 //					// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
 //				}
 //			}
-			
-			IEditorPart editor = EditorUtils.findSQLEditor(userDB);
-			if(editor == null || isNewEditor) {				
-				newSQLEditorOpen(userDB, lowSQL, initAction);		
+
+			/** select, view 등이 아니면 무조 새로운 에디터로 오픈합니다 */
+			if(SQLUtil.isSELECTEditor(initAction)) {
+				IEditorPart editor = EditorUtils.findSQLEditor(userDB);
+				if(editor == null || isNewEditor) {				
+					newSQLEditorOpen(userDB, lowSQL, initAction);		
+				} else {
+					appendSQLEditorOpen(editor, userDB, lowSQL);				
+				}	// end reference
 			} else {
-				appendSQLEditorOpen(editor, userDB, lowSQL);				
-			}	// end reference
+				newObjectEditorOpen(userDB, lowSQL, initAction);
+			}
 		}	// end db
 	}
 	
@@ -112,12 +119,31 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param lowSQL
 	 * @param initAction
 	 */
+	private static void newObjectEditorOpen(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
+		try {
+			ObjectEditorInput mei = new ObjectEditorInput(userDB, lowSQL, initAction);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, ObjectEditor.ID, false);
+		} catch (PartInitException e) {
+			logger.error("new sql editor open", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+		}	
+	}
+	
+	/**
+	 * new window open
+	 * 
+	 * @param userDB
+	 * @param lowSQL
+	 * @param initAction
+	 */
 	private static void newSQLEditorOpen(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
 		try {
 			MainEditorInput mei = new MainEditorInput(userDB, lowSQL, initAction);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);
 		} catch (PartInitException e) {
-			logger.error("new editor open", e); //$NON-NLS-1$
+			logger.error("new object editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$

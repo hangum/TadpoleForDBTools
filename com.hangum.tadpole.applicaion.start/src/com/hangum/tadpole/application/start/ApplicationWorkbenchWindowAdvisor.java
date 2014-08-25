@@ -108,8 +108,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	// fullscreen
     	getWindowConfigurer().getWindow().getShell().setMaximized(true);;
     	
+//    	
+//    	
+//    	 쪽지 기능의 역할에 비해 리소스를 너무 많이 먹는 것으로 판단되어 기능을 막습니다.
+//    	더 의미를 찾을때까지요. - 14.08.25
+//    	
     	// main ui callback thread
-    	mainUICallback();
+//    	mainUICallback();
     	   
     	// If login after does not DB exist, DB connect Dialog open.
     	try {

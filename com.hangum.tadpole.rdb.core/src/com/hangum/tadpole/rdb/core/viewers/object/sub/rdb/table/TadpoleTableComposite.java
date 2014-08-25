@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +93,6 @@ import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
-import com.swtdesigner.SWTResourceManager;
 
 /**
  * RDB table composite

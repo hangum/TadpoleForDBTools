@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -339,5 +340,24 @@ public class SQLUtil {
 		}
 		
 		return returnDataArry;
+	}
+	
+	/**
+	 * 에디터에서 쿼리 실행 단위 조절.
+	 * 
+	 * https://github.com/hangum/TadpoleForDBTools/issues/466
+	 * 
+	 * @param dbAction
+	 * @return
+	 */
+	public static boolean isSELECTEditor(DB_ACTION dbAction) {
+		if(dbAction == DB_ACTION.TABLES ||
+				dbAction == DB_ACTION.VIEWS ||
+				dbAction == DB_ACTION.SYNONYM ||
+				dbAction == DB_ACTION.INDEXES) {
+			return true;
+		}
+		
+		return false;
 	}
 }

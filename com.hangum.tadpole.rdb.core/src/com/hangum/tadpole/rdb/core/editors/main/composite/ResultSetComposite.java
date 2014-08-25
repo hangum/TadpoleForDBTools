@@ -454,7 +454,7 @@ public class ResultSetComposite extends Composite {
 		sqlFilter.setFilter("");
 		textFilter.setText("");
 		
-		if(logger.isDebugEnabled()) logger.debug("Start query ========================= " + System.currentTimeMillis() );
+		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() );
 		
 		controlProgress(true);
 		final Shell runShell = textFilter.getShell();
@@ -523,6 +523,7 @@ public class ResultSetComposite extends Composite {
 							sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
+						
 						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 						if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());// userEmail, userDB)) return null;
@@ -914,6 +915,10 @@ public class ResultSetComposite extends Composite {
 		super.dispose();
 	}
 
+	/**
+	 * 실행중인 쿼리 job을 가져옵니다. 
+	 * @return
+	 */
 	public Job getJobQueryManager() {
 		return jobQueryManager;
 	}
@@ -922,8 +927,22 @@ public class ResultSetComposite extends Composite {
 	protected void checkSubclass() {
 	}
 	
+	/**
+	 * 에디터의 쿼리 타입을 설정합니다. 
+	 * 
+	 * @param isSelect
+	 */
 	public void setSelect(boolean isSelect) {
 		this.isSelect = isSelect;
+	}
+	
+	/**
+	 * 에디터의 쿼리 타입을 설정합니다.
+	 * 
+	 * @return
+	 */
+	public boolean isSelect() {
+		return isSelect;
 	}
 
 }
