@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +19,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.rap.addons.d3chart.BarChart;
+import org.eclipse.rap.addons.d3chart.ChartItem;
+import org.eclipse.rap.addons.d3chart.ColorStream;
+import org.eclipse.rap.addons.d3chart.Colors;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,15 +45,14 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * Tadpole DB Hub User login dialog.
@@ -73,7 +72,9 @@ public class LoginDialog extends Dialog {
 	private Text textEMail;
 	private Text textPasswd;
 
-	private TableViewer tableViewer;
+//	private TableViewer tableViewer;
+	
+	private BarChart barChart;
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -132,12 +133,14 @@ public class LoginDialog extends Dialog {
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		// ---------------------  Registered database ----------------------------------------------------
-//		Group grpSponser = new Group(container, SWT.NONE);
-//		grpSponser.setLayout(new GridLayout(1, false));
-//		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-//		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-//		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
-//		
+		Group grpSponser = new Group(container, SWT.NONE);
+		grpSponser.setLayout(new GridLayout(1, false));
+		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
+		
+		pieChart(grpSponser);
+		
 //		tableViewer = new TableViewer(grpSponser, SWT.NONE | SWT.FULL_SELECTION);
 //		Table table = tableViewer.getTable();
 //		table.setLinesVisible(true);
@@ -190,12 +193,12 @@ public class LoginDialog extends Dialog {
 		lblUserKor.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserEng = new Label(compositeUserGide, SWT.NONE);
-		lblUserEng.setSize(607, 14);
+//		lblUserEng.setSize(607, 14);
 		lblUserEng.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Eng' target='_blank'>(English)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserEng.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserIndonesia = new Label(compositeUserGide, SWT.NONE);
-		lblUserIndonesia.setSize(611, 14);
+//		lblUserIndonesia.setSize(611, 14);
 		lblUserIndonesia.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID' target='_blank'>(Indonesia)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserIndonesia.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
@@ -220,19 +223,49 @@ public class LoginDialog extends Dialog {
 	}
 	
 	/**
+	 * 데이터베이스 통계 pie chart를 생성합니다. 
+	 * 
+	 * @param composite
+	 */
+	private void pieChart(Composite compositeCursor) {
+		try {
+			ColorStream colors = Colors.cat20Colors(compositeCursor.getDisplay()).loop();
+			
+			barChart = new BarChart(compositeCursor, SWT.NONE);
+			GridLayout gl_grpConnectionInfo = new GridLayout(1, true);
+			gl_grpConnectionInfo.verticalSpacing = 0;
+			gl_grpConnectionInfo.horizontalSpacing = 0;
+			gl_grpConnectionInfo.marginHeight = 0;
+			gl_grpConnectionInfo.marginWidth = 0;
+			barChart.setLayout(gl_grpConnectionInfo);
+			barChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			barChart.setBarWidth(10);
+			
+			for(Object element : getInitData()) {
+				Map<String, Object> retMap = (HashMap<String, Object>)element;
+				
+				ChartItem item = new ChartItem(barChart);
+			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")");
+			    item.setColor(colors.next());
+			    
+			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 100;
+			    logger.debug("=>>>>>" + floatVal);
+			    item.setValue(floatVal);
+			}
+		} catch(Exception e) {
+			logger.error("Get registered DB", e);
+		}
+		barChart.layout();
+		barChart.getParent().layout();
+	}
+	
+	/**
 	 * registered database
 	 * 
 	 * @return
 	 */
-	private List getInitData() {
-		List retList = new ArrayList();
-		try {
-			retList = TadpoleSystem_UserDBQuery.getRegisteredDB();
-		} catch (Exception e) {
-			logger.error("getRegistered db", e);
-		}
-		
-		return retList;
+	private List getInitData() throws Exception {
+		return TadpoleSystem_UserDBQuery.getRegisteredDB();
 	}
 
 	private void newUser() {
@@ -365,7 +398,8 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(490, 310);
+//		return new Point(490, 310);
+		return new Point(490, 450);
 	}
 }
 
