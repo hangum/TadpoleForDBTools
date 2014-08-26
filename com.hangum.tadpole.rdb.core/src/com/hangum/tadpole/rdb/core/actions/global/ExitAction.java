@@ -25,7 +25,6 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -63,10 +62,6 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		
 		if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
 			
-			// 모든 데이터베이스를 클로스 합니다.
-			TadpoleSQLManager.getDbManager();
-			
-			
 			// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에 내용이 있다면 묻도록 수정.)
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
 			IEditorReference[] references = page.getEditorReferences();
@@ -74,15 +69,15 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 				page.closeEditor(iEditorReference.getEditor(false), true);
 			}
 			
-			// standalone 모드일경우에는 프로그램 종료한다.
-			if(ApplicationArgumentUtils.isStandaloneMode()) {
-				beforeLogoutAction();
-				System.exit(0);
-			// 서버모드 일 경우 프로그램 로그아웃한다.
-			} else {
+//			// standalone 모드일경우에는 프로그램 종료한다.
+//			if(ApplicationArgumentUtils.isStandaloneMode()) {
+//				beforeLogoutAction();
+//				System.exit(0);
+//			// 서버모드 일 경우 프로그램 로그아웃한다.
+//			} else {
 				beforeLogoutAction();
 				SessionManager.logout();
-			}
+//			}
 		}
 	}
 	

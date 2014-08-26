@@ -15,8 +15,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-
 /**
  * 시스템 시작 유틸 
  * 
