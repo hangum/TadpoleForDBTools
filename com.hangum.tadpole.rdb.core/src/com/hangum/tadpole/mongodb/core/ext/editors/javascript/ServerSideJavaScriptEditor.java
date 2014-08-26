@@ -375,7 +375,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 		
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
-				browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_JAVASCRIPT, "", getInputJavaScriptContent());
+				browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_JAVASCRIPT, "NONE", "", getInputJavaScriptContent());
 			}
 			public void changed( ProgressEvent event ) {}
 		});

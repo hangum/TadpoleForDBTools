@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +43,6 @@ import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpold.commons.libs.core.mails.template.NewUserMailBodyTemplate;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserGroupQuery;
@@ -59,10 +57,6 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
  */
 public class NewUserDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(NewUserDialog.class);
-	
-	private Button btnManager;
-	private Button btnUser;
-	private Button btnDBA;
 	
 	private Composite compositeUserGroup;
 	/** user group combo로 기 존재하는 그룹 정보  */
@@ -85,7 +79,7 @@ public class NewUserDialog extends Dialog {
 	private Text textAnswer;
 
 	/** OTP code */
-	private String secretKey = "";
+	private String secretKey = ""; //$NON-NLS-1$
 	private Button btnGetOptCode;
 	private Label lblSecretKey;
 	private Text textSecretKey;
@@ -124,47 +118,6 @@ public class NewUserDialog extends Dialog {
 		gridLayout.marginHeight = 4;
 		gridLayout.marginWidth = 4;
 		gridLayout.numColumns = 2;
-		
-		Label lblUserType = new Label(container, SWT.NONE);
-		lblUserType.setText(Messages.NewUserDialog_lblUserType_text);
-		
-		Composite composite = new Composite(container, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(3, false));
-		
-		if(!SessionManager.isLogin()) {
-			btnManager = new Button(composite, SWT.RADIO);
-			btnManager.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					initUserGroup();
-				}
-			});
-			btnManager.setText(Messages.NewUserDialog_btnManager_text_1);
-			btnManager.setSelection(true);
-		}
-		
-		btnDBA = new Button(composite, SWT.RADIO);
-		btnDBA.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				initUserGroup();
-			}
-		});
-		btnDBA.setText("DBA"); //$NON-NLS-1$
-		btnDBA.setEnabled(false);
-		
-		btnUser = new Button(composite, SWT.RADIO);
-		btnUser.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				initUserGroup();
-			}
-		});
-		btnUser.setText(Messages.NewUserDialog_btnUser_text);
-		btnUser.setSelection(false);
-		btnUser.setEnabled(false);
-		new Label(composite, SWT.NONE);
 		
 		Label lblGroupName = new Label(container, SWT.NONE);
 		lblGroupName.setText(Messages.NewUserDialog_lblNewLabel_text);
@@ -269,7 +222,10 @@ public class NewUserDialog extends Dialog {
 		textOTPCode = new Text(grpGoogleOtp, SWT.BORDER);
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		initUserGroup();
+		textUserGroup = new Text(compositeUserGroup, SWT.BORDER);
+		textUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		textUserGroup.setFocus();
 		
 		return container;
 	}
@@ -310,52 +266,6 @@ public class NewUserDialog extends Dialog {
 		textQRCodeURL.setText(strURL);
 	}
 	
-	private void initUserGroup() {
-		// 유저의 조건에 따른 화면을 초기화 한다.
-		if(comboUserGroup != null) comboUserGroup.dispose();
-		if(textUserGroup != null) textUserGroup.dispose();
-		
-		// user를 선택하면 그룹을 입력하도록 합니다.
-		if(btnUser.getSelection() || btnDBA.getSelection()) {
-			comboUserGroup = new Combo(compositeUserGroup, SWT.READ_ONLY);
-			comboUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-			// 사용자가 로그인 중일때.
-			int groupSeq = -99;
-			String groupName = ""; //$NON-NLS-1$
-			if(SessionManager.isLogin()) groupSeq = SessionManager.getGroupSeq();
-			
-			try {
-				List<UserGroupDAO> listUserGroup = TadpoleSystem_UserGroupQuery.getGroup();
-				for (UserGroupDAO userGroupDAO : listUserGroup) {
-					
-					if(groupSeq == userGroupDAO.getSeq()) groupName = userGroupDAO.getName();
-					comboUserGroup.add(userGroupDAO.getName());
-					comboUserGroup.setData(userGroupDAO.getName(), userGroupDAO.getSeq());
-				}
-				
-				if(SessionManager.isLogin()) {
-					comboUserGroup.setText(groupName);
-					comboUserGroup.setEnabled(false);
-				} else {
-					comboUserGroup.select(0);
-				}
-				
-				comboUserGroup.setFocus();
-			} catch (Exception e) {
-				logger.error("initUserGroup", e); //$NON-NLS-1$
-			}
-		// 그룹을 선택하면 신규 그룹 이름을 입력합니다.
-		} else {
-			textUserGroup = new Text(compositeUserGroup, SWT.BORDER);
-			textUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-			textUserGroup.setFocus();
-		}
-		
-		compositeUserGroup.layout();
-	}
-	
 	@Override
 	protected void okPressed() {
 		String strGroupName = "";  //$NON-NLS-1$
@@ -379,34 +289,22 @@ public class NewUserDialog extends Dialog {
 				return;
 			}
 		}
-
 		
 		// user 입력시 
 		UserGroupDAO groupDAO = new UserGroupDAO();
 		PublicTadpoleDefine.USER_TYPE userType = PublicTadpoleDefine.USER_TYPE.USER;
-		if(btnUser.getSelection()) {
-			strGroupName = comboUserGroup.getText();
-			groupDAO.setSeq( (Integer)comboUserGroup.getData(strGroupName) );
+
+		strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			
-		} else if(btnDBA.getSelection()) {
-			strGroupName = comboUserGroup.getText();
-			groupDAO.setSeq( (Integer)comboUserGroup.getData(strGroupName) );
-			userType = PublicTadpoleDefine.USER_TYPE.DBA;
-			
-		} else {
-			strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
-			
-			userType = PublicTadpoleDefine.USER_TYPE.MANAGER;
-			// 그룹 등록
-			try {
-				groupDAO = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
-			} catch(Exception e) {
-				logger.error(Messages.NewUserDialog_8, e);
-				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_16 + e.getMessage());
-				return;
-			}
+		userType = PublicTadpoleDefine.USER_TYPE.MANAGER;
+		// 그룹 등록
+		try {
+			groupDAO = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
+		} catch(Exception e) {
+			logger.error(Messages.NewUserDialog_8, e);
+			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_16 + e.getMessage());
+			return;
 		}
-		
 		
 		try {
 			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn.toString(), questionKey, answer, 
@@ -421,6 +319,8 @@ public class NewUserDialog extends Dialog {
 //			}
 			
 			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
+			
+			MessageDialog.openInformation(null, "Confirm", Messages.NewUserDialog_31); //$NON-NLS-1$
 			
 		} catch (Exception e) {
 			logger.error(Messages.NewUserDialog_8, e);
@@ -477,12 +377,10 @@ public class NewUserDialog extends Dialog {
 	 */
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name, String questionKey, String answer) {
 
-		if(btnManager != null && btnManager.getSelection()) {
-			if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
-				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_23);
-				textUserGroup.setFocus();
-				return false;
-			}
+		if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
+			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_23);
+			textUserGroup.setFocus();
+			return false;
 		}
 		
 		if("".equals(strEmail)) { //$NON-NLS-1$
@@ -514,7 +412,7 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		//  신규 그룹 입력시 오류 검증
-		if(btnManager != null && btnManager.getSelection()) {
+//		if(btnManager != null && btnManager.getSelection()) {
 			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			// 동일한 그룹명이 있는 지 검증한다.
 			if(TadpoleSystem_UserGroupQuery.isUserGroup(strGroupName)) {
@@ -522,7 +420,7 @@ public class NewUserDialog extends Dialog {
 				textUserGroup.setFocus();
 				return false;
 			}
-		}
+//		}
 		
 		try {
 			// 기존 중복 이메일인지 검사합니다.
@@ -567,7 +465,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 560);
+		return new Point(420, 500);
 	}
 
 }

@@ -11,8 +11,9 @@
 package com.hangum.tadpole.commons.google.analytics;
 
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.Client;
 import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
+
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 
 /**
  * google analytics caller
@@ -52,10 +53,12 @@ public class AnalyticCaller {
 	 * @param event
 	 */
 	public static void track(String action, String event) {
-		JavaScriptExecutor executor = RWT.getClient().getService(JavaScriptExecutor.class);
-
-		String strJs = "ga('send', 'pageview', {'" + action + "':'" + event + "'});";
-		
-		executor.execute(strJs);
+		if(ApplicationArgumentUtils.isGAON()) {
+			JavaScriptExecutor executor = RWT.getClient().getService(JavaScriptExecutor.class);
+	
+			String strJs = "ga('send', 'pageview', {'" + action + "':'" + event + "'});";
+			
+			executor.execute(strJs);
+		}
 	}
 }

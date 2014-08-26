@@ -111,10 +111,10 @@ public class ResultSetComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
 	
-//	/** 결과 페이지에서 사용할 폰트 지정 */
-//	private final String PREFERENCE_USER_FONT 	= GetPreferenceGeneral.getRDBResultFont();
-//	/** query time out */
-//	private final int queryTimeOut = GetPreferenceGeneral.getQueryTimeOut();
+	/**
+	 * 에디터가 select 에디터인지 즉 구분자로 쿼리를 검색하는 상태인지 나타냅니다.
+	 */
+	private boolean isSelect = true;
 	
 	/** execute job */
 	private Job jobQueryManager = null;
@@ -146,11 +146,13 @@ public class ResultSetComposite extends Composite {
     private Composite compositeDumy;
     
     private OpenSingleDataDialogAction openSingleDataAction;
-
+    
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
+	 * @param isSelect
 	 */
 	public ResultSetComposite(Composite parent, int style) {
 		super(parent, style);
@@ -452,7 +454,7 @@ public class ResultSetComposite extends Composite {
 		sqlFilter.setFilter("");
 		textFilter.setText("");
 		
-		if(logger.isDebugEnabled()) logger.debug("Start query ========================= " + System.currentTimeMillis() );
+		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() );
 		
 		controlProgress(true);
 		final Shell runShell = textFilter.getShell();
@@ -495,7 +497,7 @@ public class ResultSetComposite extends Composite {
 				sqlHistoryDAO.setStrSQLText(reqQuery.getOriginalSql());
 				
 				try {
-						
+					
 					if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
@@ -521,6 +523,7 @@ public class ResultSetComposite extends Composite {
 							sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
+						
 						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 						if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());// userEmail, userDB)) return null;
@@ -631,11 +634,6 @@ public class ResultSetComposite extends Composite {
 					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT
 			)) {
 				statement.setQueryTimeout(queryTimeOut);
-//			}
-//			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-//					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-//					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)) 
-//			{
 				statement.setMaxRows(intSelectLimitCnt);
 			}
 			
@@ -917,6 +915,10 @@ public class ResultSetComposite extends Composite {
 		super.dispose();
 	}
 
+	/**
+	 * 실행중인 쿼리 job을 가져옵니다. 
+	 * @return
+	 */
 	public Job getJobQueryManager() {
 		return jobQueryManager;
 	}
@@ -924,4 +926,23 @@ public class ResultSetComposite extends Composite {
 	@Override
 	protected void checkSubclass() {
 	}
+	
+	/**
+	 * 에디터의 쿼리 타입을 설정합니다. 
+	 * 
+	 * @param isSelect
+	 */
+	public void setSelect(boolean isSelect) {
+		this.isSelect = isSelect;
+	}
+	
+	/**
+	 * 에디터의 쿼리 타입을 설정합니다.
+	 * 
+	 * @return
+	 */
+	public boolean isSelect() {
+		return isSelect;
+	}
+
 }

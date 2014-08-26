@@ -35,6 +35,17 @@ public class TadpoleSystem_UserQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserQuery.class);
 	
 	/**
+	 * 모든 유효한 유저 목록을 가져옵니다.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDAO> getAllUser() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getAllUser"); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 신규 유저를 등록합니다.
 	 * @param email
 	 * @param passwd
@@ -141,7 +152,11 @@ public class TadpoleSystem_UserQuery {
 		if(null == userInfo) {
 			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 		} else {
-			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+			try {
+				if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+					throw new Exception(Messages.TadpoleSystem_UserQuery_5);
+				}
+			} catch(Exception e) {
 				throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 			}
 		}

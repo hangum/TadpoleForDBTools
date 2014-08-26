@@ -143,7 +143,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 							ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
 							dao.setName(tableDAO.getTable_name());
 
-							FindEditorAndWriteQueryUtil.run(userDB, rdbScript.getFunctionScript(dao));
+							FindEditorAndWriteQueryUtil.run(userDB, rdbScript.getFunctionScript(dao), PublicTadpoleDefine.DB_ACTION.FUNCTIONS);
 						}
 					}
 				} catch (Exception e) {

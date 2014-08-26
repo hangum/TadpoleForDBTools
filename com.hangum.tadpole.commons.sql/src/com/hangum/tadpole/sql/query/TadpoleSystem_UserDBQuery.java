@@ -34,6 +34,17 @@ public class TadpoleSystem_UserDBQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBQuery.class);
 	
 	/**
+	 * Registered Database
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static List getRegisteredDB() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getRegisteredDB");
+	}
+	
+	/**
 	 * 기존 디비 수정할 수 있는지 검사합니다.
 	 * 
 	 * @param user_seq

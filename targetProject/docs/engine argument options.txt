@@ -8,6 +8,10 @@
 # Contributors:
 #     hangum - initial API and implementation
 #-------------------------------------------------------------------------------
+
+-console -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog  -passwd tadpole.jong
+-dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
+
 Program Argument
   -test			: 테스트 데이터를 로드할것인지 (ex: 로그인시 관리자, 개발자 계정 보이기, 예제 데이터 베이스 정보 노출)
   -testDB		:  예제 데이터 베이스 정보 노출
@@ -48,7 +52,9 @@ Program Argument
  -resourcesDir  : resource directory 를 설정합니다.    
  				  전체 리소스는 리소스 루트에 각 사용자 리소스느는 id뒤에 놓습니다.
  				  폴더가 설정되어지 있지 않다면 .exe가 있거나 혹은 context root 디렉토리의 패런트  아래에 놓습니다. 
- 			
+
+ -passwd : 엔진에서 사용할 패스워드.
+ -GAON   : Google Analytics 사용.
   
 VM Argument
   -Dfile.encoding=UTF-8

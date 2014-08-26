@@ -235,7 +235,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 			public void widgetSelected(SelectionEvent e) {
 				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserInfoPerference_9)) { //$NON-NLS-1$
 					try {
-						TadpoleSystem_UserRole.withdrawal(SessionManager.getGroupSeq());
+						TadpoleSystem_UserRole.withdrawal(SessionManager.getSeq());
 						
 						TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
 						SessionManager.logout();

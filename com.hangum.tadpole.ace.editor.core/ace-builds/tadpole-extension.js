@@ -28,6 +28,9 @@ var editorService = {
 	/** add text */
 	addText : function(varText) {},
 	
+	/** is block text */
+	isBlockText : function() {},
+	
 	/**
 	 * 에디터 기존 내용을 지운 후에 새롭게 텍스트를 넣습니다.
 	 * -예, 쿼리 포멧 기능
@@ -53,6 +56,8 @@ var editor;
 var isEdited = false;
 /** 자바에서 처리가 끝났는지 */
 var isJavaRunning = false;
+/** open 된 에디터 타입 */
+var varEditorType = 'TABLES';
 
 /** initialize editor */
 {
@@ -73,8 +78,17 @@ var isJavaRunning = false;
 	});
 };
 
-/** 에디터를 초기화 합니다. */
-editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
+/** 
+ * 에디터를 초기화 합니다. 
+ * @param varExt 확장자
+ * @param varAddKeyword
+ * @param varType editorType (sql or procedure )
+ * @param varInitText
+ * 
+ */
+editorService.initEditor = function(varExt, varType, varAddKeyword, varInitText) {
+	varEditorType = varType;
+	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
 		var UndoManager = ace.require("./undomanager").UndoManager;
@@ -127,6 +141,18 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
+
+/**
+ * editor 텍스트가 block인지 유무?
+ * @returns {Boolean}
+ */
+editorService.isBlockText = function() {
+	var isBlock = false;
+	if("" != editor.getSelectedText())  isBlock = true;
+	
+	return isBlock;
+}
+
 editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
@@ -136,7 +162,7 @@ editor.commands.addCommand({
     		
     		if(!isJavaRunning) {
     			isJavaRunning = true;
-    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
 //    		} else {
 //    			console.log("\t Can not execute query");
     		}
@@ -154,7 +180,7 @@ editor.commands.addCommand({
     	try {
     		if(!isJavaRunning) {
     			isJavaRunning = true;
-    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
+    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'), editorService.isBlockText());
     		}
 	    } catch(e) {
 			console.log(e);
@@ -246,6 +272,25 @@ editorService.getSelectedText = function(varDelimiter) {
 	var varEditorContent = editor.getValue();
 	if("" == varEditorContent) return "";
 	
+	//
+	// 프로시저 평선 트리거는 에디터 모두를 리턴합니다. 
+	//
+	if(varEditorType == "PROCEDURES" ||
+		varEditorType == "FUNCTIONS" ||
+		varEditorType == "TRIGGERS") {
+		
+		// 선택된 텍스트가 있다면 우선적으로 리턴합니다.
+		var varSelectionContent = editor.getSelectedText();
+		if("" != varSelectionContent)  {
+			return varSelectionContent;
+		} else {
+			return varEditorContent;
+		}
+	} 
+	
+	//
+	// 일반 에디터. 
+	// 
 	try {
 		// 선택된 텍스트가 있다면 우선적으로 리턴합니다.
 		var varSelectionContent = editor.getSelectedText();

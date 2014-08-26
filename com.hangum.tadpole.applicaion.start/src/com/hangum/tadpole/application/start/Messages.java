@@ -81,6 +81,11 @@ public class Messages extends NLS {
 	public static String LoginDialog_lblDownloadUrl_text;
 	public static String LoginDialog_lblContact_text;
 	public static String LoginDialog_lblContact_text_1;
+	public static String LoginDialog_tblclmnSeq_text;
+	public static String LoginDialog_tblclmnName_text;
+	public static String LoginDialog_tblclmnCount_text;
+	public static String LoginDialog_button_text;
+	public static String LoginDialog_button_text_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

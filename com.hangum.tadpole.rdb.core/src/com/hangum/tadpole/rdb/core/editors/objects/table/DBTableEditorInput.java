@@ -17,6 +17,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -26,12 +27,12 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  *
  */
 public class DBTableEditorInput implements IEditorInput {
-	String tableName = "";
+	TableDAO tableDAO;
 	UserDBDAO userDB;
 	List<TableColumnDAO> showTableColumns;
 	
-	public DBTableEditorInput(String tableName, UserDBDAO userDB, List showTableColumns) {
-		this.tableName = tableName;
+	public DBTableEditorInput(TableDAO tableDAO, UserDBDAO userDB, List showTableColumns) {
+		this.tableDAO = tableDAO;
 		this.userDB = userDB;
 		this.showTableColumns = showTableColumns;
 	}
@@ -43,12 +44,13 @@ public class DBTableEditorInput implements IEditorInput {
 
 	@Override
 	public boolean exists() {
-		return false;//(this.tableName != null);
+		return false;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		if( !(obj instanceof DBTableEditorInput) ) return false;
+		
 		return ((DBTableEditorInput)obj).getName().equals(getName());
 	}
 
@@ -59,7 +61,7 @@ public class DBTableEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return tableName;
+		return tableDAO.getName();
 	}
 
 	@Override
@@ -69,9 +71,13 @@ public class DBTableEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return userDB.getDb() + "[" + tableName + "]";
+		return userDB.getDb() + "[" + tableDAO.getName() + "]";
 	}
 
+	public TableDAO getTableDAO() {
+		return tableDAO;
+	}
+	
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}

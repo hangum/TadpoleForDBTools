@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -104,6 +105,19 @@ public class TadpoleSQLManager {
 		}
 
 		return sqlMapClient;
+	}
+
+	/**
+	 * 전체 connection pool 정보를 가져옵니다.
+	 */
+	public static void getConnectionPoolStatus() {
+		SqlMapClient[] sqlMaps = (SqlMapClient[])dbManager.values().toArray();
+		for (SqlMapClient sqlMapClient : sqlMaps) {
+
+			BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
+			logger.info("NumActive 	: " + basicDataSource.getNumActive());
+			logger.info("NumIdle 	: " + basicDataSource.getNumIdle());
+		}
 	}
 	
 	/**

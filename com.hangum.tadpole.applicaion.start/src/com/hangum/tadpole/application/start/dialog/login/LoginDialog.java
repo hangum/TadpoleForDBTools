@@ -10,17 +10,24 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.rap.addons.d3chart.BarChart;
+import org.eclipse.rap.addons.d3chart.ChartItem;
+import org.eclipse.rap.addons.d3chart.ColorStream;
+import org.eclipse.rap.addons.d3chart.Colors;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -42,6 +49,7 @@ import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -57,11 +65,16 @@ public class LoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
 	
 	private int ID_NEW_USER		 = IDialogConstants.CLIENT_ID 	+ 1;
+	private int ID_FINDPASSWORD = IDialogConstants.CLIENT_ID 	+ 2;
 	private int ID_ADMIN_USER 	= IDialogConstants.CLIENT_ID 	+ 3;
 	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID 	+ 4;
 	
 	private Text textEMail;
 	private Text textPasswd;
+
+//	private TableViewer tableViewer;
+	
+	private BarChart barChart;
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -91,30 +104,19 @@ public class LoginDialog extends Dialog {
 		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
 		compositeLeftBtn.setLayout(new GridLayout(1, false));
 		
-		Button button = new Button(compositeLeftBtn, SWT.PUSH);
+		Button button = new Button(compositeLeftBtn, SWT.NONE);
 		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		button.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TadpoleOverView.png"));
-		button.setBounds(0, 0, 95, 28);
 		
 		Composite compositeLogin = new Composite(container, SWT.NONE);
 		compositeLogin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeLogin.setLayout(new GridLayout(2, false));
-		
-		Label lblPleaseSignIn = new Label(compositeLogin, SWT.NONE);
-		lblPleaseSignIn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		lblPleaseSignIn.setText(Messages.LoginDialog_lblPleaseSignIn_text);
 		
 		Label lblEmail = new Label(compositeLogin, SWT.NONE);
 		lblEmail.setText(Messages.LoginDialog_1);
 		
 		textEMail = new Text(compositeLogin, SWT.BORDER);
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		textEMail.setFocus();
-		
-//		Label lblLoginImage = new Label(compositeLogin, SWT.NONE);
-//		lblLoginImage.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 2));
-//		lblLoginImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/LoginManager.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		Label lblPassword = new Label(compositeLogin, SWT.NONE);
 		lblPassword.setText(Messages.LoginDialog_4);
@@ -130,22 +132,36 @@ public class LoginDialog extends Dialog {
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label lblRecommand = new Label(compositeLogin, SWT.NONE);
-		lblRecommand.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		lblRecommand.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		lblRecommand.setText(Messages.LoginDialog_lblNewLabel_text);
-		new Label(compositeLogin, SWT.NONE);
-
-		Button btnFindPassword = new Button(compositeLogin, SWT.PUSH);
-		btnFindPassword.setText(Messages.LoginDialog_lblFindPassword);
-		setButtonLayoutData(btnFindPassword);
+		// ---------------------  Registered database ----------------------------------------------------
+		Group grpSponser = new Group(container, SWT.NONE);
+		grpSponser.setLayout(new GridLayout(1, false));
+		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
 		
-		btnFindPassword.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				findPassword();
-			}
-		});
+		pieChart(grpSponser);
+		
+//		tableViewer = new TableViewer(grpSponser, SWT.NONE | SWT.FULL_SELECTION);
+//		Table table = tableViewer.getTable();
+//		table.setLinesVisible(true);
+//		table.setHeaderVisible(true);
+//		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		
+//		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+//		TableColumn tblclmnSeq = tableViewerColumn.getColumn();
+//		tblclmnSeq.setWidth(120);
+//		tblclmnSeq.setText(Messages.LoginDialog_tblclmnSeq_text);
+//		
+//		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
+//		TableColumn tblclmnName = tableViewerColumn_1.getColumn();
+//		tblclmnName.setWidth(100);
+//		tblclmnName.setText(Messages.LoginDialog_tblclmnName_text);
+//
+//		tableViewer.setContentProvider(new ArrayContentProvider());
+//		tableViewer.setLabelProvider(new RegisteredDBLabelprovider());
+//		tableViewer.setInput(getInitData());
+		// ---------------------  Registered database ----------------------------------------------------
+		
 		
 		Group compositeLetter = new Group(container, SWT.NONE);
 		compositeLetter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
@@ -177,12 +193,12 @@ public class LoginDialog extends Dialog {
 		lblUserKor.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserEng = new Label(compositeUserGide, SWT.NONE);
-		lblUserEng.setSize(607, 14);
+//		lblUserEng.setSize(607, 14);
 		lblUserEng.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Eng' target='_blank'>(English)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserEng.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserIndonesia = new Label(compositeUserGide, SWT.NONE);
-		lblUserIndonesia.setSize(611, 14);
+//		lblUserIndonesia.setSize(611, 14);
 		lblUserIndonesia.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID' target='_blank'>(Indonesia)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserIndonesia.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
@@ -193,13 +209,6 @@ public class LoginDialog extends Dialog {
 		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>https://github.com/hangum/TadpoleForDBTools/issues</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblDownload = new Label(compositeLetter, SWT.NONE);
-		lblDownload.setText(Messages.LoginDialog_lblDownload_text);
-		
-		Label lblDownloadUrl = new Label(compositeLetter, SWT.NONE);
-		lblDownloadUrl.setText("<a href='https://www.facebook.com/groups/tadpoledbhub/' target='_blank'>https://www.facebook.com/groups/tadpoledbhub/</a>"); //$NON-NLS-1$ //$NON-NLS-2$
-		lblDownloadUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
-		
 		Label lblContact = new Label(compositeLetter, SWT.NONE);
 		lblContact.setText(Messages.LoginDialog_lblContact_text_1);
 		
@@ -207,17 +216,56 @@ public class LoginDialog extends Dialog {
 		lblContactUrl.setText("<a href='mailto:adi.tadpole@gmail.com'>adi.tadpole@gmail.com</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Group grpSponser = new Group(container, SWT.NONE);
-		grpSponser.setLayout(new GridLayout(1, false));
-		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
-		
-		
+		textEMail.setFocus();
 		AnalyticCaller.track("login");
 		
-		
 		return compositeLogin;
+	}
+	
+	/**
+	 * 데이터베이스 통계 pie chart를 생성합니다. 
+	 * 
+	 * @param composite
+	 */
+	private void pieChart(Composite compositeCursor) {
+		try {
+			ColorStream colors = Colors.cat20Colors(compositeCursor.getDisplay()).loop();
+			
+			barChart = new BarChart(compositeCursor, SWT.NONE);
+			GridLayout gl_grpConnectionInfo = new GridLayout(1, true);
+			gl_grpConnectionInfo.verticalSpacing = 0;
+			gl_grpConnectionInfo.horizontalSpacing = 0;
+			gl_grpConnectionInfo.marginHeight = 0;
+			gl_grpConnectionInfo.marginWidth = 0;
+			barChart.setLayout(gl_grpConnectionInfo);
+			barChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			barChart.setBarWidth(10);
+			
+			for(Object element : getInitData()) {
+				Map<String, Object> retMap = (HashMap<String, Object>)element;
+				
+				ChartItem item = new ChartItem(barChart);
+			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")");
+			    item.setColor(colors.next());
+			    
+			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 100;
+			    logger.debug("=>>>>>" + floatVal);
+			    item.setValue(floatVal);
+			}
+		} catch(Exception e) {
+			logger.error("Get registered DB", e);
+		}
+		barChart.layout();
+		barChart.getParent().layout();
+	}
+	
+	/**
+	 * registered database
+	 * 
+	 * @return
+	 */
+	private List getInitData() throws Exception {
+		return TadpoleSystem_UserDBQuery.getRegisteredDB();
 	}
 
 	private void newUser() {
@@ -232,14 +280,16 @@ public class LoginDialog extends Dialog {
 	
 	@Override
 	protected void buttonPressed(int buttonId) {
-		 if(buttonId == ID_NEW_USER) {
+		if(buttonId == ID_NEW_USER) {
 			newUser();
-				
-			return;
-		 } else if(buttonId == IDialogConstants.OK_ID) {
-			 okPressed();
-			 
-		 } else {
+		
+		} else if(buttonId == ID_FINDPASSWORD) {
+			findPassword();
+
+		} else if(buttonId == IDialogConstants.OK_ID) {
+			okPressed();
+		
+		} else {
 			String userId = "", password = ""; //$NON-NLS-1$ //$NON-NLS-2$
 			
 			if(buttonId == ID_ADMIN_USER) {
@@ -338,7 +388,8 @@ public class LoginDialog extends Dialog {
 			createButton(parent, ID_MANAGER_USER, Messages.LoginDialog_12, false);
 		}
 		
-		createButton(parent, ID_NEW_USER, Messages.LoginDialog_16, false);
+		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
+		createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
 
@@ -347,6 +398,66 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(626, 430);
+//		return new Point(490, 310);
+		return new Point(490, 450);
 	}
 }
+
+//class RegisteredDBLabelprovider extends LabelProvider implements ITableLabelProvider {
+//
+//	@Override
+//	public Image getColumnImage(Object element, int columnIndex) {
+//		Map<String, Object> retMap = (HashMap<String, Object>)element;
+//		
+//		switch(columnIndex) {
+//		case 0: 
+//			String dbmsType = ""+retMap.get("dbms_types");
+//			DBDefine dbType = DBDefine.getDBDefine(dbmsType);
+//			
+//			if(DBDefine.MYSQL_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.MARIADB_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.ORACLE_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.SQLite_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.MSSQL_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.CUBRID_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.MONGODB_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
+//			
+//			else if(DBDefine.TAJO_DEFAULT == dbType) 
+//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/tajo-add.jpg"); //$NON-NLS-1$
+//		}
+//		
+//		return null;
+//	}
+//
+//	@Override
+//	public String getColumnText(Object element, int columnIndex) {
+//		Map<String, Object> retMap = (HashMap<String, Object>)element;
+//		
+//		switch(columnIndex) {
+//		case 0: return ""+retMap.get("dbms_types");
+//		case 1: return ""+retMap.get("tot");
+//		}
+//		
+//		return "*** not set column ***";
+//	}
+//	
+//}

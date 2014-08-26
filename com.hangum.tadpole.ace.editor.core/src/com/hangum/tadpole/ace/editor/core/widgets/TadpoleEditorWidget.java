@@ -107,7 +107,7 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 		browserEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					getBfUtils().browserEvaluate(IEditorFunction.INITIALIZE, initExt, "", initContent);
+					getBfUtils().browserEvaluate(IEditorFunction.INITIALIZE, initExt, "NONE", "", initContent);
 				} catch(Exception e) {
 					logger.error("browser initialize", e);	  
 				}

@@ -14,10 +14,12 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.sql.util.SQLUtil;
 
 /**
  * editor utils
@@ -28,7 +30,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 public class EditorUtils {
 
 	/**
-	 * find sql editor
+	 * find SQL editor
 	 * 
 	 * @param dao UserDBDAO
 	 * @return
@@ -38,7 +40,7 @@ public class EditorUtils {
 		IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (activeEditor instanceof MainEditor) {
 			MainEditor editor = (MainEditor) activeEditor;
-			if(editor.getUserDB().equals(dao)) {
+			if(editor.getUserDB().equals(dao) && SQLUtil.isSELECTEditor(editor.getDbAction())) {
 				return activeEditor;
 			}
 		}

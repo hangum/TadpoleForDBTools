@@ -80,6 +80,13 @@
             id="com.hangum.tadpole.rdb.core.editor.externalBrowser"
             name="External Browser">
       </editor>
+      <editor
+            class="com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditor"
+            default="false"
+            icon="resources/icons/editor/object_editor.png"
+            id="com.hangum.tadpole.rdb.core.editor.main.procedure"
+            name="Procedure">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">

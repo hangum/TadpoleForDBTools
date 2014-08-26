@@ -77,7 +77,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 			
 			//
 //			QueryEditorAction qea = new QueryEditorAction();
-			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
+			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), actionType);
 		} catch(Exception e) {
 			logger.error("Generate SQL Statement Error", e); //$NON-NLS-1$
 			

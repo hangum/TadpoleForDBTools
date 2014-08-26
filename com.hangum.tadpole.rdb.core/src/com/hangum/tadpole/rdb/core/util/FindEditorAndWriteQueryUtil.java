@@ -18,6 +18,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
@@ -26,8 +27,10 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
+import com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditor;
+import com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditorInput;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.format.SQLFormater;
+import com.hangum.tadpole.sql.util.SQLUtil;
 
 /**
  * 쿼리 생성관련 유틸입니다.
@@ -47,9 +50,9 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param userDB
 	 * @param lowSQL
 	 * @param isNewEditor 항상 새로운 창으로 엽니다.
-	 * @param isFormating sql formatting
+	 * @param initAction action이 호출된곳.
 	 */
-	public static void run(UserDBDAO userDB, String lowSQL, boolean isNewEditor) {
+	public static void run(UserDBDAO userDB, String lowSQL, boolean isNewEditor, PublicTadpoleDefine.DB_ACTION initAction) {
 		
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			newMongoDBEditorOpen(userDB, lowSQL);
@@ -62,13 +65,18 @@ public class FindEditorAndWriteQueryUtil {
 //					// ignore exception 쿼리 파싱을 잘 못하거나 틀리면 exception 나오는데, 걸려줍니다.
 //				}
 //			}
-			
-			IEditorPart editor = EditorUtils.findSQLEditor(userDB);
-			if(editor == null || isNewEditor) {				
-				newSQLEditorOpen(userDB, lowSQL);		
+
+			/** select, view 등이 아니면 무조 새로운 에디터로 오픈합니다 */
+			if(SQLUtil.isSELECTEditor(initAction)) {
+				IEditorPart editor = EditorUtils.findSQLEditor(userDB);
+				if(editor == null || isNewEditor) {				
+					newSQLEditorOpen(userDB, lowSQL, initAction);		
+				} else {
+					appendSQLEditorOpen(editor, userDB, lowSQL);				
+				}	// end reference
 			} else {
-				appendSQLEditorOpen(editor, userDB, lowSQL);				
-			}	// end reference
+				newObjectEditorOpen(userDB, lowSQL, initAction);
+			}
 		}	// end db
 	}
 	
@@ -78,9 +86,10 @@ public class FindEditorAndWriteQueryUtil {
 	 * 
 	 * @param userDB
 	 * @param lowSQL
+	 * @param initAction
 	 */
-	public static void run(UserDBDAO userDB, String lowSQL) {
-		run(userDB, lowSQL, false);
+	public static void run(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
+		run(userDB, lowSQL, false, initAction);
 	}
 	
 	/**
@@ -108,13 +117,33 @@ public class FindEditorAndWriteQueryUtil {
 	 * 
 	 * @param userDB
 	 * @param lowSQL
+	 * @param initAction
 	 */
-	private static void newSQLEditorOpen(UserDBDAO userDB, String lowSQL) {
+	private static void newObjectEditorOpen(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
 		try {
-			MainEditorInput mei = new MainEditorInput(userDB, lowSQL);
+			ObjectEditorInput mei = new ObjectEditorInput(userDB, lowSQL, initAction);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, ObjectEditor.ID, false);
+		} catch (PartInitException e) {
+			logger.error("new sql editor open", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+		}	
+	}
+	
+	/**
+	 * new window open
+	 * 
+	 * @param userDB
+	 * @param lowSQL
+	 * @param initAction
+	 */
+	private static void newSQLEditorOpen(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
+		try {
+			MainEditorInput mei = new MainEditorInput(userDB, lowSQL, initAction);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);
 		} catch (PartInitException e) {
-			logger.error("new editor open", e); //$NON-NLS-1$
+			logger.error("new object editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$

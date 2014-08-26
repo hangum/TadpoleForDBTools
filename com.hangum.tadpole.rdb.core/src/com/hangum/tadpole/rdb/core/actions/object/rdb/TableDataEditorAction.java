@@ -66,9 +66,10 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 			List showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 
 			// Open the table director editor
-			DBTableEditorInput mei = new DBTableEditorInput(tableDAO.getName(), userDB, showTableColumns);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			page.openEditor(mei, TableInformationEditor.ID);
+			
+			DBTableEditorInput dbEditorInput = new DBTableEditorInput(tableDAO, userDB, showTableColumns);
+			page.openEditor(dbEditorInput, TableInformationEditor.ID, false);
 		} catch(Exception e) {
 			logger.error("Load the table data", e); //$NON-NLS-1$
 
