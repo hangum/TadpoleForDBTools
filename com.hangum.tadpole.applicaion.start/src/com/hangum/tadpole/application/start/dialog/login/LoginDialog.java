@@ -134,7 +134,12 @@ public class LoginDialog extends Dialog {
 
 		// ---------------------  Registered database ----------------------------------------------------
 		Group grpSponser = new Group(container, SWT.NONE);
-		grpSponser.setLayout(new GridLayout(1, false));
+		GridLayout gl_grpSponser = new GridLayout(1, false);
+		gl_grpSponser.verticalSpacing = 0;
+		gl_grpSponser.horizontalSpacing = 0;
+		gl_grpSponser.marginHeight = 0;
+		gl_grpSponser.marginWidth = 0;
+		grpSponser.setLayout(gl_grpSponser);
 		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
