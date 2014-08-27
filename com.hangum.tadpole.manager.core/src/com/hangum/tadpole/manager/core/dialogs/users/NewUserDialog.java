@@ -59,8 +59,6 @@ public class NewUserDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(NewUserDialog.class);
 	
 	private Composite compositeUserGroup;
-	/** user group combo로 기 존재하는 그룹 정보  */
-	private Combo comboUserGroup;
 	
 	/** user group text로 신규 그룹명을 입력 받는다 */
 	private Text textUserGroup;
@@ -162,7 +160,7 @@ public class NewUserDialog extends Dialog {
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboLanguage.add("ko"); //$NON-NLS-1$
 		comboLanguage.add("en_us"); //$NON-NLS-1$
-		comboLanguage.select(0);
+		comboLanguage.select(1);
 		
 		Label lblPasswordDescription = new Label(container, SWT.NONE);
 		lblPasswordDescription.setText(Messages.NewUserDialog_18);
