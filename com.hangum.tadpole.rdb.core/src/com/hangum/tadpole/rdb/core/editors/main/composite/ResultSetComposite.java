@@ -307,9 +307,14 @@ public class ResultSetComposite extends Composite {
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
 		
-		compositeDumy = new Composite(compositeBtn, SWT.NONE);
-		compositeDumy.setLayout(new GridLayout(1, false));
-		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+//		Button btnDMLGenerator = new Button(compositeBtn, SWT.NONE);
+//		btnDMLGenerator.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				dmlGeneratorDialog();
+//			}
+//		});
+//		btnDMLGenerator.setText(Messages.ResultSetComposite_btnDMLGenerator_text);
 		
 		btnDetailView = new Button(compositeBtn, SWT.NONE);
 		GridData gd_btnDetailView = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -322,6 +327,10 @@ public class ResultSetComposite extends Composite {
 			}
 		});
 		btnDetailView.setText("View detail");
+		
+		compositeDumy = new Composite(compositeBtn, SWT.NONE);
+		compositeDumy.setLayout(new GridLayout(1, false));
+		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		btnSQLResultExport = new Button(compositeBtn, SWT.NONE);
 		GridData gd_btnSQLResultExport = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -361,7 +370,6 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
 	}
@@ -840,12 +848,12 @@ public class ResultSetComposite extends Composite {
 			float longExecuteTime = (executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime()) / 1000f;
 			String strResultMsg = "";
 			if(trs.isEndOfRead()) {
-				strResultMsg = String.format("%s %s (%s%s)", trs.getData().size(), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
+				strResultMsg = String.format("%s %s (%s %s)", trs.getData().size(), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
 			} else {
 				// 
 				// 데이터가 한계가 넘어 갔습니다.
 				String strMsg = String.format(Messages.MainEditor_34, GetPreferenceGeneral.getSelectLimitCount());
-				strResultMsg = String.format("%s (%s%s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
+				strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
 			}
 			
 			tvQueryResult.getTable().setToolTipText(strResultMsg);

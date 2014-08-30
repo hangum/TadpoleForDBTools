@@ -430,6 +430,8 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_btnFileUpload_text;
 	public static String SQLiteLoginComposite_btnCreationDb_text;
 	public static String TableDirectEditorComposite_tltmRefersh_text;
+	public static String ResultSetComposite_btnDmlGenerator_text;
+	public static String ResultSetComposite_btnDMLGenerator_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

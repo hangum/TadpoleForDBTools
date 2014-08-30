@@ -104,6 +104,7 @@ public class SendMessageDialog extends Dialog {
 		
 		textMessage = new Text(compositeBody, SWT.BORDER | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		textMessage.setText("<pre>\n\n</pre>");
 
 		return container;
 	}
