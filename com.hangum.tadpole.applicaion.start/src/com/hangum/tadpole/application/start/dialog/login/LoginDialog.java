@@ -351,7 +351,7 @@ public class LoginDialog extends Dialog {
 			
 			SessionManager.addSession(userDao);
 		} catch (Exception e) {
-			logger.error("Login exception", e); //$NON-NLS-1$
+			logger.error("Login exception. request email is " + strEmail, e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
 			
 			textEMail.setFocus();
@@ -416,7 +416,7 @@ public class LoginDialog extends Dialog {
 		if(listDBMart.isEmpty()) {
 			return new Point(490, 310);
 		} else {
-			return new Point(490, 450);
+			return new Point(490, 470);
 		}
 	}
 }

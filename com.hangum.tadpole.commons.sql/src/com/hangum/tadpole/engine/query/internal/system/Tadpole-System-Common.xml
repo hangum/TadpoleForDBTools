@@ -899,11 +899,10 @@ SELECT
 	대표 role을 검색합니다. 
  -->
 <select id="representUserRole" resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO" parameterClass="java.lang.Integer">
-	select c.* from user_role a, user_group b, user_role c
+	select a.* 
+	from user_role a, user_group b
 	where a.user_seq = #user_seq#
 	and a.group_seq = b.seq
-	and b.seq = c.group_seq
-	and c.user_seq = a.seq 
 </select>
 
 <!-- 
