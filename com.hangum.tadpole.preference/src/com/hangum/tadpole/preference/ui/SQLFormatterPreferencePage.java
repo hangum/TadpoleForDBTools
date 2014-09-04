@@ -73,7 +73,6 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblTabSize = new Label(container, SWT.NONE);
-		lblTabSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTabSize.setText(Messages.SQLFormatterPreferencePage_0);
 		
 		comboTabsize = new Combo(container, SWT.READ_ONLY);
@@ -107,7 +106,6 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		btnWordBreak.setText(Messages.SQLFormatterPreferencePage_btnWordBreak_text);
 		
 		textWidth = new Text(container, SWT.BORDER);
-		textWidth.setText(Messages.SQLFormatterPreferencePage_text_text);
 		textWidth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		initDefaultValue();

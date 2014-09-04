@@ -111,7 +111,6 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		lblQueryTimeout.setText(Messages.RDBPreferencePage_lblQueryTimeout_text);
 		
 		textQueryTimeout = new Text(container, SWT.BORDER);
-		textQueryTimeout.setText(Messages.RDBPreferencePage_text_text);
 		textQueryTimeout.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
