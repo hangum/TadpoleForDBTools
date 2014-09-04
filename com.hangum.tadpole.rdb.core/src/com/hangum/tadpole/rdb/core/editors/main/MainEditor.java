@@ -152,18 +152,16 @@ public class MainEditor extends EditorExtension {
 		compositeEditor.setLayout(gl_compositeEditor);
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
-		toolBar.setToolTipText(String.format(Messages.MainEditor_toolBar_toolTipText, ShortcutPrefixUtils.getCtrlShortcut()));
-		
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText("Connection Information");
+		tltmConnectURL.setToolTipText("Connection Information"); //$NON-NLS-1$
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		
 		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
 			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
-				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName));
+				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName)); //$NON-NLS-1$
 			} else {
-				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers()));
+				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers())); //$NON-NLS-1$
 			}	
 		} else {
 			tltmConnectURL.setText(userDB.getDbms_types());
@@ -258,7 +256,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-	    tltmSQLToApplication.setToolTipText("SQL statement to Application code");
+	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
 //		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
@@ -281,7 +279,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommit = new ToolItem(toolBar, SWT.CHECK);
 		tiAutoCommit.setSelection(false);
-		tiAutoCommit.setText("Transaction start");
+		tiAutoCommit.setText("Transaction start"); //$NON-NLS-1$
 		tiAutoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -291,7 +289,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText("Commit");
+		tiAutoCommitCommit.setText("Commit"); //$NON-NLS-1$
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -303,7 +301,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitRollback.setSelection(false);
-		tiAutoCommitRollback.setText("Rollback");
+		tiAutoCommitRollback.setText("Rollback"); //$NON-NLS-1$
 		tiAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -313,6 +311,11 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		// semicolon
+		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
+		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
+		tltmSemicolon.setToolTipText(Messages.MainEditor_49);
 		
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
 		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
@@ -515,7 +518,7 @@ public class MainEditor extends EditorExtension {
 		resultMainComposite.executeCommand(reqQuery);
 		
 		// google analytic
-		AnalyticCaller.track(MainEditor.ID, "executeCommand");
+		AnalyticCaller.track(MainEditor.ID, "executeCommand"); //$NON-NLS-1$
 	}
 	/**
 	 * auto commit 

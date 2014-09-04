@@ -298,7 +298,7 @@
                icon="resources/icons/db_information.png"
                id="com.hangum.tadpole.rdb.core.action.rdb.dbInformation"
                label="DB Information"
-               menubarPath="menu.admin/admin">
+               menubarPath="additions">
          </action>
          <action
                class="com.hangum.tadpole.rdb.core.actions.commons.ExtensionBrowserAction"
@@ -547,7 +547,7 @@
                icon="resources/icons/db_information.png"
                id="com.hangum.tadpole.rdb.core.action.rdb.dbInformation"
                label="DB Information"
-               menubarPath="menu.admin/admin">
+               menubarPath="additions">
          </action>tion>
          <action
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbProfillingAction"
