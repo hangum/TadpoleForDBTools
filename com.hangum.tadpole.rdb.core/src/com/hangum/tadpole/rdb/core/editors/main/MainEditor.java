@@ -21,6 +21,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.window.Window;
+import org.eclipse.rap.addons.fileupload.DiskFileUploadReceiver;
+import org.eclipse.rap.addons.fileupload.FileDetails;
+import org.eclipse.rap.addons.fileupload.FileUploadEvent;
+import org.eclipse.rap.addons.fileupload.FileUploadHandler;
+import org.eclipse.rap.addons.fileupload.FileUploadListener;
+import org.eclipse.rap.rwt.service.ServerPushSession;
+import org.eclipse.rap.rwt.widgets.FileUpload;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
@@ -98,6 +105,11 @@ public class MainEditor extends EditorExtension {
 	
 	/** save mode */
 	private boolean isDirty = false;
+	
+//	/* file upload */
+//	private FileUpload fileUpload;
+//	private DiskFileUploadReceiver receiver;
+//	private ServerPushSession pushSession;
 	    
 	public MainEditor() {
 		super();
@@ -176,6 +188,21 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+//		// fileupload 
+//		final String url = startUploadReceiver();
+//		pushSession = new ServerPushSession();
+//		
+//		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
+//		tltmOpen.setToolTipText("Open script file in the editor");
+//		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-file-open.png")); //$NON-NLS-1$
+//		tltmOpen.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				
+//			}
+//		});
+//		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, ShortcutPrefixUtils.getCtrlShortcut()));
@@ -700,4 +727,35 @@ public class MainEditor extends EditorExtension {
 	public String getInitDefaultEditorStr() {
 		return initDefaultEditorStr;
 	}
+	
+//	/**
+//	 * 저장 이벤트 
+//	 * 
+//	 * @return
+//	 */
+//	private String startUploadReceiver() {
+//		receiver = new DiskFileUploadReceiver();
+//		final FileUploadHandler uploadHandler = new FileUploadHandler(receiver);
+//		uploadHandler.addUploadListener(new FileUploadListener() {
+//
+//			public void uploadProgress(FileUploadEvent event) {
+//			}
+//
+//			public void uploadFailed(FileUploadEvent event) {
+////				MessageDi( "upload failed: " + event.getException() ); //$NON-NLS-1$
+//				MessageDialog.openError(null, "Error", "Download fail. \n" + event.getException().getMessage());
+//			}
+//
+//			public void uploadFinished(FileUploadEvent event) {
+//				for( FileDetails file : event.getFileDetails() ) {
+////					addToLog( "uploaded : " + file.getFileName() );
+//					System.out.println("downloaded. " + file.getFileName());
+//
+//				}
+//			}			
+//		});
+//		
+//		return uploadHandler.getUploadUrl();
+//	}
+	
 }

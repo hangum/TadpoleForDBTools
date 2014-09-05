@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -201,6 +202,16 @@ public class RecordViewDialog extends Dialog {
 		if (getDialogArea() != null) {
 			getDialogArea().redraw();
 		}
+	}
+	
+	/**
+	 * Create contents of the button bar.
+	 * 
+	 * @param parent
+	 */
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, "Close", false);
 	}
 
 	@Override

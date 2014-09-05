@@ -17,7 +17,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.addons.fileupload.DiskFileUploadReceiver;
 import org.eclipse.rap.addons.fileupload.FileDetails;
@@ -35,7 +34,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -66,7 +64,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	private Button chkBtnCreationDb;
 	
 	private FileUpload fileUpload;
-	
 	private DiskFileUploadReceiver receiver;
 	private ServerPushSession pushSession;
 	
