@@ -648,7 +648,9 @@ public class ResultSetComposite extends Composite {
 			// check stop thread
 //			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
 			esCheckStop = Executors.newSingleThreadExecutor();
-			esCheckStop.execute(new CheckStopThread(statement));
+			CheckStopThread cst = new CheckStopThread(statement);
+			cst.setName("Check Stop Thread ");
+			esCheckStop.execute(cst);
 			
 //			if(logger.isDebugEnabled()) logger.debug("\t===== start query ==========================");
 			// execute query
@@ -703,7 +705,8 @@ public class ResultSetComposite extends Composite {
 		private Statement stmt = null;
 		
 		public CheckStopThread(Statement stmt) {
-			super("CheckStopThread is "+ stmt.toString());
+			super("CheckStopThread ");
+			
 			this.stmt = stmt;
 		}
 		
@@ -732,7 +735,7 @@ public class ResultSetComposite extends Composite {
 						isCheckRunning = false;
 						
 						try {
-							logger.debug("User stop operation is [statement close] " + stmt.isClosed());
+							if(logger.isDebugEnabled()) logger.debug("User stop operation is [statement close] " + stmt.isClosed());
 							if(!stmt.isClosed()) execServiceQuery.shutdown();
 						} catch(Exception ee) {
 							logger.error("Execute stop", ee);
@@ -746,13 +749,6 @@ public class ResultSetComposite extends Composite {
 			}
 		} 	// end run
 	}	// end method
-
-//	private int getQueryResultCount() {
-//		return easyPreferenceData.getQueryResultCount();
-//	}
-//	private int getPageCount() {
-//		return easyPreferenceData.getQueryPageCount();
-//	}
 
 	/**
 	 * error message 추가한다.

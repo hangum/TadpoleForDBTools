@@ -63,7 +63,13 @@ var SqlHighlightRules = function() {
 
     var keywords = (
         "select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
-        "when|else|end|type|left|right|join|on|outer|desc|asc"
+        "when|else|end|type|left|right|join|on|outer|desc|asc" +
+        
+        "|references|primary|key|foreign|autoincrement|no|action" +
+        "|default|not|null" +
+        "|create|drop|alter|into|values|set|view|index|trigger|before|for|each|row|begin|replace|procedure|in|out|with|unique|returns"+
+        "|table|integer|int|char|varchar|varchar2|number|datetime|date|text|timestamp" +
+        "|commit|rollback"
     );
 
     var builtinConstants = (

@@ -16,7 +16,7 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
-	executeFlag : function() {},
+//	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -72,6 +72,10 @@ var varEditorType = 'TABLES';
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
+	/*
+	 *  autocomplete
+	 *  http://stackoverflow.com/questions/13545433/autocompletion-in-ace-editor 
+	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
 	    enableSnippets: true
@@ -122,10 +126,10 @@ editorService.saveData = function() {
 editorService.setFocus = function() {
 	editor.focus();
 };
-editorService.executeFlag = function() {
-//	console.log('\t end java program....');
-	isJavaRunning = false;
-};
+//editorService.executeFlag = function() {
+////	console.log('\t end java program....');
+//	isJavaRunning = false;
+//};
 
 //==[ Define short key ]======================================================================================================================
 editor.commands.addCommand({
@@ -160,15 +164,15 @@ editor.commands.addCommand({
     	try {
 //    		console.log("\t [start]Execute query => " + isJavaRunning);
     		
-    		if(!isJavaRunning) {
-    			isJavaRunning = true;
+//    		if(!isJavaRunning) {
+//    			isJavaRunning = true;
     			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
 //    		} else {
 //    			console.log("\t Can not execute query");
-    		}
+//    		}
     	} catch(e) {
     		console.log(e);
-    		editorService.executeFlag();
+//    		editorService.executeFlag();
     	}
     },
     readOnly: false
@@ -178,13 +182,13 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
     	try {
-    		if(!isJavaRunning) {
-    			isJavaRunning = true;
+//    		if(!isJavaRunning) {
+//    			isJavaRunning = true;
     			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'), editorService.isBlockText());
-    		}
+//    		}
 	    } catch(e) {
 			console.log(e);
-			editorService.executeFlag();
+//			editorService.executeFlag();
 		}
     },
     readOnly: false

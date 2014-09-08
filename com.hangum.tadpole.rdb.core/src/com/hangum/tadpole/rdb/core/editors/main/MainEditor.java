@@ -41,6 +41,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.USER_TYPE;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
@@ -443,13 +444,32 @@ public class MainEditor extends EditorExtension {
 			public void completed( ProgressEvent event ) {
 				try {
 //					content assist기능에 테이블 정보 넣는 것은 잠시 보류합니다.
-					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, dbAction.toString(), "", getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), "", getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
 			}
 			public void changed( ProgressEvent event ) {}			
 		});
+	}
+	
+	/**
+	 * find editor extension
+	 * 
+	 * eg) mysql, pgsql
+	 * @return
+	 */
+	private String findEditorExt() {
+		String ext = EditorDefine.EXT_DEFAULT;
+		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_MYSQL;
+		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_PGSQL;
+		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_SQLite;
+		}
+		
+		return ext;
 	}
 	
 //	/**

@@ -200,7 +200,7 @@ public class MongoDBImportEditor extends EditorPart {
 		tabItemQuery.setControl(compositeQuery);
 		compositeQuery.setLayout(new GridLayout(1, false));
 		
-		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, EditorDefine.EXT_SQL, "", "");
+		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeQueryTail = new Composite(compositeQuery, SWT.NONE);
