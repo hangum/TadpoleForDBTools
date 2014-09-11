@@ -63,7 +63,7 @@ var SqlHighlightRules = function() {
 
     var keywords = (
         "select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
-        "when|else|end|type|left|right|join|on|outer|desc|asc" +
+        "when|else|end|type|left|right|join|on|outer|desc|asc|union" +
         
         "|references|primary|key|foreign|autoincrement|no|action" +
         "|default|not|null" +

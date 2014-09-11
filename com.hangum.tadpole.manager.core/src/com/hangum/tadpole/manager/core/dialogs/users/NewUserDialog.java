@@ -316,7 +316,7 @@ public class NewUserDialog extends Dialog {
 //				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
 //			}
 			
-			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
+//			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
 			
 			MessageDialog.openInformation(null, "Confirm", Messages.NewUserDialog_31); //$NON-NLS-1$
 			
