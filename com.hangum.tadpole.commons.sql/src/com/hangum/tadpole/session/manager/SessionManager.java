@@ -11,12 +11,15 @@
 package com.hangum.tadpole.session.manager;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
+
+import oracle.net.aso.s;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,6 +31,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.dao.system.UserRoleDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
@@ -61,6 +65,9 @@ public class SessionManager {
 								/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
 								/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
 														USER_INFO_DATA,
+														
+														USE_OTP, OTP_SECRET_KEY,
+														
 														SECURITY_QUESTION,
 														SECURITY_ANSWER, PERSPECTIVE}
 
@@ -97,14 +104,7 @@ public class SessionManager {
 	public static void addSession(UserDAO loginUserDao) {
 		HttpSession sStore = RWT.getRequest().getSession();
 		
-//		 user의 대표 role과 전체 role을 세션에 저장합니다. 
-//		 이것은 user role이 manager일 경우만 디비의 등록 추가 수정이 가능하여 자신이 속한 그룹의 role을 찾는 것입니다.
-		String strRepresentRole 	= PublicTadpoleDefine.USER_TYPE.USER.toString();
-		String tmpStrRepAdminRole 	= "";
-		String tmpStrRepManagerRole = "";
-		String tmpStrRepDBARole 	= "";
-		String tmpStrRepUserRole 	= "";
-		
+		Map<Integer, String> mapRoleType = new HashMap<Integer, String>();
 		// 내가 속한 모든 그룹 순번이고, 이것은 사용할수 있는 디비를 조회하는 용도로 사용하기 위해 세션에 입력합니다.
 		String strGroupSeqs = "";
 		
@@ -114,18 +114,8 @@ public class SessionManager {
 				mapUserRole.put(userRoleDAO.getGroup_seq(), userRoleDAO.getRole_type());
 				
 				if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(userRoleDAO.getRole_type())) {
-					tmpStrRepAdminRole = PublicTadpoleDefine.USER_TYPE.ADMIN.toString();
-					
 					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				} else if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(userRoleDAO.getRole_type())) {
-					tmpStrRepManagerRole = PublicTadpoleDefine.USER_TYPE.MANAGER.toString();
-					
-					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
-				} else if(PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(userRoleDAO.getRole_type())) {
-					tmpStrRepDBARole = PublicTadpoleDefine.USER_TYPE.DBA.toString();
-					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
-				} else if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(userRoleDAO.getRole_type())) {
-					tmpStrRepUserRole = PublicTadpoleDefine.USER_TYPE.USER.toString();
 					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
 				}
 				
@@ -135,15 +125,12 @@ public class SessionManager {
 			strGroupSeqs = StringUtils.removeEnd(strGroupSeqs, ",");
 			sStore.setAttribute(NAME.GROUP_SEQS.toString(), strGroupSeqs);
 			
-			// 대표 role을 찾는다.
-			if(!"".equals(tmpStrRepAdminRole)) strRepresentRole = tmpStrRepAdminRole;
-			else if(!"".equals(tmpStrRepManagerRole)) strRepresentRole = tmpStrRepManagerRole;
-			else if(!"".equals(tmpStrRepDBARole)) strRepresentRole = tmpStrRepDBARole;
-			else if(!"".equals(tmpStrRepUserRole)) strRepresentRole = tmpStrRepUserRole;
-			
-			// session 에 등록.
-			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), strRepresentRole);
+//			// session 에 등록.
 			sStore.setAttribute(NAME.ROLE_TYPE.toString(), mapUserRole);
+			
+			// 본래 자신의  role을 넣습니다.
+			UserRoleDAO representUserRole = TadpoleSystem_UserRole.representUserRole(loginUserDao);
+			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), representUserRole.getRole_type());
 			
 		} catch(Exception e) {
 			logger.error("find user rold", e);
@@ -158,6 +145,9 @@ public class SessionManager {
 		sStore.setAttribute(NAME.SECURITY_ANSWER.toString(), loginUserDao.getSecurity_answer());
 		sStore.setAttribute(NAME.SECURITY_QUESTION.toString(), loginUserDao.getSecurity_question());
 		sStore.setAttribute(NAME.PERSPECTIVE.toString(), "default");
+		
+		sStore.setAttribute(NAME.USE_OTP.toString(), loginUserDao.getUse_otp());
+		sStore.setAttribute(NAME.OTP_SECRET_KEY.toString(), loginUserDao.getOtp_secret());
 	}
 	
 	/**
@@ -225,17 +215,26 @@ public class SessionManager {
 		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(NAME.SECURITY_ANSWER.toString());
 	}
+	public static String getUseOTP() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.USE_OTP.toString());
+	}
+	public static String getOTPSecretKey() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.OTP_SECRET_KEY.toString());
+	}
+	
 	/**
 	 * db에 해당하는 자신의 role을 가지고 옵니다.
 	 * 
 	 * @param groupSeq
 	 * @return
 	 */
-	public static String getRoleType(int groupSeq) {
+	public static String getRoleType(UserDBDAO userDB) {
 		HttpSession sStore = RWT.getRequest().getSession();
 		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(NAME.ROLE_TYPE.toString());
 		
-		return mapUserRole.get(groupSeq);
+		return mapUserRole.get(userDB.getGroup_seq());
 	}
 	
 	/**
@@ -259,6 +258,12 @@ public class SessionManager {
 		HttpSession sStore = RWT.getRequest().getSession();
 		
 		return (String)sStore.getAttribute(NAME.REPRESENT_ROLE_TYPE.toString());
+	}
+	
+	public static boolean isAdmin() {
+		Map<Integer, String> mapUserRole = getAllRoleType();
+		Collection<String> collValues = mapUserRole.values();
+		return collValues.contains(PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 	}
 	
 	/**
@@ -337,11 +342,10 @@ public class SessionManager {
 			HttpSession sStore = RWT.getRequest().getSession();			
 			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
 		
-			String defaultUrl = MessageFormat.format("{0}://{1}:{2}",
-					new Object[] { RWT.getRequest().getScheme(), RWT.getRequest().getLocalName(), Integer.toString(RWT.getRequest().getLocalPort()),RWT.getRequest().getRequestURI() });
-	     System.out.println("Default URL: " + defaultUrl);
+//			String defaultUrl = MessageFormat.format("{0}://{1}:{2}",
+//					new Object[] { RWT.getRequest().getScheme(), RWT.getRequest().getLocalName(), Integer.toString(RWT.getRequest().getLocalPort()),RWT.getRequest().getRequestURI() });
 	     
-	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", defaultUrl);
+	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", "www.tadpoledb.com");
 	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
 	     	executor.execute("setTimeout('"+browserText+"', 50)" );
 			

@@ -1,5 +1,0 @@
-rap fileupload incubator 2.2
-
-url is 
-http://git.eclipse.org/c/rap/incubator/org.eclipse.rap.incubator.fileupload.git/commit/?id=af70bf1c8901c77bf44b8f43a4e9ce4ebaf4d0b7
-2014-03-11 update

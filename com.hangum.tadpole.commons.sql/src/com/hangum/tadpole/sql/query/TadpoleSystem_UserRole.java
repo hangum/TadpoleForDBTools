@@ -16,6 +16,17 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class TadpoleSystem_UserRole {
 	
 	/**
+	 * 탈퇴.
+	 * @param userSeq
+	 * @throws Exception
+	 */
+	public static void withdrawal(int userSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("userWithdrawal", userSeq); //$NON-NLS-1$
+		sqlClient.update("dbWithdrawal", userSeq); //$NON-NLS-1$
+	}
+	
+	/**
 	 * insert data the user_goup_role.
 	 * 
 	 * @param groupSeq
@@ -38,6 +49,18 @@ public class TadpoleSystem_UserRole {
 		groupRole = (UserRoleDAO)sqlClient.insert("userUserRoleInsert", groupRole); //$NON-NLS-1$
 		
 		return groupRole;
+	}
+	
+	/**
+	 * 대표 role을 리턴합니다.
+	 * 
+	 * @param userDao
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserRoleDAO representUserRole(UserDAO userDao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (UserRoleDAO)sqlClient.queryForObject("representUserRole", userDao.getSeq()); 
 	}
 	
 	/**

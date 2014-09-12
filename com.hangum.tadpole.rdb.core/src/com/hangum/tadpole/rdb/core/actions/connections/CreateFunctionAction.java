@@ -33,7 +33,9 @@ public class CreateFunctionAction extends AbstractQueryAction {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.FUNCTIONS));
+		FindEditorAndWriteQueryUtil.run(userDB, 
+					QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.FUNCTIONS), 
+					PublicTadpoleDefine.DB_ACTION.FUNCTIONS);
 	}
 
 }

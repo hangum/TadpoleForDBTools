@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -89,6 +89,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		btnCheckButtonHomepage.setSelection(true);
 		
 		grpEmailAccount = new Group(container, SWT.NONE);
+		grpEmailAccount.setVisible(false);
 		grpEmailAccount.setLayout(new GridLayout(2, false));
 		grpEmailAccount.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpEmailAccount.setText(Messages.GeneralPreferencePage_grpEmailAccount_text);
@@ -117,11 +118,14 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		textPasswd = new Text(grpEmailAccount, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		if(!PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())) {
-			grpEmailAccount.setVisible(false);
+		if(SessionManager.isAdmin()) {
+			grpEmailAccount.setVisible(true);
 		}
 		
 		initDefaultValue();
+		
+		// google analytic
+		AnalyticCaller.track("GeneralPreferencePage");
 		
 		return container;
 	}

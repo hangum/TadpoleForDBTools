@@ -120,10 +120,10 @@ public class DDLScriptManager {
 		}
 		
 		// 마지막 ; 문자가 포함되어있을 경우.
-		if(StringUtils.endsWith(StringUtils.trim(retStr), PublicTadpoleDefine.SQL_DILIMITER)) {
+		if(StringUtils.endsWith(StringUtils.trim(retStr), PublicTadpoleDefine.SQL_DELIMITER)) {
 			return retStr;
 		} else {
-			return retStr + PublicTadpoleDefine.SQL_DILIMITER;
+			return retStr + PublicTadpoleDefine.SQL_DELIMITER;
 		}
 	}
 	

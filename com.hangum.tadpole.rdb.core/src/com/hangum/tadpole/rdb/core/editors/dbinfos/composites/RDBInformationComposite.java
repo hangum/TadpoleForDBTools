@@ -27,8 +27,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpold.commons.libs.core.dao.KeyValueDAO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
@@ -89,13 +91,13 @@ public class RDBInformationComposite extends Composite {
 		listInfo.add(new KeyValueDAO("Group Name", 		userDB.getGroup_name())); //$NON-NLS-1$
 		listInfo.add(new KeyValueDAO("Display Name", 	userDB.getDisplay_name())); //$NON-NLS-1$
 		
-		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getShowUrl(SessionManager.getRepresentRole()))); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getShowUrl(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getShowHost(SessionManager.getRepresentRole()) + "/" + userDB.getShowPort(SessionManager.getRepresentRole()))); //$NON-NLS-1$ //$NON-NLS-2$
+			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getShowHost(SessionManager.getRoleType(userDB)) + "/" + userDB.getShowPort(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		listInfo.add(new KeyValueDAO("Database", 		userDB.getShowDb(SessionManager.getRepresentRole()))); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("Database", 		userDB.getShowDb(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("User",	 		userDB.getShowUsers(SessionManager.getRepresentRole()))); //$NON-NLS-1$
+			listInfo.add(new KeyValueDAO("User",	 		userDB.getShowUsers(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
 		}
 		
 		listInfo.add(new KeyValueDAO("Read Only", 		userDB.getIs_readOnlyConnect())); //$NON-NLS-1$
@@ -110,6 +112,9 @@ public class RDBInformationComposite extends Composite {
 			listInfo.add(new KeyValueDAO("Profile", 		userDB.getIs_profile())); //$NON-NLS-1$
 			listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_17, 	userDB.getQuestion_dml()));
 		}
+		
+		// google analytic
+		AnalyticCaller.track(RDBDBInfosEditor.ID, "RDBInformationComposite");
 	}
 
 	@Override

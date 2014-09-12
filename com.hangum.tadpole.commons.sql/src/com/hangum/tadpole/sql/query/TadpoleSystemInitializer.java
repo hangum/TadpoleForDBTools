@@ -209,7 +209,7 @@ public class TadpoleSystemInitializer {
 				//targetDDL = new String(targetDDL.getBytes(), "ISO-8859-1");
 				createMsg = "System Table create [" + targetDDL + "]";
 				stmt.execute(targetDDL);
-				logger.info("\n System Table create ==>> " + field.getName());
+				logger.info(" ==>> " + field.getName());
 			}
 
 		} catch (Exception e) {
@@ -241,20 +241,20 @@ public class TadpoleSystemInitializer {
 		// add basic user
 //		createMsg = ADMIN_EMAIL + " user creating....";
 		UserDAO adminUser = TadpoleSystem_UserQuery.newUser(ADMIN_EMAIL, ADMIN_PASSWD, ADMIN_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString(),
-				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole");
+				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole", PublicTadpoleDefine.YES_NO.NO.toString(), "");
 
 //		createMsg = MANAGER_EMAIL + " user creating....";
 		UserDAO managerUser = TadpoleSystem_UserQuery.newUser(MANAGER_EMAIL, MANAGER_PASSWD, MANAGER_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString(),
-				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole");
+				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole", PublicTadpoleDefine.YES_NO.NO.toString(), "");
 
-//		createMsg = GUEST_EMAIL + " user creating....";
-		UserDAO gusetUser = TadpoleSystem_UserQuery.newUser(GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString(),
-				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole");
+////		createMsg = GUEST_EMAIL + " user creating....";
+//		UserDAO gusetUser = TadpoleSystem_UserQuery.newUser(GUEST_EMAIL, GUEST_PASSWD, GUEST_NAME, "en_us", PublicTadpoleDefine.YES_NO.YES.toString(),
+//				PublicTadpoleDefine.SecurityHint.QUESTION2.getKey(), "tadpole");
 
 		// add group_role
 		TadpoleSystem_UserRole.newUserRole(groupAdmin.getSeq(), adminUser.getSeq(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString(), PublicTadpoleDefine.YES_NO.NO.toString(), PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 		TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), managerUser.getSeq(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString(), PublicTadpoleDefine.YES_NO.NO.toString(), PublicTadpoleDefine.USER_TYPE.MANAGER.toString());
-		TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), gusetUser.getSeq(), PublicTadpoleDefine.USER_TYPE.USER.toString(), PublicTadpoleDefine.YES_NO.NO.toString(), PublicTadpoleDefine.USER_TYPE.USER.toString());
+//		TadpoleSystem_UserRole.newUserRole(groupTest.getSeq(), gusetUser.getSeq(), PublicTadpoleDefine.USER_TYPE.USER.toString(), PublicTadpoleDefine.YES_NO.NO.toString(), PublicTadpoleDefine.USER_TYPE.USER.toString());
 
 	}
 

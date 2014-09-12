@@ -155,7 +155,7 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 		} catch(Exception e) {
 			logger.error("MongoDBreference saveing", e);
 			
-			MessageDialog.openError(getShell(), Messages.MongoDBPreferencePage_12, Messages.MongoDBPreferencePage_13 + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.MongoDBPreferencePage_12, e.getMessage());
 			return false;
 		}
 		

@@ -129,7 +129,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
 		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
-		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
 			tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getDb() + " ]"); //$NON-NLS-1$
 		} else {
 			tltmConnectURL.setText("Connect Information"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -375,7 +375,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 		
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
-				browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_JAVASCRIPT, "", getInputJavaScriptContent());
+				browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_JAVASCRIPT, "NONE", "", getInputJavaScriptContent());
 			}
 			public void changed( ProgressEvent event ) {}
 		});

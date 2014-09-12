@@ -37,7 +37,9 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.sql.query.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
@@ -78,6 +80,9 @@ public class QueryHistoryComposite extends Composite {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(!is.isEmpty()) {
 					appendText(getHistoryTabelSelectData());
+					
+					// google analytic
+					AnalyticCaller.track(MainEditor.ID, "QueryHistoryComposite");
 				}
 			}
 		});
@@ -115,7 +120,7 @@ public class QueryHistoryComposite extends Composite {
 				
 				IStructuredSelection is = (IStructuredSelection)tvSQLHistory.getSelection();
 				if(!is.isEmpty()) {
-					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DILIMITER);
+					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DELIMITER);
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}

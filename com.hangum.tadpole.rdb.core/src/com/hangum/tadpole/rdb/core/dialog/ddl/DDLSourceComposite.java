@@ -52,7 +52,7 @@ public class DDLSourceComposite extends Composite {
 		labelTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		labelTable.setText(tableName);
 		
-		ddlSource = new TadpoleEditorWidget(compositeBasic, SWT.BORDER, EditorDefine.EXT_SQL, initDDL, "");
+		ddlSource = new TadpoleEditorWidget(compositeBasic, SWT.BORDER, EditorDefine.EXT_DEFAULT, initDDL, "");
 		ddlSource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 	}
 	

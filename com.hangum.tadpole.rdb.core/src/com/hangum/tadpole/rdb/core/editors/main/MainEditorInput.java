@@ -39,7 +39,7 @@ public class MainEditorInput implements IEditorInput {
 	private PublicTadpoleDefine.EDITOR_OPEN_TYPE OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.NONE;
 	
 	private UserDBDAO userDB;
-	private PublicTadpoleDefine.DB_ACTION action;
+	private PublicTadpoleDefine.DB_ACTION dbAction = PublicTadpoleDefine.DB_ACTION.TABLES;
 	private String defaultStr = ""; //$NON-NLS-1$
 	private UserDBResourceDAO resourceDAO;
 	
@@ -60,9 +60,10 @@ public class MainEditorInput implements IEditorInput {
 	 * @param userDB
 	 * @param defaultStr
 	 */
-	public MainEditorInput(UserDBDAO userDB, String defaultStr) {
+	public MainEditorInput(UserDBDAO userDB, String defaultStr, PublicTadpoleDefine.DB_ACTION initAction) {
 		this.userDB = userDB;
 		this.defaultStr = defaultStr;
+		this.dbAction = initAction;
 		
 		this.OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.STRING;
 	}
@@ -81,18 +82,18 @@ public class MainEditorInput implements IEditorInput {
 		this.defaultStr = TadpoleSystem_UserDBResource.getResourceData(dao);
 	}
 	
-	/**
-	 * query창에 action 타입에 따른 기본 텍스트 출력
-	 * @param userDB
-	 * @param action
-	 */
-	public MainEditorInput(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION initAction) {
-		this.userDB = userDB;
-		this.action = initAction;
-		this.defaultStr = QueryTemplateUtils.getQuery(userDB, initAction);
-		
-		this.OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.STRING;
-	}
+//	/**
+//	 * query창에 action 타입에 따른 기본 텍스트 출력
+//	 * @param userDB
+//	 * @param action
+//	 */
+//	public MainEditorInput(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION initAction) {
+//		this.userDB = userDB;
+//		this.dbAction = initAction;
+//		this.defaultStr = QueryTemplateUtils.getQuery(userDB, initAction);
+//		
+//		this.OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.STRING;
+//	}
 
 	@Override
 	public Object getAdapter(Class adapter) {
@@ -122,7 +123,7 @@ public class MainEditorInput implements IEditorInput {
 	@Override
 	public String getToolTipText() {
 
-		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
 			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
 				return String.format(userDB.getDbms_types() + " - %s", fileName);
@@ -148,5 +149,9 @@ public class MainEditorInput implements IEditorInput {
 
 	public UserDBResourceDAO getResourceDAO() {
 		return resourceDAO;
+	}
+	
+	public PublicTadpoleDefine.DB_ACTION getDbAction() {
+		return dbAction;
 	}
 }

@@ -50,9 +50,10 @@ public class DBTypeActionFilterAdapter implements IActionFilter {
 				
 			// 사용자 권한에 따라.
 			} else if(USER_TYPE.equals(name)) {
-				String[] userTypes = StringUtils.split(value, ",");
+				final String[] userTypes = StringUtils.split(value, ",");
+				final String strRoleType = SessionManager.getRoleType(userDB);
 				for (String userType : userTypes) {
-					if(SessionManager.getRoleType(userDB.getGroup_seq()).equalsIgnoreCase(userType)) {
+					if(strRoleType.equalsIgnoreCase(userType)) {
 						return true;
 					}
 				}

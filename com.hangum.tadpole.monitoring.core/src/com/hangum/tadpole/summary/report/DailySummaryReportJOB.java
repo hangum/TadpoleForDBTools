@@ -10,12 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.summary.report;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -74,7 +72,7 @@ public class DailySummaryReportJOB implements Job {
 						String mailContent = report.makeFullSummaryReport(userDBDAO.getDisplay_name(), strMailContent.toString());
 
 						// 보고서를 보냅니다.						
-						sendEmail(userDBDAO, mailContent);
+						sendEmail(userDBDAO.getDisplay_name(), userDBDAO.getUser_seq(), mailContent);
 						
 						if(logger.isDebugEnabled()) logger.debug(mailContent);
 					} // end mysql db
@@ -88,19 +86,17 @@ public class DailySummaryReportJOB implements Job {
 	
 	/**
 	 * 
-	 * @param userType
-	 * @param groupSeq
-	 * @param groupName
-	 * @param name
-	 * @param email
+	 * @param title
+	 * @param userSeq
+	 * @param strContent
 	 */
-	private void sendEmail(UserDBDAO userDB, String strContent) {
+	public static void sendEmail(String title, int userSeq, String strContent) throws Exception {
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.getUserInfo(userDB.getUser_seq());
+			UserDAO userDao = TadpoleSystem_UserQuery.getUserInfo(userSeq);
 			
 			// manager 에게 메일을 보낸다.
 			EmailDTO emailDao = new EmailDTO();
-			emailDao.setSubject(userDB.getDisplay_name() + " Summary Report.");
+			emailDao.setSubject(title + " Report.");
 			emailDao.setContent(strContent);
 			emailDao.setTo(userDao.getEmail());
 			
@@ -108,6 +104,7 @@ public class DailySummaryReportJOB implements Job {
 			sendEmail.sendMail(emailDao);
 		} catch(Exception e) {
 			logger.error("Error send email", e);
+			throw e;
 		}
 	}
 	
@@ -120,6 +117,8 @@ public class DailySummaryReportJOB implements Job {
 	 * @param args
 	 */
 	public static String executSQL(UserDBDAO userDB, String strTitle, String strDML) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("execute query " + strDML);
+		
 		java.sql.Connection javaConn = null;
 		Statement stmt = null;
 		ResultSet rs = null;

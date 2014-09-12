@@ -118,6 +118,7 @@ public class FindPasswordDialog extends Dialog {
 
 		if (!checkValidation()) {
 			MessageDialog.openWarning(getShell(), Messages.FindPasswordDialog_1, Messages.FindPasswordDialog_6);
+			textEmail.setFocus();
 			return;
 		}
 		UserDAO validUser;

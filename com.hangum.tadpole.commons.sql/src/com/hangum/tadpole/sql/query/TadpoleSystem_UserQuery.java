@@ -35,16 +35,31 @@ public class TadpoleSystem_UserQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserQuery.class);
 	
 	/**
+	 * 모든 유효한 유저 목록을 가져옵니다.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDAO> getAllUser() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getAllUser"); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 신규 유저를 등록합니다.
 	 * @param email
 	 * @param passwd
 	 * @param name
 	 * @param approvalYn
+	 * @param question
+	 * @param answer
+	 * @param use_opt
+	 * @param opt_secret
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDAO newUser(String email, String passwd, String name, String language, String approvalYn, String question, String answer) throws Exception {
-		UserDAO loginDAO = new UserDAO(email, name, language, approvalYn, question, answer);
+	public static UserDAO newUser(String email, String passwd, String name, String language, String approvalYn, String question, String answer, String use_opt, String opt_secret) throws Exception {
+		UserDAO loginDAO = new UserDAO(email, name, language, approvalYn, question, answer, use_opt, opt_secret);
 		loginDAO.setPasswd(CipherManager.getInstance().encryption(passwd));
 		
 		loginDAO.setSecurity_question(CipherManager.getInstance().encryption(question));
@@ -136,10 +151,12 @@ public class TadpoleSystem_UserQuery {
 	
 		if(null == userInfo) {
 			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
-		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) {
-			throw new Exception(Messages.TadpoleSystem_UserQuery_6);
 		} else {
-			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+			try {
+				if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+					throw new Exception(Messages.TadpoleSystem_UserQuery_5);
+				}
+			} catch(Exception e) {
 				throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 			}
 		}
@@ -261,6 +278,17 @@ public class TadpoleSystem_UserQuery {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 사용자 힌트 변경
+	 * 
+	 * @param user
+	 * @throws Exception
+	 */
+	public static void updateUserOTPCode(UserDAO user) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserOTPCode", user); //$NON-NLS-1$
 	}
 
 	/**

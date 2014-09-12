@@ -72,7 +72,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 					else sbSQL.append("? ); "); //$NON-NLS-1$
 				}
 				
-				FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
+				FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), actionType);
 			} catch(Exception e) {
 				logger.error(Messages.GenerateSQLInsertAction_9, e);
 				

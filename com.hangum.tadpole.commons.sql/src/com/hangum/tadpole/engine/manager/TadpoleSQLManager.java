@@ -15,12 +15,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -61,7 +64,7 @@ public class TadpoleSQLManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlMapClient getInstance(UserDBDAO dbInfo) throws Exception {
+	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws Exception {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
@@ -93,7 +96,16 @@ public class TadpoleSQLManager {
 				}
 				
 			} catch(Exception e) {
-				logger.error("get DB Instance", e);
+				String strAddReqInfo = "";
+				try {
+					strAddReqInfo = RequestInfoUtils.requestInfo("db connection exception ", SessionManager.getEMAIL());
+				} catch(Exception ee) {
+					logger.error("request error", ee);
+				}
+				
+				logger.error("=================================================\n get DB Instance \n " + strAddReqInfo + "\n" , e);
+				
+				
 				
 				dbManager.remove(searchKey);
 				
@@ -104,6 +116,19 @@ public class TadpoleSQLManager {
 		}
 
 		return sqlMapClient;
+	}
+
+	/**
+	 * 전체 connection pool 정보를 가져옵니다.
+	 */
+	public static void getConnectionPoolStatus() {
+		SqlMapClient[] sqlMaps = (SqlMapClient[])dbManager.values().toArray();
+		for (SqlMapClient sqlMapClient : sqlMaps) {
+
+			BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
+//			logger.info("NumActive 	: " + basicDataSource.getNumActive());
+//			logger.info("NumIdle 	: " + basicDataSource.getNumIdle());
+		}
 	}
 	
 	/**

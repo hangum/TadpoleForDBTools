@@ -60,6 +60,7 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	public void run() {
 		
 		if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
+			
 			// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에 내용이 있다면 묻도록 수정.)
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
 			IEditorReference[] references = page.getEditorReferences();
@@ -67,15 +68,15 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 				page.closeEditor(iEditorReference.getEditor(false), true);
 			}
 			
-			// standalone 모드일경우에는 프로그램 종료한다.
-			if(ApplicationArgumentUtils.isStandaloneMode()) {
-				beforeLogoutAction();
-				System.exit(0);
-			// 서버모드 일 경우 프로그램 로그아웃한다.
-			} else {
+//			// standalone 모드일경우에는 프로그램 종료한다.
+//			if(ApplicationArgumentUtils.isStandaloneMode()) {
+//				beforeLogoutAction();
+//				System.exit(0);
+//			// 서버모드 일 경우 프로그램 로그아웃한다.
+//			} else {
 				beforeLogoutAction();
 				SessionManager.logout();
-			}
+//			}
 		}
 	}
 	

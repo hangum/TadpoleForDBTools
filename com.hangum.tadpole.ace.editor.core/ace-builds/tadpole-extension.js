@@ -16,7 +16,7 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
-	executeFlag : function() {},
+//	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -27,6 +27,9 @@ var editorService = {
 	
 	/** add text */
 	addText : function(varText) {},
+	
+	/** is block text */
+	isBlockText : function() {},
 	
 	/**
 	 * 에디터 기존 내용을 지운 후에 새롭게 텍스트를 넣습니다.
@@ -53,6 +56,8 @@ var editor;
 var isEdited = false;
 /** 자바에서 처리가 끝났는지 */
 var isJavaRunning = false;
+/** open 된 에디터 타입 */
+var varEditorType = 'TABLES';
 
 /** initialize editor */
 {
@@ -67,14 +72,27 @@ var isJavaRunning = false;
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
+	/*
+	 *  autocomplete
+	 *  http://stackoverflow.com/questions/13545433/autocompletion-in-ace-editor 
+	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
 	    enableSnippets: true
 	});
 };
 
-/** 에디터를 초기화 합니다. */
-editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
+/** 
+ * 에디터를 초기화 합니다. 
+ * @param varExt 확장자
+ * @param varAddKeyword
+ * @param varType editorType (sql or procedure )
+ * @param varInitText
+ * 
+ */
+editorService.initEditor = function(varExt, varType, varAddKeyword, varInitText) {
+	varEditorType = varType;
+	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
 		var UndoManager = ace.require("./undomanager").UndoManager;
@@ -108,10 +126,10 @@ editorService.saveData = function() {
 editorService.setFocus = function() {
 	editor.focus();
 };
-editorService.executeFlag = function() {
-//	console.log('\t end java program....');
-	isJavaRunning = false;
-};
+//editorService.executeFlag = function() {
+////	console.log('\t end java program....');
+//	isJavaRunning = false;
+//};
 
 //==[ Define short key ]======================================================================================================================
 editor.commands.addCommand({
@@ -127,6 +145,18 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
+
+/**
+ * editor 텍스트가 block인지 유무?
+ * @returns {Boolean}
+ */
+editorService.isBlockText = function() {
+	var isBlock = false;
+	if("" != editor.getSelectedText())  isBlock = true;
+	
+	return isBlock;
+}
+
 editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
@@ -134,15 +164,15 @@ editor.commands.addCommand({
     	try {
 //    		console.log("\t [start]Execute query => " + isJavaRunning);
     		
-    		if(!isJavaRunning) {
-    			isJavaRunning = true;
-    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
+//    		if(!isJavaRunning) {
+//    			isJavaRunning = true;
+    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
 //    		} else {
 //    			console.log("\t Can not execute query");
-    		}
+//    		}
     	} catch(e) {
     		console.log(e);
-    		editorService.executeFlag();
+//    		editorService.executeFlag();
     	}
     },
     readOnly: false
@@ -152,13 +182,13 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
     	try {
-    		if(!isJavaRunning) {
-    			isJavaRunning = true;
-    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
-    		}
+//    		if(!isJavaRunning) {
+//    			isJavaRunning = true;
+    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'), editorService.isBlockText());
+//    		}
 	    } catch(e) {
 			console.log(e);
-			editorService.executeFlag();
+//			editorService.executeFlag();
 		}
     },
     readOnly: false
@@ -246,6 +276,25 @@ editorService.getSelectedText = function(varDelimiter) {
 	var varEditorContent = editor.getValue();
 	if("" == varEditorContent) return "";
 	
+	//
+	// 프로시저 평선 트리거는 에디터 모두를 리턴합니다. 
+	//
+	if(varEditorType == "PROCEDURES" ||
+		varEditorType == "FUNCTIONS" ||
+		varEditorType == "TRIGGERS") {
+		
+		// 선택된 텍스트가 있다면 우선적으로 리턴합니다.
+		var varSelectionContent = editor.getSelectedText();
+		if("" != varSelectionContent)  {
+			return varSelectionContent;
+		} else {
+			return varEditorContent;
+		}
+	} 
+	
+	//
+	// 일반 에디터. 
+	// 
 	try {
 		// 선택된 텍스트가 있다면 우선적으로 리턴합니다.
 		var varSelectionContent = editor.getSelectedText();

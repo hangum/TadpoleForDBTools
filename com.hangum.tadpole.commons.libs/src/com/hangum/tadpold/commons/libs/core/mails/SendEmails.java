@@ -37,7 +37,7 @@ public class SendEmails {
 	 * 
 	 * @param emailDao
 	 */
-	public void sendMail(EmailDTO emailDao) {
+	public void sendMail(EmailDTO emailDao) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("Add new message");
 		
 		try {
@@ -47,7 +47,8 @@ public class SendEmails {
 			email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));
 			email.setSSLOnConnect(true);
 	
-			email.setFrom(smtpDto.getEmail());
+			
+			email.setFrom(smtpDto.getEmail(), "Tadpole DB Hub");
 			email.setSubject(emailDao.getSubject());
 			
 			// set the html message
@@ -58,6 +59,7 @@ public class SendEmails {
 			
 		} catch(Exception e) {
 			logger.error("send email", e);
+			throw e;
 		}
 	}
 }

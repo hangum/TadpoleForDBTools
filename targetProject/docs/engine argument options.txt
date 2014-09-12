@@ -8,12 +8,17 @@
 # Contributors:
 #     hangum - initial API and implementation
 #-------------------------------------------------------------------------------
+
+-console -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog  -passwd tadpole.jong
+-dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
+
 Program Argument
-  -test			: 테스트 데이터를 로드할것인지 (ex: 예제 데이터 베이스 정보 노출)
+  -test			: 테스트 데이터를 로드할것인지 (ex: 로그인시 관리자, 개발자 계정 보이기, 예제 데이터 베이스 정보 노출)
+  -testDB		:  예제 데이터 베이스 정보 노출
   -standalone 	: 독립 실행모드인지 (ex: 서버 종료 모드, 시작시 브라우저 자동 노출)
   -debuglog 	: log4j 로그레벨이 debug모드. 아니면 info
   -dbPath		: local db(sqlite)일 경우 path 
-  -dbServer 	0t//bB9qlWgGXTTF9sAwWOc3RYoWToZRp9fir0oasXQWOskWOUwsQyP1EfZKO0Myhao3kOPdddZvC+CkOVQATaPne9B6XVs/ZpJe4mdFBwzyFW8Q8JoSOg==
+  -dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
   				: 엔진디비를 지정한 디비 정보를 사용합니다. 디폴트는 내부 sqlite 디비를 사용합니다. 
   -useDB		: 올챙이 시스템에서 지원하는 디비중에서 이용하고자하는 디비를 기록합니다. 모두다 사용할 경우 all 혹은 option을 적지않습니다.
   				: 현재 지원되는디비는 다음과 같습니다.  아래의 값들 중에 return 다음 값들을 ,로 구분하여 입력합니다.
@@ -33,16 +38,13 @@ Program Argument
  -defaultDB     : 디비 입력시 선택디비 나열:
  				: ex : -defaultDB MySQL
  -forceSystemInitialize : 시스테의 초기테이블 데이터 생성을 항상 점검합니다.  일반적으로 한번만 합니다.  검사는 프리퍼런스에 하구요.
- -envDev 				: 개발환경에서 올챙이를 실행했는지 테스트 합니다.
- 							/**
-							 * 시스템이 개발환경인지?
-							 * 
-							 * 올챙이 실행환경이 mac 1.7이상, 그외 1.6 이상이다 보니, 
-							 * 맥 환경 개발자들이 1.6 환경을 맞추면 시스템 개발환경을 설정하기어려워 -dev가 들어 있는 환경에서는 System checker가 동작하지 않도록 하기위해 사용합니다.
-							 * ps) 일괄적으로 1.7로 올리면 좋겠다...
-							 * 
- 							*/
- 			
+
+  -resourcesDir  : resource directory 를 설정합니다.    
+ 				  전체 리소스는 리소스 루트에 각 사용자 리소스느는 id뒤에 놓습니다.
+ 				  폴더가 설정되어지 있지 않다면 .exe가 있거나 혹은 context root 디렉토리의 패런트  아래에 놓습니다. 
+
+ -passwd : 엔진에서 사용할 패스워드.
+ -GAON   : Google Analytics 사용.
   
 VM Argument
   -Dfile.encoding=UTF-8

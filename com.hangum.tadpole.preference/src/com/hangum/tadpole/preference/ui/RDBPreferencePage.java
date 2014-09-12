@@ -111,7 +111,6 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		lblQueryTimeout.setText(Messages.RDBPreferencePage_lblQueryTimeout_text);
 		
 		textQueryTimeout = new Text(container, SWT.BORDER);
-		textQueryTimeout.setText(Messages.RDBPreferencePage_text_text);
 		textQueryTimeout.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -228,7 +227,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	 * 초기값을 설정 합니다.
 	 */
 	private void initDefaultValue() {
-		textSelectLimit.setText( "" + GetPreferenceGeneral.getQueryResultCount() ); //$NON-NLS-1$
+		textSelectLimit.setText( "" + GetPreferenceGeneral.getSelectLimitCount() ); //$NON-NLS-1$
 		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
 		textQueryTimeout.setText( "" + GetPreferenceGeneral.getQueryTimeOut() );
 		

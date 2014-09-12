@@ -34,6 +34,12 @@ public class UserManagementEditorInput implements IEditorInput {
 	public boolean exists() {
 		return true;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof UserManagementEditorInput) ) return false;
+		return ((UserManagementEditorInput)obj).getName().equals(getName());
+	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {

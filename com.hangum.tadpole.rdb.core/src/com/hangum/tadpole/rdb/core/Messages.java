@@ -134,6 +134,7 @@ public class Messages extends NLS {
 	public static String MainEditor_45;
 	public static String MainEditor_46;
 	public static String MainEditor_47;
+	public static String MainEditor_49;
 	public static String MainEditor_5;
 	public static String MainEditor_50;
 	public static String MainEditor_56;
@@ -324,7 +325,6 @@ public class Messages extends NLS {
 	public static String TableViewerEditPart_0;
 	public static String TableViewerEditPart_1;
 	public static String TableViewerEditPart_10;
-	public static String TableViewerEditPart_11;
 	public static String TableViewerEditPart_2;
 	public static String TableViewerEditPart_3;
 	public static String TableViewerEditPart_7;
@@ -388,6 +388,9 @@ public class Messages extends NLS {
 	public static String PreDBInfoComposite_this_text;
 	public static String MSSQLLoginComposite_grpConnectionType_text;
 	public static String MSSQLLoginComposite_preDBInfo_text;
+	public static String TableDirectEditorComposite_1;
+	public static String TableDirectEditorComposite_17;
+	public static String TableDirectEditorComposite_19;
 	public static String TableDirectEditorComposite_tltmDdlSourceView_text;
 	public static String TableDirectEditorComposite_btnDdlSourceView_text;
 	public static String OthersConnectionMongoDBGroup_btnShowTables_text;
@@ -423,6 +426,13 @@ public class Messages extends NLS {
 	public static String OthersConnectionBigDataGroup_btnSendMonitoring_text;
 	public static String OthersConnectionMongoDBGroup_btnCheckButton_text;
 	public static String OthersConnectionMongoDBGroup_btnIsVisible_1_text;
+	public static String SQLiteLoginComposite_btnCreation_text;
+	public static String SQLiteLoginComposite_btnFileupload_text;
+	public static String SQLiteLoginComposite_btnFileUpload_text;
+	public static String SQLiteLoginComposite_btnCreationDb_text;
+	public static String TableDirectEditorComposite_tltmRefersh_text;
+	public static String ResultSetComposite_btnDmlGenerator_text;
+	public static String ResultSetComposite_btnDMLGenerator_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -24,6 +24,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.CollectionInformationComposite;
@@ -144,6 +145,9 @@ public class MongoDBInfosEditor extends EditorPart {
 	private void initData() {
 		compositeServerStatus.initMongoDBInfoData(commandResult);
 		compositeCollectionSummary.initData(userDB);
+		
+		// google analytic
+		AnalyticCaller.track(MongoDBInfosEditor.ID);
 	}
 
 	@Override

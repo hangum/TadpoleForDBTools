@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -25,7 +26,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -138,6 +138,7 @@ public class ResultMainComposite extends Composite {
 	 */
 	public void setMainEditor(MainEditor mainEditor) {
 		this.mainEditor = mainEditor;
+		this.compositeResultSet.setSelect(SQLUtil.isSELECTEditor(mainEditor.getDbAction()));
 	}
 	
 	/**
@@ -151,23 +152,21 @@ public class ResultMainComposite extends Composite {
 			
 			// 쿼리를 이미 실행 중이라면 무시합니다.
 			if(compositeResultSet.getJobQueryManager() != null) {
-				if(logger.isDebugEnabled()) logger.debug("===> job state is : " + compositeResultSet.getJobQueryManager().getState());
-				
 				if(Job.RUNNING == compositeResultSet.getJobQueryManager().getState()) {
-					if(logger.isDebugEnabled()) logger.debug("================= return running query job ");
+					if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job ");
 					return;
 				}
 			}
 			
 			// 요청쿼리가 없다면 무시합니다. 
-			if("".equals(reqQuery.getSql())) return;
+			if(StringUtils.isEmpty(reqQuery.getSql())) return;
 			this.reqQuery = reqQuery;
 			
 			// 실행해도 되는지 묻는다.
 			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(getUserDB().getQuestion_dml())) {
 				boolean isDMLQuestion = false;
 				if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {						
-					for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DILIMITER)) {							
+					for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
 						if(!SQLUtil.isStatement(strSQL)) {
 							isDMLQuestion = true;
 							break;
@@ -179,17 +178,18 @@ public class ResultMainComposite extends Composite {
 			
 				if(isDMLQuestion) if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) return; //$NON-NLS-1$
 			}
-			
+
 			// tab을 처음으로 이동합니다. 
 			resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 			
 			// 실제 쿼리 실행.
 			compositeResultSet.executeCommand(reqQuery);
+			
 		} catch(Exception e) {
 			logger.error("execute query", e);
 		} finally {
 			// 에디터가 작업이 끝났음을 알립니다.
-			browserEvaluate(EditorFunctionService.EXECUTE_DONE);
+//			browserEvaluate(EditorFunctionService.EXECUTE_DONE);
 		}
 	}
 	

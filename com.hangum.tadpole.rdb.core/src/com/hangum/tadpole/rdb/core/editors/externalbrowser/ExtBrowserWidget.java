@@ -25,6 +25,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
+
 /**
  * Extension browser
  * 
@@ -132,6 +135,9 @@ public class ExtBrowserWidget extends Composite {
 		goUrl();
 		
 		browser.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track("ExtBrowserWidget");
 	}
 	
 	/**

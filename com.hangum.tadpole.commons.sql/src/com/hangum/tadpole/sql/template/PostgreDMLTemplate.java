@@ -51,7 +51,7 @@ public class PostgreDMLTemplate extends MySQLDMLTemplate {
 	
 	
 	/** function */
-	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE FUNCTION emp_stamp() RETURNS trigger AS $emp_stamp$  " + PublicTadpoleDefine.LINE_SEPARATOR + 
+	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE FUNCTION emp_stamp() RETURNS trigger AS emp_stamp_name  " + PublicTadpoleDefine.LINE_SEPARATOR + 
 														  "  BEGIN  " + PublicTadpoleDefine.LINE_SEPARATOR + 
 														  "      -- Check that empname and salary are given  " + PublicTadpoleDefine.LINE_SEPARATOR + 
 														  "      IF NEW.empname IS NULL THEN " + PublicTadpoleDefine.LINE_SEPARATOR + 

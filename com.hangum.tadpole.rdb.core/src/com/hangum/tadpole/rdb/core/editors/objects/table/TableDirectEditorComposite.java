@@ -48,28 +48,31 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.commons.util.XMLUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
-import com.hangum.tadpole.rdb.core.editors.objects.table.TbUtils.TABLE_MOD_TYPE;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.PartQueryUtil;
 import com.hangum.tadpole.sql.util.resultset.ResultSetUtils;
 import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
 import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
-import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Table data direct editor
+ * 
+ * refer to https://github.com/hangum/TadpoleForDBTools/issues/469
  * 
  * @author hangum
  *
@@ -79,11 +82,8 @@ public class TableDirectEditorComposite extends Composite {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TableDirectEditorComposite.class);
-	
-	/** 현재 테이블의 상태 */
-	private TABLE_MOD_TYPE modifyType = TABLE_MOD_TYPE.NONE;
 		
-	private String initTableNameStr;
+	private TableDAO tableDao;
 	private UserDBDAO userDB;
 	private List<TableColumnDAO> columnList;
 	/** pk key의 이름을 가지고 있습니다 */
@@ -108,22 +108,19 @@ public class TableDirectEditorComposite extends Composite {
 	private HashMap<Integer, String> tableDataTypeList = new HashMap<Integer, String>();
 	
 	private Text textFilter;
+	
 	private ToolBar toolBar;
+	private ToolItem tltmRefresh;
 	private ToolItem tltmSave;
 	private ToolItem tltmDelete;
 	private ToolItem tltmInsert;
-	private ToolItem tltmTablecomment;
 	
 	private Text textWhere;
 	private Composite compositeTail;
 	private Button btnDdlSourceView;
 	private Label lblOrderBy;
 	private Text textOrderBy;
-	private Label lblLimit;
-	private Composite compositeLimit;
-	private Text textLimitStart;
-	private Label lblEnd;
-	private Text textLimitEnd;
+	
 
 	/**
 	 * default composite
@@ -135,7 +132,7 @@ public class TableDirectEditorComposite extends Composite {
 	 * @param columnList
 	 * @param primaryKEYListString
 	 */
-	public TableDirectEditorComposite(Composite parent, int style, final UserDBDAO userDB, final String initTableNameStr,  List<TableColumnDAO> columnList, Map<String, Boolean> primaryKEYListString) {
+	public TableDirectEditorComposite(Composite parent, int style, final UserDBDAO userDB, final TableDAO tableDao,  List<TableColumnDAO> columnList, Map<String, Boolean> primaryKEYListString) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 2;
@@ -146,7 +143,7 @@ public class TableDirectEditorComposite extends Composite {
 		
 		// start initialize value
 		this.userDB = userDB;
-		this.initTableNameStr = initTableNameStr;
+		this.tableDao = tableDao;
 		this.columnList = columnList;
 		this.primaryKEYListString = primaryKEYListString;
 		// end initialize value
@@ -154,16 +151,31 @@ public class TableDirectEditorComposite extends Composite {
 		Composite compositeBase = new Composite(this, SWT.NONE);
 		compositeBase.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeBase = new GridLayout(1, false);
-		gl_compositeBase.verticalSpacing = 1;
-		gl_compositeBase.horizontalSpacing = 1;
-		gl_compositeBase.marginHeight = 1;
-		gl_compositeBase.marginWidth = 1;
+		gl_compositeBase.verticalSpacing = 3;
+		gl_compositeBase.horizontalSpacing = 3;
+		gl_compositeBase.marginHeight = 3;
+		gl_compositeBase.marginWidth = 3;
 		compositeBase.setLayout(gl_compositeBase);
 		
-		toolBar = new ToolBar(compositeBase, SWT.FLAT | SWT.RIGHT);
+		toolBar = new ToolBar(compositeBase, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(tltmSave.getEnabled()) {
+					if(!MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_1)) return; //$NON-NLS-1$
+				}
+				
+				refreshEditor();
+			}
+		});
+		tltmRefresh.setToolTipText(Messages.TableDirectEditorComposite_tltmRefersh_text);
+		
 		tltmSave = new ToolItem(toolBar, SWT.NONE);
+		tltmSave.setImage(ImageUtils.getSave());
 		tltmSave.setEnabled(false);
 		tltmSave.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -171,19 +183,20 @@ public class TableDirectEditorComposite extends Composite {
 				saveTableData();
 			}
 		});
-		tltmSave.setText(Messages.TableEditPart_0);
+		tltmSave.setToolTipText(Messages.TableEditPart_0);
 		
 		tltmInsert = new ToolItem(toolBar, SWT.NONE);
+		tltmInsert.setImage(ImageUtils.getAdd());
 		tltmInsert.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(modifyType == TABLE_MOD_TYPE.EDITOR) insertRow();
+				insertRow();
 			}
 		});
-		tltmInsert.setText(Messages.TableEditPart_tltmInsert_text);
-		tltmInsert.setEnabled(false);
+		tltmInsert.setToolTipText(Messages.TableEditPart_tltmInsert_text);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmDelete.setImage(ImageUtils.getDelete());
 		tltmDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -196,17 +209,14 @@ public class TableDirectEditorComposite extends Composite {
 			}
 		});
 		tltmDelete.setEnabled(false);
-		tltmDelete.setText(Messages.TableEditPart_1);
-		
-		tltmTablecomment = new ToolItem(toolBar, SWT.NONE);
-		tltmTablecomment.setText(TbUtils.NONE_MSG);
+		tltmDelete.setToolTipText(Messages.TableEditPart_1);
 		
 		Composite compositeBody = new Composite(compositeBase, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(2, false);
-		gl_compositeBody.horizontalSpacing = 1;
-		gl_compositeBody.verticalSpacing = 1;
-		gl_compositeBody.marginHeight = 1;
-		gl_compositeBody.marginWidth = 1;
+		gl_compositeBody.horizontalSpacing = 3;
+		gl_compositeBody.verticalSpacing = 3;
+		gl_compositeBody.marginHeight = 3;
+		gl_compositeBody.marginWidth = 3;
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -235,53 +245,6 @@ public class TableDirectEditorComposite extends Composite {
 		});
 		textOrderBy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblLimit = new Label(compositeBody, SWT.NONE);
-		lblLimit.setText(Messages.TableDirectEditorComposite_lblLimit_text);
-		
-		compositeLimit = new Composite(compositeBody, SWT.NONE);
-		compositeLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeLimit = new GridLayout(4, false);
-		gl_compositeLimit.verticalSpacing = 1;
-		gl_compositeLimit.horizontalSpacing = 1;
-		gl_compositeLimit.marginHeight = 1;
-		gl_compositeLimit.marginWidth = 1;
-		compositeLimit.setLayout(gl_compositeLimit);
-		
-		Label lblStart = new Label(compositeLimit, SWT.NONE);
-		lblStart.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblStart.setBounds(0, 0, 59, 14);
-		lblStart.setText(Messages.TableDirectEditorComposite_lblStart_text);
-		
-		textLimitStart = new Text(compositeLimit, SWT.BORDER);
-		textLimitStart.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) initBusiness();
-			}
-		});
-		textLimitStart.setText(Messages.TableDirectEditorComposite_textStart_text);
-		GridData gd_textLimitStart = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		gd_textLimitStart.widthHint = 40;
-		gd_textLimitStart.minimumWidth = 40;
-		textLimitStart.setLayoutData(gd_textLimitStart);
-		
-		lblEnd = new Label(compositeLimit, SWT.NONE);
-		lblEnd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEnd.setText(Messages.TableDirectEditorComposite_lblEnd_text);
-		
-		textLimitEnd = new Text(compositeLimit, SWT.BORDER);
-		textLimitEnd.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) initBusiness();
-			}
-		});
-		textLimitEnd.setText(Messages.TableDirectEditorComposite_text_text);
-		GridData gd_textLimitEnd = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		gd_textLimitEnd.minimumWidth = 40;
-		gd_textLimitEnd.widthHint = 40;
-		textLimitEnd.setLayoutData(gd_textLimitEnd);
-		
 		Label lblNewLabel = new Label(compositeBody, SWT.NONE);
 		lblNewLabel.setText(Messages.TableEditPart_3);
 		
@@ -297,7 +260,7 @@ public class TableDirectEditorComposite extends Composite {
 		sqlResultTableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		sqlResultTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if(primaryKeyListIndex.size() >= 1) tltmDelete.setEnabled(true);
+				tltmDelete.setEnabled(true);
 			}
 		});
 		tableResult = sqlResultTableViewer.getTable();
@@ -325,9 +288,9 @@ public class TableDirectEditorComposite extends Composite {
 
 				try {
 					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.TABLES);
-					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(new TableDAO(initTableNameStr, "")));
+					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(tableDao), PublicTadpoleDefine.DB_ACTION.TABLES);
 				} catch(Exception ee) {
-					MessageDialog.openError(null, "Confirm", ee.getMessage());
+					MessageDialog.openError(null, "Confirm", ee.getMessage()); //$NON-NLS-1$
 				}
 			}
 		});
@@ -367,13 +330,7 @@ public class TableDirectEditorComposite extends Composite {
 					primaryKEYIntStrList.put(i, mapColumns.get(i));
 				}
 			}
-			// 인덱스가 존재하면  수정가능 모드
-			if(primaryKeyListIndex.size() >= 1) {
-				modifyType = TABLE_MOD_TYPE.EDITOR;
-				tltmTablecomment.setText(TbUtils.EDITOR_MSG);
-				tltmInsert.setEnabled(true);
-			}
-			
+
 			// 화면에 데이터를 보여준다.
 			resultView();
 			
@@ -385,6 +342,8 @@ public class TableDirectEditorComposite extends Composite {
 			return;
 		}
 		
+		// google analytic
+		AnalyticCaller.track("TableDirectEditorComposite"); //$NON-NLS-1$
 	}
 
 	/**
@@ -396,32 +355,25 @@ public class TableDirectEditorComposite extends Composite {
 	 * @param strOrderBy
 	 */
 	private void runSQLSelect(String strWhere, String strOrderBy) throws Exception {
-		String requestQuery = "SELECT * FROM " + initTableNameStr; //$NON-NLS-1$
-		if(!"".equals( strWhere )) requestQuery += " where " + strWhere; //$NON-NLS-1$
-		if(!"".equals( strOrderBy )) requestQuery += " order by " + strOrderBy; //$NON-NLS-1$
+		String requestQuery = "SELECT "; //$NON-NLS-1$
 		
-		int intStart = 0, intEnd = 500;
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			requestQuery += " rowid, "; //$NON-NLS-1$
+		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			requestQuery += " ctid, "; //$NON-NLS-1$
+		}
+		
+		for(int i=0 ; i<columnList.size(); i++) {
+			TableColumnDAO tabledao = columnList.get(i);
+			requestQuery += tabledao.getName();
+			if(i < (columnList.size()-1)) requestQuery += ","; //$NON-NLS-1$
+		}
+		requestQuery += "  FROM " + tableDao.getSysName(); //$NON-NLS-1$
 
-		try {
-			intStart = Integer.parseInt(StringUtils.trimToEmpty(textLimitStart.getText()));
-		} catch(Exception e) {
-			textLimitStart.setText(""+intStart);
-		}
-		try {
-			intEnd = Integer.parseInt(StringUtils.trimToEmpty(textLimitEnd.getText()));
-		} catch(Exception e) {
-			textLimitEnd.setText(""+intEnd);
-		}
 		
-		if((intEnd - intStart) > 500) {
-			MessageDialog.openWarning(null, "Information", "Can not be more than 500.");
-			textLimitStart.setFocus();
-			return;
-		}
-		
-		requestQuery = PartQueryUtil.makeSelect(userDB, requestQuery, intStart, intEnd);
-		if(logger.isDebugEnabled()) logger.debug("[table information query]" + requestQuery);
-		
+		if(!"".equals( strWhere )) requestQuery += " where " + strWhere; //$NON-NLS-1$ //$NON-NLS-2$
+		if(!"".equals( strOrderBy )) requestQuery += " order by " + strOrderBy; //$NON-NLS-1$ //$NON-NLS-2$
+			
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
 		
@@ -431,6 +383,7 @@ public class TableDirectEditorComposite extends Composite {
 			
 			PreparedStatement stmt = null;
 			stmt = javaConn.prepareStatement(requestQuery);
+			stmt.setMaxRows(GetPreferenceGeneral.getSelectLimitCount());
 			
 			rs = stmt.executeQuery();
 			
@@ -457,10 +410,10 @@ public class TableDirectEditorComposite extends Composite {
 				
 				for(int i=1;i<columnCount+1; i++) {					
 					try {
-						tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i) == null?"":rs.getString(i)));
+						tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i) == null?"":rs.getString(i))); //$NON-NLS-1$
 					} catch(Exception e) {
-						logger.error("ResutSet fetch error", e);
-						tmpRs.put(i, "");
+						logger.error("ResutSet fetch error", e); //$NON-NLS-1$
+						tmpRs.put(i, ""); //$NON-NLS-1$
 					}
 				}
 				
@@ -485,7 +438,7 @@ public class TableDirectEditorComposite extends Composite {
 		sqlSorter = new SQLResultSorter(-999);
 		
 		createTableColumn(sqlResultTableViewer, mapColumns, sqlSorter);
-		sqlResultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
+		sqlResultTableViewer.setLabelProvider( new TableEditorLabelProvider(userDB) );
 		sqlResultTableViewer.setContentProvider(new SQLResultContentProvider(tableDataList) );
 		sqlResultTableViewer.setInput(tableDataList);
 		sqlResultTableViewer.setSorter(sqlSorter);
@@ -523,10 +476,16 @@ public class TableDirectEditorComposite extends Composite {
 			tableColumnInfo.getColumn().setText( Messages.TableViewerEditPart_0 );
 			tableColumnInfo.getColumn().setResizable(true);
 			tableColumnInfo.getColumn().setMoveable(false);
-			tableColumnInfo.getColumn().setWidth(100);
+			
+			// 0 번째 컬럼은 데이터 수정 타입 NONE 
+			// 오라클, PGSQL인 경우 1 번째 컬럼은 업데이트를 위해 ROWID, CID를 조회 하여서 보내주지 않도록 하였다. 
+			int intColStartIndex = 1;
+			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				intColStartIndex++;
+			}
 			
 			// reset column 
-			for(int i=1; i<mapColumns.size()+1; i++) {
+			for(int i=intColStartIndex; i<mapColumns.size()+1; i++) {
 				final int index = i;
 				
 				final TableViewerColumn tableColumn = new TableViewerColumn(tableViewer, SWT.LEFT);
@@ -551,7 +510,7 @@ public class TableDirectEditorComposite extends Composite {
 					}
 				});
 				
-				if(modifyType == TABLE_MOD_TYPE.EDITOR) tableColumn.setEditingSupport(new TextViewerEditingSupport(this, index, tableViewer));
+				tableColumn.setEditingSupport(new TextViewerEditingSupport(this, index, tableViewer));
 			}	// end for
 			
 		} catch(Exception e) { 
@@ -564,6 +523,11 @@ public class TableDirectEditorComposite extends Composite {
 	 * save table data
 	 */
 	private void saveTableData() {
+		String strQuery = getChangeQuery();
+		if("".equals(strQuery)) return; //$NON-NLS-1$
+		
+		String[] querys = SQLTextUtil.delLineChar(strQuery).split(";"); //$NON-NLS-1$
+		
 		// save 기능을 수행합니다.
 		java.sql.Connection javaConn = null;
 		Statement stmt = null;
@@ -576,33 +540,51 @@ public class TableDirectEditorComposite extends Composite {
 			// sqlite에서는 forward cursor만 지원하여 블럭 처리 
 			stmt = javaConn.createStatement();//ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			javaConn.setAutoCommit(false);
-
-			String[] querys = SQLTextUtil.delLineChar(getChangeQuery()).split(";"); //$NON-NLS-1$
+			
+			boolean isUpdateOrDelete = false;
 			for(int i=0; i<querys.length; i++) {
+				logger.info("exe query [" + querys[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+			
 				
-			//	logger.info("exe query [" + querys[i] + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+				if(StringUtils.startsWithIgnoreCase(querys[i], "update") ||  //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(querys[i], "delete")) isUpdateOrDelete = true; //$NON-NLS-1$
 				
 				lastExeQuery = querys[i] ;
-				stmt.execute(querys[i] );
+				stmt.addBatch(querys[i] );
 			}
 			
-			javaConn.commit();
+			boolean isUpdateed = false;
+			if(isUpdateOrDelete) {
+				DBDefine selectDB = userDB.getDBDefine();
+				if(selectDB == DBDefine.SQLite_DEFAULT || 
+					selectDB == DBDefine.CUBRID_DEFAULT ||
+					selectDB == DBDefine.MSSQL_DEFAULT ||
+					selectDB == DBDefine.MSSQL_8_LE_DEFAULT) {
+					
+					isUpdateed = MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_17); //$NON-NLS-1$
+				} else {
+					isUpdateed = MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_19); //$NON-NLS-1$
+				}
+			} else {
+				isUpdateed = MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_19); //$NON-NLS-1$
+			}
 			
-			// 정상적으로 모든 결과 처리 완료.
-			tltmSave.setEnabled(false);
-			initBusiness();
-//			isDirty = false;
-//			
-//			isDirty = false;
-//			firePropertyChange(PROP_DIRTY);
+			if(isUpdateed) {
+				stmt.executeBatch();
+				javaConn.commit();
+				
+				// 정상적으로 모든 결과 처리 완료.
+				initBusiness();
+				initButtonCtrl();				
+			}
 			
-		} catch(Exception ee) {
-			try { if(javaConn != null) javaConn.rollback(); } catch(SQLException roE) {};
+		} catch(Exception e) {
+			try { if(javaConn != null) javaConn.rollback(); } catch(SQLException sqe) {};
 			
-			logger.error(Messages.TableViewerEditPart_7, ee);
+			logger.error(Messages.TableViewerEditPart_7, e);
 			
 			// 에러 났으므로 사후 처리.
-			MessageDialog.openError(null, Messages.TableViewerEditPart_3, "Query [ " + lastExeQuery + Messages.TableViewerEditPart_10 + ee.getMessage() + Messages.TableViewerEditPart_11); //$NON-NLS-2$
+			MessageDialog.openError(null, Messages.TableViewerEditPart_3, lastExeQuery + Messages.TableViewerEditPart_10 + e.getMessage()); //$NON-NLS-2$
 			
 		} finally {
 			// connection을 원래대로 돌려 놓는다.
@@ -644,9 +626,8 @@ public class TableDirectEditorComposite extends Composite {
 			data.put(0, TbUtils.getColumnText(TbUtils.COLUMN_MOD_TYPE.DELETE) );
 		}
 		
-		setModifyButtonControl();
-		
 		sqlResultTableViewer.refresh(tableDataList);
+		setModifyButtonControl();
 	}
 	
 	/**
@@ -654,8 +635,6 @@ public class TableDirectEditorComposite extends Composite {
 	 */
 	public void initButtonCtrl() {
 		tltmDelete.setEnabled(false);
-		tltmInsert.setEnabled(false);
-		
 		tltmSave.setEnabled(false);
 	}
 	
@@ -665,7 +644,19 @@ public class TableDirectEditorComposite extends Composite {
 	 * @param updateQuery
 	 */
 	public void setModifyButtonControl() {
-		tltmSave.setEnabled(true);
+		boolean isModifyed = false;
+		
+		for(int i=0; i<tableDataList.size(); i++) {
+			Map<Integer, Object> tmpRs = tableDataList.get(i);
+			if(TbUtils.isDelete( tmpRs.get(0).toString() ) || TbUtils.isUpdate( tmpRs.get(0).toString() ) || TbUtils.isInsert( tmpRs.get(0).toString() )) {
+				isModifyed = true;
+			}
+		}
+		tltmSave.setEnabled(isModifyed);
+		
+		// delete button enabled
+		if(sqlResultTableViewer.getSelection().isEmpty()) tltmDelete.setEnabled(false);
+		else tltmDelete.setEnabled(true);
 	}
 	
 	/**
@@ -700,22 +691,44 @@ public class TableDirectEditorComposite extends Composite {
 	 * where 절 이하의 쿼리를 생성한다. 
 	 * 
 	 * @param data
+	 * @param tmpRs
+	 * 
 	 * @return
 	 */
-	private String getWhereMake(int rowSeq) {
-		String stmt = ""; //$NON-NLS-1$
+	private String getWhereMake(int rowSeq, Map<Integer, Object> tmpRs) {
+		String strWhere = ""; //$NON-NLS-1$
 		
 		// original data
 		Map<Integer, Object> orgRs = originalDataList.get(rowSeq);
 		
-		for(int i=0; i<primaryKeyListIndex.size(); i++) {
-			int keyIndex = primaryKeyListIndex.get(i);
-			stmt += primaryKEYIntStrList.get(keyIndex) + " = '" + TbUtils.getOriginalData(orgRs.get(keyIndex+1).toString()) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
-			
-			if(i < (primaryKeyListIndex.size()-1)) stmt += " AND "; //$NON-NLS-1$
+		/**
+		 * oracle 은 rowid
+		 * pgsql 은 cid 로 처리합니다.
+		 * 
+		 */
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			strWhere = " rowid = '" + orgRs.get(1) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else if( userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			strWhere = " ctid = '" + orgRs.get(1) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			if(!primaryKeyListIndex.isEmpty()) {
+				for(int i=0; i<primaryKeyListIndex.size(); i++) {
+					int keyIndex = primaryKeyListIndex.get(i);
+					strWhere += primaryKEYIntStrList.get(keyIndex) + " = '" + TbUtils.getOriginalData(orgRs.get(keyIndex+1).toString()) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+					
+					if(i < (primaryKeyListIndex.size()-1)) strWhere += " AND "; //$NON-NLS-1$
+				}
+			} else {
+				for(int i=1; i<tmpRs.size(); i++) {
+					strWhere += mapColumns.get(i-1) + " = '" + TbUtils.getOriginalData(orgRs.get(i).toString() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+					
+					if(i < (tmpRs.size()-1)) strWhere += " AND "; //$NON-NLS-1$
+				}
+				
+			}
 		}
 		
-		return stmt;
+		return strWhere;
 	}
 	
 	/**
@@ -725,10 +738,14 @@ public class TableDirectEditorComposite extends Composite {
 	 * @return
 	 */
 	private String makeDelete(int rowSeq, Map<Integer, Object> tmpRs) {
-		String deleteStmt = "DELETE FROM " + initTableNameStr + " \r\n WHERE "; //$NON-NLS-1$ //$NON-NLS-2$
-		deleteStmt += getWhereMake(rowSeq)  + PublicTadpoleDefine.SQL_DILIMITER; //$NON-NLS-1$
+		String deleteStmt = "DELETE FROM " + tableDao.getSysName(); //$NON-NLS-1$
+		deleteStmt += " WHERE  (" + getWhereMake(rowSeq, tmpRs) + ") "; //$NON-NLS-1$ //$NON-NLS-2$
 		
-		return deleteStmt;
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			deleteStmt += "LIMIT 1"; //$NON-NLS-1$
+		}
+		
+		return deleteStmt + PublicTadpoleDefine.SQL_DELIMITER ;
 	}
 	
 	/**
@@ -738,7 +755,7 @@ public class TableDirectEditorComposite extends Composite {
 	 * @return
 	 */
 	private String makeUpdate(int rowSeq, Map<Integer, Object> tmpRs) {
-		String updateStmt = "UPDATE " + initTableNameStr +   //$NON-NLS-1$ //$NON-NLS-2$
+		String updateStmt = "UPDATE " + tableDao.getSysName() +   //$NON-NLS-1$ //$NON-NLS-2$
 				" SET "; //$NON-NLS-1$
 		
 		// 수정된 컬럼의 값을 넣는다.
@@ -750,8 +767,13 @@ public class TableDirectEditorComposite extends Composite {
 		}
 		updateStmt = StringUtils.chompLast(updateStmt, ", "); //$NON-NLS-1$
 		
-		updateStmt += " WHERE " + getWhereMake(rowSeq) + PublicTadpoleDefine.SQL_DILIMITER; //$NON-NLS-1$ //$NON-NLS-2$
-		return updateStmt;
+		updateStmt += " WHERE (" + getWhereMake(rowSeq, tmpRs) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			updateStmt += " LIMIT 1"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		
+		return updateStmt + PublicTadpoleDefine.SQL_DELIMITER;
 	}
 	
 	/**
@@ -761,7 +783,7 @@ public class TableDirectEditorComposite extends Composite {
 	 * @return
 	 */
 	private String makeInsert(Map<Integer, Object> tmpRs) {
-		String insertStmt = "INSERT INTO " + initTableNameStr + "("; //$NON-NLS-1$ //$NON-NLS-2$
+		String insertStmt = "INSERT INTO " + tableDao.getSysName() + "("; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		// 수정된 컬럼 리스트를 나열한다.
 		boolean isModifyColumn = false;

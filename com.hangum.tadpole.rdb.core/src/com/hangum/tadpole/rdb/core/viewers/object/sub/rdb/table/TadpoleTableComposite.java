@@ -181,7 +181,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, showTableColumns));
+					FindEditorAndWriteQueryUtil.run(userDB, 
+							GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, showTableColumns),
+							PublicTadpoleDefine.DB_ACTION.TABLES);
 				}
 			}
 		});
@@ -280,11 +282,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 
 			public int getToolTipDisplayDelayTime(Object object) {
-				return 5000;
+				return 100;
 			}
 
 			public int getToolTipTimeDisplayed(Object object) {
-				return 1000;
+				return 5000;
 			}
 
 			public void update(ViewerCell cell) {
@@ -324,7 +326,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 				if (null != is) {
 					TableColumnDAO tableDAO = (TableColumnDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.runAtPosition(tableDAO.getField());
+					FindEditorAndWriteQueryUtil.runAtPosition(StringUtils.trim(tableDAO.getField()));
 				}
 			}
 		});
@@ -435,7 +437,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if (userDB != null) {
 					// hive & tajo
-					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || 
+							userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || 
+									userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 							manager.add(creatAction_Table);
 							manager.add(deleteAction_Table);

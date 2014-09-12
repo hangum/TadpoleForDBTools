@@ -47,6 +47,12 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 	public boolean exists() {
 		return false;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof ExecutedSQLEditorInput) ) return false;
+		return ((ExecutedSQLEditorInput)obj).getName().equals(getName());
+	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {

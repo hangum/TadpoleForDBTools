@@ -48,7 +48,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
@@ -57,7 +59,6 @@ import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryFilter;
@@ -334,24 +335,27 @@ public class ExecutedSQLEditor extends EditorPart {
 		initBehavior();
 
 		search();
+		
+		// google analytic
+		AnalyticCaller.track(ExecutedSQLEditor.ID);
 	}
 
 	/**
 	 * Initial configuration setting of widgets
 	 */
 	private void initBehavior() {
-		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+//		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
 			btnUserAllCheck.setSelection(true);
 			
 			comboDisplayName.setEnabled(false);
 			comboUserName.setEnabled(false);
-		} else {
-			btnUserAllCheck.setSelection(false);
-			btnUserAllCheck.setEnabled(false);
-			
-			comboDisplayName.setEnabled(false);
-			comboUserName.setEnabled(true);
-		}
+//		} else {
+//			btnUserAllCheck.setSelection(false);
+//			btnUserAllCheck.setEnabled(false);
+//			
+//			comboDisplayName.setEnabled(false);
+//			comboUserName.setEnabled(true);
+//		}
 	}
 
 	/**
@@ -374,7 +378,7 @@ public class ExecutedSQLEditor extends EditorPart {
 					}
 				}
 				
-				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DILIMITER);
+				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DELIMITER, DB_ACTION.TABLES);
 			} catch (Exception e) {
 				logger.error("find editor and write query", e);
 			}
@@ -436,21 +440,21 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void initUIData() {
 
 		try {
-			// 어드민 권한이면 모든 정보를 다 표현합니다.
-			if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+//			// 어드민 권한이면 모든 정보를 다 표현합니다.
+//			if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
 				List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
 				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
 					String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
 					comboUserName.add(name);
 					comboUserName.setData(name, userGroupAUserDAO.getSeq());
 				}
-			// 개발자 권한일 경우에는 본인만 표시합니다.
-			} else {
-				String name = SessionManager.getName() + " (" + SessionManager.getEMAIL() + ")";
-				
-				comboUserName.add(name);
-				comboUserName.setData(name, SessionManager.getSeq());
-			}
+//			// 개발자 권한일 경우에는 본인만 표시합니다.
+//			} else {
+//				String name = SessionManager.getName() + " (" + SessionManager.getEMAIL() + ")";
+//				
+//				comboUserName.add(name);
+//				comboUserName.setData(name, SessionManager.getSeq());
+//			}
 			
 			if (userDAO == null) {
 				comboUserName.select(0);

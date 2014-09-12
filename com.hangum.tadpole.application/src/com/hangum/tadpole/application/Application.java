@@ -13,19 +13,16 @@ package com.hangum.tadpole.application;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
-import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.sql.query.TadpoleSystemChecker;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 
 /**
@@ -49,20 +46,6 @@ public class Application implements EntryPoint {
 	 * If the system table does not exist, create a table.
 	 */
 	private void systemInitialize() {
-		// 개발환경일 경우 검사하지 않습니다.
-		// TODO 시스템 환경에따른 코드변화가 필요합니다.
-		//
-		// 시스템 동작가능한 환경인지 오류 확인.
-		if(!ApplicationArgumentUtils.envDev()) {
-			try {
-				TadpoleSystemChecker.checker();
-			} catch (Exception e) {
-				logger.error("System Initialize Checker", e); //$NON-NLS-1$
-				MessageDialog.openError(null, "System Initialize Error", Messages.Application_2 + e.getMessage()); //$NON-NLS-1$
-				System.exit(0);
-			}
-		}
-		
 		// 시스템 초기 데이터 베이스 생성.
 		boolean isTadpoleInitialize = PlatformUI.getPreferenceStore().getBoolean(PreferenceDefine.IS_TADPOLE_INITIALIZE);
 		if(!isTadpoleInitialize || ApplicationArgumentUtils.isForceSystemInitialize()) {

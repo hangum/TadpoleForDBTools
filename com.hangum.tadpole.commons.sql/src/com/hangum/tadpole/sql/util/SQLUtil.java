@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -47,7 +48,7 @@ public class SQLUtil {
 	 * 		PRAGMA는 sqlite의 시스템 쿼리 얻는 거.
 	 * </PRE>
 	 */
-	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*";
+	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*";
 	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile(PATTERN_STATEMENT, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
@@ -223,7 +224,7 @@ public class SQLUtil {
 			// 모든 쿼리에 공백 주석 제거
 			exeSQL = removeComment(exeSQL);
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
-			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DILIMITER);
+			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
 			
 		} catch(Exception e) {
 			logger.error("query execute", e);
@@ -276,7 +277,7 @@ public class SQLUtil {
 				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[0]+",")) {
 					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
 				}
-			} else {
+			} else if(arryRetStr.length > 1){
 				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[1]+",")) {
 					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
 				}
@@ -339,5 +340,24 @@ public class SQLUtil {
 		}
 		
 		return returnDataArry;
+	}
+	
+	/**
+	 * 에디터에서 쿼리 실행 단위 조절.
+	 * 
+	 * https://github.com/hangum/TadpoleForDBTools/issues/466
+	 * 
+	 * @param dbAction
+	 * @return
+	 */
+	public static boolean isSELECTEditor(DB_ACTION dbAction) {
+		if(dbAction == DB_ACTION.TABLES ||
+				dbAction == DB_ACTION.VIEWS ||
+				dbAction == DB_ACTION.SYNONYM ||
+				dbAction == DB_ACTION.INDEXES) {
+			return true;
+		}
+		
+		return false;
 	}
 }

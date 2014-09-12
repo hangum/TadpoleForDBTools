@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.manager.core.Activator;
@@ -128,30 +127,26 @@ public class UserListComposite extends Composite {
 		});
 		tltmRefresh.setToolTipText("Refresh");
 	
-		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole()) ||
-				PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())
-		) {
-			ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
-			tltmAdd.setImage(ImageUtils.getAdd());
-			tltmAdd.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					addUser();
-				}
-			});
-			tltmAdd.setToolTipText("Add");
-		
-			tltmModify = new ToolItem(toolBar, SWT.NONE);
-			tltmModify.setImage(ImageUtils.getModify());
-			tltmModify.setEnabled(false);
-			tltmModify.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					modifyUser();
-				}
-			});
-			tltmModify.setToolTipText("Modify");
-		}
+		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+		tltmAdd.setImage(ImageUtils.getAdd());
+		tltmAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addUser();
+			}
+		});
+		tltmAdd.setToolTipText("Add");
+	
+		tltmModify = new ToolItem(toolBar, SWT.NONE);
+		tltmModify.setImage(ImageUtils.getModify());
+		tltmModify.setEnabled(false);
+		tltmModify.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				modifyUser();
+			}
+		});
+		tltmModify.setToolTipText("Modify");
 		
 		tltmQuery = new ToolItem(toolBar, SWT.NONE);
 		tltmQuery.setImage(ImageUtils.getQueryHistory());
@@ -256,13 +251,7 @@ public class UserListComposite extends Composite {
 		listUserGroup.clear();
 		
 		try {
-			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
-				|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())
-			) {	// manager, dba
-				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
-			} else {	// admin 
-				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission();
-			}
+			listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(""+SessionManager.getGroupSeq());
 			
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();

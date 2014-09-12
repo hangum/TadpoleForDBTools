@@ -140,12 +140,6 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
-		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
-		
-		comboLocale = new Combo(grpConnectionType, SWT.READ_ONLY);
-		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		
 		Label lblSupportSSL = new Label(grpConnectionType, SWT.NONE);
 		lblSupportSSL.setText("Support SSL?");
 		
@@ -179,7 +173,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
@@ -188,6 +182,8 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textDatabase.setText("daiune4ju9eqio");
 			textUser.setText("iagtyrdnybmqnx");
 			textPassword.setText("LDZJIFugFQESxjFDFC-j-xPNsy");
+			
+			comboSSL.setText("YES");
 			
 		} else {
 			textPort.setText("5432");
@@ -212,8 +208,8 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	}
 	
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 		
 		String dbUrl = String.format(
 								getSelectDB().getDB_URL_INFO(), 
@@ -238,7 +234,6 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
-		userDB.setLocale(StringUtils.trimToEmpty(comboLocale.getText()));
 		
 		userDB.setExt1(comboSSL.getText());
 		

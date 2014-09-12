@@ -169,7 +169,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
-		comboLocale = new Combo(grpConnectionType, SWT.READ_ONLY);
+		comboLocale = new Combo(grpConnectionType, SWT.NONE);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			
 		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
@@ -198,7 +198,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			textPassword.setText(oldUserDB.getPasswd());
 			
 			textReplicaSet.setText(oldUserDB.getExt1()==null?"":oldUserDB.getExt1());
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
@@ -233,7 +233,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	}
 	
 	@Override
-	public boolean isValidateInput() {
+	public boolean isValidateInput(boolean isTest) {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -245,8 +245,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 		
 		final String dbUrl = String.format(
 								getSelectDB().getDB_URL_INFO(), 

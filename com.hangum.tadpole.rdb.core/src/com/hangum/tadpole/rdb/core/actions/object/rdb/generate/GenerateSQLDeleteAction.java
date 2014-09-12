@@ -64,9 +64,9 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 					cnt++;
 				}				
 			}
-			sbSQL.append(PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
+			sbSQL.append(PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 			
-			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
+			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.DB_ACTION.TABLES);
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLDeleteAction_10, e);
 			
