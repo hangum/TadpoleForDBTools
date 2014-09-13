@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.DBObject;
 
@@ -99,6 +100,9 @@ public class FindOneDetailDialog extends Dialog {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initData();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

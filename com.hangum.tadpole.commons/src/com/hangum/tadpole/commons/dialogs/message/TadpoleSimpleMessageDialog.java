@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 
 /**
@@ -90,6 +91,9 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 		textMessage.setData( RWT.CANCEL_KEYS, new String[] { "TAB" } );
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		textMessage.setFocus();
 

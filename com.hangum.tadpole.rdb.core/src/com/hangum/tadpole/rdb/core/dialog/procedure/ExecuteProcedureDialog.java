@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -180,6 +181,9 @@ public class ExecuteProcedureDialog extends Dialog {
 		grpTables.setText("Result Set view");
 		
 		initUI();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.dialogs.users.FindUserDialog;
@@ -207,6 +208,10 @@ public class UserListComposite extends Composite {
 		userListViewer.addFilter(filter);;
 		
 		initUI();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+				
 	}
 	
 	/**

@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+
 /**
  * tadpole message dialog
  * 
@@ -87,6 +89,9 @@ public class TadpoleMessageDialog extends TitleAreaDialog {
 		textMessage = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		textMessage.setFocus();
 

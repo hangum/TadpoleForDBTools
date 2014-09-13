@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 
 /**
  * Table summary composite
@@ -54,6 +55,9 @@ public class DDLSourceComposite extends Composite {
 		
 		ddlSource = new TadpoleEditorWidget(compositeBasic, SWT.BORDER, EditorDefine.EXT_DEFAULT, initDDL, "");
 		ddlSource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

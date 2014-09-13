@@ -33,6 +33,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -284,6 +285,9 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		
 		textSecretKey.setText(secretKey);
 		textQRCodeURL.setText(strURL);
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 
 	
