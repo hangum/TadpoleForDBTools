@@ -54,8 +54,8 @@ var editorService = {
 var editor;
 /** 에디터가 저장 할 수 있는 상태인지 */
 var isEdited = false;
-/** 자바에서 처리가 끝났는지 */
-var isJavaRunning = false;
+///** 자바에서 처리가 끝났는지 */
+//var isJavaRunning = false;
 /** open 된 에디터 타입 */
 var varEditorType = 'TABLES';
 
@@ -79,18 +79,37 @@ var varEditorType = 'TABLES';
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
 	    enableSnippets: true
+//	    ,
+//	    enableLiveAutocompletion: true
 	});
+	
+//	var wordList =  [ {"word":"hello"}, {"word":"good morning"}, {"word":"suggestions"}, {"word":"auto suggest"}, {"word":"try this"}];
+//	editor.addCompleter(wordList);
 };
+
+//var wordList =  [ {"word":"hello"}, {"word":"good morning"}, {"word":"suggestions"}, {"word":"auto suggest"}, {"word":"try this"}];	
+//rhymeCompleter = {
+//		console.log('================> rhymeCompleter....');
+//		
+//        getCompletions: function(editor, session, pos, prefix, callback) {
+//            if (prefix.length === 0) { callback(null, []); return }
+//            $.getJSON(jsonUrl, function(wordList) {
+//                callback(null, wordList.map(function(ea)  {           
+//                    return {name: ea.word, value: ea.word, meta: "optional text"}
+//                }));
+//            })
+//        }
+//    }
 
 /** 
  * 에디터를 초기화 합니다. 
- * @param varExt 확장자
+ * @param varMode mode
  * @param varAddKeyword
  * @param varType editorType (sql or procedure )
  * @param varInitText
  * 
  */
-editorService.initEditor = function(varExt, varType, varAddKeyword, varInitText) {
+editorService.initEditor = function(varMode, varType, varAddKeyword, varInitText) {
 	varEditorType = varType;
 	
 	try {
@@ -99,7 +118,7 @@ editorService.initEditor = function(varExt, varType, varAddKeyword, varInitText)
 
 		var doc = new EditSession(varInitText);
 		doc.setUndoManager(new UndoManager());
-		doc.setMode(varExt);
+		doc.setMode(varMode);
 		doc.on('change', function() {
 			if(!isEdited) {
 				try {
@@ -131,7 +150,21 @@ editorService.setFocus = function() {
 //	isJavaRunning = false;
 //};
 
+/** user autocomplete */
+editor.commands.on("afterExec", function(e){
+	if (e.command.name == "insertstring"&&/^[\\.\(.]$/.test(e.args)) { 
+//    	console.log('------------>' );
+//    	var all = editor.completers;
+//    	console.log(all);
+//    	editor.completers = [ {"word":"hello"}, {"word":"good morning"}, {"word":"suggestions"}, {"word":"auto suggest"}, {"word":"try this"}];
+    	editor.execCommand("startAutocomplete");
+//    	editor.completers = all;
+    }
+})
+
+
 //==[ Define short key ]======================================================================================================================
+
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
