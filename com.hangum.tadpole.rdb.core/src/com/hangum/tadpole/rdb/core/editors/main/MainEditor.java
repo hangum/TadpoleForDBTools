@@ -11,6 +11,9 @@
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -41,7 +44,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.USER_TYPE;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
@@ -61,7 +63,11 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
@@ -100,6 +106,9 @@ public class MainEditor extends EditorExtension {
 	/** save mode */
 	private boolean isDirty = false;
 	
+	/** db table list */
+	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
+	
 //	/* file upload */
 //	private FileUpload fileUpload;
 //	private DiskFileUploadReceiver receiver;
@@ -119,10 +128,12 @@ public class MainEditor extends EditorExtension {
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
 
-		strRoleType = SessionManager.getRoleType(userDB);
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
+
+		strRoleType = SessionManager.getRoleType(userDB);
+		super.setUserType(strRoleType);
 	}
 	
 	@Override
@@ -443,8 +454,10 @@ public class MainEditor extends EditorExtension {
 			@Override
 			public void completed( ProgressEvent event ) {
 				try {
-//					content assist기능에 테이블 정보 넣는 것은 잠시 보류합니다.
-					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), "", getInitDefaultEditorStr()); //$NON-NLS-1$
+					/*
+					 * 
+					 */
+					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), getAssistTableList(), getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
@@ -472,34 +485,52 @@ public class MainEditor extends EditorExtension {
 		return ext;
 	}
 	
-//	/**
-//	 * 에디터에서 assist창에 보여줄 목록을 가져옵니다.
-//	 * 
-//	 * @return
-//	 */
-//	private String getAssistList() {
-//		String strTablelist = ""; //$NON-NLS-1$
-//		
-//		try {
-//			List<TableDAO> showTables = null;
-//			if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
-//				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-//			} else {
-//				showTables = new TajoConnectionManager().tableList(userDB);
-//			}
-//
-//			for (TableDAO tableDao : showTables) {
-//				strTablelist += tableDao.getName() + "|"; //$NON-NLS-1$
-//			}
-//			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
-//			
-//		} catch(Exception e) {
-//			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
-//		}
-//		
-//		return strTablelist;
-//	}
+	/**
+	 * List of assist table column name
+	 * 
+	 * @param tableName
+	 * @return
+	 */
+	public String getAssistColumnList(String tableName) {
+		String strColumnlist = ""; //$NON-NLS-1$
+		
+		try {
+			TableDAO table = mapTableList.get(tableName);
+			
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
+			for (TableColumnDAO tableDao : showTableColumns) {
+				strColumnlist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+			}
+			strColumnlist = StringUtils.removeEnd(strColumnlist, "|"); //$NON-NLS-1$
+		} catch(Exception e) {
+			logger.error("MainEditor get the table column list", e); //$NON-NLS-1$
+		}
+		
+		return strColumnlist;
+	}
+	
+	/**
+	 * List of assist table name 
+	 * 
+	 * @return
+	 */
+	private String getAssistTableList() {
+		String strTablelist = ""; //$NON-NLS-1$
+		
+		try {
+			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
+			for (TableDAO tableDao : showTables) {
+				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+				mapTableList.put(tableDao.getSysName(), tableDao);
+			}
+			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
+			
+		} catch(Exception e) {
+			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
+		}
+		
+		return strTablelist;
+	}
 
 	/**
 	 * initialize editor
