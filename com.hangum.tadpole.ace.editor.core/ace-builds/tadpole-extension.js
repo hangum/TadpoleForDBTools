@@ -59,9 +59,12 @@ var isEdited = false;
 /** open 된 에디터 타입 */
 var varEditorType = 'TABLES';
 
+// enable live auto completion
+var completions = [];
+
 /** initialize editor */
 {
-	ace.require("ace/ext/language_tools");
+	var langTools = ace.require("ace/ext/language_tools");
 	editor = ace.edit("editor");
 	document.getElementById('editor').style.fontSize= '12px';
 	
@@ -78,39 +81,45 @@ var varEditorType = 'TABLES';
 	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
-	    enableSnippets: true
-//	    ,
-//	    enableLiveAutocompletion: true
+	    enableSnippets: true,
+	    enableLiveAutocompletion: true
 	});
 	
-//	var wordList =  [ {"word":"hello"}, {"word":"good morning"}, {"word":"suggestions"}, {"word":"auto suggest"}, {"word":"try this"}];
-//	editor.addCompleter(wordList);
+//	var completer = {
+//	        getCompletions: function(editor, session, pos, prefix, callback) {
+//	        	var text = editor.getValue(); 
+//	        	
+//	        	if (prefix.length === 0) { 
+//	        		callback(null, []); 
+//	        		return 
+//	        	} 
+//	        	 
+////	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+//	        	callback(null, completions); 
+//	        } 
+//	} 
+//	langTools.addCompleter(completer); 
 };
-
-//var wordList =  [ {"word":"hello"}, {"word":"good morning"}, {"word":"suggestions"}, {"word":"auto suggest"}, {"word":"try this"}];	
-//rhymeCompleter = {
-//		console.log('================> rhymeCompleter....');
-//		
-//        getCompletions: function(editor, session, pos, prefix, callback) {
-//            if (prefix.length === 0) { callback(null, []); return }
-//            $.getJSON(jsonUrl, function(wordList) {
-//                callback(null, wordList.map(function(ea)  {           
-//                    return {name: ea.word, value: ea.word, meta: "optional text"}
-//                }));
-//            })
-//        }
-//    }
 
 /** 
  * 에디터를 초기화 합니다. 
  * @param varMode mode
- * @param varAddKeyword
+ * @param varTableList table list
  * @param varType editorType (sql or procedure )
  * @param varInitText
  * 
  */
-editorService.initEditor = function(varMode, varType, varAddKeyword, varInitText) {
+editorService.initEditor = function(varMode, varType, varTableList, varInitText) {
 	varEditorType = varType;
+	
+	try {
+		var tables = varTableList.split("|");
+		for(var i=0; i<tables.length; i++) {
+			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
+		}
+	} catch(e) {
+		console.log(e);
+	}
 	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
@@ -152,14 +161,32 @@ editorService.setFocus = function() {
 
 /** user autocomplete */
 editor.commands.on("afterExec", function(e){
-	if (e.command.name == "insertstring"&&/^[\\.\(.]$/.test(e.args)) { 
-//    	console.log('------------>' );
-//    	var all = editor.completers;
-//    	console.log(all);
-//    	editor.completers = [ {"word":"hello"}, {"word":"good morning"}, {"word":"suggestions"}, {"word":"auto suggest"}, {"word":"try this"}];
-    	editor.execCommand("startAutocomplete");
+	console.log("--> command --> " + e.command.name);
+	
+//	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
+//		var all = editor.completers;
+//		editor.completers = completions;
+//    	editor.execCommand("startAutocomplete");
 //    	editor.completers = all;
-    }
+//    	
+////    } else if(e.command.name == "startAutocomplete") {
+////    	var all = e.editor.completers;
+////    	
+////		var completer = {
+////		        getCompletions: function(editor, session, pos, prefix, callback) {
+////		        	var text = editor.getValue(); 
+////		        	
+////		        	if (prefix.length === 0) { 
+////		        		callback(null, []); 
+////		        		return 
+////		        	} 
+////		        	 
+////	//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+////		        	callback(null, completions); 
+////		        } 
+////		} 
+////		langTools.addCompleter(completer);
+//	}
 })
 
 
