@@ -25,6 +25,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -52,6 +53,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -538,7 +540,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void done(IJobChangeEvent event) {
 				final IJobChangeEvent jobEvent = event; 
 				
-				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+				final Display display = getSite().getShell().getDisplay();
+				display.asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
 							tableListViewer.setInput(showTables);
@@ -551,8 +554,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							tableListViewer.refresh();
 							TableUtil.packTable(tableListViewer.getTable());
 							
+//							logger.error("=============================================================================================");
+							MessageDialog.openError(display.getActiveShell(), "Error", jobEvent.getResult().getException().getMessage());
+							
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(display.getActiveShell(), "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}
 				});	// end display.asyncExec

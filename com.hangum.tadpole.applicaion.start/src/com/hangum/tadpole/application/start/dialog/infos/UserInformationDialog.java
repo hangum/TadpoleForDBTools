@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -71,6 +72,9 @@ public class UserInformationDialog extends Dialog {
 		Label lblRecommand2 = new Label(container, SWT.NONE);
 		lblRecommand2.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		lblRecommand2.setText(Messages.LoginDialog_lblNewLabel_text ); //$NON-NLS-1$
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

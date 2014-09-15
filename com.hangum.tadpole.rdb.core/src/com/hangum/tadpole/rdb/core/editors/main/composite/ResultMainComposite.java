@@ -139,6 +139,7 @@ public class ResultMainComposite extends Composite {
 	public void setMainEditor(MainEditor mainEditor) {
 		this.mainEditor = mainEditor;
 		this.compositeResultSet.setSelect(SQLUtil.isSELECTEditor(mainEditor.getDbAction()));
+		this.compositeResultSet.setDbUserRoleType(mainEditor.getUserType());
 	}
 	
 	/**

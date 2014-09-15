@@ -14,6 +14,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -45,6 +46,9 @@ public class ObjectEditor extends MainEditor {
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 
 

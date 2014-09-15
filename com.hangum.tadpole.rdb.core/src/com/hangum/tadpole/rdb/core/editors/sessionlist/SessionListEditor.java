@@ -286,7 +286,7 @@ public class SessionListEditor extends EditorPart {
 		}
 		
 		// google analytic
-		AnalyticCaller.track("SessionListEditor");
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

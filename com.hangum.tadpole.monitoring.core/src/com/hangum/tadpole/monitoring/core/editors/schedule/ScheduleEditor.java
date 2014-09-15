@@ -44,6 +44,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.dialogs.schedule.AddScheduleDialog;
 import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
@@ -222,7 +223,11 @@ public class ScheduleEditor extends EditorPart {
 
 		sashForm.setWeights(new int[] {4, 6});
 		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 	}
+	
 	private void initUI() {
 		refreshSchedule();
 	}

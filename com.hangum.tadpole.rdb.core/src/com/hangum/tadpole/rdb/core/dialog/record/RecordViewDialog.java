@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -179,6 +180,9 @@ public class RecordViewDialog extends Dialog {
 		compositeScrolled.setExpandVertical(true);
 
 		setValue(loc);
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

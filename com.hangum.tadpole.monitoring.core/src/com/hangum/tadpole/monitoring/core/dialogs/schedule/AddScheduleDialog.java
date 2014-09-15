@@ -279,7 +279,7 @@ public class AddScheduleDialog extends Dialog {
 		}
 		
 		// google analytic
-		AnalyticCaller.track("AddScheduleDialog");
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

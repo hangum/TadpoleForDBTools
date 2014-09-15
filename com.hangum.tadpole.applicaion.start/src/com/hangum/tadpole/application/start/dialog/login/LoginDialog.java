@@ -264,7 +264,7 @@ public class LoginDialog extends Dialog {
 			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")");
 			    item.setColor(colors.next());
 			    
-			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 150;
+			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 200;
 			    item.setValue(floatVal);
 			}
 		} catch(Exception e) {

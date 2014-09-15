@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -79,6 +80,8 @@ public class MessageComposite extends Composite {
 			}
 		});
 		Table tableMessage = tableViewerMessage.getTable();
+		tableMessage.setData(RWT.CUSTOM_ITEM_HEIGHT, 50);
+		tableMessage.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		tableMessage.setLinesVisible(true);
 		tableMessage.setHeaderVisible(true);
 		tableMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -153,19 +156,21 @@ public class MessageComposite extends Composite {
 	 * @param layoutColumnLayoutMsg
 	 */
 	public void createTableMessageColumn(TableViewer tableViewerMessage, SQLHistorySorter sorterMessage, AutoResizeTableLayout layoutColumnLayoutMsg) {
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerMessage, SWT.NONE);
-		TableColumn tblclmnDate = tableViewerColumn.getColumn();
-		tblclmnDate.setWidth(140);
-		tblclmnDate.setText(Messages.MainEditor_14);
-		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 0));
-		layoutColumnLayoutMsg.addColumnData(new ColumnPixelData(160));
-				
+
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		TableColumn tblclmnSql = tableViewerColumn_1.getColumn();
 		tblclmnSql.setWidth(500);
 		tblclmnSql.setText("Message"); //$NON-NLS-1$
-		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnSql, 1));
+		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnSql, 0));
 		layoutColumnLayoutMsg.addColumnData(new ColumnWeightData(500));
+		
+		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerMessage, SWT.NONE);
+		TableColumn tblclmnDate = tableViewerColumn.getColumn();
+		tblclmnDate.setWidth(140);
+		tblclmnDate.setText(Messages.MainEditor_14);
+		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 1));
+		layoutColumnLayoutMsg.addColumnData(new ColumnPixelData(160));
+
 	}
 	
 	/**

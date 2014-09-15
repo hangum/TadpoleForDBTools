@@ -173,8 +173,10 @@ public class DBLoginDialog extends Dialog {
 		// history .....................................
 		sashFormContainer.setWeights(new int[] {1});
 
-		
 		comboDBList.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return container;
 	}

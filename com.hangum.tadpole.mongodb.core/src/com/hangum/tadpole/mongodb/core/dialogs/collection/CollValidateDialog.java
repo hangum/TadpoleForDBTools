@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.help.HelpDefine;
 import com.hangum.tadpole.commons.util.HelpUtils;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -77,6 +78,9 @@ public class CollValidateDialog extends Dialog {
 		btnFull = new Button(container, SWT.CHECK);
 		btnFull.setSelection(true);
 		btnFull.setText("Full");
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

@@ -48,7 +48,7 @@ public class AboutDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("About");
+		newShell.setText("About...");
 	}
 
 	/**

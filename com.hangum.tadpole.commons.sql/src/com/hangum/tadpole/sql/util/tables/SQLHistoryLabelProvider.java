@@ -55,8 +55,8 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 			TadpoleMessageDAO messageDAO = (TadpoleMessageDAO)element;
 			
 			switch(columnIndex) {
-				case 0: return dateToStr(messageDAO.getDateExecute());
-				case 1: return messageDAO.getStrMessage();
+				case 0: return messageDAO.getStrViewMessage();
+				case 1: return dateToStr(messageDAO.getDateExecute());
 			}
 		}
 		

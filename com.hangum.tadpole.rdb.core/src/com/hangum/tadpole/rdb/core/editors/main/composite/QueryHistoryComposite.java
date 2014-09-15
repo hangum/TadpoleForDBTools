@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -79,7 +80,8 @@ public class QueryHistoryComposite extends Composite {
 				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(!is.isEmpty()) {
-					appendText(getHistoryTabelSelectData());
+					SQLHistoryDAO historyDAO = (SQLHistoryDAO)is.getFirstElement();
+					appendText(historyDAO.getStrSQLText());
 					
 					// google analytic
 					AnalyticCaller.track(MainEditor.ID, "QueryHistoryComposite");
@@ -120,7 +122,9 @@ public class QueryHistoryComposite extends Composite {
 				
 				IStructuredSelection is = (IStructuredSelection)tvSQLHistory.getSelection();
 				if(!is.isEmpty()) {
-					appendText(getHistoryTabelSelectData() + PublicTadpoleDefine.SQL_DELIMITER);
+					SQLHistoryDAO historyDAO = (SQLHistoryDAO)is.getFirstElement();
+					
+					appendText(historyDAO.getStrSQLText());
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}
@@ -209,20 +213,22 @@ public class QueryHistoryComposite extends Composite {
 		return rdbResultComposite;
 	}
 	
-	/**
-	 * sql history를 텍스트로 만듭니다.
-	 * @return
-	 * @throws Exception
-	 */
-	private String getHistoryTabelSelectData() {
-		StringBuffer sbData = new StringBuffer();
-		
-		for(TableItem ti : tvSQLHistory.getTable().getSelection()) {
-			sbData.append(ti.getText(1));
-		}
-		
-		return sbData.toString();
-	}
+//	/**
+//	 * sql history를 텍스트로 만듭니다.
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	private String getHistoryTabelSelectData() {
+//		IStructuredSelection is = (IStructuredSelection)tvSQLHistory.getTable().getSelection();
+//		SQLHistoryDAO historyDAO = (SQLHistoryDAO)is;
+//		StringBuffer sbData = new StringBuffer();
+//		
+//		for(TableItem ti : tvSQLHistory.getTable().getSelection()) {
+//			sbData.append(ti.getText(1));
+//		}
+//		
+//		return sbData.toString();
+//	}
 	
 	/**
 	 * 쿼리 후 실행결과를 히스토리화면과 프로파일에 저장합니다.

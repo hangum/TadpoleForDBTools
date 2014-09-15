@@ -115,6 +115,10 @@ public class ResultSetComposite extends Composite {
 	 * 에디터가 select 에디터인지 즉 구분자로 쿼리를 검색하는 상태인지 나타냅니다.
 	 */
 	private boolean isSelect = true;
+	/**
+	 * 현재 사용자의 데이터의 궈한타입.
+	 */
+	private String dbUserRoleType = "";
 	
 	/** execute job */
 	private Job jobQueryManager = null;
@@ -195,12 +199,12 @@ public class ResultSetComposite extends Composite {
 		final Table tableResult = tvQueryResult.getTable();
 
 		final String PREFERENCE_USER_FONT = GetPreferenceGeneral.getRDBResultFont();
-		if(!"".equals(PREFERENCE_USER_FONT)) {
+		if(!"".equals(PREFERENCE_USER_FONT)) { //$NON-NLS-1$
 			try {
-				String[] arryFontInfo = StringUtils.split(PREFERENCE_USER_FONT, "|");
+				String[] arryFontInfo = StringUtils.split(PREFERENCE_USER_FONT, "|"); //$NON-NLS-1$
 				tableResult.setFont(ResourceManager.getFont(arryFontInfo[0], Integer.parseInt(arryFontInfo[1]), Integer.parseInt(arryFontInfo[2])));
 			} catch(Exception e) {
-				logger.error("Fail User font set", e);
+				logger.error("Fail User font set", e); //$NON-NLS-1$
 			}
 		}
 		
@@ -326,7 +330,7 @@ public class ResultSetComposite extends Composite {
 				openSingleRecordViewDialog();
 			}
 		});
-		btnDetailView.setText("View detail");
+		btnDetailView.setText(Messages.ResultSetComposite_0);
 		
 		compositeDumy = new Composite(compositeBtn, SWT.NONE);
 		compositeDumy.setLayout(new GridLayout(1, false));
@@ -339,7 +343,7 @@ public class ResultSetComposite extends Composite {
 		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " ";
+				String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				
 				// 분리자 정보를 가져옵니다.
 				StringBuffer sbExportData = new StringBuffer();
@@ -384,7 +388,7 @@ public class ResultSetComposite extends Composite {
 		if (openSingleDataAction.isEnabled()) {
 			openSingleDataAction.run();
 		} else {
-			MessageDialog.openWarning(getShell(), "Warning", "Select row data");
+			MessageDialog.openWarning(getShell(), Messages.ResultSetComposite_7, Messages.ResultSetComposite_8);
 		}
 	}
 	
@@ -394,7 +398,7 @@ public class ResultSetComposite extends Composite {
 	private void createResultMenu() {
 		openSingleDataAction = new OpenSingleDataDialogAction();
 		// menu
-		final MenuManager menuMgr = new MenuManager("#PopupMenu", "ResultSet"); //$NON-NLS-1$
+		final MenuManager menuMgr = new MenuManager("#PopupMenu", "ResultSet"); //$NON-NLS-1$ //$NON-NLS-2$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
@@ -429,9 +433,9 @@ public class ResultSetComposite extends Composite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 
 			final TadpoleResultSet trs = rsDAO.getDataList();
-			if(logger.isDebugEnabled()) logger.debug("====> refresh data " + trs.getData().size() +":"+ tableResult.getItemCount());
+			if(logger.isDebugEnabled()) logger.debug("====> refresh data " + trs.getData().size() +":"+ tableResult.getItemCount()); //$NON-NLS-1$ //$NON-NLS-2$
 			if(trs.getData().size() > tableResult.getItemCount()) {
-				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount()));
+				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())); //$NON-NLS-1$ //$NON-NLS-2$
 				if(trs.getData().size() > (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())) {
 					tvQueryResult.setInput(trs.getData().subList(0, tableResult.getItemCount() + GetPreferenceGeneral.getPageCount()));
 				} else {
@@ -459,10 +463,10 @@ public class ResultSetComposite extends Composite {
 	public void executeCommand(final RequestQuery reqQuery) {
 		this.reqQuery = reqQuery; 
 		this.rsDAO = new QueryExecuteResultDTO();
-		sqlFilter.setFilter("");
-		textFilter.setText("");
+		sqlFilter.setFilter(""); //$NON-NLS-1$
+		textFilter.setText(""); //$NON-NLS-1$
 		
-		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() );
+		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
 		
 		controlProgress(true);
 		final Shell runShell = textFilter.getShell();
@@ -475,13 +479,13 @@ public class ResultSetComposite extends Composite {
 						epd.open();
 						ParameterObject paramObj = epd.getParameterObject();
 						String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-						if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL);
+						if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL); //$NON-NLS-1$
 						reqQuery.setSql(repSQL);
 						
 						epd.close();
 					}
 				} catch(Exception e) {
-					logger.error("Parameter parse", e);
+					logger.error("Parameter parse", e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -522,7 +526,7 @@ public class ResultSetComposite extends Composite {
 						
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
-							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getUserType(), strUserEmail);
+							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getDbUserRoleType(), strUserEmail);
 						}
 						
 						// select 문장 실행
@@ -543,7 +547,7 @@ public class ResultSetComposite extends Composite {
 								sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 							}
 						} else {
-							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getUserType(), strUserEmail);
+							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 						}
 					}
 					
@@ -552,11 +556,11 @@ public class ResultSetComposite extends Composite {
 						try {
 							TadpoleSystem_SchemaHistory.save(intUserSeq, getUserDB(), reqQuery.getSql());
 						} catch(Exception e) {
-							logger.error("save schemahistory", e);
+							logger.error("save schemahistory", e); //$NON-NLS-1$
 						}
 					}
 					
-					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  );
+					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
 					
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
@@ -615,7 +619,7 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService esCheckStop = null; 
 	private Button btnDetailView;
 	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final boolean isResultComma) throws Exception {
-		if(!PermissionChecker.isExecute(getUserType(), getUserDB(), reqQuery.getSql())) {
+		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
 		
@@ -649,7 +653,7 @@ public class ResultSetComposite extends Composite {
 //			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
 			esCheckStop = Executors.newSingleThreadExecutor();
 			CheckStopThread cst = new CheckStopThread(statement);
-			cst.setName("Check Stop Thread ");
+			cst.setName("Check Stop Thread "); //$NON-NLS-1$
 			esCheckStop.execute(cst);
 			
 //			if(logger.isDebugEnabled()) logger.debug("\t===== start query ==========================");
@@ -661,7 +665,7 @@ public class ResultSetComposite extends Composite {
 					
 			rsDAO = new QueryExecuteResultDTO(true, resultSet, intSelectLimitCnt, isResultComma);
 		} catch(Exception e) {
-			if(logger.isDebugEnabled()) logger.error("execute query", e);
+			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
 		} finally {
 //			if(logger.isDebugEnabled()) logger.debug("\t====> execute select finally=======================");
@@ -705,7 +709,7 @@ public class ResultSetComposite extends Composite {
 		private Statement stmt = null;
 		
 		public CheckStopThread(Statement stmt) {
-			super("CheckStopThread ");
+			super("CheckStopThread "); //$NON-NLS-1$
 			
 			this.stmt = stmt;
 		}
@@ -735,16 +739,16 @@ public class ResultSetComposite extends Composite {
 						isCheckRunning = false;
 						
 						try {
-							if(logger.isDebugEnabled()) logger.debug("User stop operation is [statement close] " + stmt.isClosed());
+							if(logger.isDebugEnabled()) logger.debug("User stop operation is [statement close] " + stmt.isClosed()); //$NON-NLS-1$
 							if(!stmt.isClosed()) execServiceQuery.shutdown();
 						} catch(Exception ee) {
-							logger.error("Execute stop", ee);
+							logger.error("Execute stop", ee); //$NON-NLS-1$
 						}
 					}
 					
 				}   // end while
 			} catch(Exception e) {
-				logger.error("isCheckThread exception", e);
+				logger.error("isCheckThread exception", e); //$NON-NLS-1$
 				isCheckRunning = false;
 			}
 		} 	// end run
@@ -797,25 +801,13 @@ public class ResultSetComposite extends Composite {
 			btnStopQuery.setEnabled(false);
 		}
 	}
-	
-//	private boolean getIsResultComma() {
-//		return easyPreferenceData.isResultComma();
-//	}
 
-//	private String getPlanTableName() {
-//		return easyPreferenceData.getPlanTableName();
-//	}
-
-	private String getUserType() {
-		return null;
+	public void setDbUserRoleType(String userRoleType) {
+		dbUserRoleType = userRoleType;
 	}
-
-//	private String getUserEMail() {
-//		return easyPreferenceData.getUserEMail();
-//	}
-//	private int getUserSeq() {
-//		return easyPreferenceData.getUserSeq();
-//	}
+	public String getDbUserRoleType() {
+		return dbUserRoleType;
+	}
 
 	/**
 	 * 쿼리 결과를 화면에 출력합니다.
@@ -842,7 +834,7 @@ public class ResultSetComposite extends Composite {
 			
 			// 메시지를 출력합니다.
 			float longExecuteTime = (executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime()) / 1000f;
-			String strResultMsg = "";
+			String strResultMsg = ""; //$NON-NLS-1$
 			if(trs.isEndOfRead()) {
 				strResultMsg = String.format("%s %s (%s %s)", trs.getData().size(), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
 			} else {
