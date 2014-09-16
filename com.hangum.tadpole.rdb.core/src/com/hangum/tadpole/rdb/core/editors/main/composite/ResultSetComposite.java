@@ -77,6 +77,7 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.global.OpenSingleDataDialogAction;
+import com.hangum.tadpole.rdb.core.dialog.ddl.SQLSourceViewDialog;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -306,10 +307,22 @@ public class ResultSetComposite extends Composite {
 		
 		Composite compositeBtn = new Composite(this, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(5, false);
+		GridLayout gl_compositeBtn = new GridLayout(6, false);
 		gl_compositeBtn.marginWidth = 1;
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
+		
+		btnSql = new Button(compositeBtn, SWT.NONE);
+		btnSql.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(rsDAO != null) {
+					SQLSourceViewDialog dialog = new SQLSourceViewDialog(null, reqQuery.getOriginalSql());
+					dialog.open();
+				}
+			}
+		});
+		btnSql.setText(Messages.ResultSetComposite_btnSql_text);
 		
 //		Button btnDMLGenerator = new Button(compositeBtn, SWT.NONE);
 //		btnDMLGenerator.addSelectionListener(new SelectionAdapter() {
@@ -374,6 +387,7 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
 	}
@@ -618,6 +632,7 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService execServiceQuery = null;
 	private ExecutorService esCheckStop = null; 
 	private Button btnDetailView;
+	private Button btnSql;
 	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final boolean isResultComma) throws Exception {
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
