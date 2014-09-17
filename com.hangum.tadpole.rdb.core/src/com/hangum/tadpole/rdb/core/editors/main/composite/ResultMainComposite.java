@@ -180,9 +180,6 @@ public class ResultMainComposite extends Composite {
 				if(isDMLQuestion) if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) return; //$NON-NLS-1$
 			}
 
-			// tab을 처음으로 이동합니다. 
-			resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
-			
 			// 실제 쿼리 실행.
 			compositeResultSet.executeCommand(reqQuery);
 			

@@ -14,8 +14,6 @@ import java.sql.Statement;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -24,10 +22,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
-import com.hangum.tadpole.sql.util.SQLUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -40,9 +36,12 @@ public class ExecuteOtherSQL {
 	 * @param reqQuery
 	 * @exception
 	 */
-	public static void runSQLOther(final RequestQuery reqQuery, final UserDBDAO userDB,
+	public static void runSQLOther(
+			final RequestQuery reqQuery, 
+			final UserDBDAO userDB,
 			final String userType,
-			final String userEmail) throws Exception {
+			final String userEmail) throws Exception 
+	{
 		if(!PermissionChecker.isExecute(userType, userDB, reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
@@ -101,32 +100,6 @@ public class ExecuteOtherSQL {
 				}
 			}
 		}  	// end which db
-		
-		// create table, drop table이면 작동하도록			
-		try {
-			if(!SQLUtil.isStatement(reqQuery.getSql())) refreshExplorerView(userDB);
-		} catch(Exception e) {
-			logger.error("CREATE, DROP, ALTER Query refersh error" + reqQuery.getSql()); //$NON-NLS-1$
-		}
 	}
 	
-	/**
-	 * CREATE, DROP, ALTER 문이 실행되어 ExplorerViewer view를 리프레쉬합니다.
-	 */
-	private static void refreshExplorerView(final UserDBDAO userDB) {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().
-		getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
-					ev.refreshCurrentTab(userDB);
-				} catch (PartInitException e) {
-					logger.error("ExplorerView show", e); //$NON-NLS-1$
-				}
-			}
-			
-		});
-	}
 }

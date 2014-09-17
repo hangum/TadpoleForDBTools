@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -50,6 +51,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
+import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 
@@ -390,10 +392,10 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void refershSelectObject(String strSelectItemText) {
 //		테이블 초기화 될때 무조건 리프레쉬 되므로 다시리프레쉬 되는것을 막습니다.
-//		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
-//			refreshTable(false);
-//		} else
-		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
+		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
+			if(tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
+			refreshTable(false);
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 			refreshView(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.toString())) {
 			refreshSynonym(false);
@@ -581,17 +583,23 @@ public class ExplorerViewer extends ViewPart {
 	}
 
 	/**
-	 *  refresh table
+	 *  refresh object
 	 * 
 	 * @param chgUserDB
-	 * @param changeType
-	 * @param changeTbName
+	 * @param schemaDao
 	 */
-	public void refreshCurrentTab(UserDBDAO chgUserDB) {
+	public void refreshCurrentTab(UserDBDAO chgUserDB, final SchemaHistoryDAO schemaDao) {
 		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
-		if (tabFolderObject.getSelectionIndex() != 0)	return;
-
-		refershSelectObject(strSelectItem);
+		
+		if(schemaDao != null) {
+			if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "TABLE")) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name());
+			} else if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "VIEW")) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name());
+			} else if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "INDEX")) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name());
+			}
+		}
 	}
 	
 	@Override

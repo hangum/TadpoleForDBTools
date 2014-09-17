@@ -85,8 +85,8 @@ public class TadpoleSystem_SchemaHistory {
 	 * @param userDB
 	 * @param strSQL
 	 */
-	public static void save(int user_seq, UserDBDAO userDB, String strSQL) {
-		// drop table sample_table32
+	public static SchemaHistoryDAO save(int user_seq, UserDBDAO userDB, String strSQL) {
+		SchemaHistoryDAO schemaDao = new SchemaHistoryDAO(); 
 		
 		try {
 			//
@@ -110,23 +110,25 @@ public class TadpoleSystem_SchemaHistory {
 				strObjectId = StringUtils.remove(arrSQL[4], "(");
 			} 
 			
-			SchemaHistoryDAO sHistory = new SchemaHistoryDAO();
-			sHistory.setDb_seq(userDB.getSeq());
-			sHistory.setUser_seq(user_seq);
+			schemaDao = new SchemaHistoryDAO();
+			schemaDao.setDb_seq(userDB.getSeq());
+			schemaDao.setUser_seq(user_seq);
 			
-			sHistory.setWork_type(strWorkType);
-			sHistory.setObject_type(strObjecType);
-			sHistory.setObject_id(strObjectId);
+			schemaDao.setWork_type(strWorkType);
+			schemaDao.setObject_type(strObjecType);
+			schemaDao.setObject_id(strObjectId);
 			
-			sHistory.setCreate_date(new Timestamp(System.currentTimeMillis()));
+			schemaDao.setCreate_date(new Timestamp(System.currentTimeMillis()));
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-			SchemaHistoryDAO schemaHistoryDao =  (SchemaHistoryDAO)sqlClient.insert("sqlHistoryInsert", sHistory); //$NON-NLS-1$
+			SchemaHistoryDAO schemaHistoryDao =  (SchemaHistoryDAO)sqlClient.insert("sqlHistoryInsert", schemaDao); //$NON-NLS-1$
 			
 			insertResourceData(schemaHistoryDao, strSQL);
 		} catch(Exception e) {
 			logger.error("Schema histor save error", e);
 		}
+		
+		return schemaDao;
 	}
 	
 	/**

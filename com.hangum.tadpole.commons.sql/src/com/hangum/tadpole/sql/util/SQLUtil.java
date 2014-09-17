@@ -10,9 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util;
 
+import java.io.StringReader;
 import java.sql.ResultSet;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import net.sf.jsqlparser.parser.CCJSqlParserManager;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.Select;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -131,17 +136,17 @@ public class SQLUtil {
 			return true;
 		} else {
 //			add issue https://github.com/JSQLParser/JSqlParser/issues/31
-//			try {
-//				// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
-//				// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
+			try {
+				// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
+				// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
 //				if(!isEnglish(strSQL)) return false;
 //				
 //				CCJSqlParserManager parserManager = new CCJSqlParserManager();
 //				Statement statement = parserManager.parse(new StringReader(strSQL));
 //				if(statement instanceof Select) return true;
-//			} catch(Exception e) {
-//				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
-//			}
+			} catch(Exception e) {
+				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
+			}
 			return false;
 		}
 		

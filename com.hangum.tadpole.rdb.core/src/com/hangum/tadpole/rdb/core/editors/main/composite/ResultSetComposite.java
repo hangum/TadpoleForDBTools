@@ -61,6 +61,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
@@ -85,7 +87,9 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
@@ -509,7 +513,6 @@ public class ResultSetComposite extends Composite {
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
 		final boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 		final String strPlanTBName = GetPreferenceGeneral.getPlanTableName();
-		final int intUserSeq 		= SessionManager.getSeq();
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		
@@ -562,15 +565,6 @@ public class ResultSetComposite extends Composite {
 							}
 						} else {
 							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
-						}
-					}
-					
-					// working schema_history 에 history 를 남깁니다.
-					if(SQLUtil.isExecute(reqQuery.getSql())) {
-						try {
-							TadpoleSystem_SchemaHistory.save(intUserSeq, getUserDB(), reqQuery.getSql());
-						} catch(Exception e) {
-							logger.error("save schemahistory", e); //$NON-NLS-1$
 						}
 					}
 					
@@ -870,18 +864,40 @@ public class ResultSetComposite extends Composite {
 		} else {
 			getRdbResultComposite().refreshMessageView("success. \n" + executingSQLDAO.getStrSQLText()); //$NON-NLS-1$
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+			
+			// working schema_history 에 history 를 남깁니다.
+			SchemaHistoryDAO schemaDao = null;
+			try {
+				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getSeq(), getUserDB(), reqQuery.getSql());
+			} catch(Exception e) {
+				logger.error("save schemahistory", e); //$NON-NLS-1$
+			}
+			
+			refreshExplorerView(getUserDB(), schemaDao);
 		}
 	}
 	
-//	/**
-//	 * 결과 테이블을 초기화 상태로 만듭니다.
-//	 */
-//	public void initResultTable() {
-//		tvQueryResult.setLabelProvider( new SQLResultLabelProvider() );
-//		tvQueryResult.setContentProvider(new SQLResultContentProvider(null) );
-//		tvQueryResult.setInput(null);			
-//		lblQueryResultStatus.setText(Messages.MainEditor_28 );
-//	}
+	/**
+	 * CREATE, DROP, ALTER 문이 실행되어 ExplorerViewer view를 리프레쉬합니다.
+	 * 
+	 * @param userDB
+	 * @param schemaDao
+	 */
+	private void refreshExplorerView(final UserDBDAO userDB, final SchemaHistoryDAO schemaDao) {
+		rdbResultComposite.getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
+					ev.refreshCurrentTab(userDB, schemaDao);
+				} catch (PartInitException e) {
+					logger.error("ExplorerView show", e); //$NON-NLS-1$
+				}
+			}
+			
+		});
+	}
+
 	
 	/**
 	 * 필터를 설정합니다.
