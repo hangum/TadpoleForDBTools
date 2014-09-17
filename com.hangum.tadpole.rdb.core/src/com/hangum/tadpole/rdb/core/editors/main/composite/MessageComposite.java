@@ -40,7 +40,6 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.DefaultViewerSorter;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryLabelProvider;
-import com.hangum.tadpole.sql.util.tables.SQLHistorySorter;
 
 /**
  * Result Message Composite
@@ -80,7 +79,7 @@ public class MessageComposite extends Composite {
 			}
 		});
 		Table tableMessage = tableViewerMessage.getTable();
-		tableMessage.setData(RWT.CUSTOM_ITEM_HEIGHT, 50);
+		tableMessage.setData(RWT.CUSTOM_ITEM_HEIGHT, 68);
 		tableMessage.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		tableMessage.setLinesVisible(true);
 		tableMessage.setHeaderVisible(true);
@@ -91,7 +90,7 @@ public class MessageComposite extends Composite {
 		AutoResizeTableLayout layoutColumnLayoutMsg = new AutoResizeTableLayout(tableViewerMessage.getTable());
 		tableViewerMessage.getTable().setLayout(layoutColumnLayoutMsg);
 		
-		SQLHistorySorter sorterMessage = new SQLHistorySorter();
+		SQLMessageSorter sorterMessage = new SQLMessageSorter();
 		createTableMessageColumn(tableViewerMessage, sorterMessage, layoutColumnLayoutMsg);
 		
 		tableViewerMessage.setLabelProvider(new SQLHistoryLabelProvider());
@@ -155,21 +154,21 @@ public class MessageComposite extends Composite {
 	 * @param sorterMessage
 	 * @param layoutColumnLayoutMsg
 	 */
-	public void createTableMessageColumn(TableViewer tableViewerMessage, SQLHistorySorter sorterMessage, AutoResizeTableLayout layoutColumnLayoutMsg) {
-
-		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerMessage, SWT.NONE);
-		TableColumn tblclmnSql = tableViewerColumn_1.getColumn();
-		tblclmnSql.setWidth(500);
-		tblclmnSql.setText("Message"); //$NON-NLS-1$
-		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnSql, 0));
-		layoutColumnLayoutMsg.addColumnData(new ColumnWeightData(500));
-		
+	public void createTableMessageColumn(TableViewer tableViewerMessage, SQLMessageSorter sorterMessage, AutoResizeTableLayout layoutColumnLayoutMsg) {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		TableColumn tblclmnDate = tableViewerColumn.getColumn();
 		tblclmnDate.setWidth(140);
 		tblclmnDate.setText(Messages.MainEditor_14);
-		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 1));
+		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 0));
 		layoutColumnLayoutMsg.addColumnData(new ColumnPixelData(160));
+		
+		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerMessage, SWT.NONE);
+		TableColumn tblclmnSql = tableViewerColumn_1.getColumn();
+		tblclmnSql.setWidth(500);
+		tblclmnSql.setText("Message"); //$NON-NLS-1$
+		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnSql, 1));
+		layoutColumnLayoutMsg.addColumnData(new ColumnWeightData(500));
+		
 
 	}
 	

@@ -26,7 +26,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
  * @author hangum
  *
  */
-public class DDLSourceComposite extends Composite {
+public class SQLSourceComposite extends Composite {
 	
 	private Label labelTable;
 	private TadpoleEditorWidget ddlSource;
@@ -36,7 +36,7 @@ public class DDLSourceComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public DDLSourceComposite(Composite parent, int style, String tableName, String initDDL) {
+	public SQLSourceComposite(Composite parent, int style, String tableName, String initDDL) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
