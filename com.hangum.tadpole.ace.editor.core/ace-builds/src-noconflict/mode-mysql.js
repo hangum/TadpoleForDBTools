@@ -131,15 +131,18 @@ oop.inherits(MysqlHighlightRules, TextHighlightRules);
 exports.MysqlHighlightRules = MysqlHighlightRules;
 });
 
-ace.define("ace/mode/mysql",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/mysql_highlight_rules","ace/range"], function(require, exports, module) {
+ace.define("ace/mode/mysql",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/mysql_highlight_rules","ace/range", 'ace/mode/folding/cstyle'], function(require, exports, module) {
 
 var oop = require("../lib/oop");
 var TextMode = require("../mode/text").Mode;
 var MysqlHighlightRules = require("./mysql_highlight_rules").MysqlHighlightRules;
 var Range = require("../range").Range;
+//add filding 
+var CStyleFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = MysqlHighlightRules;
+    this.foldingRules = new CStyleFoldMode();
 };
 oop.inherits(Mode, TextMode);
 
@@ -151,4 +154,107 @@ oop.inherits(Mode, TextMode);
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
+});
+
+/*
+ * folding
+ */
+ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/range', 'ace/mode/folding/fold_mode'], function(require, exports, module) {
+
+	var oop = require("../../lib/oop");
+	var Range = require("../../range").Range;
+	var BaseFoldMode = require("./fold_mode").FoldMode;
+
+	var FoldMode = exports.FoldMode = function(commentRegex) {
+	    if (commentRegex) {
+	        this.foldingStartMarker = new RegExp(
+	            this.foldingStartMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.start)
+	        );
+	        this.foldingStopMarker = new RegExp(
+	            this.foldingStopMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.end)
+	        );
+	    }
+	};
+	oop.inherits(FoldMode, BaseFoldMode);
+
+	(function() {
+
+//	    this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
+//	    this.foldingStopMarker  = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
+		
+		this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)|^(\s)*(select|insert|update|delete|create|alter|drop)( .*$| ?[\r\n]?)+/i;
+
+	    this.getFoldWidgetRange = function(session, foldStyle, row, forceMultiline) {
+	        var line = session.getLine(row);
+	        var match = line.match(this.foldingStartMarker);
+	        
+	        if (match) {
+	            var i = match.index;
+
+	            if (match[1])
+	                return this.openingBracketBlock(session, match[1], row, i);
+	            if (match[4]) // foldingStartMarker정규식 평가결과를 이용해 키워드에 따른 Syntax폴딩처리 여부를 검사한다.
+	            	return session.getSyntaxFoldRange(row, match[4].length, 1);	            
+	            
+	            var range = session.getCommentFoldRange(row, i + match[0].length, 1);
+	            
+	            
+	            if (range && !range.isMultiLine()) {
+	                if (forceMultiline) {
+	                    range = this.getSectionRange(session, row);
+	                } else if (foldStyle != "all")
+	                    range = null;
+	            }
+	            
+	            return range;
+	        }
+
+	        if (foldStyle === "markbegin")
+	            return;
+
+//	        var match = line.match(this.foldingStopMarker);
+//	        if (match) {
+//	            var i = match.index + match[0].length;
+//
+//	            if (match[1])
+//	                return this.closingBracketBlock(session, match[1], row, i);
+//
+//	            return session.getCommentFoldRange(row, i, -1);
+//	        }
+	    };
+	    
+	    this.getSectionRange = function(session, row) {
+	        var line = session.getLine(row);
+	        var startIndent = line.search(/\S/);
+	        var startRow = row;
+	        var startColumn = line.length;
+	        row = row + 1;
+	        var endRow = row;
+	        var maxRow = session.getLength();
+	        while (++row < maxRow) {
+	            line = session.getLine(row);
+	            var indent = line.search(/\S/);
+	            if (indent === -1)
+	                continue;
+	            if  (startIndent > indent)
+	                break;
+	            var subRange = this.getFoldWidgetRange(session, "all", row);
+	            
+	            if (subRange) {
+	                if (subRange.start.row <= startRow) {
+	                    break;
+	                } else if (subRange.isMultiLine()) {
+	                    row = subRange.end.row;
+	                } else if (startIndent == indent) {
+	                    break;
+	                }
+	            }
+	            endRow = row;
+	        }
+	        
+	        return new Range(startRow, startColumn, endRow, session.getLine(endRow).length);
+	    };
+
+	}).call(FoldMode.prototype);
+
 });
