@@ -45,7 +45,6 @@ var editorService = {
 	DIRTY_CHANGED 		: "1",
 		
 	SAVE 				: "15",
-	
 	EXECUTE_QUERY 		: "25",
 	EXECUTE_ALL_QUERY 	: "26",
 	EXECUTE_PLAN  		: "30",
@@ -61,7 +60,7 @@ var isEdited = false;
 var varEditorType = 'TABLES';
 
 // enable live auto completion
-//var completionsListTable = [];
+var completions = [];
 
 /** initialize editor */
 {
@@ -82,29 +81,24 @@ var varEditorType = 'TABLES';
 	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
-	    enableSnippets: true
-//	    ,
-//	    enableLiveAutocompletion: true
+	    enableSnippets: true,
+	    enableLiveAutocompletion: true
 	});
 	
-/*
- *   
- // add add at content assist
-	var completer = {
-	        getCompletions: function(editor, session, pos, prefix, callback) {
-	        	var text = editor.getValue(); 
-	        	
-	        	if (prefix.length === 0) { 
-	        		callback(null, []); 
-	        		return 
-	        	} 
-	        	 
-//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
-	        	callback(null, completions); 
-	        } 
-	} 
-	langTools.addCompleter(completer);
-*/
+//	var completer = {
+//	        getCompletions: function(editor, session, pos, prefix, callback) {
+//	        	var text = editor.getValue(); 
+//	        	
+//	        	if (prefix.length === 0) { 
+//	        		callback(null, []); 
+//	        		return 
+//	        	} 
+//	        	 
+////	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+//	        	callback(null, completions); 
+//	        } 
+//	} 
+//	langTools.addCompleter(completer); 
 };
 
 /** 
@@ -118,14 +112,14 @@ var varEditorType = 'TABLES';
 editorService.initEditor = function(varMode, varType, varTableList, varInitText) {
 	varEditorType = varType;
 	
-//	try {
-//		var tables = varTableList.split("|");
-//		for(var i=0; i<tables.length; i++) {
-//			completionsListTable.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
-//		}
-//	} catch(e) {
-//		console.log(e);
-//	}
+	try {
+		var tables = varTableList.split("|");
+		for(var i=0; i<tables.length; i++) {
+			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
+		}
+	} catch(e) {
+		console.log(e);
+	}
 	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
@@ -165,16 +159,16 @@ editorService.setFocus = function() {
 //	isJavaRunning = false;
 //};
 
-///** user autocomplete */
-//editor.commands.on("afterExec", function(e){
-//	console.log("--> command --> " + e.command.name);
-//	
-////	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
-////		var all = editor.completers;
-////		editor.completers = completionsListTable;
-////    	editor.execCommand("startAutocomplete");
-////    	editor.completers = all;
-////    	
+/** user autocomplete */
+editor.commands.on("afterExec", function(e){
+	console.log("--> command --> " + e.command.name);
+	
+//	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
+//		var all = editor.completers;
+//		editor.completers = completions;
+//    	editor.execCommand("startAutocomplete");
+//    	editor.completers = all;
+//    	
 ////    } else if(e.command.name == "startAutocomplete") {
 ////    	var all = e.editor.completers;
 ////    	
@@ -192,12 +186,8 @@ editorService.setFocus = function() {
 ////		        } 
 ////		} 
 ////		langTools.addCompleter(completer);
-////	}
-//	
-//	if(e.command.name == "startAutocomplete") {
-//    	editor.completers = completionsListTable;
 //	}
-//});
+})
 
 
 //==[ Define short key ]======================================================================================================================

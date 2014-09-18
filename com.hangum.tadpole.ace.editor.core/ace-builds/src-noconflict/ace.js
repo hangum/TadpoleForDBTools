@@ -7628,6 +7628,35 @@ function Folding() {
         }
     };
 
+    this.getSyntaxFoldRange = function(row, column, dir) {
+        var iterator = new TokenIterator(this, row, column);
+        var token = iterator.getCurrentToken();
+        // 키워드인지 확인.
+        if (token && /^keyword/.test(token.type)) {
+            var range = new Range();
+            var re = /[.\s]?\;[.\s]?$/;
+            
+            // 키워드 시작부분은 남기고 단축[...]처리하도록.
+            range.start.row = iterator.getCurrentTokenRow();
+            range.start.column = iterator.getCurrentTokenColumn() + token.value.length;
+
+            // 키워드 위치에서 부터 에디터의 첫행을 읽는다.
+            iterator = new TokenIterator(this, row, column);            
+            if (dir != -1) {
+                do {
+                	// 계속해서 다음행을 읽으면서 세미콜론(;)으로 종료하는 문자열의 위치를 찾는다.
+                    token = iterator.stepForward();
+                } while(token && !re.test(token.value));
+            } else
+                token = iterator.getCurrentToken();
+
+            // 검색된 행과 열을 리턴한다.
+            range.end.row = iterator.getCurrentTokenRow();
+            range.end.column = iterator.getCurrentTokenColumn() + token.value.length - 1;
+            return range;
+        }
+    };
+
     this.foldAll = function(startRow, endRow, depth) {
         if (depth == undefined)
             depth = 100000; // JSON.stringify doesn't hanle Infinity

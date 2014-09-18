@@ -216,15 +216,7 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 //	    this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
 //	    this.foldingStopMarker  = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
 		
-		
-//		(select|insert|update|create|delete|drop|alter)[^\}\]]*$|^\s*(\/\*)
-		
-//	    this.foldingStartMarker = /(select|insert|update|create|delete|drop|alter)[^\;]*$|^\s*(\/\*)/i;
-//			this.foldingStartMarker = /(select .*|insert .*)[^\;]*|^\s*(\/\*)/i;
-//	    this.foldingStopMarker 	= /^[^select|insert|update|create|delete|drop|alter]*(\;)|^[\s\*]*(\*\/)/i;
-		
-		this.foldingStartMarker = /(select*.)[^;]*$|^\s*(\/\*)/i;
-//	    this.foldingStopMarker 	= /^[^select .*|insert .*]*(\;)|^[\s\*]*(\*\/)/i;
+		this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)|^(\s)*(select|insert|update|delete|create|alter|drop)( .*$| ?[\r\n]?)+/i;
 
 	    this.getFoldWidgetRange = function(session, foldStyle, row, forceMultiline) {
 	        var line = session.getLine(row);
@@ -235,7 +227,9 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 
 	            if (match[1])
 	                return this.openingBracketBlock(session, match[1], row, i);
-	                
+	            if (match[4]) // foldingStartMarker정규식 평가결과를 이용해 키워드에 따른 Syntax폴딩처리 여부를 검사한다.
+	            	return session.getSyntaxFoldRange(row, match[4].length, 1);	            
+	            
 	            var range = session.getCommentFoldRange(row, i + match[0].length, 1);
 	            
 	            
