@@ -67,7 +67,7 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(startTime);
-			DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
 			queryMap.put("startTime",  formatter.format(date));
 			
 			Date dateendTime = new Date(endTime);
