@@ -267,7 +267,8 @@
   WHERE
  	   a.seq = c.group_seq
     AND c.user_seq = b.seq
-    AND c.group_seq in ($group_seq$)
+    AND c.group_seq in ($group_seq$) 
+    AND c.delYn = 'NO'
   ORDER BY
     user_group_name, email
  </select>
@@ -884,6 +885,17 @@ SELECT
 			delYn = 'NO'
 	</selectKey>
 </insert>
+
+<!-- 
+	withdrawal user gorup
+ -->
+<update id="withdrawalUserRole" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
+	UPDATE user_role
+ 	SET   delyn= 'YES' 
+ 	WHERE 
+		group_seq = #group_seq# AND 
+		user_seq = #user_seq#
+</update>
 	
 <!-- 
 	사용자 정보를 가져온다. 
@@ -903,6 +915,7 @@ SELECT
 	from user_role a, user_group b
 	where a.user_seq = #user_seq#
 	and a.group_seq = b.seq
+	and a.role_type != 'USER'
 </select>
 
 <!-- 

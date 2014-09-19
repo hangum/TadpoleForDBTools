@@ -18,8 +18,11 @@ Bundle-ClassPath: .,
  libs/mail/commons-email-1.3.2.jar,
  libs/sql/parser/jsqlparser-0.9.jar,
  libs/googleauth/commons-codec-1.9.jar,
- libs/googleauth/GoogleAuth-1.0.jar
+ libs/googleauth/GoogleAuth-1.0.jar,
+ libs/csv/opencsv-3.0.jar
 Export-Package: .,
+ au.com.bytecode.opencsv,
+ au.com.bytecode.opencsv.bean,
  com.hangum.tadpold.commons.libs.core.dao,
  com.hangum.tadpold.commons.libs.core.define,
  com.hangum.tadpold.commons.libs.core.googleauth,
