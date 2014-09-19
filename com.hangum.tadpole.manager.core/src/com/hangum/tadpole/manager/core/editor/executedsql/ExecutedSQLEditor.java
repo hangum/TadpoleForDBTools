@@ -136,6 +136,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		lblUser.setText("<b>User</b>");
 
 		btnUserAllCheck = new Button(compositeHead2, SWT.CHECK);
+		btnUserAllCheck.setEnabled(false);
 		GridData gd_btnBtnuserallcheck = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
 		gd_btnBtnuserallcheck.minimumWidth = 45;
 		gd_btnBtnuserallcheck.widthHint = 45;
@@ -169,7 +170,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		lblDatabase.setText("<b>Database</b>");
 
 		final Button btnDbAllCheck = new Button(compositeHead2, SWT.CHECK);
-		btnDbAllCheck.setSelection(true);
+		btnDbAllCheck.setEnabled(false);
 		GridData gd_btnBtndballcheck = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
 		gd_btnBtndballcheck.minimumWidth = 45;
 		gd_btnBtndballcheck.widthHint = 45;
@@ -344,11 +345,9 @@ public class ExecutedSQLEditor extends EditorPart {
 	 * Initial configuration setting of widgets
 	 */
 	private void initBehavior() {
-//		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-			btnUserAllCheck.setSelection(true);
 			
-			comboDisplayName.setEnabled(false);
-			comboUserName.setEnabled(false);
+//			comboDisplayName.setEnabled(false);
+//			comboUserName.setEnabled(false);
 //		} else {
 //			btnUserAllCheck.setSelection(false);
 //			btnUserAllCheck.setEnabled(false);

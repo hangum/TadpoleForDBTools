@@ -40,6 +40,8 @@ public class GenerateDDLScriptUtils {
 	
 	
 	public static String genTableScript(UserDBDAO userDB, TableDAO tableDAO, List<TableColumnDAO> showTableColumns) {
+		if(showTableColumns.isEmpty()) return "";
+		
 		StringBuffer sbSQL = new StringBuffer();
 		try {
 			sbSQL.append("SELECT "); //$NON-NLS-1$

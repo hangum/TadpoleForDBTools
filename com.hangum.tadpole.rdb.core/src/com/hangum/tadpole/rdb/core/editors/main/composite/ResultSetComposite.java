@@ -364,27 +364,35 @@ public class ResultSetComposite extends Composite {
 				
 				// 분리자 정보를 가져옵니다.
 				StringBuffer sbExportData = new StringBuffer();
-					
+				
 				// column 헤더추가.
 				TableColumn[] tcs = tvQueryResult.getTable().getColumns();
 				for (TableColumn tableColumn : tcs) {
-					sbExportData.append( tableColumn.getText()).append(EXPORT_DEMILITER);
+					sbExportData.append(makeQuoteValue(tableColumn.getText())).append(EXPORT_DEMILITER);
 				}
 				sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 				
 				// column 데이터 추가
 				List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+//				Map<Integer, Integer> columnType = rsDAO.getColumnType();
+				
 				for(int i=0; i<dataList.size(); i++) {
 					Map<Integer, Object> mapColumns = dataList.get(i);
 					for(int j=0; j<mapColumns.size(); j++) {
-						String strContent = mapColumns.get(j)==null?"":mapColumns.get(j).toString(); //$NON-NLS-1$
-						if(strContent.length() == 0 ) strContent = " "; //$NON-NLS-1$
+//						if(RDBTypeToJavaTypeUtils.isNumberType(columnType.get(j))) {
+						String strContent = makeQuoteValue(mapColumns.get(j));
 						sbExportData.append(strContent).append(EXPORT_DEMILITER); //$NON-NLS-1$
 					}
 					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR);
 				}
 				
 				downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", sbExportData.toString()); //$NON-NLS-1$
+			}
+			
+			private String makeQuoteValue(Object value) {
+				if(value == null) return "\" \"";
+				
+				return "\"" + value.toString() + "\"";
 			}
 		});
 		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);

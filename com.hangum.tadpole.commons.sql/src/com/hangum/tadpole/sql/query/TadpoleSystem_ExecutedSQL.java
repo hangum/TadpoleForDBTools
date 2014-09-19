@@ -11,6 +11,8 @@
 package com.hangum.tadpole.sql.query;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.system.ExecutedSqlResourceDAO;
 import com.hangum.tadpole.sql.dao.system.ExecutedSqlResourceDataDAO;
@@ -55,14 +58,25 @@ public class TadpoleSystem_ExecutedSQL {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		if (user_seq != -1) { // user all check
+//		if (user_seq != -1) { // user all check
 			queryMap.put("user_seq",user_seq);
-		}
-		if (dbSeq != -1) {	// db all check
+//		}
+//		if (dbSeq != -1) {	// db all check
 			queryMap.put("db_seq", 	dbSeq);
+//		}
+		
+		if(ApplicationArgumentUtils.isDBServer()) {
+			Date date = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+			queryMap.put("startTime",  formatter.format(date));
+			
+			Date dateendTime = new Date(endTime);
+			queryMap.put("endTime", formatter.format(dateendTime));			
+		} else {
+			queryMap.put("startTime",  startTime);
+			queryMap.put("endTime", endTime);
 		}
-		queryMap.put("startTime",  startTime);
-		queryMap.put("endTime", endTime);
+		
 		queryMap.put("duration", duringExecute);
 		queryMap.put("count", 	1000);
 		
@@ -71,10 +85,18 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		for (Map resultMap : listResourceData) {
 			int seq = (Integer)resultMap.get("executed_sql_resource_seq");
-			
-			Long startdateexecute = (Long)resultMap.get("startdateexecute");
+
+			Long startdateexecute = 0l;
 			String strSQLText = (String)resultMap.get("datas");
-			Long enddateexecute = (Long)resultMap.get("enddateexecute");
+			Long enddateexecute = 0l;
+			
+			if(ApplicationArgumentUtils.isDBServer()) {
+				startdateexecute = ((Timestamp)resultMap.get("startdateexecute")).getTime();
+				enddateexecute 	= ((Timestamp)resultMap.get("enddateexecute")).getTime();
+			} else {
+				startdateexecute = (Long)resultMap.get("startdateexecute");
+				enddateexecute = (Long)resultMap.get("enddateexecute");
+			}
 			
 			int row = (Integer)resultMap.get("row");
 			String result = (String)resultMap.get("result");
