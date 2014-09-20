@@ -12,6 +12,9 @@
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -26,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,6 +67,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+
+import au.com.bytecode.opencsv.CSVWriter;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
@@ -360,40 +366,51 @@ public class ResultSetComposite extends Composite {
 		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//				String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				
-				// 분리자 정보를 가져옵니다.
-				StringBuffer sbExportData = new StringBuffer();
-				
+				List<String[]> listCsvData = new ArrayList<String[]>();
 				// column 헤더추가.
 				TableColumn[] tcs = tvQueryResult.getTable().getColumns();
-				for (TableColumn tableColumn : tcs) {
-					sbExportData.append(makeQuoteValue(tableColumn.getText())).append(EXPORT_DEMILITER);
+				String[] strArrys = new String[tcs.length-1];
+				for(int i=1; i<tcs.length; i++) {
+					TableColumn tableColumn = tcs[i];
+					strArrys[i-1] = tableColumn.getText();
 				}
-				sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+				listCsvData.add(strArrys);
 				
 				// column 데이터 추가
 				List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-//				Map<Integer, Integer> columnType = rsDAO.getColumnType();
 				
 				for(int i=0; i<dataList.size(); i++) {
 					Map<Integer, Object> mapColumns = dataList.get(i);
-					for(int j=0; j<mapColumns.size(); j++) {
+					
+					strArrys = new String[mapColumns.size()-1];
+					for(int j=1; j<mapColumns.size(); j++) {
 //						if(RDBTypeToJavaTypeUtils.isNumberType(columnType.get(j))) {
-						String strContent = makeQuoteValue(mapColumns.get(j));
-						sbExportData.append(strContent).append(EXPORT_DEMILITER); //$NON-NLS-1$
+						strArrys[j-1] = ""+mapColumns.get(j);
 					}
-					sbExportData.append(PublicTadpoleDefine.LINE_SEPARATOR);
+					listCsvData.add(strArrys);
 				}
 				
-				downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", sbExportData.toString()); //$NON-NLS-1$
+				try {
+					String filename = PublicTadpoleDefine.TEMP_DIR + getUserDB().getDisplay_name() + "_SQLResultExport.csv";
+					
+					FileOutputStream fos = new FileOutputStream(filename);
+					OutputStreamWriter bw = new OutputStreamWriter(fos, "UTF-8");
+					
+					CSVWriter writer = new CSVWriter(bw);
+					writer.writeAll(listCsvData);
+					bw.close();
+					
+					String strCVSContent = FileUtils.readFileToString(new File(filename));
+					
+					downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
+				} catch(Exception ee) {
+					logger.error("csv file writer", ee);
+				}
+				
 			}
 			
-			private String makeQuoteValue(Object value) {
-				if(value == null) return "\" \"";
-				
-				return "\"" + value.toString() + "\"";
-			}
 		});
 		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);
 		
