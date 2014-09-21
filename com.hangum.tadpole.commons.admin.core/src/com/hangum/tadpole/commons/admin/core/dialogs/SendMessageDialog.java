@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
@@ -55,7 +56,19 @@ public class SendMessageDialog extends Dialog {
 	public SendMessageDialog(Shell parentShell) {
 		super(parentShell);
 	}
+	
+	@Override
+	public void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Send Email");
+	}
 
+	@Override
+	protected int getShellStyle() {
+		int ret = super.getShellStyle(); 
+		return ret | SWT.RESIZE;
+	}
+	
 	/**
 	 * Create contents of the dialog.
 	 * @param parent
@@ -90,8 +103,12 @@ public class SendMessageDialog extends Dialog {
 		Label lblMessage = new Label(compositeBody, SWT.NONE);
 		lblMessage.setText("Message");
 		
-		textMessage = new Text(compositeBody, SWT.BORDER);
+		textMessage = new Text(compositeBody, SWT.BORDER | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		textMessage.setText("<pre>\n\n</pre>");
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}
@@ -102,10 +119,12 @@ public class SendMessageDialog extends Dialog {
 		if(StringUtils.isEmpty(textTitle.getText())) {
 			MessageDialog.openError(null, "Error", "Title is null.");
 			textTitle.setFocus();
+			return;
 		}
 		if(StringUtils.isEmpty(textMessage.getText())) {
 			MessageDialog.openError(null, "Error", "Message is null.");
 			textMessage.setFocus();
+			return;
 		}
 		
 		// 모든 사용자에게 이메일을 보냅니다.

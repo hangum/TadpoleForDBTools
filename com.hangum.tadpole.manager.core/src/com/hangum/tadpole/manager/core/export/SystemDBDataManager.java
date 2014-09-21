@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import com.google.gson.Gson;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -71,7 +72,9 @@ public class SystemDBDataManager {
 				retStr += PublicTadpoleDefine.LINE_SEPARATOR;
 			}
 		}
-		
+		// google analytic
+		AnalyticCaller.track("export user DB");
+						
 		return retStr;
 	}
 	
@@ -92,6 +95,9 @@ public class SystemDBDataManager {
 			UserDBDAO userDBDAO = gson.fromJson(strUserdb[i], UserDBDAO.class);
 			TadpoleSystem_UserDBQuery.newUserDB(userDBDAO, SessionManager.getSeq());
 		}
+		
+		// google analytic
+		AnalyticCaller.track("import user DB");
 		
 	}
 

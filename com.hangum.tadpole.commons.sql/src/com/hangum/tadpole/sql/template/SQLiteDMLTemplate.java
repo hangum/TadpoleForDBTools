@@ -35,7 +35,7 @@ public class SQLiteDMLTemplate extends AbstractDMLTemplate {
 
 	/** view  */
 	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																" SELECT   columns   FROM   table;";
+																" SELECT   columns   FROM   table_name;";
 	
 	/** index */
 	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name " + PublicTadpoleDefine.LINE_SEPARATOR + 

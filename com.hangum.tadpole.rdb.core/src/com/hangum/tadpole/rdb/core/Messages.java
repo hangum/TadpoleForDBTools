@@ -134,6 +134,7 @@ public class Messages extends NLS {
 	public static String MainEditor_45;
 	public static String MainEditor_46;
 	public static String MainEditor_47;
+	public static String MainEditor_49;
 	public static String MainEditor_5;
 	public static String MainEditor_50;
 	public static String MainEditor_56;
@@ -264,10 +265,19 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_0;
 	public static String SQLiteLoginComposite_1;
 	public static String SQLiteLoginComposite_10;
+	public static String SQLiteLoginComposite_11;
 	public static String SQLiteLoginComposite_12;
 	public static String SQLiteLoginComposite_13;
+	public static String SQLiteLoginComposite_14;
 	public static String SQLiteLoginComposite_15;
+	public static String SQLiteLoginComposite_16;
+	public static String SQLiteLoginComposite_17;
+	public static String SQLiteLoginComposite_19;
 	public static String SQLiteLoginComposite_2;
+	public static String SQLiteLoginComposite_22;
+	public static String SQLiteLoginComposite_23;
+	public static String SQLiteLoginComposite_24;
+	public static String SQLiteLoginComposite_29;
 	public static String SQLiteLoginComposite_3;
 	public static String SQLiteLoginComposite_4;
 	public static String SQLiteLoginComposite_5;
@@ -430,6 +440,12 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_btnFileUpload_text;
 	public static String SQLiteLoginComposite_btnCreationDb_text;
 	public static String TableDirectEditorComposite_tltmRefersh_text;
+	public static String ResultSetComposite_0;
+	public static String ResultSetComposite_7;
+	public static String ResultSetComposite_8;
+	public static String ResultSetComposite_btnDmlGenerator_text;
+	public static String ResultSetComposite_btnDMLGenerator_text;
+	public static String ResultSetComposite_btnSql_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

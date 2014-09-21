@@ -41,6 +41,7 @@ import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpold.commons.libs.core.mails.template.NewUserMailBodyTemplate;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
@@ -59,8 +60,6 @@ public class NewUserDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(NewUserDialog.class);
 	
 	private Composite compositeUserGroup;
-	/** user group combo로 기 존재하는 그룹 정보  */
-	private Combo comboUserGroup;
 	
 	/** user group text로 신규 그룹명을 입력 받는다 */
 	private Text textUserGroup;
@@ -162,7 +161,7 @@ public class NewUserDialog extends Dialog {
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboLanguage.add("ko"); //$NON-NLS-1$
 		comboLanguage.add("en_us"); //$NON-NLS-1$
-		comboLanguage.select(0);
+		comboLanguage.select(1);
 		
 		Label lblPasswordDescription = new Label(container, SWT.NONE);
 		lblPasswordDescription.setText(Messages.NewUserDialog_18);
@@ -226,6 +225,9 @@ public class NewUserDialog extends Dialog {
 		textUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		textUserGroup.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return container;
 	}
@@ -318,7 +320,7 @@ public class NewUserDialog extends Dialog {
 //				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
 //			}
 			
-			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
+//			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
 			
 			MessageDialog.openInformation(null, "Confirm", Messages.NewUserDialog_31); //$NON-NLS-1$
 			

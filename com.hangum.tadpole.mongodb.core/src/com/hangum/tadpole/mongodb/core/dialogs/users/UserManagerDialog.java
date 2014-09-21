@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dto.UserDTO;
@@ -153,6 +154,10 @@ public class UserManagerDialog extends Dialog {
 		initTable();
 		
 		textID.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return container;
 	}
 	

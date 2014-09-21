@@ -272,6 +272,9 @@ public class MapReduceEditor extends EditorPart {
 		sashFormMain.setWeights(new int[] {40, 30, 30});
 		
 		initUI();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

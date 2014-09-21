@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -48,6 +49,10 @@ public class GenerateSQLSelectAction extends AbstractObjectSelectAction {
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
-		FindEditorAndWriteQueryUtil.run(userDB, GenerateDDLScriptUtils.genTableScript(userDB, tableDAO), actionType);
+		
+		String strSQL = GenerateDDLScriptUtils.genTableScript(userDB, tableDAO);
+		if(StringUtils.isNotEmpty(strSQL)) {
+			FindEditorAndWriteQueryUtil.run(userDB, strSQL, actionType);
+		}
 	}
 }

@@ -56,7 +56,7 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 			
 			switch(columnIndex) {
 				case 0: return dateToStr(messageDAO.getDateExecute());
-				case 1: return messageDAO.getStrMessage();
+				case 1: return messageDAO.getStrViewMessage();
 			}
 		}
 		

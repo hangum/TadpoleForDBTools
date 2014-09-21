@@ -27,6 +27,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 
 /**
@@ -158,7 +159,10 @@ public class IntroEditor extends EditorPart {
 //		labelAllDonerList.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 //		labelAllDonerList.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List' target='_blank'>All donor</a>");
 		
-		setBrowserURL();		
+		setBrowserURL();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

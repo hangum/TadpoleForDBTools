@@ -297,6 +297,9 @@ public class TableDirectEditorComposite extends Composite {
 		btnDdlSourceView.setText(Messages.TableDirectEditorComposite_btnDdlSourceView_text);
 		
 		initBusiness();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

@@ -16,7 +16,7 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
-	executeFlag : function() {},
+//	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -54,14 +54,17 @@ var editorService = {
 var editor;
 /** 에디터가 저장 할 수 있는 상태인지 */
 var isEdited = false;
-/** 자바에서 처리가 끝났는지 */
-var isJavaRunning = false;
+///** 자바에서 처리가 끝났는지 */
+//var isJavaRunning = false;
 /** open 된 에디터 타입 */
 var varEditorType = 'TABLES';
 
+// enable live auto completion
+var completions = [];
+
 /** initialize editor */
 {
-	ace.require("ace/ext/language_tools");
+	var langTools = ace.require("ace/ext/language_tools");
 	editor = ace.edit("editor");
 	document.getElementById('editor').style.fontSize= '12px';
 	
@@ -72,22 +75,51 @@ var varEditorType = 'TABLES';
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
+	/*
+	 *  autocomplete
+	 *  http://stackoverflow.com/questions/13545433/autocompletion-in-ace-editor 
+	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
-	    enableSnippets: true
+	    enableSnippets: true,
+	    enableLiveAutocompletion: true
 	});
+	
+	var completer = {
+	        getCompletions: function(editor, session, pos, prefix, callback) {
+	        	var text = editor.getValue(); 
+	        	
+	        	if (prefix.length === 0) { 
+	        		callback(null, []); 
+	        		return 
+	        	} 
+	        	 
+//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+	        	callback(null, completions); 
+	        } 
+	} 
+	langTools.addCompleter(completer); 
 };
 
 /** 
  * 에디터를 초기화 합니다. 
- * @param varExt 확장자
- * @param varAddKeyword
+ * @param varMode mode
+ * @param varTableList table list
  * @param varType editorType (sql or procedure )
  * @param varInitText
  * 
  */
-editorService.initEditor = function(varExt, varType, varAddKeyword, varInitText) {
+editorService.initEditor = function(varMode, varType, varTableList, varInitText) {
 	varEditorType = varType;
+	
+	try {
+		var tables = varTableList.split("|");
+		for(var i=0; i<tables.length; i++) {
+			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
+		}
+	} catch(e) {
+		console.log(e);
+	}
 	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
@@ -95,7 +127,7 @@ editorService.initEditor = function(varExt, varType, varAddKeyword, varInitText)
 
 		var doc = new EditSession(varInitText);
 		doc.setUndoManager(new UndoManager());
-		doc.setMode(varExt);
+		doc.setMode(varMode);
 		doc.on('change', function() {
 			if(!isEdited) {
 				try {
@@ -122,12 +154,44 @@ editorService.saveData = function() {
 editorService.setFocus = function() {
 	editor.focus();
 };
-editorService.executeFlag = function() {
-//	console.log('\t end java program....');
-	isJavaRunning = false;
-};
+//editorService.executeFlag = function() {
+////	console.log('\t end java program....');
+//	isJavaRunning = false;
+//};
+
+/** user autocomplete */
+editor.commands.on("afterExec", function(e){
+	console.log("--> command --> " + e.command.name);
+	
+	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
+		var all = editor.completers;
+		editor.completers = completions;
+    	editor.execCommand("startAutocomplete");
+    	editor.completers = all;
+    	
+//    } else if(e.command.name == "startAutocomplete") {
+//    	var all = e.editor.completers;
+//    	
+//		var completer = {
+//		        getCompletions: function(editor, session, pos, prefix, callback) {
+//		        	var text = editor.getValue(); 
+//		        	
+//		        	if (prefix.length === 0) { 
+//		        		callback(null, []); 
+//		        		return 
+//		        	} 
+//		        	 
+//	//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+//		        	callback(null, completions); 
+//		        } 
+//		} 
+//		langTools.addCompleter(completer);
+	}
+})
+
 
 //==[ Define short key ]======================================================================================================================
+
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
@@ -160,15 +224,15 @@ editor.commands.addCommand({
     	try {
 //    		console.log("\t [start]Execute query => " + isJavaRunning);
     		
-    		if(!isJavaRunning) {
-    			isJavaRunning = true;
+//    		if(!isJavaRunning) {
+//    			isJavaRunning = true;
     			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
 //    		} else {
 //    			console.log("\t Can not execute query");
-    		}
+//    		}
     	} catch(e) {
     		console.log(e);
-    		editorService.executeFlag();
+//    		editorService.executeFlag();
     	}
     },
     readOnly: false
@@ -178,13 +242,13 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
     	try {
-    		if(!isJavaRunning) {
-    			isJavaRunning = true;
+//    		if(!isJavaRunning) {
+//    			isJavaRunning = true;
     			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'), editorService.isBlockText());
-    		}
+//    		}
 	    } catch(e) {
 			console.log(e);
-			editorService.executeFlag();
+//			editorService.executeFlag();
 		}
     },
     readOnly: false

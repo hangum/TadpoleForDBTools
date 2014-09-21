@@ -81,7 +81,7 @@ public class ResultSetUtils {
 
 					if (RDBTypeToJavaTypeUtils.isNumberType(type)){
 						if(isPretty) { 
-							tmpRow.put(intShowColIndex, addComma(type, obj.toString()));
+							tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:addComma(type, obj));
 						}else{
 							tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 						}

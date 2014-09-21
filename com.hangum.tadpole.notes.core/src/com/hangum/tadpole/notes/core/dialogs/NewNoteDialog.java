@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.notes.core.Messages;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -148,6 +149,9 @@ public class NewNoteDialog extends Dialog {
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

@@ -52,6 +52,21 @@ public class TadpoleSystem_UserRole {
 	}
 	
 	/**
+	 * usergroup withdrawal 
+	 * @param groupseq
+	 * @param userSeq
+	 * @throws Exception
+	 */
+	public static void withdrawalUserRole(int groupSeq, int userSeq) throws Exception {
+		UserRoleDAO userRole = new UserRoleDAO();
+		userRole.setGroup_seq(groupSeq);
+		userRole.setUser_seq(userSeq);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("withdrawalUserRole", userRole); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 대표 role을 리턴합니다.
 	 * 
 	 * @param userDao

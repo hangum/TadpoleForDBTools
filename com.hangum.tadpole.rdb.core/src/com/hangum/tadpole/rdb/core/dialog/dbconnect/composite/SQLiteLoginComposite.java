@@ -17,7 +17,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.addons.fileupload.DiskFileUploadReceiver;
 import org.eclipse.rap.addons.fileupload.FileDetails;
@@ -35,7 +34,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -66,7 +64,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	private Button chkBtnCreationDb;
 	
 	private FileUpload fileUpload;
-	
 	private DiskFileUploadReceiver receiver;
 	private ServerPushSession pushSession;
 	
@@ -76,7 +73,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 * @param style
 	 */
 	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample SQLite", DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super(Messages.SQLiteLoginComposite_11, DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
 	}
 	
 	@Override
@@ -121,12 +118,12 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		pushSession = new ServerPushSession();
 		
 		fileUpload = new FileUpload(grpConnectionType, SWT.NONE);
-		fileUpload.setText("Select File");
+		fileUpload.setText(Messages.SQLiteLoginComposite_14);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!MessageDialog.openConfirm(null, "Confirm", "Do you want to upload a file?")) return;
+				if(!MessageDialog.openConfirm(null, Messages.SQLiteLoginComposite_16, Messages.SQLiteLoginComposite_17)) return;
 				
 				String fileName = fileUpload.getFileName();
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
@@ -174,7 +171,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 
 			public void uploadFinished(FileUploadEvent event) {
 				for( FileDetails file : event.getFileDetails() ) {
-					addToLog( "uploaded : " + file.getFileName() );
+					addToLog( "uploaded : " + file.getFileName() ); //$NON-NLS-1$
 				}
 			}			
 		});
@@ -228,7 +225,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 			uiInit(true);
 			preDBInfo.setTextDisplayName(getDisplayName());
-			textCreationDB.setText("Chinook_Sqlite.sqlite");
+			textCreationDB.setText(Messages.SQLiteLoginComposite_19);
 		}
 		
 		Combo comboGroup = preDBInfo.getComboGroup();
@@ -236,7 +233,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) {
+			if("".equals(selGroupName)) { //$NON-NLS-1$
 				comboGroup.setText(strOtherGroupName);
 			} else {
 				// 콤보 선택 
@@ -262,8 +259,8 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		}
 
 		
-		if("".equals(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()))) {
-			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "Group" + Messages.MySQLLoginComposite_10);
+		if("".equals(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()))) { //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_22 + Messages.MySQLLoginComposite_10);
 			return false;
 		} else if("".equals(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_12 );
@@ -274,14 +271,15 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		if(chkBtnFileUpload.getSelection()) {
 			File[] arryFiles = receiver.getTargetFiles();
 			if(arryFiles.length == 0) {
-				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "Uploaded the Database file.");
+				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_23);
 				return false;
 			}
 			File userDBFile = arryFiles[arryFiles.length-1];
 			
 			File targetFile = new File(rootResourceDir + userDBFile.getName());
 			if(targetFile.exists()) {
-				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "There is a Database file.");
+				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_24);
+				chkBtnFileUpload.setFocus();
 				return false;
 			}
 			
@@ -291,10 +289,12 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			
 			if("".equals(strFile) ) { //$NON-NLS-1$
 				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_7);
+				textCreationDB.setFocus();
 				return false;
 			} 
 			if(new File(rootResourceDir + textCreationDB.getText()).exists()) {
-				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "There is a Database file.");
+				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_24);
+				textCreationDB.setFocus();
 				return false;
 			}
 		}
@@ -306,7 +306,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	public boolean makeUserDBDao(boolean isTest) {
 		if(!isValidateInput(isTest)) return false;
 		
-		String strDBFile = "", strDBUrl = "";
+		String strDBFile = "", strDBUrl = ""; //$NON-NLS-1$ //$NON-NLS-2$
 		if(oldUserDB != null) {
 			strDBFile = oldUserDB.getDb();
 			strDBUrl = oldUserDB.getUrl();
@@ -324,8 +324,8 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 					try {
 						FileUtils.moveFile(userDBFile, new File(strDBUrl));
 					} catch (IOException e) {
-						logger.debug("File moveing", e);
-						MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "There was an error while moving Database file.");
+						logger.error("File moveing", e); //$NON-NLS-1$
+						MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_29);
 						
 						return false;
 					}

@@ -37,7 +37,7 @@ public class HIVEDMLTemplate extends AbstractDMLTemplate {
 	
 	/** view */
 	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS  " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																" SELECT   columns   FROM   table;";
+																" SELECT   columns   FROM   table_name;";
 
 	/** alter view template */
 	public static final String TMP_ALTER_VIEW_STMT = "ALTER ALGORITHM=UNDEFINED DEFINER='%s'@'%' " + PublicTadpoleDefine.LINE_SEPARATOR +

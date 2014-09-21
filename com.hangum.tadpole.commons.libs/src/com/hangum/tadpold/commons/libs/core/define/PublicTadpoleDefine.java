@@ -37,6 +37,9 @@ public class PublicTadpoleDefine {
 	
 	/** DIR SEPARATOR */
 	public static char DIR_SEPARATOR = IOUtils.DIR_SEPARATOR;
+	
+	/** temmp dir */
+	public static String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$

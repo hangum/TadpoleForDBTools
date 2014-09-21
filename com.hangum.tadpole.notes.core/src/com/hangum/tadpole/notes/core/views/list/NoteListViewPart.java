@@ -269,6 +269,9 @@ public class NoteListViewPart extends ViewPart {
 		tableViewer.setLabelProvider(new NoteListLabelProvider());
 		
 		initData();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

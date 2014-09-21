@@ -139,6 +139,10 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 		}
 	}
 	
+	public void setUserType(String userRoleType) {
+		strRoleType = userRoleType;
+	}
+	
 	/**
 	 * 사용자 role_type을 리턴한다.
 	 * 

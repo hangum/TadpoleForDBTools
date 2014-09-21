@@ -267,7 +267,8 @@
   WHERE
  	   a.seq = c.group_seq
     AND c.user_seq = b.seq
-    AND c.group_seq in ($group_seq$)
+    AND c.group_seq in ($group_seq$) 
+    AND c.delYn = 'NO'
   ORDER BY
     user_group_name, email
  </select>
@@ -884,6 +885,17 @@ SELECT
 			delYn = 'NO'
 	</selectKey>
 </insert>
+
+<!-- 
+	withdrawal user gorup
+ -->
+<update id="withdrawalUserRole" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
+	UPDATE user_role
+ 	SET   delyn= 'YES' 
+ 	WHERE 
+		group_seq = #group_seq# AND 
+		user_seq = #user_seq#
+</update>
 	
 <!-- 
 	사용자 정보를 가져온다. 
@@ -899,11 +911,11 @@ SELECT
 	대표 role을 검색합니다. 
  -->
 <select id="representUserRole" resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO" parameterClass="java.lang.Integer">
-	select c.* from user_role a, user_group b, user_role c
+	select a.* 
+	from user_role a, user_group b
 	where a.user_seq = #user_seq#
 	and a.group_seq = b.seq
-	and b.seq = c.group_seq
-	and c.user_seq = a.seq 
+	and a.role_type != 'USER'
 </select>
 
 <!-- 

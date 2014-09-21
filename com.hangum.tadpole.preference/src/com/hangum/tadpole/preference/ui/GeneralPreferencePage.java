@@ -125,7 +125,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		initDefaultValue();
 		
 		// google analytic
-		AnalyticCaller.track("GeneralPreferencePage");
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return container;
 	}

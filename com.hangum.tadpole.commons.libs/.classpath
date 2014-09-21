@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/csv/opencsv-3.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/googleauth/commons-codec-1.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/googleauth/GoogleAuth-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sql/parser/jsqlparser-0.9.jar"/>

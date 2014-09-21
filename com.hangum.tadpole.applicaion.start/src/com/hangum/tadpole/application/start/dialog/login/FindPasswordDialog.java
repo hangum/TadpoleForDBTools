@@ -29,6 +29,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
@@ -103,6 +104,9 @@ public class FindPasswordDialog extends Dialog {
 		textAnswer = new Text(container, SWT.BORDER);
 		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return container;
 	}
 
@@ -118,6 +122,7 @@ public class FindPasswordDialog extends Dialog {
 
 		if (!checkValidation()) {
 			MessageDialog.openWarning(getShell(), Messages.FindPasswordDialog_1, Messages.FindPasswordDialog_6);
+			textEmail.setFocus();
 			return;
 		}
 		UserDAO validUser;

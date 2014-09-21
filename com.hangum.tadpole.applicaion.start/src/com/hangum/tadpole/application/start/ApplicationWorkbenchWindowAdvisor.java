@@ -153,56 +153,56 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //		}
     }
     
-    /**
-     * 시스템에서 사용자에게 메시지를 전해 줍니다.
-     * 
-     */
-    private void mainUICallback() {
-    	final Display display = PlatformUI.getWorkbench().getDisplay();
-    	
-    	Runnable runnable = new Runnable() {
-    		public void run() {
-    			while(isUIThreadRunning) {
-				    
-    				if(display.isDisposed()) {
-    					isUIThreadRunning = false;
-    				} else {
-    				
-	    				try {
-	 					     display.asyncExec( new Runnable() {
-	 					    	public void run() {
-	 					    		
-	 					    		// note list
-	 					    		List<NotesDAO> listNotes = NoteSystemAlert.getSystemNoteAlert();
-	 					    		if(!listNotes.isEmpty()) {
-	 					    			// refresh note view
-	 					    			NoteListViewPart nlvPart = (NoteListViewPart)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(NoteListViewPart.ID);
-	 					    			nlvPart.initData();
-
-	 					    			// show note 
-	 					    			for (NotesDAO notesDAO : listNotes) {
-		 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO, NotesDefine.NOTE_TYPES.RECEIVE);
-		 									dialog.open();
-										}	 					    			
-	 					    		}
-	 					    		// note list 
-	 					    		
-	 					    	}
-	 					    } );
-					    } catch(Exception e) {
-					    	logger.error("main ui call", e);
-					    } // end try
-    				
-	    				try {
-							Thread.sleep(20 * 1000);
-	    				} catch(Exception e){}
-    				}
-    			}	// end while
-    		}	// end run
-		};
-    	pushSession.start();
-    	new Thread(runnable).start();
-    }
+//    /**
+//     * 시스템에서 사용자에게 메시지를 전해 줍니다.
+//     * 
+//     */
+//    private void mainUICallback() {
+//    	final Display display = PlatformUI.getWorkbench().getDisplay();
+//    	
+//    	Runnable runnable = new Runnable() {
+//    		public void run() {
+//    			while(isUIThreadRunning) {
+//				    
+//    				if(display.isDisposed()) {
+//    					isUIThreadRunning = false;
+//    				} else {
+//    				
+//	    				try {
+//	 					     display.asyncExec( new Runnable() {
+//	 					    	public void run() {
+//	 					    		
+//	 					    		// note list
+//	 					    		List<NotesDAO> listNotes = NoteSystemAlert.getSystemNoteAlert();
+//	 					    		if(!listNotes.isEmpty()) {
+//	 					    			// refresh note view
+//	 					    			NoteListViewPart nlvPart = (NoteListViewPart)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(NoteListViewPart.ID);
+//	 					    			nlvPart.initData();
+//
+//	 					    			// show note 
+//	 					    			for (NotesDAO notesDAO : listNotes) {
+//		 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO, NotesDefine.NOTE_TYPES.RECEIVE);
+//		 									dialog.open();
+//										}	 					    			
+//	 					    		}
+//	 					    		// note list 
+//	 					    		
+//	 					    	}
+//	 					    } );
+//					    } catch(Exception e) {
+//					    	logger.error("main ui call", e);
+//					    } // end try
+//    				
+//	    				try {
+//							Thread.sleep(20 * 1000);
+//	    				} catch(Exception e){}
+//    				}
+//    			}	// end while
+//    		}	// end run
+//		};
+//    	pushSession.start();
+//    	new Thread(runnable).start();
+//    }
     
     /**
      * login 
@@ -273,7 +273,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		
 		int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
 		if(sessionTimeOut <= 0) {
-			iss.setMaxInactiveInterval( 60 * 60 * 24 );
+			iss.setMaxInactiveInterval( 60 * 90 );
 		} else {
 			iss.setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
 		}

@@ -76,8 +76,6 @@ public class Messages extends NLS {
 
 	public static String MongoDBPreferencePage_12;
 
-	public static String MongoDBPreferencePage_13;
-
 	public static String MongoDBPreferencePage_2;
 
 	public static String MongoDBPreferencePage_3;
@@ -100,12 +98,10 @@ public class Messages extends NLS {
 	public static String SQLFormatterPreferencePage_btnNewLineBefore_text;
 	public static String SQLFormatterPreferencePage_btnRemoveEmptyLine_text;
 	public static String SQLFormatterPreferencePage_btnWordBreak_text;
-	public static String SQLFormatterPreferencePage_text_text;
 	public static String RDBPreferencePage_lblResultViewFont_text;
 	public static String RDBPreferencePage_btnNewButton_text;
 	public static String RDBPreferencePage_lblNewLabel_3_text;
 	public static String RDBPreferencePage_lblQueryTimeout_text;
-	public static String RDBPreferencePage_text_text;
 	public static String GeneralPreferencePage_grpEmailAccount_text;
 	public static String GeneralPreferencePage_lblSmtpServer_text;
 	public static String GeneralPreferencePage_lblPort_text;

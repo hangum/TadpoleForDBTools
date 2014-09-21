@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -107,6 +108,9 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 		
 		initDefaultValue();
 		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return container;
 	}
 	
@@ -155,7 +159,7 @@ public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchP
 		} catch(Exception e) {
 			logger.error("MongoDBreference saveing", e);
 			
-			MessageDialog.openError(getShell(), Messages.MongoDBPreferencePage_12, Messages.MongoDBPreferencePage_13 + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.MongoDBPreferencePage_12, e.getMessage());
 			return false;
 		}
 		

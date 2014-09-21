@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -39,7 +40,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.DefaultViewerSorter;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryLabelProvider;
-import com.hangum.tadpole.sql.util.tables.SQLHistorySorter;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * Result Message Composite
@@ -50,10 +51,11 @@ import com.hangum.tadpole.sql.util.tables.SQLHistorySorter;
 public class MessageComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(MessageComposite.class);
+	private Text textMessage;
 	
 	/** tadpole message */
-	private TableViewer tableViewerMessage;
-	private List<TadpoleMessageDAO> listMessage = new ArrayList<TadpoleMessageDAO>();
+//	private TableViewer tableViewerMessage;
+//	private List<TadpoleMessageDAO> listMessage = new ArrayList<TadpoleMessageDAO>();
 
 	/**
 	 * Create the composite.
@@ -64,74 +66,79 @@ public class MessageComposite extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
-	//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tableViewerMessage = new TableViewer(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-		tableViewerMessage.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				
-				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				Object selElement = is.getFirstElement();
-				if(selElement instanceof TadpoleMessageDAO) {
-					TadpoleMessageDAO tmd = (TadpoleMessageDAO)selElement;
-					TadpoleMessageDialog dlg = new TadpoleMessageDialog(null, Messages.MainEditor_20, SQLHistoryLabelProvider.dateToStr(tmd.getDateExecute()), tmd.getStrMessage());
-					dlg.open();
-				}
-			}
-		});
-		Table tableMessage = tableViewerMessage.getTable();
-		tableMessage.setLinesVisible(true);
-		tableMessage.setHeaderVisible(true);
-		tableMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableMessage.setSortDirection(SWT.DOWN);
+		textMessage = new Text(this, SWT.BORDER | SWT.MULTI);
+		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		// auto column layout
-		AutoResizeTableLayout layoutColumnLayoutMsg = new AutoResizeTableLayout(tableViewerMessage.getTable());
-		tableViewerMessage.getTable().setLayout(layoutColumnLayoutMsg);
-		
-		SQLHistorySorter sorterMessage = new SQLHistorySorter();
-		createTableMessageColumn(tableViewerMessage, sorterMessage, layoutColumnLayoutMsg);
-		
-		tableViewerMessage.setLabelProvider(new SQLHistoryLabelProvider());
-		tableViewerMessage.setContentProvider(new ArrayContentProvider());
-		tableViewerMessage.setInput(listMessage);
-		tableViewerMessage.setComparator(sorterMessage);
-		
-		Composite compositeMessageSub = new Composite(this, SWT.NONE);
-		compositeMessageSub.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		GridLayout gl_compositeMessageSubBtn = new GridLayout(3, false);
-		gl_compositeMessageSubBtn.marginWidth = 1;
-		gl_compositeMessageSubBtn.marginHeight = 0;
-		compositeMessageSub.setLayout(gl_compositeMessageSubBtn);
-		
-//		Button btnExportMessage = new Button(compositeMessageSub, SWT.NONE);
-//		btnExportMessage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-//		btnExportMessage.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				StringBuffer sbExportData = new StringBuffer();
+//	//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+//		tableViewerMessage = new TableViewer(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+//		tableViewerMessage.addDoubleClickListener(new IDoubleClickListener() {
+//			public void doubleClick(DoubleClickEvent event) {
 //				
-//				for(TadpoleMessageDAO dao : listMessage) {
-//					sbExportData.append( dao.getStrMessage() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+//				IStructuredSelection is = (IStructuredSelection)event.getSelection();
+//				Object selElement = is.getFirstElement();
+//				if(selElement instanceof TadpoleMessageDAO) {
+//					TadpoleMessageDAO tmd = (TadpoleMessageDAO)selElement;
+//					TadpoleMessageDialog dlg = new TadpoleMessageDialog(null, Messages.MainEditor_20, SQLHistoryLabelProvider.dateToStr(tmd.getDateExecute()), tmd.getStrMessage());
+//					dlg.open();
 //				}
-//				
-////				downloadExtFile(getUserDB().getDisplay_name() + "_Message.txt", sbExportData.toString()); //$NON-NLS-1$
 //			}
 //		});
-//		btnExportMessage.setText(Messages.MainEditor_43);
-		
-		Label labelMsgDumy = new Label(compositeMessageSub, SWT.NONE);
-		labelMsgDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Button btnMessageViewClear = new Button(compositeMessageSub, SWT.NONE);
-		btnMessageViewClear.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				listMessage.clear();
-				tableViewerMessage.refresh();
-			}
-		});
-		btnMessageViewClear.setText(Messages.MainEditor_btnClear_text);
+//		Table tableMessage = tableViewerMessage.getTable();
+//		tableMessage.setData(RWT.CUSTOM_ITEM_HEIGHT, 68);
+//		tableMessage.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+//		tableMessage.setLinesVisible(true);
+//		tableMessage.setHeaderVisible(true);
+//		tableMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		tableMessage.setSortDirection(SWT.DOWN);
+//		
+//		// auto column layout
+//		AutoResizeTableLayout layoutColumnLayoutMsg = new AutoResizeTableLayout(tableViewerMessage.getTable());
+//		tableViewerMessage.getTable().setLayout(layoutColumnLayoutMsg);
+//		
+//		SQLMessageSorter sorterMessage = new SQLMessageSorter();
+//		createTableMessageColumn(tableViewerMessage, sorterMessage, layoutColumnLayoutMsg);
+//		
+//		tableViewerMessage.setLabelProvider(new SQLHistoryLabelProvider());
+//		tableViewerMessage.setContentProvider(new ArrayContentProvider());
+//		tableViewerMessage.setInput(listMessage);
+//		tableViewerMessage.setComparator(sorterMessage);
+//		
+//		Composite compositeMessageSub = new Composite(this, SWT.NONE);
+//		compositeMessageSub.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//		GridLayout gl_compositeMessageSubBtn = new GridLayout(3, false);
+//		gl_compositeMessageSubBtn.marginWidth = 1;
+//		gl_compositeMessageSubBtn.marginHeight = 0;
+//		compositeMessageSub.setLayout(gl_compositeMessageSubBtn);
+//		
+////		Button btnExportMessage = new Button(compositeMessageSub, SWT.NONE);
+////		btnExportMessage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+////		btnExportMessage.addSelectionListener(new SelectionAdapter() {
+////			@Override
+////			public void widgetSelected(SelectionEvent e) {
+////				StringBuffer sbExportData = new StringBuffer();
+////				
+////				for(TadpoleMessageDAO dao : listMessage) {
+////					sbExportData.append( dao.getStrMessage() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
+////				}
+////				
+//////				downloadExtFile(getUserDB().getDisplay_name() + "_Message.txt", sbExportData.toString()); //$NON-NLS-1$
+////			}
+////		});
+////		btnExportMessage.setText(Messages.MainEditor_43);
+//		
+//		Label labelMsgDumy = new Label(compositeMessageSub, SWT.NONE);
+//		labelMsgDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//		Button btnMessageViewClear = new Button(compositeMessageSub, SWT.NONE);
+//		btnMessageViewClear.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				listMessage.clear();
+//				tableViewerMessage.refresh();
+//			}
+//		});
+//		btnMessageViewClear.setText(Messages.MainEditor_btnClear_text);
 
 	}
 
@@ -141,8 +148,9 @@ public class MessageComposite extends Composite {
 	 * @param tadpoleMessageDAO
 	 */
 	public void addAfterRefresh(TadpoleMessageDAO tadpoleMessageDAO) {
-		listMessage.add(tadpoleMessageDAO);
-		tableViewerMessage.refresh();		
+		textMessage.setText(tadpoleMessageDAO.getStrMessage());
+//		listMessage.add(tadpoleMessageDAO);
+//		tableViewerMessage.refresh();		
 	}
 	
 	/**
@@ -152,20 +160,22 @@ public class MessageComposite extends Composite {
 	 * @param sorterMessage
 	 * @param layoutColumnLayoutMsg
 	 */
-	public void createTableMessageColumn(TableViewer tableViewerMessage, SQLHistorySorter sorterMessage, AutoResizeTableLayout layoutColumnLayoutMsg) {
+	public void createTableMessageColumn(TableViewer tableViewerMessage, SQLMessageSorter sorterMessage, AutoResizeTableLayout layoutColumnLayoutMsg) {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		TableColumn tblclmnDate = tableViewerColumn.getColumn();
 		tblclmnDate.setWidth(140);
 		tblclmnDate.setText(Messages.MainEditor_14);
 		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 0));
 		layoutColumnLayoutMsg.addColumnData(new ColumnPixelData(160));
-				
+		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		TableColumn tblclmnSql = tableViewerColumn_1.getColumn();
 		tblclmnSql.setWidth(500);
 		tblclmnSql.setText("Message"); //$NON-NLS-1$
 		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnSql, 1));
 		layoutColumnLayoutMsg.addColumnData(new ColumnWeightData(500));
+		
+
 	}
 	
 	/**

@@ -70,7 +70,7 @@ public interface IEditorFunction  {
      * 데이터 저장.
      */
     public static final String SAVE_DATA = EDITOR_SERVICE_MAP + ".saveData();";
-    /** 자바 호출이 끝났음을 자바 스크립트에게 알려줍니다 */
-    public static final String EXECUTE_DONE = EDITOR_SERVICE_MAP + ".executeFlag();";
+//    /** 자바 호출이 끝났음을 자바 스크립트에게 알려줍니다 */
+//    public static final String EXECUTE_DONE = EDITOR_SERVICE_MAP + ".executeFlag();";
     
 }

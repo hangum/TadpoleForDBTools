@@ -62,11 +62,11 @@ public class TadpoleSQLManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlMapClient getInstance(UserDBDAO dbInfo) throws Exception {
+	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws Exception {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
-		synchronized (dbManager) {
+//		synchronized (dbManager) {
 			String searchKey = getKey(dbInfo);
 			try {
 				sqlMapClient = dbManager.get( searchKey );
@@ -94,7 +94,14 @@ public class TadpoleSQLManager {
 				}
 				
 			} catch(Exception e) {
-				logger.error("get DB Instance", e);
+//				String strAddReqInfo = "";
+//				try {
+//					strAddReqInfo = RequestInfoUtils.requestInfo("db connection exception ", SessionManager.getEMAIL());
+//				} catch(Exception ee) {
+//					logger.error("request error", ee);
+//				}
+				
+				logger.error("=================================================\n get DB Instance \n seq is " + dbInfo.getSeq() + "\n" , e);
 				
 				dbManager.remove(searchKey);
 				
@@ -102,7 +109,7 @@ public class TadpoleSQLManager {
 			} finally {
 				if(conn != null) try {conn.close();} catch(Exception e) {}
 			}
-		}
+//		}
 
 		return sqlMapClient;
 	}
@@ -115,8 +122,8 @@ public class TadpoleSQLManager {
 		for (SqlMapClient sqlMapClient : sqlMaps) {
 
 			BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
-			logger.info("NumActive 	: " + basicDataSource.getNumActive());
-			logger.info("NumIdle 	: " + basicDataSource.getNumIdle());
+//			logger.info("NumActive 	: " + basicDataSource.getNumActive());
+//			logger.info("NumIdle 	: " + basicDataSource.getNumIdle());
 		}
 	}
 	

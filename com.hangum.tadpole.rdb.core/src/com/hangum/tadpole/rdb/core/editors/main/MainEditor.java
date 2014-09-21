@@ -11,6 +11,9 @@
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -60,7 +63,11 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
@@ -98,6 +105,14 @@ public class MainEditor extends EditorExtension {
 	
 	/** save mode */
 	private boolean isDirty = false;
+	
+	/** db table list */
+	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
+	
+//	/* file upload */
+//	private FileUpload fileUpload;
+//	private DiskFileUploadReceiver receiver;
+//	private ServerPushSession pushSession;
 	    
 	public MainEditor() {
 		super();
@@ -113,10 +128,12 @@ public class MainEditor extends EditorExtension {
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
 
-		strRoleType = SessionManager.getRoleType(userDB);
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
+
+		strRoleType = SessionManager.getRoleType(userDB);
+		super.setUserType(strRoleType);
 	}
 	
 	@Override
@@ -152,18 +169,16 @@ public class MainEditor extends EditorExtension {
 		compositeEditor.setLayout(gl_compositeEditor);
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
-		toolBar.setToolTipText(String.format(Messages.MainEditor_toolBar_toolTipText, ShortcutPrefixUtils.getCtrlShortcut()));
-		
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText("Connection Information");
+		tltmConnectURL.setToolTipText("Connection Information"); //$NON-NLS-1$
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		
 		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
 			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
-				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName));
+				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName)); //$NON-NLS-1$
 			} else {
-				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers()));
+				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers())); //$NON-NLS-1$
 			}	
 		} else {
 			tltmConnectURL.setText(userDB.getDbms_types());
@@ -178,6 +193,21 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+//		// fileupload 
+//		final String url = startUploadReceiver();
+//		pushSession = new ServerPushSession();
+//		
+//		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
+//		tltmOpen.setToolTipText("Open script file in the editor");
+//		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-file-open.png")); //$NON-NLS-1$
+//		tltmOpen.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				
+//			}
+//		});
+//		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, ShortcutPrefixUtils.getCtrlShortcut()));
@@ -258,7 +288,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-	    tltmSQLToApplication.setToolTipText("SQL statement to Application code");
+	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
 //		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
@@ -281,7 +311,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommit = new ToolItem(toolBar, SWT.CHECK);
 		tiAutoCommit.setSelection(false);
-		tiAutoCommit.setText("Transaction start");
+		tiAutoCommit.setText("Transaction start"); //$NON-NLS-1$
 		tiAutoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -291,7 +321,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText("Commit");
+		tiAutoCommitCommit.setText("Commit"); //$NON-NLS-1$
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -303,7 +333,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitRollback.setSelection(false);
-		tiAutoCommitRollback.setText("Rollback");
+		tiAutoCommitRollback.setText("Rollback"); //$NON-NLS-1$
 		tiAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -313,6 +343,11 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		// semicolon
+		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
+		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
+		tltmSemicolon.setToolTipText(Messages.MainEditor_49);
 		
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
 		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
@@ -419,8 +454,10 @@ public class MainEditor extends EditorExtension {
 			@Override
 			public void completed( ProgressEvent event ) {
 				try {
-//					content assist기능에 테이블 정보 넣는 것은 잠시 보류합니다.
-					browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_SQL, dbAction.toString(), "", getInitDefaultEditorStr()); //$NON-NLS-1$
+					/*
+					 * 
+					 */
+					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), getAssistTableList(), getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
@@ -429,34 +466,71 @@ public class MainEditor extends EditorExtension {
 		});
 	}
 	
-//	/**
-//	 * 에디터에서 assist창에 보여줄 목록을 가져옵니다.
-//	 * 
-//	 * @return
-//	 */
-//	private String getAssistList() {
-//		String strTablelist = ""; //$NON-NLS-1$
-//		
-//		try {
-//			List<TableDAO> showTables = null;
-//			if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
-//				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//				showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
-//			} else {
-//				showTables = new TajoConnectionManager().tableList(userDB);
-//			}
-//
-//			for (TableDAO tableDao : showTables) {
-//				strTablelist += tableDao.getName() + "|"; //$NON-NLS-1$
-//			}
-//			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
-//			
-//		} catch(Exception e) {
-//			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
-//		}
-//		
-//		return strTablelist;
-//	}
+	/**
+	 * find editor extension
+	 * 
+	 * eg) mysql, pgsql
+	 * @return
+	 */
+	private String findEditorExt() {
+		String ext = EditorDefine.EXT_DEFAULT;
+		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_MYSQL;
+		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_PGSQL;
+		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_SQLite;
+		}
+		
+		return ext;
+	}
+	
+	/**
+	 * List of assist table column name
+	 * 
+	 * @param tableName
+	 * @return
+	 */
+	public String getAssistColumnList(String tableName) {
+		String strColumnlist = ""; //$NON-NLS-1$
+		
+		try {
+			TableDAO table = mapTableList.get(tableName);
+			
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
+			for (TableColumnDAO tableDao : showTableColumns) {
+				strColumnlist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+			}
+			strColumnlist = StringUtils.removeEnd(strColumnlist, "|"); //$NON-NLS-1$
+		} catch(Exception e) {
+			logger.error("MainEditor get the table column list", e); //$NON-NLS-1$
+		}
+		
+		return strColumnlist;
+	}
+	
+	/**
+	 * List of assist table name 
+	 * 
+	 * @return
+	 */
+	private String getAssistTableList() {
+		String strTablelist = ""; //$NON-NLS-1$
+		
+		try {
+			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
+			for (TableDAO tableDao : showTables) {
+				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+				mapTableList.put(tableDao.getSysName(), tableDao);
+			}
+			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
+			
+		} catch(Exception e) {
+			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
+		}
+		
+		return strTablelist;
+	}
 
 	/**
 	 * initialize editor
@@ -515,7 +589,7 @@ public class MainEditor extends EditorExtension {
 		resultMainComposite.executeCommand(reqQuery);
 		
 		// google analytic
-		AnalyticCaller.track(MainEditor.ID, "executeCommand");
+		AnalyticCaller.track(MainEditor.ID, "executeCommand"); //$NON-NLS-1$
 	}
 	/**
 	 * auto commit 
@@ -697,4 +771,35 @@ public class MainEditor extends EditorExtension {
 	public String getInitDefaultEditorStr() {
 		return initDefaultEditorStr;
 	}
+	
+//	/**
+//	 * 저장 이벤트 
+//	 * 
+//	 * @return
+//	 */
+//	private String startUploadReceiver() {
+//		receiver = new DiskFileUploadReceiver();
+//		final FileUploadHandler uploadHandler = new FileUploadHandler(receiver);
+//		uploadHandler.addUploadListener(new FileUploadListener() {
+//
+//			public void uploadProgress(FileUploadEvent event) {
+//			}
+//
+//			public void uploadFailed(FileUploadEvent event) {
+////				MessageDi( "upload failed: " + event.getException() ); //$NON-NLS-1$
+//				MessageDialog.openError(null, "Error", "Download fail. \n" + event.getException().getMessage());
+//			}
+//
+//			public void uploadFinished(FileUploadEvent event) {
+//				for( FileDetails file : event.getFileDetails() ) {
+////					addToLog( "uploaded : " + file.getFileName() );
+//					System.out.println("downloaded. " + file.getFileName());
+//
+//				}
+//			}			
+//		});
+//		
+//		return uploadHandler.getUploadUrl();
+//	}
+	
 }

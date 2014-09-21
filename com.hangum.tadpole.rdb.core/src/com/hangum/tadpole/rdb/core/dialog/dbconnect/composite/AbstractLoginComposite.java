@@ -294,7 +294,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @param isTest
 	 * @return
 	 */
-	private boolean checkDatabase(UserDBDAO loginInfo, boolean isTest) {
+	private boolean checkDatabase(final UserDBDAO loginInfo, boolean isTest) {
 		try {
 			if(DBDefine.getDBDefine(loginInfo) == DBDefine.MONGODB_DEFAULT) {
 				MongoConnectionManager.getInstance(userDB);
@@ -320,7 +320,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			
 			return true;
 		} catch (Exception e) {
-			logger.error("DB Connecting... ", e); //$NON-NLS-1$
+			logger.error("DB Connecting... [url]"+ loginInfo.getUrl(), e); //$NON-NLS-1$
 			// If UserDBDao is not invalid, remove UserDBDao at internal cache
 			TadpoleSQLManager.removeInstance(loginInfo);
 

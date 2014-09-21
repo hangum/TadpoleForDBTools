@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.rap.addons.d3chart.BarChart;
 import org.eclipse.rap.addons.d3chart.ChartItem;
 import org.eclipse.rap.addons.d3chart.ColorStream;
@@ -68,6 +68,9 @@ public class LoginDialog extends Dialog {
 	private int ID_FINDPASSWORD = IDialogConstants.CLIENT_ID 	+ 2;
 	private int ID_ADMIN_USER 	= IDialogConstants.CLIENT_ID 	+ 3;
 	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID 	+ 4;
+
+	/** database list */
+	private List listDBMart = new ArrayList();
 	
 	private Text textEMail;
 	private Text textPasswd;
@@ -133,18 +136,25 @@ public class LoginDialog extends Dialog {
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		// ---------------------  Registered database ----------------------------------------------------
-		Group grpSponser = new Group(container, SWT.NONE);
-		GridLayout gl_grpSponser = new GridLayout(1, false);
-		gl_grpSponser.verticalSpacing = 0;
-		gl_grpSponser.horizontalSpacing = 0;
-		gl_grpSponser.marginHeight = 0;
-		gl_grpSponser.marginWidth = 0;
-		grpSponser.setLayout(gl_grpSponser);
-		grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		grpSponser.setText(Messages.LoginDialog_grpSponser_text);
-		
-		pieChart(grpSponser);
+		try {
+			listDBMart = getDBMart();
+			if(!listDBMart.isEmpty()) {
+				Group grpSponser = new Group(container, SWT.NONE);
+				GridLayout gl_grpSponser = new GridLayout(1, false);
+				gl_grpSponser.verticalSpacing = 0;
+				gl_grpSponser.horizontalSpacing = 0;
+				gl_grpSponser.marginHeight = 0;
+				gl_grpSponser.marginWidth = 0;
+				grpSponser.setLayout(gl_grpSponser);
+				grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+				grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+				grpSponser.setText(Messages.LoginDialog_grpSponser_text);
+				
+				barChart(grpSponser, listDBMart);
+			}
+		} catch(Exception e) {
+			logger.error("get initdata", e);
+		}
 		
 //		tableViewer = new TableViewer(grpSponser, SWT.NONE | SWT.FULL_SELECTION);
 //		Table table = tableViewer.getTable();
@@ -231,8 +241,9 @@ public class LoginDialog extends Dialog {
 	 * 데이터베이스 통계 pie chart를 생성합니다. 
 	 * 
 	 * @param composite
+	 * @param listData
 	 */
-	private void pieChart(Composite compositeCursor) {
+	private void barChart(Composite compositeCursor, List listData) {
 		try {
 			ColorStream colors = Colors.cat20Colors(compositeCursor.getDisplay()).loop();
 			
@@ -246,15 +257,14 @@ public class LoginDialog extends Dialog {
 			barChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			barChart.setBarWidth(10);
 			
-			for(Object element : getInitData()) {
+			for(Object element : listData) {
 				Map<String, Object> retMap = (HashMap<String, Object>)element;
 				
 				ChartItem item = new ChartItem(barChart);
 			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")");
 			    item.setColor(colors.next());
 			    
-			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 100;
-			    logger.debug("=>>>>>" + floatVal);
+			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 200;
 			    item.setValue(floatVal);
 			}
 		} catch(Exception e) {
@@ -269,7 +279,7 @@ public class LoginDialog extends Dialog {
 	 * 
 	 * @return
 	 */
-	private List getInitData() throws Exception {
+	private List getDBMart() throws Exception {
 		return TadpoleSystem_UserDBQuery.getRegisteredDB();
 	}
 
@@ -341,7 +351,7 @@ public class LoginDialog extends Dialog {
 			
 			SessionManager.addSession(userDao);
 		} catch (Exception e) {
-			logger.error("Login exception", e); //$NON-NLS-1$
+			logger.error("Login exception. request email is " + strEmail, e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
 			
 			textEMail.setFocus();
@@ -403,8 +413,11 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-//		return new Point(490, 310);
-		return new Point(490, 450);
+		if(listDBMart.isEmpty()) {
+			return new Point(490, 310);
+		} else {
+			return new Point(490, 470);
+		}
 	}
 }
 

@@ -36,9 +36,7 @@ public class SendMessageAction extends Action implements ISelectionListener, IWo
 	 */
 	private static final Logger logger = Logger.getLogger(SendMessageAction.class);
 	private final static String ID = "com.hangum.tadpole.commons.admin.core.actions.global.SendMessageAction"; //$NON-NLS-1$
-	
 	private final IWorkbenchWindow window;
-	private IStructuredSelection iss;
 	
 	public SendMessageAction(IWorkbenchWindow window) {
 		this.window = window;
