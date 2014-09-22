@@ -601,7 +601,7 @@ public class ResultSetComposite extends Composite {
 					sqlHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
 					sqlHistoryDAO.setMesssage(e.getMessage());
 					
-					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
+					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
 				} finally {
 					sqlHistoryDAO.setEndDateExecute(new Date());
 					monitor.done();
