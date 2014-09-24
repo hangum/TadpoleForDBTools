@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -327,7 +328,7 @@ public class ResultSetComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(rsDAO != null) {
-					SQLSourceViewDialog dialog = new SQLSourceViewDialog(null, reqQuery.getOriginalSql());
+					SQLSourceViewDialog dialog = new SQLSourceViewDialog(null, reqQuery.getSql());
 					dialog.open();
 				}
 			}
@@ -519,13 +520,13 @@ public class ResultSetComposite extends Composite {
 				try {
 					ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
 					if (epd.getParamCount() > 0){
-						epd.open();
-						ParameterObject paramObj = epd.getParameterObject();
-						String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-						if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL); //$NON-NLS-1$
-						reqQuery.setSql(repSQL);
-						
-						epd.close();
+						if(Dialog.OK == epd.open()) {
+							ParameterObject paramObj = epd.getParameterObject();
+							String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+							reqQuery.setSql(repSQL);
+							
+							if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL); //$NON-NLS-1$
+						}
 					}
 				} catch(Exception e) {
 					logger.error("Parameter parse", e); //$NON-NLS-1$
@@ -721,7 +722,7 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param requestQuery
 	 */
-	public ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws Exception {
+	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override

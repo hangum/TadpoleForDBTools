@@ -1,16 +1,22 @@
 package com.hangum.tadpole.importdb.core.dialog.importdb.csv;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Date;
 
+import org.apache.commons.io.ByteOrderMark;
+import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import au.com.bytecode.opencsv.CSVReader;
+
+import com.hangum.tadpole.commons.util.UnicodeBOMInputStream;
 
 /**
  * csv loader 
@@ -21,12 +27,13 @@ import au.com.bytecode.opencsv.CSVReader;
 public class CSVLoader {
 	private static final Logger logger = Logger.getLogger(CSVLoader.class);
 	
-	private static final String SQL_INSERT = "INSERT INTO ${table}(${keys}) VALUES(${values})";
+	private static final String SQL_INSERT = "INSERT INTO ${table} (${keys}) VALUES (${values})";
 	private static final String TABLE_REGEX = "${table}";
 	private static final String KEYS_REGEX = "${keys}";
 	private static final String VALUES_REGEX = "${values}";
 
 	private char seprator;
+	private int batchSize = 1000;
 
 	/**
 	 * Public constructor to build CSVLoader object with Connection details. The
@@ -45,20 +52,31 @@ public class CSVLoader {
 	 * @param csvFile Input CSV file
 	 * @param tableName Database table name to import data
 	 * @param truncateBeforeLoad trancate before load
+	 * @return insert count
 	 * @throws Exception
 	 */
-	public void loadCSV(final Connection con, final File csvFile, final String tableName, final boolean truncateBeforeLoad) throws Exception {
-
+	public int loadCSV(final Connection con, final File csvFile, final String tableName, final boolean truncateBeforeLoad) throws Exception {
+		BOMInputStream bos = null; 
 		CSVReader csvReader = null;
+		String[] headerRow = null;
 		try {
-			csvReader = new CSVReader(new FileReader(csvFile), this.seprator);
-
+			// find bom
+			bos = new BOMInputStream(new FileInputStream(csvFile), false, ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
+			String charset = "utf-8";
+			if(bos.hasBOM()) {
+				charset = bos.getBOMCharsetName();
+			}
+			InputStream cleanStream = new UnicodeBOMInputStream(new FileInputStream(csvFile)).skipBOM();
+			
+			// read bom 
+			csvReader = new CSVReader(new InputStreamReader(cleanStream, charset), this.seprator);
+			headerRow = csvReader.readNext();
 		} catch (Exception e) {
 			logger.error(e);
 			throw new Exception("Error occured while executing file. " + e.getMessage());
+		} finally {
+			if(bos != null) bos.close();
 		}
-
-		String[] headerRow = csvReader.readNext();
 
 		if (null == headerRow) {
 			throw new FileNotFoundException("No columns defined in given CSV file." + "Please check the CSV file format.");
@@ -68,13 +86,12 @@ public class CSVLoader {
 		questionmarks = (String) questionmarks.subSequence(0, questionmarks.length() - 1);
 
 		String query = StringUtils.replaceOnce(SQL_INSERT, TABLE_REGEX, tableName);
-		
-		String strColumns = removeUTF8BOM(StringUtils.join(headerRow, ","));
-		query = StringUtils.replaceOnce(query, KEYS_REGEX, strColumns);
+		query = StringUtils.replaceOnce(query, KEYS_REGEX, StringUtils.join(headerRow, ","));
 		query = StringUtils.replaceOnce(query, VALUES_REGEX, questionmarks);
 		
-		logger.info("CSV to DB Query: " + query);
+		if(logger.isDebugEnabled()) logger.info("CSV to DB Query: " + query);
 
+		int count = 0;
 		String[] nextLine;
 		PreparedStatement ps = null;
 		try {
@@ -85,8 +102,6 @@ public class CSVLoader {
 				con.createStatement().execute("DELETE FROM " + tableName);
 			}
 
-			final int batchSize = 1000;
-			int count = 0;
 			Date date = null;
 			while ((nextLine = csvReader.readNext()) != null) {
 
@@ -95,8 +110,7 @@ public class CSVLoader {
 					for (String string : nextLine) {
 						date = DateUtil.convertToDate(string);
 						if (null != date) {
-							ps.setDate(index++,
-									new java.sql.Date(date.getTime()));
+							ps.setDate(index++, new java.sql.Date(date.getTime()));
 						} else {
 							ps.setString(index++, string);
 						}
@@ -116,9 +130,10 @@ public class CSVLoader {
 		} finally {
 			if (null != ps) ps.close();
 			if (null != con) con.close();
-
-			csvReader.close();
+			if (csvReader != null) csvReader.close();
 		}
+		
+		return count;
 	}
 
 	/**
@@ -130,16 +145,28 @@ public class CSVLoader {
 	 */
 	int cvsTotData = 0;
 	public String generateSQL(File csvFile, String tableName) throws Exception {
+		BOMInputStream bos = null; 
+				
 		String[] headerRow = null;
 		CSVReader csvReader = null;
 		try {
-			csvReader = new CSVReader(new FileReader(csvFile), this.seprator);
+			// find bom
+			bos = new BOMInputStream(new FileInputStream(csvFile), false, ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
+			String charset = "utf-8";
+			if(bos.hasBOM()) {
+				charset = bos.getBOMCharsetName();
+			}
+			InputStream cleanStream = new UnicodeBOMInputStream(new FileInputStream(csvFile)).skipBOM();
+			
+			// read bom 
+			csvReader = new CSVReader(new InputStreamReader(cleanStream, charset), this.seprator);
 			headerRow = csvReader.readNext();
 		} catch (Exception e) {
 			logger.error(e);
 			throw new Exception("Error occured while executing file. " + e.getMessage());
 		} finally {
-			csvReader.close();
+			if(bos != null) bos.close();
+			if (csvReader != null) csvReader.close();
 		}
 
 		if (null == headerRow) {
@@ -154,14 +181,6 @@ public class CSVLoader {
 		query = StringUtils.replaceOnce(query, VALUES_REGEX, questionmarks);
 		
 		return query;
-	}
-	
-	public static final String UTF8_BOM = "\uFEFF";
-	private static String removeUTF8BOM(String s) {
-	    if (s.startsWith(UTF8_BOM)) {
-	        s = s.substring(1);
-	    }
-	    return s;
 	}
 
 	public char getSeprator() {

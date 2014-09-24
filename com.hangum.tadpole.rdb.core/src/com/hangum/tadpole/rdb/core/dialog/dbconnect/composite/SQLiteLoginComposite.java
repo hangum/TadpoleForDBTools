@@ -123,9 +123,11 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				String fileName = fileUpload.getFileName();
+				if("".equals(fileName) || null == fileName) return;
+				
 				if(!MessageDialog.openConfirm(null, Messages.SQLiteLoginComposite_16, Messages.SQLiteLoginComposite_17)) return;
 				
-				String fileName = fileUpload.getFileName();
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
 				
 				pushSession.start();

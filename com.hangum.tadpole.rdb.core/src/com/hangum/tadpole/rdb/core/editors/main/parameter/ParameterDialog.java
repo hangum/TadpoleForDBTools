@@ -25,12 +25,9 @@ import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -121,7 +118,7 @@ public class ParameterDialog extends Dialog {
 		TableColumnLayout tcl_composite = new TableColumnLayout();
 		composite.setLayout(tcl_composite);
 
-		TableViewer tableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
+		TableViewer tableViewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -134,7 +131,8 @@ public class ParameterDialog extends Dialog {
 
 		tableViewer.refresh();
 		
-		tableViewer.getTable().setFocus();
+//		table.select(0);
+		table.setFocus();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
@@ -165,7 +163,7 @@ public class ParameterDialog extends Dialog {
 		tcValue.setText("Param Value");
 		tvcValue.setEditingSupport(new ParameterEditingSupport(tableViewer, 3, this.userDB));
 	}
-
+	
 	/**
 	 * Create contents of the button bar.
 	 * 
@@ -174,13 +172,14 @@ public class ParameterDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		Button button = createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				parameters.clear();
-			}
-		});
+		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
+//		Button button = createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
+//		button.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				parameters.clear();
+//			}
+//		});
 	}
 
 	/**

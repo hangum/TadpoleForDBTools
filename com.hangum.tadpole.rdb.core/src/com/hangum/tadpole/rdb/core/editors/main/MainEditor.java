@@ -645,6 +645,8 @@ public class MainEditor extends EditorExtension {
 				setDirty(false);
 				browserEvaluate(IEditorFunction.SAVE_DATA);	
 			}
+			
+			browserEvaluate(IEditorFunction.SET_FOCUS);
 		}
 		
 		return isSaved;
@@ -675,6 +677,8 @@ public class MainEditor extends EditorExtension {
 				setDirty(false);
 				browserEvaluate(IEditorFunction.SAVE_DATA);	
 			}
+			
+			browserEvaluate(IEditorFunction.SET_FOCUS);
 		}
 	}
 
