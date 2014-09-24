@@ -709,6 +709,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private boolean saveResourceData(UserDBResourceDAO newDBResource, String newContents) {
+
 		try {
 			// db 저장
 			dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, newDBResource, newContents);

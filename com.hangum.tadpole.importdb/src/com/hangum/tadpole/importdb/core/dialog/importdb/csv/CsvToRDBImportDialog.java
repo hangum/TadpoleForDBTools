@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.csv.CSVLoader;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -50,6 +51,8 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  */
 public class CsvToRDBImportDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(CsvToRDBImportDialog.class);
+	private int ID_BTN_INSERT		 = IDialogConstants.CLIENT_ID 	+ 1;
+	
 	private UserDBDAO userDB;
 	private static final String INITIAL_TEXT = "No files uploaded."; //$NON-NLS-1$
 	
@@ -164,16 +167,16 @@ public class CsvToRDBImportDialog extends Dialog {
 		btnTruncateBeforeInsert = new Button(compositeHead, SWT.CHECK);
 		btnTruncateBeforeInsert.setText(Messages.CsvToRDBImportDialog_12);
 		
-		Button btnInsert = new Button(compositeHead, SWT.NONE);
-		btnInsert.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_14)) {
-					insertData();
-				}
-			}
-		});
-		btnInsert.setText(Messages.CsvToRDBImportDialog_15);
+//		Button btnInsert = new Button(compositeHead, SWT.NONE);
+//		btnInsert.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				if(MessageDialog.openConfirm(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_14)) {
+//					insertData();
+//				}
+//			}
+//		});
+//		btnInsert.setText(Messages.CsvToRDBImportDialog_15);
 		
 		Group grpSqlTemplate = new Group(container, SWT.NONE);
 		grpSqlTemplate.setLayout(new GridLayout(1, false));
@@ -284,6 +287,17 @@ public class CsvToRDBImportDialog extends Dialog {
 			});
 		}
 	}
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		super.buttonPressed(buttonId);
+		
+		if(buttonId == ID_BTN_INSERT) {
+			if(MessageDialog.openConfirm(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_14)) {
+				insertData();
+			}
+		}
+	}
 
 	/**
 	 * Create contents of the button bar.
@@ -291,6 +305,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, ID_BTN_INSERT, "Insert", false);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.CsvToRDBImportDialog_30, false);
 	}
 

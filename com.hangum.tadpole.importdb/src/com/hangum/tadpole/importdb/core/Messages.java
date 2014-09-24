@@ -51,8 +51,10 @@ public class Messages extends NLS {
 	public static String QueryToMongoDBImport_5;
 	public static String TableColumnLIstComposite_1;
 	public static String SQLToDBImportDialog_grpSqlResult_text;
-	public static String SQLToDBImportDialog_text_1_text;
 	public static String SQLToDBImportDialog_btnInsert_text;
+	public static String SQLToDBImportDialog_lblSeprator_text;
+	public static String SQLToDBImportDialog_text_1_text;
+	public static String SQLToDBImportDialog_btnTruncateBeforeLoad_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
