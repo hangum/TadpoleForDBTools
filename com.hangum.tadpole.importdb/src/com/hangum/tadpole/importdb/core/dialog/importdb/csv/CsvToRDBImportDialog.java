@@ -167,17 +167,6 @@ public class CsvToRDBImportDialog extends Dialog {
 		btnTruncateBeforeInsert = new Button(compositeHead, SWT.CHECK);
 		btnTruncateBeforeInsert.setText(Messages.CsvToRDBImportDialog_12);
 		
-//		Button btnInsert = new Button(compositeHead, SWT.NONE);
-//		btnInsert.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				if(MessageDialog.openConfirm(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_14)) {
-//					insertData();
-//				}
-//			}
-//		});
-//		btnInsert.setText(Messages.CsvToRDBImportDialog_15);
-		
 		Group grpSqlTemplate = new Group(container, SWT.NONE);
 		grpSqlTemplate.setLayout(new GridLayout(1, false));
 		grpSqlTemplate.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

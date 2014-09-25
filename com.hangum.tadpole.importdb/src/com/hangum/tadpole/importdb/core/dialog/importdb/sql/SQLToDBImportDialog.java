@@ -136,15 +136,6 @@ public class SQLToDBImportDialog extends Dialog {
 		textSeprator = new Text(compositeHead, SWT.BORDER);
 		textSeprator.setText(Messages.SQLToDBImportDialog_text_1_text);
 		textSeprator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-//		Button btnInsert = new Button(compositeHead, SWT.NONE);
-//		btnInsert.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				insert();
-//			}
-//		});
-//		btnInsert.setText(Messages.SQLToDBImportDialog_btnInsert_text);
 		
 		return container;
 	}
