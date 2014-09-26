@@ -15,23 +15,23 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.layout.GridData;
-
-import com.hangum.tadpole.preference.Messages;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
-
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.preference.Messages;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
 
 /**
  * SQL formatter preference page
@@ -74,7 +74,6 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblTabSize = new Label(container, SWT.NONE);
-		lblTabSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTabSize.setText(Messages.SQLFormatterPreferencePage_0);
 		
 		comboTabsize = new Combo(container, SWT.READ_ONLY);
@@ -108,10 +107,12 @@ public class SQLFormatterPreferencePage extends PreferencePage implements IWorkb
 		btnWordBreak.setText(Messages.SQLFormatterPreferencePage_btnWordBreak_text);
 		
 		textWidth = new Text(container, SWT.BORDER);
-		textWidth.setText(Messages.SQLFormatterPreferencePage_text_text);
 		textWidth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		initDefaultValue();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

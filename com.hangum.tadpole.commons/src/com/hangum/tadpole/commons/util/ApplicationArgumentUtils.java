@@ -10,8 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-
 import org.eclipse.core.runtime.Platform;
 
 /**
@@ -25,6 +26,39 @@ public class ApplicationArgumentUtils {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ApplicationArgumentUtils.class);
+
+	/**
+	 * engine에서 사용하는 패스워드.
+	 * 
+	 * @return
+	 */
+	public static String getPasswd() {
+		String passwd = "";
+		
+		try {
+			passwd = getValue("-passwd");
+		} catch(Exception e) {
+			passwd = "heechan.tadpole.owner.son";
+		}
+		
+		return passwd;
+	}
+
+	/**
+	 * 리소스 디렉토리 루트 정보를 리턴합니다.
+	 * @return
+	 */
+	public static String getResourcesDir() {
+		String strResourceDir = "";
+		
+		try {
+			strResourceDir = getValue("-resourcesDir");
+		} catch(Exception e) {
+			strResourceDir = FileUtils.getUserDirectoryPath() + IOUtils.DIR_SEPARATOR + "tadpole";
+		}
+		
+		return strResourceDir + IOUtils.DIR_SEPARATOR;
+	}
 	
 	/**
 	 * 시스템의 테이블 초기 데이터를 초기화 루틴을 탈것인지 검사합니다.
@@ -120,10 +154,28 @@ public class ApplicationArgumentUtils {
 	}
 	
 	/**
+	 * testDB 모드이면
+	 * 
+	 * @return
+	 */
+	public static boolean isTestDBMode() {
+		return checkString("-testDB");
+	}
+	
+	/**
 	 * check debug mode
 	 */
 	public static boolean isDebugMode() {
 		return checkString("-debuglog");
+	}
+	
+	/**
+	 * IS Google Analytics use?
+	 * 
+	 * @return
+	 */
+	public static boolean isGAON() {
+		return checkString("-GAON");
 	}
 	
 	/**
@@ -143,7 +195,6 @@ public class ApplicationArgumentUtils {
 	
 		throw new Exception("Can't find argument. Find key is " + key);
 	}
-	
 	/**
 	 * runtime시에 argument가 있는지 검사합니다.
 	 * 
@@ -154,7 +205,7 @@ public class ApplicationArgumentUtils {
 		String[] applicationArgs = Platform.getApplicationArgs();
 		
 		for (String string : applicationArgs) {
-			if( string.startsWith(checkString) ) return true;
+			if( string.equalsIgnoreCase(checkString) ) return true;
 		}
 		
 		return false;

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
@@ -19,16 +20,18 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.preference.Messages;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
 
 /**
  * general preference
@@ -43,6 +46,11 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	private Text textExportDelimit;
 	private Text textHomePage;
 	private Button btnCheckButtonHomepage;
+	private Group grpEmailAccount;
+	private Text textSMTP;
+	private Text textPort;
+	private Text textEmail;
+	private Text textPasswd;
 
 	public GeneralPreferencePage() {
 	}
@@ -80,37 +88,84 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		btnCheckButtonHomepage.setText(Messages.GeneralPreferencePage_btnCheckButton_text);
 		btnCheckButtonHomepage.setSelection(true);
 		
+		grpEmailAccount = new Group(container, SWT.NONE);
+		grpEmailAccount.setVisible(false);
+		grpEmailAccount.setLayout(new GridLayout(2, false));
+		grpEmailAccount.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		grpEmailAccount.setText(Messages.GeneralPreferencePage_grpEmailAccount_text);
+		
+		Label lblSmtpServer = new Label(grpEmailAccount, SWT.NONE);
+		lblSmtpServer.setText(Messages.GeneralPreferencePage_lblSmtpServer_text);
+		
+		textSMTP = new Text(grpEmailAccount, SWT.BORDER);
+		textSMTP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblPort = new Label(grpEmailAccount, SWT.NONE);
+		lblPort.setText(Messages.GeneralPreferencePage_lblPort_text);
+		
+		textPort = new Text(grpEmailAccount, SWT.BORDER);
+		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblAccount = new Label(grpEmailAccount, SWT.NONE);
+		lblAccount.setText(Messages.GeneralPreferencePage_lblAccount_text);
+		
+		textEmail = new Text(grpEmailAccount, SWT.BORDER);
+		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblPassword = new Label(grpEmailAccount, SWT.NONE);
+		lblPassword.setText(Messages.GeneralPreferencePage_lblPassword_text);
+		
+		textPasswd = new Text(grpEmailAccount, SWT.BORDER | SWT.PASSWORD);
+		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		if(SessionManager.isAdmin()) {
+			grpEmailAccount.setVisible(true);
+		}
+		
 		initDefaultValue();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return container;
 	}
 	
 	@Override
 	public boolean performOk() {
-		String txtSessionTime = textSessionTime.getText();
+		String txtSessionTime 	= textSessionTime.getText();
 		String txtExportDelimit = textExportDelimit.getText();
-		String txtHomePage = textHomePage.getText();
-		String txtHomePageUse = ""+btnCheckButtonHomepage.getSelection();
+		String txtHomePage 		= textHomePage.getText();
+		String txtHomePageUse 	= ""+btnCheckButtonHomepage.getSelection();
 		
-		try {
-			Integer.parseInt(txtSessionTime);
-		} catch(Exception e) {
+		String txtSmtp 			= textSMTP.getText();
+		String txtPort			= textPort.getText();
+		String txtEmail			= textEmail.getText();
+		String txtPasswd		= textPasswd.getText();
+		
+		if(!NumberUtils.isNumber(txtSessionTime)) {
+			textSessionTime.setFocus();
 			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_2 + Messages.GeneralPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
+		if(!NumberUtils.isNumber(txtPort)) {
+			textPort.setFocus();
+			MessageDialog.openError(getShell(), "Confirm", "Port is " + Messages.GeneralPreferencePage_0);			 //$NON-NLS-1$
+			return false;
+		}
+		
 		// 테이블에 저장 
-		try {
-			TadpoleSystem_UserInfoData.updateGeneralUserInfoData(txtSessionTime);
-			TadpoleSystem_UserInfoData.updateGeneralExportDelimitData(txtExportDelimit);
-			TadpoleSystem_UserInfoData.updateDefaultHomePage(txtHomePage);
-			TadpoleSystem_UserInfoData.updateDefaultHomePageUse(txtHomePageUse);
+		try {			
+			updateInfo(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, txtSessionTime);
+			updateInfo(PreferenceDefine.EXPORT_DILIMITER, 			txtExportDelimit);
+			updateInfo(PreferenceDefine.DEFAULT_HOME_PAGE, 			txtHomePage);
+			updateInfo(PreferenceDefine.DEFAULT_HOME_PAGE_USE, 		txtHomePageUse);
 			
-			// session 데이터를 수정한다.
-			SessionManager.setUserInfo(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, txtSessionTime);			
-			SessionManager.setUserInfo(PreferenceDefine.EXPORT_DILIMITER, txtExportDelimit);
-			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE, txtHomePage);
-			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_HOME_PAGE_USE, txtHomePageUse);
+			updateInfo(PreferenceDefine.SMTP_HOST_NAME, txtSmtp);
+			updateInfo(PreferenceDefine.SMTP_PORT, 		txtPort);
+			updateInfo(PreferenceDefine.SMTP_EMAIL, 	txtEmail);
+			updateInfo(PreferenceDefine.SMTP_PASSWD, 	txtPasswd);
+			
 		} catch(Exception e) {
 			logger.error("GeneralPreference saveing", e);
 			
@@ -119,6 +174,11 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 		
 		return super.performOk();
+	}
+	
+	private void updateInfo(String key, String value) throws Exception {
+		TadpoleSystem_UserInfoData.updateValue(key, value);
+		SessionManager.setUserInfo(key, value);
 	}
 	
 	@Override
@@ -145,16 +205,20 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 	 * 페이지 초기값 로딩 
 	 */
 	private void initDefaultValue() {
-		textSessionTime.setText( "" + GetPreferenceGeneral.getSessionTimeout() ); //$NON-NLS-1$
-		textExportDelimit.setText( "" + GetPreferenceGeneral.getExportDelimit() ); //$NON-NLS-1$
-		textHomePage.setText( "" + GetPreferenceGeneral.getDefaultHomePage() ); //$NON-NLS-1$
+		textSessionTime.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, PreferenceDefine.SESSION_SERVER_DEFAULT_PREFERENCE_VALUE));//"" + GetPreferenceGeneral.getSessionTimeout() ); //$NON-NLS-1$
+		textExportDelimit.setText(GetPreferenceGeneral.getValue(PreferenceDefine.EXPORT_DILIMITER, PreferenceDefine.EXPORT_DILIMITER_VALUE));// "" + GetPreferenceGeneral.getExportDelimit() ); //$NON-NLS-1$
+		textHomePage.setText(GetPreferenceGeneral.getValue(PreferenceDefine.DEFAULT_HOME_PAGE, PreferenceDefine.DEFAULT_HOME_PAGE_VALUE)); //$NON-NLS-1$
 		
-		String use = GetPreferenceGeneral.getDefaultHomePageUse();
+		String use = GetPreferenceGeneral.getValue(PreferenceDefine.DEFAULT_HOME_PAGE_USE, PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE);//GetPreferenceGeneral.getDefaultHomePageUse();
 		if("true".equals(use)) {
 			btnCheckButtonHomepage.setSelection(true);
 		} else {
 			btnCheckButtonHomepage.setSelection(false);
 		}
+		
+		textSMTP.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
+		textPort.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
+		textEmail.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
+		textPasswd.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
 	}
-
 }

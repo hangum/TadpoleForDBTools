@@ -14,8 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.IActionFilter;
 
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 
 /**
  * rdb db popup
@@ -50,9 +50,10 @@ public class DBTypeActionFilterAdapter implements IActionFilter {
 				
 			// 사용자 권한에 따라.
 			} else if(USER_TYPE.equals(name)) {
-				String[] userTypes = StringUtils.split(value, ",");
+				final String[] userTypes = StringUtils.split(value, ",");
+				final String strRoleType = SessionManager.getRoleType(userDB);
 				for (String userType : userTypes) {
-					if(SessionManager.getRoleType(userDB.getGroup_seq()).equalsIgnoreCase(userType)) {
+					if(strRoleType.equalsIgnoreCase(userType)) {
 						return true;
 					}
 				}

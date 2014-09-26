@@ -10,9 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -23,14 +21,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * generate sql statement     
@@ -55,27 +52,21 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 		try {
 			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 			
-			Map<String, String> parameter = new HashMap<String, String>();
-			parameter.put("db", userDB.getDb());
-			parameter.put("table", tableDAO.getName());
-			
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-			
-			sbSQL.append("DELETE FROM " + tableDAO.getName() + " "); //$NON-NLS-1$ //$NON-NLS-2$
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+			sbSQL.append("DELETE FROM " + tableDAO.getSysName() + " "); //$NON-NLS-1$ //$NON-NLS-2$
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 			int cnt = 0;
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				if(PublicTadpoleDefine.isKEY(dao.getKey())) {
-					if(cnt == 0) sbSQL.append("\t" + dao.getField() + " = ? " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
-					else sbSQL.append("\tAND " + dao.getField() + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
+					if(cnt == 0) sbSQL.append("\t" + dao.getSysName() + " = ? " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
+					else sbSQL.append("\tAND " + dao.getSysName() + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
 					cnt++;
 				}				
 			}
-			sbSQL.append(PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
+			sbSQL.append(PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 			
-			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
+			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.DB_ACTION.TABLES);
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLDeleteAction_10, e);
 			

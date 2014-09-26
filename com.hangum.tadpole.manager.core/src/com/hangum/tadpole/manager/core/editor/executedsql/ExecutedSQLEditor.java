@@ -48,15 +48,17 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_ExecutedSQL;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_ExecutedSQL;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryFilter;
@@ -86,6 +88,7 @@ public class ExecutedSQLEditor extends EditorPart {
 	private UserDAO userDAO;
 	private UserDBDAO userDBDAO;
 
+	private Button btnUserAllCheck;
 	private Combo comboUserName;
 	private Combo comboDisplayName;
 	private Text textMillis;
@@ -132,8 +135,8 @@ public class ExecutedSQLEditor extends EditorPart {
 		lblUser.setLayoutData(gd_lblUser);
 		lblUser.setText("<b>User</b>");
 
-		final Button btnUserAllCheck = new Button(compositeHead2, SWT.CHECK);
-		btnUserAllCheck.setSelection(true);
+		btnUserAllCheck = new Button(compositeHead2, SWT.CHECK);
+		btnUserAllCheck.setEnabled(false);
 		GridData gd_btnBtnuserallcheck = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
 		gd_btnBtnuserallcheck.minimumWidth = 45;
 		gd_btnBtnuserallcheck.widthHint = 45;
@@ -167,7 +170,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		lblDatabase.setText("<b>Database</b>");
 
 		final Button btnDbAllCheck = new Button(compositeHead2, SWT.CHECK);
-		btnDbAllCheck.setSelection(true);
+		btnDbAllCheck.setEnabled(false);
 		GridData gd_btnBtndballcheck = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
 		gd_btnBtndballcheck.minimumWidth = 45;
 		gd_btnBtndballcheck.widthHint = 45;
@@ -333,14 +336,25 @@ public class ExecutedSQLEditor extends EditorPart {
 		initBehavior();
 
 		search();
+		
+		// google analytic
+		AnalyticCaller.track(ExecutedSQLEditor.ID);
 	}
 
 	/**
 	 * Initial configuration setting of widgets
 	 */
 	private void initBehavior() {
-		comboDisplayName.setEnabled(false);
-		comboUserName.setEnabled(false);
+			
+//			comboDisplayName.setEnabled(false);
+//			comboUserName.setEnabled(false);
+//		} else {
+//			btnUserAllCheck.setSelection(false);
+//			btnUserAllCheck.setEnabled(false);
+//			
+//			comboDisplayName.setEnabled(false);
+//			comboUserName.setEnabled(true);
+//		}
 	}
 
 	/**
@@ -363,7 +377,7 @@ public class ExecutedSQLEditor extends EditorPart {
 					}
 				}
 				
-				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DILIMITER);
+				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DELIMITER, DB_ACTION.TABLES);
 			} catch (Exception e) {
 				logger.error("find editor and write query", e);
 			}
@@ -425,13 +439,22 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void initUIData() {
 
 		try {
-			// user information
-			List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
-			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-				String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
-				comboUserName.add(name);
-				comboUserName.setData(name, userGroupAUserDAO.getSeq());
-			}
+//			// 어드민 권한이면 모든 정보를 다 표현합니다.
+//			if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
+				List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
+				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
+					String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
+					comboUserName.add(name);
+					comboUserName.setData(name, userGroupAUserDAO.getSeq());
+				}
+//			// 개발자 권한일 경우에는 본인만 표시합니다.
+//			} else {
+//				String name = SessionManager.getName() + " (" + SessionManager.getEMAIL() + ")";
+//				
+//				comboUserName.add(name);
+//				comboUserName.setData(name, SessionManager.getSeq());
+//			}
+			
 			if (userDAO == null) {
 				comboUserName.select(0);
 			} else {

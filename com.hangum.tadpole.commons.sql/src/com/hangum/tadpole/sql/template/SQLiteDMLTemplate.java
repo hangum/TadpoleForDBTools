@@ -18,7 +18,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  * @author hangum
  *
  */
-public class SQLiteDMLTemplate {
+public class SQLiteDMLTemplate extends AbstractDMLTemplate {
 	/**  
 	 * sqlite 을 수행할때 preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.
 	 */	
@@ -35,7 +35,7 @@ public class SQLiteDMLTemplate {
 
 	/** view  */
 	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																" SELECT   columns   FROM   table;";
+																" SELECT   columns   FROM   table_name;";
 	
 	/** index */
 	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name " + PublicTadpoleDefine.LINE_SEPARATOR + 

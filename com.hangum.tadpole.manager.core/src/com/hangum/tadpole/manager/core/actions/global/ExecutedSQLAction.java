@@ -49,8 +49,8 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 		this.window = window;
 		
 		setId(ID);
-		setText("Query History");
-		setToolTipText("Query History");
+		setText("SQL Audit");
+		setToolTipText("SQL Audit");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/queryhistory.png"));
 		setEnabled(true);
 	}
@@ -61,10 +61,10 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 			ExecutedSQLEditorInput executedSQL = new ExecutedSQLEditorInput();
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(executedSQL, ExecutedSQLEditor.ID);
 		} catch (PartInitException e) {
-			logger.error("ExecutedSQL Management editor", e); //$NON-NLS-1$
+			logger.error("SQL Audit Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "ExecutedSQL Management editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Audit Management editor", errStatus); //$NON-NLS-1$
 		}
 	}
 

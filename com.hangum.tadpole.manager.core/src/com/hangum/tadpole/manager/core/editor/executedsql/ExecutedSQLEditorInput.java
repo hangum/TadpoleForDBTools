@@ -47,6 +47,12 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 	public boolean exists() {
 		return false;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof ExecutedSQLEditorInput) ) return false;
+		return ((ExecutedSQLEditorInput)obj).getName().equals(getName());
+	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
@@ -55,7 +61,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Executed SQL Management";
+		return "SQL Audit";
 	}
 
 	@Override
@@ -65,7 +71,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Executed SQL Management";
+		return "SQL Audit";
 	}
 	
 	public UserDAO getUserDAO() {

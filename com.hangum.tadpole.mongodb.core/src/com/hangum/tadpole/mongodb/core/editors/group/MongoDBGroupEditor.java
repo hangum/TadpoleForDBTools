@@ -35,6 +35,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -231,6 +232,9 @@ public class MongoDBGroupEditor extends EditorPart {
 		compositeResult.setLayout(gl_compositeResult);
 		
 		sashForm.setWeights(new int[] {7, 3});
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

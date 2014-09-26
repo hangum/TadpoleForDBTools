@@ -34,8 +34,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionBigDataGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
@@ -172,11 +172,11 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
 			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		 } else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("tajo-vm");
+			textHost.setText("127.0.0.1");
 			textPort.setText("26002");
 			textDatabase.setText("default");
 			textUser.setText("");
@@ -212,7 +212,7 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 	 * 
 	 * @return
 	 */
-	public boolean isValidateInput() {
+	public boolean isValidateInput(boolean isTest) {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -223,8 +223,8 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 	}
 	
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 		
 		final String dbUrl = String.format(
 				getSelectDB().getDB_URL_INFO(), 
@@ -261,6 +261,9 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 		
 		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
+		
+		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
 		return true;
 	}

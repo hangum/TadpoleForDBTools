@@ -16,7 +16,7 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
-	executeFlag : function() {},
+//	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -27,6 +27,9 @@ var editorService = {
 	
 	/** add text */
 	addText : function(varText) {},
+	
+	/** is block text */
+	isBlockText : function() {},
 	
 	/**
 	 * 에디터 기존 내용을 지운 후에 새롭게 텍스트를 넣습니다.
@@ -51,12 +54,17 @@ var editorService = {
 var editor;
 /** 에디터가 저장 할 수 있는 상태인지 */
 var isEdited = false;
-/** 자바에서 처리가 끝났는지 */
-var isJavaRunning = false;
+///** 자바에서 처리가 끝났는지 */
+//var isJavaRunning = false;
+/** open 된 에디터 타입 */
+var varEditorType = 'TABLES';
+
+// enable live auto completion
+var completions = [];
 
 /** initialize editor */
 {
-	ace.require("ace/ext/language_tools");
+	var langTools = ace.require("ace/ext/language_tools");
 	editor = ace.edit("editor");
 	document.getElementById('editor').style.fontSize= '12px';
 	
@@ -67,21 +75,59 @@ var isJavaRunning = false;
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
+	/*
+	 *  autocomplete
+	 *  http://stackoverflow.com/questions/13545433/autocompletion-in-ace-editor 
+	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
-	    enableSnippets: true
+	    enableSnippets: true,
+	    enableLiveAutocompletion: true
 	});
+	
+	var completer = {
+	        getCompletions: function(editor, session, pos, prefix, callback) {
+	        	var text = editor.getValue(); 
+	        	
+	        	if (prefix.length === 0) { 
+	        		callback(null, []); 
+	        		return 
+	        	} 
+	        	 
+//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+	        	callback(null, completions); 
+	        } 
+	} 
+	langTools.addCompleter(completer); 
 };
 
-/** 에디터를 초기화 합니다. */
-editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
+/** 
+ * 에디터를 초기화 합니다. 
+ * @param varMode mode
+ * @param varTableList table list
+ * @param varType editorType (sql or procedure )
+ * @param varInitText
+ * 
+ */
+editorService.initEditor = function(varMode, varType, varTableList, varInitText) {
+	varEditorType = varType;
+	
+	try {
+		var tables = varTableList.split("|");
+		for(var i=0; i<tables.length; i++) {
+			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
+		}
+	} catch(e) {
+		console.log(e);
+	}
+	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
 		var UndoManager = ace.require("./undomanager").UndoManager;
 
 		var doc = new EditSession(varInitText);
 		doc.setUndoManager(new UndoManager());
-		doc.setMode(varExt);
+		doc.setMode(varMode);
 		doc.on('change', function() {
 			if(!isEdited) {
 				try {
@@ -104,15 +150,48 @@ editorService.initEditor = function(varExt, varAddKeyword, varInitText) {
 editorService.saveData = function() {
 	isEdited = false;
 }
-editorService.executeFlag = function() {
-	isJavaRunning = false;
-}
 /** set editor focus */
 editorService.setFocus = function() {
 	editor.focus();
 };
+//editorService.executeFlag = function() {
+////	console.log('\t end java program....');
+//	isJavaRunning = false;
+//};
+
+/** user autocomplete */
+editor.commands.on("afterExec", function(e){
+	console.log("--> command --> " + e.command.name);
+	
+	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
+		var all = editor.completers;
+		editor.completers = completions;
+    	editor.execCommand("startAutocomplete");
+    	editor.completers = all;
+    	
+//    } else if(e.command.name == "startAutocomplete") {
+//    	var all = e.editor.completers;
+//    	
+//		var completer = {
+//		        getCompletions: function(editor, session, pos, prefix, callback) {
+//		        	var text = editor.getValue(); 
+//		        	
+//		        	if (prefix.length === 0) { 
+//		        		callback(null, []); 
+//		        		return 
+//		        	} 
+//		        	 
+//	//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+//		        	callback(null, completions); 
+//		        } 
+//		} 
+//		langTools.addCompleter(completer);
+	}
+})
+
 
 //==[ Define short key ]======================================================================================================================
+
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
@@ -126,17 +205,34 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
+
+/**
+ * editor 텍스트가 block인지 유무?
+ * @returns {Boolean}
+ */
+editorService.isBlockText = function() {
+	var isBlock = false;
+	if("" != editor.getSelectedText())  isBlock = true;
+	
+	return isBlock;
+}
+
 editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-    		if(!isJavaRunning) {
-    			isJavaRunning = true;
-    			var retResulr = AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"));
-    		}
+//    		console.log("\t [start]Execute query => " + isJavaRunning);
+    		
+//    		if(!isJavaRunning) {
+//    			isJavaRunning = true;
+    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
+//    		} else {
+//    			console.log("\t Can not execute query");
+//    		}
     	} catch(e) {
     		console.log(e);
+//    		editorService.executeFlag();
     	}
     },
     readOnly: false
@@ -146,12 +242,13 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
     	try {
-    		if(!isJavaRunning) {
-    			isJavaRunning = true;
-    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'));
-    		}
+//    		if(!isJavaRunning) {
+//    			isJavaRunning = true;
+    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'), editorService.isBlockText());
+//    		}
 	    } catch(e) {
 			console.log(e);
+//			editorService.executeFlag();
 		}
     },
     readOnly: false
@@ -239,6 +336,25 @@ editorService.getSelectedText = function(varDelimiter) {
 	var varEditorContent = editor.getValue();
 	if("" == varEditorContent) return "";
 	
+	//
+	// 프로시저 평선 트리거는 에디터 모두를 리턴합니다. 
+	//
+	if(varEditorType == "PROCEDURES" ||
+		varEditorType == "FUNCTIONS" ||
+		varEditorType == "TRIGGERS") {
+		
+		// 선택된 텍스트가 있다면 우선적으로 리턴합니다.
+		var varSelectionContent = editor.getSelectedText();
+		if("" != varSelectionContent)  {
+			return varSelectionContent;
+		} else {
+			return varEditorContent;
+		}
+	} 
+	
+	//
+	// 일반 에디터. 
+	// 
 	try {
 		// 선택된 텍스트가 있다면 우선적으로 리턴합니다.
 		var varSelectionContent = editor.getSelectedText();
@@ -411,8 +527,12 @@ editorService.insertText = function(varText) {
 };
 editorService.addText = function(varText) {
 	try {
-		if("" == editor.getValue()) editor.insert(varText);
-		else editor.insert("\n" + varText);
+		if("" == editor.getValue()) {
+			editor.insert(varText);
+		} else {
+			editor.gotoLine(editor.session.getLength()+1);
+			editor.insert("\n" + varText);
+		}
 		editor.focus();
 	} catch(e) {
 		console.log(e);

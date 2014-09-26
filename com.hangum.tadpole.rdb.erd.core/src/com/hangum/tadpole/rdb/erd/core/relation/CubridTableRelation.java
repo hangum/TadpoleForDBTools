@@ -61,7 +61,7 @@ public class CubridTableRelation {
 		            if(rs.getString("FK_NAME") == null || "".equals(rs.getString("FK_NAME"))) ref.setConstraint_name(rs.getString("FK_NAME"));
 		            else ref.setConstraint_name(rs.getString("fk_name"));
 		            
-					// 테이블 명
+					// Table names
 					if(rs.getString("FKTABLE_NAME") == null || "".equals(rs.getString("FKTABLE_NAME"))) ref.setTable_name(rs.getString("FKTABLE_NAME"));
 					else ref.setTable_name(rs.getString("fktable_name"));
 					

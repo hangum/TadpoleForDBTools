@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.mongodb.core.Messages;
 
@@ -78,7 +79,10 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 		tadpoleEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();
-
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return container;
 	}
 	

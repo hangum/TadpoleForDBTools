@@ -39,10 +39,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-import com.hangum.tadpole.engine.transaction.TransactionDAO;
+import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 import com.hangum.tadpole.manager.core.Activator;
 
 /**
@@ -113,6 +114,9 @@ public class TransactionConnectionListEditor extends EditorPart {
 		
 		// default folder selection
 		tabFolder.setSelection(0);
+		
+		// google analytic
+		AnalyticCaller.track(TransactionConnectionListEditor.ID);
 	}
 	
 	/**

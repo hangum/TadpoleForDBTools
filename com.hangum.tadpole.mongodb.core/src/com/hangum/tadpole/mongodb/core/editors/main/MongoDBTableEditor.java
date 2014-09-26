@@ -37,14 +37,15 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -240,6 +241,9 @@ public class MongoDBTableEditor extends EditorPart {
 		sashForm.setWeights(new int[] {50, 50});
 		
 		initCollection();
+		
+		// google analytic
+		AnalyticCaller.track(MongoDBTableEditor.ID);
 	}
 	
 	/**

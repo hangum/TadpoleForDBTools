@@ -29,6 +29,10 @@ public class Messages extends NLS {
 
 	public static String UserInfoPerference_13;
 
+	public static String UserInfoPerference_15;
+
+	public static String UserInfoPerference_16;
+
 	public static String UserInfoPerference_2;
 
 	public static String UserInfoPerference_3;
@@ -38,6 +42,8 @@ public class Messages extends NLS {
 	public static String UserInfoPerference_5;
 	public static String UserInfoPerference_6;
 	public static String UserInfoPerference_8;
+
+	public static String UserInfoPerference_9;
 	
 	public static String DefaultPreferencePage_other_labelText;
 	public static String DefaultPreferencePage_stringFieldEditor_stringValue;
@@ -70,8 +76,6 @@ public class Messages extends NLS {
 
 	public static String MongoDBPreferencePage_12;
 
-	public static String MongoDBPreferencePage_13;
-
 	public static String MongoDBPreferencePage_2;
 
 	public static String MongoDBPreferencePage_3;
@@ -94,7 +98,25 @@ public class Messages extends NLS {
 	public static String SQLFormatterPreferencePage_btnNewLineBefore_text;
 	public static String SQLFormatterPreferencePage_btnRemoveEmptyLine_text;
 	public static String SQLFormatterPreferencePage_btnWordBreak_text;
-	public static String SQLFormatterPreferencePage_text_text;
+	public static String RDBPreferencePage_lblResultViewFont_text;
+	public static String RDBPreferencePage_btnNewButton_text;
+	public static String RDBPreferencePage_lblNewLabel_3_text;
+	public static String RDBPreferencePage_lblQueryTimeout_text;
+	public static String GeneralPreferencePage_grpEmailAccount_text;
+	public static String GeneralPreferencePage_lblSmtpServer_text;
+	public static String GeneralPreferencePage_lblPort_text;
+	public static String GeneralPreferencePage_lblAccount_text;
+	public static String GeneralPreferencePage_lblPassword_text;
+	public static String UserInfoPerference_button_text;
+	public static String UserInfoPerference_grpGoogleAuth_text;
+	public static String UserInfoPerference_btnGoogleOtp_text;
+	public static String UserInfoPerference_lblSecretKey_text;
+	public static String UserInfoPerference_lblNewLabel_text;
+	public static String UserInfoPerference_btnGoogleOtp_text_1;
+	public static String UserInfoPerference_lblSecretKey_text_1;
+	public static String UserInfoPerference_lblQrcodeUrl_text;
+	public static String UserInfoPerference_lblOptCode_text;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

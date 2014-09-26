@@ -26,11 +26,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 
 /**
  * Resource save dialog
@@ -43,6 +44,9 @@ public class ResourceSaveDialog extends Dialog {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ResourceSaveDialog.class);
+	
+	/** 화면에 초기 값을 뿌려 주어야 한다면 사용한다 */
+	private UserDBResourceDAO initDBResource;
 	
 	private UserDBDAO userDB;
 	private PublicTadpoleDefine.RESOURCE_TYPE resourceType;
@@ -61,8 +65,11 @@ public class ResourceSaveDialog extends Dialog {
 	 * @param userDB
 	 * @param resourceType
 	 */
-	public ResourceSaveDialog(Shell parentShell, UserDBDAO userDB, PublicTadpoleDefine.RESOURCE_TYPE resourceType) {
+	public ResourceSaveDialog(Shell parentShell, UserDBResourceDAO initDBResource, UserDBDAO userDB, PublicTadpoleDefine.RESOURCE_TYPE resourceType) {
 		super(parentShell);
+		
+		if(initDBResource == null) this.initDBResource = new UserDBResourceDAO();
+		else this.initDBResource = initDBResource;
 		
 		this.userDB = userDB;
 		this.resourceType = resourceType;
@@ -71,7 +78,7 @@ public class ResourceSaveDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Resource Save Dialog"); //$NON-NLS-1$
+		newShell.setText(Messages.ResourceSaveDialog_3);
 	}
 	
 	/**
@@ -89,13 +96,14 @@ public class ResourceSaveDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText("Name"); //$NON-NLS-1$
+		lblName.setText(Messages.ResourceSaveDialog_0);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textName.setText(initDBResource.getName());
 		
 		Label lblSharedType = new Label(container, SWT.NONE);
-		lblSharedType.setText("Shared Type"); //$NON-NLS-1$
+		lblSharedType.setText(Messages.ResourceSaveDialog_1);
 		
 		comboSharedType = new Combo(container, SWT.READ_ONLY);
 		comboSharedType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -105,12 +113,12 @@ public class ResourceSaveDialog extends Dialog {
 		comboSharedType.select(0);
 		
 		Label lblDescription = new Label(container, SWT.NONE);
-		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDescription.setText("Description"); //$NON-NLS-1$
+		lblDescription.setText(Messages.ResourceSaveDialog_2);
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+		textDescription.setText(initDBResource.getDescription());
+
 		initUI();
 
 		return container;
@@ -121,6 +129,10 @@ public class ResourceSaveDialog extends Dialog {
 	 */
 	private void initUI() {
 		textName.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+				
 	}
 	
 	@Override

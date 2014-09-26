@@ -93,6 +93,8 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 		browserEditor = new Browser(compositeServerStatus, SWT.NONE);
 		browserEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		addBrowserHandler();
+		
+		super.initWidget();
 	}
 	
 	/**
@@ -105,7 +107,7 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 		browserEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					browserEvaluate(IEditorFunction.INITIALIZE, initExt, "", initContent);
+					getBfUtils().browserEvaluate(IEditorFunction.INITIALIZE, initExt, "NONE", "", initContent);
 				} catch(Exception e) {
 					logger.error("browser initialize", e);	  
 				}
@@ -144,7 +146,7 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 	 */
 	public void setText(String strDdl) {
 		try {
-			browserEvaluate(EditorFunctionService.RE_NEW_TEXT, strDdl);
+			getBfUtils().browserEvaluate(EditorFunctionService.RE_NEW_TEXT, strDdl);
 		} catch(Exception e) {
 			logger.error("setText()", e);
 		}
@@ -156,7 +158,7 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 	 */
 	public String getText() {
 		try {
-			return browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+			return getBfUtils().browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 		} catch(Exception e) {
 			logger.error("getText()", e);
 		}
@@ -170,7 +172,7 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 //	}
 	
 	public void setBrowserFocus() {
-		browserEvaluate(IEditorFunction.SET_FOCUS);
+		getBfUtils().browserEvaluate(IEditorFunction.SET_FOCUS);
 	}
 
 }

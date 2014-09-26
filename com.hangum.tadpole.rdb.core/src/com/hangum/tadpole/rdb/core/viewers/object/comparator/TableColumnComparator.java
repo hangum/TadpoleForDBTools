@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 
 /**
@@ -35,25 +36,25 @@ public  class TableColumnComparator extends ObjectComparator  {
 		int rc = 0;
 		switch(propertyIndex) {
 		case 0:
-			rc = tc1.getName().toLowerCase().compareToIgnoreCase(tc2.getName().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getName(), tc2.getName());
 			break;
 		case 1:
-			rc = tc1.getType().toLowerCase().compareToIgnoreCase(tc2.getType().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getType(), tc2.getType());
 			break;
 		case 2:
-			rc = tc1.getKey().toLowerCase().compareToIgnoreCase(tc2.getKey().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getKey(), tc2.getKey());
 			break;
 		case 3:
-			rc = tc1.getComment().toLowerCase().compareToIgnoreCase(tc2.getComment().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getComment(), tc2.getComment());
 			break;
 		case 4:
-			rc = tc1.getNull().toLowerCase().compareToIgnoreCase(tc2.getNull().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getNull(), tc2.getNull());
 			break;
 		case 5:
-			rc = tc1.getDefault().toLowerCase().compareToIgnoreCase(tc2.getDefault().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getDefault(), tc2.getDefault());
 			break;
 		case 6:
-			rc = tc1.getExtra().toLowerCase().compareToIgnoreCase(tc2.getExtra().toLowerCase());
+			rc = NullSafeComparator.compare(tc1.getExtra(), tc2.getExtra());
 		}
 		
 				

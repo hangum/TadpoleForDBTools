@@ -20,7 +20,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  * @author hangum
  *
  */
-public class HIVEDMLTemplate {
+public class HIVEDMLTemplate extends AbstractDMLTemplate {
 	
 	/**  
 	 * preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.
@@ -32,13 +32,12 @@ public class HIVEDMLTemplate {
 	/** table - mysql */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE   sample_table   (  " + PublicTadpoleDefine.LINE_SEPARATOR + 
 						 " id int,   " + PublicTadpoleDefine.LINE_SEPARATOR +
-						 " dtDontQuery string, " + PublicTadpoleDefine.LINE_SEPARATOR +
 						 " name string  " + PublicTadpoleDefine.LINE_SEPARATOR +
 						" );";
 	
 	/** view */
 	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS  " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																" SELECT   columns   FROM   table;";
+																" SELECT   columns   FROM   table_name;";
 
 	/** alter view template */
 	public static final String TMP_ALTER_VIEW_STMT = "ALTER ALGORITHM=UNDEFINED DEFINER='%s'@'%' " + PublicTadpoleDefine.LINE_SEPARATOR +

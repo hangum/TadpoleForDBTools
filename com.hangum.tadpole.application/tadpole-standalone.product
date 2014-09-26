@@ -7,8 +7,10 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-standalone -test -useDB all -defaultDB MySQL -debuglog</programArgs>
-      <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1 -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer</vmArgs>
+      <programArgs>-GAON -passwd tadpole.default.passwd -standalone -test -useDB all -defaultDB MySQL
+      </programArgs>
+      <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1
+      </vmArgs>
    </launcherArgs>
 
    <windowImages/>
@@ -32,11 +34,13 @@
    </vm>
 
    <plugins>
+      <plugin id="com.hamgum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.ace.editor.core"/>
-      <plugin id="com.hangum.tadpole.applicaion.start"/>
       <plugin id="com.hangum.tadpole.application"/>
+      <plugin id="com.hangum.tadpole.applicattion.start"/>
       <plugin id="com.hangum.tadpole.aws.rds.commons.core"/>
       <plugin id="com.hangum.tadpole.cipher.core"/>
+      <plugin id="com.hangum.tadpole.commons.admin.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.utils"/>
       <plugin id="com.hangum.tadpole.engine"/>
@@ -47,6 +51,7 @@
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
       <plugin id="com.hangum.tadpole.mongodb.erd.core"/>
       <plugin id="com.hangum.tadpole.mongodb.model"/>
+      <plugin id="com.hangum.tadpole.monitoring.core"/>
       <plugin id="com.hangum.tadpole.notes.core"/>
       <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.hangum.tadpole.rdb.core"/>
@@ -108,17 +113,16 @@
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.rap.addons.d3chart"/>
+      <plugin id="org.eclipse.rap.addons.filedialog"/>
+      <plugin id="org.eclipse.rap.addons.fileupload"/>
       <plugin id="org.eclipse.rap.design.example"/>
       <plugin id="org.eclipse.rap.draw2d"/>
       <plugin id="org.eclipse.rap.draw2d.compatibility"/>
       <plugin id="org.eclipse.rap.gef"/>
-      <plugin id="org.eclipse.rap.jettycustomizer" fragment="true"/>
       <plugin id="org.eclipse.rap.jface"/>
       <plugin id="org.eclipse.rap.jface.databinding"/>
       <plugin id="org.eclipse.rap.rwt"/>
       <plugin id="org.eclipse.rap.rwt.osgi"/>
-      <plugin id="org.eclipse.rap.rwt.supplemental.filedialog"/>
-      <plugin id="org.eclipse.rap.rwt.supplemental.fileupload"/>
       <plugin id="org.eclipse.rap.ui"/>
       <plugin id="org.eclipse.rap.ui.views"/>
       <plugin id="org.eclipse.rap.ui.workbench"/>
@@ -129,11 +133,13 @@
    </features>
 
    <configurations>
+      <plugin id="com.hamgum.tadpole.help.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.ace.editor.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.applicaion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.applicattion.start" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.aws.rds.commons.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.cipher.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.admin.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
@@ -145,6 +151,7 @@
       <plugin id="com.hangum.tadpole.mongodb.core.test" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.monitoring.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.notes.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />
@@ -191,6 +198,8 @@
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
       <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.addons.d3chart" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.addons.filedialog" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.addons.fileupload" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.design.example" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.draw2d" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.draw2d.compatibility" autoStart="true" startLevel="0" />
@@ -201,8 +210,6 @@
       <plugin id="org.eclipse.rap.junit.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.rwt" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.rwt.osgi" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.rap.rwt.supplemental.filedialog" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.rap.rwt.supplemental.fileupload" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.views" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.ui.workbench" autoStart="true" startLevel="0" />

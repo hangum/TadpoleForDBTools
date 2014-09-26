@@ -50,9 +50,9 @@ public class GenerateSQLDMLAction extends GenerateSQLSelectAction {
 		try {
 			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 			
-			GenerateStatmentDMLDialog dialog = new GenerateStatmentDMLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, tableDAO.getName());
+			GenerateStatmentDMLDialog dialog = new GenerateStatmentDMLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, tableDAO);
 			if(Dialog.OK == dialog.open()) {
-				FindEditorAndWriteQueryUtil.run(userDB, dialog.getDML());
+				FindEditorAndWriteQueryUtil.run(userDB, dialog.getDML(), actionType);
 			}
 			
 		} catch(Exception e) {

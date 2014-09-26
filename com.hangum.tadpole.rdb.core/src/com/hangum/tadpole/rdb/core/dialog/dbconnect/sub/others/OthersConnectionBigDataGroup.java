@@ -30,6 +30,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.ExtensionBrowserURLDi
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * hive Others connection info
@@ -47,6 +48,8 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 	private Button btnExecuteQuestionDml;
 	private Button btnShowTables;
 	private Button btnExternalBrowser;
+	private Button btnIsVisible;
+	private Button btnSendMonitoring;
 	
 	/**
 	 * Create the composite.
@@ -59,7 +62,7 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		super(parent, style, selectDB);
 		
 		setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_0);
-		GridLayout gridLayout = new GridLayout(3, false);
+		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -99,6 +102,7 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 			}
 		});
 		btnExternalBrowser.setText(Messages.OthersConnectionBigDataGroup_btnExternalBrowser_text);
+		new Label(this, SWT.NONE);
 		
 		btnProfiler = new Button(this, SWT.CHECK);
 		btnProfiler.setSelection(true);
@@ -110,6 +114,18 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_5);
+		
+		btnIsVisible = new Button(this, SWT.CHECK);
+		btnIsVisible.setSelection(true);
+		btnIsVisible.setText(Messages.OthersConnectionBigDataGroup_btnIsVisible_text);
+		
+		btnSendMonitoring = new Button(this, SWT.CHECK);
+		btnSendMonitoring.setSelection(true);
+		btnSendMonitoring.setEnabled(false);
+		btnSendMonitoring.setText(Messages.OthersConnectionBigDataGroup_btnSendMonitoring_text);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
 	}
 	
 	/**
@@ -183,7 +199,17 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 			otherConnectionDAO.setListExterBroswer(getDefaultExternalBrowserInfo());
 		}
 		
+		otherConnectionDAO.setVisible(getIsVisible());
+		otherConnectionDAO.setSummaryReport(getSendMonitoring());
+		
 		return otherConnectionDAO;
+	}
+	
+	public boolean getIsVisible() {
+		return btnIsVisible.getSelection();
+	}
+	public boolean getSendMonitoring() {
+		return btnSendMonitoring.getSelection();
 	}
 	
 	/**

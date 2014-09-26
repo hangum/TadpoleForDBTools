@@ -10,15 +10,17 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.connect;
 
+import java.sql.DatabaseMetaData;
 
-public class MSSQLTest {
+
+public class MSSQLTest extends AbstractDriverInfo {
 	private java.sql.Connection con = null;
 	private final String url = "jdbc:jtds:sqlserver://";
-	private final String serverName = "172.16.31.133";
+	private final String serverName = "192.168.32.128";
 	private final String portNumber = "1433";
-	private final String databaseName = "testdb";
+	private final String databaseName = "northwind";
 	private final String userName = "sa";
-	private final String password = "1234";
+	private final String password = "tadpole";
 	// Informs the driver to use server a side-cursor,
 	// which permits more than one active statement
 	// on a connection.
@@ -36,8 +38,9 @@ public class MSSQLTest {
 		try {
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
 			con = java.sql.DriverManager.getConnection(getConnectionUrl(), userName, password);
-			if (con != null)
-				System.out.println("Connection Successful!");
+			if (con != null) System.out.println("Connection Successful!");
+			
+			printMetaData(con.getMetaData());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error Trace in getConnection() : "
@@ -59,13 +62,10 @@ public class MSSQLTest {
 				dm = con.getMetaData();
 				System.out.println("Driver Information");
 				System.out.println("\tDriver Name: " + dm.getDriverName());
-				System.out
-						.println("\tDriver Version: " + dm.getDriverVersion());
+				System.out.println("\tDriver Version: " + dm.getDriverVersion());
 				System.out.println("\nDatabase Information ");
-				System.out.println("\tDatabase Name: "
-						+ dm.getDatabaseProductName());
-				System.out.println("\tDatabase Version: "
-						+ dm.getDatabaseProductVersion());
+				System.out.println("\tDatabase Name: " + dm.getDatabaseProductName());
+				System.out.println("\tDatabase Version: " + dm.getDatabaseProductVersion());
 				System.out.println("Avalilable Catalogs ");
 				
 				rs = dm.getCatalogs();

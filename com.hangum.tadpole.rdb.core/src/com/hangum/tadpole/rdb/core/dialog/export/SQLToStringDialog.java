@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.application.SQLToJavaConvert;
 
@@ -147,6 +148,9 @@ public class SQLToStringDialog extends Dialog {
 		textConvert.setText(sql);
 		
 		sqlToStr();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}
@@ -176,7 +180,7 @@ public class SQLToStringDialog extends Dialog {
 	}
 	
 	private String[] parseSQL() {
-		String[] arry = sql.split(PublicTadpoleDefine.SQL_DILIMITER); //$NON-NLS-1$
+		String[] arry = sql.split(PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 		 if( arry.length == 1) {
 			 String ars[] = { sql };
 			 return ars;

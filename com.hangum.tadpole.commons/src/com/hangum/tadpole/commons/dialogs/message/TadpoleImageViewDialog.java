@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+
 /**
  * tadpole message dialog
  * 
@@ -82,6 +84,10 @@ public class TadpoleImageViewDialog extends TitleAreaDialog {
 		labelImage.setImage(image);
 		scrolledComposite.setContent(labelImage);
 		scrolledComposite.setMinSize(labelImage.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return area;
 	}
 

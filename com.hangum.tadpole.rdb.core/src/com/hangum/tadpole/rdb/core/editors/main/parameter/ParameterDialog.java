@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
@@ -70,6 +72,8 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 
  */
 public class ParameterDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(ParameterDialog.class);
+	
 	private Table table;
 	private UserDBDAO userDB;
 	private int paramCount = 0;
@@ -87,13 +91,13 @@ public class ParameterDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Parameters...");
+		newShell.setText("Bind Parameters");
 	}
 
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ParameterDialog(Shell parentShell, UserDBDAO userDB, String executeQuery) {
+	public ParameterDialog(Shell parentShell, UserDBDAO userDB, String executeQuery) throws Exception {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 
@@ -122,38 +126,42 @@ public class ParameterDialog extends Dialog {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
-		CreateTableColumn(tableViewer, tcl_composite);
+		createTableColumn(tableViewer, tcl_composite);
 
-		// tableViewer.setContentProvider(new ParamContentProvider(parameters));
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ParamLabelProvider());
 		tableViewer.setInput(parameters);
 
 		tableViewer.refresh();
+		
+		tableViewer.getTable().setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}
 
-	private void CreateTableColumn(TableViewer tableViewer, TableColumnLayout tcl_composite) {
+	private void createTableColumn(TableViewer tableViewer, TableColumnLayout tcl_composite) {
 		TableViewerColumn tvcSeq = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcSeq = tvcSeq.getColumn();
-		tcl_composite.setColumnData(tcSeq, new ColumnPixelData(35, true, true));
+		tcl_composite.setColumnData(tcSeq, new ColumnPixelData(30, true, true));
 		tcSeq.setText("Seq");
 
 		TableViewerColumn tvcName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcName = tvcName.getColumn();
-		tcl_composite.setColumnData(tcName, new ColumnPixelData(150, true, true));
+		tcl_composite.setColumnData(tcName, new ColumnPixelData(80, true, true));
 		tcName.setText("Param Name");
 
 		TableViewerColumn tvcType = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcType = tvcType.getColumn();
-		tcl_composite.setColumnData(tcType, new ColumnPixelData(100, true, true));
+		tcl_composite.setColumnData(tcType, new ColumnPixelData(80, true, true));
 		tcType.setText("Data Type");
 		tvcType.setEditingSupport(new ParameterEditingSupport(tableViewer, 2, this.userDB));
 
 		TableViewerColumn tvcValue = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcValue = tvcValue.getColumn();
-		tcl_composite.setColumnData(tcValue, new ColumnPixelData(200, true, true));
+		tcl_composite.setColumnData(tcValue, new ColumnPixelData(150, true, true));
 		tcValue.setText("Param Value");
 		tvcValue.setEditingSupport(new ParameterEditingSupport(tableViewer, 3, this.userDB));
 	}
@@ -180,7 +188,7 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(700, 500);
+		return new Point(370, 300);
 	}
 
 	public ParameterObject getParameterObject() {
@@ -199,7 +207,7 @@ public class ParameterDialog extends Dialog {
 		return param;
 	}
 
-	protected void calcParamCount(String executeQuery) {
+	protected void calcParamCount(String executeQuery) throws Exception {
 
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
@@ -207,11 +215,17 @@ public class ParameterDialog extends Dialog {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			stmt = javaConn.prepareStatement(executeQuery);
-			paramCount = stmt.getParameterMetaData().getParameterCount();
+			java.sql.ParameterMetaData pmd = stmt.getParameterMetaData();
+			if(pmd != null) {
+				paramCount = pmd.getParameterCount();	
+			} else {
+				paramCount = 0;
+			}
 
 		} catch (Exception e) {
+			logger.error("Count parameter error", e);
 			paramCount = 0;
-			e.printStackTrace();
+			throw e;
 		} finally {
 			try {
 				stmt.close();

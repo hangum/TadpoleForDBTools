@@ -1,0 +1,1 @@
+jdbc minimal JAR file list : http://tajo.incubator.apache.org/docs/0.8.0/jdbc_driver.html#minimal-jar-files

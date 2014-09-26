@@ -23,11 +23,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.notes.core.Messages;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.define.NotesDefine.NOTE_TYPES;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
+import com.hangum.tadpole.sql.query.TadpoleSystem_Notes;
 
 /**
  * 쪽지 내용을 보고 답변을 보내는 dialog
@@ -119,7 +120,23 @@ public class ViewDialog extends Dialog {
 		
 		textTitle.setFocus();
 		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return container;
+	}
+	
+	private void readNote() {
+		try {
+			TadpoleSystem_Notes.readSystemNote(noteDAO.getSeq());
+		} catch(Exception e) {
+			logger.error("note readable exception", e);
+		}
+	}
+	
+	@Override
+	protected void cancelPressed() {
+		super.cancelPressed();
 	}
 	
 	@Override
@@ -136,6 +153,7 @@ public class ViewDialog extends Dialog {
 	private void initData() {
 		try {
 			// note를 읽음 상태 처리 합니다.
+			readNote();
 			TadpoleSystem_Notes.readNote(noteDAO.getSeq());
 
 			// note의 디테일 정보를 가져오고.

@@ -40,6 +40,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.importdb.Activator;
@@ -50,7 +51,7 @@ import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.MongoDBCollectio
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.QueryToMongoDBImport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.RDBTableToMongoDBImport;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 
 /**
  * mongodb import
@@ -200,7 +201,7 @@ public class MongoDBImportEditor extends EditorPart {
 		tabItemQuery.setControl(compositeQuery);
 		compositeQuery.setLayout(new GridLayout(1, false));
 		
-		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, EditorDefine.EXT_SQL, "", "");
+		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeQueryTail = new Composite(compositeQuery, SWT.NONE);
@@ -222,6 +223,10 @@ public class MongoDBImportEditor extends EditorPart {
 //		btnPreview.setText("Preview");
 		
 		initEditor();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+				
 	}
 	
 	private void initCombo() {

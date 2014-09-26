@@ -27,16 +27,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
@@ -152,7 +150,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
-		comboLocale = new Combo(grpConnectionType, SWT.READ_ONLY);
+		comboLocale = new Combo(grpConnectionType, SWT.NONE);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			
 		for(String val : DBLocaleUtils.getMySQLList()) {
@@ -183,9 +181,11 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textDatabase.setText(oldUserDB.getDb());
 			textPort.setText(oldUserDB.getPort());
 			
-			comboLocale.setText(DBLocaleUtils.findMySQLFullLocale(oldUserDB.getLocale()));
+			comboLocale.setText(oldUserDB.getLocale());
 			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+			othersConnectionInfo.setUserData(oldUserDB);
+			
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 			
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
@@ -221,7 +221,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	 * 
 	 * @return
 	 */
-	public boolean isValidateInput() {
+	public boolean isValidateInput(boolean isTest) {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -234,13 +234,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 
 		String dbUrl = "";
-		String locale = StringUtils.trimToEmpty(comboLocale.getText());
-		String selectLocale = "";
-		if(locale.equals("") || DBLocaleUtils.NONE_TXT.equals(locale)) {
+		String selectLocale = StringUtils.trimToEmpty(comboLocale.getText());
+		if(selectLocale.equals("") || DBLocaleUtils.NONE_TXT.equals(selectLocale)) {
 			dbUrl = String.format(
 						getSelectDB().getDB_URL_INFO(), 
 						StringUtils.trimToEmpty(textHost.getText()), 
@@ -248,13 +247,12 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 						StringUtils.trimToEmpty(textDatabase.getText())
 					);
 		} else {			
-			selectLocale = StringUtils.substringBefore(StringUtils.trimToEmpty(comboLocale.getText()), "|");			
 			
 			dbUrl = String.format(
 						getSelectDB().getDB_URL_INFO(), 
 						StringUtils.trimToEmpty(textHost.getText()), 
 						StringUtils.trimToEmpty(textPort.getText()), 
-						StringUtils.trimToEmpty(textDatabase.getText()) + "?useUnicode=false&characterEncoding=" + StringUtils.trimToEmpty(selectLocale));
+						StringUtils.trimToEmpty(textDatabase.getText()) + "?useUnicode=false&characterEncoding=" + selectLocale);
 		}
 		
 		userDB = new UserDBDAO();
@@ -272,21 +270,8 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		userDB.setLocale(selectLocale);
 		
-		// others connection 정보를 입력합니다.
-		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
-		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		
-		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
-		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
-		
-		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		
-		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
+		// other connection info
+		setOtherConnectionInfo();
 		
 		return true;
 	}

@@ -34,6 +34,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
@@ -46,16 +47,16 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.notes.core.Activator;
 import com.hangum.tadpole.notes.core.Messages;
 import com.hangum.tadpole.notes.core.define.NotesDefine.NOTE_TYPES;
 import com.hangum.tadpole.notes.core.dialogs.NewNoteDialog;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_Notes;
+import com.hangum.tadpole.sql.query.TadpoleSystem_Notes;
 import com.swtdesigner.ResourceManager;
-import org.eclipse.swt.widgets.Button;
 
 /**
  * Notes
@@ -81,6 +82,8 @@ public class NoteListViewPart extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		setPartName(Messages.NoteListViewPart_0);
+		
 		GridLayout gl_parent = new GridLayout(1, false);
 		gl_parent.verticalSpacing = 1;
 		gl_parent.horizontalSpacing = 1;
@@ -172,10 +175,10 @@ public class NoteListViewPart extends ViewPart {
 		comboTypes.setLayoutData(gd_combo);
 		
 		comboTypes.add(Messages.NoteListViewPart_8);
-		comboTypes.setData(Messages.NoteListViewPart_8, "Send");
+		comboTypes.setData(Messages.NoteListViewPart_8, "Send"); //$NON-NLS-1$
 		
 		comboTypes.add(Messages.NoteListViewPart_9);
-		comboTypes.setData(Messages.NoteListViewPart_9, "Receive");
+		comboTypes.setData(Messages.NoteListViewPart_9, "Receive"); //$NON-NLS-1$
 		
 		comboTypes.select(1);
 		
@@ -187,10 +190,10 @@ public class NoteListViewPart extends ViewPart {
 			}
 		});
 		comboRead.add(Messages.NoteListViewPart_10);
-		comboRead.setData(Messages.NoteListViewPart_10, "Read");
+		comboRead.setData(Messages.NoteListViewPart_10, "Read"); //$NON-NLS-1$
 		
 		comboRead.add(Messages.NoteListViewPart_11);
-		comboRead.setData(Messages.NoteListViewPart_11, "Not yet Read");
+		comboRead.setData(Messages.NoteListViewPart_11, "Not yet Read"); //$NON-NLS-1$
 		
 		comboRead.select(0);
 		
@@ -247,7 +250,7 @@ public class NoteListViewPart extends ViewPart {
 				if(!iss.isEmpty()) {
 					
 					String selComboType = (String)comboTypes.getData(comboTypes.getText());
-					NOTE_TYPES noteType = selComboType.equals("Send")?NOTE_TYPES.SEND:NOTE_TYPES.RECEIVE;
+					NOTE_TYPES noteType = selComboType.equals("Send")?NOTE_TYPES.SEND:NOTE_TYPES.RECEIVE; //$NON-NLS-1$
 					ViewDialog dialog = new ViewDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), (NotesDAO)iss.getFirstElement(), noteType);
 					if(Dialog.OK == dialog.open()) {
 						initData();
@@ -266,6 +269,9 @@ public class NoteListViewPart extends ViewPart {
 		tableViewer.setLabelProvider(new NoteListLabelProvider());
 		
 		initData();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**
@@ -290,6 +296,9 @@ public class NoteListViewPart extends ViewPart {
 		} catch(Exception e) {
 			logger.error("Get note list", e); //$NON-NLS-1$
 		}
+		
+		// google analytic
+		AnalyticCaller.track(NoteListViewPart.ID);
 	}
 	
 	/**

@@ -13,8 +13,8 @@ package com.hangum.tadpole.sql.dao.system;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
@@ -116,6 +116,11 @@ public class UserDBDAO {
     
     /** 디비의 버전 정보 */
     protected String version;
+    
+    /** 디비 정보를 커넥션 메이저에 보일 것인지 	- 2014.05.22 hangum */
+    protected String is_visible 		= PublicTadpoleDefine.YES_NO.YES.toString();
+    /** 디비의 요약 정보를 보낼 것인지 			- 2014.05.22 hangum */
+    protected String is_summary_report 	= PublicTadpoleDefine.YES_NO.YES.toString();
     
     /** userdb를 그룹으로 표시 하고자 할때 사용합니다. 현재는 로그인창에서 디비 관리하면에서 사용. */
     protected List<UserDBDAO> listUserDBGroup = new ArrayList<UserDBDAO>();
@@ -284,7 +289,6 @@ public class UserDBDAO {
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
 	}
-
 
 	/**
 	 * @return the dbms_types
@@ -555,4 +559,51 @@ public class UserDBDAO {
 		this.listExternalBrowserdao = listExternalBrowserdao;
 	}
 
+	public String getIs_visible() {
+		return is_visible;
+	}
+
+	public void setIs_visible(String is_visible) {
+		this.is_visible = is_visible;
+	}
+
+	public String getIs_summary_report() {
+		return is_summary_report;
+	}
+
+	public void setIs_summary_report(String is_summary_report) {
+		this.is_summary_report = is_summary_report;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "UserDBDAO [seq=" + seq + ", user_seq=" + user_seq
+				+ ", ext_seq=" + ext_seq + ", group_seq=" + group_seq
+				+ ", group_name=" + group_name + ", operation_type="
+				+ operation_type + ", dbms_types=" + dbms_types + ", url="
+				+ url + ", db=" + db + ", display_name=" + display_name
+				+ ", host=" + host + ", port=" + port + ", locale=" + locale
+				+ ", passwd=" + passwd + ", users=" + users + ", create_time="
+				+ create_time + ", delYn=" + delYn + ", ext1=" + ext1
+				+ ", ext2=" + ext2 + ", ext3=" + ext3 + ", ext4=" + ext4
+				+ ", ext5=" + ext5 + ", ext6=" + ext6 + ", ext7=" + ext7
+				+ ", ext8=" + ext8 + ", ext9=" + ext9 + ", ext10=" + ext10
+				+ ", is_profile=" + is_profile + ", profile_select_mill="
+				+ profile_select_mill + ", is_readOnlyConnect="
+				+ is_readOnlyConnect + ", is_autocommit=" + is_autocommit
+				+ ", is_showtables=" + is_showtables + ", is_table_filter="
+				+ is_table_filter + ", is_external_browser="
+				+ is_external_browser + ", listExternalBrowserdao="
+				+ listExternalBrowserdao + ", table_filter_include="
+				+ table_filter_include + ", table_filter_exclude="
+				+ table_filter_exclude + ", question_dml=" + question_dml
+				+ ", parent=" + parent + ", listUserDBErd=" + listUserDBErd
+				+ ", version=" + version + ", is_visible=" + is_visible
+				+ ", is_summary_report=" + is_summary_report
+				+ ", listUserDBGroup=" + listUserDBGroup + "]";
+	}
+	
 }

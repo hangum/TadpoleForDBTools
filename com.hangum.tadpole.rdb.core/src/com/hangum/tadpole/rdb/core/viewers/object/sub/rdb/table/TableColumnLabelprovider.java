@@ -15,9 +15,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.viewers.object.ObjectExploreDefine;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
-import com.swtdesigner.ResourceManager;
 
 /**
  * TABLE, VIEW의 컬럼 정보
@@ -32,15 +31,10 @@ public class TableColumnLabelprovider extends LabelProvider implements ITableLab
 		TableColumnDAO tc = (TableColumnDAO) element;
 		
 		if(columnIndex == 0)  {
-			if(PublicTadpoleDefine.isPK(tc.getKey())) {
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/primary_key_column.png"); //$NON-NLS-1$
-			} else if(PublicTadpoleDefine.isFK(tc.getKey())) {
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/foreign_key_column.png"); //$NON-NLS-1$
-			} else if(PublicTadpoleDefine.isMUL(tc.getKey())) {
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/multi_key_column.png"); //$NON-NLS-1$
-			}
-			
-			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/column.png"); //$NON-NLS-1$
+			if(PublicTadpoleDefine.isPK(tc.getKey())) 		return ObjectExploreDefine.IMAGE_PRIMARY_KEY; 
+			else if(PublicTadpoleDefine.isFK(tc.getKey())) 	return ObjectExploreDefine.IMAGE_FOREIGN_KEY; 
+			else if(PublicTadpoleDefine.isMUL(tc.getKey())) return ObjectExploreDefine.IMAGE_MULTI_KEY;
+			else 											return ObjectExploreDefine.IMAGE_COLUMN;
 		}
 		
 		return null;

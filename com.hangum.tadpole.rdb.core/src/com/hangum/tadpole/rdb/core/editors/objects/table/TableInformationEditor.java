@@ -16,8 +16,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -27,9 +25,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.rdb.core.dialog.ddl.DDLSourceComposite;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -43,7 +40,7 @@ public class TableInformationEditor extends EditorPart {
 	
 	public static final String ID = "com.hangum.tadpole.rdb.core.editors.table.edit";
 	
-	private String initTableNameStr;
+	private TableDAO tableDao;
 	private UserDBDAO userDB;
 	private List<TableColumnDAO> columnList;
 	/** pk key의 이름을 가지고 있습니다 */
@@ -72,9 +69,9 @@ public class TableInformationEditor extends EditorPart {
 		
 		DBTableEditorInput qei = (DBTableEditorInput)input;
 		userDB = qei.getUserDB();
-		setPartName("[" + qei.getName() + "] Table Editor");		 //$NON-NLS-1$
+		setPartName(qei.getName() + " data editor");		 //$NON-NLS-1$
 		
-		initTableNameStr = qei.getName();
+		tableDao = qei.getTableDAO();
 		columnList = qei.getShowTableColumns();
 		for (TableColumnDAO columnDAO : columnList) {
 			if(PublicTadpoleDefine.isPK(columnDAO.getKey())) {
@@ -104,38 +101,15 @@ public class TableInformationEditor extends EditorPart {
 		gl_parent.marginWidth = 1;
 		parent.setLayout(gl_parent);
 		
-		CTabFolder tabFolder = new CTabFolder(parent, SWT.NONE);
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tabFolder.setBorderVisible(false);		
-		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
-		
-		//======================================================================
 		GridLayout gl_compositeTableData = new GridLayout(1, false);
 		gl_compositeTableData.verticalSpacing = 1;
 		gl_compositeTableData.horizontalSpacing = 1;
 		gl_compositeTableData.marginHeight = 1;
 		gl_compositeTableData.marginWidth = 1;
-		//======================================================================
-
-		//[table data composite start]///////////////////////////////		
-		CTabItem tbtmTableData = new CTabItem(tabFolder, SWT.NONE);
-		tbtmTableData.setText("Table Data");
 		
-		compositeTableData = new TableDirectEditorComposite(tabFolder, SWT.NONE, userDB, initTableNameStr, columnList, primaryKEYListString);
-		tbtmTableData.setControl(compositeTableData);
+		compositeTableData = new TableDirectEditorComposite(parent, SWT.NONE, userDB, tableDao, columnList, primaryKEYListString);
+		compositeTableData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeTableData.setLayout(gl_compositeTableData);
-		//[table data composite end]/////////////////////////////////
-		
-//		//[DDL composite start]/////////////////////////////////
-//		CTabItem tbtmSource = new CTabItem(tabFolder, SWT.NONE);
-//		tbtmSource.setText("DDL");
-//		
-//		compositeDdl = new DDLSourceComposite(tabFolder, SWT.NONE);
-//		compositeDdl.setDdlSource("Select * from test");
-//		tbtmSource.setControl(compositeDdl);
-//		//[DDL composite end]/////////////////////////////////
-		
-		tabFolder.setSelection(0);
 	}
 
 	@Override

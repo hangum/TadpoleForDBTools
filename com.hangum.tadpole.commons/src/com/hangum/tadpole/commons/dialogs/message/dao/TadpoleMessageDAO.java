@@ -12,6 +12,10 @@ package com.hangum.tadpole.commons.dialogs.message.dao;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * system message dao
  * 
@@ -24,10 +28,13 @@ public class TadpoleMessageDAO  {
 	Date dateExecute;
 	/** sql text */
 	String strMessage;
+	
+	/** table 에 보여줄때 html markup형식이 되기 위해 라이피드 문자를 <br/>로 변경해서 저장합니다 */
+	String strViewMessage;
 
 	public TadpoleMessageDAO(Date dateExecute, String strMessage) {
-		this.dateExecute = dateExecute;
-		this.strMessage = strMessage;
+		setDateExecute( dateExecute );
+		setStrMessage( strMessage );
 	}
 
 	public Date getDateExecute() {
@@ -44,7 +51,24 @@ public class TadpoleMessageDAO  {
 
 	public void setStrMessage(String strMessage) {
 		this.strMessage = strMessage;
+		setStrViewMessage( StringUtils.replace(strMessage, PublicTadpoleDefine.LINE_SEPARATOR, "<br />") );
 	}
+
+	/**
+	 * @return the strViewMessage
+	 */
+	public String getStrViewMessage() {
+		return strViewMessage;
+	}
+
+	/**
+	 * @param strViewMessage the strViewMessage to set
+	 */
+	public void setStrViewMessage(String strViewMessage) {
+		this.strViewMessage = strViewMessage;
+	}
+	
+	
 	
 	
 }

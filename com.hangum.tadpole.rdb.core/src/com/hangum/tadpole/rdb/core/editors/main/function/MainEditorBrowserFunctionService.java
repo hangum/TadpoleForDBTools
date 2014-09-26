@@ -16,10 +16,11 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
-import com.hangum.tadpole.rdb.core.editors.main.RequestQuery;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**
@@ -42,7 +43,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		boolean result = false;
 		try {
 			String newContents = (String) arguments[1];
-			result = editor.performSave(newContents);
+			result = editor.calledDoSave(newContents);
 		} catch(Exception e) {
 			logger.error("do not save", e);
 		}
@@ -58,7 +59,10 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected void doExecuteQuery(Object[] arguments) {
 		String strSQL = (String) arguments[1];
-		RequestQuery rq = new RequestQuery(strSQL, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
+		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
+		if((Boolean) arguments[2]) exeType = EXECUTE_TYPE.BLOCK;
+		
+		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
 	
@@ -68,7 +72,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected void doExecutePlan(Object[] arguments) {
 		String strSQL = (String) arguments[1];
-		RequestQuery rq = new RequestQuery(strSQL, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
+		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
 	

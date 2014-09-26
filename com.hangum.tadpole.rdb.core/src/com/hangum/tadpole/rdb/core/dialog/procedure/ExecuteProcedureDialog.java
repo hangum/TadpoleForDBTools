@@ -34,12 +34,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
 import com.hangum.tadpole.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.sql.util.executer.procedure.ProcedureExecutor;
+import com.hangum.tadpole.sql.util.resultset.ResultSetUtilDTO;
 import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
@@ -180,6 +181,9 @@ public class ExecuteProcedureDialog extends Dialog {
 		grpTables.setText("Result Set view");
 		
 		initUI();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}
@@ -214,11 +218,11 @@ public class ExecuteProcedureDialog extends Dialog {
 		try {
 			boolean ret = procedureExecutor.exec(parameterList);
 			if(ret) {
-				List<ResultSetUtilDAO> listResultDao = procedureExecutor.getResultDAO();
+				List<ResultSetUtilDTO> listResultDao = procedureExecutor.getResultDAO();
 				sqlResultTableViewer = new TableViewer[listResultDao.size()];
 				
 				for(int i=0; i<listResultDao.size(); i++) {
-					ResultSetUtilDAO resultDao = listResultDao.get(i);
+					ResultSetUtilDTO resultDao = listResultDao.get(i);
 					
 					sqlResultTableViewer[i] = new TableViewer(grpTables, SWT.BORDER | SWT.FULL_SELECTION);
 					Table table = sqlResultTableViewer[i].getTable();
@@ -230,7 +234,7 @@ public class ExecuteProcedureDialog extends Dialog {
 					
 					SQLResultLabelProvider.createTableColumn(sqlResultTableViewer[i], resultDao, sqlSorter);
 					sqlResultTableViewer[i].setLabelProvider(new SQLResultLabelProvider());
-					sqlResultTableViewer[i].setContentProvider(new SQLResultContentProvider(resultDao.getDataList()));
+					sqlResultTableViewer[i].setContentProvider(new SQLResultContentProvider(resultDao.getDataList().getData()));
 					
 					sqlResultTableViewer[i].setInput(resultDao.getDataList());
 					sqlResultTableViewer[i].setSorter(sqlSorter);

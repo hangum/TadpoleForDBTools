@@ -65,7 +65,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
 					TableDAO tc = (TableDAO)selection.getFirstElement();
 					if(tc == null) cta.run(userDB, actionType);
-					else cta.run(userDB, tc.getComment());
+					else cta.run(userDB, tc.getComment(), actionType);
 				} else {				
 					cta.run(userDB, actionType);
 				}

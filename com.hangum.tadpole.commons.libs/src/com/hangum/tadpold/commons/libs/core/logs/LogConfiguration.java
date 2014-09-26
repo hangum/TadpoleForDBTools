@@ -16,8 +16,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
-
-import com.hangum.tadpold.commons.libs.core.utils.ApplicationArgumentUtils;
+import org.eclipse.core.runtime.Platform;
 
 /**
  * log file의 환경을 설정합니다.
@@ -58,7 +57,7 @@ public class LogConfiguration {
 		
 		consoleAppender = new ConsoleAppender(new PatternLayout(defaultPattern) );
 
-		if(ApplicationArgumentUtils.isDebugMode()) this.level = Level.DEBUG;
+		if(isDebugMode()) this.level = Level.DEBUG;
 		else this.level = Level.INFO;
 		
 //		System.out.println("###################### log4j log level is " + this.level.toString());
@@ -99,5 +98,28 @@ public class LogConfiguration {
 
 	public void setIsDevelopment(String isDevelopment) {
 		this.isDevelopment = isDevelopment;
+	}
+	
+	/**
+	 * check debug mode
+	 */
+	public static boolean isDebugMode() {
+		return checkString("-debuglog");
+	}
+	
+	/**
+	 * runtime시에 argument가 있는지 검사합니다.
+	 * 
+	 * @param checkString
+	 * @return
+	 */
+	private static boolean checkString(String checkString) {
+		String[] applicationArgs = Platform.getApplicationArgs();
+		
+		for (String string : applicationArgs) {
+			if( string.equalsIgnoreCase(checkString) ) return true;
+		}
+		
+		return false;
 	}
 }

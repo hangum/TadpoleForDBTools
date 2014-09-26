@@ -1,63 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-dbcp-1.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-cli-1.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/common/hadoop-auth-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/common/hadoop-common-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/hdfs/hadoop-hdfs-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-beanutils-1.7.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-beanutils-core-1.8.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-collections-3.2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-configuration-1.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-digester-1.8.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-el-1.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-io-2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-lang-2.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-logging-1.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-logging-api-1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-net-3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/commons-pool-1.5.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/gson-2.2.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/guava-13.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/hamcrest-core-1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/jline-2.11.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/jsch-0.1.42.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/json-20090211.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/log4j-1.2.17.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/management-api-3.0.0-b012.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/netty-3.6.6.Final.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/protobuf-java-2.4.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/slf4j-api-1.6.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/slf4j-log4j12-1.6.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/snappy-0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/snappy-java-1.0.4.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajo-lib/xmlenc-0.52.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-algebra-0.8.0-SNAPSHOT-tests.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-algebra-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-catalog-client-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-catalog-common-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-catalog-server-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-common-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-core-backend-0.8.0-SNAPSHOT-tests.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-core-backend-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-core-pullserver-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-core-storage-0.8.0-SNAPSHOT-tests.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-core-storage-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-rpc-0.8.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-api-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-applications-distributedshell-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-applications-unmanaged-am-launcher-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-client-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-common-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-server-common-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-server-nodemanager-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-server-resourcemanager-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-server-tests-2.0.3-alpha-tests.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-server-tests-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-server-web-proxy-2.0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/yarn/hadoop-yarn-site-2.0.3-alpha.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-catalog-common-0.9.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-client-0.9.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-common-0.9.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-jdbc-0.9.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-rpc-0.9.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tajos/tajo-storage-0.9.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hadoop/hadoop-annotations-2.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hadoop/hadoop-auth-2.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hadoop/hadoop-client-2.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hadoop/hadoop-common-2.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hadoop/hadoop-hdfs-2.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/joda-time-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/commons-io-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/commons-lang-2.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/guava-15.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/dbcp/commons-collections-3.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/dbcp/commons-dbcp-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/dbcp/commons-pool-1.5.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/commons-cli-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/commons-configuration-1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/commons-logging-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/log4j-1.2.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/netty-3.6.6.Final.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/protobuf-java-2.5.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/slf4j-api-1.7.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/common/slf4j-log4j12-1.7.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src_test"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

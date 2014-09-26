@@ -48,7 +48,7 @@ public class AboutDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("About");
+		newShell.setText("About...");
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class AboutDialog extends Dialog {
 		gd_lblNewLabelImage.minimumWidth = 300;
 		lblNewLabelImage.setLayoutData(gd_lblNewLabelImage);
 //		lblNewLabel_1.setText(Messages.AboutDialog_lblNewLabel_1_text);
-		lblNewLabelImage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/TadpoleForDBTools.png"));
+		lblNewLabelImage.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools.png"));
 		
 		Composite composite_1 = new Composite(container, SWT.NONE);
 		composite_1.setLayout(new GridLayout(1, false));

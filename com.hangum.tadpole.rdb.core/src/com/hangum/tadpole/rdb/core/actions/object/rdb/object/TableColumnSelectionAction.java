@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -32,7 +33,7 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(TableColumnSelectionAction.class);
+	private static final Logger logger = Logger.getLogger(TableColumnSelectionAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.table.column.selection"; //$NON-NLS-1$
 
@@ -44,12 +45,22 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		String strColumnName = "";
+		if(selection.isEmpty()) return;
 		
-		for(Object obj : selection.toArray()) {
+		String strColumnName = "";
+		Object[] arryObj = selection.toArray();
+		for(int i=0; i<arryObj.length; i++) {
+			Object obj = arryObj[arryObj.length-i-1];
+			
 			TableColumnDAO tcDAO = (TableColumnDAO)obj;
 			strColumnName += tcDAO.getField() + ", "; //$NON-NLS-1$
 		}
+		
+//		String strColumnName = "";
+//		for(Object obj : selection.toArray()) {
+//			TableColumnDAO tcDAO = (TableColumnDAO)obj;
+//			strColumnName += tcDAO.getField() + ", "; //$NON-NLS-1$
+//		}
 		strColumnName = StringUtils.removeEnd(strColumnName, ", "); //$NON-NLS-1$
 		
 		FindEditorAndWriteQueryUtil.runAtPosition(strColumnName);

@@ -39,13 +39,17 @@ public interface IEditorFunction  {
      * 에디터를 초기화 합니다. 
      * 
      * @param 확장자
+     * @param editor type
      * @param 추가하려는 키워드
      * @param 초기텍스트
      */
-    public static final String INITIALIZE = EDITOR_SERVICE_MAP + ".initEditor('%s', '%s', '%s');";
+    public static final String INITIALIZE = EDITOR_SERVICE_MAP + ".initEditor('%s', '%s', '%s', '%s');";
     
     /** 쿼리 - 2014.3.1 (hangum) */
     public static final String SELECTED_TEXT = "return " + EDITOR_SERVICE_MAP + ".getSelectedText('%s');";
+    
+    /** block text */
+    public static final String IS_BLOCK_TEXT = "return " + EDITOR_SERVICE_MAP + ".isBlockText();";
     
     /** 쿼리 창의 모든 쿼리 - 2014.3.1 (hangum) */
     public static final String ALL_TEXT = "return " + EDITOR_SERVICE_MAP + ".getAllText();";
@@ -66,7 +70,7 @@ public interface IEditorFunction  {
      * 데이터 저장.
      */
     public static final String SAVE_DATA = EDITOR_SERVICE_MAP + ".saveData();";
-    
-    public static final String EXECUTE_DONE = EDITOR_SERVICE_MAP + ".executeFlag();";
+//    /** 자바 호출이 끝났음을 자바 스크립트에게 알려줍니다 */
+//    public static final String EXECUTE_DONE = EDITOR_SERVICE_MAP + ".executeFlag();";
     
 }

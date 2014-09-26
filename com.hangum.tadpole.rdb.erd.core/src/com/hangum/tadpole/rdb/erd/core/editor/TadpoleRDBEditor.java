@@ -52,6 +52,7 @@ import org.xml.sax.InputSource;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
 import com.hangum.tadpole.rdb.erd.core.actions.TableSelectionAction;
@@ -63,11 +64,11 @@ import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.RdbPackage;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 
 /**
  * Tadpole DB Hub ERD editor
@@ -310,6 +311,9 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 			setPartName(isAllTable?"All " + userDB.getDisplay_name():userDB.getDisplay_name());
 			setTitleToolTip(userDB.getDisplay_name());
 		}
+		
+		// google analytic
+		AnalyticCaller.track(TadpoleRDBEditor.ID, userDB.getDbms_types());
 	}
 	
 //	@Override
@@ -374,7 +378,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		if(userDBErd == null) {
 			
 			// file 이름 dialog
-			ResourceSaveDialog rsDialog = new ResourceSaveDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, PublicTadpoleDefine.RESOURCE_TYPE.ERD);
+			ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, null, userDB, PublicTadpoleDefine.RESOURCE_TYPE.ERD);
 			if (rsDialog.open() == Window.OK) {
 				
 				try {

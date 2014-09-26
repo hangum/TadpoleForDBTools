@@ -40,11 +40,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -127,9 +129,9 @@ public class TablesComposite extends Composite {
 		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
 			DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT
 		) {
-			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "collation", "Created", "Comment"};
-			int[] size = {120, 70, 70, 100, 120, 120, 220};
-			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT};
+			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "collation", "Size(MB)", "Created", "Comment"};
+			int[] size = {120, 70, 70, 100, 80, 80, 120, 220};
+			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
@@ -177,6 +179,9 @@ public class TablesComposite extends Composite {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
 		}
+		
+		// google analytic
+		AnalyticCaller.track(RDBDBInfosEditor.ID, "TablesComposite");
 	}
 	
 	@Override
@@ -214,8 +219,9 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 2: return NumberFormatUtils.commaFormat(""+resultMap.get("TABLE_ROWS"));
 			case 3: return NumberFormatUtils.commaFormat(StringUtils.replace(""+resultMap.get("AUTO_INCREMENT"), "null", ""));
 			case 4: return ""+resultMap.get("TABLE_COLLATION");
-			case 5: return ""+resultMap.get("CREATE_TIME");
-			case 6: return ""+resultMap.get("TABLE_COMMENT");
+			case 5: return ""+resultMap.get("SIZEOFMB");
+			case 6: return ""+resultMap.get("CREATE_TIME");
+			case 7: return ""+resultMap.get("TABLE_COMMENT");
 			}
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 			switch(columnIndex) {

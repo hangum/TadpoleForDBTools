@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.define;
 
+import org.apache.commons.io.IOUtils;
+
 import com.hangum.tadpold.commons.libs.core.Messages;
 
 /**
@@ -23,7 +25,7 @@ public class PublicTadpoleDefine {
 	 * PLAN Statement ID
 	 */
 	public static String STATEMENT_ID = "||TADPOLE-STATEMENT_ID||"; //$NON-NLS-1$
-
+	
 	/**
 	 * 분리자
 	 */
@@ -32,9 +34,15 @@ public class PublicTadpoleDefine {
 	/** 라인분리자 */
 	public static String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$
 	public static String DOUBLE_LINE_SEPARATOR = LINE_SEPARATOR + LINE_SEPARATOR;
+	
+	/** DIR SEPARATOR */
+	public static char DIR_SEPARATOR = IOUtils.DIR_SEPARATOR;
+	
+	/** temmp dir */
+	public static String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
 	/**  쿼리 구분자 */
-	public static final String SQL_DILIMITER = ";"; //$NON-NLS-1$
+	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$
 	
 	/** tadpole url */
 	public static String TADPOLE_URL = "http://127.0.0.1:%s/tadpole";//db?startup=tadpole"; //$NON-NLS-1$
@@ -54,6 +62,9 @@ public class PublicTadpoleDefine {
 	
 	/** NULL VALUE */
 	public static final String DEFINE_NULL_VALUE = "{null}";
+	
+	/** 쿼리 실행 결과  */
+	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};
 
 	/** yes, no */
 	public static enum YES_NO {YES, NO}; 

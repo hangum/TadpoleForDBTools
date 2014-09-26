@@ -34,10 +34,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
 import com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -239,6 +241,9 @@ public class ColumnsComposite extends Composite {
 			}
 			tvColumnInform.setInput(listTableInform);
 			tvColumnInform.refresh();
+			
+			// google analytic
+			AnalyticCaller.track(RDBDBInfosEditor.ID, "ColumnsComposite");
 		} catch (Exception e) {
 			logger.error("initialize column summary", e);
 

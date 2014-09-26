@@ -33,8 +33,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionBigDataGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
@@ -112,6 +112,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		comboDriverType.setData("Hive Server 2", DBDefine.HIVE2_DEFAULT);
 		
 		comboDriverType.select(1);
+		comboDriverType.setEnabled(false);
 		
 		Label lblHost = new Label(grpConnectionType, SWT.NONE);
 		lblHost.setText(Messages.DBLoginDialog_1);
@@ -190,18 +191,18 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
 			
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		 } else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("192.168.56.101");
-			textPort.setText("10000");
-			textDatabase.setText("sbx");
-			textUser.setText("root");
-			textPassword.setText("duroah");
+			textHost.setText("127.0.0.1");
+			textPort.setText("10002");
+			textDatabase.setText("testdb");
+			textUser.setText("hangum");
+			textPassword.setText("");
 			
 		} else {
-			textPort.setText("10000");
+			textPort.setText("10002");
 		}
 		
 		 Combo comboGroup = preDBInfo.getComboGroup();
@@ -230,7 +231,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	 * 
 	 * @return
 	 */
-	public boolean isValidateInput() {
+	public boolean isValidateInput(boolean isTest) {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -242,8 +243,8 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	}
 	
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 		
 		DBDefine selectDB = (DBDefine)comboDriverType.getData(comboDriverType.getText());
 		
@@ -268,6 +269,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		
 		// others connection 정보를 입력합니다.
+//		setOtherConnectionInfo();
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
 		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
@@ -281,7 +283,6 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
 		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
 		
 		return true;
 	}

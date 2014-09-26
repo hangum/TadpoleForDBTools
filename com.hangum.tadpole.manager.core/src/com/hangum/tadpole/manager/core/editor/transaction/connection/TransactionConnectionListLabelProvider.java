@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.engine.transaction.TransactionDAO;
+import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 
 /**
  * Transaction Connection Manager Labelprovider

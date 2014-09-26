@@ -10,14 +10,24 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util;
 
+import java.io.StringReader;
 import java.sql.ResultSet;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import net.sf.jsqlparser.parser.CCJSqlParserManager;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.Select;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.resultset.ResultSetUtils;
 
 /**
  * <pre>
@@ -43,13 +53,13 @@ public class SQLUtil {
 	 * 		PRAGMA는 sqlite의 시스템 쿼리 얻는 거.
 	 * </PRE>
 	 */
-	private static final String PATTERN_STATEMENT = "^SELECT.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*";
+	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*";
 	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile(PATTERN_STATEMENT, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
 	private static final String PATTERN_EXECUTE_UPDATE = "^INSERT.*|^UPDATE.*|^DELETET.*|^MERGE.*|^COMMIT.*|^ROLLBACK.*|^SAVEPOINT.*";
 	private static final String PATTERN_EXECUTE_CREATE = "^CREATE.*|^DECLARE.*";
-	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE + PATTERN_EXECUTE_UPDATE + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE /*+ PATTERN_EXECUTE_UPDATE*/ + "|" + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 
 	private static final String PATTERN_COMMENT = "/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/";
@@ -98,6 +108,21 @@ public class SQLUtil {
 		return isRet;
 	}
 	
+	/**
+	 * execute query
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static boolean isExecute(String strSQL) {
+		strSQL = removeComment(strSQL);
+		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	
 	/**
 	 * 쿼리의 패턴이 <code>PATTERN_STATEMENT</code>인지?
@@ -111,17 +136,17 @@ public class SQLUtil {
 			return true;
 		} else {
 //			add issue https://github.com/JSQLParser/JSqlParser/issues/31
-//			try {
-//				// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
-//				// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
+			try {
+				// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
+				// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
 //				if(!isEnglish(strSQL)) return false;
 //				
 //				CCJSqlParserManager parserManager = new CCJSqlParserManager();
 //				Statement statement = parserManager.parse(new StringReader(strSQL));
 //				if(statement instanceof Select) return true;
-//			} catch(Exception e) {
-//				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
-//			}
+			} catch(Exception e) {
+				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
+			}
 			return false;
 		}
 		
@@ -204,13 +229,80 @@ public class SQLUtil {
 			// 모든 쿼리에 공백 주석 제거
 			exeSQL = removeComment(exeSQL);
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
-			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DILIMITER);
+			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
 			
 		} catch(Exception e) {
 			logger.error("query execute", e);
 		}
 		
-		return exeSQL;
+		return exeSQL.trim();
+	}
+	
+	/**
+	 * 쿼리에 사용 할 Table name을 만듭니다.
+	 * 
+	 * @param userDB
+	 * @param tableName
+	 * @return
+	 */
+	public static String makeIdentifierName(UserDBDAO userDB, String tableName) {
+		boolean isChanged = false;
+		String retStr = tableName;
+		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
+		
+		switch(tmd.getSTORE_TYPE()) {
+//		case NONE: 
+//			retStr = tableName;
+//			break;
+		case BLANK: 
+			if(tableName.matches(".*\\s.*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		case LOWCASE_BLANK:
+			if(tableName.matches(".*[a-z\\s].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		case UPPERCASE_BLANK:
+			if(tableName.matches(".*[A-Z\\s].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+			}
+			break;
+		}
+			
+		// Is keywords?
+		// schema.tableName
+		if(!isChanged) {
+			String[] arryRetStr = StringUtils.split(retStr, ".");
+			if(arryRetStr.length == 1) {
+				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[0]+",")) {
+					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+				}
+			} else if(arryRetStr.length > 1){
+				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[1]+",")) {
+					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+				}
+			}
+		}
+		
+//		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
+		
+		return retStr;
+	}
+	
+	private static String makeFullyTableName(String tableName, String strIdentifier) {
+		String retStr = "";
+		
+		for(String chunk : StringUtils.split(tableName, '.')) {
+			retStr += strIdentifier + chunk + strIdentifier + ".";
+		}
+		retStr = StringUtils.removeEnd(retStr, ".");
+		
+		return retStr;
 	}
 	
 	/**
@@ -253,5 +345,24 @@ public class SQLUtil {
 		}
 		
 		return returnDataArry;
+	}
+	
+	/**
+	 * 에디터에서 쿼리 실행 단위 조절.
+	 * 
+	 * https://github.com/hangum/TadpoleForDBTools/issues/466
+	 * 
+	 * @param dbAction
+	 * @return
+	 */
+	public static boolean isSELECTEditor(DB_ACTION dbAction) {
+		if(dbAction == DB_ACTION.TABLES ||
+				dbAction == DB_ACTION.VIEWS ||
+				dbAction == DB_ACTION.SYNONYM ||
+				dbAction == DB_ACTION.INDEXES) {
+			return true;
+		}
+		
+		return false;
 	}
 }

@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -46,18 +47,19 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.dialogs.users.FindUserDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
-import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 사용자리스트 화면
@@ -74,7 +76,7 @@ public class UserListComposite extends Composite {
 	private static final Logger logger = Logger.getLogger(UserListComposite.class);
 	
 	/** toolbar button */
-	private ToolItem tltmModify;
+//	private ToolItem tltmModify;
 	private ToolItem tltmQuery;
 	
 	/** search text */
@@ -128,30 +130,36 @@ public class UserListComposite extends Composite {
 		});
 		tltmRefresh.setToolTipText("Refresh");
 	
-		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole()) ||
-				PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())
-		) {
-			ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
-			tltmAdd.setImage(ImageUtils.getAdd());
-			tltmAdd.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					addUser();
-				}
-			});
-			tltmAdd.setToolTipText("Add");
+		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+		tltmAdd.setImage(ImageUtils.getAdd());
+		tltmAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addUser();
+			}
+		});
+		tltmAdd.setToolTipText("Add");
 		
-			tltmModify = new ToolItem(toolBar, SWT.NONE);
-			tltmModify.setImage(ImageUtils.getModify());
-			tltmModify.setEnabled(false);
-			tltmModify.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					modifyUser();
-				}
-			});
-			tltmModify.setToolTipText("Modify");
-		}
+		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmDelete.setImage(ImageUtils.getDelete());
+		tltmDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				deleteUser();
+			}
+		});
+		tltmDelete.setToolTipText("Delete");
+	
+//		tltmModify = new ToolItem(toolBar, SWT.NONE);
+//		tltmModify.setImage(ImageUtils.getModify());
+//		tltmModify.setEnabled(false);
+//		tltmModify.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				modifyUser();
+//			}
+//		});
+//		tltmModify.setToolTipText("Modify");
 		
 		tltmQuery = new ToolItem(toolBar, SWT.NONE);
 		tltmQuery.setImage(ImageUtils.getQueryHistory());
@@ -194,7 +202,7 @@ public class UserListComposite extends Composite {
 		});
 		userListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if(tltmModify != null) tltmModify.setEnabled(true);
+//				if(tltmModify != null) tltmModify.setEnabled(true);
 				tltmQuery.setEnabled(true);
 			}
 		});
@@ -212,6 +220,10 @@ public class UserListComposite extends Composite {
 		userListViewer.addFilter(filter);;
 		
 		initUI();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+				
 	}
 	
 	/**
@@ -256,13 +268,7 @@ public class UserListComposite extends Composite {
 		listUserGroup.clear();
 		
 		try {
-			if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole())
-				|| PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(SessionManager.getRepresentRole())
-			) {	// manager, dba
-				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
-			} else {	// admin 
-				listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission();
-			}
+			listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(""+SessionManager.getGroupSeq());
 			
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();
@@ -276,25 +282,51 @@ public class UserListComposite extends Composite {
 	 * add user
 	 */
 	private void addUser() {
-		NewUserDialog dialog = new NewUserDialog(getShell(), PublicTadpoleDefine.YES_NO.YES);
-		if(Dialog.OK == dialog.open()) {
-			initUI();
-		}
+		FindUserDialog dialog = new FindUserDialog(getShell());
+		dialog.open();
+		
+		initUI();
 	}
 	
 	/**
-	 * modify user
+	 * delete user
 	 */
-	private void modifyUser() {
+	private void deleteUser() {
 		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
 		if(ss != null) {
-			
-			ModifyUserDialog dialog = new ModifyUserDialog(getShell(), (UserGroupAUserDAO)ss.getFirstElement());
-			if(Dialog.OK == dialog.open()) {
-				initUI();
+			UserGroupAUserDAO userGroupAuser = (UserGroupAUserDAO)ss.getFirstElement();
+			if(userGroupAuser.getEmail().equals(SessionManager.getEMAIL())) {
+				MessageDialog.openWarning(getShell(), "Warning", "자신은 삭제 할 수 없습니다.");
+			} else {
+				if(MessageDialog.openConfirm(getShell(), "확인", "삭제 하시겠습니까?")) {
+					try {
+						TadpoleSystem_UserRole.withdrawalUserRole(SessionManager.getGroupSeq(), userGroupAuser.getSeq());
+						initUI();
+					} catch(Exception e) {
+						logger.error("withdrawal group user", e);
+					}
+				}
 			}
 		}
 	}
+	
+//	/**
+//	 * modify user
+//	 */
+//	private void modifyUser() {
+//		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
+//		if(ss != null) {
+//			UserGroupAUserDAO userGroupAuser = (UserGroupAUserDAO)ss.getFirstElement();
+//			if(userGroupAuser.getEmail().equals(SessionManager.getEMAIL())) {
+//				ModifyUserDialog dialog = new ModifyUserDialog(getShell(), userGroupAuser);
+//				if(Dialog.OK == dialog.open()) {
+//					initUI();
+//				}
+//			} else {
+//				MessageDialog.openWarning(getShell(), "Warning", "그룹 구성원은 수정 할 수 없습니다.");
+//			}
+//		}
+//	}
 
 	@Override
 	protected void checkSubclass() {

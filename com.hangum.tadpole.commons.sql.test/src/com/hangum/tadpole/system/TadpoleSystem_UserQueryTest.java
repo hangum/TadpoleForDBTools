@@ -13,7 +13,7 @@ package com.hangum.tadpole.system;
 import junit.framework.TestCase;
 
 /**
- * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery 시스템엔진디비 유저 테스트}
+ * {@link com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery 시스템엔진디비 유저 테스트}
  * 
  * @author hangum
  *

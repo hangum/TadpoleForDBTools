@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.service.ExitConfirmation;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -31,11 +30,10 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.application.start.dialog.infos.UserInformationDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
-import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
+import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
 import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
 import com.hangum.tadpole.notes.core.define.NotesDefine;
 import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
@@ -43,12 +41,13 @@ import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.summary.report.DBSummaryReporter;
 
 /**
  * Configures the initial size and appearance of a workbench window.
@@ -69,6 +68,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     public void preWindowOpen() {
+    	try {
+    		logger.info("Schedule start.........");
+			DBSummaryReporter.executer();
+			ScheduleManager.getInstance();
+		} catch(Exception e) {
+			logger.error("Schedule", e);
+		}
+    	
 //    	not support rap yet.
 //    	String prop = IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS;
 //    	PlatformUI.getPreferenceStore().setValue(prop, false);
@@ -78,19 +85,19 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // remove this line(fixed at https://github.com/hangum/TadpoleForDBTools/issues/350)
 //        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
         configurer.setShowCoolBar(true);
-        configurer.setShowStatusLine(true);
+        configurer.setShowStatusLine(false);
         configurer.setShowMenuBar(false);
-        configurer.setShowProgressIndicator(true);
+        configurer.setShowProgressIndicator(false);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
         
         // fullscreen
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(false);
     
-        // Set system exist message.
-        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
-    	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
-    
+//        // Set system exist message.
+//        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
+//    	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
+    	
 //    	checkSupportBrowser();
     	
         login();
@@ -101,22 +108,28 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	// fullscreen
     	getWindowConfigurer().getWindow().getShell().setMaximized(true);;
     	
+//    	
+//    	
+//    	 쪽지 기능의 역할에 비해 리소스를 너무 많이 먹는 것으로 판단되어 기능을 막습니다.
+//    	더 의미를 찾을때까지요. - 14.08.25
+//    	
     	// main ui callback thread
-    	mainUICallback();
+//    	mainUICallback();
     	   
     	// If login after does not DB exist, DB connect Dialog open.
     	try {
-    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
-    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+//    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+//    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
     			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
 	    		if(0 == mv.getAllTreeList().size()) {
 	    			ConnectDatabase cd = new ConnectDatabase();
 	    			cd.run();
 	    		}
-    		}
+//    		}
     	} catch(Exception e) {
     		logger.error("Is DB list?", e); //$NON-NLS-1$
-    	}    	
+    	}
+    	
     }
     
     /**
@@ -134,62 +147,62 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	//	}
 				
 		// Show Information Dialog(Is not Firefox, Chrome, Safari)
-		if(!RequestInfoUtils.isSupportBrowser()) {
-			UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), RequestInfoUtils.getUserBrowser());
-			uiDialog.open();
-		}
+//		if(!RequestInfoUtils.isSupportBrowser()) {
+//			UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), RequestInfoUtils.getUserBrowser());
+//			uiDialog.open();
+//		}
     }
     
-    /**
-     * 시스템에서 사용자에게 메시지를 전해 줍니다.
-     * 
-     */
-    private void mainUICallback() {
-    	final Display display = PlatformUI.getWorkbench().getDisplay();
-    	
-    	Runnable runnable = new Runnable() {
-    		public void run() {
-    			while(isUIThreadRunning) {
-				    
-    				if(display.isDisposed()) {
-    					isUIThreadRunning = false;
-    				} else {
-    				
-	    				try {
-	 					     display.asyncExec( new Runnable() {
-	 					    	public void run() {
-	 					    		
-	 					    		// note list
-	 					    		List<NotesDAO> listNotes = NoteSystemAlert.getSystemNoteAlert();
-	 					    		if(!listNotes.isEmpty()) {
-	 					    			// refresh note view
-	 					    			NoteListViewPart nlvPart = (NoteListViewPart)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(NoteListViewPart.ID);
-	 					    			nlvPart.initData();
-
-	 					    			// show note 
-	 					    			for (NotesDAO notesDAO : listNotes) {
-		 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO, NotesDefine.NOTE_TYPES.RECEIVE);
-		 									dialog.open();
-										}	 					    			
-	 					    		}
-	 					    		// note list 
-	 					    		
-	 					    	}
-	 					    } );
-					    } catch(Exception e) {
-					    	logger.error("main ui call", e);
-					    } // end try
-    				
-	    				try {
-							Thread.sleep(30 * 1000);
-	    				} catch(Exception e){}
-    				}
-    			}	// end while
-    		}	// end run
-		};
-    	pushSession.start();
-    	new Thread(runnable).start();
-    }
+//    /**
+//     * 시스템에서 사용자에게 메시지를 전해 줍니다.
+//     * 
+//     */
+//    private void mainUICallback() {
+//    	final Display display = PlatformUI.getWorkbench().getDisplay();
+//    	
+//    	Runnable runnable = new Runnable() {
+//    		public void run() {
+//    			while(isUIThreadRunning) {
+//				    
+//    				if(display.isDisposed()) {
+//    					isUIThreadRunning = false;
+//    				} else {
+//    				
+//	    				try {
+//	 					     display.asyncExec( new Runnable() {
+//	 					    	public void run() {
+//	 					    		
+//	 					    		// note list
+//	 					    		List<NotesDAO> listNotes = NoteSystemAlert.getSystemNoteAlert();
+//	 					    		if(!listNotes.isEmpty()) {
+//	 					    			// refresh note view
+//	 					    			NoteListViewPart nlvPart = (NoteListViewPart)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(NoteListViewPart.ID);
+//	 					    			nlvPart.initData();
+//
+//	 					    			// show note 
+//	 					    			for (NotesDAO notesDAO : listNotes) {
+//		 					    			ViewDialog dialog = new ViewDialog(display.getActiveShell(), notesDAO, NotesDefine.NOTE_TYPES.RECEIVE);
+//		 									dialog.open();
+//										}	 					    			
+//	 					    		}
+//	 					    		// note list 
+//	 					    		
+//	 					    	}
+//	 					    } );
+//					    } catch(Exception e) {
+//					    	logger.error("main ui call", e);
+//					    } // end try
+//    				
+//	    				try {
+//							Thread.sleep(20 * 1000);
+//	    				} catch(Exception e){}
+//    				}
+//    			}	// end while
+//    		}	// end run
+//		};
+//    	pushSession.start();
+//    	new Thread(runnable).start();
+//    }
     
     /**
      * login 
@@ -217,18 +230,37 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	} else {
 	    		try {
 		    		// Stored user session.
-					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.allUserInfoData();
+					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
 					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
 					SessionManager.setUserInfos(mapUserInfoData);
 					
+					if ("".equals(SessionManager.getPerspective())) {
+					
+//						// user 사용자는 default perspective를 사용합니다.
+//						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+//							SessionManager.setPerspective(Perspective.DEFAULT);
+//						} else {
+							String persp;
+							SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
+							
+							if (Dialog.OK == dialog.open()) {
+								persp = dialog.getResult();
+							} else {
+								persp = Perspective.DEFAULT;
+							}
+							SessionManager.setPerspective(persp);
+//						}
+					}
+					
 					initSession();
 					
 	    		} catch(Exception e) {
 	    			logger.error("session set", e); //$NON-NLS-1$
 	    		}
+	    		
 	    	}
     	} 
     }
@@ -241,7 +273,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		
 		int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
 		if(sessionTimeOut <= 0) {
-			iss.setMaxInactiveInterval( 60 * 60 * 24 );
+			iss.setMaxInactiveInterval( 60 * 90 );
 		} else {
 			iss.setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
 		}

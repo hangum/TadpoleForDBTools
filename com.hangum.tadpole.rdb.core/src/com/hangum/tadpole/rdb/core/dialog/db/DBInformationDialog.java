@@ -25,13 +25,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBConnectionUtils;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
@@ -115,7 +116,7 @@ public class DBInformationDialog extends Dialog {
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText(Messages.DBInformationDialog_4);
 		
-		if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {//SessionManager.getRoleType(userDB.getGroup_seq()), userDB)) {
+		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
 			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
 			lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			lblNameValue.setText(SessionManager.getName());
@@ -136,6 +137,9 @@ public class DBInformationDialog extends Dialog {
 			lblNewLabel.setText(Messages.MainEditor_21);
 		}
 		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return container;
 	}
 	
@@ -150,8 +154,7 @@ public class DBInformationDialog extends Dialog {
 		}
 		selGroupName = userDB.getGroup_name();
 		
-		DBDefine dbDefine = DBDefine.getDBDefine(userDB);
-		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, groupName, selGroupName, userDB);
+		loginComposite = DBConnectionUtils.getDBConnection(userDB.getDBDefine(), compositeBody, groupName, selGroupName, userDB);
 		compositeBody.layout();
 		container.layout();
 	}

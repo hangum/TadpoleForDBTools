@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
 
@@ -36,28 +37,28 @@ public class MySQLSessionListTableCompare extends ObjectComparator  {
 		int rc = 0;
 		switch(propertyIndex) {
 		case 0:
-			rc = sl1.getId().compareTo(sl2.getId());
+			rc = NullSafeComparator.compare(sl1.getId(), sl2.getId());
 			break;
 		case 1:
-			rc = sl1.getUser().compareTo(sl2.getUser());
+			rc = NullSafeComparator.compare(sl1.getUser(), sl2.getUser());
 			break;
 		case 2:
-			rc = sl1.getHost().compareTo(sl2.getHost());
+			rc = NullSafeComparator.compare(sl1.getHost(), sl2.getHost());
 			break;
 		case 3:
-			rc = sl1.getDb().compareTo(sl2.getDb());
+			rc = NullSafeComparator.compare(sl1.getDb(), sl2.getDb());
 			break;
 		case 4:
-			rc = sl1.getCommand().compareTo(sl2.getCommand());
+			rc = NullSafeComparator.compare(sl1.getCommand(), sl2.getCommand());
 			break;
 		case 5:
-			rc = sl1.getTime().compareTo(sl2.getTime());
+			rc = NullSafeComparator.compare(sl1.getTime(), sl2.getTime());
 			break;
 		case 6:
-			rc = sl1.getState().compareTo(sl2.getState());
+			rc = NullSafeComparator.compare(sl1.getState(), sl2.getState());
 			break;
 		case 7:
-			rc = sl1.getInfo().compareTo(sl2.getInfo());
+			rc = NullSafeComparator.compare(sl1.getInfo(), sl2.getInfo());
 			break;
 		}
 				

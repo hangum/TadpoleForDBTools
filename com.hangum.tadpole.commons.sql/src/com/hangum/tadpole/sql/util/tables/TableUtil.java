@@ -12,15 +12,47 @@ package com.hangum.tadpole.sql.util.tables;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.sql.util.tables.DefaultViewerSorter.COLUMN_TYPE;
 
+/**
+ * eclipse swt table utils
+ * @author hangum
+ *
+ */
 public class TableUtil {
+	
+	/**
+	 * make selected single column
+	 * 
+	 * @param tv
+	 */
+	public static void makeSelectSingleColumn(TableViewer tv) {
+		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(tv,new FocusCellOwnerDrawHighlighter(tv));
+	    ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(tv) {
+	        protected boolean isEditorActivationEvent(
+	                ColumnViewerEditorActivationEvent event) {
+	            return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
+	                    || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
+	                    || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR)
+	                    || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+	        }
+	    };
+	    TableViewerEditor.create(tv, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL
+	            | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
+	            | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
+	}
 
 	public static void makeTableColumns(Table table, String[] headers) {
 		TableColumn column;

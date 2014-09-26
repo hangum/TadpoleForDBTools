@@ -106,7 +106,40 @@ public class TadpoleMySQLDDL extends NLS {
 	public static String external_browser_info_seq;
 	public static String external_browser_info_fk;
 	
-
+	
+	public static String schema_history;
+	public static String schema_history_pk;
+	public static String schema_history_seq;
+	public static String schema_history_fk_dbseq;
+	
+	public static String schema_history_detail;
+	public static String schema_history_detail_fk_userseq;
+	public static String schema_history_detail_pk;
+	public static String schema_history_detail_seq;
+	
+	
+	public static String schedule_main;
+	public static String pk_schedule_main;
+	public static String schedule_main_seq;
+	
+	public static String schedule_detail;
+	public static String pk_schedule_detail;
+	public static String schedule_detail_seq;
+	
+	public static String schedule;
+	public static String pk_schedule;
+	public static String schedule_seq;
+	
+	public static String schedule_result;
+	public static String pk_schedule_result;
+	public static String schedule_result_seq;
+	
+	public static String fk_user_db_to_schedule_main;
+	public static String fk_user_to_schedule_main;
+	public static String fk_schedule_to_schedule_detail;
+	public static String fk_schedule_main_to_schedule;
+	public static String fk_schedule_main_to_schedule_result;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, TadpoleMySQLDDL.class);

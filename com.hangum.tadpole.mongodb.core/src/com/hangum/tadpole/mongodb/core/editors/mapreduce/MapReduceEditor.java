@@ -37,6 +37,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
@@ -271,6 +272,9 @@ public class MapReduceEditor extends EditorPart {
 		sashFormMain.setWeights(new int[] {40, 30, 30});
 		
 		initUI();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**
@@ -391,6 +395,9 @@ public class MapReduceEditor extends EditorPart {
 //		textFinalize.setText(TEMPLATE_FINALIZE_SRC);
 		
 		textMap.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(MapReduceEditor.ID);
 	}
 
 	@Override

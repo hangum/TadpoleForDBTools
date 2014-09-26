@@ -10,9 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
+import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -32,10 +35,11 @@ import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionGroup;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -58,7 +62,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	protected String displayName = ""; //$NON-NLS-1$
 	
 	protected PreConnectionInfoGroup preDBInfo;
-	protected OthersConnectionRDBGroup othersConnectionInfo;
+	protected OthersConnectionGroup othersConnectionInfo;
 	
 	protected String strOtherGroupName = "Other Group"; //$NON-NLS-1$
 	protected String selGroupName = ""; //$NON-NLS-1$
@@ -169,7 +173,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * 
 	 * @return
 	 */
-	public abstract boolean isValidateInput();
+	public abstract boolean isValidateInput(boolean isTest);
 	
 	/**
 	 * test connection
@@ -179,7 +183,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @throws Exception
 	 */
 	public boolean testConnection(boolean isTest) {
-		if(!makeUserDBDao()) return false;
+		if(!makeUserDBDao(isTest)) return false;
 		if(!isValidateDatabase(userDB, isTest)) return false;
 		
 		return true;
@@ -189,7 +193,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * 1. input validation
 	 * 2. make UserDBDAO
 	 */
-	public abstract boolean makeUserDBDao();
+	public abstract boolean makeUserDBDao(boolean isTest);
 	
 	/**
 	 * DB 가 정상 연결되었을때 객체
@@ -290,12 +294,25 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @param isTest
 	 * @return
 	 */
-	private boolean checkDatabase(UserDBDAO loginInfo, boolean isTest) {
+	private boolean checkDatabase(final UserDBDAO loginInfo, boolean isTest) {
 		try {
 			if(DBDefine.getDBDefine(loginInfo) == DBDefine.MONGODB_DEFAULT) {
 				MongoConnectionManager.getInstance(userDB);
+				
 			} else if(DBDefine.getDBDefine(loginInfo) == DBDefine.TAJO_DEFAULT) {
 				new TajoConnectionManager().connectionCheck(loginInfo);
+				
+			} else if(DBDefine.getDBDefine(loginInfo) == DBDefine.SQLite_DEFAULT) {
+				String strFileLoc = StringUtils.difference(StringUtils.remove(loginInfo.getDBDefine().getDB_URL_INFO(), "%s"), loginInfo.getUrl());
+				File fileDB = new File(strFileLoc);
+				if(fileDB.exists()) {
+					List<String> strArr = FileUtils.readLines(fileDB);
+					
+					if(!StringUtils.contains(strArr.get(0), "SQLite format")) {
+						throw new SQLException("Doesn't SQLite files.");
+					}
+				}
+				
 			} else {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
 				sqlClient.queryForList("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$
@@ -303,11 +320,12 @@ public abstract class AbstractLoginComposite extends Composite {
 			
 			return true;
 		} catch (Exception e) {
-			logger.error("DB Connecting... ", e); //$NON-NLS-1$
+			logger.error("DB Connecting... [url]"+ loginInfo.getUrl(), e); //$NON-NLS-1$
 			// If UserDBDao is not invalid, remove UserDBDao at internal cache
 			TadpoleSQLManager.removeInstance(loginInfo);
 
-			if(!isTest) {
+			// mssql 데이터베이스가 연결되지 않으면 등록되면 안됩니다. 하여서 제외합니다.
+			if(!isTest && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
 				if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_26, Messages.AbstractLoginComposite_3  + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR + e.getMessage())) return true;
 			} else {
 				MessageDialog.openError(null, "Confirm", Messages.AbstractLoginComposite_1 + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR + e.getMessage());
@@ -415,4 +433,31 @@ public abstract class AbstractLoginComposite extends Composite {
 		return selGroupName;
 	}
 	
+	public OthersConnectionGroup getOthersConnectionInfo() {
+		return othersConnectionInfo;
+	}
+	
+	/**
+	 * Set others connection info
+	 */
+	protected void setOtherConnectionInfo() {
+		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+		
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
+		
+		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+	}
+
 }

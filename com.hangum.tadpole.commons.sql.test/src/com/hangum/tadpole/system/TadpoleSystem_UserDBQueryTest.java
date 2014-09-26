@@ -16,12 +16,12 @@ import junit.framework.TestCase;
 
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserGroupQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserGroupQuery;
 
 /**
- * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery 시스템 UserDB 테스트}
+ * {@link com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery 시스템 UserDB 테스트}
  * 
  * @author hangum
  *
@@ -57,7 +57,7 @@ public class TadpoleSystem_UserDBQueryTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery#newUserDB(UserDBDAO) UserDB등록 테스트}
+	 * {@link com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery#newUserDB(UserDBDAO) UserDB등록 테스트}
 	 */
 	public void testNewUserDB() {
 		UserDBDAO userDb2 = TadpoleSystemInitializer.getUserDB();
@@ -74,7 +74,7 @@ public class TadpoleSystem_UserDBQueryTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery#getUserDB(int) 세션의 데이터를 가져오기위한 코드인데 어떻게 테스트 하지?}
+	 * {@link com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery#getUserDB(int) 세션의 데이터를 가져오기위한 코드인데 어떻게 테스트 하지?}
 	 */
 	public void testGetUserDBInt() {
 //		try {
@@ -88,21 +88,21 @@ public class TadpoleSystem_UserDBQueryTest extends TestCase {
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery#getUserDB(int) 세션의 데이터를 가져오기위한 코드인데 어떻게 테스트 하지?}
+	 * {@link com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery#getUserDB(int) 세션의 데이터를 가져오기위한 코드인데 어떻게 테스트 하지?}
 	 */
 	public void testGetUserDB() {
 //		fail("Not yet implemented");
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery#getSpecificUserDB(int) 세션의 데이터를 가져오기위한 코드인데 어떻게 테스트 하지?}
+	 * {@link com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery#getSpecificUserDB(int) 세션의 데이터를 가져오기위한 코드인데 어떻게 테스트 하지?}
 	 */
 	public void testGetSpecificUserDB() {
 //		fail("Not yet implemented");
 	}
 
 	/**
-	 * {@link com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery#removeUserDB(int) userdb 삭제.}
+	 * {@link com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery#removeUserDB(int) userdb 삭제.}
 	 */
 	public void testRemoveUserDB() {
 		try {

@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoContentProvider;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoLabelProvider;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
@@ -104,6 +105,9 @@ public class FindOneDetailComposite extends Composite {
 		treeViewerMongo.setLabelProvider(new TreeMongoLabelProvider());
 		
 		initData();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

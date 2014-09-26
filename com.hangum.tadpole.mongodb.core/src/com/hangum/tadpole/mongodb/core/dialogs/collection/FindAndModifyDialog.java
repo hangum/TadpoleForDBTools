@@ -31,6 +31,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.help.HelpDefine;
 import com.hangum.tadpole.commons.util.HelpUtils;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -198,6 +199,9 @@ public class FindAndModifyDialog extends Dialog {
 		btnUpsert.setText("Upsert");
 		
 		compositeBody.setWeights(new int[]{40, 20, 20, 20});
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

@@ -10,9 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.generate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -25,16 +23,20 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
+/**
+ * insert action
+ * @author hangum
+ *
+ */
 public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	/**
 	 * Logger for this class
@@ -50,20 +52,15 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		
-		if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {
+		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			StringBuffer sbSQL = new StringBuffer();
 			try {
-				Map<String, String> parameter = new HashMap<String, String>();
-				parameter.put("db", userDB.getDb());
-				parameter.put("table", tableDAO.getName());
+				List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
 				
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-				
-				sbSQL.append("INSERT INTO " + tableDAO.getName() + PublicTadpoleDefine.LINE_SEPARATOR + " ("); //$NON-NLS-1$ //$NON-NLS-2$
+				sbSQL.append("INSERT INTO " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR + " ("); //$NON-NLS-1$ //$NON-NLS-2$
 				for (int i=0; i<showTableColumns.size(); i++) {
 					TableColumnDAO dao = showTableColumns.get(i);
-					sbSQL.append(dao.getField());
+					sbSQL.append(dao.getSysName());
 					
 					// 마지막 컬럼에는 ,를 않넣어주어야하니까 
 					if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
@@ -75,9 +72,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 					else sbSQL.append("? ); "); //$NON-NLS-1$
 				}
 				
-				//
-//				QueryEditorAction qea = new QueryEditorAction();
-				FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString());
+				FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), actionType);
 			} catch(Exception e) {
 				logger.error(Messages.GenerateSQLInsertAction_9, e);
 				
@@ -85,7 +80,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLInsertAction_0, errStatus); //$NON-NLS-1$
 			}
 		// mongo db
-		} else if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			
 			NewDocumentDialog dialog = new NewDocumentDialog(Display.getCurrent().getActiveShell(), userDB, tableDAO.getName());
 			dialog.open();

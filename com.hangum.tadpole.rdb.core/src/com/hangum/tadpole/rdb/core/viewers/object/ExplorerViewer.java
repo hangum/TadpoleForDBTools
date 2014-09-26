@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -26,7 +27,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -34,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -50,6 +51,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
+import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 
@@ -100,6 +102,8 @@ public class ExplorerViewer extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		setPartName(Messages.ExplorerViewer_0);
+		
 		GridLayout gl_parent = new GridLayout(1, false);
 		gl_parent.marginWidth = 1;
 		gl_parent.verticalSpacing = 0;
@@ -109,16 +113,12 @@ public class ExplorerViewer extends ViewPart {
 
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeSearch = new GridLayout(2, false);
+		GridLayout gl_compositeSearch = new GridLayout(1, false);
 		gl_compositeSearch.horizontalSpacing = 2;
 		gl_compositeSearch.verticalSpacing = 2;
 		gl_compositeSearch.marginHeight = 2;
 		gl_compositeSearch.marginWidth = 2;
 		compositeSearch.setLayout(gl_compositeSearch);
-
-		Label lblNewLabel = new Label(compositeSearch, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.ExplorerViewer_0);
 
 		// filter를 설정합니다.
 		textSearch = new Text(compositeSearch, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
@@ -392,10 +392,10 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void refershSelectObject(String strSelectItemText) {
 //		테이블 초기화 될때 무조건 리프레쉬 되므로 다시리프레쉬 되는것을 막습니다.
-//		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
-//			refreshTable(false);
-//		} else
-		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
+		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
+			if(tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
+			refreshTable(false);
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
 			refreshView(false);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.toString())) {
 			refreshSynonym(false);
@@ -412,6 +412,9 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.toString())) {
 			refreshJS(false);
 		}
+		
+		// google analytic
+		AnalyticCaller.track(ExplorerViewer.ID, strSelectItemText);
 	}
 	
 	/**
@@ -580,17 +583,23 @@ public class ExplorerViewer extends ViewPart {
 	}
 
 	/**
-	 *  refresh table
+	 *  refresh object
 	 * 
 	 * @param chgUserDB
-	 * @param changeType
-	 * @param changeTbName
+	 * @param schemaDao
 	 */
-	public void refreshCurrentTab(UserDBDAO chgUserDB) {
+	public void refreshCurrentTab(UserDBDAO chgUserDB, final SchemaHistoryDAO schemaDao) {
 		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
-		if (tabFolderObject.getSelectionIndex() != 0)	return;
-
-		refershSelectObject(strSelectItem);
+		
+		if(schemaDao != null) {
+			if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "TABLE")) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name());
+			} else if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "VIEW")) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name());
+			} else if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "INDEX")) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name());
+			}
+		}
 	}
 	
 	@Override

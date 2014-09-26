@@ -22,12 +22,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.connections.ConnectionInterfact;
+import com.hangum.tadpole.engine.query.surface.ConnectionInterfact;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.ResultSetUtilDAO;
-import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
+import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 
 /**
  * apache tajo connection manager
@@ -38,6 +38,38 @@ import com.hangum.tadpole.tajo.core.connections.internal.ConnectionPoolManager;
  */
 public class TajoConnectionManager implements ConnectionInterfact {
 	private static final Logger logger = Logger.getLogger(TajoConnectionManager.class);
+	
+	/**
+	 * java.sql.connection을 생성하고 관리합니다.
+	 * 
+	 * @param userDB
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static Connection getInstance(final UserDBDAO userDB) throws Exception {
+		java.sql.Connection javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
+			
+		return javaConn;
+	}
+	
+	/**
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getKeyworkd(final UserDBDAO userDB) throws Exception {
+		String strKeyWord = "";
+		java.sql.Connection javaConn = getInstance(userDB);
+		try {
+			strKeyWord = javaConn.getMetaData().getSQLKeywords();
+		} finally {
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+		}
+		
+		return strKeyWord;
+	}
 	
 	/**
 	 * not select 
@@ -60,19 +92,33 @@ public class TajoConnectionManager implements ConnectionInterfact {
 		}
 	}
 	
+	public void executeUpdate(UserDBDAO userDB, String string, String name) throws Exception {
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		try {
+			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
+			String quoteString = javaConn.getMetaData().getIdentifierQuoteString();
+			
+			statement = javaConn.createStatement();
+			statement.executeUpdate(String.format(string, quoteString + name + quoteString));
+		} finally {
+			try { if(statement != null) statement.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+		}
+	}
+	
 	/**
 	 * select
 	 * 
 	 * @param userDB
 	 * @param requestQuery
-	 * @param queryResultCount
+	 * @param limitCount
 	 * @param isResultComma
 	 * 
 	 * @throws Exception
 	 */
-	public ResultSetUtilDAO select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception {
-		ResultSetUtilDAO retResultQuery = null;
-		
+	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, int limitCount, boolean isResultComma) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
 		
 		java.sql.Connection javaConn = null;
@@ -84,7 +130,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-			return new ResultSetUtilDAO(rs, queryResultCount, isResultComma);
+			return new QueryExecuteResultDTO(true, rs, limitCount, isResultComma);
 		} catch(Exception e) {
 			logger.error("Tajo select", e);
 			throw e;

@@ -23,7 +23,7 @@ public class ShortcutPrefixUtils {
 	 * 
 	 * @return
 	 */
-	public static String getCtrlShortcut() {
+	public final static String getCtrlShortcut() {
 		ServletUserAgent.OS_SIMPLE_TYPE osSimpleType = RequestInfoUtils.findOSSimpleType();
 		String prefixOSShortCut = "Ctrl ";
 		if(osSimpleType == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) prefixOSShortCut = "Command ";
@@ -36,7 +36,7 @@ public class ShortcutPrefixUtils {
 	 * 
 	 * @return
 	 */
-	public static String getAltShortcut() {
+	public final static String getAltShortcut() {
 		ServletUserAgent.OS_SIMPLE_TYPE osSimpleType = RequestInfoUtils.findOSSimpleType();
 		String prefixOSShortCut = "Alt ";
 		if(osSimpleType == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) prefixOSShortCut = "Option ";

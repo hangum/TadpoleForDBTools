@@ -532,7 +532,8 @@ public class HiveDatabaseMetaData implements DatabaseMetaData {
   }
 
   public String getSQLKeywords() throws SQLException {
-    throw new SQLException("Method not supported");
+//    throw new SQLException("Method not supported");
+	  return "";
   }
 
   public int getSQLStateType() throws SQLException {

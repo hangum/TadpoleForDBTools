@@ -11,8 +11,9 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  com.hangum.tadpole.commons.utils;bundle-version="1.0.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
  com.hangum.tadpole.rdb.core;bundle-version="2.0.0",
- com.hangum.tadpole.cipher.core;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+ com.hangum.tadpole.cipher.core;bundle-version="1.0.0",
+ com.hangum.tadpole.preference;bundle-version="2.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.manager.core.actions.global,
  com.hangum.tadpole.manager.core.dialogs.users,
@@ -21,3 +22,4 @@ Export-Package: com.hangum.tadpole.manager.core.actions.global,
  com.hangum.tadpole.manager.core.editor.resource
 Import-Package: javax.servlet;version="2.4.0",
  javax.servlet.http;version="2.4.0"
+Bundle-Localization: /OSGI-INF/l10n/bundle

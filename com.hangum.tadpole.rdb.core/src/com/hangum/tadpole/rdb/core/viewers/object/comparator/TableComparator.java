@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 
 /**
@@ -35,10 +36,10 @@ public class TableComparator extends ObjectComparator {
 		int rc = ASCENDING;
 		switch (this.propertyIndex) {
 		case 0:
-			rc = tb1.getName().toLowerCase().compareTo(tb2.getName().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getName(), tb2.getName());
 			break;
 		case 1:
-			rc = tb1.getComment().toLowerCase().compareTo(tb2.getComment().toLowerCase());
+			rc = NullSafeComparator.compare(tb1.getComment(), tb2.getComment());
 			break;
 		}
 		if (direction == DESCENDING) {

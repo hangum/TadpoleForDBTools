@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.sql.datetype.DataTypeValidate;
+import com.hangum.tadpole.sql.util.DataTypeValidate;
 
 /**
  * text editor
@@ -72,7 +72,7 @@ public class TextViewerEditingSupport extends EditingSupport {
 		// 입력 값이 올바른지 검사합니다.
 		String colType = tableDataTypeList.get(columnIndex-1);
 		if(!DataTypeValidate.isValid(editPart.getUserDB(), colType, value.toString())) {
-			MessageDialog.openError(null, Messages.TextViewerEditingSupport_0, Messages.TextViewerEditingSupport_1 + value + Messages.TextViewerEditingSupport_2 + colType + Messages.TextViewerEditingSupport_3); 
+			MessageDialog.openError(null, Messages.TextViewerEditingSupport_0, Messages.TextViewerEditingSupport_1 + " '" + value + "'. " + Messages.TextViewerEditingSupport_2 + " is " + colType + ".");// + " " + Messages.TextViewerEditingSupport_3); 
 			return;
 		} 
 		// insert가 아닌 경우에는 

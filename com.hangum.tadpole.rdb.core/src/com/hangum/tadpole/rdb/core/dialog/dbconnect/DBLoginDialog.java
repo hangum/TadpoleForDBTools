@@ -31,13 +31,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -172,8 +173,10 @@ public class DBLoginDialog extends Dialog {
 		// history .....................................
 		sashFormContainer.setWeights(new int[] {1});
 
-		
 		comboDBList.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return container;
 	}
@@ -188,6 +191,9 @@ public class DBLoginDialog extends Dialog {
 		createDBWidget(userDB);
 		compositeBody.layout();
 		container.layout();
+		
+		// google analytic
+		AnalyticCaller.track("DBLoginDialog");
 	}
 	
 	/**

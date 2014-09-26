@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -109,6 +110,9 @@ public class FindResultViewerDialog extends Dialog {
 			ExceptionDetailsErrorDialog.openError(null, "Error", "Show Cursor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return container;
 	}
 

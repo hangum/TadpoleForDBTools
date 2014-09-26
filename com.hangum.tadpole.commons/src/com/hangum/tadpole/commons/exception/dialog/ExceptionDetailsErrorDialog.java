@@ -43,6 +43,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+
 /**
  * A dialog to display one or more errors to the user, as contained in an
  * <code>IStatus</code> object. If an error contains additional detailed
@@ -211,6 +213,10 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
         childData.horizontalSpan = 2;
         composite.setLayoutData(childData);
         composite.setFont(parent.getFont());
+        
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
         return composite;
     }
 

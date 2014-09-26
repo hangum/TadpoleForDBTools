@@ -14,6 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
+	public static String MainEditor_74;
 	public static String AbstractLoginComposite_0;
 	public static String AbstractLoginComposite_1;
 	public static String AbstractLoginComposite_2;
@@ -124,6 +125,7 @@ public class Messages extends NLS {
 	public static String MainEditor_31;
 	public static String MainEditor_32;
 	public static String MainEditor_33;
+	public static String MainEditor_34;
 	public static String MainEditor_38;
 	public static String MainEditor_39;
 	public static String MainEditor_4;
@@ -132,6 +134,7 @@ public class Messages extends NLS {
 	public static String MainEditor_45;
 	public static String MainEditor_46;
 	public static String MainEditor_47;
+	public static String MainEditor_49;
 	public static String MainEditor_5;
 	public static String MainEditor_50;
 	public static String MainEditor_56;
@@ -146,7 +149,6 @@ public class Messages extends NLS {
 	public static String MainEditor_72;
 	public static String MainEditor_8;
 	public static String MainEditor_9;
-	public static String MainEditor_lblFilter_text;
 	public static String MainEditor_tltmDropdownItem_text;
 	public static String DBLoginDialog_btnPing_text;
 	public static String DeleteDBAction_1;
@@ -173,6 +175,10 @@ public class Messages extends NLS {
 	public static String ExplorerViewer_76;
 	public static String ExplorerViewer_81;
 	public static String ExplorerViewer_86;
+	public static String ExtensionBrowserURLDialog_0;
+	public static String ExtensionBrowserURLDialog_18;
+	public static String ExtensionBrowserURLDialog_21;
+	public static String ExtensionBrowserURLDialog_23;
 	public static String GenerateSQLDeleteAction_0;
 	public static String GenerateSQLDeleteAction_10;
 	public static String GenerateSQLInsertAction_0;
@@ -254,13 +260,24 @@ public class Messages extends NLS {
 	public static String QueryEditPart_7;
 	public static String QueryEditPart_8;
 	public static String QueryEditPart_9;
+	public static String QueryResultSQLDialog_0;
+	public static String QueryResultSQLDialog_2;
 	public static String SQLiteLoginComposite_0;
 	public static String SQLiteLoginComposite_1;
 	public static String SQLiteLoginComposite_10;
+	public static String SQLiteLoginComposite_11;
 	public static String SQLiteLoginComposite_12;
 	public static String SQLiteLoginComposite_13;
+	public static String SQLiteLoginComposite_14;
 	public static String SQLiteLoginComposite_15;
+	public static String SQLiteLoginComposite_16;
+	public static String SQLiteLoginComposite_17;
+	public static String SQLiteLoginComposite_19;
 	public static String SQLiteLoginComposite_2;
+	public static String SQLiteLoginComposite_22;
+	public static String SQLiteLoginComposite_23;
+	public static String SQLiteLoginComposite_24;
+	public static String SQLiteLoginComposite_29;
 	public static String SQLiteLoginComposite_3;
 	public static String SQLiteLoginComposite_4;
 	public static String SQLiteLoginComposite_5;
@@ -302,6 +319,7 @@ public class Messages extends NLS {
 	public static String MainEditorInput_0;
 	public static String MainEditorInput_3;
 	public static String MainEditorInput_4;
+	public static String ManagerViewer_0;
 	public static String ManagerViewer_10;
 	public static String ManagerViewer_4;
 	public static String ManagerViewer_6;
@@ -316,7 +334,6 @@ public class Messages extends NLS {
 	public static String TableViewerEditPart_0;
 	public static String TableViewerEditPart_1;
 	public static String TableViewerEditPart_10;
-	public static String TableViewerEditPart_11;
 	public static String TableViewerEditPart_2;
 	public static String TableViewerEditPart_3;
 	public static String TableViewerEditPart_7;
@@ -380,6 +397,9 @@ public class Messages extends NLS {
 	public static String PreDBInfoComposite_this_text;
 	public static String MSSQLLoginComposite_grpConnectionType_text;
 	public static String MSSQLLoginComposite_preDBInfo_text;
+	public static String TableDirectEditorComposite_1;
+	public static String TableDirectEditorComposite_17;
+	public static String TableDirectEditorComposite_19;
 	public static String TableDirectEditorComposite_tltmDdlSourceView_text;
 	public static String TableDirectEditorComposite_btnDdlSourceView_text;
 	public static String OthersConnectionMongoDBGroup_btnShowTables_text;
@@ -398,6 +418,34 @@ public class Messages extends NLS {
 	public static String OthersConnectionBigDataGroup_btnExternalBrowser_text;
 	public static String OthersConnectionMongoDBGroup_btnExternalBrowser_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnExternalBrowser_text;
+	public static String RDBResultComposite_lblNewLabel_text;
+	public static String RDBResultComposite_lblNewLabel_text_1;
+	public static String RDBResultComposite_btnSql_text;
+	public static String RDBResultComposite_btnStp_text;
+	public static String RDBResultComposite_lblNewLabel_text_2;
+	public static String RDBResultComposite_lblNewLabel_text_3;
+	public static String RDBResultComposite_lblNewLabel_text_4;
+	public static String OthersConnectionRDBGroup_btnIsVisible_text;
+	public static String OthersConnectionRDBGroup_btnSendMonitoring_text;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_btnIsVisible_text;
+	public static String OthersConnectionRDBWithoutTunnelingGroup_btnSendMonitoring_text;
+	public static String OthersConnectionMongoDBGroup_btnIsVisible_text;
+	public static String OthersConnectionMongoDBGroup_btnSendMonitoring_text;
+	public static String OthersConnectionBigDataGroup_btnIsVisible_text;
+	public static String OthersConnectionBigDataGroup_btnSendMonitoring_text;
+	public static String OthersConnectionMongoDBGroup_btnCheckButton_text;
+	public static String OthersConnectionMongoDBGroup_btnIsVisible_1_text;
+	public static String SQLiteLoginComposite_btnCreation_text;
+	public static String SQLiteLoginComposite_btnFileupload_text;
+	public static String SQLiteLoginComposite_btnFileUpload_text;
+	public static String SQLiteLoginComposite_btnCreationDb_text;
+	public static String TableDirectEditorComposite_tltmRefersh_text;
+	public static String ResultSetComposite_0;
+	public static String ResultSetComposite_7;
+	public static String ResultSetComposite_8;
+	public static String ResultSetComposite_btnDmlGenerator_text;
+	public static String ResultSetComposite_btnDMLGenerator_text;
+	public static String ResultSetComposite_btnSql_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

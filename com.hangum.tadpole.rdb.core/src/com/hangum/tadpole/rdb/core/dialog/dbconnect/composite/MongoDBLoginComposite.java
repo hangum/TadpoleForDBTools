@@ -34,8 +34,8 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionMongoDBGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.session.manager.SessionManager;
 import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
@@ -169,7 +169,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
-		comboLocale = new Combo(grpConnectionType, SWT.READ_ONLY);
+		comboLocale = new Combo(grpConnectionType, SWT.NONE);
 		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			
 		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
@@ -198,15 +198,15 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			textPassword.setText(oldUserDB.getPasswd());
 			
 			textReplicaSet.setText(oldUserDB.getExt1()==null?"":oldUserDB.getExt1());
-		} else if(ApplicationArgumentUtils.isTestMode()) {
+		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
-			textHost.setText("127.0.0.1"); //$NON-NLS-1$
+			textHost.setText("dbs004.mongosoup.de"); //$NON-NLS-1$
 			textPort.setText("27017");			 //$NON-NLS-1$
-			textDatabase.setText("test"); //$NON-NLS-1$
-			textUser.setText(""); //$NON-NLS-1$
-			textPassword.setText(""); //$NON-NLS-1$
+			textDatabase.setText("cc_uRkAeyCDcSSi"); //$NON-NLS-1$
+			textUser.setText("uRkAeyCDcSSi"); //$NON-NLS-1$
+			textPassword.setText("NdPYZyWsZwhm"); //$NON-NLS-1$
 			
 		} else {
 			textPort.setText("27017");			 //$NON-NLS-1$
@@ -233,7 +233,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	}
 	
 	@Override
-	public boolean isValidateInput() {
+	public boolean isValidateInput(boolean isTest) {
 		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
 		
@@ -245,8 +245,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	public boolean makeUserDBDao() {
-		if(!isValidateInput()) return false;
+	public boolean makeUserDBDao(boolean isTest) {
+		if(!isValidateInput(isTest)) return false;
 		
 		final String dbUrl = String.format(
 								getSelectDB().getDB_URL_INFO(), 
@@ -285,6 +285,9 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
+		
+		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
 		return true;
 	}

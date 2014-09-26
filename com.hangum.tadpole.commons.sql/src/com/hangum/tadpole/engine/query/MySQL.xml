@@ -168,7 +168,8 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 	SELECT
-    TABLE_NAME, ENGINE, TABLE_ROWS, AUTO_INCREMENT, TABLE_COMMENT, TABLE_COLLATION, CREATE_TIME
+    TABLE_NAME, ENGINE, TABLE_ROWS, AUTO_INCREMENT, TABLE_COMMENT, TABLE_COLLATION, CREATE_TIME,
+    round(((data_length + index_length) / (1024*1024)),2) as 'SIZEOFMB'
   FROM
     INFORMATION_SCHEMA.TABLES
   WHERE

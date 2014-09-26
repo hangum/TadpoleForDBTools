@@ -21,9 +21,9 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.sql.preference.define.PreferenceDefine;
-import com.hangum.tadpole.sql.system.TadpoleSystemInitializer;
+import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 
 /**
  * This class controls all aspects of the application's execution
@@ -33,7 +33,7 @@ public class Application implements EntryPoint {
 	private static final Logger logger = Logger.getLogger(Application.class);
 
 	public int createUI() {
-		Display display = PlatformUI.createDisplay();//new TadpoleDisplay();// PlatformUI.createDisplay();
+		Display display = PlatformUI.createDisplay();//new TadpoleDisplay();
 		
 		systemInitialize();
 		
@@ -46,8 +46,8 @@ public class Application implements EntryPoint {
 	 * If the system table does not exist, create a table.
 	 */
 	private void systemInitialize() {
+		// 시스템 초기 데이터 베이스 생성.
 		boolean isTadpoleInitialize = PlatformUI.getPreferenceStore().getBoolean(PreferenceDefine.IS_TADPOLE_INITIALIZE);
-		
 		if(!isTadpoleInitialize || ApplicationArgumentUtils.isForceSystemInitialize()) {
 			try {
 				TadpoleSystemInitializer.initSystem();

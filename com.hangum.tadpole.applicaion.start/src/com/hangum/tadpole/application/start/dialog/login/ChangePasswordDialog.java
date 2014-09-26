@@ -23,10 +23,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hamgum.tadpole.help.core.views.HelpViewPart;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.system.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -62,7 +64,7 @@ public class ChangePasswordDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/icons/forgot-password.png")); //$NON-NLS-1$ //$NON-NLS-2$
+		lblNewLabel.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/forgot-password.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblNewLabel.widthHint = 128;
 		gd_lblNewLabel.heightHint = 128;
@@ -86,6 +88,9 @@ public class ChangePasswordDialog extends Dialog {
 
 		textRePassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

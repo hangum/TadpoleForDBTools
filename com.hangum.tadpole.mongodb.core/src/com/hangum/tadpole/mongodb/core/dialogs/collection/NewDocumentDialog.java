@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
@@ -100,6 +101,9 @@ public class NewDocumentDialog extends Dialog {
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		textContent.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return container;
 	}

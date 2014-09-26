@@ -14,6 +14,10 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static String BUNDLE_NAME = "com.hangum.tadpole.sql.messages"; //$NON-NLS-1$
+	public static String ResourceSaveDialog_0;
+	public static String ResourceSaveDialog_1;
+	public static String ResourceSaveDialog_2;
+	public static String ResourceSaveDialog_3;
 	public static String ResourceSaveDialog_5;
 	public static String TadpoleSystem_UserDBQuery_11;
 	public static String TadpoleSystem_UserDBQuery_4;
@@ -29,6 +33,7 @@ public class Messages extends NLS {
 	public static String TadpoleSystem_UserQuery_4;
 	public static String TadpoleSystem_UserQuery_7;
 	public static String TadpoleSystem_UserQuery_9;
+	public static String TadpoleSystemChecker_2;
 	public static String TadpoleSystemConnector_10;
 	public static String TadpoleSystemConnector_11;
 	public static String TadpoleSystemConnector_13;
