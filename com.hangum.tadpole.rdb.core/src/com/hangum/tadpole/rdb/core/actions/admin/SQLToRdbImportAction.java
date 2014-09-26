@@ -18,20 +18,20 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.importdb.core.dialog.importdb.csv.CsvToRDBImportDialog;
+import com.hangum.tadpole.importdb.core.dialog.importdb.sql.SQLToDBImportDialog;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
- *  CSV file Import
+ *  SQL file Import
  * 
  * @author hangum
  *
  */
-public class CsvToRdbImportAction implements IViewActionDelegate {
+public class SQLToRdbImportAction implements IViewActionDelegate {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(CsvToRdbImportAction.class);
+	private static final Logger logger = Logger.getLogger(SQLToRdbImportAction.class);
 
 	private IStructuredSelection sel;
 	
@@ -39,7 +39,7 @@ public class CsvToRdbImportAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		CsvToRDBImportDialog dialog = new CsvToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+		SQLToDBImportDialog dialog = new SQLToDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 		dialog.open();
 	}
 

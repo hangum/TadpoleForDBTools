@@ -525,7 +525,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				} catch(Exception e) {
 					logger.error("Table Referesh", e);
 					
-					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
+					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
 				} finally {
 					monitor.done();
 				}
@@ -554,10 +554,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							tableListViewer.setInput(showTables);
 							tableListViewer.refresh();
 							TableUtil.packTable(tableListViewer.getTable());
-							
-//							logger.error("=============================================================================================");
-							MessageDialog.openError(display.getActiveShell(), "Error", jobEvent.getResult().getException().getMessage());
-							
+
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(display.getActiveShell(), "Error", Messages.ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}

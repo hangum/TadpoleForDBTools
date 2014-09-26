@@ -645,6 +645,8 @@ public class MainEditor extends EditorExtension {
 				setDirty(false);
 				browserEvaluate(IEditorFunction.SAVE_DATA);	
 			}
+			
+			browserEvaluate(IEditorFunction.SET_FOCUS);
 		}
 		
 		return isSaved;
@@ -675,6 +677,8 @@ public class MainEditor extends EditorExtension {
 				setDirty(false);
 				browserEvaluate(IEditorFunction.SAVE_DATA);	
 			}
+			
+			browserEvaluate(IEditorFunction.SET_FOCUS);
 		}
 	}
 
@@ -705,6 +709,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private boolean saveResourceData(UserDBResourceDAO newDBResource, String newContents) {
+
 		try {
 			// db 저장
 			dBResource = TadpoleSystem_UserDBResource.saveResource(userDB, newDBResource, newContents);

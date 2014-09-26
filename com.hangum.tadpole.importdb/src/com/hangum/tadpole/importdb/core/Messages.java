@@ -14,6 +14,24 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.importdb.core.messages"; //$NON-NLS-1$
+	public static String CsvToRDBImportDialog_0;
+	public static String CsvToRDBImportDialog_1;
+	public static String CsvToRDBImportDialog_10;
+	public static String CsvToRDBImportDialog_11;
+	public static String CsvToRDBImportDialog_12;
+	public static String CsvToRDBImportDialog_14;
+	public static String CsvToRDBImportDialog_15;
+	public static String CsvToRDBImportDialog_16;
+	public static String CsvToRDBImportDialog_19;
+	public static String CsvToRDBImportDialog_2;
+	public static String CsvToRDBImportDialog_21;
+	public static String CsvToRDBImportDialog_24;
+	public static String CsvToRDBImportDialog_26;
+	public static String CsvToRDBImportDialog_29;
+	public static String CsvToRDBImportDialog_30;
+	public static String CsvToRDBImportDialog_4;
+	public static String CsvToRDBImportDialog_5;
+	public static String CsvToRDBImportDialog_6;
 	public static String MongoDBImportEditor_0;
 	public static String MongoDBImportEditor_1;
 	public static String MongoDBImportEditor_10;
@@ -32,6 +50,11 @@ public class Messages extends NLS {
 	public static String QueryToMongoDBImport_2;
 	public static String QueryToMongoDBImport_5;
 	public static String TableColumnLIstComposite_1;
+	public static String SQLToDBImportDialog_grpSqlResult_text;
+	public static String SQLToDBImportDialog_btnInsert_text;
+	public static String SQLToDBImportDialog_lblSeprator_text;
+	public static String SQLToDBImportDialog_text_1_text;
+	public static String SQLToDBImportDialog_btnTruncateBeforeLoad_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
