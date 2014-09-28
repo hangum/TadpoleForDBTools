@@ -76,7 +76,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.MongoDBCollectionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.DragListener;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableDragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
 import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
@@ -271,7 +271,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
-		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(userDB, tableListViewer));
+		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new TableDragListener(userDB, tableListViewer));
 
 		// filter
 		tableFilter = new TableFilter();

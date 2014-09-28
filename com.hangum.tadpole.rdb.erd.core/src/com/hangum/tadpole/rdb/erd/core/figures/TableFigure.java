@@ -26,16 +26,23 @@ import org.eclipse.draw2d.geometry.Insets;
 
 import com.swtdesigner.SWTResourceManager;
 
+/**
+ * define table figure
+ * 
+ * @author hangum
+ *
+ */
 public class TableFigure extends Figure {
 	private static final Logger logger = Logger.getLogger(TableFigure.class);
 	private Label tableName = new Label();
 	
 	/** column type */
-	public static enum COLUMN_TYPE{KEY, NAME, TYPE, NULL}; 
+	public static enum COLUMN_TYPE{KEY, NAME, COMMENT, TYPE, NULL}; 
 	private ColumnLayoutFigure columnFigure;// = new ColumnLayoutFigure();
 	
 	private ColumnDetailFigure colKeyFigure;
 	private ColumnDetailFigure colNameFigure;
+	private ColumnDetailFigure colCommentFigure;
 	private ColumnDetailFigure colTypeFigure;
 	private ColumnDetailFigure colNullFigure;
 	
@@ -53,6 +60,11 @@ public class TableFigure extends Figure {
 		// name
 		this.colNameFigure = new ColumnDetailFigure();
 		this.colNameFigure.setForegroundColor(ColorConstants.black);
+		
+		// comment
+		this.colCommentFigure = new ColumnDetailFigure();
+		this.colCommentFigure.setForegroundColor(ColorConstants.black);
+		
 		// type
 		this.colTypeFigure = new ColumnDetailFigure();
 		this.colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
@@ -71,6 +83,7 @@ public class TableFigure extends Figure {
 
 		this.columnFigure.add(colKeyFigure);
 		this.columnFigure.add(colNameFigure);
+		this.columnFigure.add(colCommentFigure);
 		this.columnFigure.add(colTypeFigure);
 		this.columnFigure.add(colNullFigure);
 	}
@@ -91,6 +104,8 @@ public class TableFigure extends Figure {
 				colKeyFigure.add(figure);
 			} else if(COLUMN_TYPE.NAME == tmpFigure.getColumnType()) {
 				colNameFigure.add(figure);
+			} else if(COLUMN_TYPE.COMMENT == tmpFigure.getColumnType()) {
+				colCommentFigure.add(figure);
 			} else if(COLUMN_TYPE.TYPE == tmpFigure.getColumnType()) {
 				colTypeFigure.add(figure);
 			} else if(COLUMN_TYPE.NULL == tmpFigure.getColumnType()) {
@@ -105,6 +120,7 @@ public class TableFigure extends Figure {
 		if(figure instanceof  ColumnFigure){
 			colKeyFigure.remove(figure);
 			colNameFigure.remove(figure);
+			colCommentFigure.remove(figure);
 			colTypeFigure.remove(figure);
 			colNullFigure.remove(figure);
 		} else {
@@ -115,6 +131,7 @@ public class TableFigure extends Figure {
 	public void removeAllColumns(){
 		colKeyFigure.removeAll();
 		colNameFigure.removeAll();
+		colCommentFigure.removeAll();
 		colTypeFigure.removeAll();
 		colNullFigure.removeAll();
 	}
