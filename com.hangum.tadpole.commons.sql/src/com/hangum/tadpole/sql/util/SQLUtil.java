@@ -10,14 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util;
 
-import java.io.StringReader;
 import java.sql.ResultSet;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import net.sf.jsqlparser.parser.CCJSqlParserManager;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.Select;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

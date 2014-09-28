@@ -354,7 +354,7 @@ public class SessionManager {
 	/**
 	 * 사용자 session을 invalidate시킵니다.
 	 */
-	public static void invalidate(int userSeq) {
+	public static void invalidate() {
 		try {
 			HttpSession sStore = RWT.getRequest().getSession();
 			
