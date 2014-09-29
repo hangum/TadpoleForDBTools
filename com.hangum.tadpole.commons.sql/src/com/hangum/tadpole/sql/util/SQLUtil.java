@@ -248,6 +248,7 @@ public class SQLUtil {
 		boolean isChanged = false;
 		String retStr = tableName;
 		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
+		if(tmd == null) return retStr;
 		
 		switch(tmd.getSTORE_TYPE()) {
 //		case NONE: 
