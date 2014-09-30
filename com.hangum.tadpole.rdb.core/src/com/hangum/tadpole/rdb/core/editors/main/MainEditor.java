@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -49,6 +50,7 @@ import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
+import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -109,11 +111,6 @@ public class MainEditor extends EditorExtension {
 	/** db table list */
 	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
 	
-//	/* file upload */
-//	private FileUpload fileUpload;
-//	private DiskFileUploadReceiver receiver;
-//	private ServerPushSession pushSession;
-	    
 	public MainEditor() {
 		super();
 	}
@@ -194,20 +191,21 @@ public class MainEditor extends EditorExtension {
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
-//		// fileupload 
-//		final String url = startUploadReceiver();
-//		pushSession = new ServerPushSession();
-//		
-//		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
-//		tltmOpen.setToolTipText("Open script file in the editor");
-//		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-file-open.png")); //$NON-NLS-1$
-//		tltmOpen.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				
-//			}
-//		});
-//		new ToolItem(toolBar, SWT.SEPARATOR);
+		// fileupload 
+		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
+		tltmOpen.setToolTipText("Open a file");
+		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/file-open.png")); //$NON-NLS-1$
+		tltmOpen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "SQL File Open");
+				if(Dialog.OK == dialog.open()) {
+					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile());
+					appendText(dialog.getStrTxtFile());
+				}
+			}
+		});
+		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, ShortcutPrefixUtils.getCtrlShortcut()));
