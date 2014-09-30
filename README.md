@@ -19,6 +19,7 @@ It enables you to handle typical DB over the World Wide Web
 * Content Assist
 * Execute SQL Statement
 * SQL Result Set to CSV
+* CSV, SQL Import to DB
 * SQL History And Export text
 * Generate SQL Statement (Select, Insert, Update, Delete, Table, View, Index, Procedure, Function, Trigger)
 * Generate ER Diagram (Auto Layout)
@@ -47,9 +48,9 @@ It enables you to handle typical DB over the World Wide Web
 
 Environment
 -
-* more than Java 1.6.x
+* more than Java 1.7.x
 * support system standalone : linux.gtk.x86, linux.gtk.x86_64, acosx.cocoa.x86, macosx.cocoa.x86_64, win32.x86, win32.x86_64
-* support system server : tomcat 6.x
+* support system server : Apache Tomcat 7.x
 
 Demo Video
 -
@@ -61,25 +62,25 @@ Document
 -
 * Developer Guide
  - English : https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-Eng
- - Korea  : https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-kor
+ - 한국어  : https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=2621473
 * RDB User Guide
  - English : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Eng
- - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Kor
+ - 한국어  : https://tadpoledbhub.atlassian.net/wiki/display/TADPOLE/Tadpole+DB+Hub+DOC
  - Indonesia : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID
 * MongoDB User Guide
  - English : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Eng
- - Korea : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Kor
+ - 한국어  : https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=2621445
 * RDB Tutorial
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
-Demo Site
+Site
 *  http://tadpoledb.com
 
-Chrome web Store
+Chrome web store
 *  https://chrome.google.com/webstore/detail/tadpoledbcom/nhfaneohnnijkdpgmiddcgbcgpjgdjnc?utm_source=gmail
 
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.3.9/
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.4.0/
 
 License
 -
@@ -102,4 +103,4 @@ Contributor
 
 Donation
 - Paypal(paypal.com) : hangum@gmail.com
-- Show Donor List(https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List)
+- Donor(https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List)
