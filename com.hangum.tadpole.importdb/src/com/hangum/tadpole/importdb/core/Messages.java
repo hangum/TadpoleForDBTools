@@ -50,11 +50,25 @@ public class Messages extends NLS {
 	public static String QueryToMongoDBImport_2;
 	public static String QueryToMongoDBImport_5;
 	public static String TableColumnLIstComposite_1;
+	public static String SQLToDBImportDialog_0;
+	public static String SQLToDBImportDialog_BatchSize;
 	public static String SQLToDBImportDialog_grpSqlResult_text;
 	public static String SQLToDBImportDialog_btnInsert_text;
 	public static String SQLToDBImportDialog_lblSeprator_text;
 	public static String SQLToDBImportDialog_text_1_text;
 	public static String SQLToDBImportDialog_btnTruncateBeforeLoad_text;
+	public static String SQLToDBImportDialog_Close;
+	public static String SQLToDBImportDialog_Exception;
+	public static String SQLToDBImportDialog_Ignore;
+	public static String SQLToDBImportDialog_ImportException;
+	public static String SQLToDBImportDialog_Insert;
+	public static String SQLToDBImportDialog_LoadException;
+	public static String SQLToDBImportDialog_LogEmpty;
+	public static String SQLToDBImportDialog_ReadError;
+	public static String SQLToDBImportDialog_SaveLog;
+	public static String SQLToDBImportDialog_Stop;
+	public static String SQLToDBImportDialog_StoreData;
+	public static String SQLToDBImportDialog_UploadQuestion;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
