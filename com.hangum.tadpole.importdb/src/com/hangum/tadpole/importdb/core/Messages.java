@@ -55,6 +55,15 @@ public class Messages extends NLS {
 	public static String SQLToDBImportDialog_lblSeprator_text;
 	public static String SQLToDBImportDialog_text_1_text;
 	public static String SQLToDBImportDialog_btnTruncateBeforeLoad_text;
+	public static String SQLToDBImportDialog_lblNewLabel_text;
+	public static String SQLToDBImportDialog_text_1_text_1;
+	public static String SQLToDBImportDialog_lblNewLabel_1_text;
+	public static String SQLToDBImportDialog_btnIgnor_text;
+	public static String SQLToDBImportDialog_btnIgnore_text;
+	public static String SQLToDBImportDialog_btnStop_text;
+	public static String SQLToDBImportDialog_lblResultFile_text;
+	public static String SQLToDBImportDialog_text_2_text;
+	public static String SQLToDBImportDialog_lblNewLabel_2_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
