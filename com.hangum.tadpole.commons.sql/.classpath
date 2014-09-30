@@ -6,7 +6,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mariadb/mariadb-java-client-1.1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/postgreSQL/postgresql-9.3-1100.jdbc4.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/sqlite/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-dbcp-1.4.jar" sourcepath="/Users/hangum/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-pool-1.6.jar"/>
