@@ -87,6 +87,24 @@ public class Messages extends NLS {
 	public static String NewUserDialog_lblAccessKey_1_text;
 	public static String NewUserDialog_lblQrcodeUrl_text;
 	public static String NewUserDialog_lblOtpCdoe_text;
+
+	public static String UserListComposite_0;
+
+	public static String UserListComposite_1;
+
+	public static String UserListComposite_16;
+
+	public static String UserListComposite_17;
+
+	public static String UserListComposite_18;
+
+	public static String UserListComposite_2;
+
+	public static String UserListComposite_3;
+
+	public static String UserListComposite_4;
+
+	public static String UserListComposite_5;
 	
 	static {
 		// initialize resource bundle

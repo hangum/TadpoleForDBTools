@@ -41,7 +41,7 @@ import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
- * 사용자 수정 다이얼로그
+ * admin의 사용자 수정 다이얼로그
  * 
  * @author hangum
  *
@@ -163,8 +163,6 @@ public class ModifyUserDialog extends Dialog {
 		lblQuestion.setText("Question");
 
 		textQuestion = new Text(container, SWT.BORDER);
-		textQuestion.setEnabled(false);
-		textQuestion.setEditable(false);
 		textQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblAnswer = new Label(container, SWT.NONE);
@@ -173,15 +171,12 @@ public class ModifyUserDialog extends Dialog {
 
 		textAnswer = new Text(container, SWT.BORDER);
 		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textAnswer.setEnabled(false);
-		textAnswer.setEditable(false);
 		
 		initData();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 				
-
 		return container;
 	}
 	
@@ -202,8 +197,9 @@ public class ModifyUserDialog extends Dialog {
 			try {
 				SecurityHint questionKey = PublicTadpoleDefine.SecurityHint.valueOf(question);
 				textQuestion.setText(questionKey.toString());
-			} catch (IllegalStateException e) {
+			} catch (Exception e) {
 				// skip
+				textQuestion.setText(question);
 			}
 		}
 		textAnswer.setText(CipherManager.getInstance().decryption(userDAO.getSecurity_answer()));
@@ -211,18 +207,17 @@ public class ModifyUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		SessionManager.invalidate(11);
-		
 		if(MessageDialog.openConfirm(getShell(), Messages.ModifyUserDialog_12, Messages.ModifyUserDialog_13)) {
 			UserDAO user = new UserDAO();
 			user.setApproval_yn(comboApproval.getText());
 			user.setDelYn(comboDel.getText());
 			user.setSeq(userDAO.getSeq());
+			user.setSecurity_question(textQuestion.getText());
+			user.setSecurity_answer(textAnswer.getText());
 			
 			// 사용자의 권한을 no로 만들면 session에서 삭제 하도록 합니다.
 			if("YES".equals(user.getDelYn()) || "YES".equals(user.getApproval_yn())) {
 				String sessionId = SessionManagerListener.getSessionIds(user.getEmail());
-				logger.debug("[session id]" + sessionId);
 			}
 			
 			try {

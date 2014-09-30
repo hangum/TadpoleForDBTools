@@ -278,8 +278,10 @@
  -->
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.sql.dao.system.UserDAO">
 	UPDATE user SET
-		 delYn = #delYn#,
-		 approval_yn = #approval_yn#
+		security_question = #security_question#,
+		security_answer = #security_answer#,
+		delYn = #delYn#,
+		approval_yn = #approval_yn#
 	WHERE seq = #seq#
 </update>
 

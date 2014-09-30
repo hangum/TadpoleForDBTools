@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.draw2d.geometry.Rectangle;
 
@@ -89,6 +90,10 @@ public enum TadpoleModelUtils {
 			Table tableModel = factory.createTable();
 			tableModel.setDb(db);
 			tableModel.setName(table.getName());
+			
+			String tableComment = table.getComment();
+			tableComment = StringUtils.substring(""+tableComment, 0, 10);
+			tableModel.setComment(tableComment);
 			mapDBTables.put(tableModel.getName(), tableModel);
 			
 			// 첫번째 보여주는 항목.
@@ -120,6 +125,10 @@ public enum TadpoleModelUtils {
 				column.setNull(columnDAO.getNull());
 				column.setKey(columnDAO.getKey());
 				column.setType(columnDAO.getType());
+				
+				String strComment = columnDAO.getComment();
+				strComment = StringUtils.substring(""+strComment, 0, 10);
+				column.setComment(strComment);
 				
 				column.setTable(tableModel);
 				tableModel.getColumns().add(column);

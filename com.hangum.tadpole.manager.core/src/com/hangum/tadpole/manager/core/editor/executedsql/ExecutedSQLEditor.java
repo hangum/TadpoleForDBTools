@@ -443,7 +443,7 @@ public class ExecutedSQLEditor extends EditorPart {
 //			if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
 				List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
 				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-					String name = userGroupAUserDAO.getName() + " (" + userGroupAUserDAO.getEmail() + ")";
+					String name = userGroupAUserDAO.getUser_group_name() + " (" + userGroupAUserDAO.getEmail() + ")";
 					comboUserName.add(name);
 					comboUserName.setData(name, userGroupAUserDAO.getSeq());
 				}

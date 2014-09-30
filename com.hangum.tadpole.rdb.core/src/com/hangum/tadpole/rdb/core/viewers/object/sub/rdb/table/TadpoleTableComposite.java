@@ -313,7 +313,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
-		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new DragListener(userDB, tableListViewer));
+		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new TableDragListener(userDB, tableListViewer));
 
 		// filter
 		tableFilter = new TableFilter();

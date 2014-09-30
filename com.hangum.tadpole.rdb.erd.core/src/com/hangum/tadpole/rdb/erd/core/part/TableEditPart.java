@@ -70,7 +70,11 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 	private void updateFigure(TableFigure figure) {
 		Table tableModel = (Table)getModel();
 		
-		figure.setTableName(tableModel.getName());
+		if("".equals(tableModel.getComment())) {
+			figure.setTableName(tableModel.getName() );
+		} else {
+			figure.setTableName(tableModel.getName() + "(" + tableModel.getComment() + ")");
+		}
 		figure.removeAllColumns();
 
 		EList<Column> columns = tableModel.getColumns();
@@ -80,21 +84,24 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 			figure.add(figures[1]);
 			figure.add(figures[2]);
 			figure.add(figures[3]);
+			figure.add(figures[4]);
 		}
 	}
 	
 	private ColumnFigure[] createColumnFigure(Table tableModel, Column model){
 		ColumnFigure labelKey = new ColumnFigure(COLUMN_TYPE.KEY);
 		ColumnFigure labelName = new ColumnFigure(COLUMN_TYPE.NAME);
+		ColumnFigure labelComment = new ColumnFigure(COLUMN_TYPE.COMMENT);
 		ColumnFigure labelType = new ColumnFigure(COLUMN_TYPE.TYPE);
 		ColumnFigure labelNotNull = new ColumnFigure(COLUMN_TYPE.NULL);
 		
 		labelKey.setText( StringUtils.substring(model.getKey(), 0, 1));
 		labelName.setText(model.getField());
+		labelComment.setText(model.getComment());
 		labelType.setText(model.getType());
 		labelNotNull.setText(StringUtils.substring(model.getNull(), 0, 1));
 
-		return new ColumnFigure[]{labelKey, labelName, labelType, labelNotNull};
+		return new ColumnFigure[]{labelKey, labelName, labelComment, labelType, labelNotNull};
 	}
 	
 	@Override
