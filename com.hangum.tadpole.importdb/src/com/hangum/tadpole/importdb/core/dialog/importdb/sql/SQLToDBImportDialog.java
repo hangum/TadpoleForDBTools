@@ -18,7 +18,6 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.ByteOrderMark;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang.StringUtils;
@@ -50,6 +49,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -176,8 +176,15 @@ public class SQLToDBImportDialog extends Dialog {
 		lblBatchSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblBatchSize.setText(Messages.SQLToDBImportDialog_0);
 		
-		textBatchSize = new Text(compositeHead, SWT.BORDER | SWT.RIGHT);
-		textBatchSize.setText(Messages.SQLToDBImportDialog_BatchSize);
+		textBatchSize = new Text(compositeHead, SWT.BORDER | SWT.RIGHT);		
+		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
+			textBatchSize.setEditable(false);
+			textBatchSize.setText("1");
+		}else{
+			textBatchSize.setEditable(true);
+			textBatchSize.setText(Messages.SQLToDBImportDialog_BatchSize);
+		}
 		textBatchSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
@@ -215,9 +222,9 @@ public class SQLToDBImportDialog extends Dialog {
 		return container;
 	}
 	
-	private void insert() {
+	private void insert() throws IOException {
 		int ret;
-		BOMInputStream bomInputStream ;
+		BOMInputStream bomInputStream = null ;
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
@@ -237,18 +244,18 @@ public class SQLToDBImportDialog extends Dialog {
 		File userUploadFile = arryFiles[arryFiles.length-1];
 		try {
 			// bom마크가 있는지 charset은 무엇인지 확인한다.
-			bomInputStream = new BOMInputStream(FileUtils.openInputStream(FileUtils.getFile(userUploadFile) ) );
-			ByteOrderMark bom = bomInputStream.getBOM();
-			String charsetName = bom == null ? "CP949" : bom.getCharsetName(); //$NON-NLS-1$
-
-			String strTxtFile = FileUtils.readFileToString(userUploadFile, charsetName);			
-			if (bom != null){ 
-				// ByteOrderMark.UTF_8.equals(strTxtFile.getBytes()[0]);
-				//데이터의 첫바이트에 위치하는 BOM마크를 건너뛴다.
-				strTxtFile = strTxtFile.substring(1);
+			bomInputStream = new BOMInputStream(FileUtils.openInputStream(FileUtils.getFile(userUploadFile)));//`, false, ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
+			
+			String charsetName = "utf-8"; 
+			String strSQLData = "";
+			if(bomInputStream.getBOM() == null) {
+				strSQLData = FileUtils.readFileToString(userUploadFile, charsetName);
+			}else{
+				charsetName = bomInputStream.getBOMCharsetName();
+				strSQLData = FileUtils.readFileToString(userUploadFile, charsetName).substring(1);
 			}
 			
-			String [] strArrySQL = StringUtils.split(strTxtFile, textSeprator.getText());
+			String [] strArrySQL = StringUtils.split(strSQLData, textSeprator.getText());
 			ret = runSQLExecuteBatch(Arrays.asList(strArrySQL));
 			
 			if (ret == 0 ) 
@@ -260,12 +267,14 @@ public class SQLToDBImportDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error(Messages.SQLToDBImportDialog_ImportException, e);
 			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.SQLToDBImportDialog_LoadException + e.getMessage());
+		} finally {
+			if(bomInputStream != null) bomInputStream.close();
 		}
 	}
 	
 	private void saveLog(){
 		try {
-			if("".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
+			if(bufferBatchResult == null || "".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
 				MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.SQLToDBImportDialog_LogEmpty);
 				return;
 			}
@@ -332,11 +341,7 @@ public class SQLToDBImportDialog extends Dialog {
 				statement.addBatch(strQuery);
 				if (++count % batchSize == 0) {
 					try{
-						//TODO: SQLiteDB의 경우 한꺼번에 배치 insert가능한 건수가 200건인지 대량 배치 인서트 작업을 처리할 수 있는 다른 방법을 찾아야함.
 						statement.executeBatch();
-						//Thread.sleep(100);
-						//statement.clearBatch();
-						conn.commit();
 					} catch(Exception e) {
 						result = -1;
 						logger.error("Execute Batch error", e); //$NON-NLS-1$
@@ -371,7 +376,6 @@ public class SQLToDBImportDialog extends Dialog {
 			if (result < 0 && !"".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
 				MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, bufferBatchResult.toString());
 			}
-			//TODO: bufferBatchResult 파일로 저장.
 		} catch(Exception e) {
 			result = -1;
 			conn.rollback();
@@ -431,7 +435,11 @@ public class SQLToDBImportDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		
 		if(buttonId == ID_BTN_INSERT) {
-			insert();
+			try {
+				insert();
+			} catch (IOException e) {
+				logger.error("Execute batch insert to db.", e); //$NON-NLS-1$
+			}
 		}else if(buttonId == ID_BTN_EXPORT) {
 			saveLog();
 		}
