@@ -22,6 +22,12 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.ActionFactory;
 
+/**
+ * ERD Action BAR Contributor
+ * 
+ * @author hangum
+ *
+ */
 public class TadpoleERDActionBarContributor extends ActionBarContributor {
 
 	@Override
@@ -32,6 +38,8 @@ public class TadpoleERDActionBarContributor extends ActionBarContributor {
 		
 		addRetargetAction(new ZoomInRetargetAction());
 		addRetargetAction(new ZoomOutRetargetAction());
+
+//		addRetargetAction(new ERDViewStyleAction());
 	}
 	
 	@Override
