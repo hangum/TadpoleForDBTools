@@ -84,15 +84,19 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 		}
 		figure.removeAllColumns();
 		
-		EList<Column> columns = tableModel.getColumns();
-		for (Column column : columns) {
-			ColumnFigure[] figures = createColumnFigure(tableModel, column);
-			
-			if("YES".equals(style.getColumnPrimaryKey())) figure.add(figures[0]);
-			if("YES".equals(style.getColumnName())) figure.add(figures[1]);
-			if("YES".equals(style.getColumnComment())) figure.add(figures[2]);
-			if("YES".equals(style.getColumnType())) figure.add(figures[3]);
-			if("YES".equals(style.getColumnNullCheck())) figure.add(figures[4]);
+		// 모든 컬럼을 보여 주지 않아야 하는지 ..
+		boolean isShowColumn = "NO".equals(style.getColumnPrimaryKey()) & "NO".equals(style.getColumnName()) & "NO".equals(style.getColumnComment()) & "NO".equals(style.getColumnType()) & "NO".equals(style.getColumnNullCheck());
+		if(!isShowColumn) {
+			EList<Column> columns = tableModel.getColumns();
+			for (Column column : columns) {
+				ColumnFigure[] figures = createColumnFigure(tableModel, column);
+				
+				if("YES".equals(style.getColumnPrimaryKey())) 	figure.add(figures[0]);
+				if("YES".equals(style.getColumnName())) 		figure.add(figures[1]);
+				if("YES".equals(style.getColumnComment())) 		figure.add(figures[2]);
+				if("YES".equals(style.getColumnType())) 		figure.add(figures[3]);
+				if("YES".equals(style.getColumnNullCheck())) 	figure.add(figures[4]);
+			}
 		}
 	}
 	

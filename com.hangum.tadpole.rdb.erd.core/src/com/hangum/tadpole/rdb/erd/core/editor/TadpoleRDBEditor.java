@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
@@ -37,18 +38,23 @@ import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.AlignmentAction;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
+import org.eclipse.gef.ui.actions.MatchHeightAction;
+import org.eclipse.gef.ui.actions.MatchWidthAction;
 import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
-import org.eclipse.gef.ui.parts.GraphicalEditor;
+import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -82,7 +88,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
  * @author hangum
  *
  */
-public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
+public class TadpoleRDBEditor extends GraphicalEditorWithFlyoutPalette {
 	public static final String ID = "com.hangum.tadpole.rdb.erd.core.editor"; //$NON-NLS-1$
 	/**
 	 * Logger for this class
@@ -129,13 +135,12 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 						// 모든 table 정보를 가져온다.
 						if(isAllTable) {
 							db = TadpoleModelUtils.INSTANCE.getDBAllTable(userDB);
-							db.setDbType(db.getDbType() + " (" + userDB.getDisplay_name() + ", " + userDB.getUrl() + ")");
 						// 부분 테이블 정보를 처리한다.
 						} else {
 							db = factory.createDB();
-							db.setDbType(userDB.getDbms_types() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
 						}
 
+						db.setDbType(userDB.getDbms_types() + " (" + userDB.getDisplay_name() + ")");
 					}
 					
 					// 하위 호환을 위한 코드 .
@@ -297,6 +302,44 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		registry.registerAction(erdStyledAction);
 		getSelectionActions().add(ERDViewStyleAction.ID);
 	}
+	
+	@Override
+	protected void createActions() {
+		super.createActions();
+		ActionRegistry registry = getActionRegistry();
+		
+		IAction action = new MatchWidthAction(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+		action = new MatchHeightAction(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.LEFT);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.RIGHT);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.TOP);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.BOTTOM);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.CENTER);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.MIDDLE);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -369,10 +412,10 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		AnalyticCaller.track(TadpoleRDBEditor.ID, userDB.getDbms_types());
 	}
 	
-//	@Override
-//	protected PaletteRoot getPaletteRoot() {
-//		return null;
-//	}
+	@Override
+	protected PaletteRoot getPaletteRoot() {
+		return null;
+	}
 //	
 //	@Override
 //	public void doSaveAs() {
@@ -590,4 +633,5 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	public DB getDb() {
 		return db;
 	}
+
 }
