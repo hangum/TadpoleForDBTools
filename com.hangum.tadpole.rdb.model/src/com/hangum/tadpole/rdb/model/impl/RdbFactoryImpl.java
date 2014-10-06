@@ -41,7 +41,7 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	 */
 	public static RdbFactory init() {
 		try {
-			RdbFactory theRdbFactory = (RdbFactory)EPackage.Registry.INSTANCE.getEFactory("http://com.hangum.tadpole.rdb.model.ERDInfo"); 
+			RdbFactory theRdbFactory = (RdbFactory)EPackage.Registry.INSTANCE.getEFactory(RdbPackage.eNS_URI);
 			if (theRdbFactory != null) {
 				return theRdbFactory;
 			}
@@ -77,6 +77,7 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 			case RdbPackage.VIEW: return createView();
 			case RdbPackage.ERD_INFO: return createERDInfo();
 			case RdbPackage.USER_COMMENT: return createUserComment();
+			case RdbPackage.STYLE: return createStyle();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -188,6 +189,16 @@ public class RdbFactoryImpl extends EFactoryImpl implements RdbFactory {
 	public UserComment createUserComment() {
 		UserCommentImpl userComment = new UserCommentImpl();
 		return userComment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Style createStyle() {
+		StyleImpl style = new StyleImpl();
+		return style;
 	}
 
 	/**

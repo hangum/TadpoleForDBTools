@@ -122,24 +122,25 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		
 				try {
 					if(db == null) {
+						RdbFactory factory = RdbFactory.eINSTANCE;
+						
 						// 모든 table 정보를 가져온다.
 						if(isAllTable) {
 							db = TadpoleModelUtils.INSTANCE.getDBAllTable(userDB);
 							db.setDbType(db.getDbType() + " (" + userDB.getDisplay_name() + ", " + userDB.getUrl() + ")");
-//							db.setUrl("");
-//							db.setId("");
-							
-							// update action을 날려준다.
-							
+
+							if(db.getStyle() == null) db.setStyle(factory.createStyle());
 
 						// 부분 테이블 정보를 처리한다.
 						} else {
-							RdbFactory factory = RdbFactory.eINSTANCE;
 							db = factory.createDB();
 							db.setDbType(userDB.getDbms_types() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
-//							db.setId("");//userDB.getDisplay_name());
-//							db.setUrl("");//userDB.getUrl());
+
+							if(db.getStyle() == null) db.setStyle(factory.createStyle());
 						}
+					} else {
+						// 하위 호환을 위한 코드 .
+						if(db.getStyle() == null) db.setStyle(RdbFactory.eINSTANCE.createStyle());
 					}
 					
 				} catch(Exception e) {
@@ -181,7 +182,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 							db = factory.createDB();
 							db.setDbType(userDB.getDbms_types());
 							db.setId(userDB.getUsers());
-							db.setUrl(userDB.getUrl());
+							db.setUrl(userDB.getHost());
 							
 						}
 						getGraphicalViewer().setContents(db);
@@ -290,7 +291,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		registry.registerAction(action);
 		getSelectionActions().add(action.getId());
 		
-		ERDViewStyleAction erdStyledAction = new ERDViewStyleAction(this);
+		ERDViewStyleAction erdStyledAction = new ERDViewStyleAction(this, getGraphicalViewer());
 		registry.registerAction(erdStyledAction);
 		getSelectionActions().add(ERDViewStyleAction.ID);
 	}
@@ -478,9 +479,10 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	 */
 	private String createResourceToString() throws Exception {
 		XMLResourceImpl resource = new XMLResourceImpl();
-        XMLProcessor processor = new XMLProcessor();
         resource.setEncoding("UTF-8");
         resource.getContents().add(db);
+        
+        XMLProcessor processor = new XMLProcessor();
         return processor.saveToString(resource, null);
 	}
 	
@@ -582,4 +584,8 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 //			super.dispose();
 //		}
 //	}
+	
+	public DB getDb() {
+		return db;
+	}
 }

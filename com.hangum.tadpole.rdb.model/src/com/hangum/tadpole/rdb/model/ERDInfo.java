@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link com.hangum.tadpole.rdb.model.ERDInfo#isAutoLayout <em>Auto Layout</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.ERDInfo#getVersion <em>Version</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.ERDInfo#getStyle <em>Style</em>}</li>
  * </ul>
  * </p>
  *
@@ -84,5 +85,31 @@ public interface ERDInfo extends EObject {
 	 * @generated
 	 */
 	void setVersion(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Style</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Style</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Style</em>' reference.
+	 * @see #setStyle(Style)
+	 * @see com.hangum.tadpole.rdb.model.RdbPackage#getERDInfo_Style()
+	 * @model required="true"
+	 * @generated
+	 */
+	Style getStyle();
+
+	/**
+	 * Sets the value of the '{@link com.hangum.tadpole.rdb.model.ERDInfo#getStyle <em>Style</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Style</em>' reference.
+	 * @see #getStyle()
+	 * @generated
+	 */
+	void setStyle(Style value);
 
 } // ERDInfo

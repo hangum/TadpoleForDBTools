@@ -17,6 +17,7 @@ import com.hangum.tadpole.rdb.model.RdbPackage;
 import com.hangum.tadpole.rdb.model.Relation;
 import com.hangum.tadpole.rdb.model.Table;
 
+import com.hangum.tadpole.rdb.model.UserComment;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -47,6 +48,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.DBImpl#getSid <em>Sid</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.DBImpl#getReferences <em>References</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.DBImpl#getComment <em>Comment</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.impl.DBImpl#getDBComment <em>DB Comment</em>}</li>
  * </ul>
  * </p>
  *
@@ -192,6 +194,16 @@ public class DBImpl extends ERDInfoImpl implements DB {
 	 * @ordered
 	 */
 	protected String comment = COMMENT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getDBComment() <em>DB Comment</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDBComment()
+	 * @generated
+	 * @ordered
+	 */
+	protected UserComment dbComment;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -367,6 +379,44 @@ public class DBImpl extends ERDInfoImpl implements DB {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public UserComment getDBComment() {
+		if (dbComment != null && dbComment.eIsProxy()) {
+			InternalEObject oldDBComment = (InternalEObject)dbComment;
+			dbComment = (UserComment)eResolveProxy(oldDBComment);
+			if (dbComment != oldDBComment) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RdbPackage.DB__DB_COMMENT, oldDBComment, dbComment));
+			}
+		}
+		return dbComment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UserComment basicGetDBComment() {
+		return dbComment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDBComment(UserComment newDBComment) {
+		UserComment oldDBComment = dbComment;
+		dbComment = newDBComment;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RdbPackage.DB__DB_COMMENT, oldDBComment, dbComment));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -419,6 +469,9 @@ public class DBImpl extends ERDInfoImpl implements DB {
 				return getReferences();
 			case RdbPackage.DB__COMMENT:
 				return getComment();
+			case RdbPackage.DB__DB_COMMENT:
+				if (resolve) return getDBComment();
+				return basicGetDBComment();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -458,6 +511,9 @@ public class DBImpl extends ERDInfoImpl implements DB {
 			case RdbPackage.DB__COMMENT:
 				setComment((String)newValue);
 				return;
+			case RdbPackage.DB__DB_COMMENT:
+				setDBComment((UserComment)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -494,6 +550,9 @@ public class DBImpl extends ERDInfoImpl implements DB {
 			case RdbPackage.DB__COMMENT:
 				setComment(COMMENT_EDEFAULT);
 				return;
+			case RdbPackage.DB__DB_COMMENT:
+				setDBComment((UserComment)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -522,6 +581,8 @@ public class DBImpl extends ERDInfoImpl implements DB {
 				return references != null && !references.isEmpty();
 			case RdbPackage.DB__COMMENT:
 				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
+			case RdbPackage.DB__DB_COMMENT:
+				return dbComment != null;
 		}
 		return super.eIsSet(featureID);
 	}

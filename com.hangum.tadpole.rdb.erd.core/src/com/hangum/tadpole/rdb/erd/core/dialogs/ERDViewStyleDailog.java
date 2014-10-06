@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.rdb.model.Style;
+
 /**
  * 에디터의 뷰 스타일을 선택합니다.
  *  
@@ -29,22 +31,27 @@ import org.eclipse.swt.widgets.Shell;
  *
  */
 public class ERDViewStyleDailog extends Dialog {
+	
+	Style erdStyle;
+	
 	Button btnPrimaryKey;
 	Button btnColumnName;
 	Button btnColumnComent;
 	Button btnColumnType;
 	Button btnNullCheck;
 	private Group grpTableTitle;
-	private Button btnTab;
-	private Button btnTableComment;
 	private Button btnTableName;
+	private Button btnTableComment;
+	private Button btnTableNameComment;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public ERDViewStyleDailog(Shell parentShell) {
+	public ERDViewStyleDailog(Shell parentShell, Style erdStyle) {
 		super(parentShell);
+		
+		this.erdStyle = erdStyle;
 	}
 	
 	@Override
@@ -71,14 +78,17 @@ public class ERDViewStyleDailog extends Dialog {
 		grpTableTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpTableTitle.setText("Table Title");
 		
-		btnTab = new Button(grpTableTitle, SWT.RADIO);
-		btnTab.setText("Table Name");
+		btnTableName = new Button(grpTableTitle, SWT.RADIO);
+		btnTableName.setText("Table Name");
+		btnTableName.setData("name");
 		
 		btnTableComment = new Button(grpTableTitle, SWT.RADIO);
 		btnTableComment.setText("Table Comment ");
+		btnTableComment.setData("comment");
 		
-		btnTableName = new Button(grpTableTitle, SWT.RADIO);
-		btnTableName.setText("Table Name + Comment");
+		btnTableNameComment = new Button(grpTableTitle, SWT.RADIO);
+		btnTableNameComment.setText("Table Name + Comment");
+		btnTableNameComment.setData("nameComment");
 		
 		Group grpColumn = new Group(container, SWT.NONE);
 		grpColumn.setLayout(new GridLayout(1, false));
@@ -99,8 +109,51 @@ public class ERDViewStyleDailog extends Dialog {
 		
 		btnNullCheck = new Button(grpColumn, SWT.CHECK);
 		btnNullCheck.setText("Null Check");
+		
+		initUI();
 
 		return container;
+	}
+	
+	private void initUI() {
+		String tableTitle = erdStyle.getTableTitle();
+		if("name".equals(tableTitle)) 		btnTableName.setSelection(true);
+		else if("comment".equals(tableTitle)) btnTableComment.setSelection(true);
+		else 									btnTableNameComment.setSelection(true);
+		
+		if("YES".equals(erdStyle.getColumnPrimaryKey())) 	btnPrimaryKey.setSelection(true);
+		if("YES".equals(erdStyle.getColumnName())) 			btnColumnName.setSelection(true);
+		if("YES".equals(erdStyle.getColumnComment())) 		btnColumnComent.setSelection(true);
+		if("YES".equals(erdStyle.getColumnType())) 			btnColumnType.setSelection(true);
+		if("YES".equals(erdStyle.getColumnNullCheck())) 	btnNullCheck.setSelection(true);
+	}
+	
+	@Override
+	protected void okPressed() {
+		if(btnTableName.getSelection()) 		erdStyle.setTableTitle(btnTableName.getData().toString());
+		else if(btnTableComment.getSelection()) erdStyle.setTableTitle(btnTableComment.getData().toString());
+		else 									erdStyle.setTableTitle(btnTableNameComment.getData().toString());
+	
+		if(btnPrimaryKey.getSelection()) 	erdStyle.setColumnPrimaryKey("YES");
+		else 								erdStyle.setColumnPrimaryKey("NO");
+		
+		if(btnColumnName.getSelection()) 	erdStyle.setColumnName("YES");
+		else 								erdStyle.setColumnName("NO");
+		
+		if(btnColumnComent.getSelection()) 	erdStyle.setColumnComment("YES");
+		else 								erdStyle.setColumnComment("NO");
+		
+		if(btnColumnType.getSelection()) 	erdStyle.setColumnType("YES");
+		else 								erdStyle.setColumnType("NO");
+		
+		if(btnNullCheck.getSelection()) 	erdStyle.setColumnNullCheck("YES");
+		else 								erdStyle.setColumnNullCheck("NO");
+		
+		super.okPressed();
+	}
+	
+	public Style getErdStyle() {
+		return erdStyle;
 	}
 
 	/**

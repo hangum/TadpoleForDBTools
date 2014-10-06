@@ -15,10 +15,12 @@ package com.hangum.tadpole.rdb.model.impl;
 import com.hangum.tadpole.rdb.model.ERDInfo;
 import com.hangum.tadpole.rdb.model.RdbPackage;
 
+import com.hangum.tadpole.rdb.model.Style;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
@@ -31,6 +33,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <ul>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.ERDInfoImpl#isAutoLayout <em>Auto Layout</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.ERDInfoImpl#getVersion <em>Version</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.impl.ERDInfoImpl#getStyle <em>Style</em>}</li>
  * </ul>
  * </p>
  *
@@ -76,6 +79,16 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	 * @ordered
 	 */
 	protected String version = VERSION_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getStyle() <em>Style</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStyle()
+	 * @generated
+	 * @ordered
+	 */
+	protected Style style;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -143,6 +156,44 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Style getStyle() {
+		if (style != null && style.eIsProxy()) {
+			InternalEObject oldStyle = (InternalEObject)style;
+			style = (Style)eResolveProxy(oldStyle);
+			if (style != oldStyle) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RdbPackage.ERD_INFO__STYLE, oldStyle, style));
+			}
+		}
+		return style;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Style basicGetStyle() {
+		return style;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setStyle(Style newStyle) {
+		Style oldStyle = style;
+		style = newStyle;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RdbPackage.ERD_INFO__STYLE, oldStyle, style));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -150,6 +201,9 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 				return isAutoLayout();
 			case RdbPackage.ERD_INFO__VERSION:
 				return getVersion();
+			case RdbPackage.ERD_INFO__STYLE:
+				if (resolve) return getStyle();
+				return basicGetStyle();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -167,6 +221,9 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 				return;
 			case RdbPackage.ERD_INFO__VERSION:
 				setVersion((String)newValue);
+				return;
+			case RdbPackage.ERD_INFO__STYLE:
+				setStyle((Style)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -186,6 +243,9 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 			case RdbPackage.ERD_INFO__VERSION:
 				setVersion(VERSION_EDEFAULT);
 				return;
+			case RdbPackage.ERD_INFO__STYLE:
+				setStyle((Style)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -202,6 +262,8 @@ public class ERDInfoImpl extends EObjectImpl implements ERDInfo {
 				return autoLayout != AUTO_LAYOUT_EDEFAULT;
 			case RdbPackage.ERD_INFO__VERSION:
 				return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
+			case RdbPackage.ERD_INFO__STYLE:
+				return style != null;
 		}
 		return super.eIsSet(featureID);
 	}
