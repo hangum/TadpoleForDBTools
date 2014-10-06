@@ -88,10 +88,18 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 */
 	public void browserEvaluate(String command, String ... args) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("\t ### send command is : [command] " + command + ", [args]" + args);
+			StringBuffer strOption = new StringBuffer();
+			for(String arg : args) {
+				strOption.append(arg + ", \t");
+			}
+			logger.debug("\t ### send command is : [command] " + command + ", \n [args]" + strOption.toString());
 		}
 		
 		try {
+//			logger.debug("===[start]==========================================================================>");
+//			logger.debug(TadpoleEditorUtils.makeGrantArgs(args)[0]);
+//			logger.debug("===[end]==========================================================================>");
+			
 			browserQueryEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
 		} catch(Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", getUserEMail()), e); //$NON-NLS-1$ //$NON-NLS-2$
