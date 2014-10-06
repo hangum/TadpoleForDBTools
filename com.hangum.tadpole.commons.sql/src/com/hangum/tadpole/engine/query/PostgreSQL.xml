@@ -303,7 +303,70 @@ FROM
 	collation				:
  -->
 <select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
-	select tgname "trigger" from pg_trigger 
+<![CDATA[
+ SELECT 
+    (current_database())::information_schema.sql_identifier AS Database,
+    (t.tgname)::information_schema.sql_identifier AS trigger,
+    (em.text)::information_schema.character_data AS Event,
+    (current_database())::information_schema.sql_identifier AS Definer,
+    (c.relname)::information_schema.sql_identifier AS Table_name,
+    (CASE WHEN pg_has_role(c.relowner, 'USAGE'::text) THEN ( 
+        SELECT rm.m[1] AS m
+        FROM regexp_matches(pg_get_triggerdef(t.oid), '.{35,} WHEN ((.+)) EXECUTE PROCEDURE'::text) rm(m) LIMIT 1)
+    ELSE NULL::text END)::information_schema.character_data AS action_condition,
+    ("substring"(pg_get_triggerdef(t.oid), ("position"("substring"(pg_get_triggerdef(t.oid), 48), 'EXECUTE PROCEDURE'::text) + 47)))::information_schema.character_data AS Statement,
+    (CASE ((t.tgtype)::integer & 1) WHEN 1 THEN 'ROW'::text ELSE 'STATEMENT'::text END)::information_schema.character_data ||' '||
+    (CASE ((t.tgtype)::integer & 66)
+     WHEN 2 THEN 'BEFORE'::text
+     WHEN 64 THEN 'INSTEAD OF'::text
+     ELSE 'AFTER'::text END)::information_schema.character_data AS Timing,
+    (NULL::timestamp with time zone)::information_schema.time_stamp AS created,
+    (case when t.tgenabled = 'O' then 'VALID' else 'INVALID' end) as Status
+   FROM pg_namespace n,
+    pg_class c,
+    pg_trigger t,
+    ( VALUES (4,'INSERT'::text), (8,'DELETE'::text), (16,'UPDATE'::text)) em(num, text)
+  WHERE ((((((n.oid = c.relnamespace) AND (c.oid = t.tgrelid)) 
+AND (((t.tgtype)::integer & em.num) <> 0)) 
+AND (NOT t.tgisinternal)) 
+AND (NOT pg_is_other_temp_schema(n.oid))) 
+AND ((pg_has_role(c.relowner, 'USAGE'::text) 
+ OR has_table_privilege(c.oid, 'INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER'::text)) 
+ OR has_any_column_privilege(c.oid, 'INSERT, UPDATE, REFERENCES'::text)));
+ ]]>
+</select>
+
+<!-- 
+	enable 상태의 트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+SELECT 
+     c.relname as Table_name 
+    ,t.tgname as Trigger_name
+    ,'ALTER TABLE ' || c.relname || ' DISABLE TRIGGER ' || t.tgname as Disable_Statement
+    ,'ALTER TABLE ' || c.relname || ' ENABLE TRIGGER ' || t.tgname as Enable_Statement
+FROM pg_class c 
+  inner join pg_trigger t on c.oid = t.tgrelid
+WHERE 1 = 1 
+  AND NOT t.tgisinternal 
+  AND lower(c.relname) = lower(#table_name#)
+  AND t.tgenabled = 'O'
+ ]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+select 
+    a.attname as column_name
+    ,a.attnum as column_order
+from pg_class t
+    inner join pg_index ix on t.oid = ix.indrelid
+    inner join pg_attribute a on a.attrelid = t.oid and a.attnum = ANY(ix.indkey)
+where 1=1
+  and lower(t.relname) = lower(#table_name#)
 </select>
 
 <!-- 

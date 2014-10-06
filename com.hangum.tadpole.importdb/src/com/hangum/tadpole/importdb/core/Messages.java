@@ -69,6 +69,30 @@ public class Messages extends NLS {
 	public static String SQLToDBImportDialog_Stop;
 	public static String SQLToDBImportDialog_StoreData;
 	public static String SQLToDBImportDialog_UploadQuestion;
+	public static String CsvToRDBImportDialog_btnCopyNew_text;
+	public static String CsvToRDBImportDialog_text_1_text;
+	public static String CsvToRDBImportDialog_lblExistsData_text;
+	public static String CsvToRDBImportDialog_btnTruncate_text;
+	public static String CsvToRDBImportDialog_btnDeleteAll_text;
+	public static String CsvToRDBImportDialog_lblDisable_text;
+	public static String CsvToRDBImportDialog_btnCheckButton_text;
+	public static String CsvToRDBImportDialog_btnTrigger_text;
+	public static String CsvToRDBImportDialog_btnPk_text;
+	public static String CsvToRDBImportDialog_btnFk_text;
+	public static String CsvToRDBImportDialog_btnDownloadSql_text;
+	public static String CsvToRDBImportDialog_btnSaveLog_text;
+	public static String CsvToRDBImportDialog_lblExecuteType_text;
+	public static String CsvToRDBImportDialog_btnInsert_text;
+	public static String CsvToRDBImportDialog_btnUpdate_text;
+	public static String CsvToRDBImportDialog_btnDelete_text;
+	public static String CsvToRDBImportDialog_lblBatchSize_text;
+	public static String CsvToRDBImportDialog_text_1_text_1;
+	public static String CsvToRDBImportDialog_lblException_text;
+	public static String CsvToRDBImportDialog_btnIgnore_text;
+	public static String CsvToRDBImportDialog_btnStop_text;
+	public static String CsvToRDBImportDialog_btnIgnore_toolTipText;
+	public static String CsvToRDBImportDialog_btnStop_toolTipText;
+	public static String CsvToRDBImportDialog_btnRadioButton_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
