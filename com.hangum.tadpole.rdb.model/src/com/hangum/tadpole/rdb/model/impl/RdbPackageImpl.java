@@ -275,6 +275,15 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getDB_StyledReference() {
+		return (EReference)dbEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTable() {
 		return tableEClass;
 	}
@@ -698,6 +707,15 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getStyle_Db() {
+		return (EReference)styleEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getRelationKind() {
 		return relationKindEEnum;
 	}
@@ -758,6 +776,7 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 		createEReference(dbEClass, DB__REFERENCES);
 		createEAttribute(dbEClass, DB__COMMENT);
 		createEReference(dbEClass, DB__DB_COMMENT);
+		createEReference(dbEClass, DB__STYLED_REFERENCE);
 
 		tableEClass = createEClass(TABLE);
 		createEReference(tableEClass, TABLE__COLUMNS);
@@ -812,6 +831,7 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 		createEAttribute(styleEClass, STYLE__COLUMN_TYPE);
 		createEAttribute(styleEClass, STYLE__COLUMN_NULL_CHECK);
 		createEAttribute(styleEClass, STYLE__GRID);
+		createEReference(styleEClass, STYLE__DB);
 
 		// Create enums
 		relationKindEEnum = createEEnum(RELATION_KIND);
@@ -863,6 +883,7 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 		initEReference(getDB_References(), this.getRelation(), this.getRelation_Db(), "references", null, 0, -1, com.hangum.tadpole.rdb.model.DB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDB_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, com.hangum.tadpole.rdb.model.DB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDB_DBComment(), this.getUserComment(), null, "DBComment", null, 0, 1, com.hangum.tadpole.rdb.model.DB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDB_StyledReference(), this.getStyle(), this.getStyle_Db(), "styledReference", null, 0, -1, com.hangum.tadpole.rdb.model.DB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tableEClass, Table.class, "Table", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTable_Columns(), this.getColumn(), this.getColumn_Table(), "columns", null, 1, -1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -910,13 +931,14 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 		initEAttribute(getUserComment_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, UserComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(styleEClass, Style.class, "Style", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getStyle_TableTitle(), ecorePackage.getEString(), "tableTitle", "name", 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStyle_TableTitle(), ecorePackage.getEString(), "tableTitle", "nameComment", 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStyle_ColumnPrimaryKey(), ecorePackage.getEString(), "columnPrimaryKey", "YES", 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStyle_ColumnName(), ecorePackage.getEString(), "columnName", "YES", 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStyle_ColumnComment(), ecorePackage.getEString(), "columnComment", "YES", 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStyle_ColumnType(), ecorePackage.getEString(), "columnType", "YES", 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStyle_ColumnNullCheck(), ecorePackage.getEString(), "columnNullCheck", "YES", 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStyle_Grid(), ecorePackage.getEString(), "grid", "YES", 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStyle_Db(), this.getDB(), this.getDB_StyledReference(), "db", null, 1, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(relationKindEEnum, RelationKind.class, "RelationKind");
@@ -931,6 +953,25 @@ public class RdbPackageImpl extends EPackageImpl implements RdbPackage {
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// null
+		createNullAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>null</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createNullAnnotations() {
+		String source = null;	
+		addAnnotation
+		  (tableEClass, 
+		   source, 
+		   new String[] {
+		   });
 	}
 
 } //RdbPackageImpl

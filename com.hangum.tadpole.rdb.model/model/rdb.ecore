@@ -13,6 +13,8 @@
         eType="#//Relation" containment="true" eOpposite="#//Relation/db"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="DBComment" eType="#//UserComment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="styledReference" upperBound="-1"
+        eType="#//Style" containment="true" eOpposite="#//Style/db"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Table">
     <eAnnotations/>
@@ -95,5 +97,7 @@
         defaultValueLiteral="YES"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="grid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="YES"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="db" lowerBound="1" eType="#//DB"
+        eOpposite="#//DB/styledReference"/>
   </eClassifiers>
 </ecore:EPackage>

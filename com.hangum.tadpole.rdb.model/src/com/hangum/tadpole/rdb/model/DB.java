@@ -31,6 +31,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link com.hangum.tadpole.rdb.model.DB#getReferences <em>References</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.DB#getComment <em>Comment</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.DB#getDBComment <em>DB Comment</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.DB#getStyledReference <em>Styled Reference</em>}</li>
  * </ul>
  * </p>
  *
@@ -256,5 +257,23 @@ public interface DB extends ERDInfo {
 	 * @generated
 	 */
 	void setDBComment(UserComment value);
+
+	/**
+	 * Returns the value of the '<em><b>Styled Reference</b></em>' containment reference list.
+	 * The list contents are of type {@link com.hangum.tadpole.rdb.model.Style}.
+	 * It is bidirectional and its opposite is '{@link com.hangum.tadpole.rdb.model.Style#getDb <em>Db</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Styled Reference</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Styled Reference</em>' containment reference list.
+	 * @see com.hangum.tadpole.rdb.model.RdbPackage#getDB_StyledReference()
+	 * @see com.hangum.tadpole.rdb.model.Style#getDb
+	 * @model opposite="db" containment="true"
+	 * @generated
+	 */
+	EList<Style> getStyledReference();
 
 } // DB

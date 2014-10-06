@@ -15,6 +15,7 @@ package com.hangum.tadpole.rdb.model.impl;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbPackage;
 import com.hangum.tadpole.rdb.model.Relation;
+import com.hangum.tadpole.rdb.model.Style;
 import com.hangum.tadpole.rdb.model.Table;
 
 import com.hangum.tadpole.rdb.model.UserComment;
@@ -49,6 +50,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.DBImpl#getReferences <em>References</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.DBImpl#getComment <em>Comment</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.DBImpl#getDBComment <em>DB Comment</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.impl.DBImpl#getStyledReference <em>Styled Reference</em>}</li>
  * </ul>
  * </p>
  *
@@ -204,6 +206,16 @@ public class DBImpl extends ERDInfoImpl implements DB {
 	 * @ordered
 	 */
 	protected UserComment dbComment;
+
+	/**
+	 * The cached value of the '{@link #getStyledReference() <em>Styled Reference</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStyledReference()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Style> styledReference;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -417,6 +429,18 @@ public class DBImpl extends ERDInfoImpl implements DB {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Style> getStyledReference() {
+		if (styledReference == null) {
+			styledReference = new EObjectContainmentWithInverseEList<Style>(Style.class, this, RdbPackage.DB__STYLED_REFERENCE, RdbPackage.STYLE__DB);
+		}
+		return styledReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -425,6 +449,8 @@ public class DBImpl extends ERDInfoImpl implements DB {
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getTables()).basicAdd(otherEnd, msgs);
 			case RdbPackage.DB__REFERENCES:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getReferences()).basicAdd(otherEnd, msgs);
+			case RdbPackage.DB__STYLED_REFERENCE:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getStyledReference()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -441,6 +467,8 @@ public class DBImpl extends ERDInfoImpl implements DB {
 				return ((InternalEList<?>)getTables()).basicRemove(otherEnd, msgs);
 			case RdbPackage.DB__REFERENCES:
 				return ((InternalEList<?>)getReferences()).basicRemove(otherEnd, msgs);
+			case RdbPackage.DB__STYLED_REFERENCE:
+				return ((InternalEList<?>)getStyledReference()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -472,6 +500,8 @@ public class DBImpl extends ERDInfoImpl implements DB {
 			case RdbPackage.DB__DB_COMMENT:
 				if (resolve) return getDBComment();
 				return basicGetDBComment();
+			case RdbPackage.DB__STYLED_REFERENCE:
+				return getStyledReference();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -514,6 +544,10 @@ public class DBImpl extends ERDInfoImpl implements DB {
 			case RdbPackage.DB__DB_COMMENT:
 				setDBComment((UserComment)newValue);
 				return;
+			case RdbPackage.DB__STYLED_REFERENCE:
+				getStyledReference().clear();
+				getStyledReference().addAll((Collection<? extends Style>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -553,6 +587,9 @@ public class DBImpl extends ERDInfoImpl implements DB {
 			case RdbPackage.DB__DB_COMMENT:
 				setDBComment((UserComment)null);
 				return;
+			case RdbPackage.DB__STYLED_REFERENCE:
+				getStyledReference().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -583,6 +620,8 @@ public class DBImpl extends ERDInfoImpl implements DB {
 				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
 			case RdbPackage.DB__DB_COMMENT:
 				return dbComment != null;
+			case RdbPackage.DB__STYLED_REFERENCE:
+				return styledReference != null && !styledReference.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

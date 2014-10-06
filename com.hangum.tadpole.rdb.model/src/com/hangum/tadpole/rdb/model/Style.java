@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.hangum.tadpole.rdb.model.Style#getColumnType <em>Column Type</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.Style#getColumnNullCheck <em>Column Null Check</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.Style#getGrid <em>Grid</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.Style#getDb <em>Db</em>}</li>
  * </ul>
  * </p>
  *
@@ -29,7 +30,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface Style extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Table Title</b></em>' attribute.
-	 * The default value is <code>"name"</code>.
+	 * The default value is <code>"nameComment"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Table Title</em>' attribute isn't clear,
@@ -39,7 +40,7 @@ public interface Style extends EObject {
 	 * @return the value of the '<em>Table Title</em>' attribute.
 	 * @see #setTableTitle(String)
 	 * @see com.hangum.tadpole.rdb.model.RdbPackage#getStyle_TableTitle()
-	 * @model default="name"
+	 * @model default="nameComment"
 	 * @generated
 	 */
 	String getTableTitle();
@@ -215,5 +216,33 @@ public interface Style extends EObject {
 	 * @generated
 	 */
 	void setGrid(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Db</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link com.hangum.tadpole.rdb.model.DB#getStyledReference <em>Styled Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Db</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Db</em>' container reference.
+	 * @see #setDb(DB)
+	 * @see com.hangum.tadpole.rdb.model.RdbPackage#getStyle_Db()
+	 * @see com.hangum.tadpole.rdb.model.DB#getStyledReference
+	 * @model opposite="styledReference" required="true" transient="false"
+	 * @generated
+	 */
+	DB getDb();
+
+	/**
+	 * Sets the value of the '{@link com.hangum.tadpole.rdb.model.Style#getDb <em>Db</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Db</em>' container reference.
+	 * @see #getDb()
+	 * @generated
+	 */
+	void setDb(DB value);
 
 } // Style

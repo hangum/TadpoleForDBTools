@@ -232,13 +232,22 @@ public interface RdbPackage extends EPackage {
 	int DB__DB_COMMENT = ERD_INFO_FEATURE_COUNT + 8;
 
 	/**
+	 * The feature id for the '<em><b>Styled Reference</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DB__STYLED_REFERENCE = ERD_INFO_FEATURE_COUNT + 9;
+
+	/**
 	 * The number of structural features of the '<em>DB</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DB_FEATURE_COUNT = ERD_INFO_FEATURE_COUNT + 9;
+	int DB_FEATURE_COUNT = ERD_INFO_FEATURE_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.rdb.model.impl.TableImpl <em>Table</em>}' class.
@@ -760,13 +769,22 @@ public interface RdbPackage extends EPackage {
 	int STYLE__GRID = 6;
 
 	/**
+	 * The feature id for the '<em><b>Db</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__DB = 7;
+
+	/**
 	 * The number of structural features of the '<em>Style</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STYLE_FEATURE_COUNT = 7;
+	int STYLE_FEATURE_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.rdb.model.RelationKind <em>Relation Kind</em>}' enum.
@@ -907,6 +925,17 @@ public interface RdbPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDB_DBComment();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link com.hangum.tadpole.rdb.model.DB#getStyledReference <em>Styled Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Styled Reference</em>'.
+	 * @see com.hangum.tadpole.rdb.model.DB#getStyledReference()
+	 * @see #getDB()
+	 * @generated
+	 */
+	EReference getDB_StyledReference();
 
 	/**
 	 * Returns the meta object for class '{@link com.hangum.tadpole.rdb.model.Table <em>Table</em>}'.
@@ -1419,6 +1448,17 @@ public interface RdbPackage extends EPackage {
 	EAttribute getStyle_Grid();
 
 	/**
+	 * Returns the meta object for the container reference '{@link com.hangum.tadpole.rdb.model.Style#getDb <em>Db</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Db</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getDb()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EReference getStyle_Db();
+
+	/**
 	 * Returns the meta object for enum '{@link com.hangum.tadpole.rdb.model.RelationKind <em>Relation Kind</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1553,6 +1593,14 @@ public interface RdbPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DB__DB_COMMENT = eINSTANCE.getDB_DBComment();
+
+		/**
+		 * The meta object literal for the '<em><b>Styled Reference</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DB__STYLED_REFERENCE = eINSTANCE.getDB_StyledReference();
 
 		/**
 		 * The meta object literal for the '{@link com.hangum.tadpole.rdb.model.impl.TableImpl <em>Table</em>}' class.
@@ -1943,6 +1991,14 @@ public interface RdbPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute STYLE__GRID = eINSTANCE.getStyle_Grid();
+
+		/**
+		 * The meta object literal for the '<em><b>Db</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STYLE__DB = eINSTANCE.getStyle_Db();
 
 		/**
 		 * The meta object literal for the '{@link com.hangum.tadpole.rdb.model.RelationKind <em>Relation Kind</em>}' enum.

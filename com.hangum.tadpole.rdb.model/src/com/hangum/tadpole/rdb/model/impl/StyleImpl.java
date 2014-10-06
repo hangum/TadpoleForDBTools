@@ -2,15 +2,19 @@
  */
 package com.hangum.tadpole.rdb.model.impl;
 
+import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbPackage;
 import com.hangum.tadpole.rdb.model.Style;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,6 +30,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.StyleImpl#getColumnType <em>Column Type</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.StyleImpl#getColumnNullCheck <em>Column Null Check</em>}</li>
  *   <li>{@link com.hangum.tadpole.rdb.model.impl.StyleImpl#getGrid <em>Grid</em>}</li>
+ *   <li>{@link com.hangum.tadpole.rdb.model.impl.StyleImpl#getDb <em>Db</em>}</li>
  * </ul>
  * </p>
  *
@@ -40,7 +45,7 @@ public class StyleImpl extends EObjectImpl implements Style {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TABLE_TITLE_EDEFAULT = "name";
+	protected static final String TABLE_TITLE_EDEFAULT = "nameComment";
 
 	/**
 	 * The cached value of the '{@link #getTableTitle() <em>Table Title</em>}' attribute.
@@ -343,6 +348,91 @@ public class StyleImpl extends EObjectImpl implements Style {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public DB getDb() {
+		if (eContainerFeatureID() != RdbPackage.STYLE__DB) return null;
+		return (DB)eInternalContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDb(DB newDb, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newDb, RdbPackage.STYLE__DB, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDb(DB newDb) {
+		if (newDb != eInternalContainer() || (eContainerFeatureID() != RdbPackage.STYLE__DB && newDb != null)) {
+			if (EcoreUtil.isAncestor(this, newDb))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newDb != null)
+				msgs = ((InternalEObject)newDb).eInverseAdd(this, RdbPackage.DB__STYLED_REFERENCE, DB.class, msgs);
+			msgs = basicSetDb(newDb, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RdbPackage.STYLE__DB, newDb, newDb));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case RdbPackage.STYLE__DB:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetDb((DB)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case RdbPackage.STYLE__DB:
+				return basicSetDb(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case RdbPackage.STYLE__DB:
+				return eInternalContainer().eInverseRemove(this, RdbPackage.DB__STYLED_REFERENCE, DB.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -360,6 +450,8 @@ public class StyleImpl extends EObjectImpl implements Style {
 				return getColumnNullCheck();
 			case RdbPackage.STYLE__GRID:
 				return getGrid();
+			case RdbPackage.STYLE__DB:
+				return getDb();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -392,6 +484,9 @@ public class StyleImpl extends EObjectImpl implements Style {
 				return;
 			case RdbPackage.STYLE__GRID:
 				setGrid((String)newValue);
+				return;
+			case RdbPackage.STYLE__DB:
+				setDb((DB)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -426,6 +521,9 @@ public class StyleImpl extends EObjectImpl implements Style {
 			case RdbPackage.STYLE__GRID:
 				setGrid(GRID_EDEFAULT);
 				return;
+			case RdbPackage.STYLE__DB:
+				setDb((DB)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -452,6 +550,8 @@ public class StyleImpl extends EObjectImpl implements Style {
 				return COLUMN_NULL_CHECK_EDEFAULT == null ? columnNullCheck != null : !COLUMN_NULL_CHECK_EDEFAULT.equals(columnNullCheck);
 			case RdbPackage.STYLE__GRID:
 				return GRID_EDEFAULT == null ? grid != null : !GRID_EDEFAULT.equals(grid);
+			case RdbPackage.STYLE__DB:
+				return getDb() != null;
 		}
 		return super.eIsSet(featureID);
 	}

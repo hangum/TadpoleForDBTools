@@ -69,6 +69,7 @@ import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.RdbPackage;
+import com.hangum.tadpole.rdb.model.Style;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
@@ -121,26 +122,27 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 				monitor.beginTask("ERD Initialize", IProgressMonitor.UNKNOWN);
 		
 				try {
+					RdbFactory factory = RdbFactory.eINSTANCE;
+					
 					if(db == null) {
-						RdbFactory factory = RdbFactory.eINSTANCE;
 						
 						// 모든 table 정보를 가져온다.
 						if(isAllTable) {
 							db = TadpoleModelUtils.INSTANCE.getDBAllTable(userDB);
 							db.setDbType(db.getDbType() + " (" + userDB.getDisplay_name() + ", " + userDB.getUrl() + ")");
-
-							if(db.getStyle() == null) db.setStyle(factory.createStyle());
-
 						// 부분 테이블 정보를 처리한다.
 						} else {
 							db = factory.createDB();
 							db.setDbType(userDB.getDbms_types() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
-
-							if(db.getStyle() == null) db.setStyle(factory.createStyle());
 						}
-					} else {
-						// 하위 호환을 위한 코드 .
-						if(db.getStyle() == null) db.setStyle(RdbFactory.eINSTANCE.createStyle());
+
+					}
+					
+					// 하위 호환을 위한 코드 .
+					if(db.getStyle() == null) {
+						Style style = RdbFactory.eINSTANCE.createStyle();
+						style.setDb(db);
+						db.setStyle(style);
 					}
 					
 				} catch(Exception e) {
