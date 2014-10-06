@@ -33,10 +33,14 @@ import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
+import org.eclipse.gef.SnapToGeometry;
+import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
+import org.eclipse.gef.ui.actions.ToggleGridAction;
+import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
@@ -55,6 +59,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
+import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleAction;
 import com.hangum.tadpole.rdb.erd.core.actions.TableSelectionAction;
 import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferDropTargetListener;
 import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferFactory;
@@ -225,8 +230,35 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		
 		viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.NONE), MouseWheelZoomHandler.SINGLETON);
 		viewer.setKeyHandler(keyHandler);
+		
+		// grid and geometry
+		configureGeometry();
+		configureGrid();
 	}
 	
+	/**
+	 * configure grid
+	 */
+	private void configureGrid() {
+		GraphicalViewer viewer = getGraphicalViewer();
+		viewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, true);
+		viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, true);
+		
+		IAction action = new ToggleGridAction(viewer);
+		getActionRegistry().registerAction(action);
+	}
+
+	/**
+	 * configure geometry
+	 */
+	private void configureGeometry() {
+		GraphicalViewer viewer = getGraphicalViewer();
+		viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, true);
+		
+		IAction action = new ToggleSnapToGeometryAction(viewer);
+		getActionRegistry().registerAction(action);
+	}
+
 	private void zoomContribution(GraphicalViewer viewer) {
 		double[] zoomLevels;
 		List<String> zoomContributions;
@@ -257,12 +289,30 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		IAction action = new TableSelectionAction(this, getGraphicalViewer());
 		registry.registerAction(action);
 		getSelectionActions().add(action.getId());
+		
+		ERDViewStyleAction erdStyledAction = new ERDViewStyleAction(this);
+		registry.registerAction(erdStyledAction);
+		getSelectionActions().add(ERDViewStyleAction.ID);
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 		loadDBRsource(input);
+	}
+	
+	private void configureKeyboardShortcu() {
+//		getGraphicalViewer().getKeyHandler();
+//		GraphicalViewerKeyHandler keyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
+//		keyHandler.put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry().getAction(GEFActionConstants.DIRECT_EDIT));
+//		keyHandler.put(KeyStroke.getPressed(SWT.F3, 0), getActionRegistry().getAction(ResizeToContentsAction.RESIZE_TO_CONTENTS_ID));
+//		getGraphicalViewer().setKeyHandler(keyHandler);
+//		
+//		getGraphicalViewer().getKeyHandler();
+//		GraphicalViewerKeyHandler keyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
+//		keyHandler.put(KeyStroke.getPressed(SWT.F3, 0), getActionRegistry().getAction(GEFActionConstants.SAVE));
+////		keyHandler.put(KeyStroke.getPressed(SWT.F3, 0), getActionRegistry().getAction(ResizeToContentsAction.RESIZE_TO_CONTENTS_ID));
+//		getGraphicalViewer().setKeyHandler(keyHandler);
 	}
 	
 	/**

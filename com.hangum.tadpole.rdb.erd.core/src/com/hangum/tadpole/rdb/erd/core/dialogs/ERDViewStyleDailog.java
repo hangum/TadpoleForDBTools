@@ -12,17 +12,15 @@ package com.hangum.tadpole.rdb.erd.core.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * 에디터의 뷰 스타일을 선택합니다.
@@ -31,13 +29,15 @@ import org.eclipse.swt.widgets.Group;
  *
  */
 public class ERDViewStyleDailog extends Dialog {
-
-	Combo comboTitle;
 	Button btnPrimaryKey;
 	Button btnColumnName;
 	Button btnColumnComent;
 	Button btnColumnType;
 	Button btnNullCheck;
+	private Group grpTableTitle;
+	private Button btnTab;
+	private Button btnTableComment;
+	private Button btnTableName;
 
 	/**
 	 * Create the dialog.
@@ -45,6 +45,12 @@ public class ERDViewStyleDailog extends Dialog {
 	 */
 	public ERDViewStyleDailog(Shell parentShell) {
 		super(parentShell);
+	}
+	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("ERD Viewing style");
 	}
 
 	/**
@@ -59,21 +65,20 @@ public class ERDViewStyleDailog extends Dialog {
 		gridLayout.horizontalSpacing = 5;
 		gridLayout.marginHeight = 5;
 		gridLayout.marginWidth = 5;
-		gridLayout.numColumns = 2;
 		
-		Label lblTitle = new Label(container, SWT.NONE);
-		lblTitle.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTitle.setText("Title");
+		grpTableTitle = new Group(container, SWT.NONE);
+		grpTableTitle.setLayout(new GridLayout(3, false));
+		grpTableTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		grpTableTitle.setText("Table Title");
 		
-		comboTitle = new Combo(container, SWT.NONE);
-		comboTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		btnTab = new Button(grpTableTitle, SWT.RADIO);
+		btnTab.setText("Table Name");
 		
-		comboTitle.add("Table Name");
-		comboTitle.add("Table Comment");
-		comboTitle.add("Table Name + Table Comment");
-		comboTitle.select(0);
+		btnTableComment = new Button(grpTableTitle, SWT.RADIO);
+		btnTableComment.setText("Table Comment ");
 		
-		new Label(container, SWT.NONE);
+		btnTableName = new Button(grpTableTitle, SWT.RADIO);
+		btnTableName.setText("Table Name + Comment");
 		
 		Group grpColumn = new Group(container, SWT.NONE);
 		grpColumn.setLayout(new GridLayout(1, false));
@@ -113,7 +118,7 @@ public class ERDViewStyleDailog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(470, 320);
 	}
 
 }

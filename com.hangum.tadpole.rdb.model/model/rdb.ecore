@@ -73,6 +73,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="autoLayout" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="0.8.1(2012.04.13)"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UserComment">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
