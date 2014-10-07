@@ -42,34 +42,34 @@ public class TableFigure extends Figure {
 	protected ConnectionAnchor connectionAnchor;
 	
 	public TableFigure() {
-		this.tableName = new Label();
-		this.tableName.setBorder(new MarginBorder(2, 2, 0, 2));
-		this.tableName.setForegroundColor(ColorConstants.blue);
-//		this.tableName.setBackgroundColor(SWTResourceManager.getColor(255, 255, 50));
-		this.tableName.setOpaque(true);
+		tableName = new Label();
+		tableName.setBorder(new MarginBorder(2, 2, 0, 2));
+		tableName.setForegroundColor(ColorConstants.blue);
+		tableName.setOpaque(true);
 
 		// key
-		this.colKeyFigure = new ColumnDetailFigure();
-		this.colKeyFigure.setForegroundColor(ColorConstants.red);
+		colKeyFigure = new ColumnDetailFigure();
+		colKeyFigure.setForegroundColor(ColorConstants.red);
 		// name 
-		this.colNameFigure = new ColumnDetailFigure();
-		this.colNameFigure.setForegroundColor(ColorConstants.black);
+		colNameFigure = new ColumnDetailFigure();
+		colNameFigure.setForegroundColor(ColorConstants.black);
 		// type
-		this.colTypeFigure = new ColumnDetailFigure();
-		this.colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
+		colTypeFigure = new ColumnDetailFigure();
+		colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
 
-		this.columnFigure = new ColumnLayoutFigure(this);
-		this.columnFigure.add(colKeyFigure);
-		this.columnFigure.add(colNameFigure);
-		this.columnFigure.add(colTypeFigure);
+		columnFigure = new ColumnLayoutFigure(this);
+		columnFigure.add(colKeyFigure);
+		columnFigure.add(colNameFigure);
+		columnFigure.add(colTypeFigure);
 		
-		this.setLayoutManager(new ToolbarLayout());
-		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 163));
-		this.setBorder(new CompoundBorder(new LineBorder(ColorConstants.black, 0), new MarginBorder(4, 4, 4, 4)));
-		this.setOpaque(true);
+		ToolbarLayout layout = new ToolbarLayout();
+		setLayoutManager(layout);
+		setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
+		setBorder(new LineBorder(ColorConstants.black, 1));
+		setOpaque(true);
 		
-		this.add(this.tableName);
-		this.add(this.columnFigure);
+		add(this.tableName);
+		add(this.columnFigure);
 	}
 	
 	public void setTableName(String tableName){

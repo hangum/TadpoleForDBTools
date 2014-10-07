@@ -17,6 +17,8 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
 
+import com.swtdesigner.SWTResourceManager;
+
 public class DBFigure extends Figure {
 	private Label labelURL		= new Label();
 	
@@ -29,7 +31,11 @@ public class DBFigure extends Figure {
 		layout = new XYLayout();
 		setLayoutManager(layout);
 		
-		labelDBType.setForegroundColor(ColorConstants.lightBlue);
+		labelDBType.setForegroundColor(ColorConstants.black);
+		labelDBType.setBorder(new LineBorder(1));
+		labelDBType.setBackgroundColor(SWTResourceManager.getColor(100, 149, 237));
+		labelDBType.setOpaque(true);
+		
 		add(labelDBType);
 		setConstraint(labelDBType, new Rectangle(2, 2, -1, -1));
 		
