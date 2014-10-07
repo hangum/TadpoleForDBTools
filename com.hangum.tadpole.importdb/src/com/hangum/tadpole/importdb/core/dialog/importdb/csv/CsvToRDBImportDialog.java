@@ -11,10 +11,14 @@
 package com.hangum.tadpole.importdb.core.dialog.importdb.csv;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -25,6 +29,7 @@ import org.eclipse.rap.addons.fileupload.FileDetails;
 import org.eclipse.rap.addons.fileupload.FileUploadEvent;
 import org.eclipse.rap.addons.fileupload.FileUploadHandler;
 import org.eclipse.rap.addons.fileupload.FileUploadListener;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.rap.rwt.widgets.FileUpload;
 import org.eclipse.swt.SWT;
@@ -41,7 +46,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.csv.CSVLoader;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -90,8 +99,11 @@ public class CsvToRDBImportDialog extends Dialog {
 	private Button btnDelete ;
 	
 	private Text textBatchSize;
-
+	private List<HashMap<String,String>> disableObjectResults = new ArrayList<HashMap<String,String>>();
 	
+	/** download servcie handler. */
+	private DownloadServiceHandler downloadServiceHandler;
+
 	/**
 	 * Create the dialog.
 	 * @param parentShell
@@ -106,6 +118,12 @@ public class CsvToRDBImportDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(userDB.getDisplay_name() + " CSV File import"); //$NON-NLS-1$
+	}
+
+	@Override
+	public boolean close() {
+		unregisterServiceHandler();
+		return super.close();
 	}
 
 	/**
@@ -137,20 +155,20 @@ public class CsvToRDBImportDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// update나 delete를 선택할 경우에는 기존 데이터에 대해 삭제또는 갱신하는 것이므로 삭제옵션은 필요하지 않음.
-				compositeExistsData.setEnabled(!btnCopyNew.getSelection());
 				btnDeleteAll.setSelection(true);
 				btnTruncate.setSelection(false);
 				btnNotDelete.setSelection(false);
+				compositeExistsData.setEnabled(!btnCopyNew.getSelection());
 				
-				compositeDisable.setEnabled(!btnCopyNew.getSelection());
 				btnTrigger.setSelection(false);
 				btnFk.setSelection(false);
 				btnPk.setSelection(false);
+				compositeDisable.setEnabled(!btnCopyNew.getSelection());
 				
-				compositeExecuteType.setEnabled(!btnCopyNew.getSelection());
 				btnInsert.setSelection(true);
 				btnUpdate.setSelection(false);
 				btnDelete.setSelection(false);
+				compositeExecuteType.setEnabled(!btnCopyNew.getSelection());
 			}
 		});
 		btnCopyNew.setText(Messages.CsvToRDBImportDialog_btnCopyNew_text);
@@ -207,7 +225,14 @@ public class CsvToRDBImportDialog extends Dialog {
 		lblBatchSize.setText(Messages.CsvToRDBImportDialog_lblBatchSize_text);
 		
 		textBatchSize = new Text(composite_3, SWT.BORDER | SWT.RIGHT);
-		textBatchSize.setText(Messages.CsvToRDBImportDialog_text_1_text_1);
+		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
+			textBatchSize.setEditable(false);
+			textBatchSize.setText("1");
+		}else{
+			textBatchSize.setEditable(true);
+			textBatchSize.setText(Messages.CsvToRDBImportDialog_text_1_text_1);
+		}
 		textBatchSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
@@ -252,10 +277,10 @@ public class CsvToRDBImportDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// update나 delete를 선택할 경우에는 기존 데이터에 대해 삭제또는 갱신하는 것이므로 삭제옵션은 필요하지 않음.
-				compositeExistsData.setEnabled(true);
 				btnDeleteAll.setSelection(true);
 				btnTruncate.setSelection(false);
 				btnNotDelete.setSelection(false);
+				compositeExistsData.setEnabled(true);
 			}
 		});
 		btnInsert.setText(Messages.CsvToRDBImportDialog_btnInsert_text);
@@ -265,8 +290,10 @@ public class CsvToRDBImportDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// update나 delete를 선택할 경우에는 기존 데이터에 대해 삭제또는 갱신하는 것이므로 삭제옵션은 필요하지 않음.
-				compositeExistsData.setEnabled(false);
+				btnTruncate.setSelection(false);
+				btnDeleteAll.setSelection(false);				
 				btnNotDelete.setSelection(true);
+				compositeExistsData.setEnabled(false);
 			}
 		});
 		GridData gd_btnUpdate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -280,8 +307,10 @@ public class CsvToRDBImportDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// update나 delete를 선택할 경우에는 기존 데이터에 대해 삭제또는 갱신하는 것이므로 삭제옵션은 필요하지 않음.
-				compositeExistsData.setEnabled(false);
+				btnTruncate.setSelection(false);
+				btnDeleteAll.setSelection(false);				
 				btnNotDelete.setSelection(true);
+				compositeExistsData.setEnabled(false);
 			}
 		});
 		GridData gd_btnDelete = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -379,16 +408,61 @@ public class CsvToRDBImportDialog extends Dialog {
 		grpSqlTemplate.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpSqlTemplate.setText(Messages.CsvToRDBImportDialog_16);
 		
-		textSQL = new Text(grpSqlTemplate, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textSQL = new Text(grpSqlTemplate, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		registerServiceHandler();
 		
 		textTableName.setFocus();
 		
 		return container;
 	}
+	
+	private void saveLog(){
+		try {
+			if("".equals(textSQL.getText())) { //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.SQLToDBImportDialog_LogEmpty);
+				return;
+			}
+			String filename = PublicTadpoleDefine.TEMP_DIR + userDB.getDisplay_name() + "_SQLImportResult.log"; //$NON-NLS-1$
+			
+			FileOutputStream fos = new FileOutputStream(filename);
+			OutputStreamWriter bw = new OutputStreamWriter(fos, "UTF-8"); //$NON-NLS-1$
+			
+			bw.write(textSQL.getText());
+			bw.close();
+			
+			String strImportResultLogContent = FileUtils.readFileToString(new File(filename));
+			
+			downloadExtFile(userDB.getDisplay_name() + "_SQLImportResult.log", strImportResultLogContent);//sbExportData.toString()); //$NON-NLS-1$
+		} catch(Exception ee) {
+			logger.error("log writer", ee); //$NON-NLS-1$
+		}		
+	}
 
-	
-	
+	/** registery service handler */
+	private void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	/** download service handler call */
+	private void unregisterServiceHandler() {
+		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
+		downloadServiceHandler = null;
+	}
+	/**
+	 * download external file
+	 * 
+	 * @param fileName
+	 * @param newContents
+	 */
+	public void downloadExtFile(String fileName, String newContents) {
+		downloadServiceHandler.setName(fileName);
+		downloadServiceHandler.setByteContent(newContents.getBytes());
+
+		DownloadUtils.provideDownload(compositeExecuteType, downloadServiceHandler.getId());
+	}
+
 	private void appendPreviewSQL(String newSQL){
 		textSQL.setText(textSQL.getText() + newSQL + "\n");
 	}
@@ -397,35 +471,24 @@ public class CsvToRDBImportDialog extends Dialog {
 	 * DBMS별 기능 구현 가능성 검증 필요.
 	 * DBMS별로 Disable Constraint 를 지원하는지 여부와 drop 후 add 가능 여부에 따라 기능 구현이 필요함.
 	 * *************************************************************************************** */
-	private void loadObjectDiableStatements(String tableName) {
-		List<HashMap> objetResults;
+	private boolean loadObjectDiableStatements(String tableName) {
 		try {
+			disableObjectResults.clear();
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
 			if (btnTrigger.getSelection()){
-				objetResults = sqlClient.queryForList("triggerListInTable", tableName); //$NON-NLS-1$
-				if (objetResults.size() > 0 ){
-					for (HashMap map : objetResults){
-						appendPreviewSQL(map.get("disable_statement").toString());
-					}
-				}else{
-					appendPreviewSQL("/* Trigger not found. */");
-				}
+				disableObjectResults = sqlClient.queryForList("triggerListInTable", tableName); //$NON-NLS-1$
 			}
 
 			if (btnPk.getSelection()){
-				objetResults = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
-				if (objetResults.size() > 0 ){
-					for (HashMap map : objetResults){
-						appendPreviewSQL(map.get("disable_statement").toString());
-					}
-				}else{
-					appendPreviewSQL("/* Primary Key not found. */");
-				}
+				disableObjectResults = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
 			}
+			
+			return true;
 		} catch (Exception e) {
 			logger.error("loadObjectDiableStatements", e); //$NON-NLS-1$
-			appendPreviewSQL("/* Disable Object not support or select. */");
+			//appendPreviewSQL("/* Disable Object not support or select. */");
+			return false;
 		}
 	}
 	
@@ -437,8 +500,16 @@ public class CsvToRDBImportDialog extends Dialog {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showIndexColumns = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
 			for (HashMap dao: showIndexColumns){
-				result.put(dao.get("column_name").toString(), (Integer) dao.get("column_order"));	
-				columns += dao.get("column_name").toString() + ",";
+				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+					/* cid, name, type, notnull, dflt_value, pk */
+					if ("1".equals(dao.get("pk").toString())) {
+						result.put(dao.get("name").toString(), (Integer) dao.get("cid") + 1);	
+						columns += dao.get("name").toString() + ",";
+					}
+				}else{
+					result.put(dao.get("column_name").toString(), (Integer) dao.get("column_order"));	
+					columns += dao.get("column_name").toString() + ",";
+				}				
 			}
 		} catch (Exception e) {
 			logger.error("loadObjectDiableStatements", e); //$NON-NLS-1$
@@ -451,7 +522,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	}
 	
 	private void saveResultLog(){
-		MessageDialog.openInformation(null, "Tadpole CSV Import", "not support...");
+		saveLog();
 	}
 	
 	private void downloadSQL(){
@@ -485,8 +556,14 @@ public class CsvToRDBImportDialog extends Dialog {
 			}else{
 
 				// 기존 테이블에 대해서 작업할때만 테이블 제약조건 Disable / Enable 처리 필요함.
-				if (!"".equals(tableName)){
-					loadObjectDiableStatements(tableName);
+				if (loadObjectDiableStatements(tableName)){
+					if (disableObjectResults !=null && disableObjectResults.size() > 0){
+						for (HashMap<String,String> map : disableObjectResults){
+							appendPreviewSQL(map.get("disable_statement").toString().concat("\n"));
+						}
+					}else{
+						appendPreviewSQL("/*Find not found disable objects...*/");
+					}
 				}
 				
 				if ("i".equals(stmtType)){
@@ -556,7 +633,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		Connection conn =  null;
 		HashMap<String,Object> keyColumns = new HashMap<String,Object>();
 		String stmtType = "i";
-		String workType = "d";
+		String workType = "n";
 		try {
 			if (this.btnInsert.getSelection()) {
 				stmtType = "i";
@@ -567,16 +644,28 @@ public class CsvToRDBImportDialog extends Dialog {
 			}
 			
 			if(btnCopyNew.getSelection()){
-				workType = "c";
-			}else if(btnTruncate.getSelection()){
-				workType = "t";
-			}else if(btnDeleteAll.getSelection()){
-				workType = "d";
+				workType = "c"; // Copy & New
+				disableObjectResults.clear();
+			}else{
+				
+				// 기존 테이블에 대해서 작업할때만 테이블 제약조건 Disable / Enable 처리 필요함.
+				loadObjectDiableStatements(textTableName.getText());
+
+				if(btnTruncate.getSelection()){
+					workType = "t"; // Truncate
+				}else if(btnDeleteAll.getSelection()){
+					workType = "d"; // Delete
+				}
 			}
 			
+
 			keyColumns = loadPrimaryKeyColumns(textTableName.getText().trim());
 			conn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
-			int count = loader.loadCSV(conn, userDBFile, textTableName.getText(), workType, stmtType,keyColumns);
+			
+			
+			int count = loader.loadCSV(conn, userDBFile, textTableName.getText(), workType, stmtType, keyColumns, disableObjectResults);
+			
+			this.appendPreviewSQL(loader.getImportResultLog().toString());
 			
 			MessageDialog.openInformation(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_26 + "\n count is "+ count);
 		} catch (Exception e1) {
@@ -588,7 +677,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			if(conn != null) try { conn.close(); } catch(Exception e) {} 
 		}
 		
-		super.okPressed();
+		//super.okPressed();
 	}
 	
 	/**
@@ -650,7 +739,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, ID_BTN_INSERT, "Insert", false);
+		createButton(parent, ID_BTN_INSERT, "Import", false);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.CsvToRDBImportDialog_30, false);
 	}
 

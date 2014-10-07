@@ -11,12 +11,12 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.io.ByteOrderMark;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -41,6 +41,7 @@ public class CSVLoader {
 	private char seprator = ',';
 	private int batchSize = 1000;
 	private boolean isExceptionStop = false;
+	private StringBuffer resultLogBuffer = new StringBuffer();
 
 	public CSVLoader(String separator, String batchSize, boolean isExceptionStop) {
 		this.seprator = separator.charAt(0);//String.',';
@@ -50,6 +51,10 @@ public class CSVLoader {
 		}catch(Exception e){
 			this.batchSize = 1000;
 		}
+	}
+	
+	public StringBuffer getImportResultLog(){
+		return this.resultLogBuffer;
 	}
 	
 	/**
@@ -62,7 +67,7 @@ public class CSVLoader {
 	 * @return insert count
 	 * @throws Exception
 	 */
-	public int loadCSV(final Connection con, final File csvFile, final String tableName, final String workType, final String stmtType, final HashMap<String,Object> keyColumns) throws Exception {
+	public int loadCSV(final Connection con, final File csvFile, final String tableName, final String workType, final String stmtType, final HashMap<String,Object> keyColumns, final List<HashMap<String, String>> disableObjects) throws Exception {
 		BOMInputStream bos = null; 
 		CSVReader csvReader = null;
 		String[] headerRow = null;
@@ -84,11 +89,23 @@ public class CSVLoader {
 		} finally {
 			if(bos != null) bos.close();
 		}
+		resultLogBuffer.append("CSV File Import from " + csvFile.getAbsolutePath()+"\n");
 
 		if (null == headerRow) {
-			throw new FileNotFoundException("No columns defined in given CSV file." + "Please check the CSV file format.");
+			throw new FileNotFoundException("No columns defined in given CSV file.\n\n" + "Please check the CSV file format.");
+		}
+		// 컬럼헤더가 없는 컬럼이 있으면.  ex) id,name,address,,,,   이런형태의 csv파일의 경우 오류.
+		for (String colHead : headerRow) {
+			if (colHead == null || "".equals(colHead)){
+				throw new FileNotFoundException("There is no column names in the first line of the file.\n\n" + "Please check the target table primary key file.");
+			}
 		}
 
+		if ("u".equals(stmtType)||"d".equals(stmtType)) {
+			if (keyColumns.get("all_key_columns") == null || ((String[]) keyColumns.get("all_key_columns")).length <= 0){
+				throw new FileNotFoundException("Primary key not define for Update or Delete.\n\n" + "Please check the CSV file format.");
+			}			
+		}
 		//String questionmarks = StringUtils.repeat("?,", headerRow.length);
 		//questionmarks = (String) questionmarks.subSequence(0, questionmarks.length() - 1);
 
@@ -96,6 +113,7 @@ public class CSVLoader {
 		//query = StringUtils.replaceOnce(query, KEYS_REGEX, StringUtils.join(headerRow, ","));
 		//query = StringUtils.replaceOnce(query, VALUES_REGEX, questionmarks);
 
+		resultLogBuffer.append("--------------------------- Make execute query ---------------------------\n");
 		
 		String query = "";
 		String questionmarks = "";
@@ -106,6 +124,7 @@ public class CSVLoader {
 			query = StringUtils.replaceOnce(SQL_INSERT, TABLE_REGEX, tableName);
 			query = StringUtils.replaceOnce(query, KEYS_REGEX, StringUtils.join(headerRow, ","));
 			query = StringUtils.replaceOnce(query, VALUES_REGEX, questionmarks);
+			
 		}else if ("u".equals(stmtType)) {
 			updateValues = StringUtils.join(headerRow, " = ?,") + " = ? ";			
 			questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
@@ -126,49 +145,68 @@ public class CSVLoader {
 			}			
 		}
 		
+		resultLogBuffer.append("Execute Query is " + query + "\n");
 		
 		//if(logger.isDebugEnabled()) logger.info("CSV to DB Query: " + query);
 		logger.debug("CSV to DB Query: " + query);
 		
 		int count = 0;
+		int countSum = 0;
 		String[] nextLine;
+		String preProcessQuery = "";
 		PreparedStatement ps = null;
 		ResultSetMetaData rsmd = null;
 		try {
 			con.setAutoCommit(false);
 			ps = con.prepareStatement(query);
 
-			// insert작업일 경우만
-			if ("i".equals(stmtType)){
-				// 테이블 복사를 선택하면 
-				if ("c".equals(workType)){
-					try{
-						con.createStatement().execute("CREATE TABLE " + tableName + "_COPY AS SELECT * FROM " + tableName + " WHERE 1 = 0 ");
-					}catch(Exception e){
-						logger.debug("Copy Table Exception : " + e.getMessage());
-					}
-				}else if ("t".equals(workType)) {
-					try{
-						con.createStatement().execute("TRUNCATE TABLE " + tableName);
-					}catch(Exception e){
-						logger.debug("Truncate Table Exception : " + e.getMessage());
-					}
-				}else if("d".equals(workType)){
-					try{
-						con.createStatement().execute("DELETE FROM " + tableName);
-					}catch(Exception e){
-						logger.debug("Delete Table Exception : " + e.getMessage());
+			resultLogBuffer.append("--------------------------- Delete exists data ---------------------------\n");
+			// 테이블 복사를 선택하면 
+			if ("c".equals(workType)){
+				preProcessQuery = "CREATE TABLE " + tableName + "_COPY AS SELECT * FROM " + tableName + " WHERE 1 = 0 ";
+			}else {
+				// insert작업일 경우만
+				if ("i".equals(stmtType)){
+					if ("t".equals(workType)) {
+						preProcessQuery = "TRUNCATE TABLE " + tableName;
+					}else if("d".equals(workType)){
+						preProcessQuery = "DELETE FROM " + tableName;
 					}
 				}
 			}
 			
+			if(!"".equals(preProcessQuery)){
+				con.createStatement().execute(preProcessQuery);
+				resultLogBuffer.append(" - Execute : " + preProcessQuery + "\n");
+			}
+			
+			resultLogBuffer.append("------------------------------ Object Disable ------------------------------\n");
+			
+			// 새로운 테이블로 복사해서 import를 진행하는 경우가 아니고 disable처리할 객체가 있으면...
+			if (!"c".equals(workType)){
+				if (disableObjects !=null && disableObjects.size() > 0){
+					for (HashMap<String, String> map : disableObjects){
+						con.createStatement().execute(map.get("disable_statement").toString());
+						resultLogBuffer.append(" - Diable Object : " + map.get("disable_statement").toString() + "\n");
+					}
+				}
+			}
+
+			
+			// import할 테이블의 데이터 타입별로 파라미터를 설정하기 위해 메타정보를 조회한다.
 			rsmd = con.createStatement().executeQuery("select * from " + tableName + " where 1 = 0 ").getMetaData();
+			if (headerRow.length != rsmd.getColumnCount()) {
+				throw new FileNotFoundException("Mismatch of the number of columns and the target table ." + "Please check the CSV file format.");
+			}
+
 			HashMap rsmdMap = new HashMap();
 			for (int i=1; i <= rsmd.getColumnCount(); i++){
 				rsmdMap.put(rsmd.getColumnName(i), i);				
 			}
+
 			
 
+			resultLogBuffer.append("---------------------- Start Import Batch ----------------------\n");
 			Date date = null;
 			while ((nextLine = csvReader.readNext()) != null) {
 				
@@ -212,53 +250,61 @@ public class CSVLoader {
 						ps.executeBatch();				
 					}catch(SQLException e){
 						logger.error("CSV file import.", e);
-						MessageDialog.openError(null, "Tadpole CSV Import", e.getMessage());
+						
+						//MessageDialog.openError(null, "Tadpole CSV Import", e.getMessage());
+						resultLogBuffer.append(e.getMessage()+"\n");
 						SQLException ne = e.getNextException();
 						
 						while (ne != null){
 							logger.error("NEXT SQLException is ", ne);
-							MessageDialog.openError(null, "Tadpole CSV Import", ne.getMessage());
+							//MessageDialog.openError(null, "Tadpole CSV Import", ne.getMessage());
+							resultLogBuffer.append(ne.getMessage()+"\n");
 							ne = ne.getNextException();
 						}
 
 						if (this.isExceptionStop) {
 							con.rollback();
-							return 0;
+							count = 0;
 						}else{
 							con.commit();
+							countSum += count;
+							count = 0;
 							continue;
 						}
 					}
 				}
 			}//while;
 			
-			try{
-				ps.executeBatch(); // insert remaining records
-				con.commit();
-			}catch(SQLException e){
-				logger.error("CSV file import.", e);
-				MessageDialog.openError(null, "Tadpole CSV Import", e.getMessage());
-				SQLException ne = e.getNextException();
-				while (ne != null){
-					logger.error("NEXT SQLException is ", ne);
-					MessageDialog.openError(null, "Tadpole CSV Import", ne.getMessage());
-					ne = ne.getNextException();
-				}
-				
-				if (this.isExceptionStop) {
-					con.rollback();
-					return 0;
-				}else{
-					con.commit();
+			ps.executeBatch(); // insert remaining records
+			con.commit();
+			countSum += count;
+			
+			resultLogBuffer.append("---------------------- Data Import Complete!!! ----------------------\n");
+			
+			// 새로운 테이블로 복사해서 import를 진행하는 경우가 아니고 disable처리할 객체가 있으면...
+			if (!"c".equals(workType)){
+				if (disableObjects !=null && disableObjects.size() > 0){
+					for (HashMap<String, String> map : disableObjects){
+						con.createStatement().execute(map.get("enable_statement").toString());
+						resultLogBuffer.append(" - Enable Object : " + map.get("enable_statement").toString() + "\n");
+						con.commit();
+					}
 				}
 			}
 			
+			resultLogBuffer.append("================================= End Log =============================\n");
+
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			count=0;
-			con.rollback();
+			if (this.isExceptionStop) {
+				con.rollback();
+				countSum = 0;
+			}else{
+				con.commit();
+			}
 			logger.error("CSV file import.", e);
+			resultLogBuffer.append(e.getMessage()+"\n");
 			
 			SQLException ne = e.getNextException();
 			while (ne != null){
@@ -267,9 +313,10 @@ public class CSVLoader {
 			}
 			//throw new SQLException("Error occured while loading data from file to database." + e.getMessage());
 		} catch (Exception e) {
-			count = 0;
+			countSum = 0;
 			con.rollback();
 			logger.error("CSV file import.", e);
+			resultLogBuffer.append(e.getMessage()+"\n");
 			throw new Exception("Error occured while loading data from file to database." + e.getMessage());
 		} finally {
 			if (null != ps) ps.close();
@@ -277,7 +324,7 @@ public class CSVLoader {
 			if (csvReader != null) csvReader.close();
 		}
 		
-		return count;
+		return countSum;
 	}
 	
 	private void setParameterValue(PreparedStatement ps, ResultSetMetaData rsmd, int columnIndex, int paramIndex, String paramValue){
