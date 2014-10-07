@@ -24,8 +24,8 @@ import com.swtdesigner.ResourceManager;
 public class ERDViewStyleRetargetAction extends RetargetAction {
 	
 	public ERDViewStyleRetargetAction() {
-		super(ERDViewStyleAction.ID, "View Style");
-		setToolTipText("View Style Select");
+		super(ERDViewStyleAction.ID, "Show Column");
+		setToolTipText("Show Column");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/viewStyle.png"));
 	}
 

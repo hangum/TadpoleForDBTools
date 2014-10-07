@@ -57,7 +57,7 @@ public class ERDViewStyleDailog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("ERD Viewing style");
+		newShell.setText("Show column Dialog");
 	}
 
 	/**

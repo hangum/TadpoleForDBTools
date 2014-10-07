@@ -48,8 +48,8 @@ public class ERDViewStyleAction extends SelectionAction {
 		this.viewer = graphicalViewer;
 		
 		setId(ID);
-		setText("View Style Select");
-		setToolTipText("View Style Select");
+		setText("Show Column");
+		setToolTipText("Show Column");
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/viewStyle.png"));
 	}
 	

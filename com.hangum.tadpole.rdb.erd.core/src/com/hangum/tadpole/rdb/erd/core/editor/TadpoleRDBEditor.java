@@ -231,10 +231,26 @@ public class TadpoleRDBEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setContextMenu(provider);
 
 		// key handler
+		configureKeyHandler();
+		
+		// grid and geometry
+		configureGeometry();
+		configureGrid();
+	}
+	
+	/**
+	 * configure key handler
+	 */
+	private void configureKeyHandler() {
+		GraphicalViewer viewer = getGraphicalViewer();
+		
 		keyHandler = new KeyHandler();
 //		keyHandler.put(KeyStroke.getPressed('a', 0x61, SWT.COMMAND),	getActionRegistry().getAction(ActionFactory.SELECT_ALL.getId()));
-		keyHandler.put(KeyStroke.getPressed('a', 0x61, SWT.CTRL),		getActionRegistry().getAction(ActionFactory.SELECT_ALL.getId()));
 		keyHandler.put(KeyStroke.getPressed('s', 0x61, SWT.CTRL),		getActionRegistry().getAction(ActionFactory.SAVE.getId()));
+		
+		keyHandler.put(KeyStroke.getPressed('z', 0x7a, SWT.CTRL),			getActionRegistry().getAction(ActionFactory.UNDO.getId()));
+		keyHandler.put(KeyStroke.getPressed('z', 0x7a, SWT.CTRL | SWT.SHIFT),getActionRegistry().getAction(ActionFactory.REDO.getId()));
+		keyHandler.put(KeyStroke.getPressed('a', 0x61, SWT.CTRL),			getActionRegistry().getAction(ActionFactory.SELECT_ALL.getId()));
 		
 		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), 				getActionRegistry().getAction(ActionFactory.DELETE.getId()));
 		keyHandler.put(KeyStroke.getPressed('+', SWT.KEYPAD_ADD, 0), 		getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
@@ -243,9 +259,6 @@ public class TadpoleRDBEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.NONE), MouseWheelZoomHandler.SINGLETON);
 		viewer.setKeyHandler(keyHandler);
 		
-		// grid and geometry
-		configureGeometry();
-		configureGrid();
 	}
 	
 	/**

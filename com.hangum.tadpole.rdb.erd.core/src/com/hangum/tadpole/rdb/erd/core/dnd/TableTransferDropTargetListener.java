@@ -141,7 +141,8 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 					column.setType(columnDAO.getType());
 					
 					String strComment = columnDAO.getComment();
-					strComment = StringUtils.substring(""+strComment, 0, 10);
+					if(strComment == null) strComment = "";
+					else strComment = StringUtils.substring(""+strComment, 0, 10);
 					column.setComment(strComment);
 					
 					column.setTable(tableModel);
