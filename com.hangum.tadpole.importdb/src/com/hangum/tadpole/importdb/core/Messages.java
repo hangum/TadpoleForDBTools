@@ -93,6 +93,7 @@ public class Messages extends NLS {
 	public static String CsvToRDBImportDialog_btnIgnore_toolTipText;
 	public static String CsvToRDBImportDialog_btnStop_toolTipText;
 	public static String CsvToRDBImportDialog_btnRadioButton_text;
+	public static String CsvToRDBImportDialog_label_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
