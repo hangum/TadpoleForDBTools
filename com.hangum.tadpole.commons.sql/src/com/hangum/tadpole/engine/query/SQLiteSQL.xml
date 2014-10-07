@@ -143,6 +143,30 @@ SELECT name as function_name,
 </select>
 
 <!-- 
+	enable 상태의 트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT 
+ 		tbl_name as table_name,
+ 		name as trigger_name,
+ 		'DROP TRIGGER ' || name as disable_statement,
+ 		sql as enable_statement
+	FROM sqlite_master
+	WHERE type = 'trigger'
+	  AND lower(tbl_name) = lower(#table_name#)
+ ]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+    ResultSet Columns : cid, name, type, notnull, dflt_value, pk
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+PRAGMA table_info($table_name$)
+</select>
+
+<!-- 
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">

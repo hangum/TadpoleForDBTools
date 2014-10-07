@@ -3,6 +3,7 @@ package com.hangum.tadpole.commons.csv;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -17,6 +18,7 @@ import org.apache.commons.io.ByteOrderMark;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -42,6 +44,12 @@ public class CSVLoader {
 	private int batchSize = 1000;
 	private boolean isExceptionStop = false;
 	private StringBuffer resultLogBuffer = new StringBuffer();
+	private CSVReader csvReader = null;
+	private String[] headerRow = null;
+	private ResultSetMetaData rsmd = null;
+	private HashMap<String,Object> rsmdMap = new HashMap<String,Object>();
+
+
 
 	public CSVLoader(String separator, String batchSize, boolean isExceptionStop) {
 		this.seprator = separator.charAt(0);//String.',';
@@ -68,98 +76,23 @@ public class CSVLoader {
 	 * @throws Exception
 	 */
 	public int loadCSV(final Connection con, final File csvFile, final String tableName, final String workType, final String stmtType, final HashMap<String,Object> keyColumns, final List<HashMap<String, String>> disableObjects) throws Exception {
-		BOMInputStream bos = null; 
-		CSVReader csvReader = null;
-		String[] headerRow = null;
-		try {
-			// find bom
-			bos = new BOMInputStream(new FileInputStream(csvFile), false, ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
-			String charset = "utf-8";
-			if(bos.hasBOM()) {
-				charset = bos.getBOMCharsetName();
-			}
-			InputStream cleanStream = new UnicodeBOMInputStream(new FileInputStream(csvFile)).skipBOM();
-			
-			// read bom 
-			csvReader = new CSVReader(new InputStreamReader(cleanStream, charset), this.seprator);
-			headerRow = csvReader.readNext();
-		} catch (Exception e) {
-			logger.error(e);
-			throw new Exception("Error occured while executing file. " + e.getMessage());
-		} finally {
-			if(bos != null) bos.close();
-		}
-		resultLogBuffer.append("CSV File Import from " + csvFile.getAbsolutePath()+"\n");
-
-		if (null == headerRow) {
-			throw new FileNotFoundException("No columns defined in given CSV file.\n\n" + "Please check the CSV file format.");
-		}
-		// 컬럼헤더가 없는 컬럼이 있으면.  ex) id,name,address,,,,   이런형태의 csv파일의 경우 오류.
-		for (String colHead : headerRow) {
-			if (colHead == null || "".equals(colHead)){
-				throw new FileNotFoundException("There is no column names in the first line of the file.\n\n" + "Please check the target table primary key file.");
-			}
-		}
-
-		if ("u".equals(stmtType)||"d".equals(stmtType)) {
-			if (keyColumns.get("all_key_columns") == null || ((String[]) keyColumns.get("all_key_columns")).length <= 0){
-				throw new FileNotFoundException("Primary key not define for Update or Delete.\n\n" + "Please check the CSV file format.");
-			}			
-		}
-		//String questionmarks = StringUtils.repeat("?,", headerRow.length);
-		//questionmarks = (String) questionmarks.subSequence(0, questionmarks.length() - 1);
-
-		//String query = StringUtils.replaceOnce(SQL_INSERT, TABLE_REGEX, tableName);
-		//query = StringUtils.replaceOnce(query, KEYS_REGEX, StringUtils.join(headerRow, ","));
-		//query = StringUtils.replaceOnce(query, VALUES_REGEX, questionmarks);
-
-		resultLogBuffer.append("--------------------------- Make execute query ---------------------------\n");
-		
-		String query = "";
-		String questionmarks = "";
-		String updateValues = "";
-		if ("i".equals(stmtType)) {
-			questionmarks = StringUtils.repeat("?,", headerRow.length);
-			questionmarks = (String) questionmarks.subSequence(0, questionmarks.length() - 1);
-			query = StringUtils.replaceOnce(SQL_INSERT, TABLE_REGEX, tableName);
-			query = StringUtils.replaceOnce(query, KEYS_REGEX, StringUtils.join(headerRow, ","));
-			query = StringUtils.replaceOnce(query, VALUES_REGEX, questionmarks);
-			
-		}else if ("u".equals(stmtType)) {
-			updateValues = StringUtils.join(headerRow, " = ?,") + " = ? ";			
-			questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
-			query = StringUtils.replaceOnce(SQL_UPDATE, TABLE_REGEX, tableName);
-			query = StringUtils.replaceOnce(query, VALUES_REGEX, updateValues);			
-			if (!"".equals(questionmarks)){
-				query = StringUtils.replaceOnce(query, KEYS_REGEX, " AND " + questionmarks);				
-			}else{
-				query = StringUtils.replaceOnce(query, KEYS_REGEX, "");
-			}			
-		}else if ("d".equals(stmtType)) {			
-			questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
-			query = StringUtils.replaceOnce(SQL_DELETE, TABLE_REGEX, tableName);			
-			if (!"".equals(questionmarks)){
-				query = StringUtils.replaceOnce(query, KEYS_REGEX, " AND " + questionmarks);				
-			}else{
-				query = StringUtils.replaceOnce(query, KEYS_REGEX, "");
-			}			
-		}
-		
-		resultLogBuffer.append("Execute Query is " + query + "\n");
-		
-		//if(logger.isDebugEnabled()) logger.info("CSV to DB Query: " + query);
-		logger.debug("CSV to DB Query: " + query);
-		
 		int count = 0;
 		int countSum = 0;
 		String[] nextLine;
+		String query="";
 		String preProcessQuery = "";
 		PreparedStatement ps = null;
 		ResultSetMetaData rsmd = null;
 		try {
 			con.setAutoCommit(false);
-			ps = con.prepareStatement(query);
+			
+			readSourceFile(con, csvFile, tableName, stmtType, keyColumns);
 
+			resultLogBuffer.append("--------------------------- Make execute query ---------------------------\n");
+			query = makePreparedStatement(tableName, stmtType, keyColumns);	
+			resultLogBuffer.append("Execute Query is " + query + "\n");
+			ps = con.prepareStatement(query);
+			
 			resultLogBuffer.append("--------------------------- Delete exists data ---------------------------\n");
 			// 테이블 복사를 선택하면 
 			if ("c".equals(workType)){
@@ -192,26 +125,8 @@ public class CSVLoader {
 				}
 			}
 
-			
-			// import할 테이블의 데이터 타입별로 파라미터를 설정하기 위해 메타정보를 조회한다.
-			rsmd = con.createStatement().executeQuery("select * from " + tableName + " where 1 = 0 ").getMetaData();
-			if (headerRow.length != rsmd.getColumnCount()) {
-				throw new FileNotFoundException("Mismatch of the number of columns and the target table ." + "Please check the CSV file format.");
-			}
-
-			HashMap rsmdMap = new HashMap();
-			for (int i=1; i <= rsmd.getColumnCount(); i++){
-				rsmdMap.put(rsmd.getColumnName(i), i);				
-			}
-
-			
-
 			resultLogBuffer.append("---------------------- Start Import Batch ----------------------\n");
-			Date date = null;
 			while ((nextLine = csvReader.readNext()) != null) {
-				
-			//java.util.Date temp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").parse("2014-09-27 01:19:57.292888");
-			//logger.debug(temp);
 				
 				//TODO:메타데이터를 읽어서 컬럼의 데이터 타입을 확인후 setString(), setInteger(), setObject()를 사용해야함.
 				if (null != nextLine) {
@@ -247,7 +162,8 @@ public class CSVLoader {
 				}
 				if (++count % batchSize == 0) {
 					try{
-						ps.executeBatch();				
+						ps.executeBatch();	
+						resultLogBuffer.append("\t Execute Batch...\n");
 					}catch(SQLException e){
 						logger.error("CSV file import.", e);
 						
@@ -276,6 +192,7 @@ public class CSVLoader {
 			}//while;
 			
 			ps.executeBatch(); // insert remaining records
+			resultLogBuffer.append("\t Execute Batch...\n");
 			con.commit();
 			countSum += count;
 			
@@ -317,7 +234,7 @@ public class CSVLoader {
 			con.rollback();
 			logger.error("CSV file import.", e);
 			resultLogBuffer.append(e.getMessage()+"\n");
-			throw new Exception("Error occured while loading data from file to database." + e.getMessage());
+			throw new Exception("Error occured while loading data from file to database.\n" + e.getMessage());
 		} finally {
 			if (null != ps) ps.close();
 			if (null != con) con.close();
@@ -325,6 +242,97 @@ public class CSVLoader {
 		}
 		
 		return countSum;
+	}
+	
+	public boolean readSourceFile(final Connection con, final File csvFile, final String tableName, final String stmtType, final HashMap<String,Object> keyColumns) throws Exception {
+		BOMInputStream bos = null; 
+		try {
+			// find bom
+			bos = new BOMInputStream(new FileInputStream(csvFile), false, ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
+			String charset = "utf-8";
+			if(bos.hasBOM()) {
+				charset = bos.getBOMCharsetName();
+			}
+			InputStream cleanStream = new UnicodeBOMInputStream(new FileInputStream(csvFile)).skipBOM();
+			
+			// read bom 
+			csvReader = new CSVReader(new InputStreamReader(cleanStream, charset), this.seprator);
+			headerRow = csvReader.readNext();
+
+			if (null == headerRow) {
+				throw new Exception("No columns defined in given CSV file.\n" + "Please check the CSV file format.");
+			}
+			// 컬럼헤더가 없는 컬럼이 있으면.  ex) id,name,address,,,,   이런형태의 csv파일의 경우 오류.
+			for (String colHead : headerRow) {
+				if (colHead == null || "".equals(colHead)){
+					throw new Exception( "There is no column names in the first line of the file.\n" + "Please check the CSV file format.");
+				}
+			}
+
+			if ("u".equals(stmtType)||"d".equals(stmtType)) {
+				if (keyColumns.get("all_key_columns") == null || ((String[]) keyColumns.get("all_key_columns")).length <= 0){
+					throw new Exception( "Primary key not define for Update or Delete.\n" + "Please check the Primarykey information of the target table.");
+				}			
+			}
+
+			// import할 테이블의 데이터 타입별로 파라미터를 설정하기 위해 메타정보를 조회한다.
+			if (con != null){
+				rsmd = con.createStatement().executeQuery("select * from " + tableName + " where 1 = 0 ").getMetaData();
+				if (headerRow.length != rsmd.getColumnCount()) {
+					throw new Exception( "Mismatch of the number of columns and the target table .\n" + "Please check the CSV file format.");
+				}
+	
+				for (int i=1; i <= rsmd.getColumnCount(); i++){
+					rsmdMap.put(rsmd.getColumnName(i), i);				
+				}
+			}
+			return true;
+		} finally {
+			if(bos != null) bos.close();
+		}
+	}
+	
+	public String makePreparedStatement(final String tableName, final String stmtType, final HashMap<String,Object> keyColumns) {
+		
+		String query = "";
+		String questionmarks = "";
+		String updateValues = "";
+		
+		try{
+			if ("i".equals(stmtType)) {
+				questionmarks = StringUtils.repeat("?,", headerRow.length);
+				questionmarks = (String) questionmarks.subSequence(0, questionmarks.length() - 1);
+				query = StringUtils.replaceOnce(SQL_INSERT, TABLE_REGEX, tableName);
+				query = StringUtils.replaceOnce(query, KEYS_REGEX, StringUtils.join(headerRow, ","));
+				query = StringUtils.replaceOnce(query, VALUES_REGEX, questionmarks);
+				
+			}else if ("u".equals(stmtType)) {
+				updateValues = StringUtils.join(headerRow, " = ?,") + " = ? ";			
+				questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
+				query = StringUtils.replaceOnce(SQL_UPDATE, TABLE_REGEX, tableName);
+				query = StringUtils.replaceOnce(query, VALUES_REGEX, updateValues);			
+				if (!"".equals(questionmarks)){
+					query = StringUtils.replaceOnce(query, KEYS_REGEX, " AND " + questionmarks);				
+				}else{
+					query = StringUtils.replaceOnce(query, KEYS_REGEX, "");
+				}			
+			}else if ("d".equals(stmtType)) {			
+				questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
+				query = StringUtils.replaceOnce(SQL_DELETE, TABLE_REGEX, tableName);			
+				if (!"".equals(questionmarks)){
+					query = StringUtils.replaceOnce(query, KEYS_REGEX, " AND " + questionmarks);				
+				}else{
+					query = StringUtils.replaceOnce(query, KEYS_REGEX, "");
+				}			
+			}
+			
+			logger.debug("CSV to DB Query: " + query);
+			
+			return query;
+		} catch (Exception e) {
+			logger.error(e);
+			return "";
+		}
 	}
 	
 	private void setParameterValue(PreparedStatement ps, ResultSetMetaData rsmd, int columnIndex, int paramIndex, String paramValue){
@@ -391,64 +399,19 @@ public class CSVLoader {
 	 */
 	int cvsTotData = 0;
 	public String generateSQL(File csvFile, String tableName, String stmtType, HashMap<String,Object> keyColumns) throws Exception {
-		BOMInputStream bos = null; 
-				
-		String[] headerRow = null;
-		CSVReader csvReader = null;
-		try {
-			// find bom
-			bos = new BOMInputStream(new FileInputStream(csvFile), false, ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
-			String charset = "utf-8";
-			if(bos.hasBOM()) {
-				charset = bos.getBOMCharsetName();
+		try{
+			if(readSourceFile(null, csvFile, tableName, stmtType, keyColumns)) {
+				return makePreparedStatement(tableName, stmtType, keyColumns).concat(";");
 			}
-			InputStream cleanStream = new UnicodeBOMInputStream(new FileInputStream(csvFile)).skipBOM();
 			
-			// read bom 
-			csvReader = new CSVReader(new InputStreamReader(cleanStream, charset), this.seprator);
-			headerRow = csvReader.readNext();
+			return "";
 		} catch (Exception e) {
 			logger.error(e);
-			throw new Exception("Error occured while executing file. " + e.getMessage());
+			MessageDialog.openError(null, "Tadpole CSV Import", e.getMessage());
+			return "";
 		} finally {
-			if(bos != null) bos.close();
 			if (csvReader != null) csvReader.close();
 		}
-
-		if (null == headerRow) {
-			throw new FileNotFoundException("No columns defined in given CSV file." + "Please check the CSV file format.");
-		}
-
-		
-		String query = "";
-		String questionmarks = "";
-		String updateValues = "";
-		if ("i".equals(stmtType)) {
-			questionmarks = StringUtils.repeat("?,", headerRow.length);
-			questionmarks = (String) questionmarks.subSequence(0, questionmarks.length() - 1);
-			query = StringUtils.replaceOnce(SQL_INSERT, TABLE_REGEX, tableName);
-			query = StringUtils.replaceOnce(query, KEYS_REGEX, StringUtils.join(headerRow, ","));
-			query = StringUtils.replaceOnce(query, VALUES_REGEX, questionmarks);
-		}else if ("u".equals(stmtType)) {
-			updateValues = StringUtils.join(headerRow, " = ?,") + " = ? ";			
-			questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
-			query = StringUtils.replaceOnce(SQL_UPDATE, TABLE_REGEX, tableName);
-			query = StringUtils.replaceOnce(query, VALUES_REGEX, updateValues);			
-			if (!"".equals(questionmarks)){
-				query = StringUtils.replaceOnce(query, KEYS_REGEX, " AND " + questionmarks);				
-			}else{
-				query = StringUtils.replaceOnce(query, KEYS_REGEX, "");
-			}			
-		}else if ("d".equals(stmtType)) {			
-			questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
-			query = StringUtils.replaceOnce(SQL_DELETE, TABLE_REGEX, tableName);			
-			if (!"".equals(questionmarks)){
-				query = StringUtils.replaceOnce(query, KEYS_REGEX, " AND " + questionmarks);				
-			}else{
-				query = StringUtils.replaceOnce(query, KEYS_REGEX, "");
-			}			
-		}
-		return query + ";";
 	}
 
 	public char getSeprator() {

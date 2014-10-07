@@ -363,6 +363,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			}
 		});
 		btnDownloadSql.setText(Messages.CsvToRDBImportDialog_btnDownloadSql_text);
+		btnDownloadSql.setVisible(false);
 		
 		Label lblDisable = new Label(compositeHead, SWT.NONE);
 		lblDisable.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -552,7 +553,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			// truncate or delete
 			if (this.btnCopyNew.getSelection()) { 
 				tableName += "_COPY"; 
-				appendPreviewSQL("CREATE TABLE " + tableName + " AS SELECT * FROM " + textTableName.getText().trim() + " WHERE 1=0;");
+				appendPreviewSQL("CREATE TABLE " + tableName + " AS \nSELECT * FROM " + textTableName.getText().trim() + " WHERE 1=0;\n");
 			}else{
 
 				// 기존 테이블에 대해서 작업할때만 테이블 제약조건 Disable / Enable 처리 필요함.
