@@ -48,7 +48,7 @@ import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
-import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
+import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -88,7 +88,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
  * @author hangum
  *
  */
-public class TadpoleRDBEditor extends GraphicalEditorWithFlyoutPalette {
+public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	public static final String ID = "com.hangum.tadpole.rdb.erd.core.editor"; //$NON-NLS-1$
 	/**
 	 * Logger for this class
@@ -258,7 +258,6 @@ public class TadpoleRDBEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.NONE), MouseWheelZoomHandler.SINGLETON);
 		viewer.setKeyHandler(keyHandler);
-		
 	}
 	
 	/**
@@ -429,10 +428,10 @@ public class TadpoleRDBEditor extends GraphicalEditorWithFlyoutPalette {
 		AnalyticCaller.track(TadpoleRDBEditor.ID, userDB.getDbms_types());
 	}
 	
-	@Override
-	protected PaletteRoot getPaletteRoot() {
-		return null;
-	}
+//	@Override
+//	protected PaletteRoot getPaletteRoot() {
+//		return null;
+//	}
 //	
 //	@Override
 //	public void doSaveAs() {
