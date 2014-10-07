@@ -2,8 +2,6 @@ package com.hangum.tadpole.commons.csv;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -82,23 +80,20 @@ public class CSVLoader {
 		String query="";
 		String preProcessQuery = "";
 		PreparedStatement ps = null;
-		ResultSetMetaData rsmd = null;
 		try {
 			con.setAutoCommit(false);
 			
 			readSourceFile(con, csvFile, tableName, stmtType, keyColumns);
 
-			resultLogBuffer.append("--------------------------- Make execute query ---------------------------\n");
-			query = makePreparedStatement(tableName, stmtType, keyColumns);	
-			resultLogBuffer.append("Execute Query is " + query + "\n");
-			ps = con.prepareStatement(query);
 			
-			resultLogBuffer.append("--------------------------- Delete exists data ---------------------------\n");
 			// 테이블 복사를 선택하면 
 			if ("c".equals(workType)){
+				query = makePreparedStatement(tableName + "_COPY", stmtType, keyColumns);	
 				preProcessQuery = "CREATE TABLE " + tableName + "_COPY AS SELECT * FROM " + tableName + " WHERE 1 = 0 ";
 			}else {
 				// insert작업일 경우만
+				query = makePreparedStatement(tableName, stmtType, keyColumns);	
+				resultLogBuffer.append("--------------------------- Delete exists data ---------------------------\n");
 				if ("i".equals(stmtType)){
 					if ("t".equals(workType)) {
 						preProcessQuery = "TRUNCATE TABLE " + tableName;
@@ -107,6 +102,8 @@ public class CSVLoader {
 					}
 				}
 			}
+			resultLogBuffer.append("Execute Query is " + query + "\n");
+			ps = con.prepareStatement(query);
 			
 			if(!"".equals(preProcessQuery)){
 				con.createStatement().execute(preProcessQuery);
@@ -166,7 +163,7 @@ public class CSVLoader {
 						resultLogBuffer.append("\t Execute Batch...\n");
 					}catch(SQLException e){
 						logger.error("CSV file import.", e);
-						
+
 						//MessageDialog.openError(null, "Tadpole CSV Import", e.getMessage());
 						resultLogBuffer.append(e.getMessage()+"\n");
 						SQLException ne = e.getNextException();
@@ -180,9 +177,11 @@ public class CSVLoader {
 
 						if (this.isExceptionStop) {
 							con.rollback();
+							resultLogBuffer.append("\t Rollback() - " + count + "Entry.\n");
 							count = 0;
 						}else{
 							con.commit();
+							resultLogBuffer.append("\t Commit() - " + count + "Entry.\n");
 							countSum += count;
 							count = 0;
 							continue;
@@ -195,6 +194,7 @@ public class CSVLoader {
 			resultLogBuffer.append("\t Execute Batch...\n");
 			con.commit();
 			countSum += count;
+			resultLogBuffer.append("\t Commit() - Total " + countSum + "Entry.\n");
 			
 			resultLogBuffer.append("---------------------- Data Import Complete!!! ----------------------\n");
 			
@@ -216,9 +216,11 @@ public class CSVLoader {
 		} catch (SQLException e) {
 			if (this.isExceptionStop) {
 				con.rollback();
+				resultLogBuffer.append("\t Rollback() - " + count + "Entry.\n");
 				countSum = 0;
 			}else{
 				con.commit();
+				resultLogBuffer.append("\t Commit() - " + count + "Entry.\n");
 			}
 			logger.error("CSV file import.", e);
 			resultLogBuffer.append(e.getMessage()+"\n");
