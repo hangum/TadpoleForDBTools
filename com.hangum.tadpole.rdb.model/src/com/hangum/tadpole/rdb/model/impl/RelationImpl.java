@@ -451,7 +451,7 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	 */
 	public DB getDb() {
 		if (eContainerFeatureID() != RdbPackage.RELATION__DB) return null;
-		return (DB)eContainer();
+		return (DB)eInternalContainer();
 	}
 
 	/**

@@ -106,6 +106,10 @@ public class RdbAdapterFactory extends AdapterFactoryImpl {
 				return createUserCommentAdapter();
 			}
 			@Override
+			public Adapter caseStyle(Style object) {
+				return createStyleAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -220,6 +224,20 @@ public class RdbAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUserCommentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.hangum.tadpole.rdb.model.Style <em>Style</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.hangum.tadpole.rdb.model.Style
+	 * @generated
+	 */
+	public Adapter createStyleAdapter() {
 		return null;
 	}
 

@@ -81,24 +81,25 @@ var completions = [];
 	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
-	    enableSnippets: true,
-	    enableLiveAutocompletion: true
+	    enableSnippets: true
+//	    ,
+//	    enableLiveAutocompletion: true
 	});
 	
-	var completer = {
-	        getCompletions: function(editor, session, pos, prefix, callback) {
-	        	var text = editor.getValue(); 
-	        	
-	        	if (prefix.length === 0) { 
-	        		callback(null, []); 
-	        		return 
-	        	} 
-	        	 
-//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
-	        	callback(null, completions); 
-	        } 
-	} 
-	langTools.addCompleter(completer); 
+//	var completer = {
+//	        getCompletions: function(editor, session, pos, prefix, callback) {
+//	        	var text = editor.getValue(); 
+//	        	
+//	        	if (prefix.length === 0) { 
+//	        		callback(null, []); 
+//	        		return 
+//	        	} 
+//	        	 
+////	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+//	        	callback(null, completions); 
+//	        } 
+//	} 
+//	langTools.addCompleter(completer); 
 };
 
 /** 
@@ -159,35 +160,35 @@ editorService.setFocus = function() {
 //	isJavaRunning = false;
 //};
 
-/** user autocomplete */
-editor.commands.on("afterExec", function(e){
-	console.log("--> command --> " + e.command.name);
-	
-	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
-		var all = editor.completers;
-		editor.completers = completions;
-    	editor.execCommand("startAutocomplete");
-    	editor.completers = all;
-    	
-//    } else if(e.command.name == "startAutocomplete") {
-//    	var all = e.editor.completers;
+///** user autocomplete */
+//editor.commands.on("afterExec", function(e){
+////	console.log("--> command --> " + e.command.name);
+//	
+//	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
+//		var all = editor.completers;
+//		editor.completers = completions;
+//    	editor.execCommand("startAutocomplete");
+//    	editor.completers = all;
 //    	
-//		var completer = {
-//		        getCompletions: function(editor, session, pos, prefix, callback) {
-//		        	var text = editor.getValue(); 
-//		        	
-//		        	if (prefix.length === 0) { 
-//		        		callback(null, []); 
-//		        		return 
-//		        	} 
-//		        	 
-//	//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
-//		        	callback(null, completions); 
-//		        } 
-//		} 
-//		langTools.addCompleter(completer);
-	}
-})
+////    } else if(e.command.name == "startAutocomplete") {
+////    	var all = e.editor.completers;
+////    	
+////		var completer = {
+////		        getCompletions: function(editor, session, pos, prefix, callback) {
+////		        	var text = editor.getValue(); 
+////		        	
+////		        	if (prefix.length === 0) { 
+////		        		callback(null, []); 
+////		        		return 
+////		        	} 
+////		        	 
+////	//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
+////		        	callback(null, completions); 
+////		        } 
+////		} 
+////		langTools.addCompleter(completer);
+//	}
+//})
 
 
 //==[ Define short key ]======================================================================================================================

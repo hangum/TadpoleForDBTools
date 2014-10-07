@@ -27,6 +27,13 @@ public class SessionListDAO {
 	String time;
 	String state;
 	String info;
+	
+	// postgresql start ------------------------------
+	/** pg_user is original user column */
+	String pg_user;
+	/** pg_time is orginal time column */
+	String pg_time;
+	// postgresql end ------------------------------
 
 	public SessionListDAO() {
 	}
@@ -94,4 +101,37 @@ public class SessionListDAO {
 	public void setInfo(String info) {
 		this.info = info;
 	}
+
+	/**
+	 * @return the pg_user
+	 */
+	public String getPg_user() {
+		return pg_user;
+	}
+
+	/**
+	 * @param pg_user the pg_user to set
+	 */
+	public void setPg_user(String pg_user) {
+		this.pg_user = pg_user;
+		
+		setUser(pg_user);
+	}
+
+	/**
+	 * @return the pg_time
+	 */
+	public String getPg_time() {
+		return pg_time;
+	}
+
+	/**
+	 * @param pg_time the pg_time to set
+	 */
+	public void setPg_time(String pg_time) {
+		this.pg_time = pg_time;
+		
+		setTime(pg_time);
+	}
+	
 }

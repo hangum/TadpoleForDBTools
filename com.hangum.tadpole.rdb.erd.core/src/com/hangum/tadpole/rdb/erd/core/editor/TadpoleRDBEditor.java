@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
@@ -33,18 +34,27 @@ import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
+import org.eclipse.gef.SnapToGeometry;
+import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.AlignmentAction;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
+import org.eclipse.gef.ui.actions.MatchHeightAction;
+import org.eclipse.gef.ui.actions.MatchWidthAction;
+import org.eclipse.gef.ui.actions.ToggleGridAction;
+import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
-import org.eclipse.gef.ui.parts.GraphicalEditor;
+import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -55,6 +65,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
+import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleAction;
 import com.hangum.tadpole.rdb.erd.core.actions.TableSelectionAction;
 import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferDropTargetListener;
 import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferFactory;
@@ -64,6 +75,7 @@ import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.RdbPackage;
+import com.hangum.tadpole.rdb.model.Style;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
@@ -76,7 +88,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
  * @author hangum
  *
  */
-public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
+public class TadpoleRDBEditor extends GraphicalEditorWithFlyoutPalette {
 	public static final String ID = "com.hangum.tadpole.rdb.erd.core.editor"; //$NON-NLS-1$
 	/**
 	 * Logger for this class
@@ -116,25 +128,26 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 				monitor.beginTask("ERD Initialize", IProgressMonitor.UNKNOWN);
 		
 				try {
+					RdbFactory factory = RdbFactory.eINSTANCE;
+					
 					if(db == null) {
+						
 						// 모든 table 정보를 가져온다.
 						if(isAllTable) {
 							db = TadpoleModelUtils.INSTANCE.getDBAllTable(userDB);
-							db.setDbType(db.getDbType() + " (" + userDB.getDisplay_name() + ", " + userDB.getUrl() + ")");
-//							db.setUrl("");
-//							db.setId("");
-							
-							// update action을 날려준다.
-							
-
 						// 부분 테이블 정보를 처리한다.
 						} else {
-							RdbFactory factory = RdbFactory.eINSTANCE;
 							db = factory.createDB();
-							db.setDbType(userDB.getDbms_types() + " (" + userDB.getDisplay_name()  + ", " + userDB.getUrl() + ")");
-//							db.setId("");//userDB.getDisplay_name());
-//							db.setUrl("");//userDB.getUrl());
 						}
+
+						db.setDbType(userDB.getDbms_types() + " (" + userDB.getDisplay_name() + ")");
+					}
+					
+					// 하위 호환을 위한 코드 .
+					if(db.getStyle() == null) {
+						Style style = RdbFactory.eINSTANCE.createStyle();
+						style.setDb(db);
+						db.setStyle(style);
 					}
 					
 				} catch(Exception e) {
@@ -176,7 +189,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 							db = factory.createDB();
 							db.setDbType(userDB.getDbms_types());
 							db.setId(userDB.getUsers());
-							db.setUrl(userDB.getUrl());
+							db.setUrl(userDB.getHost());
 							
 						}
 						getGraphicalViewer().setContents(db);
@@ -218,15 +231,59 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		viewer.setContextMenu(provider);
 
 		// key handler
+		configureKeyHandler();
+		
+		// grid and geometry
+		configureGeometry();
+		configureGrid();
+	}
+	
+	/**
+	 * configure key handler
+	 */
+	private void configureKeyHandler() {
+		GraphicalViewer viewer = getGraphicalViewer();
+		
 		keyHandler = new KeyHandler();
-		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
-		keyHandler.put(KeyStroke.getPressed('+', SWT.KEYPAD_ADD, 0), getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
-		keyHandler.put(KeyStroke.getPressed('-', SWT.KEYPAD_SUBTRACT, 0), getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
+//		keyHandler.put(KeyStroke.getPressed('a', 0x61, SWT.COMMAND),	getActionRegistry().getAction(ActionFactory.SELECT_ALL.getId()));
+		keyHandler.put(KeyStroke.getPressed('s', 0x61, SWT.CTRL),		getActionRegistry().getAction(ActionFactory.SAVE.getId()));
+		
+		keyHandler.put(KeyStroke.getPressed('z', 0x7a, SWT.CTRL),			getActionRegistry().getAction(ActionFactory.UNDO.getId()));
+		keyHandler.put(KeyStroke.getPressed('z', 0x7a, SWT.CTRL | SWT.SHIFT),getActionRegistry().getAction(ActionFactory.REDO.getId()));
+		keyHandler.put(KeyStroke.getPressed('a', 0x61, SWT.CTRL),			getActionRegistry().getAction(ActionFactory.SELECT_ALL.getId()));
+		
+		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), 				getActionRegistry().getAction(ActionFactory.DELETE.getId()));
+		keyHandler.put(KeyStroke.getPressed('+', SWT.KEYPAD_ADD, 0), 		getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
+		keyHandler.put(KeyStroke.getPressed('-', SWT.KEYPAD_SUBTRACT, 0), 	getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
 		
 		viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.NONE), MouseWheelZoomHandler.SINGLETON);
 		viewer.setKeyHandler(keyHandler);
+		
 	}
 	
+	/**
+	 * configure grid
+	 */
+	private void configureGrid() {
+		GraphicalViewer viewer = getGraphicalViewer();
+		viewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, true);
+		viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, true);
+		
+		IAction action = new ToggleGridAction(viewer);
+		getActionRegistry().registerAction(action);
+	}
+
+	/**
+	 * configure geometry
+	 */
+	private void configureGeometry() {
+		GraphicalViewer viewer = getGraphicalViewer();
+		viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, true);
+		
+		IAction action = new ToggleSnapToGeometryAction(viewer);
+		getActionRegistry().registerAction(action);
+	}
+
 	private void zoomContribution(GraphicalViewer viewer) {
 		double[] zoomLevels;
 		List<String> zoomContributions;
@@ -257,12 +314,68 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		IAction action = new TableSelectionAction(this, getGraphicalViewer());
 		registry.registerAction(action);
 		getSelectionActions().add(action.getId());
+		
+		ERDViewStyleAction erdStyledAction = new ERDViewStyleAction(this, getGraphicalViewer());
+		registry.registerAction(erdStyledAction);
+		getSelectionActions().add(ERDViewStyleAction.ID);
+	}
+	
+	@Override
+	protected void createActions() {
+		super.createActions();
+		ActionRegistry registry = getActionRegistry();
+		
+		IAction action = new MatchWidthAction(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+		action = new MatchHeightAction(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.LEFT);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.RIGHT);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.TOP);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.BOTTOM);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.CENTER);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new AlignmentAction((IWorkbenchPart)this, PositionConstants.MIDDLE);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 		loadDBRsource(input);
+	}
+	
+	private void configureKeyboardShortcu() {
+//		getGraphicalViewer().getKeyHandler();
+//		GraphicalViewerKeyHandler keyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
+//		keyHandler.put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry().getAction(GEFActionConstants.DIRECT_EDIT));
+//		keyHandler.put(KeyStroke.getPressed(SWT.F3, 0), getActionRegistry().getAction(ResizeToContentsAction.RESIZE_TO_CONTENTS_ID));
+//		getGraphicalViewer().setKeyHandler(keyHandler);
+//		
+//		getGraphicalViewer().getKeyHandler();
+//		GraphicalViewerKeyHandler keyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer());
+//		keyHandler.put(KeyStroke.getPressed(SWT.F3, 0), getActionRegistry().getAction(GEFActionConstants.SAVE));
+////		keyHandler.put(KeyStroke.getPressed(SWT.F3, 0), getActionRegistry().getAction(ResizeToContentsAction.RESIZE_TO_CONTENTS_ID));
+//		getGraphicalViewer().setKeyHandler(keyHandler);
 	}
 	
 	/**
@@ -316,10 +429,10 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		AnalyticCaller.track(TadpoleRDBEditor.ID, userDB.getDbms_types());
 	}
 	
-//	@Override
-//	protected PaletteRoot getPaletteRoot() {
-//		return null;
-//	}
+	@Override
+	protected PaletteRoot getPaletteRoot() {
+		return null;
+	}
 //	
 //	@Override
 //	public void doSaveAs() {
@@ -428,9 +541,10 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	 */
 	private String createResourceToString() throws Exception {
 		XMLResourceImpl resource = new XMLResourceImpl();
-        XMLProcessor processor = new XMLProcessor();
         resource.setEncoding("UTF-8");
         resource.getContents().add(db);
+        
+        XMLProcessor processor = new XMLProcessor();
         return processor.saveToString(resource, null);
 	}
 	
@@ -532,4 +646,9 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 //			super.dispose();
 //		}
 //	}
+	
+	public DB getDb() {
+		return db;
+	}
+
 }

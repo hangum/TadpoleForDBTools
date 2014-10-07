@@ -51,7 +51,7 @@ public class DeleteResourceAction extends Action implements ISelectionListener, 
 	@Override
 	public void run() {
 		UserDBResourceDAO userResourceDB = (UserDBResourceDAO)iss.getFirstElement();
-		if(!MessageDialog.openConfirm(window.getShell(), Messages.DeleteResourceAction_3, userResourceDB.getName() + Messages.DeleteResourceAction_4)) return;
+		if(!MessageDialog.openConfirm(window.getShell(), Messages.DeleteResourceAction_3, Messages.DeleteResourceAction_4)) return;
 		
 		RDBERDDeleteAction erdDelete = new RDBERDDeleteAction();
 		erdDelete.run(userResourceDB);

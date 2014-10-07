@@ -211,33 +211,20 @@ public class SessionListEditor extends EditorPart {
 		
 		if(!MessageDialog.openConfirm(null, "Confirm", "Do you want kill process?")) return;
 		
-		String sqlText = "kill " + sl.getId(); 
-//		java.sql.Connection javaConn = null;		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			client.queryForObject("killProcess", sl.getId());
-//			javaConn = client.getDataSource().getConnection();
-//			
-//			Statement stmt = javaConn.createStatement();
-//			boolean boolResult = stmt.execute( sqlText );
+			if (DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+				client.queryForObject("killProcess", Integer.parseInt(sl.getId()));
+			} else {
+				client.queryForObject("killProcess", sl.getId());
+			}
 			
 			initSessionListData();
 		} catch(Exception e) {
 			logger.error("killprocess exception", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
-			
-		} finally {
-//			try { javaConn.close(); } catch(Exception e){}
-			
-//			if(DB_Define.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
-//				try {
-//					TadpoleSystem_UserDBResource.saveResource(user_seq, userDB, DB_Define.RESOURCE_TYPE.USER_EXECUTE_QUERY, Messages.MainEditor_31 + System.currentTimeMillis(), sqlText);
-//				} catch(Exception e) {
-//					logger.error("SAVE killprocess log", e);
-//				}
-//			}
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$			
 		}	
 	}
 	
@@ -294,7 +281,7 @@ public class SessionListEditor extends EditorPart {
 	 */
 	private void createColumn() {
 		String[] name = {"PID", "User", "Host", "Database", "Command", "Time", "State", "Info"};
-		int[] size = {70, 70, 150, 70, 70, 100, 150, 200};
+		int[] size = {70, 70, 150, 70, 70, 100, 50, 200};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tableViewerSessionList, SWT.LEFT);

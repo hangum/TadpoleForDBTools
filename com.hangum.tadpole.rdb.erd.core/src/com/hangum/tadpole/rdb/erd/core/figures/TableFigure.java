@@ -49,43 +49,44 @@ public class TableFigure extends Figure {
 	private ConnectionAnchor connectionAnchor;
 	
 	public TableFigure() {
-		this.tableName = new Label();
-		this.tableName.setBorder(new MarginBorder(2, 2, 0, 2));
-		this.tableName.setForegroundColor(ColorConstants.blue);
+		tableName = new Label();
+		tableName.setBorder(new MarginBorder(2, 2, 0, 2));
+		tableName.setForegroundColor(ColorConstants.blue);
 
-		this.columnFigure = new ColumnLayoutFigure();
+		columnFigure = new ColumnLayoutFigure();
 		// key
-		this.colKeyFigure = new ColumnDetailFigure();
-		this.colKeyFigure.setForegroundColor(ColorConstants.red);
+		colKeyFigure = new ColumnDetailFigure();
+		colKeyFigure.setForegroundColor(ColorConstants.red);
+		
 		// name
-		this.colNameFigure = new ColumnDetailFigure();
-		this.colNameFigure.setForegroundColor(ColorConstants.black);
+		colNameFigure = new ColumnDetailFigure();
+		colNameFigure.setForegroundColor(ColorConstants.black);
 		
 		// comment
-		this.colCommentFigure = new ColumnDetailFigure();
-		this.colCommentFigure.setForegroundColor(ColorConstants.black);
+		colCommentFigure = new ColumnDetailFigure();
+		colCommentFigure.setForegroundColor(ColorConstants.black);
 		
 		// type
-		this.colTypeFigure = new ColumnDetailFigure();
-		this.colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
+		colTypeFigure = new ColumnDetailFigure();
+		colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
 		// null 
-		this.colNullFigure = new ColumnDetailFigure();
-		this.colNullFigure.setForegroundColor(ColorConstants.black);
+		colNullFigure = new ColumnDetailFigure();
+		colNullFigure.setForegroundColor(ColorConstants.black);
 
 		ToolbarLayout layout = new ToolbarLayout();
-		this.setLayoutManager(layout);
-		this.setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
-		this.setBorder(new LineBorder(ColorConstants.black, 1));
-		this.setOpaque(true);
+		setLayoutManager(layout);
+		setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
+		setBorder(new LineBorder(ColorConstants.black, 1));
+		setOpaque(true);
 
-		this.add(this.tableName);
-		this.add(this.columnFigure);
+		add(tableName);
+		add(columnFigure);
 
-		this.columnFigure.add(colKeyFigure);
-		this.columnFigure.add(colNameFigure);
-		this.columnFigure.add(colCommentFigure);
-		this.columnFigure.add(colTypeFigure);
-		this.columnFigure.add(colNullFigure);
+		columnFigure.add(colKeyFigure);
+		columnFigure.add(colNameFigure);
+		columnFigure.add(colCommentFigure);
+		columnFigure.add(colTypeFigure);
+		columnFigure.add(colNullFigure);
 	}
 	
 	public void setTableName(String tableName){

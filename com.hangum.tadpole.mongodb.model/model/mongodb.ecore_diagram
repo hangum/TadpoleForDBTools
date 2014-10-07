@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_cYkB0E0PEeSyXo1YMPj44Q" type="Ecore" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_T44vsE0jEeSyXo1YMPj44Q" type="2001" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T44vsk0jEeSyXo1YMPj44Q" type="5001"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T44vs00jEeSyXo1YMPj44Q" type="7001">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T44vtE0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T44vtU0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T44vtk0jEeSyXo1YMPj44Q" type="7002">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T44vt00jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T44vuE0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T44vuU0jEeSyXo1YMPj44Q" type="7003">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T44vuk0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T44vu00jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EClass" href="mongodb.ecore#//DB"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T44vsU0jEeSyXo1YMPj44Q" x="349" y="77"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T44vvE0jEeSyXo1YMPj44Q" type="2001" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T44vvk0jEeSyXo1YMPj44Q" type="5001"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T44vv00jEeSyXo1YMPj44Q" type="7001">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T44vwE0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T44vwU0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T44vwk0jEeSyXo1YMPj44Q" type="7002">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T44vw00jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T44vxE0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T45WwE0jEeSyXo1YMPj44Q" type="7003">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T45WwU0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T45Wwk0jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EClass" href="mongodb.ecore#//Table"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T44vvU0jEeSyXo1YMPj44Q" x="339" y="491"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T45Ww00jEeSyXo1YMPj44Q" type="2001" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T45WxU0jEeSyXo1YMPj44Q" type="5001"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T45Wxk0jEeSyXo1YMPj44Q" type="7001">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T45Wx00jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T45WyE0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T45WyU0jEeSyXo1YMPj44Q" type="7002">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T45Wyk0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T45Wy00jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T45WzE0jEeSyXo1YMPj44Q" type="7003">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T45WzU0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T45Wzk0jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EClass" href="mongodb.ecore#//Column"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T45WxE0jEeSyXo1YMPj44Q" x="260" y="658"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T45Wz00jEeSyXo1YMPj44Q" type="2004" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T45W0U0jEeSyXo1YMPj44Q" type="5004"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T45W0k0jEeSyXo1YMPj44Q" type="7010">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T45W000jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T45W1E0jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EDataType" href="mongodb.ecore#//Rectangle"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T45W0E0jEeSyXo1YMPj44Q" x="207" y="77"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T45W1U0jEeSyXo1YMPj44Q" type="2001" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T45W100jEeSyXo1YMPj44Q" type="5001"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T45W2E0jEeSyXo1YMPj44Q" type="7001">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T45W2U0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T45W2k0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T45W200jEeSyXo1YMPj44Q" type="7002">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T45W3E0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T45W3U0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T45W3k0jEeSyXo1YMPj44Q" type="7003">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T4590E0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T4590U0jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EClass" href="mongodb.ecore#//Relation"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T45W1k0jEeSyXo1YMPj44Q" x="185" y="276"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T4590k0jEeSyXo1YMPj44Q" type="2004" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T4591E0jEeSyXo1YMPj44Q" type="5004"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T4591U0jEeSyXo1YMPj44Q" type="7010">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T4591k0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T459100jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EDataType" href="mongodb.ecore#//Point"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T459000jEeSyXo1YMPj44Q" x="128" y="156"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T4592E0jEeSyXo1YMPj44Q" type="2005" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T4592k0jEeSyXo1YMPj44Q" type="5005"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T459200jEeSyXo1YMPj44Q" type="7011">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T4593E0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T4593U0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T4593k0jEeSyXo1YMPj44Q" type="7012">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T459300jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T4594E0jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EEnum" href="mongodb.ecore#//RelationKind"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T4592U0jEeSyXo1YMPj44Q" x="619" y="77"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T4594U0jEeSyXo1YMPj44Q" type="2001" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T459400jEeSyXo1YMPj44Q" type="5001"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T4595E0jEeSyXo1YMPj44Q" type="7001">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T4595U0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T4595k0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T459500jEeSyXo1YMPj44Q" type="7002">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T4596E0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T4596U0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T4596k0jEeSyXo1YMPj44Q" type="7003">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T459600jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T4597E0jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EClass" href="mongodb.ecore#//View"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T4594k0jEeSyXo1YMPj44Q" x="643" y="276"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T4597U0jEeSyXo1YMPj44Q" type="2001" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T46k4E0jEeSyXo1YMPj44Q" type="5001"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T46k4U0jEeSyXo1YMPj44Q" type="7001">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T46k4k0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T46k400jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T46k5E0jEeSyXo1YMPj44Q" type="7002">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T46k5U0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T46k5k0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T46k500jEeSyXo1YMPj44Q" type="7003">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T46k6E0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T46k6U0jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EClass" href="mongodb.ecore#//ERDInfo"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T4597k0jEeSyXo1YMPj44Q" x="448" y="276"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_T46k6k0jEeSyXo1YMPj44Q" type="2001" fontName=".Helvetica Neue DeskInterface">
+    <children xmi:type="notation:DecorationNode" xmi:id="_T46k7E0jEeSyXo1YMPj44Q" type="5001"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T46k7U0jEeSyXo1YMPj44Q" type="7001">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T46k7k0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T46k700jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T46k8E0jEeSyXo1YMPj44Q" type="7002">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T46k8U0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T46k8k0jEeSyXo1YMPj44Q"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_T46k800jEeSyXo1YMPj44Q" type="7003">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_T46k9E0jEeSyXo1YMPj44Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_T46k9U0jEeSyXo1YMPj44Q"/>
+    </children>
+    <element xmi:type="ecore:EClass" href="mongodb.ecore#//UserComment"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T46k600jEeSyXo1YMPj44Q" x="433" y="658"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_cYkB0U0PEeSyXo1YMPj44Q"/>
+  <element xmi:type="ecore:EPackage" href="mongodb.ecore#/"/>
+</notation:Diagram>
