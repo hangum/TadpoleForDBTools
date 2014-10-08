@@ -260,6 +260,10 @@ public class CSVLoader {
 			// read bom 
 			csvReader = new CSVReader(new InputStreamReader(cleanStream, charset), this.seprator);
 			headerRow = csvReader.readNext();
+			int i=0;
+			for (String columnHead:headerRow){
+				headerRow[i++] = columnHead.toLowerCase();
+			}
 
 			if (null == headerRow) {
 				throw new Exception("No columns defined in given CSV file.\n" + "Please check the CSV file format.");
@@ -284,8 +288,8 @@ public class CSVLoader {
 					throw new Exception( "Mismatch of the number of columns and the target table .\n" + "Please check the CSV file format.");
 				}
 	
-				for (int i=1; i <= rsmd.getColumnCount(); i++){
-					rsmdMap.put(rsmd.getColumnName(i), i);				
+				for (int colIndex=1; colIndex <= rsmd.getColumnCount(); colIndex++){
+					rsmdMap.put(rsmd.getColumnName(colIndex).toLowerCase(), colIndex);				
 				}
 			}
 			return true;
