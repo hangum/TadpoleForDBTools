@@ -508,7 +508,7 @@ public class CsvToRDBImportDialog extends Dialog {
 						columns += dao.get("name").toString() + ",";
 					}
 				}else{
-					result.put(dao.get("column_name").toString(), (Integer) dao.get("column_order"));	
+					result.put(dao.get("column_name").toString(), Integer.parseInt( dao.get("column_order").toString()));	
 					columns += dao.get("column_name").toString() + ",";
 				}				
 			}
