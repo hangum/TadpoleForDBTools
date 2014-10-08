@@ -340,7 +340,7 @@ public class ColumnImpl extends EObjectImpl implements Column {
 	 */
 	public Table getTable() {
 		if (eContainerFeatureID() != RdbPackage.COLUMN__TABLE) return null;
-		return (Table)eContainer();
+		return (Table)eInternalContainer();
 	}
 
 	/**

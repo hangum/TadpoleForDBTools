@@ -96,13 +96,22 @@ public interface RdbPackage extends EPackage {
 	int ERD_INFO__VERSION = 1;
 
 	/**
+	 * The feature id for the '<em><b>Style</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ERD_INFO__STYLE = 2;
+
+	/**
 	 * The number of structural features of the '<em>ERD Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ERD_INFO_FEATURE_COUNT = 2;
+	int ERD_INFO_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.rdb.model.impl.DBImpl <em>DB</em>}' class.
@@ -131,6 +140,15 @@ public interface RdbPackage extends EPackage {
 	 * @ordered
 	 */
 	int DB__VERSION = ERD_INFO__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Style</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DB__STYLE = ERD_INFO__STYLE;
 
 	/**
 	 * The feature id for the '<em><b>Db Type</b></em>' attribute.
@@ -205,13 +223,31 @@ public interface RdbPackage extends EPackage {
 	int DB__COMMENT = ERD_INFO_FEATURE_COUNT + 7;
 
 	/**
+	 * The feature id for the '<em><b>DB Comment</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DB__DB_COMMENT = ERD_INFO_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Styled Reference</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DB__STYLED_REFERENCE = ERD_INFO_FEATURE_COUNT + 9;
+
+	/**
 	 * The number of structural features of the '<em>DB</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DB_FEATURE_COUNT = ERD_INFO_FEATURE_COUNT + 8;
+	int DB_FEATURE_COUNT = ERD_INFO_FEATURE_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.rdb.model.impl.TableImpl <em>Table</em>}' class.
@@ -660,6 +696,97 @@ public interface RdbPackage extends EPackage {
 	int USER_COMMENT_FEATURE_COUNT = 1;
 
 	/**
+	 * The meta object id for the '{@link com.hangum.tadpole.rdb.model.impl.StyleImpl <em>Style</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.hangum.tadpole.rdb.model.impl.StyleImpl
+	 * @see com.hangum.tadpole.rdb.model.impl.RdbPackageImpl#getStyle()
+	 * @generated
+	 */
+	int STYLE = 7;
+
+	/**
+	 * The feature id for the '<em><b>Table Title</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__TABLE_TITLE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Column Primary Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__COLUMN_PRIMARY_KEY = 1;
+
+	/**
+	 * The feature id for the '<em><b>Column Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__COLUMN_NAME = 2;
+
+	/**
+	 * The feature id for the '<em><b>Column Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__COLUMN_COMMENT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Column Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__COLUMN_TYPE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Column Null Check</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__COLUMN_NULL_CHECK = 5;
+
+	/**
+	 * The feature id for the '<em><b>Grid</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__GRID = 6;
+
+	/**
+	 * The feature id for the '<em><b>Db</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE__DB = 7;
+
+	/**
+	 * The number of structural features of the '<em>Style</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STYLE_FEATURE_COUNT = 8;
+
+	/**
 	 * The meta object id for the '{@link com.hangum.tadpole.rdb.model.RelationKind <em>Relation Kind</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -667,7 +794,7 @@ public interface RdbPackage extends EPackage {
 	 * @see com.hangum.tadpole.rdb.model.impl.RdbPackageImpl#getRelationKind()
 	 * @generated
 	 */
-	int RELATION_KIND = 7;
+	int RELATION_KIND = 8;
 
 	/**
 	 * The meta object id for the '<em>Rectangle</em>' data type.
@@ -677,7 +804,7 @@ public interface RdbPackage extends EPackage {
 	 * @see com.hangum.tadpole.rdb.model.impl.RdbPackageImpl#getRectangle()
 	 * @generated
 	 */
-	int RECTANGLE = 8;
+	int RECTANGLE = 9;
 
 	/**
 	 * The meta object id for the '<em>Point</em>' data type.
@@ -687,7 +814,7 @@ public interface RdbPackage extends EPackage {
 	 * @see com.hangum.tadpole.rdb.model.impl.RdbPackageImpl#getPoint()
 	 * @generated
 	 */
-	int POINT = 9;
+	int POINT = 10;
 
 
 	/**
@@ -787,6 +914,28 @@ public interface RdbPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getDB_Comment();
+
+	/**
+	 * Returns the meta object for the reference '{@link com.hangum.tadpole.rdb.model.DB#getDBComment <em>DB Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>DB Comment</em>'.
+	 * @see com.hangum.tadpole.rdb.model.DB#getDBComment()
+	 * @see #getDB()
+	 * @generated
+	 */
+	EReference getDB_DBComment();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link com.hangum.tadpole.rdb.model.DB#getStyledReference <em>Styled Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Styled Reference</em>'.
+	 * @see com.hangum.tadpole.rdb.model.DB#getStyledReference()
+	 * @see #getDB()
+	 * @generated
+	 */
+	EReference getDB_StyledReference();
 
 	/**
 	 * Returns the meta object for class '{@link com.hangum.tadpole.rdb.model.Table <em>Table</em>}'.
@@ -1180,6 +1329,17 @@ public interface RdbPackage extends EPackage {
 	EAttribute getERDInfo_Version();
 
 	/**
+	 * Returns the meta object for the reference '{@link com.hangum.tadpole.rdb.model.ERDInfo#getStyle <em>Style</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Style</em>'.
+	 * @see com.hangum.tadpole.rdb.model.ERDInfo#getStyle()
+	 * @see #getERDInfo()
+	 * @generated
+	 */
+	EReference getERDInfo_Style();
+
+	/**
 	 * Returns the meta object for class '{@link com.hangum.tadpole.rdb.model.UserComment <em>User Comment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1199,6 +1359,104 @@ public interface RdbPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getUserComment_Comment();
+
+	/**
+	 * Returns the meta object for class '{@link com.hangum.tadpole.rdb.model.Style <em>Style</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Style</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style
+	 * @generated
+	 */
+	EClass getStyle();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Style#getTableTitle <em>Table Title</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Table Title</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getTableTitle()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EAttribute getStyle_TableTitle();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Style#getColumnPrimaryKey <em>Column Primary Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Column Primary Key</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getColumnPrimaryKey()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EAttribute getStyle_ColumnPrimaryKey();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Style#getColumnName <em>Column Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Column Name</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getColumnName()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EAttribute getStyle_ColumnName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Style#getColumnComment <em>Column Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Column Comment</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getColumnComment()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EAttribute getStyle_ColumnComment();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Style#getColumnType <em>Column Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Column Type</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getColumnType()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EAttribute getStyle_ColumnType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Style#getColumnNullCheck <em>Column Null Check</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Column Null Check</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getColumnNullCheck()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EAttribute getStyle_ColumnNullCheck();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.hangum.tadpole.rdb.model.Style#getGrid <em>Grid</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Grid</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getGrid()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EAttribute getStyle_Grid();
+
+	/**
+	 * Returns the meta object for the container reference '{@link com.hangum.tadpole.rdb.model.Style#getDb <em>Db</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Db</em>'.
+	 * @see com.hangum.tadpole.rdb.model.Style#getDb()
+	 * @see #getStyle()
+	 * @generated
+	 */
+	EReference getStyle_Db();
 
 	/**
 	 * Returns the meta object for enum '{@link com.hangum.tadpole.rdb.model.RelationKind <em>Relation Kind</em>}'.
@@ -1327,6 +1585,22 @@ public interface RdbPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DB__COMMENT = eINSTANCE.getDB_Comment();
+
+		/**
+		 * The meta object literal for the '<em><b>DB Comment</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DB__DB_COMMENT = eINSTANCE.getDB_DBComment();
+
+		/**
+		 * The meta object literal for the '<em><b>Styled Reference</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DB__STYLED_REFERENCE = eINSTANCE.getDB_StyledReference();
 
 		/**
 		 * The meta object literal for the '{@link com.hangum.tadpole.rdb.model.impl.TableImpl <em>Table</em>}' class.
@@ -1627,6 +1901,14 @@ public interface RdbPackage extends EPackage {
 		EAttribute ERD_INFO__VERSION = eINSTANCE.getERDInfo_Version();
 
 		/**
+		 * The meta object literal for the '<em><b>Style</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ERD_INFO__STYLE = eINSTANCE.getERDInfo_Style();
+
+		/**
 		 * The meta object literal for the '{@link com.hangum.tadpole.rdb.model.impl.UserCommentImpl <em>User Comment</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1643,6 +1925,80 @@ public interface RdbPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute USER_COMMENT__COMMENT = eINSTANCE.getUserComment_Comment();
+
+		/**
+		 * The meta object literal for the '{@link com.hangum.tadpole.rdb.model.impl.StyleImpl <em>Style</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.hangum.tadpole.rdb.model.impl.StyleImpl
+		 * @see com.hangum.tadpole.rdb.model.impl.RdbPackageImpl#getStyle()
+		 * @generated
+		 */
+		EClass STYLE = eINSTANCE.getStyle();
+
+		/**
+		 * The meta object literal for the '<em><b>Table Title</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STYLE__TABLE_TITLE = eINSTANCE.getStyle_TableTitle();
+
+		/**
+		 * The meta object literal for the '<em><b>Column Primary Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STYLE__COLUMN_PRIMARY_KEY = eINSTANCE.getStyle_ColumnPrimaryKey();
+
+		/**
+		 * The meta object literal for the '<em><b>Column Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STYLE__COLUMN_NAME = eINSTANCE.getStyle_ColumnName();
+
+		/**
+		 * The meta object literal for the '<em><b>Column Comment</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STYLE__COLUMN_COMMENT = eINSTANCE.getStyle_ColumnComment();
+
+		/**
+		 * The meta object literal for the '<em><b>Column Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STYLE__COLUMN_TYPE = eINSTANCE.getStyle_ColumnType();
+
+		/**
+		 * The meta object literal for the '<em><b>Column Null Check</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STYLE__COLUMN_NULL_CHECK = eINSTANCE.getStyle_ColumnNullCheck();
+
+		/**
+		 * The meta object literal for the '<em><b>Grid</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STYLE__GRID = eINSTANCE.getStyle_Grid();
+
+		/**
+		 * The meta object literal for the '<em><b>Db</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STYLE__DB = eINSTANCE.getStyle_Db();
 
 		/**
 		 * The meta object literal for the '{@link com.hangum.tadpole.rdb.model.RelationKind <em>Relation Kind</em>}' enum.

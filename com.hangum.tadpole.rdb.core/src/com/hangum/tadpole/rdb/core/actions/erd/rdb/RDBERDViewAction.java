@@ -53,7 +53,7 @@ public class RDBERDViewAction implements IViewActionDelegate {
 	public void run(UserDBDAO userDB) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
+			if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 				TadpoleMongoDBEditorInput input = new TadpoleMongoDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
 				page.openEditor(input, TadpoleMongoDBERDEditor.ID, false);
 			} else {
@@ -73,8 +73,7 @@ public class RDBERDViewAction implements IViewActionDelegate {
 		UserDBDAO userDB = userDBErd.getParent();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			
-			if(DBDefine.getDBDefine(userDB.getDbms_types()) == DBDefine.MONGODB_DEFAULT) {
+			if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 				TadpoleMongoDBEditorInput input = new TadpoleMongoDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
 				page.openEditor(input, TadpoleMongoDBERDEditor.ID, false);
 			} else {

@@ -122,7 +122,7 @@ public class AutoLayoutAction extends SelectionAction {
 			new DirectedGraphLayout().visit(graph);
 			for (int i = 0; i < graph.nodes.size(); i++) {
 				EntityNode node = (EntityNode) graph.nodes.getNode(i);
-				commands.add(new LayoutCommand(node.model, node.x, node.y));
+				commands.add(new LayoutCommand(node.model, node.x+10, node.y+10));
 			}
 	
 			getViewer().getEditDomain().getCommandStack().execute(commands);

@@ -7,8 +7,7 @@ Bundle-ClassPath: .
 Bundle-Vendor: hangum.com
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: 
- com.hangum.tadpole.rdb.model,
+Export-Package: com.hangum.tadpole.rdb.model,
  com.hangum.tadpole.rdb.model.impl,
  com.hangum.tadpole.rdb.model.util
 Require-Bundle: org.eclipse.core.runtime,

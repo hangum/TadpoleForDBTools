@@ -16,7 +16,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.importdb.core.dialog.importdb.csv.CsvToRDBImportDialog;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -37,20 +39,8 @@ public class CsvToRdbImportAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-//		CsvToRDBImportDialog dialog = new CsvToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
-		
-//		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
-//		try {
-//			MongoDBImportEditorInput input = new MongoDBImportEditorInput(userDB);
-//			page.openEditor(input, MongoDBImportEditor.ID, false);
-//			
-//		} catch (PartInitException e) {
-//			logger.error("Mongodb import", e);
-//			
-//			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//			ExceptionDetailsErrorDialog.openError(null, "Error", "MongoDB Import Exception", errStatus); //$NON-NLS-1$
-//		}
-		logger.debug("===> CVS to RDB DB import");
+		CsvToRDBImportDialog dialog = new CsvToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+		dialog.open();
 	}
 
 	@Override

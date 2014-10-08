@@ -246,7 +246,7 @@ public class TadpoleSystem_UserQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("userListPermissions"); //$NON-NLS-1$
 	}
-
+	
 	/**
 	 * group의 사용자를 리턴한다.
 	 * @param groupSeq
@@ -264,6 +264,9 @@ public class TadpoleSystem_UserQuery {
 	 * @throws Exception
 	 */
 	public static void updateUserData(UserDAO user) throws Exception {
+		user.setSecurity_question(CipherManager.getInstance().encryption(user.getSecurity_question()));
+		user.setSecurity_answer(CipherManager.getInstance().encryption(user.getSecurity_answer()));
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPermission", user); //$NON-NLS-1$
 	}

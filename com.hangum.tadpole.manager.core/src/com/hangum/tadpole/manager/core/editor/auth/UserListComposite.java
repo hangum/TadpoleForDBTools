@@ -16,26 +16,19 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -51,8 +44,11 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.users.FindUserDialog;
-import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
+import com.hangum.tadpole.manager.core.editor.auth.provider.UserCompFilter;
+import com.hangum.tadpole.manager.core.editor.auth.provider.UserContentProvider;
+import com.hangum.tadpole.manager.core.editor.auth.provider.UserLabelProvider;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -62,7 +58,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
- * 어드민, 메니저, DBA가 사용하는 사용자리스트 화면
+ * 메니저, DBA가 사용하는 사용자리스트 화면
  * 
  * 화면에서 사용자의 추가, 수정은 어드민, 매니저 권한을 가지 사용자 만 가능하다.
  * 
@@ -76,7 +72,6 @@ public class UserListComposite extends Composite {
 	private static final Logger logger = Logger.getLogger(UserListComposite.class);
 	
 	/** toolbar button */
-//	private ToolItem tltmModify;
 	private ToolItem tltmQuery;
 	
 	/** search text */
@@ -128,7 +123,7 @@ public class UserListComposite extends Composite {
 				initUI();
 			}
 		});
-		tltmRefresh.setToolTipText("Refresh");
+		tltmRefresh.setToolTipText(Messages.UserListComposite_0);
 	
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 		tltmAdd.setImage(ImageUtils.getAdd());
@@ -138,7 +133,7 @@ public class UserListComposite extends Composite {
 				addUser();
 			}
 		});
-		tltmAdd.setToolTipText("Add");
+		tltmAdd.setToolTipText(Messages.UserListComposite_1);
 		
 		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmDelete.setImage(ImageUtils.getDelete());
@@ -148,18 +143,7 @@ public class UserListComposite extends Composite {
 				deleteUser();
 			}
 		});
-		tltmDelete.setToolTipText("Delete");
-	
-//		tltmModify = new ToolItem(toolBar, SWT.NONE);
-//		tltmModify.setImage(ImageUtils.getModify());
-//		tltmModify.setEnabled(false);
-//		tltmModify.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				modifyUser();
-//			}
-//		});
-//		tltmModify.setToolTipText("Modify");
+		tltmDelete.setToolTipText(Messages.UserListComposite_2);
 		
 		tltmQuery = new ToolItem(toolBar, SWT.NONE);
 		tltmQuery.setImage(ImageUtils.getQueryHistory());
@@ -170,11 +154,11 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmQuery.setEnabled(false);
-		tltmQuery.setToolTipText("Query History");
+		tltmQuery.setToolTipText(Messages.UserListComposite_3);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSearch.setText("Search");
+		lblSearch.setText(Messages.UserListComposite_4);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -241,7 +225,7 @@ public class UserListComposite extends Composite {
 				logger.error("Query History open", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Query History", errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.UserListComposite_5, errStatus); //$NON-NLS-1$
 			}
 		}
 	}
@@ -250,7 +234,7 @@ public class UserListComposite extends Composite {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] colNames = {"Group Name", "Email", "Name", "Role", "Approval", "Delete", "Create Time"};
+		String[] colNames = {"Group Name", "Email", "Name", "Role", "Approval", "Delete", "Create Time"}; //$NON-NLS-1$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 		int[] colSize = {130, 200, 150, 80, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
@@ -268,13 +252,13 @@ public class UserListComposite extends Composite {
 		listUserGroup.clear();
 		
 		try {
-			listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(""+SessionManager.getGroupSeq());
+			listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(""+SessionManager.getGroupSeq()); //$NON-NLS-1$
 			
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();
 			userListViewer.expandToLevel(2);
 		} catch(Exception e) {
-			logger.error("Get user list", e);
+			logger.error("Get user list", e); //$NON-NLS-1$
 		}
 	}
 	
@@ -296,152 +280,21 @@ public class UserListComposite extends Composite {
 		if(ss != null) {
 			UserGroupAUserDAO userGroupAuser = (UserGroupAUserDAO)ss.getFirstElement();
 			if(userGroupAuser.getEmail().equals(SessionManager.getEMAIL())) {
-				MessageDialog.openWarning(getShell(), "Warning", "자신은 삭제 할 수 없습니다.");
+				MessageDialog.openWarning(getShell(), "Warning", Messages.UserListComposite_16); //$NON-NLS-1$
 			} else {
-				if(MessageDialog.openConfirm(getShell(), "확인", "삭제 하시겠습니까?")) {
+				if(MessageDialog.openConfirm(getShell(), Messages.UserListComposite_17, Messages.UserListComposite_18)) {
 					try {
 						TadpoleSystem_UserRole.withdrawalUserRole(SessionManager.getGroupSeq(), userGroupAuser.getSeq());
 						initUI();
 					} catch(Exception e) {
-						logger.error("withdrawal group user", e);
+						logger.error("withdrawal group user", e); //$NON-NLS-1$
 					}
 				}
 			}
 		}
 	}
-	
-//	/**
-//	 * modify user
-//	 */
-//	private void modifyUser() {
-//		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
-//		if(ss != null) {
-//			UserGroupAUserDAO userGroupAuser = (UserGroupAUserDAO)ss.getFirstElement();
-//			if(userGroupAuser.getEmail().equals(SessionManager.getEMAIL())) {
-//				ModifyUserDialog dialog = new ModifyUserDialog(getShell(), userGroupAuser);
-//				if(Dialog.OK == dialog.open()) {
-//					initUI();
-//				}
-//			} else {
-//				MessageDialog.openWarning(getShell(), "Warning", "그룹 구성원은 수정 할 수 없습니다.");
-//			}
-//		}
-//	}
 
 	@Override
 	protected void checkSubclass() {
 	}
-}
-
-/**
-* content provider
-* 
-* @author hangum
-*
-*/
-class UserContentProvider implements ITreeContentProvider {
-	private static final Logger logger = Logger.getLogger(UserContentProvider.class);
-	
-	@Override
-	public void dispose() {
-	}
-
-	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
-
-	@Override
-	public Object[] getElements(Object inputElement) {
-		return ((List<UserGroupAUserDAO>)inputElement).toArray();
-	}
-
-	@Override
-	public Object[] getChildren(Object parentElement) {
-		return getElements(parentElement);
-	}
-
-	@Override
-	public Object getParent(Object element) {
-		if(element == null) {
-			return null;
-		}
-		
-		return ((UserGroupAUserDAO) element).parent;
-	}
-
-	@Override
-	public boolean hasChildren(Object element) {
-		if(element instanceof ArrayList) {
-			return ((ArrayList)element).size() > 0;			
-		} else if(element instanceof UserGroupAUserDAO) {
-			return ((UserGroupAUserDAO)element).child.size() > 0;
-		}
-		
-		return false;
-	}
-	
-}
-
-/**
-* 유저 정보 레이블 
-* 
-* @author hangum
-*
-*/
-class UserLabelProvider extends LabelProvider implements ITableLabelProvider {
-	private static final Logger logger = Logger.getLogger(UserLabelProvider.class);
-	
-	@Override
-	public Image getColumnImage(Object element, int columnIndex) {
-		return null;
-	}
-
-	@Override
-	public String getColumnText(Object element, int columnIndex) {
-		UserGroupAUserDAO user = (UserGroupAUserDAO)element;
-
-		switch(columnIndex) {
-		case 0: return user.getUser_group_name();
-		case 1: return user.getEmail();
-		case 2: return user.getName();
-		case 3: return user.getRole_type();
-		case 4: return user.getApproval_yn();
-		case 5: return user.getDelYn();
-		case 6: return user.getCreate_time();
-		}
-		
-		return "*** not set column ***";
-	}
-	
-}
-
-/**
-* User composite filter
-* 
-* @author hangum
-*
-*/
-class UserCompFilter extends ViewerFilter {
-	String searchString;
-	
-	public void setSearchString(String s) {
-		this.searchString = ".*" + s.toLowerCase() + ".*";
-	}
-
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if(searchString == null || searchString.length() == 0) {
-			return true;
-		}
-			
-		UserGroupAUserDAO user = (UserGroupAUserDAO)element;
-		if(user.getUser_group_name().toLowerCase().matches(searchString)) return true;
-		if(user.getEmail().toLowerCase().matches(searchString)) return true;
-		if(user.getName().toLowerCase().matches(searchString)) return true;
-		if(user.getRole_type().toLowerCase().matches(searchString)) return true;
-		if(user.getApproval_yn().toLowerCase().matches(searchString)) return true;
-		
-		return false;
-	}
-	
 }

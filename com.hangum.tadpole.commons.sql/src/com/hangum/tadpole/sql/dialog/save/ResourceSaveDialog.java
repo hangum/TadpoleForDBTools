@@ -161,6 +161,8 @@ public class ResourceSaveDialog extends Dialog {
 			}
 		} catch (Exception e) {
 			logger.error("SQL Editor File validator", e); //$NON-NLS-1$
+			
+			return;
 		}
 		
 		super.okPressed();

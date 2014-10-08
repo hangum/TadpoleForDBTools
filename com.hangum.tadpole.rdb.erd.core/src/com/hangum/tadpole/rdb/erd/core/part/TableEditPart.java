@@ -31,6 +31,8 @@ import com.hangum.tadpole.rdb.erd.core.figures.TableFigure;
 import com.hangum.tadpole.rdb.erd.core.figures.TableFigure.COLUMN_TYPE;
 import com.hangum.tadpole.rdb.erd.core.policies.TableComponentEditPolicy;
 import com.hangum.tadpole.rdb.model.Column;
+import com.hangum.tadpole.rdb.model.DB;
+import com.hangum.tadpole.rdb.model.Style;
 import com.hangum.tadpole.rdb.model.Table;
 
 public class TableEditPart extends AbstractGraphicalEditPart implements NodeEditPart {
@@ -70,31 +72,54 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 	private void updateFigure(TableFigure figure) {
 		Table tableModel = (Table)getModel();
 		
-		figure.setTableName(tableModel.getName());
-		figure.removeAllColumns();
-
-		EList<Column> columns = tableModel.getColumns();
-		for (Column column : columns) {
-			ColumnFigure[] figures = createColumnFigure(tableModel, column);
-			figure.add(figures[0]);
-			figure.add(figures[1]);
-			figure.add(figures[2]);
-			figure.add(figures[3]);
+		DB db = tableModel.getDb();
+		if(db == null) {
+			figure.removeAllColumns();
+		} else {
+			Style style = db.getStyle();
+			String strTableTitle = style.getTableTitle();
+			if("name".equals(strTableTitle)) 		figure.setTableName(tableModel.getName() );
+			else if("comment".equals(strTableTitle)) figure.setTableName(tableModel.getComment());
+			else {
+				if("".equals(tableModel.getComment())) {
+					figure.setTableName(tableModel.getName() );
+				} else {
+					figure.setTableName(tableModel.getName() + "(" + tableModel.getComment() + ")");
+				}
+			}
+			figure.removeAllColumns();
+			
+			// 모든 컬럼을 보여 주지 않아야 하는지 ..
+			boolean isShowColumn = "NO".equals(style.getColumnPrimaryKey()) & "NO".equals(style.getColumnName()) & "NO".equals(style.getColumnComment()) & "NO".equals(style.getColumnType()) & "NO".equals(style.getColumnNullCheck());
+			if(!isShowColumn) {
+				EList<Column> columns = tableModel.getColumns();
+				for (Column column : columns) {
+					ColumnFigure[] figures = createColumnFigure(tableModel, column);
+					
+					if("YES".equals(style.getColumnPrimaryKey())) 	figure.add(figures[0]);
+					if("YES".equals(style.getColumnName())) 		figure.add(figures[1]);
+					if("YES".equals(style.getColumnComment())) 		figure.add(figures[2]);
+					if("YES".equals(style.getColumnType())) 		figure.add(figures[3]);
+					if("YES".equals(style.getColumnNullCheck())) 	figure.add(figures[4]);
+				}
+			}
 		}
 	}
 	
 	private ColumnFigure[] createColumnFigure(Table tableModel, Column model){
 		ColumnFigure labelKey = new ColumnFigure(COLUMN_TYPE.KEY);
 		ColumnFigure labelName = new ColumnFigure(COLUMN_TYPE.NAME);
+		ColumnFigure labelComment = new ColumnFigure(COLUMN_TYPE.COMMENT);
 		ColumnFigure labelType = new ColumnFigure(COLUMN_TYPE.TYPE);
 		ColumnFigure labelNotNull = new ColumnFigure(COLUMN_TYPE.NULL);
 		
 		labelKey.setText( StringUtils.substring(model.getKey(), 0, 1));
 		labelName.setText(model.getField());
+		labelComment.setText(model.getComment());
 		labelType.setText(model.getType());
 		labelNotNull.setText(StringUtils.substring(model.getNull(), 0, 1));
 
-		return new ColumnFigure[]{labelKey, labelName, labelType, labelNotNull};
+		return new ColumnFigure[]{labelKey, labelName, labelComment, labelType, labelNotNull};
 	}
 	
 	@Override

@@ -58,7 +58,8 @@ public class SessionListAction implements IViewActionDelegate {
 		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT  ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT 
+				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT 	||
+				DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
 		) {
 			
 			try {

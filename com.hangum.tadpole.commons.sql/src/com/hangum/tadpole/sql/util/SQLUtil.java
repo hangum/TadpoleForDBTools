@@ -10,14 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util;
 
-import java.io.StringReader;
 import java.sql.ResultSet;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.sf.jsqlparser.parser.CCJSqlParserManager;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.Select;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -62,8 +58,8 @@ public class SQLUtil {
 	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE /*+ PATTERN_EXECUTE_UPDATE*/ + "|" + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 
-	private static final String PATTERN_COMMENT = "/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/";
-	private static final String PATTERN_COMMENT2 = "(--.*)|(//.*)";
+//	private static final String PATTERN_COMMENT = "/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/";
+//	private static final String PATTERN_COMMENT2 = "(--.*)|(//.*)";
 	
 	/** 허용되지 않는 sql 정의 */
 	private static final String[] NOT_ALLOWED_SQL = {
@@ -80,10 +76,13 @@ public class SQLUtil {
 	public static String removeComment(String strSQL) {
 		if(null == strSQL) return "";
 		
-		String retStr = strSQL.replaceAll(PATTERN_COMMENT, "");
-		retStr = retStr.replaceAll(PATTERN_COMMENT2, "");
+//		String retStr = strSQL.replaceAll(PATTERN_COMMENT, "");
+//		retStr = retStr.replaceAll(PATTERN_COMMENT2, "");
 		
-		return retStr;
+		Pattern regex = Pattern.compile("(?:--[^;]*?$)|(--[^\r\n])|(?:/\\*[^;]*?\\*/)", Pattern.DOTALL | Pattern.MULTILINE);
+        Matcher regexMatcher = regex.matcher(strSQL);
+		
+		return regexMatcher.replaceAll("");
 	}
 	
 	/**
@@ -249,6 +248,7 @@ public class SQLUtil {
 		boolean isChanged = false;
 		String retStr = tableName;
 		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
+		if(tmd == null) return retStr;
 		
 		switch(tmd.getSTORE_TYPE()) {
 //		case NONE: 

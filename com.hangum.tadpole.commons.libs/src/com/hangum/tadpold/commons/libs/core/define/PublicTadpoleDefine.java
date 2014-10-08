@@ -12,8 +12,6 @@ package com.hangum.tadpold.commons.libs.core.define;
 
 import org.apache.commons.io.IOUtils;
 
-import com.hangum.tadpold.commons.libs.core.Messages;
-
 /**
  * 올챙이 전역 정의 
  * 
@@ -205,14 +203,14 @@ public class PublicTadpoleDefine {
 	 *
 	 */
 	public enum SecurityHint {
-		QUESTION1(Messages.PublicTadpoleDefine_0, 0), 
-		QUESTION2(Messages.PublicTadpoleDefine_1, 1), 
-		QUESTION3(Messages.PublicTadpoleDefine_2, 2), 
-		QUESTION4(Messages.PublicTadpoleDefine_3, 3),
-		QUESTION5(Messages.PublicTadpoleDefine_4, 4),
-		QUESTION6(Messages.PublicTadpoleDefine_5, 5),
-		QUESTION7(Messages.PublicTadpoleDefine_6, 6), 
-		QUESTION8(Messages.PublicTadpoleDefine_7, 7);
+		QUESTION1("What is your alternate email address?", 0), //$NON-NLS-1$
+		QUESTION2("What is your favorite thing?", 1), //$NON-NLS-1$
+		QUESTION3("What elementary school did you graduate?", 2), //$NON-NLS-1$
+		QUESTION4("What is your ideal match?", 3), //$NON-NLS-1$
+		QUESTION5("What is your mother's name?", 4), //$NON-NLS-1$
+		QUESTION6("What is your father's name?", 5), //$NON-NLS-1$
+		QUESTION7("What is your favorite color?", 6), //$NON-NLS-1$
+		QUESTION8("What is your favorite food?", 7); //$NON-NLS-1$
 		
 		private String value;
 		private int order;

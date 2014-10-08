@@ -22,8 +22,10 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * 사용자 관리 에디터
@@ -91,9 +93,15 @@ public class UserManagementEditor extends EditorPart {
 		CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
 		tbtmItem.setText("User List");
 
-		Composite compositeUserList = new UserListComposite(tabFolder, SWT.NONE);
-		tbtmItem.setControl(compositeUserList);
-		compositeUserList.setLayout(new GridLayout(1, false));
+		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())) {
+			Composite compositeUserList = new AdminUserListComposite(tabFolder, SWT.NONE);
+			tbtmItem.setControl(compositeUserList);
+			compositeUserList.setLayout(new GridLayout(1, false));
+		} else {
+			Composite compositeUserList = new UserListComposite(tabFolder, SWT.NONE);
+			tbtmItem.setControl(compositeUserList);
+			compositeUserList.setLayout(new GridLayout(1, false));			
+		}
 		
 		// DBs
 		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);

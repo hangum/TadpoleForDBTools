@@ -108,6 +108,9 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 		String tableName = arrayDragSourceData[1];		
 		String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 		
+		String tableComment = arrayDragSourceData[2];
+		tableComment = StringUtils.substring(""+tableComment, 0, 10);
+		
 		// 이미 editor 상에 테이블 정보를 가져온다.
 		Map<String, Table> mapDBTables = new HashMap<String, Table>();
 		for (Table table : db.getTables()) {
@@ -122,6 +125,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			Table tableModel = tadpoleFactory.createTable();
 			tableModel.setName(tableName);
 			tableModel.setDb(db);
+			tableModel.setComment(tableComment);
 			tableModel.setConstraints(new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
 			
 			try {
@@ -135,6 +139,11 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 					column.setNull(columnDAO.getNull());
 					column.setKey(columnDAO.getKey());
 					column.setType(columnDAO.getType());
+					
+					String strComment = columnDAO.getComment();
+					if(strComment == null) strComment = "";
+					else strComment = StringUtils.substring(""+strComment, 0, 10);
+					column.setComment(strComment);
 					
 					column.setTable(tableModel);
 					tableModel.getColumns().add(column);

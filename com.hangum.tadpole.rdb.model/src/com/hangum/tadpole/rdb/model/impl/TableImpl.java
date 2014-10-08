@@ -219,7 +219,7 @@ public class TableImpl extends EObjectImpl implements Table {
 	 */
 	public DB getDb() {
 		if (eContainerFeatureID() != RdbPackage.TABLE__DB) return null;
-		return (DB)eContainer();
+		return (DB)eInternalContainer();
 	}
 
 	/**

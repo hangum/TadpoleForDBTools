@@ -117,7 +117,7 @@ public class FindPasswordDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strEmail = StringUtils.trimToEmpty(textEmail.getText());
-		String strQuestion = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getText()));
+		String strQuestion = StringUtils.trimToEmpty(comboQuestion.getText());
 		String strAnswer = StringUtils.trimToEmpty(textAnswer.getText());
 
 		if (!checkValidation()) {
