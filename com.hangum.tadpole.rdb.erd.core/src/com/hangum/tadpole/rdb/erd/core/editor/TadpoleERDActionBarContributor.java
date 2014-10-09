@@ -51,7 +51,7 @@ public class TadpoleERDActionBarContributor extends ActionBarContributor {
 		// Show/hide grid
 //		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY, GEFMessages.get().ToggleRulerVisibility_Label, IAction.AS_CHECK_BOX));
 //		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY, GEFMessages.get().ToggleSnapToGeometry_Label, IAction.AS_CHECK_BOX));
-		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_GRID_VISIBILITY, GEFMessages.get().ToggleGrid_Label, IAction.AS_CHECK_BOX));
+		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_GRID_VISIBILITY, "Grid", IAction.AS_CHECK_BOX));
 		
 		// aligment action
 		addRetargetAction(new AlignmentRetargetAction(PositionConstants.LEFT));
@@ -61,16 +61,16 @@ public class TadpoleERDActionBarContributor extends ActionBarContributor {
 		addRetargetAction(new AlignmentRetargetAction(PositionConstants.MIDDLE));
 		addRetargetAction(new AlignmentRetargetAction(PositionConstants.BOTTOM));
 		
-		RetargetAction retargetAction = new RetargetAction(GEFActionConstants.MATCH_WIDTH, GEFMessages.get().MatchWidthAction_Label);
+		RetargetAction retargetAction = new RetargetAction(GEFActionConstants.MATCH_WIDTH, "Match Width");
 		retargetAction.setImageDescriptor(InternalImages.DESC_MATCH_WIDTH);
 		retargetAction.setDisabledImageDescriptor(InternalImages.DESC_MATCH_WIDTH_DIS);
-		retargetAction.setToolTipText(GEFMessages.get().MatchWidthAction_Tooltip);
+		retargetAction.setToolTipText("Match Width");
 		addRetargetAction(retargetAction);
 		
-		retargetAction = new RetargetAction(GEFActionConstants.MATCH_HEIGHT, GEFMessages.get().MatchHeightAction_Label);
+		retargetAction = new RetargetAction(GEFActionConstants.MATCH_HEIGHT, "Match Height");
 		retargetAction.setImageDescriptor(InternalImages.DESC_MATCH_HEIGHT);
 		retargetAction.setDisabledImageDescriptor(InternalImages.DESC_MATCH_HEIGHT_DIS);
-		retargetAction.setToolTipText(GEFMessages.get().MatchHeightAction_Tooltip);
+		retargetAction.setToolTipText("Match Height");
 		addRetargetAction(retargetAction);
      
         // styled action

@@ -12,21 +12,17 @@ package com.hangum.tadpole.rdb.erd.core.actions;
 
 import java.util.List;
 
-import org.eclipse.draw2d.graph.Node;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.EDITOR_OPEN_TYPE;
 import com.hangum.tadpole.rdb.erd.core.dialogs.ERDViewStyleDailog;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.rdb.erd.core.part.TableEditPart;
 import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.DB;
-import com.hangum.tadpole.rdb.model.Table;
 import com.swtdesigner.ResourceManager;
 
 /**

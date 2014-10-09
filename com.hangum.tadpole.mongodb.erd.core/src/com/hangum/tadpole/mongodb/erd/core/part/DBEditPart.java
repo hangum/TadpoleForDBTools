@@ -21,9 +21,15 @@ import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.SnapToGeometry;
+import org.eclipse.gef.SnapToGrid;
+import org.eclipse.gef.SnapToGuides;
+import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.rulers.RulerProvider;
 
 import com.hangum.tadpole.mongodb.erd.core.figures.DBFigure;
 import com.hangum.tadpole.mongodb.erd.core.policies.TableXYLayoutPolicy;
@@ -49,6 +55,31 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 	protected IFigure createFigure() {
 		IFigure figure = new DBFigure();
 		return figure;
+	}
+	
+	@Override
+	public Object getAdapter(Class key) {
+		if (key == SnapToHelper.class) {
+			List<SnapToHelper> snaps = new ArrayList<SnapToHelper>();
+			
+			Boolean bool = (Boolean)getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
+			if(bool != null && bool) snaps.add(new SnapToGuides(this));
+
+			bool = (Boolean)getViewer().getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
+			if (bool != null && bool) snaps.add(new SnapToGeometry(this));
+			
+			bool = (Boolean) getViewer().getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
+			if (bool != null && bool) snaps.add(new SnapToGrid(this));
+			
+			if (snaps.size() == 0) return null;
+			if (snaps.size() == 1) return snaps.get(0);
+			
+			SnapToHelper[] ss = snaps.toArray(new SnapToHelper[0]);
+			
+			return new CompoundSnapToHelper(ss);
+		}
+
+		return super.getAdapter(key);
 	}
 	
 	@Override
