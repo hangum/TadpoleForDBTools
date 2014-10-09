@@ -220,6 +220,40 @@ SELECT
 </select>
 
 <!-- 
+	enable 상태의 트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+select
+     s.table_schema + '.' + s.table_name as "table_name"
+    ,t.name as "trigger_name"
+    ,'DISABLE TRIGGER ' + t.name + ' on ' + s.table_schema + '.' + s.table_name as "disable_statement"
+    ,'ENABLE TRIGGER ' + t.name + ' on ' + s.table_schema + '.' + s.table_name as "enable_statement"
+from sys.triggers t
+	inner join information_schema.tables s on t.parent_id = object_id(s.table_schema + '.' + s.table_name)
+where 1=1
+  and t.is_disabled = 'false'
+  and t.parent_id = object_id('$table_name$')
+]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	select 
+      tc.name as "column_name" 
+	, tc.column_id as "column_order" 
+	from sys.indexes p
+	  inner join sys.tables t on p.object_id = t.object_id
+	  inner join sys.index_columns c on t.object_id = c.object_id 
+	  inner join sys.all_columns tc on tc.object_id = t.object_id and c.column_id = tc.column_id
+	  where 1=1
+	    and t.object_id = object_id('$table_name$')
+	order by c.key_ordinal
+</select>
+
+<!-- 
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">

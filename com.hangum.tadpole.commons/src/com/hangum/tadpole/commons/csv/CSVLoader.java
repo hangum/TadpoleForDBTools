@@ -161,6 +161,8 @@ public class CSVLoader {
 					try{
 						ps.executeBatch();	
 						resultLogBuffer.append("\t Execute Batch...\n");
+						countSum += count;
+						count = 0;
 					}catch(SQLException e){
 						logger.error("CSV file import.", e);
 
@@ -182,7 +184,6 @@ public class CSVLoader {
 						}else{
 							con.commit();
 							resultLogBuffer.append("\t Commit() - " + count + "Entry.\n");
-							countSum += count;
 							count = 0;
 							continue;
 						}
@@ -284,13 +285,22 @@ public class CSVLoader {
 			// import할 테이블의 데이터 타입별로 파라미터를 설정하기 위해 메타정보를 조회한다.
 			if (con != null){
 				rsmd = con.createStatement().executeQuery("select * from " + tableName + " where 1 = 0 ").getMetaData();
-				if (headerRow.length != rsmd.getColumnCount()) {
-					throw new Exception( "Mismatch of the number of columns and the target table .\n" + "Please check the CSV file format.");
-				}
-	
+				
 				for (int colIndex=1; colIndex <= rsmd.getColumnCount(); colIndex++){
 					rsmdMap.put(rsmd.getColumnName(colIndex).toLowerCase(), colIndex);				
 				}
+
+				for(String headColumn:headerRow){
+					if (!rsmdMap.containsKey(headColumn.toLowerCase())) {
+						//대상테이블에 존재하지 않는 컬럼이 CSV 파일에서 발견되었습니다.
+						throw new Exception( "Column that does not exist in the target table was discovered in the CSV file.");
+					}
+				}
+				
+				if (headerRow.length > rsmd.getColumnCount()) {
+					throw new Exception( "Mismatch of the number of columns and the target table .\n" + "Please check the CSV file format.");
+				}
+	
 			}
 			return true;
 		} finally {
