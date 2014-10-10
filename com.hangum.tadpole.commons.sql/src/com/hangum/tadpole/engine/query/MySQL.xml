@@ -164,6 +164,38 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 </select>
 
 <!-- 
+	enable 상태의 트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+	select 
+	     event_object_table as "table_name"
+	    ,trigger_name as "trigger_name"
+	    ,'SET @disable_triggers = 1 ' as "disable_statement" 
+	    ,'SET @disable_triggers = 0 ' as "enable_statement" 
+	from INFORMATION_SCHEMA.triggers
+	where 1=1
+	and event_object_table = #table_name#;
+]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+select   
+     c.column_name as "column_name"
+    ,c.ordinal_position as "column_order"
+from information_schema.tables t 
+  inner join information_schema.columns c on t.table_schema = c.table_schema and t.table_name = c.table_name
+where 1=1
+  and c.column_key = 'PRI'
+  and t.table_name = #table_name#
+order by c.ordinal_position
+</select>
+
+
+<!-- 
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
