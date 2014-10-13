@@ -114,11 +114,10 @@ public class TajoConnectionManager implements ConnectionInterfact {
 	 * @param userDB
 	 * @param requestQuery
 	 * @param limitCount
-	 * @param isResultComma
 	 * 
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, int limitCount, boolean isResultComma) throws Exception {
+	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, int limitCount) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
 		
 		java.sql.Connection javaConn = null;
@@ -130,7 +129,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-			return new QueryExecuteResultDTO(true, rs, limitCount, isResultComma);
+			return new QueryExecuteResultDTO(true, rs, limitCount);
 		} catch(Exception e) {
 			logger.error("Tajo select", e);
 			throw e;

@@ -94,6 +94,8 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.MainEditorContributionsHandler;
+import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
@@ -286,6 +288,15 @@ public class ResultSetComposite extends Composite {
 								}
 							}else{
 								appendTextAtPosition(strText);
+								
+								IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getCompMainExtions();
+								for (IMainEditorExtension iMainEditorExtension : extensions) {
+									iMainEditorExtension.resultSetDoubleClick(i, mapColumns);
+								}
+								
+//								// tadpole extension 
+//								MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
+//								editorExtension.evaluateResultColumnDoublClick(i, mapColumns);
 							}
 						}	// end if first column
 					}	// for column index
@@ -537,7 +548,7 @@ public class ResultSetComposite extends Composite {
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
-		final boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
+//		final boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 		final String strPlanTBName = GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
@@ -574,7 +585,7 @@ public class ResultSetComposite extends Composite {
 						
 						// select 문장 실행
 						if(SQLUtil.isStatement(reqQuery.getSql())) { //$NON-NLS-1$
-							rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, isResultComma);
+							rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
 							sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
@@ -586,7 +597,7 @@ public class ResultSetComposite extends Composite {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
 							} else {
-								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, isResultComma);
+								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
 								sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 							}
 						} else {
@@ -653,7 +664,7 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService esCheckStop = null; 
 	private Button btnDetailView;
 	private Button btnSql;
-	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final boolean isResultComma) throws Exception {
+	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt/*, final boolean isResultComma*/) throws Exception {
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
@@ -698,7 +709,7 @@ public class ResultSetComposite extends Composite {
 			
 //			if(logger.isDebugEnabled()) logger.debug("\t======== execute end =================================");
 					
-			rsDAO = new QueryExecuteResultDTO(true, resultSet, intSelectLimitCnt, isResultComma);
+			rsDAO = new QueryExecuteResultDTO(true, resultSet, intSelectLimitCnt/*, isResultComma*/);
 		} catch(Exception e) {
 			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
@@ -853,10 +864,10 @@ public class ResultSetComposite extends Composite {
 		if(SQLUtil.isStatement(reqQuery.getSql())) {			
 			// table data를 생성한다.
 			final TadpoleResultSet trs = rsDAO.getDataList();
-			
+//			final boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 			sqlSorter = new SQLResultSorter(-999);
 			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter);
-			tvQueryResult.setLabelProvider(new SQLResultLabelProvider());
+			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
 			tvQueryResult.setContentProvider(new ArrayContentProvider());// SQLResultContentProvider(trs.getData().subList(0, getPageCount())));
 			
 			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.

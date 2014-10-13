@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -233,7 +234,7 @@ public class ExecuteProcedureDialog extends Dialog {
 					sqlSorter = new SQLResultSorter(-999);
 					
 					SQLResultLabelProvider.createTableColumn(sqlResultTableViewer[i], resultDao, sqlSorter);
-					sqlResultTableViewer[i].setLabelProvider(new SQLResultLabelProvider());
+					sqlResultTableViewer[i].setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), resultDao));
 					sqlResultTableViewer[i].setContentProvider(new SQLResultContentProvider(resultDao.getDataList().getData()));
 					
 					sqlResultTableViewer[i].setInput(resultDao.getDataList());
