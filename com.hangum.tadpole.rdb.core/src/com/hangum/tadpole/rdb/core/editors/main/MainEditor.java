@@ -113,6 +113,8 @@ public class MainEditor extends EditorExtension {
 	/** db table list */
 	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
 	
+	private IMainEditorExtension[] compMainExtions;
+	
 	public MainEditor() {
 		super();
 	}
@@ -387,9 +389,9 @@ public class MainEditor extends EditorExtension {
 		
 		// 올챙이 확장에 관한 코드를 넣습니다. =================================================================== 
 		MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
-		IMainEditorExtension[] compositesExt = editorExtension.evaluateCreateWidgetContribs();
-		for (IMainEditorExtension aMainEditorExtension : compositesExt) {
-			if(logger.isDebugEnabled()) logger.debug("=================>>>>>>>>>>>>>>>>>>> editor extension ");
+		compMainExtions = editorExtension.evaluateCreateWidgetContribs();
+		for (IMainEditorExtension aMainEditorExtension : compMainExtions) {
+			
 			Composite compExt = new Composite(sashFormExtension, SWT.BORDER);
 			GridLayout gl_compositeExt = new GridLayout(1, false);
 			gl_compositeExt.verticalSpacing = 0;
@@ -401,7 +403,7 @@ public class MainEditor extends EditorExtension {
 			aMainEditorExtension.createPartControl(compExt);
 		}
 		
-		if(compositesExt.length >= 1) {
+		if(compMainExtions.length >= 1) {
 			sashFormExtension.setWeights(new int[] {70, 30});
 		}
 		// 올챙이 확장에 관한 코드를 넣습니다. ===================================================================
@@ -831,5 +833,8 @@ public class MainEditor extends EditorExtension {
 //		
 //		return uploadHandler.getUploadUrl();
 //	}
-	
+
+	public IMainEditorExtension[] getCompMainExtions() {
+		return compMainExtions;
+	}	
 }
