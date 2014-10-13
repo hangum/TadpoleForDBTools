@@ -94,6 +94,8 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.MainEditorContributionsHandler;
+import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
@@ -286,6 +288,10 @@ public class ResultSetComposite extends Composite {
 								}
 							}else{
 								appendTextAtPosition(strText);
+								
+								// tadpole extension 
+								MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
+								editorExtension.evaluateResultColumnDoublClick(i, mapColumns);
 							}
 						}	// end if first column
 					}	// for column index

@@ -65,6 +65,8 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.MainEditorContributionsHandler;
+import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -153,7 +155,11 @@ public class MainEditor extends EditorExtension {
 		gl_parent.marginWidth = 2;
 		parent.setLayout(gl_parent);
 		
-		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+		// 에디터 확장을 위한 기본 베이스 위젲을 설정합니다.
+		SashForm sashFormExtension = new SashForm(parent, SWT.NONE);
+		sashFormExtension.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+				
+		SashForm sashForm = new SashForm(sashFormExtension, SWT.VERTICAL);
 		sashForm.setSashWidth(4);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -378,6 +384,27 @@ public class MainEditor extends EditorExtension {
 		
 		sashForm.setWeights(new int[] {65, 35});
 		initEditor();
+		
+		// 올챙이 확장에 관한 코드를 넣습니다. =================================================================== 
+		MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
+		IMainEditorExtension[] compositesExt = editorExtension.evaluateCreateWidgetContribs();
+		for (IMainEditorExtension aMainEditorExtension : compositesExt) {
+			if(logger.isDebugEnabled()) logger.debug("=================>>>>>>>>>>>>>>>>>>> editor extension ");
+			Composite compExt = new Composite(sashFormExtension, SWT.BORDER);
+			GridLayout gl_compositeExt = new GridLayout(1, false);
+			gl_compositeExt.verticalSpacing = 0;
+			gl_compositeExt.horizontalSpacing = 0;
+			gl_compositeExt.marginHeight = 0;
+			gl_compositeExt.marginWidth = 0;
+			compExt.setLayout(gl_compositeExt);
+
+			aMainEditorExtension.createPartControl(compExt);
+		}
+		
+		if(compositesExt.length >= 1) {
+			sashFormExtension.setWeights(new int[] {70, 30});
+		}
+		// 올챙이 확장에 관한 코드를 넣습니다. ===================================================================
 		
 		// autocommit true 혹은 false값이 바뀌었을때..
 		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
