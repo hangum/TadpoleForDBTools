@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util.tables;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
@@ -26,6 +27,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.sql.util.resultset.ResultSetUtilDTO;
 import com.swtdesigner.ResourceManager;
@@ -41,7 +43,21 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(SQLResultLabelProvider.class);
+	private boolean isPretty = false;
+	private ResultSetUtilDTO rsDAO;
 	
+	
+	public SQLResultLabelProvider() {
+	}
+
+	public SQLResultLabelProvider(final boolean isPretty) {
+		this.isPretty = isPretty;
+	}
+	
+	public SQLResultLabelProvider(final boolean isPretty, final ResultSetUtilDTO rsDAO) {
+		this.isPretty = isPretty;
+		this.rsDAO = rsDAO;
+	}
 
 	@Override
 	public Color getForeground(Object element, int columnIndex) {
@@ -64,7 +80,11 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)element;
 		
 		Object obj = rsResult.get(columnIndex);
-		return obj == null ? "" : obj.toString();
+		if(rsDAO != null) {
+			if(isPretty & RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) return addComma(obj);
+		}
+		
+		return obj == null ? PublicTadpoleDefine.DEFINE_NULL_VALUE : obj.toString();
 	}
 	
 	/**
@@ -89,8 +109,8 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				
 				final TableViewerColumn tv = new TableViewerColumn(tableViewer, columnAlign);
 				final TableColumn tc = tv.getColumn();
+
 				tc.setText( rsDAO.getColumnName().get(i) );
-				
 				tc.setResizable(true);
 				tc.setMoveable(true);
 				
@@ -117,4 +137,22 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		}		
 	}
 	
+	/**
+	 * 숫자일 경우 ,를 찍어보여줍니다.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String addComma(Object value) {
+		if(value==null) return PublicTadpoleDefine.DEFINE_NULL_VALUE;
+		
+		try{
+			NumberFormat nf = NumberFormat.getNumberInstance();
+			return nf.format(value);
+		} catch(Exception e){
+			// ignore exception
+		}
+
+		return value.toString();
+	}
 }

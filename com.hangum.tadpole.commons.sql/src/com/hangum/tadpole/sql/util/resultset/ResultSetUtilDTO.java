@@ -61,11 +61,11 @@ public class ResultSetUtilDTO {
 	 * @param isResultComma
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO(boolean isShowRownum, ResultSet rs, int limitCount, boolean isResultComma) throws Exception {
+	public ResultSetUtilDTO(boolean isShowRownum, ResultSet rs, int limitCount) throws Exception {
 		if(rs != null) {
 			columnName = ResultSetUtils.getColumnName(isShowRownum, rs);
 			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
-			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount, isResultComma);
+			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
 		}
 	}
 

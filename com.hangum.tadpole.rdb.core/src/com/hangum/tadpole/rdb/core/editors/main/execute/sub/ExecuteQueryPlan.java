@@ -90,7 +90,7 @@ public class ExecuteQueryPlan {
 				rs = pstmt.executeQuery();
 			}
 
-			rsDAO = new QueryExecuteResultDTO(true, rs, 1000, true);
+			rsDAO = new QueryExecuteResultDTO(true, rs, 1000/*, true*/);
 			return rsDAO;
 			
 		} finally {
