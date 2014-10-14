@@ -325,7 +325,8 @@ public abstract class AbstractLoginComposite extends Composite {
 			TadpoleSQLManager.removeInstance(loginInfo);
 
 			// mssql 데이터베이스가 연결되지 않으면 등록되면 안됩니다. 하여서 제외합니다.
-			if(!isTest && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
+			// https://github.com/hangum/TadpoleForDBTools/issues/512 
+			if(!isTest) {// && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
 				if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_26, Messages.AbstractLoginComposite_3  + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR + e.getMessage())) return true;
 			} else {
 				MessageDialog.openError(null, "Confirm", Messages.AbstractLoginComposite_1 + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR + e.getMessage());

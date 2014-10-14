@@ -220,6 +220,42 @@ SELECT
 </select>
 
 <!-- 
+	enable 상태의 트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+	select
+	     s.name as "table_name"
+	    ,t.name as "trigger_name"
+	    ,'ALTER TABLE ' + s.name + ' DISABLE trigger ' + t.name as "disable_statement"
+	    ,'ALTER TABLE ' + s.name + ' ENABLE  trigger ' + t.name as "enable_statement"
+	from sysobjects t 
+		inner join sysobjects s on t.parent_obj = s.id
+	where 1=1
+	  and t.type = 'TR'
+	  and s.type = 'U'
+	  and t.parent_obj = object_id('$table_name$')
+]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	select 
+	      b.name as "column_name"
+		, b.colid as "column_order"
+	from sysobjects t
+	   inner join sysobjects a on t.id = a.id 
+	   inner join syscolumns b on a.id = b.id
+	   inner join dbo.sysindexkeys d on b.id =d.id and b.colid = d.colid and indid = 1
+	where 1=1
+	  and t.xtype = 'U'
+	  and d.keyno > 0
+	  and t.id = object_id('$table_name$')
+</select>
+
+<!-- 
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
@@ -278,7 +314,7 @@ SELECT
 	      INNER JOIN systypes d  ON c.xtype = d.xtype
 	    LEFT JOIN  dbo.sysindexkeys v ON (t.id =v.id and c.colid = v.colid and indid =1)     
 	WHERE  1 = 1
-	  AND t.name = 'test2'
+	  AND t.name = #table#
 	ORDER BY c.colorder
 </select>
 

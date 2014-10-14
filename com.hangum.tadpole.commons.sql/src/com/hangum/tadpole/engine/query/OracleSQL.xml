@@ -507,6 +507,45 @@ ORDER BY t.table_name, s.object_name
 </select>
 
 <!-- 
+	enable 상태의 트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+  SELECT t.table_name AS "table_name"
+        ,s.object_name AS "trigger_name"
+        ,'ALTER TRIGGER ' || t.table_owner || '.' || s.object_name || ' DISABLE' AS "disable_statement"
+        ,'ALTER TRIGGER ' || t.table_owner || '.' || s.object_name || ' ENABLE' AS "enable_statement"
+    FROM user_objects s INNER JOIN user_triggers t ON s.object_name = t.trigger_name
+   WHERE     1 = 1
+         AND t.status = 'ENABLED'
+         AND s.status = 'VALID'
+         AND s.object_type = 'TRIGGER'
+         AND t.table_name = UPPER(#table_name#)
+ORDER BY t.table_name, s.object_name
+ ]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+  SELECT 
+  		c.column_name AS "column_name"
+  	  , c.column_id AS "column_order"
+    FROM user_tab_columns c
+         INNER JOIN user_constraints b ON c.table_name = b.table_name
+         INNER JOIN user_cons_columns a
+            ON     a.table_name = c.table_name
+               AND a.column_name = c.column_name
+               AND a.constraint_name = b.constraint_name
+   WHERE     1 = 1
+         AND c.table_name = UPPER (#table_name#)
+         AND b.constraint_type = 'P'
+         AND b.status = 'ENABLED'
+ORDER BY a.position
+</select>
+
+<!-- 
 	show function, object
 	
 	컬럼 설명

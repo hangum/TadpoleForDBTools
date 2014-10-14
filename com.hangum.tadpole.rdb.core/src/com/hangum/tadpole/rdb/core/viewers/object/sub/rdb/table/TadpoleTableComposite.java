@@ -25,7 +25,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -78,6 +77,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.AlterTableAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -136,6 +136,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	
 	private AbstractObjectAction viewDDLAction;
 	private AbstractObjectAction tableDataEditorAction;
+	
+	/** table editor action */
+	private AlterTableAction alterTableAction;
 	
 	// table column
 	private TableColumnSelectionAction tableColumnSelectionAction;
@@ -428,6 +431,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Update"); //$NON-NLS-1$
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Delete"); //$NON-NLS-1$
 		
+		alterTableAction = new AlterTableAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
+		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "View"); //$NON-NLS-1$
 		
 		tableDataEditorAction = new TableDataEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES);
@@ -478,6 +483,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							manager.add(insertStmtAction);
 							manager.add(updateStmtAction);
 							manager.add(deleteStmtAction);
+							
+							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							manager.add(alterTableAction);
 	
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(viewDDLAction);
@@ -662,6 +670,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction.setUserDB(getUserDB());
 		deleteStmtAction.setUserDB(getUserDB());
 		
+		alterTableAction.setUserDB(getUserDB());
+		
 		viewDDLAction.setUserDB(getUserDB());
 		tableDataEditorAction.setUserDB(getUserDB());
 		
@@ -730,6 +740,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		insertStmtAction.dispose();
 		updateStmtAction.dispose();
 		deleteStmtAction.dispose();
+		
+		alterTableAction.dispose();
+		
 		viewDDLAction.dispose();
 		tableDataEditorAction.dispose();
 	}

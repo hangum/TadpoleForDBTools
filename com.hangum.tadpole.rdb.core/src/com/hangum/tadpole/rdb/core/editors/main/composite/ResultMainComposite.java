@@ -258,4 +258,7 @@ public class ResultMainComposite extends Composite {
 		mainEditor.browserEvaluate(command);
 	}
 
+	public MainEditor getMainEditor() {
+		return mainEditor;
+	}
 }
