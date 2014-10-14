@@ -47,11 +47,11 @@ public class AlterTableAction extends AbstractObjectSelectAction {
 		window.getSelectionService().addSelectionListener(this);
 	}
 	
-/*	@Override
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		setEnabled(false);
 	}
-*/
+
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		TableDAO tc = (TableDAO)selection.getFirstElement();

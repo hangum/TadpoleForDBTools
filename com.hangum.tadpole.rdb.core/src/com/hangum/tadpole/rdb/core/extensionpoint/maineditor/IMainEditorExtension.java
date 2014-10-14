@@ -30,7 +30,15 @@ public interface IMainEditorExtension {
 	 *	SWT.TOP
 	 *	SWT.BOTTOM
 	 */
-	public int extensionLocation = SWT.RIGHT;
+	public int location = SWT.RIGHT;
+	
+	/**
+	 * widget을 보여줄지 유무
+	 * 
+	 * @return
+	 */
+	public boolean isShowWidget();
+	
 		
 	/**
 	 * user create part control

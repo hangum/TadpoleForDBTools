@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hamgum.tadpole.help.core.views.sub.shortcutkey;
+package com.hangum.tadpole.help.core.views.sub.shortcutkey;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.hamgum.tadpole.help.core.Messages;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ServletUserAgent;
+import com.hangum.tadpole.help.core.Messages;
 
 /**
  * ShortcutComposte

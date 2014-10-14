@@ -1,4 +1,4 @@
-package com.hamgum.tadpole.help.core;
+package com.hangum.tadpole.help.core;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
