@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+<!--
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
@@ -9,7 +10,8 @@
             load-on-startup="true">
       </servlet>
    </extension>
-
+-->
+      
    <extension
          point="org.eclipse.rap.ui.entrypoint">
       <entrypoint
@@ -26,7 +28,7 @@
             favicon="icons/old_TadpoleDBHub.ico"
             id="com.hangum.tadpole.browser.rap.branding"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="Tadpole DB Hub - v1.4.1(Edge)-R0">
+            title="Tadpole DB Hub - v1.4.1(Edge)-R1">
       </branding>
    </extension>
    <extension
