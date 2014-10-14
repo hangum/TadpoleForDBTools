@@ -127,6 +127,7 @@ public enum TadpoleModelUtils {
 				column.setType(columnDAO.getType());
 				
 				String strComment = columnDAO.getComment();
+				if(strComment == null) strComment = "";
 				strComment = StringUtils.substring(""+strComment, 0, 10);
 				column.setComment(strComment);
 				
