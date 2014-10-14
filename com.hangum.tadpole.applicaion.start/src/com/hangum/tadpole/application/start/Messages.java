@@ -33,6 +33,7 @@ public class Messages extends NLS {
 	public static String LoginDialog_15;
 	public static String LoginDialog_16;
 	public static String LoginDialog_2;
+	public static String LoginDialog_27;
 	public static String LoginDialog_lblFindPassword;
 	public static String LoginDialog_4;
 	public static String LoginDialog_5;
