@@ -40,9 +40,11 @@ public interface ConnectionInterfact {
 	 * 
 	 * @param userDB
 	 * @param requestQuery
+	 * @param queryResultCount
+	 * 
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO select(UserDBDAO userDB, String requestQuery, int queryResultCount, boolean isResultComma) throws Exception;
+	public ResultSetUtilDTO select(UserDBDAO userDB, String requestQuery, int queryResultCount) throws Exception;
 	
 	/**
 	 * 연결 테스트 합니다.

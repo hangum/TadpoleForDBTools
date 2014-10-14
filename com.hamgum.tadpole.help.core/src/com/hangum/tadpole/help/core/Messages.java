@@ -1,9 +1,9 @@
-package com.hamgum.tadpole.help.core;
+package com.hangum.tadpole.help.core;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "com.hamgum.tadpole.help.core.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "com.hangum.tadpole.help.core.messages"; //$NON-NLS-1$
 	public static String AbstractShortCutDialog_10;
 	public static String AbstractShortCutDialog_12;
 	public static String AbstractShortCutDialog_14;

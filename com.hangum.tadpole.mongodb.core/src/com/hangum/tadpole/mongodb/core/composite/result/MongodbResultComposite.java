@@ -804,7 +804,7 @@ public class MongodbResultComposite extends Composite {
 		treeViewerMongo.refresh();
 		
 		List<HashMap<Integer, Object>> tmpTable = new ArrayList<HashMap<Integer,Object>>();
-		resultTableViewer.setLabelProvider( new SQLResultLabelProvider() );
+		resultTableViewer.setLabelProvider( new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma()) );
 		resultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
 		resultTableViewer.setInput(tmpTable);
 		resultTableViewer.refresh();

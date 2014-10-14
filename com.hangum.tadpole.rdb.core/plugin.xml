@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor" name="MainEditor" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <category
