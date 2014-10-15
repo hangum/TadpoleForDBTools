@@ -45,6 +45,7 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
@@ -234,7 +235,17 @@ public class LoginDialog extends Dialog {
 		textEMail.setFocus();
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
+		initUI();
+		
 		return compositeLogin;
+	}
+	
+	private void initUI() {
+		// Show Information Dialog(Is not Firefox, Chrome, Safari)
+		if(!RequestInfoUtils.isSupportBrowser()) {
+			String errMsg = "User browser is  " + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.UserInformationDialog_5 + "\n" + Messages.LoginDialog_lblNewLabel_text;
+			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, errMsg);
+		}
 	}
 	
 	/**
@@ -358,7 +369,7 @@ public class LoginDialog extends Dialog {
 			SessionManager.addSession(userDao);
 		} catch (Exception e) {
 			logger.error("Login exception. request email is " + strEmail, e); //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
+			MessageDialog.openError(getParentShell(), "Error", e.getMessage());
 			
 			textEMail.setFocus();
 			return;
