@@ -20,7 +20,7 @@ public class AlterTableConsts {
 	public static final String DATA_PRECISION = "Precision";
 	public static final String DATA_SCALE = "Scale";
 	public static final String DEFAULT_VALUE = "Default";
-	public static final String NULLABLE = "Null";
+	public static final String NULLABLE = "Not Null";
 
 	public static final int SEQ_NO_IDX = 0;
 	public static final int COLUMN_NAME_IDX = 1;
@@ -39,7 +39,7 @@ public class AlterTableConsts {
 	public static final int PRIMARY_KEY_SIZE = 50;
 	public static final int DATA_TYPE_SIZE = 150;
 	public static final int DATA_SIZE_SIZE = 35;
-	public static final int DATA_PRECISION_SIZE = 45;
+	public static final int DATA_PRECISION_SIZE = 50;
 	public static final int DATA_SCALE_SIZE = 35;
 	public static final int DEFAULT_VALUE_SIZE = 70;
 	public static final int NULLABLE_SIZE = 50;
