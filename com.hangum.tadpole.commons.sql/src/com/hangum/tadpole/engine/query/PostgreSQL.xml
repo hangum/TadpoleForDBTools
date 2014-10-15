@@ -532,6 +532,17 @@ UNION ALL
 </select>
 
 <!-- 
+	Table DDL Script => All Trigger in table.
+ -->
+<select id="getTableScript.trigger" resultClass="java.lang.String" parameterClass="java.lang.String">
+select 
+    pg_get_triggerdef(t.oid) as source_text
+from pg_trigger t
+where t.tgrelid in (select c.oid from pg_class c where c.relname = #table_name#)
+and t.tgisinternal = false;
+</select>
+
+<!-- 
 	Function Script 
 	
 	pg_get_functiondef(func_oid) : get definition of a function
@@ -572,8 +583,7 @@ where oid = #oid#;
 <!-- 
 	Trigger Script 
 	pg_get_triggerdef(trigger_oid)	:	get CREATE [ CONSTRAINT ] TRIGGER command for trigger
- -->
- 
+
 <select id="getTriggerScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 select 
 	trigger_name as trigger_name
@@ -584,6 +594,13 @@ select
 	, action_statement as action_statement
 from information_schema.triggers
 where trigger_name = #object_name#
+</select>
+ --> 
+<select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+select 
+    pg_get_triggerdef(t.oid) as source_text
+from pg_trigger t
+where t.tgname = #object_name#
 </select>
 
 <!-- 

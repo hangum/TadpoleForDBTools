@@ -137,6 +137,15 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		// table grant
 
 		// table trigger
+		result.append("\n\n");
+		List<String> srcTriggerScripts = client.queryForList("getTableScript.trigger", tableDAO.getName());
+		String scriptSource = "";
+		for (int i = 0; i < srcTriggerScripts.size(); i++) {
+			scriptSource = srcTriggerScripts.get(i);
+			if (!"".equals(scriptSource)){
+				result.append(srcTriggerScripts.get(i) + ";\n");
+			}
+		}
 
 		// table synonyms
 
@@ -294,28 +303,14 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 
 		StringBuilder result = new StringBuilder("");
 
-		HashMap<String, String> srcScriptList = (HashMap<String, String>) client.queryForObject("getTriggerScript", objectName);
-
-		result.append("DROP TRIGGER IF EXISTS " + objectName + " ON " + srcScriptList.get("event_table") + ";\n\n");
-
-		result.append("CREATE TRIGGER " + objectName + "\n");
-		result.append(srcScriptList.get("action_timing") + " ");
-		result.append(srcScriptList.get("event_name") + " ON ");
-		result.append(srcScriptList.get("event_table") + " \n ");
-		result.append("FOR EACH " + srcScriptList.get("action_orientation") + " ");
-
-		String action_statement = srcScriptList.get("action_statement");
-
-		result.append(action_statement + " \n ");
-
-		if (action_statement.trim().toUpperCase().startsWith("EXECUTE PROCEDURE")) {
-			// trigger function script
-
-			String funcName = action_statement.replace("EXECUTE PROCEDURE", "").trim();
-			funcName = funcName.substring(0, funcName.lastIndexOf('('));
-
-			result.insert(0, getFunctionScript(funcName.trim().toLowerCase()) + "\n\n");
-
+		result.append("\n\n");
+		List<String> srcTriggerScripts = client.queryForList("getTriggerScript", objectName);
+		String scriptSource = "";
+		for (int i = 0; i < srcTriggerScripts.size(); i++) {
+			scriptSource = srcTriggerScripts.get(i);
+			if (!"".equals(scriptSource)){
+				result.append(srcTriggerScripts.get(i) + ";\n");
+			}
 		}
 
 		return result.toString();
