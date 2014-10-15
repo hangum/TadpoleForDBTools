@@ -10,15 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util.sqlscripts.scripts;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
@@ -79,7 +78,7 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 				result.append(" ");
 			}
 
-			if (source.get("data_default") != null && !"NULL".equals(source.get("nullable"))) {
+			if (source.get("data_default") != null && !"".equals(source.get("data_default"))) {
 				if (StringUtils.contains((String) source.get("data_type"), "text")) {
 					result.append(" DEFAULT '" + source.get("data_default") + "'");
 				} else {
@@ -92,13 +91,37 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 			}
 			result.append("\n");
 		}
+
+		// primary key 
+		List<HashMap> srcPkList = client.queryForList("getTableScript.pk", tableDAO.getName());				
+		for (int i=0; i<srcPkList.size(); i++){
+			HashMap<String, Object> source =  srcPkList.get(i);
+			if(i==0){
+				result.append("\t,CONSTRAINT ").append(source.get("constraint_name")).append(" PRIMARY KEY ( ").append(source.get("column_name"));
+			}else{
+				result.append(", "+source.get("column_name"));
+			}
+			
+			if(i == srcPkList.size()-1){
+				result.append(") \n");
+			}
+		}
+
 		result.append(");\n");
 
 		// table, column comments
 		result.append("\n\n");
 		List<String> srcCommentList = client.queryForList("getTableScript.comments", tableDAO.getName());
+		String commentStr = "";
+		if (srcCommentList.size() == 0){
+			result.append("COMMENT ON TABLE " + tableDAO.getName() + " is ''; /* table comment is empty.*/\n");
+			result.append("COMMENT ON COLUMN " + tableDAO.getName() + ".[column name] is ''; /* column comment is empty.*/\n");
+		}
 		for (int i = 0; i < srcCommentList.size(); i++) {
-			result.append(srcCommentList.get(i) + ";\n");
+			commentStr = srcCommentList.get(i);
+			if (!"".equals(commentStr)){
+				result.append(srcCommentList.get(i) + ";\n");
+			}
 		}
 
 		// foreign key

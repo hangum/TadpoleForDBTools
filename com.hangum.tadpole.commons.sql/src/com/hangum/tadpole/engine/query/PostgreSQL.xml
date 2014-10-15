@@ -443,7 +443,7 @@ SELECT
                 (SELECT substring(pg_catalog.pg_get_expr(d.adbin, d.adrelid) for 128)
                  FROM pg_catalog.pg_attrdef d
                  WHERE d.adrelid = a.attrelid AND d.adnum = a.attnum AND a.atthasdef) IS NOT NULL THEN
-                'DEFAULT '|| (SELECT substring(pg_catalog.pg_get_expr(d.adbin, d.adrelid) for 128)
+                      (SELECT substring(pg_catalog.pg_get_expr(d.adbin, d.adrelid) for 128)
                               FROM pg_catalog.pg_attrdef d
                               WHERE d.adrelid = a.attrelid AND d.adnum = a.attnum AND a.atthasdef)
             ELSE
@@ -485,6 +485,25 @@ SELECT
           AND NOT a.attisdropped
         ORDER BY a.attnum
 </select>
+
+<!-- 
+	Table DDL Script => Primary key list
+ -->
+<select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+SELECT
+    tc.constraint_name
+    ,kcu.column_name
+  FROM
+    information_schema.table_constraints AS tc
+      INNER JOIN information_schema.key_column_usage AS kcu
+        ON tc.constraint_name = kcu.constraint_name
+  WHERE
+    1 = 1 AND
+    tc.table_name = #table_name#
+  ORDER BY
+    kcu.ordinal_position
+</select>
+
 <!-- 
 	Table DDL Script => Table, Column Comment Script
  -->
@@ -494,6 +513,7 @@ SELECT
     'COMMENT ON TABLE ' || relname || ' IS ''' || pg_catalog.obj_description(oid,'pg_class') || '''' as "comment_text"
   FROM pg_catalog.pg_class ‌
   WHERE 1 = 1 
+    AND pg_catalog.obj_description(oid,'pg_class')  > ''
     AND relkind IN ('r','')
     AND relname IN (
       SELECT a.table_name
@@ -508,6 +528,7 @@ UNION ALL
 		WHERE attrelid = (select oid from pg_catalog.pg_class where relname = #table_name#) 
 		AND attnum > 0 
 		AND NOT attisdropped
+		AND pg_catalog.col_description(attrelid, attnum) > ''
 </select>
 
 <!-- 
