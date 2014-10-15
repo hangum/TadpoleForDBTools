@@ -539,7 +539,7 @@ select
     pg_get_triggerdef(t.oid) as source_text
 from pg_trigger t
 where t.tgrelid in (select c.oid from pg_class c where c.relname = #table_name#)
-and t.tgisinternal = false;
+and t.tgisinternal = false
 </select>
 
 <!-- 
