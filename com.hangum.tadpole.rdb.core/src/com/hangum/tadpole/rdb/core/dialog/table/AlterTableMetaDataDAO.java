@@ -16,7 +16,11 @@ public class AlterTableMetaDataDAO {
 	private String defaultValue;
 	private boolean nullable;
 	
+	/* RDBMS종류 */
 	private DBDefine dbdef;
+	/* 데이터 사이즈 사용여부 - CREATE, ALTER할때 컬럼의 데이터 타입에 자료사이즈를 명시적으로 지정해야 하는지 여부. */
+	private boolean useSize;
+	private boolean usePrecision;
 	
 	public String getColumnName() {
 		return columnName;
@@ -112,6 +116,22 @@ public class AlterTableMetaDataDAO {
 
 	public void setDbdef(DBDefine dbdef) {
 		this.dbdef = dbdef;
+	}
+
+	public boolean isUseSize() {
+		return useSize;
+	}
+
+	public void setUseSize(boolean useSize) {
+		this.useSize = useSize;
+	}
+
+	public boolean isUsePrecision() {
+		return usePrecision;
+	}
+
+	public void setUsePrecision(boolean usePrecision) {
+		this.usePrecision = usePrecision;
 	}
 
 }
