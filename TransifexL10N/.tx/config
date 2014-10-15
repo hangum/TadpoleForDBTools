@@ -1,0 +1,111 @@
+[main]
+host = https://www.transifex.com
+
+[tadpoleui.help_core__messages]
+source_file = help_core__messages.properties
+source_lang = en
+trans.ko = help_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.ace_editor_core__messages]
+source_file = ace_editor_core__messages.properties
+source_lang = en
+trans.ko = ace_editor_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.application_start__messages]
+source_file = application_start__messages.properties
+source_lang = en
+trans.ko = application_start__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.commons__messages]
+source_file = commons__messages.properties
+source_lang = en
+trans.ko = commons__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.engine__messages]
+source_file = engine__messages.properties
+source_lang = en
+trans.ko = engine__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.sql__messages]
+source_file = sql__messages.properties
+source_lang = en
+trans.ko = sql__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.importdb_core__messages]
+source_file = importdb_core__messages.properties
+source_lang = en
+trans.ko = importdb_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.manager_core__bundle]
+source_file = manager_core__bundle.properties
+source_lang = en
+trans.ko = manager_core__bundle_ko.properties
+type = PROPERTIES
+
+[tadpoleui.manager_core__messages]
+source_file = manager_core__messages.properties
+source_lang = en
+trans.ko = manager_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.mongodb_core__messages]
+source_file = mongodb_core__messages.properties
+source_lang = en
+trans.ko = mongodb_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.mongodb_erd_core__messages]
+source_file = mongodb_erd_core__messages.properties
+source_lang = en
+trans.ko = mongodb_erd_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.monitoring_core__messages]
+source_file = monitoring_core__messages.properties
+source_lang = en
+trans.ko = monitoring_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.notes_core__bundle]
+source_file = notes_core__bundle.properties
+source_lang = en
+trans.ko = notes_core__bundle_ko.properties
+type = PROPERTIES
+
+[tadpoleui.notes_core__messages]
+source_file = notes_core__messages.properties
+source_lang = en
+trans.ko = notes_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.preference__messages]
+source_file = preference__messages.properties
+source_lang = en
+trans.ko = preference__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.rdb_core__bundle]
+source_file = rdb_core__bundle.properties
+source_lang = en
+trans.ko = rdb_core__bundle_ko.properties
+type = PROPERTIES
+
+[tadpoleui.rdb_core__messages]
+source_file = rdb_core__messages.properties
+source_lang = en
+trans.ko = rdb_core__messages_ko.properties
+type = PROPERTIES
+
+[tadpoleui.rdb_erd_core__messages]
+source_file = rdb_erd_core__messages.properties
+source_lang = en
+trans.ko = rdb_erd_core__messages_ko.properties
+type = PROPERTIES
+
