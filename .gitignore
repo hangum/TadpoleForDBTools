@@ -4,3 +4,4 @@
 *.ear
 
 bin/
+.DS_Store

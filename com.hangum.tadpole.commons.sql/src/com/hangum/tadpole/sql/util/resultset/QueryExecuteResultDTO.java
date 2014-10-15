@@ -33,8 +33,8 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 		super(columnName, columnType, dataList);
 	}
 
-	public QueryExecuteResultDTO(boolean isShowRownum, ResultSet rs, int queryResultCount, boolean isResultComma) throws Exception {
-		super(isShowRownum, rs, queryResultCount, isResultComma);
+	public QueryExecuteResultDTO(boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
+		super(isShowRownum, rs, queryResultCount);
 	}
 
 	/**

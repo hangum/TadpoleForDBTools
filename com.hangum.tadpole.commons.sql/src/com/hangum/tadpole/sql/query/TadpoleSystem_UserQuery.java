@@ -65,11 +65,6 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setSecurity_question(CipherManager.getInstance().encryption(question));
 		loginDAO.setSecurity_answer(CipherManager.getInstance().encryption(answer));
 		
-		// Is test mode?
-		if(ApplicationArgumentUtils.isTestMode()) {
-			loginDAO.setApproval_yn(PublicTadpoleDefine.YES_NO.YES.toString());
-		}
-		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
 	

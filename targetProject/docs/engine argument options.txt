@@ -11,6 +11,7 @@
 
 -console -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog  -passwd tadpole.jong
 -dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
+ -dbPath /Users/hangum/Documents/tadpole/tadpole-system.db
 
 Program Argument
   -test			: 테스트 데이터를 로드할것인지 (ex: 로그인시 관리자, 개발자 계정 보이기, 예제 데이터 베이스 정보 노출)
@@ -45,6 +46,8 @@ Program Argument
 
  -passwd : 엔진에서 사용할 패스워드.
  -GAON   : Google Analytics 사용.
+ -newUserPermit : 신규 유저등록시 어드민의 허락이 필요한지 유무. 허락이 필요하면 YES, 옵션이 없으면 NO 입니다. 
+ 					-newUserPermit YES|NO
   
 VM Argument
   -Dfile.encoding=UTF-8
