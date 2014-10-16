@@ -11,7 +11,7 @@ import shutil
 
 
 PROJECT_NAME = "tadpoleui"
-SRC_DIR = "../"
+SRC_DIR = "../../"
 DST_DIR = "" #"c:/OpenGIS/TadpoleDbHub/TransifexL10N"
 
 PATH_PATTERN1 = "/?.*/src/"
@@ -298,7 +298,9 @@ def main():
 
     DST_DIR = os.getcwd()
 
-    if option == None or option == "-update":
+    if option == None:
+        show_help(cmd)
+    elif option == "-update":
         push_source()
         pull_trans()
     elif option == "-help":
