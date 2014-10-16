@@ -130,6 +130,82 @@ public class DataTypeDef {
 	};
 
 	/**
+	 * 데이터 타입을 받아서 문자 데이터를 저장하는 데이터 타입인지 판단하여 리턴한다.
+	 * 테이블 생성시 데이터 사이즈를 명시적으로 생성해야 하는지 여부를 판단한다.
+	 * @param type
+	 * @return 
+	 */
+	public static boolean isCharType(int type){
+		switch(type){
+		case NCHAR 				:	
+		case NVARCHAR 			:	
+		case CHAR 				:	
+		case VARCHAR 			:	
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isNumericType(int type){
+		switch(type){
+		case TINYINT 			:	
+		case BIGINT 			:	
+		case BINARY 			:	
+		case NUMERIC 			:	
+		case DECIMAL 			:	
+		case INTEGER 			:	
+		case SMALLINT 			:	
+		case FLOAT 				:	
+		case REAL 				:	
+		case DOUBLE 			:	
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isDateType(int type){
+		switch(type){
+		case DATE 				:	
+		case TIME 				:	
+		case TIMESTAMP 			:	
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isBooleanType(int type){
+		switch(type){
+		case BIT 				:	
+		case BOOLEAN 			:	
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isOtherObjectType(int type){
+		switch(type){
+		case LONGNVARCHAR 		:	
+		case ROWID 				:	
+		case LONGVARBINARY 		:	
+		case VARBINARY 			:	
+		case LONGVARCHAR 		:	
+		case DATALINK 			:	
+		case OTHER 				:	
+		case JAVA_OBJECT 		:	
+		case DISTINCT 			:	
+		case STRUCT 			:	
+		case ARRAY 				:	
+		case BLOB 				:	
+		case CLOB 				:	
+		case REF 				:	
+		case SQLXML 			:	
+		case NCLOB 				:	
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * 콤보박스에 넣어줄 전체 데이터타입의 명칭을 조회하여 리턴한다.
 	 * @param dbDef
 	 * @return

@@ -42,6 +42,7 @@ import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpold.commons.libs.core.mails.template.NewUserMailBodyTemplate;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
@@ -71,9 +72,6 @@ public class NewUserDialog extends Dialog {
 	
 	private Combo comboLanguage;
 	
-	/** 자동 허용유무 */
-	private PublicTadpoleDefine.YES_NO approvalYn;
-	
 	private Combo comboQuestion;
 	private Text textAnswer;
 
@@ -91,11 +89,9 @@ public class NewUserDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public NewUserDialog(Shell parentShell, PublicTadpoleDefine.YES_NO approvalYn) {
+	public NewUserDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
-		this.approvalYn = approvalYn;
 	}
 
 	@Override
@@ -309,7 +305,11 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		try {
-			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn.toString(), questionKey, answer, 
+			/**
+			 * 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
+			 */
+			String approvalYn = ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.toString():PublicTadpoleDefine.YES_NO.YES.toString();
+			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn, questionKey, answer, 
 					btnGetOptCode.getSelection()?"YES":"NO", textSecretKey.getText()); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			// user_role 입력.

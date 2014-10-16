@@ -6,12 +6,9 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -26,12 +23,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataConsts;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataEditingSupport;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.swtdesigner.ResourceManager;
 
 /**
  * Table 수정 다이얼로그.
@@ -43,6 +36,11 @@ import com.swtdesigner.ResourceManager;
 /** table view sample data */
 
 public class AlterTableDialog extends Dialog {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -717632913094073217L;
+
 	private List<AlterTableMetaDataDAO> listAlterTableColumns = new ArrayList<AlterTableMetaDataDAO>();
 
 	TableViewer tableViewer;
@@ -65,8 +63,8 @@ public class AlterTableDialog extends Dialog {
 	 */
 	public AlterTableDialog(Shell parentShell, final UserDBDAO userDB) {
 		super(parentShell);
-		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER);
-		
+		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
+
 		this.userDB = userDB;
 	}
 
@@ -81,6 +79,12 @@ public class AlterTableDialog extends Dialog {
 		this.tableDao = tableDao;
 		this.schemaName = "".equals(this.tableDao.getSchema_name()) ? userDB.getUsers() : this.tableDao.getSchema_name();
 		this.tableName = "".equals(this.tableDao.getTable_name()) ? this.tableDao.getName() : this.tableDao.getTable_name();
+	}
+
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Alter Table");
 	}
 
 	/**
