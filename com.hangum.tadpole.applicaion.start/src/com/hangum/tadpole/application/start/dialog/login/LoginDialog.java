@@ -45,6 +45,7 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
@@ -87,7 +88,7 @@ public class LoginDialog extends Dialog {
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.LoginDialog_0);
-		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png"));
+		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png")); //$NON-NLS-1$
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class LoginDialog extends Dialog {
 		
 		Button button = new Button(compositeLeftBtn, SWT.NONE);
 		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		button.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TadpoleOverView.png"));
+		button.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TadpoleOverView.png")); //$NON-NLS-1$
 		
 		Composite compositeLogin = new Composite(container, SWT.NONE);
 		compositeLogin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -153,7 +154,7 @@ public class LoginDialog extends Dialog {
 				barChart(grpSponser, listDBMart);
 			}
 		} catch(Exception e) {
-			logger.error("get initdata", e);
+			logger.error("get initdata", e); //$NON-NLS-1$
 		}
 		
 //		tableViewer = new TableViewer(grpSponser, SWT.NONE | SWT.FULL_SELECTION);
@@ -188,7 +189,7 @@ public class LoginDialog extends Dialog {
 		lblSite.setText(Messages.LoginDialog_lblSite_text);
 		
 		Label lblNewLabel = new Label(compositeLetter, SWT.NONE);
-		lblNewLabel.setText("<a href='" + Messages.LoginDialog_lblNewLabel_text_1 + "' target='_blank'>" + Messages.LoginDialog_lblNewLabel_text_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblNewLabel.setText("<a href='" + Messages.LoginDialog_lblNewLabel_text_1 + "' target='_blank'>" + Messages.LoginDialog_lblNewLabel_text_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblNewLabel.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserGuide = new Label(compositeLetter, SWT.NONE);
@@ -232,9 +233,19 @@ public class LoginDialog extends Dialog {
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		textEMail.setFocus();
-		AnalyticCaller.track("login");
+		AnalyticCaller.track("login"); //$NON-NLS-1$
+		
+		initUI();
 		
 		return compositeLogin;
+	}
+	
+	private void initUI() {
+		// Show Information Dialog(Is not Firefox, Chrome, Safari)
+		if(!RequestInfoUtils.isSupportBrowser()) {
+			String errMsg = "User browser is  " + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.UserInformationDialog_5 + "\n" + Messages.LoginDialog_lblNewLabel_text;
+			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, errMsg);
+		}
 	}
 	
 	/**
@@ -261,14 +272,14 @@ public class LoginDialog extends Dialog {
 				Map<String, Object> retMap = (HashMap<String, Object>)element;
 				
 				ChartItem item = new ChartItem(barChart);
-			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")");
+			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			    item.setColor(colors.next());
 			    
-			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 250;
+			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 250; //$NON-NLS-1$ //$NON-NLS-2$
 			    item.setValue(floatVal);
 			}
 		} catch(Exception e) {
-			logger.error("Get registered DB", e);
+			logger.error("Get registered DB", e); //$NON-NLS-1$
 		}
 		barChart.layout();
 		barChart.getParent().layout();
@@ -284,7 +295,7 @@ public class LoginDialog extends Dialog {
 	}
 
 	private void newUser() {
-		NewUserDialog newUser = new NewUserDialog(getParentShell(), PublicTadpoleDefine.YES_NO.YES);
+		NewUserDialog newUser = new NewUserDialog(getParentShell());
 		newUser.open();
 	}
 	
@@ -340,6 +351,12 @@ public class LoginDialog extends Dialog {
 		
 		try {
 			UserDAO userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
+			if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDao.getApproval_yn())) {
+				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_27);
+				
+				return;
+			}
+			
 			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDao.getUse_otp())) {
 				OTPLoginDialog otpDialog = new OTPLoginDialog(getShell());
 				otpDialog.open(); 
@@ -352,7 +369,7 @@ public class LoginDialog extends Dialog {
 			SessionManager.addSession(userDao);
 		} catch (Exception e) {
 			logger.error("Login exception. request email is " + strEmail, e); //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
+			MessageDialog.openError(getParentShell(), "Error", e.getMessage());
 			
 			textEMail.setFocus();
 			return;

@@ -21,6 +21,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ServerPushSession;
+import org.eclipse.rap.rwt.service.UISessionEvent;
+import org.eclipse.rap.rwt.service.UISessionListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -34,15 +36,10 @@ import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
 import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
-import com.hangum.tadpole.notes.core.alert.NoteSystemAlert;
-import com.hangum.tadpole.notes.core.define.NotesDefine;
-import com.hangum.tadpole.notes.core.dialogs.ViewDialog;
-import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.NotesDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
@@ -269,7 +266,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 * Set initialize session
 	 */
 	private void initSession() {
-		HttpSession iss = RWT.getRequest().getSession();
+		HttpSession iss = RWT.getUISession().getHttpSession();
 		
 		int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
 		if(sessionTimeOut <= 0) {
@@ -277,6 +274,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		} else {
 			iss.setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
 		}
+		
+		// cleanup code
+		// user logout
+		RWT.getUISession().addUISessionListener( new UISessionListener() {
+			public void beforeDestroy( UISessionEvent event ) {
+				
+			}
+		});
 	}
     
     @Override
@@ -287,4 +292,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	}
     	shell.setMaximized(true);
     }
+    
+//    @Override
+//    public boolean preWindowShellClose() {
+//    	logger.debug("======================> preShutdown execute ================");
+//    	ScheduleManager.getInstance().stopSchedule();
+//    	logger.debug("======================> preShutdown execute ================");
+//    	
+//    	return super.preWindowShellClose();
+//    }
+    
 }

@@ -10,21 +10,20 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.table;
 
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.sql.dao.mysql.ConstraintDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -54,12 +53,22 @@ public class AlterTableExecutor {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 
-			stmt = javaConn.prepareStatement("SELECT * FROM " + selectTable + " WHERE 1=0 ");
+			stmt = javaConn.prepareStatement("SELECT * FROM " + selectTable + " WHERE 1=0 "); //$NON-NLS-1$
 			rsDumy = stmt.executeQuery();
 			ResultSetMetaData rsm = rsDumy.getMetaData();
-
+			DatabaseMetaData dmd = javaConn.getMetaData();
+			
+			ResultSet rs = dmd.getTypeInfo();
+			while (rs.next()){
+				String info="";
+				for(int col = 1; col <= rs.getMetaData().getColumnCount(); col++){
+					info  += rs.getMetaData().getColumnLabel(col) + "=" + rs.getString(col) + ", ";
+				}
+				logger.debug(info);
+			}
+			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<HashMap> conlist = sqlClient.queryForList("primarykeyListInTable", selectTable); //$NON-NLS-1$
+			List<HashMap<String,Integer>> conlist = sqlClient.queryForList("primarykeyListInTable", selectTable); //$NON-NLS-1$
 			
 			for (int i = 1; i <= rsm.getColumnCount(); i++) {
 				AlterTableMetaDataDAO dao = new AlterTableMetaDataDAO();
@@ -70,21 +79,41 @@ public class AlterTableExecutor {
 				dao.setColumnName(rsm.getColumnLabel(i));
 				dao.setDataType(rsm.getColumnType(i));
 				dao.setDataTypeName(rsm.getColumnTypeName(i));
-				dao.setDataSize(rsm.getColumnDisplaySize(i));
-				dao.setDataPrecision(rsm.getPrecision(i));
-				dao.setDataScale(rsm.getScale(i));
+				
+				logger.debug(dao.toString());
+				
+				if (DataTypeDef.isCharType(rsm.getColumnType(i))){
+					dao.setDataSize(rsm.getColumnDisplaySize(i));
+					dao.setUseSize(true);
+					dao.setUsePrecision(false);
+				} else if (DataTypeDef.isNumericType(rsm.getColumnType(i))){
+					dao.setDataPrecision(rsm.getPrecision(i));
+					dao.setDataScale(rsm.getScale(i));
+					dao.setUseSize(false);
+					dao.setUsePrecision(true);
+				} else {
+					dao.setUseSize(false);
+					dao.setUsePrecision(false);
+				}
 				
 				// primary key
 				if (conlist.size() > 0) {
 					for (int k = 0; k < conlist.size(); k++) {
-						HashMap cons = (HashMap) conlist.get(k);
-						if (dao.getColumnName().equalsIgnoreCase(cons.get("column_name").toString())) {
-							dao.setPrimaryKey(true);
+						HashMap cons = conlist.get(k);						
+						if(dao.getDbdef() == DBDefine.SQLite_DEFAULT ) {
+							/* cid, name, type, notnull, dflt_value, pk */
+							if ("1".equals(cons.get("pk").toString())) {
+								dao.setPrimaryKey(true);
+							}
+						}else{
+							if (dao.getColumnName().equalsIgnoreCase(cons.get("column_name").toString())) { //$NON-NLS-1$
+								dao.setPrimaryKey(true);
+							}
 						}
 					}
 				}
 				dao.setDefaultValue("");
-				dao.setNullable(Boolean.parseBoolean(rsm.isNullable(i)+""));
+				dao.setNullable(1 != rsm.isNullable(i));
 
 				listAlterTableColumns.add(dao);
 			}

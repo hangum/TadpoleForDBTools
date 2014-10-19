@@ -15,6 +15,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * 시스템 시작 유틸 
  * 
@@ -176,6 +178,31 @@ public class ApplicationArgumentUtils {
 	 */
 	public static boolean isGAON() {
 		return checkString("-GAON");
+	}
+	
+	/**
+	 * 신규 유저는 어드민의 허락이 필요한지?
+	 * @return
+	 */
+	public static boolean isNewUserPermit() {
+		return checkString("-newUserPermit");
+	}
+	/**
+	 * 옵션이 정의되어 있지 않다면 어드민 허락이 필요없다.
+	 * 
+	 * @return
+	 */
+	public static boolean getNewUserPermit() {
+		if(isNewUserPermit()) {
+			try {
+				return PublicTadpoleDefine.YES_NO.YES.toString().equals(getValue("-newUserPermit"))?true:false;
+			} catch (Exception e) {
+				logger.error("check option : -newUserPermit exeception ", e);
+				return false;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

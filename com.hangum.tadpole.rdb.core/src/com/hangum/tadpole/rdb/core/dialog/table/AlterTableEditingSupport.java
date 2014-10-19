@@ -64,6 +64,11 @@ public class AlterTableEditingSupport extends EditingSupport {
 		case AlterTableConsts.SEQ_NO_IDX:
 		case AlterTableConsts.COLUMN_ID_IDX:
 			return false;
+		case AlterTableConsts.DATA_SIZE_IDX:
+			return dao.isUseSize();
+		case AlterTableConsts.DATA_PRECISION_IDX:
+		case AlterTableConsts.DATA_SCALE_IDX:
+			return dao.isUsePrecision();
 		default:
 			return true;
 		}

@@ -68,34 +68,34 @@ public class MainEditorContributionsHandler {
 		return (IMainEditorExtension[]) list.toArray(new IMainEditorExtension[list.size()]);
 	}
 
-	/**
-	 * table column double click
-	 * 
-	 * @param selectIndex
-	 * @param mapColumns
-	 */
-	public void evaluateResultColumnDoublClick(final int selectIndex, final Map<Integer, Object> mapColumns) {
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(MainEditor_ID);
-		try {
-			for (IConfigurationElement e : config) {
-				final Object mainEditorExtension = e.createExecutableExtension("class");
-				if (mainEditorExtension instanceof IMainEditorExtension) {
-					ISafeRunnable runnable = new ISafeRunnable() {
-						@Override
-						public void handleException(Throwable exception) {
-							logger.error("Exception create widget", exception);
-						}
-
-						@Override
-						public void run() throws Exception {
-							((IMainEditorExtension) mainEditorExtension).resultSetDoubleClick(selectIndex, mapColumns);
-						}
-					};
-					SafeRunner.run(runnable);
-				}
-			}
-		} catch (CoreException ex) {
-			logger.error("table result double click exception", ex);
-		}
-	}
+//	/**
+//	 * table column double click
+//	 * 
+//	 * @param selectIndex
+//	 * @param mapColumns
+//	 */
+//	public void evaluateResultColumnDoublClick(final int selectIndex, final Map<Integer, Object> mapColumns) {
+//		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(MainEditor_ID);
+//		try {
+//			for (IConfigurationElement e : config) {
+//				final Object mainEditorExtension = e.createExecutableExtension("class");
+//				if (mainEditorExtension instanceof IMainEditorExtension) {
+//					ISafeRunnable runnable = new ISafeRunnable() {
+//						@Override
+//						public void handleException(Throwable exception) {
+//							logger.error("Exception create widget", exception);
+//						}
+//
+//						@Override
+//						public void run() throws Exception {
+//							((IMainEditorExtension) mainEditorExtension).resultSetDoubleClick(selectIndex, mapColumns);
+//						}
+//					};
+//					SafeRunner.run(runnable);
+//				}
+//			}
+//		} catch (CoreException ex) {
+//			logger.error("table result double click exception", ex);
+//		}
+//	}
 }

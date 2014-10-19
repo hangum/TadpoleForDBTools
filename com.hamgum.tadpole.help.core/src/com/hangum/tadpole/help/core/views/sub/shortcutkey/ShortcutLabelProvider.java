@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hamgum.tadpole.help.core.views.sub.shortcutkey;
+package com.hangum.tadpole.help.core.views.sub.shortcutkey;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
