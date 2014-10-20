@@ -152,4 +152,16 @@ public class ScheduleManager {
 		return userDB.getSeq() + PublicTadpoleDefine.DELIMITER + scheduleMainDao.getSeq() + PublicTadpoleDefine.DELIMITER + userDB.getDisplay_name() + scheduleMainDao.getTitle();
 	}
 
+	
+	public void stopSchedule() {
+		if(scheduler != null) {
+			try {
+				scheduler.shutdown(true);
+				
+				Thread.sleep(1000);
+			} catch (Exception e) {
+				logger.error("Shutdown Schedule", e);
+			}
+		}
+	}
 }
