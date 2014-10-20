@@ -93,7 +93,7 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		
 		// connection router 조절
 		ConnectionLayer cLayer = (ConnectionLayer)getLayer(CONNECTION_LAYER);
-		cLayer.setForegroundColor(ColorConstants.lightGray);
+		cLayer.setForegroundColor(ColorConstants.lightBlue);
 		cLayer.setConnectionRouter(new ShortestPathConnectionRouter(getFigure()));
 	}
 
@@ -139,7 +139,7 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		@Override
 		public void notifyChanged(Notification notification) {
 //			DB db = (DB) getModel();
-//			logger.debug("\t ######################## [DB] " + db.getSid());
+//			logger.debug("\t ######################## [DB] " + db.getSid()); 
 			
 			refreshVisuals();
 			refreshChildren();
