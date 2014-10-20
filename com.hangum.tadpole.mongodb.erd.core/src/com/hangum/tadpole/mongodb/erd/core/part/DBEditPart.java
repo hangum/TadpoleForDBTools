@@ -139,7 +139,7 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		@Override
 		public void notifyChanged(Notification notification) {
 //			DB db = (DB) getModel();
-//			logger.debug("\t ######################## [DB] " + db.getSid());
+//			logger.debug("\t ######################## [DB] " + db.getSid()); 
 			
 			refreshVisuals();
 			refreshChildren();
