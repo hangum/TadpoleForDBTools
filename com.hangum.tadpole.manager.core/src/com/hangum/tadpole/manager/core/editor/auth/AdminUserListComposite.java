@@ -277,7 +277,7 @@ public class AdminUserListComposite extends Composite {
 	 */
 	private void modifyUser() {
 		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
-		if(ss != null) {
+		if(!ss.isEmpty()) {
 			UserGroupAUserDAO userGroupAuser = (UserGroupAUserDAO)ss.getFirstElement();
 	
 			ModifyUserDialog dialog = new ModifyUserDialog(getShell(), userGroupAuser);

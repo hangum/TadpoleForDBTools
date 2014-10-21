@@ -8,8 +8,9 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
 
 public class AlterTableLabelProvider extends LabelProvider implements ITableLabelProvider {
-	private static final Image CHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/checked.gif"); //$NON-NLS-1$
-	private static final Image UNCHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unchecked.gif"); //$NON-NLS-1$
+	private static final long serialVersionUID = 1785941396655624429L;
+	private static final Image CHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/checked.png"); //$NON-NLS-1$
+	private static final Image UNCHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unchecked.png"); //$NON-NLS-1$
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -44,11 +45,11 @@ public class AlterTableLabelProvider extends LabelProvider implements ITableLabe
 		case AlterTableConsts.DATA_TYPE_IDX:
 			return DataTypeDef.getTypeName(dao.getDbdef(), dao.getDataType());
 		case AlterTableConsts.DATA_SIZE_IDX:
-			return String.valueOf(dao.getDataSize());
+			return dao.isUseSize() ? String.valueOf(dao.getDataSize()) : null;
 		case AlterTableConsts.DATA_PRECISION_IDX:
-			return String.valueOf(dao.getDataPrecision());
+			return dao.isUsePrecision() ? String.valueOf(dao.getDataPrecision()) : null;
 		case AlterTableConsts.DATA_SCALE_IDX:
-			return String.valueOf(dao.getDataScale());
+			return dao.isUsePrecision() ? String.valueOf(dao.getDataScale()) : null;
 		default:
 			return null;
 		}

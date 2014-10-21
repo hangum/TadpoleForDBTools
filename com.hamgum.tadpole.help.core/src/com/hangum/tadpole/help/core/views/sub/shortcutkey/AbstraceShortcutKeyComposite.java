@@ -8,15 +8,15 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hamgum.tadpole.help.core.views.sub.shortcutkey;
+package com.hangum.tadpole.help.core.views.sub.shortcutkey;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 
-import com.hamgum.tadpole.help.core.Messages;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
+import com.hangum.tadpole.help.core.Messages;
 
 /**
  * abstract shortcut key

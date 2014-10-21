@@ -20,7 +20,7 @@ It enables you to handle typical DB over the World Wide Web
 * Execute SQL Statement
 * SQL Result Set to CSV
 * CSV, SQL Import to DB
-* SQL History And Export text
+* SQL Audit And Export text
 * Generate SQL Statement (Select, Insert, Update, Delete, Table, View, Index, Procedure, Function, Trigger)
 * Generate ER Diagram (Auto Layout)
 
@@ -28,7 +28,7 @@ It enables you to handle typical DB over the World Wide Web
 
 2.MongoDB Feature
 -
-* Intuitive web interface (Safari, Chrome, IE, Firefox)
+* Intuitive web interface (Safari, Chrome, IE 10, Firefox)
 * User Management (Admin, Manager, User)
 * MongoDB User Management
 * Query View(Tree, Table, Text)
@@ -80,7 +80,7 @@ Chrome web store
 *  https://chrome.google.com/webstore/detail/tadpoledbcom/nhfaneohnnijkdpgmiddcgbcgpjgdjnc?utm_source=gmail
 
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.4.0/
+* https://sourceforge.net/projects/tadpoledbhub/files/v1.4.1/
 
 License
 -
