@@ -390,20 +390,24 @@ public class MainEditor extends EditorExtension {
 		// 올챙이 확장에 관한 코드를 넣습니다. =================================================================== 
 		MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
 		compMainExtions = editorExtension.evaluateCreateWidgetContribs();
+		int intSashCnt = 1;
 		for (IMainEditorExtension aMainEditorExtension : compMainExtions) {
 			
-			Composite compExt = new Composite(sashFormExtension, SWT.BORDER);
-			GridLayout gl_compositeExt = new GridLayout(1, false);
-			gl_compositeExt.verticalSpacing = 0;
-			gl_compositeExt.horizontalSpacing = 0;
-			gl_compositeExt.marginHeight = 0;
-			gl_compositeExt.marginWidth = 0;
-			compExt.setLayout(gl_compositeExt);
-
-			aMainEditorExtension.createPartControl(compExt);
+			if(aMainEditorExtension.isEnableExtension()) {
+				intSashCnt++;
+				Composite compExt = new Composite(sashFormExtension, SWT.BORDER);
+				GridLayout gl_compositeExt = new GridLayout(1, false);
+				gl_compositeExt.verticalSpacing = 0;
+				gl_compositeExt.horizontalSpacing = 0;
+				gl_compositeExt.marginHeight = 0;
+				gl_compositeExt.marginWidth = 0;
+				compExt.setLayout(gl_compositeExt);
+	
+				aMainEditorExtension.createPartControl(userDB, compExt);
+			}
 		}
 		
-		if(compMainExtions.length >= 1) {
+		if(intSashCnt >= 2) {
 			sashFormExtension.setWeights(new int[] {70, 30});
 		}
 		// 올챙이 확장에 관한 코드를 넣습니다. ===================================================================
