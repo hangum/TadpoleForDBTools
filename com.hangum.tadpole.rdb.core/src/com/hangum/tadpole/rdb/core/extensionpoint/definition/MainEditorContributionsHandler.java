@@ -11,7 +11,6 @@
 package com.hangum.tadpole.rdb.core.extensionpoint.definition;
 
 import java.util.LinkedList;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +20,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
 import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtension;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Main Editor extension handler
@@ -37,7 +37,7 @@ public class MainEditorContributionsHandler {
 	 * 
 	 * @return
 	 */
-	public IMainEditorExtension[] evaluateCreateWidgetContribs() {
+	public IMainEditorExtension[] evaluateCreateWidgetContribs(final UserDBDAO userDB) {
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(MainEditor_ID);
 		final LinkedList list = new LinkedList();
 		try {
@@ -56,7 +56,8 @@ public class MainEditorContributionsHandler {
 						@Override
 						public void run() throws Exception {
 							IMainEditorExtension compositeExt = (IMainEditorExtension) mainEditorExtension;
-							list.add(compositeExt);
+							compositeExt.initExtension(userDB);
+							if(compositeExt.isEnableExtension()) list.add(compositeExt);
 						}
 					};
 					SafeRunner.run(runnable);

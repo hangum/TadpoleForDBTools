@@ -28,7 +28,7 @@ public abstract class IMainEditorExtension {
 	/**
 	 * 이 익스텐션을 동작가능 한지?
 	 */
-	private boolean enableExtension = true;
+	private boolean enableExtension = false;
 	
 	/**
 	 * 현재 보여지고 있는 데이터베이스.
@@ -44,25 +44,22 @@ public abstract class IMainEditorExtension {
 	 *	SWT.BOTTOM
 	 */
 	protected int location = SWT.RIGHT;
-	
-		
 
 	/**
 	 * user create part control
 	 * 
 	 * @param parent
 	 */
-	public void createPartControl(UserDBDAO userDB, Composite parent) {
-		this.editorUserDB = userDB;
-		
-		initExtension();
-	}
+	public abstract void createPartControl(Composite parent); //{
+//		initExtension();
+//	}
 	
 	/**
 	 * 화면을 초기화 합니다.
 	 * 1. 초기 화면이 보여야 하는지 설정합니다. 
 	 */
-	protected void initExtension() {
+	public void initExtension(UserDBDAO userDB) {
+		this.editorUserDB = userDB;
 		enableExtension = true;
 		
 	}

@@ -389,7 +389,7 @@ public class MainEditor extends EditorExtension {
 		
 		// 올챙이 확장에 관한 코드를 넣습니다. =================================================================== 
 		MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
-		compMainExtions = editorExtension.evaluateCreateWidgetContribs();
+		compMainExtions = editorExtension.evaluateCreateWidgetContribs(userDB);
 		int intSashCnt = 1;
 		for (IMainEditorExtension aMainEditorExtension : compMainExtions) {
 			
@@ -403,7 +403,7 @@ public class MainEditor extends EditorExtension {
 				gl_compositeExt.marginWidth = 0;
 				compExt.setLayout(gl_compositeExt);
 	
-				aMainEditorExtension.createPartControl(userDB, compExt);
+				aMainEditorExtension.createPartControl(compExt);
 			}
 		}
 		
