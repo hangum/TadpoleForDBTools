@@ -18,54 +18,54 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.IConnectionDecoration;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
- * Connection decoration extension handler
+ * Table decoration contribution handler
  * 
  * @author hangum
  *
  */
-public class ConnectionDecorationContributionsHandler {
-	private static final Logger logger = Logger.getLogger(ConnectionDecorationContributionsHandler.class);
-	private static final String CONNECTION_DECORATION_EXTENSION_ID = "com.hangum.tadpole.rdb.core.extensionpoint.definition.connection.decoration";
+public class TableDecorationContributionHandler {
+	private static final Logger logger = Logger.getLogger(TableDecorationContributionHandler.class);
+	private static final String TABLE_DECORATION_ID = "com.hangum.tadpole.rdb.core.extensionpoint.definition.table.decoration";
 
 	/**
-	 * Get extension DB Label image
+	 * extension widget creation
 	 * 
 	 * @return
 	 */
-	public Image getImage(final UserDBDAO userDB) {
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(CONNECTION_DECORATION_EXTENSION_ID);
+	public ITableDecorationExtension evaluateCreateWidgetContribs(final UserDBDAO userDB) {
+		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(TABLE_DECORATION_ID);
 		final LinkedList list = new LinkedList();
 		try {
 			for (IConfigurationElement e : config) {
-				final Object cdExtension = e.createExecutableExtension("class");
-				if (cdExtension instanceof IConnectionDecoration) {
+				final Object mainEditorExtension = e.createExecutableExtension("class");
+				if (mainEditorExtension instanceof ITableDecorationExtension) {
 					ISafeRunnable runnable = new ISafeRunnable() {
 
 						@Override
 						public void handleException(Throwable exception) {
-							logger.error("Exception connection decoration extension", exception);
+							logger.error("Exception create widget", exception);
 						}
 
 						@Override
 						public void run() throws Exception {
-							IConnectionDecoration compositeExt = (IConnectionDecoration) cdExtension;
-							Image image = compositeExt.getImage(userDB);
-							if(image != null) list.add(image);
+							ITableDecorationExtension compositeExt = (ITableDecorationExtension) mainEditorExtension;
+							if(compositeExt.initExtension(userDB)) list.add(compositeExt);
 						}
 					};
 					SafeRunner.run(runnable);
 				}
 			}
 		} catch (CoreException ex) {
-			logger.error("create connection decoration", ex);
+			logger.error("create main editor", ex);
 		}
-		if(!list.isEmpty()) return (Image)list.get(0);
-		return null;
+		
+		if(list.isEmpty()) return null;
+		else return (ITableDecorationExtension)list.get(0);
 	}
 }
