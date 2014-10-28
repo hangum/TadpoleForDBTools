@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.extensionpoint.maineditor;
+package com.hangum.tadpole.rdb.core.extensionpoint.definition;
 
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  * @author hangum
  *
  */
-public abstract class IMainEditorExtension {
+public abstract class AMainEditorExtension {
 	
 	/**
 	 * 이 익스텐션을 동작가능 한지?
@@ -50,9 +50,7 @@ public abstract class IMainEditorExtension {
 	 * 
 	 * @param parent
 	 */
-	public abstract void createPartControl(Composite parent); //{
-//		initExtension();
-//	}
+	public abstract void createPartControl(Composite parent);
 	
 	/**
 	 * 화면을 초기화 합니다.
@@ -61,7 +59,6 @@ public abstract class IMainEditorExtension {
 	public void initExtension(UserDBDAO userDB) {
 		this.editorUserDB = userDB;
 		enableExtension = true;
-		
 	}
 	
 	/**

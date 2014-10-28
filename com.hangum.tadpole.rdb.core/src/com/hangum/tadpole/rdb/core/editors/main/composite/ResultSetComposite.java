@@ -94,8 +94,7 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.MainEditorContributionsHandler;
-import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
@@ -242,63 +241,65 @@ public class ResultSetComposite extends Composite {
 							Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
 							Object columnObject = mapColumns.get(i);
 							
-							// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
-							//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
-							if (columnObject != null && columnObject instanceof java.sql.Clob ){
-								Clob cl = (Clob) columnObject;
-		
-								StringBuffer clobContent = new StringBuffer();
-								String readBuffer = new String();
-		
-								// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
-								BufferedReader bufferedReader;
-								try {
-									bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
-									
-									while ((readBuffer = bufferedReader.readLine())!= null)
-										clobContent.append(readBuffer);
-	
-									TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), clobContent.toString());
-						            dlg.open();									
-								} catch (Exception e) {
-									logger.error("Clob column echeck", e); //$NON-NLS-1$
-								}
-							}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
-								try {
-									Blob blob = (Blob) columnObject;
-									
-									TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
-									dlg.open();								
-								} catch (Exception e) {
-									logger.error("Blob column echeck", e); //$NON-NLS-1$
-								}
-			
-							}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
-								byte[] b = (byte[])columnObject;
-								StringBuffer str = new StringBuffer();
-								try {
-									for (byte buf : b){
-										str.append(buf);
-									}
-									str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
-									TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), str.toString() );
-					                dlg.open();
-								} catch (Exception e) {
-									logger.error("Clob column echeck", e); //$NON-NLS-1$
-								}
-							}else{
-								appendTextAtPosition(strText);
-								
-								IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getCompMainExtions();
-								for (IMainEditorExtension iMainEditorExtension : extensions) {
-									iMainEditorExtension.resultSetDoubleClick(i, mapColumns);
-								}
-								
-//								// tadpole extension 
-//								MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
-//								editorExtension.evaluateResultColumnDoublClick(i, mapColumns);
+							// execute extension start =============================== 
+							boolean isExtension = false;
+							AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getCompMainExtions();
+							for (AMainEditorExtension iMainEditorExtension : extensions) {
+								iMainEditorExtension.resultSetDoubleClick(i, mapColumns);
+								isExtension = true;
 							}
+							
+							if(!isExtension) {
+								// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
+								//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
+								if (columnObject != null && columnObject instanceof java.sql.Clob ){
+									Clob cl = (Clob) columnObject;
+			
+									StringBuffer clobContent = new StringBuffer();
+									String readBuffer = new String();
+			
+									// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
+									BufferedReader bufferedReader;
+									try {
+										bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
+										
+										while ((readBuffer = bufferedReader.readLine())!= null)
+											clobContent.append(readBuffer);
+		
+										TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), clobContent.toString());
+							            dlg.open();									
+									} catch (Exception e) {
+										logger.error("Clob column echeck", e); //$NON-NLS-1$
+									}
+								}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
+									try {
+										Blob blob = (Blob) columnObject;
+										
+										TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
+										dlg.open();								
+									} catch (Exception e) {
+										logger.error("Blob column echeck", e); //$NON-NLS-1$
+									}
+				
+								}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
+									byte[] b = (byte[])columnObject;
+									StringBuffer str = new StringBuffer();
+									try {
+										for (byte buf : b){
+											str.append(buf);
+										}
+										str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
+										TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), str.toString() );
+						                dlg.open();
+									} catch (Exception e) {
+										logger.error("Clob column echeck", e); //$NON-NLS-1$
+									}
+								}else{
+									appendTextAtPosition(strText);
+								}
+							}// is extension
 						}	// end if first column
+						
 					}	// for column index
 				}
 		    }

@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor" name="MainEditor" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor.exsd"/>
+   <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.connection.decoration" name="Connection Decoration" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.connection.decoration.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <category
