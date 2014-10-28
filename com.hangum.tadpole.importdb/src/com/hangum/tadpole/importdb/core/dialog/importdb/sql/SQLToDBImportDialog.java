@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
@@ -342,44 +343,56 @@ public class SQLToDBImportDialog extends Dialog {
 				if (++count % batchSize == 0) {
 					try{
 						statement.executeBatch();
-					} catch(Exception e) {
-						result = -1;
+					} catch(SQLException e) {
 						logger.error("Execute Batch error", e); //$NON-NLS-1$
 						bufferBatchResult.append(e.getMessage()+"\n"); //$NON-NLS-1$
+						
+						SQLException ne = e.getNextException();						
+						while (ne != null){
+							logger.error("NEXT SQLException is ", ne);//$NON-NLS-1$
+							bufferBatchResult.append(ne.getMessage()+"\n");
+							ne = ne.getNextException();
+						}
+						
 						if (btnIgnore.getSelection()) {
 							conn.commit();
 							continue;
 						} else {
 							conn.rollback();
+							result = -1;
 							break;
 						}							
 					}
 				}
 			}
 			
-			try{
-				statement.executeBatch();
-				conn.commit();
-			} catch(Exception e) {
-				result = -1;
-				logger.error("Execute Batch error", e); //$NON-NLS-1$
-				bufferBatchResult.append(e.getMessage()+"\n"); //$NON-NLS-1$
-				if (btnIgnore.getSelection()) {
-					conn.commit();
-				} else {
-					conn.rollback();
-				}							
-			}
-
+			statement.executeBatch();
+			conn.commit();
 			conn.setAutoCommit(true);
 			
 			if (result < 0 && !"".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
 				MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, bufferBatchResult.toString());
 			}
+		} catch (SQLException e) {
+			logger.error("Execute Batch error", e); //$NON-NLS-1$
+			bufferBatchResult.append(e.getMessage()+"\n"); //$NON-NLS-1$
+			if (btnIgnore.getSelection()) {
+				conn.commit();
+			}else{
+				conn.rollback();
+			}
+			
+			SQLException ne = e.getNextException();
+			while (ne != null){
+				logger.error("Execute Batch error", e); //$NON-NLS-1$
+				bufferBatchResult.append(e.getMessage()+"\n"); //$NON-NLS-1$
+				ne = ne.getNextException();
+			}
 		} catch(Exception e) {
 			result = -1;
+			logger.error("Execute Batch error", e); //$NON-NLS-1$
+			bufferBatchResult.append(e.getMessage()+"\n"); //$NON-NLS-1$
 			conn.rollback();
-			logger.error("Execute batch update", e); //$NON-NLS-1$
 			throw e;
 		} finally {
 			try { if(statement != null) statement.close();} catch(Exception e) {}

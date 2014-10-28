@@ -88,49 +88,49 @@ public class CSVLoader {
 			
 			// 테이블 복사를 선택하면 
 			if ("c".equals(workType)){
-				query = makePreparedStatement(tableName + "_COPY", stmtType, keyColumns);	
-				preProcessQuery = "CREATE TABLE " + tableName + "_COPY AS SELECT * FROM " + tableName + " WHERE 1 = 0 ";
+				query = makePreparedStatement(tableName + "_COPY", stmtType, keyColumns);	//$NON-NLS-1$
+				preProcessQuery = "CREATE TABLE " + tableName + "_COPY AS SELECT * FROM " + tableName + " WHERE 1 = 0 ";//$NON-NLS-1$
 			}else {
 				// insert작업일 경우만
 				query = makePreparedStatement(tableName, stmtType, keyColumns);	
-				resultLogBuffer.append("--------------------------- Delete exists data ---------------------------\n");
+				resultLogBuffer.append("--------------------------- Delete exists data ---------------------------\n");//$NON-NLS-1$
 				if ("i".equals(stmtType)){
 					if ("t".equals(workType)) {
-						preProcessQuery = "TRUNCATE TABLE " + tableName;
+						preProcessQuery = "TRUNCATE TABLE " + tableName;//$NON-NLS-1$
 					}else if("d".equals(workType)){
-						preProcessQuery = "DELETE FROM " + tableName;
+						preProcessQuery = "DELETE FROM " + tableName;//$NON-NLS-1$
 					}
 				}
 			}
-			resultLogBuffer.append("Execute Query is " + query + "\n");
+			resultLogBuffer.append("Execute Query is " + query + "\n");//$NON-NLS-1$
 			ps = con.prepareStatement(query);
 			
 			if(!"".equals(preProcessQuery)){
 				con.createStatement().execute(preProcessQuery);
-				resultLogBuffer.append(" - Execute : " + preProcessQuery + "\n");
+				resultLogBuffer.append(" - Execute : " + preProcessQuery + "\n");//$NON-NLS-1$
 			}
 			
-			resultLogBuffer.append("------------------------------ Object Disable ------------------------------\n");
+			resultLogBuffer.append("------------------------------ Object Disable ------------------------------\n");//$NON-NLS-1$
 			
 			// 새로운 테이블로 복사해서 import를 진행하는 경우가 아니고 disable처리할 객체가 있으면...
 			if (!"c".equals(workType)){
 				if (disableObjects !=null && disableObjects.size() > 0){
 					for (HashMap<String, String> map : disableObjects){
 						con.createStatement().execute(map.get("disable_statement").toString());
-						resultLogBuffer.append(" - Diable Object : " + map.get("disable_statement").toString() + "\n");
+						resultLogBuffer.append(" - Diable Object : " + map.get("disable_statement").toString() + "\n");//$NON-NLS-1$
 					}
 				}
 			}
 
-			resultLogBuffer.append("---------------------- Start Import Batch ----------------------\n");
+			resultLogBuffer.append("---------------------- Start Import Batch ----------------------\n");//$NON-NLS-1$
 			while ((nextLine = csvReader.readNext()) != null) {
 				
-				//TODO:메타데이터를 읽어서 컬럼의 데이터 타입을 확인후 setString(), setInteger(), setObject()를 사용해야함.
 				if (null != nextLine) {
 					int index = 1;
 					if ("i".equals(stmtType) || "u".equals(stmtType)  ) {
 						for (String string : nextLine) {
 							int column = (Integer)rsmdMap.get(headerRow[index - 1]);
+							//메타데이터를 읽어서 컬럼의 데이터 타입을 확인후 setString(), setInteger(), setObject()를 사용함.
 							setParameterValue(ps, rsmd, column, index++, string);
 						}
 					}
@@ -149,7 +149,7 @@ public class CSVLoader {
 								keyIndex = (Integer)keyColumns.get(string);
 
 								String paramValue = nextLine[keyIndex - 1];
-								logger.debug("Update where is " + string + "=" + paramValue);
+								logger.debug("Update where is " + string + "=" + paramValue);//$NON-NLS-1$
 								setParameterValue(ps, rsmd, keyIndex, headIndex++, paramValue);
 							}
 						}
@@ -160,30 +160,29 @@ public class CSVLoader {
 				if (++count % batchSize == 0) {
 					try{
 						ps.executeBatch();	
-						resultLogBuffer.append("\t Execute Batch...\n");
+						resultLogBuffer.append("\t Execute Batch...\n");//$NON-NLS-1$
 						countSum += count;
 						count = 0;
 					}catch(SQLException e){
-						logger.error("CSV file import.", e);
+						logger.error("CSV file import.", e);//$NON-NLS-1$
 
-						//MessageDialog.openError(null, "Tadpole CSV Import", e.getMessage());
 						resultLogBuffer.append(e.getMessage()+"\n");
 						SQLException ne = e.getNextException();
 						
 						while (ne != null){
-							logger.error("NEXT SQLException is ", ne);
-							//MessageDialog.openError(null, "Tadpole CSV Import", ne.getMessage());
+							logger.error("NEXT SQLException is ", ne);//$NON-NLS-1$
 							resultLogBuffer.append(ne.getMessage()+"\n");
 							ne = ne.getNextException();
 						}
 
 						if (this.isExceptionStop) {
 							con.rollback();
-							resultLogBuffer.append("\t Rollback() - " + count + "Entry.\n");
+							resultLogBuffer.append("\t Rollback() - " + count + "Entry.\n");//$NON-NLS-1$
 							count = 0;
+							break;
 						}else{
 							con.commit();
-							resultLogBuffer.append("\t Commit() - " + count + "Entry.\n");
+							resultLogBuffer.append("\t Commit() - " + count + "Entry.\n");//$NON-NLS-1$
 							count = 0;
 							continue;
 						}
@@ -192,52 +191,52 @@ public class CSVLoader {
 			}//while;
 			
 			ps.executeBatch(); // insert remaining records
-			resultLogBuffer.append("\t Execute Batch...\n");
+			resultLogBuffer.append("\t Execute Batch...\n");//$NON-NLS-1$
 			con.commit();
 			countSum += count;
-			resultLogBuffer.append("\t Commit() - Total " + countSum + "Entry.\n");
+			resultLogBuffer.append("\t Commit() - Total " + countSum + "Entry.\n");//$NON-NLS-1$
 			
-			resultLogBuffer.append("---------------------- Data Import Complete!!! ----------------------\n");
+			resultLogBuffer.append("---------------------- Data Import Complete!!! ----------------------\n");//$NON-NLS-1$
 			
 			// 새로운 테이블로 복사해서 import를 진행하는 경우가 아니고 disable처리할 객체가 있으면...
 			if (!"c".equals(workType)){
 				if (disableObjects !=null && disableObjects.size() > 0){
 					for (HashMap<String, String> map : disableObjects){
 						con.createStatement().execute(map.get("enable_statement").toString());
-						resultLogBuffer.append(" - Enable Object : " + map.get("enable_statement").toString() + "\n");
+						resultLogBuffer.append(" - Enable Object : " + map.get("enable_statement").toString() + "\n");//$NON-NLS-1$
 						con.commit();
 					}
 				}
 			}
 			
-			resultLogBuffer.append("================================= End Log =============================\n");
+			resultLogBuffer.append("================================= End Log =============================\n");//$NON-NLS-1$
 
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
 			if (this.isExceptionStop) {
 				con.rollback();
-				resultLogBuffer.append("\t Rollback() - " + count + "Entry.\n");
+				resultLogBuffer.append("\t Rollback() - " + count + "Entry.\n");//$NON-NLS-1$
 				countSum = 0;
 			}else{
 				con.commit();
-				resultLogBuffer.append("\t Commit() - " + count + "Entry.\n");
+				resultLogBuffer.append("\t Commit() - " + count + "Entry.\n");//$NON-NLS-1$
 			}
-			logger.error("CSV file import.", e);
+			logger.error("CSV file import.", e);//$NON-NLS-1$
 			resultLogBuffer.append(e.getMessage()+"\n");
 			
 			SQLException ne = e.getNextException();
 			while (ne != null){
-				logger.error("NEXT SQLException is ", ne);
+				logger.error("NEXT SQLException is ", ne);//$NON-NLS-1$
 				ne = ne.getNextException();
 			}
 			//throw new SQLException("Error occured while loading data from file to database." + e.getMessage());
 		} catch (Exception e) {
 			countSum = 0;
 			con.rollback();
-			logger.error("CSV file import.", e);
-			resultLogBuffer.append(e.getMessage()+"\n");
-			throw new Exception("Error occured while loading data from file to database.\n" + e.getMessage());
+			logger.error("CSV file import.", e);//$NON-NLS-1$
+			resultLogBuffer.append(e.getMessage()+"\n");//$NON-NLS-1$
+			throw new Exception("Error occured while loading data from file to database.\n" + e.getMessage());//$NON-NLS-1$
 		} finally {
 			if (null != ps) ps.close();
 			if (null != con) con.close();
@@ -252,7 +251,7 @@ public class CSVLoader {
 		try {
 			// find bom
 			bos = new BOMInputStream(new FileInputStream(csvFile), false, ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
-			String charset = "utf-8";
+			String charset = "utf-8";//$NON-NLS-1$
 			if(bos.hasBOM()) {
 				charset = bos.getBOMCharsetName();
 			}
@@ -277,14 +276,14 @@ public class CSVLoader {
 			}
 
 			if ("u".equals(stmtType)||"d".equals(stmtType)) {
-				if (keyColumns.get("all_key_columns") == null || ((String[]) keyColumns.get("all_key_columns")).length <= 0){
+				if (keyColumns.get("all_key_columns") == null || ((String[]) keyColumns.get("all_key_columns")).length <= 0){//$NON-NLS-1$
 					throw new Exception( "Primary key not define for Update or Delete.\n" + "Please check the Primarykey information of the target table.");
 				}			
 			}
 
 			// import할 테이블의 데이터 타입별로 파라미터를 설정하기 위해 메타정보를 조회한다.
 			if (con != null){
-				rsmd = con.createStatement().executeQuery("select * from " + tableName + " where 1 = 0 ").getMetaData();
+				rsmd = con.createStatement().executeQuery("select * from " + tableName + " where 1 = 0 ").getMetaData();//$NON-NLS-1$
 				
 				for (int colIndex=1; colIndex <= rsmd.getColumnCount(); colIndex++){
 					rsmdMap.put(rsmd.getColumnName(colIndex).toLowerCase(), colIndex);				
@@ -324,7 +323,7 @@ public class CSVLoader {
 				
 			}else if ("u".equals(stmtType)) {
 				updateValues = StringUtils.join(headerRow, " = ?,") + " = ? ";			
-				questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
+				questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";//$NON-NLS-1$
 				query = StringUtils.replaceOnce(SQL_UPDATE, TABLE_REGEX, tableName);
 				query = StringUtils.replaceOnce(query, VALUES_REGEX, updateValues);			
 				if (!"".equals(questionmarks)){
@@ -333,7 +332,7 @@ public class CSVLoader {
 					query = StringUtils.replaceOnce(query, KEYS_REGEX, "");
 				}			
 			}else if ("d".equals(stmtType)) {			
-				questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";
+				questionmarks = StringUtils.join((String[]) keyColumns.get("all_key_columns"), " = ? AND ") + " = ? ";//$NON-NLS-1$
 				query = StringUtils.replaceOnce(SQL_DELETE, TABLE_REGEX, tableName);			
 				if (!"".equals(questionmarks)){
 					query = StringUtils.replaceOnce(query, KEYS_REGEX, " AND " + questionmarks);				
@@ -342,7 +341,7 @@ public class CSVLoader {
 				}			
 			}
 			
-			logger.debug("CSV to DB Query: " + query);
+			logger.debug("CSV to DB Query: " + query);//$NON-NLS-1$
 			
 			return query;
 		} catch (Exception e) {
@@ -391,18 +390,18 @@ public class CSVLoader {
 				}//switch;;
 			}
 		} catch (NumberFormatException e) {
-			logger.error("PreparedStatement setValue NumberFormatException. ", e);
+			logger.error("PreparedStatement setValue NumberFormatException. ", e);//$NON-NLS-1$
 		} catch (SQLException e) {
-			logger.error("PreparedStatement setValue SQLException. ", e);
+			logger.error("PreparedStatement setValue SQLException. ", e);//$NON-NLS-1$
 			
 			SQLException ne = e.getNextException();
 			while (ne != null){
-				logger.error("NEXT SQLException is ", ne);
+				logger.error("NEXT SQLException is ", ne);//$NON-NLS-1$
 				ne = ne.getNextException();
 			}
 		} catch (Exception e) {
-			logger.debug("Exception value is " + paramValue);
-			logger.error("PreparedStatement setValue Exception. ", e);
+			logger.debug("Exception value is " + paramValue);//$NON-NLS-1$
+			logger.error("PreparedStatement setValue Exception. ", e);//$NON-NLS-1$
 		}
 	}
 
@@ -423,7 +422,7 @@ public class CSVLoader {
 			return "";
 		} catch (Exception e) {
 			logger.error(e);
-			MessageDialog.openError(null, "Tadpole CSV Import", e.getMessage());
+			MessageDialog.openError(null, "Tadpole CSV Import", e.getMessage());//$NON-NLS-1$
 			return "";
 		} finally {
 			if (csvReader != null) csvReader.close();
