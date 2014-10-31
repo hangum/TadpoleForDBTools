@@ -19,7 +19,6 @@ import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
-import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
 import com.hangum.tadpole.rdb.core.viewers.object.ObjectExploreDefine;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.sql.dao.mysql.TableDAO;
@@ -63,7 +62,7 @@ public class TableColumnLabelprovider extends LabelProvider implements ITableLab
 					
 					Image imageExtension = tableDecorationExtension.getColumnImage(table.getName(), tc.getField());
 					if(imageExtension != null) {
-						return ResourceManager.decorateImage(imageBase, imageExtension, ResourceManager.TOP_LEFT);
+						return ResourceManager.decorateImage(imageBase, imageExtension, ResourceManager.BOTTOM_RIGHT);
 					}
 				}
 			} catch(Exception e){

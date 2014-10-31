@@ -279,7 +279,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						Image extensionImage = tableDecorationExtension.getTableImage(table.getName());
 						
 						if(extensionImage != null) {
-							return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.TOP_LEFT);
+							return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
 						}
 					}
 				} catch(Exception e) {
