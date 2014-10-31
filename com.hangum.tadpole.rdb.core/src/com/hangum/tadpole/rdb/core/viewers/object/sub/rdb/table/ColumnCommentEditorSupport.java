@@ -157,7 +157,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 				}
 
 			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
-				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers());
+				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers());
 				query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
 				query.append(",'column' , '").append(dao.getSysName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
@@ -170,7 +170,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 				try {
 					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers());
+					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers());
 					query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
 					query.append(",'column', '").append(dao.getSysName()).append("'");
 					stmt = javaConn.prepareStatement(query.toString());
@@ -180,7 +180,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 					logger.error("Comment add error ", e);
 				}
 			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
-				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , " + tableDAO.getSchema_name());
+				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' , " + tableDAO.getSchema_name());
 				query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
 				query.append(",'column' , '").append(dao.getSysName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
@@ -193,7 +193,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 				try {
 					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'Caption', '").append(dao.getComment()).append("' ,'user' , " + tableDAO.getSchema_name());
+					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' , " + tableDAO.getSchema_name());
 					query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
 					query.append(",'column', '").append(dao.getSysName()).append("'");
 					stmt = javaConn.prepareStatement(query.toString());
