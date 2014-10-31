@@ -65,8 +65,8 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.MainEditorContributionsHandler;
-import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -113,7 +113,7 @@ public class MainEditor extends EditorExtension {
 	/** db table list */
 	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
 	
-	private IMainEditorExtension[] compMainExtions;
+	private AMainEditorExtension[] compMainExtions;
 	
 	public MainEditor() {
 		super();
@@ -389,21 +389,25 @@ public class MainEditor extends EditorExtension {
 		
 		// 올챙이 확장에 관한 코드를 넣습니다. =================================================================== 
 		MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
-		compMainExtions = editorExtension.evaluateCreateWidgetContribs();
-		for (IMainEditorExtension aMainEditorExtension : compMainExtions) {
+		compMainExtions = editorExtension.evaluateCreateWidgetContribs(userDB);
+		int intSashCnt = 1;
+		for (AMainEditorExtension aMainEditorExtension : compMainExtions) {
 			
-			Composite compExt = new Composite(sashFormExtension, SWT.BORDER);
-			GridLayout gl_compositeExt = new GridLayout(1, false);
-			gl_compositeExt.verticalSpacing = 0;
-			gl_compositeExt.horizontalSpacing = 0;
-			gl_compositeExt.marginHeight = 0;
-			gl_compositeExt.marginWidth = 0;
-			compExt.setLayout(gl_compositeExt);
-
-			aMainEditorExtension.createPartControl(compExt);
+			if(aMainEditorExtension.isEnableExtension()) {
+				intSashCnt++;
+				Composite compExt = new Composite(sashFormExtension, SWT.BORDER);
+				GridLayout gl_compositeExt = new GridLayout(1, false);
+				gl_compositeExt.verticalSpacing = 0;
+				gl_compositeExt.horizontalSpacing = 0;
+				gl_compositeExt.marginHeight = 0;
+				gl_compositeExt.marginWidth = 0;
+				compExt.setLayout(gl_compositeExt);
+	
+				aMainEditorExtension.createPartControl(compExt);
+			}
 		}
 		
-		if(compMainExtions.length >= 1) {
+		if(intSashCnt >= 2) {
 			sashFormExtension.setWeights(new int[] {70, 30});
 		}
 		// 올챙이 확장에 관한 코드를 넣습니다. ===================================================================
@@ -834,7 +838,7 @@ public class MainEditor extends EditorExtension {
 //		return uploadHandler.getUploadUrl();
 //	}
 
-	public IMainEditorExtension[] getCompMainExtions() {
+	public AMainEditorExtension[] getCompMainExtions() {
 		return compMainExtions;
 	}	
 }
