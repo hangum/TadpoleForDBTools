@@ -10,13 +10,20 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
+import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
 import com.hangum.tadpole.rdb.core.viewers.object.ObjectExploreDefine;
 import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.swtdesigner.ResourceManager;
 
 /**
  * TABLE, VIEW의 컬럼 정보
@@ -25,16 +32,45 @@ import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
  *
  */
 public class TableColumnLabelprovider extends LabelProvider implements ITableLabelProvider {
+	private static final Logger logger = Logger.getLogger(TableColumnLabelprovider.class);
+	TableViewer tableListViewer;
+	ITableDecorationExtension tableDecorationExtension;
 	
+	public TableColumnLabelprovider() {}
+	
+	public TableColumnLabelprovider(TableViewer tableListViewer, ITableDecorationExtension tableDecorationExtension) {
+		this.tableListViewer = tableListViewer;
+		this.tableDecorationExtension = tableDecorationExtension;
+	}
+
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		TableColumnDAO tc = (TableColumnDAO) element;
 		
 		if(columnIndex == 0)  {
-			if(PublicTadpoleDefine.isPK(tc.getKey())) 		return ObjectExploreDefine.IMAGE_PRIMARY_KEY; 
-			else if(PublicTadpoleDefine.isFK(tc.getKey())) 	return ObjectExploreDefine.IMAGE_FOREIGN_KEY; 
-			else if(PublicTadpoleDefine.isMUL(tc.getKey())) return ObjectExploreDefine.IMAGE_MULTI_KEY;
-			else 											return ObjectExploreDefine.IMAGE_COLUMN;
+			Image imageBase = null;
+			
+			if(PublicTadpoleDefine.isPK(tc.getKey())) 		imageBase = ObjectExploreDefine.IMAGE_PRIMARY_KEY; 
+			else if(PublicTadpoleDefine.isFK(tc.getKey())) 	imageBase = ObjectExploreDefine.IMAGE_FOREIGN_KEY; 
+			else if(PublicTadpoleDefine.isMUL(tc.getKey())) imageBase = ObjectExploreDefine.IMAGE_MULTI_KEY;
+			else 											imageBase = ObjectExploreDefine.IMAGE_COLUMN;
+			
+			// image decoration extension point 
+			try {
+				if(tableListViewer != null && tableDecorationExtension != null) {
+					IStructuredSelection iss = (IStructuredSelection)tableListViewer.getSelection();
+					TableDAO table = (TableDAO)iss.getFirstElement();
+					
+					Image imageExtension = tableDecorationExtension.getColumnImage(table.getName(), tc.getField());
+					if(imageExtension != null) {
+						return ResourceManager.decorateImage(imageBase, imageExtension, ResourceManager.TOP_LEFT);
+					}
+				}
+			} catch(Exception e){
+				logger.error("extension point exception", e);
+			}
+			
+			return imageBase;
 		}
 		
 		return null;
