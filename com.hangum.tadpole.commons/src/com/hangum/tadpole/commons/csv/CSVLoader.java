@@ -375,7 +375,20 @@ public class CSVLoader {
 						break;
 					case java.sql.Types.SMALLINT:
 					case java.sql.Types.INTEGER:
-						ps.setInt(paramIndex, Integer.parseInt(paramValue));
+					case java.sql.Types.TINYINT:
+						ps.setInt(paramIndex, Integer.parseInt(paramValue.replace(",", "")));
+						break;
+					case java.sql.Types.BIGINT:
+					case java.sql.Types.DECIMAL:
+					case java.sql.Types.NUMERIC: /* BIGDECIMAL ?? */
+						ps.setLong(paramIndex, Long.parseLong(paramValue.replace(",", "")));
+						break;
+					case java.sql.Types.FLOAT:
+						ps.setFloat(paramIndex, Float.parseFloat(paramValue.replace(",", "")));
+						break;
+					case java.sql.Types.REAL:
+					case java.sql.Types.DOUBLE:
+						ps.setDouble(paramIndex, Double.parseDouble(paramValue.replace(",", "")));
 						break;
 					case java.sql.Types.BOOLEAN:
 						ps.setBoolean(paramIndex, Boolean.parseBoolean(paramValue));

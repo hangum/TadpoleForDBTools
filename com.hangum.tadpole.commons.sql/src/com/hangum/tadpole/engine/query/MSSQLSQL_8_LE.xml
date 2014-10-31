@@ -38,7 +38,7 @@ SELECT getdate()
 	select o.name, c.value as comment 
 		from sysobjects o
 		    left join sysproperties c on o.id = c.id	     
-	    	and c.type = '3'	
+	    	and c.type = '3' and c.name = 'MS_Description'	
 		where o.xtype = 'U' 
 		order by o.name
 	
@@ -71,8 +71,7 @@ FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
 	LEFT JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
 	LEFT JOIN dbo.sysforeignkeys f ON a.id = f.fkeyid and b.colid = f.fkey 
-    left join sysproperties t on a.id = t.id and b.colid = t.smallid and t.type = '4'
-        and t.name in ('ms_description', 'caption', 'comment')    	
+    left join sysproperties t on a.id = t.id and b.colid = t.smallid and t.type = '4' and t.name = 'MS_Description'    	
 WHERE 
 		a.name = #table#
 ORDER BY a.id, b.colid
