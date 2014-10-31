@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.extensionpoint.handler;
+package com.hangum.tadpole.rdb.erd.core.extensionpoint.handler;
 
 import java.util.LinkedList;
 
@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
+import com.hangum.tadpole.rdb.erd.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -30,7 +30,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  */
 public class TableDecorationContributionHandler {
 	private static final Logger logger = Logger.getLogger(TableDecorationContributionHandler.class);
-	private static final String TABLE_DECORATION_ID = "com.hangum.tadpole.rdb.core.extensionpoint.definition.table.decoration";
+	private static final String TABLE_DECORATION_ID = "com.hangum.tadpole.rdb.erd.core.extensionpoint.definition.decoration";
 
 	/**
 	 * extension widget creation
