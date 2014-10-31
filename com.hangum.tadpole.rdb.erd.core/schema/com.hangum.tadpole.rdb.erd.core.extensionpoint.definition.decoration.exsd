@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="com.hangum.tadpole.rdb.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="com.hangum.tadpole.rdb.erd.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="com.hangum.tadpole.rdb.core" id="com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor" name="MainEditor"/>
+         <meta.schema plugin="com.hangum.tadpole.rdb.erd.core" id="com.hangum.tadpole.rdb.erd.core.extensionpoint.definition.decoration" name="ERD Table Column Decoration"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -17,9 +17,6 @@
          </appinfo>
       </annotation>
       <complexType>
-         <choice minOccurs="1" maxOccurs="unbounded">
-            <element ref="mainEditor"/>
-         </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -47,7 +44,7 @@
       </complexType>
    </element>
 
-   <element name="mainEditor">
+   <element name="tableDecoration">
       <complexType>
          <attribute name="class" type="string">
             <annotation>
@@ -55,7 +52,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension"/>
+                  <meta.attribute kind="java" basedOn=":com.hangum.tadpole.rdb.erd.core.extensionpoint.definition.ITableDecorationExtension"/>
                </appinfo>
             </annotation>
          </attribute>

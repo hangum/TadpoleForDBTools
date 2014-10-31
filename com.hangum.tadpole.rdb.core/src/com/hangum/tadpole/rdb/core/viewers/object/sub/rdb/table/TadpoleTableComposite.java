@@ -73,11 +73,13 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelect
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLUpdateAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSampleDataAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.AlterTableAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.AlterTableAction;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -142,6 +144,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	
 	// table column
 	private TableColumnSelectionAction tableColumnSelectionAction;
+	
+	private ITableDecorationExtension tableDecorationExtension;
 	
 	/**
 	 * Create the composite.
@@ -252,6 +256,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// auto table layout
 		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tableListViewer.getTable());
+		
+		// table decoration extension start...
+		TableDecorationContributionHandler decorationExtension = new TableDecorationContributionHandler();
+		tableDecorationExtension = decorationExtension.evaluateCreateWidgetContribs(userDB);
+		// table decoration extension end...
 
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();
@@ -262,7 +271,22 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			
 			@Override
 			public Image getImage(Object element) {
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$
+				Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$
+				
+				try {
+					if(tableDecorationExtension != null) {
+						TableDAO table = (TableDAO) element;
+						Image extensionImage = tableDecorationExtension.getTableImage(table.getName());
+						
+						if(extensionImage != null) {
+							return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
+						}
+					}
+				} catch(Exception e) {
+					logger.error("extension point exception", e);
+				}
+				
+				return baseImage;
 			}
 			
 			@Override
@@ -346,7 +370,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		createTableColumne(tableColumnViewer);
 
 		tableColumnViewer.setContentProvider(new ArrayContentProvider());
-		tableColumnViewer.setLabelProvider(new TableColumnLabelprovider());
+		tableColumnViewer.setLabelProvider(new TableColumnLabelprovider(tableListViewer, tableDecorationExtension));
 		
 		createTableColumnMenu();
 		

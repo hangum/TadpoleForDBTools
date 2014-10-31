@@ -54,6 +54,7 @@ SELECT
         ON p.major_id = tbl.object_id
         AND p.minor_id = 0
         AND p.class = 1
+        AND p.name = 'MS_Description'
   ORDER BY s.name, tbl.name 
 </select>
 
@@ -76,7 +77,10 @@ FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
 	LEFT JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
 	LEFT JOIN dbo.sysforeignkeys f ON a.id = f.fkeyid and b.colid = f.fkey 
-	LEFT JOIN sys.extended_properties AS p         ON p.major_id = a.id        AND p.minor_id = b.colid       AND p.class = 1
+	LEFT JOIN sys.extended_properties AS p ON p.major_id = a.id        
+	AND p.minor_id = b.colid      
+	AND p.class = 1
+	AND p.name = 'MS_Description'	
 WHERE 1 = 1
 	and a.id = object_id('$table$')
 ORDER BY a.id, b.colid
