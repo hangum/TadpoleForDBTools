@@ -374,7 +374,6 @@ public class ResultSetComposite extends Composite {
 		
 		btnSQLResultExport = new Button(compositeBtn, SWT.NONE);
 		GridData gd_btnSQLResultExport = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnSQLResultExport.widthHint = 80;
 		btnSQLResultExport.setLayoutData(gd_btnSQLResultExport);
 		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
 			@Override

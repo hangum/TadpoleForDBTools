@@ -431,9 +431,9 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		if(listDBMart.isEmpty()) {
-			return new Point(490, 310);
+			return new Point(540, 310);
 		} else {
-			return new Point(490, 470);
+			return new Point(540, 470);
 		}
 	}
 }
