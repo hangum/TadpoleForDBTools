@@ -275,7 +275,7 @@ public class LoginDialog extends Dialog {
 			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			    item.setColor(colors.next());
 			    
-			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 250; //$NON-NLS-1$ //$NON-NLS-2$
+			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 300; //$NON-NLS-1$ //$NON-NLS-2$
 			    item.setValue(floatVal);
 			}
 		} catch(Exception e) {
@@ -431,9 +431,9 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		if(listDBMart.isEmpty()) {
-			return new Point(490, 310);
+			return new Point(540, 310);
 		} else {
-			return new Point(490, 470);
+			return new Point(540, 470);
 		}
 	}
 }

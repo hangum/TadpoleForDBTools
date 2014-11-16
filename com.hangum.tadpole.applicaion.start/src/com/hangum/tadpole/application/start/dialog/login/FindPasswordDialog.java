@@ -95,6 +95,7 @@ public class FindPasswordDialog extends Dialog {
 			comboQuestion.add(q.toString(), q.getOrderIndex());
 			comboQuestion.setData(q.toString(), q.getKey());
 		}
+		comboQuestion.setVisibleItemCount(8);
 		comboQuestion.select(0);
 		
 		Label lblAnswer = new Label(container, SWT.NONE);

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,6 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.swtdesigner.ResourceManager;
 
@@ -175,19 +173,9 @@ public class MainEditor extends EditorExtension {
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText("Connection Information"); //$NON-NLS-1$
+		tltmConnectURL.setToolTipText("Connection Name"); //$NON-NLS-1$
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
-		
-		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
-			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
-				String fileName = new File(userDB.getDb()).getName();			
-				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName)); //$NON-NLS-1$
-			} else {
-				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers())); //$NON-NLS-1$
-			}	
-		} else {
-			tltmConnectURL.setText(userDB.getDbms_types());
-		}
+		tltmConnectURL.setText(userDB.getDisplay_name());
 		
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -838,7 +826,7 @@ public class MainEditor extends EditorExtension {
 //		return uploadHandler.getUploadUrl();
 //	}
 
-	public AMainEditorExtension[] getCompMainExtions() {
+	public AMainEditorExtension[] getMainEditorExtions() {
 		return compMainExtions;
 	}	
 }
