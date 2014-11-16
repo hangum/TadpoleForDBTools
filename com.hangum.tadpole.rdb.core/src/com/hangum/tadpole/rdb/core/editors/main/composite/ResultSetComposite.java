@@ -243,7 +243,7 @@ public class ResultSetComposite extends Composite {
 							
 							// execute extension start =============================== 
 							boolean isExtension = false;
-							AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getCompMainExtions();
+							AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
 							for (AMainEditorExtension iMainEditorExtension : extensions) {
 								iMainEditorExtension.resultSetDoubleClick(i, mapColumns);
 								isExtension = true;
@@ -374,7 +374,6 @@ public class ResultSetComposite extends Composite {
 		
 		btnSQLResultExport = new Button(compositeBtn, SWT.NONE);
 		GridData gd_btnSQLResultExport = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnSQLResultExport.widthHint = 80;
 		btnSQLResultExport.setLayoutData(gd_btnSQLResultExport);
 		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -549,7 +548,6 @@ public class ResultSetComposite extends Composite {
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
-//		final boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 		final String strPlanTBName = GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
@@ -665,10 +663,21 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService esCheckStop = null; 
 	private Button btnDetailView;
 	private Button btnSql;
-	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt/*, final boolean isResultComma*/) throws Exception {
+	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt) throws Exception {
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
 		}
+		
+		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
+		AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+		for (AMainEditorExtension iMainEditorExtension : extensions) {
+			String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
+			if(!strCostumSQL.equals(reqQuery.getSql())) {
+				logger.info("** extension costume sql is : " + strCostumSQL);
+				reqQuery.setSql(strCostumSQL);
+			}
+		}
+		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
 		
 		ResultSet resultSet = null;
 		java.sql.Connection javaConn = null;
@@ -697,25 +706,20 @@ public class ResultSetComposite extends Composite {
 			}
 			
 			// check stop thread
-//			if(logger.isDebugEnabled()) logger.debug("\t===== start stop query ==========================");
 			esCheckStop = Executors.newSingleThreadExecutor();
 			CheckStopThread cst = new CheckStopThread(statement);
 			cst.setName("Check Stop Thread "); //$NON-NLS-1$
 			esCheckStop.execute(cst);
 			
-//			if(logger.isDebugEnabled()) logger.debug("\t===== start query ==========================");
 			// execute query
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
 			
-//			if(logger.isDebugEnabled()) logger.debug("\t======== execute end =================================");
-					
-			rsDAO = new QueryExecuteResultDTO(true, resultSet, intSelectLimitCnt/*, isResultComma*/);
+			rsDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt/*, isResultComma*/);
 		} catch(Exception e) {
 			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
 		} finally {
-//			if(logger.isDebugEnabled()) logger.debug("\t====> execute select finally=======================");
 			isCheckRunning = false;
 			
 			try { if(statement != null) statement.close(); } catch(Exception e) {}
@@ -819,6 +823,12 @@ public class ResultSetComposite extends Composite {
 	 */
 	private void finallyEndExecuteCommand() {
 		controlProgress(false);
+		
+		// 확장포인트에 실행결과를 위임합니다. 
+		AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+		for (AMainEditorExtension iMainEditorExtension : extensions) {
+			iMainEditorExtension.queryEndedExecute(rsDAO);
+		}
 	}
 	
 	/**
