@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,6 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.swtdesigner.ResourceManager;
 
@@ -828,7 +826,7 @@ public class MainEditor extends EditorExtension {
 //		return uploadHandler.getUploadUrl();
 //	}
 
-	public AMainEditorExtension[] getCompMainExtions() {
+	public AMainEditorExtension[] getMainEditorExtions() {
 		return compMainExtions;
 	}	
 }
