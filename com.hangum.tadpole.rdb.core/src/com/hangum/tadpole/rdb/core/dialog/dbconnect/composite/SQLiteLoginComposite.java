@@ -174,6 +174,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			public void uploadFinished(FileUploadEvent event) {
 				for( FileDetails file : event.getFileDetails() ) {
 					addToLog( "uploaded : " + file.getFileName() ); //$NON-NLS-1$
+					if(logger.isDebugEnabled()) logger.debug("===> " + file.getFileName());
 				}
 			}			
 		});
@@ -254,12 +255,13 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 */
 	@Override
 	public boolean isValidateInput(boolean isTest) {
+		logger.debug(rootResourceDir);
+		
 		// 데이터베이스 용 디렉토리가 없으면 생성합니다.
 		File fileRootResource = new File(rootResourceDir);
 		if(!fileRootResource.isDirectory()) {
 			fileRootResource.mkdirs();
 		}
-
 		
 		if("".equals(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()))) { //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_22 + Messages.MySQLLoginComposite_10);
@@ -280,9 +282,11 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			
 			File targetFile = new File(rootResourceDir + userDBFile.getName());
 			if(targetFile.exists()) {
-				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_24);
-				chkBtnFileUpload.setFocus();
-				return false;
+				boolean isUpload = MessageDialog.openConfirm(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_24);
+				if(!isUpload) {
+					chkBtnFileUpload.setFocus();
+					return false;
+				}
 			}
 			
 		// 신규 디비 생성.
@@ -321,7 +325,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 				if(isTest) {
 					strDBUrl = userDBFile.getAbsolutePath();
 				} else {
-					strDBUrl = rootResourceDir + userDBFile.getName();
+					strDBUrl = rootResourceDir + userDBFile.getName() + java.util.UUID.randomUUID();
 					
 					try {
 						FileUtils.moveFile(userDBFile, new File(strDBUrl));
