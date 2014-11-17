@@ -19,7 +19,7 @@ package com.hangum.tadpold.commons.libs.core.define;
 public class SystemDefine {
 	
 	public static final String NAME = "Tadpole DB Hub";
-	public static final String MAJOR_VERSION = "1.4.2 (edge)";
+	public static final String MAJOR_VERSION = "1.6.0 (edge)";
 	public static final String SUB_VERSION = "Build" + "(R0)";	
 	public static final String RELEASE_DATE = "2014.11.17";
 	public static final String INFORMATION = "http://hangum.github.io/TadpoleForDBTools/";
