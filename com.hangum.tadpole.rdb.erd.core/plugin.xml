@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="com.hangum.tadpole.rdb.erd.core.extensionpoint.definition.decoration" name="ERD Table Column Decoration" schema="schema/com.hangum.tadpole.rdb.erd.core.extensionpoint.definition.decoration.exsd"/>
    <!--extension
          point="org.eclipse.rap.ui.entrypoint">
       <entrypoint

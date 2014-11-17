@@ -192,7 +192,7 @@ editorService.setFocus = function() {
 
 
 //==[ Define short key ]======================================================================================================================
-
+var shortcutErrMsg = 'Sorry. Broken shortcuts. \nOpen a new editor window. \nPlease use the Toolbar.';
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
@@ -202,6 +202,7 @@ editor.commands.addCommand({
     		if(boolDoSave) editorService.saveData();
     	}catch(e) {
     		console.log(e);
+    		alert(shortcutErrMsg);
     	}
     },
     readOnly: false
@@ -223,17 +224,10 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-//    		console.log("\t [start]Execute query => " + isJavaRunning);
-    		
-//    		if(!isJavaRunning) {
-//    			isJavaRunning = true;
-    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
-//    		} else {
-//    			console.log("\t Can not execute query");
-//    		}
+   			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
     	} catch(e) {
     		console.log(e);
-//    		editorService.executeFlag();
+    		alert(shortcutErrMsg);
     	}
     },
     readOnly: false
@@ -243,13 +237,10 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
     exec: function(editor) {
     	try {
-//    		if(!isJavaRunning) {
-//    			isJavaRunning = true;
-    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'), editorService.isBlockText());
-//    		}
+   			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'), editorService.isBlockText());
 	    } catch(e) {
 			console.log(e);
-//			editorService.executeFlag();
+			alert(shortcutErrMsg);
 		}
     },
     readOnly: false
@@ -263,6 +254,7 @@ editor.commands.addCommand({
     		editor.setValue(varFormat);
     	} catch(e) {
     		console.log(e);
+    		alert(shortcutErrMsg);
     	}
     },
     readOnly: false

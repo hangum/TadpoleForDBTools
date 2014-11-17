@@ -26,6 +26,7 @@ import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.erd.core.figures.ColumnFigure;
 import com.hangum.tadpole.rdb.erd.core.figures.TableFigure;
 import com.hangum.tadpole.rdb.erd.core.figures.TableFigure.COLUMN_TYPE;
@@ -78,15 +79,21 @@ public class TableEditPart extends AbstractGraphicalEditPart implements NodeEdit
 		} else {
 			Style style = db.getStyle();
 			String strTableTitle = style.getTableTitle();
-			if("name".equals(strTableTitle)) 		figure.setTableName(tableModel.getName() );
-			else if("comment".equals(strTableTitle)) figure.setTableName(tableModel.getComment());
-			else {
-				if("".equals(tableModel.getComment())) {
-					figure.setTableName(tableModel.getName() );
-				} else {
-					figure.setTableName(tableModel.getName() + "(" + tableModel.getComment() + ")");
+			
+			if(db.getDbType().startsWith(DBDefine.SQLite_DEFAULT.toString())) {
+				figure.setTableName(tableModel.getName() );
+			} else {
+				if("name".equals(strTableTitle)) 		figure.setTableName(tableModel.getName() );
+				else if("comment".equals(strTableTitle)) figure.setTableName(tableModel.getComment());
+				else {
+					if("".equals(tableModel.getComment())) {
+						figure.setTableName(tableModel.getName() );
+					} else {
+						figure.setTableName(tableModel.getName() + "(" + tableModel.getComment() + ")");
+					}
 				}
 			}
+			
 			figure.removeAllColumns();
 			
 			// 모든 컬럼을 보여 주지 않아야 하는지 ..

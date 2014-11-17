@@ -73,7 +73,7 @@ public abstract class AbstraceShortcutKeyComposite extends Composite {
 		listShortcut.add(new ShortcutHelpDAO(Messages.AbstractShortCutDialog_37, 	prefixCtrlShortcut + "+ F") 		); //$NON-NLS-2$
 		listShortcut.add(new ShortcutHelpDAO(Messages.AbstractShortCutDialog_39, 	prefixCtrlShortcut + "+ G") 		); //$NON-NLS-2$
 		listShortcut.add(new ShortcutHelpDAO(Messages.AbstractShortCutDialog_41, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ G") ); //$NON-NLS-2$ //$NON-NLS-3$
-		listShortcut.add(new ShortcutHelpDAO(Messages.AbstractShortCutDialog_44, 	prefixCtrlShortcut  + " + " + prefixAltShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
+		
 	}
 
 	@Override
