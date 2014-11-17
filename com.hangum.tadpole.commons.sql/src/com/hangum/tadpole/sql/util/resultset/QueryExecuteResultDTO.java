@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_EXECUTE_STATUS;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * 쿼리 실행결과 dto
@@ -33,8 +34,8 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 		super(columnName, columnType, dataList);
 	}
 
-	public QueryExecuteResultDTO(boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
-		super(isShowRownum, rs, queryResultCount);
+	public QueryExecuteResultDTO(UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
+		super(userDB, isShowRownum, rs, queryResultCount);
 	}
 
 	/**

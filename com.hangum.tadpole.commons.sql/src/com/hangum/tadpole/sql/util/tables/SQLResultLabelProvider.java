@@ -12,7 +12,9 @@ package com.hangum.tadpole.sql.util.tables;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -106,11 +108,15 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			for(int i=0; i<rsDAO.getColumnName().size(); i++) {
 				final int index = i;
 				final int columnAlign = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))?SWT.RIGHT:SWT.LEFT;
+				String strColumnName = rsDAO.getColumnName().get(i);
+		
+				/** 표시 되면 안되는 컬럼을 제거 합니다 */
+				if(StringUtils.startsWithIgnoreCase(strColumnName, PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN)) continue;
 				
 				final TableViewerColumn tv = new TableViewerColumn(tableViewer, columnAlign);
 				final TableColumn tc = tv.getColumn();
-
-				tc.setText( rsDAO.getColumnName().get(i) );
+				
+				tc.setText(strColumnName);
 				tc.setResizable(true);
 				tc.setMoveable(true);
 				

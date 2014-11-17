@@ -16,6 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
  * MainEditor extension
@@ -62,12 +63,29 @@ public abstract class AMainEditorExtension {
 	}
 	
 	/**
+	 * 확장 에디터가 조작하고 싶은 쿼리로 조절한다.
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public abstract String sqlCostume(String strSQL);
+	
+	/**
 	 * resultSetDoubleClick
 	 * 
 	 * @param selectIndex  select index
 	 * @param mapColumns column <index, value>
 	 */
 	public abstract void resultSetDoubleClick(int selectIndex, Map<Integer, Object> mapColumns);
+	
+	/**
+	 * 쿼리 실행이 끝나고 확장하는 포인터에서 실행해 줘야 하는 경우에.
+	 * 
+	 * 즉, 사용자가 메인 에디터에서 쿼리 실행을 끝나면 실행 됩니다.
+	 * 
+	 * @param rsDAO
+	 */
+	public abstract void queryEndedExecute(QueryExecuteResultDTO rsDAO);
 
 	/**
 	 * 현재 에디터에서 사용하고 있는 extension
@@ -78,6 +96,8 @@ public abstract class AMainEditorExtension {
 	}
 
 	/**
+	 * extension을 활성화 할것인지?
+	 * 
 	 * @return the enableExtension
 	 */
 	public boolean isEnableExtension() {
