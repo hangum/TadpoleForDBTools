@@ -32,7 +32,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(EditorExtension.class);
-
+	
 	///[browser editor]/////////////////////////////////////////////////////////////////////////////////////////////////////
 	protected Browser browserQueryEditor;
 	/** browser.browserFunction의 서비스 헨들러 */

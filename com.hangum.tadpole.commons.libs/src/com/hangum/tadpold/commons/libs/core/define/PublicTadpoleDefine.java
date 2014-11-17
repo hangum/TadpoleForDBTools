@@ -25,6 +25,11 @@ public class PublicTadpoleDefine {
 	public static String STATEMENT_ID = "||TADPOLE-STATEMENT_ID||"; //$NON-NLS-1$
 	
 	/**
+	 * 특별 컬럼을 정의 합니다. 
+	 */
+	public static String SPECIAL_USER_DEFINE_HIDE_COLUMN = "TADPOLE_HIDE_";
+	
+	/**
 	 * 분리자
 	 */
 	public static String DELIMITER = "||TADPOLE-DELIMITER||"; //$NON-NLS-1$
