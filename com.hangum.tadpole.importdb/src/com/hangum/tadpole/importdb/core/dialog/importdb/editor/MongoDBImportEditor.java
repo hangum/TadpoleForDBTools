@@ -145,18 +145,10 @@ public class MongoDBImportEditor extends EditorPart {
 		Label lblTarget = new Label(compositeHead, SWT.NONE);
 		lblTarget.setText(Messages.MongoDBImportEditor_2);
 		
-		Label lblTargetDB = new Label(compositeHead, SWT.NONE);
+		Label lblTargetDB = new Label(compositeHead, SWT.BORDER);
 		lblTargetDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblTargetDB.setText(targetDBDAO.getDisplay_name());
-		
-		Button btnImport = new Button(compositeHead, SWT.NONE);
-		btnImport.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				importData();
-			}
-		});
-		btnImport.setText(Messages.MongoDBImportEditor_4);
+		new Label(compositeHead, SWT.NONE);
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -179,7 +171,11 @@ public class MongoDBImportEditor extends EditorPart {
 		tabItemTable.setControl(tableColumnListComposite);
 		tableColumnListComposite.setLayout(new GridLayout(1, false));
 		
-		Button btnSelectAll = new Button(tableColumnListComposite, SWT.NONE);
+		Composite composite = new Composite(tableColumnListComposite, SWT.NONE);
+		composite.setLayout(new GridLayout(3, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Button btnSelectAll = new Button(composite, SWT.NONE);
 		btnSelectAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -193,6 +189,18 @@ public class MongoDBImportEditor extends EditorPart {
 			}
 		});
 		btnSelectAll.setText(Messages.MongoDBImportEditor_6);
+		
+		Label lblNewLabel = new Label(composite, SWT.NONE);
+		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Button btnImport = new Button(composite, SWT.NONE);
+		btnImport.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				importData();
+			}
+		});
+		btnImport.setText(Messages.MongoDBImportEditor_4);
 		
 		CTabItem tabItemQuery = new CTabItem(tabFolderQuery, SWT.NONE);
 		tabItemQuery.setText(Messages.MongoDBImportEditor_7);

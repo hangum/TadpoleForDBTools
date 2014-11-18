@@ -8,10 +8,9 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.extensionpoint.definition;
+package com.hangum.tadpole.rdb.core.extensionpoint.handler;
 
 import java.util.LinkedList;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
@@ -20,7 +19,8 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
-import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Main Editor extension handler
@@ -30,22 +30,20 @@ import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtensio
  */
 public class MainEditorContributionsHandler {
 	private static final Logger logger = Logger.getLogger(MainEditorContributionsHandler.class);
-	private static final String MainEditor_ID = "com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor";
+	private static final String MAIN_EDITOR_ID = "com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor";
 
 	/**
 	 * extension widget creation
 	 * 
 	 * @return
 	 */
-	public IMainEditorExtension[] evaluateCreateWidgetContribs() {
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(MainEditor_ID);
+	public AMainEditorExtension[] evaluateCreateWidgetContribs(final UserDBDAO userDB) {
+		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(MAIN_EDITOR_ID);
 		final LinkedList list = new LinkedList();
 		try {
 			for (IConfigurationElement e : config) {
-				logger.info("Evaluation extension");
-				
 				final Object mainEditorExtension = e.createExecutableExtension("class");
-				if (mainEditorExtension instanceof IMainEditorExtension) {
+				if (mainEditorExtension instanceof AMainEditorExtension) {
 					ISafeRunnable runnable = new ISafeRunnable() {
 
 						@Override
@@ -55,8 +53,9 @@ public class MainEditorContributionsHandler {
 
 						@Override
 						public void run() throws Exception {
-							IMainEditorExtension compositeExt = (IMainEditorExtension) mainEditorExtension;
-							list.add(compositeExt);
+							AMainEditorExtension compositeExt = (AMainEditorExtension) mainEditorExtension;
+							compositeExt.initExtension(userDB);
+							if(compositeExt.isEnableExtension()) list.add(compositeExt);
 						}
 					};
 					SafeRunner.run(runnable);
@@ -65,7 +64,7 @@ public class MainEditorContributionsHandler {
 		} catch (CoreException ex) {
 			logger.error("create main editor", ex);
 		}
-		return (IMainEditorExtension[]) list.toArray(new IMainEditorExtension[list.size()]);
+		return (AMainEditorExtension[]) list.toArray(new AMainEditorExtension[list.size()]);
 	}
 
 //	/**

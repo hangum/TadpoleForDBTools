@@ -65,5 +65,4 @@ public class TadpoleResultSet {
 		this.isEndOfRead = isEndOfRead;
 	}
 
-	
 }

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +64,8 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.MainEditorContributionsHandler;
-import com.hangum.tadpole.rdb.core.extensionpoint.maineditor.IMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -76,7 +75,6 @@ import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.hangum.tadpole.sql.util.SQLUtil;
 import com.swtdesigner.ResourceManager;
 
@@ -113,7 +111,7 @@ public class MainEditor extends EditorExtension {
 	/** db table list */
 	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
 	
-	private IMainEditorExtension[] compMainExtions;
+	private AMainEditorExtension[] compMainExtions;
 	
 	public MainEditor() {
 		super();
@@ -175,19 +173,9 @@ public class MainEditor extends EditorExtension {
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText("Connection Information"); //$NON-NLS-1$
+		tltmConnectURL.setToolTipText("Connection Name"); //$NON-NLS-1$
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
-		
-		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
-			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
-				String fileName = new File(userDB.getDb()).getName();			
-				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s", fileName)); //$NON-NLS-1$
-			} else {
-				tltmConnectURL.setText(String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers())); //$NON-NLS-1$
-			}	
-		} else {
-			tltmConnectURL.setText(userDB.getDbms_types());
-		}
+		tltmConnectURL.setText(userDB.getDisplay_name());
 		
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -389,21 +377,25 @@ public class MainEditor extends EditorExtension {
 		
 		// 올챙이 확장에 관한 코드를 넣습니다. =================================================================== 
 		MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
-		compMainExtions = editorExtension.evaluateCreateWidgetContribs();
-		for (IMainEditorExtension aMainEditorExtension : compMainExtions) {
+		compMainExtions = editorExtension.evaluateCreateWidgetContribs(userDB);
+		int intSashCnt = 1;
+		for (AMainEditorExtension aMainEditorExtension : compMainExtions) {
 			
-			Composite compExt = new Composite(sashFormExtension, SWT.BORDER);
-			GridLayout gl_compositeExt = new GridLayout(1, false);
-			gl_compositeExt.verticalSpacing = 0;
-			gl_compositeExt.horizontalSpacing = 0;
-			gl_compositeExt.marginHeight = 0;
-			gl_compositeExt.marginWidth = 0;
-			compExt.setLayout(gl_compositeExt);
-
-			aMainEditorExtension.createPartControl(compExt);
+			if(aMainEditorExtension.isEnableExtension()) {
+				intSashCnt++;
+				Composite compExt = new Composite(sashFormExtension, SWT.BORDER);
+				GridLayout gl_compositeExt = new GridLayout(1, false);
+				gl_compositeExt.verticalSpacing = 0;
+				gl_compositeExt.horizontalSpacing = 0;
+				gl_compositeExt.marginHeight = 0;
+				gl_compositeExt.marginWidth = 0;
+				compExt.setLayout(gl_compositeExt);
+	
+				aMainEditorExtension.createPartControl(compExt);
+			}
 		}
 		
-		if(compMainExtions.length >= 1) {
+		if(intSashCnt >= 2) {
 			sashFormExtension.setWeights(new int[] {70, 30});
 		}
 		// 올챙이 확장에 관한 코드를 넣습니다. ===================================================================
@@ -834,7 +826,7 @@ public class MainEditor extends EditorExtension {
 //		return uploadHandler.getUploadUrl();
 //	}
 
-	public IMainEditorExtension[] getCompMainExtions() {
+	public AMainEditorExtension[] getMainEditorExtions() {
 		return compMainExtions;
 	}	
 }

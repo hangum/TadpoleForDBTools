@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2014 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,25 +8,24 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.notes.core.define;
+package com.hangum.tadpole.rdb.core.extensionpoint.definition;
+
+import org.eclipse.swt.graphics.Image;
+
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
- * Note define
+ * 커넥션 뷰 파트의 데코레이션입니다.
  * 
  * @author hangum
  *
  */
-public class NotesDefine {
-
-	/** notes type */
-	public enum TYPES { GROUP, PERSON };
+public interface IConnectionDecoration {
 	
 	/**
-	 * 쪽지 타입
-	 * 
-	 * @author hangum
-	 *
+	 * 화면을 초기화 합니다.
+	 * 1. 초기 화면이 보여야 하는지 설정합니다. 
 	 */
-	public enum NOTE_TYPES { SEND, RECEIVE };
-	
+	public Image getImage(UserDBDAO userDB);
+
 }

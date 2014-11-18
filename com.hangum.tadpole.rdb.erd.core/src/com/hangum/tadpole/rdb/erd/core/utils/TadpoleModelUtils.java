@@ -91,9 +91,14 @@ public enum TadpoleModelUtils {
 			tableModel.setDb(db);
 			tableModel.setName(table.getName());
 			
-			String tableComment = table.getComment();
-			tableComment = StringUtils.substring(""+tableComment, 0, 10);
-			tableModel.setComment(tableComment);
+			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				tableModel.setComment("");	
+			} else {
+				String tableComment = table.getComment();
+				tableComment = StringUtils.substring(""+tableComment, 0, 10);
+				tableModel.setComment(tableComment);
+			}
+			
 			mapDBTables.put(tableModel.getName(), tableModel);
 			
 			// 첫번째 보여주는 항목.

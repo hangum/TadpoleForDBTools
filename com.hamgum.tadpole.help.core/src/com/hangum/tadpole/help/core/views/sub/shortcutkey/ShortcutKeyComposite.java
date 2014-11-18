@@ -96,8 +96,10 @@ public class ShortcutKeyComposite extends AbstraceShortcutKeyComposite {
 		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_4, 		prefixCtrlShortcut + "+ S") 		);
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
 			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		);
+			listShortcut.add(new ShortcutHelpDAO(Messages.AbstractShortCutDialog_44, 	prefixCtrlShortcut  + " + " + prefixAltShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
 			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$
+			listShortcut.add(new ShortcutHelpDAO(Messages.AbstractShortCutDialog_44, 	"Ctrl + H") ); //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		
 		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$

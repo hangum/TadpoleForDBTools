@@ -17,6 +17,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.postgresql.PGResultSetMetaData;
+
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * ResultSet utils
@@ -119,6 +123,72 @@ public class ResultSetUtils {
 	}
 	
 	/**
+	 * 쿼리결과의 실제 테이블 컬럼 정보를 넘겨 받습니다.
+	 * 현재는 pgsql 만 지원합니다.
+	 * 
+	 * mysql, maria, oracle의 경우는 테이블 alias가 붙은 경우 이름을 처리하지 못합니다.
+	 * 다른 디비는 테스트 해봐야합니다.
+	 * 2014-11-13 
+	 * 
+	 * @param rsm
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Map<Integer, Map> getColumnTableColumnName(UserDBDAO userDB, ResultSetMetaData rsm) {
+		Map<Integer, Map> mapTableColumn = new HashMap<>();
+		
+		// 첫번째 컬럼 순번을 위해 삽입.
+		mapTableColumn.put(0, new HashMap());
+			
+		try {
+			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				PGResultSetMetaData pgsqlMeta = (PGResultSetMetaData)rsm;
+				for(int i=0;i<rsm.getColumnCount(); i++) {
+					int columnSeq = i+1;
+					Map<String, String> metaData = new HashMap<String, String>();
+					metaData.put("schema", pgsqlMeta.getBaseSchemaName(columnSeq));
+					metaData.put("table", pgsqlMeta.getBaseTableName(columnSeq));
+					metaData.put("column", pgsqlMeta.getBaseColumnName(columnSeq));
+					
+					if(logger.isDebugEnabled()) {
+						logger.debug("\tschema :" + pgsqlMeta.getBaseSchemaName(columnSeq) + "\ttable:" + pgsqlMeta.getBaseTableName(columnSeq) + "\tcolumn:" + pgsqlMeta.getBaseColumnName(columnSeq));
+					}
+					
+					mapTableColumn.put(i+1, metaData);
+				}
+				
+//			/**
+//			 * table name alia
+//			 * 
+//			 */
+//			} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+//							userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
+//			) {
+////				com.mysql.jdbc.ResultSetMetaData mysqlMeta = (com.mysql.jdbc.ResultSetMetaData)rsm;
+//				org.mariadb.jdbc.MySQLResultSetMetaData mysqlMeta = (org.mariadb.jdbc.MySQLResultSetMetaData)rsm;
+//				for(int i=0;i<rsm.getColumnCount(); i++) {
+//					int columnSeq = i+1;
+//					Map<String, String> metaData = new HashMap<String, String>();
+//					if(logger.isDebugEnabled()) {
+//						logger.debug("\tschema :" + mysqlMeta.getCatalogName(columnSeq) + "\ttable:" + mysqlMeta.getTableName(columnSeq) + "\tcolumn:" + mysqlMeta.getColumnName(columnSeq));
+//					}
+//					
+//					metaData.put("schema", mysqlMeta.getCatalogName(columnSeq));
+//					metaData.put("table", mysqlMeta.getTableName(columnSeq));
+//					metaData.put("column", mysqlMeta.getColumnName(columnSeq));
+//					
+//					mapTableColumn.put(i+1, metaData);
+//				}
+				
+			}
+		} catch(Exception e) {
+			logger.error("resultset metadata exception", e);
+		}
+		
+		return mapTableColumn;
+	}
+	
+	/**
 	 * get column types
 	 * 
 	 * @param isShowRowNum 로우넘 보여주기위해 첫번째 컬럼을 추가하는 데이터를 만듭니다.
@@ -127,7 +197,7 @@ public class ResultSetUtils {
 	 * @throws SQLException
 	 */
 	public static Map<Integer, Integer> getColumnType(boolean isShowRowNum, ResultSetMetaData rsm) throws SQLException {
-		Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> mapColumnType = new HashMap<>();
 		int intStartIndex = 0;
 		
 		if(isShowRowNum) {

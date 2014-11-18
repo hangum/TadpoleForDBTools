@@ -11,7 +11,10 @@
 package com.hangum.tadpole.sql.query;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO;
@@ -69,8 +73,17 @@ public class TadpoleSystem_SchemaHistory {
 		queryMap.put("objectType", 	"%" + objectType	+ "%");
 		queryMap.put("objectId", 	"%" + objectId 		+ "%");
 		
-		queryMap.put("startTime",  	startTime);
-		queryMap.put("endTime", 	endTime);
+		if(ApplicationArgumentUtils.isDBServer()) {
+			Date date = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			queryMap.put("startTime",  formatter.format(date));
+			
+			Date dateendTime = new Date(endTime);
+			queryMap.put("endTime", formatter.format(dateendTime));			
+		} else {
+			queryMap.put("startTime",  	startTime);
+			queryMap.put("endTime", 	endTime);
+		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		returnSchemaHistory =  sqlClient.queryForList("getSchemaHistory", queryMap);

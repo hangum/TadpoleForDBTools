@@ -38,7 +38,7 @@ Export-Package: com.hangum.tadpole.rdb.core,
  com.hangum.tadpole.rdb.core.editors.dbinfos.composites,
  com.hangum.tadpole.rdb.core.editors.intro,
  com.hangum.tadpole.rdb.core.editors.main,
- com.hangum.tadpole.rdb.core.extensionpoint.maineditor,
+ com.hangum.tadpole.rdb.core.extensionpoint.definition,
  com.hangum.tadpole.rdb.core.util,
  com.hangum.tadpole.rdb.core.viewers.connections,
  com.hangum.tadpole.rdb.core.viewers.object
