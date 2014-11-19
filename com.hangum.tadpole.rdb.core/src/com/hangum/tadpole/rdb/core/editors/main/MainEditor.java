@@ -64,7 +64,7 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
@@ -111,7 +111,7 @@ public class MainEditor extends EditorExtension {
 	/** db table list */
 	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
 	
-	private AMainEditorExtension[] compMainExtions;
+	private IMainEditorExtension[] compMainExtions;
 	
 	public MainEditor() {
 		super();
@@ -379,7 +379,7 @@ public class MainEditor extends EditorExtension {
 		MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
 		compMainExtions = editorExtension.evaluateCreateWidgetContribs(userDB);
 		int intSashCnt = 1;
-		for (AMainEditorExtension aMainEditorExtension : compMainExtions) {
+		for (IMainEditorExtension aMainEditorExtension : compMainExtions) {
 			
 			if(aMainEditorExtension.isEnableExtension()) {
 				intSashCnt++;
@@ -826,7 +826,7 @@ public class MainEditor extends EditorExtension {
 //		return uploadHandler.getUploadUrl();
 //	}
 
-	public AMainEditorExtension[] getMainEditorExtions() {
+	public IMainEditorExtension[] getMainEditorExtions() {
 		return compMainExtions;
 	}	
 }
