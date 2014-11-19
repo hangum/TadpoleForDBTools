@@ -94,7 +94,7 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
@@ -232,8 +232,8 @@ public class ResultSetComposite extends Composite {
 					if (item.getBounds(i).contains(event.x, event.y)) {
 						Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
 						// execute extension start =============================== 
-						AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-						for (AMainEditorExtension iMainEditorExtension : extensions) {
+						IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+						for (IMainEditorExtension iMainEditorExtension : extensions) {
 							iMainEditorExtension.resultSetClick(i, mapColumns);
 						}
 						
@@ -254,8 +254,8 @@ public class ResultSetComposite extends Composite {
 					if (item.getBounds(i).contains(event.x, event.y)) {
 						Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
 						// execute extension start =============================== 
-						AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-						for (AMainEditorExtension iMainEditorExtension : extensions) {
+						IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+						for (IMainEditorExtension iMainEditorExtension : extensions) {
 							iMainEditorExtension.resultSetDoubleClick(i, mapColumns);
 						}
 						// execute extension stop ===============================
@@ -690,8 +690,8 @@ public class ResultSetComposite extends Composite {
 		}
 		
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
-		AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-		for (AMainEditorExtension iMainEditorExtension : extensions) {
+		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
 			if(!strCostumSQL.equals(reqQuery.getSql())) {
 				logger.info("** extension costume sql is : " + strCostumSQL);
@@ -846,8 +846,8 @@ public class ResultSetComposite extends Composite {
 		controlProgress(false);
 		
 		// 확장포인트에 실행결과를 위임합니다. 
-		AMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-		for (AMainEditorExtension iMainEditorExtension : extensions) {
+		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			iMainEditorExtension.queryEndedExecute(rsDAO);
 		}
 	}

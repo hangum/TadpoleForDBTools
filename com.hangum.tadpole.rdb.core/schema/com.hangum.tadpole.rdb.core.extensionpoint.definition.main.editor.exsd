@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension"/>
+                  <meta.attribute kind="java" basedOn=":com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension"/>
                </appinfo>
             </annotation>
          </attribute>
