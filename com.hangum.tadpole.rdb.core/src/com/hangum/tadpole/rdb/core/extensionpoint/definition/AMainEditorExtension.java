@@ -71,6 +71,14 @@ public abstract class AMainEditorExtension {
 	public abstract String sqlCostume(String strSQL);
 	
 	/**
+	 * result set one click
+	 * 
+	 * @param selectIndex  select index
+	 * @param mapColumns column <index, value>
+	 */
+	public abstract void resultSetClick(int selectIndex, Map<Integer, Object> mapColumns);
+	
+	/**
 	 * resultSetDoubleClick
 	 * 
 	 * @param selectIndex  select index
