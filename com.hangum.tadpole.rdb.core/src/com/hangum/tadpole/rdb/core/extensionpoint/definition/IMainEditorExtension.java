@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 
+import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 
@@ -28,9 +29,10 @@ public interface IMainEditorExtension {
 	/**
 	 * user create part control
 	 * 
-	 * @param parent
+	 * @param parent    사용자 컴포넌트를 그릴 위젲.
+	 * @param mainEditor 메인 에디터 위젲.
 	 */
-	public void createPartControl(Composite parent);
+	public void createPartControl(Composite parent, MainEditor mainEditor);
 	
 	/**
 	 * 화면을 초기화 합니다.
