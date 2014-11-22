@@ -140,4 +140,8 @@ public class PreferenceDefine {
 	/** RDB 결과 테이블의 폰트를 설정합니다 */
 	public static final String RDB_RESULT_FONT = "RDB_RESULT_FONT";
 	public static final String RDB_RESULT_FONT_VALUE = "";
+	
+	/** RDB COMMIT COUNT 설정합니다 */
+	public static final String RDB_COMMIT_COUNT = "RDB_COMMIT_COUNT";
+	public static final String RDB_COMMIT_COUNT_VALUE = "1000";
 }

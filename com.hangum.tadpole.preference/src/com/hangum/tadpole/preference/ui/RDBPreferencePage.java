@@ -114,6 +114,13 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		textQueryTimeout = new Text(container, SWT.BORDER);
 		textQueryTimeout.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label lblCommitCount = new Label(container, SWT.NONE);
+		lblCommitCount.setText(Messages.RDBPreferencePage_lblCommitCount_text);
+		
+		textCommitCount = new Text(container, SWT.BORDER);
+		textCommitCount.setText(Messages.RDBPreferencePage_text_text);
+		textCommitCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		label.setText(""); //$NON-NLS-1$
@@ -162,6 +169,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		String txtOraclePlan = textOraclePlan.getText();
 		String txtRDBNumberColumnIsComman = comboRDBNumberComma.getText();
 		String txtFontInfo = lblUserFont.getText();
+		String txtCommitCount = textCommitCount.getText();
 		
 		if(!NumberUtils.isNumber(txtSelectLimit)) {
 			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_0 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
@@ -175,6 +183,11 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		if(!NumberUtils.isNumber(txtQueryTimtout)) {
 			MessageDialog.openError(getShell(), "Confirm", "Query timeout is " + Messages.RDBPreferencePage_0);
+			return false;
+		}
+		
+		if(!NumberUtils.isNumber(txtCommitCount)) {
+			MessageDialog.openError(getShell(), "Confirm", "Commit count is " + Messages.RDBPreferencePage_0);
 			return false;
 		}
 		
@@ -195,6 +208,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			SessionManager.setUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE, txtOraclePlan);		
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, txtRDBNumberColumnIsComman);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_FONT, txtFontInfo);
+			SessionManager.setUserInfo(PreferenceDefine.RDB_COMMIT_COUNT, txtCommitCount);
 			
 			
 		} catch(Exception e) {
@@ -237,6 +251,8 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		textOraclePlan.setText( GetPreferenceGeneral.getPlanTableName() );
 		comboRDBNumberComma.setText(GetPreferenceGeneral.getRDBNumberISComma());
+		
+		textCommitCount.setText(GetPreferenceGeneral.getRDBCommitCount());
 		
 		String strFontInfo = GetPreferenceGeneral.getRDBResultFont();
 		lblUserFont.setText(strFontInfo);
@@ -282,5 +298,6 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 					"         qblock_name        VARCHAR2(30)     \r\n" + 
 					" ) ";
 	private Text textQueryTimeout;
+	private Text textCommitCount;
 }
 

@@ -286,6 +286,11 @@ public class TadpoleSystem_UserInfoData {
 		userInfoData.setValue0(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
+		// 에디터에서 커밋 카운트.
+		userInfoData.setName(PreferenceDefine.RDB_COMMIT_COUNT);
+		userInfoData.setValue0(PreferenceDefine.RDB_COMMIT_COUNT_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		
 		// MONGO_DEFAULT_LIMIT
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_LIMIT);
 		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_LIMIT_VALUE);
