@@ -537,14 +537,14 @@ public class ResultSetComposite extends Composite {
 	 * 쿼리를 수행합니다.
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		controlProgress(true);
+		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
+		
 		this.reqQuery = reqQuery; 
 		this.rsDAO = new QueryExecuteResultDTO();
 		sqlFilter.setFilter(""); //$NON-NLS-1$
 		textFilter.setText(""); //$NON-NLS-1$
 		
-		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
-		
-		controlProgress(true);
 		final Shell runShell = textFilter.getShell();
 		
 		if(reqQuery.getType() != EditorDefine.EXECUTE_TYPE.ALL) {
@@ -807,7 +807,6 @@ public class ResultSetComposite extends Composite {
 					// Is user stop?
 					if(!isUserInterrupt) {
 						stmt.cancel();
-						
 						isCheckRunning = false;
 						
 						try {

@@ -144,6 +144,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 			browserQueryEditor.evaluate(EditorFunctionService.SET_FOCUS);
 		} catch(Exception e) {
 			// ignore exception
+//			logger.error("set focous", e);
 		}
 	}
 	

@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.extensionpoint.definition;
 
 import org.eclipse.swt.SWT;
 
+import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
@@ -21,6 +22,10 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  *
  */
 public abstract class AMainEditorExtension implements IMainEditorExtension {
+	
+	/** 올챙이 메인 에디터 */
+	protected MainEditor mainEditor;
+
 	/**
 	 * 이 익스텐션을 동작가능 한지?
 	 */
