@@ -198,7 +198,8 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		// 테이블에 저장 
 		try {
-			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo);
+			TadpoleSystem_UserInfoData.updateRDBUserInfoData(
+					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT, txtSelectLimit);
