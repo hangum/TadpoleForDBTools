@@ -572,6 +572,7 @@ public class ResultSetComposite extends Composite {
 		final String strPlanTBName = GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
+		final int intCommitCount = Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
 		
 		jobQueryManager = new Job(Messages.MainEditor_45) {
 			@Override
@@ -600,7 +601,7 @@ public class ResultSetComposite extends Composite {
 						
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
-							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getDbUserRoleType(), strUserEmail);
+							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getDbUserRoleType(), intCommitCount, strUserEmail);
 						}
 						
 						// select 문장 실행
