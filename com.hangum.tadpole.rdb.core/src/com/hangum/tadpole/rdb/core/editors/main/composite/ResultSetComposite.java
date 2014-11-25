@@ -815,7 +815,7 @@ public class ResultSetComposite extends Composite {
 					if(i>100) i = 0;
 					final int progressAdd = i++; 
 					
-					btnStopQuery.getDisplay().asyncExec(new Runnable() {
+					btnStopQuery.getDisplay().syncExec(new Runnable() {
 						@Override
 						public void run() {
 							progressBarQuery.setSelection(progressAdd);
