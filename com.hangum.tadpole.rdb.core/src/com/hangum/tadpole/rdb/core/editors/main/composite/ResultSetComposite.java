@@ -227,39 +227,18 @@ public class ResultSetComposite extends Composite {
 				if (selection.length != 1) return;
 				
 				final TableItem item = tableResult.getSelection()[0];
-				Job jobMouseClick = new Job(Messages.MainEditor_45) {
-					@Override
-					public IStatus run(IProgressMonitor monitor) {
-						monitor.beginTask(reqQuery.getSql(), IProgressMonitor.UNKNOWN);
-						
-						tableResult.getDisplay().asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								for (int i=0; i<tableResult.getColumnCount(); i++) {
-									if (item.getBounds(i).contains(event.x, event.y)) {
-										Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
-										// execute extension start =============================== 
-										IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-										for (IMainEditorExtension iMainEditorExtension : extensions) {
-											iMainEditorExtension.resultSetClick(i, mapColumns);
-										}
-										break;
-									}
-								}	// for column count								
-							}
-						});
-							
-						monitor.done();
-						
-						/////////////////////////////////////////////////////////////////////////////////////////
-						return Status.OK_STATUS;
+				for (int i=0; i<tableResult.getColumnCount(); i++) {
+					if (item.getBounds(i).contains(event.x, event.y)) {
+						Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
+						// execute extension start =============================== 
+						IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+						for (IMainEditorExtension iMainEditorExtension : extensions) {
+							iMainEditorExtension.resultSetClick(i, mapColumns);
+						}
+						break;
 					}
-				};
-			
-				jobMouseClick.setPriority(Job.SHORT);
-				jobMouseClick.setName("Result clikc");
-				jobMouseClick.schedule();
-		    }
+				}	// for column count								
+			}
 		});
 		
 		tableResult.addListener(SWT.MouseDoubleClick, new Listener() {
@@ -815,7 +794,7 @@ public class ResultSetComposite extends Composite {
 					if(i>100) i = 0;
 					final int progressAdd = i++; 
 					
-					btnStopQuery.getDisplay().asyncExec(new Runnable() {
+					btnStopQuery.getDisplay().syncExec(new Runnable() {
 						@Override
 						public void run() {
 							progressBarQuery.setSelection(progressAdd);
