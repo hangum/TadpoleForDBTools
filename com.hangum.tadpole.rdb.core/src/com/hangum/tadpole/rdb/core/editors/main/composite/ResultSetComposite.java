@@ -222,13 +222,12 @@ public class ResultSetComposite extends Composite {
 		}
 		
 		tableResult.addListener(SWT.MouseDown, new Listener() {
-		    public void handleEvent(Event event) {
+		    public void handleEvent(final Event event) {
 		    	TableItem[] selection = tableResult.getSelection();
 				if (selection.length != 1) return;
 				
-				TableItem item = tableResult.getSelection()[0];
+				final TableItem item = tableResult.getSelection()[0];
 				for (int i=0; i<tableResult.getColumnCount(); i++) {
-					
 					if (item.getBounds(i).contains(event.x, event.y)) {
 						Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
 						// execute extension start =============================== 
@@ -236,11 +235,10 @@ public class ResultSetComposite extends Composite {
 						for (IMainEditorExtension iMainEditorExtension : extensions) {
 							iMainEditorExtension.resultSetClick(i, mapColumns);
 						}
-						
 						break;
 					}
-				}	// for column count
-		    }
+				}	// for column count								
+			}
 		});
 		
 		tableResult.addListener(SWT.MouseDoubleClick, new Listener() {
@@ -572,6 +570,7 @@ public class ResultSetComposite extends Composite {
 		final String strPlanTBName = GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
+		final int intCommitCount = Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
 		
 		jobQueryManager = new Job(Messages.MainEditor_45) {
 			@Override
@@ -600,7 +599,7 @@ public class ResultSetComposite extends Composite {
 						
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
-							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getDbUserRoleType(), strUserEmail);
+							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getDbUserRoleType(), intCommitCount, strUserEmail);
 						}
 						
 						// select 문장 실행
@@ -795,7 +794,7 @@ public class ResultSetComposite extends Composite {
 					if(i>100) i = 0;
 					final int progressAdd = i++; 
 					
-					btnStopQuery.getDisplay().asyncExec(new Runnable() {
+					btnStopQuery.getDisplay().syncExec(new Runnable() {
 						@Override
 						public void run() {
 							progressBarQuery.setSelection(progressAdd);

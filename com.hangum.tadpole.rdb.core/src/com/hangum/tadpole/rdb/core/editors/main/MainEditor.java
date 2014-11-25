@@ -106,7 +106,8 @@ public class MainEditor extends EditorExtension {
 	
 	/** db table list */
 	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
-	
+
+	private SashForm sashFormExtension;
 	private IMainEditorExtension[] compMainExtions;
 	
 	public MainEditor() {
@@ -152,7 +153,7 @@ public class MainEditor extends EditorExtension {
 		parent.setLayout(gl_parent);
 		
 		// 에디터 확장을 위한 기본 베이스 위젲을 설정합니다.
-		SashForm sashFormExtension = new SashForm(parent, SWT.NONE);
+		sashFormExtension = new SashForm(parent, SWT.NONE);
 		sashFormExtension.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 				
 		SashForm sashForm = new SashForm(sashFormExtension, SWT.VERTICAL);
@@ -392,7 +393,7 @@ public class MainEditor extends EditorExtension {
 		}
 		
 		if(intSashCnt >= 2) {
-			sashFormExtension.setWeights(new int[] {70, 30});
+			sashFormExtension.setWeights(new int[] {100, 0});
 		}
 		// 올챙이 확장에 관한 코드를 넣습니다. ===================================================================
 		
@@ -824,5 +825,9 @@ public class MainEditor extends EditorExtension {
 
 	public IMainEditorExtension[] getMainEditorExtions() {
 		return compMainExtions;
-	}	
+	}
+	
+	public SashForm getSashFormExtension() {
+		return sashFormExtension;
+	}
 }
