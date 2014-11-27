@@ -31,9 +31,6 @@ public class TadpoleSQLIteDDL extends NLS {
 	public static String executed_sql_resource;
 	public static String executed_sql_resource_data;
 	
-	public static String notes;
-	public static String notes_detail;
-	
 	public static String external_browser_info;
 	
 	public static String schema_history;
