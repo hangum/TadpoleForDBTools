@@ -116,6 +116,10 @@ public class Messages extends NLS {
 	public static String UserInfoPerference_lblSecretKey_text_1;
 	public static String UserInfoPerference_lblQrcodeUrl_text;
 	public static String UserInfoPerference_lblOptCode_text;
+	public static String RDBPreferencePage_lblCommitCount_text;
+	public static String RDBPreferencePage_text_text;
+	public static String RDBPreferencePage_lblCharacterShownIn_text;
+	public static String RDBPreferencePage_text_text_1;
 	
 	static {
 		// initialize resource bundle

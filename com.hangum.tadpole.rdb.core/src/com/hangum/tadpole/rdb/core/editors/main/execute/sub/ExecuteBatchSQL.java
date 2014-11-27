@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -38,12 +39,18 @@ public class ExecuteBatchSQL {
 	 * select문의 execute 쿼리를 수행합니다.
 	 * 
 	 * @param listQuery
+	 * @param reqQuery
+	 * @param userDB
+	 * @param userType
+	 * @param intCommitCount
+	 * @param userEmail
 	 * @throws Exception
 	 */
 	public static void runSQLExecuteBatch(List<String> listQuery, 
 			final RequestQuery reqQuery,
 			final UserDBDAO userDB,
 			final String userType,
+			final int intCommitCount,
 			final String userEmail
 	) throws Exception {
 		if(!PermissionChecker.isExecute(userType, userDB, listQuery)) {
@@ -62,6 +69,7 @@ public class ExecuteBatchSQL {
 			}
 			statement = javaConn.createStatement();
 			
+			int count = 0;
 			for (String strQuery : listQuery) {
 				// 쿼리 중간에 commit이나 rollback이 있으면 어떻게 해야 하나???
 				if(!TransactionManger.transactionQuery(reqQuery.getSql(), userEmail, userDB)) {
@@ -72,6 +80,11 @@ public class ExecuteBatchSQL {
 					
 				}
 				statement.addBatch(strQuery);
+				
+				if (++count % intCommitCount == 0) {
+					statement.executeBatch();
+					count = 0;
+				}
 			}
 			statement.executeBatch();
 		} catch(Exception e) {

@@ -150,15 +150,6 @@ public class ResultMainComposite extends Composite {
 		if(logger.isDebugEnabled()) logger.debug("==> executeQuery user query is " + reqQuery.getOriginalSql());
 		
 		try {
-			
-			// 쿼리를 이미 실행 중이라면 무시합니다.
-			if(compositeResultSet.getJobQueryManager() != null) {
-				if(Job.RUNNING == compositeResultSet.getJobQueryManager().getState()) {
-					if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job ");
-					return;
-				}
-			}
-			
 			// 요청쿼리가 없다면 무시합니다. 
 			if(StringUtils.isEmpty(reqQuery.getSql())) return;
 			this.reqQuery = reqQuery;

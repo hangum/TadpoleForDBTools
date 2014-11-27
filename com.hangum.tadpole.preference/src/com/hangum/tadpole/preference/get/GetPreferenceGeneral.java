@@ -192,6 +192,26 @@ public class GetPreferenceGeneral {
 		return userInfo.getValue0();
 	}
 	
+	/**
+	 * RDB Commit count
+	 * @return
+	 */
+	public static String getRDBCommitCount() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_COMMIT_COUNT);
+		if(null == userInfo) return PreferenceDefine.RDB_COMMIT_COUNT_VALUE;
+		return userInfo.getValue0();
+	}
+	
+	/**
+	 * RDB Character shown in the column
+	 * @return
+	 */
+	public static String getRDBShowInTheColumn() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
+		if(null == userInfo) return PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE;
+		return userInfo.getValue0();
+	}
+	
 	///////////////// sql formatter 설정 ////////////////////////////////////////////////////////////////////////////
 		/** tab size */	
 		public static String getDefaultTabSize() {
