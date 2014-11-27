@@ -108,7 +108,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtCommitCount commit count
 	 */
 	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
-			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount) throws Exception {
+			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getSeq());
@@ -144,6 +144,10 @@ public class TadpoleSystem_UserInfoData {
 		
 		userInfoData.setName(PreferenceDefine.RDB_COMMIT_COUNT);
 		userInfoData.setValue0(txtCommitCount);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
+		userInfoData.setValue0(txtShownInTheColumn);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
 	
@@ -294,6 +298,11 @@ public class TadpoleSystem_UserInfoData {
 		// 에디터에서 커밋 카운트.
 		userInfoData.setName(PreferenceDefine.RDB_COMMIT_COUNT);
 		userInfoData.setValue0(PreferenceDefine.RDB_COMMIT_COUNT_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		
+		// 에디터에서 결과 화면에서 컬럼의 보여지는 캐릭터 숫자.
+		userInfoData.setName(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
+		userInfoData.setValue0(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE);
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// MONGO_DEFAULT_LIMIT

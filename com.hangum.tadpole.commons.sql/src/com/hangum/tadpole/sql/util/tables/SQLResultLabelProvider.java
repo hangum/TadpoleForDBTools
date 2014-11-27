@@ -12,7 +12,6 @@ package com.hangum.tadpole.sql.util.tables;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,6 +29,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.sql.util.resultset.ResultSetUtilDTO;
 import com.swtdesigner.ResourceManager;
@@ -76,6 +78,16 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
 	}
+	
+	/**
+	 * RDB Character shown in the column
+	 * @return
+	 */
+	public static String getRDBShowInTheColumn() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
+		if(null == userInfo) return PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE;
+		return userInfo.getValue0();
+	}
 
 	@SuppressWarnings("unchecked")
 	public String getColumnText(Object element, int columnIndex) {
@@ -86,7 +98,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			if(isPretty & RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) return addComma(obj);
 		}
 		
-		return obj == null ? PublicTadpoleDefine.DEFINE_NULL_VALUE : obj.toString();
+		return obj == null ? PublicTadpoleDefine.DEFINE_NULL_VALUE : StringUtils.abbreviate(obj.toString(), 0, Integer.parseInt(getRDBShowInTheColumn()));
 	}
 	
 	/**
