@@ -535,6 +535,14 @@ public class ResultSetComposite extends Composite {
 	 * 쿼리를 수행합니다.
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		// 쿼리를 이미 실행 중이라면 무시합니다.
+		if(jobQueryManager != null) {
+			if(Job.RUNNING == jobQueryManager.getState()) {
+				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job ");
+				return;
+			}
+		}
+
 		controlProgress(true);
 		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
 		
