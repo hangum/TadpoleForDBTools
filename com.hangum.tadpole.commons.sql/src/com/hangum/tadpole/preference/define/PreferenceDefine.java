@@ -144,4 +144,8 @@ public class PreferenceDefine {
 	/** RDB COMMIT COUNT 설정합니다 */
 	public static final String RDB_COMMIT_COUNT = "RDB_COMMIT_COUNT";
 	public static final String RDB_COMMIT_COUNT_VALUE = "1000";
+	
+	/** RDB의 결과 화면에서 컬럼에서 보여지는 캐릭터 숫자. */
+	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN = "RDB_CHARACTER_SHOW_IN_THE_COLUMN";
+	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "30";
 }
