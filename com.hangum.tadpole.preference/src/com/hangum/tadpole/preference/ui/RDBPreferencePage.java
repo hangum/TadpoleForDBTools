@@ -55,6 +55,10 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	private Label lblUserFont;
 	
 	private Combo comboRDBNumberComma;
+	
+	private Text textQueryTimeout;
+	private Text textCommitCount;
+	private Text textShowInTheColumn;
 
 	public RDBPreferencePage() {
 	}
@@ -121,6 +125,14 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		textCommitCount.setText(Messages.RDBPreferencePage_text_text);
 		textCommitCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label lblCharacterShownIn = new Label(container, SWT.NONE);
+		lblCharacterShownIn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblCharacterShownIn.setText(Messages.RDBPreferencePage_lblCharacterShownIn_text);
+		
+		textShowInTheColumn = new Text(container, SWT.BORDER);
+		textShowInTheColumn.setText(Messages.RDBPreferencePage_text_text_1);
+		textShowInTheColumn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		label.setText(""); //$NON-NLS-1$
@@ -170,24 +182,29 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		String txtRDBNumberColumnIsComman = comboRDBNumberComma.getText();
 		String txtFontInfo = lblUserFont.getText();
 		String txtCommitCount = textCommitCount.getText();
+		String txtShownInTheColumn = textShowInTheColumn.getText();
 		
 		if(!NumberUtils.isNumber(txtSelectLimit)) {
 			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_0 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
+			textSelectLimit.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtResultPage)) {
 			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_other_labelText_1 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
+			textResultPage.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtQueryTimtout)) {
 			MessageDialog.openError(getShell(), "Confirm", "Query timeout is " + Messages.RDBPreferencePage_0);
+			textQueryTimeout.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtCommitCount)) {
 			MessageDialog.openError(getShell(), "Confirm", "Commit count is " + Messages.RDBPreferencePage_0);
+			textCommitCount.setFocus();
 			return false;
 		}
 		
@@ -196,10 +213,16 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			return false;
 		}
 		
+		if(!NumberUtils.isNumber(txtShownInTheColumn)) {
+			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_0);
+			textShowInTheColumn.setFocus();
+			return false;
+		}
+		
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateRDBUserInfoData(
-					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount);
+					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT, txtSelectLimit);
@@ -210,6 +233,7 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, txtRDBNumberColumnIsComman);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_FONT, txtFontInfo);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_COMMIT_COUNT, txtCommitCount);
+			SessionManager.setUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, txtShownInTheColumn);
 			
 			
 		} catch(Exception e) {
@@ -257,6 +281,8 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		String strFontInfo = GetPreferenceGeneral.getRDBResultFont();
 		lblUserFont.setText(strFontInfo);
+		
+		textShowInTheColumn.setText(GetPreferenceGeneral.getRDBShowInTheColumn());
 	}
 	
 	/** ORACLE PLAN TABLE */
@@ -298,7 +324,5 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 					"         TIME               NUMERIC,         \r\n" + 
 					"         qblock_name        VARCHAR2(30)     \r\n" + 
 					" ) ";
-	private Text textQueryTimeout;
-	private Text textCommitCount;
 }
 
