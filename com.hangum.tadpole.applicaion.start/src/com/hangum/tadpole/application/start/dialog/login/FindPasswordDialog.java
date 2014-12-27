@@ -31,7 +31,6 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -127,16 +126,16 @@ public class FindPasswordDialog extends Dialog {
 			return;
 		}
 		UserDAO validUser;
-		try {
-			validUser = TadpoleSystem_UserQuery.checkSecurityHint(strEmail, strQuestion, strAnswer);
-		} catch (Exception e) {
-			logger.error("Find password exception", e); //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.LoginDialog_7, e.getMessage());
-			return;
-		}
+//		try {
+//			validUser = TadpoleSystem_UserQuery.checkSecurityHint(strEmail, strQuestion, strAnswer);
+//		} catch (Exception e) {
+//			logger.error("Find password exception", e); //$NON-NLS-1$
+//			MessageDialog.openError(getShell(), Messages.LoginDialog_7, e.getMessage());
+//			return;
+//		}
 		super.okPressed();
-		ChangePasswordDialog dialog = new ChangePasswordDialog(getParentShell(), validUser);
-		dialog.open();
+//		ChangePasswordDialog dialog = new ChangePasswordDialog(getParentShell(), validUser);
+//		dialog.open();
 	}
 	
 

@@ -25,8 +25,6 @@ public class UserDAO {
 	String delYn;
 	String create_time;
 	String approval_yn;
-	String security_question;
-	String security_answer;
 	
 	String use_otp;
 	String otp_secret;
@@ -34,13 +32,11 @@ public class UserDAO {
 	public UserDAO() {
 	}
 
-	public UserDAO(String email, String name, String language, String approval_yn, String security_question, String security_answer, String use_opt, String otp_secret) {
+	public UserDAO(String email, String name, String language, String approval_yn, String use_opt, String otp_secret) {
 		this.email = email;
 		this.name = name;
 		this.language = language;
 		this.approval_yn = approval_yn;
-		this.security_question = security_question;
-		this.security_answer = security_answer;
 		this.use_otp = use_opt;
 		this.otp_secret = otp_secret;
 	}
@@ -121,22 +117,6 @@ public class UserDAO {
 	 */
 	public void setApproval_yn(String approval_yn) {
 		this.approval_yn = approval_yn;
-	}
-
-	public String getSecurity_question() {
-		return security_question;
-	}
-
-	public void setSecurity_question(String security_question) {
-		this.security_question = security_question;
-	}
-
-	public String getSecurity_answer() {
-		return security_answer;
-	}
-
-	public void setSecurity_answer(String security_answer) {
-		this.security_answer = security_answer;
 	}
 
 	public String getUse_otp() {

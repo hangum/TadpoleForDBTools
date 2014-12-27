@@ -13,13 +13,11 @@ package com.hangum.tadpole.session.manager;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
@@ -30,9 +28,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.dao.system.UserRoleDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
  * tadpole의 session manager입니다
@@ -101,37 +97,37 @@ public class SessionManager {
 	public static void addSession(UserDAO loginUserDao) {
 		HttpSession sStore = RWT.getRequest().getSession();
 		
-		Map<Integer, String> mapRoleType = new HashMap<Integer, String>();
-		// 내가 속한 모든 그룹 순번이고, 이것은 사용할수 있는 디비를 조회하는 용도로 사용하기 위해 세션에 입력합니다.
-		String strGroupSeqs = "";
-		
-		try {
-			Map<Integer, String> mapUserRole = new HashMap<Integer, String>();
-			for (UserRoleDAO userRoleDAO : TadpoleSystem_UserRole.findUserRole(loginUserDao)) {
-				mapUserRole.put(userRoleDAO.getGroup_seq(), userRoleDAO.getRole_type());
-				
-				if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(userRoleDAO.getRole_type())) {
-					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
-				} else if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(userRoleDAO.getRole_type())) {
-					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
-				}
-				
-				strGroupSeqs += userRoleDAO.getGroup_seq() + ",";
-			}
-
-			strGroupSeqs = StringUtils.removeEnd(strGroupSeqs, ",");
-			sStore.setAttribute(NAME.GROUP_SEQS.toString(), strGroupSeqs);
-			
-//			// session 에 등록.
-			sStore.setAttribute(NAME.ROLE_TYPE.toString(), mapUserRole);
-			
-			// 본래 자신의  role을 넣습니다.
-			UserRoleDAO representUserRole = TadpoleSystem_UserRole.representUserRole(loginUserDao);
-			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), representUserRole.getRole_type());
-			
-		} catch(Exception e) {
-			logger.error("find user rold", e);
-		}
+//		Map<Integer, String> mapRoleType = new HashMap<Integer, String>();
+//		// 내가 속한 모든 그룹 순번이고, 이것은 사용할수 있는 디비를 조회하는 용도로 사용하기 위해 세션에 입력합니다.
+//		String strGroupSeqs = "";
+//		
+//		try {
+//			Map<Integer, String> mapUserRole = new HashMap<Integer, String>();
+//			for (UserRoleDAO userRoleDAO : TadpoleSystem_UserRole.findUserRole(loginUserDao)) {
+//				mapUserRole.put(userRoleDAO.getGroup_seq(), userRoleDAO.getRole_type());
+//				
+//				if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(userRoleDAO.getRole_type())) {
+//					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
+//				} else if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(userRoleDAO.getRole_type())) {
+//					sStore.setAttribute(NAME.GROUP_SEQ.toString(), userRoleDAO.getGroup_seq());
+//				}
+//				
+//				strGroupSeqs += userRoleDAO.getGroup_seq() + ",";
+//			}
+//
+//			strGroupSeqs = StringUtils.removeEnd(strGroupSeqs, ",");
+//			sStore.setAttribute(NAME.GROUP_SEQS.toString(), strGroupSeqs);
+//			
+////			// session 에 등록.
+//			sStore.setAttribute(NAME.ROLE_TYPE.toString(), mapUserRole);
+//			
+//			// 본래 자신의  role을 넣습니다.
+//			UserRoleDAO representUserRole = TadpoleSystem_UserRole.representUserRole(loginUserDao);
+//			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), representUserRole.getRole_type());
+//			
+//		} catch(Exception e) {
+//			logger.error("find user rold", e);
+//		}
 		
 //		sStore.setAttribute(SESSEION_NAME.GROUP_SEQ.toString(), groupSeq);		
 		sStore.setAttribute(NAME.USER_SEQ.toString(), loginUserDao.getSeq());
@@ -139,8 +135,8 @@ public class SessionManager {
 		sStore.setAttribute(NAME.LOGIN_EMAIL.toString(), loginUserDao.getEmail());
 		sStore.setAttribute(NAME.LOGIN_PASSWORD.toString(), loginUserDao.getPasswd());
 		sStore.setAttribute(NAME.LOGIN_NAME.toString(), loginUserDao.getName());
-		sStore.setAttribute(NAME.SECURITY_ANSWER.toString(), loginUserDao.getSecurity_answer());
-		sStore.setAttribute(NAME.SECURITY_QUESTION.toString(), loginUserDao.getSecurity_question());
+//		sStore.setAttribute(NAME.SECURITY_ANSWER.toString(), loginUserDao.getSecurity_answer());
+//		sStore.setAttribute(NAME.SECURITY_QUESTION.toString(), loginUserDao.getSecurity_question());
 		sStore.setAttribute(NAME.PERSPECTIVE.toString(), "default");
 		
 		sStore.setAttribute(NAME.USE_OTP.toString(), loginUserDao.getUse_otp());

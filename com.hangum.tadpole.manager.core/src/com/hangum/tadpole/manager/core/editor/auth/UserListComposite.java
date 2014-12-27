@@ -55,7 +55,6 @@ import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
  * 메니저, DBA가 사용하는 사용자리스트 화면
@@ -283,12 +282,12 @@ public class UserListComposite extends Composite {
 				MessageDialog.openWarning(getShell(), "Warning", Messages.UserListComposite_16); //$NON-NLS-1$
 			} else {
 				if(MessageDialog.openConfirm(getShell(), Messages.UserListComposite_17, Messages.UserListComposite_18)) {
-					try {
-						TadpoleSystem_UserRole.withdrawalUserRole(SessionManager.getGroupSeq(), userGroupAuser.getSeq());
-						initUI();
-					} catch(Exception e) {
-						logger.error("withdrawal group user", e); //$NON-NLS-1$
-					}
+//					try {
+//						TadpoleSystem_UserRole.withdrawalUserRole(SessionManager.getGroupSeq(), userGroupAuser.getSeq());
+//						initUI();
+//					} catch(Exception e) {
+//						logger.error("withdrawal group user", e); //$NON-NLS-1$
+//					}
 				}
 			}
 		}

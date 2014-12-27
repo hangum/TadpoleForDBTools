@@ -65,13 +65,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     public void preWindowOpen() {
-    	try {
-    		logger.info("Schedule start.........");
-			DBSummaryReporter.executer();
-			ScheduleManager.getInstance();
-		} catch(Exception e) {
-			logger.error("Schedule", e);
-		}
+//    	try {
+//    		logger.info("Schedule start.........");
+//			DBSummaryReporter.executer();
+//			ScheduleManager.getInstance();
+//		} catch(Exception e) {
+//			logger.error("Schedule", e);
+//		}
     	
 //    	not support rap yet.
 //    	String prop = IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS;

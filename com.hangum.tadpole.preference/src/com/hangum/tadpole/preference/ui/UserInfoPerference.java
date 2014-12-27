@@ -19,11 +19,15 @@ import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -39,12 +43,6 @@ import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
-
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Group;
 
 /**
  * 사용자 정보 수정
@@ -61,8 +59,8 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 	private Text textRePassword;
 	private Text textName;
 	
-	private Combo comboQuestion;
-	private Text textAnswer;
+//	private Combo comboQuestion;
+//	private Text textAnswer;
 	
 	/** OTP code */
 	private String secretKey = ""; //$NON-NLS-1$
@@ -157,26 +155,26 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		lblPasswordDescription.setText(Messages.UserInfoPerference_11);
 		lblPasswordDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblQuestion = new Label(container, SWT.NONE);
-		lblQuestion.setText(Messages.UserInfoPerference_12);
-
-		comboQuestion = new Combo(container, SWT.READ_ONLY);
-		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
-			comboQuestion.add(q.toString(), q.getOrderIndex());
-			comboQuestion.setData(q.getOrderIndex()+q.toString(), q.getKey());
-		}
-		
-		Label lblAnswer = new Label(container, SWT.NONE);
-		lblAnswer.setText(Messages.UserInfoPerference_13);
-
-		textAnswer = new Text(container, SWT.BORDER);
-		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textAnswer.setText(CipherManager.getInstance().decryption(SessionManager.getSecurityAnswer()));
-		
-
-		// because of reference of textAnswer
-		comboQuestion.select(0);
+//		Label lblQuestion = new Label(container, SWT.NONE);
+//		lblQuestion.setText(Messages.UserInfoPerference_12);
+//
+//		comboQuestion = new Combo(container, SWT.READ_ONLY);
+//		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
+//			comboQuestion.add(q.toString(), q.getOrderIndex());
+//			comboQuestion.setData(q.getOrderIndex()+q.toString(), q.getKey());
+//		}
+//		
+//		Label lblAnswer = new Label(container, SWT.NONE);
+//		lblAnswer.setText(Messages.UserInfoPerference_13);
+//
+//		textAnswer = new Text(container, SWT.BORDER);
+//		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		textAnswer.setText(CipherManager.getInstance().decryption(SessionManager.getSecurityAnswer()));
+//		
+//
+//		// because of reference of textAnswer
+//		comboQuestion.select(0);
 		
 		// google auth
 		Group grpGoogleAuth = new Group(container, SWT.NONE);
@@ -236,7 +234,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 			public void widgetSelected(SelectionEvent e) {
 				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserInfoPerference_9)) { //$NON-NLS-1$
 					try {
-						TadpoleSystem_UserRole.withdrawal(SessionManager.getSeq());
+//						TadpoleSystem_UserRole.withdrawal(SessionManager.getSeq());
 						
 						TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
 						SessionManager.logout();
@@ -250,15 +248,15 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		buttonWithdrawal.setText(Messages.UserInfoPerference_button_text);
 		new Label(container, SWT.NONE);
 		
-		String questionKey = CipherManager.getInstance().decryption(SessionManager.getSecurityQuestion());
-		if (null!= questionKey && !"".equals(questionKey.trim())) { //$NON-NLS-1$
-			try {
-				SecurityHint question = PublicTadpoleDefine.SecurityHint.valueOf(questionKey);
-				comboQuestion.select(question.getOrderIndex());
-			} catch (IllegalStateException e) {
-				// skip
-			}
-		}
+//		String questionKey = CipherManager.getInstance().decryption(SessionManager.getSecurityQuestion());
+//		if (null!= questionKey && !"".equals(questionKey.trim())) { //$NON-NLS-1$
+//			try {
+//				SecurityHint question = PublicTadpoleDefine.SecurityHint.valueOf(questionKey);
+//				comboQuestion.select(question.getOrderIndex());
+//			} catch (IllegalStateException e) {
+//				// skip
+//			}
+//		}
 
 		return container;
 	}
@@ -295,8 +293,8 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 	public boolean performOk() {
 		String pass = textPassword.getText().trim();
 		String rePass = textRePassword.getText().trim();
-		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
-		String answer = StringUtils.trimToEmpty(textAnswer.getText());
+//		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
+//		String answer = StringUtils.trimToEmpty(textAnswer.getText());
 		String useOTP = btnGetOptCode.getSelection()?"YES":"NO";
 		String otpSecretKey = textSecretKey.getText();
 		
@@ -323,8 +321,8 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		UserDAO user = new UserDAO();
 		user.setSeq(SessionManager.getSeq());
 		user.setPasswd(pass);
-		user.setSecurity_question(questionKey);
-		user.setSecurity_answer(answer);
+//		user.setSecurity_question(questionKey);
+//		user.setSecurity_answer(answer);
 		
 		user.setUse_otp(useOTP);
 		user.setOtp_secret(otpSecretKey);
@@ -335,9 +333,9 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), user.getPasswd());			
 			}
 			
-			TadpoleSystem_UserQuery.updateUserSecurityHint(user);
-			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_QUESTION.toString(), CipherManager.getInstance().encryption(questionKey));			
-			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_ANSWER.toString(), CipherManager.getInstance().encryption(answer));
+//			TadpoleSystem_UserQuery.updateUserSecurityHint(user);
+//			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_QUESTION.toString(), CipherManager.getInstance().encryption(questionKey));			
+//			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_ANSWER.toString(), CipherManager.getInstance().encryption(answer));
 			
 			TadpoleSystem_UserQuery.updateUserOTPCode(user);
 			SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.toString(), useOTP);			

@@ -41,13 +41,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.manager.core.Messages;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
  * 사용자를 그룹에 추가하기 위한 다이얼로그.
@@ -154,22 +151,22 @@ public class FindUserDialog extends Dialog {
 			if(MessageDialog.openConfirm(null, "Confirm", Messages.FindUserDialog_4)) { //$NON-NLS-1$
 				UserDAO userDAO = (UserDAO)iss.getFirstElement();
 				
-				try {
-					if(TadpoleSystem_UserRole.findGroupUserRole(SessionManager.getGroupSeq(), userDAO.getSeq())) {
-						MessageDialog.openError(null, "Error", Messages.FindUserDialog_6); //$NON-NLS-1$
-						return;
-					} else {
-						TadpoleSystem_UserRole.newUserRole(
-									SessionManager.getGroupSeq(), 
-									userDAO.getSeq(), 
-									PublicTadpoleDefine.USER_TYPE.USER.toString(), 
-									PublicTadpoleDefine.YES_NO.YES.toString(), 
-									userDAO.getName()
-								);
-					}
-				} catch(Exception e) {
-					logger.error("Fine user role", e); //$NON-NLS-1$
-				}
+//				try {
+//					if(TadpoleSystem_UserRole.findGroupUserRole(SessionManager.getGroupSeq(), userDAO.getSeq())) {
+//						MessageDialog.openError(null, "Error", Messages.FindUserDialog_6); //$NON-NLS-1$
+//						return;
+//					} else {
+//						TadpoleSystem_UserRole.newUserRole(
+////									SessionManager.getGroupSeq(), 
+//									userDAO.getSeq(), 
+//									PublicTadpoleDefine.USER_TYPE.USER.toString(), 
+//									PublicTadpoleDefine.YES_NO.YES.toString(), 
+//									userDAO.getName()
+//								);
+//					}
+//				} catch(Exception e) {
+//					logger.error("Fine user role", e); //$NON-NLS-1$
+//				}
 				
 			}
 		}

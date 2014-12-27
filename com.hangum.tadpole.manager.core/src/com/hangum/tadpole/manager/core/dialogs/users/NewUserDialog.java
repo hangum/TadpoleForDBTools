@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2014 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -46,24 +46,17 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.dao.system.UserGroupDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserGroupQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
  * Add new user Dialog
  *  
  * @author hangum
+ * @since 2014.12.01
  *
  */
 public class NewUserDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(NewUserDialog.class);
-	
-	private Composite compositeUserGroup;
-	
-	/** user group text로 신규 그룹명을 입력 받는다 */
-	private Text textUserGroup;
 	
 	private Text textEMail;
 	private Text textPasswd;
@@ -72,8 +65,8 @@ public class NewUserDialog extends Dialog {
 	
 	private Combo comboLanguage;
 	
-	private Combo comboQuestion;
-	private Text textAnswer;
+//	private Combo comboQuestion;
+//	private Text textAnswer;
 
 	/** OTP code */
 	private String secretKey = ""; //$NON-NLS-1$
@@ -114,17 +107,17 @@ public class NewUserDialog extends Dialog {
 		gridLayout.marginWidth = 4;
 		gridLayout.numColumns = 2;
 		
-		Label lblGroupName = new Label(container, SWT.NONE);
-		lblGroupName.setText(Messages.NewUserDialog_lblNewLabel_text);
+//		Label lblGroupName = new Label(container, SWT.NONE);
+//		lblGroupName.setText(Messages.NewUserDialog_lblNewLabel_text);
 		
-		compositeUserGroup = new Composite(container, SWT.NONE);
-		GridLayout gl_compositeUserGroup = new GridLayout(1, false);
-		gl_compositeUserGroup.verticalSpacing = 0;
-		gl_compositeUserGroup.horizontalSpacing = 0;
-		gl_compositeUserGroup.marginHeight = 1;
-		gl_compositeUserGroup.marginWidth = 0;
-		compositeUserGroup.setLayout(gl_compositeUserGroup);
-		compositeUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		compositeUserGroup = new Composite(container, SWT.NONE);
+//		GridLayout gl_compositeUserGroup = new GridLayout(1, false);
+//		gl_compositeUserGroup.verticalSpacing = 0;
+//		gl_compositeUserGroup.horizontalSpacing = 0;
+//		gl_compositeUserGroup.marginHeight = 1;
+//		gl_compositeUserGroup.marginWidth = 0;
+//		compositeUserGroup.setLayout(gl_compositeUserGroup);
+//		compositeUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblIdemail = new Label(container, SWT.NONE);
 		lblIdemail.setText(Messages.NewUserDialog_1);
@@ -163,22 +156,22 @@ public class NewUserDialog extends Dialog {
 		lblPasswordDescription.setText(Messages.NewUserDialog_18);
 		lblPasswordDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblQuestion = new Label(container, SWT.NONE);
-		lblQuestion.setText(Messages.NewUserDialog_22);
-
-		comboQuestion = new Combo(container, SWT.READ_ONLY);
-		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
-			comboQuestion.add(q.toString(), q.getOrderIndex());
-			comboQuestion.setData(q.getOrderIndex()+q.toString(), q.getKey());
-		}
-		comboQuestion.select(0);
-		
-		Label lblAnswer = new Label(container, SWT.NONE);
-		lblAnswer.setText(Messages.NewUserDialog_27);
-
-		textAnswer = new Text(container, SWT.BORDER);
-		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		Label lblQuestion = new Label(container, SWT.NONE);
+//		lblQuestion.setText(Messages.NewUserDialog_22);
+//
+//		comboQuestion = new Combo(container, SWT.READ_ONLY);
+//		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
+//			comboQuestion.add(q.toString(), q.getOrderIndex());
+//			comboQuestion.setData(q.getOrderIndex()+q.toString(), q.getKey());
+//		}
+//		comboQuestion.select(0);
+//		
+//		Label lblAnswer = new Label(container, SWT.NONE);
+//		lblAnswer.setText(Messages.NewUserDialog_27);
+//
+//		textAnswer = new Text(container, SWT.BORDER);
+//		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Group grpGoogleOtp = new Group(container, SWT.NONE);
 		grpGoogleOtp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
@@ -217,10 +210,10 @@ public class NewUserDialog extends Dialog {
 		textOTPCode = new Text(grpGoogleOtp, SWT.BORDER);
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		textUserGroup = new Text(compositeUserGroup, SWT.BORDER);
-		textUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		textUserGroup = new Text(compositeUserGroup, SWT.BORDER);
+//		textUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		textUserGroup.setFocus();
+		textEMail.setFocus();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
@@ -266,15 +259,15 @@ public class NewUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		String strGroupName = "";  //$NON-NLS-1$
+//		String strGroupName = "";  //$NON-NLS-1$
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String passwd = StringUtils.trimToEmpty(textPasswd.getText());
 		String rePasswd = StringUtils.trimToEmpty(textRePasswd.getText());
 		String name = StringUtils.trimToEmpty(textName.getText());
-		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
-		String answer = StringUtils.trimToEmpty(textAnswer.getText());
+//		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
+//		String answer = StringUtils.trimToEmpty(textAnswer.getText());
 		
-		if(!validation(strEmail, passwd, rePasswd, name, questionKey, answer)) return;
+//		if(!validation(strEmail, passwd, rePasswd, name, questionKey, answer)) return;
 		if(btnGetOptCode.getSelection()) {
 			if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
 				MessageDialog.openError(getShell(), "Error", Messages.NewUserDialog_40); //$NON-NLS-1$
@@ -289,32 +282,32 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		// user 입력시 
-		UserGroupDAO groupDAO = new UserGroupDAO();
+//		UserGroupDAO groupDAO = new UserGroupDAO();
 		PublicTadpoleDefine.USER_TYPE userType = PublicTadpoleDefine.USER_TYPE.USER;
 
-		strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
+//		strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			
 		userType = PublicTadpoleDefine.USER_TYPE.MANAGER;
-		// 그룹 등록
-		try {
-			groupDAO = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
-		} catch(Exception e) {
-			logger.error(Messages.NewUserDialog_8, e);
-			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_16 + e.getMessage());
-			return;
-		}
+//		// 그룹 등록
+//		try {
+//			groupDAO = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
+//		} catch(Exception e) {
+//			logger.error(Messages.NewUserDialog_8, e);
+//			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_16 + e.getMessage());
+//			return;
+//		}
 		
 		try {
 			/**
 			 * 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
 			 */
 			String approvalYn = ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.toString():PublicTadpoleDefine.YES_NO.YES.toString();
-			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn, questionKey, answer, 
+			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn,  
 					btnGetOptCode.getSelection()?"YES":"NO", textSecretKey.getText()); //$NON-NLS-1$ //$NON-NLS-2$
 			
-			// user_role 입력.
-			TadpoleSystem_UserRole.newUserRole(groupDAO.getSeq(), newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), 
-					PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
+//			// user_role 입력.
+//			TadpoleSystem_UserRole.newUserRole(/*groupDAO.getSeq(),*/ newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), 
+//					PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
 			
 //			if(!ApplicationArgumentUtils.isTestMode()) {
 //				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
@@ -379,11 +372,11 @@ public class NewUserDialog extends Dialog {
 	 */
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name, String questionKey, String answer) {
 
-		if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_23);
-			textUserGroup.setFocus();
-			return false;
-		}
+//		if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
+//			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_23);
+//			textUserGroup.setFocus();
+//			return false;
+//		}
 		
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_7);
@@ -401,10 +394,10 @@ public class NewUserDialog extends Dialog {
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);
 			textEMail.setFocus();
 			return false;
-		} else if("".equals(answer)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_26);
-			textAnswer.setFocus();
-			return false;
+//		} else if("".equals(answer)) { //$NON-NLS-1$
+//			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_26);
+//			textAnswer.setFocus();
+//			return false;
 		}
 		
 		if(!strPass.equals(rePasswd)) {
@@ -415,13 +408,13 @@ public class NewUserDialog extends Dialog {
 		
 		//  신규 그룹 입력시 오류 검증
 //		if(btnManager != null && btnManager.getSelection()) {
-			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
-			// 동일한 그룹명이 있는 지 검증한다.
-			if(TadpoleSystem_UserGroupQuery.isUserGroup(strGroupName)) {
-				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_25);
-				textUserGroup.setFocus();
-				return false;
-			}
+//			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
+//			// 동일한 그룹명이 있는 지 검증한다.
+//			if(TadpoleSystem_UserGroupQuery.isUserGroup(strGroupName)) {
+//				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_25);
+//				textUserGroup.setFocus();
+//				return false;
+//			}
 //		}
 		
 		try {
