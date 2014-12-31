@@ -223,7 +223,7 @@ public class TadpoleSQLTransactionManager {
 	public static String getKey(final String userId, final UserDBDAO userDB) {
 		return userId + PublicTadpoleDefine.DELIMITER + 
 				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
-				userDB.getDbms_types() 		+ PublicTadpoleDefine.DELIMITER +
+				userDB.getDbms_type() 		+ PublicTadpoleDefine.DELIMITER +
 				userDB.getSeq()  			+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUsers() 			+ PublicTadpoleDefine.DELIMITER ;
 	}

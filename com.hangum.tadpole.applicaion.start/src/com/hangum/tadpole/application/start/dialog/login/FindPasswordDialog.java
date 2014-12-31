@@ -25,8 +25,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
@@ -84,18 +82,18 @@ public class FindPasswordDialog extends Dialog {
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblQuestion = new Label(container, SWT.NONE);
-		lblQuestion.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblQuestion.setText(Messages.FindPasswordDialog_4);
-
-		comboQuestion = new Combo(container, SWT.READ_ONLY);
-		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
-			comboQuestion.add(q.toString(), q.getOrderIndex());
-			comboQuestion.setData(q.toString(), q.getKey());
-		}
-		comboQuestion.setVisibleItemCount(8);
-		comboQuestion.select(0);
+//		Label lblQuestion = new Label(container, SWT.NONE);
+//		lblQuestion.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblQuestion.setText(Messages.FindPasswordDialog_4);
+//
+//		comboQuestion = new Combo(container, SWT.READ_ONLY);
+//		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
+//			comboQuestion.add(q.toString(), q.getOrderIndex());
+//			comboQuestion.setData(q.toString(), q.getKey());
+//		}
+//		comboQuestion.setVisibleItemCount(8);
+//		comboQuestion.select(0);
 		
 		Label lblAnswer = new Label(container, SWT.NONE);
 		lblAnswer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));

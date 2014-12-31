@@ -49,9 +49,9 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/**
 	 * 사용자 seq
 	 */
-	private final int userSeq 			= SessionManager.getSeq();
+	private final int userSeq 			= SessionManager.getUserSeq();
 	protected String strRoleType 		= "";
-	protected final int intUserSeq 		= SessionManager.getSeq();
+//	protected final int intUserSeq 		= SessionManager.getSeq();
 	
 	/** 현재 에디터에서 처리해야하는 디비 정보. */
 	protected UserDBDAO userDB;

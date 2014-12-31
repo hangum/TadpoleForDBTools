@@ -272,7 +272,7 @@ public class LoginDialog extends Dialog {
 				Map<String, Object> retMap = (HashMap<String, Object>)element;
 				
 				ChartItem item = new ChartItem(barChart);
-			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			    item.setText(retMap.get("dbms_type") + " (" +  retMap.get("tot") + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			    item.setColor(colors.next());
 			    
 			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 300; //$NON-NLS-1$ //$NON-NLS-2$
@@ -327,11 +327,14 @@ public class LoginDialog extends Dialog {
 				password = TadpoleSystemInitializer.MANAGER_PASSWD;
 			}
 			
-			// 정상이면 session에 로그인 정보를 입력하고 
 			try {
-				// template code
-				SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
+				UserDAO userDao = TadpoleSystem_UserQuery.login(userId, password);
 				
+				// 정상이면 session에 로그인 정보를 입력하고
+				SessionManager.addSession(userDao);
+				
+				// save login_history
+				TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
 			} catch (Exception e) {
 				logger.error(Messages.LoginDialog_9, e);
 				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());

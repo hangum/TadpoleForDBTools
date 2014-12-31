@@ -444,16 +444,16 @@ public class ResourceManageEditor extends EditorPart {
 
 		try {
 			treeList.clear();
-			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
-			for (String groupName : groupNames) {
-				ManagerListDTO parent = new ManagerListDTO(groupName);
-				treeList.add(parent);
-			}
-
-			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
-			for (UserDBDAO userDBDAO : userDBS) {
-				addUserDB(userDBDAO, false);
-			}
+//			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
+//			for (String groupName : groupNames) {
+//				ManagerListDTO parent = new ManagerListDTO(groupName);
+//				treeList.add(parent);
+//			}
+//
+//			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+//			for (UserDBDAO userDBDAO : userDBS) {
+//				addUserDB(userDBDAO, false);
+//			}
 
 		} catch (Exception e) {
 			logger.error("initialize Managerview", e);

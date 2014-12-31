@@ -321,13 +321,13 @@ public class SchemaHistoryEditor extends EditorPart {
 	 */
 	private void initUI() {
 		try {
-			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
-			for (UserDBDAO userDBDAO : listUserDBDAO) {
-				if(userDBDAO.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
-					comboDisplayName.add(userDBDAO.getDisplay_name());
-					comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
-				}
-			}
+//			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
+//			for (UserDBDAO userDBDAO : listUserDBDAO) {
+//				if(userDBDAO.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+//					comboDisplayName.add(userDBDAO.getDisplay_name());
+//					comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
+//				}
+//			}
 			comboDisplayName.select(0);
 			
 			// Range of date

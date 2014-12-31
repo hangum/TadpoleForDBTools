@@ -16,10 +16,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
+import com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBOriginalDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -131,11 +133,11 @@ public class TadpoleSystem_UserDBQuery {
 		// data encryption
 		UserDBOriginalDAO userEncryptDao = new UserDBOriginalDAO();
 		userEncryptDao.setUser_seq(userDb.getUser_seq());
-		userEncryptDao.setDbms_types(userDb.getDbms_types());
+		userEncryptDao.setDbms_type(userDb.getDbms_type());
 		userEncryptDao.setUrl(CipherManager.getInstance().encryption(userDb.getUrl()));
 		userEncryptDao.setDb(CipherManager.getInstance().encryption(userDb.getDb()));
 		
-		userEncryptDao.setGroup_seq(userDb.getGroup_seq());
+//		userEncryptDao.setGroup_seq(userDb.getGroup_seq());
 		userEncryptDao.setGroup_name(userDb.getGroup_name());
 		userEncryptDao.setDisplay_name(userDb.getDisplay_name());
 		userEncryptDao.setOperation_type(userDb.getOperation_type());
@@ -172,6 +174,9 @@ public class TadpoleSystem_UserDBQuery {
 		
 		userDb.setSeq(insertedUserDB.getSeq());
 		
+		// tadpole_user_db_role
+		insertTadpoleUserDBRole(userSeq, insertedUserDB.getSeq(), PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN);
+		
 		// table_filter 등록
 		sqlClient.insert("userDBFilterInsert", userDb);
 		
@@ -184,6 +189,26 @@ public class TadpoleSystem_UserDBQuery {
 		}
 		
 		return insertedUserDB;
+	}
+	
+	/**
+	 * insert tadpole_user_db_role table
+	 * 
+	 * @param userSeq
+	 * @param dbSeq
+	 * @param roleId
+	 * @throws Exception
+	 */
+	public static void insertTadpoleUserDBRole(int userSeq, int dbSeq, PublicTadpoleDefine.USER_ROLE_TYPE roleType) throws Exception {
+		TadpoleUserDbRoleDAO userDBRoleDao = new TadpoleUserDbRoleDAO();
+		userDBRoleDao.setUser_seq(userSeq);
+		userDBRoleDao.setDb_seq(dbSeq);
+		userDBRoleDao.setRole_id(roleType.toString());
+		
+		// Insert tadpole_user_db_role table. 
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.insert("userDBRoleInsert", userDBRoleDao);
+
 	}
 	
 	/**
@@ -200,11 +225,11 @@ public class TadpoleSystem_UserDBQuery {
 		UserDBOriginalDAO userEncryptDao = new UserDBOriginalDAO();
 		userEncryptDao.setUser_seq(userSeq);
 		userEncryptDao.setSeq(oldUserDb.getSeq());
-		userEncryptDao.setDbms_types(newUserDb.getDbms_types());
+		userEncryptDao.setDbms_type(newUserDb.getDbms_type());
 		userEncryptDao.setUrl(CipherManager.getInstance().encryption(newUserDb.getUrl()));
 		userEncryptDao.setDb(CipherManager.getInstance().encryption(newUserDb.getDb()));
 		
-		userEncryptDao.setGroup_seq(newUserDb.getGroup_seq());
+//		userEncryptDao.setGroup_seq(newUserDb.getGroup_seq());
 		userEncryptDao.setGroup_name(newUserDb.getGroup_name());
 		userEncryptDao.setDisplay_name(newUserDb.getDisplay_name());
 		userEncryptDao.setOperation_type(newUserDb.getOperation_type());
@@ -252,9 +277,9 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserDBDAO> getUserDB(String groupSeqs) throws Exception {
+	public static List<UserDBDAO> getUserDB() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<UserDBDAO> userDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", groupSeqs);//SessionManager.getSeq()); //$NON-NLS-1$
+		List<UserDBDAO> userDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getUserSeq());//SessionManager.getSeq()); //$NON-NLS-1$
 	
 //		TODO 이 로직이 왜 쓰이는지 몰라서 블럭 처리 - hangum.0613
 //		// user가 manager 일 경우 (session에 넣을때 부터..)
@@ -266,16 +291,16 @@ public class TadpoleSystem_UserDBQuery {
 		return userDB;
 	}
 	
-	/**
-	 * 유저디비 + 메니저 디비 
-	 * 단, 메니저일경우 메니져 디비만 리턴한다.
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public static List<UserDBDAO> getUserDB() throws Exception {
-		return getUserDB(SessionManager.getGroupSeqs());
-	}
+//	/**
+//	 * 유저디비 + 메니저 디비 
+//	 * 단, 메니저일경우 메니져 디비만 리턴한다.
+//	 * 
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static List<UserDBDAO> getUserDB() throws Exception {
+//		return getUserDB(SessionManager.getGroupSeqs());
+//	}
 	
 	/**
 	 * 모든 유저의 디비를 보여 줍니다.
@@ -322,15 +347,15 @@ public class TadpoleSystem_UserDBQuery {
 		return  (List<UserDBDAO>)sqlClient.queryForList("userDB", ""+userSeq); //$NON-NLS-1$
 	}
 	
-	/**
-	 * 유저의 디비를 보여 줍니다.
-	 * @return
-	 * @throws Exception
-	 */
-	public static List<UserDBDAO> getAllUserDBManager(String userSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return  (List<UserDBDAO>)sqlClient.queryForList("userDBManager", ""+userSeq); //$NON-NLS-1$
-	}
+//	/**
+//	 * 유저의 디비를 보여 줍니다.
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static List<UserDBDAO> getAllUserDBManager(String userSeq) throws Exception {
+//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+//		return  (List<UserDBDAO>)sqlClient.queryForList("userDBManager", ""+userSeq); //$NON-NLS-1$
+//	}
 	
 	/**
 	 * 유저 삭제

@@ -250,15 +250,15 @@ public class MongoDBImportEditor extends EditorPart {
 		
 		try {
 			int visibleItemCount = 0;
-			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
-			for (UserDBDAO userDBDAO : userDBS) {
-				// 임포트 하려는 자신은 제외 
-				if(targetDBDAO.getSeq() != userDBDAO.getSeq()) {
-					comboDBList.add(userDBDAO.getDisplay_name());
-					comboDBList.setData(userDBDAO.getDisplay_name(), userDBDAO);
-					visibleItemCount++;
-				}
-			}
+//			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+//			for (UserDBDAO userDBDAO : userDBS) {
+//				// 임포트 하려는 자신은 제외 
+//				if(targetDBDAO.getSeq() != userDBDAO.getSeq()) {
+//					comboDBList.add(userDBDAO.getDisplay_name());
+//					comboDBList.setData(userDBDAO.getDisplay_name(), userDBDAO);
+//					visibleItemCount++;
+//				}
+//			}
 			comboDBList.setVisibleItemCount(visibleItemCount);
 			comboDBList.select(0);
 			initCombo();
@@ -297,7 +297,7 @@ public class MongoDBImportEditor extends EditorPart {
 			if(tabFolderQuery.getSelectionIndex() == 0) {
 				
 				DBImport dbImport = null;
-				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(sourceDBDAO.getDbms_types())) {
+				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == sourceDBDAO.getDBDefine()) {
 					dbImport = new MongoDBCollectionToMongodBImport(sourceDBDAO, targetDBDAO, tableColumnListComposite.getSelectListTables());
 				} else {
 					dbImport = new RDBTableToMongoDBImport(sourceDBDAO, targetDBDAO, tableColumnListComposite.getSelectListTables());
@@ -307,7 +307,7 @@ public class MongoDBImportEditor extends EditorPart {
 				
 				
 			} else if(tabFolderQuery.getSelectionIndex() == 1) {	
-				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(sourceDBDAO.getDbms_types())) {
+				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == sourceDBDAO.getDBDefine()) {
 					MessageDialog.openInformation(null, "Confirm", "Not support MongoDB.");
 					return;
 				} else {

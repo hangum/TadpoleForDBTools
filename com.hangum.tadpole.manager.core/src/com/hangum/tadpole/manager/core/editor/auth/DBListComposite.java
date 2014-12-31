@@ -54,13 +54,11 @@ import com.hangum.tadpole.commons.util.ImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -176,25 +174,25 @@ public class DBListComposite extends Composite {
 			});
 			tltmModify.setToolTipText("Modify");
 			
-			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
-			tltmDbExport.setImage(ImageUtils.getExport());
-			tltmDbExport.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					exportDB();
-				}
-			});
-			tltmDbExport.setToolTipText("DB Export");
-			
-			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
-			tltmDbImport.setImage(ImageUtils.getImport()); //$NON-NLS-1$
-			tltmDbImport.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					importDB();
-				}
-			});
-			tltmDbImport.setToolTipText("DB Import");
+//			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
+//			tltmDbExport.setImage(ImageUtils.getExport());
+//			tltmDbExport.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					exportDB();
+//				}
+//			});
+//			tltmDbExport.setToolTipText("DB Export");
+//			
+//			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
+//			tltmDbImport.setImage(ImageUtils.getImport()); //$NON-NLS-1$
+//			tltmDbImport.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					importDB();
+//				}
+//			});
+//			tltmDbImport.setToolTipText("DB Import");
 //		}
 		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
@@ -255,13 +253,13 @@ public class DBListComposite extends Composite {
 				IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
 				if(ss.isEmpty()) return;
 				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
-				if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
-					tltmModify.setEnabled(true);
-					tltmDBDelete.setEnabled(true);	
-				} else {
-					tltmModify.setEnabled(false);
-					tltmDBDelete.setEnabled(false);
-				}
+//				if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
+//					tltmModify.setEnabled(true);
+//					tltmDBDelete.setEnabled(true);	
+//				} else {
+//					tltmModify.setEnabled(false);
+//					tltmDBDelete.setEnabled(false);
+//				}
 				
 				tltmQueryHistory.setEnabled(true);
 				tltmSQLEditor.setEnabled(true);
@@ -338,15 +336,15 @@ public class DBListComposite extends Composite {
 		if(!ss.isEmpty()) {
 			UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 			
-			if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
-				final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
-				final int ret = dialog.open();
-				
-				if(ret == Dialog.OK) {
-					treeViewerDBList.setInput(initData());
-					refreshConnections();
-				}
-			}
+//			if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
+//				final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
+//				final int ret = dialog.open();
+//				
+//				if(ret == Dialog.OK) {
+//					treeViewerDBList.setInput(initData());
+//					refreshConnections();
+//				}
+//			}
 		}
 	}
 	
@@ -361,12 +359,12 @@ public class DBListComposite extends Composite {
 			UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 				
 			try {
-				if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
-					TadpoleSystem_UserDBQuery.removeUserDB(userDB.getSeq());
-					TadpoleSQLManager.removeInstance(userDB);
-					treeViewerDBList.setInput(initData());
-					refreshConnections();
-				}
+//				if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
+//					TadpoleSystem_UserDBQuery.removeUserDB(userDB.getSeq());
+//					TadpoleSQLManager.removeInstance(userDB);
+//					treeViewerDBList.setInput(initData());
+//					refreshConnections();
+//				}
 			} catch (Exception e) { 
 				logger.error("disconnection exception", e);				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -482,9 +480,9 @@ public class DBListComposite extends Composite {
 	private List<UserDBDAO> initData() {
 		listUserDBs.clear();
 		try {
-			listUserDBs = TadpoleSystem_UserDBQuery.getAllUserDBManager(SessionManager.getGroupSeqs());
+			listUserDBs = TadpoleSystem_UserDBQuery.getUserDB();//TadpoleSystem_UserDBQuery.getAllUserDBManager(SessionManager.getGroupSeqs());
 		} catch (Exception e) {
-			logger.error("user list", e);
+			logger.error("db list", e);
 		}
 		
 		return listUserDBs;
@@ -616,7 +614,7 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 		
 		switch(columnIndex) {
 		case 0: return userDB.getGroup_name();
-		case 1: return userDB.getDbms_types();
+		case 1: return userDB.getDbms_type();
 		case 2: return userDB.getDisplay_name();
 		case 3:
 			// sqlite
@@ -654,7 +652,7 @@ class AdminCompFilter extends ViewerFilter {
 		
 		UserDBDAO userDB = (UserDBDAO)element;
 		if(userDB.getGroup_name().toLowerCase().matches(searchString)) return true;
-		if(userDB.getDbms_types().toLowerCase().matches(searchString)) return true;
+		if(userDB.getDbms_type().toLowerCase().matches(searchString)) return true;
 		if(userDB.getDisplay_name().toLowerCase().matches(searchString)) return true;
 		if(userDB.getUrl().toLowerCase().matches(searchString)) return true;
 		if(userDB.getHost() != null) if(userDB.getHost().toLowerCase().matches(searchString)) return true;

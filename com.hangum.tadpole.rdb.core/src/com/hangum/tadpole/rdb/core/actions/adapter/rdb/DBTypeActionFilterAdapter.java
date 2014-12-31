@@ -43,7 +43,7 @@ public class DBTypeActionFilterAdapter implements IActionFilter {
 			if(DB_TYPE.equals(name)) {
 				String[] dbTypes = StringUtils.split(value, ",");
 				for (String dbType : dbTypes) {
-					if(userDB.getDbms_types().equalsIgnoreCase(dbType)) {
+					if(userDB.getDbms_type().equalsIgnoreCase(dbType)) {
 						return true;
 					}
 				}

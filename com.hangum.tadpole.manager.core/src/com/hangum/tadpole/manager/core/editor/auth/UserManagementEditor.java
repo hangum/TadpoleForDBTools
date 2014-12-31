@@ -89,19 +89,19 @@ public class UserManagementEditor extends EditorPart {
 		tabFolder.setBorderVisible(false);		
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 
-		// Users
-		CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
-		tbtmItem.setText("User List");
-
-		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())) {
-			Composite compositeUserList = new AdminUserListComposite(tabFolder, SWT.NONE);
-			tbtmItem.setControl(compositeUserList);
-			compositeUserList.setLayout(new GridLayout(1, false));
-		} else {
-			Composite compositeUserList = new UserListComposite(tabFolder, SWT.NONE);
-			tbtmItem.setControl(compositeUserList);
-			compositeUserList.setLayout(new GridLayout(1, false));			
-		}
+//		// Users
+//		CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
+//		tbtmItem.setText("User List");
+//
+//		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())) {
+//			Composite compositeUserList = new AdminUserListComposite(tabFolder, SWT.NONE);
+//			tbtmItem.setControl(compositeUserList);
+//			compositeUserList.setLayout(new GridLayout(1, false));
+//		} else {
+//			Composite compositeUserList = new UserListComposite(tabFolder, SWT.NONE);
+//			tbtmItem.setControl(compositeUserList);
+//			compositeUserList.setLayout(new GridLayout(1, false));			
+//		}
 		
 		// DBs
 		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);

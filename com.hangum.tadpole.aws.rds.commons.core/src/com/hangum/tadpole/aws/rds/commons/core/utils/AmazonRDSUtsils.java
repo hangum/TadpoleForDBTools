@@ -20,9 +20,9 @@ import com.amazonaws.regions.ServiceAbbreviations;
 import com.amazonaws.services.rds.AmazonRDSClient;
 import com.amazonaws.services.rds.model.DBInstance;
 import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.sql.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
-import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * AmazonRDS Utils
@@ -90,9 +90,9 @@ public class AmazonRDSUtsils {
 					strDBMStype = DBDefine.ORACLE_DEFAULT.getDBToString();
 				}
 				
-				rdsUserDB.setDbms_types(DBDefine.getDBDefine(strDBMStype).getDBToString());
+				rdsUserDB.setDbms_type(DBDefine.getDBDefine(strDBMStype).getDBToString());
 				rdsUserDB.setDisplay_name(rdsDbInstance.getDBInstanceIdentifier() + "." + rdsDbInstance.getAvailabilityZone());
-				rdsUserDB.setOperation_type(DBOperationType.DEVELOP.toString());
+				rdsUserDB.setOperation_type(PublicTadpoleDefine.DBOperationType.DEVELOP.toString());
 				rdsUserDB.setDb(rdsDbInstance.getDBInstanceIdentifier());//getDBName());
 				rdsUserDB.setHost(rdsDbInstance.getEndpoint().getAddress());
 				rdsUserDB.setPort(""+rdsDbInstance.getEndpoint().getPort());

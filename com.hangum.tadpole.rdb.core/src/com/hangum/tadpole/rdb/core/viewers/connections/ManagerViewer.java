@@ -109,7 +109,7 @@ public class ManagerViewer extends ViewPart {
 					UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
 					addUserResouceData(userDB);
 					
-					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_types());
+					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
 				}
 				
 				//
@@ -310,7 +310,7 @@ public class ManagerViewer extends ViewPart {
 						} else {
 							
 							// 리소스 중에서 개인 리소스만 넣도록 합니다.
-							if(SessionManager.getSeq() == userDBResourceDAO.getUser_seq()) {
+							if(SessionManager.getUserSeq() == userDBResourceDAO.getUser_seq()) {
 								userDBResourceDAO.setParent(userDB);
 								listRealResource.add(userDBResourceDAO);
 							}

@@ -130,12 +130,12 @@ public abstract class AbstractLoginComposite extends Composite {
 	protected abstract void init();
 	
 	/**
-	 * DB 연결
+	 * DB 정보 저장.
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean connection() {
+	public boolean saveDBData() {
 		if(!testConnection(false)) return false;
 		
 		// 기존 데이터 업데이트
@@ -143,7 +143,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -155,7 +155,7 @@ public abstract class AbstractLoginComposite extends Composite {
 		// 신규 데이터 저장.
 		} else {
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error(Messages.AbstractLoginComposite_0, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -251,7 +251,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			if(getDataActionStatus() == DATA_STATUS.MODIFY) {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
-				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getSeq(), userDBDao, oldUserDB)) {
+				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getUserSeq(), userDBDao, oldUserDB)) {
 					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
 					return false;
 				}
@@ -259,14 +259,14 @@ public abstract class AbstractLoginComposite extends Composite {
 			} else {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
-				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getSeq(), userDBDao)) {
+				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getUserSeq(), userDBDao)) {
 					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
 					
 					return false;
 				}
 				
 				// 이름은 틀리지만, 다른 정보는 같은 이미 등록된 디비 인지 검사합니다.
-				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), userDBDao)){
+				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getUserSeq(), userDBDao)){
 					
 					// 중복 디비 등록시 사용자의 의견을 묻습니다.
 					if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {

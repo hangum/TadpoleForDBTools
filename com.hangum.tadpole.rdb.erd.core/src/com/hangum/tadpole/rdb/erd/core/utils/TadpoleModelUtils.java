@@ -70,7 +70,7 @@ public enum TadpoleModelUtils {
 	public DB getDBAllTable(UserDBDAO userDB) throws Exception {
 		this.userDB = userDB;
 		DB db = factory.createDB();
-		db.setDbType(userDB.getDbms_types());
+		db.setDbType(userDB.getDbms_type());
 		db.setId(userDB.getUsers());
 		db.setUrl(userDB.getUrl());
 		

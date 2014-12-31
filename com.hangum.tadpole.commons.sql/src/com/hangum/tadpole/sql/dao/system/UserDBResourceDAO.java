@@ -27,7 +27,7 @@ public class UserDBResourceDAO {
 	String resource_types;
 	int user_seq;
 	int db_seq;
-	int group_seq;
+//	int group_seq;
 	String name = "";
 	String shared_type = PublicTadpoleDefine.SHARED_TYPE.PUBLIC.toString();
 	String description = "";
@@ -169,19 +169,19 @@ public class UserDBResourceDAO {
 		this.delYn = delYn;
 	}
 
-	/**
-	 * @return the group_seq
-	 */
-	public int getGroup_seq() {
-		return group_seq;
-	}
-
-	/**
-	 * @param group_seq the group_seq to set
-	 */
-	public void setGroup_seq(int group_seq) {
-		this.group_seq = group_seq;
-	}
+//	/**
+//	 * @return the group_seq
+//	 */
+//	public int getGroup_seq() {
+//		return group_seq;
+//	}
+//
+//	/**
+//	 * @param group_seq the group_seq to set
+//	 */
+//	public void setGroup_seq(int group_seq) {
+//		this.group_seq = group_seq;
+//	}
 
 
 }

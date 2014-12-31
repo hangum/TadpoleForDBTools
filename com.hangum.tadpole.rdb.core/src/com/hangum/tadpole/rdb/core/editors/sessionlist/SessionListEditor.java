@@ -73,7 +73,7 @@ public class SessionListEditor extends EditorPart {
 
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.sessionlist";
 	
-	protected final int user_seq = SessionManager.getSeq();
+	protected final int user_seq = SessionManager.getUserSeq();
 	
 	private UserDBDAO userDB;
 	

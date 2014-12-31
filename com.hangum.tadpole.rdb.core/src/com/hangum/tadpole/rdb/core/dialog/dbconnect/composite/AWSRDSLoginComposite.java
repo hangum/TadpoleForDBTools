@@ -246,7 +246,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	}
 
 	@Override
-	public boolean connection() {
+	public boolean saveDBData() {
 		return true;
 	}
 
@@ -300,7 +300,7 @@ class RDSInfoLabelProvider extends LabelProvider implements ITableLabelProvider 
 		AWSRDSUserDBDAO dto = (AWSRDSUserDBDAO)element;
 
 		switch(columnIndex) {
-		case 0: return dto.getDbms_types();
+		case 0: return dto.getDbms_type();
 		case 1: return dto.getHost();
 		case 2: return dto.getPort();
 		case 3: return dto.getDb();

@@ -148,6 +148,6 @@ public class MongoConnectionManager {
 	 * @return
 	 */
 	private static String getKey(UserDBDAO userDB) {
-		return userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd();
+		return userDB.getDbms_type()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd();
 	}
 }

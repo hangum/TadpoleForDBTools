@@ -143,7 +143,7 @@ public enum DBDefine {
 	 * @return
 	 */
 	public static DBDefine getDBDefine(UserDBDAO userDB) {
-		return getDBDefine(userDB.getDbms_types());
+		return getDBDefine(userDB.getDbms_type());
 	}
 	
 	

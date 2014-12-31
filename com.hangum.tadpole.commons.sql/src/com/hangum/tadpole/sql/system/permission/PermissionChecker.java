@@ -14,7 +14,6 @@ import java.util.List;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.template.DBOperationType;
 import com.hangum.tadpole.sql.util.SQLUtil;
 
 /**
@@ -45,7 +44,7 @@ public class PermissionChecker {
 
 	/**
 	 * 쿼리가 실행 가능한지 검사합니다.
-	 * {@code UserDBDAO}의 operation_type {@code DBOperationType#REAL}인 경우 {@code Define#USER_TYPE}에서 MANAGER, ADMIN 권한 만 실행 가능합니다.
+	 * {@code UserDBDAO}의 operation_type {@code DBOperationType#REAL}인 경우 {@code Define#USER_ROLE_TYPE}에서 MANAGER, ADMIN 권한 만 실행 가능합니다.
 	 * 
 	 * @param strUserType
 	 * @param userDB
@@ -59,7 +58,7 @@ public class PermissionChecker {
 			return false;
 		}
 		
-		DBOperationType opType = DBOperationType.valueOf(userDB.getOperation_type());
+		PublicTadpoleDefine.DBOperationType opType = PublicTadpoleDefine.DBOperationType.valueOf(userDB.getOperation_type());
 		
 		// 디비권한이 read only connection 옵션이 선택되었으면 statement문만 권한을 허락합니다.
 		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_readOnlyConnect())) {
@@ -69,13 +68,13 @@ public class PermissionChecker {
 		//
 		// 유저의 권한을 검사합니다.
 		//
-		if(opType != DBOperationType.PRODUCTION) {
+		if(opType != PublicTadpoleDefine.DBOperationType.PRODUCTION) {
 			return true;
 		// real db라면 
 		} else {
-			if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
-					PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType) ||
-					PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) return true;
+			if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType) || 
+					PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strUserType) ||
+					PublicTadpoleDefine.USER_ROLE_TYPE.DBA.toString().equals(strUserType)) return true;
 			
 			// GUEST USER인 경우 SELECT 만 허락합니다.
 			if(SQLUtil.isStatement(strSQL)) return true;
@@ -93,7 +92,7 @@ public class PermissionChecker {
 	public static boolean isAdmin(String strUserType) {
 		boolean boolReturn = false;
 		
-		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType)) { 
+		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType)) { 
 			boolReturn = true;
 		}
 		
@@ -109,8 +108,8 @@ public class PermissionChecker {
 	public static boolean isDBAShow(String strUserType) {
 		boolean boolReturn = false;
 		
-		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
-				PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType)) {
+		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType) || 
+				PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strUserType)) {
 			boolReturn = true;
 		}
 		
@@ -126,9 +125,9 @@ public class PermissionChecker {
 	public static boolean isShow(String strUserType) {
 		boolean boolReturn = false;
 		
-		if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
-				PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType) ||
-				PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) {
+		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType) || 
+				PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strUserType) ||
+				PublicTadpoleDefine.USER_ROLE_TYPE.DBA.toString().equals(strUserType)) {
 			boolReturn = true;
 		}
 		
@@ -149,16 +148,16 @@ public class PermissionChecker {
 		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_readOnlyConnect())) return false;
 		
 		// 유저의 권한를 검사합니다.
-		DBOperationType opType = DBOperationType.valueOf(userDB.getOperation_type());
+		PublicTadpoleDefine.DBOperationType opType = PublicTadpoleDefine.DBOperationType.valueOf(userDB.getOperation_type());
 		// real db가 아니면 모든 사용 권한을 얻습니다.
-		if(opType != DBOperationType.PRODUCTION) {
+		if(opType != PublicTadpoleDefine.DBOperationType.PRODUCTION) {
 			return true;
 		
 		// real db라면 
 		} else {
-			if(PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(strUserType) || 
-					PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(strUserType) ||
-					PublicTadpoleDefine.USER_TYPE.DBA.toString().equals(strUserType)) return true;
+			if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType) || 
+					PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strUserType) ||
+					PublicTadpoleDefine.USER_ROLE_TYPE.DBA.toString().equals(strUserType)) return true;
 		}
 		
 		return boolReturn;

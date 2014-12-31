@@ -70,7 +70,7 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 						}
 						
 						//
-						TadpoleSystem_SchemaHistory.save(SessionManager.getSeq(), userDB, strSQL);
+						TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, strSQL);
 						
 						refreshTable();
 					} catch(Exception e) {

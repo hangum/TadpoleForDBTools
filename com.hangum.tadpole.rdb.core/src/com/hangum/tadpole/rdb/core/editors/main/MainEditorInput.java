@@ -125,9 +125,9 @@ public class MainEditorInput implements IEditorInput {
 		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
 			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
-				return String.format(userDB.getDbms_types() + " - %s", fileName);
+				return String.format(userDB.getDbms_type() + " - %s", fileName);
 			} else {
-				return String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers());
+				return String.format(userDB.getDbms_type() + " - %s:%s", userDB.getHost(), userDB.getUsers());
 			}	
 		}
 		

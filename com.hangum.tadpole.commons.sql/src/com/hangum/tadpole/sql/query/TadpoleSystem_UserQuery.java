@@ -159,6 +159,20 @@ public class TadpoleSystem_UserQuery {
 		return userInfo;
 	}
 	
+	/**
+	 * save login history
+	 * 
+	 * @param userSeq
+	 */
+	public static void saveLoginHistory(int userSeq) {
+		try {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+			sqlClient.insert("saveLoginHistory", userSeq);
+		} catch(Exception e) {
+			logger.error("save login history", e);
+		}
+	}
+	
 //	/**
 //	 * check security hint
 //	 *  

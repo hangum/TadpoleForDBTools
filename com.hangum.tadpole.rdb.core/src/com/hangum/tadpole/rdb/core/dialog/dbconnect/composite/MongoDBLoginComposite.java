@@ -34,9 +34,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionMongoDBGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * oracle login composite
@@ -189,7 +187,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
-			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
+			preDBInfo.getComboOperationType().setText( PublicTadpoleDefine.DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textHost.setText(oldUserDB.getHost());
 			textPort.setText(oldUserDB.getPort());
@@ -256,13 +254,13 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 							);
 
 		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(textDatabase.getText());
-		userDB.setGroup_seq(SessionManager.getGroupSeq());
+//		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
+		userDB.setOperation_type( PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));

@@ -120,7 +120,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		tabFolder.setSelection(0);
 		
 		// google analytic
-		AnalyticCaller.track(RDBDBInfosEditor.ID, userDB.getDbms_types());
+		AnalyticCaller.track(RDBDBInfosEditor.ID, userDB.getDbms_type());
 	}
 
 	@Override

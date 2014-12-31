@@ -67,18 +67,18 @@ public class ModifyDBDialog extends Dialog {
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.userDBDAO = userDBDAO;
-		// db groupData 
-		try {
-			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
-		} catch (Exception e1) {
-			logger.error("get group info", e1); //$NON-NLS-1$
-		}
+//		// db groupData 
+//		try {
+//			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
+//		} catch (Exception e1) {
+//			logger.error("get group info", e1); //$NON-NLS-1$
+//		}
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(userDBDAO.getDbms_types() + " Database"); //$NON-NLS-1$
+		newShell.setText(userDBDAO.getDbms_type() + " Database"); //$NON-NLS-1$
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class ModifyDBDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
+		if (!loginComposite.saveDBData()) return;
 		this.retuserDb = loginComposite.getDBDTO();
 		refreshManagerView();
 		

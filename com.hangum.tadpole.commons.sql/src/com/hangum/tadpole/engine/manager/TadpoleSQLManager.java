@@ -211,7 +211,7 @@ public class TadpoleSQLManager {
 	 */
 	public static String getKey(UserDBDAO dbInfo) {
 		return dbInfo.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
-				dbInfo.getDbms_types()  + PublicTadpoleDefine.DELIMITER +
+				dbInfo.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
 				dbInfo.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
 				dbInfo.getUsers()  		+ PublicTadpoleDefine.DELIMITER +
 				dbInfo.getPasswd()  	+ PublicTadpoleDefine.DELIMITER;

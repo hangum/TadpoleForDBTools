@@ -146,8 +146,8 @@ public class ResourceSaveDialog extends Dialog {
 		
 		retResourceDao.setDb_seq(userDB.getSeq());
 		retResourceDao.setResource_types(resourceType.toString());
-		retResourceDao.setGroup_seq(SessionManager.getGroupSeq());
-		retResourceDao.setUser_seq(SessionManager.getSeq());
+//		retResourceDao.setGroup_seq(SessionManager.getGroupSeq());
+		retResourceDao.setUser_seq(SessionManager.getUserSeq());
 		
 		retResourceDao.setName(textName.getText().trim());
 		retResourceDao.setShared_type(comboSharedType.getText());

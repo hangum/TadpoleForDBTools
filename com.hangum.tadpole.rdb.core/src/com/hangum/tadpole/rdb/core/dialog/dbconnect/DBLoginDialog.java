@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -36,9 +37,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -163,7 +162,7 @@ public class DBLoginDialog extends Dialog {
 		
 		// db groupData 
 		try {
-			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
+			groupName = new ArrayList<>();//TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}
@@ -216,7 +215,7 @@ public class DBLoginDialog extends Dialog {
 	 * add db
 	 */
 	private boolean addDB() {
-		if (loginComposite.connection()) {
+		if (loginComposite.saveDBData()) {
 			this.retuserDb = loginComposite.getDBDTO();	
 			return true;
 		}

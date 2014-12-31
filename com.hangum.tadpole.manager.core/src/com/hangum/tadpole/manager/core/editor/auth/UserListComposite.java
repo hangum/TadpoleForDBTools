@@ -251,7 +251,7 @@ public class UserListComposite extends Composite {
 		listUserGroup.clear();
 		
 		try {
-			listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(""+SessionManager.getGroupSeq()); //$NON-NLS-1$
+//			listUserGroup =  TadpoleSystem_UserQuery.getUserListPermission(""+SessionManager.getGroupSeq()); //$NON-NLS-1$
 			
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();

@@ -24,7 +24,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -34,9 +33,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
-import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.preference.Messages;
@@ -319,7 +316,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		boolean isPasswordUpdated = !pass.equals(SessionManager.getPassword());
 		
 		UserDAO user = new UserDAO();
-		user.setSeq(SessionManager.getSeq());
+		user.setSeq(SessionManager.getUserSeq());
 		user.setPasswd(pass);
 //		user.setSecurity_question(questionKey);
 //		user.setSecurity_answer(answer);

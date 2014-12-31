@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
@@ -42,7 +43,6 @@ import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.DBInfoDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.template.DBOperationType;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -169,7 +169,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
-			preDBInfo.getComboOperationType().setText(DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName());
+			preDBInfo.getComboOperationType().setText(PublicTadpoleDefine.DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName());
 			
 			textHost.setText(oldUserDB.getHost());
 			textPort.setText(oldUserDB.getPort());
@@ -247,7 +247,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	}
 	
 	@Override
-	public boolean connection() {
+	public boolean saveDBData() {
 		if(!testConnection(false)) return false;
 		
 		// 기존 데이터 업데이트
@@ -255,7 +255,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -267,28 +267,29 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		// 신규 데이터 저장.
 		} else {
 			
-			int intVersion = 0;
-			
-			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
-				// 디비 버전을 찾아옵니다.
-				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
-				intVersion = Integer.parseInt( StringUtils.substringBefore(dbInfo.getProductversion(), ".") );
+			if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+				int intVersion = 0;
 				
-			} catch (Exception e) {
-				logger.error("MSSQL Connection", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
-				
-				return false;
+				try {
+					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
+					// 디비 버전을 찾아옵니다.
+					DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
+					intVersion = Integer.parseInt( StringUtils.substringBefore(dbInfo.getProductversion(), ".") );
+					
+					if(intVersion <= 8) {
+						userDB.setDbms_type(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
+					}
+				} catch (Exception e) {
+					logger.error("MSSQL Connection", e); //$NON-NLS-1$
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
+					
+					return false;
+				}				
 			}
 			
 			try {
-				if(intVersion <= 8) {
-					userDB.setDbms_types(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
-				}
-				
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error("MSSQL", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -341,13 +342,13 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		if(logger.isDebugEnabled()) logger.debug("[db url]" + dbUrl);
 
 		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
-		userDB.setGroup_seq(SessionManager.getGroupSeq());
+//		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
+		userDB.setOperation_type( PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));

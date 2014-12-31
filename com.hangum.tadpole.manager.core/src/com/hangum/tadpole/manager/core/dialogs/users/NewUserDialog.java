@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
@@ -283,11 +282,11 @@ public class NewUserDialog extends Dialog {
 		
 		// user 입력시 
 //		UserGroupDAO groupDAO = new UserGroupDAO();
-		PublicTadpoleDefine.USER_TYPE userType = PublicTadpoleDefine.USER_TYPE.USER;
+		PublicTadpoleDefine.USER_ROLE_TYPE userType = PublicTadpoleDefine.USER_ROLE_TYPE.USER;
 
 //		strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
 			
-		userType = PublicTadpoleDefine.USER_TYPE.MANAGER;
+		userType = PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER;
 //		// 그룹 등록
 //		try {
 //			groupDAO = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
@@ -334,10 +333,10 @@ public class NewUserDialog extends Dialog {
 	 * @param name
 	 * @param email
 	 */
-	private void sendEmail(PublicTadpoleDefine.USER_TYPE userType, int groupSeq, String groupName, String name, String email) {
+	private void sendEmail(PublicTadpoleDefine.USER_ROLE_TYPE userType, int groupSeq, String groupName, String name, String email) {
 		try {
 			UserDAO userDao = null;
-			if(PublicTadpoleDefine.USER_TYPE.MANAGER == userType) {
+			if(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER == userType) {
 				userDao = TadpoleSystem_UserQuery.getAdmin();
 			} else {
 				userDao = TadpoleSystem_UserQuery.getGroupManager(groupSeq);

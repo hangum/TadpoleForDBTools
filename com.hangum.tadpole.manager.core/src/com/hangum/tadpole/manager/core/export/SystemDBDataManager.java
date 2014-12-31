@@ -67,10 +67,10 @@ public class SystemDBDataManager {
 		Gson gson = new Gson();
 		
 		for (UserDBDAO userDBDAO : listUserDB) {
-			if(userDBDAO.getGroup_seq() == SessionManager.getGroupSeq()) {
-				retStr += gson.toJson(userDBDAO);
-				retStr += PublicTadpoleDefine.LINE_SEPARATOR;
-			}
+//			if(userDBDAO.getGroup_seq() == SessionManager.getGroupSeq()) {
+//				retStr += gson.toJson(userDBDAO);
+//				retStr += PublicTadpoleDefine.LINE_SEPARATOR;
+//			}
 		}
 		// google analytic
 		AnalyticCaller.track("export user DB");
@@ -93,7 +93,7 @@ public class SystemDBDataManager {
 		// int 가 1인 이유는 시스템 버전 정보를 빼서입니다.
 		for (int i=3; i<strUserdb.length; i++) {
 			UserDBDAO userDBDAO = gson.fromJson(strUserdb[i], UserDBDAO.class);
-			TadpoleSystem_UserDBQuery.newUserDB(userDBDAO, SessionManager.getSeq());
+			TadpoleSystem_UserDBQuery.newUserDB(userDBDAO, SessionManager.getUserSeq());
 		}
 		
 		// google analytic

@@ -206,7 +206,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      */
     private void login() {
     	// If you already login?
-    	if(0 == SessionManager.getSeq()) {
+    	if(0 == SessionManager.getUserSeq()) {
     	
 	    	// Open login dialog    
 	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());

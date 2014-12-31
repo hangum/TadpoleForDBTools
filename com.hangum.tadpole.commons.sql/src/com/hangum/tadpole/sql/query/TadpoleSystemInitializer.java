@@ -268,7 +268,7 @@ public class TadpoleSystemInitializer {
 		// local db
 		if ("".equals(dbServerPath)) {
 
-			tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDBToString());
+			tadpoleEngineDB.setDbms_type(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDBToString());
 			tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDB_URL_INFO(), DEFAULT_DB_FILE_LOCATION + DB_NAME));
 			tadpoleEngineDB.setDb(DB_INFORMATION);
 			tadpoleEngineDB.setDisplay_name(DB_INFORMATION);
@@ -295,7 +295,7 @@ public class TadpoleSystemInitializer {
 				
 				// make userDB
 				if("MYSQL".equalsIgnoreCase(whichDB)) {
-					tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
+					tadpoleEngineDB.setDbms_type(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
 					tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
 					tadpoleEngineDB.setDb(database);
 					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());

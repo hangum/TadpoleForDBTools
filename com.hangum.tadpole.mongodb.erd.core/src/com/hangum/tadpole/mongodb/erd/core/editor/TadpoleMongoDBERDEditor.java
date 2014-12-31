@@ -92,7 +92,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleMongoDBERDEditor.class);
 	/** 사용자 seq */
-	private final int user_seq = SessionManager.getSeq();
+	private final int user_seq = SessionManager.getUserSeq();
 	
 	/** first init data */
 	private DB db;
@@ -134,7 +134,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 							db = factory.createDB();
 						}
 						
-						db.setDbType(userDB.getDbms_types() + " (" + userDB.getDisplay_name() + ")");
+						db.setDbType(userDB.getDbms_type() + " (" + userDB.getDisplay_name() + ")");
 					}
 					
 				} catch(Exception e) {
@@ -165,7 +165,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 							// 오류가 발생했을때는 기본 정보로 
 							MongodbFactory factory = MongodbFactory.eINSTANCE;
 							db = factory.createDB();
-							db.setDbType(userDB.getDbms_types());
+							db.setDbType(userDB.getDbms_type());
 							db.setId(userDB.getUsers());
 							db.setUrl(userDB.getUrl());
 //						} else {
@@ -388,7 +388,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 		}
 		
 		// google analytic
-		AnalyticCaller.track(TadpoleMongoDBERDEditor.ID, userDB.getDbms_types());
+		AnalyticCaller.track(TadpoleMongoDBERDEditor.ID, userDB.getDbms_type());
 	}
 	
 //	@Override

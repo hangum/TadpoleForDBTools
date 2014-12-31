@@ -89,9 +89,43 @@ public class PublicTadpoleDefine {
 	/** Tadpole support browser list  */
 	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI, IE};
 	
-	/** USER TYPE */
-	public static enum USER_TYPE {ADMIN, DBA, MANAGER, USER/*, GUEST*/};
+	/** 
+	 * This variable is user_role_table. 
+	 */
+	public static enum USER_ROLE_TYPE {SYSTEM_ADMIN, ADMIN, DBA, MANAGER, USER/*, GUEST*/};
 	
+	/**
+	 * db operation type
+	 * 
+	 * @author hangum
+	 *
+	 */
+	public enum DBOperationType {
+		PRODUCTION("Production Sever"), 
+		DEVELOP("Develop Sever"), 
+		TEST("Test Sever"),
+		BACKUP("Backup Sever"),
+		OTHERS("Others Sever");
+
+		private String typeName;
+		
+		private DBOperationType(String typeName) {
+			this.typeName = typeName;
+		}
+		
+		public String getTypeName() {
+			return typeName;
+		}
+		
+		public static DBOperationType getNameToType(String name) {
+			if(PRODUCTION.typeName.equals(name)) 	return PRODUCTION;
+			else if(DEVELOP.typeName.equals(name)) 	return DEVELOP;
+			else if(TEST.typeName.equals(name)) 	return TEST;
+			else if(BACKUP.typeName.equals(name)) 	return BACKUP;
+			else return OTHERS;
+		}
+	};
+
 	/** 에디터를 열때 오픈하는 타입을 적습니다. */
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
@@ -200,42 +234,42 @@ public class PublicTadpoleDefine {
 		return isReturn;
 	}
 	
-	/**
-	 * This is questions for security hint.<br>
-	 * Maybe you will put the value in the DB for common code.
-	 * 
-	 * @author billygoo
-	 *
-	 */
-	public enum SecurityHint {
-		QUESTION1("What is your alternate email address?", 0), //$NON-NLS-1$
-		QUESTION2("What is your favorite thing?", 1), //$NON-NLS-1$
-		QUESTION3("What elementary school did you graduate?", 2), //$NON-NLS-1$
-		QUESTION4("What is your ideal match?", 3), //$NON-NLS-1$
-		QUESTION5("What is your mother's name?", 4), //$NON-NLS-1$
-		QUESTION6("What is your father's name?", 5), //$NON-NLS-1$
-		QUESTION7("What is your favorite color?", 6), //$NON-NLS-1$
-		QUESTION8("What is your favorite food?", 7); //$NON-NLS-1$
-		
-		private String value;
-		private int order;
-		
-		private SecurityHint(String value, int order) {
-			this.value = value;
-			this.order = order;
-		}
-		
-		public String getKey() {
-			return super.toString();
-		}
-		
-		public int getOrderIndex() {
-			return order;
-		}
-
-		@Override
-		public String toString() {
-			return this.value;
-		}
-	};
+//	/**
+//	 * This is questions for security hint.<br>
+//	 * Maybe you will put the value in the DB for common code.
+//	 * 
+//	 * @author billygoo
+//	 *
+//	 */
+//	public enum SecurityHint {
+//		QUESTION1("What is your alternate email address?", 0), //$NON-NLS-1$
+//		QUESTION2("What is your favorite thing?", 1), //$NON-NLS-1$
+//		QUESTION3("What elementary school did you graduate?", 2), //$NON-NLS-1$
+//		QUESTION4("What is your ideal match?", 3), //$NON-NLS-1$
+//		QUESTION5("What is your mother's name?", 4), //$NON-NLS-1$
+//		QUESTION6("What is your father's name?", 5), //$NON-NLS-1$
+//		QUESTION7("What is your favorite color?", 6), //$NON-NLS-1$
+//		QUESTION8("What is your favorite food?", 7); //$NON-NLS-1$
+//		
+//		private String value;
+//		private int order;
+//		
+//		private SecurityHint(String value, int order) {
+//			this.value = value;
+//			this.order = order;
+//		}
+//		
+//		public String getKey() {
+//			return super.toString();
+//		}
+//		
+//		public int getOrderIndex() {
+//			return order;
+//		}
+//
+//		@Override
+//		public String toString() {
+//			return this.value;
+//		}
+//	};
 }

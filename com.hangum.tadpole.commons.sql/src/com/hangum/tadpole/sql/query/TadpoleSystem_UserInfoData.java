@@ -42,7 +42,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @throws Exception
 	 */
 	public static List<UserInfoDataDAO> getUserInfoData() throws Exception {
-		return getUserInfoData(SessionManager.getSeq());
+		return getUserInfoData(SessionManager.getUserSeq());
 	}
 	/**
 	 * 사용자 정보 데이터. 
@@ -89,7 +89,7 @@ public class TadpoleSystem_UserInfoData {
 	public static void updateValue(String key, String use) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getSeq());
+		userInfoData.setUser_seq(SessionManager.getUserSeq());
 		
 		userInfoData.setName(key);//PreferenceDefine.DEFAULT_HOME_PAGE_USE);
 		userInfoData.setValue0(use);
@@ -111,7 +111,7 @@ public class TadpoleSystem_UserInfoData {
 			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getSeq());
+		userInfoData.setUser_seq(SessionManager.getUserSeq());
 		
 		// 	select 제한  갯수		
 		userInfoData.setName(PreferenceDefine.SELECT_LIMIT_COUNT);
@@ -162,7 +162,7 @@ public class TadpoleSystem_UserInfoData {
 	public static void updateSQLFormatterInfoData(String tabSize, String sqlFormatDecode, String sqlFormatIn) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB()); 
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getSeq());
+		userInfoData.setUser_seq(SessionManager.getUserSeq());
 		
 		userInfoData.setName(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE);
 		userInfoData.setValue0(tabSize);
@@ -189,7 +189,7 @@ public class TadpoleSystem_UserInfoData {
 	public static void updateMongoDBUserInfoData(String txtLimitCount, String txtMacCount, String txtFindPage, String txtResultPage) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getSeq());
+		userInfoData.setUser_seq(SessionManager.getUserSeq());
 		
 		// 	MONGO_DEFAULT_LIMIT
 		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_LIMIT);
@@ -224,7 +224,7 @@ public class TadpoleSystem_UserInfoData {
 	public static void updateUserInfoData(String key, String value0) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getSeq());
+		userInfoData.setUser_seq(SessionManager.getUserSeq());
 		
 		userInfoData.setName(key);
 		userInfoData.setValue0(value0);

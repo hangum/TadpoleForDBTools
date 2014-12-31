@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * DB 등록시 공통으로 들어가는 정보를 나열합니다.
@@ -66,7 +66,7 @@ public class PreConnectionInfoGroup extends Group {
 		
 		comboOperationType = new Combo(this, SWT.READ_ONLY);
 		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (DBOperationType opType : DBOperationType.values()) {
+		for (PublicTadpoleDefine.DBOperationType opType : PublicTadpoleDefine.DBOperationType.values()) {
 			comboOperationType.add(opType.getTypeName());
 		}
 		comboOperationType.select(1);

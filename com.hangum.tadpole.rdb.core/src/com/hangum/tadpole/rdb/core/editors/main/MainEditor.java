@@ -569,7 +569,7 @@ public class MainEditor extends EditorExtension {
 		resultMainComposite.initMainComposite();
 		
 		// google analytic
-		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_types());
+		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
 	}
 	
 	/**

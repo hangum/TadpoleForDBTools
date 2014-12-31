@@ -88,7 +88,7 @@ public class ConnectionPoolManager {
 	 * @return
 	 */
 	private static String getKey(final UserDBDAO userDB) {
-		return userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
+		return userDB.getSeq() + userDB.getDbms_type()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
 	}
 
 }

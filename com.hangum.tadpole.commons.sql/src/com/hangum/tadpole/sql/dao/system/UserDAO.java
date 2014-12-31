@@ -28,6 +28,9 @@ public class UserDAO {
 	
 	String use_otp;
 	String otp_secret;
+	
+	/** tadpole_user_db_role column */
+	String role_id;
 
 	public UserDAO() {
 	}
@@ -133,6 +136,14 @@ public class UserDAO {
 
 	public void setOtp_secret(String otp_secret) {
 		this.otp_secret = otp_secret;
+	}
+
+	public String getRole_id() {
+		return role_id;
+	}
+
+	public void setRole_id(String role_id) {
+		this.role_id = role_id;
 	}
 
 }

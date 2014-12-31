@@ -943,7 +943,7 @@ public class ResultSetComposite extends Composite {
 			// working schema_history 에 history 를 남깁니다.
 			SchemaHistoryDAO schemaDao = null;
 			try {
-				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getSeq(), getUserDB(), reqQuery.getSql());
+				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(), reqQuery.getSql());
 			} catch(Exception e) {
 				logger.error("save schemahistory", e); //$NON-NLS-1$
 			}

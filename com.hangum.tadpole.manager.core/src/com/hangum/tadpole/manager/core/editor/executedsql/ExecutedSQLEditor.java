@@ -439,21 +439,12 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void initUIData() {
 
 		try {
-//			// 어드민 권한이면 모든 정보를 다 표현합니다.
-//			if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-				List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
-				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-					String name = userGroupAUserDAO.getUser_group_name() + " (" + userGroupAUserDAO.getEmail() + ")";
-					comboUserName.add(name);
-					comboUserName.setData(name, userGroupAUserDAO.getSeq());
-				}
-//			// 개발자 권한일 경우에는 본인만 표시합니다.
-//			} else {
-//				String name = SessionManager.getName() + " (" + SessionManager.getEMAIL() + ")";
-//				
-//				comboUserName.add(name);
-//				comboUserName.setData(name, SessionManager.getSeq());
-//			}
+//				List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
+//				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
+//					String name = userGroupAUserDAO.getUser_group_name() + " (" + userGroupAUserDAO.getEmail() + ")";
+//					comboUserName.add(name);
+//					comboUserName.setData(name, userGroupAUserDAO.getSeq());
+//				}
 			
 			if (userDAO == null) {
 				comboUserName.select(0);
@@ -461,12 +452,12 @@ public class ExecutedSQLEditor extends EditorPart {
 				comboUserName.setText(userDAO.getName() + " (" + userDAO.getEmail() + ")");
 			}
 
-			// database name combo
-			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
-			for (UserDBDAO userDBDAO : listUserDBDAO) {
-				comboDisplayName.add(userDBDAO.getDisplay_name());
-				comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
-			}
+//			// database name combo
+//			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
+//			for (UserDBDAO userDBDAO : listUserDBDAO) {
+//				comboDisplayName.add(userDBDAO.getDisplay_name());
+//				comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
+//			}
 			if (userDBDAO == null) {
 				comboDisplayName.select(0);
 			} else {

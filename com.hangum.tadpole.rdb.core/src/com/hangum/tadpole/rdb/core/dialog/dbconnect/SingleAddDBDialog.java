@@ -71,7 +71,7 @@ public class SingleAddDBDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(amazonRDSDto.getDbms_types() + " add Database"); //$NON-NLS-1$
+		newShell.setText(amazonRDSDto.getDbms_type() + " add Database"); //$NON-NLS-1$
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class SingleAddDBDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
+		if (!loginComposite.saveDBData()) return;
 		this.retuserDb = loginComposite.getDBDTO();
 		refreshManagerView();
 		

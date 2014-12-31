@@ -44,7 +44,7 @@ public class TableDragListener implements DragSourceListener {
 		if(!iss.isEmpty()) {
 
 			TableDAO td = (TableDAO)iss.getFirstElement();
-			if(userDB.getDbms_types().equals(DBDefine.SQLite_DEFAULT)) {
+			if(userDB.getDbms_type().equals(DBDefine.SQLite_DEFAULT)) {
 				event.data = userDB.getSeq() + PublicTadpoleDefine.DELIMITER + td.getName() + PublicTadpoleDefine.DELIMITER + "";
 			} else {
 				event.data = userDB.getSeq() + PublicTadpoleDefine.DELIMITER + td.getName() + PublicTadpoleDefine.DELIMITER + td.getComment();

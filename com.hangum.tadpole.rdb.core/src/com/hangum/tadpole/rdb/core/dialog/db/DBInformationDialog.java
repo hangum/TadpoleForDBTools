@@ -147,11 +147,11 @@ public class DBInformationDialog extends Dialog {
 	 * db widget
 	 */
 	private void initDBWidget() {
-		try {
-			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
-		} catch (Exception e1) {
-			logger.error("get group info", e1); //$NON-NLS-1$
-		}
+//		try {
+//			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
+//		} catch (Exception e1) {
+//			logger.error("get group info", e1); //$NON-NLS-1$
+//		}
 		selGroupName = userDB.getGroup_name();
 		
 		loginComposite = DBConnectionUtils.getDBConnection(userDB.getDBDefine(), compositeBody, groupName, selGroupName, userDB);
