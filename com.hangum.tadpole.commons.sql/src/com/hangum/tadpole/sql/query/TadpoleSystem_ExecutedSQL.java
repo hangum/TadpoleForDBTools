@@ -47,19 +47,18 @@ public class TadpoleSystem_ExecutedSQL {
 	/**
 	 * 쿼리 실행 히스토리 디테일 창을 얻습니다.
 	 * 
-	 * @param user_seq
 	 * @param dbSeq
 	 * @param executeTime
 	 * @param durationLimit
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(int user_seq, int dbSeq, long startTime, long endTime, int duringExecute) throws Exception {
+	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String dbSeq, long startTime, long endTime, int duringExecute) throws Exception {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 //		if (user_seq != -1) { // user all check
-			queryMap.put("user_seq",user_seq);
+//			queryMap.put("user_seq",user_seq);
 //		}
 //		if (dbSeq != -1) {	// db all check
 			queryMap.put("db_seq", 	dbSeq);

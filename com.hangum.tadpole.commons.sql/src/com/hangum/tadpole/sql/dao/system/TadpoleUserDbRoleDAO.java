@@ -1,5 +1,7 @@
 package com.hangum.tadpole.sql.dao.system;
 
+import java.util.Date;
+
 /**
  * Define tadple_user_db_role table
  * 
@@ -11,6 +13,12 @@ public class TadpoleUserDbRoleDAO {
 	int user_seq;
 	int db_seq;
 	String role_id;
+	String delYn;
+	Date create_time;
+	
+	/////////////////////////
+	String email;
+	String name;
 
 	public TadpoleUserDbRoleDAO() {
 	}
@@ -46,7 +54,37 @@ public class TadpoleUserDbRoleDAO {
 	public void setRole_id(String role_id) {
 		this.role_id = role_id;
 	}
-	
-	
+
+	public String getDelYn() {
+		return delYn;
+	}
+
+	public void setDelYn(String delYn) {
+		this.delYn = delYn;
+	}
+
+	public Date getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(Date create_time) {
+		this.create_time = create_time;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }

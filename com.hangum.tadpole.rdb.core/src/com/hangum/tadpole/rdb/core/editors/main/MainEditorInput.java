@@ -122,7 +122,7 @@ public class MainEditorInput implements IEditorInput {
 	@Override
 	public String getToolTipText() {
 
-		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
+		if(PermissionChecker.isShow(userDB.getRole_id())) {
 			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
 				return String.format(userDB.getDbms_type() + " - %s", fileName);

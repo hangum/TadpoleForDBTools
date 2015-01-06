@@ -26,7 +26,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
 
@@ -57,7 +56,7 @@ public class SessionManager {
 														LOGIN_PASSWORD, 
 														LOGIN_NAME, 
 								/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
-								/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
+//								/* 자신의 모든 롤 타입 */	ROLE_TYPE, 
 														USER_INFO_DATA,
 														
 														USE_OTP, OTP_SECRET_KEY,
@@ -124,7 +123,7 @@ public class SessionManager {
 //			
 //			// 본래 자신의  role을 넣습니다.
 //			UserRoleDAO representUserRole = TadpoleSystem_UserRole.representUserRole(loginUserDao);
-//			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), representUserRole.getRole_type());
+			sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), loginUserDao.getRole_type());
 //			
 //		} catch(Exception e) {
 //			logger.error("find user rold", e);
@@ -218,20 +217,20 @@ public class SessionManager {
 		return (String)sStore.getAttribute(NAME.OTP_SECRET_KEY.toString());
 	}
 	
-	/**
-	 * db에 해당하는 자신의 role을 가지고 옵니다.
-	 * 
-	 * @param groupSeq
-	 * @return
-	 */
-	public static String getRoleType(UserDBDAO userDB) {
-		HttpSession sStore = RWT.getRequest().getSession();
-		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(NAME.ROLE_TYPE.toString());
-		
-//		return mapUserRole.get(userDB.getGroup_seq());
-		return "";
-	}
-	
+//	/**
+//	 * db에 해당하는 자신의 role을 가지고 옵니다.
+//	 * 
+//	 * @param groupSeq
+//	 * @return
+//	 */
+//	public static String getRoleType(UserDBDAO userDB) {
+//		HttpSession sStore = RWT.getRequest().getSession();
+//		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(NAME.ROLE_TYPE.toString());
+//		
+////		return mapUserRole.get(userDB.getGroup_seq());
+//		return "";
+//	}
+//	
 	/**
 	 * 자신이 대표 권한을 리턴합니다.
 	 * 
@@ -251,27 +250,24 @@ public class SessionManager {
 	 */
 	public static String getRepresentRole() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		
 		return (String)sStore.getAttribute(NAME.REPRESENT_ROLE_TYPE.toString());
 	}
 	
 	public static boolean isAdmin() {
-		Map<Integer, String> mapUserRole = getAllRoleType();
-		Collection<String> collValues = mapUserRole.values();
-		return collValues.contains(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		return PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString().equals(getRepresentRole()) ? true : false;
 	}
-	
-	/**
-	 * 사용자의 모든 role type을 리턴합니다.
-	 * @return
-	 */
-	public static Map<Integer, String> getAllRoleType() {
-		HttpSession sStore = RWT.getRequest().getSession();
-		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(NAME.ROLE_TYPE.toString());
-		
-		return mapUserRole;
-	}
-	
+//	
+//	/**
+//	 * 사용자의 모든 role type을 리턴합니다.
+//	 * @return
+//	 */
+//	public static Map<Integer, String> getAllRoleType() {
+//		HttpSession sStore = RWT.getRequest().getSession();
+//		Map<Integer, String> mapUserRole = (Map)sStore.getAttribute(NAME.ROLE_TYPE.toString());
+//		
+//		return mapUserRole;
+//	}
+//	
 //	public static int getManagerSeq() {
 //		HttpSession sStore = RWT.getRequest().getSession();
 //		return (Integer)sStore.getAttribute(SESSEION_NAME.MANAGER_SEQ.toString());

@@ -16,7 +16,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -30,7 +29,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -51,21 +49,19 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ImageUtils;
-import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
-import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.dialogs.users.FindUserAndDBRoleDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
-import com.hangum.tadpole.manager.core.export.SystemDBDataManager;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
-import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
+import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -85,16 +81,12 @@ public class DBListComposite extends Composite {
 	
 	private AdminCompFilter filter;
 	private Text textSearch;
-	
+
+	private ToolItem tltmAdd; 
 	private ToolItem tltmQueryHistory;
 	private ToolItem tltmSQLEditor;
 	private ToolItem tltmModify;
 	private ToolItem tltmDBDelete;
-	
-	/** download dumy compoiste */
-	private Composite compositeDumy;
-	/** download servcie handler. */
-	private DownloadServiceHandler downloadServiceHandler;
 	
 	/**
 	 * Create the composite.
@@ -127,73 +119,48 @@ public class DBListComposite extends Composite {
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				treeViewerDBList.setInput(initData());
+				initData();
 			}
 		});
 		tltmRefresh.setToolTipText("Refresh");
 
-//		// access control
-//		if(PublicTadpoleDefine.USER_TYPE.MANAGER.toString().equals(SessionManager.getRepresentRole()) || 
-//				PublicTadpoleDefine.USER_TYPE.ADMIN.toString().equals(SessionManager.getRepresentRole())
-//				) {
-			final ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
-			tltmAdd.setImage(ImageUtils.getAdd());
-			tltmAdd.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "");
-					final int ret = dialog.open();
-					
-					if(ret == Dialog.OK) {
-						treeViewerDBList.setInput(initData());
-						refreshConnections();
-					}
-				}
-			});
-			tltmAdd.setToolTipText("Add");
-			
-			tltmDBDelete = new ToolItem(toolBar, SWT.NONE);
-			tltmDBDelete.setImage(ImageUtils.getDelete());
-			tltmDBDelete.setEnabled(false);
-			tltmDBDelete.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					deleteDB();
-				}
-			});
-			tltmDBDelete.setToolTipText("DB Delete");
+		tltmAdd = new ToolItem(toolBar, SWT.NONE);
+		tltmAdd.setImage(ImageUtils.getAdd());
+		tltmAdd.setEnabled(false);
+		tltmAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+				if(ss.isEmpty()) return;
+				
+				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell(), (UserDBDAO)ss.getFirstElement());
+				dialog.open();
+				initData();
+			}
+		});
+		tltmAdd.setToolTipText("Add User");
+		
+		tltmDBDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmDBDelete.setImage(ImageUtils.getDelete());
+		tltmDBDelete.setEnabled(false);
+		tltmDBDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				deleteDB();
+			}
+		});
+		tltmDBDelete.setToolTipText("DB Delete");
 
-			tltmModify = new ToolItem(toolBar, SWT.NONE);
-			tltmModify.setImage(ImageUtils.getModify());
-			tltmModify.setEnabled(false);
-			tltmModify.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					modifyDB();
-				}
-			});
-			tltmModify.setToolTipText("Modify");
-			
-//			ToolItem tltmDbExport = new ToolItem(toolBar, SWT.NONE);
-//			tltmDbExport.setImage(ImageUtils.getExport());
-//			tltmDbExport.addSelectionListener(new SelectionAdapter() {
-//				@Override
-//				public void widgetSelected(SelectionEvent e) {
-//					exportDB();
-//				}
-//			});
-//			tltmDbExport.setToolTipText("DB Export");
-//			
-//			ToolItem tltmDbImport = new ToolItem(toolBar, SWT.NONE);
-//			tltmDbImport.setImage(ImageUtils.getImport()); //$NON-NLS-1$
-//			tltmDbImport.addSelectionListener(new SelectionAdapter() {
-//				@Override
-//				public void widgetSelected(SelectionEvent e) {
-//					importDB();
-//				}
-//			});
-//			tltmDbImport.setToolTipText("DB Import");
-//		}
+		tltmModify = new ToolItem(toolBar, SWT.NONE);
+		tltmModify.setImage(ImageUtils.getModify());
+		tltmModify.setEnabled(false);
+		tltmModify.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				modifyDB();
+			}
+		});
+		tltmModify.setToolTipText("Modify");
 		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
 		tltmQueryHistory.setImage(ImageUtils.getQueryHistory()); //$NON-NLS-1$
@@ -233,10 +200,6 @@ public class DBListComposite extends Composite {
 			}
 		});
 		
-		// download dumy
-		compositeDumy = new Composite(compositeHead, SWT.NONE);
-		compositeDumy.setLayout(new GridLayout(1, false));
-		
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(1, false);
 		gl_compositeBody.verticalSpacing = 2;
@@ -252,17 +215,25 @@ public class DBListComposite extends Composite {
 				
 				IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
 				if(ss.isEmpty()) return;
-				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
-//				if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
-//					tltmModify.setEnabled(true);
-//					tltmDBDelete.setEnabled(true);	
-//				} else {
-//					tltmModify.setEnabled(false);
-//					tltmDBDelete.setEnabled(false);
-//				}
-				
-				tltmQueryHistory.setEnabled(true);
-				tltmSQLEditor.setEnabled(true);
+
+				Object objSelect = ss.getFirstElement();
+				if(objSelect instanceof UserDBDAO) {
+					UserDBDAO userDB = (UserDBDAO)objSelect;
+					try {
+						List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserList(userDB);
+						if(userDB.getListChildren().isEmpty()) {
+							userDB.setListChildren(listUser);
+							treeViewerDBList.refresh(userDB, true);
+							treeViewerDBList.expandToLevel(2);
+						}
+					} catch (Exception e) {
+						logger.error("get user list", e);
+					}
+					
+					toolbarCotrol(PermissionChecker.isDBAdminRole(userDB));
+				} else {
+					TadpoleUserDbRoleDAO roleDao = (TadpoleUserDbRoleDAO)objSelect;
+				}
 			}
 		});
 		treeViewerDBList.addDoubleClickListener(new IDoubleClickListener() {
@@ -276,16 +247,16 @@ public class DBListComposite extends Composite {
 		treeAdmin.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		TreeViewerColumn colGroupName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colGroupName.getColumn().setWidth(130);
-		colGroupName.getColumn().setText("Group Name");
+		colGroupName.getColumn().setWidth(150);
+		colGroupName.getColumn().setText("Group Name(eMail)");
 		
-		TreeViewerColumn colUserType = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colUserType.getColumn().setWidth(100);
-		colUserType.getColumn().setText("DB Type");
+		TreeViewerColumn colRoleName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		colRoleName.getColumn().setWidth(80);
+		colRoleName.getColumn().setText("Role");
 		
 		TreeViewerColumn colEmail = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colEmail.getColumn().setWidth(150);
-		colEmail.getColumn().setText("DB Name");
+		colEmail.getColumn().setText("Name");
 		
 		TreeViewerColumn colName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
 		colName.getColumn().setWidth(200);
@@ -305,17 +276,31 @@ public class DBListComposite extends Composite {
 		
 		treeViewerDBList.setContentProvider(new AdminUserContentProvider());
 		treeViewerDBList.setLabelProvider(new AdminUserLabelProvider());
-		treeViewerDBList.setInput(initData());
+		treeViewerDBList.setInput(listUserDBs);
+		initData();
 		treeViewerDBList.expandToLevel(2);
 		
 		filter = new AdminCompFilter();
 		treeViewerDBList.addFilter(filter);
 		
-		registerServiceHandler();
-		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 				
+	}
+	
+	/**
+	 * toolbar control
+	 * 
+	 * @param isTrue
+	 */
+	private void toolbarCotrol(boolean isTrue) {
+		tltmAdd.setEnabled(isTrue);
+		tltmModify.setEnabled(isTrue);
+		
+		tltmDBDelete.setEnabled(isTrue);	
+		
+		tltmQueryHistory.setEnabled(true);
+		tltmSQLEditor.setEnabled(true);
 	}
 	
 	private void refreshConnections() {
@@ -333,9 +318,10 @@ public class DBListComposite extends Composite {
 	 */
 	private void modifyDB() {
 		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
-		if(!ss.isEmpty()) {
-			UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
-			
+		if(ss.isEmpty()) return;
+		
+		UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
+		
 //			if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
 //				final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 //				final int ret = dialog.open();
@@ -345,7 +331,6 @@ public class DBListComposite extends Composite {
 //					refreshConnections();
 //				}
 //			}
-		}
 	}
 	
 	/**
@@ -353,79 +338,22 @@ public class DBListComposite extends Composite {
 	 */
 	private void deleteDB(){
 		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
-		if(!ss.isEmpty()) {
-			if(!MessageDialog.openConfirm(null, "Confirm", "Do you want to delete the selected database?") ) return; //$NON-NLS-1$
+		if(ss.isEmpty()) return;
+		
+		if(!MessageDialog.openConfirm(null, "Confirm", "Do you want to delete the selected database?") ) return; //$NON-NLS-1$
 
-			UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
-				
-			try {
+		UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
+		try {
 //				if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
 //					TadpoleSystem_UserDBQuery.removeUserDB(userDB.getSeq());
 //					TadpoleSQLManager.removeInstance(userDB);
 //					treeViewerDBList.setInput(initData());
 //					refreshConnections();
 //				}
-			} catch (Exception e) { 
-				logger.error("disconnection exception", e);				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
-	}
-	
-	
-	/** registery service handler */
-	private void registerServiceHandler() {
-		downloadServiceHandler = new DownloadServiceHandler();
-		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
-	}
-	
-	/**
-	 * import db list
-	 */
-	private void importDB() {
-//		FileUploadDialog fud = new FileUploadDialog(this.getShell());
-//		if(Dialog.OK == fud.open()) {
-//			
-//			try {
-//				String abstFile = fud.getListFiles().get(0);
-//				String fileContetn = FileUtils.readFileToString(new File(abstFile));
-//				
-//				SystemDBDataManager.importUserDB(fileContetn);
-//				
-//				treeViewerDBList.setInput(initData());
-//				refreshConnections();
-//			} catch(Exception e) {
-//				logger.error("Import DB exception", e);
-//				
-//				MessageDialog.openError(null, "Error", e.getMessage());
-//			}
-//		}
-	}
-	
-	/**
-	 * export db list
-	 */
-	private void exportDB() {
-		final String strDBEncrypt = SystemDBDataManager.exportUserDB(listUserDBs);
-		
-		if(!"".equals(strDBEncrypt)) {
-			if(MessageDialog.openConfirm(null, "Confirm", "사용자 디비를 export하시겠습니까?"))  { //$NON-NLS-1$
-				
-				try {
-					byte[] arrayData = strDBEncrypt.getBytes();
-					
-					downloadServiceHandler.setContentType("txt");
-					downloadServiceHandler.setName("Tadpole_DBList_Export.txt"); //$NON-NLS-1$
-					downloadServiceHandler.setByteContent(arrayData);
-					DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
-				} catch(Exception e) {
-					logger.error("DB export exception", e); //$NON-NLS-1$
-					
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(null, "Error", "DB export Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-			}
+		} catch (Exception e) { 
+			logger.error("disconnection exception", e);				
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
@@ -434,11 +362,12 @@ public class DBListComposite extends Composite {
 	 */
 	private void viewQueryHistory() {
 		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
-		if(ss != null) {
-			 UserDBDAO userDBDAO = ((UserDBDAO)ss.getFirstElement());
-			
+		if(ss.isEmpty()) return;
+		
+		Object objSelect = ss.getFirstElement();
+		if(objSelect instanceof UserDBDAO) {
 			try {
-				ExecutedSQLEditorInput esei = new ExecutedSQLEditorInput(userDBDAO);
+				ExecutedSQLEditorInput esei = new ExecutedSQLEditorInput((UserDBDAO)ss.getFirstElement());
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, ExecutedSQLEditor.ID, false);
 			} catch(Exception e) {
 				logger.error("Query History open", e); //$NON-NLS-1$
@@ -454,18 +383,16 @@ public class DBListComposite extends Composite {
 	 */
 	private void sqlEditor() {
 		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
-		if(ss != null) {
-			 UserDBDAO userDBDAO = ((UserDBDAO)ss.getFirstElement());
+		if(ss.isEmpty()) return;
+		
+		try {
+			MainEditorInput esei = new MainEditorInput((UserDBDAO)ss.getFirstElement());
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, MainEditor.ID, false);
+		} catch(Exception e) {
+			logger.error("SQL Editor open", e); //$NON-NLS-1$
 			
-			try {
-				MainEditorInput esei = new MainEditorInput(userDBDAO);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, MainEditor.ID, false);
-			} catch(Exception e) {
-				logger.error("SQL Editor open", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Editor", errStatus); //$NON-NLS-1$
-			}
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Editor", errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -477,33 +404,18 @@ public class DBListComposite extends Composite {
 	 * 
 	 * @return
 	 */
-	private List<UserDBDAO> initData() {
+	private void initData() {
 		listUserDBs.clear();
 		try {
-			listUserDBs = TadpoleSystem_UserDBQuery.getUserDB();//TadpoleSystem_UserDBQuery.getAllUserDBManager(SessionManager.getGroupSeqs());
+			listUserDBs = TadpoleSystem_UserDBQuery.getUserDB();
+			treeViewerDBList.setInput(listUserDBs);
 		} catch (Exception e) {
 			logger.error("db list", e);
 		}
-		
-		return listUserDBs;
 	}
 	
-	@Override
-	public void dispose() {
-		unregisterServiceHandler();
-		
-		super.dispose();
-	}
-	
-	/** download service handler call */
-	private void unregisterServiceHandler() {
-		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
-		downloadServiceHandler = null;
-	}
-
 	@Override
 	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
 	}
 }
 
@@ -527,11 +439,19 @@ class AdminUserContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		return ((List<UserDBDAO>) inputElement).toArray();
+		if(inputElement instanceof UserDBDAO) {
+			return ((List<UserDBDAO>) inputElement).toArray();
+		} else {
+			return ((List<TadpoleUserDbRoleDAO>) inputElement).toArray();
+		}
 	}
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
+		if(parentElement instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)parentElement;
+			return userDB.getListChildren().toArray();
+		}
 		return getElements(parentElement);
 	}
 
@@ -548,8 +468,9 @@ class AdminUserContentProvider implements ITreeContentProvider {
 	public boolean hasChildren(Object element) {
 		if(element instanceof ArrayList) {
 			return ((ArrayList)element).size() > 0;			
-		} else if(element instanceof UserGroupAUserDAO) {
-			return ((UserGroupAUserDAO)element).child.size() > 0;
+		} else if(element instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)element;
+			return userDB.getListChildren().size() > 0;
 		}
 		
 		return false;
@@ -569,40 +490,41 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		String RDB_CORE_PLUGIN_ID = "com.hangum.tadpole.rdb.core"; //$NON-NLS-1$
-		
-		if(columnIndex == 1) {
-			DBDefine dbType = ((UserDBDAO)element).getDBDefine();
-			if(DBDefine.MYSQL_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.MARIADB_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.ORACLE_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.SQLite_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.MSSQL_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.CUBRID_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.MONGODB_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
-			
-			else if(DBDefine.TAJO_DEFAULT == dbType) 
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/tajo-add.jpg"); //$NON-NLS-1$
-			else
-				return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/database-add.png"); //$NON-NLS-1$
+		if(element instanceof UserDBDAO) {
+			if(columnIndex == 2) {
+				DBDefine dbType = ((UserDBDAO)element).getDBDefine();
+				if(DBDefine.MYSQL_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.MARIADB_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.ORACLE_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.SQLite_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.MSSQL_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.CUBRID_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.POSTGRE_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.MONGODB_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
+				
+				else if(DBDefine.TAJO_DEFAULT == dbType) 
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/tajo-add.jpg"); //$NON-NLS-1$
+				else
+					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/database-add.png"); //$NON-NLS-1$
+			}
 		}
 		
 		return null;
@@ -610,22 +532,50 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		UserDBDAO userDB = (UserDBDAO)element;
+		if(element instanceof UserDBDAO) {
 		
-		switch(columnIndex) {
-		case 0: return userDB.getGroup_name();
-		case 1: return userDB.getDbms_type();
-		case 2: return userDB.getDisplay_name();
-		case 3:
-			// sqlite
-			if("".equals(userDB.getHost())) return userDB.getUrl();
-			return userDB.getHost() + ":"  + userDB.getPort();
-		case 4: return userDB.getUsers();
-		case 5: return userDB.getIs_visible();
-		case 6: return ""+userDB.getCreate_time();
+			UserDBDAO userDB = (UserDBDAO)element;
+			if(PermissionChecker.isDBAdminRole(userDB)) {
+				switch(columnIndex) {
+					case 0: return userDB.getGroup_name();
+					case 1: return userDB.getRole_id();
+					case 2: return userDB.getDisplay_name();
+					case 3:
+						// sqlite
+						if("".equals(userDB.getHost())) return userDB.getUrl();
+						return userDB.getHost() + ":"  + userDB.getPort();
+					case 4: return userDB.getUsers();
+					case 5: return userDB.getIs_visible();
+					case 6: return ""+userDB.getCreate_time();
+				}
+			} else {
+				switch(columnIndex) {
+				case 0: return userDB.getGroup_name();
+					case 1: return userDB.getRole_id();
+					case 2: return userDB.getDisplay_name();
+					case 3:
+						// sqlite
+						if("".equals(userDB.getHost())) return userDB.getUrl(userDB.getRole_id());
+						return userDB.getHost(userDB.getRole_id()) + ":"  + userDB.getPort(userDB.getRole_id());
+					case 4: return userDB.getUsers(userDB.getRole_id());
+					case 5: return userDB.getIs_visible();
+					case 6: return ""+userDB.getCreate_time();
+				}
+			}
+			
+			return "*** not set column ***";
+		} else {
+			TadpoleUserDbRoleDAO roleDao = (TadpoleUserDbRoleDAO)element;
+			switch(columnIndex) {
+				case 0: return roleDao.getEmail();
+				case 1: return roleDao.getRole_id();
+				case 2: return roleDao.getName();
+				case 6: return ""+roleDao.getCreate_time();
+			}
+			
+			return "";
 		}
 		
-		return "*** not set column ***";
 	}
 	
 }

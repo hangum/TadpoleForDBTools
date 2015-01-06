@@ -52,13 +52,10 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.sql.util.tables.SQLHistoryFilter;
@@ -87,10 +84,13 @@ public class ExecutedSQLEditor extends EditorPart {
 	/** 제일 처음 설정 될때 사용하는 dao */
 	private UserDAO userDAO;
 	private UserDBDAO userDBDAO;
+	
+	/** 사용자 db list */
+	private List<UserDBDAO> listUserDBDAO;
 
-	private Button btnUserAllCheck;
-	private Combo comboUserName;
-	private Combo comboDisplayName;
+	private Combo comboDatabase;
+	private Combo comboUser;
+	
 	private Text textMillis;
 	private TableViewer tvList;
 
@@ -122,46 +122,13 @@ public class ExecutedSQLEditor extends EditorPart {
 		gl_parent.horizontalSpacing = 2;
 		parent.setLayout(gl_parent);
 
-		Group compositeHead2 = new Group(parent, SWT.NONE);
-		compositeHead2.setText("Search");
-		compositeHead2.setLayout(new GridLayout(14, false));
-		compositeHead2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		Group compositeHead = new Group(parent, SWT.NONE);
+		compositeHead.setText("Search");
+		GridLayout gl_compositeHead = new GridLayout(2, false);
+		compositeHead.setLayout(gl_compositeHead);
+		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
-		Label lblUser = new Label(compositeHead2, SWT.NONE);
-		lblUser.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
-		GridData gd_lblUser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblUser.minimumWidth = 65;
-		gd_lblUser.widthHint = 65;
-		lblUser.setLayoutData(gd_lblUser);
-		lblUser.setText("<b>User</b>");
-
-		btnUserAllCheck = new Button(compositeHead2, SWT.CHECK);
-		btnUserAllCheck.setEnabled(false);
-		GridData gd_btnBtnuserallcheck = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_btnBtnuserallcheck.minimumWidth = 45;
-		gd_btnBtnuserallcheck.widthHint = 45;
-		btnUserAllCheck.setLayoutData(gd_btnBtnuserallcheck);
-		btnUserAllCheck.setText("All");
-		btnUserAllCheck.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				comboUserName.setEnabled(!btnUserAllCheck.getSelection());
-			}
-		});
-
-		comboUserName = new Combo(compositeHead2, SWT.READ_ONLY);
-		GridData gd_comboUserName = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
-		gd_comboUserName.widthHint = 200;
-		gd_comboUserName.minimumWidth = 200;
-		comboUserName.setLayoutData(gd_comboUserName);
-
-		Label lblBlank = new Label(compositeHead2, SWT.NONE);
-		GridData gd_lblBlank = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblBlank.minimumWidth = 15;
-		gd_lblBlank.widthHint = 15;
-		lblBlank.setLayoutData(gd_lblBlank);
-
-		Label lblDatabase = new Label(compositeHead2, SWT.NONE);
+		Label lblDatabase = new Label(compositeHead, SWT.NONE);
 		GridData gd_lblDatabase = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblDatabase.widthHint = 65;
 		gd_lblDatabase.minimumWidth = 65;
@@ -169,64 +136,62 @@ public class ExecutedSQLEditor extends EditorPart {
 		lblDatabase.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		lblDatabase.setText("<b>Database</b>");
 
-		final Button btnDbAllCheck = new Button(compositeHead2, SWT.CHECK);
-		btnDbAllCheck.setEnabled(false);
-		GridData gd_btnBtndballcheck = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_btnBtndballcheck.minimumWidth = 45;
-		gd_btnBtndballcheck.widthHint = 45;
-		btnDbAllCheck.setLayoutData(gd_btnBtndballcheck);
-		btnDbAllCheck.setText("All");
-		btnDbAllCheck.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				comboDisplayName.setEnabled(!btnDbAllCheck.getSelection());
-			}
-		});
-
-		comboDisplayName = new Combo(compositeHead2, SWT.READ_ONLY);
-		GridData gd_comboDisplayName = new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1);
+		comboDatabase = new Combo(compositeHead, SWT.READ_ONLY);
+		GridData gd_comboDisplayName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_comboDisplayName.minimumWidth = 200;
 		gd_comboDisplayName.widthHint = 200;
-		comboDisplayName.setLayoutData(gd_comboDisplayName);
-
-		Label lblDate = new Label(compositeHead2, SWT.NONE);
-		lblDate.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		comboDatabase.setLayoutData(gd_comboDisplayName);
+		
+//		Label lblUser = new Label(compositeHead, SWT.NONE);
+//		lblUser.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+//		GridData gd_lblUser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+//		gd_lblUser.minimumWidth = 65;
+//		gd_lblUser.widthHint = 65;
+//		lblUser.setLayoutData(gd_lblUser);
+//		lblUser.setText("<b>User</b>");
+//
+//		comboUser = new Combo(compositeHead, SWT.READ_ONLY);
+//		GridData gd_comboUserName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+//		gd_comboUserName.widthHint = 200;
+//		gd_comboUserName.minimumWidth = 200;
+//		comboUser.setLayoutData(gd_comboUserName);
+		
+		Composite compositeInSearch = new Composite(compositeHead, SWT.NONE);
+		compositeInSearch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 4, 1));
+		GridLayout gl_compositeInSearch = new GridLayout(7, false);
+		gl_compositeInSearch.verticalSpacing = 1;
+		gl_compositeInSearch.horizontalSpacing = 2;
+		gl_compositeInSearch.marginHeight = 1;
+		gl_compositeInSearch.marginWidth = 2;
+		compositeInSearch.setLayout(gl_compositeInSearch);
+				
+		Label lblDate = new Label(compositeInSearch, SWT.NONE);
 		lblDate.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		lblDate.setText("<b>Search date</b>");
-
-		dateTimeStart = new DateTime(compositeHead2, SWT.BORDER | SWT.DROP_DOWN);
-		Label label = new Label(compositeHead2, SWT.NONE);
+						
+		dateTimeStart = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
+		Label label = new Label(compositeInSearch, SWT.NONE);
 		label.setText("~");
-
-		dateTimeEnd = new DateTime(compositeHead2, SWT.BORDER | SWT.DROP_DOWN);
-		new Label(compositeHead2, SWT.NONE);
-
-		Label lblDuring = new Label(compositeHead2, SWT.RIGHT);
-		GridData gd_lblDuring = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 1);
-		gd_lblDuring.minimumWidth = 120;
-		gd_lblDuring.widthHint = 120;
-		lblDuring.setLayoutData(gd_lblDuring);
+								
+		dateTimeEnd = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
+												
+		Label lblDuring = new Label(compositeInSearch, SWT.RIGHT);
 		lblDuring.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		lblDuring.setText("<b>During execute</b>");
-
-		textMillis = new Text(compositeHead2, SWT.BORDER | SWT.CENTER);
-		GridData gd_textMillis = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
-		gd_textMillis.minimumWidth = 40;
-		gd_textMillis.widthHint = 40;
+																
+		textMillis = new Text(compositeInSearch, SWT.BORDER | SWT.CENTER);
+		GridData gd_textMillis = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gd_textMillis.widthHint = 70;
 		textMillis.setLayoutData(gd_textMillis);
 		textMillis.setText("50");
-
-		Label lblMilis = new Label(compositeHead2, SWT.NONE);
-		lblMilis.setText("milliseconds");
-		new Label(compositeHead2, SWT.NONE);
-		new Label(compositeHead2, SWT.NONE);
-
-		btnSearch = new Button(compositeHead2, SWT.NONE);
+																				
+		Label lblMilis = new Label(compositeInSearch, SWT.NONE);
+		lblMilis.setText("(ms)");
+		new Label(compositeHead, SWT.NONE);
+		
+		btnSearch = new Button(compositeHead, SWT.NONE);
+		btnSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnSearch.setImage(ResourceManager.getPluginImage("com.hangum.tadpole.manager.core", "resources/icons/search.png"));
-		GridData gd_btnSearch = new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1);
-		gd_btnSearch.minimumWidth = 120;
-		gd_btnSearch.widthHint = 120;
-		btnSearch.setLayoutData(gd_btnSearch);
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -234,15 +199,6 @@ public class ExecutedSQLEditor extends EditorPart {
 			}
 		});
 		btnSearch.setText("Search");
-
-		Composite compositeHead = new Composite(parent, SWT.NONE);
-		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeHead = new GridLayout(1, false);
-		gl_compositeHead.verticalSpacing = 2;
-		gl_compositeHead.marginHeight = 2;
-		gl_compositeHead.horizontalSpacing = 2;
-		gl_compositeHead.marginWidth = 2;
-		compositeHead.setLayout(gl_compositeHead);
 
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -333,19 +289,18 @@ public class ExecutedSQLEditor extends EditorPart {
 		btnShowQueryEditor.setText("Show query in the Query editor");
 
 		initUIData();
-		initBehavior();
-
-		search();
+//		initBehavior();
+//		search();
 		
 		// google analytic
 		AnalyticCaller.track(ExecutedSQLEditor.ID);
 	}
 
-	/**
-	 * Initial configuration setting of widgets
-	 */
-	private void initBehavior() {
-			
+//	/**
+//	 * Initial configuration setting of widgets
+//	 */
+//	private void initBehavior() {
+//			
 //			comboDisplayName.setEnabled(false);
 //			comboUserName.setEnabled(false);
 //		} else {
@@ -355,7 +310,7 @@ public class ExecutedSQLEditor extends EditorPart {
 //			comboDisplayName.setEnabled(false);
 //			comboUserName.setEnabled(true);
 //		}
-	}
+//	}
 
 	/**
 	 * show query editor
@@ -390,28 +345,18 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void search() {
 		listSQLHistory.clear();
 
-		// Is user DB empty.
-		if ("".equals(comboUserName.getText()) || "".equals(comboDisplayName.getText())) {
-			MessageDialog.openWarning(getSite().getShell(), "Warning", "If do not have user or database, can't be viewed.");
-			return;
-		}
-
-		// check all user
-		int user_seq;
-		if (comboUserName.getEnabled()) {
-			user_seq = (Integer) comboUserName.getData(comboUserName.getText());
-		} else {
-			user_seq = -1;
-		}
-
 		// check all db
-		int db_seq;
-		if (comboDisplayName.getEnabled()) {
-			searchUserDBDAO = (UserDBDAO) comboDisplayName.getData(comboDisplayName.getText());
-			db_seq = searchUserDBDAO.getSeq();
+		String db_seq = "";
+		if (!comboDatabase.getText().equals("All")) {
+			searchUserDBDAO = (UserDBDAO) comboDatabase.getData(comboDatabase.getText());
+			db_seq = ""+searchUserDBDAO.getSeq();
 		} else {
 			searchUserDBDAO = null;
-			db_seq = -1;
+			for(int i=0; i<listUserDBDAO.size(); i++) {
+				UserDBDAO userDB = listUserDBDAO.get(i);
+				if(i == (listUserDBDAO.size()-1)) db_seq += (""+userDB.getSeq());
+				else db_seq += userDB.getSeq() + ",";
+			}
 		}
 
 		Calendar cal = Calendar.getInstance();
@@ -420,11 +365,10 @@ public class ExecutedSQLEditor extends EditorPart {
 
 		cal.set(dateTimeEnd.getYear(), dateTimeEnd.getMonth(), dateTimeEnd.getDay(), 23, 59, 59);
 		long endTime = cal.getTimeInMillis();
-
 		int duringExecute = Integer.parseInt(textMillis.getText());
 
 		try {
-			listSQLHistory = TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(user_seq, db_seq, startTime, endTime, duringExecute);
+			listSQLHistory = TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(db_seq, startTime, endTime, duringExecute);
 			tvList.setInput(listSQLHistory);
 			tvList.refresh();
 		} catch (Exception ee) {
@@ -439,30 +383,31 @@ public class ExecutedSQLEditor extends EditorPart {
 	private void initUIData() {
 
 		try {
-//				List<UserGroupAUserDAO> listUserGroup = TadpoleSystem_UserQuery.getUserListPermission(SessionManager.getGroupSeqs());
-//				for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-//					String name = userGroupAUserDAO.getUser_group_name() + " (" + userGroupAUserDAO.getEmail() + ")";
-//					comboUserName.add(name);
-//					comboUserName.setData(name, userGroupAUserDAO.getSeq());
-//				}
+			// database name combo
+			listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
+			comboDatabase.add("All");
+			comboDatabase.setData("All", null);
 			
-			if (userDAO == null) {
-				comboUserName.select(0);
-			} else {
-				comboUserName.setText(userDAO.getName() + " (" + userDAO.getEmail() + ")");
+			for (UserDBDAO userDBDAO : listUserDBDAO) {
+				comboDatabase.add(userDBDAO.getDisplay_name());
+				comboDatabase.setData(userDBDAO.getDisplay_name(), userDBDAO);
 			}
+			comboDatabase.select(0);
 
-//			// database name combo
-//			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
-//			for (UserDBDAO userDBDAO : listUserDBDAO) {
-//				comboDisplayName.add(userDBDAO.getDisplay_name());
-//				comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
+//			List<UserDBDAO> listUserDBs = TadpoleSystem_UserDBQuery.getUserDB();
+//			comboUserName.add("All");
+//			comboUserName.setData("All", null);
+//			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
+//				String name = userGroupAUserDAO.getUser_group_name() + " (" + userGroupAUserDAO.getEmail() + ")";
+//				comboUserName.add(name);
+//				comboUserName.setData(name, userGroupAUserDAO.getSeq());
 //			}
-			if (userDBDAO == null) {
-				comboDisplayName.select(0);
-			} else {
-				comboDisplayName.setText(userDBDAO.getDisplay_name());
-			}
+//			if (userDAO == null) {
+//				comboUserName.select(0);
+//			} else {
+//				comboUserName.setText(userDAO.getName() + " (" + userDAO.getEmail() + ")");
+//			}
+
 		} catch (Exception e) {
 			logger.error("get db list", e);
 		}

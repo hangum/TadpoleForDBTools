@@ -128,7 +128,7 @@ public class MainEditor extends EditorExtension {
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
 
-		strRoleType = SessionManager.getRoleType(userDB);
+		strRoleType = userDB.getRole_id();//SessionManager.getRoleType(userDB);
 		super.setUserType(strRoleType);
 	}
 	

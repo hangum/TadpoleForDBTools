@@ -19,7 +19,9 @@ package com.hangum.tadpole.sql.dao.system;
 public class UserDAO {
 	int seq;
 	String email;
+	String email_key;
 	String passwd;
+	String role_type;
 	String name;
 	String language;
 	String delYn;
@@ -144,6 +146,22 @@ public class UserDAO {
 
 	public void setRole_id(String role_id) {
 		this.role_id = role_id;
+	}
+
+	public String getEmail_key() {
+		return email_key;
+	}
+
+	public void setEmail_key(String email_key) {
+		this.email_key = email_key;
+	}
+
+	public String getRole_type() {
+		return role_type;
+	}
+
+	public void setRole_type(String role_type) {
+		this.role_type = role_type;
 	}
 
 }

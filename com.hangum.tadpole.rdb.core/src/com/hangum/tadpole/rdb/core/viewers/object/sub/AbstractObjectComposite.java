@@ -65,7 +65,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	}
 	
 	protected String getUserRoleType() {
-		return SessionManager.getRoleType(getUserDB());
+		return userDB.getRole_id();//SessionManager.getRoleType(getUserDB());
 	}
 	
 	/**

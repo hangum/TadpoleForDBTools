@@ -175,7 +175,7 @@ public class TadpoleSystem_UserDBQuery {
 		userDb.setSeq(insertedUserDB.getSeq());
 		
 		// tadpole_user_db_role
-		insertTadpoleUserDBRole(userSeq, insertedUserDB.getSeq(), PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN);
+		TadpoleSystem_UserRole.insertTadpoleUserDBRole(userSeq, insertedUserDB.getSeq(), PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 		// table_filter 등록
 		sqlClient.insert("userDBFilterInsert", userDb);
@@ -189,26 +189,6 @@ public class TadpoleSystem_UserDBQuery {
 		}
 		
 		return insertedUserDB;
-	}
-	
-	/**
-	 * insert tadpole_user_db_role table
-	 * 
-	 * @param userSeq
-	 * @param dbSeq
-	 * @param roleId
-	 * @throws Exception
-	 */
-	public static void insertTadpoleUserDBRole(int userSeq, int dbSeq, PublicTadpoleDefine.USER_ROLE_TYPE roleType) throws Exception {
-		TadpoleUserDbRoleDAO userDBRoleDao = new TadpoleUserDbRoleDAO();
-		userDBRoleDao.setUser_seq(userSeq);
-		userDBRoleDao.setDb_seq(dbSeq);
-		userDBRoleDao.setRole_id(roleType.toString());
-		
-		// Insert tadpole_user_db_role table. 
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.insert("userDBRoleInsert", userDBRoleDao);
-
 	}
 	
 	/**
@@ -279,16 +259,7 @@ public class TadpoleSystem_UserDBQuery {
 	 */
 	public static List<UserDBDAO> getUserDB() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<UserDBDAO> userDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getUserSeq());//SessionManager.getSeq()); //$NON-NLS-1$
-	
-//		TODO 이 로직이 왜 쓰이는지 몰라서 블럭 처리 - hangum.0613
-//		// user가 manager 일 경우 (session에 넣을때 부터..)
-//		if(SessionManager.getManagerSeq() != -1) {
-//			List<UserDBDAO> userManagerDB =  (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getManagerSeq()); //$NON-NLS-1$
-//			userDB.addAll(userManagerDB);
-//		}
-		
-		return userDB;
+		return (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getUserSeq());
 	}
 	
 //	/**

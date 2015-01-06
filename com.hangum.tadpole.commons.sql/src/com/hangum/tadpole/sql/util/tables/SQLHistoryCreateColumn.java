@@ -56,10 +56,10 @@ public class SQLHistoryCreateColumn {
 		// duration
 		TableViewerColumn tvcDuration = new TableViewerColumn(tv, SWT.RIGHT);
 		TableColumn tblclmnDuration = tvcDuration.getColumn();
-		tblclmnDuration.setWidth(85);
+		tblclmnDuration.setWidth(60);
 		tblclmnDuration.setText(Messages.SQLHistoryCreateColumn_2);
 		tblclmnDuration.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDuration, 2));
-		layoutColumnLayout.addColumnData(new ColumnPixelData(75));
+		layoutColumnLayout.addColumnData(new ColumnPixelData(50));
 		
 		// rows
 		TableViewerColumn tvcRows = new TableViewerColumn(tv, SWT.RIGHT);
@@ -91,7 +91,7 @@ public class SQLHistoryCreateColumn {
 		// User name 
 		TableViewerColumn tvcUser = new TableViewerColumn(tv, SWT.NONE);
 		TableColumn tblclmnUser = tvcUser.getColumn();
-		tblclmnUser.setWidth(250);
+		tblclmnUser.setWidth(200);
 		tblclmnUser.setText(Messages.SQLHistoryCreateColumn_6);
 		tblclmnUser.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnUser, 6));
 		layoutColumnLayout.addColumnData(new ColumnPixelData(150));

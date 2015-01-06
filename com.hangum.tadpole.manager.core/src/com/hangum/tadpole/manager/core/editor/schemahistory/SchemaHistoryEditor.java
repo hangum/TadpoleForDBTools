@@ -63,10 +63,10 @@ public class SchemaHistoryEditor extends EditorPart {
 	public static String ID = "com.hangum.tadpole.manager.core.editor.schemahistory";
 	
 	private Combo comboDisplayName;
-	private Combo textWorkType;
+	private Combo comboWorkType;
 	private Text textObjectID;
 	private TableViewer tableViewer;
-	private Combo textObjectType;
+	private Combo comboObjectType;
 	
 	private DateTime dateTimeStart;
 	private DateTime dateTimeEnd;
@@ -96,28 +96,28 @@ public class SchemaHistoryEditor extends EditorPart {
 		lblWorkType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblWorkType.setText("Work Type");
 		
-		textWorkType = new Combo(compositeHead, SWT.BORDER);
-		textWorkType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textWorkType.add("");
-		textWorkType.add("CREATE");
-		textWorkType.add("ALTER");
-		textWorkType.add("DROP");
+		comboWorkType = new Combo(compositeHead, SWT.BORDER);
+		comboWorkType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboWorkType.add("");
+		comboWorkType.add("CREATE");
+		comboWorkType.add("ALTER");
+		comboWorkType.add("DROP");
 		
 		Label lblObjectType = new Label(compositeHead, SWT.NONE);
 		lblObjectType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblObjectType.setText("Object Type");
 		
-		textObjectType = new Combo(compositeHead, SWT.BORDER);
-		textObjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textObjectType.setVisibleItemCount(7);
+		comboObjectType = new Combo(compositeHead, SWT.BORDER);
+		comboObjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboObjectType.setVisibleItemCount(7);
 		
-		textObjectType.add("");
-		textObjectType.add("TABLE");
-		textObjectType.add("VIEW");
-		textObjectType.add("INDEX");
-		textObjectType.add("PROCEDURE");
-		textObjectType.add("FUNCTION");
-		textObjectType.add("TRIGGER");
+		comboObjectType.add("");
+		comboObjectType.add("TABLE");
+		comboObjectType.add("VIEW");
+		comboObjectType.add("INDEX");
+		comboObjectType.add("PROCEDURE");
+		comboObjectType.add("FUNCTION");
+		comboObjectType.add("TRIGGER");
 		
 		Label lblObjectId = new Label(compositeHead, SWT.NONE);
 		lblObjectId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -298,8 +298,8 @@ public class SchemaHistoryEditor extends EditorPart {
 		
 		try {
 			int dbSeq = ((UserDBDAO)comboDisplayName.getData(comboDisplayName.getText())).getSeq();
-			String workType = textWorkType.getText();
-			String objectType = textObjectType.getText();
+			String workType = comboWorkType.getText();
+			String objectType = comboObjectType.getText();
 			String objectId = textObjectID.getText();
 			
 			Calendar cal = Calendar.getInstance();
@@ -321,13 +321,13 @@ public class SchemaHistoryEditor extends EditorPart {
 	 */
 	private void initUI() {
 		try {
-//			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
-//			for (UserDBDAO userDBDAO : listUserDBDAO) {
-//				if(userDBDAO.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
-//					comboDisplayName.add(userDBDAO.getDisplay_name());
-//					comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
-//				}
-//			}
+			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
+			for (UserDBDAO userDBDAO : listUserDBDAO) {
+				if(userDBDAO.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+					comboDisplayName.add(userDBDAO.getDisplay_name());
+					comboDisplayName.setData(userDBDAO.getDisplay_name(), userDBDAO);
+				}
+			}
 			comboDisplayName.select(0);
 			
 			// Range of date

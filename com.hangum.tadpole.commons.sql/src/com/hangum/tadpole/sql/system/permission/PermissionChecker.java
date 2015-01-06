@@ -25,6 +25,22 @@ import com.hangum.tadpole.sql.util.SQLUtil;
 public class PermissionChecker {
 	
 	/**
+	 * db를 추가/삭제/수정 할 수 있는 권한이 있는지.
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static boolean isDBAdminRole(UserDBDAO userDB) {
+		String strDBRole = userDB.getRole_id();
+		
+		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strDBRole) || 
+				PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strDBRole) ||
+				PublicTadpoleDefine.USER_ROLE_TYPE.DBA.toString().equals(strDBRole)) return true;
+		
+		return false;
+	}
+	
+	/**
 	 * 쿼리중에 하나라도 권한이 허락하지 않으면 false를 리턴합니다.
 	 * 
 	 * @param strUserType
@@ -44,7 +60,7 @@ public class PermissionChecker {
 
 	/**
 	 * 쿼리가 실행 가능한지 검사합니다.
-	 * {@code UserDBDAO}의 operation_type {@code DBOperationType#REAL}인 경우 {@code Define#USER_ROLE_TYPE}에서 MANAGER, ADMIN 권한 만 실행 가능합니다.
+	 * {@code UserDBDAO}의 operation_type {@code PublicTadpoleDefine#DBOperationType}인 경우 {@code PublicTadpoleDefine#USER_ROLE_TYPE}에서 MANAGER, ADMIN 권한 만 실행 가능합니다.
 	 * 
 	 * @param strUserType
 	 * @param userDB

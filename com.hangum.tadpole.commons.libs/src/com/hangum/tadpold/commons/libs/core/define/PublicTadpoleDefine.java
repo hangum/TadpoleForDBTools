@@ -92,7 +92,7 @@ public class PublicTadpoleDefine {
 	/** 
 	 * This variable is user_role_table. 
 	 */
-	public static enum USER_ROLE_TYPE {SYSTEM_ADMIN, ADMIN, DBA, MANAGER, USER/*, GUEST*/};
+	public static enum USER_ROLE_TYPE {SYSTEM_ADMIN, ADMIN, DBA, MANAGER, USER, GUEST};
 	
 	/**
 	 * db operation type

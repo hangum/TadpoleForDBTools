@@ -32,7 +32,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
  *  			IS_READONLYCONNECT, IS_AUTOCOMMIT, IS_SHOWTABLES, DELYN
  * 
  * @author hangum
- *
+ * @deprecated
  */
 public class SystemDBDataManager {
 	public static String EXPORT_VER = "00001"; //$NON-NLS-1$

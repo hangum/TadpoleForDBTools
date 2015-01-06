@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -41,39 +42,48 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
 
 /**
- * 사용자를 그룹에 추가하기 위한 다이얼로그.
+ * 사용자를 디비 그룹에 추가하고, 사용자 역할을 설정합니다.
  * 
  * @author hangum
  *
  */
-public class FindUserDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(FindUserDialog.class);
+public class FindUserAndDBRoleDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(FindUserAndDBRoleDialog.class);
 	
 	private int BTN_ADD = IDialogConstants.CLIENT_ID + 1;
+	
+	private UserDBDAO userDBDao;
 	
 	private Text textEMail;
 	private TableViewer tableViewer;
 	private List<UserDAO> listUserGroup = new ArrayList<UserDAO>();
+	
+	private Combo comboRoleType;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public FindUserDialog(Shell parentShell) {
+	public FindUserAndDBRoleDialog(Shell parentShell, UserDBDAO userDBDao) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		this.userDBDao = userDBDao;
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Find User"); //$NON-NLS-1$
+		newShell.setText("Add user role"); //$NON-NLS-1$
 	}
 
 	/**
@@ -126,11 +136,28 @@ public class FindUserDialog extends Dialog {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		createColumns();
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new UserLabelProvider());
+		
+		Composite composite = new Composite(compositeBody, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite.setLayout(new GridLayout(2, false));
+		
+		Label lblRoleType = new Label(composite, SWT.NONE);
+		lblRoleType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblRoleType.setText("Role Type");
+		
+		comboRoleType = new Combo(composite, SWT.NONE | SWT.READ_ONLY);
+		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString());
+		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString());
+		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.USER.toString());
+		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.GUEST.toString());
+		comboRoleType.select(0);
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
@@ -147,27 +174,22 @@ public class FindUserDialog extends Dialog {
 		if(buttonId == BTN_ADD) {
 			IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
 			if(iss.isEmpty()) return;
-				
-			if(MessageDialog.openConfirm(null, "Confirm", Messages.FindUserDialog_4)) { //$NON-NLS-1$
-				UserDAO userDAO = (UserDAO)iss.getFirstElement();
-				
-//				try {
-//					if(TadpoleSystem_UserRole.findGroupUserRole(SessionManager.getGroupSeq(), userDAO.getSeq())) {
-//						MessageDialog.openError(null, "Error", Messages.FindUserDialog_6); //$NON-NLS-1$
-//						return;
-//					} else {
-//						TadpoleSystem_UserRole.newUserRole(
-////									SessionManager.getGroupSeq(), 
-//									userDAO.getSeq(), 
-//									PublicTadpoleDefine.USER_TYPE.USER.toString(), 
-//									PublicTadpoleDefine.YES_NO.YES.toString(), 
-//									userDAO.getName()
-//								);
-//					}
-//				} catch(Exception e) {
-//					logger.error("Fine user role", e); //$NON-NLS-1$
-//				}
-				
+			UserDAO userDAO = (UserDAO)iss.getFirstElement();
+			
+			// 사용자가 해당 디비에 추가 될수 있는지 검사합니다. 
+			try {
+				boolean isAddDBRole = TadpoleSystem_UserRole.isDBAddRole(userDBDao, userDAO);
+				if(isAddDBRole) {
+					if(!MessageDialog.openConfirm(null, "Confirm", Messages.FindUserDialog_4)) return;
+					TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(), userDBDao.getSeq(), comboRoleType.getText());
+					
+					MessageDialog.openInformation(null, "Comfirm", "Sucess save.");
+				} else {
+					MessageDialog.openInformation(null, "Comfirm", "Already exist user.");
+				}
+			} catch (Exception e) {
+				logger.error("Is DB add role error.", e);
+				MessageDialog.openError(null, "Error", "Error saveing...\n" + e.getMessage());
 			}
 		}
 	}
@@ -211,7 +233,7 @@ public class FindUserDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, BTN_ADD, "Add", false); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false); //$NON-NLS-1$
 	}
 
 	/**
@@ -231,7 +253,6 @@ public class FindUserDialog extends Dialog {
 *
 */
 class UserLabelProvider extends LabelProvider implements ITableLabelProvider {
-	private static final Logger logger = Logger.getLogger(UserLabelProvider.class);
 	
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {

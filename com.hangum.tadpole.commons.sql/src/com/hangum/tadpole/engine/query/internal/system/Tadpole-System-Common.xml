@@ -423,22 +423,13 @@
 
 <!--  UserDB의 리스트 -->
 <select id="userDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
-	<!-- SELECT a.seq, user_seq, ext_seq, group_seq, operation_type, dbms_types, url, db, group_name, display_name, host, port, locale, passwd, users, is_profile, profile_select_mill, question_dml, is_readonlyconnect, is_autocommit, is_showtables, is_external_browser, is_visible, is_summary_report, create_time, delyn,
-	  ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10 
-	FROM tadpole_db a
-		, user_db_ext b
-	WHERE 
-		group_seq in ($group_seqs$) AND
-		a.seq = b.seq AND
-		delYn = 'NO' AND
-		is_visible = 'YES'
-	ORDER BY group_name -->
 	select a.*, b.ROLE_ID role_id, c.*
 	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
 	where a.seq = b.db_seq
 		and a.seq = c.seq
 		and b.user_seq = #user_seq#
-	    and delyn = 'NO';
+	    and a.delyn = 'NO'
+	    and b.delyn = 'NO'
 </select>
 
 <select id="userDBManager" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
@@ -484,12 +475,6 @@
 			display_name = #display_name# AND
 			delYn = 'NO'
 	</selectKey>
-</insert>
-
-<insert id="userDBRoleInsert" parameterClass="com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO">
-	INSERT INTO tadpole_user_db_role
-		(user_seq,db_seq, role_id)
-	VALUES (#user_seq#, #db_seq#, #role_id#);
 </insert>
 
 <!-- 
@@ -575,6 +560,37 @@
 
 <!-- 
 	============================================================================================================================
+	tadpole_user_db_role
+	============================================================================================================================
+ -->
+<!-- 
+	is add user role 
+ -->
+<select id="isDBAddRole" parameterClass="java.util.Map" resultClass="com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO">
+	SELECT * FROM tadpole_user_db_role 
+	WHERE db_seq = #db_seq# 
+		AND user_seq = #user_seq#
+		AND delyn = 'NO'
+</select>
+
+<select id="getUserRoleList" parameterClass="com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO" resultClass="com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO">
+	SELECT a.*, b.email, b.name
+	FROM 
+		tadpole_user_db_role a,
+		tadpole_user b 
+	WHERE
+			a.db_seq = #seq# 
+		AND a.delyn = 'NO'
+		AND a.user_seq = b.seq
+</select>
+
+<insert id="userDBRoleInsert" parameterClass="com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO">
+	INSERT INTO tadpole_user_db_role
+		(user_seq,db_seq, role_id)
+	VALUES (#user_seq#, #db_seq#, #role_id#);
+</insert>
+<!-- 
+	============================================================================================================================
 	external_browser_info
 	============================================================================================================================
  -->
@@ -629,14 +645,13 @@ SELECT
 	, m.user_seq as user_seq
 	, u.name as user_name
 	, m.db_seq as db_seq
-	, m.group_seq as group_seq
 	, m.name as res_title
 	, m.shared_type as shared_type
 	, m.description as description
 	, m.create_time as create_time
 	, m.delyn as delyn
   FROM user_db_resource m
-  inner join user u on m.user_seq = u.seq
+  	inner join tadpole_user u on m.user_seq = u.seq
   where 1=1
   and m.resource_types in ( 'SQL' , 'ERD' )
   and m.delyn = 'NO'
@@ -769,7 +784,7 @@ SELECT
     <![CDATA[
 	    select a.name, b.*
 	    from
-	    	user a, 
+	    	tadpole_user a, 
 	    	schema_history b
 	    where 
 	    	del_yn = 'NO' 				AND
@@ -835,19 +850,28 @@ SELECT
 	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
  -->
 <select id="getExecuteQueryHistoryDetail" resultClass="java.util.HashMap" parameterClass="java.util.Map">
- 	SELECT b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.datas, a.row, a.result,
- 		   u.name, db.display_name, a.ipaddress, db.seq as dbseq
+ 	SELECT 
+ 			b.executed_sql_resource_seq, 
+ 			a.startdateexecute, 
+ 			a.enddateexecute, 
+ 			b.datas, 
+ 			a.row, 
+ 			a.result,
+ 		   	u.name, 
+ 		   	db.display_name, 
+ 		   	a.ipaddress, 
+ 		   	db.seq as dbseq
 	 FROM 
 		 executed_sql_resource a,
 		 executed_sql_resource_data b,
-		 user u,
-		 user_db db
+		 tadpole_user u,
+		 tadpole_db db
 	where 1=1 AND
-	 <isNotNull property="user_seq">
+	 <!-- <isNotNull property="user_seq">
 	  a.user_seq = #user_seq# AND
-	 </isNotNull>
+	 </isNotNull> -->
 	 <isNotNull property="db_seq">
-	  a.db_seq = #db_seq# AND 
+	  a.db_seq in ($db_seq$) AND 
 	 </isNotNull>
  <![CDATA[
 	  a.delyn = 'NO' AND
@@ -885,7 +909,7 @@ SELECT
 	user_rol 정보를 설정합니다.
 	=========================================================================================================
  --> 
-<insert id="userUserRoleInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
+<!-- <insert id="userUserRoleInsert" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
 	INSERT INTO user_role(group_seq, user_seq, role_type, name)
 	VALUES(#group_seq#, #user_seq#, #role_type#, #name#)
 	
@@ -900,9 +924,9 @@ SELECT
 	</selectKey>
 </insert>
 
-<!-- 
+
 	withdrawal user gorup
- -->
+
 <update id="withdrawalUserRole" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
 	UPDATE user_role
  	SET   delyn= 'YES' 
@@ -911,9 +935,9 @@ SELECT
 		user_seq = #user_seq#
 </update>
 	
-<!-- 
+
 	사용자 정보를 가져온다. 
- -->
+
 <select id="findUserRole" resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO" parameterClass="java.lang.Integer">
 	SELECT * FROM user_role
 	WHERE
@@ -921,9 +945,9 @@ SELECT
 		delyn = 'NO'
 </select>
 
-<!-- 
+
 	대표 role을 검색합니다. 
- -->
+
 <select id="representUserRole" resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO" parameterClass="java.lang.Integer">
 	select a.* 
 	from user_role a, user_group b
@@ -932,9 +956,9 @@ SELECT
 	and a.role_type != 'USER'
 </select>
 
-<!-- 
+
 	사용자 그룹에 속한 유저가 있는지 검사합니다. 
- -->
+
 <select id="findGroupUserRole" resultClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserRoleDAO">
 	SELECT * FROM user_role
 	WHERE
@@ -942,7 +966,7 @@ SELECT
 		user_seq = #user_seq# AND
 		delyn = 'NO'
 </select>
-
+ -->
 <!-- 
 	=========================================================================================================
 	schedule 정보.

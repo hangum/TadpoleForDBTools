@@ -36,13 +36,12 @@ import com.hangum.tadpole.sql.system.permission.PermissionChecker;
  * @author hangum
  *
  */
-public class UserDBDAO {
+public class UserDBDAO extends TadpoleUserDbRoleDAO {	
 	protected int seq = -999;
 	protected int user_seq;
 	
-	/** 외부 시스템 seq 현재는 amamzon rds seq*/
+//	/** 외부 시스템 seq 현재는 amamzon rds seq*/
 //	protected int ext_seq = -999;
-//	protected int group_seq;
     
 	protected String group_name = "";
 	
@@ -51,33 +50,35 @@ public class UserDBDAO {
 	protected String dbms_type;
 	protected String url;
 	
-	public String getShowUrl(String userType) {
+	protected List<TadpoleUserDbRoleDAO> listChildren = new ArrayList<>();
+	
+	public String getUrl(String userType) {
 		return PermissionChecker.isShow(userType)?getUrl():"jdbc:*************************";
 	}
 	
 	protected String db;
-	public String getShowDb(String userType) {
+	public String getDb(String userType) {
 		return PermissionChecker.isShow(userType)?getDb():"********";
 	}
 	protected String display_name;
 	protected String host;
-	public String getShowHost(String userType) {
+	public String getHost(String userType) {
 		return PermissionChecker.isShow(userType)?getHost():"***.***.***.***";
 	}
 	
 	protected String port;
-	public String getShowPort(String userType) {
+	public String getPort(String userType) {
 		return PermissionChecker.isShow(userType)?getPort():"****";
 	}
 	
 	protected String locale;
 	protected String passwd;
-	public String getShowPasswd(String userType) {
+	public String getPasswd(String userType) {
 		return PermissionChecker.isShow(userType)?getPasswd():"********";
 	}
 	
 	protected String users;
-	public String getShowUsers(String userType) {
+	public String getUsers(String userType) {
 		return PermissionChecker.isShow(userType)?getUsers():"********";
 	}
 	
@@ -133,20 +134,6 @@ public class UserDBDAO {
     	return DBDefine.getDBDefine(this);
     }
     
-//	/**
-//	 * @return the group_seq
-//	 */
-//	public int getGroup_seq() {
-//		return group_seq;
-//	}
-//
-//	/**
-//	 * @param group_seq the group_seq to set
-//	 */
-//	public void setGroup_seq(int group_seq) {
-//		this.group_seq = group_seq;
-//	}
-
 	public int getSeq() {
 		return seq;
 	}
@@ -567,6 +554,12 @@ public class UserDBDAO {
 	public void setIs_summary_report(String is_summary_report) {
 		this.is_summary_report = is_summary_report;
 	}
-
 	
+	public List<TadpoleUserDbRoleDAO> getListChildren() {
+		return listChildren;
+	}
+	
+	public void setListChildren(List<TadpoleUserDbRoleDAO> listChildren) {
+		this.listChildren = listChildren;
+	}
 }

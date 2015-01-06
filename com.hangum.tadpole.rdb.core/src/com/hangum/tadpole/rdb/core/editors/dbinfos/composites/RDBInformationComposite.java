@@ -91,13 +91,13 @@ public class RDBInformationComposite extends Composite {
 		listInfo.add(new KeyValueDAO("Group Name", 		userDB.getGroup_name())); //$NON-NLS-1$
 		listInfo.add(new KeyValueDAO("Display Name", 	userDB.getDisplay_name())); //$NON-NLS-1$
 		
-		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getShowUrl(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getUrl(userDB.getRole_id()))); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getShowHost(SessionManager.getRoleType(userDB)) + "/" + userDB.getShowPort(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$ //$NON-NLS-2$
+			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost(userDB.getRole_id()) + "/" + userDB.getPort(userDB.getRole_id()))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		listInfo.add(new KeyValueDAO("Database", 		userDB.getShowDb(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("Database", 		userDB.getDb(userDB.getRole_id()))); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("User",	 		userDB.getShowUsers(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
+			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers(userDB.getRole_id()))); //$NON-NLS-1$
 		}
 		
 		listInfo.add(new KeyValueDAO("Read Only", 		userDB.getIs_readOnlyConnect())); //$NON-NLS-1$
