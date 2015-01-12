@@ -74,14 +74,14 @@ public class ResultSetUtils {
 				final int intShowColIndex = i + intStartIndex;
 				try {
 //					Object obj = rs.getObject(intColIndex);
-					tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
+					tmpRow.put(intShowColIndex, rs.getString(intColIndex));
 //					int type = rs.getMetaData().getColumnType(intColIndex);
 //
 //					if (RDBTypeToJavaTypeUtils.isNumberType(type)){
 ////						if(isPretty) { 
 ////							tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:addComma(type, obj));
 ////						}else{
-//							tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
+//								tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
 ////						}
 //					}else if (RDBTypeToJavaTypeUtils.isCharType(type)){
 //						tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
@@ -89,7 +89,7 @@ public class ResultSetUtils {
 //						tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:rs.getString(intColIndex));
 //					}else {
 //						tmpRow.put(intShowColIndex, obj == null?PublicTadpoleDefine.DEFINE_NULL_VALUE:obj);
-////						logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
+////					logger.debug("\nColumn type is " + rs.getObject(intColIndex).getClass().toString());
 //					}
 				} catch(Exception e) {
 					logger.error("ResutSet fetch error", e); //$NON-NLS-1$
@@ -146,9 +146,11 @@ public class ResultSetUtils {
 				for(int i=0;i<rsm.getColumnCount(); i++) {
 					int columnSeq = i+1;
 					Map<String, String> metaData = new HashMap<String, String>();
-					metaData.put("schema", pgsqlMeta.getBaseSchemaName(columnSeq));
-					metaData.put("table", pgsqlMeta.getBaseTableName(columnSeq));
-					metaData.put("column", pgsqlMeta.getBaseColumnName(columnSeq));
+					metaData.put("schema", 	pgsqlMeta.getBaseSchemaName(columnSeq));
+					metaData.put("table", 	pgsqlMeta.getBaseTableName(columnSeq));
+					metaData.put("column", 	pgsqlMeta.getBaseColumnName(columnSeq));
+					metaData.put("type", 	""+rsm.getColumnType(columnSeq));
+					metaData.put("typeName", 	""+rsm.getColumnTypeName(columnSeq));
 					
 					if(logger.isDebugEnabled()) {
 						logger.debug("\tschema :" + pgsqlMeta.getBaseSchemaName(columnSeq) + "\ttable:" + pgsqlMeta.getBaseTableName(columnSeq) + "\tcolumn:" + pgsqlMeta.getBaseColumnName(columnSeq));
@@ -161,10 +163,8 @@ public class ResultSetUtils {
 //			 * table name alia
 //			 * 
 //			 */
-//			} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-//							userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
-//			) {
-////				com.mysql.jdbc.ResultSetMetaData mysqlMeta = (com.mysql.jdbc.ResultSetMetaData)rsm;
+//			} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+//				com.mysql.jdbc.ResultSetMetaData mysqlMeta = (com.mysql.jdbc.ResultSetMetaData)rsm;
 //				org.mariadb.jdbc.MySQLResultSetMetaData mysqlMeta = (org.mariadb.jdbc.MySQLResultSetMetaData)rsm;
 //				for(int i=0;i<rsm.getColumnCount(); i++) {
 //					int columnSeq = i+1;
@@ -180,6 +180,18 @@ public class ResultSetUtils {
 //					mapTableColumn.put(i+1, metaData);
 //				}
 				
+			} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+				for(int i=0;i<rsm.getColumnCount(); i++) {
+					int columnSeq = i+1;
+					Map<String, String> metaData = new HashMap<String, String>();
+					metaData.put("schema", 	rsm.getSchemaName(columnSeq));
+					metaData.put("table", 	rsm.getTableName(columnSeq));
+					metaData.put("column", 	rsm.getColumnName(columnSeq));
+					metaData.put("type", 	""+rsm.getColumnType(columnSeq));
+					metaData.put("typeName", 	""+rsm.getColumnTypeName(columnSeq));
+					
+					mapTableColumn.put(i+1, metaData);
+				}
 			}
 		} catch(Exception e) {
 			logger.error("resultset metadata exception", e);
