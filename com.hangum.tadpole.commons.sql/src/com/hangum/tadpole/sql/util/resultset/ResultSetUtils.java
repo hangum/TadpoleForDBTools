@@ -74,7 +74,7 @@ public class ResultSetUtils {
 				final int intShowColIndex = i + intStartIndex;
 				try {
 //					Object obj = rs.getObject(intColIndex);
-					tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
+					tmpRow.put(intShowColIndex, rs.getString(intColIndex));
 //					int type = rs.getMetaData().getColumnType(intColIndex);
 //
 //					if (RDBTypeToJavaTypeUtils.isNumberType(type)){

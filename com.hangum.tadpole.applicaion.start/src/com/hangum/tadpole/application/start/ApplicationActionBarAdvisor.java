@@ -71,7 +71,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction executedSQLAction;
     
     /** schedule action */
-    private IAction scheduleAction;
+//    private IAction scheduleAction;
     
     /** schema history */
     private IAction schemaHistoryAction;
@@ -119,8 +119,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	executedSQLAction = new ExecutedSQLAction(window);
     	register(executedSQLAction);
     	
-    	scheduleAction = new ScheduleAction(window);
-    	register(scheduleAction);
+//    	scheduleAction = new ScheduleAction(window);
+//    	register(scheduleAction);
     	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
@@ -212,8 +212,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	toolbar.add(executedSQLAction);
         toolbar.add(new Separator());
         
-        toolbar.add(scheduleAction);
-        toolbar.add(new Separator());
+//        toolbar.add(scheduleAction);
+//        toolbar.add(new Separator());
         
         toolbar.add(schemaHistoryAction);
         toolbar.add(new Separator());
