@@ -27,7 +27,7 @@ public class OracleConnectTest extends AbstractDriverInfo {
 	public static void main(String args[]) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@192.168.32.128:1521:XE";
+			String url = "jdbc:oracle:thin:@172.16.187.132:1521:XE";
 	
 			Properties props = new Properties();
 			props.setProperty("user", "HR");
@@ -36,11 +36,18 @@ public class OracleConnectTest extends AbstractDriverInfo {
 			Connection conn = DriverManager.getConnection(url, props);
 			printMetaData(conn.getMetaData());
 	
-			PreparedStatement preStatement = conn.prepareStatement("select * from v$version");
+			PreparedStatement preStatement = conn.prepareStatement("SELECT MKT_ID, NAME, shape FROM COLA_MARKETS");//select * from v$version");
 			ResultSet result = preStatement.executeQuery();
 	
 			while (result.next()) {
-				System.out.println("Information is : " + result.getString(1));
+//				Geometry sample
+//				STRUCT st = (STRUCT)result.getObject(3);
+//				JGeometry j_geom = JGeometry.load(st);
+//				
+//				WKT wkt = new WKT();
+//				System.out.println(new String(wkt.fromJGeometry(j_geom)));
+				
+				System.out.println("Result is : " + result.getString(1) + ", " + result.getString(2) + ", " + result.getString(3));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -275,7 +275,7 @@ public class LoginDialog extends Dialog {
 			    item.setText(retMap.get("dbms_types") + " (" +  retMap.get("tot") + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			    item.setColor(colors.next());
 			    
-			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 300; //$NON-NLS-1$ //$NON-NLS-2$
+			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 500; //$NON-NLS-1$ //$NON-NLS-2$
 			    item.setValue(floatVal);
 			}
 		} catch(Exception e) {
