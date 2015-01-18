@@ -10,13 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.util.resultset;
 
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
-import oracle.jdbc.OracleTypeMetaData.Struct;
 
 import org.apache.log4j.Logger;
 import org.postgresql.PGResultSetMetaData;
@@ -78,7 +77,9 @@ public class ResultSetUtils {
 					Object obj = rs.getObject(intColIndex);
 //					int type = rs.getMetaData().getColumnType(intColIndex);
 					if(obj instanceof oracle.sql.STRUCT) {
-						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));						
+						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
+					} else if(obj instanceof Blob) {
+						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
 					} else {
 						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
 					}
