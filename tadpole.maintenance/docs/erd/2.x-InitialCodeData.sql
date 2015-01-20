@@ -11,3 +11,33 @@ INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('DEVELOP','Develop 
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('TEST','Test Sever', '');
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('BACKUP','Backup Sever', '');
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('OTHERS','Others Sever', '');
+
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
+VALUES ( 'SESSION_LIST', 'SESSION LIST', 'SHOW FULL PROCESSLIST' ); 
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'GENERAL_LOG', 'GENERAL LOG', 'select * from mysql.general_log' ); 
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
+VALUES ( 'SLOW_LOG', 'SLOW QUERY', 'select * from mysql.slow_log' ); 
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) VALUES  ( 'CPU', 'CPU', '' ); 
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) VALUES  ( 'DISK', 'DISK', '' ); 
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'CONNECTION', 'Connection', 'SHOW STATUS WHERE variable_name = Connections' ); 
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'PROCESS', 'Process count', 'SHOW STATUS WHERE variable_name = Threads_connected' ); 
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'NETWORK_IN', 'Network in', 'SHOW STATUS WHERE variable_name = Bytes_received' ); 
+INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'NETWORK_OUT', 'Network out', 'SHOW STATUS WHERE variable_name = Bytes_sent' ); 
+
+INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'SQL', 'SQL', '' ); 
+-- INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
+-- VALUES  ( 'REST_API', 'REST API', '' ); 
+INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'PL/SQL', 'PL SQL', '' ); 
+ 
+INSERT INTO message_send_type (TYPE, NAME, DESCRIPTION) 
+VALUES ( 'email', 'eamil', '' ); 
+INSERT INTO message_send_type (TYPE, NAME, DESCRIPTION) 
+VALUES ( 'SESSION_KILL_AFTER_EMAIL', 'Session kill after email send', '' ); 
+ 
