@@ -69,6 +69,7 @@ Export-Package:
  com.mongodb.util.management,
  com.mongodb.util.management.jmx,
  cubrid.jdbc.driver,
+ oracle.sql,
  org.bson,
  org.bson.io,
  org.bson.types,

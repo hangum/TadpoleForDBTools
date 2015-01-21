@@ -124,6 +124,9 @@ public class UserDBDAO extends TadpoleUserDbRoleDAO {
     /** 디비의 요약 정보를 보낼 것인지 			- 2014.05.22 hangum */
     protected String is_summary_report 	= PublicTadpoleDefine.YES_NO.YES.toString();
     
+    /** Is DB monitoring? */
+    protected String is_monitoring 		= PublicTadpoleDefine.YES_NO.YES.toString();
+    
     /** userdb를 그룹으로 표시 하고자 할때 사용합니다. 현재는 로그인창에서 디비 관리하면에서 사용. */
     protected List<UserDBDAO> listUserDBGroup = new ArrayList<UserDBDAO>();
     
@@ -529,6 +532,20 @@ public class UserDBDAO extends TadpoleUserDbRoleDAO {
 	 */
 	public List<ExternalBrowserInfoDAO> getListExternalBrowserdao() {
 		return listExternalBrowserdao;
+	}
+	
+	/**
+	 * @return the is_monitoring
+	 */
+	public String getIs_monitoring() {
+		return is_monitoring;
+	}
+
+	/**
+	 * @param is_monitoring the is_monitoring to set
+	 */
+	public void setIs_monitoring(String is_monitoring) {
+		this.is_monitoring = is_monitoring;
 	}
 
 	/**

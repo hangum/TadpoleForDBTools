@@ -37,6 +37,8 @@ public class OthersConnectionInfoDAO {
 	boolean isVisible = true;
 	boolean isSummaryReport = true;
 	
+	boolean isMonitoring = true;
+	
 	/** 시스템 브라우저에서 사용 할 url을 기록합니다 */
 	boolean isExterBrowser = false;
 	List<ExternalBrowserInfoDAO> listExterBroswer = new ArrayList<ExternalBrowserInfoDAO>();
@@ -198,6 +200,20 @@ public class OthersConnectionInfoDAO {
 
 	public void setSummaryReport(boolean isSummaryReport) {
 		this.isSummaryReport = isSummaryReport;
+	}
+
+	/**
+	 * @return the isMonitoring
+	 */
+	public boolean isMonitoring() {
+		return isMonitoring;
+	}
+
+	/**
+	 * @param isMonitoring the isMonitoring to set
+	 */
+	public void setMonitoring(boolean isMonitoring) {
+		this.isMonitoring = isMonitoring;
 	}
 	
 }
