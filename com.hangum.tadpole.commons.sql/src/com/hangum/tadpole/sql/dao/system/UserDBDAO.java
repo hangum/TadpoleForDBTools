@@ -36,7 +36,26 @@ import com.hangum.tadpole.sql.system.permission.PermissionChecker;
  * @author hangum
  *
  */
-public class UserDBDAO extends TadpoleUserDbRoleDAO {	
+public class UserDBDAO {//extends TadpoleUserDbRoleDAO {	
+	
+	
+	// TadpoleUserDbRoleDAO start ======================================
+	protected String role_id;
+	/**
+	 * @return the role_id
+	 */
+	public String getRole_id() {
+		return role_id;
+	}
+
+	/**
+	 * @param role_id the role_id to set
+	 */
+	public void setRole_id(String role_id) {
+		this.role_id = role_id;
+	}
+	// ====================================== end
+
 	protected int seq = -999;
 	protected int user_seq;
 	

@@ -127,5 +127,17 @@ public class BasicEntryPoint extends AbstractEntryPoint {
 			ee.printStackTrace();
 		}
 	}
+	
+	public static void main(String[] args) {
+		try {
+			String strEncrypt = CipherManager.getInstance().decryption("");
+			System.out.println(strEncrypt);
+			// System.out.println(strEncrypt);
+			// String strDecrypt = EncryptiDecryptUtil.decryption(strEncrypt);
+			// System.out.println(strDecrypt);
+		} catch (Exception ee) {
+			ee.printStackTrace();
+		}
+	}
 
 }

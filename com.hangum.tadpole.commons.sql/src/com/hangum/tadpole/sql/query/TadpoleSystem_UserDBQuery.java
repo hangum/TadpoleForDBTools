@@ -21,7 +21,6 @@ import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
-import com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBOriginalDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -187,6 +186,11 @@ public class TadpoleSystem_UserDBQuery {
 		for(ExternalBrowserInfoDAO extDao : userDb.getListExternalBrowserdao()) {
 			extDao.setDb_seq(userDb.getSeq());
 			sqlClient.insert("externalBrowserInsert", extDao);
+		}
+		
+		// save monitoring
+		if(PublicTadpoleDefine.YES_NO.YES.toString().endsWith(userDb.getIs_monitoring()) ){
+			TadpoleSystem_monitoring.saveMonitoring(userDb);
 		}
 		
 		return insertedUserDB;

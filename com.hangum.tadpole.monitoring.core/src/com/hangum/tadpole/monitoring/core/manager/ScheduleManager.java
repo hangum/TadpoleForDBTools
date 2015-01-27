@@ -11,7 +11,6 @@
 package com.hangum.tadpole.monitoring.core.manager;
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.quartz.CronScheduleBuilder;
@@ -26,11 +25,10 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.monitoring.core.jobs.MonitoringJob;
 import com.hangum.tadpole.monitoring.core.jobs.UserJOB;
 import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 
 /**
  * Schedule Manager
@@ -53,12 +51,15 @@ public class ScheduleManager {
 				scheduler = new StdSchedulerFactory().getScheduler();
 				scheduler.start();
 				
-				// 기 등록된 job들을 등록해줍니다.
-				List<ScheduleMainDAO> listSchedule = TadpoleSystem_Schedule.findAllScheduleMain();
-				for (ScheduleMainDAO scheduleMainDao : listSchedule) {
-					UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(scheduleMainDao.getDb_seq());
-					manager.newJob(userDB, scheduleMainDao);
-				}
+//				// 기 등록된 job들을 등록해줍니다.
+//				List<ScheduleMainDAO> listSchedule = TadpoleSystem_Schedule.findAllScheduleMain();
+//				for (ScheduleMainDAO scheduleMainDao : listSchedule) {
+//					UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(scheduleMainDao.getDb_seq());
+//					manager.newJob(userDB, scheduleMainDao);
+//				}
+				
+				// Add monitoring job
+				manager.newMonitoringJob();
 				
 			} catch (SchedulerException e) {
 				logger.error("Schedule initialize exception", e);
@@ -68,6 +69,30 @@ public class ScheduleManager {
 		}
 		
 		return manager;
+	}
+	
+	/**
+	 * add monitoring job
+	 */
+	public Date newMonitoringJob() throws Exception {
+		Date firstJob = new Date(); 
+				
+		String strJobKey = "MainMonitoringJob";//makeJobkey(userDB, scheduleMainDao);
+		
+		JobDetail job = JobBuilder.newJob(MonitoringJob.class).withIdentity(strJobKey).build();
+		Trigger trigger = TriggerBuilder.newTrigger()
+				.withSchedule(CronScheduleBuilder.cronSchedule("*/10 * * * * ?"))
+				.build();
+		
+		try {
+			firstJob = scheduler.scheduleJob(job, trigger);
+		} catch(Exception e) {
+			logger.error("execute summary reporter", e);
+			
+			throw e;
+		}
+		
+		return firstJob;
 	}
 	
 	/**
@@ -152,7 +177,6 @@ public class ScheduleManager {
 		return userDB.getSeq() + PublicTadpoleDefine.DELIMITER + scheduleMainDao.getSeq() + PublicTadpoleDefine.DELIMITER + userDB.getDisplay_name() + scheduleMainDao.getTitle();
 	}
 
-	
 	public void stopSchedule() {
 		if(scheduler != null) {
 			try {

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2015 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!-- 
+
+ -->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Tadpole-System-Template">
+
+<!--  get monitoring SQL template -->
+<select id="getDefaultMonitoringSQLTemplate" resultClass="com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO" parameterClass="java.lang.String">
+	SELECT seq, user_seq, db_type, title, description, query, index_nm, condition_type, condition_value, after_type, monitoring_type, delyn 
+ 	FROM tadpole_monitoring_template
+	WHERE delyn = 'NO'
+		AND user_seq = -1
+		AND db_type = #db_type# 
+</select>
+
+	
+</sqlMap>

@@ -25,7 +25,8 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726.jar,
  libs/driver/mssql/jtds-1.3.1.jar,
  libs/driver/mongodb/mongo-java-driver-2.12.2.jar,
  libs/driver/mysql/mysql-connector-java-5.1.32-bin.jar,
- libs/driver/sqlite/sqlite-jdbc-3.7.2.jar
+ libs/driver/sqlite/sqlite-jdbc-3.7.2.jar,
+ libs/dbutils/commons-dbutils-1.6.jar
 Export-Package: 
  com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.engine,
@@ -47,6 +48,7 @@ Export-Package:
  com.hangum.tadpole.sql.dao.system,
  com.hangum.tadpole.sql.dao.system.ext,
  com.hangum.tadpole.sql.dao.system.ext.aws.rds,
+ com.hangum.tadpole.sql.dao.system.monitoring,
  com.hangum.tadpole.sql.dialog.save,
  com.hangum.tadpole.sql.query,
  com.hangum.tadpole.sql.system.internal.initialize,

@@ -87,6 +87,7 @@ public class AddScheduleDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @wbp.parser.constructor
 	 */
 	public AddScheduleDialog(Shell parentShell, UserDBDAO userDB) {
 		super(parentShell);
