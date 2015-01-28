@@ -2,6 +2,8 @@ package com.hangum.tadpole.sql.dao.system.monitoring;
 
 import java.sql.Timestamp;
 
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+
 /**
  * monitoring main
  * 
@@ -10,6 +12,7 @@ import java.sql.Timestamp;
  */
 public class MonitoringMainDAO {
 	String email;
+	UserDBDAO userDB;
 	
 	int seq;
 	int user_seq;
@@ -207,6 +210,20 @@ public class MonitoringMainDAO {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * @return the userDB
+	 */
+	public UserDBDAO getUserDB() {
+		return userDB;
+	}
+
+	/**
+	 * @param userDB the userDB to set
+	 */
+	public void setUserDB(UserDBDAO userDB) {
+		this.userDB = userDB;
 	}
 	
 }

@@ -24,6 +24,17 @@ public class TadpoleSystem_monitoring {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_monitoring.class);
 	
 	/**
+	 * update parameter
+	 * 
+	 * @param dao
+	 * @throws Exception
+	 */
+	public static void updateParameter(MonitoringIndexDAO dao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateIndexParameter", dao);
+	}
+	
+	/**
 	 * monitoring list
 	 * 
 	 * @return
@@ -65,6 +76,11 @@ public class TadpoleSystem_monitoring {
 			 indexDao.setAfter_type(tadpoleSQLTemplateDAO.getAfter_type());
 			 indexDao.setIndex_nm(tadpoleSQLTemplateDAO.getIndex_nm());
 			 indexDao.setCondition_value(tadpoleSQLTemplateDAO.getCondition_value());
+
+			 indexDao.setParam_1_column(tadpoleSQLTemplateDAO.getParam_1_column());
+			 indexDao.setParam_1_init_value(tadpoleSQLTemplateDAO.getParam_1_init_value());
+			 indexDao.setParam_2_column(tadpoleSQLTemplateDAO.getParam_2_column());
+			 indexDao.setParam_2_init_value(tadpoleSQLTemplateDAO.getParam_2_init_value());
 			 
 			 sqlClient.insert("insertMonitoringIndex", indexDao);
 		}
@@ -90,6 +106,7 @@ public class TadpoleSystem_monitoring {
 			resultDao.setResult(indexDAO.isError()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 			
 			JsonObject jsonObj = indexDAO.getResultJson();
+			if(jsonObj == null) continue;
 			String strIndexValue = jsonObj.get(indexDAO.getIndex_nm().toLowerCase()).getAsString();
 			resultDao.setIndex_value(strIndexValue);
 			resultDao.setSystem_description(String.format("%s %s %s", indexDAO.getCondition_value(), indexDAO.getCondition_type(), strIndexValue));
@@ -101,9 +118,6 @@ public class TadpoleSystem_monitoring {
 			} catch(Exception e) {
 				logger.error("Monitoring result save exception", e);
 			}
-			
-			// 캐쉬에 마지막 데이터를 쌓아 놓습니다. 
-			
 			
 			// 실패일 경우 후속 처리를 한다.(세션 삭제, 이메일 보내기 등)
 			if(indexDAO.isError()) {

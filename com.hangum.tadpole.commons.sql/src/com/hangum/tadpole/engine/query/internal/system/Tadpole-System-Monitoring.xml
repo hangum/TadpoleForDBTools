@@ -18,6 +18,16 @@
 
 <sqlMap namespace="Tadpole-System-Monitoring">
 
+<!--  update index parameter -->
+<update id="updateIndexParameter" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO">
+	UPDATE 
+		monitoring_index
+	SET 
+		param_1_init_value = #param_1_init_value#, param_2_init_value = #param_2_init_value#
+	WHERE
+		seq = #seq# 
+</update>
+
 <!-- getAllMonitoringList -->
 <select id="getAllMonitoringList" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO">
 	SELECT 
@@ -28,13 +38,17 @@
         a.query,
         a.db_seq, 
         b.seq, 
-        b.condition_type, b.monitoring_type, b.after_type, b.index_nm, b.condition_value
+        b.condition_type, b.monitoring_type, b.after_type, b.index_nm, b.condition_value, 
+        b.param_1_column, b.param_1_init_value, b.param_2_column, b.param_2_init_value
 	FROM 
+		tadpole_db db,
 		tadpole_user user,
 		monitoring_main a,
 	    monitoring_index b
 	WHERE 
-			a.seq = b.monitoring_seq
+			db.seq = a.db_seq
+		AND db.delyn = 'NO'
+		AND	a.seq = b.monitoring_seq
 		AND a.delyn = 'NO'
 		AND b.delyn = 'NO'
 		AND a.user_seq = user.seq
@@ -73,7 +87,7 @@
 
 <!--  get monitoring index -->
 <select id="getMonitoringIndex" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO" parameterClass="java.lang.Integer">
-	SELECT seq, monitoring_seq, condition_type, monitoring_type, after_type, index_nm, condition_value, create_time, mod_time, delyn   
+	SELECT seq, monitoring_seq, condition_type, monitoring_type, after_type, index_nm, condition_value, create_time, mod_time, delyn, param_1_column, param_1_init_value, param_2_column, param_2_init_value   
 	FROM monitoring_index
 	WHERE monitoring_seq = #monitoring_seq#
 		AND delyn = 'NO'
@@ -84,9 +98,9 @@
  -->
 <insert id="insertMonitoringIndex" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO">
 	INSERT INTO monitoring_index
-	 (monitoring_seq, condition_type, monitoring_type, after_type, index_nm, condition_value) 
+	 (monitoring_seq, condition_type, monitoring_type, after_type, index_nm, condition_value, param_1_column, param_1_init_value, param_2_column, param_2_init_value) 
 	VALUES 
-	 (#monitoring_seq#, #condition_type#, #monitoring_type#, #after_type#, #index_nm#, #condition_value#) 
+	 (#monitoring_seq#, #condition_type#, #monitoring_type#, #after_type#, #index_nm#, #condition_value#, #param_1_column#, #param_1_init_value#, #param_2_column#, #param_2_init_value#) 
 	 
 	 <selectKey resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO">
 		SELECT * 

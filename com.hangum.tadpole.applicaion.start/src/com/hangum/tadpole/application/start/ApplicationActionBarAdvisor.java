@@ -32,7 +32,7 @@ import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
-import com.hangum.tadpole.monitoring.core.actions.schedule.ScheduleAction;
+import com.hangum.tadpole.monitoring.core.actions.monitoring.MonitoringAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
@@ -72,6 +72,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** schedule action */
 //    private IAction scheduleAction;
+    private IAction monitoringAction;
     
     /** schema history */
     private IAction schemaHistoryAction;
@@ -121,6 +122,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
 //    	scheduleAction = new ScheduleAction(window);
 //    	register(scheduleAction);
+    	
+    	monitoringAction = new MonitoringAction(window);
+    	register(monitoringAction);
     	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
@@ -214,6 +218,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
 //        toolbar.add(scheduleAction);
 //        toolbar.add(new Separator());
+        
+        toolbar.add(monitoringAction);
+        toolbar.add(new Separator());
         
         toolbar.add(schemaHistoryAction);
         toolbar.add(new Separator());

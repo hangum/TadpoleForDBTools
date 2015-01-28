@@ -25,8 +25,8 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.monitoring.core.Activator;
-import com.hangum.tadpole.monitoring.core.editors.schedule.ScheduleEditor;
-import com.hangum.tadpole.monitoring.core.editors.schedule.ScheduleEditorInput;
+import com.hangum.tadpole.monitoring.core.editors.monitoring.MonitoringMainEditor;
+import com.hangum.tadpole.monitoring.core.editors.monitoring.MonitoringMainInput;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -51,20 +51,20 @@ public class MonitoringAction extends Action implements ISelectionListener, IWor
 		setId(ID);
 		setText("Monitoring");
 		setToolTipText("Monitoring");
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/schedule.png"));
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/monitoring.png"));
 		setEnabled(true);
 	}
 	
 	@Override
 	public void run() {
 		try {
-			ScheduleEditorInput executedSQL = new ScheduleEditorInput();
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(executedSQL, ScheduleEditor.ID);
+			MonitoringMainInput monitoringMainInput = new MonitoringMainInput();
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(monitoringMainInput, MonitoringMainEditor.ID);
 		} catch (PartInitException e) {
-			logger.error("Schedule editor", e); //$NON-NLS-1$
+			logger.error("Monitoring editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Schedule editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Monitoring editor", errStatus); //$NON-NLS-1$
 		}
 	}
 

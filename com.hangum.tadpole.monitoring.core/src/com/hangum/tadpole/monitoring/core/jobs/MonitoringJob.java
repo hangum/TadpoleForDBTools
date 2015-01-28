@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -43,12 +44,12 @@ public class MonitoringJob implements Job {
 			for (MonitoringIndexDAO monitoringIndexDAO : TadpoleSystem_monitoring.getMonitoring()) {
 				if(logger.isDebugEnabled()) logger.debug("==[title]===> " + monitoringIndexDAO.getTitle());
 				UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(monitoringIndexDAO.getDb_seq());
+				monitoringIndexDAO.setUserDB(userDB);
 
 				try {
-					JsonArray jsonArray = QueryUtils.selectToJson(userDB, monitoringIndexDAO.getQuery());
+					JsonArray jsonArray = QueryUtils.selectToJson(userDB, monitoringIndexDAO);
 					for(int i=0; i<jsonArray.size(); i++) {
-//					for (JsonObject jsonElement : jsonArray) {
-						JsonObject jsonObj = (JsonObject)jsonArray.get(i);//jsonElement.getAsJsonObject();
+						JsonObject jsonObj = (JsonObject)jsonArray.get(i);
 						
 						JsonElement jsonValue = jsonObj.get(monitoringIndexDAO.getIndex_nm().toLowerCase());
 						String strIndexValue = jsonValue != null?jsonValue.getAsString():"";
@@ -56,12 +57,16 @@ public class MonitoringJob implements Job {
 							logger.debug("\t result is " + jsonObj.toString());
 							logger.debug("\t check values is " + monitoringIndexDAO.getTitle() + " : " + strIndexValue);
 						}
+						monitoringIndexDAO.setIndex_value(strIndexValue);
 						
 						//결과를 저장한다.
 						boolean isError = !isErrorCheck(strIndexValue, monitoringIndexDAO);
 						monitoringIndexDAO.setError(isError);
 						monitoringIndexDAO.setResultJson(jsonObj);
 					}
+					
+					// update index parameter.
+					updateParameterValue(monitoringIndexDAO, jsonArray);
 
 				} catch (Exception e) {
 					logger.error("monitoring Job exception " + monitoringIndexDAO.getTitle(), e);
@@ -84,6 +89,35 @@ public class MonitoringJob implements Job {
 		}
 		
 		saveResultData(mapMonitoringData);
+	}
+	
+	/**
+	 * update index parameter
+	 * 
+	 * @param monitoringIndexDAO
+	 * @param jsonArray
+	 */
+	private void updateParameterValue(MonitoringIndexDAO monitoringIndexDAO, JsonArray jsonArray) {
+		if(StringUtils.isNotEmpty(monitoringIndexDAO.getParam_1_column())) {
+			if(jsonArray.size() != 0) {
+				JsonObject jsonObj = (JsonObject)jsonArray.get(jsonArray.size()-1);
+				
+				JsonElement jsonValue = jsonObj.get(monitoringIndexDAO.getParam_1_column());
+				String strIndexValue = jsonValue != null?jsonValue.getAsString():"";
+				
+				JsonElement jsonValue2 = jsonObj.get(monitoringIndexDAO.getParam_2_column());
+				String strIndexValue2 = jsonValue2 != null?jsonValue2.getAsString():"";
+				
+				monitoringIndexDAO.setParam_1_init_value(strIndexValue);
+				monitoringIndexDAO.setParam_2_init_value(strIndexValue2);
+				
+				try {
+					TadpoleSystem_monitoring.updateParameter(monitoringIndexDAO);
+				} catch (Exception e) {
+					logger.error("Update index parameter", e);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -117,7 +151,9 @@ public class MonitoringJob implements Job {
 		String conditionType 	= monitoringIndexDAO.getCondition_type();
 		String conditionValue 	= monitoringIndexDAO.getCondition_value();
 		
-		if(conditionType.equals("EQUALS")) {
+		if(conditionType.equals("RISE_EXCEPTION")) {
+			return true;
+		} else if(conditionType.equals("EQUALS")) {
 			if(conditionValue.equals(strIndelValue)) return true;
 		} else if(conditionType.equals("GREATEST")) {
 			if(NumberUtils.toDouble(conditionValue) > NumberUtils.toDouble(strIndelValue)) return true;
