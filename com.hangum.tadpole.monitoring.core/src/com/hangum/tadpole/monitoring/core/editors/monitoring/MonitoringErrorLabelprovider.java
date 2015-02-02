@@ -4,9 +4,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
+import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 
 /**
  * monitoring label provider
@@ -23,23 +21,17 @@ public class MonitoringErrorLabelprovider extends LabelProvider implements ITabl
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		MonitoringIndexDAO dao = (MonitoringIndexDAO)element;
-		
-		JsonObject jsonObj = dao.getResultJson();
-		if(jsonObj != null) {
-			JsonElement jsonValue = jsonObj.get(dao.getIndex_nm().toLowerCase());
-			String strIndexValue = jsonValue != null?jsonValue.getAsString():"";
+		MonitoringResultDAO dao = (MonitoringResultDAO)element;
 			
-			switch(columnIndex) {
-				case 0: return dao.getUserDB().getDisplay_name();
-				case 1: return dao.getTitle();
-				case 2: return strIndexValue;
-				case 3: return dao.getIndex_value();
-				case 4: return jsonObj.toString();
-			}
-			
+		switch(columnIndex) {
+			case 0: return dao.getUserDB().getDisplay_name();
+			case 1: return dao.getResult();
+			case 2: return dao.getMonitoringIndexDAO().getTitle();
+			case 3: return dao.getIndex_value();
+			case 4: return dao.getMonitoringIndexDAO().getCondition_type() + " " + dao.getMonitoringIndexDAO().getCondition_value();
+			case 5: return dao.getQuery_result() + dao.getQuery_result2();
 		}
-		
+	
 		return null;
 	}
 

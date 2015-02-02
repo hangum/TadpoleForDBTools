@@ -21,6 +21,7 @@ import org.quartz.JobExecutionException;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.mails.template.DailySummaryReport;
+import com.hangum.tadpole.monitoring.core.utils.Utils;
 import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
 import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -42,7 +43,7 @@ public class UserJOB implements Job {
 		StringBuffer sbMailContent = new StringBuffer();
 		
 		String strKey = context.getJobDetail().getKey().toString();
-		logger.debug("start job is " + strKey);
+		if(logger.isDebugEnabled()) logger.debug("start job is " + strKey);
 		String[] keys = StringUtils.split( StringUtils.removeStart(strKey, "DEFAULT."), PublicTadpoleDefine.DELIMITER);
 		
 		int dbSeq = NumberUtils.createInteger(keys[0]);
@@ -68,7 +69,7 @@ public class UserJOB implements Job {
 			DailySummaryReport report = new DailySummaryReport();
 			String mailContent = report.makeFullSummaryReport(scheduleMainDao.getTitle(), sbMailContent.toString());
 			
-			DailySummaryReportJOB.sendEmail(scheduleMainDao.getTitle(), scheduleMainDao.getUser_seq(), mailContent);;
+			Utils.sendEmail(scheduleMainDao.getTitle(), scheduleMainDao.getUser_seq(), mailContent);;
 			
 			TadpoleSystem_Schedule.saveScheduleResult(scheduleSeq, isResult, strMessage);
 		} catch (Exception e) {

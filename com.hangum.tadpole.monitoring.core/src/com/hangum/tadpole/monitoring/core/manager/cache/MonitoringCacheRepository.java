@@ -1,10 +1,10 @@
-package com.hangum.tadpole.monitoring.core.cache;
+package com.hangum.tadpole.monitoring.core.manager.cache;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
+import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 
 /**
  * monitoring cache repository
@@ -21,7 +21,7 @@ public class MonitoringCacheRepository {
 	 * key is user Email
 	 * value is monitoring data
 	 */
-	private Map<String, List<MonitoringIndexDAO>> temporaryCacheMap = new HashMap<>();//CacheBuilder.newBuilder().maximumSize(2000).build();
+	private Map<String, List<MonitoringResultDAO>> temporaryCacheMap = new HashMap<>();//CacheBuilder.newBuilder().maximumSize(2000).build();
 	private MonitoringCacheRepository() {}
 
 	public static MonitoringCacheRepository getInstance() {
@@ -32,11 +32,11 @@ public class MonitoringCacheRepository {
 	}
 	
 
-	public void put(String key, List<MonitoringIndexDAO> value) {
+	public void put(String key, List<MonitoringResultDAO> value) {
 		temporaryCacheMap.put(key, value);
 	}
 	
-	public List<MonitoringIndexDAO> get(String key) {
+	public List<MonitoringResultDAO> get(String key) {
 		return temporaryCacheMap.get(key);
 	}
 }

@@ -5,7 +5,6 @@ INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('MANAGER','Manager');
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('USER','User');
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('GUEST', 'Guest')
 
-
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('PRODUCTION','Production Sever', '');
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('DEVELOP','Develop Sever', '');
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('TEST','Test Sever', '');
@@ -36,8 +35,13 @@ VALUES  ( 'SQL', 'SQL', '' );
 INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
 VALUES  ( 'PL/SQL', 'PL SQL', '' ); 
  
-INSERT INTO message_send_type (TYPE, NAME, DESCRIPTION) 
-VALUES ( 'email', 'eamil', '' ); 
-INSERT INTO message_send_type (TYPE, NAME, DESCRIPTION) 
-VALUES ( 'SESSION_KILL_AFTER_EMAIL', 'Session kill after email send', '' ); 
+INSERT INTO monitoring_after_type (TYPE, NAME, DESCRIPTION) 
+VALUES ( 'EMAIL', 'EMAIL', '' );
+ INSERT INTO monitoring_after_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'KILL_AFTER_EMAIL', 'Kill Session after EMAIL send', '' ); 
+ INSERT INTO monitoring_after_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'SMS', 'SMS', '' ); 
+ INSERT INTO monitoring_after_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'KILL_AFTER_SMS', 'Kill Session after SMS send', '' ); 
+ 
  

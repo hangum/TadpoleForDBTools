@@ -2,8 +2,6 @@ package com.hangum.tadpole.sql.dao.system.monitoring;
 
 import java.sql.Timestamp;
 
-import com.google.gson.JsonObject;
-
 /**
  * 모니터 지표를 정의 합니다.
  * 
@@ -27,11 +25,6 @@ public class MonitoringIndexDAO extends MonitoringMainDAO {
 	Timestamp create_time 	= new Timestamp(System.currentTimeMillis());
 	Timestamp mod_time 		= new Timestamp(System.currentTimeMillis());
 	String delyn;
-	
-	/** 모니터링 결과로 화면에 출력하기 위해 저장한다. */
-	JsonObject resultJson;
-	boolean error = false;
-	String index_value;
 
 	public MonitoringIndexDAO() {
 	}
@@ -118,48 +111,6 @@ public class MonitoringIndexDAO extends MonitoringMainDAO {
 	 */
 	public void setCondition_value(String condition_value) {
 		this.condition_value = condition_value;
-	}
-
-	/**
-	 * @return the resultJson
-	 */
-	public JsonObject getResultJson() {
-		return resultJson;
-	}
-
-	/**
-	 * @param resultJson the resultJson to set
-	 */
-	public void setResultJson(JsonObject resultJson) {
-		this.resultJson = resultJson;
-	}
-
-	/**
-	 * @return the error
-	 */
-	public boolean isError() {
-		return error;
-	}
-
-	/**
-	 * @param error the error to set
-	 */
-	public void setError(boolean error) {
-		this.error = error;
-	}
-
-	/**
-	 * @return the index_value
-	 */
-	public String getIndex_value() {
-		return index_value;
-	}
-
-	/**
-	 * @param index_value the index_value to set
-	 */
-	public void setIndex_value(String index_value) {
-		this.index_value = index_value;
 	}
 
 	/**

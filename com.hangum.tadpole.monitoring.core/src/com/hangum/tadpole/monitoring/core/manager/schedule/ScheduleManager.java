@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.monitoring.core.manager;
+package com.hangum.tadpole.monitoring.core.manager.schedule;
 
 import java.util.Date;
 

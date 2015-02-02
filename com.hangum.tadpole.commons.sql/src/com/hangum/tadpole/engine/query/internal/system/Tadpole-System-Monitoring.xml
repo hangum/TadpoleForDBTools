@@ -37,6 +37,7 @@
         a.is_result_save, 
         a.query,
         a.db_seq, 
+        a.receiver,
         b.seq, 
         b.condition_type, b.monitoring_type, b.after_type, b.index_nm, b.condition_value, 
         b.param_1_column, b.param_1_init_value, b.param_2_column, b.param_2_init_value
@@ -58,7 +59,7 @@
 
 <!--  get monitoring main -->
 <select id="getMonitoringMain" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO" parameterClass="java.lang.Integer">
-	SELECT seq, user_seq, db_seq, read_method, title, description, cron_exp, query, is_result_save, create_time, mod_time, delyn  
+	SELECT seq, user_seq, db_seq, read_method, title, description, cron_exp, query, is_result_save, receiver, create_time, mod_time, delyn  
  	FROM monitoring_main
 	WHERE delyn = 'NO'
 </select>
@@ -68,9 +69,9 @@
  -->
 <insert id="insertMonitoringMain" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO">
 	INSERT INTO monitoring_main
-	 (user_seq, db_seq, read_method, title, description, cron_exp, query, is_result_save) 
+	 (user_seq, db_seq, read_method, title, description, cron_exp, query, is_result_save, receiver) 
 	VALUES 
-	 (#user_seq#, #db_seq#, #read_method#, #title#, #description#, #cron_exp#, #query#, #is_result_save#)
+	 (#user_seq#, #db_seq#, #read_method#, #title#, #description#, #cron_exp#, #query#, #is_result_save#, #receiver#)
 	 
 	 <selectKey resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO">
 		SELECT * 
@@ -82,6 +83,7 @@
 			AND cron_exp 		= #cron_exp# 
 			AND query 			= #query# 
 			AND delYn 			= 'NO'
+			AND receiver		= #receiver#
 	</selectKey>
 </insert>
 
@@ -126,17 +128,6 @@
 	 (monitoring_seq, monitoring_index_seq, result, index_value, system_description, user_description, after_description, query_result, query_result2) 
 	VALUES 
 	 (#monitoring_seq#, #monitoring_index_seq#, #result#, #index_value#, #system_description#, #user_description#, #after_description#, #query_result#, #query_result2#); 
-</insert>
-
-
-<!-- 
-	add new monitoring result data
- -->
-<insert id="insertMailBag" parameterClass="com.hangum.tadpole.sql.dao.system.commons.MailBagDAO">
-	INSERT INTO mail_back
-	 (receiver, title, content, is_send, is_success) 
-	VALUES 
-	 (#receiver#, #title#, #content#, #is_send#, #is_success#); 
 </insert>
 	
 </sqlMap>

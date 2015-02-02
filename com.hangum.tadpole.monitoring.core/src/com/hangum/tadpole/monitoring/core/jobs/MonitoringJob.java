@@ -16,15 +16,19 @@ import org.quartz.JobExecutionException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hangum.tadpole.monitoring.core.cache.MonitoringCacheRepository;
+import com.google.gson.JsonPrimitive;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
+import com.hangum.tadpole.monitoring.core.manager.event.EventManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
+import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
 import com.hangum.tadpole.sql.util.QueryUtils;
 
 /**
- * Moitoring job
+ * Tadpole monitoring job
  * 
  * @author hangum
  *
@@ -34,36 +38,40 @@ public class MonitoringJob implements Job {
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		logger.debug("Monitoring Job start....");
-
-		// 후속 작업을 위해 사용자 별로 모니터링 데이터를 담습니다. 
-		Map<String, List<MonitoringIndexDAO>> mapMonitoringData = new HashMap<>();
+		List<MonitoringResultDAO> listMonitoringResult = new ArrayList<MonitoringResultDAO>();
 
 		try {
-			List<MonitoringIndexDAO> listMonitoring = new ArrayList<MonitoringIndexDAO>();
 			for (MonitoringIndexDAO monitoringIndexDAO : TadpoleSystem_monitoring.getMonitoring()) {
 				if(logger.isDebugEnabled()) logger.debug("==[title]===> " + monitoringIndexDAO.getTitle());
 				UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(monitoringIndexDAO.getDb_seq());
-				monitoringIndexDAO.setUserDB(userDB);
-
+				
 				try {
+					MonitoringResultDAO resultDao = null;
 					JsonArray jsonArray = QueryUtils.selectToJson(userDB, monitoringIndexDAO);
 					for(int i=0; i<jsonArray.size(); i++) {
-						JsonObject jsonObj = (JsonObject)jsonArray.get(i);
+						resultDao = new MonitoringResultDAO();
+						resultDao.setUserDB(userDB);
 						
-						JsonElement jsonValue = jsonObj.get(monitoringIndexDAO.getIndex_nm().toLowerCase());
+						resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
+						resultDao.setMonitoring_index_seq(monitoringIndexDAO.getSeq());
+						
+						JsonObject jsonObj = jsonArray.get(i).getAsJsonObject();
+						JsonPrimitive jsonValue = jsonObj.getAsJsonPrimitive(monitoringIndexDAO.getIndex_nm().toLowerCase());
 						String strIndexValue = jsonValue != null?jsonValue.getAsString():"";
-						if(logger.isDebugEnabled()) {
-							logger.debug("\t result is " + jsonObj.toString());
-							logger.debug("\t check values is " + monitoringIndexDAO.getTitle() + " : " + strIndexValue);
-						}
-						monitoringIndexDAO.setIndex_value(strIndexValue);
+						resultDao.setIndex_value(strIndexValue);
 						
 						//결과를 저장한다.
 						boolean isError = !isErrorCheck(strIndexValue, monitoringIndexDAO);
-						monitoringIndexDAO.setError(isError);
-						monitoringIndexDAO.setResultJson(jsonObj);
-					}
+						resultDao.setResult(isError?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+						resultDao.setSystem_description(String.format("%s %s %s", monitoringIndexDAO.getCondition_value(), monitoringIndexDAO.getCondition_type(), strIndexValue));
+						
+						resultDao.setQuery_result(jsonObj.toString());
+						resultDao.setQuery_result2("");
+						resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
+						
+						// 후속작업을 위해 사용자 별로 모니터링 데이터를 모읍니다.
+						listMonitoringResult.add(resultDao);
+					}	// end for
 					
 					// update index parameter.
 					updateParameterValue(monitoringIndexDAO, jsonArray);
@@ -73,22 +81,12 @@ public class MonitoringJob implements Job {
 					
 					// 오류를 모니터링 항목에 넣습니다.
 				}
-				
-				// 후속작업을 위해 사용자 별로 모니터링 데이터를 모읍니다.
-				String strEmail = monitoringIndexDAO.getEmail();
-				if(mapMonitoringData.get(strEmail) == null) {
-					listMonitoring = new ArrayList<MonitoringIndexDAO>(); 
-					listMonitoring.add(monitoringIndexDAO);
-					mapMonitoringData.put(strEmail, listMonitoring);
-				} else {
-					mapMonitoringData.get(strEmail).add(monitoringIndexDAO);
-				}
 			}
 		} catch(Exception e) {
 			logger.error("get monitoring list", e);
 		}
 		
-		saveResultData(mapMonitoringData);
+		afterProceedingResultData(listMonitoringResult);
 	}
 	
 	/**
@@ -121,22 +119,71 @@ public class MonitoringJob implements Job {
 	}
 	
 	/**
-	 * after monitoring result data
+	 * after proceeding monitoring result data
 	 * - save data
 	 * - user notification
 	 * - cache monitoring data 
 	 * 
+	 * @param listMonitoringData
+	 */
+	private void afterProceedingResultData(List<MonitoringResultDAO> listMonitoringData) {
+
+		// 후속 작업을 위해 사용자 별로 모니터링 데이터를 담습니다. 
+		Map<String, List<MonitoringResultDAO>> mapMonitoringData = new HashMap<>();
+		List<MonitoringResultDAO> listErrorMonitoringResult = new ArrayList<MonitoringResultDAO>();
+		
+		{
+			List<MonitoringResultDAO> listMonitoringResult;
+			String strEmail = "";
+			for (MonitoringResultDAO resultDao : listMonitoringData) {
+				
+				if(PublicTadpoleDefine.YES_NO.YES.toString().equals( resultDao.getResult() )) {
+					listErrorMonitoringResult.add(resultDao);
+				}
+				
+				strEmail = resultDao.getMonitoringIndexDAO().getEmail();
+				if(mapMonitoringData.get(strEmail) == null) {
+					listMonitoringResult = new ArrayList<MonitoringResultDAO>(); 
+					listMonitoringResult.add(resultDao);
+					mapMonitoringData.put(strEmail, listMonitoringResult);
+				} else {
+					mapMonitoringData.get(strEmail).add(resultDao);
+				}
+			}
+		}
+		
+		// 사용자별로 담아 cache 메니저에 데이터를 전달한다.
+		sendCacheManager(mapMonitoringData);
+		
+		// 이벤트 처리를 처리 모듈에 보낸다.
+		sendEventManager(listErrorMonitoringResult);	
+		
+		// 데이터를 저장한다.
+		TadpoleSystem_monitoring.saveMonitoringResult(listMonitoringData);
+	}
+	
+	/**
+	 * send cache Manager
+	 * 
 	 * @param mapMonitoringData
 	 */
-	private void saveResultData(Map<String, List<MonitoringIndexDAO>> mapMonitoringData) {
+	private void sendCacheManager(Map<String, List<MonitoringResultDAO>> mapMonitoringData) {
 		Set<String> emailSet = mapMonitoringData.keySet();
 		for (String strEmail : emailSet) {
-			List<MonitoringIndexDAO> listMonitoringIndex = mapMonitoringData.get(strEmail);
 			
 			MonitoringCacheRepository cacheInstance = MonitoringCacheRepository.getInstance();
-			cacheInstance.put(strEmail, listMonitoringIndex);
-
-			TadpoleSystem_monitoring.saveMonitoringResult(strEmail, listMonitoringIndex);
+			cacheInstance.put(strEmail, mapMonitoringData.get(strEmail));
+		}
+	}
+	
+	/**
+	 * send event manager
+	 * 
+	 * @param listErrorMonitoringResult
+	 */
+	private void sendEventManager(List<MonitoringResultDAO> listErrorMonitoringResult) {
+		if(!listErrorMonitoringResult.isEmpty()) {
+			EventManager.getInstance().proceedEvent(listErrorMonitoringResult);
 		}
 	}
 	
@@ -157,8 +204,10 @@ public class MonitoringJob implements Job {
 			if(conditionValue.equals(strIndelValue)) return true;
 		} else if(conditionType.equals("GREATEST")) {
 			if(NumberUtils.toDouble(conditionValue) > NumberUtils.toDouble(strIndelValue)) return true;
-		} else {
+		} else if(conditionType.equals("LEAST")) {
 			if(NumberUtils.toDouble(conditionValue) < NumberUtils.toDouble(strIndelValue)) return true;
+		} else if(conditionType.equals("NONE")) {
+			return false;	
 		}
 		
 		return false;

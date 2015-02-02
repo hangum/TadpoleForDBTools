@@ -2,8 +2,6 @@ package com.hangum.tadpole.sql.dao.system.monitoring;
 
 import java.sql.Timestamp;
 
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-
 /**
  * monitoring main
  * 
@@ -12,7 +10,7 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
  */
 public class MonitoringMainDAO {
 	String email;
-	UserDBDAO userDB;
+//	UserDBDAO userDB;
 	
 	int seq;
 	int user_seq;
@@ -23,6 +21,7 @@ public class MonitoringMainDAO {
 	String cron_exp;
 	String query;
 	String is_result_save;
+	String receiver;
 	Timestamp create_time;
 	Timestamp mod_time;
 	String delyn;
@@ -213,17 +212,16 @@ public class MonitoringMainDAO {
 	}
 
 	/**
-	 * @return the userDB
+	 * @return the receiver
 	 */
-	public UserDBDAO getUserDB() {
-		return userDB;
+	public String getReceiver() {
+		return receiver;
 	}
 
 	/**
-	 * @param userDB the userDB to set
+	 * @param receiver the receiver to set
 	 */
-	public void setUserDB(UserDBDAO userDB) {
-		this.userDB = userDB;
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
 	}
-	
 }

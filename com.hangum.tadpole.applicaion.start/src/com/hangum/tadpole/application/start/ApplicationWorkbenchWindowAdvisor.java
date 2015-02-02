@@ -35,7 +35,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
-import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
+import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;

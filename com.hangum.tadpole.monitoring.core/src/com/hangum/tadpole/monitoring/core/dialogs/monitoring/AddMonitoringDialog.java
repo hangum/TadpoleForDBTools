@@ -1,20 +1,13 @@
 package com.hangum.tadpole.monitoring.core.dialogs.monitoring;
 
-import java.text.ParseException;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -27,8 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import com.hangum.tadpole.monitoring.core.Messages;
-import com.hangum.tadpole.monitoring.core.utils.Utils;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * Add monitoring Dialog
@@ -37,12 +29,16 @@ import com.hangum.tadpole.monitoring.core.utils.Utils;
  *
  */
 public class AddMonitoringDialog extends Dialog {
+	private Combo comboDBType;
 	private Text textTitle;
 	private Text textDescription;
 	private Combo comboMonitoringReadType;
 	private Text textCronExp;
 	private Text textViewScheule;
 	private Table table;
+	private Text textQuery;
+	private Text textParameter1_name;
+	private Text textParameter1Value;
 
 	/**
 	 * Create the dialog.
@@ -74,10 +70,19 @@ public class AddMonitoringDialog extends Dialog {
 		
 		Composite compositeMoni = new Composite(container, SWT.NONE);
 		compositeMoni.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeMoni.setLayout(new GridLayout(3, false));
+		compositeMoni.setLayout(new GridLayout(2, false));
+		
+		Label lblDbType = new Label(compositeMoni, SWT.NONE);
+		lblDbType.setText("DB Type");
+		
+		comboDBType = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboDBType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		for (PublicTadpoleDefine.DBOperationType opType : PublicTadpoleDefine.DBOperationType.values()) {
+			comboDBType.add(opType.getTypeName());
+		}
+		comboDBType.select(1);
 		
 		Label lblTitle = new Label(compositeMoni, SWT.NONE);
-		lblTitle.setBounds(0, 0, 60, 14);
 		lblTitle.setText("Title");
 		
 		textTitle = new Text(compositeMoni, SWT.BORDER);
@@ -98,38 +103,59 @@ public class AddMonitoringDialog extends Dialog {
 		comboMonitoringReadType = new Combo(compositeMoni, SWT.READ_ONLY);
 		comboMonitoringReadType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		comboMonitoringReadType.add("SQL");
-//		comboMonitoringReadType.add("PL/SQL");
-//		comboMonitoringReadType.add("Rest API");
+		comboMonitoringReadType.add("PL/SQL");
+		comboMonitoringReadType.add("Rest-API");
 		comboMonitoringReadType.select(0);
 		
-		Label lblCropExp = new Label(compositeMoni, SWT.NONE);
-//		lblCropExp.setText("<a href='http://www.cronmaker.com/' target='_blank'>Cron Expression</a>"); //$NON-NLS-1$
-		lblCropExp.setText("Cron Expression</a>"); //$NON-NLS-1$
-		lblCropExp.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		Label lblQuery = new Label(compositeMoni, SWT.NONE);
+		lblQuery.setText("Query");
 		
-		textCronExp = new Text(compositeMoni, SWT.BORDER);
-		textCronExp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textQuery = new Text(compositeMoni, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		GridData gd_textQuery = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_textQuery.heightHint = 50;
+		gd_textQuery.minimumHeight = 50;
+		textQuery.setLayoutData(gd_textQuery);
 		
-		Button btnViewSchedule = new Button(compositeMoni, SWT.NONE);
-		btnViewSchedule.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					textViewScheule.setText( Utils.showExp(textCronExp.getText()) );
-				} catch (ParseException ee) {
-					MessageDialog.openError(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_12);
-					textCronExp.setFocus();
-				}
-			}
-		});
-		btnViewSchedule.setText("View Schedule");
-		new Label(compositeMoni, SWT.NONE);
+		Label lblParameter = new Label(compositeMoni, SWT.NONE);
+		lblParameter.setText("Parameter1 Name");
 		
-		textViewScheule = new Text(compositeMoni, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		textViewScheule.setEditable(true);
-		GridData gd_textViewScheule = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
-		gd_textViewScheule.heightHint = 60;
-		textViewScheule.setLayoutData(gd_textViewScheule);
+		textParameter1_name = new Text(compositeMoni, SWT.BORDER);
+		textParameter1_name.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblParameterValue = new Label(compositeMoni, SWT.NONE);
+		lblParameterValue.setText("Parameter 1 Value");
+		
+		textParameter1Value = new Text(compositeMoni, SWT.BORDER);
+		textParameter1Value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+//		Label lblCropExp = new Label(compositeMoni, SWT.NONE);
+////		lblCropExp.setText("<a href='http://www.cronmaker.com/' target='_blank'>Cron Expression</a>"); //$NON-NLS-1$
+//		lblCropExp.setText("Cron Expression</a>"); //$NON-NLS-1$
+//		lblCropExp.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+//		
+//		textCronExp = new Text(compositeMoni, SWT.BORDER);
+//		textCronExp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//		Button btnViewSchedule = new Button(compositeMoni, SWT.NONE);
+//		btnViewSchedule.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				try {
+//					textViewScheule.setText( Utils.showExp(textCronExp.getText()) );
+//				} catch (ParseException ee) {
+//					MessageDialog.openError(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_12);
+//					textCronExp.setFocus();
+//				}
+//			}
+//		});
+//		btnViewSchedule.setText("View Schedule");
+//		new Label(compositeMoni, SWT.NONE);
+//		
+//		textViewScheule = new Text(compositeMoni, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+//		textViewScheule.setEditable(true);
+//		GridData gd_textViewScheule = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+//		gd_textViewScheule.heightHint = 60;
+//		textViewScheule.setLayoutData(gd_textViewScheule);
 		
 		Group grpAddCheckPoint = new Group(container, SWT.NONE);
 		grpAddCheckPoint.setLayout(new GridLayout(1, false));

@@ -2,6 +2,8 @@ package com.hangum.tadpole.sql.dao.system.monitoring;
 
 import java.sql.Timestamp;
 
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+
 /**
  * monitoring result
  * 
@@ -9,6 +11,10 @@ import java.sql.Timestamp;
  *
  */
 public class MonitoringResultDAO {
+	// 보기 용 및 감시용.
+	UserDBDAO userDB;
+	MonitoringIndexDAO monitoringIndexDAO;
+	
 	int seq; 
 	int monitoring_seq;
 	int monitoring_index_seq;
@@ -18,8 +24,8 @@ public class MonitoringResultDAO {
 	String user_description;
 	String after_description;
 	Timestamp create_time;	
-	String query_result;
-    String query_result2;
+	String query_result	= "";
+    String query_result2 = "";
     
 	public MonitoringResultDAO() {
 	}
@@ -178,4 +184,31 @@ public class MonitoringResultDAO {
 		this.query_result2 = query_result2;
 	}
 
+	/**
+	 * @return the userDB
+	 */
+	public UserDBDAO getUserDB() {
+		return userDB;
+	}
+
+	/**
+	 * @param userDB the userDB to set
+	 */
+	public void setUserDB(UserDBDAO userDB) {
+		this.userDB = userDB;
+	}
+
+	/**
+	 * @return the monitoringIndexDAO
+	 */
+	public MonitoringIndexDAO getMonitoringIndexDAO() {
+		return monitoringIndexDAO;
+	}
+
+	/**
+	 * @param monitoringIndexDAO the monitoringIndexDAO to set
+	 */
+	public void setMonitoringIndexDAO(MonitoringIndexDAO monitoringIndexDAO) {
+		this.monitoringIndexDAO = monitoringIndexDAO;
+	}
 }

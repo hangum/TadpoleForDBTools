@@ -88,48 +88,30 @@ public class TadpoleSystem_monitoring {
 
 	/**
 	 * MonitoringResult save
-	 * 	after monitoring result data
-	 * - save data
-	 * - user notification
-	 * - cache monitoring data 
 	 * 
-	 * @param strEmail
 	 * @param listMonitoringIndex
 	 */
-	public static void saveMonitoringResult(String strEmail, List<MonitoringIndexDAO> listMonitoringIndex) {//MonitoringIndexDAO indexDAO, JsonObject jsonObj, String strIndexValue, boolean boolSuccess) {
+	public static void saveMonitoringResult(List<MonitoringResultDAO> listMonitoringIndex) {
+		SqlMapClient sqlClient = null;
 		
-		for (MonitoringIndexDAO indexDAO : listMonitoringIndex) {
-			MonitoringResultDAO resultDao = new MonitoringResultDAO();
-
-			resultDao.setMonitoring_seq(indexDAO.getMonitoring_seq());
-			resultDao.setMonitoring_index_seq(indexDAO.getSeq());
-			resultDao.setResult(indexDAO.isError()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-			
-			JsonObject jsonObj = indexDAO.getResultJson();
-			if(jsonObj == null) continue;
-			String strIndexValue = jsonObj.get(indexDAO.getIndex_nm().toLowerCase()).getAsString();
-			resultDao.setIndex_value(strIndexValue);
-			resultDao.setSystem_description(String.format("%s %s %s", indexDAO.getCondition_value(), indexDAO.getCondition_type(), strIndexValue));
-			resultDao.setQuery_result(jsonObj.toString());
-
+		try {
+			sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+			sqlClient.startTransaction();
+			sqlClient.startBatch();
+		
+			for (MonitoringResultDAO resultDAO : listMonitoringIndex) {
+				sqlClient.insert("insertMonitoringResult", resultDAO);
+			}
+			sqlClient.executeBatch();
+			sqlClient.commitTransaction();
+		} catch(Exception e) {
+			logger.error("Monitoring result save exception", e);
+		} finally {
 			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-				sqlClient.insert("insertMonitoringResult", resultDao);
+				if(sqlClient != null) sqlClient.endTransaction();
 			} catch(Exception e) {
-				logger.error("Monitoring result save exception", e);
+				logger.error("saveMonitoring Result ", e);
 			}
-			
-			// 실패일 경우 후속 처리를 한다.(세션 삭제, 이메일 보내기 등)
-			if(indexDAO.isError()) {
-				
-//				try {
-//					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-//					sqlClient.insert("insertMailBag", resultDao);
-//				} catch(Exception e) {
-//					logger.error("save image bag", e);
-//				}
-			}
-			
 		}
 	}
 

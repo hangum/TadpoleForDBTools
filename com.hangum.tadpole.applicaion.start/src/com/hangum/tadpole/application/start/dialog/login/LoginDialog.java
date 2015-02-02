@@ -374,7 +374,7 @@ public class LoginDialog extends Dialog {
 			logger.error("Login exception. request email is " + strEmail, e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), "Error", e.getMessage());
 			
-			textEMail.setFocus();
+			textPasswd.setFocus();
 			return;
 		}	
 		

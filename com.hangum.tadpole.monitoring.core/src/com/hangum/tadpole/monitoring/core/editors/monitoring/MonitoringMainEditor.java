@@ -5,6 +5,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.rap.rwt.service.ServerPushSession;
@@ -24,12 +27,16 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.monitoring.core.cache.MonitoringCacheRepository;
+import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
+import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
+import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
- * Monitorng main Editor
+ * Monitoring main Editor
  * 
  * @author hangum
  *
@@ -38,6 +45,8 @@ public class MonitoringMainEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(MonitoringMainEditor.class);
 
 	public static final String ID = "com.hangum.tadpole.monitoring.core.editor.main";
+	
+	private boolean isThread = true;
 	final ServerPushSession pushSession = new ServerPushSession();
 	private TableViewer tvError;
 
@@ -75,20 +84,48 @@ public class MonitoringMainEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
+		
+		Composite compositeHead = new Composite(parent, SWT.NONE);
+		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeHead.setLayout(new GridLayout(1, false));
+		
+		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
+		
+		ToolItem tltmAddItem = new ToolItem(toolBar, SWT.NONE);
+		tltmAddItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		tltmAddItem.setText("Add Item");
 
-		SashForm sashForm = new SashForm(parent, SWT.NONE);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		SashForm sashFormBody = new SashForm(parent, SWT.VERTICAL);
+		sashFormBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Composite compositeChart = new Composite(sashFormBody, SWT.NONE);
+		compositeChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeChart.setLayout(new GridLayout(1, false));
 
-		Composite compositeError = new Composite(sashForm, SWT.NONE);
+		Composite compositeError = new Composite(sashFormBody, SWT.NONE);
 		compositeError.setLayout(new GridLayout(1, false));
 		compositeError.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
+		
 		ToolBar toolBarError = new ToolBar(compositeError, SWT.FLAT | SWT.RIGHT);
 
 		ToolItem tltmStop = new ToolItem(toolBarError, SWT.NONE);
 		tltmStop.setText("Stop");
 
 		tvError = new TableViewer(compositeError, SWT.BORDER | SWT.FULL_SELECTION);
+		tvError.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				if(!sel.isEmpty()) {
+					MonitoringResultDAO dao = (MonitoringResultDAO)sel.getFirstElement();
+					ResultSetViewDialog dialog = new ResultSetViewDialog(null, dao);
+					dialog.open();	
+				}
+			}
+		});
 		Table tableError = tvError.getTable();
 		tableError.setHeaderVisible(true);
 		tableError.setLinesVisible(true);
@@ -96,8 +133,13 @@ public class MonitoringMainEditor extends EditorPart {
 
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvError, SWT.NONE);
 		TableColumn tblclmnDbName = tableViewerColumn.getColumn();
-		tblclmnDbName.setWidth(150);
+		tblclmnDbName.setWidth(120);
 		tblclmnDbName.setText("DB Name");
+		
+		TableViewerColumn tableViewerColumn_Err = new TableViewerColumn(tvError, SWT.NONE);
+		TableColumn tblclmnErr = tableViewerColumn_Err.getColumn();
+		tblclmnErr.setWidth(50);
+		tblclmnErr.setText("is Error");
 
 		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvError, SWT.NONE);
 		TableColumn tblclmnTitle = tableViewerColumn_2.getColumn();
@@ -106,7 +148,7 @@ public class MonitoringMainEditor extends EditorPart {
 
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvError, SWT.NONE);
 		TableColumn tblclmnResultData = tableViewerColumn_1.getColumn();
-		tblclmnResultData.setWidth(80);
+		tblclmnResultData.setWidth(60);
 		tblclmnResultData.setText("Value");
 
 		TableViewerColumn tableViewerColumn_4 = new TableViewerColumn(tvError, SWT.NONE);
@@ -122,7 +164,7 @@ public class MonitoringMainEditor extends EditorPart {
 		tvError.setContentProvider(new ArrayContentProvider());
 		tvError.setLabelProvider(new MonitoringErrorLabelprovider());
 
-		sashForm.setWeights(new int[] { 1 });
+		sashFormBody.setWeights(new int[] { 7, 3 });
 
 		callbackui();
 	}
@@ -143,14 +185,14 @@ public class MonitoringMainEditor extends EditorPart {
 			@Override
 			public void run() {
 
-				while(true) {
-					final List<MonitoringIndexDAO> listMonitoringIndex = instance.get(email);
+				while(isThread) {
+					final List<MonitoringResultDAO> listMonitoringResult = instance.get(email);
 					
 					display.asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							if (!tvError.getTable().isDisposed()) {
-								tvError.setInput(listMonitoringIndex);
+								tvError.setInput(listMonitoringResult);
 								tvError.refresh();
 							}
 						}
@@ -161,6 +203,14 @@ public class MonitoringMainEditor extends EditorPart {
 		};
 
 		return bgRunnable;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+
+		isThread = false;
+		pushSession.stop();
 	}
 
 	@Override
