@@ -1,5 +1,6 @@
 package com.hangum.tadpole.monitoring.core.jobs;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,7 @@ public class MonitoringJob implements Job {
 						resultDao.setQuery_result(jsonObj.toString());
 						resultDao.setQuery_result2("");
 						resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
+						resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
 						
 						// 후속작업을 위해 사용자 별로 모니터링 데이터를 모읍니다.
 						listMonitoringResult.add(resultDao);
