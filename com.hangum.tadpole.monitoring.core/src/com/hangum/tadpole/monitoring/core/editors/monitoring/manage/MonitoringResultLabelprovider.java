@@ -24,12 +24,11 @@ public class MonitoringResultLabelprovider extends LabelProvider implements ITab
 		MonitoringResultDAO dao = (MonitoringResultDAO)element;
 			
 		switch(columnIndex) {
-			case 0: return dao.getUserDB().getDisplay_name();
+			case 0: return dao.getMonitoringIndexDAO().getTitle();
 			case 1: return dao.getResult();
-			case 2: return dao.getMonitoringIndexDAO().getTitle();
-			case 3: return dao.getIndex_value();
-			case 4: return dao.getMonitoringIndexDAO().getCondition_type() + " " + dao.getMonitoringIndexDAO().getCondition_value();
-			case 5: return dao.getQuery_result() + dao.getQuery_result2();
+			case 2: return dao.getIndex_value();
+			case 3: return dao.getQuery_result() +  dao.getQuery_result2();
+			case 4: return dao.getCreate_time().toString();
 		}
 	
 		return null;

@@ -57,9 +57,9 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringIndexDAO> getMonitoring(UserDBDAO userDB) throws Exception {
+	public static List<MonitoringIndexDAO> getUserMonitoringIndex(UserDBDAO userDB) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("getUserDBMonitoringList", userDB);
+		return sqlClient.queryForList("getUserDBMonitoringIndex", userDB);
 	}
 
 	/**
@@ -149,11 +149,10 @@ public class TadpoleSystem_monitoring {
 		queryMap.put("monitoring_seq",	monitoringIndexDao.getSeq());
 		
 		if("Success".equals(strResultType)) {
-			queryMap.put("resultType", 	"YES");	
+			queryMap.put("resultType", 	PublicTadpoleDefine.YES_NO.NO.toString());	
 		} else if("Fail".equals(strResultType)) {
-			queryMap.put("resultType", 	"NO");
+			queryMap.put("resultType", 	PublicTadpoleDefine.YES_NO.YES.toString());
 		}
-		
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(startTime);

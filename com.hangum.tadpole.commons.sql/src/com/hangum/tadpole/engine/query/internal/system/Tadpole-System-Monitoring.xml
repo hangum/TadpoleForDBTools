@@ -29,7 +29,7 @@
 </update>
 
 <!-- Get UserDB monitoring list -->
-<select id="getUserDBMonitoringList" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO" 
+<select id="getUserDBMonitoringIndex" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO" 
 						parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
 	SELECT 
 		user.email,

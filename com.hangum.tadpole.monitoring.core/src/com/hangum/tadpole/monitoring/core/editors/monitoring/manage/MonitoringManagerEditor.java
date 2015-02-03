@@ -23,6 +23,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -32,6 +34,8 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -44,18 +48,12 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.monitoring.core.Activator;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
 import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringErrorLabelprovider;
-import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringMainEditor;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
-
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Monitoring manage editor
@@ -120,10 +118,10 @@ public class MonitoringManagerEditor extends EditorPart {
 		gl_parent.marginWidth = 1;
 		parent.setLayout(gl_parent);
 		
-		SashForm sashFormMain = new SashForm(parent, SWT.VERTICAL);
+		SashForm sashFormMain = new SashForm(parent, SWT.BORDER | SWT.VERTICAL);
 		sashFormMain.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		SashForm sashFormTerm = new SashForm(sashFormMain, SWT.NONE);
+		SashForm sashFormTerm = new SashForm(sashFormMain, SWT.BORDER);
 		
 		Composite compositeLeft = new Composite(sashFormTerm, SWT.NONE);
 		compositeLeft.setLayout(new GridLayout(1, false));
@@ -250,14 +248,14 @@ public class MonitoringManagerEditor extends EditorPart {
 			}
 		});
 		Table tableResult = tvResult.getTable();
+		tableResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableResult.setLinesVisible(true);
 		tableResult.setHeaderVisible(true);
-		tableResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		createTableColumn(tvResult);
 
 		tvResult.setContentProvider(new ArrayContentProvider());
-		tvResult.setLabelProvider(new MonitoringErrorLabelprovider());
+		tvResult.setLabelProvider(new MonitoringResultLabelprovider());
 		
 		sashFormMain.setWeights(new int[] {3, 7});
 		tabFolderResult.setSelection(0);
@@ -269,8 +267,8 @@ public class MonitoringManagerEditor extends EditorPart {
 	 * crate result column
 	 */
 	public void createTableColumn(TableViewer tvError) {
-		String[] arryTable = {"Title", "is Error", "Value", "Condition", "Result", "Date"};
-		int[] arryWidth = {120, 50, 80, 60, 100, 500};
+		String[] arryTable = {"Title", "is Error", "Value", "Result", "Date"};
+		int[] arryWidth = {120, 50, 80, 300, 160};
 	
 		for(int i=0; i<arryTable.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvError, SWT.NONE);
@@ -296,6 +294,9 @@ public class MonitoringManagerEditor extends EditorPart {
 			
 			try {
 				List<MonitoringResultDAO> listResult = TadpoleSystem_monitoring.getMonitoringResult(monitoringIndexDao, comboResult.getText(), comboStatics.getText(), startTime, endTime);
+				for (MonitoringResultDAO monitoringResultDAO : listResult) {
+					monitoringResultDAO.setMonitoringIndexDAO(monitoringIndexDao);
+				}
 				tvResult.setInput(listResult);
 				tvResult.refresh();
 			} catch(Exception e) {
@@ -323,7 +324,7 @@ public class MonitoringManagerEditor extends EditorPart {
 					userDB = (UserDBDAO) is.getFirstElement();
 					
 					try {
-						List<MonitoringIndexDAO> listMonitoringIndex = TadpoleSystem_monitoring.getMonitoring(userDB);
+						List<MonitoringIndexDAO> listMonitoringIndex = TadpoleSystem_monitoring.getUserMonitoringIndex(userDB);
 						tableVMonitoringList.setInput(listMonitoringIndex);
 						tableVMonitoringList.refresh();
 					} catch (Exception e) {
@@ -380,8 +381,8 @@ public class MonitoringManagerEditor extends EditorPart {
 	 * create monitoring column 
 	 */
 	private void createMonitoringColumn() {
-		String[] arryTitle = {"Title", "Read Method", "Type",  "Index Name", "Condition", "Condition Value", "After"};
-		int[] arryWidth = 	 {120, 		90, 			130, 		130, 		70, 		70, 			80};
+		String[] arryTitle = {"Title", "Method", "Type",  "Index Name", "Condition", "Condition Value", "After"};
+		int[] arryWidth = 	 {120, 		50, 		130, 		130, 		70, 		70, 			150};
 		
 		for (int i=0; i<arryTitle.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableVMonitoringList, SWT.NONE);
