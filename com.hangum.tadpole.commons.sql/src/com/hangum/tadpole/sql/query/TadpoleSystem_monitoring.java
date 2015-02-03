@@ -1,11 +1,16 @@
 package com.hangum.tadpole.sql.query;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.JsonObject;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
@@ -43,6 +48,18 @@ public class TadpoleSystem_monitoring {
 	public static List<MonitoringIndexDAO> getMonitoring() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getAllMonitoringList");
+	}
+	
+	/**
+	 * Get DB monitoring data.
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<MonitoringIndexDAO> getMonitoring(UserDBDAO userDB) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getUserDBMonitoringList", userDB);
 	}
 
 	/**
@@ -114,5 +131,44 @@ public class TadpoleSystem_monitoring {
 			}
 		}
 	}
-
+	
+	/**
+	 * get monitoring result
+	 * 
+	 * @param monitoringIndexDao
+	 * @param strResultType
+	 * @param strTerm
+	 * @param startTime
+	 * @param endTime
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<MonitoringResultDAO> getMonitoringResult(MonitoringIndexDAO monitoringIndexDao, String strResultType, String strTerm, long startTime, long endTime) throws Exception {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("monitoring_seq",	monitoringIndexDao.getSeq());
+		
+		if("Success".equals(strResultType)) {
+			queryMap.put("resultType", 	"YES");	
+		} else if("Fail".equals(strResultType)) {
+			queryMap.put("resultType", 	"NO");
+		}
+		
+		
+		if(ApplicationArgumentUtils.isDBServer()) {
+			Date date = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			queryMap.put("startTime",  formatter.format(date));
+			
+			Date dateendTime = new Date(endTime);
+			queryMap.put("endTime", formatter.format(dateendTime));			
+		} else {
+			queryMap.put("startTime",  	startTime);
+			queryMap.put("endTime", 	endTime);
+		}
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getMonitoringResult", queryMap);
+	}
+	
 }

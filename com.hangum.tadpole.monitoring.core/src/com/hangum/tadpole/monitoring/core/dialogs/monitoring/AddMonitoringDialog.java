@@ -29,7 +29,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  *
  */
 public class AddMonitoringDialog extends Dialog {
-	private Combo comboDBType;
+	private Combo comboDBName;
 	private Text textTitle;
 	private Text textDescription;
 	private Combo comboMonitoringReadType;
@@ -72,27 +72,27 @@ public class AddMonitoringDialog extends Dialog {
 		compositeMoni.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeMoni.setLayout(new GridLayout(2, false));
 		
-		Label lblDbType = new Label(compositeMoni, SWT.NONE);
-		lblDbType.setText("DB Type");
+		Label lblDbName = new Label(compositeMoni, SWT.NONE);
+		lblDbName.setText("DB Name");
 		
-		comboDBType = new Combo(compositeMoni, SWT.READ_ONLY);
-		comboDBType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboDBName = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboDBName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboDBName.select(1);
 		for (PublicTadpoleDefine.DBOperationType opType : PublicTadpoleDefine.DBOperationType.values()) {
-			comboDBType.add(opType.getTypeName());
+			comboDBName.add(opType.getTypeName());
 		}
-		comboDBType.select(1);
 		
 		Label lblTitle = new Label(compositeMoni, SWT.NONE);
 		lblTitle.setText("Title");
 		
 		textTitle = new Text(compositeMoni, SWT.BORDER);
-		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(compositeMoni, SWT.NONE);
 		lblDescription.setText("Description");
 		
 		textDescription = new Text(compositeMoni, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_textDescription.heightHint = 50;
 		gd_textDescription.minimumHeight = 60;
 		textDescription.setLayoutData(gd_textDescription);
@@ -101,7 +101,7 @@ public class AddMonitoringDialog extends Dialog {
 		lblMonitoringType.setText("Read Type");
 		
 		comboMonitoringReadType = new Combo(compositeMoni, SWT.READ_ONLY);
-		comboMonitoringReadType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboMonitoringReadType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboMonitoringReadType.add("SQL");
 		comboMonitoringReadType.add("PL/SQL");
 		comboMonitoringReadType.add("Rest-API");
@@ -117,7 +117,7 @@ public class AddMonitoringDialog extends Dialog {
 		textQuery.setLayoutData(gd_textQuery);
 		
 		Label lblParameter = new Label(compositeMoni, SWT.NONE);
-		lblParameter.setText("Parameter1 Name");
+		lblParameter.setText("Parameter 1 Name");
 		
 		textParameter1_name = new Text(compositeMoni, SWT.BORDER);
 		textParameter1_name.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -220,6 +220,6 @@ public class AddMonitoringDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(533, 506);
+		return new Point(610, 558);
 	}
 }

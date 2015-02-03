@@ -1,4 +1,4 @@
-package com.hangum.tadpole.monitoring.core.editors.monitoring;
+package com.hangum.tadpole.monitoring.core.editors.monitoring.manage;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -12,7 +12,7 @@ import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
  * @author hangum
  *
  */
-public class MonitoringErrorLabelprovider extends LabelProvider implements ITableLabelProvider {
+public class MonitoringResultLabelprovider extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {

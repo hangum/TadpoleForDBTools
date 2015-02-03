@@ -65,6 +65,9 @@ public class MonitoringJob implements Job {
 						resultDao.setResult(isError?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 						resultDao.setSystem_description(String.format("%s %s %s", monitoringIndexDAO.getCondition_value(), monitoringIndexDAO.getCondition_type(), strIndexValue));
 						
+						resultDao.setUser_seq(userDB.getUser_seq());
+						resultDao.setDb_seq(userDB.getSeq());
+						
 						resultDao.setQuery_result(jsonObj.toString());
 						resultDao.setQuery_result2("");
 						resultDao.setMonitoringIndexDAO(monitoringIndexDAO);

@@ -11,11 +11,17 @@
             name="Schedule">
       </editor>
       <editor
-            class="com.hangum.tadpole.monitoring.core.editors.monitoring.MonitoringMainEditor"
+            class="com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringMainEditor"
             default="false"
             icon="resources/icons/monitoring.png"
             id="com.hangum.tadpole.monitoring.core.editor.main"
-            name="Monitoring Main">
+            name="Monitoring">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.monitoring.core.editors.monitoring.manage.MonitoringManagerEditor"
+            default="false"
+            id="com.hangum.tadpole.monitoring.core.editor.manage"
+            name="Monitoring Manage">
       </editor>
    </extension>
 

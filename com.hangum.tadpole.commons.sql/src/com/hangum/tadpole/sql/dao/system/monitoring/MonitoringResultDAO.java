@@ -18,6 +18,8 @@ public class MonitoringResultDAO {
 	int seq; 
 	int monitoring_seq;
 	int monitoring_index_seq;
+	int user_seq;
+	int db_seq;
 	String result;
 	String index_value;
 	String system_description;
@@ -211,4 +213,33 @@ public class MonitoringResultDAO {
 	public void setMonitoringIndexDAO(MonitoringIndexDAO monitoringIndexDAO) {
 		this.monitoringIndexDAO = monitoringIndexDAO;
 	}
+
+	/**
+	 * @return the user_seq
+	 */
+	public int getUser_seq() {
+		return user_seq;
+	}
+
+	/**
+	 * @param user_seq the user_seq to set
+	 */
+	public void setUser_seq(int user_seq) {
+		this.user_seq = user_seq;
+	}
+
+	/**
+	 * @return the db_seq
+	 */
+	public int getDb_seq() {
+		return db_seq;
+	}
+
+	/**
+	 * @param db_seq the db_seq to set
+	 */
+	public void setDb_seq(int db_seq) {
+		this.db_seq = db_seq;
+	}
+	
 }

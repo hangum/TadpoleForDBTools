@@ -1,4 +1,4 @@
-package com.hangum.tadpole.monitoring.core.editors.monitoring;
+package com.hangum.tadpole.monitoring.core.editors.monitoring.realtime;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -35,7 +35,7 @@ public class MonitoringMainInput  implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Schedule";
+		return "Monitoring main";
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class MonitoringMainInput  implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Schedule";
+		return "Monitoring main";
 	}
 
 }

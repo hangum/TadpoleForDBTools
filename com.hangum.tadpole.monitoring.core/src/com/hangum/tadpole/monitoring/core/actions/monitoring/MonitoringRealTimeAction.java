@@ -25,8 +25,8 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.monitoring.core.Activator;
-import com.hangum.tadpole.monitoring.core.editors.monitoring.MonitoringMainEditor;
-import com.hangum.tadpole.monitoring.core.editors.monitoring.MonitoringMainInput;
+import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringMainEditor;
+import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringMainInput;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -35,22 +35,22 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class MonitoringAction extends Action implements ISelectionListener, IWorkbenchAction {
+public class MonitoringRealTimeAction extends Action implements ISelectionListener, IWorkbenchAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(MonitoringAction.class);
+	private static final Logger logger = Logger.getLogger(MonitoringRealTimeAction.class);
 	private final static String ID = "com.hangum.tadpole.monitoring.core.actions.monitoring.actions.global.MonitoringAction"; //$NON-NLS-1$
 	
 	private final IWorkbenchWindow window;
 	private IStructuredSelection iss;
 	
-	public MonitoringAction(IWorkbenchWindow window) {
+	public MonitoringRealTimeAction(IWorkbenchWindow window) {
 		this.window = window;
 		
 		setId(ID);
-		setText("Monitoring");
-		setToolTipText("Monitoring");
+		setText("Monitoring Realtime");
+		setToolTipText("Monitoring Realtime");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/monitoring.png"));
 		setEnabled(true);
 	}
@@ -61,10 +61,10 @@ public class MonitoringAction extends Action implements ISelectionListener, IWor
 			MonitoringMainInput monitoringMainInput = new MonitoringMainInput();
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(monitoringMainInput, MonitoringMainEditor.ID);
 		} catch (PartInitException e) {
-			logger.error("Monitoring editor open", e); //$NON-NLS-1$
+			logger.error("Monitoring realtime editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Monitoring editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Monitoring realtime editor", errStatus); //$NON-NLS-1$
 		}
 	}
 

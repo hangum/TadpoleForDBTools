@@ -1,4 +1,4 @@
-package com.hangum.tadpole.monitoring.core.editors.monitoring;
+package com.hangum.tadpole.monitoring.core.editors.monitoring.realtime;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -27,13 +29,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
 import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Monitoring main Editor
@@ -95,6 +95,8 @@ public class MonitoringMainEditor extends EditorPart {
 		tltmAddItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				AddMonitoringDialog dialog = new AddMonitoringDialog(null);
+				dialog.open();
 			}
 		});
 		tltmAddItem.setText("Add Item");
@@ -131,35 +133,7 @@ public class MonitoringMainEditor extends EditorPart {
 		tableError.setLinesVisible(true);
 		tableError.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvError, SWT.NONE);
-		TableColumn tblclmnDbName = tableViewerColumn.getColumn();
-		tblclmnDbName.setWidth(120);
-		tblclmnDbName.setText("DB Name");
-		
-		TableViewerColumn tableViewerColumn_Err = new TableViewerColumn(tvError, SWT.NONE);
-		TableColumn tblclmnErr = tableViewerColumn_Err.getColumn();
-		tblclmnErr.setWidth(50);
-		tblclmnErr.setText("is Error");
-
-		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvError, SWT.NONE);
-		TableColumn tblclmnTitle = tableViewerColumn_2.getColumn();
-		tblclmnTitle.setWidth(120);
-		tblclmnTitle.setText("Title");
-
-		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvError, SWT.NONE);
-		TableColumn tblclmnResultData = tableViewerColumn_1.getColumn();
-		tblclmnResultData.setWidth(60);
-		tblclmnResultData.setText("Value");
-
-		TableViewerColumn tableViewerColumn_4 = new TableViewerColumn(tvError, SWT.NONE);
-		TableColumn tblclmnCondition = tableViewerColumn_4.getColumn();
-		tblclmnCondition.setWidth(100);
-		tblclmnCondition.setText("Condition");
-
-		TableViewerColumn tableViewerColumn_3 = new TableViewerColumn(tvError, SWT.NONE);
-		TableColumn tblclmnResult = tableViewerColumn_3.getColumn();
-		tblclmnResult.setWidth(500);
-		tblclmnResult.setText("Result");
+		createTableColumn(tvError);
 
 		tvError.setContentProvider(new ArrayContentProvider());
 		tvError.setLabelProvider(new MonitoringErrorLabelprovider());
@@ -167,6 +141,21 @@ public class MonitoringMainEditor extends EditorPart {
 		sashFormBody.setWeights(new int[] { 7, 3 });
 
 		callbackui();
+	}
+	
+	/**
+	 * crate result column
+	 */
+	public void createTableColumn(TableViewer tvError) {
+		String[] arryTable = {"DB Name", "is Error", "Title", "Value", "Condition", "Result"};
+		int[] arryWidth = {120, 50, 120, 60, 100, 500};
+	
+		for(int i=0; i<arryTable.length; i++) {
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvError, SWT.NONE);
+			TableColumn tblclmnDbName = tableViewerColumn.getColumn();
+			tblclmnDbName.setWidth(arryWidth[i]);
+			tblclmnDbName.setText(arryTable[i]);
+		}
 	}
 
 	private void callbackui() {
