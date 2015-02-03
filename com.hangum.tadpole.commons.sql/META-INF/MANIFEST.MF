@@ -49,6 +49,7 @@ Export-Package:
  com.hangum.tadpole.sql.dao.system.ext,
  com.hangum.tadpole.sql.dao.system.ext.aws.rds,
  com.hangum.tadpole.sql.dao.system.monitoring,
+ com.hangum.tadpole.sql.dao.system.sql.template,
  com.hangum.tadpole.sql.dialog.save,
  com.hangum.tadpole.sql.query,
  com.hangum.tadpole.sql.system.internal.initialize,

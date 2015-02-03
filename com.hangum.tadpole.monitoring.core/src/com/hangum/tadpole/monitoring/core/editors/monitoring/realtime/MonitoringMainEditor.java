@@ -95,8 +95,8 @@ public class MonitoringMainEditor extends EditorPart {
 		tltmAddItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AddMonitoringDialog dialog = new AddMonitoringDialog(null);
-				dialog.open();
+//				AddMonitoringDialog dialog = new AddMonitoringDialog(null);
+//				dialog.open();
 			}
 		});
 		tltmAddItem.setText("Add Item");

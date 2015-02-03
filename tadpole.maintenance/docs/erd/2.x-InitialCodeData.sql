@@ -16,7 +16,7 @@ VALUES ( 'SESSION_LIST', 'SESSION LIST', 'SHOW FULL PROCESSLIST' );
 INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
 VALUES  ( 'GENERAL_LOG', 'GENERAL LOG', 'select * from mysql.general_log' ); 
 INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
-VALUES ( 'SLOW_LOG', 'SLOW QUERY', 'select * from mysql.slow_log' ); 
+VALUES ( 'SLOW_QUERY', 'SLOW QUERY', 'select * from mysql.slow_log' ); 
 INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) VALUES  ( 'CPU', 'CPU', '' ); 
 INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) VALUES  ( 'DISK', 'DISK', '' ); 
 INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 

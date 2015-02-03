@@ -188,11 +188,6 @@ public class TadpoleSystem_UserDBQuery {
 			sqlClient.insert("externalBrowserInsert", extDao);
 		}
 		
-		// save monitoring
-		if(PublicTadpoleDefine.YES_NO.YES.toString().endsWith(userDb.getIs_monitoring()) ){
-			TadpoleSystem_monitoring.saveMonitoring(userDb);
-		}
-		
 		return insertedUserDB;
 	}
 	

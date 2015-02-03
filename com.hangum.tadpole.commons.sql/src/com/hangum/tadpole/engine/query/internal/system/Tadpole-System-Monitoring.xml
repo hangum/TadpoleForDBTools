@@ -115,8 +115,8 @@
 			AND description 	= #description# 
 			AND cron_exp 		= #cron_exp# 
 			AND query 			= #query# 
-			AND delYn 			= 'NO'
-			AND receiver		= #receiver#
+			AND read_method		= #read_method#
+			AND delyn 			= 'NO'
 	</selectKey>
 </insert>
 

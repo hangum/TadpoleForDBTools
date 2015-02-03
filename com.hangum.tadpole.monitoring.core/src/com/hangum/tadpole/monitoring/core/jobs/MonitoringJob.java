@@ -211,7 +211,7 @@ public class MonitoringJob implements Job {
 			if(NumberUtils.toDouble(conditionValue) > NumberUtils.toDouble(strIndelValue)) return true;
 		} else if(conditionType.equals("LEAST")) {
 			if(NumberUtils.toDouble(conditionValue) < NumberUtils.toDouble(strIndelValue)) return true;
-		} else if(conditionType.equals("NONE")) {
+		} else if(conditionType.equals("NOT_CHECK")) {
 			return false;	
 		}
 		

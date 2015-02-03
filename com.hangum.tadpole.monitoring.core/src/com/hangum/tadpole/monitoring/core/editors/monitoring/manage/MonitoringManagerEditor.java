@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -46,8 +47,8 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.monitoring.core.Activator;
+import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
-import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringErrorLabelprovider;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
@@ -132,6 +133,7 @@ public class MonitoringManagerEditor extends EditorPart {
 		tltmDBRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				reLoadDBList();
 			}
 		});
 		tltmDBRefresh.setText("Refresh");
@@ -140,23 +142,50 @@ public class MonitoringManagerEditor extends EditorPart {
 		Tree treeDatabase = treeVUserDB.getTree();
 		treeDatabase.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		treeDatabase.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
-		
+		treeVUserDB.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection is = (IStructuredSelection) event.getSelection();
+				if (is.getFirstElement() instanceof UserDBDAO) {
+					userDB = (UserDBDAO) is.getFirstElement();
+					reLoadMonitoringIndex();
+				}
+				treeVUserDB.getControl().setFocus();
+			}
+		});
+
 		Composite compositeRight = new Composite(sashFormTerm, SWT.NONE);
 		compositeRight.setLayout(new GridLayout(1, false));
 		
 		ToolBar toolBar = new ToolBar(compositeRight, SWT.FLAT | SWT.RIGHT);
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				reLoadMonitoringIndex();
+			}
+		});
 		tltmRefresh.setText("Refresh");
 		
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+		tltmAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				AddMonitoringDialog dialog = new AddMonitoringDialog(null, userDB);
+				if(Dialog.OK == dialog.open()) {
+					reLoadMonitoringIndex();	
+				}
+			}
+		});
 		tltmAdd.setText("Add");
 		
 		ToolItem tltmRemove = new ToolItem(toolBar, SWT.NONE);
 		tltmRemove.setText("Remove");
+		tltmRemove.setEnabled(false);
 		
 		ToolItem tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.setText("Modify");
+		tltmModify.setEnabled(false);
 		
 		tableVMonitoringList = new TableViewer(compositeRight, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableIndex = tableVMonitoringList.getTable();
@@ -183,8 +212,8 @@ public class MonitoringManagerEditor extends EditorPart {
 		
 		comboResult = new Combo(compositeResultSearch, SWT.READ_ONLY);
 		comboResult.add("All");
-		comboResult.add("Success");
-		comboResult.add("Fail");
+		comboResult.add("Normal");
+		comboResult.add("Error");
 		comboResult.select(2);
 		
 		Label lblStart = new Label(compositeResultSearch, SWT.NONE);
@@ -313,30 +342,10 @@ public class MonitoringManagerEditor extends EditorPart {
 		treeVUserDB.setContentProvider(new UserDBContentProvider());
 		treeVUserDB.setLabelProvider(new UserDBLabelProvider());
 		treeVUserDB.setInput(treeList);
-		getSite().setSelectionProvider(treeVUserDB);
+//		getSite().setSelectionProvider(treeVUserDB);
 
-		treeVUserDB.getTree().clearAll(true);
-		treeVUserDB.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection is = (IStructuredSelection) event.getSelection();
-				if (is.getFirstElement() instanceof UserDBDAO) {
-					userDB = (UserDBDAO) is.getFirstElement();
-					
-					try {
-						List<MonitoringIndexDAO> listMonitoringIndex = TadpoleSystem_monitoring.getUserMonitoringIndex(userDB);
-						tableVMonitoringList.setInput(listMonitoringIndex);
-						tableVMonitoringList.refresh();
-					} catch (Exception e) {
-						logger.error("get UserMonitoring index", e);
-					}
-					
-					
-				}
-				treeVUserDB.getControl().setFocus();
-			}
-		});
-		reLoadResource();
+//		treeVUserDB.getTree().clearAll(true);
+		reLoadDBList();
 		
 		// end 
 		Calendar cal = Calendar.getInstance();
@@ -350,7 +359,7 @@ public class MonitoringManagerEditor extends EditorPart {
 	/**
 	 * refresh db list
 	 */
-	public void reLoadResource() {
+	public void reLoadDBList() {
 		try {
 			treeList.clear();
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
@@ -375,6 +384,20 @@ public class MonitoringManagerEditor extends EditorPart {
 
 		treeVUserDB.refresh();
 		treeVUserDB.expandToLevel(2);
+	}
+	
+	/**
+	 * monitoring index 초기화
+	 */
+	private void reLoadMonitoringIndex() {
+		try {
+			List<MonitoringIndexDAO> listMonitoringIndex = TadpoleSystem_monitoring.getUserMonitoringIndex(userDB);
+			tableVMonitoringList.setInput(listMonitoringIndex);
+			tableVMonitoringList.refresh();
+		} catch (Exception e) {
+			logger.error("get UserMonitoring index", e);
+		}
+		
 	}
 	
 	/**
@@ -447,7 +470,7 @@ public class MonitoringManagerEditor extends EditorPart {
 //			}
 		}
 	}
-
+	
 	@Override
 	public void setFocus() {
 	}

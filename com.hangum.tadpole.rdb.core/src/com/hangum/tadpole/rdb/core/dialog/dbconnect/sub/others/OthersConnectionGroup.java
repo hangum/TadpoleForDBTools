@@ -55,7 +55,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	protected Button btnShowTables;
 	protected Button btnIsVisible;
 	protected Button btnSendMonitoring;
-	protected Button btnIsMonitoring;
+//	protected Button btnIsMonitoring;
 	
 	/**
 	 * Create the composite.
@@ -129,11 +129,11 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnSendMonitoring.setSelection(true);
 		btnSendMonitoring.setText(Messages.OthersConnectionRDBGroup_btnSendMonitoring_text);
 		
-		btnIsMonitoring = new Button(this, SWT.CHECK);
-		btnIsMonitoring.setSelection(true);
-		btnIsMonitoring.setText(Messages.OthersConnectionGroup_btnIsMonitoring_text);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
+//		btnIsMonitoring = new Button(this, SWT.CHECK);
+//		btnIsMonitoring.setSelection(true);
+//		btnIsMonitoring.setText(Messages.OthersConnectionGroup_btnIsMonitoring_text);
+//		new Label(this, SWT.NONE);
+//		new Label(this, SWT.NONE);
 		
 		initUI();
 	}
@@ -157,8 +157,8 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getQuestion_dml())?true:false);
 		
 		setIsVisible(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_visible())?true:false);
-		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_summary_report())?true:false);
-		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_monitoring())?true:false);
+//		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_summary_report())?true:false);
+//		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_monitoring())?true:false);
 	}
 
 	/**
@@ -176,7 +176,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		
 		otherConnectionDAO.setVisible(getIsVisible());
 		otherConnectionDAO.setSummaryReport(getSendMonitoring());
-		otherConnectionDAO.setMonitoring(getIsMonitoring());
+//		otherConnectionDAO.setMonitoring(getIsMonitoring());
 		
 		return otherConnectionDAO;
 	}
@@ -235,16 +235,16 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	public boolean getSendMonitoring() {
 		return btnSendMonitoring.getSelection();
 	}
-	public void setSendMonitoring(boolean isSelect) {
-		btnIsMonitoring.setSelection(isSelect);
-	}
-	
-	public boolean getIsMonitoring() {
-		return btnSendMonitoring.getSelection();
-	}
-	public void setIsMonitoring(boolean isSelect) {
-		btnIsMonitoring.setSelection(isSelect);
-	}
+//	public void setSendMonitoring(boolean isSelect) {
+//		btnIsMonitoring.setSelection(isSelect);
+//	}
+//	
+//	public boolean getIsMonitoring() {
+//		return btnSendMonitoring.getSelection();
+//	}
+//	public void setIsMonitoring(boolean isSelect) {
+//		btnIsMonitoring.setSelection(isSelect);
+//	}
 
 	/**
 	 * @param btnShowTables

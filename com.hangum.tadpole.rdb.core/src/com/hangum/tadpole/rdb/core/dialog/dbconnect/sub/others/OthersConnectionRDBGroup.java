@@ -47,18 +47,18 @@ public class OthersConnectionRDBGroup extends OthersConnectionGroup {
 		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getQuestion_dml())?true:false);
 		
 		setIsVisible(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_visible())?true:false);
-		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_summary_report())?true:false);
-		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_monitoring())?true:false);
+//		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_summary_report())?true:false);
+//		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_monitoring())?true:false);
 	}
 	
 	@Override
 	public void initUI() {
 		if(getSelectDB() == DBDefine.MYSQL_DEFAULT || getSelectDB() == DBDefine.MARIADB_DEFAULT) {
 			btnSendMonitoring.setEnabled(true);
-			btnIsMonitoring.setEnabled(true);
+//			btnIsMonitoring.setEnabled(true);
 		} else {
 			btnSendMonitoring.setEnabled(false);
-			btnIsMonitoring.setEnabled(false);
+//			btnIsMonitoring.setEnabled(false);
 		}
 	}
 	
