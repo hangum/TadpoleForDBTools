@@ -39,6 +39,7 @@
         a.read_method,
         a.query,
         a.db_seq, 
+        a.description, 
         a.receiver,
         b.seq, 
         b.condition_type, b.monitoring_type, b.after_type, b.index_nm, b.condition_value, 
@@ -70,6 +71,7 @@
         a.read_method,
         a.query,
         a.db_seq, 
+        a.description,
         a.receiver,
         b.seq, 
         b.condition_type, b.monitoring_type, b.after_type, b.index_nm, b.condition_value, 
@@ -128,6 +130,23 @@
 <!--  delete monitoring index -->
 <update id="deleteMonitoringIndex" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO">
 	UPDATE monitoring_index SET delyn = 'YES' WHERE seq = #seq#
+</update>
+
+<!--  update monitoring main -->
+<update id="updateMonitoringMain" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO">
+	UPDATE monitoring_main 
+	SET 
+		read_method = #read_method#, title = #title#, description = #description#, query = #query#, receiver = #receiver#
+	WHERE seq = #seq#
+</update>
+
+<!--  update monitoring index -->
+<update id="updateMonitoringIndex" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO">
+	UPDATE monitoring_index 
+	SET 
+		condition_type = #condition_type#, monitoring_type = #monitoring_type#, after_type = #after_type#, index_nm = #index_nm#, condition_value = #condition_value#, 
+		param_1_column = #param_1_column#, param_1_init_value = #param_1_init_value#, param_2_column = #param_2_column#, param_2_init_value = #param_2_init_value# 
+	WHERE seq = #seq#
 </update>
 
 

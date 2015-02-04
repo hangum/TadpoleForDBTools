@@ -1,5 +1,6 @@
 package com.hangum.tadpole.monitoring.core.dialogs.monitoring;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -79,6 +80,7 @@ public class UpdateMonitoringDialog extends Dialog {
 		gridLayout.marginWidth = 4;
 		
 		Composite compositeMoni = new Composite(container, SWT.NONE);
+		compositeMoni.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeMoni.setLayout(new GridLayout(4, false));
 		
 		Label lblMonitoringType_1 = new Label(compositeMoni, SWT.NONE);
@@ -207,68 +209,65 @@ public class UpdateMonitoringDialog extends Dialog {
 	 * ui initialize
 	 */
 	private void initUI() {
-//		comboMonitoringType.setText(dao.getMonitoring_type());
-//		textTitle.setText(dao.getTitle());
-//		textDescription.setText(dao.getDescription());
-//		comboMonitoringReadType.setText("SQL");
-//		textQuery.setText(dao.getQuery());
-//		textParameter1_name.setText(StringUtils.trimToEmpty(dao.getParam_1_column()));
-//		textParameter1Value.setText(StringUtils.trimToEmpty(dao.getParam_1_init_value()));
-//		textParameter2_name.setText(StringUtils.trimToEmpty(dao.getParam_2_column()));
-//		textParameter2Value.setText(StringUtils.trimToEmpty(dao.getParam_2_init_value()));
-//		
-//		textIndexName.setText(dao.getIndex_nm());
-//		comboConditionType.setText(dao.getCondition_type());
-//		textConditionValue.setText(dao.getCondition_value());
-//		comboAfterProcess.setText(dao.getAfter_type());
-//		textReceiver.setText(SessionManager.getEMAIL());
+		comboMonitoringType.setText(monitoringIndexDao.getMonitoring_type());
+		textTitle.setText(monitoringIndexDao.getTitle());
+		textDescription.setText(StringUtils.trimToEmpty(monitoringIndexDao.getDescription()));
+		comboMonitoringReadType.setText("SQL");
+		textQuery.setText(StringUtils.trimToEmpty(monitoringIndexDao.getQuery()));
+		textParameter1_name.setText(StringUtils.trimToEmpty(monitoringIndexDao.getParam_1_column()));
+		textParameter1Value.setText(StringUtils.trimToEmpty(monitoringIndexDao.getParam_1_init_value()));
+		textParameter2_name.setText(StringUtils.trimToEmpty(monitoringIndexDao.getParam_2_column()));
+		textParameter2Value.setText(StringUtils.trimToEmpty(monitoringIndexDao.getParam_2_init_value()));
+		
+		textIndexName.setText(monitoringIndexDao.getIndex_nm());
+		comboConditionType.setText(monitoringIndexDao.getCondition_type());
+		textConditionValue.setText(monitoringIndexDao.getCondition_value());
+		comboAfterProcess.setText(monitoringIndexDao.getAfter_type());
+		textReceiver.setText(StringUtils.trimToEmpty(monitoringIndexDao.getReceiver()));
 	}
 	
 	@Override
 	protected void okPressed() {
-//		if("".equals(textTitle.getText())) {
-//			MessageDialog.openError(null, "Error", "Title은 공백이 될 수 없습니다.");
-//			textTitle.setFocus();
-//			return;
-//		}
-//		if("".equals(textQuery.getText())) {
-//			MessageDialog.openError(null, "Error", "Query은 공백이 될 수 없습니다.");
-//			textQuery.setFocus();
-//			return;
-//		}
-//
-//		 MonitoringMainDAO mainDao = new MonitoringMainDAO();
-////		 mainDao.setUser_seq(userDB.getUser_seq());
-////		 mainDao.setDb_seq(userDB.getSeq());
-//		 mainDao.setRead_method(comboMonitoringReadType.getText());
-//		 mainDao.setTitle(textTitle.getText());
-//		 mainDao.setDescription(textDescription.getText());
-//		 mainDao.setCron_exp("*/10 * * * * ?");
-//		 mainDao.setQuery(textQuery.getText());
-//		 mainDao.setIs_result_save(PublicTadpoleDefine.YES_NO.YES.toString());
-//
-//		 MonitoringIndexDAO indexDao = new MonitoringIndexDAO();
-//		 indexDao.setMonitoring_seq(mainDao.getSeq());
-//		 
-//		 indexDao.setMonitoring_type(comboMonitoringType.getText());
-//		 indexDao.setIndex_nm(textIndexName.getText());
-//		 indexDao.setCondition_type(comboConditionType.getText());
-//		 indexDao.setCondition_value(textConditionValue.getText());
-//		 indexDao.setAfter_type(comboAfterProcess.getText());
-//		 
-//		 indexDao.setParam_1_column(textParameter1_name.getText());
-//		 indexDao.setParam_1_init_value(textParameter1Value.getText());
-//		 indexDao.setParam_2_column(textParameter2_name.getText());
-//		 indexDao.setParam_2_init_value(textParameter2Value.getText());
-//		 
-//		 indexDao.setReceiver(textReceiver.getText());
-//
-//		try {
-//			TadpoleSystem_monitoring.saveMonitoring(mainDao, indexDao);
-//		} catch (Exception e) {
-//			logger.error("save monitoring index", e);
-//		}
-//		 
+		if("".equals(textTitle.getText())) {
+			MessageDialog.openError(null, "Error", "Title은 공백이 될 수 없습니다.");
+			textTitle.setFocus();
+			return;
+		}
+		if("".equals(textQuery.getText())) {
+			MessageDialog.openError(null, "Error", "Query은 공백이 될 수 없습니다.");
+			textQuery.setFocus();
+			return;
+		}
+		
+		if(!MessageDialog.openConfirm(null, "Confirm", "수정하시겠습니까?")) return;
+
+		 MonitoringMainDAO mainDao = new MonitoringMainDAO();
+		 mainDao.setSeq(monitoringIndexDao.getMonitoring_seq());
+		 mainDao.setRead_method(comboMonitoringReadType.getText());
+		 mainDao.setTitle(textTitle.getText());
+		 mainDao.setDescription(textDescription.getText());
+		 mainDao.setCron_exp("*/10 * * * * ?");
+		 mainDao.setQuery(textQuery.getText());
+		 mainDao.setIs_result_save(PublicTadpoleDefine.YES_NO.YES.toString());
+		 mainDao.setReceiver(textReceiver.getText());
+
+		 monitoringIndexDao.setMonitoring_type(comboMonitoringType.getText());
+		 monitoringIndexDao.setIndex_nm(textIndexName.getText());
+		 monitoringIndexDao.setCondition_type(comboConditionType.getText());
+		 monitoringIndexDao.setCondition_value(textConditionValue.getText());
+		 monitoringIndexDao.setAfter_type(comboAfterProcess.getText());
+		 
+		 monitoringIndexDao.setParam_1_column(textParameter1_name.getText());
+		 monitoringIndexDao.setParam_1_init_value(textParameter1Value.getText());
+		 monitoringIndexDao.setParam_2_column(textParameter2_name.getText());
+		 monitoringIndexDao.setParam_2_init_value(textParameter2Value.getText());		 
+
+		try {
+			TadpoleSystem_monitoring.updateMonitoring(mainDao, monitoringIndexDao);
+		} catch (Exception e) {
+			logger.error("update monitoring index", e);
+		}
+		 
 		super.okPressed();
 	}
 
@@ -278,7 +277,7 @@ public class UpdateMonitoringDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Add", true);
+		createButton(parent, IDialogConstants.OK_ID, "Update", true);
 		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
 	}
 
@@ -287,6 +286,6 @@ public class UpdateMonitoringDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(550, 670);
+		return new Point(550, 510);
 	}
 }

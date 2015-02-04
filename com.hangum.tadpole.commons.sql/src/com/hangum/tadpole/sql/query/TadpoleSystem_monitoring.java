@@ -153,5 +153,17 @@ public class TadpoleSystem_monitoring {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getMonitoringResult", queryMap);
 	}
+
+	/**
+	 * update monitoring data
+	 * 
+	 * @param mainDao
+	 * @param indexDao
+	 */
+	public static void updateMonitoring(MonitoringMainDAO mainDao, MonitoringIndexDAO indexDao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateMonitoringMain", mainDao);
+		sqlClient.update("updateMonitoringIndex", indexDao);
+	}
 	
 }

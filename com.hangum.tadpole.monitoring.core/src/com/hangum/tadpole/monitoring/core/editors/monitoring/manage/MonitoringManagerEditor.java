@@ -198,13 +198,13 @@ public class MonitoringManagerEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection iss = (IStructuredSelection)tableVMonitoringList.getSelection();
 				if(!iss.isEmpty()) {
-					if(!MessageDialog.openConfirm(null, "Confirm", "Do you want delete?")) return;
 					
 					MonitoringIndexDAO monitoringIndexDao = (MonitoringIndexDAO)iss.getFirstElement();
 					try {
 						UpdateMonitoringDialog dialog = new UpdateMonitoringDialog(null, monitoringIndexDao);
-						
-//						refreshMonitoringIndex();
+						if(Dialog.OK == dialog.open()) {
+							refreshMonitoringIndex();	
+						}
 					} catch (Exception e1) {
 						logger.error("delete monitoring index", e1);
 					}
