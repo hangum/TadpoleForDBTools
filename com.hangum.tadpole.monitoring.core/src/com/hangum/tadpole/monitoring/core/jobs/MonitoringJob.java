@@ -45,9 +45,9 @@ public class MonitoringJob implements Job {
 			for (MonitoringIndexDAO monitoringIndexDAO : TadpoleSystem_monitoring.getMonitoring()) {
 				if(logger.isDebugEnabled()) logger.debug("==[title]===> " + monitoringIndexDAO.getTitle());
 				UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(monitoringIndexDAO.getDb_seq());
-				
+
+				MonitoringResultDAO resultDao = null;
 				try {
-					MonitoringResultDAO resultDao = null;
 					JsonArray jsonArray = QueryUtils.selectToJson(userDB, monitoringIndexDAO);
 					for(int i=0; i<jsonArray.size(); i++) {
 						resultDao = new MonitoringResultDAO();
@@ -85,6 +85,28 @@ public class MonitoringJob implements Job {
 					logger.error("monitoring Job exception " + monitoringIndexDAO.getTitle(), e);
 					
 					// 오류를 모니터링 항목에 넣습니다.
+					resultDao = new MonitoringResultDAO();
+					resultDao.setUserDB(userDB);
+					
+					resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
+					resultDao.setMonitoring_index_seq(monitoringIndexDAO.getSeq());
+					
+					resultDao.setIndex_value("0");
+					
+					//결과를 저장한다.
+					resultDao.setResult(PublicTadpoleDefine.YES_NO.YES.toString());
+					resultDao.setSystem_description(e.getMessage());
+					
+					resultDao.setUser_seq(userDB.getUser_seq());
+					resultDao.setDb_seq(userDB.getSeq());
+					
+					resultDao.setQuery_result("");
+					resultDao.setQuery_result2("");
+					resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
+					resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
+					
+					// 후속작업을 위해 사용자 별로 모니터링 데이터를 모읍니다.
+					listMonitoringResult.add(resultDao);
 				}
 			}
 		} catch(Exception e) {

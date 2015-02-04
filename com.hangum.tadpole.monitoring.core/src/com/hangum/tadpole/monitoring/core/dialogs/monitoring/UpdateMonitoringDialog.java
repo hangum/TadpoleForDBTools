@@ -1,40 +1,23 @@
 package com.hangum.tadpole.monitoring.core.dialogs.monitoring;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO;
-import com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_Template;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
 
 /**
@@ -43,12 +26,10 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
  * @author hangum
  *
  */
-public class AddMonitoringDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(AddMonitoringDialog.class);
+public class UpdateMonitoringDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(UpdateMonitoringDialog.class);
 	
-	private UserDBDAO userDB;
-	
-	private TableViewer tvTemplate;
+	private MonitoringIndexDAO monitoringIndexDao;
 	
 	private Combo comboMonitoringType;
 	private Text textTitle;
@@ -72,16 +53,16 @@ public class AddMonitoringDialog extends Dialog {
 	 * @param parentShell
 	 * @param userDB
 	 */
-	public AddMonitoringDialog(Shell parentShell, UserDBDAO userDB) {
+	public UpdateMonitoringDialog(Shell parentShell, MonitoringIndexDAO monitoringIndexDao) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		this.userDB = userDB;
+		this.monitoringIndexDao = monitoringIndexDao;
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Add Monitoring Index"); //$NON-NLS-1$
+		newShell.setText("Update Monitoring Index"); //$NON-NLS-1$
 	}
 
 	/**
@@ -97,35 +78,7 @@ public class AddMonitoringDialog extends Dialog {
 		gridLayout.marginHeight = 4;
 		gridLayout.marginWidth = 4;
 		
-		SashForm sashForm = new SashForm(container, SWT.VERTICAL);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		Group grpTemplate = new Group(sashForm, SWT.NONE);
-		grpTemplate.setText("Template");
-		grpTemplate.setLayout(new GridLayout(1, false));
-		
-		tvTemplate = new TableViewer(grpTemplate, SWT.BORDER | SWT.FULL_SELECTION);
-		tvTemplate.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection select = (IStructuredSelection)event.getSelection();
-				if(!select.isEmpty()) {
-					TeadpoleMonitoringTemplateDAO dao = (TeadpoleMonitoringTemplateDAO)select.getFirstElement();
-					selectTemplateData(dao);	
-				}
-				
-			}
-		});
-		Table table = tvTemplate.getTable();
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		createColumns();
-		
-		tvTemplate.setContentProvider(new ArrayContentProvider());
-		tvTemplate.setLabelProvider(new MonitoringTemplateLabelProvider());
-		
-		Composite compositeMoni = new Composite(sashForm, SWT.NONE);
+		Composite compositeMoni = new Composite(container, SWT.NONE);
 		compositeMoni.setLayout(new GridLayout(4, false));
 		
 		Label lblMonitoringType_1 = new Label(compositeMoni, SWT.NONE);
@@ -243,7 +196,7 @@ public class AddMonitoringDialog extends Dialog {
 		textReceiver = new Text(compositeMoni, SWT.BORDER);
 		textReceiver.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
-		sashForm.setWeights(new int[] {3, 7});
+//		sashForm.setWeights(new int[] {3, 7});
 		
 		initUI();
 
@@ -254,104 +207,69 @@ public class AddMonitoringDialog extends Dialog {
 	 * ui initialize
 	 */
 	private void initUI() {
-		try {
-			List<TeadpoleMonitoringTemplateDAO> listTemplateDao = TadpoleSystem_Template.getMonitoringTemplate(userDB);
-			tvTemplate.setInput(listTemplateDao);
-			tvTemplate.refresh();
-		} catch(Exception e) {
-			logger.error("Get template list", e);
-		}
-	}
-	
-	/**
-	 * select template data
-	 * 
-	 * @param dao
-	 */
-	private void selectTemplateData(TeadpoleMonitoringTemplateDAO dao) {
-		
-		comboMonitoringType.setText(dao.getMonitoring_type());
-		textTitle.setText(dao.getTitle());
-		textDescription.setText(dao.getDescription());
-		comboMonitoringReadType.setText("SQL");
-		textQuery.setText(dao.getQuery());
-		textParameter1_name.setText(StringUtils.trimToEmpty(dao.getParam_1_column()));
-		textParameter1Value.setText(StringUtils.trimToEmpty(dao.getParam_1_init_value()));
-		textParameter2_name.setText(StringUtils.trimToEmpty(dao.getParam_2_column()));
-		textParameter2Value.setText(StringUtils.trimToEmpty(dao.getParam_2_init_value()));
-		
-		textIndexName.setText(dao.getIndex_nm());
-		comboConditionType.setText(dao.getCondition_type());
-		textConditionValue.setText(dao.getCondition_value());
-		comboAfterProcess.setText(dao.getAfter_type());
-		textReceiver.setText(SessionManager.getEMAIL());
+//		comboMonitoringType.setText(dao.getMonitoring_type());
+//		textTitle.setText(dao.getTitle());
+//		textDescription.setText(dao.getDescription());
+//		comboMonitoringReadType.setText("SQL");
+//		textQuery.setText(dao.getQuery());
+//		textParameter1_name.setText(StringUtils.trimToEmpty(dao.getParam_1_column()));
+//		textParameter1Value.setText(StringUtils.trimToEmpty(dao.getParam_1_init_value()));
+//		textParameter2_name.setText(StringUtils.trimToEmpty(dao.getParam_2_column()));
+//		textParameter2Value.setText(StringUtils.trimToEmpty(dao.getParam_2_init_value()));
+//		
+//		textIndexName.setText(dao.getIndex_nm());
+//		comboConditionType.setText(dao.getCondition_type());
+//		textConditionValue.setText(dao.getCondition_value());
+//		comboAfterProcess.setText(dao.getAfter_type());
+//		textReceiver.setText(SessionManager.getEMAIL());
 	}
 	
 	@Override
 	protected void okPressed() {
-		if("".equals(textTitle.getText())) {
-			MessageDialog.openError(null, "Error", "Title은 공백이 될 수 없습니다.");
-			textTitle.setFocus();
-			return;
-		}
-		if("".equals(textQuery.getText())) {
-			MessageDialog.openError(null, "Error", "Query은 공백이 될 수 없습니다.");
-			textQuery.setFocus();
-			return;
-		}
-
-		 MonitoringMainDAO mainDao = new MonitoringMainDAO();
-		 mainDao.setUser_seq(userDB.getUser_seq());
-		 mainDao.setDb_seq(userDB.getSeq());
-		 mainDao.setRead_method(comboMonitoringReadType.getText());
-		 mainDao.setTitle(textTitle.getText());
-		 mainDao.setDescription(textDescription.getText());
-		 mainDao.setCron_exp("*/10 * * * * ?");
-		 mainDao.setQuery(textQuery.getText());
-		 mainDao.setIs_result_save(PublicTadpoleDefine.YES_NO.YES.toString());
-
-		 MonitoringIndexDAO indexDao = new MonitoringIndexDAO();
-		 indexDao.setMonitoring_seq(mainDao.getSeq());
-		 
-		 indexDao.setMonitoring_type(comboMonitoringType.getText());
-		 indexDao.setIndex_nm(textIndexName.getText());
-		 indexDao.setCondition_type(comboConditionType.getText());
-		 indexDao.setCondition_value(textConditionValue.getText());
-		 indexDao.setAfter_type(comboAfterProcess.getText());
-		 
-		 indexDao.setParam_1_column(textParameter1_name.getText());
-		 indexDao.setParam_1_init_value(textParameter1Value.getText());
-		 indexDao.setParam_2_column(textParameter2_name.getText());
-		 indexDao.setParam_2_init_value(textParameter2Value.getText());
-		 
-		 indexDao.setReceiver(textReceiver.getText());
-
-		try {
-			TadpoleSystem_monitoring.saveMonitoring(mainDao, indexDao);
-		} catch (Exception e) {
-			logger.error("save monitoring index", e);
-		}
-		 
+//		if("".equals(textTitle.getText())) {
+//			MessageDialog.openError(null, "Error", "Title은 공백이 될 수 없습니다.");
+//			textTitle.setFocus();
+//			return;
+//		}
+//		if("".equals(textQuery.getText())) {
+//			MessageDialog.openError(null, "Error", "Query은 공백이 될 수 없습니다.");
+//			textQuery.setFocus();
+//			return;
+//		}
+//
+//		 MonitoringMainDAO mainDao = new MonitoringMainDAO();
+////		 mainDao.setUser_seq(userDB.getUser_seq());
+////		 mainDao.setDb_seq(userDB.getSeq());
+//		 mainDao.setRead_method(comboMonitoringReadType.getText());
+//		 mainDao.setTitle(textTitle.getText());
+//		 mainDao.setDescription(textDescription.getText());
+//		 mainDao.setCron_exp("*/10 * * * * ?");
+//		 mainDao.setQuery(textQuery.getText());
+//		 mainDao.setIs_result_save(PublicTadpoleDefine.YES_NO.YES.toString());
+//
+//		 MonitoringIndexDAO indexDao = new MonitoringIndexDAO();
+//		 indexDao.setMonitoring_seq(mainDao.getSeq());
+//		 
+//		 indexDao.setMonitoring_type(comboMonitoringType.getText());
+//		 indexDao.setIndex_nm(textIndexName.getText());
+//		 indexDao.setCondition_type(comboConditionType.getText());
+//		 indexDao.setCondition_value(textConditionValue.getText());
+//		 indexDao.setAfter_type(comboAfterProcess.getText());
+//		 
+//		 indexDao.setParam_1_column(textParameter1_name.getText());
+//		 indexDao.setParam_1_init_value(textParameter1Value.getText());
+//		 indexDao.setParam_2_column(textParameter2_name.getText());
+//		 indexDao.setParam_2_init_value(textParameter2Value.getText());
+//		 
+//		 indexDao.setReceiver(textReceiver.getText());
+//
+//		try {
+//			TadpoleSystem_monitoring.saveMonitoring(mainDao, indexDao);
+//		} catch (Exception e) {
+//			logger.error("save monitoring index", e);
+//		}
+//		 
 		super.okPressed();
-	}
-	
-	/**
-	 * crate table column
-	 */
-	private void createColumns() {
-		String[] names = {"Type", "Title", "Description", "Query", 
-					"param 1 column", "param 1 value", "param 2 column", "param 2 value", 
-					"Index Name", "Condition Type", "Condition Value"};
-		int[] intWidth = {80, 100, 150, 100,
-						100, 100, 100, 100, 
-						100, 100, 100};
-		
-		for(int i=0; i<names.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvTemplate, SWT.NONE);
-			TableColumn tblclmnDbName = tableViewerColumn.getColumn();
-			tblclmnDbName.setText(names[i]);
-			tblclmnDbName.setWidth(intWidth[i]);
-		}
 	}
 
 	/**

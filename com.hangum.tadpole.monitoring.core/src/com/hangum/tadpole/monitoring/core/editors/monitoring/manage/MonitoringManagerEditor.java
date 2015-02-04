@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -49,6 +50,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.monitoring.core.Activator;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
+import com.hangum.tadpole.monitoring.core.dialogs.monitoring.UpdateMonitoringDialog;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
@@ -68,8 +70,14 @@ public class MonitoringManagerEditor extends EditorPart {
 	
 	private List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
 	private TreeViewer treeVUserDB;
+	
+	// index
 	private UserDBDAO userDB;
 	private TableViewer tableVMonitoringList;
+	private ToolItem tltmRefresh;
+	private ToolItem tltmAdd;
+	private ToolItem tltmModify;
+	private ToolItem tltmRemove;
 	
 	// result search
 	private Combo comboResult;
@@ -147,10 +155,15 @@ public class MonitoringManagerEditor extends EditorPart {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (is.getFirstElement() instanceof UserDBDAO) {
 					userDB = (UserDBDAO) is.getFirstElement();
-					reLoadMonitoringIndex();
+					
+					if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+						refreshMonitoringIndex();
+						initIndexBtn(true);
+						initSearchResult();
+					}
 				}
-				treeVUserDB.getControl().setFocus();
 			}
+			
 		});
 
 		Composite compositeRight = new Composite(sashFormTerm, SWT.NONE);
@@ -158,36 +171,80 @@ public class MonitoringManagerEditor extends EditorPart {
 		
 		ToolBar toolBar = new ToolBar(compositeRight, SWT.FLAT | SWT.RIGHT);
 		
-		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh = new ToolItem(toolBar, SWT.NONE);
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				reLoadMonitoringIndex();
+				refreshMonitoringIndex();
 			}
 		});
 		tltmRefresh.setText("Refresh");
 		
-		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
+		tltmAdd = new ToolItem(toolBar, SWT.NONE);
 		tltmAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AddMonitoringDialog dialog = new AddMonitoringDialog(null, userDB);
 				if(Dialog.OK == dialog.open()) {
-					reLoadMonitoringIndex();	
+					refreshMonitoringIndex();	
 				}
 			}
 		});
 		tltmAdd.setText("Add");
 		
-		ToolItem tltmRemove = new ToolItem(toolBar, SWT.NONE);
-		tltmRemove.setText("Remove");
-		tltmRemove.setEnabled(false);
-		
-		ToolItem tltmModify = new ToolItem(toolBar, SWT.NONE);
+		tltmModify = new ToolItem(toolBar, SWT.NONE);
+		tltmModify.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection iss = (IStructuredSelection)tableVMonitoringList.getSelection();
+				if(!iss.isEmpty()) {
+					if(!MessageDialog.openConfirm(null, "Confirm", "Do you want delete?")) return;
+					
+					MonitoringIndexDAO monitoringIndexDao = (MonitoringIndexDAO)iss.getFirstElement();
+					try {
+						UpdateMonitoringDialog dialog = new UpdateMonitoringDialog(null, monitoringIndexDao);
+						
+//						refreshMonitoringIndex();
+					} catch (Exception e1) {
+						logger.error("delete monitoring index", e1);
+					}
+				}
+			}
+		});
 		tltmModify.setText("Modify");
 		tltmModify.setEnabled(false);
 		
+		tltmRemove = new ToolItem(toolBar, SWT.NONE);
+		tltmRemove.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection iss = (IStructuredSelection)tableVMonitoringList.getSelection();
+				if(!iss.isEmpty()) {
+					if(!MessageDialog.openConfirm(null, "Confirm", "Do you want delete?")) return;
+					
+					MonitoringIndexDAO monitoringIndexDao = (MonitoringIndexDAO)iss.getFirstElement();
+					try {
+						TadpoleSystem_monitoring.deleteMonitoringIndex(monitoringIndexDao);
+						
+						refreshMonitoringIndex();
+					} catch (Exception e1) {
+						logger.error("delete monitoring index", e1);
+					}
+				}
+			}
+		});
+		tltmRemove.setText("Remove");
+		tltmRemove.setEnabled(false);
+				
 		tableVMonitoringList = new TableViewer(compositeRight, SWT.BORDER | SWT.FULL_SELECTION);
+		tableVMonitoringList.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if(!event.getSelection().isEmpty()) {
+					tltmModify.setEnabled(true);
+					tltmRemove.setEnabled(true);
+				}
+			}
+		});
 		Table tableIndex = tableVMonitoringList.getTable();
 		tableIndex.setHeaderVisible(true);
 		tableIndex.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -351,9 +408,29 @@ public class MonitoringManagerEditor extends EditorPart {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -7);
 		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		initIndexBtn(false);
 
 		// google analytic
 		AnalyticCaller.track(MonitoringManagerEditor.ID);
+	}
+	
+	/**
+	 * initialize index button
+	 * 
+	 * @param isEnable
+	 */
+	private void initIndexBtn(boolean isEnable) {
+		tltmRefresh.setEnabled(isEnable);
+		tltmAdd.setEnabled(isEnable);
+	}
+	
+	/**
+	 * initialize resultData
+	 */
+	private void initSearchResult() {
+		List<MonitoringResultDAO> listResult = new ArrayList<>();
+		tvResult.setInput(listResult);
 	}
 	
 	/**
@@ -389,11 +466,14 @@ public class MonitoringManagerEditor extends EditorPart {
 	/**
 	 * monitoring index 초기화
 	 */
-	private void reLoadMonitoringIndex() {
+	private void refreshMonitoringIndex() {
 		try {
 			List<MonitoringIndexDAO> listMonitoringIndex = TadpoleSystem_monitoring.getUserMonitoringIndex(userDB);
 			tableVMonitoringList.setInput(listMonitoringIndex);
 			tableVMonitoringList.refresh();
+			
+			tltmModify.setEnabled(false);
+			tltmRemove.setEnabled(false);
 		} catch (Exception e) {
 			logger.error("get UserMonitoring index", e);
 		}

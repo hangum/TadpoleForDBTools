@@ -16,7 +16,6 @@ import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
-import com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -74,6 +73,18 @@ public class TadpoleSystem_monitoring {
 		indexDao.setMonitoring_seq(mainDao.getSeq());
 		sqlClient.insert("insertMonitoringIndex", indexDao);
 	}
+	
+	/**
+	 * delete monitoring index
+	 * 
+	 * @param indexDao
+	 * @throws Exception
+	 */
+	public static void deleteMonitoringIndex(MonitoringIndexDAO indexDao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.delete("deleteMonitoringMain", indexDao);
+		sqlClient.delete("deleteMonitoringIndex", indexDao);
+	}
 
 	/**
 	 * MonitoringResult save
@@ -116,7 +127,8 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringResultDAO> getMonitoringResult(MonitoringIndexDAO monitoringIndexDao, String strResultType, String strTerm, long startTime, long endTime) throws Exception {
+	public static List<MonitoringResultDAO> getMonitoringResult(MonitoringIndexDAO monitoringIndexDao, 
+											String strResultType, String strTerm, long startTime, long endTime) throws Exception {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("monitoring_seq",	monitoringIndexDao.getMonitoring_seq());
 		

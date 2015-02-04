@@ -1,5 +1,6 @@
 package com.hangum.tadpole.monitoring.core.editors.monitoring.realtime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,7 +30,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
 import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -43,12 +44,13 @@ import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
  */
 public class MonitoringMainEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(MonitoringMainEditor.class);
-
 	public static final String ID = "com.hangum.tadpole.monitoring.core.editor.main";
 	
 	private boolean isThread = true;
 	final ServerPushSession pushSession = new ServerPushSession();
 	private TableViewer tvError;
+	
+	List<MonitoringResultDAO> listMonitoringResult; 
 
 	public MonitoringMainEditor() {
 		super();
@@ -95,11 +97,11 @@ public class MonitoringMainEditor extends EditorPart {
 		tltmAddItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				AddMonitoringDialog dialog = new AddMonitoringDialog(null);
-//				dialog.open();
+
 			}
 		});
-		tltmAddItem.setText("Add Item");
+		tltmAddItem.setText("Add Chart Item");
+		tltmAddItem.setEnabled(false);
 
 		SashForm sashFormBody = new SashForm(parent, SWT.VERTICAL);
 		sashFormBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -175,13 +177,18 @@ public class MonitoringMainEditor extends EditorPart {
 			public void run() {
 
 				while(isThread) {
-					final List<MonitoringResultDAO> listMonitoringResult = instance.get(email);
+					listMonitoringResult = instance.get(email);
+					
+					final List<MonitoringResultDAO> listErrorMonitoringResult = new ArrayList<MonitoringResultDAO>();
+					for (MonitoringResultDAO monitoringResultDAO : listMonitoringResult) {
+						if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringResultDAO.getResult())) listErrorMonitoringResult.add(monitoringResultDAO);
+					}
 					
 					display.asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							if (!tvError.getTable().isDisposed()) {
-								tvError.setInput(listMonitoringResult);
+								tvError.setInput(listErrorMonitoringResult);
 								tvError.refresh();
 							}
 						}
