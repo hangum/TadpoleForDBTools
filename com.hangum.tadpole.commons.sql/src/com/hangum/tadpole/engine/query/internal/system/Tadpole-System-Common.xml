@@ -182,11 +182,11 @@
 	WHERE email = #email#
 </select>
 
-<select id="getAdmin" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO">
-	select a.* from tadpole_user a,  user_role b
-	where 
-	 	b.role_type = 'ADMIN'
-	 and a.seq = b.user_seq;
+<select id="getSystemAdmin" resultClass="com.hangum.tadpole.sql.dao.system.UserDAO">
+	SELECT * 
+	FROM tadpole_user 
+	WHERE 
+	 	role_type = 'SYSTEM_ADMIN'
 </select>
 
 <!-- userDB의 manager 권한 리스트 -->

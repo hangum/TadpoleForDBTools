@@ -26,20 +26,30 @@ public class Utils {
 	private static final Logger logger = Logger.getLogger(Utils.class);
 	
 	/**
+	 * email send
 	 * 
-	 * @param title
 	 * @param userSeq
+	 * @param title
+	 * @param strContent
+	 * @throws Exception
+	 */
+	public static void sendEmail(int userSeq, String title, String strContent) throws Exception {
+		UserDAO userDao = TadpoleSystem_UserQuery.getUserInfo(userSeq);
+		sendEmail(userDao.getEmail(), title, strContent);
+	}
+	
+	/**
+	 * 
+	 * @param receivers 
+	 * @param title
 	 * @param strContent
 	 */
-	public static void sendEmail(String title, int userSeq, String strContent) throws Exception {
+	public static void sendEmail(String receivers, String title, String strContent) throws Exception {
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.getUserInfo(userSeq);
-			
-			// manager 에게 메일을 보낸다.
 			EmailDTO emailDao = new EmailDTO();
-			emailDao.setSubject(title + " Report.");
+			emailDao.setSubject(title + " waraing message.");
 			emailDao.setContent(strContent);
-			emailDao.setTo(userDao.getEmail());
+			emailDao.setTo(receivers);
 			
 			SendEmails sendEmail = new SendEmails(GetPreferenceGeneral.getSMTPINFO());
 			sendEmail.sendMail(emailDao);

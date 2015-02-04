@@ -68,7 +68,7 @@ public class DailySummaryReportJOB implements Job {
 						String mailContent = report.makeFullSummaryReport(userDBDAO.getDisplay_name(), strMailContent.toString());
 
 						// 보고서를 보냅니다.						
-						Utils.sendEmail(userDBDAO.getDisplay_name(), userDBDAO.getUser_seq(), mailContent);
+						Utils.sendEmail(userDBDAO.getUser_seq(), userDBDAO.getDisplay_name(), mailContent);
 						
 						if(logger.isDebugEnabled()) logger.debug(mailContent);
 					} // end mysql db

@@ -211,9 +211,9 @@ public class TadpoleSystem_UserQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDAO getAdmin() throws Exception {
+	public static UserDAO getSystemAdmin() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (UserDAO)sqlClient.queryForObject("getAdmin"); //$NON-NLS-1$
+		return (UserDAO)sqlClient.queryForObject("getSystemAdmin"); //$NON-NLS-1$
 	}
 	
 	/**

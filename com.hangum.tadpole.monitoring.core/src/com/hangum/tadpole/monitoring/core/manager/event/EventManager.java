@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.monitoring.core.utils.Utils;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -79,12 +80,10 @@ public class EventManager {
 	private void sendEmail(MonitoringResultDAO resultDao) {
 		if(logger.isDebugEnabled()) logger.debug(resultDao.getQuery_result() + resultDao.getQuery_result2());
 		try {
-			FileWriter fw  = new FileWriter("/Users/hangum/Downloads/mail.send.txt", true);
-			fw.write(resultDao.getQuery_result() + resultDao.getQuery_result2() + PublicTadpoleDefine.LINE_SEPARATOR);
-			fw.flush();
-			
-			fw.close();
-		} catch (IOException e) {
+			String strMailTitle = resultDao.getUserDB().getDisplay_name() + " - " + resultDao.getMonitoringIndexDAO().getTitle();
+			String strMailContent = strMailTitle + "\n" + resultDao.getSystem_description() + "\n" + resultDao.getQuery_result() + resultDao.getQuery_result2();
+			Utils.sendEmail(resultDao.getMonitoringIndexDAO().getReceiver(), strMailTitle, strMailContent);
+		} catch (Exception e) {
 			logger.error("Mail send", e);
 		}
 	}

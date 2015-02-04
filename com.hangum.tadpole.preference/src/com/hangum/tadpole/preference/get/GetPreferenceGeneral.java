@@ -61,7 +61,7 @@ public class GetPreferenceGeneral {
 			dto = new SMTPDTO();
 			
 			try {
-				UserDAO userDao = TadpoleSystem_UserQuery.getAdmin();
+				UserDAO userDao = TadpoleSystem_UserQuery.getSystemAdmin();
 				List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
 				Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
 				for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
@@ -86,7 +86,7 @@ public class GetPreferenceGeneral {
 		SMTPDTO dto = new SMTPDTO();
 		
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.getAdmin();
+			UserDAO userDao = TadpoleSystem_UserQuery.getSystemAdmin();
 			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
 			Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
 			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						

@@ -69,7 +69,7 @@ public class UserJOB implements Job {
 			DailySummaryReport report = new DailySummaryReport();
 			String mailContent = report.makeFullSummaryReport(scheduleMainDao.getTitle(), sbMailContent.toString());
 			
-			Utils.sendEmail(scheduleMainDao.getTitle(), scheduleMainDao.getUser_seq(), mailContent);;
+			Utils.sendEmail(scheduleMainDao.getUser_seq(), scheduleMainDao.getTitle(), mailContent);;
 			
 			TadpoleSystem_Schedule.saveScheduleResult(scheduleSeq, isResult, strMessage);
 		} catch (Exception e) {

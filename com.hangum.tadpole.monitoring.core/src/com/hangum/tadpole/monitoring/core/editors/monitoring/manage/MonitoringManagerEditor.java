@@ -79,6 +79,8 @@ public class MonitoringManagerEditor extends EditorPart {
 	private ToolItem tltmModify;
 	private ToolItem tltmRemove;
 	
+//	private ToolItem tltmAddTemplate;
+	
 	// result search
 	private Combo comboResult;
 	private DateTime dateTimeStart;
@@ -235,6 +237,14 @@ public class MonitoringManagerEditor extends EditorPart {
 		});
 		tltmRemove.setText("Remove");
 		tltmRemove.setEnabled(false);
+		
+//		tltmAddTemplate = new ToolItem(toolBar, SWT.NONE);
+//		tltmAddTemplate.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//			}
+//		});
+//		tltmAddTemplate.setText("Add Template");
 				
 		tableVMonitoringList = new TableViewer(compositeRight, SWT.BORDER | SWT.FULL_SELECTION);
 		tableVMonitoringList.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -306,11 +316,6 @@ public class MonitoringManagerEditor extends EditorPart {
 		comboStatics.add("1 Week");
 		comboStatics.add("1 Month");
 		comboStatics.select(0);
-		new Label(compositeResultSearch, SWT.NONE);
-		new Label(compositeResultSearch, SWT.NONE);
-		new Label(compositeResultSearch, SWT.NONE);
-		new Label(compositeResultSearch, SWT.NONE);
-		new Label(compositeResultSearch, SWT.NONE);
 		
 		CTabFolder tabFolderResult = new CTabFolder(compositeResult, SWT.NONE);
 		tabFolderResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -423,6 +428,8 @@ public class MonitoringManagerEditor extends EditorPart {
 	private void initIndexBtn(boolean isEnable) {
 		tltmRefresh.setEnabled(isEnable);
 		tltmAdd.setEnabled(isEnable);
+		
+//		tltmAddTemplate.setEnabled(isEnable);
 	}
 	
 	/**

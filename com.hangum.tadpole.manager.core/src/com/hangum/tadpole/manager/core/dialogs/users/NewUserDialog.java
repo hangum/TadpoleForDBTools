@@ -337,7 +337,7 @@ public class NewUserDialog extends Dialog {
 		try {
 			UserDAO userDao = null;
 			if(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER == userType) {
-				userDao = TadpoleSystem_UserQuery.getAdmin();
+				userDao = TadpoleSystem_UserQuery.getSystemAdmin();
 			} else {
 				userDao = TadpoleSystem_UserQuery.getGroupManager(groupSeq);
 			}
