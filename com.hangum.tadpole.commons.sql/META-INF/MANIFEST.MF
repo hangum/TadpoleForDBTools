@@ -20,12 +20,12 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726.jar,
  .,
  libs/driver/oracle/ojdbc6.jar,
  libs/driver/postgreSQL/postgresql-9.3-1100.jdbc4.jar,
- libs/driver/mariadb/mariadb-java-client-1.1.7.jar,
  libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar,
  libs/driver/mssql/jtds-1.3.1.jar,
  libs/driver/mongodb/mongo-java-driver-2.12.2.jar,
  libs/driver/mysql/mysql-connector-java-5.1.32-bin.jar,
- libs/driver/sqlite/sqlite-jdbc-3.7.2.jar
+ libs/driver/sqlite/sqlite-jdbc-3.7.2.jar,
+ libs/driver/mariadb/mariadb-java-client-1.1.8.jar
 Export-Package: 
  com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.engine,
