@@ -25,8 +25,8 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.monitoring.core.jobs.MonitoringJob;
 import com.hangum.tadpole.monitoring.core.jobs.UserJOB;
+import com.hangum.tadpole.monitoring.core.jobs.monitoring.MonitoringJob;
 import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 

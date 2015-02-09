@@ -13,7 +13,6 @@ import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.summary.report.DailySummaryReportJOB;
 
 /**
  * cron exp utils

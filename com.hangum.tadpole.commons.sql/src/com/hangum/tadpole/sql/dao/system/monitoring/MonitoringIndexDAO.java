@@ -12,17 +12,19 @@ public class MonitoringIndexDAO extends MonitoringMainDAO {
 	
 	int seq;
 	int monitoring_seq;
-	String condition_type;
 	String monitoring_type;
-	String after_type;
-	String index_nm;
-	String condition_value;
-	String param_1_column;
-	String param_1_init_value;
-	String param_2_column;
-	String param_2_init_value;
 	
-	Timestamp create_time 	= new Timestamp(System.currentTimeMillis());
+	String after_type;
+
+	String index_nm;
+	String condition_type;
+	String condition_value;
+	
+    String exception_index_nm;
+    String exception_condition_type;
+    String exception_condition_value;
+
+    Timestamp create_time 	= new Timestamp(System.currentTimeMillis());
 	Timestamp mod_time 		= new Timestamp(System.currentTimeMillis());
 	String delyn;
 
@@ -105,6 +107,7 @@ public class MonitoringIndexDAO extends MonitoringMainDAO {
 	public String getCondition_value() {
 		return condition_value;
 	}
+	
 
 	/**
 	 * @param condition_value the condition_value to set
@@ -114,59 +117,59 @@ public class MonitoringIndexDAO extends MonitoringMainDAO {
 	}
 
 	/**
-	 * @return the param_1_column
+	 * @return the exception_index_nm
 	 */
-	public String getParam_1_column() {
-		return param_1_column;
+	public String getException_index_nm() {
+		return exception_index_nm;
 	}
 
 	/**
-	 * @param param_1_column the param_1_column to set
+	 * @param exception_index_nm the exception_index_nm to set
 	 */
-	public void setParam_1_column(String param_1_column) {
-		this.param_1_column = param_1_column;
+	public void setException_index_nm(String exception_index_nm) {
+		this.exception_index_nm = exception_index_nm;
 	}
 
 	/**
-	 * @return the param_1_init_value
+	 * @return the exception_condition_type
 	 */
-	public String getParam_1_init_value() {
-		return param_1_init_value;
+	public String getException_condition_type() {
+		return exception_condition_type;
 	}
 
 	/**
-	 * @param param_1_init_value the param_1_init_value to set
+	 * @param exception_condition_type the exception_condition_type to set
 	 */
-	public void setParam_1_init_value(String param_1_init_value) {
-		this.param_1_init_value = param_1_init_value;
+	public void setException_condition_type(String exception_condition_type) {
+		this.exception_condition_type = exception_condition_type;
 	}
 
 	/**
-	 * @return the param_2_column
+	 * @return the exception_condition_value
 	 */
-	public String getParam_2_column() {
-		return param_2_column;
+	public String getException_condition_value() {
+		return exception_condition_value;
 	}
 
 	/**
-	 * @param param_2_column the param_2_column to set
+	 * @param exception_condition_value the exception_condition_value to set
 	 */
-	public void setParam_2_column(String param_2_column) {
-		this.param_2_column = param_2_column;
+	public void setException_condition_value(String exception_condition_value) {
+		this.exception_condition_value = exception_condition_value;
 	}
 
 	/**
-	 * @return the param_2_init_value
+	 * @return the mod_time
 	 */
-	public String getParam_2_init_value() {
-		return param_2_init_value;
+	public Timestamp getMod_time() {
+		return mod_time;
 	}
 
 	/**
-	 * @param param_2_init_value the param_2_init_value to set
+	 * @param mod_time the mod_time to set
 	 */
-	public void setParam_2_init_value(String param_2_init_value) {
-		this.param_2_init_value = param_2_init_value;
+	public void setMod_time(Timestamp mod_time) {
+		this.mod_time = mod_time;
 	}
-
+	
 }

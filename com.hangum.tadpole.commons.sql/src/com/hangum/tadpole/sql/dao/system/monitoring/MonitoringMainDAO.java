@@ -10,22 +10,29 @@ import java.sql.Timestamp;
  */
 public class MonitoringMainDAO {
 	String email;
-//	UserDBDAO userDB;
 	
 	int seq;
 	int user_seq;
 	int db_seq;
+	
 	String read_method;
 	String title;
 	String description;
 	String cron_exp;
+
 	String query;
+	String param_1_column;
+	String param_1_init_value;
+	String param_2_column;
+	String param_2_init_value;
+
+	
 	String is_result_save;
 	String receiver;
 	Timestamp create_time;
 	Timestamp mod_time;
 	String delyn;
-
+	
 	public MonitoringMainDAO() {
 	}
 
@@ -224,4 +231,61 @@ public class MonitoringMainDAO {
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
 	}
+
+	/**
+	 * @return the param_1_column
+	 */
+	public String getParam_1_column() {
+		return param_1_column;
+	}
+
+	/**
+	 * @param param_1_column the param_1_column to set
+	 */
+	public void setParam_1_column(String param_1_column) {
+		this.param_1_column = param_1_column;
+	}
+
+	/**
+	 * @return the param_1_init_value
+	 */
+	public String getParam_1_init_value() {
+		return param_1_init_value;
+	}
+
+	/**
+	 * @param param_1_init_value the param_1_init_value to set
+	 */
+	public void setParam_1_init_value(String param_1_init_value) {
+		this.param_1_init_value = param_1_init_value;
+	}
+
+	/**
+	 * @return the param_2_column
+	 */
+	public String getParam_2_column() {
+		return param_2_column;
+	}
+
+	/**
+	 * @param param_2_column the param_2_column to set
+	 */
+	public void setParam_2_column(String param_2_column) {
+		this.param_2_column = param_2_column;
+	}
+
+	/**
+	 * @return the param_2_init_value
+	 */
+	public String getParam_2_init_value() {
+		return param_2_init_value;
+	}
+
+	/**
+	 * @param param_2_init_value the param_2_init_value to set
+	 */
+	public void setParam_2_init_value(String param_2_init_value) {
+		this.param_2_init_value = param_2_init_value;
+	}
+
 }

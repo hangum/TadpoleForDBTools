@@ -1,7 +1,6 @@
 package com.hangum.tadpole.monitoring.core.manager.event;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -9,7 +8,6 @@ import org.apache.log4j.Logger;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.monitoring.core.utils.Utils;
@@ -55,17 +53,25 @@ public class EventManager {
 				
 				JsonElement jsonElement = parser.parse(resultDAO.getQuery_result() + resultDAO.getQuery_result2());
 				JsonObject jsonObject = jsonElement.getAsJsonObject();
-				String id = jsonObject.getAsJsonPrimitive("id").getAsString();
+				String id = "";
+				if(DBDefine.MYSQL_DEFAULT == resultDAO.getUserDB().getDBDefine() || DBDefine.MARIADB_DEFAULT == resultDAO.getUserDB().getDBDefine()) {
+					id = jsonObject.getAsJsonPrimitive("id").getAsString();
+				} else if(DBDefine.POSTGRE_DEFAULT == resultDAO.getUserDB().getDBDefine()) {
+					id = jsonObject.getAsJsonPrimitive("pid").getAsString();
+				}
 				
 				try {
 					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 					if (userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 						client.queryForObject("killProcess", Integer.parseInt(id));
-					} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					} else {
 						client.queryForObject("killProcess", id);
 					}
 				} catch(Exception e) {
+					logger.error("=[monitoring kill session][start]==============================================================================");
+					logger.error(resultDAO.getCreate_time() + "\t[db seq]" + resultDAO.getUserDB().getSeq() + "\t [Json msg]" + jsonElement.toString());
 					logger.error("kill session", e);
+					logger.error("=[monitoring kill session][end]==============================================================================");
 				}
 			}	//  end if kill_after email
 				
@@ -82,7 +88,12 @@ public class EventManager {
 		try {
 			String strMailTitle = resultDao.getUserDB().getDisplay_name() + " - " + resultDao.getMonitoringIndexDAO().getTitle();
 			String strMailContent = strMailTitle + "\n" + resultDao.getSystem_description() + "\n" + resultDao.getQuery_result() + resultDao.getQuery_result2();
-			Utils.sendEmail(resultDao.getMonitoringIndexDAO().getReceiver(), strMailTitle, strMailContent);
+
+			//			Utils.sendEmail(resultDao.getMonitoringIndexDAO().getReceiver(), strMailTitle, strMailContent);
+			FileWriter fw = new FileWriter("/Users/hangum/Downloads/mail.txt", true);
+			fw.write(strMailTitle); 
+			fw.flush();
+			fw.close();
 		} catch (Exception e) {
 			logger.error("Mail send", e);
 		}

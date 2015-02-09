@@ -20,7 +20,7 @@
 
 <!--  get monitoring SQL template -->
 <select id="getDefaultMonitoringSQLTemplate" resultClass="com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO" parameterClass="java.lang.String">
-	SELECT seq, user_seq, db_type, title, description, query, index_nm, condition_type, condition_value, after_type, monitoring_type, delyn, param_1_column, param_1_init_value, param_2_column, param_2_init_value 
+	SELECT *  
  	FROM tadpole_monitoring_template
 	WHERE delyn = 'NO'
 		AND user_seq = -1

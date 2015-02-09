@@ -44,8 +44,8 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
  *
  */
 @SuppressWarnings("serial")
-public class AddMonitoringDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(AddMonitoringDialog.class);
+public class TemplateMonitoringManageDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(TemplateMonitoringManageDialog.class);
 	
 	private UserDBDAO userDB;
 	
@@ -66,9 +66,6 @@ public class AddMonitoringDialog extends Dialog {
 	private Text textParameter2_name;
 	private Text textParameter2Value;
 	private Text textReceiver;
-	private Combo comboExceptionConditionType;
-	private Text textExceptionIndexNM;
-	private Text textExceptionConditionValue;
 
 	/**
 	 * Create the dialog.
@@ -76,7 +73,7 @@ public class AddMonitoringDialog extends Dialog {
 	 * @param parentShell
 	 * @param userDB
 	 */
-	public AddMonitoringDialog(Shell parentShell, UserDBDAO userDB) {
+	public TemplateMonitoringManageDialog(Shell parentShell, UserDBDAO userDB) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		this.userDB = userDB;
@@ -130,13 +127,13 @@ public class AddMonitoringDialog extends Dialog {
 		tvTemplate.setLabelProvider(new MonitoringTemplateLabelProvider());
 		
 		Composite compositeMoni = new Composite(sashForm, SWT.NONE);
-		compositeMoni.setLayout(new GridLayout(6, false));
+		compositeMoni.setLayout(new GridLayout(4, false));
 		
 		Label lblMonitoringType_1 = new Label(compositeMoni, SWT.NONE);
 		lblMonitoringType_1.setText("Monitoring Type");
 		
 		comboMonitoringType = new Combo(compositeMoni, SWT.READ_ONLY);
-		comboMonitoringType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		comboMonitoringType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		comboMonitoringType.add("CONNECTION");
 		comboMonitoringType.add("CPU");
 		comboMonitoringType.add("DISK");
@@ -152,13 +149,13 @@ public class AddMonitoringDialog extends Dialog {
 		lblTitle.setText("Title");
 		
 		textTitle = new Text(compositeMoni, SWT.BORDER);
-		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Label lblDescription = new Label(compositeMoni, SWT.NONE);
 		lblDescription.setText("Description");
 		
 		textDescription = new Text(compositeMoni, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1);
+		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
 		gd_textDescription.heightHint = 40;
 		gd_textDescription.minimumHeight = 40;
 		textDescription.setLayoutData(gd_textDescription);
@@ -167,7 +164,7 @@ public class AddMonitoringDialog extends Dialog {
 		lblMonitoringType.setText("Read Type");
 		
 		comboMonitoringReadType = new Combo(compositeMoni, SWT.READ_ONLY);
-		comboMonitoringReadType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		comboMonitoringReadType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		comboMonitoringReadType.add("SQL");
 //		comboMonitoringReadType.add("PL/SQL");
 //		comboMonitoringReadType.add("Rest-API");
@@ -177,7 +174,7 @@ public class AddMonitoringDialog extends Dialog {
 		lblQuery.setText("Query");
 		
 		textQuery = new Text(compositeMoni, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		GridData gd_textQuery = new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1);
+		GridData gd_textQuery = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
 		gd_textQuery.heightHint = 80;
 		gd_textQuery.minimumHeight = 80;
 		textQuery.setLayoutData(gd_textQuery);
@@ -186,26 +183,27 @@ public class AddMonitoringDialog extends Dialog {
 		lblParameter.setText("Parameter 1 Name");
 		
 		textParameter1_name = new Text(compositeMoni, SWT.BORDER);
-		textParameter1_name.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textParameter1_name.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblParameterValue = new Label(compositeMoni, SWT.NONE);
 		lblParameterValue.setText("Parameter 1 Value");
 		
 		textParameter1Value = new Text(compositeMoni, SWT.BORDER);
-		textParameter1Value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textParameter1Value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblParameterName = new Label(compositeMoni, SWT.NONE);
 		lblParameterName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblParameterName.setText("Parameter 2 Name");
 		
 		textParameter2_name = new Text(compositeMoni, SWT.BORDER);
-		textParameter2_name.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textParameter2_name.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblParameterValue_1 = new Label(compositeMoni, SWT.NONE);
+		lblParameterValue_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblParameterValue_1.setText("Parameter 2 Value");
 		
 		textParameter2Value = new Text(compositeMoni, SWT.BORDER);
-		textParameter2Value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textParameter2Value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblIndexName = new Label(compositeMoni, SWT.NONE);
 		lblIndexName.setText("Index Name");
@@ -214,55 +212,28 @@ public class AddMonitoringDialog extends Dialog {
 		textIndexName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblConditionType = new Label(compositeMoni, SWT.NONE);
-		lblConditionType.setText("Type");
+		lblConditionType.setText("Condition Type");
 		
 		comboConditionType = new Combo(compositeMoni, SWT.READ_ONLY);
 		comboConditionType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboConditionType.add("EQUALS");
-		comboConditionType.add("UNEQUAL");
 		comboConditionType.add("LEAST");
 		comboConditionType.add("GREATEST");
 		comboConditionType.add("NOT_CHECK");
 		comboConditionType.add("RISE_EXCEPTION");
 		comboConditionType.select(0);
-		
+
 		Label lblCondition = new Label(compositeMoni, SWT.NONE);
-		lblCondition.setText("Value");
+		lblCondition.setText("Condition Value");
 		
 		textConditionValue = new Text(compositeMoni, SWT.BORDER);
-		textConditionValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblExceptionIndex = new Label(compositeMoni, SWT.NONE);
-		lblExceptionIndex.setText("Exception Index");
-		
-		textExceptionIndexNM = new Text(compositeMoni, SWT.BORDER);
-		textExceptionIndexNM.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblType = new Label(compositeMoni, SWT.NONE);
-		lblType.setText("Type");
-		
-		comboExceptionConditionType = new Combo(compositeMoni, SWT.READ_ONLY);
-		comboExceptionConditionType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboExceptionConditionType.add("EQUALS");
-		comboExceptionConditionType.add("UNEQUAL");
-		comboExceptionConditionType.add("LEAST");
-		comboExceptionConditionType.add("GREATEST");
-		comboExceptionConditionType.add("NOT_CHECK");
-		comboExceptionConditionType.add("RISE_EXCEPTION");
-		comboExceptionConditionType.select(0);
-		
-		Label lblNewLabel = new Label(compositeMoni, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText("Value");
-		
-		textExceptionConditionValue = new Text(compositeMoni, SWT.BORDER);
-		textExceptionConditionValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textConditionValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Label lblIfError = new Label(compositeMoni, SWT.NONE);
 		lblIfError.setText("If error?");
 		
 		comboAfterProcess = new Combo(compositeMoni, SWT.READ_ONLY);
-		comboAfterProcess.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		comboAfterProcess.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		comboAfterProcess.add("EMAIL");
 		comboAfterProcess.add("KILL_AFTER_EMAIL");
 		comboAfterProcess.select(0);
@@ -271,7 +242,7 @@ public class AddMonitoringDialog extends Dialog {
 		lblReceiver.setText("Receiver");
 		
 		textReceiver = new Text(compositeMoni, SWT.BORDER);
-		textReceiver.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		textReceiver.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		sashForm.setWeights(new int[] {3, 7});
 		
@@ -305,7 +276,6 @@ public class AddMonitoringDialog extends Dialog {
 		textDescription.setText(dao.getDescription());
 		comboMonitoringReadType.setText("SQL");
 		textQuery.setText(dao.getQuery());
-		
 		textParameter1_name.setText(StringUtils.trimToEmpty(dao.getParam_1_column()));
 		textParameter1Value.setText(StringUtils.trimToEmpty(dao.getParam_1_init_value()));
 		textParameter2_name.setText(StringUtils.trimToEmpty(dao.getParam_2_column()));
@@ -314,11 +284,6 @@ public class AddMonitoringDialog extends Dialog {
 		textIndexName.setText(dao.getIndex_nm());
 		comboConditionType.setText(dao.getCondition_type());
 		textConditionValue.setText(dao.getCondition_value());
-		
-		textExceptionIndexNM.setText(dao.getException_index_nm());
-		comboExceptionConditionType.setText(dao.getException_condition_type());
-		textExceptionConditionValue.setText(dao.getException_condition_value());
-		
 		comboAfterProcess.setText(dao.getAfter_type());
 		textReceiver.setText(SessionManager.getEMAIL());
 	}
@@ -346,24 +311,20 @@ public class AddMonitoringDialog extends Dialog {
 		 mainDao.setQuery(textQuery.getText());
 		 mainDao.setIs_result_save(PublicTadpoleDefine.YES_NO.YES.toString());
 		 mainDao.setReceiver(textReceiver.getText());
-		 
-		 mainDao.setParam_1_column(textParameter1_name.getText());
-		 mainDao.setParam_1_init_value(textParameter1Value.getText());
-		 mainDao.setParam_2_column(textParameter2_name.getText());
-		 mainDao.setParam_2_init_value(textParameter2Value.getText());
 
 		 MonitoringIndexDAO indexDao = new MonitoringIndexDAO();
 		 indexDao.setMonitoring_seq(mainDao.getSeq());
 		 
 		 indexDao.setMonitoring_type(comboMonitoringType.getText());
-		 indexDao.setAfter_type(comboAfterProcess.getText());
 		 indexDao.setIndex_nm(textIndexName.getText());
 		 indexDao.setCondition_type(comboConditionType.getText());
 		 indexDao.setCondition_value(textConditionValue.getText());
+		 indexDao.setAfter_type(comboAfterProcess.getText());
 		 
-		 indexDao.setException_index_nm(textExceptionIndexNM.getText());
-		 indexDao.setException_condition_type(comboExceptionConditionType.getText());
-		 indexDao.setException_condition_value(textExceptionConditionValue.getText());
+		 indexDao.setParam_1_column(textParameter1_name.getText());
+		 indexDao.setParam_1_init_value(textParameter1Value.getText());
+		 indexDao.setParam_2_column(textParameter2_name.getText());
+		 indexDao.setParam_2_init_value(textParameter2Value.getText());
 		 
 		 indexDao.setReceiver(textReceiver.getText());
 

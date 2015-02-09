@@ -178,21 +178,22 @@ public class MonitoringMainEditor extends EditorPart {
 
 				while(isThread) {
 					listMonitoringResult = instance.get(email);
-					
-					final List<MonitoringResultDAO> listErrorMonitoringResult = new ArrayList<MonitoringResultDAO>();
-					for (MonitoringResultDAO monitoringResultDAO : listMonitoringResult) {
-						if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringResultDAO.getResult())) listErrorMonitoringResult.add(monitoringResultDAO);
-					}
-					
-					display.asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							if (!tvError.getTable().isDisposed()) {
-								tvError.setInput(listErrorMonitoringResult);
-								tvError.refresh();
-							}
+					if(null != listMonitoringResult) {
+						final List<MonitoringResultDAO> listErrorMonitoringResult = new ArrayList<MonitoringResultDAO>();
+						for (MonitoringResultDAO monitoringResultDAO : listMonitoringResult) {
+							if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringResultDAO.getResult())) listErrorMonitoringResult.add(monitoringResultDAO);
 						}
-					});
+						
+						display.asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								if (!tvError.getTable().isDisposed()) {
+									tvError.setInput(listErrorMonitoringResult);
+									tvError.refresh();
+								}
+							}
+						});
+					}
 					try{ Thread.sleep(2000); } catch(Exception e) {}
 				}
 			};

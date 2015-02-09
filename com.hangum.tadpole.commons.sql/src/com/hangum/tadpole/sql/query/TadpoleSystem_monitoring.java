@@ -35,7 +35,7 @@ public class TadpoleSystem_monitoring {
 	 */
 	public static void updateParameter(MonitoringIndexDAO dao) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.update("updateIndexParameter", dao);
+		sqlClient.update("updateParameter", dao);
 	}
 	
 	/**
@@ -68,10 +68,16 @@ public class TadpoleSystem_monitoring {
 	 * @throws Exception
 	 */
 	public static void saveMonitoring(MonitoringMainDAO mainDao, MonitoringIndexDAO indexDao) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		mainDao = (MonitoringMainDAO)sqlClient.insert("insertMonitoringMain", mainDao);
-		indexDao.setMonitoring_seq(mainDao.getSeq());
-		sqlClient.insert("insertMonitoringIndex", indexDao);
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
+		// 기존에 동일한 type, name으로 항목이 등록 되어 있는지 검사합니다.
+		List<MonitoringMainDAO> listMainList = sqlClient.queryForList("getMonitoringDuplicatCheck", mainDao);
+		if(listMainList.isEmpty()) {
+			mainDao = (MonitoringMainDAO)sqlClient.insert("insertMonitoringMain", mainDao);
+			indexDao.setMonitoring_seq(mainDao.getSeq());
+			sqlClient.insert("insertMonitoringIndex", indexDao);
+		} else {
+			throw new Exception("이미 동일한 항목이 존재합니다. 이름을 수정하여 주십시오. ");
+		}
 	}
 	
 	/**

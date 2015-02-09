@@ -50,6 +50,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.monitoring.core.Activator;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
+import com.hangum.tadpole.monitoring.core.dialogs.monitoring.TemplateMonitoringManageDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.UpdateMonitoringDialog;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
@@ -128,6 +129,22 @@ public class MonitoringManagerEditor extends EditorPart {
 		gl_parent.marginHeight = 1;
 		gl_parent.marginWidth = 1;
 		parent.setLayout(gl_parent);
+		
+		Composite compositeTop = new Composite(parent, SWT.NONE);
+		compositeTop.setLayout(new GridLayout(1, false));
+		
+		ToolBar toolBarTop = new ToolBar(compositeTop, SWT.FLAT | SWT.RIGHT);
+		toolBarTop.setBounds(0, 0, 88, 20);
+		
+		ToolItem tltmManageTemplate = new ToolItem(toolBarTop, SWT.NONE);
+		tltmManageTemplate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TemplateMonitoringManageDialog dialog = new TemplateMonitoringManageDialog(null, userDB);
+				dialog.open();
+			}
+		});
+		tltmManageTemplate.setText("Manage Template");
 		
 		SashForm sashFormMain = new SashForm(parent, SWT.BORDER | SWT.VERTICAL);
 		sashFormMain.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -270,8 +287,23 @@ public class MonitoringManagerEditor extends EditorPart {
 		compositeResult.setLayout(new GridLayout(1, false));
 		
 		Composite compositeResultSearch = new Composite(compositeResult, SWT.NONE);
-		compositeResultSearch.setLayout(new GridLayout(7, false));
+		compositeResultSearch.setLayout(new GridLayout(9, false));
 		compositeResultSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblStatics = new Label(compositeResultSearch, SWT.NONE);
+		lblStatics.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblStatics.setText("Statics");
+		
+		comboStatics = new Combo(compositeResultSearch, SWT.READ_ONLY);
+		comboStatics.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		comboStatics.setVisibleItemCount(5);
+		comboStatics.add("All");
+		comboStatics.add("5 Minute");
+		comboStatics.add("1 Hour");
+		comboStatics.add("1 Day");
+		comboStatics.add("1 Week");
+		comboStatics.add("1 Month");
+		comboStatics.select(0);
 		
 		Label lblNewLabel = new Label(compositeResultSearch, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -301,21 +333,6 @@ public class MonitoringManagerEditor extends EditorPart {
 			}
 		});
 		btnSearch.setText("Search");
-		
-		Label lblStatics = new Label(compositeResultSearch, SWT.NONE);
-		lblStatics.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblStatics.setText("Statics");
-		
-		comboStatics = new Combo(compositeResultSearch, SWT.READ_ONLY);
-		comboStatics.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		comboStatics.setVisibleItemCount(5);
-		comboStatics.add("NONE");
-		comboStatics.add("5 Minute");
-		comboStatics.add("1 Hour");
-		comboStatics.add("1 Day");
-		comboStatics.add("1 Week");
-		comboStatics.add("1 Month");
-		comboStatics.select(0);
 		
 		CTabFolder tabFolderResult = new CTabFolder(compositeResult, SWT.NONE);
 		tabFolderResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -561,5 +578,4 @@ public class MonitoringManagerEditor extends EditorPart {
 	@Override
 	public void setFocus() {
 	}
-
 }

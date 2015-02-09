@@ -20,11 +20,14 @@ public class MonitoringResultDAO {
 	int monitoring_index_seq;
 	int user_seq;
 	int db_seq;
+	
 	String result;
 	String index_value;
+	
 	String system_description;
 	String user_description;
 	String after_description;
+	
 	Timestamp create_time;	
 	String query_result	= "";
     String query_result2 = "";
@@ -241,5 +244,4 @@ public class MonitoringResultDAO {
 	public void setDb_seq(int db_seq) {
 		this.db_seq = db_seq;
 	}
-	
 }

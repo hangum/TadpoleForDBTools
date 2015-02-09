@@ -1,5 +1,7 @@
 package com.hangum.tadpole.sql.dao.system.sql.template;
 
+import java.sql.Timestamp;
+
 /**
  * SQL monitoring dao
  * 
@@ -13,9 +15,14 @@ public class TeadpoleMonitoringTemplateDAO {
     String title;
     String description;
     String query;
+
     String index_nm;
     String condition_type;
     String condition_value;
+    
+    String exception_index_nm;
+    String exception_condition_type;
+    String exception_condition_value;
     
     String param_1_column;
 	String param_1_init_value;
@@ -24,6 +31,7 @@ public class TeadpoleMonitoringTemplateDAO {
     
     String after_type;
     String monitoring_type;
+    Timestamp create_time;
     String delyn;
     
 	public TeadpoleMonitoringTemplateDAO() {
@@ -156,45 +164,45 @@ public class TeadpoleMonitoringTemplateDAO {
 	}
 
 	/**
-	 * @return the after_type
+	 * @return the exception_index_nm
 	 */
-	public String getAfter_type() {
-		return after_type;
+	public String getException_index_nm() {
+		return exception_index_nm;
 	}
 
 	/**
-	 * @param after_type the after_type to set
+	 * @param exception_index_nm the exception_index_nm to set
 	 */
-	public void setAfter_type(String after_type) {
-		this.after_type = after_type;
+	public void setException_index_nm(String exception_index_nm) {
+		this.exception_index_nm = exception_index_nm;
 	}
 
 	/**
-	 * @return the monitoring_type
+	 * @return the exception_condition_type
 	 */
-	public String getMonitoring_type() {
-		return monitoring_type;
+	public String getException_condition_type() {
+		return exception_condition_type;
 	}
 
 	/**
-	 * @param monitoring_type the monitoring_type to set
+	 * @param exception_condition_type the exception_condition_type to set
 	 */
-	public void setMonitoring_type(String monitoring_type) {
-		this.monitoring_type = monitoring_type;
+	public void setException_condition_type(String exception_condition_type) {
+		this.exception_condition_type = exception_condition_type;
 	}
 
 	/**
-	 * @return the delyn
+	 * @return the exception_condition_value
 	 */
-	public String getDelyn() {
-		return delyn;
+	public String getException_condition_value() {
+		return exception_condition_value;
 	}
 
 	/**
-	 * @param delyn the delyn to set
+	 * @param exception_condition_value the exception_condition_value to set
 	 */
-	public void setDelyn(String delyn) {
-		this.delyn = delyn;
+	public void setException_condition_value(String exception_condition_value) {
+		this.exception_condition_value = exception_condition_value;
 	}
 
 	/**
@@ -252,5 +260,61 @@ public class TeadpoleMonitoringTemplateDAO {
 	public void setParam_2_init_value(String param_2_init_value) {
 		this.param_2_init_value = param_2_init_value;
 	}
-	
+
+	/**
+	 * @return the after_type
+	 */
+	public String getAfter_type() {
+		return after_type;
+	}
+
+	/**
+	 * @param after_type the after_type to set
+	 */
+	public void setAfter_type(String after_type) {
+		this.after_type = after_type;
+	}
+
+	/**
+	 * @return the monitoring_type
+	 */
+	public String getMonitoring_type() {
+		return monitoring_type;
+	}
+
+	/**
+	 * @param monitoring_type the monitoring_type to set
+	 */
+	public void setMonitoring_type(String monitoring_type) {
+		this.monitoring_type = monitoring_type;
+	}
+
+	/**
+	 * @return the create_time
+	 */
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	/**
+	 * @param create_time the create_time to set
+	 */
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
+	}
+
+	/**
+	 * @return the delyn
+	 */
+	public String getDelyn() {
+		return delyn;
+	}
+
+	/**
+	 * @param delyn the delyn to set
+	 */
+	public void setDelyn(String delyn) {
+		this.delyn = delyn;
+	}
+
 }

@@ -1,4 +1,4 @@
-package com.hangum.tadpole.monitoring.core.jobs;
+package com.hangum.tadpole.monitoring.core.jobs.monitoring;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -62,7 +61,7 @@ public class MonitoringJob implements Job {
 						resultDao.setIndex_value(strIndexValue);
 						
 						//결과를 저장한다.
-						boolean isError = !isErrorCheck(strIndexValue, monitoringIndexDAO);
+						boolean isError = MonitorErrorChecker.isError(jsonObj, monitoringIndexDAO);
 						resultDao.setResult(isError?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 						resultDao.setSystem_description(String.format("%s %s %s", monitoringIndexDAO.getCondition_value(), monitoringIndexDAO.getCondition_type(), strIndexValue));
 						
@@ -197,7 +196,6 @@ public class MonitoringJob implements Job {
 	private void sendCacheManager(Map<String, List<MonitoringResultDAO>> mapMonitoringData) {
 		Set<String> emailSet = mapMonitoringData.keySet();
 		for (String strEmail : emailSet) {
-			
 			MonitoringCacheRepository cacheInstance = MonitoringCacheRepository.getInstance();
 			cacheInstance.put(strEmail, mapMonitoringData.get(strEmail));
 		}
@@ -214,30 +212,4 @@ public class MonitoringJob implements Job {
 		}
 	}
 	
-	/**
-	 * 에러인지 검사합니다. 
-	 * 
-	 * @param strIndelValue
-	 * @param monitoringIndexDAO
-	 * @return
-	 */
-	private boolean isErrorCheck(String strIndelValue, MonitoringIndexDAO monitoringIndexDAO) {
-		String conditionType 	= monitoringIndexDAO.getCondition_type();
-		String conditionValue 	= monitoringIndexDAO.getCondition_value();
-		
-		if(conditionType.equals("RISE_EXCEPTION")) {
-			return true;
-		} else if(conditionType.equals("EQUALS")) {
-			if(conditionValue.equals(strIndelValue)) return true;
-		} else if(conditionType.equals("GREATEST")) {
-			if(NumberUtils.toDouble(conditionValue) > NumberUtils.toDouble(strIndelValue)) return true;
-		} else if(conditionType.equals("LEAST")) {
-			if(NumberUtils.toDouble(conditionValue) < NumberUtils.toDouble(strIndelValue)) return true;
-		} else if(conditionType.equals("NOT_CHECK")) {
-			return false;	
-		}
-		
-		return false;
-	}
-
 }
