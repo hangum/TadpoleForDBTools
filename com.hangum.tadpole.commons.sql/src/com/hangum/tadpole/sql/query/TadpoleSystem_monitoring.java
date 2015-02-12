@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO;
@@ -26,6 +27,17 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_monitoring {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_monitoring.class);
+	
+	/**
+	 * get user monitoring db list
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDBDAO> getUserMonitoringDBList() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getUserMonitoringDBList", SessionManager.getUserSeq());
+	}
 	
 	/**
 	 * update parameter

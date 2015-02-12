@@ -58,6 +58,7 @@ import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * Monitoring manage editor
@@ -89,6 +90,8 @@ public class MonitoringManagerEditor extends EditorPart {
 	private TableViewer tvResult;
 	
 	private Combo comboStatics;
+	private Text text;
+	private Text text_1;
 
 	public MonitoringManagerEditor() {
 		super();
@@ -367,6 +370,24 @@ public class MonitoringManagerEditor extends EditorPart {
 		
 		sashFormMain.setWeights(new int[] {3, 7});
 		tabFolderResult.setSelection(0);
+		
+		Composite compositeSummary = new Composite(compositeResult, SWT.NONE);
+		compositeSummary.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeSummary.setLayout(new GridLayout(4, false));
+		
+		Label lblTotal = new Label(compositeSummary, SWT.NONE);
+		lblTotal.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblTotal.setText("Total");
+		
+		text_1 = new Text(compositeSummary, SWT.BORDER);
+		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblAverage = new Label(compositeSummary, SWT.NONE);
+		lblAverage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblAverage.setText("Average");
+		
+		text = new Text(compositeSummary, SWT.BORDER);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		initUI();
 	}
@@ -421,14 +442,11 @@ public class MonitoringManagerEditor extends EditorPart {
 		treeVUserDB.setContentProvider(new UserDBContentProvider());
 		treeVUserDB.setLabelProvider(new UserDBLabelProvider());
 		treeVUserDB.setInput(treeList);
-//		getSite().setSelectionProvider(treeVUserDB);
-
-//		treeVUserDB.getTree().clearAll(true);
 		reLoadDBList();
 		
 		// end 
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, -7);
+//		cal.add(Calendar.DAY_OF_YEAR, -1);
 		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 		
 		initIndexBtn(false);

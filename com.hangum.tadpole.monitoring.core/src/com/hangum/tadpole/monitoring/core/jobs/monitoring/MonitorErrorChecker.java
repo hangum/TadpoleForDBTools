@@ -32,13 +32,16 @@ public class MonitorErrorChecker {
 		isResult = isError(conditionType, conditionValue, strIndexValue);
 		
 		if(isResult) {
-			String exceptionConditionType 	= monitoringIndexDAO.getException_condition_type();
-			String exceptionConditionValue 	= monitoringIndexDAO.getException_condition_value();
-			
-			JsonPrimitive jsonExceptionValue = jsonObj.getAsJsonPrimitive(monitoringIndexDAO.getException_index_nm().toLowerCase());
-			String exceptionIndexValue = jsonExceptionValue != null?jsonExceptionValue.getAsString():"0";
-			
-			isResult = isError(exceptionConditionType, exceptionConditionValue, exceptionIndexValue);
+			String strExceptIndexNm = monitoringIndexDAO.getException_index_nm().toLowerCase();
+			if(!"".equals(strExceptIndexNm)){
+				String exceptionConditionType 	= monitoringIndexDAO.getException_condition_type();
+				String exceptionConditionValue 	= monitoringIndexDAO.getException_condition_value();
+				
+				JsonPrimitive jsonExceptionValue = jsonObj.getAsJsonPrimitive(strExceptIndexNm);
+				String exceptionIndexValue = jsonExceptionValue != null?jsonExceptionValue.getAsString():"0";
+				
+				isResult = isError(exceptionConditionType, exceptionConditionValue, exceptionIndexValue);
+			}
 		}
 		
 		return isResult;

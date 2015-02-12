@@ -18,6 +18,7 @@ public class MonitoringResultDAO {
 	int seq; 
 	int monitoring_seq;
 	int monitoring_index_seq;
+	String monitoring_type;
 	int user_seq;
 	int db_seq;
 	
@@ -244,4 +245,20 @@ public class MonitoringResultDAO {
 	public void setDb_seq(int db_seq) {
 		this.db_seq = db_seq;
 	}
+
+	/**
+	 * @return the monitoring_type
+	 */
+	public String getMonitoring_type() {
+		return monitoring_type;
+	}
+
+	/**
+	 * @param monitoring_type the monitoring_type to set
+	 */
+	public void setMonitoring_type(String monitoring_type) {
+		this.monitoring_type = monitoring_type;
+	}
+	
+	
 }

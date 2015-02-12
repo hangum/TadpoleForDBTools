@@ -1,7 +1,9 @@
 package com.hangum.tadpole.monitoring.core.editors.monitoring.realtime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -14,16 +16,16 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -32,9 +34,14 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
+import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.composite.ChartColorUtils;
+import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.composite.LineChartComposite;
 import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
+import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * Monitoring main Editor
@@ -47,10 +54,20 @@ public class MonitoringMainEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.monitoring.core.editor.main";
 	
 	private boolean isThread = true;
-	final ServerPushSession pushSession = new ServerPushSession();
+	private final ServerPushSession pushSession = new ServerPushSession();
 	private TableViewer tvError;
 	
-	List<MonitoringResultDAO> listMonitoringResult; 
+	/** db color list */
+	private Map<Integer, RGB> dbColorList = new HashMap<>();
+	
+	/* head title group */
+	private Group grpIndexDescription;
+	
+	private List<MonitoringResultDAO> listMonitoringResult;
+	private LineChartComposite compositeNetworkIn;
+	private LineChartComposite compositeNetworkOut;
+	private LineChartComposite compositeConnection;
+	private TableViewer tvStatement;
 
 	public MonitoringMainEditor() {
 		super();
@@ -87,37 +104,79 @@ public class MonitoringMainEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		
-		Composite compositeHead = new Composite(parent, SWT.NONE);
-		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(1, false));
+		grpIndexDescription = new Group(parent, SWT.NONE);
+		grpIndexDescription.setLayout(new RowLayout(SWT.HORIZONTAL));
+		GridData gd_grpIndexDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_grpIndexDescription.heightHint = 50;
+		gd_grpIndexDescription.minimumHeight = 50;
+		grpIndexDescription.setLayoutData(gd_grpIndexDescription);
+		grpIndexDescription.setText("Index Description");
 		
-		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
-		
-		ToolItem tltmAddItem = new ToolItem(toolBar, SWT.NONE);
-		tltmAddItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
+		try {
+			List<UserDBDAO> userDBS = TadpoleSystem_monitoring.getUserMonitoringDBList();
+			for(int i=0; i<userDBS.size(); i++) {
+				UserDBDAO userDBDAO = userDBS.get(i);
+				
+				Button btnAa = new Button(grpIndexDescription, SWT.CHECK);
+				btnAa.setText(userDBDAO.getDisplay_name());
+				btnAa.setEnabled(false);
+				
+				RGB rgb = ChartColorUtils.getCat20Colors()[i];
+				dbColorList.put(userDBDAO.getSeq(), rgb);
+				btnAa.setBackground(SWTResourceManager.getColor(rgb));
 			}
-		});
-		tltmAddItem.setText("Add Chart Item");
-		tltmAddItem.setEnabled(false);
-
+		} catch(Exception e) {
+			logger.error("get userdb list", e);
+		}
+			
 		SashForm sashFormBody = new SashForm(parent, SWT.VERTICAL);
 		sashFormBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeChart = new Composite(sashFormBody, SWT.NONE);
 		compositeChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeChart.setLayout(new GridLayout(1, false));
+		compositeChart.setLayout(new GridLayout(2, false));
+		
+		Composite compositeChartLeft = new Composite(compositeChart, SWT.NONE);
+		compositeChartLeft.setLayout(new GridLayout(1, false));
+		compositeChartLeft.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite compositeError = new Composite(sashFormBody, SWT.NONE);
+		compositeNetworkIn = new LineChartComposite(compositeChartLeft, dbColorList, "Network In");
+		compositeNetworkIn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeNetworkIn.setLayout(new GridLayout(1, false));
+		
+		compositeNetworkOut = new LineChartComposite(compositeChartLeft, dbColorList, "Network Out");
+		compositeNetworkOut.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeNetworkOut.setLayout(new GridLayout(1, false));
+		
+		compositeConnection = new LineChartComposite(compositeChartLeft, dbColorList, "Client Connection(Total)");
+		compositeConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeConnection.setLayout(new GridLayout(1, false));
+		
+		Composite compositeCenter = new Composite(compositeChart, SWT.NONE);
+		compositeCenter.setLayout(new GridLayout(1, false));
+		compositeCenter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Group grpStatementCount = new Group(compositeCenter, SWT.NONE);
+		grpStatementCount.setLayout(new GridLayout(1, false));
+		grpStatementCount.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpStatementCount.setText("Statement Count");
+		
+		tvStatement = new TableViewer(grpStatementCount, SWT.BORDER | SWT.FULL_SELECTION);
+		Table table = tvStatement.getTable();
+		table.setHeaderVisible(true);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		createTVStatement();
+
+		Group compositeError = new Group(sashFormBody, SWT.NONE);
 		compositeError.setLayout(new GridLayout(1, false));
 		compositeError.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeError.setText("Error List");
 		
-		ToolBar toolBarError = new ToolBar(compositeError, SWT.FLAT | SWT.RIGHT);
+//		ToolBar toolBarError = new ToolBar(compositeError, SWT.FLAT | SWT.RIGHT);
 
-		ToolItem tltmStop = new ToolItem(toolBarError, SWT.NONE);
-		tltmStop.setText("Stop");
+//		ToolItem tltmStop = new ToolItem(toolBarError, SWT.NONE);
+//		tltmStop.setText("Stop");
 
 		tvError = new TableViewer(compositeError, SWT.BORDER | SWT.FULL_SELECTION);
 		tvError.addDoubleClickListener(new IDoubleClickListener() {
@@ -146,14 +205,35 @@ public class MonitoringMainEditor extends EditorPart {
 	}
 	
 	/**
+	 * create table viewer statement
+	 */
+	private void createTVStatement() {
+		String[] arryTable = {"DB Name", "SELECT", "INSERT", "UPDATE", "CREATE", "ALTER", "DROP"};
+		int[] arryWidth = {120, 60, 60, 60, 60, 60, 60};
+		
+		crateTableColumn(tvStatement, arryTable, arryWidth);
+	}
+	
+	/**
 	 * crate result column
 	 */
 	public void createTableColumn(TableViewer tvError) {
 		String[] arryTable = {"DB Name", "is Error", "Title", "Value", "Condition", "Result"};
 		int[] arryWidth = {120, 50, 120, 60, 100, 500};
 	
+		crateTableColumn(tvError, arryTable, arryWidth);
+	}
+	
+	/**
+	 * create table viewer column
+	 * 
+	 * @param tv
+	 * @param arryTable
+	 * @param arryWidth
+	 */
+	private void crateTableColumn(TableViewer tv, String[] arryTable, int[] arryWidth) {
 		for(int i=0; i<arryTable.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvError, SWT.NONE);
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tv, SWT.NONE);
 			TableColumn tblclmnDbName = tableViewerColumn.getColumn();
 			tblclmnDbName.setWidth(arryWidth[i]);
 			tblclmnDbName.setText(arryTable[i]);
@@ -179,9 +259,21 @@ public class MonitoringMainEditor extends EditorPart {
 				while(isThread) {
 					listMonitoringResult = instance.get(email);
 					if(null != listMonitoringResult) {
+						
+						/** collect error data */
 						final List<MonitoringResultDAO> listErrorMonitoringResult = new ArrayList<MonitoringResultDAO>();
 						for (MonitoringResultDAO monitoringResultDAO : listMonitoringResult) {
 							if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringResultDAO.getResult())) listErrorMonitoringResult.add(monitoringResultDAO);
+						}
+						
+						final List<MonitoringResultDAO> listNetworkIn = new ArrayList<MonitoringResultDAO>();
+						final List<MonitoringResultDAO> listNetworkOut = new ArrayList<MonitoringResultDAO>();
+						final List<MonitoringResultDAO> listConnection = new ArrayList<MonitoringResultDAO>();
+						
+						for (MonitoringResultDAO monitoringResultDAO : listMonitoringResult) {
+							if("NETWORK_IN".equals(monitoringResultDAO.getMonitoring_type())) 	listNetworkIn.add(monitoringResultDAO);
+							if("NETWORK_OUT".equals(monitoringResultDAO.getMonitoring_type())) 	listNetworkOut.add(monitoringResultDAO);
+							if("CONNECTION".equals(monitoringResultDAO.getMonitoring_type())) 	listConnection.add(monitoringResultDAO);
 						}
 						
 						display.asyncExec(new Runnable() {
@@ -190,11 +282,17 @@ public class MonitoringMainEditor extends EditorPart {
 								if (!tvError.getTable().isDisposed()) {
 									tvError.setInput(listErrorMonitoringResult);
 									tvError.refresh();
+									
+									compositeNetworkIn.addRowData(listNetworkIn, true);
+									compositeNetworkOut.addRowData(listNetworkOut, true);
+									compositeConnection.addRowData(listConnection, false);
 								}
 							}
 						});
+						
+						// 20 seconds
+						try{ Thread.sleep(999 * 10); } catch(Exception e) {}
 					}
-					try{ Thread.sleep(2000); } catch(Exception e) {}
 				}
 			};
 		};

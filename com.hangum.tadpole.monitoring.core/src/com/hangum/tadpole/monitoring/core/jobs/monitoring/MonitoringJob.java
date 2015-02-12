@@ -54,6 +54,7 @@ public class MonitoringJob implements Job {
 						
 						resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
 						resultDao.setMonitoring_index_seq(monitoringIndexDAO.getSeq());
+						resultDao.setMonitoring_type(monitoringIndexDAO.getMonitoring_type());
 						
 						JsonObject jsonObj = jsonArray.get(i).getAsJsonObject();
 						JsonPrimitive jsonValue = jsonObj.getAsJsonPrimitive(monitoringIndexDAO.getIndex_nm().toLowerCase());

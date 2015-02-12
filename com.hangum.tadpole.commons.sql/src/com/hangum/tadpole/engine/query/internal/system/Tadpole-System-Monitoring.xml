@@ -18,6 +18,24 @@
 
 <sqlMap namespace="Tadpole-System-Monitoring">
 
+<!-- 
+	each user db monitoring
+ -->
+<select id="getUserMonitoringDBList" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
+	SELECT db.* 
+	FROM 
+	    tadpole_db db,
+	    (
+	        SELECT * FROM monitoring_main
+	        WHERE delyn = 'NO'
+	        GROUP BY DB_SEQ
+	    ) m
+	WHERE
+	        db.delyn = 'NO'
+	    AND m.db_seq = db.seq
+	    AND db.user_seq = #user_seq#
+</select>
+
 <!--  update parameter -->
 <update id="updateParameter" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO">
 	UPDATE 
