@@ -119,7 +119,7 @@ public class MonitoringMainEditor extends EditorPart {
 				
 				Button btnAa = new Button(grpIndexDescription, SWT.CHECK);
 				btnAa.setText(userDBDAO.getDisplay_name());
-				btnAa.setEnabled(false);
+//				btnAa.setEnabled(false);
 				
 				RGB rgb = ChartColorUtils.getCat20Colors()[i];
 				dbColorList.put(userDBDAO.getSeq(), rgb);
@@ -148,7 +148,7 @@ public class MonitoringMainEditor extends EditorPart {
 		compositeNetworkOut.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeNetworkOut.setLayout(new GridLayout(1, false));
 		
-		compositeConnection = new LineChartComposite(compositeChartLeft, dbColorList, "Client Connection(Total)");
+		compositeConnection = new LineChartComposite(compositeChartLeft, dbColorList, "Client Connection");
 		compositeConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeConnection.setLayout(new GridLayout(1, false));
 		
@@ -171,7 +171,7 @@ public class MonitoringMainEditor extends EditorPart {
 		Group compositeError = new Group(sashFormBody, SWT.NONE);
 		compositeError.setLayout(new GridLayout(1, false));
 		compositeError.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeError.setText("Error List");
+		compositeError.setText("Live Error List");
 		
 //		ToolBar toolBarError = new ToolBar(compositeError, SWT.FLAT | SWT.RIGHT);
 

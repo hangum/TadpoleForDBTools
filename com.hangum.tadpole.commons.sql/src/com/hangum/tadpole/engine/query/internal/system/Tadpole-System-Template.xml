@@ -27,5 +27,38 @@
 		AND db_type = #db_type# 
 </select>
 
+<!--  save monitoring template data -->
+<insert id="saveMonitoringTemplate" parameterClass="com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO">
+	INSERT INTO tadpole_monitoring_template
+	 (user_seq, db_type, monitoring_type, title, description, query, index_nm, condition_type, condition_value, exception_index_nm, exception_condition_type, exception_condition_value, param_1_column, param_1_init_value, param_2_column, param_2_init_value, after_type) 
+	VALUES 
+	 (#user_seq#, #db_type#, #monitoring_type#, #title#, #description#, #query#, #index_nm#, #condition_type#, #condition_value#, #exception_index_nm#, #exception_condition_type#, 
+	 #exception_condition_value#, #param_1_column#, #param_1_init_value#, #param_2_column#, #param_2_init_value#, #after_type#) 
+</insert>
+
+<!-- update monitoring template data -->
+<update id="updateUseTemplateDao" parameterClass="com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO">
+	UPDATE 
+		tadpole_monitoring_template
+	SET 
+		db_type 		= #db_type#, 
+		monitoring_type = #monitoring_type#, 
+		title 			= #title#, 
+		description 	= #description#, 
+		query 			= #query#, 
+		index_nm 		= #index_nm#, 
+		condition_type	= #condition_type#, 
+		condition_value = #condition_value#, 
+		exception_index_nm = #exception_index_nm#, 
+		exception_condition_type = #exception_condition_type#, 
+		exception_condition_value = #exception_condition_value#, 
+		param_1_column 	= #param_1_column#, 
+		param_1_init_value 	= #param_1_init_value#, 
+		param_2_column		= #param_2_column#, 
+		param_2_init_value 	= #param_2_init_value#, 
+		after_type			= #after_type#
+	WHERE
+		seq = #seq# 
+</update>
 	
 </sqlMap>

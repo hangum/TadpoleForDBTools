@@ -81,10 +81,11 @@ public class LineChartComposite extends AbstractTadpoleChart {
 		for(MonitoringResultDAO monitoringResultDAO : listNetworkMonitoringResult) {
 			String key = monitoringResultDAO.getDb_seq() + ":" + monitoringResultDAO.getMonitoring_index_seq() + ":"+ monitoringResultDAO.getMonitoring_type();
 			int dblValue = Integer.parseInt(monitoringResultDAO.getIndex_value());
+			int origianlDBlValue = Integer.parseInt(monitoringResultDAO.getIndex_value());
 			
-			logger.info("==================================================================");
-			logger.info("===========>[key] " + key + "\t[value]" + dblValue);
-			logger.info("==================================================================");
+//			logger.info("==================================================================");
+//			logger.info("===========>[key] " + key + "\t[value]" + dblValue + "-" + mapLastValue.get(key));
+//			logger.info("==================================================================");
 			
 			int[] arryInt = mapChartRowData.get(key);
 			if(arryInt == null) {
@@ -97,20 +98,20 @@ public class LineChartComposite extends AbstractTadpoleChart {
 			}
 			
 			int[] rowArrData = mapChartRowData.get(key);
-			System.arraycopy(rowArrData, 1, rowArrData, 0, rowArrData.length - 1);
+			System.arraycopy(rowArrData, 0, rowArrData, 1, rowArrData.length - 1);
 			
 			if(isLastValueMinus) {
 				int intLastValue = mapLastValue.get(key) == null?0:mapLastValue.get(key);
 				if(intLastValue != 0 ) {
 					dblValue = dblValue - intLastValue; 
-					rowArrData[rowArrData.length-1] = dblValue;
+					rowArrData[0] = dblValue;
 				}
 			} else {
-				rowArrData[rowArrData.length-1] = dblValue;
+				rowArrData[0] = dblValue;
 			}
 			
 			chartRowData.addRow(rowArrData, mapChartStyle.get(key));
-			mapLastValue.put(key, dblValue);
+			mapLastValue.put(key, origianlDBlValue);
 		}
 		
 		chart.clear();

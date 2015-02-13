@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Group;
 public abstract class AbstractTadpoleChart extends Group {
 	
 	/** 3 minute chart label */
-	protected static final String[] ThreeMinuteChartLabel = new String[] { "180", "", "160", "", "140", "", "120", "", "100", "", "80", "", "60", "", "40", "", "20", "", "0" };
+	protected static final String[] ThreeMinuteChartLabel = new String[] { "0(Sec)", "", "20", "", "40", "", "60", "", "80", "", "100", "", "120", "", "140", "", "160", "", "180" };
 
 	public AbstractTadpoleChart(Composite parent, int style, String strGroupTitle) {
 		super(parent, style);

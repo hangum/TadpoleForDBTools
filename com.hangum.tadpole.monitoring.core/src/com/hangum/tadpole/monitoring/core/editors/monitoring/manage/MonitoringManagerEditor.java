@@ -143,7 +143,7 @@ public class MonitoringManagerEditor extends EditorPart {
 		tltmManageTemplate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TemplateMonitoringManageDialog dialog = new TemplateMonitoringManageDialog(null, userDB);
+				TemplateMonitoringManageDialog dialog = new TemplateMonitoringManageDialog(null);
 				dialog.open();
 			}
 		});
@@ -222,13 +222,9 @@ public class MonitoringManagerEditor extends EditorPart {
 				if(!iss.isEmpty()) {
 					
 					MonitoringIndexDAO monitoringIndexDao = (MonitoringIndexDAO)iss.getFirstElement();
-					try {
-						UpdateMonitoringDialog dialog = new UpdateMonitoringDialog(null, monitoringIndexDao);
-						if(Dialog.OK == dialog.open()) {
-							refreshMonitoringIndex();	
-						}
-					} catch (Exception e1) {
-						logger.error("delete monitoring index", e1);
+					UpdateMonitoringDialog dialog = new UpdateMonitoringDialog(null, monitoringIndexDao);
+					if(Dialog.OK == dialog.open()) {
+						refreshMonitoringIndex();	
 					}
 				}
 			}
@@ -247,7 +243,6 @@ public class MonitoringManagerEditor extends EditorPart {
 					MonitoringIndexDAO monitoringIndexDao = (MonitoringIndexDAO)iss.getFirstElement();
 					try {
 						TadpoleSystem_monitoring.deleteMonitoringIndex(monitoringIndexDao);
-						
 						refreshMonitoringIndex();
 					} catch (Exception e1) {
 						logger.error("delete monitoring index", e1);

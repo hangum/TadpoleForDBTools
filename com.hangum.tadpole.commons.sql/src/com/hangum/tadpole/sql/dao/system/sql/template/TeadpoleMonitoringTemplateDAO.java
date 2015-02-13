@@ -12,25 +12,25 @@ public class TeadpoleMonitoringTemplateDAO {
 	int     seq;
 	int 	user_seq;
     String db_type;
-    String title;
-    String description;
-    String query;
+    String title = "";
+    String description = "";
+    String query = "";
 
-    String index_nm;
-    String condition_type;
-    String condition_value;
+    String index_nm = "";
+    String condition_type = "";
+    String condition_value = "";
     
-    String exception_index_nm;
-    String exception_condition_type;
-    String exception_condition_value;
+    String exception_index_nm = "";
+    String exception_condition_type = "";
+    String exception_condition_value = "";
     
-    String param_1_column;
-	String param_1_init_value;
-	String param_2_column;
-	String param_2_init_value;
+    String param_1_column = "";
+	String param_1_init_value = "";
+	String param_2_column = "";
+	String param_2_init_value = "";
     
-    String after_type;
-    String monitoring_type;
+    String after_type = "";
+    String monitoring_type = "";
     Timestamp create_time;
     String delyn;
     

@@ -169,8 +169,9 @@
 <update id="updateMonitoringMain" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO">
 	UPDATE monitoring_main 
 	SET 
-		read_method = #read_method#, title = #title#, description = #description#, query = #query#, receiver = #receiver#,
-		param_1_column = #param_1_column#, param_1_init_value = #param_1_init_value#, param_2_column = #param_2_column#, param_2_init_value = #param_2_init_value#
+		read_method = #read_method#, title = #title#, description = #description#, query = #query#,
+		param_1_column = #param_1_column#, param_1_init_value = #param_1_init_value#, param_2_column = #param_2_column#, param_2_init_value = #param_2_init_value#,
+		receiver = #receiver#, mod_time = now()
 	WHERE seq = #seq#
 </update>
 
@@ -178,7 +179,8 @@
 <update id="updateMonitoringIndex" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO">
 	UPDATE monitoring_index 
 	SET 
-		condition_type = #condition_type#, monitoring_type = #monitoring_type#, after_type = #after_type#, index_nm = #index_nm#, condition_value = #condition_value# 
+		monitoring_type = #monitoring_type#, after_type = #after_type#, index_nm = #index_nm#, condition_type = #condition_type#, condition_value = #condition_value#,
+		exception_index_nm = #exception_index_nm#, exception_condition_type = #exception_condition_type#, exception_condition_value = #exception_condition_value#, mod_time = now()
 	WHERE seq = #seq#
 </update>
 
@@ -231,9 +233,9 @@
 
 <insert id="insertMonitoringResult" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO">
 	INSERT INTO monitoring_result
-	 (monitoring_seq, monitoring_index_seq, user_seq, db_seq, result, index_value, system_description, user_description, after_description, query_result, query_result2) 
+	 (monitoring_seq, monitoring_index_seq, monitoring_type, user_seq, db_seq, result, index_value, system_description, user_description, after_description, query_result, query_result2) 
 	VALUES 
-	 (#monitoring_seq#, #monitoring_index_seq#, #user_seq#, #db_seq#, #result#, #index_value#, #system_description#, #user_description#, #after_description#, #query_result#, #query_result2#); 
+	 (#monitoring_seq#, #monitoring_index_seq#, #monitoring_type#, #user_seq#, #db_seq#, #result#, #index_value#, #system_description#, #user_description#, #after_description#, #query_result#, #query_result2#); 
 </insert>
 	
 </sqlMap>

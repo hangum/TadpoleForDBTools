@@ -65,10 +65,12 @@ public class AddMonitoringDialog extends Dialog {
 	private Combo comboAfterProcess;
 	private Text textParameter2_name;
 	private Text textParameter2Value;
-	private Text textReceiver;
+	
 	private Combo comboExceptionConditionType;
 	private Text textExceptionIndexNM;
 	private Text textExceptionConditionValue;
+	
+	private Text textReceiver;
 
 	/**
 	 * Create the dialog.
@@ -285,7 +287,7 @@ public class AddMonitoringDialog extends Dialog {
 	 */
 	private void initUI() {
 		try {
-			List<TeadpoleMonitoringTemplateDAO> listTemplateDao = TadpoleSystem_Template.getMonitoringTemplate(userDB);
+			List<TeadpoleMonitoringTemplateDAO> listTemplateDao = TadpoleSystem_Template.getMonitoringTemplate(userDB.getDBDefine());
 			tvTemplate.setInput(listTemplateDao);
 			tvTemplate.refresh();
 		} catch(Exception e) {
@@ -369,7 +371,7 @@ public class AddMonitoringDialog extends Dialog {
 
 		try {
 			TadpoleSystem_monitoring.saveMonitoring(mainDao, indexDao);
-			super.okPressed();
+			MessageDialog.openInformation(null, "Confirm", "저장 되었습니다.");
 		} catch (Exception e) {
 			logger.error("save monitoring index", e);
 			
