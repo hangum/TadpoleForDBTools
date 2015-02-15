@@ -119,7 +119,7 @@ public class MonitoringMainEditor extends EditorPart {
 				
 				Button btnAa = new Button(grpIndexDescription, SWT.CHECK);
 				btnAa.setText(userDBDAO.getDisplay_name());
-//				btnAa.setEnabled(false);
+				btnAa.setSelection(true);
 				
 				RGB rgb = ChartColorUtils.getCat20Colors()[i];
 				dbColorList.put(userDBDAO.getSeq(), rgb);
@@ -138,7 +138,10 @@ public class MonitoringMainEditor extends EditorPart {
 		
 		Composite compositeChartLeft = new Composite(compositeChart, SWT.NONE);
 		compositeChartLeft.setLayout(new GridLayout(1, false));
-		compositeChartLeft.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gd_compositeChartLeft = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_compositeChartLeft.minimumWidth = 300;
+		gd_compositeChartLeft.widthHint = 300;
+		compositeChartLeft.setLayoutData(gd_compositeChartLeft);
 
 		compositeNetworkIn = new LineChartComposite(compositeChartLeft, dbColorList, "Network In");
 		compositeNetworkIn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

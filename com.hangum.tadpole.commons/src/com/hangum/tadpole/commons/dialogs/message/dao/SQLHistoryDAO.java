@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.dialogs.message.dao;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -24,12 +25,12 @@ public class SQLHistoryDAO {
 	int seq;
 
 	/** Execute start time */
-	Date startDateExecute;
+	Timestamp startDateExecute;
 
 	/** execute sql text */
 	String strSQLText;
 
-	Date endDateExecute;
+	Timestamp endDateExecute;
 	int rows;
 	String result = PublicTadpoleDefine.SUCCESS_FAIL.S.toString();
 	String messsage;
@@ -40,7 +41,7 @@ public class SQLHistoryDAO {
 	String ipAddress;
 	
 
-	public SQLHistoryDAO(Date dateExecute, String strSQLText, Date endDateExecute, int rows, String result, String message) {
+	public SQLHistoryDAO(Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message) {
 		this.userName = "";
 		this.dbName = "";
 		this.startDateExecute = dateExecute;
@@ -52,7 +53,7 @@ public class SQLHistoryDAO {
 	}
 
 	// Sql history for executedSqlEditor
-	public SQLHistoryDAO(String userName, String dbName, Date dateExecute, String strSQLText, Date endDateExecute, int rows, String result, String message,
+	public SQLHistoryDAO(String userName, String dbName, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message,
 			String ipAddress, int dbSeq) {
 		this.userName = userName;
 		this.dbName = dbName;
@@ -120,7 +121,7 @@ public class SQLHistoryDAO {
 	/**
 	 * @return the startDateExecute
 	 */
-	public Date getStartDateExecute() {
+	public Timestamp getStartDateExecute() {
 		return startDateExecute;
 	}
 
@@ -128,14 +129,14 @@ public class SQLHistoryDAO {
 	 * @param startDateExecute
 	 *            the startDateExecute to set
 	 */
-	public void setStartDateExecute(Date startDateExecute) {
+	public void setStartDateExecute(Timestamp startDateExecute) {
 		this.startDateExecute = startDateExecute;
 	}
 
 	/**
 	 * @return the endDateExecute
 	 */
-	public Date getEndDateExecute() {
+	public Timestamp getEndDateExecute() {
 		return endDateExecute;
 	}
 
@@ -143,7 +144,7 @@ public class SQLHistoryDAO {
 	 * @param endDateExecute
 	 *            the endDateExecute to set
 	 */
-	public void setEndDateExecute(Date endDateExecute) {
+	public void setEndDateExecute(Timestamp endDateExecute) {
 		this.endDateExecute = endDateExecute;
 	}
 

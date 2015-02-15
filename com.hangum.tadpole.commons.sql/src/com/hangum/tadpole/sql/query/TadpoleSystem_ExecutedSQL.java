@@ -106,7 +106,7 @@ public class TadpoleSystem_ExecutedSQL {
 			String ipAddress = (String) resultMap.get("ipaddress");
 			int dbSeq2 = (Integer) resultMap.get("dbseq");
 
-			SQLHistoryDAO dao = new SQLHistoryDAO(userName, dbName, new Date(startdateexecute), strSQLText, new Date(enddateexecute), row, result, "",
+			SQLHistoryDAO dao = new SQLHistoryDAO(userName, dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, "",
 					ipAddress, dbSeq2);
 			dao.setSeq(seq);
 			returnSQLHistory.add(dao);
@@ -159,7 +159,7 @@ public class TadpoleSystem_ExecutedSQL {
 			int row 			= (Integer)resultMap.get("row");
 			String result 		= (String)resultMap.get("result");
 			
-			SQLHistoryDAO dao = new SQLHistoryDAO(new Date(startdateexecute), strSQLText, new Date(enddateexecute), row, result, "");
+			SQLHistoryDAO dao = new SQLHistoryDAO(new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, "");
 			dao.setSeq(seq);
 			returnSQLHistory.add(dao);
 		}

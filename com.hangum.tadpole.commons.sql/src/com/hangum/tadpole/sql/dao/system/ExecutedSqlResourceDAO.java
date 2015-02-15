@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.dao.system;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -24,14 +25,14 @@ public class ExecutedSqlResourceDAO {
      int db_seq;
 
 	 String types;
-     Date startDateExecute;
-     Date endDateExecute;
+     Timestamp startDateExecute;
+     Timestamp endDateExecute;
      int duration;
      int row;
      String result;
      String message;
 
-     Date create_time;
+     Timestamp create_time;
      String delYn;
      String ipAddress;
      
@@ -112,7 +113,7 @@ public class ExecutedSqlResourceDAO {
 	/**
 	 * @param startDateExecute the startDateExecute to set
 	 */
-	public void setStartDateExecute(Date startDateExecute) {
+	public void setStartDateExecute(Timestamp startDateExecute) {
 		this.startDateExecute = startDateExecute;
 	}
 
@@ -126,7 +127,7 @@ public class ExecutedSqlResourceDAO {
 	/**
 	 * @param endDateExecute the endDateExecute to set
 	 */
-	public void setEndDateExecute(Date endDateExecute) {
+	public void setEndDateExecute(Timestamp endDateExecute) {
 		this.endDateExecute = endDateExecute;
 	}
 
@@ -168,7 +169,7 @@ public class ExecutedSqlResourceDAO {
 	/**
 	 * @param create_time the create_time to set
 	 */
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
 	}
 

@@ -807,11 +807,10 @@ SELECT
 	VALUES (#db_seq#, #user_seq#, #object_id#, #work_type#, #object_type#, #create_date#)
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO">
-		SELECT * 
+		SELECT max(seq) seq 
 		FROM schema_history 
-		WHERE user_seq = #user_seq# AND
-			db_seq = #db_seq# AND 
-			create_date = #create_date#
+		WHERE user_seq = #user_seq# 
+			AND db_seq = #db_seq#
 	</selectKey>
 </insert>
 <insert id="sqlHistoryDataInsert" parameterClass="com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO">
@@ -824,16 +823,14 @@ SELECT
 	=========================================================================================================
  -->
 <insert id="userExecuteSQLResourceInsert" parameterClass="com.hangum.tadpole.sql.dao.system.ExecutedSqlResourceDAO">
-	INSERT INTO executed_sql_resource(user_seq, db_seq, types, startDateExecute, endDateExecute, duration, row, result, message, ipaddress)
+	INSERT INTO executed_sql_resource(user_seq, db_seq, types, startDateExecute, endDateExecute, duration, row, result, message, ipAddress)
 	VALUES(#user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #duration#, #row#, #result#, #message#, #ipAddress#)
 	
 	<selectKey resultClass="com.hangum.tadpole.sql.dao.system.ExecutedSqlResourceDAO">
-		SELECT * 
+		SELECT max(seq) seq 
 		FROM executed_sql_resource 
-		WHERE user_seq = #user_seq# AND
-			db_seq = #db_seq# AND 
-			types = #types# AND 
-			startDateExecute = #startDateExecute#
+		WHERE user_seq = #user_seq# 
+			AND db_seq = #db_seq#
 	</selectKey>
 </insert>
 

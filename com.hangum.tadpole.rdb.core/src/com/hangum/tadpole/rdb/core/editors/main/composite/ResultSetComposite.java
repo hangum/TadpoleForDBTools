@@ -20,6 +20,7 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -585,7 +586,7 @@ public class ResultSetComposite extends Composite {
 			public IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(reqQuery.getSql(), IProgressMonitor.UNKNOWN);
 				
-				sqlHistoryDAO.setStartDateExecute(new Date());
+				sqlHistoryDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
 				sqlHistoryDAO.setIpAddress(reqQuery.getUserIp());
 				sqlHistoryDAO.setStrSQLText(reqQuery.getOriginalSql());
 				
@@ -642,7 +643,7 @@ public class ResultSetComposite extends Composite {
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
 				} finally {
-					sqlHistoryDAO.setEndDateExecute(new Date());
+					sqlHistoryDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
 					monitor.done();
 				}
 				
