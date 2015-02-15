@@ -44,7 +44,7 @@ public class MonitoringJob implements Job {
 			for (MonitoringIndexDAO monitoringIndexDAO : TadpoleSystem_monitoring.getMonitoring()) {
 				if(logger.isDebugEnabled()) logger.debug("==[title]===> " + monitoringIndexDAO.getTitle());
 				UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(monitoringIndexDAO.getDb_seq());
-
+				
 				MonitoringResultDAO resultDao = null;
 				try {
 					JsonArray jsonArray = QueryUtils.selectToJson(userDB, monitoringIndexDAO);
@@ -60,6 +60,10 @@ public class MonitoringJob implements Job {
 						JsonPrimitive jsonValue = jsonObj.getAsJsonPrimitive(monitoringIndexDAO.getIndex_nm().toLowerCase());
 						String strIndexValue = jsonValue != null?jsonValue.getAsString():"";
 						resultDao.setIndex_value(strIndexValue);
+						
+//						System.out.println("===============================================");
+//						System.out.println(monitoringIndexDAO.getIndex_nm().toLowerCase() + ":" + "\t: " + strIndexValue) ;
+//						System.out.println("===============================================");
 						
 						//결과를 저장한다.
 						boolean isError = MonitorErrorChecker.isError(jsonObj, monitoringIndexDAO);

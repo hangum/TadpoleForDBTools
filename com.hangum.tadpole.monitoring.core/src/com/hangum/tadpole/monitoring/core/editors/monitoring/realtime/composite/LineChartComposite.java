@@ -12,11 +12,10 @@ import org.eclipse.rap.chartjs.ChartStyle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
-
-import org.eclipse.swt.layout.GridLayout;
 
 /**
  * line chart

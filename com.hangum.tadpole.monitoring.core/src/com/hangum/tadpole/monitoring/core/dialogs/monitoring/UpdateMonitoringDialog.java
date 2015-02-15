@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
@@ -93,15 +94,10 @@ public class UpdateMonitoringDialog extends Dialog {
 		
 		comboMonitoringType = new Combo(compositeMoni, SWT.READ_ONLY);
 		comboMonitoringType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
-		comboMonitoringType.add("CONNECTION");
-		comboMonitoringType.add("CPU");
-		comboMonitoringType.add("DISK");
-		comboMonitoringType.add("GENERAL_LOG");
-		comboMonitoringType.add("SLOW_QUERY");
-		comboMonitoringType.add("NETWORK_IN");
-		comboMonitoringType.add("NETWORK_OUT");
-		comboMonitoringType.add("PROCESS");
-		comboMonitoringType.add("SESSION_LIST");
+		for (MonitoringDefine.MONITORING_TYPE type : MonitoringDefine.MONITORING_TYPE.values()) {
+			comboMonitoringType.add(type.toString());
+		}
+		comboMonitoringType.setVisibleItemCount(MonitoringDefine.MONITORING_TYPE.values().length);
 		comboMonitoringType.select(0);
 		
 		Label lblTitle = new Label(compositeMoni, SWT.NONE);
@@ -124,9 +120,10 @@ public class UpdateMonitoringDialog extends Dialog {
 		
 		comboMonitoringReadType = new Combo(compositeMoni, SWT.READ_ONLY);
 		comboMonitoringReadType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
-		comboMonitoringReadType.add("SQL");
-//		comboMonitoringReadType.add("PL/SQL");
-//		comboMonitoringReadType.add("Rest-API");
+		for (MonitoringDefine.ACCESS_TYPE type : MonitoringDefine.ACCESS_TYPE.values()) {
+			comboMonitoringReadType.add(type.toString());
+		}
+		comboMonitoringReadType.setVisibleItemCount(MonitoringDefine.ACCESS_TYPE.values().length);
 		comboMonitoringReadType.select(0);
 		
 		Label lblQuery = new Label(compositeMoni, SWT.NONE);
@@ -174,12 +171,10 @@ public class UpdateMonitoringDialog extends Dialog {
 		
 		comboConditionType = new Combo(compositeMoni, SWT.READ_ONLY);
 		comboConditionType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboConditionType.add("EQUALS");
-		comboConditionType.add("UNEQUAL");
-		comboConditionType.add("LEAST");
-		comboConditionType.add("GREATEST");
-		comboConditionType.add("NOT_CHECK");
-		comboConditionType.add("RISE_EXCEPTION");
+		for (MonitoringDefine.CONDITION_TYPE type : MonitoringDefine.CONDITION_TYPE.values()) {
+			comboConditionType.add(type.toString());
+		}
+		comboConditionType.setVisibleItemCount(MonitoringDefine.CONDITION_TYPE.values().length);
 		comboConditionType.select(0);
 
 		Label lblCondition = new Label(compositeMoni, SWT.NONE);
@@ -199,12 +194,10 @@ public class UpdateMonitoringDialog extends Dialog {
 		
 		comboExceptionConditionType = new Combo(compositeMoni, SWT.READ_ONLY);
 		comboExceptionConditionType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboExceptionConditionType.add("EQUALS");
-		comboExceptionConditionType.add("UNEQUAL");
-		comboExceptionConditionType.add("LEAST");
-		comboExceptionConditionType.add("GREATEST");
-		comboExceptionConditionType.add("NOT_CHECK");
-		comboExceptionConditionType.add("RISE_EXCEPTION");
+		for (MonitoringDefine.CONDITION_TYPE type : MonitoringDefine.CONDITION_TYPE.values()) {
+			comboExceptionConditionType.add(type.toString());
+		}
+		comboExceptionConditionType.setVisibleItemCount(MonitoringDefine.CONDITION_TYPE.values().length);
 		comboExceptionConditionType.select(0);
 		
 		Label lblNewLabel = new Label(compositeMoni, SWT.NONE);
@@ -219,8 +212,10 @@ public class UpdateMonitoringDialog extends Dialog {
 		
 		comboAfterProcess = new Combo(compositeMoni, SWT.READ_ONLY);
 		comboAfterProcess.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
-		comboAfterProcess.add("EMAIL");
-		comboAfterProcess.add("KILL_AFTER_EMAIL");
+		for (MonitoringDefine.AFTER_PROCESS_TYPE type : MonitoringDefine.AFTER_PROCESS_TYPE.values()) {
+			comboAfterProcess.add(type.toString());
+		}
+		comboAfterProcess.setVisibleItemCount(MonitoringDefine.AFTER_PROCESS_TYPE.values().length);
 		comboAfterProcess.select(0);
 		
 		Label lblReceiver = new Label(compositeMoni, SWT.NONE);

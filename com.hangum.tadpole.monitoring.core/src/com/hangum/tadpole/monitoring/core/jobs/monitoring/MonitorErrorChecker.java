@@ -26,7 +26,10 @@ public class MonitorErrorChecker {
 		String conditionType 	= monitoringIndexDAO.getCondition_type();
 		String conditionValue 	= monitoringIndexDAO.getCondition_value();
 		
-		JsonPrimitive jsonValue = jsonObj.getAsJsonPrimitive(monitoringIndexDAO.getIndex_nm().toLowerCase());
+		String strIndexName = monitoringIndexDAO.getIndex_nm().toLowerCase();
+		if("".equals(strIndexName)) return false;
+		
+		JsonPrimitive jsonValue = jsonObj.getAsJsonPrimitive(strIndexName);
 		String strIndexValue = jsonValue != null?jsonValue.getAsString():"0";
 		
 		isResult = isError(conditionType, conditionValue, strIndexValue);

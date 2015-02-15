@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -30,6 +31,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -39,6 +41,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -74,6 +77,14 @@ public class SessionListEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.sessionlist";
 	
 	protected final int user_seq = SessionManager.getUserSeq();
+	
+	private boolean isThread = true;
+	private final ServerPushSession pushSession = new ServerPushSession();
+
+	// set initialize button
+	private ToolItem tltmStart;
+	private ToolItem tltmStop;
+	private boolean isNotRefreshUi = true;
 	
 	private UserDBDAO userDB;
 	
@@ -133,19 +144,36 @@ public class SessionListEditor extends EditorPart {
 		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setToolTipText("Refresh");
-		tltmRefresh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
-		tltmRefresh.addSelectionListener(new SelectionAdapter() {
+		tltmStart = new ToolItem(toolBar, SWT.NONE);
+		tltmStart.setToolTipText("Start");
+		tltmStart.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/start.png")); //$NON-NLS-1$
+		tltmStart.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				initSessionListData();
+				isNotRefreshUi = true;
+				
+				tltmStart.setEnabled(false);
+				tltmStop.setEnabled(true);
 			}
+		});
+		tltmStart.setEnabled(false);
+		
+		tltmStop = new ToolItem(toolBar, SWT.NONE);
+		tltmStop.setToolTipText("Stop");
+		tltmStop.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/stop.png")); //$NON-NLS-1$
+		tltmStop.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				isNotRefreshUi = false;
+				
+				tltmStart.setEnabled(true);
+				tltmStop.setEnabled(false);
+			} 
 		});
 		
 		final ToolItem tltmKillProcess = new ToolItem(toolBar, SWT.NONE);
 		tltmKillProcess.setToolTipText("Kill Process");
-		tltmKillProcess.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/stop_process.png")); //$NON-NLS-1$
+		tltmKillProcess.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/kill_process.png")); //$NON-NLS-1$
 		tltmKillProcess.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -200,6 +228,41 @@ public class SessionListEditor extends EditorPart {
 		
 		// init data
 		initSessionListData();
+		
+		callbackui();
+	}
+	
+	private void callbackui() {
+		pushSession.start();
+		Thread thread = new Thread(startUIThread());
+		thread.setDaemon(true);
+		thread.start();
+	}
+	
+	private Runnable startUIThread() {
+		final String email = SessionManager.getEMAIL();
+		final Display display = PlatformUI.getWorkbench().getDisplay();// tvError.getTable().getDisplay();
+
+		Runnable bgRunnable = new Runnable() {
+			@Override
+			public void run() {
+
+				while(isThread) {
+					display.asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							
+							if(isNotRefreshUi) initSessionListData();
+						}
+					});	
+						
+					// 20 seconds
+					try{ Thread.sleep(1000 * 5); } catch(Exception e) {}
+				}
+			};
+		};
+
+		return bgRunnable;
 	}
 	
 	/**
@@ -319,5 +382,12 @@ public class SessionListEditor extends EditorPart {
 		tableViewerSessionList.getTable().setFocus();
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		isThread = false;
+		pushSession.stop();
+	}
 }
 

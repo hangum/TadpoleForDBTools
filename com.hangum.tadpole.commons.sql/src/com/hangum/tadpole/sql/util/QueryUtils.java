@@ -35,7 +35,7 @@ public class QueryUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static JsonArray selectToJson(UserDBDAO userDB, MonitoringIndexDAO indexDao) throws Exception {
+	public static JsonArray selectToJson(final UserDBDAO userDB, final MonitoringIndexDAO indexDao) throws Exception {
 		final JsonArray jsonArry = new JsonArray();
 
 		// generate query parameter.
@@ -58,8 +58,12 @@ public class QueryUtils {
 				while (rs.next()) {
 					JsonObject jsonObj = new JsonObject();
 					for (int i = 1; i <= metaData.getColumnCount(); i++) {
-						String columnName = metaData.getColumnName(i);
+						String columnName = metaData.getColumnLabel(i);
 						String value = rs.getString(i) == null ? "" : rs.getString(i);
+						
+						if("Show processlist".equals(indexDao.getTitle())) {
+							logger.debug("=========> columnName\t:" + columnName + ":"+ value);
+						}
 
 						jsonObj.addProperty(columnName.toLowerCase(), value);
 					}

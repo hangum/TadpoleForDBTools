@@ -117,9 +117,9 @@ public class MonitoringMainEditor extends EditorPart {
 			for(int i=0; i<userDBS.size(); i++) {
 				UserDBDAO userDBDAO = userDBS.get(i);
 				
-				Button btnAa = new Button(grpIndexDescription, SWT.CHECK);
+				Button btnAa = new Button(grpIndexDescription, SWT.NONE);
 				btnAa.setText(userDBDAO.getDisplay_name());
-				btnAa.setSelection(true);
+//				btnAa.setSelection(true);
 				
 				RGB rgb = ChartColorUtils.getCat20Colors()[i];
 				dbColorList.put(userDBDAO.getSeq(), rgb);
