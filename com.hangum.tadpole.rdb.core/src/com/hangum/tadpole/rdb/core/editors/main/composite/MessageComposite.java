@@ -53,7 +53,7 @@ public class MessageComposite extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
-		textMessage = new Text(this, SWT.BORDER | SWT.MULTI);
+		textMessage = new Text(this, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 //	//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
