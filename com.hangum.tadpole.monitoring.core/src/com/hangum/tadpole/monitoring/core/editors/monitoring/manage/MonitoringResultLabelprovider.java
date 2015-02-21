@@ -27,7 +27,7 @@ public class MonitoringResultLabelprovider extends LabelProvider implements ITab
 			case 0: return dao.getMonitoringIndexDAO().getTitle();
 			case 1: return dao.getResult();
 			case 2: return dao.getIndex_value();
-			case 3: return dao.getQuery_result() +  dao.getQuery_result2();
+			case 3: return dao.getQuery_result();
 			case 4: return dao.getCreate_time().toString();
 		}
 	

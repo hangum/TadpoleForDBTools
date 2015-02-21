@@ -53,6 +53,8 @@ public class AddMonitoringDialog extends Dialog {
 	private TableViewer tvTemplate;
 	
 	private Combo comboMonitoringType;
+	private Combo comboKPIType;
+	
 	private Text textTitle;
 	private Text textDescription;
 	private Combo comboMonitoringReadType;
@@ -130,7 +132,7 @@ public class AddMonitoringDialog extends Dialog {
 		createColumns();
 		
 		tvTemplate.setContentProvider(new ArrayContentProvider());
-		tvTemplate.setLabelProvider(new MonitoringTemplateLabelProvider());
+		tvTemplate.setLabelProvider(new MonitoringLabelProvider());
 		
 		Composite compositeMoni = new Composite(sashForm, SWT.NONE);
 		compositeMoni.setLayout(new GridLayout(6, false));
@@ -145,6 +147,17 @@ public class AddMonitoringDialog extends Dialog {
 		}
 		comboMonitoringType.setVisibleItemCount(MonitoringDefine.MONITORING_TYPE.values().length);
 		comboMonitoringType.select(0);
+		
+		Label lblKpi = new Label(compositeMoni, SWT.NONE);
+		lblKpi.setText("KPI");
+		
+		comboKPIType = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboKPIType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		for (MonitoringDefine.KPI_TYPE type : MonitoringDefine.KPI_TYPE.values()) {
+			comboKPIType.add(type.toString());
+		}
+		comboKPIType.setVisibleItemCount(MonitoringDefine.MONITORING_TYPE.values().length);
+		comboKPIType.select(0);
 		
 		Label lblTitle = new Label(compositeMoni, SWT.NONE);
 		lblTitle.setText("Title");
@@ -298,6 +311,8 @@ public class AddMonitoringDialog extends Dialog {
 	private void selectTemplateData(TeadpoleMonitoringTemplateDAO dao) {
 		
 		comboMonitoringType.setText(dao.getMonitoring_type());
+		comboKPIType.setText(dao.getKpi_type());
+		
 		textTitle.setText(dao.getTitle());
 		textDescription.setText(dao.getDescription());
 		comboMonitoringReadType.setText("SQL");
@@ -353,6 +368,7 @@ public class AddMonitoringDialog extends Dialog {
 		 indexDao.setMonitoring_seq(mainDao.getSeq());
 		 
 		 indexDao.setMonitoring_type(comboMonitoringType.getText());
+		 indexDao.setKpi_type(comboKPIType.getText());
 		 indexDao.setAfter_type(comboAfterProcess.getText());
 		 indexDao.setIndex_nm(textIndexName.getText());
 		 indexDao.setCondition_type(comboConditionType.getText());
@@ -378,10 +394,10 @@ public class AddMonitoringDialog extends Dialog {
 	 * crate table column
 	 */
 	private void createColumns() {
-		String[] names = {"Type", "Title", "Description", "Query", 
+		String[] names = {"Type", "KPI", "Title", "Description", "Query", 
 					"param 1 column", "param 1 value", "param 2 column", "param 2 value", 
 					"Index Name", "Condition Type", "Condition Value"};
-		int[] intWidth = {120, 100, 150, 200,
+		int[] intWidth = {120, 90, 100, 150, 200,
 						100, 100, 100, 100, 
 						100, 100, 100};
 		
@@ -408,6 +424,6 @@ public class AddMonitoringDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(700, 670);
+		return new Point(700, 700);
 	}
 }

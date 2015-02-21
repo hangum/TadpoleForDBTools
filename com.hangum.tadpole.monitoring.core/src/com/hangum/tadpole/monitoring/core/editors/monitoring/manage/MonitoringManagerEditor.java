@@ -145,6 +145,8 @@ public class MonitoringManagerEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				TemplateMonitoringManageDialog dialog = new TemplateMonitoringManageDialog(null);
 				dialog.open();
+				
+				reLoadDBList();
 			}
 		});
 		tltmManageTemplate.setText("Manage Template");
@@ -521,8 +523,8 @@ public class MonitoringManagerEditor extends EditorPart {
 	 * create monitoring column 
 	 */
 	private void createMonitoringColumn() {
-		String[] arryTitle = {"Title", "Method", "Type",  "Index Name", "Condition", "Condition Value", "After"};
-		int[] arryWidth = 	 {120, 		50, 		130, 		130, 		70, 		70, 			150};
+		String[] arryTitle = {"Title", "KPI", "Method", "Type",  "Index Name", "Condition", "Condition Value", "After"};
+		int[] arryWidth = 	 {120, 		70, 	50, 		130, 		130, 		70, 		70, 			150};
 		
 		for (int i=0; i<arryTitle.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableVMonitoringList, SWT.NONE);

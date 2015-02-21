@@ -30,10 +30,17 @@
 <!--  save monitoring template data -->
 <insert id="saveMonitoringTemplate" parameterClass="com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO">
 	INSERT INTO tadpole_monitoring_template
-	 (user_seq, db_type, monitoring_type, title, description, query, index_nm, condition_type, condition_value, exception_index_nm, exception_condition_type, exception_condition_value, param_1_column, param_1_init_value, param_2_column, param_2_init_value, after_type) 
+	 (user_seq, db_type, 	db_ver, 		template_type, monitoring_type, title, 	description, 
+	 query, 	index_nm, 	condition_type, condition_value, 
+	 			exception_index_nm, exception_condition_type, exception_condition_value, 
+	 	param_1_column, param_1_init_value, param_2_column, param_2_init_value, 
+	 after_type, kpi_type) 
 	VALUES 
-	 (#user_seq#, #db_type#, #monitoring_type#, #title#, #description#, #query#, #index_nm#, #condition_type#, #condition_value#, #exception_index_nm#, #exception_condition_type#, 
-	 #exception_condition_value#, #param_1_column#, #param_1_init_value#, #param_2_column#, #param_2_init_value#, #after_type#) 
+	 (#user_seq#, #db_type#, #db_ver#, #template_type#, #monitoring_type#, #title#, #description#, #query#, 
+	 #index_nm#, #condition_type#, #condition_value#, 
+	 #exception_index_nm#, #exception_condition_type#, #exception_condition_value#, 
+	 #param_1_column#, #param_1_init_value#, #param_2_column#, #param_2_init_value#, 
+	 #after_type#, #kpi_type#) 
 </insert>
 
 <!-- update monitoring template data -->
@@ -41,7 +48,9 @@
 	UPDATE 
 		tadpole_monitoring_template
 	SET 
-		db_type 		= #db_type#, 
+		db_type 		= #db_type#,
+		db_ver			= #db_ver#,
+		template_type	= #template_type#, 
 		monitoring_type = #monitoring_type#, 
 		title 			= #title#, 
 		description 	= #description#, 
@@ -56,7 +65,8 @@
 		param_1_init_value 	= #param_1_init_value#, 
 		param_2_column		= #param_2_column#, 
 		param_2_init_value 	= #param_2_init_value#, 
-		after_type			= #after_type#
+		after_type			= #after_type#,
+		kpi_type			= #kpi_type#
 	WHERE
 		seq = #seq# 
 </update>

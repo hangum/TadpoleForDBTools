@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine.AFTER_PROCESS_TYPE;
 import com.hangum.tadpole.monitoring.core.utils.Utils;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
@@ -48,10 +49,12 @@ public class EventManager {
 		
 			if(strAfterType.equals("EMAIL")) {
 				sendEmail(resultDAO);
+			} else if(strAfterType.equals(AFTER_PROCESS_TYPE.PUSH_EMAIL)) {
+				sendEmail(resultDAO);
 			} else if(strAfterType.equals("KILL_AFTER_EMAIL")) {
 				sendEmail(resultDAO);
 				
-				JsonElement jsonElement = parser.parse(resultDAO.getQuery_result() + resultDAO.getQuery_result2());
+				JsonElement jsonElement = parser.parse(resultDAO.getQuery_result());
 				JsonObject jsonObject = jsonElement.getAsJsonObject();
 				String id = "";
 				if(DBDefine.MYSQL_DEFAULT == resultDAO.getUserDB().getDBDefine() || DBDefine.MARIADB_DEFAULT == resultDAO.getUserDB().getDBDefine()) {
@@ -84,10 +87,10 @@ public class EventManager {
 	 * @param resultDao
 	 */
 	private void sendEmail(MonitoringResultDAO resultDao) {
-		if(logger.isDebugEnabled()) logger.debug(resultDao.getQuery_result() + resultDao.getQuery_result2());
+		if(logger.isDebugEnabled()) logger.debug(resultDao.getQuery_result());
 		try {
 			String strMailTitle = resultDao.getUserDB().getDisplay_name() + " - " + resultDao.getMonitoringIndexDAO().getTitle();
-			String strMailContent = strMailTitle + "\n" + resultDao.getSystem_description() + "\n" + resultDao.getQuery_result() + resultDao.getQuery_result2();
+			String strMailContent = strMailTitle + "\n" + resultDao.getSystem_description() + "\n" + resultDao.getQuery_result();
 
 			//			Utils.sendEmail(resultDao.getMonitoringIndexDAO().getReceiver(), strMailTitle, strMailContent);
 			FileWriter fw = new FileWriter("/Users/hangum/Downloads/mail.txt", true);

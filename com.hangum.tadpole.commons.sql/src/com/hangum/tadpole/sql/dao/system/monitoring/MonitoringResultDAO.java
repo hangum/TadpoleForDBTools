@@ -19,6 +19,8 @@ public class MonitoringResultDAO {
 	int monitoring_seq;
 	int monitoring_index_seq;
 	String monitoring_type;
+	String kpi_type;
+	
 	int user_seq;
 	int db_seq;
 	
@@ -29,9 +31,11 @@ public class MonitoringResultDAO {
 	String user_description;
 	String after_description;
 	
-	Timestamp create_time;	
+	Timestamp create_time;
+	Timestamp mod_time;
+	
 	String query_result	= "";
-    String query_result2 = "";
+	String snapshot = "";
     
 	public MonitoringResultDAO() {
 	}
@@ -177,20 +181,6 @@ public class MonitoringResultDAO {
 	}
 
 	/**
-	 * @return the query_result2
-	 */
-	public String getQuery_result2() {
-		return query_result2;
-	}
-
-	/**
-	 * @param query_result2 the query_result2 to set
-	 */
-	public void setQuery_result2(String query_result2) {
-		this.query_result2 = query_result2;
-	}
-
-	/**
 	 * @return the userDB
 	 */
 	public UserDBDAO getUserDB() {
@@ -258,6 +248,48 @@ public class MonitoringResultDAO {
 	 */
 	public void setMonitoring_type(String monitoring_type) {
 		this.monitoring_type = monitoring_type;
+	}
+
+	/**
+	 * @return the kpi_type
+	 */
+	public String getKpi_type() {
+		return kpi_type;
+	}
+
+	/**
+	 * @param kpi_type the kpi_type to set
+	 */
+	public void setKpi_type(String kpi_type) {
+		this.kpi_type = kpi_type;
+	}
+
+	/**
+	 * @return the mod_time
+	 */
+	public Timestamp getMod_time() {
+		return mod_time;
+	}
+
+	/**
+	 * @param mod_time the mod_time to set
+	 */
+	public void setMod_time(Timestamp mod_time) {
+		this.mod_time = mod_time;
+	}
+
+	/**
+	 * @return the snapshot
+	 */
+	public String getSnapshot() {
+		return snapshot;
+	}
+
+	/**
+	 * @param snapshot the snapshot to set
+	 */
+	public void setSnapshot(String snapshot) {
+		this.snapshot = snapshot;
 	}
 	
 	

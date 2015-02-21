@@ -55,6 +55,7 @@ public class MonitoringJob implements Job {
 						resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
 						resultDao.setMonitoring_index_seq(monitoringIndexDAO.getSeq());
 						resultDao.setMonitoring_type(monitoringIndexDAO.getMonitoring_type());
+						resultDao.setKpi_type(monitoringIndexDAO.getKpi_type());
 						
 						JsonObject jsonObj = jsonArray.get(i).getAsJsonObject();
 						JsonPrimitive jsonValue = jsonObj.getAsJsonPrimitive(monitoringIndexDAO.getIndex_nm().toLowerCase());
@@ -74,7 +75,6 @@ public class MonitoringJob implements Job {
 						resultDao.setDb_seq(userDB.getSeq());
 						
 						resultDao.setQuery_result(jsonObj.toString());
-						resultDao.setQuery_result2("");
 						resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 						resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
 						
@@ -94,6 +94,8 @@ public class MonitoringJob implements Job {
 					
 					resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
 					resultDao.setMonitoring_index_seq(monitoringIndexDAO.getSeq());
+					resultDao.setMonitoring_type(monitoringIndexDAO.getMonitoring_type());
+					resultDao.setKpi_type(monitoringIndexDAO.getKpi_type());
 					
 					resultDao.setIndex_value("0");
 					
@@ -105,7 +107,6 @@ public class MonitoringJob implements Job {
 					resultDao.setDb_seq(userDB.getSeq());
 					
 					resultDao.setQuery_result("");
-					resultDao.setQuery_result2("");
 					resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 					resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
 					
@@ -131,7 +132,7 @@ public class MonitoringJob implements Job {
 			if(jsonArray.size() != 0) {
 				JsonObject jsonObj = (JsonObject)jsonArray.get(jsonArray.size()-1);
 				
-				JsonElement jsonValue = jsonObj.get(monitoringIndexDAO.getParam_1_column());
+				JsonElement jsonValue = jsonObj.get(monitoringIndexDAO.getParam_1_column().toLowerCase());
 				String strIndexValue = jsonValue != null?jsonValue.getAsString():"";
 				
 				JsonElement jsonValue2 = jsonObj.get(monitoringIndexDAO.getParam_2_column());

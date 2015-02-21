@@ -35,6 +35,7 @@ public class MonitorErrorChecker {
 		isResult = isError(conditionType, conditionValue, strIndexValue);
 		
 		if(isResult) {
+			
 			String strExceptIndexNm = monitoringIndexDAO.getException_index_nm().toLowerCase();
 			if(!"".equals(strExceptIndexNm)){
 				String exceptionConditionType 	= monitoringIndexDAO.getException_condition_type();

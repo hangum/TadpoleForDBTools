@@ -53,6 +53,9 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	private TeadpoleMonitoringTemplateDAO updateUseTemplateDao;
 	
 	private Combo comboDBType;
+	private Combo comboKPIType;
+	private Combo comboTemplateType;
+	
 	private TableViewer tvTemplate;
 	
 	private Combo comboMonitoringType;
@@ -165,6 +168,28 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		}
 		comboMonitoringType.setVisibleItemCount(MonitoringDefine.MONITORING_TYPE.values().length);
 		comboMonitoringType.select(0);
+		
+		Label lblKpi = new Label(compositeMoni, SWT.NONE);
+		lblKpi.setText("KPI Type");
+		
+		comboKPIType = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboKPIType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		for (MonitoringDefine.KPI_TYPE type : MonitoringDefine.KPI_TYPE.values()) {
+			comboKPIType.add(type.toString());
+		}
+		comboKPIType.setVisibleItemCount(MonitoringDefine.MONITORING_TYPE.values().length);
+		comboKPIType.select(0);
+		
+		Label lblTemplateType = new Label(compositeMoni, SWT.NONE);
+		lblTemplateType.setText("Template Type");
+		
+		comboTemplateType = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboTemplateType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		for (MonitoringDefine.TEMPLATE_TYPE type : MonitoringDefine.TEMPLATE_TYPE.values()) {
+			comboTemplateType.add(type.toString());
+		}
+		comboTemplateType.setVisibleItemCount(MonitoringDefine.MONITORING_TYPE.values().length);
+		comboTemplateType.select(0);
 		
 		Label lblTitle = new Label(compositeMoni, SWT.NONE);
 		lblTitle.setText("Title");
@@ -316,10 +341,14 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	 */
 	private void selectTemplateData(TeadpoleMonitoringTemplateDAO dao) {
 		comboMonitoringType.setText(dao.getMonitoring_type());
+		comboKPIType.setText(dao.getKpi_type());
+		comboTemplateType.setText(dao.getTemplate_type());
+		
 		textTitle.setText(dao.getTitle());
 		textDescription.setText(dao.getDescription());
 		comboMonitoringReadType.setText("SQL");
 		textQuery.setText(dao.getQuery());
+		
 		textParameter1_name.setText(StringUtils.trimToEmpty(dao.getParam_1_column()));
 		textParameter1Value.setText(StringUtils.trimToEmpty(dao.getParam_1_init_value()));
 		textParameter2_name.setText(StringUtils.trimToEmpty(dao.getParam_2_column()));
@@ -328,6 +357,11 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		textIndexName.setText(dao.getIndex_nm());
 		comboConditionType.setText(dao.getCondition_type());
 		textConditionValue.setText(dao.getCondition_value());
+
+		textExceptionIndexNM.setText(dao.getException_index_nm());
+		comboExceptionConditionType.setText(dao.getException_condition_type());
+		textExceptionConditionValue.setText(dao.getException_condition_value());
+		
 		comboAfterProcess.setText(dao.getAfter_type());
 	}
 	
@@ -361,7 +395,9 @@ public class TemplateMonitoringManageDialog extends Dialog {
 			updateUseTemplateDao.setDb_type(comboDBType.getText());
 		} 
 		
+		updateUseTemplateDao.setTemplate_type(comboTemplateType.getText());
 		updateUseTemplateDao.setMonitoring_type(comboMonitoringType.getText());
+		updateUseTemplateDao.setKpi_type(comboKPIType.getText());
 		updateUseTemplateDao.setTitle(textTitle.getText());
 		updateUseTemplateDao.setDescription(textDescription.getText());
 		updateUseTemplateDao.setQuery(textQuery.getText());
@@ -401,10 +437,10 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	 * crate table column
 	 */
 	private void createColumns() {
-		String[] names = {"Type", "Title", "Description", "Query", 
+		String[] names = {"Template", "Type", "KPI", "Title", "Description", "Query", 
 					"param 1 column", "param 1 value", "param 2 column", "param 2 value", 
 					"Index Name", "Condition Type", "Condition Value"};
-		int[] intWidth = {120, 100, 150, 200,
+		int[] intWidth = {60, 120, 90, 100, 150, 200,
 						100, 100, 100, 100, 
 						100, 100, 100};
 		
@@ -432,6 +468,6 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(700, 670);
+		return new Point(700, 700);
 	}
 }

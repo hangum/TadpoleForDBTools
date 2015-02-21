@@ -30,10 +30,12 @@ VALUES  ( 'NETWORK_OUT', 'Network out', 'SHOW STATUS WHERE variable_name = Bytes
 
 INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
 VALUES  ( 'SQL', 'SQL', '' ); 
--- INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
--- VALUES  ( 'REST_API', 'REST API', '' ); 
+INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'REST_API', 'REST API', '' ); 
 INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
 VALUES  ( 'PL/SQL', 'PL SQL', '' ); 
+INSERT INTO monitoring_read_type (TYPE, NAME, DESCRIPTION) 
+VALUES  ( 'Agent', 'Agent', '' );
  
 INSERT INTO monitoring_after_type (TYPE, NAME, DESCRIPTION) 
 VALUES ( 'EMAIL', 'EMAIL', '' );

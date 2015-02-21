@@ -14,6 +14,8 @@ public class MonitoringIndexDAO extends MonitoringMainDAO {
 	int monitoring_seq;
 	String monitoring_type;
 	
+	String kpi_type;
+	
 	String after_type;
 
 	String index_nm;
@@ -171,5 +173,20 @@ public class MonitoringIndexDAO extends MonitoringMainDAO {
 	public void setMod_time(Timestamp mod_time) {
 		this.mod_time = mod_time;
 	}
+
+	/**
+	 * @return the kpi_type
+	 */
+	public String getKpi_type() {
+		return kpi_type;
+	}
+
+	/**
+	 * @param kpi_type the kpi_type to set
+	 */
+	public void setKpi_type(String kpi_type) {
+		this.kpi_type = kpi_type;
+	}
+	
 	
 }

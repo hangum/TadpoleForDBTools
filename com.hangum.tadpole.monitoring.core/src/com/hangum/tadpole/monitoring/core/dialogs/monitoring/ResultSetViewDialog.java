@@ -61,7 +61,7 @@ public class ResultSetViewDialog extends Dialog {
 	
 	private void initUI() {
 		try {
-			textMessage.setText(JSONUtil.getPretty(dao.getQuery_result() + dao.getQuery_result2()));
+			textMessage.setText(JSONUtil.getPretty(dao.getQuery_result()));
 		} catch(Exception e) {
 			logger.error("server status", e); //$NON-NLS-1$
 		}

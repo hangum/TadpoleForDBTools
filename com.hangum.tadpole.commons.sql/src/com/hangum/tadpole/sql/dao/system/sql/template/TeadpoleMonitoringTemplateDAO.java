@@ -12,6 +12,9 @@ public class TeadpoleMonitoringTemplateDAO {
 	int     seq;
 	int 	user_seq;
     String db_type;
+    String db_ver;
+    String template_type="";
+    
     String title = "";
     String description = "";
     String query = "";
@@ -31,6 +34,8 @@ public class TeadpoleMonitoringTemplateDAO {
     
     String after_type = "";
     String monitoring_type = "";
+    String kpi_type = "";
+    
     Timestamp create_time;
     String delyn;
     
@@ -317,4 +322,45 @@ public class TeadpoleMonitoringTemplateDAO {
 		this.delyn = delyn;
 	}
 
+	/**
+	 * @return the db_ver
+	 */
+	public String getDb_ver() {
+		return db_ver;
+	}
+
+	/**
+	 * @param db_ver the db_ver to set
+	 */
+	public void setDb_ver(String db_ver) {
+		this.db_ver = db_ver;
+	}
+
+	/**
+	 * @return the kpi_type
+	 */
+	public String getKpi_type() {
+		return kpi_type;
+	}
+
+	/**
+	 * @param kpi_type the kpi_type to set
+	 */
+	public void setKpi_type(String kpi_type) {
+		this.kpi_type = kpi_type;
+	}
+
+	/**
+	 * @return the template_type
+	 */
+	public String getTemplate_type() {
+		return template_type;
+	}
+
+	/**
+	 * @param template_type the template_type to set
+	 */
+	public void setTemplate_type(String template_type) {
+		this.template_type = template_type;
+	}
 }

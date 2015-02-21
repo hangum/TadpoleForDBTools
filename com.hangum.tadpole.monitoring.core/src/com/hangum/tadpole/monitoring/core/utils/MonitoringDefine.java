@@ -9,15 +9,39 @@ package com.hangum.tadpole.monitoring.core.utils;
 public class MonitoringDefine {
 	
 	/**
+	 * template type
+	 * 
+	 * @author hangum
+	 *
+	 */
+	public static enum TEMPLATE_TYPE {
+		BASIC,
+		INTERMEDIATE,
+		ADVANCE
+	}
+	
+	/** 
+	 * define kpi type 
+	 */
+	public static enum KPI_TYPE {
+		SECURITY,
+		PERFORMANCE,
+		SYSTEM,
+		OTHERS
+	}
+	
+	/**
+	 * Define access type
 	 * 
 	 * @author hangum
 	 *
 	 */
 	public static enum ACCESS_TYPE {
 		SQL
-//		,
+//		AGENT,
 //		PLSQL,
-//		RestAPI
+//		RestAPI,
+//		CLASS
 	};
 
 	/**
@@ -31,12 +55,13 @@ public class MonitoringDefine {
 		CPU,
 		DISK,
 		GENERAL_LOG,
-		SLOW_QUERY,
 		NETWORK_IN,
 		NETWORK_OUT,
 		PROCESS,
 		SESSION_LIST,
-		STATEMENT_STATUS
+		STATEMENT_STATUS,
+		SLAVE_STATUS,
+		SLOW_QUERY
 	};
 	
 	/**
@@ -62,7 +87,9 @@ public class MonitoringDefine {
 	 */
 	public static enum AFTER_PROCESS_TYPE {
 		EMAIL,
-		KILL_AFTER_EMAIL
+		KILL_AFTER_EMAIL,
+		PUSH,
+		PUSH_EMAIL
 	}
 	
 }

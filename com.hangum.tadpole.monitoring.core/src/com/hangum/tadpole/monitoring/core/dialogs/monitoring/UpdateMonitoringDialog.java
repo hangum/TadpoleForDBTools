@@ -34,6 +34,8 @@ public class UpdateMonitoringDialog extends Dialog {
 	private MonitoringIndexDAO monitoringIndexDao;
 	
 	private Combo comboMonitoringType;
+	private Combo comboKPIType;
+	
 	private Text textTitle;
 	private Text textDescription;
 	private Combo comboMonitoringReadType;
@@ -99,6 +101,17 @@ public class UpdateMonitoringDialog extends Dialog {
 		}
 		comboMonitoringType.setVisibleItemCount(MonitoringDefine.MONITORING_TYPE.values().length);
 		comboMonitoringType.select(0);
+		
+		Label lblKpi = new Label(compositeMoni, SWT.NONE);
+		lblKpi.setText("KPI");
+		
+		comboKPIType = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboKPIType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
+		for (MonitoringDefine.KPI_TYPE type : MonitoringDefine.KPI_TYPE.values()) {
+			comboKPIType.add(type.toString());
+		}
+		comboKPIType.setVisibleItemCount(MonitoringDefine.MONITORING_TYPE.values().length);
+		comboKPIType.select(0);
 		
 		Label lblTitle = new Label(compositeMoni, SWT.NONE);
 		lblTitle.setText("Title");
@@ -234,6 +247,8 @@ public class UpdateMonitoringDialog extends Dialog {
 	 */
 	private void initUI() {
 		comboMonitoringType.setText(monitoringIndexDao.getMonitoring_type());
+		comboKPIType.setText(monitoringIndexDao.getKpi_type());
+		
 		textTitle.setText(monitoringIndexDao.getTitle());
 		textDescription.setText(StringUtils.trimToEmpty(monitoringIndexDao.getDescription()));
 		comboMonitoringReadType.setText("SQL");
@@ -288,6 +303,7 @@ public class UpdateMonitoringDialog extends Dialog {
 		 mainDao.setParam_2_init_value(textParameter2Value.getText());
 
 		 monitoringIndexDao.setMonitoring_type(comboMonitoringType.getText());
+		 monitoringIndexDao.setKpi_type(comboKPIType.getText());
 		 monitoringIndexDao.setAfter_type(comboAfterProcess.getText());
 		 monitoringIndexDao.setIndex_nm(textIndexName.getText());
 		 monitoringIndexDao.setCondition_type(comboConditionType.getText());
@@ -325,6 +341,6 @@ public class UpdateMonitoringDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(700, 500);
+		return new Point(700, 550);
 	}
 }

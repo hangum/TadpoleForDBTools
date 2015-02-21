@@ -16,6 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * line chart
@@ -48,19 +49,33 @@ public class LineChartComposite extends AbstractTadpoleChart {
 	 * @param dbColorList
 	 * @param strGroupTitle
 	 */
-	public LineChartComposite(Composite parent, Map<Integer, RGB> dbColorList, String strGroupTitle) {
+	public LineChartComposite(Composite parent, Map<Integer, RGB> dbColorList, String strGroupTitle, String strUnit) {
 		super(parent, SWT.NONE, strGroupTitle);
 		this.setText(strGroupTitle);
 		
 		this.dbColorList = dbColorList;
 		
-		Composite composite = new Composite(this, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		composite.setLayout(new GridLayout(1, false));
+		Composite compositeChart = new Composite(this, SWT.BORDER);
+		compositeChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridLayout gl_compositeChart = new GridLayout(1, false);
+		gl_compositeChart.verticalSpacing = 0;
+		gl_compositeChart.horizontalSpacing = 0;
+		gl_compositeChart.marginHeight = 0;
+		gl_compositeChart.marginWidth = 0;
+		compositeChart.setLayout(gl_compositeChart);
 
-		chart = new Chart(composite, SWT.NONE);
+		chart = new Chart(compositeChart, SWT.NONE);
 		chart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
+		Label lblKbPerSecond = new Label(compositeChart, SWT.NONE);
+		lblKbPerSecond.setText(strUnit);
+
+
+		initUI();
+	}
+	
+	private void initUI() {
+		// make chart row data
 		chartRowData = new ChartRowData(ThreeMinuteChartLabel);
 		options = new ChartOptions();
 		options.setAnimation(false);
@@ -76,6 +91,7 @@ public class LineChartComposite extends AbstractTadpoleChart {
 	 */
 	public void addRowData(final List<MonitoringResultDAO> listNetworkMonitoringResult, boolean isLastValueMinus) {
 
+		try {
 		chartRowData = new ChartRowData(ThreeMinuteChartLabel);
 		for(MonitoringResultDAO monitoringResultDAO : listNetworkMonitoringResult) {
 			String key = monitoringResultDAO.getDb_seq() + ":" + monitoringResultDAO.getMonitoring_index_seq() + ":"+ monitoringResultDAO.getMonitoring_type();
@@ -109,12 +125,14 @@ public class LineChartComposite extends AbstractTadpoleChart {
 				rowArrData[0] = dblValue;
 			}
 			
-			chartRowData.addRow(rowArrData, mapChartStyle.get(key));
+//			chartRowData.addRow(rowArrData, mapChartStyle.get(key));
 			mapLastValue.put(key, origianlDBlValue);
 		}
 		
 		chart.clear();
 		chart.drawLineChart(chartRowData, options);
+		} catch(Exception e) {
+			logger.error("monitoring exception", e);
+		}
 	}
-	
 }
