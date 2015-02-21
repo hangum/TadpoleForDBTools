@@ -24,8 +24,8 @@ public class MonitoringErrorLabelprovider extends LabelProvider implements ITabl
 		MonitoringResultDAO dao = (MonitoringResultDAO)element;
 			
 		switch(columnIndex) {
-			case 0: return dao.getUserDB().getDisplay_name();
-			case 1: return dao.getResult();
+			case 0: return dao.getCreate_time().toString();
+			case 1: return dao.getUserDB().getDisplay_name();
 			case 2: return dao.getMonitoringIndexDAO().getTitle();
 			case 3: return dao.getIndex_value();
 			case 4: return dao.getMonitoringIndexDAO().getCondition_type() + " " + dao.getMonitoringIndexDAO().getCondition_value();

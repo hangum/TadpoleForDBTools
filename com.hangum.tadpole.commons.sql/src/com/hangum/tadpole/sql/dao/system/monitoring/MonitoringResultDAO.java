@@ -15,7 +15,9 @@ public class MonitoringResultDAO {
 	UserDBDAO userDB;
 	MonitoringIndexDAO monitoringIndexDAO;
 	
-	int seq; 
+	String seq;
+	String relation_seq;
+	
 	int monitoring_seq;
 	int monitoring_index_seq;
 	String monitoring_type;
@@ -40,19 +42,38 @@ public class MonitoringResultDAO {
 	public MonitoringResultDAO() {
 	}
 
+
 	/**
 	 * @return the seq
 	 */
-	public int getSeq() {
+	public String getSeq() {
 		return seq;
 	}
+
 
 	/**
 	 * @param seq the seq to set
 	 */
-	public void setSeq(int seq) {
+	public void setSeq(String seq) {
 		this.seq = seq;
 	}
+
+
+	/**
+	 * @return the relation_seq
+	 */
+	public String getRelation_seq() {
+		return relation_seq;
+	}
+
+
+	/**
+	 * @param relation_seq the relation_seq to set
+	 */
+	public void setRelation_seq(String relation_seq) {
+		this.relation_seq = relation_seq;
+	}
+
 
 	/**
 	 * @return the monitoring_seq

@@ -114,14 +114,14 @@ public class TadpoleSystem_monitoring {
 		
 		try {
 			sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-			sqlClient.startTransaction();
-			sqlClient.startBatch();
+//			sqlClient.startTransaction();
+//			sqlClient.startBatch();
 		
 			for (MonitoringResultDAO resultDAO : listMonitoringIndex) {
 				sqlClient.insert("insertMonitoringResult", resultDAO);
 			}
-			sqlClient.executeBatch();
-			sqlClient.commitTransaction();
+//			sqlClient.executeBatch();
+//			sqlClient.commitTransaction();
 		} catch(Exception e) {
 			logger.error("Monitoring result save exception", e);
 		} finally {

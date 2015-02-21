@@ -236,9 +236,9 @@
 <!--  save query result -->
 <insert id="insertMonitoringResult" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO">
 	INSERT INTO monitoring_result
-	 (monitoring_seq, monitoring_index_seq, monitoring_type, kpi_type, user_seq, db_seq, result, index_value, system_description, user_description, after_description, query_result, snapshot) 
+	 (seq, relation_seq, monitoring_seq, monitoring_index_seq, monitoring_type, kpi_type, user_seq, db_seq, result, index_value, system_description, user_description, after_description, query_result, snapshot) 
 	VALUES 
-	 (#monitoring_seq#, #monitoring_index_seq#, #monitoring_type#, #kpi_type#, #user_seq#, #db_seq#, #result#, #index_value#, #system_description#, #user_description#, #after_description#, #query_result#, #snapshot#) 
+	 (#seq#, #relation_seq#, #monitoring_seq#, #monitoring_index_seq#, #monitoring_type#, #kpi_type#, #user_seq#, #db_seq#, #result#, #index_value#, #system_description#, #user_description#, #after_description#, #query_result#, #snapshot#) 
 </insert>
 	
 </sqlMap>

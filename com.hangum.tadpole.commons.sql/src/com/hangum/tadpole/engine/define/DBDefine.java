@@ -146,7 +146,6 @@ public enum DBDefine {
 		return getDBDefine(userDB.getDbms_type());
 	}
 	
-	
 	/**
 	 * DB URL INFO를 얻는다.
 	 * 
@@ -240,6 +239,34 @@ public enum DBDefine {
 		}
 		
 		return extension;
+	}
+	
+	/** 
+	 * define System variable query
+	 * @return
+	 */
+	public String[] getSystemVariableQuery() {
+		switch ( this ) {
+		case ORACLE_DEFAULT:		return DBVariableDefine.ORACLE_VARIABLES;
+		
+		case MSSQL_DEFAULT:			return DBVariableDefine.MSSQL_VARIABLES;
+		case MSSQL_8_LE_DEFAULT:	return DBVariableDefine.MSSQL_VARIABLES;
+		
+		case MYSQL_DEFAULT:			return DBVariableDefine.MYSQL_VARIABLES;
+		case MARIADB_DEFAULT:		return DBVariableDefine.MARIA_VARIABLES;
+		
+		case SQLite_DEFAULT:		return DBVariableDefine.SQLITE_VARIABLES;
+		case CUBRID_DEFAULT:		return DBVariableDefine.CUBRID_VARIABLES;
+		case POSTGRE_DEFAULT:		return DBVariableDefine.PGSQL_VARIABLES;
+		
+		case MONGODB_DEFAULT :  	return DBVariableDefine.MONGO_VARIABLE;		
+		case HIVE_DEFAULT: 			return DBVariableDefine.HIVE_VARIABLE;
+		case HIVE2_DEFAULT: 		return DBVariableDefine.HIVE2_VARIABLE;
+		
+		case TAJO_DEFAULT: 			return DBVariableDefine.TAJO_VARIABLE;
+		default:
+			return new String[]{};
+		}
 	}
 	
 	/**

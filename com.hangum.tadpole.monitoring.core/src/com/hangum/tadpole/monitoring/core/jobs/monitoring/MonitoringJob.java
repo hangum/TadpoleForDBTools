@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,12 +21,12 @@ import com.google.gson.JsonPrimitive;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.monitoring.core.manager.event.EventManager;
+import com.hangum.tadpole.monitoring.core.utils.Utils;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
-import com.hangum.tadpole.sql.util.QueryUtils;
 
 /**
  * Tadpole monitoring job
@@ -41,15 +42,20 @@ public class MonitoringJob implements Job {
 		List<MonitoringResultDAO> listMonitoringResult = new ArrayList<MonitoringResultDAO>();
 
 		try {
+			String strRelationUUID = UUID.randomUUID().toString();
+			
 			for (MonitoringIndexDAO monitoringIndexDAO : TadpoleSystem_monitoring.getMonitoring()) {
 				if(logger.isDebugEnabled()) logger.debug("==[title]===> " + monitoringIndexDAO.getTitle());
 				UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(monitoringIndexDAO.getDb_seq());
 				
 				MonitoringResultDAO resultDao = null;
 				try {
-					JsonArray jsonArray = QueryUtils.selectToJson(userDB, monitoringIndexDAO);
+					JsonArray jsonArray = Utils.selectToJson(userDB, monitoringIndexDAO);
 					for(int i=0; i<jsonArray.size(); i++) {
 						resultDao = new MonitoringResultDAO();
+
+						resultDao.setSeq(UUID.randomUUID().toString());
+						resultDao.setRelation_seq(strRelationUUID);
 						resultDao.setUserDB(userDB);
 						
 						resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
@@ -62,10 +68,6 @@ public class MonitoringJob implements Job {
 						String strIndexValue = jsonValue != null?jsonValue.getAsString():"";
 						resultDao.setIndex_value(strIndexValue);
 						
-//						System.out.println("===============================================");
-//						System.out.println(monitoringIndexDAO.getIndex_nm().toLowerCase() + ":" + "\t: " + strIndexValue) ;
-//						System.out.println("===============================================");
-						
 						//결과를 저장한다.
 						boolean isError = MonitorErrorChecker.isError(jsonObj, monitoringIndexDAO);
 						resultDao.setResult(isError?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
@@ -77,6 +79,9 @@ public class MonitoringJob implements Job {
 						resultDao.setQuery_result(jsonObj.toString());
 						resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 						resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
+						if(isError) {
+							resultDao.setSnapshot(Utils.getDBVariable(userDB));	
+						}
 						
 						// 후속작업을 위해 사용자 별로 모니터링 데이터를 모읍니다.
 						listMonitoringResult.add(resultDao);
@@ -160,6 +165,10 @@ public class MonitoringJob implements Job {
 	 */
 	private void afterProceedingResultData(List<MonitoringResultDAO> listMonitoringData) {
 
+		// 데이터를 저장한다.
+		TadpoleSystem_monitoring.saveMonitoringResult(listMonitoringData);
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////
 		// 후속 작업을 위해 사용자 별로 모니터링 데이터를 담습니다. 
 		Map<String, List<MonitoringResultDAO>> mapMonitoringData = new HashMap<>();
 		List<MonitoringResultDAO> listErrorMonitoringResult = new ArrayList<MonitoringResultDAO>();
@@ -190,8 +199,6 @@ public class MonitoringJob implements Job {
 		// 이벤트 처리를 처리 모듈에 보낸다.
 		sendEventManager(listErrorMonitoringResult);	
 		
-		// 데이터를 저장한다.
-		TadpoleSystem_monitoring.saveMonitoringResult(listMonitoringData);
 	}
 	
 	/**

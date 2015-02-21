@@ -2,20 +2,28 @@ package com.hangum.tadpole.monitoring.core.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.quartz.CronExpression;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
+import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.sql.util.QueryUtils;
 
 /**
- * cron exp utils
+ * monitoring utils
  * 
  * @author hangum
  *
@@ -23,6 +31,52 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 public class Utils {
 	
 	private static final Logger logger = Logger.getLogger(Utils.class);
+	
+	/**
+	 * resultset to json
+	 * 
+	 * @param userDB
+	 * @param indexDao
+	 * @return
+	 * @throws Exception
+	 */
+	public static JsonArray selectToJson(final UserDBDAO userDB, final MonitoringIndexDAO indexDao) throws Exception {
+		List<Object> listParam = new ArrayList<>();
+		if(StringUtils.isNotEmpty(indexDao.getParam_1_init_value())) listParam.add(indexDao.getParam_1_init_value());
+		if(StringUtils.isNotEmpty(indexDao.getParam_2_init_value())) listParam.add(indexDao.getParam_2_init_value());
+		
+		return QueryUtils.selectToJson(userDB, indexDao.getQuery(), listParam);
+	}
+
+	/**
+	 * get db variable
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static String getDBVariable(final UserDBDAO userDB) {
+		return sqlToJson(userDB, userDB.getDBDefine().getSystemVariableQuery());
+	}
+	
+	/**
+	 * SQL to json
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static String sqlToJson(final UserDBDAO userDB, String[] strSQLs) {
+		JsonObject jsonEntry = new JsonObject();
+		
+		for (String strSQL : strSQLs) {
+			try {
+				JsonArray jsonArray = QueryUtils.selectToJson(userDB, strSQL);
+				jsonEntry.add(strSQL, jsonArray);
+			} catch (Exception e) {
+				logger.error("sql to json error", e);
+			}
+		}
+		return jsonEntry.toString();
+	}
 	
 	/**
 	 * email send
