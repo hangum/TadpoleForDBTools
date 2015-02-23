@@ -14,6 +14,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringDashboardDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
@@ -27,6 +28,18 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_monitoring {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_monitoring.class);
+	
+	/**
+	 * get monitoring error status
+	 * 
+	 * @param dbseqs
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<MonitoringDashboardDAO> getMonitoringErrorStatus(String dbseqs) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getMonitoringErrorStatus", dbseqs);
+	}
 	
 	/**
 	 * get user monitoring db list
@@ -170,6 +183,26 @@ public class TadpoleSystem_monitoring {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getMonitoringResult", queryMap);
+	}
+	
+	/**
+	 * 사용자 확인 처리를 합니다. 
+	 * 
+	 * @param monitoring_seq
+	 * @param monitoring_index_seq
+	 * @param strUserMsg
+	 * 
+	 * @throws Exception
+	 */
+	public static void updateUserConfirmMsg(int monitoring_seq, int monitoring_index_seq, String strUserMsg) throws Exception {
+		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("monitoring_seq",			monitoring_seq);
+		queryMap.put("monitoring_index_seq",	monitoring_index_seq);
+		queryMap.put("user_description",		strUserMsg);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserConfirmMsg", queryMap);
 	}
 
 	/**

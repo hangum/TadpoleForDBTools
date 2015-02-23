@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringMainEditor;
+import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.swtdesigner.SWTResourceManager;
 
@@ -47,15 +47,15 @@ public class DBStatusComposite extends Composite {
 		btnDB = new Button(composite, SWT.NONE);
 		GridData gd_btnDB = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnDB.heightHint = 70;
-		gd_btnDB.widthHint = 70;
+		gd_btnDB.widthHint = 77;
 		btnDB.setLayoutData(gd_btnDB);
 		btnDB.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnDB.setBackground(SWTResourceManager.getColor(MonitoringMainEditor.STATUS_COLOR_CLEAN));
-		btnDB.setText("0");
+		btnDB.setBackground(SWTResourceManager.getColor(MonitoringDefine.MONITORING_STATUS.CLEAN.getColor()));
+//		btnDB.setText("0");
 		
 		Label lblDBName = new Label(composite, SWT.NONE | SWT.WRAP);
 		lblDBName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -65,7 +65,8 @@ public class DBStatusComposite extends Composite {
 	}
 	
 	/**
-	 * 
+	 * change status
+	 *  
 	 * @param intBtnColor
 	 * @param msg
 	 */
@@ -75,8 +76,21 @@ public class DBStatusComposite extends Composite {
 		btnDB.getParent().redraw();
 	}
 
+	/**
+	 * change status 
+	 *  
+	 * @param intBtnColor
+	 * @param msg
+	 */
+	public void changeStatusAdd(int intBtnColor, String msg) {
+		btnDB.setBackground(SWTResourceManager.getColor(intBtnColor));
+		btnDB.setText(btnDB.getText() + ", " + msg);
+		btnDB.getParent().redraw();
+	}
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
+
 }

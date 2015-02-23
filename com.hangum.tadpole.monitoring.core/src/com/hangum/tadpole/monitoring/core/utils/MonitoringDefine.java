@@ -1,5 +1,8 @@
 package com.hangum.tadpole.monitoring.core.utils;
 
+import org.eclipse.swt.SWT;
+
+
 /**
  * monitoring define
  * 
@@ -7,6 +10,35 @@ package com.hangum.tadpole.monitoring.core.utils;
  *
  */
 public class MonitoringDefine {
+	
+	/**
+	 * monitoring status
+	 * 
+	 * @author hangum
+	 *
+	 */
+	public static enum MONITORING_STATUS {
+		CLEAN("CLEAN", SWT.COLOR_DARK_GREEN),
+		WARRING("WARRING", SWT.COLOR_DARK_GRAY),
+		CRITICAL("CRITICAL", SWT.COLOR_RED);
+		
+		String name;
+		int color;
+		
+		private MONITORING_STATUS(String name, int color) {
+			this.name = name;
+			this.color = color;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public int getColor() {
+			return color;
+		} 
+	
+	}
 	
 	/**
 	 * template type

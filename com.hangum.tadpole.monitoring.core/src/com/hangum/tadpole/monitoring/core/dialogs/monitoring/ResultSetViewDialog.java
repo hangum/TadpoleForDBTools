@@ -3,6 +3,7 @@ package com.hangum.tadpole.monitoring.core.dialogs.monitoring;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -13,6 +14,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
+import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
 
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridLayout;
@@ -28,7 +30,8 @@ import org.eclipse.ui.PlatformUI;
 public class ResultSetViewDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetViewDialog.class);
 	
-	private int intBtnSnapshotID = IDialogConstants.CLIENT_ID + 1;
+	private int intBtnSnapshotID 	= IDialogConstants.CLIENT_ID + 1;
+	private int intBtnUserConfirmID = IDialogConstants.CLIENT_ID + 2;
 	
 	private MonitoringResultDAO dao;
 	private Text textTitle;
@@ -38,6 +41,7 @@ public class ResultSetViewDialog extends Dialog {
 	private Text textMessage;
 	private Text textDate;
 	private Text textDBName;
+	private Text textUserConfirmMsg;
 	
 	/**
 	 * Create the dialog.
@@ -115,6 +119,16 @@ public class ResultSetViewDialog extends Dialog {
 		textMessage = new Text(grpResultset, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		Group grpUserConformMessage = new Group(container, SWT.NONE);
+		GridData gd_grpUserConformMessage = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_grpUserConformMessage.heightHint = 50;
+		grpUserConformMessage.setLayoutData(gd_grpUserConformMessage);
+		grpUserConformMessage.setText("User Conform Message");
+		grpUserConformMessage.setLayout(new GridLayout(1, false));
+		
+		textUserConfirmMsg = new Text(grpUserConformMessage, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textUserConfirmMsg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
 		initUI();
 		
 		// shell을 오른쪽 하단에 놓을수 있도록 합니다.
@@ -128,16 +142,10 @@ public class ResultSetViewDialog extends Dialog {
 
 		return container;
 	}
-	
-	@Override
-	protected void buttonPressed(int buttonId) {
-		if(buttonId == intBtnSnapshotID) {
-			ShowSnapshotDialog dialog = new ShowSnapshotDialog(null, dao);
-			dialog.open();
-		}
-		super.buttonPressed(buttonId);
-	}
 
+	/**
+	 * initialize ui
+	 */
 	private void initUI() {
 		try {
 			textDate.setText(dao.getCreate_time().toString());
@@ -152,6 +160,26 @@ public class ResultSetViewDialog extends Dialog {
 		}
 	}
 
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		if(buttonId == intBtnSnapshotID) {
+			ShowSnapshotDialog dialog = new ShowSnapshotDialog(null, dao);
+			dialog.open();
+		} else if(buttonId == intBtnUserConfirmID) {
+			if(MessageDialog.openConfirm(null, "Confirm", "사용자 확인으로 처리 하시겠습니까?")) {
+				try {
+					TadpoleSystem_monitoring.updateUserConfirmMsg(dao.getMonitoring_seq(), dao.getMonitoring_index_seq(), textUserConfirmMsg.getText());
+					
+					super.close();
+				} catch (Exception e) {
+					logger.error("Update user confirm", e);
+				}
+			}
+		}
+		super.buttonPressed(buttonId);
+	}
+
 	/**
 	 * Create contents of the button bar.
 	 * @param parent
@@ -159,9 +187,10 @@ public class ResultSetViewDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, intBtnSnapshotID, "View Snapshot", false);
+		createButton(parent, intBtnUserConfirmID, "User Confirm", false);
 		createButton(parent, IDialogConstants.OK_ID, "Close", true);
 	}
-
+	
 	/**
 	 * Return the initial size of the dialog.
 	 */

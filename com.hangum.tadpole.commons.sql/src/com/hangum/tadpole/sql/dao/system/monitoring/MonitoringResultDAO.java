@@ -15,8 +15,10 @@ public class MonitoringResultDAO {
 	UserDBDAO userDB;
 	MonitoringIndexDAO monitoringIndexDAO;
 	
-	String seq;
-	String relation_seq;
+	int seq;
+	
+	String unique_id;
+	String relation_id;
 	
 	int monitoring_seq;
 	int monitoring_index_seq;
@@ -42,38 +44,47 @@ public class MonitoringResultDAO {
 	public MonitoringResultDAO() {
 	}
 
-
 	/**
 	 * @return the seq
 	 */
-	public String getSeq() {
+	public int getSeq() {
 		return seq;
 	}
-
 
 	/**
 	 * @param seq the seq to set
 	 */
-	public void setSeq(String seq) {
+	public void setSeq(int seq) {
 		this.seq = seq;
 	}
 
-
 	/**
-	 * @return the relation_seq
+	 * @return the unique_id
 	 */
-	public String getRelation_seq() {
-		return relation_seq;
+	public String getUnique_id() {
+		return unique_id;
 	}
 
-
 	/**
-	 * @param relation_seq the relation_seq to set
+	 * @param unique_id the unique_id to set
 	 */
-	public void setRelation_seq(String relation_seq) {
-		this.relation_seq = relation_seq;
+	public void setUnique_id(String unique_id) {
+		this.unique_id = unique_id;
 	}
 
+	/**
+	 * @return the relation_id
+	 */
+	public String getRelation_id() {
+		return relation_id;
+	}
+
+	/**
+	 * @param relation_id the relation_id to set
+	 */
+	public void setRelation_id(String relation_id) {
+		this.relation_id = relation_id;
+	}
 
 	/**
 	 * @return the monitoring_seq

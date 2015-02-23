@@ -18,9 +18,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.monitoring.core.manager.event.EventManager;
+import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 import com.hangum.tadpole.monitoring.core.utils.Utils;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
@@ -54,8 +54,8 @@ public class MonitoringJob implements Job {
 					for(int i=0; i<jsonArray.size(); i++) {
 						resultDao = new MonitoringResultDAO();
 
-						resultDao.setSeq(UUID.randomUUID().toString());
-						resultDao.setRelation_seq(strRelationUUID);
+						resultDao.setUnique_id(UUID.randomUUID().toString());
+						resultDao.setRelation_id(strRelationUUID);
 						resultDao.setUserDB(userDB);
 						
 						resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
@@ -70,7 +70,7 @@ public class MonitoringJob implements Job {
 						
 						//결과를 저장한다.
 						boolean isError = MonitorErrorChecker.isError(jsonObj, monitoringIndexDAO);
-						resultDao.setResult(isError?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+						resultDao.setResult(isError?MonitoringDefine.MONITORING_STATUS.WARRING.getName():MonitoringDefine.MONITORING_STATUS.CLEAN.getName());
 						resultDao.setSystem_description(String.format("%s %s %s", monitoringIndexDAO.getCondition_value(), monitoringIndexDAO.getCondition_type(), strIndexValue));
 						
 						resultDao.setUser_seq(userDB.getUser_seq());
@@ -95,6 +95,8 @@ public class MonitoringJob implements Job {
 					
 					// 오류를 모니터링 항목에 넣습니다.
 					resultDao = new MonitoringResultDAO();
+					resultDao.setUnique_id(UUID.randomUUID().toString());
+					resultDao.setRelation_id(strRelationUUID);
 					resultDao.setUserDB(userDB);
 					
 					resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
@@ -105,7 +107,7 @@ public class MonitoringJob implements Job {
 					resultDao.setIndex_value("0");
 					
 					//결과를 저장한다.
-					resultDao.setResult(PublicTadpoleDefine.YES_NO.YES.toString());
+					resultDao.setResult(MonitoringDefine.MONITORING_STATUS.CRITICAL.toString());
 					resultDao.setSystem_description(e.getMessage());
 					
 					resultDao.setUser_seq(userDB.getUser_seq());
@@ -114,6 +116,7 @@ public class MonitoringJob implements Job {
 					resultDao.setQuery_result("");
 					resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 					resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
+					resultDao.setSnapshot(Utils.getDBVariable(userDB));
 					
 					// 후속작업을 위해 사용자 별로 모니터링 데이터를 모읍니다.
 					listMonitoringResult.add(resultDao);
@@ -178,7 +181,7 @@ public class MonitoringJob implements Job {
 			String strEmail = "";
 			for (MonitoringResultDAO resultDao : listMonitoringData) {
 				
-				if(PublicTadpoleDefine.YES_NO.YES.toString().equals( resultDao.getResult() )) {
+				if(!MonitoringDefine.MONITORING_STATUS.CLEAN.getName().equals( resultDao.getResult() )) {
 					listErrorMonitoringResult.add(resultDao);
 				}
 				
@@ -198,7 +201,6 @@ public class MonitoringJob implements Job {
 		
 		// 이벤트 처리를 처리 모듈에 보낸다.
 		sendEventManager(listErrorMonitoringResult);	
-		
 	}
 	
 	/**

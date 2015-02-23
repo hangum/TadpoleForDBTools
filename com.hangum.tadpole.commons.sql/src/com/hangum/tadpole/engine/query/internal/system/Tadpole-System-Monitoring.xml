@@ -18,6 +18,63 @@
 
 <sqlMap namespace="Tadpole-System-Monitoring">
 
+<!-- monitoring list -->
+<select id="getMonitoringErrorStatus" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringDashboardDAO" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT
+	    main.*,
+	    base.*, 
+	    (SELECT DISPLAY_NAME
+	    FROM
+	        tadpole_db
+	    WHERE
+	        seq = base.db_seq) display_name,
+	    (SELECT CREATE_TIME
+	    FROM    
+	        monitoring_result
+	    WHERE db_seq = base.db_seq 
+	        AND monitoring_seq = base.monitoring_seq
+	        AND monitoring_index_seq = base.monitoring_index_seq
+	        AND result IN ( 'WARRING', 'CRITICAL')
+	        AND is_user_confirm = 'NO'
+	        LIMIT 1)                    start_time,
+	    (SELECT count(*)  
+	    FROM    
+	        monitoring_result
+	    WHERE db_seq = base.db_seq 
+	        AND monitoring_seq = base.monitoring_seq
+	        AND monitoring_index_seq = base.monitoring_index_seq
+	        AND result = 'WARRING'
+	        AND is_user_confirm = 'NO') warring_cnt,
+	    (SELECT count(*) 
+	    FROM    
+	        monitoring_result
+	    WHERE db_seq = base.db_seq 
+	        AND monitoring_seq = base.monitoring_seq
+	        AND monitoring_index_seq = base.monitoring_index_seq
+	        AND result = 'CRITICAL'
+	        AND is_user_confirm = 'NO') critical_cnt
+	FROM	    
+	    (SELECT
+	        db_seq, monitoring_seq, monitoring_index_seq, monitoring_type, kpi_type
+	    FROM
+	        monitoring_result
+	    WHERE
+	            result IN ( 'WARRING', 'CRITICAL')
+	        AND is_user_confirm = 'NO'
+	        AND db_seq IN ($db_seqs$)
+	    GROUP BY 
+	        db_seq, monitoring_seq, monitoring_index_seq, monitoring_type, kpi_type) base, 
+	    (    SELECT seq, title, description
+	    FROM
+	        monitoring_main
+	    WHERE 
+	        db_seq IN ($db_seqs$)
+	    ) main
+	WHERE base.monitoring_seq = main.seq
+]]>	
+</select>
+
 <!-- 
 	each user db monitoring
  -->
@@ -217,7 +274,6 @@
 
 <!--  get monitoring result -->
 <select id="getMonitoringResult" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO" parameterClass="java.util.Map">
-
 	SELECT *  
  	FROM monitoring_result
 	WHERE monitoring_seq = #monitoring_seq#
@@ -233,12 +289,24 @@
 ]]>	
 </select>
 
-<!--  save query result -->
+<!--  save monitoring result -->
 <insert id="insertMonitoringResult" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO">
 	INSERT INTO monitoring_result
-	 (seq, relation_seq, monitoring_seq, monitoring_index_seq, monitoring_type, kpi_type, user_seq, db_seq, result, index_value, system_description, user_description, after_description, query_result, snapshot) 
+	 (unique_id, relation_id, monitoring_seq, monitoring_index_seq, monitoring_type, kpi_type, user_seq, db_seq, result, index_value, system_description, user_description, after_description, query_result, snapshot) 
 	VALUES 
-	 (#seq#, #relation_seq#, #monitoring_seq#, #monitoring_index_seq#, #monitoring_type#, #kpi_type#, #user_seq#, #db_seq#, #result#, #index_value#, #system_description#, #user_description#, #after_description#, #query_result#, #snapshot#) 
+	 (#unique_id#, #relation_id#, #monitoring_seq#, #monitoring_index_seq#, #monitoring_type#, #kpi_type#, #user_seq#, #db_seq#, #result#, #index_value#, #system_description#, #user_description#, #after_description#, #query_result#, #snapshot#) 
 </insert>
+
+<!-- update monitoring result -->
+<update id="updateUserConfirmMsg" parameterClass="java.util.Map">
+	UPDATE 
+		monitoring_result 
+	SET
+		user_description = #user_description#, is_user_confirm = 'YES', mod_time = now()
+	WHERE  
+			monitoring_seq 			= #monitoring_seq#
+		AND monitoring_index_seq 	= #monitoring_index_seq#
+		AND is_user_confirm 		= 'NO'
+</update>
 	
 </sqlMap>

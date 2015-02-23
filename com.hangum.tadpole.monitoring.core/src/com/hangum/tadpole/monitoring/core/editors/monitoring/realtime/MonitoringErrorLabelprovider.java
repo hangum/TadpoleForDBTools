@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
+import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringDashboardDAO;
 
 /**
  * monitoring label provider
@@ -21,15 +21,17 @@ public class MonitoringErrorLabelprovider extends LabelProvider implements ITabl
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		MonitoringResultDAO dao = (MonitoringResultDAO)element;
-			
+		MonitoringDashboardDAO dao = (MonitoringDashboardDAO)element;
+
 		switch(columnIndex) {
-			case 0: return dao.getCreate_time().toString();
-			case 1: return dao.getUserDB().getDisplay_name();
-			case 2: return dao.getMonitoringIndexDAO().getTitle();
-			case 3: return dao.getIndex_value();
-			case 4: return dao.getMonitoringIndexDAO().getCondition_type() + " " + dao.getMonitoringIndexDAO().getCondition_value();
-			case 5: return dao.getQuery_result();
+			case 0: return dao.getStart_time().toString();
+			
+			case 1: return dao.getDisplay_name();
+			case 2: return dao.getKpi_type();
+			case 3: return dao.getTitle();
+			case 4: return dao.getDescription();
+			case 5: return ""+dao.getWarring_cnt();
+			case 6: return ""+dao.getCritical_cnt();
 		}
 	
 		return null;
