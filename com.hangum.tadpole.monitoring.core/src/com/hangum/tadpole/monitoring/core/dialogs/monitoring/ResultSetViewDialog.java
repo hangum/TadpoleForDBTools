@@ -114,20 +114,20 @@ public class ResultSetViewDialog extends Dialog {
 		Group grpResultset = new Group(container, SWT.NONE);
 		grpResultset.setLayout(new GridLayout(1, false));
 		grpResultset.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpResultset.setText("ResultSet");
+		grpResultset.setText("Query Result");
 		
 		textMessage = new Text(grpResultset, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Group grpUserConformMessage = new Group(container, SWT.NONE);
-		GridData gd_grpUserConformMessage = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		gd_grpUserConformMessage.heightHint = 50;
-		grpUserConformMessage.setLayoutData(gd_grpUserConformMessage);
-		grpUserConformMessage.setText("User Conform Message");
-		grpUserConformMessage.setLayout(new GridLayout(1, false));
-		
-		textUserConfirmMsg = new Text(grpUserConformMessage, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textUserConfirmMsg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		Group grpUserConformMessage = new Group(container, SWT.NONE);
+//		GridData gd_grpUserConformMessage = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+//		gd_grpUserConformMessage.heightHint = 50;
+//		grpUserConformMessage.setLayoutData(gd_grpUserConformMessage);
+//		grpUserConformMessage.setText("User Conform Message");
+//		grpUserConformMessage.setLayout(new GridLayout(1, false));
+//		
+//		textUserConfirmMsg = new Text(grpUserConformMessage, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+//		textUserConfirmMsg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();
 		
@@ -167,15 +167,15 @@ public class ResultSetViewDialog extends Dialog {
 			ShowSnapshotDialog dialog = new ShowSnapshotDialog(null, dao);
 			dialog.open();
 		} else if(buttonId == intBtnUserConfirmID) {
-			if(MessageDialog.openConfirm(null, "Confirm", "사용자 확인으로 처리 하시겠습니까?")) {
-				try {
-					TadpoleSystem_monitoring.updateUserConfirmMsg(dao.getMonitoring_seq(), dao.getMonitoring_index_seq(), textUserConfirmMsg.getText());
-					
-					super.close();
-				} catch (Exception e) {
-					logger.error("Update user confirm", e);
-				}
-			}
+//			if(MessageDialog.openConfirm(null, "Confirm", "사용자 확인으로 처리 하시겠습니까?")) {
+//				try {
+//					TadpoleSystem_monitoring.updateUserConfirmMsg(dao.getMonitoring_seq(), dao.getMonitoring_index_seq(), textUserConfirmMsg.getText());
+//					
+//					super.close();
+//				} catch (Exception e) {
+//					logger.error("Update user confirm", e);
+//				}
+//			}
 		}
 		super.buttonPressed(buttonId);
 	}
@@ -187,7 +187,7 @@ public class ResultSetViewDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, intBtnSnapshotID, "View Snapshot", false);
-		createButton(parent, intBtnUserConfirmID, "User Confirm", false);
+//		createButton(parent, intBtnUserConfirmID, "User Confirm", false);
 		createButton(parent, IDialogConstants.OK_ID, "Close", true);
 	}
 	

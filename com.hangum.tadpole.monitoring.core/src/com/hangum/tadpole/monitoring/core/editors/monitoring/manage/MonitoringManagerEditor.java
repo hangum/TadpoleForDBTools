@@ -209,9 +209,8 @@ public class MonitoringManagerEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AddMonitoringDialog dialog = new AddMonitoringDialog(null, userDB);
-				if(Dialog.OK == dialog.open()) {
-					refreshMonitoringIndex();	
-				}
+				dialog.open();
+				refreshMonitoringIndex();	
 			}
 		});
 		tltmAdd.setText("Add");
@@ -419,7 +418,7 @@ public class MonitoringManagerEditor extends EditorPart {
 			long endTime = cal.getTimeInMillis();
 			
 			try {
-				List<MonitoringResultDAO> listResult = TadpoleSystem_monitoring.getMonitoringResult(monitoringIndexDao, comboResult.getText(), comboStatics.getText(), startTime, endTime);
+				List<MonitoringResultDAO> listResult = TadpoleSystem_monitoring.getMonitoringResultHistory(monitoringIndexDao, comboResult.getText(), comboStatics.getText(), startTime, endTime);
 				for (MonitoringResultDAO monitoringResultDAO : listResult) {
 					monitoringResultDAO.setMonitoringIndexDAO(monitoringIndexDao);
 				}

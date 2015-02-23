@@ -273,7 +273,7 @@
 </insert>
 
 <!--  get monitoring result -->
-<select id="getMonitoringResult" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO" parameterClass="java.util.Map">
+<select id="getMonitoringResultHistory" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO" parameterClass="java.util.Map">
 	SELECT *  
  	FROM monitoring_result
 	WHERE monitoring_seq = #monitoring_seq#
@@ -289,6 +289,27 @@
 ]]>	
 </select>
 
+<!-- Get monitoring result status. -->
+<select id="getMonitoringResultStatus" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO" parameterClass="java.util.Map">
+	SELECT 
+		seq, unique_id, relation_id, monitoring_seq, monitoring_index_seq, monitoring_type, kpi_type, user_seq, db_seq, result, index_value, system_description, is_user_confirm, user_description, after_description, create_time, mod_time, query_result  
+ 	FROM monitoring_result
+	WHERE monitoring_seq = #monitoring_seq#
+		AND monitoring_index_seq = #monitoring_index_seq#
+		AND result			IN ($result$)
+		AND is_user_confirm	= #is_user_confirm#
+	ORDER BY create_time DESC	
+</select>
+
+<!--  Get monitoring result -->
+<select id="getMonitoringResult" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO" 
+				parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO">
+	SELECT 
+		seq, unique_id, relation_id, monitoring_seq, monitoring_index_seq, monitoring_type, kpi_type, user_seq, db_seq, result, index_value, system_description, is_user_confirm, user_description, after_description, create_time, mod_time, query_result, snapshot  
+ 	FROM monitoring_result
+	WHERE seq = #seq#
+</select>
+
 <!--  save monitoring result -->
 <insert id="insertMonitoringResult" parameterClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO">
 	INSERT INTO monitoring_result
@@ -299,6 +320,16 @@
 
 <!-- update monitoring result -->
 <update id="updateUserConfirmMsg" parameterClass="java.util.Map">
+	UPDATE
+		monitoring_result
+	SET
+		user_description = #user_description#, is_user_confirm = 'YES', mod_time = now()
+	WHERE
+		seq 	= #seq#
+</update>
+
+<!-- update monitoring result -->
+<update id="updateAllUserConfirmMsg" parameterClass="java.util.Map">
 	UPDATE 
 		monitoring_result 
 	SET

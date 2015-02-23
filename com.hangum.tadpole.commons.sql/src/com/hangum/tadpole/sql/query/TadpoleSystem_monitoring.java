@@ -2,6 +2,7 @@ package com.hangum.tadpole.sql.query;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -37,6 +37,8 @@ public class TadpoleSystem_monitoring {
 	 * @throws Exception
 	 */
 	public static List<MonitoringDashboardDAO> getMonitoringErrorStatus(String dbseqs) throws Exception {
+		if("".equals(dbseqs)) return new ArrayList<MonitoringDashboardDAO>();
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getMonitoringErrorStatus", dbseqs);
 	}
@@ -158,16 +160,11 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringResultDAO> getMonitoringResult(MonitoringIndexDAO monitoringIndexDao, 
+	public static List<MonitoringResultDAO> getMonitoringResultHistory(MonitoringIndexDAO monitoringIndexDao, 
 											String strResultType, String strTerm, long startTime, long endTime) throws Exception {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("monitoring_seq",	monitoringIndexDao.getMonitoring_seq());
-		
-		if("Normal".equals(strResultType)) {
-			queryMap.put("resultType", 	PublicTadpoleDefine.YES_NO.NO.toString());	
-		} else if("Error".equals(strResultType)) {
-			queryMap.put("resultType", 	PublicTadpoleDefine.YES_NO.YES.toString());
-		}
+		queryMap.put("resultType", strResultType);	
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(startTime);
@@ -182,8 +179,40 @@ public class TadpoleSystem_monitoring {
 		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("getMonitoringResult", queryMap);
+		return sqlClient.queryForList("getMonitoringResultHistory", queryMap);
 	}
+
+	/**
+	 * getMonitoring result status
+	 * 
+	 * @param intMonSeq
+	 * @param intMonIndexSeq
+	 * @param strUserConfirm
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<MonitoringResultDAO> getMonitoringResultStatus(int intMonSeq, int intMonIndexSeq, String is_user_confirm, String resultType) throws Exception {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("monitoring_seq",			intMonSeq);
+		queryMap.put("monitoring_index_seq",	intMonIndexSeq);
+		queryMap.put("is_user_confirm", 		is_user_confirm);
+		queryMap.put("result", 					resultType);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getMonitoringResultStatus", queryMap);
+	}
+
+	/**
+	 * monitoring result
+	 * 
+	 * @param dao
+	 * @return
+	 */
+	public static MonitoringResultDAO getMonitoringResult(MonitoringResultDAO dao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (MonitoringResultDAO)sqlClient.queryForObject("getMonitoringResult", dao);
+	}
+
 	
 	/**
 	 * 사용자 확인 처리를 합니다. 
@@ -194,16 +223,33 @@ public class TadpoleSystem_monitoring {
 	 * 
 	 * @throws Exception
 	 */
-	public static void updateUserConfirmMsg(int monitoring_seq, int monitoring_index_seq, String strUserMsg) throws Exception {
+	public static void updateUserConfirmMsg(int seq, String strUserMsg) throws Exception {
 		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("seq",			seq);
+		queryMap.put("user_description",		strUserMsg);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserConfirmMsg", queryMap);
+	}
+	
+	/**
+	 * 모든 인덱스 에러에 대해 사용자 확인 처리 합니다.
+	 * 
+	 * @param monitoring_seq
+	 * @param monitoring_index_seq
+	 * @param strUserMsg
+	 */
+	public static void updateUserConfirmMsg(int monitoring_seq, int monitoring_index_seq, String strUserMsg) throws Exception {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("monitoring_seq",			monitoring_seq);
 		queryMap.put("monitoring_index_seq",	monitoring_index_seq);
 		queryMap.put("user_description",		strUserMsg);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.update("updateUserConfirmMsg", queryMap);
-	}
+		sqlClient.update("updateAllUserConfirmMsg", queryMap);
+		
+	}	
 
 	/**
 	 * update monitoring data
@@ -216,5 +262,4 @@ public class TadpoleSystem_monitoring {
 		sqlClient.update("updateMonitoringMain", mainDao);
 		sqlClient.update("updateMonitoringIndex", indexDao);
 	}
-	
 }
