@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
@@ -49,7 +50,6 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.monitoring.core.Activator;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog;
-import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.TemplateMonitoringManageDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.UpdateMonitoringDialog;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
@@ -59,8 +59,6 @@ import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
-
-import org.eclipse.swt.widgets.Text;
 
 /**
  * Monitoring manage editor
@@ -91,9 +89,9 @@ public class MonitoringManagerEditor extends EditorPart {
 	private DateTime dateTimeEnd;
 	private TableViewer tvResult;
 	
-	private Combo comboStatics;
-	private Text text;
-	private Text text_1;
+//	private Combo comboStatics;
+//	private Text text;
+//	private Text text_1;
 
 	public MonitoringManagerEditor() {
 		super();
@@ -395,8 +393,8 @@ public class MonitoringManagerEditor extends EditorPart {
 	 * crate result column
 	 */
 	public void createTableColumn(TableViewer tvError) {
-		String[] arryTable = {"Title", "is Error", "Value", "Result", "Date"};
-		int[] arryWidth = {120, 50, 80, 300, 160};
+		String[] arryTable 	= {"Title", "Status", "Value", "User Descripton", "System Description", "Result", "Date"};
+		int[] arryWidth 	= {120, 		65, 	80, 	200, 				200,				160, 		100};
 	
 		for(int i=0; i<arryTable.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvError, SWT.NONE);
