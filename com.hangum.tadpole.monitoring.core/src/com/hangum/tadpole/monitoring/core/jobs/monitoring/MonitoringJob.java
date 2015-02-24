@@ -18,6 +18,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.monitoring.core.manager.event.EventManager;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
@@ -44,7 +45,7 @@ public class MonitoringJob implements Job {
 		try {
 			String strRelationUUID = UUID.randomUUID().toString();
 			
-			for (MonitoringIndexDAO monitoringIndexDAO : TadpoleSystem_monitoring.getMonitoring()) {
+			for (MonitoringIndexDAO monitoringIndexDAO : TadpoleSystem_monitoring.getAllMonitoringList()) {
 				if(logger.isDebugEnabled()) logger.debug("==[title]===> " + monitoringIndexDAO.getTitle());
 				UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(monitoringIndexDAO.getDb_seq());
 				
@@ -76,10 +77,12 @@ public class MonitoringJob implements Job {
 						resultDao.setUser_seq(userDB.getUser_seq());
 						resultDao.setDb_seq(userDB.getSeq());
 						
-						resultDao.setQuery_result(jsonObj.toString());
+						if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringIndexDAO.getIs_result_save())) {
+							resultDao.setQuery_result(jsonObj.toString());
+						}
 						resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 						resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
-						if(isError) {
+						if(isError & PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringIndexDAO.getIs_snapshot_save())) {
 							resultDao.setSnapshot(Utils.getDBVariable(userDB));	
 						}
 						
@@ -116,7 +119,9 @@ public class MonitoringJob implements Job {
 					resultDao.setQuery_result("");
 					resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 					resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
-					resultDao.setSnapshot(Utils.getDBVariable(userDB));
+					if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringIndexDAO.getIs_snapshot_save())) {
+						resultDao.setSnapshot(Utils.getDBVariable(userDB));
+					}
 					
 					// 후속작업을 위해 사용자 별로 모니터링 데이터를 모읍니다.
 					listMonitoringResult.add(resultDao);

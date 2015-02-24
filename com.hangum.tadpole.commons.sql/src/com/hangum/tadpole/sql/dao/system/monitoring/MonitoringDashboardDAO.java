@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 public class MonitoringDashboardDAO {
 	String title;
 	String description;
+	String advice;
 	
 	String display_name;
 	int db_seq;
@@ -25,6 +26,20 @@ public class MonitoringDashboardDAO {
 	int critical_cnt;
 
 	public MonitoringDashboardDAO() {
+	}
+
+	/**
+	 * @return the advice
+	 */
+	public String getAdvice() {
+		return advice;
+	}
+
+	/**
+	 * @param advice the advice to set
+	 */
+	public void setAdvice(String advice) {
+		this.advice = advice;
 	}
 
 	/**

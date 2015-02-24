@@ -3,23 +3,20 @@ package com.hangum.tadpole.monitoring.core.dialogs.monitoring;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
-
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * ResultSet view dialog
@@ -41,7 +38,8 @@ public class ResultSetViewDialog extends Dialog {
 	private Text textMessage;
 	private Text textDate;
 	private Text textDBName;
-	private Text textUserConfirmMsg;
+	private Text textAdvice;
+//	private Text textUserConfirmMsg;
 	
 	/**
 	 * Create the dialog.
@@ -105,6 +103,15 @@ public class ResultSetViewDialog extends Dialog {
 		gd_textDescription.minimumHeight = 40;
 		textDescription.setLayoutData(gd_textDescription);
 		
+		Label lblAdvice = new Label(compositeHead, SWT.NONE);
+		lblAdvice.setText("Advice");
+		
+		textAdvice = new Text(compositeHead, SWT.BORDER);
+		GridData gd_textAdvice = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_textAdvice.heightHint = 40;
+		gd_textAdvice.minimumHeight = 40;
+		textAdvice.setLayoutData(gd_textAdvice);
+		
 		Label lblValue = new Label(compositeHead, SWT.NONE);
 		lblValue.setText("System Message");
 		
@@ -152,6 +159,7 @@ public class ResultSetViewDialog extends Dialog {
 			textDBName.setText(dao.getUserDB().getDisplay_name());
 			textTitle.setText(dao.getMonitoringIndexDAO().getTitle());
 			textDescription.setText(dao.getMonitoringIndexDAO().getDescription());
+			textAdvice.setText(dao.getMonitoringIndexDAO().getAdvice());
 			textSystemDescription.setText(dao.getSystem_description());
 			
 			textMessage.setText(JSONUtil.getPretty(dao.getQuery_result()));

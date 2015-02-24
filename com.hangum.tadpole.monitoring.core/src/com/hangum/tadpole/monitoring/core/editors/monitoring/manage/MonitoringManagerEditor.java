@@ -52,12 +52,14 @@ import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.TemplateMonitoringManageDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.UpdateMonitoringDialog;
+import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 import com.hangum.tadpole.sql.dao.ManagerListDTO;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
+
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -289,30 +291,31 @@ public class MonitoringManagerEditor extends EditorPart {
 		compositeResultSearch.setLayout(new GridLayout(9, false));
 		compositeResultSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblStatics = new Label(compositeResultSearch, SWT.NONE);
-		lblStatics.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblStatics.setText("Statics");
-		
-		comboStatics = new Combo(compositeResultSearch, SWT.READ_ONLY);
-		comboStatics.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		comboStatics.setVisibleItemCount(5);
-		comboStatics.add("All");
-		comboStatics.add("5 Minute");
-		comboStatics.add("1 Hour");
-		comboStatics.add("1 Day");
-		comboStatics.add("1 Week");
-		comboStatics.add("1 Month");
-		comboStatics.select(0);
+//		Label lblStatics = new Label(compositeResultSearch, SWT.NONE);
+//		lblStatics.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblStatics.setText("Statics");
+//		
+//		comboStatics = new Combo(compositeResultSearch, SWT.READ_ONLY);
+//		comboStatics.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+//		comboStatics.setVisibleItemCount(5);
+//		comboStatics.add("All");
+//		comboStatics.add("5 Minute");
+//		comboStatics.add("1 Hour");
+//		comboStatics.add("1 Day");
+//		comboStatics.add("1 Week");
+//		comboStatics.add("1 Month");
+//		comboStatics.select(0);
 		
 		Label lblNewLabel = new Label(compositeResultSearch, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText("Result");
 		
 		comboResult = new Combo(compositeResultSearch, SWT.READ_ONLY);
-		comboResult.add("All");
-		comboResult.add("Normal");
-		comboResult.add("Error");
-		comboResult.select(2);
+		for (MonitoringDefine.MONITORING_STATUS type : MonitoringDefine.MONITORING_STATUS.values()) {
+			comboResult.add(type.getName());
+		}
+		comboResult.setVisibleItemCount(MonitoringDefine.MONITORING_STATUS.values().length);
+		comboResult.select(1);
 		
 		Label lblStart = new Label(compositeResultSearch, SWT.NONE);
 		lblStart.setText("start");
@@ -348,9 +351,9 @@ public class MonitoringManagerEditor extends EditorPart {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 				if(!sel.isEmpty()) {
-					MonitoringResultDAO dao = (MonitoringResultDAO)sel.getFirstElement();
-					ResultSetViewDialog dialog = new ResultSetViewDialog(null, dao);
-					dialog.open();	
+//					MonitoringResultDAO dao = (MonitoringResultDAO)sel.getFirstElement();
+//					ResultSetViewDialog dialog = new ResultSetViewDialog(null, dao);
+//					dialog.open();	
 				}
 			}
 		});
@@ -367,23 +370,23 @@ public class MonitoringManagerEditor extends EditorPart {
 		sashFormMain.setWeights(new int[] {3, 7});
 		tabFolderResult.setSelection(0);
 		
-		Composite compositeSummary = new Composite(compositeResult, SWT.NONE);
-		compositeSummary.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeSummary.setLayout(new GridLayout(4, false));
-		
-		Label lblTotal = new Label(compositeSummary, SWT.NONE);
-		lblTotal.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTotal.setText("Total");
-		
-		text_1 = new Text(compositeSummary, SWT.BORDER);
-		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblAverage = new Label(compositeSummary, SWT.NONE);
-		lblAverage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblAverage.setText("Average");
-		
-		text = new Text(compositeSummary, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		Composite compositeSummary = new Composite(compositeResult, SWT.NONE);
+//		compositeSummary.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		compositeSummary.setLayout(new GridLayout(4, false));
+//		
+//		Label lblTotal = new Label(compositeSummary, SWT.NONE);
+//		lblTotal.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblTotal.setText("Total");
+//		
+//		text_1 = new Text(compositeSummary, SWT.BORDER);
+//		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//		Label lblAverage = new Label(compositeSummary, SWT.NONE);
+//		lblAverage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblAverage.setText("Average");
+//		
+//		text = new Text(compositeSummary, SWT.BORDER);
+//		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		initUI();
 	}
@@ -418,7 +421,7 @@ public class MonitoringManagerEditor extends EditorPart {
 			long endTime = cal.getTimeInMillis();
 			
 			try {
-				List<MonitoringResultDAO> listResult = TadpoleSystem_monitoring.getMonitoringResultHistory(monitoringIndexDao, comboResult.getText(), comboStatics.getText(), startTime, endTime);
+				List<MonitoringResultDAO> listResult = TadpoleSystem_monitoring.getMonitoringResultHistory(monitoringIndexDao, comboResult.getText(), "", startTime, endTime);
 				for (MonitoringResultDAO monitoringResultDAO : listResult) {
 					monitoringResultDAO.setMonitoringIndexDAO(monitoringIndexDao);
 				}

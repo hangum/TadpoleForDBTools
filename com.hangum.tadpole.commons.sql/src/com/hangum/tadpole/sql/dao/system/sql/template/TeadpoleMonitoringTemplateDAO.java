@@ -17,6 +17,11 @@ public class TeadpoleMonitoringTemplateDAO {
     
     String title = "";
     String description = "";
+
+    String advice = "";
+    String is_result_save = "";
+    String is_snapshot_save = "";
+    
     String query = "";
 
     String index_nm = "";
@@ -363,4 +368,47 @@ public class TeadpoleMonitoringTemplateDAO {
 	public void setTemplate_type(String template_type) {
 		this.template_type = template_type;
 	}
+
+	/**
+	 * @return the advice
+	 */
+	public String getAdvice() {
+		return advice;
+	}
+
+	/**
+	 * @param advice the advice to set
+	 */
+	public void setAdvice(String advice) {
+		this.advice = advice;
+	}
+
+	/**
+	 * @return the is_result_save
+	 */
+	public String getIs_result_save() {
+		return is_result_save;
+	}
+
+	/**
+	 * @param is_result_save the is_result_save to set
+	 */
+	public void setIs_result_save(String is_result_save) {
+		this.is_result_save = is_result_save;
+	}
+
+	/**
+	 * @return the is_snapshot_save
+	 */
+	public String getIs_snapshot_save() {
+		return is_snapshot_save;
+	}
+
+	/**
+	 * @param is_snapshot_save the is_snapshot_save to set
+	 */
+	public void setIs_snapshot_save(String is_snapshot_save) {
+		this.is_snapshot_save = is_snapshot_save;
+	}
+	
 }

@@ -18,6 +18,7 @@ public class MonitoringMainDAO {
 	String read_method;
 	String title;
 	String description;
+	String advice;
 	String cron_exp;
 
 	String query;
@@ -26,8 +27,9 @@ public class MonitoringMainDAO {
 	String param_2_column;
 	String param_2_init_value;
 
-	
 	String is_result_save;
+	String is_snapshot_save = "";
+	
 	String receiver;
 	Timestamp create_time;
 	Timestamp mod_time;
@@ -286,6 +288,34 @@ public class MonitoringMainDAO {
 	 */
 	public void setParam_2_init_value(String param_2_init_value) {
 		this.param_2_init_value = param_2_init_value;
+	}
+
+	/**
+	 * @return the advice
+	 */
+	public String getAdvice() {
+		return advice;
+	}
+
+	/**
+	 * @param advice the advice to set
+	 */
+	public void setAdvice(String advice) {
+		this.advice = advice;
+	}
+
+	/**
+	 * @return the is_snapshot_save
+	 */
+	public String getIs_snapshot_save() {
+		return is_snapshot_save;
+	}
+
+	/**
+	 * @param is_snapshot_save the is_snapshot_save to set
+	 */
+	public void setIs_snapshot_save(String is_snapshot_save) {
+		this.is_snapshot_save = is_snapshot_save;
 	}
 
 }

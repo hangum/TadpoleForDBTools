@@ -38,6 +38,7 @@ public class UpdateMonitoringDialog extends Dialog {
 	
 	private Text textTitle;
 	private Text textDescription;
+	private Text textAdvice;
 	private Combo comboMonitoringReadType;
 	private Text textQuery;
 	private Text textParameter1_name;
@@ -55,6 +56,9 @@ public class UpdateMonitoringDialog extends Dialog {
 	private Text textExceptionConditionValue;
 	
 	private Text textReceiver;
+	
+	private Combo comboIsResultSave;
+	private Combo comboIsSnapshotSave;
 
 	/**
 	 * Create the dialog.
@@ -128,6 +132,15 @@ public class UpdateMonitoringDialog extends Dialog {
 		gd_textDescription.minimumHeight = 40;
 		textDescription.setLayoutData(gd_textDescription);
 		
+		Label lblAdvice = new Label(compositeMoni, SWT.NONE);
+		lblAdvice.setText("Advice");
+		
+		textAdvice = new Text(compositeMoni, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		GridData gd_textAdvice = new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1);
+		gd_textAdvice.minimumHeight = 40;
+		gd_textAdvice.heightHint = 40;
+		textAdvice.setLayoutData(gd_textAdvice);
+		
 		Label lblMonitoringType = new Label(compositeMoni, SWT.NONE);
 		lblMonitoringType.setText("Read Type");
 		
@@ -161,7 +174,6 @@ public class UpdateMonitoringDialog extends Dialog {
 		textParameter1Value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblParameterName = new Label(compositeMoni, SWT.NONE);
-		lblParameterName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblParameterName.setText("Parameter 2 Name");
 		
 		textParameter2_name = new Text(compositeMoni, SWT.BORDER);
@@ -237,6 +249,28 @@ public class UpdateMonitoringDialog extends Dialog {
 		textReceiver = new Text(compositeMoni, SWT.BORDER);
 		textReceiver.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
 		
+		Label lblSaveResultData = new Label(compositeMoni, SWT.NONE);
+		lblSaveResultData.setText("Is save result data?");
+		
+		comboIsResultSave = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboIsResultSave.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		for (PublicTadpoleDefine.YES_NO type : PublicTadpoleDefine.YES_NO.values()) {
+			comboIsResultSave.add(type.toString());
+		}
+		comboIsResultSave.setVisibleItemCount(MonitoringDefine.AFTER_PROCESS_TYPE.values().length);
+		comboIsResultSave.select(0);
+		
+		Label lblSaveSanpshotData = new Label(compositeMoni, SWT.NONE);
+		lblSaveSanpshotData.setText("is Save sanpshot data?");
+		
+		comboIsSnapshotSave = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboIsSnapshotSave.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		for (PublicTadpoleDefine.YES_NO type : PublicTadpoleDefine.YES_NO.values()) {
+			comboIsSnapshotSave.add(type.toString());
+		}
+		comboIsSnapshotSave.setVisibleItemCount(MonitoringDefine.AFTER_PROCESS_TYPE.values().length);
+		comboIsSnapshotSave.select(0);
+		
 		initUI();
 
 		return container;
@@ -251,6 +285,7 @@ public class UpdateMonitoringDialog extends Dialog {
 		
 		textTitle.setText(monitoringIndexDao.getTitle());
 		textDescription.setText(StringUtils.trimToEmpty(monitoringIndexDao.getDescription()));
+		textAdvice.setText(monitoringIndexDao.getAdvice());
 		comboMonitoringReadType.setText("SQL");
 		textQuery.setText(StringUtils.trimToEmpty(monitoringIndexDao.getQuery()));
 		textParameter1_name.setText(StringUtils.trimToEmpty(monitoringIndexDao.getParam_1_column()));
@@ -268,6 +303,9 @@ public class UpdateMonitoringDialog extends Dialog {
 		
 		comboAfterProcess.setText(monitoringIndexDao.getAfter_type());
 		textReceiver.setText(StringUtils.trimToEmpty(monitoringIndexDao.getReceiver()));
+		
+		comboIsResultSave.setText(monitoringIndexDao.getIs_result_save());
+		comboIsSnapshotSave.setText(monitoringIndexDao.getIs_snapshot_save());
 	}
 	
 	@Override
@@ -292,6 +330,8 @@ public class UpdateMonitoringDialog extends Dialog {
 		 mainDao.setRead_method(comboMonitoringReadType.getText());
 		 mainDao.setTitle(textTitle.getText());
 		 mainDao.setDescription(textDescription.getText());
+		 mainDao.setAdvice(textAdvice.getText());
+		 
 		 mainDao.setCron_exp("*/10 * * * * ?");
 		 mainDao.setQuery(textQuery.getText());
 		 mainDao.setIs_result_save(PublicTadpoleDefine.YES_NO.YES.toString());
@@ -301,6 +341,9 @@ public class UpdateMonitoringDialog extends Dialog {
 		 mainDao.setParam_1_init_value(textParameter1Value.getText());
 		 mainDao.setParam_2_column(textParameter2_name.getText());
 		 mainDao.setParam_2_init_value(textParameter2Value.getText());
+		 
+		 mainDao.setIs_result_save(comboIsResultSave.getText());
+		 mainDao.setIs_snapshot_save(comboIsSnapshotSave.getText());
 
 		 monitoringIndexDao.setMonitoring_type(comboMonitoringType.getText());
 		 monitoringIndexDao.setKpi_type(comboKPIType.getText());
@@ -341,6 +384,6 @@ public class UpdateMonitoringDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(700, 550);
+		return new Point(700, 600);
 	}
 }

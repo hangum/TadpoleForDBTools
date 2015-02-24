@@ -30,14 +30,16 @@
 <!--  save monitoring template data -->
 <insert id="saveMonitoringTemplate" parameterClass="com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO">
 	INSERT INTO tadpole_monitoring_template
-	 (user_seq, db_type, 	db_ver, 		template_type, monitoring_type, title, 	description, 
+	 (user_seq, db_type, 	db_ver, 		template_type, monitoring_type, 
+	 title, 	description, advice, is_result_save, is_snapshot_save,  
 	 query, 	index_nm, 	condition_type, condition_value, 
-	 			exception_index_nm, exception_condition_type, exception_condition_value, 
-	 	param_1_column, param_1_init_value, param_2_column, param_2_init_value, 
+	 exception_index_nm, exception_condition_type, exception_condition_value, 
+	 param_1_column, param_1_init_value, param_2_column, param_2_init_value, 
 	 after_type, kpi_type) 
 	VALUES 
-	 (#user_seq#, #db_type#, #db_ver#, #template_type#, #monitoring_type#, #title#, #description#, #query#, 
-	 #index_nm#, #condition_type#, #condition_value#, 
+	 (#user_seq#, #db_type#, #db_ver#, #template_type#, #monitoring_type#, 
+	 #title#, #description#, #advice#, #is_result_save#, #is_snapshot_save#, 
+	 #query#, #index_nm#, #condition_type#, #condition_value#, 
 	 #exception_index_nm#, #exception_condition_type#, #exception_condition_value#, 
 	 #param_1_column#, #param_1_init_value#, #param_2_column#, #param_2_init_value#, 
 	 #after_type#, #kpi_type#) 
@@ -53,7 +55,10 @@
 		template_type	= #template_type#, 
 		monitoring_type = #monitoring_type#, 
 		title 			= #title#, 
-		description 	= #description#, 
+		description 	= #description#,
+		advice			= #advice#, 
+		is_result_save	= #is_result_save#, 
+		is_snapshot_save= #is_snapshot_save#, 
 		query 			= #query#, 
 		index_nm 		= #index_nm#, 
 		condition_type	= #condition_type#, 

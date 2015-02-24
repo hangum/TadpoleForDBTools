@@ -71,7 +71,7 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringIndexDAO> getMonitoring() throws Exception {
+	public static List<MonitoringIndexDAO> getAllMonitoringList() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getAllMonitoringList");
 	}

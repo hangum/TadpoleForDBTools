@@ -30,13 +30,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 import com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_Template;
 
 /**
- * Add monitoring Dialog
+ * Add template monitoring index Dialog
  * 
  * @author hangum
  *
@@ -61,6 +62,8 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	private Combo comboMonitoringType;
 	private Text textTitle;
 	private Text textDescription;
+	private Text textAdvice;
+	
 	private Combo comboMonitoringReadType;
 	private Text textQuery;
 	private Text textParameter1_name;
@@ -76,6 +79,9 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	private Combo comboExceptionConditionType;
 	private Text textExceptionIndexNM;
 	private Text textExceptionConditionValue;
+	
+	private Combo comboIsResultSave;
+	private Combo comboIsSnapshotSave;
 
 	/**
 	 * Create the dialog.
@@ -206,6 +212,15 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		gd_textDescription.minimumHeight = 40;
 		textDescription.setLayoutData(gd_textDescription);
 		
+		Label lblAdvice = new Label(compositeMoni, SWT.NONE);
+		lblAdvice.setText("Advice");
+		
+		textAdvice = new Text(compositeMoni, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		GridData gd_textAdvice = new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1);
+		gd_textAdvice.minimumHeight = 40;
+		gd_textAdvice.heightHint = 40;
+		textAdvice.setLayoutData(gd_textAdvice);
+		
 		Label lblMonitoringType = new Label(compositeMoni, SWT.NONE);
 		lblMonitoringType.setText("Read Type");
 		
@@ -309,6 +324,28 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		comboAfterProcess.setVisibleItemCount(MonitoringDefine.AFTER_PROCESS_TYPE.values().length);
 		comboAfterProcess.select(0);
 		
+		Label lblSaveResultData = new Label(compositeMoni, SWT.NONE);
+		lblSaveResultData.setText("Is save result data?");
+		
+		comboIsResultSave = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboIsResultSave.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		for (PublicTadpoleDefine.YES_NO type : PublicTadpoleDefine.YES_NO.values()) {
+			comboIsResultSave.add(type.toString());
+		}
+		comboIsResultSave.setVisibleItemCount(MonitoringDefine.AFTER_PROCESS_TYPE.values().length);
+		comboIsResultSave.select(0);
+		
+		Label lblSaveSanpshotData = new Label(compositeMoni, SWT.NONE);
+		lblSaveSanpshotData.setText("is Save sanpshot data?");
+		
+		comboIsSnapshotSave = new Combo(compositeMoni, SWT.READ_ONLY);
+		comboIsSnapshotSave.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		for (PublicTadpoleDefine.YES_NO type : PublicTadpoleDefine.YES_NO.values()) {
+			comboIsSnapshotSave.add(type.toString());
+		}
+		comboIsSnapshotSave.setVisibleItemCount(MonitoringDefine.AFTER_PROCESS_TYPE.values().length);
+		comboIsSnapshotSave.select(0);
+		
 		sashForm.setWeights(new int[] {3, 7});
 		
 		initUI();
@@ -346,6 +383,7 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		
 		textTitle.setText(dao.getTitle());
 		textDescription.setText(dao.getDescription());
+		textAdvice.setText(dao.getAdvice());
 		comboMonitoringReadType.setText("SQL");
 		textQuery.setText(dao.getQuery());
 		
@@ -363,6 +401,9 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		textExceptionConditionValue.setText(dao.getException_condition_value());
 		
 		comboAfterProcess.setText(dao.getAfter_type());
+		
+		comboIsResultSave.setText(dao.getIs_result_save());
+		comboIsSnapshotSave.setText(dao.getIs_snapshot_save());
 	}
 	
 	@Override
@@ -400,6 +441,8 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		updateUseTemplateDao.setKpi_type(comboKPIType.getText());
 		updateUseTemplateDao.setTitle(textTitle.getText());
 		updateUseTemplateDao.setDescription(textDescription.getText());
+		updateUseTemplateDao.setAdvice(textAdvice.getText());
+		
 		updateUseTemplateDao.setQuery(textQuery.getText());
 		updateUseTemplateDao.setIndex_nm(textIndexName.getText());
 		updateUseTemplateDao.setCondition_type(comboConditionType.getText());
@@ -415,6 +458,9 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		updateUseTemplateDao.setParam_2_init_value(textParameter2Value.getText());
 		
 		updateUseTemplateDao.setAfter_type(comboAfterProcess.getText());
+		
+		updateUseTemplateDao.setIs_result_save(comboIsResultSave.getText());
+		updateUseTemplateDao.setIs_snapshot_save(comboIsSnapshotSave.getText());
 
 		try {
 			if(isNewSaveStatue) {
@@ -468,6 +514,6 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(700, 700);
+		return new Point(700, 800);
 	}
 }

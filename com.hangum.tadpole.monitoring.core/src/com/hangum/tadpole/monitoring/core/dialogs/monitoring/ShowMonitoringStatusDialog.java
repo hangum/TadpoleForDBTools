@@ -50,6 +50,7 @@ public class ShowMonitoringStatusDialog extends Dialog {
 	private Text textDBName;
 	private Text textTitle;
 	private Text textDescription;
+	private Text textAdvice;
 	private Text textWarningCnt;
 	private Text textCriticalCnt;
 
@@ -111,6 +112,15 @@ public class ShowMonitoringStatusDialog extends Dialog {
 		gd_textDescription.heightHint = 40;
 		gd_textDescription.minimumHeight = 40;
 		textDescription.setLayoutData(gd_textDescription);
+		
+		Label lblAdvice = new Label(compositeBody, SWT.NONE);
+		lblAdvice.setText("Advice");
+		
+		textAdvice = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		GridData gd_textAdvice = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
+		gd_textAdvice.minimumHeight = 40;
+		gd_textAdvice.heightHint = 40;
+		textAdvice.setLayoutData(gd_textAdvice);
 		
 		Label lblWarringCount = new Label(compositeBody, SWT.NONE);
 		lblWarringCount.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -188,6 +198,7 @@ public class ShowMonitoringStatusDialog extends Dialog {
 		textDBName.setText(dao.getDisplay_name());
 		textTitle.setText(dao.getTitle());
 		textDescription.setText(dao.getDescription());
+		textAdvice.setText(dao.getAdvice());
 		textWarningCnt.setText(""+dao.getWarring_cnt());
 		textCriticalCnt.setText(""+dao.getCritical_cnt());
 		
@@ -207,8 +218,8 @@ public class ShowMonitoringStatusDialog extends Dialog {
 	 * create result column
 	 */
 	private void createTableColumn() {
-		String[] arryTable 	= {"Rise Date", "Index", "Result Type", "System Description", "Query Result"};
-		int[] arryWidth 	= {120, 		50,  			70,		150, 				300};
+		String[] arryTable 	= {"Rise Date", "Index", "Result Type", "System Description"};//, "Query Result"};
+		int[] arryWidth 	= {120, 		80,  			90,		200, 				};//300};
 	
 		for(int i=0; i<arryTable.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvList, SWT.NONE);
@@ -308,7 +319,7 @@ class MonitoringResultLabelprovider extends LabelProvider implements ITableLabel
 			case 1: return dao.getIndex_value();
 			case 2: return dao.getResult();
 			case 3: return dao.getSystem_description();
-			case 4: return dao.getQuery_result();
+//			case 4: return dao.getQuery_result();
 		}
 	
 		return null;
