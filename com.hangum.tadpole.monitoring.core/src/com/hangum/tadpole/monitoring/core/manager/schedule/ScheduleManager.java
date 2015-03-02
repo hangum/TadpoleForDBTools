@@ -81,7 +81,7 @@ public class ScheduleManager {
 		
 		JobDetail job = JobBuilder.newJob(MonitoringJob.class).withIdentity(strJobKey).build();
 		Trigger trigger = TriggerBuilder.newTrigger()
-				.withSchedule(CronScheduleBuilder.cronSchedule("*/10 * * * * ?"))
+				.withSchedule(CronScheduleBuilder.cronSchedule("0 0/1 * 1/1 * ? *"))//*/10 * * * * ?"))
 				.build();
 		
 		try {

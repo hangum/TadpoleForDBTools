@@ -15,10 +15,15 @@ public class MonitoringResultDAO {
 	UserDBDAO userDB;
 	MonitoringIndexDAO monitoringIndexDAO;
 	
+	String title;
+	String description;
+	String advice;
+
+	// -----------------------------------------
 	int seq;
 	
 	String unique_id;
-	String relation_id;
+	int relation_id;
 	
 	int monitoring_seq;
 	int monitoring_index_seq;
@@ -71,18 +76,18 @@ public class MonitoringResultDAO {
 	public void setUnique_id(String unique_id) {
 		this.unique_id = unique_id;
 	}
-
+	
 	/**
 	 * @return the relation_id
 	 */
-	public String getRelation_id() {
+	public int getRelation_id() {
 		return relation_id;
 	}
 
 	/**
 	 * @param relation_id the relation_id to set
 	 */
-	public void setRelation_id(String relation_id) {
+	public void setRelation_id(int relation_id) {
 		this.relation_id = relation_id;
 	}
 
@@ -322,6 +327,48 @@ public class MonitoringResultDAO {
 	 */
 	public void setSnapshot(String snapshot) {
 		this.snapshot = snapshot;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the advice
+	 */
+	public String getAdvice() {
+		return advice;
+	}
+
+	/**
+	 * @param advice the advice to set
+	 */
+	public void setAdvice(String advice) {
+		this.advice = advice;
 	}
 	
 	

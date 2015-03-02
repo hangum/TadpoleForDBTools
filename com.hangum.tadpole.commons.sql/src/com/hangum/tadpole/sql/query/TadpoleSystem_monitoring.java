@@ -14,6 +14,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.sql.dao.system.commons.TadpoleSequenceDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringDashboardDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO;
@@ -28,6 +29,18 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_monitoring {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_monitoring.class);
+	
+	/**
+	 * 모니터링 현재 상태를 리턴합니다.
+	 * 
+	 * @param dbSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<MonitoringResultDAO> getMonitoringStatus(int dbSeq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getMonitoringStatus", dbSeq);
+	}
 	
 	/**
 	 * get monitoring error status
@@ -127,12 +140,20 @@ public class TadpoleSystem_monitoring {
 	public static void saveMonitoringResult(List<MonitoringResultDAO> listMonitoringIndex) {
 		SqlMapClient sqlClient = null;
 		
+		TadpoleSequenceDAO dao = new TadpoleSequenceDAO();
+		dao.setName(TadpoleSystem_Sequence.KEY_MONITORING);
+		
 		try {
+			// unique id를 생성합니다. 
+			dao = TadpoleSystem_Sequence.getSequence(dao);
+			
+			
 			sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 //			sqlClient.startTransaction();
 //			sqlClient.startBatch();
 		
 			for (MonitoringResultDAO resultDAO : listMonitoringIndex) {
+				resultDAO.setRelation_id(dao.getNo());
 				sqlClient.insert("insertMonitoringResult", resultDAO);
 			}
 //			sqlClient.executeBatch();

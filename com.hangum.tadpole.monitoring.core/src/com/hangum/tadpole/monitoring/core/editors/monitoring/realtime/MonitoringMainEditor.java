@@ -36,7 +36,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
-import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ShowMonitoringStatusDialog;
+import com.hangum.tadpole.monitoring.core.dialogs.monitoring.MonitoringDetailStatusDialog;
 import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.composite.DBStatusComposite;
 import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
@@ -102,7 +102,7 @@ public class MonitoringMainEditor extends EditorPart {
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(final Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		
 		Composite compositeStatus = new Composite(parent, SWT.NONE);
@@ -177,7 +177,7 @@ public class MonitoringMainEditor extends EditorPart {
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 				if(!sel.isEmpty()) {
 					MonitoringDashboardDAO dao = (MonitoringDashboardDAO)sel.getFirstElement();
-					ShowMonitoringStatusDialog dialog = new ShowMonitoringStatusDialog(null, dao);
+					MonitoringDetailStatusDialog dialog = new MonitoringDetailStatusDialog(parent.getShell(), dao);
 					dialog.open();	
 				}
 			}

@@ -47,6 +47,16 @@ public class Utils {
 		
 		return QueryUtils.selectToJson(userDB, indexDao.getQuery(), listParam);
 	}
+	
+	/**
+	 * get shapshot
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static String getSnapshot(final UserDBDAO userDB) throws Exception {
+		return sqlToJson(userDB, "");
+	}
 
 	/**
 	 * get db variable
@@ -56,6 +66,24 @@ public class Utils {
 	 */
 	public static String getDBVariable(final UserDBDAO userDB) {
 		return sqlToJson(userDB, userDB.getDBDefine().getSystemVariableQuery());
+	}
+	
+	/**
+	 * SQL to json
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	public static String sqlToJson(final UserDBDAO userDB, String strSQL) {
+		JsonObject jsonEntry = new JsonObject();
+		
+		try {
+			JsonArray jsonArray = QueryUtils.selectToJson(userDB, strSQL);
+			jsonEntry.add(strSQL, jsonArray);
+		} catch (Exception e) {
+			logger.error("sql to json error", e);
+		}
+		return jsonEntry.toString();
 	}
 	
 	/**

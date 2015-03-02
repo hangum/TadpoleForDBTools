@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.hangum.tadpole.monitoring.core.dialogs.monitoring.MonitoringStatusDialog;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.swtdesigner.SWTResourceManager;
@@ -29,7 +30,7 @@ public class DBStatusComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public DBStatusComposite(Composite parent, int style, UserDBDAO userDB) {
+	public DBStatusComposite(final Composite parent, int style, final UserDBDAO userDB) {
 		super(parent, style);
 		
 		this.userDB = userDB;
@@ -41,27 +42,29 @@ public class DBStatusComposite extends Composite {
 		setLayout(gridLayout);
 		
 		Composite composite = new Composite(this, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_composite.widthHint = 85;
+		composite.setLayoutData(gd_composite);
 		composite.setLayout(new GridLayout(1, false));
 		
 		btnDB = new Button(composite, SWT.NONE);
 		GridData gd_btnDB = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnDB.heightHint = 70;
-		gd_btnDB.widthHint = 77;
+		gd_btnDB.widthHint = 85;
 		btnDB.setLayoutData(gd_btnDB);
 		btnDB.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				MonitoringStatusDialog dialog = new MonitoringStatusDialog(parent.getShell(), userDB);
+				dialog.open();
 			}
 		});
 		btnDB.setBackground(SWTResourceManager.getColor(MonitoringDefine.MONITORING_STATUS.CLEAN.getColor()));
-//		btnDB.setText("0");
 		
 		Label lblDBName = new Label(composite, SWT.NONE | SWT.WRAP);
 		lblDBName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		lblDBName.setSize(63, 24);
 		lblDBName.setText(userDB.getDisplay_name());
-		
 	}
 	
 	/**
@@ -90,7 +93,5 @@ public class DBStatusComposite extends Composite {
 	
 	@Override
 	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
 	}
-
 }

@@ -56,7 +56,6 @@ public class MonitoringJob implements Job {
 						resultDao = new MonitoringResultDAO();
 
 						resultDao.setUnique_id(UUID.randomUUID().toString());
-						resultDao.setRelation_id(strRelationUUID);
 						resultDao.setUserDB(userDB);
 						
 						resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());
@@ -99,7 +98,6 @@ public class MonitoringJob implements Job {
 					// 오류를 모니터링 항목에 넣습니다.
 					resultDao = new MonitoringResultDAO();
 					resultDao.setUnique_id(UUID.randomUUID().toString());
-					resultDao.setRelation_id(strRelationUUID);
 					resultDao.setUserDB(userDB);
 					
 					resultDao.setMonitoring_seq(monitoringIndexDAO.getMonitoring_seq());

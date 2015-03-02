@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
@@ -125,7 +124,7 @@ public class MonitoringManagerEditor extends EditorPart {
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(final Composite parent) {
 		GridLayout gl_parent = new GridLayout(1, false);
 		gl_parent.verticalSpacing = 1;
 		gl_parent.horizontalSpacing = 1;
@@ -143,7 +142,7 @@ public class MonitoringManagerEditor extends EditorPart {
 		tltmManageTemplate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TemplateMonitoringManageDialog dialog = new TemplateMonitoringManageDialog(null);
+				TemplateMonitoringManageDialog dialog = new TemplateMonitoringManageDialog(parent.getShell());
 				dialog.open();
 				
 				reLoadDBList();
@@ -223,7 +222,7 @@ public class MonitoringManagerEditor extends EditorPart {
 				if(!iss.isEmpty()) {
 					
 					MonitoringIndexDAO monitoringIndexDao = (MonitoringIndexDAO)iss.getFirstElement();
-					UpdateMonitoringDialog dialog = new UpdateMonitoringDialog(null, monitoringIndexDao);
+					UpdateMonitoringDialog dialog = new UpdateMonitoringDialog(parent.getShell(), monitoringIndexDao);
 					if(Dialog.OK == dialog.open()) {
 						refreshMonitoringIndex();	
 					}

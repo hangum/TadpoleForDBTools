@@ -41,8 +41,8 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
  * @author hangum
  *
  */
-public class ShowMonitoringStatusDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(ShowMonitoringStatusDialog.class);
+public class MonitoringDetailStatusDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(MonitoringDetailStatusDialog.class);
 	
 	private int ALL_CONFORM_BTN_ID = IDialogConstants.CLIENT_ID +1;
 	
@@ -62,7 +62,7 @@ public class ShowMonitoringStatusDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public ShowMonitoringStatusDialog(Shell parentShell, MonitoringDashboardDAO dao) {
+	public MonitoringDetailStatusDialog(Shell parentShell, MonitoringDashboardDAO dao) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
@@ -72,7 +72,7 @@ public class ShowMonitoringStatusDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Detail Monitoring Data"); //$NON-NLS-1$
+		newShell.setText(dao.getTitle() + " monitoring detail dialog"); //$NON-NLS-1$
 	}
 
 	/**

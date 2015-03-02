@@ -45,6 +45,24 @@
 	INSERT INTO tadpole_system(name, major_version, sub_version, information)
 	VALUES (#name#, #major_version#, #sub_version#, #information#)    
 </insert>
+
+<!-- 
+	=====================================================================
+	Tadpole Sequence
+	=====================================================================
+ -->
+<!-- 
+	신규 시스템 정보를 입력합니다.
+ -->
+<select id="lastSequene" resultClass="com.hangum.tadpole.sql.dao.system.commons.TadpoleSequenceDAO"
+				 parameterClass="com.hangum.tadpole.sql.dao.system.commons.TadpoleSequenceDAO">
+	SELECT * 
+	FROM tadpole_sequence 
+	WHERE name=#name#
+</select>
+<update id="updateSequence" parameterClass="com.hangum.tadpole.sql.dao.system.commons.TadpoleSequenceDAO">
+	UPDATE tadpole_sequence SET no=#no# WHERE name = #name# 
+</update>
     
 <!-- 
 	============================================================================================================================

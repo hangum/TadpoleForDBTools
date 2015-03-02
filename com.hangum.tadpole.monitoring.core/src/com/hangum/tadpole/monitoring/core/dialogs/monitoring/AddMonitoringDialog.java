@@ -377,12 +377,12 @@ public class AddMonitoringDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTitle.getText())) {
-			MessageDialog.openError(null, "Error", "Title은 공백이 될 수 없습니다.");
+			MessageDialog.openError(null, "Error", "Title column is not empay.");
 			textTitle.setFocus();
 			return;
 		}
 		if("".equals(textQuery.getText())) {
-			MessageDialog.openError(null, "Error", "Query은 공백이 될 수 없습니다.");
+			MessageDialog.openError(null, "Error", "Query column is not empty");
 			textQuery.setFocus();
 			return;
 		}
@@ -426,7 +426,7 @@ public class AddMonitoringDialog extends Dialog {
 
 		try {
 			TadpoleSystem_monitoring.saveMonitoring(mainDao, indexDao);
-			MessageDialog.openInformation(null, "Confirm", "저장 되었습니다.");
+			MessageDialog.openInformation(null, "Confirm", "Save data.");
 		} catch (Exception e) {
 			logger.error("save monitoring index", e);
 			

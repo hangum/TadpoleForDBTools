@@ -18,6 +18,27 @@
 
 <sqlMap namespace="Tadpole-System-Monitoring">
 
+<!-- 
+	monitoring status
+ -->
+<select id="getMonitoringStatus" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO"
+	parameterClass="java.lang.Integer">
+	SELECT b.title, b.description, b.advice, a.*
+	FROM 
+	    monitoring_result a,
+	    monitoring_main b
+	WHERE
+	        relation_id = 
+	            (
+	            SELECT relation_id
+	            FROM monitoring_result
+	            WHERE db_seq= #db_seq#
+	            ORDER BY create_time DESC
+	            LIMIT 1
+	            )
+	    AND a.monitoring_seq = b.seq
+</select>
+
 <!-- monitoring list -->
 <select id="getMonitoringErrorStatus" resultClass="com.hangum.tadpole.sql.dao.system.monitoring.MonitoringDashboardDAO" parameterClass="java.lang.String">
 <![CDATA[

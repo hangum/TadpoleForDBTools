@@ -1,3 +1,6 @@
+-- sequence table
+INSERT INTO tadpole_sequence (name, no) VALUES ('MONITORING', 0);
+
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('SYSTEM_ADMIN','System Admin');
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('ADMIN','Admin');
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('DBA','DBA');
