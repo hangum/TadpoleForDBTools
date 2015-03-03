@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -31,12 +33,17 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.monitoring.core.Activator;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.MonitoringDetailStatusDialog;
+import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
+import com.hangum.tadpole.monitoring.core.editors.monitoring.manage.MonitoringManagerEditor;
+import com.hangum.tadpole.monitoring.core.editors.monitoring.manage.MonitoringManagerInput;
 import com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.composite.DBStatusComposite;
 import com.hangum.tadpole.monitoring.core.manager.cache.MonitoringCacheRepository;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
@@ -106,8 +113,28 @@ public class MonitoringMainEditor extends EditorPart {
 		parent.setLayout(new GridLayout(1, false));
 		
 		Composite compositeStatus = new Composite(parent, SWT.NONE);
-		compositeStatus.setLayout(new GridLayout(5, false));
+		compositeStatus.setLayout(new GridLayout(6, false));
 		compositeStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Button btnManageMonitoring = new Button(compositeStatus, SWT.NONE);
+		btnManageMonitoring.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
+				try {
+					MonitoringManagerInput input = new MonitoringManagerInput();
+					page.openEditor(input, MonitoringManagerEditor.ID, false);				
+					
+				} catch (PartInitException ee) {
+					logger.error("Does not open monitoring manager", ee);
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, ee.getMessage(), ee); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null, "Error", "Open monitoring manager", errStatus); //$NON-NLS-1$
+				}
+			}
+		});
+		btnManageMonitoring.setText("Manage");
 		
 		final Button btnAutoPopupDialog = new Button(compositeStatus, SWT.CHECK);
 		btnAutoPopupDialog.addSelectionListener(new SelectionAdapter() {

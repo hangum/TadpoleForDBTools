@@ -37,6 +37,7 @@
 	            LIMIT 1
 	            )
 	    AND a.monitoring_seq = b.seq
+	    AND a.db_seq= #db_seq#
 </select>
 
 <!-- monitoring list -->

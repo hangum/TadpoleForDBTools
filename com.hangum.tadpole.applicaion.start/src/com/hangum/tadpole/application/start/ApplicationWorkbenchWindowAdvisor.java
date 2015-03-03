@@ -44,7 +44,6 @@ import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.summary.report.DBSummaryReporter;
 
 /**
  * Configures the initial size and appearance of a workbench window.

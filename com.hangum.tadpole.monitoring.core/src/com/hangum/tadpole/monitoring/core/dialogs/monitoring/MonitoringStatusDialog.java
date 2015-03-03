@@ -6,12 +6,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -25,9 +27,11 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.util.JSONUtil;
+import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine.MONITORING_STATUS;
 import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
+import com.swtdesigner.SWTResourceManager;
 
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -190,10 +194,26 @@ public class MonitoringStatusDialog extends Dialog {
  * @author hangum
  *
  */
-class MonitoringStatusLabelProvider extends LabelProvider implements ITableLabelProvider {
+class MonitoringStatusLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
+
+	@Override
+	public Color getForeground(Object element) {
+		MonitoringResultDAO dao = (MonitoringResultDAO)element;
+		if(MONITORING_STATUS.WARRING.toString().equals(dao.getResult())) {
+			return SWTResourceManager.getColor(MONITORING_STATUS.WARRING.getColor());
+		} else if(MONITORING_STATUS.CRITICAL.toString().equals(dao.getResult())) {
+			return SWTResourceManager.getColor(MONITORING_STATUS.CRITICAL.getColor());
+		}
+		return null;
+	}
+
+	@Override
+	public Color getBackground(Object element) {
+		return null;
+	}
+	
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -215,5 +235,4 @@ class MonitoringStatusLabelProvider extends LabelProvider implements ITableLabel
 		
 		return null;
 	}
-	
 }

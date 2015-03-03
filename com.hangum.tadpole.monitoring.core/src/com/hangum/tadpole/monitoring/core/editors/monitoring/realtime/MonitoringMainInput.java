@@ -35,7 +35,7 @@ public class MonitoringMainInput  implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Monitoring main";
+		return "Monitoring Dashboard";
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class MonitoringMainInput  implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Monitoring main";
+		return "Monitoring Dashboard";
 	}
 
 }
