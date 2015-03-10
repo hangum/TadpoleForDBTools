@@ -13,14 +13,14 @@ package com.hangum.tadpole.sql.query;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
-import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.sql.Messages;
 import com.hangum.tadpole.sql.dao.system.UserDAO;
+import com.hangum.tadpole.sql.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -166,8 +166,12 @@ public class TadpoleSystem_UserQuery {
 	 */
 	public static void saveLoginHistory(int userSeq) {
 		try {
+			UserLoginHistoryDAO historyDao = new UserLoginHistoryDAO();
+			historyDao.setLogin_ip(RWT.getRequest().getRemoteAddr());
+			historyDao.setUser_seq(userSeq);
+			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-			sqlClient.insert("saveLoginHistory", userSeq);
+			sqlClient.insert("saveLoginHistory", historyDao);
 		} catch(Exception e) {
 			logger.error("save login history", e);
 		}

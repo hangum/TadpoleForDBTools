@@ -52,7 +52,6 @@
       <plugin id="com.hangum.tadpole.mongodb.erd.core"/>
       <plugin id="com.hangum.tadpole.mongodb.model"/>
       <plugin id="com.hangum.tadpole.monitoring.core"/>
-      <plugin id="com.hangum.tadpole.notes.core"/>
       <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.hangum.tadpole.rdb.core"/>
       <plugin id="com.hangum.tadpole.rdb.core.ext"/>
@@ -115,6 +114,7 @@
       <plugin id="org.eclipse.rap.addons.d3chart"/>
       <plugin id="org.eclipse.rap.addons.filedialog"/>
       <plugin id="org.eclipse.rap.addons.fileupload"/>
+      <plugin id="org.eclipse.rap.chartjs"/>
       <plugin id="org.eclipse.rap.design.example"/>
       <plugin id="org.eclipse.rap.draw2d"/>
       <plugin id="org.eclipse.rap.draw2d.compatibility"/>
@@ -152,7 +152,6 @@
       <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.monitoring.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.notes.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core.ext" autoStart="true" startLevel="0" />
@@ -200,6 +199,7 @@
       <plugin id="org.eclipse.rap.addons.d3chart" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.addons.filedialog" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.addons.fileupload" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.chartjs" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.design.example" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.draw2d" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.rap.draw2d.compatibility" autoStart="true" startLevel="0" />

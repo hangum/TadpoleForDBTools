@@ -7,7 +7,7 @@ Bundle-Activator: com.hangum.tadpole.secret.util.Activator
 Bundle-Vendor: HANGUM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.rap.rwt;bundle-version="[2.0.0,3.0.0)",
+Require-Bundle: org.eclipse.rap.rwt;bundle-version="2.0.0",
  com.hangum.tadpole.cipher.core;bundle-version="1.0.0"
 Import-Package: org.osgi.framework
 Service-Component: OSGI-INF/contribution.xml

@@ -269,6 +269,9 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		userDB.setLocale(selectLocale);
 		
+		// 처음 등록자는 권한이 어드민입니다.
+		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		
 		// other connection info
 		setOtherConnectionInfo();
 		

@@ -187,8 +187,8 @@
 <!-- 
 	save login history
  -->
-<insert id="saveLoginHistory" parameterClass="java.lang.Integer">
-	INSERT INTO login_history(user_seq) VALUES (#user_seq#);
+<insert id="saveLoginHistory" parameterClass="com.hangum.tadpole.sql.dao.system.UserLoginHistoryDAO">
+	INSERT INTO login_history(user_seq, login_ip) VALUES (#user_seq#, #login_ip#);
 </insert>
 
 <!-- 
@@ -450,6 +450,17 @@
 	    and b.delyn = 'NO'
 </select>
 
+<select id="getCreateUserDB" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
+	select a.*, b.ROLE_ID role_id, c.*
+	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
+	where a.seq = b.db_seq
+		and a.seq = c.seq
+		and b.user_seq = #user_seq#
+		and b.user_seq = a.user_seq 
+	    and a.delyn = 'NO'
+	    and b.delyn = 'NO'
+</select>
+
 <select id="userDBManager" resultClass="com.hangum.tadpole.sql.dao.system.UserDBDAO" parameterClass="java.lang.String">
 	SELECT a.seq, user_seq, ext_seq, group_seq, operation_type, dbms_type, url, db, group_name, display_name, host, port, locale, passwd, users, is_profile, profile_select_mill, question_dml, is_readonlyconnect, is_autocommit, is_showtables, is_monitoring, is_external_browser, is_visible, is_summary_report, is_monitoring, create_time, delyn,
 	  ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10 
@@ -592,7 +603,7 @@
 		AND delyn = 'NO'
 </select>
 
-<select id="getUserRoleList" parameterClass="com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO" resultClass="com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO">
+<select id="getUserRoleList" resultClass="com.hangum.tadpole.sql.dao.system.TadpoleUserDbRoleDAO" parameterClass="com.hangum.tadpole.sql.dao.system.UserDBDAO">
 	SELECT a.*, b.email, b.name
 	FROM 
 		tadpole_user_db_role a,
@@ -608,6 +619,12 @@
 		(user_seq,db_seq, role_id)
 	VALUES (#user_seq#, #db_seq#, #role_id#);
 </insert>
+
+<update id="userDBRoleUpdate" parameterClass="java.lang.Integer">
+	UPDATE tadpole_user_db_role SET
+		delYn = 'YES'
+	WHERE seq = #seq#
+</update>
 <!-- 
 	============================================================================================================================
 	external_browser_info

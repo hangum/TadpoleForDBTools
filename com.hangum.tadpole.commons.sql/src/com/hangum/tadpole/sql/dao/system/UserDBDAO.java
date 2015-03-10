@@ -36,7 +36,7 @@ import com.hangum.tadpole.sql.system.permission.PermissionChecker;
  * @author hangum
  *
  */
-public class UserDBDAO {//extends TadpoleUserDbRoleDAO {	
+public class UserDBDAO {	
 	
 	
 	// TadpoleUserDbRoleDAO start ======================================

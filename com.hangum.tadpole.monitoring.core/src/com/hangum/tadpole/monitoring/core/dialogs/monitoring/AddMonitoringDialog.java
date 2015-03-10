@@ -220,7 +220,6 @@ public class AddMonitoringDialog extends Dialog {
 		textParameter1Value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblParameterName = new Label(compositeMoni, SWT.NONE);
-		lblParameterName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblParameterName.setText("Parameter 2 Name");
 		
 		textParameter2_name = new Text(compositeMoni, SWT.BORDER);

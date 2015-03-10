@@ -19,6 +19,9 @@ public class TadpoleUserDbRoleDAO {
 	/////////////////////////
 	String email;
 	String name;
+	
+	//
+	UserDBDAO parent;
 
 	public TadpoleUserDbRoleDAO() {
 	}
@@ -87,4 +90,18 @@ public class TadpoleUserDbRoleDAO {
 		this.name = name;
 	}
 
+	/**
+	 * @return the parent
+	 */
+	public UserDBDAO getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent the parent to set
+	 */
+	public void setParent(UserDBDAO parent) {
+		this.parent = parent;
+	}
+	
 }

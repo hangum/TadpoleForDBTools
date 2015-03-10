@@ -263,6 +263,16 @@ public class TadpoleSystem_UserDBQuery {
 		return (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getUserSeq());
 	}
 	
+	/**
+	 * 자신이 생성한 사용자 리스트
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDBDAO> getCreateUserDB() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (List<UserDBDAO>)sqlClient.queryForList("getCreateUserDB", SessionManager.getUserSeq());
+	}
+	
 //	/**
 //	 * 유저디비 + 메니저 디비 
 //	 * 단, 메니저일경우 메니져 디비만 리턴한다.
@@ -328,7 +338,6 @@ public class TadpoleSystem_UserDBQuery {
 //		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 //		return  (List<UserDBDAO>)sqlClient.queryForList("userDBManager", ""+userSeq); //$NON-NLS-1$
 //	}
-	
 	/**
 	 * 유저 삭제
 	 * @param seq
@@ -339,4 +348,16 @@ public class TadpoleSystem_UserDBQuery {
 		
 		sqlClient.update("userDBDelete", seq); //$NON-NLS-1$		
 	}
+
+	/**
+	 * 사용자 디비 롤을 삭제합니다.
+	 * 
+	 * @param seq
+	 * @throws Exception
+	 */
+	public static void removeUserRoleDB(int seq) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("userDBRoleUpdate", seq); //$NON-NLS-1$
+	}
+
 }

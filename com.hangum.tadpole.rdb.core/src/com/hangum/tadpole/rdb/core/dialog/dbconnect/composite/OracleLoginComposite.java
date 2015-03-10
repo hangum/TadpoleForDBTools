@@ -253,6 +253,9 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		
+		// 처음 등록자는 권한이 어드민입니다.
+		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		
 //		userDB.setLocale(comboLocale.getText().trim());
 
 		// others connection 정보를 입력합니다.

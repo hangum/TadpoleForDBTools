@@ -38,5 +38,4 @@ Export-Package: com.google.gson,
  com.hangum.tadpole.commons.viewsupport,
  com.swtdesigner
 Import-Package: javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0",
- javax.servlet.resources;version="2.5.0"
+ javax.servlet.http;version="2.5.0"
