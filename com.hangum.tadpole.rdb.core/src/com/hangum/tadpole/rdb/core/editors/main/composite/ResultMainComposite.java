@@ -39,6 +39,7 @@ import com.hangum.tadpole.sql.util.SQLUtil;
  * @author hangum
  *
  */
+@SuppressWarnings("serial")
 public class ResultMainComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultMainComposite.class);

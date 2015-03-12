@@ -602,7 +602,7 @@ public class MainEditor extends EditorExtension {
 	
 	public void executeCommand(final RequestQuery reqQuery) {
 		resultMainComposite.executeCommand(reqQuery);
-		
+
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, "executeCommand"); //$NON-NLS-1$
 	}

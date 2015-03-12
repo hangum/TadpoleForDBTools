@@ -192,7 +192,7 @@ editorService.setFocus = function() {
 
 
 //==[ Define short key ]======================================================================================================================
-var shortcutErrMsg = 'Sorry. Broken shortcuts. \nOpen a new editor window. \nPlease use the Toolbar.';
+var shortcutErrMsg = 'Opps, an execution error has occured!\nEither click the "SQL" button of the tool bar, or open a new editor window.';
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
@@ -221,7 +221,7 @@ editorService.isBlockText = function() {
 
 editor.commands.addCommand({
     name: 'executeQuery',
-    bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
+    bindKey: {win: 'Ctrl-Enter',  mac: 'Ctrl-Enter'},
     exec: function(editor) {
     	try {
    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
@@ -234,7 +234,7 @@ editor.commands.addCommand({
 });
 editor.commands.addCommand({
     name: 'executePlan',
-    bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
+    bindKey: {win: 'Ctrl-E',  mac: 'Ctrl-E'},
     exec: function(editor) {
     	try {
    			AceEditorBrowserHandler(editorService.EXECUTE_PLAN, editorService.getSelectedText(';'), editorService.isBlockText());
@@ -247,7 +247,7 @@ editor.commands.addCommand({
 });
 editor.commands.addCommand({
     name: 'format',
-    bindKey: {win: 'Ctrl-Shift-F',  mac: 'Command-Shift-F'},
+    bindKey: {win: 'Ctrl-Shift-F',  mac: 'Ctrl-Shift-F'},
     exec: function(editor) {
     	try {
     		var varFormat = AceEditorBrowserHandler(editorService.EXECUTE_FORMAT, editorService.getAllText());
@@ -261,7 +261,7 @@ editor.commands.addCommand({
 });
 editor.commands.addCommand({
     name: 'changeLowCase',
-    bindKey: {win: 'Ctrl-Shift-Y',  mac: 'Command-Shift-Y'},
+    bindKey: {win: 'Ctrl-Shift-Y',  mac: 'Ctrl-Shift-Y'},
     exec: function(editor) {
     	editor.toLowerCase();
     },
@@ -269,7 +269,7 @@ editor.commands.addCommand({
 });
 editor.commands.addCommand({
     name: 'changeUpperCase',
-    bindKey: {win: 'Ctrl-Shift-X',  mac: 'Command-Shift-X'},
+    bindKey: {win: 'Ctrl-Shift-X',  mac: 'Ctrl-Shift-X'},
     exec: function(editor) {
     	editor.toUpperCase();
     },
@@ -277,7 +277,7 @@ editor.commands.addCommand({
 });
 editor.commands.addCommand({
     name: 'helpDialog',
-    bindKey: {win: 'Ctrl-Shift-L',  mac: 'Command-Shift-L'},
+    bindKey: {win: 'Ctrl-Shift-L',  mac: 'Ctrl-Shift-L'},
     exec: function(editor) {
     	try {
     		editorService.helpDialog();
@@ -289,7 +289,7 @@ editor.commands.addCommand({
 });
 editor.commands.addCommand({
     name: 'cleagePage',
-    bindKey: {win: 'Ctrl-F7',  mac: 'Command-F7'},
+    bindKey: {win: 'Ctrl-F7',  mac: 'Ctrl-F7'},
     exec: function(editor) {
     	editor.setValue("");
     },

@@ -207,7 +207,7 @@ public class SQLUtil {
 	public static String sqlExecutable(String exeSQL) {
 		
 //		tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
-		try {
+//		try {
 //			
 //			https://github.com/hangum/TadpoleForDBTools/issues/140 오류로 불럭지정하였습니다.
 //			TO DO 특정 쿼리에서는 주석이 있으면 오류인데..DB에서 쿼리를 실행받는 다양한 조건을 고려할 필요가 있습니다. 
@@ -230,9 +230,9 @@ public class SQLUtil {
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
 			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
 			
-		} catch(Exception e) {
-			logger.error("query execute", e);
-		}
+//		} catch(Exception e) {
+//			logger.error("query execute", e);
+//		}
 		
 		return exeSQL.trim();
 	}
