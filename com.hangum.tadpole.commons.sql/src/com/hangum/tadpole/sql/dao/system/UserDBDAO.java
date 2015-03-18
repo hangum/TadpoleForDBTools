@@ -146,6 +146,9 @@ public class UserDBDAO {
     /** Is DB monitoring? */
     protected String is_monitoring 		= PublicTadpoleDefine.YES_NO.YES.toString();
     
+    /** is db lock? */
+    protected String is_lock			= PublicTadpoleDefine.YES_NO.NO.toString();
+    
     /** userdb를 그룹으로 표시 하고자 할때 사용합니다. 현재는 로그인창에서 디비 관리하면에서 사용. */
     protected List<UserDBDAO> listUserDBGroup = new ArrayList<UserDBDAO>();
     
@@ -598,4 +601,19 @@ public class UserDBDAO {
 	public void setListChildren(List<TadpoleUserDbRoleDAO> listChildren) {
 		this.listChildren = listChildren;
 	}
+
+	/**
+	 * @return the is_lock
+	 */
+	public String getIs_lock() {
+		return is_lock;
+	}
+
+	/**
+	 * @param is_lock the is_lock to set
+	 */
+	public void setIs_lock(String is_lock) {
+		this.is_lock = is_lock;
+	}
+	
 }

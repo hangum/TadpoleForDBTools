@@ -34,13 +34,13 @@ public class SubTableFigure extends TableFigure {
 
 		// key
 		this.colKeyFigure = new ColumnDetailFigure();
-		this.colKeyFigure.setForegroundColor(ColorConstants.red);
+		this.colKeyFigure.setForegroundColor(ColorConstants.red());
 		// name 
 		this.colNameFigure = new ColumnDetailFigure();
-		this.colNameFigure.setForegroundColor(ColorConstants.black);
+		this.colNameFigure.setForegroundColor(ColorConstants.black());
 		// type
 		this.colTypeFigure = new ColumnDetailFigure();
-		this.colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
+		this.colTypeFigure.setForegroundColor(ColorConstants.buttonDarker());
 
 		this.columnFigure = new ColumnLayoutFigure(this);
 		this.columnFigure.add(colKeyFigure);

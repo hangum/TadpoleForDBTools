@@ -67,7 +67,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	try {
     		logger.info("Schedule start.........");
 //			DBSummaryReporter.executer();
-			ScheduleManager.getInstance();
+//			ScheduleManager.getInstance();
 		} catch(Exception e) {
 			logger.error("Schedule", e);
 		}
@@ -111,7 +111,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    	
     	// main ui callback thread
 //    	mainUICallback();
-    	   
+
     	// If login after does not DB exist, DB connect Dialog open.
     	try {
 //    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221

@@ -38,7 +38,7 @@ public class SubTableFigureBorder extends AbstractBorder {
 		graphics.drawLine(r.x + FOLD, r.y, r.x + FOLD, r.y + FOLD);
 		graphics.drawLine(r.x, r.y + FOLD, r.x + FOLD, r.y + FOLD);
 		// gray small triangle
-		graphics.setBackgroundColor(ColorConstants.lightGray);
+		graphics.setBackgroundColor(ColorConstants.lightGray());
 		graphics.fillPolygon(new int[] { r.x, r.y + FOLD, r.x + FOLD, r.y, r.x + FOLD, r.y + FOLD });
 		// dotted short diagonal line
 		graphics.setLineStyle(SWT.LINE_DOT);

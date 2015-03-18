@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.dao.system;
 
+
 /**
  * user 정보 정의
  * 
@@ -18,8 +19,15 @@ package com.hangum.tadpole.sql.dao.system;
  */
 public class UserDAO {
 	int seq;
+	/** 
+	 * {@code PublicTadpoleDefine#LOGIN_TYPE }
+	 */
+	String login_type;
+	
 	String email;
 	String email_key;
+	String is_email_certification;
+
 	String passwd;
 	String role_type;
 	String name;
