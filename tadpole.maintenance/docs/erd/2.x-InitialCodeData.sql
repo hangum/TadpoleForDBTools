@@ -1,18 +1,21 @@
--- sequence table
-INSERT INTO tadpole_sequence (name, no) VALUES ('MONITORING', 0);
-
+INSERT INTO tadpole_system(name, major_version, sub_version, information)
+VALUES ('Tadpole DB Hub', '1.6.1', 'Initialize', 'none'); 
+	
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('SYSTEM_ADMIN','System Admin');
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('ADMIN','Admin');
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('DBA','DBA');
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('MANAGER','Manager');
 INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('USER','User');
-INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('GUEST', 'Guest')
+INSERT INTO tadpole_role(ROLE_ID, ROLE_NAME) VALUES ('GUEST', 'Guest');
 
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('PRODUCTION','Production Sever', '');
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('DEVELOP','Develop Sever', '');
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('TEST','Test Sever', '');
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('BACKUP','Backup Sever', '');
 INSERT INTO dbtype(TYPE_CODE, TYPE_NAME, SMALL_NAME) VALUES ('OTHERS','Others Sever', '');
+
+-- sequence table
+INSERT INTO tadpole_sequence (name, no) VALUES ('MONITORING', 0);
 
 INSERT INTO monitoring_type (TYPE, NAME, DESCRIPTION) 
 VALUES ( 'SESSION_LIST', 'SESSION LIST', 'SHOW FULL PROCESSLIST' ); 

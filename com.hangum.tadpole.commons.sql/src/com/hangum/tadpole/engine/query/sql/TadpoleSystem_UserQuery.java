@@ -50,21 +50,18 @@ public class TadpoleSystem_UserQuery {
 	 * 신규 유저를 등록합니다.
 	 * @param email
 	 * @param passwd
+	 * @param roleType
 	 * @param name
 	 * @param approvalYn
-	 * @param question
-	 * @param answer
 	 * @param use_opt
 	 * @param opt_secret
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDAO newUser(String email, String passwd, String name, String language, String approvalYn, String use_opt, String opt_secret) throws Exception {
+	public static UserDAO newUser(String email, String passwd, String roleType, String name, String language, String approvalYn, String use_opt, String opt_secret) throws Exception {
 		UserDAO loginDAO = new UserDAO(email, name, language, approvalYn, use_opt, opt_secret);
 		loginDAO.setPasswd(CipherManager.getInstance().encryption(passwd));
-		
-//		loginDAO.setSecurity_question(CipherManager.getInstance().encryption(question));
-//		loginDAO.setSecurity_answer(CipherManager.getInstance().encryption(answer));
+		loginDAO.setRole_type(roleType);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$

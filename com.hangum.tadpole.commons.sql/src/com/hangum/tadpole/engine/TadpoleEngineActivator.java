@@ -17,19 +17,19 @@ import org.osgi.framework.BundleContext;
 
 import com.hangum.tadpole.commons.log.LogListener;
 
-public class CommonsSQLActivator extends Plugin {
+public class TadpoleEngineActivator extends Plugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.hangum.tadpole.engine";
 
 	// The shared instance
-	private static CommonsSQLActivator plugin;
+	private static TadpoleEngineActivator plugin;
 	private ILogListener listener;
 	
 	/**
 	 * The constructor
 	 */
-	public CommonsSQLActivator() {
+	public TadpoleEngineActivator() {
 	}
 
 	/*
@@ -63,7 +63,7 @@ public class CommonsSQLActivator extends Plugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static CommonsSQLActivator getDefault() {
+	public static TadpoleEngineActivator getDefault() {
 		return plugin;
 	}
 

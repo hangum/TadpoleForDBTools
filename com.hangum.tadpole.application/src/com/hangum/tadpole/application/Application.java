@@ -50,7 +50,9 @@ public class Application implements EntryPoint {
 		boolean isTadpoleInitialize = PlatformUI.getPreferenceStore().getBoolean(PreferenceDefine.IS_TADPOLE_INITIALIZE);
 		if(!isTadpoleInitialize || ApplicationArgumentUtils.isForceSystemInitialize()) {
 			try {
-				TadpoleSystemInitializer.initSystem();
+				if(!TadpoleSystemInitializer.initSystem()) {
+					new Exception("System initialize fail");
+				}
 				PlatformUI.getPreferenceStore().setValue(PreferenceDefine.IS_TADPOLE_INITIALIZE, true);
 			} catch(Exception e) {
 				logger.error("System initialize error", e); //$NON-NLS-1$

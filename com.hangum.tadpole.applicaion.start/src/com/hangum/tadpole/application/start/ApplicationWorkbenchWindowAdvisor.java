@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.rap.rwt.service.UISessionEvent;
@@ -35,11 +34,8 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
-import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -211,7 +207,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
 	    	
 	    	// When login cancel button, i use in manager authority.
-//	    	if(Dialog.OK != loginDialog.open()) {
+	    	if(Dialog.OK != loginDialog.open()) {
+	    		//not flow this logic
 //	    		
 //	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
 //				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
@@ -223,7 +220,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
 //					return;
 //				}	
-//	    	} else {
+	    	} else {
 	    		try {
 		    		// Stored user session.
 					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
@@ -257,7 +254,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    			logger.error("session set", e); //$NON-NLS-1$
 	    		}
 	    		
-//	    	}
+	    	}
     	} 
     }
     

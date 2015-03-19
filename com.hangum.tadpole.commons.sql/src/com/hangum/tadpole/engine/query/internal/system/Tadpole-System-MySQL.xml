@@ -23,10 +23,10 @@
 		user table이 있는 지 여부에 따라 시스템 테이블의 존재 유무를 가린다.
 		============================================================================================================================
 	 -->
-	<select id="isUserTable" resultClass="java.lang.String">
+	<!-- <select id="isUserTable" resultClass="java.lang.String">
 		SELECT TABLE_NAME name
 		FROM INFORMATION_SCHEMA.TABLES
 		WHERE  table_name = 'tadpole_system'
-	</select>
+	</select> -->
 	
 </sqlMap>

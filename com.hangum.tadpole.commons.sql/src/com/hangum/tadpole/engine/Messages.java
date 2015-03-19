@@ -51,7 +51,7 @@ public class Messages extends NLS {
 	public static String TadpoleSystemConnector_14;
 	public static String TadpoleSystemConnector_15;
 	public static String TadpoleSystemConnector_16;
-	public static String TadpoleSystemConnector_2;
+//	public static String TadpoleSystemConnector_2;
 	public static String TadpoleSystemConnector_4;
 	public static String TadpoleSystemConnector_5;
 	public static String TadpoleSystemConnector_6;

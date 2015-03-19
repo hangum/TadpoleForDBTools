@@ -27,7 +27,7 @@ SELECT 1
 	컬럼 설명
 	TNAME 		: 테이블 명
  -->
-<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.TableDAO" parameterClass="java.lang.String">
 	SELECT class_name name
 	FROM DB_CLASS
 	WHERE  is_system_class = 'NO' AND class_type = 'CLASS'
@@ -47,7 +47,7 @@ SELECT 1
 
 	show columns FROM $table$
  -->
-<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.TableColumnDAO" parameterClass="java.util.HashMap">
 		select 
 		a.attr_name as "field"
 		,a.data_type as "type"
@@ -75,7 +75,7 @@ SELECT 1
 	referenced_table_name	:	타켓 테이블 이름
 	referenced_column_name	: 	타켓 테이블 컬럼
  -->
-<select id="referencedTableList"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.ReferencedTableDAO" parameterClass="java.lang.String">
 	cubrid는 JDBC API로 해야함
 </select>
 
@@ -91,7 +91,7 @@ SELECT 1
 	referenced_table_name	:	타켓 테이블 이름
 	referenced_column_name	: 	타켓 테이블 컬럼
  -->
-<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" >
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.ReferencedTableDAO" >
 	cubrid는 JDBC API로 해야함
 </select>
 	
@@ -126,7 +126,7 @@ SELECT 1
     status				:
     #table_schema# AS table_schema
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.InformationSchemaDAO" parameterClass="java.lang.String">
 SELECT
     a.class_name AS table_name
     ,a.index_name
@@ -140,7 +140,7 @@ SELECT
 <!-- 
 	index의 디테일 정보
  -->
- <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.InformationSchemaDAO" parameterClass="java.util.Map">
 	SELECT 
 		a.class_name AS table_name,
 		a.index_name,
@@ -174,7 +174,7 @@ SELECT
 	database				:
 	collation				:
  -->
-<select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT   
 		p.sp_name as "name"
 	  	, p.*
@@ -200,7 +200,7 @@ SELECT
 	database				:
 	collation				:
  -->
-<select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT   
 		p.sp_name as "name"
 	  	, p.*
@@ -226,7 +226,7 @@ SELECT
 	database				:
 	collation				:
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.TriggerDAO" parameterClass="java.lang.String">
 	SELECT 
 		name,
 		event,

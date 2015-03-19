@@ -25,7 +25,7 @@
 <!-- 
 	MSSQL의 버전 정보를 가져옵니다.
  -->
-<select id="findDBInfo" resultClass="com.hangum.tadpole.sql.dao.DBInfoDAO">
+<select id="findDBInfo" resultClass="com.hangum.tadpole.engine.query.dao.DBInfoDAO">
 	SELECT SERVERPROPERTY('productversion') productversion, SERVERPROPERTY ('productlevel') productlevel, SERVERPROPERTY ('edition') edition;
 </select>
 
@@ -41,7 +41,7 @@ SELECT getdate()
 	
 	select substring(convert(varchar(100), SERVERPROPERTY('ProductVersion')), 1, charindex('.', convert(varchar(100), SERVERPROPERTY('ProductVersion')) )-1) as version
  -->
-<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
     s.name + '.' + tbl.name AS name
     ,p.value AS comment
@@ -61,7 +61,7 @@ SELECT
 <!-- 
 	table, view의 컬럼 정보
  -->
-<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 SELECT  b.name field, 
         c.name + CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
                  ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' 
@@ -90,7 +90,7 @@ ORDER BY a.id, b.colid
 	테이블간의 관계 목록 정보를 얻습니다.
 	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
  -->
-<select id="referencedTableList"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
   SELECT X.TABLE_NAME
        ,X.CONSTRAINT_NAME
        , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.COLUMN_NAME ELSE '' END)) AS COLUMN_NAME
@@ -123,7 +123,7 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 <!-- 
 	모든 erd 보기
  -->
-<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" >
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
 SELECT X.TABLE_NAME
        ,X.CONSTRAINT_NAME
        , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.COLUMN_NAME ELSE '' END)) AS COLUMN_NAME
@@ -167,7 +167,7 @@ order by v.table_schema, v.table_name
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
 SELECT 
     i.table_schema 
     , i.table_schema + '.' + i.table_name as table_name
@@ -181,7 +181,7 @@ SELECT
 <!-- 
 	index의 디테일 정보
  -->
- <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
     	SELECT 
     	 table_name,
          0 as seq_in_index,
@@ -196,7 +196,7 @@ SELECT
 <!-- 
 	procedure list
  -->
-<select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 select 
 	p.routine_schema + '.' + p.routine_name as name
 	,'P' as type
@@ -213,7 +213,7 @@ order by p.routine_schema, p.routine_name
 <!-- 
 	function list
  -->
-<select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 select 
 	p.routine_schema + '.' + p.routine_name as name
 	,'P' as type
@@ -230,7 +230,7 @@ order by p.routine_schema, p.routine_name
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	select 
 		s.table_schema + '.' + t.name as name
 		, t.name as "trigger"
@@ -301,7 +301,7 @@ SELECT
 <!-- 
 	RDB Information - Column summary page
  -->
-<select id="columnInformation" resultClass="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
 select    
       tbl.name as table_name
     ,tp.value      as table_comment
@@ -425,7 +425,7 @@ sp_helptext '$object_name$'
 sp_helptext '$object_name$'
 </select>
 
-<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
 
 select 
    p.ordinal_position as "order"
@@ -444,7 +444,7 @@ order by ordinal_position
   
 </select> 
    
-<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
 
 select 
    p.ordinal_position as "order"
@@ -469,7 +469,7 @@ order by ordinal_position
 	
 	select *  from sys.dm_exec_connections;
  -->
-<select id="sessionList" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
+<select id="sessionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO">
 <![CDATA[
 	SELECT 
 	   s.spid as id

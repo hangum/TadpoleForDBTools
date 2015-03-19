@@ -10,9 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -42,6 +39,7 @@ import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpold.commons.libs.core.mails.template.NewUserMailBodyTemplate;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Messages;
@@ -238,7 +236,7 @@ public class NewUserDialog extends Dialog {
 			textEMail.setFocus();
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_7);
 			return;
-		} else if(!isEmail(strEmail)) {
+		} else if(!Utils.isEmail(strEmail)) {
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);
@@ -301,7 +299,9 @@ public class NewUserDialog extends Dialog {
 			 * 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
 			 */
 			String approvalYn = ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.toString():PublicTadpoleDefine.YES_NO.YES.toString();
-			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, name, comboLanguage.getText(), approvalYn,  
+			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, 
+					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
+					name, comboLanguage.getText(), approvalYn,  
 					btnGetOptCode.getSelection()?"YES":"NO", textSecretKey.getText()); //$NON-NLS-1$ //$NON-NLS-2$
 			
 //			// user_role 입력.
@@ -389,7 +389,7 @@ public class NewUserDialog extends Dialog {
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_13);
 			textName.setFocus();
 			return false;
-		} else if(!isEmail(strEmail)) {
+		} else if(!Utils.isEmail(strEmail)) {
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);
 			textEMail.setFocus();
 			return false;
@@ -432,17 +432,17 @@ public class NewUserDialog extends Dialog {
 		return true;
 	}
 	
-	/**
-	 * email검사
-	 * 
-	 * @param email
-	 * @return
-	 */
-	private static boolean isEmail(String email) {
-		Pattern p = Pattern.compile("^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$"); //$NON-NLS-1$
-		Matcher m = p.matcher(email);
-		return m.matches();
-	}
+//	/**
+//	 * email검사
+//	 * 
+//	 * @param email
+//	 * @return
+//	 */
+//	private static boolean isEmail(String email) {
+//		Pattern p = Pattern.compile("^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$"); //$NON-NLS-1$
+//		Matcher m = p.matcher(email);
+//		return m.matches();
+//	}
 
 	/**
 	 * Create contents of the button bar.

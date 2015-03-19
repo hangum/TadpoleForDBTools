@@ -34,18 +34,18 @@
 <!-- 
 	UPDATE System version 
  -->
-<update id="update_system" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO">
+<!-- <update id="update_system" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO">
     UPDATE tadpole_system SET
 		major_version = #major_version#, sub_version = #sub_version# 
-</update>
+</update> -->
 
 <!-- 
 	신규 시스템 정보를 입력합니다.
  -->
-<insert id="newSystem" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO">
+<!-- <insert id="newSystem" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO">
 	INSERT INTO tadpole_system(name, major_version, sub_version, information)
 	VALUES (#name#, #major_version#, #sub_version#, #information#)    
-</insert>
+</insert> -->
 
 <!-- 
 	=====================================================================
@@ -150,8 +150,8 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	INSERT INTO tadpole_user(email, passwd, name, language, approval_yn, use_otp, otp_secret)
-	VALUES(#email#, #passwd#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#)
+	INSERT INTO tadpole_user(email, passwd, role_type, name, language, approval_yn, use_otp, otp_secret)
+	VALUES(#email#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 		select * from tadpole_user where email = #email# 

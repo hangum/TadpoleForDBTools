@@ -48,7 +48,7 @@
 	ORDER BY name 
 	
  -->
-<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
     relname as "name"
     ,pg_catalog.obj_description(oid,'pg_class') as "comment"
@@ -79,7 +79,7 @@ SELECT
 	obj_description(object_oid, catalog_name)	text	get comment for a database object
 	
  -->
-<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	SELECT a.column_name AS "FIELD",
        a.data_type  "TYPE",
        a.is_nullable AS "NULL",
@@ -113,7 +113,7 @@ SELECT
 	테이블간의 관계 목록 정보를 얻습니다.
 	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
  -->
-<select id="referencedTableList"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
  SELECT
     tc.constraint_name, 
     tc.table_name, 
@@ -130,7 +130,7 @@ WHERE tc.table_name in ($tables$)
 <!-- 
 	모든 관계 테이블 목록을 가져옵니다.
  -->
-<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" >
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
 SELECT
     tc.constraint_name, 
     tc.table_name, 
@@ -175,7 +175,7 @@ FROM
     status				:
     #table_schema# AS table_schema
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
 	select
 	     t.relname  as "table_name",
 	     c.relname  as "index_name"
@@ -197,7 +197,7 @@ FROM
 	and ix.indisprimary = 'false'
 	
  -->
- <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 	select
 	t.relname as table_name,
 	i.relname as index_name,
@@ -247,7 +247,7 @@ FROM
 	prorettype = 2278 : procedure return type void
 	prorettype = 2279 : procedure return type trigger
  -->
-<select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT  proname "name" 
 	FROM    pg_catalog.pg_namespace n 
 	JOIN    pg_catalog.pg_proc p 
@@ -275,7 +275,7 @@ FROM
 	database				:
 	collation				:
  -->
-<select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT  proname "name" 
 	FROM    pg_catalog.pg_namespace n 
 	JOIN    pg_catalog.pg_proc p 
@@ -302,7 +302,7 @@ FROM
 	database				:
 	collation				:
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 <![CDATA[
  SELECT 
     (current_database())::information_schema.sql_identifier AS Database,
@@ -397,7 +397,7 @@ SELECT
 <!-- 
 	column information
  -->
-<select id="columnInformation" resultClass="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
 	SELECT b.table_name
 	  , (select  pg_catalog.obj_description(cl.oid,'pg_class')  from pg_catalog.pg_class cl where cl.relname = a.table_name  ) as table_comment
 	  ,a.column_name
@@ -636,7 +636,7 @@ where viewname = #object_name#
 <!-- 
 	SESSION LIST
  -->
-<select id="sessionList" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
+<select id="sessionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO">
 	SELECT 
 	    pid                 id,
 	    application_name    pg_user,
