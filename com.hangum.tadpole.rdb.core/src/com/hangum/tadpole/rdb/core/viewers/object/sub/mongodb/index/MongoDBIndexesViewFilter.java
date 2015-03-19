@@ -13,7 +13,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
-import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBIndexDAO;
 
 /**
  * mongodb Indexes의 filter

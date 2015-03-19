@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.system.ScheduleDAO;
 import com.hangum.tadpole.monitoring.core.Messages;
-import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
 
 /**
  * add sql dialoa

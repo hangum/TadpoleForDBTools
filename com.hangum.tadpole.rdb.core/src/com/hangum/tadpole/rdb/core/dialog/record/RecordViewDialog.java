@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
  * Query Result 창에서 데이터 선택히 한 창에서 조회할수 있게

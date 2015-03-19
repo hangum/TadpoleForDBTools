@@ -12,15 +12,15 @@ package com.hangum.tadpole.rdb.core.util;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.template.CubridDMLTemplate;
-import com.hangum.tadpole.sql.template.HIVEDMLTemplate;
-import com.hangum.tadpole.sql.template.MSSQLDMLTemplate;
-import com.hangum.tadpole.sql.template.MySQLDMLTemplate;
-import com.hangum.tadpole.sql.template.OracleDMLTemplate;
-import com.hangum.tadpole.sql.template.PostgreDMLTemplate;
-import com.hangum.tadpole.sql.template.SQLiteDMLTemplate;
-import com.hangum.tadpole.sql.template.TAJODMLTemplate;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.template.CubridDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.HIVEDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.MSSQLDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.MySQLDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.OracleDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.PostgreDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.SQLiteDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.TAJODMLTemplate;
 
 /**
  * db에 다른 템플릿 쿼리를 생성합니다.

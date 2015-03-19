@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringDashboardDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringDashboardDAO;
 
 /**
  * monitoring label provider

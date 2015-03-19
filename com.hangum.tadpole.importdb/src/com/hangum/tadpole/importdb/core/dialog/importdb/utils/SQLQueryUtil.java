@@ -21,9 +21,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.PartQueryUtil;
-import com.hangum.tadpole.sql.util.resultset.ResultSetUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
+import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

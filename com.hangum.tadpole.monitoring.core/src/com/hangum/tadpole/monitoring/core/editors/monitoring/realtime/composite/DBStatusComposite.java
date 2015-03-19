@@ -9,9 +9,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.MonitoringStatusDialog;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.swtdesigner.SWTResourceManager;
 
 /**

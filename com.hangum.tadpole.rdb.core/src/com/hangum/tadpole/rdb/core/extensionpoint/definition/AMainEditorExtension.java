@@ -12,8 +12,8 @@ package com.hangum.tadpole.rdb.core.extensionpoint.definition;
 
 import org.eclipse.swt.SWT;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * MainEditor extension

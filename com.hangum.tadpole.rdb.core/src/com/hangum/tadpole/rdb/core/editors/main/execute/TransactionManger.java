@@ -3,7 +3,7 @@ package com.hangum.tadpole.rdb.core.editors.main.execute;
 import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * SQL의 transaction을 처리합니다.

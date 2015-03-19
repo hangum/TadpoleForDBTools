@@ -47,17 +47,17 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringIndexDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringResultDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_monitoring;
 import com.hangum.tadpole.monitoring.core.Activator;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.TemplateMonitoringManageDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.UpdateMonitoringDialog;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
-import com.hangum.tadpole.sql.dao.ManagerListDTO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
 
 /**
  * Monitoring manage editor

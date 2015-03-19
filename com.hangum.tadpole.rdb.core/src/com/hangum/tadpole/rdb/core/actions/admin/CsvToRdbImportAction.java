@@ -18,8 +18,8 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.core.dialog.importdb.csv.CsvToRDBImportDialog;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  *  CSV file Import

@@ -46,12 +46,12 @@ import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -67,8 +67,8 @@ public class LoginDialog extends Dialog {
 	
 	private int ID_NEW_USER		 = IDialogConstants.CLIENT_ID 	+ 1;
 	private int ID_FINDPASSWORD = IDialogConstants.CLIENT_ID 	+ 2;
-	private int ID_ADMIN_USER 	= IDialogConstants.CLIENT_ID 	+ 3;
-	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID 	+ 4;
+//	private int ID_ADMIN_USER 	= IDialogConstants.CLIENT_ID 	+ 3;
+//	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID 	+ 4;
 
 	/** database list */
 	private List listDBMart = new ArrayList();
@@ -318,14 +318,14 @@ public class LoginDialog extends Dialog {
 		} else {
 			String userId = "", password = ""; //$NON-NLS-1$ //$NON-NLS-2$
 			
-			if(buttonId == ID_ADMIN_USER) {
-				userId = TadpoleSystemInitializer.ADMIN_EMAIL;
-				password = TadpoleSystemInitializer.ADMIN_PASSWD;
-				
-			} else if(buttonId == ID_MANAGER_USER) {
-				userId = TadpoleSystemInitializer.MANAGER_EMAIL;
-				password = TadpoleSystemInitializer.MANAGER_PASSWD;
-			}
+//			if(buttonId == ID_ADMIN_USER) {
+//				userId = TadpoleSystemInitializer.ADMIN_EMAIL;
+//				password = TadpoleSystemInitializer.ADMIN_PASSWD;
+//				
+//			} else if(buttonId == ID_MANAGER_USER) {
+//				userId = TadpoleSystemInitializer.MANAGER_EMAIL;
+//				password = TadpoleSystemInitializer.MANAGER_PASSWD;
+//			}
 			
 			try {
 				UserDAO userDao = TadpoleSystem_UserQuery.login(userId, password);
@@ -418,10 +418,10 @@ public class LoginDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 //		createButton(parent, ID_ADMIN_USER, "Admin", false);
 		
-		// -test 일 경우만 ..
-		if(ApplicationArgumentUtils.isTestMode()) {
-			createButton(parent, ID_MANAGER_USER, Messages.LoginDialog_12, false);
-		}
+//		// -test 일 경우만 ..
+//		if(ApplicationArgumentUtils.isTestMode()) {
+//			createButton(parent, ID_MANAGER_USER, Messages.LoginDialog_12, false);
+//		}
 		
 		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
 		createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);

@@ -11,7 +11,6 @@
 package com.hangum.tadpole.session.manager;
 
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -25,9 +24,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 
 /**
  * tadpole의 session manager입니다

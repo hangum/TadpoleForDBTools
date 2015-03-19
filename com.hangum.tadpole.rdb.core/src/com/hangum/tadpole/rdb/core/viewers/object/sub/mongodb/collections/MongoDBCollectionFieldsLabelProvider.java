@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 import com.swtdesigner.ResourceManager;
 
 /**

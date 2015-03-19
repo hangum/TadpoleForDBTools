@@ -12,8 +12,8 @@ package com.hangum.tadpole.rdb.core.util;
 
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Find Connection, Object explorer viewer

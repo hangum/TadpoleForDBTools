@@ -19,7 +19,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 

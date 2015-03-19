@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.util.JSONUtil;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringResultDAO;
 
 /**
  * Snapshot dialog

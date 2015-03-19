@@ -55,12 +55,12 @@ import org.quartz.CronExpression;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.system.ScheduleDAO;
+import com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Schedule;
 import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
-import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
-import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
 
 /**
  * Add Schedule dialogs

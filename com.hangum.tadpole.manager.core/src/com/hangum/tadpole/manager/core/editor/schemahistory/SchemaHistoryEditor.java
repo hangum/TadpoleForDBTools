@@ -45,11 +45,11 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
-import com.hangum.tadpole.sql.dao.system.SchemaHistoryDetailDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_SchemaHistory;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
+import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDetailDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.ResourceManager;
 
 /**

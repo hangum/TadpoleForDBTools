@@ -11,7 +11,7 @@
 package com.hangum.tadpole.mongodb.core.test;
 
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 public class MakeUserDBDAO {
 	

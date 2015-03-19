@@ -35,15 +35,15 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
+import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
+import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
  * Configures the initial size and appearance of a workbench window.
@@ -211,19 +211,19 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
 	    	
 	    	// When login cancel button, i use in manager authority.
-	    	if(Dialog.OK != loginDialog.open()) {
-	    		
-	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
-				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
-		    	try {
-					SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
-					initSession();
-				} catch (Exception e) {
-					logger.error("demo mode user login", e); //$NON-NLS-1$
-					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
-					return;
-				}	
-	    	} else {
+//	    	if(Dialog.OK != loginDialog.open()) {
+//	    		
+//	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
+//				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
+//		    	try {
+//					SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
+//					initSession();
+//				} catch (Exception e) {
+//					logger.error("demo mode user login", e); //$NON-NLS-1$
+//					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
+//					return;
+//				}	
+//	    	} else {
 	    		try {
 		    		// Stored user session.
 					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
@@ -257,7 +257,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    			logger.error("session set", e); //$NON-NLS-1$
 	    		}
 	    		
-	    	}
+//	    	}
     	} 
     }
     

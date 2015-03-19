@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.sql.dao.mysql.SessionListDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO;
 
 /**
  * mysql, maridb session list label provider

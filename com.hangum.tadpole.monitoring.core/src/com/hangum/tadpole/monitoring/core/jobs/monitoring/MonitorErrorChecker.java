@@ -4,7 +4,7 @@ import org.apache.commons.lang.math.NumberUtils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringIndexDAO;
 
 /**
  * monitoring error checker

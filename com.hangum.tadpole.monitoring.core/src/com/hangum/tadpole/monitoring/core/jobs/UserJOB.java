@@ -21,12 +21,12 @@ import org.quartz.JobExecutionException;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.mails.template.DailySummaryReport;
+import com.hangum.tadpole.engine.query.dao.system.ScheduleDAO;
+import com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Schedule;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.monitoring.core.utils.Utils;
-import com.hangum.tadpole.sql.dao.system.ScheduleDAO;
-import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.summary.report.DailySummaryReportJOB;
 
 /**

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringResultDAO;
 
 /**
  * monitoring cache repository

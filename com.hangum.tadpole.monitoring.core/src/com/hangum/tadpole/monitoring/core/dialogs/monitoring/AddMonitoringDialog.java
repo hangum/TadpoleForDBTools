@@ -29,14 +29,14 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringIndexDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringMainDAO;
+import com.hangum.tadpole.engine.query.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Template;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_monitoring;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringIndexDAO;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringMainDAO;
-import com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_Template;
-import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
 
 /**
  * Add monitoring Dialog

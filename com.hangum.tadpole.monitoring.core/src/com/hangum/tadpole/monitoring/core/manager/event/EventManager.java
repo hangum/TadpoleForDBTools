@@ -10,10 +10,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine.AFTER_PROCESS_TYPE;
 import com.hangum.tadpole.monitoring.core.utils.Utils;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

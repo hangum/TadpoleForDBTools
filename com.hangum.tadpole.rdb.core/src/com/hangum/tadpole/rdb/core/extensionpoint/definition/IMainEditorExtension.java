@@ -14,9 +14,9 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
  * MainEditor extension

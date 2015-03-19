@@ -32,9 +32,9 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Template;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
-import com.hangum.tadpole.sql.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_Template;
 
 /**
  * Add template monitoring index Dialog

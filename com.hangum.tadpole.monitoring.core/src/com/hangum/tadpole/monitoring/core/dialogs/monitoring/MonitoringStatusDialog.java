@@ -27,10 +27,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.util.JSONUtil;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringResultDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_monitoring;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine.MONITORING_STATUS;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.monitoring.MonitoringResultDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_monitoring;
 import com.swtdesigner.SWTResourceManager;
 
 import org.eclipse.swt.widgets.Group;

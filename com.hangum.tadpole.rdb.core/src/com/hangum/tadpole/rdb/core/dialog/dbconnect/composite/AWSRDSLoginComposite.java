@@ -41,11 +41,11 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.aws.rds.commons.core.utils.AmazonRDSUtsils;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.SingleAddDBDialog;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 
 /**
  * Amazon RDS login composite.

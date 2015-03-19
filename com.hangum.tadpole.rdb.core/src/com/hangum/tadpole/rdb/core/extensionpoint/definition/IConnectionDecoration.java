@@ -12,7 +12,7 @@ package com.hangum.tadpole.rdb.core.extensionpoint.definition;
 
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * 커넥션 뷰 파트의 데코레이션입니다.

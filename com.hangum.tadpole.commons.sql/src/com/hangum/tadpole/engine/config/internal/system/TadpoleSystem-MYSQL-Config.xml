@@ -42,6 +42,8 @@
 
 	<!--
 		DML문은 SQLite와 같아서 sqlite것을 사용합니다. - hangum
+		
+		com.hangum.tadpole.engine.manager.query.internal.system
 	-->
 	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Common.xml" />
 	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-MySQL.xml" />

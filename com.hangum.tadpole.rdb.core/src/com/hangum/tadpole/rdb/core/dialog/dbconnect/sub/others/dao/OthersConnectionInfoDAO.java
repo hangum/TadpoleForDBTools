@@ -13,7 +13,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
+import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 
 /**
  * Others Database Connection information dialog

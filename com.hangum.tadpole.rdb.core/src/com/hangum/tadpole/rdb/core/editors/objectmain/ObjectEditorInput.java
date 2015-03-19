@@ -11,8 +11,8 @@
 package com.hangum.tadpole.rdb.core.editors.objectmain;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Object editor input

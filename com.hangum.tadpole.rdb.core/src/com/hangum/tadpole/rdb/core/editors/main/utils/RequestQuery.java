@@ -14,7 +14,7 @@ import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.sql.util.SQLUtil;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
  * 에디터에서 사용자가 실행하려는 쿼리 정보를 정의합니다. 
