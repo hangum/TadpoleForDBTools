@@ -57,7 +57,7 @@ public class MessageComposite extends Composite {
 	 * @param tadpoleMessageDAO
 	 */
 	public void addAfterRefresh(TadpoleMessageDAO tadpoleMessageDAO) {
-		String strNewMessage = "=[" + tadpoleMessageDAO.getDateExecute().toString() + "]============\n";
+		String strNewMessage = "==[ " + tadpoleMessageDAO.getDateExecute().toString() + " ]============\n";
 		
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if(throwable == null) {
@@ -67,9 +67,8 @@ public class MessageComposite extends Composite {
 				SQLException sqlException = (SQLException)throwable;
 				StringBuffer sbMsg = new StringBuffer();
 				
-				sbMsg.append("State : " + sqlException.getSQLState() + PublicTadpoleDefine.LINE_SEPARATOR);
-				sbMsg.append("Error Code: " + sqlException.getErrorCode() + PublicTadpoleDefine.LINE_SEPARATOR);
-				sbMsg.append("Message : " + sqlException.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR);
+				sbMsg.append(String.format("[SQL State : %s, Error Code: %s]", sqlException.getSQLState(), sqlException.getErrorCode()));
+				sbMsg.append(sqlException.getMessage());
 				
 				strNewMessage += sbMsg.toString();
 			} else {
@@ -77,10 +76,14 @@ public class MessageComposite extends Composite {
 			}
 		}
 		
-		String strOldText = textMessage.getText();
-		textMessage.setText(strNewMessage+ PublicTadpoleDefine.LINE_SEPARATOR + strOldText);
-		textMessage.setSelection(0, strNewMessage.length());
+		// first show last error message
+		final String strOldText = textMessage.getText();
+		textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText + PublicTadpoleDefine.LINE_SEPARATOR);
 		
+		textMessage.setFocus();
+		
+		// Select the last error message.
+		textMessage.setSelection(0, strNewMessage.length());
 	}
 	
 	@Override

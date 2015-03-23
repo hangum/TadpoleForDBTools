@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -742,7 +743,7 @@ public class ResultSetComposite extends Composite {
 			resultSet = runSQLSelect(statement, reqQuery);
 			
 			rsDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt/*, isResultComma*/);
-		} catch(Exception e) {
+		} catch(SQLException e) {
 			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
 		} finally {
@@ -764,11 +765,11 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param requestQuery
 	 */
-	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws Exception {
+	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws SQLException, Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
-			public ResultSet call() throws Exception {
+			public ResultSet call() throws SQLException {
 				statement.execute(reqQuery.getSql());
 				return statement.getResultSet();
 			}
