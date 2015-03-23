@@ -18,21 +18,18 @@ package com.hangum.tadpold.commons.libs.core.mails.template;
  */
 public class NewUserMailBodyTemplate extends MailBodyTemplate {
 
-	public String getContent(String groupName, String strName, String strEmail) {
+	/**
+	 * 
+	 * @param strName
+	 * @param strEmail
+	 * @param strConfirmKey
+	 * @return
+	 */
+	public String getContent(String strName, String strEmail, String strConfirmKey) {
 		StringBuffer strContent = new StringBuffer("<html>");
 		
-		strContent.append(makeHead("User has been added.\n Please check."));
-
-		// 메시지.
+		strContent.append(makeHead("Tadpole DB Hub user has been added.\n Please check."));
 		strContent.append("<table border='1' cellpadding='0' cellspacing='0' width='100%'>");
-			strContent.append("<tr>");
-				strContent.append("<td width='100' valign='top'>");
-				strContent.append("Group Name");
-				strContent.append("</td>");
-				strContent.append("<td width='200' valign='top'>");
-				strContent.append(groupName);
-				strContent.append("</td>");
-			strContent.append("</tr>");
 				
 			strContent.append("<tr>");
 				strContent.append("<td width='100' valign='top'>");
@@ -51,6 +48,15 @@ public class NewUserMailBodyTemplate extends MailBodyTemplate {
 				strContent.append(strEmail);
 				strContent.append("</td>");
 			strContent.append("</tr>");
+		
+			strContent.append("<tr>");
+			strContent.append("<td width='100' valign='top'>");
+			strContent.append("Confoim key");
+			strContent.append("</td>");
+			strContent.append("<td width='260' valign='top'><b>");
+			strContent.append(strConfirmKey);
+			strContent.append("</b></td>");
+		strContent.append("</tr>");
 		
 		strContent.append("</table>");
 		

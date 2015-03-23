@@ -150,11 +150,11 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	INSERT INTO tadpole_user(email, passwd, role_type, name, language, approval_yn, use_otp, otp_secret)
-	VALUES(#email#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#)
+	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, approval_yn, use_otp, otp_secret)
+	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-		select * from tadpole_user where email = #email# 
+		SELECT * FROM tadpole_user WHERE email = #email# AND delyn = 'NO' 
 	</selectKey>
 </insert>
 
@@ -184,6 +184,17 @@
 			email = #email#
 		AND delyn = 'NO'
 </select>
+
+<!-- 
+	user email confirm
+ -->
+<update id="updateEmailConfirm" parameterClass="java.lang.String">
+	UPDATE tadpole_user
+	SET
+		is_email_certification = 'YES'
+	WHERE 
+		email = #email#
+</update> 
 
 <!-- 
 	save login history
@@ -353,8 +364,12 @@
   -->
  <select id="getRegisteredDB" resultClass="java.util.HashMap">
  	SELECT dbms_type, count(*) tot
-	FROM tadpole_db
-	WHERE delyn = 'NO'
+	FROM tadpole_db a,
+		tadpole_user b
+	WHERE 
+			a.delyn = 'NO'
+		AND a.user_seq = b.seq
+		AND b.delyn = 'NO'
 	GROUP BY dbms_type
 	ORDER BY tot desc
  </select>

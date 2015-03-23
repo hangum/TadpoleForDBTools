@@ -447,6 +447,7 @@ public class Messages extends NLS {
 	public static String ResultSetComposite_btnDMLGenerator_text;
 	public static String ResultSetComposite_btnSql_text;
 	public static String OthersConnectionGroup_btnIsMonitoring_text;
+	public static String ResultSetComposite_lblFilter_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

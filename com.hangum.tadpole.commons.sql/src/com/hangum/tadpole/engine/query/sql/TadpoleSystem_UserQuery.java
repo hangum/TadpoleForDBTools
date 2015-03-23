@@ -48,20 +48,37 @@ public class TadpoleSystem_UserQuery {
 	
 	/**
 	 * 신규 유저를 등록합니다.
+	 * 
+	 * @param inputType
 	 * @param email
+	 * @param email_key
+	 * @param is_email_certification
 	 * @param passwd
 	 * @param roleType
 	 * @param name
 	 * @param approvalYn
-	 * @param use_opt
-	 * @param opt_secret
+	 * @param use_otp
+	 * @param otp_secret
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDAO newUser(String email, String passwd, String roleType, String name, String language, String approvalYn, String use_opt, String opt_secret) throws Exception {
-		UserDAO loginDAO = new UserDAO(email, name, language, approvalYn, use_opt, opt_secret);
+	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
+								String roleType, String name, String language, String approvalYn, String use_otp, String otp_secret
+	) throws Exception {
+		UserDAO loginDAO = new UserDAO();
+		loginDAO.setInput_type(inputType);
+		loginDAO.setEmail(email);
+		loginDAO.setEmail_key(email_key);
+		loginDAO.setIs_email_certification(is_email_certification);
+		
 		loginDAO.setPasswd(CipherManager.getInstance().encryption(passwd));
 		loginDAO.setRole_type(roleType);
+		
+		loginDAO.setName(name);
+		loginDAO.setLanguage(language);
+		loginDAO.setApproval_yn(approvalYn);
+		loginDAO.setUse_otp(use_otp);
+		loginDAO.setOtp_secret(otp_secret);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
@@ -155,6 +172,17 @@ public class TadpoleSystem_UserQuery {
 		}
 	
 		return userInfo;
+	}
+	
+	/**
+	 * update email confirm
+	 * 
+	 * @param email
+	 * @throws Exception
+	 */
+	public static void updateEmailConfirm(String email) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateEmailConfirm", email);
 	}
 	
 	/**

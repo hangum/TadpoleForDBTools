@@ -154,9 +154,9 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setIs_autocommit(userDb.getIs_autocommit());
 		userEncryptDao.setIs_showtables(userDb.getIs_showtables());
 		
-		userEncryptDao.setIs_table_filter(userDb.getIs_table_filter());
-		userEncryptDao.setTable_filter_include(userDb.getTable_filter_include());
-		userEncryptDao.setTable_filter_exclude(userDb.getTable_filter_exclude());
+//		userEncryptDao.setIs_table_filter(userDb.getIs_table_filter());
+//		userEncryptDao.setTable_filter_include(userDb.getTable_filter_include());
+//		userEncryptDao.setTable_filter_exclude(userDb.getTable_filter_exclude());
 		
 		userEncryptDao.setIs_profile(userDb.getIs_profile());
 		userEncryptDao.setQuestion_dml(userDb.getQuestion_dml());
@@ -227,9 +227,9 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setIs_autocommit(newUserDb.getIs_autocommit());
 		userEncryptDao.setIs_showtables(newUserDb.getIs_showtables());
 		
-		userEncryptDao.setIs_table_filter(newUserDb.getIs_table_filter());
-		userEncryptDao.setTable_filter_include(newUserDb.getTable_filter_include());
-		userEncryptDao.setTable_filter_exclude(newUserDb.getTable_filter_exclude());
+//		userEncryptDao.setIs_table_filter(newUserDb.getIs_table_filter());
+//		userEncryptDao.setTable_filter_include(newUserDb.getTable_filter_include());
+//		userEncryptDao.setTable_filter_exclude(newUserDb.getTable_filter_exclude());
 		
 		userEncryptDao.setIs_profile(newUserDb.getIs_profile());
 		userEncryptDao.setQuestion_dml(newUserDb.getQuestion_dml());

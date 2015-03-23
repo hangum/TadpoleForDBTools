@@ -108,7 +108,7 @@ public class PermissionChecker {
 	public static boolean isAdmin(String strUserType) {
 		boolean boolReturn = false;
 		
-		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType)) { 
+		if(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString().equals(strUserType)) { 
 			boolReturn = true;
 		}
 		

@@ -30,9 +30,9 @@ public class OthersConnectionInfoDAO {
 	boolean isProfiling = false;
 	boolean isDMLStatement = false;
 	
-	boolean isTableFilter = false;
-	String strTableFilterInclude = "";
-	String strTableFilterExclude = "";
+//	boolean isTableFilter = false;
+//	String strTableFilterInclude = "";
+//	String strTableFilterExclude = "";
 	
 	boolean isVisible = true;
 	boolean isSummaryReport = true;
@@ -74,47 +74,47 @@ public class OthersConnectionInfoDAO {
 		this.isAutoCommit = isAutoCommit;
 	}
 
-	/**
-	 * @return the isTableFilter
-	 */
-	public boolean isTableFilter() {
-		return isTableFilter;
-	}
-
-	/**
-	 * @param isTableFilter the isTableFilter to set
-	 */
-	public void setTableFilter(boolean isTableFilter) {
-		this.isTableFilter = isTableFilter;
-	}
-
-	/**
-	 * @return the strTableFilterInclude
-	 */
-	public String getStrTableFilterInclude() {
-		return strTableFilterInclude;
-	}
-
-	/**
-	 * @param strTableFilterInclude the strTableFilterInclude to set
-	 */
-	public void setStrTableFilterInclude(String strTableFilterInclude) {
-		this.strTableFilterInclude = strTableFilterInclude;
-	}
-
-	/**
-	 * @return the strTableFilterExclude
-	 */
-	public String getStrTableFilterExclude() {
-		return strTableFilterExclude;
-	}
-
-	/**
-	 * @param strTableFilterExclude the strTableFilterExclude to set
-	 */
-	public void setStrTableFilterExclude(String strTableFilterExclude) {
-		this.strTableFilterExclude = strTableFilterExclude;
-	}
+//	/**
+//	 * @return the isTableFilter
+//	 */
+//	public boolean isTableFilter() {
+//		return isTableFilter;
+//	}
+//
+//	/**
+//	 * @param isTableFilter the isTableFilter to set
+//	 */
+//	public void setTableFilter(boolean isTableFilter) {
+//		this.isTableFilter = isTableFilter;
+//	}
+//
+//	/**
+//	 * @return the strTableFilterInclude
+//	 */
+//	public String getStrTableFilterInclude() {
+//		return strTableFilterInclude;
+//	}
+//
+//	/**
+//	 * @param strTableFilterInclude the strTableFilterInclude to set
+//	 */
+//	public void setStrTableFilterInclude(String strTableFilterInclude) {
+//		this.strTableFilterInclude = strTableFilterInclude;
+//	}
+//
+//	/**
+//	 * @return the strTableFilterExclude
+//	 */
+//	public String getStrTableFilterExclude() {
+//		return strTableFilterExclude;
+//	}
+//
+//	/**
+//	 * @param strTableFilterExclude the strTableFilterExclude to set
+//	 */
+//	public void setStrTableFilterExclude(String strTableFilterExclude) {
+//		this.strTableFilterExclude = strTableFilterExclude;
+//	}
 
 	/**
 	 * @return the isProfiling

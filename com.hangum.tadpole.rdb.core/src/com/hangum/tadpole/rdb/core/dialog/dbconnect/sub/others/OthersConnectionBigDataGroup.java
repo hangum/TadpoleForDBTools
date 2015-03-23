@@ -27,9 +27,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilterDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.ExtensionBrowserURLDialog;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 
 /**
@@ -72,21 +70,21 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_1);
 		
-		Button btnTableFilters = new Button(this, SWT.NONE);
-		btnTableFilters.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				if(Dialog.OK == dialog.open()) {
-					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
-					
-					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
-					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
-					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
-				}
-			}
-		});
-		btnTableFilters.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_3);
+//		Button btnTableFilters = new Button(this, SWT.NONE);
+//		btnTableFilters.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+//				if(Dialog.OK == dialog.open()) {
+//					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
+//					
+//					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
+//					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
+//					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
+//				}
+//			}
+//		});
+//		btnTableFilters.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_3);
 		
 		btnExternalBrowser = new Button(this, SWT.NONE);
 		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {

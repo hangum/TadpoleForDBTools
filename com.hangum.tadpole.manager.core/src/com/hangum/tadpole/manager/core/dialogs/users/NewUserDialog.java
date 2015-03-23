@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -40,7 +41,6 @@ import com.hangum.tadpold.commons.libs.core.mails.template.NewUserMailBodyTempla
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.Utils;
-import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -62,16 +62,11 @@ public class NewUserDialog extends Dialog {
 	
 	private Combo comboLanguage;
 	
-//	private Combo comboQuestion;
-//	private Text textAnswer;
-
 	/** OTP code */
 	private String secretKey = ""; //$NON-NLS-1$
 	private Button btnGetOptCode;
-	private Label lblSecretKey;
 	private Text textSecretKey;
-	private Label lblQrcodeUrl;
-	private Text textQRCodeURL;
+	private Label labelQRCodeURL;
 	private Label lblOtpCdoe;
 	private Text textOTPCode;
 	
@@ -103,18 +98,6 @@ public class NewUserDialog extends Dialog {
 		gridLayout.marginHeight = 4;
 		gridLayout.marginWidth = 4;
 		gridLayout.numColumns = 2;
-		
-//		Label lblGroupName = new Label(container, SWT.NONE);
-//		lblGroupName.setText(Messages.NewUserDialog_lblNewLabel_text);
-		
-//		compositeUserGroup = new Composite(container, SWT.NONE);
-//		GridLayout gl_compositeUserGroup = new GridLayout(1, false);
-//		gl_compositeUserGroup.verticalSpacing = 0;
-//		gl_compositeUserGroup.horizontalSpacing = 0;
-//		gl_compositeUserGroup.marginHeight = 1;
-//		gl_compositeUserGroup.marginWidth = 0;
-//		compositeUserGroup.setLayout(gl_compositeUserGroup);
-//		compositeUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblIdemail = new Label(container, SWT.NONE);
 		lblIdemail.setText(Messages.NewUserDialog_1);
@@ -149,33 +132,7 @@ public class NewUserDialog extends Dialog {
 		comboLanguage.add("en_us"); //$NON-NLS-1$
 		comboLanguage.select(1);
 		
-		Label lblPasswordDescription = new Label(container, SWT.NONE);
-		lblPasswordDescription.setText(Messages.NewUserDialog_18);
-		lblPasswordDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		
-//		Label lblQuestion = new Label(container, SWT.NONE);
-//		lblQuestion.setText(Messages.NewUserDialog_22);
-//
-//		comboQuestion = new Combo(container, SWT.READ_ONLY);
-//		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
-//			comboQuestion.add(q.toString(), q.getOrderIndex());
-//			comboQuestion.setData(q.getOrderIndex()+q.toString(), q.getKey());
-//		}
-//		comboQuestion.select(0);
-//		
-//		Label lblAnswer = new Label(container, SWT.NONE);
-//		lblAnswer.setText(Messages.NewUserDialog_27);
-//
-//		textAnswer = new Text(container, SWT.BORDER);
-//		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Group grpGoogleOtp = new Group(container, SWT.NONE);
-		grpGoogleOtp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		grpGoogleOtp.setText(Messages.NewUserDialog_grpGoogleOtp_text);
-		grpGoogleOtp.setLayout(new GridLayout(2, false));
-		
-		btnGetOptCode = new Button(grpGoogleOtp, SWT.CHECK);
+		btnGetOptCode = new Button(container, SWT.CHECK);
 		btnGetOptCode.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -183,33 +140,36 @@ public class NewUserDialog extends Dialog {
 			}
 		});
 		btnGetOptCode.setText(Messages.NewUserDialog_btnCheckButton_text);
-		new Label(grpGoogleOtp, SWT.NONE);
 		
-		lblSecretKey = new Label(grpGoogleOtp, SWT.NONE);
+		Label lblWhatIsQRCode = new Label(container, SWT.NONE);
+		lblWhatIsQRCode.setText("<a href='https://github.com/google/google-authenticator/wiki/' target='_blank'>What is Google OTP?</a>");
+		lblWhatIsQRCode.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		Group grpGoogleOtp = new Group(container, SWT.NONE);
+		grpGoogleOtp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		grpGoogleOtp.setText(Messages.NewUserDialog_grpGoogleOtp_text);
+		grpGoogleOtp.setLayout(new GridLayout(2, false));
+		
+		Label lblSecretKey = new Label(grpGoogleOtp, SWT.NONE);
 		lblSecretKey.setText(Messages.NewUserDialog_lblAccessKey_1_text);
 		
-		textSecretKey = new Text(grpGoogleOtp, SWT.BORDER);
+		textSecretKey = new Text(grpGoogleOtp, SWT.BORDER | SWT.READ_ONLY);
 		textSecretKey.setEditable(false);
 		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblQrcodeUrl = new Label(grpGoogleOtp, SWT.NONE);
-		lblQrcodeUrl.setText("<a href='https://code.google.com/p/google-authenticator/' target='_blank'>" + Messages.NewUserDialog_lblQrcodeUrl_text + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
-		lblQrcodeUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		Label lblQrcodeUrl = new Label(grpGoogleOtp, SWT.NONE);
+		lblQrcodeUrl.setText(Messages.NewUserDialog_lblQrcodeUrl_text);
 		
-		textQRCodeURL = new Text(grpGoogleOtp, SWT.BORDER | SWT.WRAP | SWT.MULTI);
-		GridData gd_textQRCodeURL = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_textQRCodeURL.heightHint = 50;
-		textQRCodeURL.setLayoutData(gd_textQRCodeURL);
+		labelQRCodeURL = new Label(grpGoogleOtp, SWT.NONE);
+		labelQRCodeURL.setText("");
+		labelQRCodeURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		labelQRCodeURL.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		lblOtpCdoe = new Label(grpGoogleOtp, SWT.NONE);
 		lblOtpCdoe.setText(Messages.NewUserDialog_lblOtpCdoe_text);
 		
 		textOTPCode = new Text(grpGoogleOtp, SWT.BORDER);
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-//		textUserGroup = new Text(compositeUserGroup, SWT.BORDER);
-//		textUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		textEMail.setFocus();
 		
 		// google analytic
@@ -223,25 +183,30 @@ public class NewUserDialog extends Dialog {
 	 */
 	private void generateGoogleOTP() {
 		if(!btnGetOptCode.getSelection()) {
+			getShell().setSize(380, 250);
 			textSecretKey.setText(""); //$NON-NLS-1$
-			textQRCodeURL.setText(""); //$NON-NLS-1$
+			labelQRCodeURL.setText(""); //$NON-NLS-1$
 			
 			return;
 		}
-		secretKey = GoogleAuthManager.getInstance().getSecretKey();
 		
 		String strEmail = textEMail.getText();
 		if("".equals(strEmail)) { //$NON-NLS-1$
+			getShell().setSize(380, 250);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_7);
 			return;
 		} else if(!Utils.isEmail(strEmail)) {
+			getShell().setSize(380, 250);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);
 			return;
 		}
+		getShell().setSize(380, 370);
+		secretKey = GoogleAuthManager.getInstance().getSecretKey();
+		textSecretKey.setText(secretKey);
 		
 		String[] strUserDomain = StringUtils.split(strEmail, "@"); //$NON-NLS-1$
 		String strURL = GoogleAuthManager.getInstance().getURL(strUserDomain[0], strUserDomain[1], secretKey);
@@ -250,21 +215,18 @@ public class NewUserDialog extends Dialog {
 			logger.debug("url is " + strURL); //$NON-NLS-1$
 		}
 		
-		textSecretKey.setText(secretKey);
-		textQRCodeURL.setText(strURL);
+		strURL = StringEscapeUtils.escapeHtml(strURL);
+		labelQRCodeURL.setText(String.format("<a href='%s' target='_blank'>Show QRCode</a>", strURL));
 	}
 	
 	@Override
 	protected void okPressed() {
-//		String strGroupName = "";  //$NON-NLS-1$
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String passwd = StringUtils.trimToEmpty(textPasswd.getText());
 		String rePasswd = StringUtils.trimToEmpty(textRePasswd.getText());
 		String name = StringUtils.trimToEmpty(textName.getText());
-//		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
-//		String answer = StringUtils.trimToEmpty(textAnswer.getText());
 		
-//		if(!validation(strEmail, passwd, rePasswd, name, questionKey, answer)) return;
+		if(!validation(strEmail, passwd, rePasswd, name)) return;
 		if(btnGetOptCode.getSelection()) {
 			if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
 				MessageDialog.openError(getShell(), "Error", Messages.NewUserDialog_40); //$NON-NLS-1$
@@ -278,41 +240,20 @@ public class NewUserDialog extends Dialog {
 			}
 		}
 		
-		// user 입력시 
-//		UserGroupDAO groupDAO = new UserGroupDAO();
-		PublicTadpoleDefine.USER_ROLE_TYPE userType = PublicTadpoleDefine.USER_ROLE_TYPE.USER;
-
-//		strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
-			
-		userType = PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER;
-//		// 그룹 등록
-//		try {
-//			groupDAO = TadpoleSystem_UserGroupQuery.newUserGroup(strGroupName);
-//		} catch(Exception e) {
-//			logger.error(Messages.NewUserDialog_8, e);
-//			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_16 + e.getMessage());
-//			return;
-//		}
-		
 		try {
 			/**
 			 * 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
 			 */
 			String approvalYn = ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.toString():PublicTadpoleDefine.YES_NO.YES.toString();
-			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(strEmail, passwd, 
+			String strEmailConformKey = Utils.getUniqueDigit(7);
+			TadpoleSystem_UserQuery.newUser(
+					PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
+					strEmail, strEmailConformKey, PublicTadpoleDefine.YES_NO.NO.toString(), 
+					passwd, 
 					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
 					name, comboLanguage.getText(), approvalYn,  
 					btnGetOptCode.getSelection()?"YES":"NO", textSecretKey.getText()); //$NON-NLS-1$ //$NON-NLS-2$
-			
-//			// user_role 입력.
-//			TadpoleSystem_UserRole.newUserRole(/*groupDAO.getSeq(),*/ newUserDAO.getSeq(), userType.toString(), PublicTadpoleDefine.YES_NO.YES.toString(), 
-//					PublicTadpoleDefine.USER_TYPE.ADMIN.toString());
-			
-//			if(!ApplicationArgumentUtils.isTestMode()) {
-//				MessageDialog.openInformation(getParentShell(), Messages.NewUserDialog_14, Messages.NewUserDialog_21);
-//			}
-			
-//			sendEmail(userType, groupDAO.getSeq(), strGroupName, name, strEmail);
+			sendEmailAccessKey(name, strEmail, strEmailConformKey);
 			
 			MessageDialog.openInformation(null, "Confirm", Messages.NewUserDialog_31); //$NON-NLS-1$
 			
@@ -326,22 +267,14 @@ public class NewUserDialog extends Dialog {
 	}
 	
 	/**
+	 * send email sccess key
 	 * 
-	 * @param userType
-	 * @param groupSeq
-	 * @param groupName
 	 * @param name
 	 * @param email
+	 * @param strConfirmKey
 	 */
-	private void sendEmail(PublicTadpoleDefine.USER_ROLE_TYPE userType, int groupSeq, String groupName, String name, String email) {
+	private void sendEmailAccessKey(String name, String email, String strConfirmKey) {
 		try {
-			UserDAO userDao = null;
-			if(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER == userType) {
-				userDao = TadpoleSystem_UserQuery.getSystemAdmin();
-			} else {
-				userDao = TadpoleSystem_UserQuery.getGroupManager(groupSeq);
-			}
-			
 			// manager 에게 메일을 보낸다.
 			EmailDTO emailDao = new EmailDTO();
 			emailDao.setSubject("Add new Tadpole user."); //$NON-NLS-1$
@@ -349,9 +282,9 @@ public class NewUserDialog extends Dialog {
 			// 그룹, 사용자, 권한.
 			// 
 			NewUserMailBodyTemplate mailContent = new NewUserMailBodyTemplate();
-			String strContent = mailContent.getContent(groupName, name, email);
+			String strContent = mailContent.getContent(name, email, strConfirmKey);
 			emailDao.setContent(strContent);
-			emailDao.setTo(userDao.getEmail());
+			emailDao.setTo(email);
 			
 			SendEmails sendEmail = new SendEmails(GetPreferenceGeneral.getSessionSMTPINFO());
 			sendEmail.sendMail(emailDao);
@@ -369,14 +302,8 @@ public class NewUserDialog extends Dialog {
 	 * @param rePasswd
 	 * @param name
 	 */
-	private boolean validation(String strEmail, String strPass, String rePasswd, String name, String questionKey, String answer) {
+	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
 
-//		if("".equals(StringUtils.trimToEmpty(textUserGroup.getText()))) { //$NON-NLS-1$
-//			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_23);
-//			textUserGroup.setFocus();
-//			return false;
-//		}
-		
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_7);
 			textEMail.setFocus();
@@ -393,10 +320,6 @@ public class NewUserDialog extends Dialog {
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);
 			textEMail.setFocus();
 			return false;
-//		} else if("".equals(answer)) { //$NON-NLS-1$
-//			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_26);
-//			textAnswer.setFocus();
-//			return false;
 		}
 		
 		if(!strPass.equals(rePasswd)) {
@@ -404,18 +327,7 @@ public class NewUserDialog extends Dialog {
 			textPasswd.setFocus();
 			return false;
 		}
-		
-		//  신규 그룹 입력시 오류 검증
-//		if(btnManager != null && btnManager.getSelection()) {
-//			String strGroupName = StringUtils.trimToEmpty(textUserGroup.getText());
-//			// 동일한 그룹명이 있는 지 검증한다.
-//			if(TadpoleSystem_UserGroupQuery.isUserGroup(strGroupName)) {
-//				MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_25);
-//				textUserGroup.setFocus();
-//				return false;
-//			}
-//		}
-		
+				
 		try {
 			// 기존 중복 이메일인지 검사합니다.
 			if(!TadpoleSystem_UserQuery.isDuplication(strEmail)) {
@@ -431,18 +343,6 @@ public class NewUserDialog extends Dialog {
 		
 		return true;
 	}
-	
-//	/**
-//	 * email검사
-//	 * 
-//	 * @param email
-//	 * @return
-//	 */
-//	private static boolean isEmail(String email) {
-//		Pattern p = Pattern.compile("^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$"); //$NON-NLS-1$
-//		Matcher m = p.matcher(email);
-//		return m.matches();
-//	}
 
 	/**
 	 * Create contents of the button bar.
@@ -459,7 +359,8 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(420, 500);
+//		return new Point(380, 250);
+		return new Point(380, 250);
 	}
 
 }

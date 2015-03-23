@@ -21,7 +21,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -29,9 +28,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilterDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.ExtensionBrowserURLDialog;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 
 /**
@@ -81,21 +78,21 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnAutoCommit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnAutoCommit.setText(Messages.OthersConnectionRDBGroup_2);
 		
-		Button btnTableFilters = new Button(this, SWT.NONE);
-		btnTableFilters.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				if(Dialog.OK == dialog.open()) {
-					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
-					
-					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
-					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
-					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
-				}
-			}
-		});
-		btnTableFilters.setText(Messages.OthersConnectionRDBGroup_3);
+//		Button btnTableFilters = new Button(this, SWT.NONE);
+//		btnTableFilters.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+//				if(Dialog.OK == dialog.open()) {
+//					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
+//					
+//					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
+//					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
+//					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
+//				}
+//			}
+//		});
+//		btnTableFilters.setText(Messages.OthersConnectionRDBGroup_3);
 		
 		btnExternalBrowser = new Button(this, SWT.NONE);
 		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {

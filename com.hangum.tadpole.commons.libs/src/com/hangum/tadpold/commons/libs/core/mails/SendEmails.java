@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.mails;
 
+import javax.activation.CommandMap;
+import javax.activation.MailcapCommandMap;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.HtmlEmail;
@@ -41,12 +44,19 @@ public class SendEmails {
 		if(logger.isDebugEnabled()) logger.debug("Add new message");
 		
 		try {
+//			MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
+//			mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
+//			mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
+//			mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+//			mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
+//			mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
+//			CommandMap.setDefaultCommandMap(mc);
+			
 			HtmlEmail email = new HtmlEmail();
 			email.setHostName(smtpDto.getHost());
 			email.setSmtpPort(NumberUtils.toInt(smtpDto.getPort()));
 			email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));
 			email.setSSLOnConnect(true);
-	
 			
 			email.setFrom(smtpDto.getEmail(), "Tadpole DB Hub");
 			email.setSubject(emailDao.getSubject());

@@ -274,9 +274,9 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		
-		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
-		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+//		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+//		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+//		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
 		
 		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
 		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());

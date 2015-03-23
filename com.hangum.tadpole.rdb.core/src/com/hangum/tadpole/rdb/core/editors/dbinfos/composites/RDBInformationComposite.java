@@ -32,7 +32,6 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * RDB 디비 summary 정보를 출력하는 composite.
@@ -101,11 +100,11 @@ public class RDBInformationComposite extends Composite {
 		}
 		
 		listInfo.add(new KeyValueDAO("Read Only", 		userDB.getIs_readOnlyConnect())); //$NON-NLS-1$
-		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter())); //$NON-NLS-1$
-		if("YES".equals(userDB.getIs_table_filter())) { //$NON-NLS-1$
-			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include())); //$NON-NLS-1$
-			listInfo.add(new KeyValueDAO("\tExclude Filter",	userDB.getTable_filter_exclude())); //$NON-NLS-1$
-		}
+//		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter())); //$NON-NLS-1$
+//		if("YES".equals(userDB.getIs_table_filter())) { //$NON-NLS-1$
+//			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include())); //$NON-NLS-1$
+//			listInfo.add(new KeyValueDAO("\tExclude Filter",	userDB.getTable_filter_exclude())); //$NON-NLS-1$
+//		}
 		// 몽고디비는 없으므로.. 
 		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 			listInfo.add(new KeyValueDAO("Auto Commit",		userDB.getIs_autocommit())); //$NON-NLS-1$

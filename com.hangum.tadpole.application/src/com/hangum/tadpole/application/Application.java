@@ -51,7 +51,7 @@ public class Application implements EntryPoint {
 		if(!isTadpoleInitialize || ApplicationArgumentUtils.isForceSystemInitialize()) {
 			try {
 				if(!TadpoleSystemInitializer.initSystem()) {
-					new Exception("System initialize fail");
+					throw new Exception("System initialize fail");
 				}
 				PlatformUI.getPreferenceStore().setValue(PreferenceDefine.IS_TADPOLE_INITIALIZE, true);
 			} catch(Exception e) {

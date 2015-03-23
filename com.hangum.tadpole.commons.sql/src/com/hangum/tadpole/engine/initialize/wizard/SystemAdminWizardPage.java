@@ -162,7 +162,7 @@ public class SystemAdminWizardPage extends WizardPage {
 		textSMTPPasswd.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) validatePage();
+				validatePage();
 			}
 		});
 		textSMTPPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -202,7 +202,7 @@ public class SystemAdminWizardPage extends WizardPage {
 				EmailDTO emailDto = new EmailDTO();
 				emailDto.setTo(textSMTPEmail.getText());
 				emailDto.setSubject("Tadpole DB Hub email test.");
-				emailDto.setContent("Tadpole DB Hub email test.");
+				emailDto.setContent("Tadpole DB Hub administrator email test.");
 				
 				try {
 					sendemail.sendMail(emailDto);
@@ -218,6 +218,8 @@ public class SystemAdminWizardPage extends WizardPage {
 
 		setControl(container);
 		setPageComplete(false);
+		
+		textEmail.setFocus();
 	}
 	
 	/**
@@ -286,5 +288,6 @@ public class SystemAdminWizardPage extends WizardPage {
 		
 		return dao;
 	}
-
+	
+	
 }

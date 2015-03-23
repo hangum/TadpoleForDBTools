@@ -144,36 +144,36 @@ public class MongoDBQuery {
 	 */
 	public static List<TableDAO> filter(UserDBDAO userDB, List<TableDAO> listDAO) {
 		
-		if("YES".equals(userDB.getIs_table_filter())){
-			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
-			String includeFilter = userDB.getTable_filter_include();
-			if("".equals(includeFilter)) {
-				tmpShowTables.addAll(listDAO);					
-			} else {
-				for (TableDAO tableDao : listDAO) {
-					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
-					for (String strFilter : strArryFilters) {
-						if(tableDao.getName().matches(strFilter)) {
-							tmpShowTables.add(tableDao);
-						}
-					}
-				}
-			}
-			
-			String excludeFilter = userDB.getTable_filter_exclude();
-			if(!"".equals(excludeFilter)) {
-				for (TableDAO tableDao : tmpShowTables) {
-					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
-					for (String strFilter : strArryFilters) {
-						if(tableDao.getName().matches(strFilter)) {
-							tmpShowTables.remove(tableDao);
-						}
-					}
-				}
-			}
-			
-			return tmpShowTables;
-		}
+//		if("YES".equals(userDB.getIs_table_filter())){
+//			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
+//			String includeFilter = userDB.getTable_filter_include();
+//			if("".equals(includeFilter)) {
+//				tmpShowTables.addAll(listDAO);					
+//			} else {
+//				for (TableDAO tableDao : listDAO) {
+//					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
+//					for (String strFilter : strArryFilters) {
+//						if(tableDao.getName().matches(strFilter)) {
+//							tmpShowTables.add(tableDao);
+//						}
+//					}
+//				}
+//			}
+//			
+//			String excludeFilter = userDB.getTable_filter_exclude();
+//			if(!"".equals(excludeFilter)) {
+//				for (TableDAO tableDao : tmpShowTables) {
+//					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
+//					for (String strFilter : strArryFilters) {
+//						if(tableDao.getName().matches(strFilter)) {
+//							tmpShowTables.remove(tableDao);
+//						}
+//					}
+//				}
+//			}
+//			
+//			return tmpShowTables;
+//		}
 		
 		return listDAO;
 	}

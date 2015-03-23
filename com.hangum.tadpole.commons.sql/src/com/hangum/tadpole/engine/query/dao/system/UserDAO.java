@@ -20,9 +20,9 @@ package com.hangum.tadpole.engine.query.dao.system;
 public class UserDAO {
 	int seq;
 	/** 
-	 * {@code PublicTadpoleDefine#LOGIN_TYPE }
+	 * {@code PublicTadpoleDefine#INPUT_TYPE }
 	 */
-	String login_type;
+	String input_type;
 	
 	String email;
 	String email_key;
@@ -44,14 +44,55 @@ public class UserDAO {
 
 	public UserDAO() {
 	}
+	
+	
 
-	public UserDAO(String email, String name, String language, String approval_yn, String use_opt, String otp_secret) {
+	/**
+	 * @param input_type
+	 * @param email
+	 * @param email_key
+	 * @param is_email_certification
+	 * @param role_type
+	 * @param name
+	 * @param language
+	 * @param use_otp
+	 */
+	public UserDAO(String input_type, String email, String email_key, String is_email_certification, String role_type,
+			String name, String language, String use_otp) {
+		super();
+		this.input_type = input_type;
 		this.email = email;
+		this.email_key = email_key;
+		this.is_email_certification = is_email_certification;
+		this.role_type = role_type;
 		this.name = name;
 		this.language = language;
-		this.approval_yn = approval_yn;
-		this.use_otp = use_opt;
-		this.otp_secret = otp_secret;
+		this.use_otp = use_otp;
+	}
+
+
+
+//	public UserDAO(String email, String name, String language, String approval_yn, String use_opt, String otp_secret) {
+//		this.email = email;
+//		this.name = name;
+//		this.language = language;
+//		this.approval_yn = approval_yn;
+//		this.use_otp = use_opt;
+//		this.otp_secret = otp_secret;
+//	}
+
+	/**
+	 * @return the input_type
+	 */
+	public String getInput_type() {
+		return input_type;
+	}
+
+	/**
+	 * @param input_type the input_type to set
+	 */
+	public void setInput_type(String input_type) {
+		this.input_type = input_type;
 	}
 
 	public int getSeq() {
@@ -172,4 +213,20 @@ public class UserDAO {
 		this.role_type = role_type;
 	}
 
+
+	/**
+	 * @return the is_email_certification
+	 */
+	public String getIs_email_certification() {
+		return is_email_certification;
+	}
+
+	/**
+	 * @param is_email_certification the is_email_certification to set
+	 */
+	public void setIs_email_certification(String is_email_certification) {
+		this.is_email_certification = is_email_certification;
+	}
+
+	
 }

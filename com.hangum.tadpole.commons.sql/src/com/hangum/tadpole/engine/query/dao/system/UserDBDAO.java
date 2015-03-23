@@ -122,10 +122,10 @@ public class UserDBDAO {
 	protected String is_autocommit = "";
 	protected String is_showtables = "";
 	
-	protected String is_table_filter = "";
 	protected String is_external_browser = "";
 	protected List<ExternalBrowserInfoDAO> listExternalBrowserdao = new ArrayList<ExternalBrowserInfoDAO>();
-	
+
+	protected String is_table_filter = "";
 	protected String table_filter_include = "";
 	protected String table_filter_exclude = "";
     
@@ -502,16 +502,23 @@ public class UserDBDAO {
 	public void setTable_filter_exclude(String table_filter_exclude) {
 		this.table_filter_exclude = table_filter_exclude;
 	}
-
-	public void setListUserDBGroup(List<UserDBDAO> listUserDBGroup) {
-		this.listUserDBGroup = listUserDBGroup;
-	}
 	
 	/**
 	 * @return the is_table_filter
 	 */
 	public String getIs_table_filter() {
 		return is_table_filter;
+	}
+
+	/**
+	 * @param is_table_filter the is_table_filter to set
+	 */
+	public void setIs_table_filter(String is_table_filter) {
+		this.is_table_filter = is_table_filter;
+	}
+
+	public void setListUserDBGroup(List<UserDBDAO> listUserDBGroup) {
+		this.listUserDBGroup = listUserDBGroup;
 	}
 
 	/**
@@ -526,13 +533,6 @@ public class UserDBDAO {
 	 */
 	public void setIs_showtables(String is_showtables) {
 		this.is_showtables = is_showtables;
-	}
-
-	/**
-	 * @param is_table_filter the is_table_filter to set
-	 */
-	public void setIs_table_filter(String is_table_filter) {
-		this.is_table_filter = is_table_filter;
 	}
 
 	/**

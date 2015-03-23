@@ -220,8 +220,14 @@ public class ResultMainComposite extends Composite {
 		mainEditor.appendText(cmd);
 	}
 
-	public void refreshMessageView(String msg) {
-		compositeMessage.addAfterRefresh(new TadpoleMessageDAO(new Date(), msg));		
+	/**
+	 * Message windows write the system message
+	 * 
+	 * @param throwable
+	 * @param msg
+	 */
+	public void refreshMessageView(Throwable throwable, String msg) {
+		compositeMessage.addAfterRefresh(new TadpoleMessageDAO(new Date(), msg, throwable));		
 	}
 
 	public IWorkbenchPartSite getSite() {

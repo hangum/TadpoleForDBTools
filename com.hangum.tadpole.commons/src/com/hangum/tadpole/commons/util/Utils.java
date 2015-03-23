@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,5 +36,24 @@ public class Utils {
 		Matcher m = p.matcher(email);
 		return m.matches();
 	}
+	
+	/**
+	 * unique id 를 넘겨준다. 
+	 * 
+	 * @param length
+	 * @return
+	 */
+	public static String getUniqueID() {
+		return UUID.randomUUID().toString();
+	}
 
+	/**
+	 * unique id를 digit 만큼 넘겨 준다.
+	 * 
+	 * @param digit
+	 * @return
+	 */
+	public static String getUniqueDigit(int digit) {
+		return getUniqueID().substring(0, digit);
+	}
 }

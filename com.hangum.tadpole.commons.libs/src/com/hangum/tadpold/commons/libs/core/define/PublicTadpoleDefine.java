@@ -67,7 +67,7 @@ public class PublicTadpoleDefine {
 	public static final String DEFINE_NULL_VALUE = "{null}";
 	
 	/** user login type */
-	public static enum LOGIN_TYPE {NORMAL, GOOGLE_OAUTH, LDAP};
+	public static enum INPUT_TYPE {NORMAL, GOOGLE_OAUTH, LDAP};
 	
 	/** 쿼리 실행 결과  */
 	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};

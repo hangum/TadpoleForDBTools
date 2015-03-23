@@ -126,7 +126,7 @@ public class TadpoleSystemInitializer {
 			
 			WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
 			if(Dialog.OK != dialog.open()) {
-				return false;
+				throw new Exception("User does not define administrator.\nPlease setting admin user.\n");
 			}
 		}
 				

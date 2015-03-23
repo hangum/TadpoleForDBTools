@@ -13,6 +13,7 @@ package com.hangum.tadpole.engine.initialize.wizard;
 import org.eclipse.jface.wizard.Wizard;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -47,7 +48,9 @@ public class SystemInitializeWizard extends Wizard {
 		SystemAdminWizardPageDAO adminDao = adminPage.getUserData();
 		
 		try {
-			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(adminDao.getEmail(), adminDao.getPasswd(), 	
+			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
+					adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.toString(),
+					adminDao.getPasswd(), 	
 					PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
 					"Tadpole System Admin", "en", PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.YES_NO.NO.toString(), ""); //$NON-NLS-1$ //$NON-NLS-2$
 			

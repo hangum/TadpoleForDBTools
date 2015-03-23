@@ -98,7 +98,6 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.global.OpenSingleDataDialogAction;
-import com.hangum.tadpole.rdb.core.dialog.ddl.SQLSourceViewDialog;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -158,7 +157,7 @@ public class ResultSetComposite extends Composite {
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
 	/** 쿼리결과 export */
-	private Button btnSQLResultExport;
+//	private Button btnSQLResultExport;
     /** content download를 위한 더미 composite */
     private Composite compositeDumy;
     
@@ -177,12 +176,16 @@ public class ResultSetComposite extends Composite {
 		
 		Composite composite = new Composite(this, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_composite = new GridLayout(3, false);
+		GridLayout gl_composite = new GridLayout(4, false);
 		gl_composite.verticalSpacing = 1;
 		gl_composite.horizontalSpacing = 1;
 		gl_composite.marginHeight = 1;
 		gl_composite.marginWidth = 1;
 		composite.setLayout(gl_composite);
+		
+		Label lblFilter = new Label(composite, SWT.NONE);
+		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblFilter.setText(Messages.ResultSetComposite_lblFilter_text);
 		
 		textFilter = new Text(composite,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -354,26 +357,17 @@ public class ResultSetComposite extends Composite {
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
 		
-		btnSql = new Button(compositeBtn, SWT.NONE);
-		btnSql.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(rsDAO != null) {
-					SQLSourceViewDialog dialog = new SQLSourceViewDialog(null, reqQuery.getSql());
-					dialog.open();
-				}
-			}
-		});
-		btnSql.setText(Messages.ResultSetComposite_btnSql_text);
-		
-//		Button btnDMLGenerator = new Button(compositeBtn, SWT.NONE);
-//		btnDMLGenerator.addSelectionListener(new SelectionAdapter() {
+//		btnSql = new Button(compositeBtn, SWT.NONE);
+//		btnSql.addSelectionListener(new SelectionAdapter() {
 //			@Override
 //			public void widgetSelected(SelectionEvent e) {
-//				dmlGeneratorDialog();
+//				if(rsDAO != null & reqQuery != null) {
+//					SQLSourceViewDialog dialog = new SQLSourceViewDialog(null, reqQuery.getSql());
+//					dialog.open();
+//				}
 //			}
 //		});
-//		btnDMLGenerator.setText(Messages.ResultSetComposite_btnDMLGenerator_text);
+//		btnSql.setText(Messages.ResultSetComposite_btnSql_text);
 		
 		btnDetailView = new Button(compositeBtn, SWT.NONE);
 		GridData gd_btnDetailView = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -387,69 +381,74 @@ public class ResultSetComposite extends Composite {
 		});
 		btnDetailView.setText(Messages.ResultSetComposite_0);
 		
+		Button btnSQLResultExportCSV = new Button(compositeBtn, SWT.NONE);
+		btnSQLResultExportCSV.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				exportResultCSVType();
+			}
+			
+		});
+		btnSQLResultExportCSV.setText(Messages.MainEditor_btnExport_text);
+		
 		compositeDumy = new Composite(compositeBtn, SWT.NONE);
 		compositeDumy.setLayout(new GridLayout(1, false));
 		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
-		btnSQLResultExport = new Button(compositeBtn, SWT.NONE);
-		GridData gd_btnSQLResultExport = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		btnSQLResultExport.setLayoutData(gd_btnSQLResultExport);
-		btnSQLResultExport.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-//				String EXPORT_DEMILITER = GetPreferenceGeneral.getExportDelimit().equalsIgnoreCase("tab")?"	":GetPreferenceGeneral.getExportDelimit() + " "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				
-				List<String[]> listCsvData = new ArrayList<String[]>();
-				// column 헤더추가.
-				TableColumn[] tcs = tvQueryResult.getTable().getColumns();
-				String[] strArrys = new String[tcs.length-1];
-				for(int i=1; i<tcs.length; i++) {
-					TableColumn tableColumn = tcs[i];
-					strArrys[i-1] = tableColumn.getText();
-				}
-				listCsvData.add(strArrys);
-				
-				// column 데이터 추가
-				List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-				
-				for(int i=0; i<dataList.size(); i++) {
-					Map<Integer, Object> mapColumns = dataList.get(i);
-					
-					strArrys = new String[mapColumns.size()-1];
-					for(int j=1; j<mapColumns.size(); j++) {
-//						if(RDBTypeToJavaTypeUtils.isNumberType(columnType.get(j))) {
-						strArrys[j-1] = ""+mapColumns.get(j);
-					}
-					listCsvData.add(strArrys);
-				}
-				
-				try {
-					String filename = PublicTadpoleDefine.TEMP_DIR + getUserDB().getDisplay_name() + "_SQLResultExport.csv";
-					
-					FileOutputStream fos = new FileOutputStream(filename);
-					OutputStreamWriter bw = new OutputStreamWriter(fos, "UTF-8");
-					
-					CSVWriter writer = new CSVWriter(bw);
-					writer.writeAll(listCsvData);
-					bw.close();
-					
-					String strCVSContent = FileUtils.readFileToString(new File(filename));
-					
-					downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
-				} catch(Exception ee) {
-					logger.error("csv file writer", ee);
-				}
-				
-			}
-			
-		});
-		btnSQLResultExport.setText(Messages.MainEditor_btnExport_text);
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
+	}
+	
+	/**
+	 * Export resultset csv
+	 * 
+	 */
+	private void exportResultCSVType() {
+		List<String[]> listCsvData = new ArrayList<String[]>();
+		// column 헤더추가.
+		TableColumn[] tcs = tvQueryResult.getTable().getColumns();
+		String[] strArrys = new String[tcs.length-1];
+		for(int i=1; i<tcs.length; i++) {
+			TableColumn tableColumn = tcs[i];
+			strArrys[i-1] = tableColumn.getText();
+		}
+		listCsvData.add(strArrys);
+		
+		// column 데이터 추가
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		
+		for(int i=0; i<dataList.size(); i++) {
+			Map<Integer, Object> mapColumns = dataList.get(i);
+			
+			strArrys = new String[mapColumns.size()-1];
+			for(int j=1; j<mapColumns.size(); j++) {
+//				if(RDBTypeToJavaTypeUtils.isNumberType(columnType.get(j))) {
+				strArrys[j-1] = ""+mapColumns.get(j);
+			}
+			listCsvData.add(strArrys);
+		}
+		
+		String filename = PublicTadpoleDefine.TEMP_DIR + getUserDB().getDisplay_name() + "_SQLResultExport.csv";
+		try {
+			FileOutputStream fos = new FileOutputStream(filename);
+			OutputStreamWriter bw = new OutputStreamWriter(fos, "UTF-8");
+			
+			CSVWriter writer = new CSVWriter(bw);
+			writer.writeAll(listCsvData);
+			bw.close();
+			
+			String strCVSContent = FileUtils.readFileToString(new File(filename));
+			
+			downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
+		} catch(Exception ee) {
+			logger.error("csv type export error", ee);
+		} finally {
+			FileUtils.deleteQuietly(new File(filename));
+		}
 	}
 	
 	/**
@@ -619,7 +618,7 @@ public class ResultSetComposite extends Composite {
 						
 						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 						if(TransactionManger.isTransaction(reqQuery.getSql())) {
-							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());// userEmail, userDB)) return null;
+							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
 						} else if(SQLUtil.isStatement(reqQuery.getSql())) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
@@ -662,7 +661,7 @@ public class ResultSetComposite extends Composite {
 						if(jobEvent.getResult().isOK()) {
 							executeFinish(sqlHistoryDAO);
 						} else {
-							executeErrorProgress(jobEvent.getResult().getMessage());
+							executeErrorProgress(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
 						
 						// 쿼리 후 화면 정리 작업을 합니다.
@@ -690,7 +689,6 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService execServiceQuery = null;
 	private ExecutorService esCheckStop = null; 
 	private Button btnDetailView;
-	private Button btnSql;
 	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt) throws Exception {
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
@@ -809,7 +807,7 @@ public class ResultSetComposite extends Composite {
 						}
 					});
 					
-					Thread.sleep(50);
+					Thread.sleep(5);
 					
 					// Is user stop?
 					if(!isUserInterrupt) {
@@ -834,11 +832,13 @@ public class ResultSetComposite extends Composite {
 
 	/**
 	 * error message 추가한다.
+	 * 
+	 * @param throwable
 	 * @param msg
 	 */
-	public void executeErrorProgress(final String msg) {
+	public void executeErrorProgress(Throwable throwable, final String msg) {
 		getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-		getRdbResultComposite().refreshMessageView(msg);
+		getRdbResultComposite().refreshMessageView(throwable, msg);
 	}
 	
 	private UserDBDAO getUserDB() {
@@ -937,7 +937,7 @@ public class ResultSetComposite extends Composite {
 			TableUtil.packTable(tvQueryResult.getTable());
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		} else {
-			getRdbResultComposite().refreshMessageView("success. \n" + executingSQLDAO.getStrSQLText()); //$NON-NLS-1$
+			getRdbResultComposite().refreshMessageView(null, "success. \n" + executingSQLDAO.getStrSQLText()); //$NON-NLS-1$
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.

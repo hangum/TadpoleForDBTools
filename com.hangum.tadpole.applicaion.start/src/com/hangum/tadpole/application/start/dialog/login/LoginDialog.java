@@ -19,7 +19,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.rap.addons.d3chart.BarChart;
 import org.eclipse.rap.addons.d3chart.ChartItem;
 import org.eclipse.rap.addons.d3chart.ColorStream;
@@ -63,20 +65,14 @@ import com.swtdesigner.SWTResourceManager;
 public class LoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
 	
-	private int ID_NEW_USER		 = IDialogConstants.CLIENT_ID 	+ 1;
-	private int ID_FINDPASSWORD = IDialogConstants.CLIENT_ID 	+ 2;
-//	private int ID_ADMIN_USER 	= IDialogConstants.CLIENT_ID 	+ 3;
-//	private int ID_MANAGER_USER = IDialogConstants.CLIENT_ID 	+ 4;
+	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
+	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 
 	/** database list */
 	private List listDBMart = new ArrayList();
 	
 	private Text textEMail;
 	private Text textPasswd;
-
-//	private TableViewer tableViewer;
-	
-	private BarChart barChart;
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -149,33 +145,11 @@ public class LoginDialog extends Dialog {
 				grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 				grpSponser.setText(Messages.LoginDialog_grpSponser_text);
 				
-				barChart(grpSponser, listDBMart);
+				makeBarChart(grpSponser, listDBMart);
 			}
 		} catch(Exception e) {
 			logger.error("get initdata", e); //$NON-NLS-1$
 		}
-		
-//		tableViewer = new TableViewer(grpSponser, SWT.NONE | SWT.FULL_SELECTION);
-//		Table table = tableViewer.getTable();
-//		table.setLinesVisible(true);
-//		table.setHeaderVisible(true);
-//		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		
-//		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-//		TableColumn tblclmnSeq = tableViewerColumn.getColumn();
-//		tblclmnSeq.setWidth(120);
-//		tblclmnSeq.setText(Messages.LoginDialog_tblclmnSeq_text);
-//		
-//		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
-//		TableColumn tblclmnName = tableViewerColumn_1.getColumn();
-//		tblclmnName.setWidth(100);
-//		tblclmnName.setText(Messages.LoginDialog_tblclmnName_text);
-//
-//		tableViewer.setContentProvider(new ArrayContentProvider());
-//		tableViewer.setLabelProvider(new RegisteredDBLabelprovider());
-//		tableViewer.setInput(getInitData());
-		// ---------------------  Registered database ----------------------------------------------------
-		
 		
 		Group compositeLetter = new Group(container, SWT.NONE);
 		compositeLetter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
@@ -207,12 +181,10 @@ public class LoginDialog extends Dialog {
 		lblUserKor.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserEng = new Label(compositeUserGide, SWT.NONE);
-//		lblUserEng.setSize(607, 14);
 		lblUserEng.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Eng' target='_blank'>(English)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserEng.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserIndonesia = new Label(compositeUserGide, SWT.NONE);
-//		lblUserIndonesia.setSize(611, 14);
 		lblUserIndonesia.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID' target='_blank'>(Indonesia)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserIndonesia.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
@@ -238,70 +210,6 @@ public class LoginDialog extends Dialog {
 		return compositeLogin;
 	}
 	
-	private void initUI() {
-		// Show Information Dialog(Is not Firefox, Chrome, Safari)
-		if(!RequestInfoUtils.isSupportBrowser()) {
-			String errMsg = "User browser is  " + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.UserInformationDialog_5 + "\n" + Messages.LoginDialog_lblNewLabel_text;
-			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, errMsg);
-		}
-	}
-	
-	/**
-	 * 데이터베이스 통계 pie chart를 생성합니다. 
-	 * 
-	 * @param composite
-	 * @param listData
-	 */
-	private void barChart(Composite compositeCursor, List listData) {
-		try {
-			ColorStream colors = Colors.cat20Colors(compositeCursor.getDisplay()).loop();
-			
-			barChart = new BarChart(compositeCursor, SWT.NONE);
-			GridLayout gl_grpConnectionInfo = new GridLayout(1, true);
-			gl_grpConnectionInfo.verticalSpacing = 0;
-			gl_grpConnectionInfo.horizontalSpacing = 0;
-			gl_grpConnectionInfo.marginHeight = 0;
-			gl_grpConnectionInfo.marginWidth = 0;
-			barChart.setLayout(gl_grpConnectionInfo);
-			barChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-			barChart.setBarWidth(10);
-			
-			for(Object element : listData) {
-				Map<String, Object> retMap = (HashMap<String, Object>)element;
-				
-				ChartItem item = new ChartItem(barChart);
-			    item.setText(retMap.get("dbms_type") + " (" +  retMap.get("tot") + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			    item.setColor(colors.next());
-			    
-			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 300; //$NON-NLS-1$ //$NON-NLS-2$
-			    item.setValue(floatVal);
-			}
-		} catch(Exception e) {
-			logger.error("Get registered DB", e); //$NON-NLS-1$
-		}
-		barChart.layout();
-		barChart.getParent().layout();
-	}
-	
-	/**
-	 * registered database
-	 * 
-	 * @return
-	 */
-	private List getDBMart() throws Exception {
-		return TadpoleSystem_UserDBQuery.getRegisteredDB();
-	}
-
-	private void newUser() {
-		NewUserDialog newUser = new NewUserDialog(getParentShell());
-		newUser.open();
-	}
-	
-	private void findPassword() {
-		FindPasswordDialog dlg = new FindPasswordDialog(getShell());
-		dlg.open();
-	}
-	
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == ID_NEW_USER) {
@@ -310,36 +218,8 @@ public class LoginDialog extends Dialog {
 		} else if(buttonId == ID_FINDPASSWORD) {
 			findPassword();
 
-		} else if(buttonId == IDialogConstants.OK_ID) {
-			okPressed();
-		
 		} else {
-			String userId = "", password = ""; //$NON-NLS-1$ //$NON-NLS-2$
-			
-//			if(buttonId == ID_ADMIN_USER) {
-//				userId = TadpoleSystemInitializer.ADMIN_EMAIL;
-//				password = TadpoleSystemInitializer.ADMIN_PASSWD;
-//				
-//			} else if(buttonId == ID_MANAGER_USER) {
-//				userId = TadpoleSystemInitializer.MANAGER_EMAIL;
-//				password = TadpoleSystemInitializer.MANAGER_PASSWD;
-//			}
-			
-			try {
-				UserDAO userDao = TadpoleSystem_UserQuery.login(userId, password);
-				
-				// 정상이면 session에 로그인 정보를 입력하고
-				SessionManager.addSession(userDao);
-				
-				// save login_history
-				TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
-			} catch (Exception e) {
-				logger.error(Messages.LoginDialog_9, e);
-				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, e.getMessage());
-				return;
-			}	
-			
-			super.okPressed();
+			okPressed();
 		}
 	}
 	
@@ -352,6 +232,21 @@ public class LoginDialog extends Dialog {
 		
 		try {
 			UserDAO userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
+			
+			// firsttime email confirm
+			if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDao.getIs_email_certification())) {
+				InputDialog inputDialog=new InputDialog(getShell(), "Email Key Dialog", "Input email confirm KEY", "", null);
+				if(inputDialog.open() == Window.OK) {
+					if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
+						throw new Exception("Do not correct email confirm message. check your email.");
+					} else {
+						TadpoleSystem_UserQuery.updateEmailConfirm(strEmail);
+					}
+				} else {
+					throw new Exception("Please input the email key.");
+				}
+			}
+			
 			if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDao.getApproval_yn())) {
 				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_27);
 				
@@ -368,6 +263,9 @@ public class LoginDialog extends Dialog {
 			} 
 			
 			SessionManager.addSession(userDao);
+			
+			// save login_history
+			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
 		} catch (Exception e) {
 			logger.error("Login exception. request email is " + strEmail, e); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), "Error", e.getMessage());
@@ -414,16 +312,76 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-//		createButton(parent, ID_ADMIN_USER, "Admin", false);
-		
-//		// -test 일 경우만 ..
-//		if(ApplicationArgumentUtils.isTestMode()) {
-//			createButton(parent, ID_MANAGER_USER, Messages.LoginDialog_12, false);
-//		}
-		
 		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
 		createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
+	}
+	
+	/**
+	 * initialize ui
+	 */
+	private void initUI() {
+		if(!RequestInfoUtils.isSupportBrowser()) {
+			String errMsg = "User browser is  " + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.UserInformationDialog_5 + "\n" + Messages.LoginDialog_lblNewLabel_text;
+			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, errMsg);
+		}
+	}
+	
+	/**
+	 * 데이터베이스 통계 bar chart를 생성합니다. 
+	 * 
+	 * @param composite
+	 * @param listData
+	 */
+	private void makeBarChart(Composite compositeCursor, List listData) {
+		try {
+			ColorStream colors = Colors.cat20Colors(compositeCursor.getDisplay()).loop();
+			
+			BarChart barChart = new BarChart(compositeCursor, SWT.NONE);
+			GridLayout gl_grpConnectionInfo = new GridLayout(1, true);
+			gl_grpConnectionInfo.verticalSpacing = 0;
+			gl_grpConnectionInfo.horizontalSpacing = 0;
+			gl_grpConnectionInfo.marginHeight = 0;
+			gl_grpConnectionInfo.marginWidth = 0;
+			barChart.setLayout(gl_grpConnectionInfo);
+			barChart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			barChart.setBarWidth(10);
+			
+			for(Object element : listData) {
+				Map<String, Object> retMap = (HashMap<String, Object>)element;
+				
+				ChartItem item = new ChartItem(barChart);
+			    item.setText(retMap.get("dbms_type") + " (" +  retMap.get("tot") + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			    item.setColor(colors.next());
+			    
+			    float floatVal = Float.parseFloat(""+retMap.get("tot")) / 300; //$NON-NLS-1$ //$NON-NLS-2$
+			    item.setValue(floatVal);
+			}
+			
+			barChart.layout();
+			barChart.getParent().layout();
+		} catch(Exception e) {
+			logger.error("Get registered DB", e); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * registered database
+	 * 
+	 * @return
+	 */
+	private List getDBMart() throws Exception {
+		return TadpoleSystem_UserDBQuery.getRegisteredDB();
+	}
+
+	private void newUser() {
+		NewUserDialog newUser = new NewUserDialog(getParentShell());
+		newUser.open();
+	}
+	
+	private void findPassword() {
+		FindPasswordDialog dlg = new FindPasswordDialog(getShell());
+		dlg.open();
 	}
 
 	/**
@@ -438,62 +396,3 @@ public class LoginDialog extends Dialog {
 		}
 	}
 }
-
-//class RegisteredDBLabelprovider extends LabelProvider implements ITableLabelProvider {
-//
-//	@Override
-//	public Image getColumnImage(Object element, int columnIndex) {
-//		Map<String, Object> retMap = (HashMap<String, Object>)element;
-//		
-//		switch(columnIndex) {
-//		case 0: 
-//			String dbmsType = ""+retMap.get("dbms_types");
-//			DBDefine dbType = DBDefine.getDBDefine(dbmsType);
-//			
-//			if(DBDefine.MYSQL_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.MARIADB_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.ORACLE_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.SQLite_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.MSSQL_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.CUBRID_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.MONGODB_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
-//			
-//			else if(DBDefine.TAJO_DEFAULT == dbType) 
-//				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/tajo-add.jpg"); //$NON-NLS-1$
-//		}
-//		
-//		return null;
-//	}
-//
-//	@Override
-//	public String getColumnText(Object element, int columnIndex) {
-//		Map<String, Object> retMap = (HashMap<String, Object>)element;
-//		
-//		switch(columnIndex) {
-//		case 0: return ""+retMap.get("dbms_types");
-//		case 1: return ""+retMap.get("tot");
-//		}
-//		
-//		return "*** not set column ***";
-//	}
-//	
-//}

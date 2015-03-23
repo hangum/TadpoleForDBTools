@@ -25,16 +25,20 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 public class TadpoleMessageDAO  {
 	
 	/** Start execute query time */
-	Date dateExecute;
-	/** sql text */
-	String strMessage;
+	private Date dateExecute;
 	
-	/** table 에 보여줄때 html markup형식이 되기 위해 라이피드 문자를 <br/>로 변경해서 저장합니다 */
-	String strViewMessage;
+	/** sql text */
+	private String strMessage;
+	
+	/**
+	 * If rise exception
+	 */
+	private Throwable throwable;
 
-	public TadpoleMessageDAO(Date dateExecute, String strMessage) {
-		setDateExecute( dateExecute );
+	public TadpoleMessageDAO(Date dateExecute, String strMessage, Throwable throwable) {
+		this.dateExecute = dateExecute;
 		setStrMessage( strMessage );
+		this.throwable = throwable;
 	}
 
 	public Date getDateExecute() {
@@ -51,24 +55,19 @@ public class TadpoleMessageDAO  {
 
 	public void setStrMessage(String strMessage) {
 		this.strMessage = strMessage;
-		setStrViewMessage( StringUtils.replace(strMessage, PublicTadpoleDefine.LINE_SEPARATOR, "<br />") );
 	}
 
 	/**
-	 * @return the strViewMessage
+	 * @return the throwable
 	 */
-	public String getStrViewMessage() {
-		return strViewMessage;
+	public Throwable getThrowable() {
+		return throwable;
 	}
 
 	/**
-	 * @param strViewMessage the strViewMessage to set
+	 * @param throwable the throwable to set
 	 */
-	public void setStrViewMessage(String strViewMessage) {
-		this.strViewMessage = strViewMessage;
-	}
-	
-	
-	
-	
+	public void setThrowable(Throwable throwable) {
+		this.throwable = throwable;
+	}	
 }

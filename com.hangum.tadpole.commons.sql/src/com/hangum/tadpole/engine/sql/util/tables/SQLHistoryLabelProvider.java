@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
-import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 
 /**
  * history label provider
@@ -51,13 +50,13 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 				case 7: return historyDAO.getDbName();
 				case 8: return historyDAO.getIpAddress();
 			}
-		} else if(element instanceof TadpoleMessageDAO) {
-			TadpoleMessageDAO messageDAO = (TadpoleMessageDAO)element;
-			
-			switch(columnIndex) {
-				case 0: return dateToStr(messageDAO.getDateExecute());
-				case 1: return messageDAO.getStrViewMessage();
-			}
+//		} else if(element instanceof TadpoleMessageDAO) {
+//			TadpoleMessageDAO messageDAO = (TadpoleMessageDAO)element;
+//			
+//			switch(columnIndex) {
+//				case 0: return dateToStr(messageDAO.getDateExecute());
+//				case 1: return messageDAO.getStrViewMessage();
+//			}
 		}
 		
 		return "### not set column ###"; //$NON-NLS-1$

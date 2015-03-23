@@ -581,7 +581,7 @@ public class MongodbResultComposite extends Composite {
 							setResult();
 						} else {
 							sbConsoleErrorMsg.append(jobEvent.getResult().getMessage());
-							appendMessage(jobEvent.getResult().getMessage());
+							appendMessage(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
 					}
 				});	// end display.asyncExec				
@@ -1049,11 +1049,12 @@ public class MongodbResultComposite extends Composite {
 	/**
 	 * append tadpole message 
 	 * 
+	 * @param throwable
 	 * @param msg
 	 */
-	public void appendMessage(String msg) {
+	public void appendMessage(Throwable throwable, String msg) {
 		tabFolderMongoDB.setSelection(2);
-		listMessage.add(new TadpoleMessageDAO(new Date(), msg));
+		listMessage.add(new TadpoleMessageDAO(new Date(), msg, throwable));
 		tableViewerMessage.refresh();
 	}
 
