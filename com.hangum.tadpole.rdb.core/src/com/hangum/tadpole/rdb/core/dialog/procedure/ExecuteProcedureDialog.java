@@ -207,6 +207,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		if(sqlResultTableViewer != null) {
 			for(int i=0; i<sqlResultTableViewer.length; i++) {
 				TableViewer tv = sqlResultTableViewer[i];
+				tv.getTable().clearAll();
 				tv.getTable().dispose();
 			}
 		}
