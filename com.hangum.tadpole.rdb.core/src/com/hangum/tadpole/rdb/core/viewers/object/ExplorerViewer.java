@@ -261,10 +261,18 @@ public class ExplorerViewer extends ViewPart {
 
 			// 디비 선택
 			userDB = selectUserDb;
-			
+
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
-			initObjectDetail(DBDefine.getDBDefine(userDB));
+			
+			// is dblock
+			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock()) &&
+					PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_lock_user_check())) {
+				userDB = null;
+				createTable();
+			} else {
+				initObjectDetail(DBDefine.getDBDefine(userDB));
+			}
 		} else {
 			userDB = null;
 
@@ -381,8 +389,7 @@ public class ExplorerViewer extends ViewPart {
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 		}
 		
-		refreshTable(false);
-		
+		refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.toString());
 	}
 	
 	/**

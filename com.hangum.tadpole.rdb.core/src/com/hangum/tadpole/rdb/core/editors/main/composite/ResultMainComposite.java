@@ -122,7 +122,7 @@ public class ResultMainComposite extends Composite {
 		tbtmMessage.setControl(compositeMessage);
 		///////////////////// tab Message //////////////////////////		
 	    
-		tabFolderResult.setSelection(0);
+		tabFolderResult.setSelection(1);
 	}
 	
 	/**

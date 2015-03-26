@@ -131,7 +131,7 @@ public class TadpoleSystem_ExecutedSQL {
 		queryMap.put("user_seq",user_seq);
 		queryMap.put("db_seq", 	dbSeq);
 		queryMap.put("filter", "%" + filter + "%");
-		queryMap.put("count", 	1000);
+		queryMap.put("count", 	50);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistory", queryMap);

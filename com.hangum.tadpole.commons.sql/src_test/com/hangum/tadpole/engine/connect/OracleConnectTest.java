@@ -27,11 +27,11 @@ public class OracleConnectTest extends AbstractDriverInfo {
 	public static void main(String args[]) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@192.168.32.128:1521:XE";
+			String url = "jdbc:oracle:thin:@172.16.187.139:1521:XE";
 	
 			Properties props = new Properties();
-			props.setProperty("user", "HR");
-			props.setProperty("password", "tadpole");
+			props.setProperty("user", "scott");
+			props.setProperty("password", "tiger");
 	
 			Connection conn = DriverManager.getConnection(url, props);
 			printMetaData(conn.getMetaData());

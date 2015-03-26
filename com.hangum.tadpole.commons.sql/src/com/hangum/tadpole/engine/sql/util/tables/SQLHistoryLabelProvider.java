@@ -13,7 +13,6 @@ package com.hangum.tadpole.engine.sql.util.tables;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -40,7 +39,10 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 			switch(columnIndex) {
 				case 0: return dateToStr(historyDAO.getStartDateExecute());
 				// 쿼리에 개행 문자가 있으면 테이블에 개행 문자 이후 쿼리가 보이지 않으므로 보여줄 때는 개행 문자를 제거합니다.
-				case 1: return StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", " ");
+				case 1: 
+					System.out.println(historyDAO.getStrSQLText());
+					return historyDAO.getStrSQLText();//StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", " ");
+//					return StringEscapeUtils.escapeXml(StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", "<br> "));
 				case 2: 
 					return ""+( (historyDAO.getEndDateExecute().getTime() - historyDAO.getStartDateExecute().getTime()) / 1000f);
 				case 3: return ""+historyDAO.getRows();
@@ -50,13 +52,6 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 				case 7: return historyDAO.getDbName();
 				case 8: return historyDAO.getIpAddress();
 			}
-//		} else if(element instanceof TadpoleMessageDAO) {
-//			TadpoleMessageDAO messageDAO = (TadpoleMessageDAO)element;
-//			
-//			switch(columnIndex) {
-//				case 0: return dateToStr(messageDAO.getDateExecute());
-//				case 1: return messageDAO.getStrViewMessage();
-//			}
 		}
 		
 		return "### not set column ###"; //$NON-NLS-1$

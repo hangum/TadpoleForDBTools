@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -48,8 +49,8 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ImageUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
@@ -60,7 +61,7 @@ import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
-import com.swtdesigner.ResourceManager;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
 
 /**
  * 어드민, 메니저, DBA가 사용하는 DB List composite
@@ -74,8 +75,8 @@ public class DBListComposite extends Composite {
 	 */
 	private static final Logger logger = Logger.getLogger(DBListComposite.class);
 
-	private TreeViewer treeViewerDBList;
-	private List<UserDBDAO> listUserDBs = new ArrayList<UserDBDAO>();
+	private TreeViewer tvDBList;
+	private List<ManagerListDTO> listUserDBs = new ArrayList<ManagerListDTO>();
 	
 	private AdminCompFilter filter;
 	private Text textSearch;
@@ -128,12 +129,11 @@ public class DBListComposite extends Composite {
 		tltmAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 				if(ss.isEmpty()) return;
 				
 				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell(), (UserDBDAO)ss.getFirstElement());
 				dialog.open();
-				initData();
 			}
 		});
 		tltmAdd.setToolTipText("Add User");
@@ -194,7 +194,7 @@ public class DBListComposite extends Composite {
 		textSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				filter.setSearchString(textSearch.getText());
-				treeViewerDBList.refresh();
+				tvDBList.refresh();
 			}
 		});
 		
@@ -207,11 +207,11 @@ public class DBListComposite extends Composite {
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		treeViewerDBList = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
-		treeViewerDBList.addSelectionChangedListener(new ISelectionChangedListener() {
+		tvDBList = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		tvDBList.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				
-				IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 				if(ss.isEmpty()) return;
 
 				Object objSelect = ss.getFirstElement();
@@ -225,8 +225,8 @@ public class DBListComposite extends Composite {
 							}
 							
 							userDB.setListChildren(listUser);
-							treeViewerDBList.refresh(userDB, true);
-							treeViewerDBList.expandToLevel(2);
+							tvDBList.refresh(userDB, true);
+							tvDBList.expandToLevel(2);
 						}
 					} catch (Exception e) {
 						logger.error("get user list", e);
@@ -234,7 +234,10 @@ public class DBListComposite extends Composite {
 					
 					tltmAdd.setEnabled(true);
 //					tltmModify.setEnabled(false);
-					tltmDBDelete.setEnabled(false);	
+					tltmDBDelete.setEnabled(false);
+					
+					tltmQueryHistory.setEnabled(true);
+					tltmSQLEditor.setEnabled(true);
 				} else if(objSelect instanceof TadpoleUserDbRoleDAO){
 					TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)objSelect;
 					if(userDBRole.getParent().getUser_seq() != userDBRole.getUser_seq()) {
@@ -246,57 +249,67 @@ public class DBListComposite extends Composite {
 //						tltmModify.setEnabled(false);
 						tltmDBDelete.setEnabled(false);
 					}
+					
+					tltmQueryHistory.setEnabled(true);
+					tltmSQLEditor.setEnabled(true);
+				} else if(objSelect instanceof ManagerListDTO) {
+					
+					tltmAdd.setEnabled(false);
+//					tltmModify.setEnabled(false);
+					tltmDBDelete.setEnabled(false);
+					tltmQueryHistory.setEnabled(false);
+					tltmSQLEditor.setEnabled(false);
 				}
-				tltmQueryHistory.setEnabled(true);
-				tltmSQLEditor.setEnabled(true);
+				
 			}
 		});
-		treeViewerDBList.addDoubleClickListener(new IDoubleClickListener() {
+		tvDBList.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				viewQueryHistory();
 			}
 		});
-		Tree treeAdmin = treeViewerDBList.getTree();
+		Tree treeAdmin = tvDBList.getTree();
 		treeAdmin.setLinesVisible(true);
 		treeAdmin.setHeaderVisible(true);
 		treeAdmin.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		treeAdmin.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		
-		TreeViewerColumn colGroupName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		TreeViewerColumn colGroupName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colGroupName.getColumn().setWidth(150);
-		colGroupName.getColumn().setText("Group Name(eMail)");
-		
-		TreeViewerColumn colRoleName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		colGroupName.getColumn().setText("Group Name(email)");
+				
+		TreeViewerColumn colRoleName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colRoleName.getColumn().setWidth(80);
 		colRoleName.getColumn().setText("Role");
 		
-		TreeViewerColumn colEmail = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		TreeViewerColumn colEmail = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colEmail.getColumn().setWidth(150);
 		colEmail.getColumn().setText("Name");
 		
-		TreeViewerColumn colName = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
-		colName.getColumn().setWidth(200);
+		TreeViewerColumn colName = new TreeViewerColumn(tvDBList, SWT.NONE);
+		colName.getColumn().setWidth(180);
 		colName.getColumn().setText("DB Info");
 		
-		TreeViewerColumn colApproval = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		TreeViewerColumn colApproval = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colApproval.getColumn().setWidth(70);
 		colApproval.getColumn().setText("User");
 		
-		TreeViewerColumn colVisible = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		TreeViewerColumn colVisible = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colVisible.getColumn().setWidth(40);
 		colVisible.getColumn().setText("Visible");
 		
-		TreeViewerColumn colCreateTime = new TreeViewerColumn(treeViewerDBList, SWT.NONE);
+		TreeViewerColumn colCreateTime = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colCreateTime.getColumn().setWidth(150);
 		colCreateTime.getColumn().setText("Create tiem");
 		
-		treeViewerDBList.setContentProvider(new AdminUserContentProvider());
-		treeViewerDBList.setLabelProvider(new AdminUserLabelProvider());
-		treeViewerDBList.setInput(listUserDBs);
+		tvDBList.setContentProvider(new DBListContentProvider());
+		tvDBList.setLabelProvider(new DBListLabelProvider());
+		tvDBList.setInput(listUserDBs);
 		initData();
-		treeViewerDBList.expandToLevel(2);
+		tvDBList.expandToLevel(2);
 		
 		filter = new AdminCompFilter();
-		treeViewerDBList.addFilter(filter);
+		tvDBList.addFilter(filter);
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
@@ -351,7 +364,7 @@ public class DBListComposite extends Composite {
 	 * delete db (delete marking)
 	 */
 	private void deleteDB(){
-		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+		IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 		if(ss.isEmpty()) return;
 
 		TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)ss.getFirstElement();
@@ -373,7 +386,7 @@ public class DBListComposite extends Composite {
 	 * 사용자가 실행 했던 쿼리의 히스토리를 봅니다.
 	 */
 	private void viewQueryHistory() {
-		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+		IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 		if(ss.isEmpty()) return;
 		
 		Object objSelect = ss.getFirstElement();
@@ -394,7 +407,7 @@ public class DBListComposite extends Composite {
 	 * SQL editor
 	 */
 	private void sqlEditor() {
-		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
+		IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 		if(ss.isEmpty()) return;
 		
 		try {
@@ -419,8 +432,30 @@ public class DBListComposite extends Composite {
 	private void initData() {
 		listUserDBs.clear();
 		try {
-			listUserDBs = TadpoleSystem_UserDBQuery.getCreateUserDB();
-			treeViewerDBList.setInput(listUserDBs);
+			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getCreateUserDB();
+			for (UserDBDAO userDB : userDBS) {
+				boolean isAdd = false;
+				
+				for(ManagerListDTO dto: listUserDBs) {
+					if(dto.getName().equals(userDB.getGroup_name())) {
+						dto.addLogin(userDB);
+						
+						isAdd = true;
+						break;
+					}	// end if(dto.getname()....		
+				}	// end for
+				
+				// 신규 그룹이면...
+				if(!isAdd) {
+					ManagerListDTO managerDto = new ManagerListDTO(userDB.getGroup_name());
+					managerDto.addLogin(userDB);
+					listUserDBs.add(managerDto);
+				}
+			}
+
+			tvDBList.refresh();
+			tvDBList.expandToLevel(2);
+			
 		} catch (Exception e) {
 			logger.error("db list", e);
 		}
@@ -431,112 +466,21 @@ public class DBListComposite extends Composite {
 	}
 }
 
-
-/**
- * content provider
- * 
- * @author hangum
- *
- */
-class AdminUserContentProvider implements ITreeContentProvider {
-	private static final Logger logger = Logger.getLogger(AdminUserContentProvider.class);
-	
-	@Override
-	public void dispose() {
-	}
-
-	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
-
-	@Override
-	public Object[] getElements(Object inputElement) {
-		if(inputElement instanceof UserDBDAO) {
-			return ((List<UserDBDAO>) inputElement).toArray();
-		} else {
-			return ((List<TadpoleUserDbRoleDAO>) inputElement).toArray();
-		}
-	}
-
-	@Override
-	public Object[] getChildren(Object parentElement) {
-		if(parentElement instanceof UserDBDAO) {
-			UserDBDAO userDB = (UserDBDAO)parentElement;
-			return userDB.getListChildren().toArray();
-		}
-		return getElements(parentElement);
-	}
-
-	@Override
-	public Object getParent(Object element) {
-		if(element == null) {
-			return null;
-		}
-		
-		return null;
-	}
-
-	@Override
-	public boolean hasChildren(Object element) {
-		if(element instanceof ArrayList) {
-			return ((ArrayList)element).size() > 0;			
-		} else if(element instanceof UserDBDAO) {
-			UserDBDAO userDB = (UserDBDAO)element;
-			return userDB.getListChildren().size() > 0;
-		}
-		
-		return false;
-	}
-	
-}
-
 /**
  * 유저 정보 레이블 
  * 
  * @author hangum
  *
  */
-class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvider {
-	private static final Logger logger = Logger.getLogger(AdminUserLabelProvider.class);
+class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
+	private static final Logger logger = Logger.getLogger(DBListLabelProvider.class);
 	
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		String RDB_CORE_PLUGIN_ID = "com.hangum.tadpole.rdb.core"; //$NON-NLS-1$
 		if(element instanceof UserDBDAO) {
-			if(columnIndex == 2) {
-				DBDefine dbType = ((UserDBDAO)element).getDBDefine();
-				if(DBDefine.MYSQL_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.MARIADB_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.ORACLE_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.SQLite_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.MSSQL_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.CUBRID_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.POSTGRE_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.MONGODB_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
-				
-				else if(DBDefine.TAJO_DEFAULT == dbType) 
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/tajo-add.jpg"); //$NON-NLS-1$
-				else
-					return ResourceManager.getPluginImage(RDB_CORE_PLUGIN_ID, "resources/icons/database-add.png"); //$NON-NLS-1$
-			}
+			if(columnIndex == 0) return ManagerLabelProvider.getDBImage((UserDBDAO)element);
+		} else if(element instanceof ManagerListDTO) {
+			if(columnIndex == 0) return ManagerLabelProvider.getGroupImage();
 		}
 		
 		return null;
@@ -550,8 +494,9 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 			if(PermissionChecker.isDBAdminRole(userDB)) {
 				switch(columnIndex) {
 					case 0: return userDB.getGroup_name();
-					case 1: return userDB.getRole_id();
-					case 2: return userDB.getDisplay_name();
+//					case 1: return userDB.getIs_lock();
+					case 1: return "";//userDB.getRole_id();
+					case 2: return ManagerLabelProvider.getDBText(userDB);
 					case 3:
 						// sqlite
 						if("".equals(userDB.getHost())) return userDB.getUrl();
@@ -562,9 +507,10 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 				}
 			} else {
 				switch(columnIndex) {
-				case 0: return userDB.getGroup_name();
-					case 1: return userDB.getRole_id();
-					case 2: return userDB.getDisplay_name();
+					case 0: return userDB.getGroup_name();
+//					case 1: return userDB.getIs_lock();
+					case 1: return "";//userDB.getRole_id();
+					case 2: return ManagerLabelProvider.getDBText(userDB);
 					case 3:
 						// sqlite
 						if("".equals(userDB.getHost())) return userDB.getUrl(userDB.getRole_id());
@@ -574,8 +520,12 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 					case 6: return ""+userDB.getCreate_time();
 				}
 			}
-			
+
 			return "*** not set column ***";
+		} else if(element instanceof ManagerListDTO) {
+			ManagerListDTO mgDto = (ManagerListDTO)element;
+			if(columnIndex == 0) return mgDto.getName();
+			else return "";
 		} else {
 			TadpoleUserDbRoleDAO roleDao = (TadpoleUserDbRoleDAO)element;
 			switch(columnIndex) {
@@ -584,10 +534,10 @@ class AdminUserLabelProvider extends LabelProvider implements ITableLabelProvide
 				case 2: return roleDao.getName();
 				case 6: return ""+roleDao.getCreate_time();
 			}
-			
+
 			return "";
 		}
-		
+
 	}
 	
 }
@@ -620,6 +570,73 @@ class AdminCompFilter extends ViewerFilter {
 		if(userDB.getHost() != null) if(userDB.getHost().toLowerCase().matches(searchString)) return true;
 		if(userDB.getPort() != null)  if(userDB.getPort().toLowerCase().matches(searchString)) return true;
 		if((""+userDB.getCreate_time()).toLowerCase().matches(searchString)) return true;
+		
+		return false;
+	}
+	
+}
+
+/**
+ * content provider
+ * 
+ * @author hangum
+ *
+ */
+class DBListContentProvider implements ITreeContentProvider {
+	private static final Logger logger = Logger.getLogger(DBListContentProvider.class);
+	
+	@Override
+	public void dispose() {
+	}
+
+	@Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+
+	@Override
+	public Object[] getElements(Object inputElement) {
+		if(inputElement instanceof ManagerListDTO) {
+			ManagerListDTO dto = (ManagerListDTO)inputElement;
+			return dto.getManagerList().toArray();
+		} else if(inputElement instanceof UserDBDAO) {
+			return ((List<UserDBDAO>) inputElement).toArray();
+		} else {
+			return ((List<TadpoleUserDbRoleDAO>) inputElement).toArray();
+		}
+	}
+
+	@Override
+	public Object[] getChildren(Object parentElement) {
+		if(parentElement instanceof ManagerListDTO) {
+			ManagerListDTO dto = (ManagerListDTO)parentElement;
+			return dto.getManagerList().toArray();
+		} else if(parentElement instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)parentElement;
+			return userDB.getListChildren().toArray();
+		}
+		return getElements(parentElement);
+	}
+
+	@Override
+	public Object getParent(Object element) {
+		if(element == null) {
+			return null;
+		}
+		
+		return null;
+	}
+
+	@Override
+	public boolean hasChildren(Object element) {
+		if(element instanceof ManagerListDTO) {
+			ManagerListDTO dto = (ManagerListDTO)element;
+			return dto.getManagerList().size() > 0;
+		} else if(element instanceof ArrayList) {
+			return ((ArrayList)element).size() > 0;			
+		} else if(element instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)element;
+			return userDB.getListChildren().size() > 0;
+		}
 		
 		return false;
 	}

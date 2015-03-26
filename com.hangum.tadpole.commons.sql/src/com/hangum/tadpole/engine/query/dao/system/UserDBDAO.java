@@ -148,6 +148,8 @@ public class UserDBDAO {
     
     /** is db lock? */
     protected String is_lock			= PublicTadpoleDefine.YES_NO.NO.toString();
+    /** 사용자가 채크 했는지? YES일경우 사용자가 패스워드로 검증했음을 의미합니다*/
+    protected String is_lock_user_check = PublicTadpoleDefine.YES_NO.NO.toString();
     
     /** userdb를 그룹으로 표시 하고자 할때 사용합니다. 현재는 로그인창에서 디비 관리하면에서 사용. */
     protected List<UserDBDAO> listUserDBGroup = new ArrayList<UserDBDAO>();
@@ -615,5 +617,20 @@ public class UserDBDAO {
 	public void setIs_lock(String is_lock) {
 		this.is_lock = is_lock;
 	}
+
+	/**
+	 * @return the is_lock_user_check
+	 */
+	public String getIs_lock_user_check() {
+		return is_lock_user_check;
+	}
+
+	/**
+	 * @param is_lock_user_check the is_lock_user_check to set
+	 */
+	public void setIs_lock_user_check(String is_lock_user_check) {
+		this.is_lock_user_check = is_lock_user_check;
+	}
+
 	
 }

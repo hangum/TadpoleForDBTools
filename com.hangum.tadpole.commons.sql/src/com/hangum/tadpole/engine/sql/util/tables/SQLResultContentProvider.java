@@ -18,12 +18,11 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * SQLResult의  Contentprovider 
- * //			ILazyContentProvider  로 구현을 수정해야합니다.
  * 
  * @author hangum
  *
  */ // ILazyContentProvider{ //,
-public class SQLResultContentProvider implements  IStructuredContentProvider {
+public class SQLResultContentProvider implements IStructuredContentProvider {
 
 	List<Map<Integer, Object>> sourceDataList;
 	
@@ -32,14 +31,13 @@ public class SQLResultContentProvider implements  IStructuredContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return sourceDataList.toArray();//queryViewer.getSourceDataList().toArray();
+		return sourceDataList.toArray();
 	}
 
 	public void dispose() {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		this.sourceDataList = (List<Map<Integer, Object>>) newInput;
 	}
 	
 	public void updateElement(int index) {

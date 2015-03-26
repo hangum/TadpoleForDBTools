@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -61,6 +62,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
+import com.hangum.tadpole.rdb.core.dialog.db.DBLockDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
@@ -106,9 +108,11 @@ public class ManagerViewer extends ViewPart {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(is.getFirstElement() instanceof UserDBDAO) {
-					UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
-					addUserResouceData(userDB);
+					final UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
 					
+					if(!isLock(userDB)) return;
+					
+					addUserResouceData(userDB);
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
 				}
 				
@@ -127,11 +131,14 @@ public class ManagerViewer extends ViewPart {
 				
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if(selElement instanceof UserDBDAO) {
+					final UserDBDAO userDB= (UserDBDAO)selElement;
+					if(!isLock(userDB)) return;
+					
 					QueryEditorAction qea = new QueryEditorAction();
-					qea.run((UserDBDAO)selElement);
+					qea.run(userDB);
 				// erd를 클릭하면 erd가 오픈되도록 수정. 
 				} else if(selElement instanceof UserDBResourceDAO) {
-					UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
+					final UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					
 					if( PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
 						UserDBDAO userDB = dao.getParent();
@@ -189,15 +196,6 @@ public class ManagerViewer extends ViewPart {
 		
 		try {
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
-			// 그룹 이름을 생성합니다.
-			List<String> groupNames = new ArrayList<String>();
-			for (UserDBDAO userDBDAO : userDBS) {
-				if(!groupNames.contains(userDBDAO.getGroup_name())) {
-					groupNames.add(userDBDAO.getGroup_name());
-				}
-			}
-			
-			// 그룹의 자세한 항목을 넣습니다.
 			for (UserDBDAO userDBDAO : userDBS) {
 				addUserDB(userDBDAO, false);
 			}
@@ -460,6 +458,27 @@ public class ManagerViewer extends ViewPart {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "DB Download Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+	
+	/**
+	 * DB is lock?
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	private boolean isLock(final UserDBDAO userDB) {
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock()) &&
+				PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_lock_user_check())) {
+			DBLockDialog dialog = new DBLockDialog(getSite().getShell(), userDB);
+			if(Dialog.OK == dialog.open()) {
+				userDB.setIs_lock_user_check(PublicTadpoleDefine.YES_NO.YES.name());
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
 

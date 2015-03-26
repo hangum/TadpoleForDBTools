@@ -19,7 +19,10 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -30,7 +33,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -38,8 +40,6 @@ import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
-import com.hangum.tadpole.engine.sql.util.tables.AutoResizeTableLayout;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistoryCreateColumn;
 import com.hangum.tadpole.engine.sql.util.tables.SQLHistoryLabelProvider;
 import com.hangum.tadpole.engine.sql.util.tables.SQLHistorySorter;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -58,7 +58,7 @@ public class QueryHistoryComposite extends Composite {
 	/** result composite */
 	private ResultMainComposite rdbResultComposite;
 	
-	private TableViewer tvSQLHistory;
+	private GridTableViewer tvSQLHistory;
 	private List<SQLHistoryDAO> listSQLHistory = new ArrayList<SQLHistoryDAO>();
 	private Text textHistoryFilter;
 	
@@ -72,7 +72,7 @@ public class QueryHistoryComposite extends Composite {
 		setLayout(new GridLayout(1, false));
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tvSQLHistory = new TableViewer(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		tvSQLHistory = new GridTableViewer(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.WRAP);
 		tvSQLHistory.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				
@@ -87,23 +87,26 @@ public class QueryHistoryComposite extends Composite {
 			}
 		});
 		
-		Table tableSQLHistory = tvSQLHistory.getTable();
+		Grid tableSQLHistory = tvSQLHistory.getGrid();
 		tableSQLHistory.setLinesVisible(true);
 		tableSQLHistory.setHeaderVisible(true);
 		tableSQLHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableSQLHistory.setSortDirection(SWT.DOWN);
+//		tableSQLHistory.setSortDirection(SWT.DOWN);
 		
 		// auto column layout
-		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tvSQLHistory.getTable());
-		tvSQLHistory.getTable().setLayout(layoutColumnLayout);
+//		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tvSQLHistory.getTable());
+//		tvSQLHistory.getTable().setLayout(layoutColumnLayout);
 		
 		SQLHistorySorter sorterHistory = new SQLHistorySorter();
-		SQLHistoryCreateColumn.createTableHistoryColumn(tvSQLHistory, sorterHistory, layoutColumnLayout, false);
+		createTableHistoryColumn(tvSQLHistory, sorterHistory);
 		
 		tvSQLHistory.setLabelProvider(new SQLHistoryLabelProvider());
 		tvSQLHistory.setContentProvider(new ArrayContentProvider());
+		tvSQLHistory.setAutoPreferredHeight(true);
 		tvSQLHistory.setInput(listSQLHistory);
-		tvSQLHistory.setSorter(sorterHistory);
+//		tvSQLHistory.setSorter(sorterHistory);
+		tvSQLHistory.getGrid().setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
 		
 		Composite compositeRecallBtn = new Composite(this, SWT.NONE);
 		compositeRecallBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -277,5 +280,121 @@ public class QueryHistoryComposite extends Composite {
 	@Override
 	protected void checkSubclass() {
 	}
+	
+	/**
+	 * history column
+	 * 
+	 * @param tv
+	 * @param sorterHistory
+	 * @param layoutColumnLayout
+	 */
+	private void createTableHistoryColumn(GridTableViewer tv, SQLHistorySorter sorterHistory) {
+		// time
+		GridColumn tvcDate = new GridColumn(tv.getGrid(), SWT.NONE);
+		tvcDate.setWidth(150);
+		tvcDate.setText("Date");
+//		tvcDate.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tvcDate, 0));
+////		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
+//		
+		// sql
+		GridColumn tvcSQL = new GridColumn(tv.getGrid(), SWT.NONE);
+//		TableColumn tblclmnSql = tvcSQL.getColumn();
+		tvcSQL.setWidth(300);
+		tvcSQL.setText("SQL");
+		tvcSQL.setWordWrap(true);
+//		tblclmnSql.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnSql, 1));
+////		layoutColumnLayout.addColumnData(new ColumnPixelData(300));
+//		
+		// duration
+		GridColumn tvcDuration = new GridColumn(tv.getGrid(), SWT.RIGHT);
+//		TableColumn tblclmnDuration = tvcDuration.getColumn();
+		tvcDuration.setWidth(60);
+		tvcDuration.setText("Sec");
+//		tblclmnDuration.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDuration, 2));
+////		layoutColumnLayout.addColumnData(new ColumnPixelData(50));
+//		
+		// rows
+		GridColumn tvcRows = new GridColumn(tv.getGrid(), SWT.RIGHT);
+//		TableColumn tblclmnRows = tvcRows.getColumn();
+		tvcRows.setWidth(60);
+		tvcRows.setText("Rows");
+//		tblclmnRows.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnRows, 3));
+////		layoutColumnLayout.addColumnData(new ColumnPixelData(50));
+		
+		// result
+		GridColumn tvcResult = new GridColumn(tv.getGrid(), SWT.NONE);
+//		TableColumn tblclmnResult = tvcResult.getColumn();
+		tvcResult.setWidth(90);
+		tvcResult.setText("Result");
+//		tblclmnResult.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnResult, 4));
+////		layoutColumnLayout.addColumnData(new ColumnPixelData(40));
+//		
+		GridColumn tvcMessage = new GridColumn(tv.getGrid(), SWT.NONE);
+//		TableColumn tblclmnMessage = tvcMessage.getColumn();
+		tvcMessage.setWidth(250);
+		tvcMessage.setText("Message");
+//		tblclmnMessage.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnMessage, 5));
+////		layoutColumnLayout.addColumnData(new ColumnPixelData(80));
+//		
+//		if (!isQueryHistoryTrack) {
+//			return;
+//		}
+//	
+//		// User name 
+//		TableViewerColumn tvcUser = new TableViewerColumn(tv, SWT.NONE);
+//		TableColumn tblclmnUser = tvcUser.getColumn();
+//		tblclmnUser.setWidth(200);
+//		tblclmnUser.setText(Messages.SQLHistoryCreateColumn_6);
+//		tblclmnUser.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnUser, 6));
+//		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
+//		
+//		// Database
+//		TableViewerColumn tvcDatabase = new TableViewerColumn(tv, SWT.NONE);
+//		TableColumn tblclmnDatabase = tvcDatabase.getColumn();
+//		tblclmnDatabase.setWidth(250);
+//		tblclmnDatabase.setText(Messages.SQLHistoryCreateColumn_7);
+//		tblclmnDatabase.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDatabase, 7));
+//		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
+//		
+//		// ip
+//		TableViewerColumn tvcIp = new TableViewerColumn(tv, SWT.NONE);
+//		TableColumn tblclmnIp = tvcIp.getColumn();
+//		tblclmnIp.setWidth(250);
+//		tblclmnIp.setText(Messages.SQLHistoryCreateColumn_8);
+//		tblclmnIp.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnIp, 8));
+//		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
+	}
+	
+//	protected void calculateHeight() {
+//		for (GridItem item : tvSQLHistory.getGrid().getItems()) {
+//			GC gc = new GC(item.getDisplay());
+//			GridColumn gridColumn = tvSQLHistory.getGrid().getColumn(1);
+//			Point textBounds = gridColumn.getCellRenderer().computeSize(gc, gridColumn.getWidth(), SWT.DEFAULT, item);
+//			gc.dispose();
+//			item.setHeight(textBounds.y);
+//		}
+//	}
+	
+//	/**
+//	 * tablecolumn adapter
+//	 * @param viewer
+//	 * @param comparator
+//	 * @param column
+//	 * @param index sort index
+//	 * @return
+//	 */
+//	private static SelectionAdapter getSelectionAdapter(final GridTableViewer viewer, final DefaultViewerSorter comparator, final GridColumn column, final int index) {
+//		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				comparator.setColumn(index);
+//				
+//				viewer.getGrid().setSortDirection(comparator.getDirection());
+//				viewer.getGrid().setSortColumn(column);
+//				viewer.refresh();
+//			}
+//		};
+//		return selectionAdapter;
+//	}
 
 }

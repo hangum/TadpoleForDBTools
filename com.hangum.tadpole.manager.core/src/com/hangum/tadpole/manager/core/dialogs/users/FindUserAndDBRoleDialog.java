@@ -83,7 +83,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Add user role"); //$NON-NLS-1$
+		newShell.setText("Add User role Dialog");
 	}
 
 	/**
@@ -154,7 +154,6 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString());
-		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString());
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.USER.toString());
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.GUEST.toString());
 		comboRoleType.select(0);
@@ -180,16 +179,16 @@ public class FindUserAndDBRoleDialog extends Dialog {
 			try {
 				boolean isAddDBRole = TadpoleSystem_UserRole.isDBAddRole(userDBDao, userDAO);
 				if(isAddDBRole) {
-					if(!MessageDialog.openConfirm(null, "Confirm", Messages.FindUserDialog_4)) return;
+					if(!MessageDialog.openConfirm(getShell(), "Confirm", Messages.FindUserDialog_4)) return;
 					TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(), userDBDao.getSeq(), comboRoleType.getText());
 					
-					MessageDialog.openInformation(null, "Comfirm", "Sucess save.");
+					MessageDialog.openInformation(getShell(), "Comfirm", "Save success.");
 				} else {
-					MessageDialog.openInformation(null, "Comfirm", "Already exist user.");
+					MessageDialog.openError(getShell(), "Comfirm", "Already exist user.");
 				}
 			} catch (Exception e) {
 				logger.error("Is DB add role error.", e);
-				MessageDialog.openError(null, "Error", "Error saveing...\n" + e.getMessage());
+				MessageDialog.openError(getShell(), "Error", "Error saveing...\n" + e.getMessage());
 			}
 		}
 	}
@@ -198,10 +197,11 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 * 검색.
 	 */
 	private void search() {
+		String txtEmail = textEMail.getText();
+		if("".equals(txtEmail)) return;
+		
 		listUserGroup.clear();
 		
-		String txtEmail = textEMail.getText();
-
 		try {
 			listUserGroup =  TadpoleSystem_UserQuery.findLikeUser(txtEmail);
 			tableViewer.setInput(listUserGroup);
