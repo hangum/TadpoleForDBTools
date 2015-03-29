@@ -503,11 +503,11 @@
  -->
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBOriginalDAO">
 	INSERT INTO tadpole_db( 
-		user_seq, operation_type, dbms_type, url, db, group_name, display_name, host, port, locale, passwd, users, 
+		user_seq, operation_type, dbms_type, url, url_user_parameter, db, group_name, display_name, host, port, locale, passwd, users, 
 		is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser, is_monitoring, is_visible, is_summary_report
 	)
 	VALUES(
-		#user_seq#, #operation_type#, #dbms_type#, #url#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
+		#user_seq#, #operation_type#, #dbms_type#, #url#, #url_user_parameter#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
 		#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#, #is_monitoring#, #is_visible#, #is_summary_report#
 	);
 		
@@ -549,7 +549,8 @@
 <update id="userDBUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
 	UPDATE tadpole_db SET
 		operation_type = #operation_type#,
-		url 		= #url#, 
+		url 		= #url#,
+		url_user_parameter = #url_user_parameter#, 
 		db			= #db#,  
 		group_name 	= #group_name#, 
 		display_name 	= #display_name#, 

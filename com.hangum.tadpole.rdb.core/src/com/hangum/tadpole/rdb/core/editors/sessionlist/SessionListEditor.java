@@ -182,6 +182,11 @@ public class SessionListEditor extends EditorPart {
 		});
 		tltmKillProcess.setEnabled(false);
 		
+		ToolItem tltmSecondsRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmSecondsRefresh.setEnabled(false);
+		tltmSecondsRefresh.setSelection(true);
+		tltmSecondsRefresh.setText("Refresh Rate : 5 Seconds");
+		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		

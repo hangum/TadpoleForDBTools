@@ -117,6 +117,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		btnSendMonitoring = new Button(this, SWT.CHECK);
 		btnSendMonitoring.setEnabled(false);
 		btnSendMonitoring.setText(Messages.OthersConnectionMongoDBGroup_btnSendMonitoring_text);
+		new Label(this, SWT.NONE);
 	}
 	
 	/**

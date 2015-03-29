@@ -57,6 +57,8 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	protected Text textDatabase;
 	protected Text textPort;
 	
+	protected Text textJDBCOptions;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -85,7 +87,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
 		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
-		grpConnectionType.setLayout(new GridLayout(3, false));
+		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.MSSQLLoginComposite_grpConnectionType_text);
 		
@@ -93,7 +95,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		lblHost.setText(Messages.DBLoginDialog_1);
 		
 		textHost = new Text(grpConnectionType, SWT.BORDER);
-		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
 		lblNewLabelPort.setText(Messages.DBLoginDialog_5);
@@ -127,24 +129,35 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		btnPing.setText(Messages.DBLoginDialog_btnPing_text);
 		
 		comboConnType = new Combo(grpConnectionType, SWT.READ_ONLY);
+		GridData gd_comboConnType = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_comboConnType.minimumWidth = 100;
+		gd_comboConnType.widthHint = 100;
+		comboConnType.setLayoutData(gd_comboConnType);
 		comboConnType.add("SID");
 		comboConnType.add("Service Name");
 		comboConnType.select(0);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
-		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));		
+		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.DBLoginDialog_2);
 		
 		textUser = new Text(grpConnectionType, SWT.BORDER);
-		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
 		lblPassword.setText(Messages.DBLoginDialog_3);
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -166,6 +179,8 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			textDatabase.setText(oldUserDB.getDb());
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
+			
+			textJDBCOptions.setText(oldUserDB.getUrl_user_parameter());
 			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
@@ -239,12 +254,15 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 						StringUtils.trimToEmpty(textDatabase.getText())
 					);
 		}
+		if(!"".equals(textJDBCOptions.getText())) {
+			dbUrl += "?" + textJDBCOptions.getText();
+		}
 
 		userDB = new UserDBDAO();
 		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
+		userDB.setUrl_user_parameter(textJDBCOptions.getText());
 		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
-//		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
 		userDB.setOperation_type(PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());

@@ -59,6 +59,9 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
 			
+			textJDBCOptions.setText(oldUserDB.getUrl_user_parameter());
+			comboLocale.setText(oldUserDB.getLocale());
+			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
 		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
@@ -106,19 +109,27 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 				StringUtils.trimToEmpty(textPort.getText()), 
 				StringUtils.trimToEmpty(textDatabase.getText())
 			);
+			
+			if(!"".equals(textJDBCOptions.getText())) {
+				dbUrl += "?" + textJDBCOptions.getText();
+			}
 		} else {
 			dbUrl = String.format(
 					getSelectDB().getDB_URL_INFO(), 
 					StringUtils.trimToEmpty(textHost.getText()), 
 					StringUtils.trimToEmpty(textPort.getText()), 
 					StringUtils.trimToEmpty(textDatabase.getText())) + "?charset=" + selectLocale;
+			
+			if(!"".equals(textJDBCOptions.getText())) {
+				dbUrl += "&" + textJDBCOptions.getText();
+			}
 		}
 
 		userDB = new UserDBDAO();
 		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
+		userDB.setUrl_user_parameter(textJDBCOptions.getText());
 		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
-//		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
 		userDB.setOperation_type( PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );

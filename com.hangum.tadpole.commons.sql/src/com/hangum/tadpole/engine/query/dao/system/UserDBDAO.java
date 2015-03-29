@@ -68,6 +68,7 @@ public class UserDBDAO {
     
 	protected String dbms_type;
 	protected String url;
+	protected String url_user_parameter;
 	
 	protected List<TadpoleUserDbRoleDAO> listChildren = new ArrayList<>();
 	
@@ -194,6 +195,20 @@ public class UserDBDAO {
 		}
 		
 		return urlDecrypt;
+	}
+	
+	/**
+	 * @return the url_user_parameter
+	 */
+	public String getUrl_user_parameter() {
+		return url_user_parameter;
+	}
+
+	/**
+	 * @param url_user_parameter the url_user_parameter to set
+	 */
+	public void setUrl_user_parameter(String url_user_parameter) {
+		this.url_user_parameter = url_user_parameter;
 	}
 
 	public void setUrl(String url) {

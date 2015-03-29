@@ -31,6 +31,7 @@ public class OthersConnectionRDBGroup extends OthersConnectionGroup {
 	 */
 	public OthersConnectionRDBGroup(Composite parent, int style, DBDefine selectDB) {
 		super(parent, style, selectDB);
+		btnSendMonitoring.setText("Summary ");
 	}
 	
 	/**

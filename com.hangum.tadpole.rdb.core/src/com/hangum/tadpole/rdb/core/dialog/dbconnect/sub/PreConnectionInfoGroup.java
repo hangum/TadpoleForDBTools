@@ -58,7 +58,7 @@ public class PreConnectionInfoGroup extends Group {
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 0;
+		gridLayout.marginWidth = 2;
 		setLayout(gridLayout);
 		
 		Label lblOperationType = new Label(this, SWT.NONE);
@@ -77,8 +77,8 @@ public class PreConnectionInfoGroup extends Group {
 		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (String strGroup : listGroupName) comboGroup.add(strGroup);
 		
-		Label lblNewLabel_1 = new Label(this, SWT.NONE);
-		lblNewLabel_1.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
+		Label lblConnectName = new Label(this, SWT.NONE);
+		lblConnectName.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
 		
 		textDisplayName = new Text(this, SWT.BORDER);
 		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

@@ -137,7 +137,6 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setUrl(CipherManager.getInstance().encryption(userDb.getUrl()));
 		userEncryptDao.setDb(CipherManager.getInstance().encryption(userDb.getDb()));
 		
-//		userEncryptDao.setGroup_seq(userDb.getGroup_seq());
 		userEncryptDao.setGroup_name(userDb.getGroup_name());
 		userEncryptDao.setDisplay_name(userDb.getDisplay_name());
 		userEncryptDao.setOperation_type(userDb.getOperation_type());
@@ -146,6 +145,8 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setPort(CipherManager.getInstance().encryption(userDb.getPort()));
 		userEncryptDao.setUsers(CipherManager.getInstance().encryption(userDb.getUsers()));
 		userEncryptDao.setPasswd(CipherManager.getInstance().encryption(userDb.getPasswd()));
+		
+		userEncryptDao.setUrl_user_parameter(userDb.getUrl_user_parameter());
 
 		userEncryptDao.setLocale(userDb.getLocale());
 		
@@ -210,7 +211,6 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setUrl(CipherManager.getInstance().encryption(newUserDb.getUrl()));
 		userEncryptDao.setDb(CipherManager.getInstance().encryption(newUserDb.getDb()));
 		
-//		userEncryptDao.setGroup_seq(newUserDb.getGroup_seq());
 		userEncryptDao.setGroup_name(newUserDb.getGroup_name());
 		userEncryptDao.setDisplay_name(newUserDb.getDisplay_name());
 		userEncryptDao.setOperation_type(newUserDb.getOperation_type());
@@ -219,6 +219,8 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setPort(CipherManager.getInstance().encryption(newUserDb.getPort()));
 		userEncryptDao.setUsers(CipherManager.getInstance().encryption(newUserDb.getUsers()));
 		userEncryptDao.setPasswd(CipherManager.getInstance().encryption(newUserDb.getPasswd()));
+		
+		userEncryptDao.setUrl_user_parameter(newUserDb.getUrl_user_parameter());
 
 		userEncryptDao.setLocale(newUserDb.getLocale());
 		

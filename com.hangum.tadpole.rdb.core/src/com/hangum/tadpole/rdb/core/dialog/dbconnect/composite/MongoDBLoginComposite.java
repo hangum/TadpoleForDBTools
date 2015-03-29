@@ -56,7 +56,9 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	protected Text textPort;
 	protected Combo comboLocale;
 	
-	private Text textReplicaSet;
+	protected Text textReplicaSet;
+	
+	protected Text textJDBCOptions;
 	
 	protected OthersConnectionMongoDBGroup othersConnectionInfo;
 	
@@ -93,7 +95,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
 		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
-		grpConnectionType.setLayout(new GridLayout(3, false));
+		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.MSSQLLoginComposite_grpConnectionType_text);
 		
@@ -101,7 +103,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblHost.setText(Messages.DBLoginDialog_1);
 		
 		textHost = new Text(grpConnectionType, SWT.BORDER);
-		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
 		lblNewLabelPort.setText(Messages.DBLoginDialog_5);
@@ -138,11 +140,11 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblReplicaSet.setText(Messages.MongoDBLoginComposite_lblReplicaSet_text);
 		
 		textReplicaSet = new Text(grpConnectionType, SWT.BORDER);
-		textReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		new Label(grpConnectionType, SWT.NONE);
 		
 		Label lblExLocalhostlocalhost = new Label(grpConnectionType, SWT.NONE);
-		lblExLocalhostlocalhost.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		lblExLocalhostlocalhost.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
 		lblExLocalhostlocalhost.setText(Messages.MongoDBLoginComposite_lblExLocalhostlocalhost_text);
 		
 		Label lblNewLabelDatabase = new Label(grpConnectionType, SWT.NONE);
@@ -150,13 +152,13 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
-		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));		
+		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));		
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.DBLoginDialog_2);
 		
 		textUser = new Text(grpConnectionType, SWT.BORDER);
-		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
 		lblPassword.setText(Messages.DBLoginDialog_3);
@@ -168,11 +170,18 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
 		comboLocale = new Combo(grpConnectionType, SWT.NONE);
-		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 			
 		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
 		comboLocale.setVisibleItemCount(12);
 		comboLocale.select(0);
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 
 		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -196,6 +205,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			textPassword.setText(oldUserDB.getPasswd());
 			
 			textReplicaSet.setText(oldUserDB.getExt1()==null?"":oldUserDB.getExt1());
+			
+			textJDBCOptions.setText(oldUserDB.getUrl_user_parameter());
 		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
@@ -246,18 +257,21 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	public boolean makeUserDBDao(boolean isTest) {
 		if(!isValidateInput(isTest)) return false;
 		
-		final String dbUrl = String.format(
+		String dbUrl = String.format(
 								getSelectDB().getDB_URL_INFO(), 
 								StringUtils.trimToEmpty(textHost.getText()), 
 								StringUtils.trimToEmpty(textPort.getText()), 
 								StringUtils.trimToEmpty(textDatabase.getText())
 							);
+		if(!"".equals(textJDBCOptions.getText())) {
+			dbUrl += "?" + textJDBCOptions.getText();
+		}
 
 		userDB = new UserDBDAO();
 		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
+		userDB.setUrl_user_parameter(textJDBCOptions.getText());
 		userDB.setDb(textDatabase.getText());
-//		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
 		userDB.setOperation_type( PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
