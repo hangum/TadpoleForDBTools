@@ -10,6 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.security;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.ui.PlatformUI;
+
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
+
 /**
  * Tadpole Security manager
  *
@@ -32,5 +39,27 @@ public class TadpoleSecurityManager {
 		return instance;
 	}
 	
+
+	/**
+	 * DB is lock?
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public boolean isLock(final UserDBDAO userDB) {
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock())) {
+			if(!SessionManager.isUnlockDB(userDB)) {
+				DBLockDialog dialog = new DBLockDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
+				if(Dialog.OK == dialog.open()) {
+					SessionManager.setUnlokDB(userDB);
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
 
 }

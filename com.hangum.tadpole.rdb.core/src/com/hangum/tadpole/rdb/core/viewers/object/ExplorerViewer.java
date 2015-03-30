@@ -54,6 +54,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * object explorer viewer
@@ -267,7 +268,7 @@ public class ExplorerViewer extends ViewPart {
 			
 			// is dblock
 			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock()) &&
-					PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_lock_user_check())) {
+					!SessionManager.isUnlockDB(selectUserDb)) {
 				userDB = null;
 				createTable();
 			} else {

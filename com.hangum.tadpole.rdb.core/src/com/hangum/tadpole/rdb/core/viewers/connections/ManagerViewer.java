@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -56,13 +55,13 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
-import com.hangum.tadpole.rdb.core.dialog.db.DBLockDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
@@ -110,13 +109,13 @@ public class ManagerViewer extends ViewPart {
 				if(is.getFirstElement() instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
 					
-					if(!isLock(userDB)) return;
+					if(!TadpoleSecurityManager.getInstance().isLock(userDB)) return;
 					
 					addUserResouceData(userDB);
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
 				}
 				
-				//
+				// 
 				// 아래 코드(managerTV.getControl().setFocus();)가 없으면, 오브젝트 탐색기의 event listener가 동작하지 않는다. 
 				// 이유는 글쎄 모르겠어.
 				//
@@ -132,7 +131,7 @@ public class ManagerViewer extends ViewPart {
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if(selElement instanceof UserDBDAO) {
 					final UserDBDAO userDB= (UserDBDAO)selElement;
-					if(!isLock(userDB)) return;
+					if(!TadpoleSecurityManager.getInstance().isLock(userDB)) return;
 					
 					QueryEditorAction qea = new QueryEditorAction();
 					qea.run(userDB);
@@ -460,25 +459,5 @@ public class ManagerViewer extends ViewPart {
 		}
 	}
 	
-	/**
-	 * DB is lock?
-	 * 
-	 * @param userDB
-	 * @return
-	 */
-	private boolean isLock(final UserDBDAO userDB) {
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock()) &&
-				PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_lock_user_check())) {
-			DBLockDialog dialog = new DBLockDialog(getSite().getShell(), userDB);
-			if(Dialog.OK == dialog.open()) {
-				userDB.setIs_lock_user_check(PublicTadpoleDefine.YES_NO.YES.name());
-				return true;
-			} else {
-				return false;
-			}
-		}
-		
-		return true;
-	}
 }
 

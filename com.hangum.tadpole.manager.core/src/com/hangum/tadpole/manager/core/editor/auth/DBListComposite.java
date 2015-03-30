@@ -49,7 +49,6 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ImageUtils;
-import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -147,7 +146,7 @@ public class DBListComposite extends Composite {
 				deleteDB();
 			}
 		});
-		tltmDBDelete.setToolTipText("DB Delete");
+		tltmDBDelete.setToolTipText("Delete");
 
 //		tltmModify = new ToolItem(toolBar, SWT.NONE);
 //		tltmModify.setImage(ImageUtils.getModify());
@@ -275,16 +274,16 @@ public class DBListComposite extends Composite {
 		treeAdmin.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		
 		TreeViewerColumn colGroupName = new TreeViewerColumn(tvDBList, SWT.NONE);
-		colGroupName.getColumn().setWidth(150);
-		colGroupName.getColumn().setText("Group Name(email)");
+		colGroupName.getColumn().setWidth(250);
+		colGroupName.getColumn().setText("Name(email)");
 				
 		TreeViewerColumn colRoleName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colRoleName.getColumn().setWidth(80);
 		colRoleName.getColumn().setText("Role");
 		
-		TreeViewerColumn colEmail = new TreeViewerColumn(tvDBList, SWT.NONE);
-		colEmail.getColumn().setWidth(150);
-		colEmail.getColumn().setText("Name");
+//		TreeViewerColumn colEmail = new TreeViewerColumn(tvDBList, SWT.NONE);
+//		colEmail.getColumn().setWidth(150);
+//		colEmail.getColumn().setText("Name");
 		
 		TreeViewerColumn colName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colName.getColumn().setWidth(180);
@@ -488,56 +487,50 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
+
 		if(element instanceof UserDBDAO) {
-		
 			UserDBDAO userDB = (UserDBDAO)element;
-			if(PermissionChecker.isDBAdminRole(userDB)) {
+//			if(PermissionChecker.isDBAdminRole(userDB)) {
 				switch(columnIndex) {
-					case 0: return userDB.getGroup_name();
-//					case 1: return userDB.getIs_lock();
+					case 0: return ManagerLabelProvider.getDBText(userDB);
 					case 1: return "";//userDB.getRole_id();
-					case 2: return ManagerLabelProvider.getDBText(userDB);
-					case 3:
+					case 2:
 						// sqlite
 						if("".equals(userDB.getHost())) return userDB.getUrl();
 						return userDB.getHost() + ":"  + userDB.getPort();
-					case 4: return userDB.getUsers();
-					case 5: return userDB.getIs_visible();
-					case 6: return ""+userDB.getCreate_time();
+					case 3: return userDB.getUsers();
+					case 4: return userDB.getIs_visible();
+					case 5: return ""+userDB.getCreate_time();
 				}
-			} else {
-				switch(columnIndex) {
-					case 0: return userDB.getGroup_name();
-//					case 1: return userDB.getIs_lock();
-					case 1: return "";//userDB.getRole_id();
-					case 2: return ManagerLabelProvider.getDBText(userDB);
-					case 3:
-						// sqlite
-						if("".equals(userDB.getHost())) return userDB.getUrl(userDB.getRole_id());
-						return userDB.getHost(userDB.getRole_id()) + ":"  + userDB.getPort(userDB.getRole_id());
-					case 4: return userDB.getUsers(userDB.getRole_id());
-					case 5: return userDB.getIs_visible();
-					case 6: return ""+userDB.getCreate_time();
-				}
-			}
+//			} else {
+//				switch(columnIndex) {
+//					case 0: return userDB.getGroup_name();
+//					case 1: return "";//userDB.getRole_id();
+//					case 2: return ManagerLabelProvider.getDBText(userDB);
+//					case 3:
+//						// sqlite
+//						if("".equals(userDB.getHost())) return userDB.getUrl(userDB.getRole_id());
+//						return userDB.getHost(userDB.getRole_id()) + ":"  + userDB.getPort(userDB.getRole_id());
+//					case 4: return userDB.getUsers(userDB.getRole_id());
+//					case 5: return userDB.getIs_visible();
+//					case 6: return ""+userDB.getCreate_time();
+//				}
+//			}
 
-			return "*** not set column ***";
 		} else if(element instanceof ManagerListDTO) {
 			ManagerListDTO mgDto = (ManagerListDTO)element;
 			if(columnIndex == 0) return mgDto.getName();
 			else return "";
-		} else {
+		} else if(element instanceof TadpoleUserDbRoleDAO) {
 			TadpoleUserDbRoleDAO roleDao = (TadpoleUserDbRoleDAO)element;
 			switch(columnIndex) {
-				case 0: return roleDao.getEmail();
+				case 0: return String.format("%s ( %s )", roleDao.getName(), roleDao.getEmail());
 				case 1: return roleDao.getRole_id();
-				case 2: return roleDao.getName();
-				case 6: return ""+roleDao.getCreate_time();
+				case 5: return ""+roleDao.getCreate_time();
 			}
-
-			return "";
 		}
-
+		
+		return "";
 	}
 	
 }

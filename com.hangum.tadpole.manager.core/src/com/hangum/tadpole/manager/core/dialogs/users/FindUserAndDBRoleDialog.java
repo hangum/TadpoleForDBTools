@@ -152,6 +152,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		
 		comboRoleType = new Combo(composite, SWT.NONE | SWT.READ_ONLY);
 		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboRoleType.add("NONE");
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString());
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.USER.toString());
@@ -174,6 +175,12 @@ public class FindUserAndDBRoleDialog extends Dialog {
 			IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
 			if(iss.isEmpty()) return;
 			UserDAO userDAO = (UserDAO)iss.getFirstElement();
+			
+			if("NONE".equals(comboRoleType.getText())) {
+				MessageDialog.openError(getShell(), "Error", "Please select Role type.");
+				comboRoleType.setFocus();
+				return;
+			}
 			
 			// 사용자가 해당 디비에 추가 될수 있는지 검사합니다. 
 			try {

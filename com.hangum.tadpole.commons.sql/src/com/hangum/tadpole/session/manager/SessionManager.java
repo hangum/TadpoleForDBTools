@@ -11,7 +11,9 @@
 package com.hangum.tadpole.session.manager;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -25,6 +27,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 
@@ -57,8 +60,12 @@ public class SessionManager {
 														
 														USE_OTP, OTP_SECRET_KEY,
 														
-														SECURITY_QUESTION,
-														SECURITY_ANSWER, PERSPECTIVE}
+														UNLOCK_DB_LIST,
+														
+//														SECURITY_QUESTION,
+//														SECURITY_ANSWER, 
+														PERSPECTIVE
+														}
 
 	/**
 	 * is login?
@@ -101,6 +108,8 @@ public class SessionManager {
 		
 		sStore.setAttribute(NAME.USE_OTP.toString(), loginUserDao.getUse_otp());
 		sStore.setAttribute(NAME.OTP_SECRET_KEY.toString(), loginUserDao.getOtp_secret());
+		
+		sStore.setAttribute(NAME.UNLOCK_DB_LIST.name(), new ArrayList<Integer>());
 	}
 	
 	/**
@@ -140,15 +149,15 @@ public class SessionManager {
 		return (String)sStore.getAttribute(NAME.LOGIN_NAME.toString());
 	}
 	
-	public static String getSecurityQuestion() {
-		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.SECURITY_QUESTION.toString());
-	}
-	
-	public static String getSecurityAnswer() {
-		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.SECURITY_ANSWER.toString());
-	}
+//	public static String getSecurityQuestion() {
+//		HttpSession sStore = RWT.getRequest().getSession();
+//		return (String)sStore.getAttribute(NAME.SECURITY_QUESTION.toString());
+//	}
+//	
+//	public static String getSecurityAnswer() {
+//		HttpSession sStore = RWT.getRequest().getSession();
+//		return (String)sStore.getAttribute(NAME.SECURITY_ANSWER.toString());
+//	}
 	public static String getUseOTP() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(NAME.USE_OTP.toString());
@@ -235,12 +244,37 @@ public class SessionManager {
 	}
 	
 	/**
+	 * set unlock db list
+	 * @param userDB
+	 * @return
+	 */
+	public static boolean setUnlokDB(final UserDBDAO userDB) {
+		HttpSession sStore = RWT.getRequest().getSession();
+		List<Integer> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
+		
+		return listUnlockDB.add(userDB.getSeq());
+	}
+	
+	/**
+	 * is unlock db 
+	 * @param userDB
+	 * @return
+	 */
+	public static boolean isUnlockDB(final UserDBDAO userDB) {
+		HttpSession sStore = RWT.getRequest().getSession();
+		List<Integer> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
+		
+		return listUnlockDB.contains(userDB.getSeq());
+	}
+	
+	/**
 	 * logout 처리를 합니다.
 	 */
 	public static void logout() {
 		try {
 			HttpSession sStore = RWT.getRequest().getSession();			
 			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
+			sStore.invalidate();
 	     
 	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", "");
 	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );

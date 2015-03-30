@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.db;
+package com.hangum.tadpole.engine.security;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
