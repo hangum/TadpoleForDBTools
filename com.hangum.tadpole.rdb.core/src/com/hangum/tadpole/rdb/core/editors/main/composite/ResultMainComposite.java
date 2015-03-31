@@ -14,6 +14,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -26,9 +28,12 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -153,6 +158,11 @@ public class ResultMainComposite extends Composite {
 			// 요청쿼리가 없다면 무시합니다. 
 			if(StringUtils.isEmpty(reqQuery.getSql())) return;
 			this.reqQuery = reqQuery;
+
+			// security check.
+			if(!TadpoleSecurityManager.getInstance().isLock(getUserDB())) {
+				throw new Exception("This DB status is locking. Please contact admin.");
+			}
 			
 			// 실행해도 되는지 묻는다.
 			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(getUserDB().getQuestion_dml())) {
@@ -176,6 +186,8 @@ public class ResultMainComposite extends Composite {
 			
 		} catch(Exception e) {
 			logger.error("execute query", e);
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Executing Query", "Executing query", errStatus); //$NON-NLS-1$
 		} finally {
 			// 에디터가 작업이 끝났음을 알립니다.
 //			browserEvaluate(EditorFunctionService.EXECUTE_DONE);

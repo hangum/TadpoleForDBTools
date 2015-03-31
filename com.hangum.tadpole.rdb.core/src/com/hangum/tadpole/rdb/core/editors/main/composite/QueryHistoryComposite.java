@@ -291,7 +291,7 @@ public class QueryHistoryComposite extends Composite {
 	private void createTableHistoryColumn(GridTableViewer tv, SQLHistorySorter sorterHistory) {
 		// time
 		GridColumn tvcDate = new GridColumn(tv.getGrid(), SWT.NONE);
-		tvcDate.setWidth(150);
+		tvcDate.setWidth(155);
 		tvcDate.setText("Date");
 //		tvcDate.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tvcDate, 0));
 ////		layoutColumnLayout.addColumnData(new ColumnPixelData(150));

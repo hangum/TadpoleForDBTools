@@ -109,7 +109,10 @@ public class ManagerViewer extends ViewPart {
 				if(is.getFirstElement() instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
 					
-					if(!TadpoleSecurityManager.getInstance().isLock(userDB)) return;
+					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+					
+					// Rice lock icode change event
+					managerTV.refresh(userDB, true);
 					
 					addUserResouceData(userDB);
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
@@ -131,7 +134,7 @@ public class ManagerViewer extends ViewPart {
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if(selElement instanceof UserDBDAO) {
 					final UserDBDAO userDB= (UserDBDAO)selElement;
-					if(!TadpoleSecurityManager.getInstance().isLock(userDB)) return;
+					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
 					
 					QueryEditorAction qea = new QueryEditorAction();
 					qea.run(userDB);

@@ -49,17 +49,40 @@ public class TadpoleSecurityManager {
 	public boolean isLock(final UserDBDAO userDB) {
 		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock())) {
 			if(!SessionManager.isUnlockDB(userDB)) {
-				DBLockDialog dialog = new DBLockDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
-				if(Dialog.OK == dialog.open()) {
-					SessionManager.setUnlokDB(userDB);
-					return true;
-				} else {
-					return false;
-				}
+				return false;
 			}
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * If DB lock than open dialog
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public boolean ifLockOpenDialog(final UserDBDAO userDB) {
+		if(!isLock(userDB)) {
+			return openPasswdDialog(userDB);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Open password dialog
+	 * @param userDB
+	 * @return
+	 */
+	private boolean openPasswdDialog(final UserDBDAO userDB) {
+		DBLockDialog dialog = new DBLockDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
+		if(Dialog.OK == dialog.open()) {
+			SessionManager.setUnlokDB(userDB);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

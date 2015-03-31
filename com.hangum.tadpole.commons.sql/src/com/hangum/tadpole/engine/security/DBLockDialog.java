@@ -53,7 +53,7 @@ public class DBLockDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("DB Password Dialog");
+		newShell.setText("DB Password input dialog");
 	}
 
 	/**

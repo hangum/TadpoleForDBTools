@@ -20,6 +20,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.ConnectionDecorationContributionsHandler;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -76,9 +77,15 @@ public class ManagerLabelProvider extends LabelProvider {
 		
 		try {
 			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock())) {
-				baseImage = ResourceManager.decorateImage(baseImage, 
-												ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/lock_0.28.png"), 
-												ResourceManager.BOTTOM_LEFT);
+				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {				
+					baseImage = ResourceManager.decorateImage(baseImage, 
+													ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/lock_0.28.png"), 
+													ResourceManager.BOTTOM_LEFT);
+				} else {
+					baseImage = ResourceManager.decorateImage(baseImage, 
+							ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unlock_0.28.png"), 
+							ResourceManager.BOTTOM_LEFT);
+				}
 			}
 		} catch(Exception e) {
 			logger.error("Image decoration", e);

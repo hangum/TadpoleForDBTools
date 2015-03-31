@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
@@ -66,9 +67,13 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 		IStructuredSelection sel = (IStructuredSelection)selection;
 		if(sel != null) {
 			if( sel.getFirstElement() instanceof UserDBDAO ) {
-				iss = sel;
+				UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 				
-				setEnabled(true);
+				if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
+					iss = sel;
+					setEnabled(true);
+				}
+				setEnabled(false);
 			} else setEnabled(false);
 		} else setEnabled(false);
 	}
