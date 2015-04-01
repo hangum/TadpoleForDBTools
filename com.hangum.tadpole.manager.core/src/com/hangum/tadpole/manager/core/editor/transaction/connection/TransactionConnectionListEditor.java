@@ -40,7 +40,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
@@ -166,7 +166,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

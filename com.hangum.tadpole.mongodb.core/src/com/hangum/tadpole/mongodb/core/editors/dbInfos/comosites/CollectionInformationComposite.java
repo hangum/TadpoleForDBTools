@@ -48,7 +48,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -116,7 +116,7 @@ public class CollectionInformationComposite extends Composite {
 		ToolBar toolBar = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

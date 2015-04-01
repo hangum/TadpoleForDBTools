@@ -359,6 +359,20 @@
 	user db
 	============================================================================================================================
  -->
+ 
+ <!-- 
+ 	update db other information
+  -->
+ <update id="updateDBOtherInformation" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+ 	UPDATE
+ 		tadpole_db
+ 	SET
+ 		is_visible 	= #is_visible#,
+ 		is_lock		= #is_lock#
+ 	WHERE
+ 		SEQ = #seq#
+ </update>
+ 
  <!-- 
  registered database
   -->
@@ -414,14 +428,14 @@
  <!-- 
  	유저디비 그룹정보를 가져옵니다.
   -->
- <select id="userDBGroup" resultClass="java.lang.String" parameterClass="java.lang.String">
+ <!-- <select id="userDBGroup" resultClass="java.lang.String" parameterClass="java.lang.Integer">
  	SELECT group_name
  	FROM tadpole_db
  	WHERE 
 		group_seq in (#group_seqs#) AND
 		delYn = 'NO'
  	group by group_name 
- </select>
+ </select> -->
  
  <!-- 
 	1) userDB 중복 저장 용도
@@ -465,6 +479,7 @@
 		and b.user_seq = #user_seq#
 	    and a.delyn = 'NO'
 	    and b.delyn = 'NO'
+	    AND a.is_visible = 'YES'
 </select>
 
 <select id="getCreateUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">

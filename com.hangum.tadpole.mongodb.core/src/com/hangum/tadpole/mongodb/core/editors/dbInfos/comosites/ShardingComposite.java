@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
@@ -85,7 +85,7 @@ public class ShardingComposite extends Composite {
 		toolBar.setBounds(0, 0, 87, 20);
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

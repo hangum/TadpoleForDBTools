@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -158,7 +157,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		
 		Composite compositeInSearch = new Composite(compositeHead, SWT.NONE);
 		compositeInSearch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 4, 1));
-		GridLayout gl_compositeInSearch = new GridLayout(7, false);
+		GridLayout gl_compositeInSearch = new GridLayout(8, false);
 		gl_compositeInSearch.verticalSpacing = 1;
 		gl_compositeInSearch.horizontalSpacing = 2;
 		gl_compositeInSearch.marginHeight = 1;
@@ -174,6 +173,9 @@ public class ExecutedSQLEditor extends EditorPart {
 		label.setText("~");
 								
 		dateTimeEnd = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
+		
+		Label label_1 = new Label(compositeInSearch, SWT.NONE);
+		label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 												
 		Label lblDuring = new Label(compositeInSearch, SWT.RIGHT);
 		lblDuring.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);

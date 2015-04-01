@@ -67,12 +67,11 @@ public class ModifyDBDialog extends Dialog {
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.userDBDAO = userDBDAO;
-//		// db groupData 
-//		try {
-//			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
-//		} catch (Exception e1) {
-//			logger.error("get group info", e1); //$NON-NLS-1$
-//		}
+		try {
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup();
+		} catch (Exception e1) {
+			logger.error("get group info", e1); //$NON-NLS-1$
+		}
 	}
 
 	@Override
@@ -159,7 +158,7 @@ public class ModifyDBDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 500);
+		return new Point(450, 470);
 	}
 	
 	/**

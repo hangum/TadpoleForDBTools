@@ -119,7 +119,7 @@
             objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.DeleteDBAction"
-               icon="resources/icons/database_delete.png"
+               icon="resources/icons/delete_database.png"
                id="com.hangum.tadpole.rdb.core.action2"
                label="Delete Database"
                menubarPath="menu.admin/admin">

@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -48,7 +49,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -56,8 +57,11 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.dialogs.users.FindUserAndDBRoleDialog;
+import com.hangum.tadpole.manager.core.editor.auth.dialogs.DBOthresConfigDialog;
+import com.hangum.tadpole.manager.core.editor.auth.dialogs.TableColumnFilterDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
@@ -66,6 +70,7 @@ import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
  * 어드민, 메니저, DBA가 사용하는 DB List composite
  * 
  * @author hangum
+ * @since 2015.03.31
  *
  */
 public class DBListComposite extends Composite {
@@ -80,11 +85,17 @@ public class DBListComposite extends Composite {
 	private AdminCompFilter filter;
 	private Text textSearch;
 
-	private ToolItem tltmAdd; 
+	// select database
+	private ToolItem tltmConfigurationDB;
+	private ToolItem tltmTableColumnFilter;
+	private ToolItem tltmOtherInformation;
+	
 	private ToolItem tltmQueryHistory;
 	private ToolItem tltmSQLEditor;
-//	private ToolItem tltmModify;
-	private ToolItem tltmDBDelete;
+
+	// select user
+	private ToolItem tltmAddUser;
+	private ToolItem tltmUserDelete;
 	
 	/**
 	 * Create the composite.
@@ -102,10 +113,6 @@ public class DBListComposite extends Composite {
 		
 		Composite compositeHead = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeHead = new GridLayout(3, false);
-		gl_compositeHead.verticalSpacing = 0;
-		gl_compositeHead.horizontalSpacing = 0;
-		gl_compositeHead.marginHeight = 0;
-		gl_compositeHead.marginWidth = 0;
 		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -113,7 +120,7 @@ public class DBListComposite extends Composite {
 		toolBar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -121,11 +128,51 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmRefresh.setToolTipText("Refresh");
+		
+		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		tltmConfigurationDB = new ToolItem(toolBar, SWT.NONE);
+		tltmConfigurationDB.setImage(ToobalImageUtils.getConfigurationDatabase());
+		tltmConfigurationDB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				configurationDB();	
+			}
+		});
+		tltmConfigurationDB.setToolTipText("Configuration database");
+		tltmConfigurationDB.setEnabled(false);
+		
+		tltmTableColumnFilter = new ToolItem(toolBar, SWT.NONE);
+		tltmTableColumnFilter.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TableColumnFilterDialog tableColumnDialog = new TableColumnFilterDialog(getShell());
+				tableColumnDialog.open();
+			}
+		});
+		tltmTableColumnFilter.setEnabled(false);
+		tltmTableColumnFilter.setText("Table,Column Filter");
+		
+		tltmOtherInformation = new ToolItem(toolBar, SWT.NONE);
+		tltmOtherInformation.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+				if(ss.isEmpty()) return;
+				
+				DBOthresConfigDialog othersDialog = new DBOthresConfigDialog(getShell(), (UserDBDAO)ss.getFirstElement());
+				othersDialog.open();
+			}
+		});
+		tltmOtherInformation.setEnabled(false);
+		tltmOtherInformation.setText("Other Information");
+		
+		ToolItem toolItem_1 = new ToolItem(toolBar, SWT.SEPARATOR);
 
-		tltmAdd = new ToolItem(toolBar, SWT.NONE);
-		tltmAdd.setImage(ImageUtils.getAdd());
-		tltmAdd.setEnabled(false);
-		tltmAdd.addSelectionListener(new SelectionAdapter() {
+		tltmAddUser = new ToolItem(toolBar, SWT.NONE);
+		tltmAddUser.setImage(ToobalImageUtils.getUserAdd());
+		tltmAddUser.setEnabled(false);
+		tltmAddUser.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
@@ -135,32 +182,23 @@ public class DBListComposite extends Composite {
 				dialog.open();
 			}
 		});
-		tltmAdd.setToolTipText("Add User");
+		tltmAddUser.setToolTipText("Add User");
 		
-		tltmDBDelete = new ToolItem(toolBar, SWT.NONE);
-		tltmDBDelete.setImage(ImageUtils.getDelete());
-		tltmDBDelete.setEnabled(false);
-		tltmDBDelete.addSelectionListener(new SelectionAdapter() {
+		tltmUserDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmUserDelete.setImage(ToobalImageUtils.getDelete());
+		tltmUserDelete.setEnabled(false);
+		tltmUserDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				deleteDB();
+				deleteUser();
 			}
 		});
-		tltmDBDelete.setToolTipText("Delete");
-
-//		tltmModify = new ToolItem(toolBar, SWT.NONE);
-//		tltmModify.setImage(ImageUtils.getModify());
-//		tltmModify.setEnabled(false);
-//		tltmModify.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				modifyDB();
-//			}
-//		});
-//		tltmModify.setToolTipText("Modify");
+		tltmUserDelete.setToolTipText("Delete");
+		
+		ToolItem toolItem = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
-		tltmQueryHistory.setImage(ImageUtils.getQueryHistory()); //$NON-NLS-1$
+		tltmQueryHistory.setImage(ToobalImageUtils.getQueryHistory()); //$NON-NLS-1$
 		tltmQueryHistory.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -171,7 +209,7 @@ public class DBListComposite extends Composite {
 		tltmQueryHistory.setToolTipText("Query History");
 		
 		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
-		tltmSQLEditor.setImage(ImageUtils.getSQLEditor()); //$NON-NLS-1$
+		tltmSQLEditor.setImage(ToobalImageUtils.getSQLEditor()); //$NON-NLS-1$
 		tltmSQLEditor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -189,6 +227,7 @@ public class DBListComposite extends Composite {
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeHead, SWT.NONE);
 		
 		textSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
@@ -231,31 +270,42 @@ public class DBListComposite extends Composite {
 						logger.error("get user list", e);
 					}
 					
-					tltmAdd.setEnabled(true);
-//					tltmModify.setEnabled(false);
-					tltmDBDelete.setEnabled(false);
+					tltmConfigurationDB.setEnabled(true);
+					tltmTableColumnFilter.setEnabled(true);
+					tltmOtherInformation.setEnabled(true);
+					
+					tltmAddUser.setEnabled(true);
+					
+					tltmUserDelete.setEnabled(false);
 					
 					tltmQueryHistory.setEnabled(true);
 					tltmSQLEditor.setEnabled(true);
 				} else if(objSelect instanceof TadpoleUserDbRoleDAO){
 					TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)objSelect;
 					if(userDBRole.getParent().getUser_seq() != userDBRole.getUser_seq()) {
-						tltmAdd.setEnabled(false);
-//						tltmModify.setEnabled(true);
-						tltmDBDelete.setEnabled(true);
+						tltmAddUser.setEnabled(false);
+						tltmConfigurationDB.setEnabled(true);
+						tltmTableColumnFilter.setEnabled(true);
+						tltmOtherInformation.setEnabled(true);
+						tltmUserDelete.setEnabled(true);
 					} else {
-						tltmAdd.setEnabled(false);
-//						tltmModify.setEnabled(false);
-						tltmDBDelete.setEnabled(false);
+						tltmAddUser.setEnabled(false);
+						tltmConfigurationDB.setEnabled(false);
+						tltmTableColumnFilter.setEnabled(false);
+						tltmOtherInformation.setEnabled(false);
+						tltmUserDelete.setEnabled(false);
 					}
 					
-					tltmQueryHistory.setEnabled(true);
-					tltmSQLEditor.setEnabled(true);
+					tltmQueryHistory.setEnabled(false);
+					tltmSQLEditor.setEnabled(false);
 				} else if(objSelect instanceof ManagerListDTO) {
+
+					tltmConfigurationDB.setEnabled(false);
+					tltmTableColumnFilter.setEnabled(false);
+					tltmOtherInformation.setEnabled(false);
 					
-					tltmAdd.setEnabled(false);
-//					tltmModify.setEnabled(false);
-					tltmDBDelete.setEnabled(false);
+					tltmAddUser.setEnabled(false);
+					tltmUserDelete.setEnabled(false);
 					tltmQueryHistory.setEnabled(false);
 					tltmSQLEditor.setEnabled(false);
 				}
@@ -315,69 +365,44 @@ public class DBListComposite extends Composite {
 				
 	}
 	
-//	/**
-//	 * toolbar control
-//	 * 
-//	 * @param isTrue
-//	 */
-//	private void toolbarCotrol(boolean isTrue) {
-//		tltmAdd.setEnabled(isTrue);
-//		tltmModify.setEnabled(!isTrue);
-//		tltmDBDelete.setEnabled(!isTrue);	
-//		
-//		tltmQueryHistory.setEnabled(true);
-//		tltmSQLEditor.setEnabled(true);
-//	}
-	
-//	private void refreshConnections() {
-//		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-//		Display.getCurrent().asyncExec(new Runnable() {
-//			@Override
-//			public void run() {
-//				managerView.init();
-//			}
-//		});	// end display
-//	}
-
-//	/**
-//	 * modify db
-//	 */
-//	private void modifyDB() {
-//		IStructuredSelection ss = (IStructuredSelection)treeViewerDBList.getSelection();
-//		if(ss.isEmpty()) return;
-//		
-//		UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
-//		
-////			if(userDB.getGroup_seq() == SessionManager.getGroupSeq()) {
-////				final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
-////				final int ret = dialog.open();
-////				
-////				if(ret == Dialog.OK) {
-////					treeViewerDBList.setInput(initData());
-////					refreshConnections();
-////				}
-////			}
-//	}
+	/**
+	 * modify db
+	 */
+	private void configurationDB() {
+		IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+		if(ss.isEmpty()) return;
+		
+		if(ss.getFirstElement() instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
+			
+			final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
+			final int ret = dialog.open();
+			
+			if(ret == Dialog.OK) {
+				initData();
+			}
+		}
+	}
 	
 	/**
-	 * delete db (delete marking)
+	 * delete user
 	 */
-	private void deleteDB(){
+	private void deleteUser(){
 		IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 		if(ss.isEmpty()) return;
 
 		TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)ss.getFirstElement();
 		if(userDBRole.getParent().getUser_seq() == userDBRole.getUser_seq()) return;
 		
-		if(!MessageDialog.openConfirm(null, "Confirm", "Do you want to delete the selected database?") ) return; //$NON-NLS-1$
+		if(!MessageDialog.openConfirm(null, "Confirm", "Do you want to delete the user?") ) return; //$NON-NLS-1$
 
 		try {
 			TadpoleSystem_UserDBQuery.removeUserRoleDB(userDBRole.getSeq());
 			initData();
 		} catch (Exception e) { 
-			logger.error("disconnection exception", e);				
+			logger.error("delete user exception", e);				
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Delete user", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

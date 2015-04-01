@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,18 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_UserDBQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBQuery.class);
+	
+	/**
+	 * update db other information
+	 * ex) db lock? visible
+	 * 
+	 * @param userDB
+	 * @throws Exception
+	 */
+	public static void updateDBOtherInformation(final UserDBDAO userDB) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateDBOtherInformation", userDB);
+	}
 	
 	/**
 	 * Registered Database
@@ -116,9 +129,19 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<String> getUserGroup(String groupSeqs) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (List<String>)sqlClient.queryForList("userDBGroup", groupSeqs); //$NON-NLS-1$
+	public static List<String> getUserGroup() throws Exception {
+		List<String> listGroupName = new ArrayList<String>();
+		
+		List<UserDBDAO> userDBS = getCreateUserDB();
+		for (UserDBDAO userDB : userDBS) {
+			boolean isAdd = false;
+			
+			if(!listGroupName.contains(userDB.getGroup_name())) {
+				listGroupName.add(userDB.getGroup_name());
+			}
+		}
+		
+		return listGroupName;
 	}
 	
 	/**

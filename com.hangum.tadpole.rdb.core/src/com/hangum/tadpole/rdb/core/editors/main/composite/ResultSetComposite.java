@@ -396,7 +396,6 @@ public class ResultSetComposite extends Composite {
 		compositeDumy.setLayout(new GridLayout(1, false));
 		compositeDumy.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
-		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		new Label(compositeBtn, SWT.NONE);
@@ -901,9 +900,9 @@ public class ResultSetComposite extends Composite {
 	 */
 	public void executeFinish(SQLHistoryDAO executingSQLDAO) {
 		if(SQLUtil.isStatement(reqQuery.getSql())) {			
+
 			// table data를 생성한다.
 			final TadpoleResultSet trs = rsDAO.getDataList();
-//			final boolean isResultComma = GetPreferenceGeneral.getISRDBNumberIsComma();
 			sqlSorter = new SQLResultSorter(-999);
 			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter);
 			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
