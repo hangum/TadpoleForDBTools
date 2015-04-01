@@ -10,14 +10,22 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.editor.auth.dialogs;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -29,8 +37,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+
+import com.hangum.tadpole.engine.query.dao.system.TableFilterDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_TableColumnFilter;
+
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  *  SQLAudit
@@ -42,22 +55,30 @@ import org.eclipse.swt.events.SelectionEvent;
  *
  */
 public class TableColumnFilterDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(TableColumnFilterDialog.class);
+	
+	private UserDBDAO userDB;
 	private TableViewer tvTableFilter;
+	private List<TableFilterDAO> listTableColumns = new ArrayList<TableFilterDAO>();
+	
+	private ToolItem tltmDelete;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public TableColumnFilterDialog(Shell parentShell) {
+	public TableColumnFilterDialog(Shell parentShell, final UserDBDAO userDB) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		this.userDB = userDB;
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
-		newShell.setText("Table, Column Fiter dialog"); //$NON-NLS-1$
+		newShell.setText("Table, Column Filter dialog"); //$NON-NLS-1$
 	}
 
 	/**
@@ -92,24 +113,32 @@ public class TableColumnFilterDialog extends Dialog {
 		tltmAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+				AddTableFilterDialog dialog = new AddTableFilterDialog(getShell(), userDB);
+				if(Dialog.OK == dialog.open()) initData();
 			}
 		});
 		tltmAdd.setText("Add");
 		
-		ToolItem tltmDelete = new ToolItem(toolBarMain, SWT.NONE);
+		tltmDelete = new ToolItem(toolBarMain, SWT.NONE);
 		tltmDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				deleteFilter();
 			}
 		});
 		tltmDelete.setText("Delete");
+		tltmDelete.setEnabled(false);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		tvTableFilter = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		tvTableFilter.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				tltmDelete.setEnabled(true);
+			}
+		});
 		Table tableTableFilter = tvTableFilter.getTable();
 		tableTableFilter.setLinesVisible(true);
 		tableTableFilter.setHeaderVisible(true);
@@ -119,7 +148,7 @@ public class TableColumnFilterDialog extends Dialog {
 		
 		tvTableFilter.setContentProvider(new ArrayContentProvider());
 		tvTableFilter.setLabelProvider(new TableFilterLabelProvider());
-		
+		tvTableFilter.setInput(listTableColumns);
 		
 		initData();
 
@@ -127,18 +156,43 @@ public class TableColumnFilterDialog extends Dialog {
 	}
 	
 	/**
+	 * delete filter
+	 */
+	private void deleteFilter() {
+		IStructuredSelection iss = (IStructuredSelection)tvTableFilter.getSelection();
+		if(iss.isEmpty()) return;
+		
+		TableFilterDAO tableFilterDao = (TableFilterDAO)iss.getFirstElement();
+		if(MessageDialog.openConfirm(getShell(), "Confirm", "Do you want to delete filter?")) {
+			try {
+				TadpoleSystem_TableColumnFilter.deleteTableColumnFilters(tableFilterDao);
+				initData();
+			} catch (Exception e) {
+				logger.error("delete tablefilter exception", e);
+			}
+		}
+	}
+	
+	/**
 	 * init data
 	 */
 	private void initData() {
+		listTableColumns.clear();
 		
+		try {
+			listTableColumns = TadpoleSystem_TableColumnFilter.getTableColumnFilters(userDB.getSeq());
+			tvTableFilter.setInput(listTableColumns);
+		} catch (Exception e) {
+			logger.error("find table, filter exception", e);
+		}
 	}
 
 	/**
 	 * Create table filter 
 	 */
 	private void createTableFilterColumns() {
-		String[] columns = {"Name", "Table Lock", "Column Name", "Description", "Create_time"};
-		int[] columnsSize = {100, 50, 200, 200, 100};
+		String[] columns = {"Name", "Table Lock", "Column Names", "Description", "Create_time"};
+		int[] columnsSize = {100, 50, 300, 200, 100};
 	
 		for(int i=0; i<columns.length; i++) {
 			TableViewerColumn tvColName = new TableViewerColumn(tvTableFilter, SWT.NONE);
@@ -178,7 +232,6 @@ class TableFilterLabelProvider extends LabelProvider implements ITableLabelProvi
 	 */
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -187,8 +240,16 @@ class TableFilterLabelProvider extends LabelProvider implements ITableLabelProvi
 	 */
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		TableFilterDAO tableFilterDao = (TableFilterDAO)element;
+		
+		switch(columnIndex) {
+		case 0: return tableFilterDao.getTable_name();
+		case 1: return tableFilterDao.getTable_lock();
+		case 2: return tableFilterDao.getColumn_names();
+		case 3: return tableFilterDao.getDescription();
+		case 4: return tableFilterDao.getCreate_time().toLocaleString();
+		}
+		return "*** Please check column : not set columns ***";
 	}
 	
 }

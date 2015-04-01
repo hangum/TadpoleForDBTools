@@ -33,6 +33,22 @@ public class ToobalImageUtils {
 	}
 	
 	/**
+	 * Other information
+	 * @return
+	 */
+	public static final Image getOtherInformation() {
+		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/Info-16.png");
+	}
+	
+	/**
+	 * Filtering
+	 * @return
+	 */
+	public static final Image getFiltering() {
+		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/filled_filter.png");
+	}
+	
+	/**
 	 * configuration database
 	 * @return
 	 */

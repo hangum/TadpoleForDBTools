@@ -842,6 +842,47 @@ SELECT
 
 <!-- 
 	=========================================================================================================
+	table_filter
+	=========================================================================================================
+ -->
+ <!-- find table filter -->
+<select id="getTableFilter" resultClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO" parameterClass="java.lang.Integer">
+	SELECT seq, db_seq, table_name, description, table_lock, column_names, create_time, delyn 
+ 	FROM table_filter
+ 	WHERE 
+ 			db_seq = #seq#
+ 		AND delyn = 'NO'
+ 	ORDER BY table_name;
+</select>
+
+<!-- find dbseq and table name -->
+<select id="getTableFilterTable" resultClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO" 
+				parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
+	SELECT seq, db_seq, table_name, description, table_lock, column_names, create_time, delyn 
+ 	FROM table_filter
+ 	WHERE 
+ 			db_seq 		= #seq#
+ 		AND table_name 	= #table_name#
+ 		AND delyn 		= 'NO'
+ 	ORDER BY table_name;
+</select>
+
+<!-- insert table column filter -->
+<insert id="insertTableColumnFilter" parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
+	INSERT INTO table_filter
+	 (db_seq, table_name, description, table_lock, column_names) 
+	VALUES 
+	 (#db_seq#, #table_name#, #description#, #table_lock#, #column_names#) 
+</insert>
+
+<!--  delete table filter -->
+<update id="deleteTableColumnFilters" parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
+	UPDATE table_filter
+	SET delyn = 'YES'
+	WHERE seq = #seq#
+</update>
+<!-- 
+	=========================================================================================================
 	schema_history 정보를 설정합니다.
 	=========================================================================================================
  -->

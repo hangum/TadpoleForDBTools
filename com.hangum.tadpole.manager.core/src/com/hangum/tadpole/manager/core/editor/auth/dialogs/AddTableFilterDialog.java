@@ -10,20 +10,26 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.editor.auth.dialogs;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+import com.hangum.tadpole.engine.query.dao.system.TableFilterDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_TableColumnFilter;
 
 /**
  * Add Table Filter Dialog
@@ -35,15 +41,30 @@ import org.eclipse.swt.widgets.Button;
  */
 public class AddTableFilterDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(AddTableFilterDialog.class);
+	
+	private UserDBDAO userDB;
+	
+	private Text textTableName;
 	private Text textDescription;
 	private Text textColumnNames;
+	private Button btnTableFullLock;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public AddTableFilterDialog(Shell parentShell) {
+	public AddTableFilterDialog(Shell parentShell, final UserDBDAO userDB) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		this.userDB = userDB;
+	}
+	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		
+		newShell.setText(userDB.getDisplay_name() + " add Table, Column Filter dialog"); //$NON-NLS-1$
 	}
 
 	/**
@@ -64,14 +85,12 @@ public class AddTableFilterDialog extends Dialog {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblTableName = new Label(compositeBody, SWT.NONE);
-		lblTableName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTableName.setText("Table Name");
 		
-		Combo comboTableName = new Combo(compositeBody, SWT.NONE);
-		comboTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTableName = new Text(compositeBody, SWT.NONE | SWT.BORDER);
+		textTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(compositeBody, SWT.NONE);
-		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDescription.setText("Description");
 		
 		textDescription = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.MULTI);
@@ -81,14 +100,15 @@ public class AddTableFilterDialog extends Dialog {
 		textDescription.setLayoutData(gd_textDescription);
 		new Label(compositeBody, SWT.NONE);
 		
-		Button btnTableFullLock = new Button(compositeBody, SWT.CHECK);
+		btnTableFullLock = new Button(compositeBody, SWT.CHECK);
 		btnTableFullLock.setText("Table full Lock");
+		btnTableFullLock.setEnabled(false);
 		
 		Label lblColumnName = new Label(compositeBody, SWT.NONE);
 		lblColumnName.setText("Column Name");
 		
 		Label lblSeparate = new Label(compositeBody, SWT.NONE);
-		lblSeparate.setText("ex) Separate ,");
+		lblSeparate.setText("ex) Column1,Column2");
 		new Label(compositeBody, SWT.NONE);
 		
 		textColumnNames = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.MULTI);
@@ -96,7 +116,60 @@ public class AddTableFilterDialog extends Dialog {
 		gd_textColumnNames.heightHint = 70;
 		textColumnNames.setLayoutData(gd_textColumnNames);
 
+		initUI();
+		
+		textTableName.setFocus();
+		
 		return container;
+	}
+
+	/**
+	 * initialize ui
+	 */
+	private void initUI() {
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+	 */
+	@Override
+	protected void okPressed() {
+		String strTableName 	= textTableName.getText();
+		String strColumnNames 	= textColumnNames.getText();
+		String strDescription 	= textDescription.getText();
+		
+		if("".equals(strTableName)) {
+			MessageDialog.openError(getShell(), "Error", "Table name is empty.");
+			textTableName.setFocus();
+			return;
+		} else if("".equals(strColumnNames)) {
+			MessageDialog.openError(getShell(), "Error", "Column name is empty.");
+			textColumnNames.setFocus();
+			return;
+		}
+		
+		TableFilterDAO tableColumnFilter = new TableFilterDAO();
+		tableColumnFilter.setDb_seq(userDB.getSeq());
+		tableColumnFilter.setTable_name(strTableName);
+		tableColumnFilter.setColumn_names(strColumnNames);
+		tableColumnFilter.setDescription(strDescription);
+
+		try {
+			// duplication check
+			List<TableFilterDAO> listTableFilter = TadpoleSystem_TableColumnFilter.getTableColumnFilters(tableColumnFilter);
+			if(listTableFilter.isEmpty()) {
+				TadpoleSystem_TableColumnFilter.insertTableColumnFilter(tableColumnFilter);
+			} else {
+				MessageDialog.openError(getShell(), "Error", "Already exist table name.");
+				textTableName.setFocus();
+				
+				return;
+			}
+		} catch (Exception e) {
+			logger.error("tablecolumnfilter table insert exception", e);
+		}
+		
+		super.okPressed();
 	}
 
 	/**
@@ -114,7 +187,7 @@ public class AddTableFilterDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(450, 350);
 	}
 
 }

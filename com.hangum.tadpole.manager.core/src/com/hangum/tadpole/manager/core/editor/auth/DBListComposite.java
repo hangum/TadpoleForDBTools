@@ -143,17 +143,22 @@ public class DBListComposite extends Composite {
 		tltmConfigurationDB.setEnabled(false);
 		
 		tltmTableColumnFilter = new ToolItem(toolBar, SWT.NONE);
+		tltmTableColumnFilter.setImage(ToobalImageUtils.getFiltering());
 		tltmTableColumnFilter.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TableColumnFilterDialog tableColumnDialog = new TableColumnFilterDialog(getShell());
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+				if(ss.isEmpty()) return;
+				
+				TableColumnFilterDialog tableColumnDialog = new TableColumnFilterDialog(getShell(), (UserDBDAO)ss.getFirstElement());
 				tableColumnDialog.open();
 			}
 		});
 		tltmTableColumnFilter.setEnabled(false);
-		tltmTableColumnFilter.setText("Table,Column Filter");
+		tltmTableColumnFilter.setToolTipText("Table,Column Filter");
 		
 		tltmOtherInformation = new ToolItem(toolBar, SWT.NONE);
+		tltmOtherInformation.setImage(ToobalImageUtils.getOtherInformation());
 		tltmOtherInformation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -165,7 +170,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmOtherInformation.setEnabled(false);
-		tltmOtherInformation.setText("Other Information");
+		tltmOtherInformation.setToolTipText("Other Information");
 		
 		ToolItem toolItem_1 = new ToolItem(toolBar, SWT.SEPARATOR);
 
@@ -283,18 +288,14 @@ public class DBListComposite extends Composite {
 				} else if(objSelect instanceof TadpoleUserDbRoleDAO){
 					TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)objSelect;
 					if(userDBRole.getParent().getUser_seq() != userDBRole.getUser_seq()) {
-						tltmAddUser.setEnabled(false);
-						tltmConfigurationDB.setEnabled(true);
-						tltmTableColumnFilter.setEnabled(true);
-						tltmOtherInformation.setEnabled(true);
 						tltmUserDelete.setEnabled(true);
 					} else {
-						tltmAddUser.setEnabled(false);
-						tltmConfigurationDB.setEnabled(false);
-						tltmTableColumnFilter.setEnabled(false);
-						tltmOtherInformation.setEnabled(false);
 						tltmUserDelete.setEnabled(false);
 					}
+					tltmAddUser.setEnabled(false);
+					tltmConfigurationDB.setEnabled(false);
+					tltmTableColumnFilter.setEnabled(false);
+					tltmOtherInformation.setEnabled(false);
 					
 					tltmQueryHistory.setEnabled(false);
 					tltmSQLEditor.setEnabled(false);
