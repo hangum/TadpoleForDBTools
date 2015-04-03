@@ -332,10 +332,6 @@ public class DBListComposite extends Composite {
 		colRoleName.getColumn().setWidth(80);
 		colRoleName.getColumn().setText("Role");
 		
-//		TreeViewerColumn colEmail = new TreeViewerColumn(tvDBList, SWT.NONE);
-//		colEmail.getColumn().setWidth(150);
-//		colEmail.getColumn().setText("Name");
-		
 		TreeViewerColumn colName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colName.getColumn().setWidth(180);
 		colName.getColumn().setText("DB Info");

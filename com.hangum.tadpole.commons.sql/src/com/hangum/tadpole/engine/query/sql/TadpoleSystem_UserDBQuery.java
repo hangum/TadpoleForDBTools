@@ -22,6 +22,7 @@ import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
+import com.hangum.tadpole.engine.query.dao.system.TableFilterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBOriginalDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -77,7 +78,7 @@ public class TadpoleSystem_UserDBQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<Object> listUserDB = sqlClient.queryForList("isOldDBValidate", queryMap);
 		
-		if(listUserDB.size() == 0) return false;
+		if(listUserDB.isEmpty()) return false;
 		else return true;
 	}
 	
@@ -97,7 +98,7 @@ public class TadpoleSystem_UserDBQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<Object> listUserDB = sqlClient.queryForList("isNewDBValidate", queryMap);
 		
-		if(listUserDB.size() == 0) return false;
+		if(listUserDB.isEmpty()) return false;
 		else return true;
 	}
 	
@@ -118,7 +119,7 @@ public class TadpoleSystem_UserDBQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<Object> listUserDB = sqlClient.queryForList("isAlreadyExistDB", queryMap);
 		
-		if(listUserDB.size() == 0) return false;
+		if(listUserDB.isEmpty()) return false;
 		else return true;
 	}
 	
@@ -203,7 +204,7 @@ public class TadpoleSystem_UserDBQuery {
 		TadpoleSystem_UserRole.insertTadpoleUserDBRole(userSeq, insertedUserDB.getSeq(), PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 		// table_filter 등록
-		sqlClient.insert("userDBFilterInsert", userDb);
+//		sqlClient.insert("userDBFilterInsert", userDb);
 		
 		// 데이터베이스 확장속성 등록
 		sqlClient.insert("userDBEXTInsert", userDb);
@@ -269,7 +270,7 @@ public class TadpoleSystem_UserDBQuery {
 		sqlClient.update("userDBUpdate", userEncryptDao); //$NON-NLS-1$
 		
 		// table_filter 등록
-		sqlClient.update("userDBFilterUpdate", userEncryptDao);
+//		sqlClient.update("userDBFilterUpdate", userEncryptDao);
 		
 		// 데이터베이스 확장속성 등록
 		sqlClient.update("userDBEXTUpdate", userEncryptDao);
@@ -286,7 +287,15 @@ public class TadpoleSystem_UserDBQuery {
 	 */
 	public static List<UserDBDAO> getUserDB() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (List<UserDBDAO>)sqlClient.queryForList("userDB", SessionManager.getUserSeq());
+		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", SessionManager.getUserSeq());
+
+		// add filter information
+		for (UserDBDAO userDBDAO : listUserDB) {
+			List<TableFilterDAO> listTableFilter = TadpoleSystem_TableColumnFilter.getTableColumnFilters(userDBDAO.getSeq());
+			userDBDAO.setListTableColumnFilter(listTableFilter);
+		}
+		
+		return listUserDB;
 	}
 	
 	/**
@@ -345,16 +354,16 @@ public class TadpoleSystem_UserDBQuery {
 		return userDB;
 	}
 	
-	/**
-	 * 유저의 디비를 보여 줍니다.
-	 * @return
-	 * @throws Exception
-	 */
-	public static List<UserDBDAO> getAllUserDB(String userSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return  (List<UserDBDAO>)sqlClient.queryForList("userDB", ""+userSeq); //$NON-NLS-1$
-	}
-	
+//	/**
+//	 * 유저의 디비를 보여 줍니다.
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static List<UserDBDAO> getAllUserDB(String userSeq) throws Exception {
+//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+//		return  (List<UserDBDAO>)sqlClient.queryForList("userDB", ""+userSeq); //$NON-NLS-1$
+//	}
+//	
 //	/**
 //	 * 유저의 디비를 보여 줍니다.
 //	 * @return

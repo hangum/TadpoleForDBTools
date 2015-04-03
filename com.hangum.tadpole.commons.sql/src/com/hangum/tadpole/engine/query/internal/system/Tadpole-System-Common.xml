@@ -493,7 +493,7 @@
 	    and b.delyn = 'NO'
 </select>
 
-<select id="userDBManager" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.String">
+<!-- <select id="userDBManager" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.String">
 	SELECT a.seq, user_seq, ext_seq, group_seq, operation_type, dbms_type, url, db, group_name, display_name, host, port, locale, passwd, users, is_profile, profile_select_mill, question_dml, is_readonlyconnect, is_autocommit, is_showtables, is_monitoring, is_external_browser, is_visible, is_summary_report, is_monitoring, create_time, delyn,
 	  ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10 
 	FROM tadpole_db a
@@ -503,7 +503,7 @@
 		a.seq = b.seq AND
 		delYn = 'NO'
 	ORDER BY group_name
-</select>
+</select> -->
 
 <!--  UserDB의 인스턴스 -->
 <select id="userDBInstance" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
@@ -541,12 +541,12 @@
 <!-- 
 	add user_db_filter
  -->
- <insert id="userDBFilterInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+ <!-- <insert id="userDBFilterInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
 	INSERT INTO user_db_filter
 		(seq, is_table_filter, table_filter_include, table_filter_exclude)
 	VALUES
 		(#seq#, #is_table_filter#, #table_filter_include#, #table_filter_exclude#)
-</insert>
+</insert> -->
  
  <!-- 
 	add user_db_filter
@@ -589,13 +589,13 @@
 <!-- 
 	add user_db_filter
  -->
- <update id="userDBFilterUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+ <!-- <update id="userDBFilterUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
 	UPDATE user_db_filter SET
 		is_table_filter = #is_table_filter#, 
 		table_filter_include = #table_filter_include#, 
 		table_filter_exclude = #table_filter_exclude#
 	WHERE seq = #seq#	
-</update>
+</update> -->
 
 <!--
 	db type은 업데이트 되지 않도록 합니다. 
