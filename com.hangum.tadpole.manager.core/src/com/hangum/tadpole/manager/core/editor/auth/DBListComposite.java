@@ -56,9 +56,9 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.dialogs.users.DetailUserAndDBRoleDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.FindUserAndDBRoleDialog;
 import com.hangum.tadpole.manager.core.editor.auth.dialogs.DBOthresConfigDialog;
-import com.hangum.tadpole.manager.core.editor.auth.dialogs.TableColumnFilterDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
@@ -87,7 +87,7 @@ public class DBListComposite extends Composite {
 
 	// select database
 	private ToolItem tltmConfigurationDB;
-	private ToolItem tltmTableColumnFilter;
+//	private ToolItem tltmTableColumnFilter;
 	private ToolItem tltmOtherInformation;
 	
 	private ToolItem tltmQueryHistory;
@@ -95,6 +95,7 @@ public class DBListComposite extends Composite {
 
 	// select user
 	private ToolItem tltmAddUser;
+	private ToolItem tltmUserInfo;
 	private ToolItem tltmUserDelete;
 	
 	/**
@@ -142,20 +143,20 @@ public class DBListComposite extends Composite {
 		tltmConfigurationDB.setToolTipText("Configuration database");
 		tltmConfigurationDB.setEnabled(false);
 		
-		tltmTableColumnFilter = new ToolItem(toolBar, SWT.NONE);
-		tltmTableColumnFilter.setImage(ToobalImageUtils.getFiltering());
-		tltmTableColumnFilter.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
-				if(ss.isEmpty()) return;
-				
-				TableColumnFilterDialog tableColumnDialog = new TableColumnFilterDialog(getShell(), (UserDBDAO)ss.getFirstElement());
-				tableColumnDialog.open();
-			}
-		});
-		tltmTableColumnFilter.setEnabled(false);
-		tltmTableColumnFilter.setToolTipText("Table,Column Filter");
+//		tltmTableColumnFilter = new ToolItem(toolBar, SWT.NONE);
+//		tltmTableColumnFilter.setImage(ToobalImageUtils.getFiltering());
+//		tltmTableColumnFilter.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+//				if(ss.isEmpty()) return;
+//				
+//				TableColumnFilterDialog tableColumnDialog = new TableColumnFilterDialog(getShell(), (UserDBDAO)ss.getFirstElement());
+//				tableColumnDialog.open();
+//			}
+//		});
+//		tltmTableColumnFilter.setEnabled(false);
+//		tltmTableColumnFilter.setToolTipText("Table,Column Filter");
 		
 		tltmOtherInformation = new ToolItem(toolBar, SWT.NONE);
 		tltmOtherInformation.setImage(ToobalImageUtils.getOtherInformation());
@@ -187,10 +188,21 @@ public class DBListComposite extends Composite {
 				dialog.open();
 			}
 		});
-		tltmAddUser.setToolTipText("Add User");
+		tltmAddUser.setToolTipText("Add user");
+		
+		tltmUserInfo = new ToolItem(toolBar, SWT.NONE);
+		tltmUserInfo.setImage(ToobalImageUtils.getUserInfo());
+		tltmUserInfo.setEnabled(false);
+		tltmUserInfo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				detailUser();
+			}
+		});
+		tltmUserInfo.setToolTipText("Detail user");
 		
 		tltmUserDelete = new ToolItem(toolBar, SWT.NONE);
-		tltmUserDelete.setImage(ToobalImageUtils.getDelete());
+		tltmUserDelete.setImage(ToobalImageUtils.getUserRemove());
 		tltmUserDelete.setEnabled(false);
 		tltmUserDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -198,7 +210,7 @@ public class DBListComposite extends Composite {
 				deleteUser();
 			}
 		});
-		tltmUserDelete.setToolTipText("Delete");
+		tltmUserDelete.setToolTipText("Delete user");
 		
 		ToolItem toolItem = new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -261,7 +273,7 @@ public class DBListComposite extends Composite {
 				if(objSelect instanceof UserDBDAO) {
 					UserDBDAO userDB = (UserDBDAO)objSelect;
 					try {
-						List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserList(userDB);
+						List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
 						if(userDB.getListChildren().isEmpty()) {
 							for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
 								tadpoleUserDbRoleDAO.setParent(userDB);
@@ -276,12 +288,13 @@ public class DBListComposite extends Composite {
 					}
 					
 					tltmConfigurationDB.setEnabled(true);
-					tltmTableColumnFilter.setEnabled(true);
+//					tltmTableColumnFilter.setEnabled(true);
 					tltmOtherInformation.setEnabled(true);
 					
 					tltmAddUser.setEnabled(true);
 					
 					tltmUserDelete.setEnabled(false);
+					tltmUserInfo.setEnabled(false);
 					
 					tltmQueryHistory.setEnabled(true);
 					tltmSQLEditor.setEnabled(true);
@@ -289,12 +302,14 @@ public class DBListComposite extends Composite {
 					TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)objSelect;
 					if(userDBRole.getParent().getUser_seq() != userDBRole.getUser_seq()) {
 						tltmUserDelete.setEnabled(true);
+						tltmUserInfo.setEnabled(true);
 					} else {
 						tltmUserDelete.setEnabled(false);
+						tltmUserInfo.setEnabled(false);
 					}
 					tltmAddUser.setEnabled(false);
 					tltmConfigurationDB.setEnabled(false);
-					tltmTableColumnFilter.setEnabled(false);
+//					tltmTableColumnFilter.setEnabled(false);
 					tltmOtherInformation.setEnabled(false);
 					
 					tltmQueryHistory.setEnabled(false);
@@ -302,11 +317,12 @@ public class DBListComposite extends Composite {
 				} else if(objSelect instanceof ManagerListDTO) {
 
 					tltmConfigurationDB.setEnabled(false);
-					tltmTableColumnFilter.setEnabled(false);
+//					tltmTableColumnFilter.setEnabled(false);
 					tltmOtherInformation.setEnabled(false);
 					
 					tltmAddUser.setEnabled(false);
 					tltmUserDelete.setEnabled(false);
+					tltmUserInfo.setEnabled(false);
 					tltmQueryHistory.setEnabled(false);
 					tltmSQLEditor.setEnabled(false);
 				}
@@ -341,12 +357,12 @@ public class DBListComposite extends Composite {
 		colApproval.getColumn().setText("User");
 		
 		TreeViewerColumn colVisible = new TreeViewerColumn(tvDBList, SWT.NONE);
-		colVisible.getColumn().setWidth(40);
+		colVisible.getColumn().setWidth(50);
 		colVisible.getColumn().setText("Visible");
 		
-		TreeViewerColumn colCreateTime = new TreeViewerColumn(tvDBList, SWT.NONE);
-		colCreateTime.getColumn().setWidth(150);
-		colCreateTime.getColumn().setText("Create tiem");
+		TreeViewerColumn colTermsOfUser = new TreeViewerColumn(tvDBList, SWT.NONE);
+		colTermsOfUser.getColumn().setWidth(300);
+		colTermsOfUser.getColumn().setText("Terms of user");
 		
 		tvDBList.setContentProvider(new DBListContentProvider());
 		tvDBList.setLabelProvider(new DBListLabelProvider());
@@ -378,6 +394,20 @@ public class DBListComposite extends Composite {
 			if(ret == Dialog.OK) {
 				initData();
 			}
+		}
+	}
+	
+	/**
+	 * detail user information
+	 */
+	private void detailUser() {
+		IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+		if(ss.isEmpty()) return;
+
+		TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)ss.getFirstElement();
+		DetailUserAndDBRoleDialog dialog = new DetailUserAndDBRoleDialog(getShell(), userDBRole);
+		if(Dialog.OK == dialog.open()) {
+			tvDBList.refresh(dialog.getUserDBRole(), true);
 		}
 	}
 	
@@ -512,32 +542,17 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		if(element instanceof UserDBDAO) {
 			UserDBDAO userDB = (UserDBDAO)element;
-//			if(PermissionChecker.isDBAdminRole(userDB)) {
-				switch(columnIndex) {
-					case 0: return ManagerLabelProvider.getDBText(userDB);
-					case 1: return "";//userDB.getRole_id();
-					case 2:
-						// sqlite
-						if("".equals(userDB.getHost())) return userDB.getUrl();
-						return userDB.getHost() + ":"  + userDB.getPort();
-					case 3: return userDB.getUsers();
-					case 4: return userDB.getIs_visible();
-					case 5: return ""+userDB.getCreate_time();
-				}
-//			} else {
-//				switch(columnIndex) {
-//					case 0: return userDB.getGroup_name();
-//					case 1: return "";//userDB.getRole_id();
-//					case 2: return ManagerLabelProvider.getDBText(userDB);
-//					case 3:
-//						// sqlite
-//						if("".equals(userDB.getHost())) return userDB.getUrl(userDB.getRole_id());
-//						return userDB.getHost(userDB.getRole_id()) + ":"  + userDB.getPort(userDB.getRole_id());
-//					case 4: return userDB.getUsers(userDB.getRole_id());
-//					case 5: return userDB.getIs_visible();
-//					case 6: return ""+userDB.getCreate_time();
-//				}
-//			}
+
+			switch(columnIndex) {
+				case 0: return ManagerLabelProvider.getDBText(userDB);
+				case 1: return "";//userDB.getRole_id();
+				case 2:
+					// sqlite
+					if("".equals(userDB.getHost())) return userDB.getUrl();
+					return userDB.getHost() + ":"  + userDB.getPort();
+				case 3: return userDB.getUsers();
+				case 4: return userDB.getIs_visible();
+			}
 
 		} else if(element instanceof ManagerListDTO) {
 			ManagerListDTO mgDto = (ManagerListDTO)element;
@@ -548,7 +563,7 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 			switch(columnIndex) {
 				case 0: return String.format("%s ( %s )", roleDao.getName(), roleDao.getEmail());
 				case 1: return roleDao.getRole_id();
-				case 5: return ""+roleDao.getCreate_time();
+				case 5: return roleDao.getTerms_of_use_starttime() + " ~ " + roleDao.getTerms_of_use_endtime();
 			}
 		}
 		

@@ -20,7 +20,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -45,7 +44,7 @@ public class ExecuteBatchSQL {
 	 * @param intCommitCount
 	 * @param userEmail
 	 * @throws Exception
-	 */
+	 */     
 	public static void runSQLExecuteBatch(List<String> listQuery, 
 			final RequestQuery reqQuery,
 			final UserDBDAO userDB,

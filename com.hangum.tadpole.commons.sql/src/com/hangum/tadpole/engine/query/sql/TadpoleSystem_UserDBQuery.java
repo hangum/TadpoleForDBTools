@@ -201,7 +201,10 @@ public class TadpoleSystem_UserDBQuery {
 		userDb.setSeq(insertedUserDB.getSeq());
 		
 		// tadpole_user_db_role
-		TadpoleSystem_UserRole.insertTadpoleUserDBRole(userSeq, insertedUserDB.getSeq(), PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		TadpoleSystem_UserRole.insertTadpoleUserDBRole(userSeq, 
+					insertedUserDB.getSeq(), 
+					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString()
+				);
 		
 		// table_filter 등록
 //		sqlClient.insert("userDBFilterInsert", userDb);
@@ -392,7 +395,7 @@ public class TadpoleSystem_UserDBQuery {
 	 */
 	public static void removeUserRoleDB(int seq) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.update("userDBRoleUpdate", seq); //$NON-NLS-1$
+		sqlClient.update("userDBRoleRemove", seq); //$NON-NLS-1$
 	}
 
 }

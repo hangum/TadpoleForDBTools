@@ -472,6 +472,7 @@
 
 <!--  UserDB의 리스트 -->
 <select id="userDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
+<![CDATA[
 	select a.*, b.ROLE_ID role_id, c.*
 	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
 	where a.seq = b.db_seq
@@ -480,6 +481,8 @@
 	    and a.delyn = 'NO'
 	    and b.delyn = 'NO'
 	    AND a.is_visible = 'YES'
+	    AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
+]]>	
 </select>
 
 <select id="getCreateUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
@@ -637,6 +640,7 @@
 </select>
 
 <select id="getUserRoleList" resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+<![CDATA[
 	SELECT a.*, b.email, b.name
 	FROM 
 		tadpole_user_db_role a,
@@ -645,15 +649,25 @@
 			a.db_seq = #seq# 
 		AND a.delyn = 'NO'
 		AND a.user_seq = b.seq
+		AND a.user_seq <> #user_seq#
+]]>
 </select>
 
 <insert id="userDBRoleInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
 	INSERT INTO tadpole_user_db_role
-		(user_seq,db_seq, role_id)
-	VALUES (#user_seq#, #db_seq#, #role_id#);
+		(user_seq,db_seq, role_id, access_ip, terms_of_use_starttime, terms_of_use_endtime)
+	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #terms_of_use_starttime#, #terms_of_use_endtime#);
 </insert>
 
-<update id="userDBRoleUpdate" parameterClass="java.lang.Integer">
+<update id="userDBRoleUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
+	UPDATE tadpole_user_db_role
+	SET role_id = #role_id#, 
+		terms_of_use_starttime = #terms_of_use_starttime#, 
+		terms_of_use_endtime = #terms_of_use_endtime#
+	WHERE seq = #seq# 
+</update>
+
+<update id="userDBRoleRemove" parameterClass="java.lang.Integer">
 	UPDATE tadpole_user_db_role SET
 		delYn = 'YES'
 	WHERE seq = #seq#

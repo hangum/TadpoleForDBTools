@@ -82,6 +82,22 @@ public class ToobalImageUtils {
 	}
 	
 	/**
+	 * user add image
+	 * @return
+	 */
+	public static final Image getUserInfo() {
+		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/user_info-0.56.png");
+	}
+	
+	/**
+	 * user add image
+	 * @return
+	 */
+	public static final Image getUserRemove() {
+		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/user-remove-0.56.png.png");
+	}
+	
+	/**
 	 * delete image
 	 * @return
 	 */

@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -36,6 +38,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -68,6 +71,9 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	private List<UserDAO> listUserGroup = new ArrayList<UserDAO>();
 	
 	private Combo comboRoleType;
+	private DateTime dateTimeStart;
+	private DateTime dateTimeEndDay;
+	private DateTime dateTimeEndTime;
 
 	/**
 	 * Create the dialog.
@@ -144,14 +150,13 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		
 		Composite composite = new Composite(compositeBody, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(2, false));
+		composite.setLayout(new GridLayout(5, false));
 		
 		Label lblRoleType = new Label(composite, SWT.NONE);
-		lblRoleType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblRoleType.setText("Role Type");
 		
 		comboRoleType = new Combo(composite, SWT.NONE | SWT.READ_ONLY);
-		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		comboRoleType.add("NONE");
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString());
@@ -159,12 +164,39 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		comboRoleType.add(PublicTadpoleDefine.USER_ROLE_TYPE.GUEST.toString());
 		comboRoleType.select(0);
 		
+		Label lblTermsUfUse = new Label(composite, SWT.NONE);
+		lblTermsUfUse.setText("Terms of use ");
+		
+		dateTimeStart = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN);
+		
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("~");
+		
+		dateTimeEndDay = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN);
+		
+		dateTimeEndTime = new DateTime(composite, SWT.BORDER | SWT.TIME | SWT.SHORT);
+		
+		initUI();
+		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 				
 		textEMail.setFocus();
 
 		return container;
+	}
+
+	/**
+	 * initialize UI
+	 */
+	private void initUI() {
+		Calendar cal = Calendar.getInstance();
+		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		cal.add(Calendar.DAY_OF_YEAR, 365 * 10);
+		dateTimeEndDay.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		dateTimeEndTime.setTime(23, 59, 59);
 	}
 	
 	@Override
@@ -187,9 +219,19 @@ public class FindUserAndDBRoleDialog extends Dialog {
 				boolean isAddDBRole = TadpoleSystem_UserRole.isDBAddRole(userDBDao, userDAO);
 				if(isAddDBRole) {
 					if(!MessageDialog.openConfirm(getShell(), "Confirm", Messages.FindUserDialog_4)) return;
-					TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(), userDBDao.getSeq(), comboRoleType.getText());
 					
-					MessageDialog.openInformation(getShell(), "Comfirm", "Save success.");
+					Calendar calStart = Calendar.getInstance();
+					calStart.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
+
+					Calendar calEnd = Calendar.getInstance();
+					calEnd.set(dateTimeEndDay.getYear(), dateTimeEndDay.getMonth(), dateTimeEndDay.getDay(), dateTimeEndTime.getHours(), dateTimeEndTime.getMinutes(), 00);
+					
+					TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(), userDBDao.getSeq(), comboRoleType.getText(), "*", 
+							new Timestamp(calStart.getTimeInMillis()), 
+							new Timestamp(calEnd.getTimeInMillis())
+							);
+					
+					MessageDialog.openInformation(getShell(), "Comfirm", "Save user role data.");
 				} else {
 					MessageDialog.openError(getShell(), "Comfirm", "Already exist user.");
 				}
@@ -248,7 +290,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 400);
+		return new Point(500, 450);
 	}
 
 }

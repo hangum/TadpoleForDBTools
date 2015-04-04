@@ -1,5 +1,7 @@
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +52,11 @@ public class TadpoleSystem_UserRole {
 	}
 	
 	/**
-	 * insert tadpole_user_db_role table
+	 * insert table
 	 * 
 	 * @param userSeq
 	 * @param dbSeq
-	 * @param roleId
+	 * @param roleType
 	 * @throws Exception
 	 */
 	public static void insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType) throws Exception {
@@ -62,18 +64,60 @@ public class TadpoleSystem_UserRole {
 		userDBRoleDao.setUser_seq(userSeq);
 		userDBRoleDao.setDb_seq(dbSeq);
 		userDBRoleDao.setRole_id(roleType);
+		userDBRoleDao.setTerms_of_use_endtime(new Timestamp(System.currentTimeMillis()));
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 100);
+		userDBRoleDao.setTerms_of_use_endtime(new Timestamp(cal.getTimeInMillis()));
+		
+		// Insert tadpole_user_db_role table. 
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.insert("userDBRoleInsert", userDBRoleDao);
+	}
+	
+	
+	/**
+	 * insert tadpole_user_db_role table
+	 * 
+	 * @param userSeq
+	 * @param dbSeq
+	 * @param roleId
+	 * @param accessIp
+	 * @param terms_of_use_starttime
+	 * @param terms_of_use_endtime
+	 * 
+	 * @throws Exception
+	 */
+	public static void insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType, String accessIp, Timestamp terms_of_use_starttime, Timestamp terms_of_use_endtime) throws Exception {
+		TadpoleUserDbRoleDAO userDBRoleDao = new TadpoleUserDbRoleDAO();
+		userDBRoleDao.setUser_seq(userSeq);
+		userDBRoleDao.setDb_seq(dbSeq);
+		userDBRoleDao.setRole_id(roleType);
+		userDBRoleDao.setAccess_ip(accessIp);
+		userDBRoleDao.setTerms_of_use_starttime(terms_of_use_starttime);
+		userDBRoleDao.setTerms_of_use_endtime(terms_of_use_endtime);
 		
 		// Insert tadpole_user_db_role table. 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("userDBRoleInsert", userDBRoleDao);
 
 	}
+	
+	/**
+	 * update user role
+	 * 
+	 * @param userDBRoleDao
+	 */
+	public static void updateTadpoleUserDBRole(TadpoleUserDbRoleDAO userDBRoleDao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.insert("userDBRoleUpdate", userDBRoleDao);
+	}
 
 	/**
 	 * user list
 	 * @param userDB
 	 */
-	public static List getUserList(UserDBDAO userDB) throws Exception {
+	public static List getUserRoleList(UserDBDAO userDB) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getUserRoleList", userDB);
 	}
