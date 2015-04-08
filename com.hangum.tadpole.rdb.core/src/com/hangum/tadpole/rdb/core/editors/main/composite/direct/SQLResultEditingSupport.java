@@ -1,0 +1,155 @@
+/*******************************************************************************
+ * Copyright (c) 2012 - 2015 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
+package com.hangum.tadpole.rdb.core.editors.main.composite.direct;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
+
+import com.hangum.tadpole.engine.sql.util.DataTypeValidate;
+import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.sql.format.SQLFormater;
+
+/**
+ * SQL Result Editing support
+ *
+ * @author hangum
+ * @version 1.6.1
+ * @since 2015. 4. 6.
+ *
+ */
+public class SQLResultEditingSupport extends EditingSupport {
+	private static Logger logger = Logger.getLogger(SQLResultEditingSupport.class);
+	
+	private TableViewer tvSQLResult;
+	private ResultSetUtilDTO rsDAO;
+	private int intColumnIndex;
+	
+	private CellEditor cellEditor;
+	
+	/**
+	 * @param viewer
+	 */
+	public SQLResultEditingSupport(TableViewer viewer, final ResultSetUtilDTO rsDAO, final int intColumnIndex) {
+		super(viewer);
+		
+		this.tvSQLResult = viewer;
+		this.rsDAO = rsDAO;
+		this.intColumnIndex = intColumnIndex;
+		
+		this.cellEditor = new TextCellEditor(tvSQLResult.getTable());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
+	 */
+	@Override
+	protected CellEditor getCellEditor(Object element) {
+		return cellEditor;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
+	 */
+	@Override
+	protected boolean canEdit(Object element) {
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
+	 */
+	@Override
+	protected Object getValue(Object element) {
+		HashMap<Integer, String> data = (HashMap<Integer, String>)element;
+		return data.get(intColumnIndex)==null?"":data.get(intColumnIndex);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	protected void setValue(Object element, Object value) {
+		HashMap<Integer, String> data = (HashMap<Integer, String>)element;
+		HashMap<Integer, String> oldDataMap = (HashMap<Integer, String>)data.clone();
+		
+		String oldData = data.get(intColumnIndex)==null?"":data.get(intColumnIndex);
+		if(oldData.equals(value.toString())) return;
+
+		// 입력 값이 올바른지 검사합니다.
+		String colType = RDBTypeToJavaTypeUtils.getRDBType(rsDAO.getColumnType().get(intColumnIndex));
+		if(!DataTypeValidate.isValid(rsDAO.getUserDB(), colType, value.toString())) {
+			MessageDialog.openError(getViewer().getControl().getShell(), Messages.TextViewerEditingSupport_0, Messages.TextViewerEditingSupport_2 + " is " + colType + "."); 
+			return;
+		} 
+
+		// 
+//		if(MessageDialog.openConfirm(getViewer().getControl().getShell(), "Confirm", "Do you want to modify")) {
+			String strColumnName = rsDAO.getColumnName().get(intColumnIndex);
+			String strColumnValue = "";
+			if(RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(intColumnIndex))) strColumnValue = value.toString();
+			else strColumnValue = "'" + value.toString() + "'";
+			
+			final String strUpdateStatement = String.format("UPDATE %s SET %s=%s WHERE %s", 
+						"Baby", 
+						strColumnName, 
+						strColumnValue, 
+						makeWhereStaement(oldDataMap));
+			String strFormatStatement = "";
+			try {
+				strFormatStatement = SQLFormater.format(strUpdateStatement);
+			} catch(Exception e) {
+				strFormatStatement = strUpdateStatement;
+			}
+			logger.debug("Update SQL Statement is " + strFormatStatement);
+			
+			SQLUpdateDialog dialog = new SQLUpdateDialog(getViewer().getControl().getShell(), rsDAO.getUserDB(),  strFormatStatement);
+			if(Dialog.OK == dialog.open()) {
+				// 수정된 데이터 표시
+				data.put(intColumnIndex, value.toString());
+				tvSQLResult.refresh();
+			}
+//		} 
+	}
+	
+	/**
+	 * make where statement
+	 * 
+	 * @return
+	 */
+	private String makeWhereStaement(HashMap<Integer, String> data) {
+		StringBuffer sbWhere = new StringBuffer();
+		
+		Map<Integer, String> mapColumnNames = rsDAO.getColumnName();
+		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
+		
+		for(int i=1;i<mapColumnNames.size(); i++) {
+			sbWhere.append(mapColumnNames.get(i) + "=");
+			if(RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))) sbWhere.append(data.get(i));
+			else sbWhere.append("'" + data.get(i) + "'");
+
+			if(i != mapColumnNames.size()-1) sbWhere.append(" AND ");
+		}
+		logger.debug("make where statement is : " + sbWhere);
+		
+		return sbWhere.toString();
+	}
+
+}

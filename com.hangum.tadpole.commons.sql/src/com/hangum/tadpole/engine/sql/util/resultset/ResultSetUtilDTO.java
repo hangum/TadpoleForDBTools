@@ -24,6 +24,11 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public class ResultSetUtilDTO {
+	/**
+	 * userDB dao
+	 */
+	private UserDBDAO userDB;
+	
 	/** 
 	 * column 이름. <columnIndex, name>
 	 */
@@ -46,26 +51,27 @@ public class ResultSetUtilDTO {
 	 */
 	private TadpoleResultSet dataList = new TadpoleResultSet();
 	
-	
-	
 	public ResultSetUtilDTO() {
 	}
 	
 	/**
 	 * 
+	 * @param userDB
 	 * @param mapColumns
 	 * @param mapColumnType
 	 * @param sourceDataList
 	 */
-	public ResultSetUtilDTO(Map<Integer, String> columnName, Map<Integer, Integer> columnType, TadpoleResultSet dataList) {
+	public ResultSetUtilDTO(UserDBDAO userDB, Map<Integer, String> columnName, Map<Integer, Integer> columnType, TadpoleResultSet dataList) {
+		this.userDB 	= userDB;
 		this.columnName = columnName;
 		this.columnType = columnType;
-		this.dataList = dataList;
+		this.dataList 	= dataList;
 	}
 
 	/**
 	 * 메인에디터에서 보여주기위한 정보를 만듭니다.
-	 * 
+	 *
+	 * @param userDB
 	 * @param isShowRownum
 	 * @param rs
 	 * @param limitCount
@@ -73,12 +79,28 @@ public class ResultSetUtilDTO {
 	 * @throws Exception
 	 */
 	public ResultSetUtilDTO(UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int limitCount) throws Exception {
+		this.userDB = userDB;
+		
 		if(rs != null) {
 			columnName = ResultSetUtils.getColumnName(isShowRownum, rs);
 			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
 			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
 			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());
 		}
+	}
+	
+	/**
+	 * @return the userDB
+	 */
+	public UserDBDAO getUserDB() {
+		return userDB;
+	}
+
+	/**
+	 * @param userDB the userDB to set
+	 */
+	public void setUserDB(UserDBDAO userDB) {
+		this.userDB = userDB;
 	}
 
 	/**

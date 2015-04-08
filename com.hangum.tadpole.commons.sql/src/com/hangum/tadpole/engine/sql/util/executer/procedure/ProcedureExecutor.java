@@ -167,7 +167,7 @@ public abstract class ProcedureExecutor {
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
 		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(rs, 1000);
 
-		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(mapColumns, mapColumnType, sourceDataList);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(userDB, mapColumns, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -199,7 +199,7 @@ public abstract class ProcedureExecutor {
 		mapColumnType.put(4, java.sql.Types.DOUBLE);
 		mapColumnType.put(5, java.sql.Types.VARCHAR);
 		
-		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(mapColumns, mapColumnType, sourceDataList);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(userDB, mapColumns, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	

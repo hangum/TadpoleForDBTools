@@ -625,14 +625,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		}
 		
 		/** filter 정보가 있으면 처리합니다. */
-		List<TableDAO> listTables = filter(userDB, showTables);
+//		List<TableDAO> listTables = filter(userDB, showTables);
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		for(TableDAO td : listTables) {
+		for(TableDAO td : showTables) {
 			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
 		}
 		
-		return listTables;
+		return showTables;
 	}
 	
 	/**
@@ -641,8 +641,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * @param userDB
 	 * @param listDAO
 	 */
-	public static List<TableDAO> filter(UserDBDAO userDB, List<TableDAO> listDAO) {
-		
+//	public static List<TableDAO> filter(UserDBDAO userDB, List<TableDAO> listDAO) {
+//		
 //		if("YES".equals(userDB.getIs_table_filter())){
 //			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
 //			String includeFilter = userDB.getTable_filter_include();
@@ -673,9 +673,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 //			
 //			return tmpShowTables;
 //		}
-		
-		return listDAO;
-	}
+//		
+//		return listDAO;
+//	}
 	
 	/**
 	 * initialize action

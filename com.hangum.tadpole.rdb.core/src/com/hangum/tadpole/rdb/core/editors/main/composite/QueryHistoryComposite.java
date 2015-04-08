@@ -244,8 +244,8 @@ public class QueryHistoryComposite extends Composite {
 			logger.error("save the user query", e); //$NON-NLS-1$
 		}
 		
-//		listSQLHistory.add(sqltHistoryDao);
-//		tvSQLHistory.refresh();
+		listSQLHistory.add(sqltHistoryDao);
+		tvSQLHistory.refresh();
 	}
 	
 	/**

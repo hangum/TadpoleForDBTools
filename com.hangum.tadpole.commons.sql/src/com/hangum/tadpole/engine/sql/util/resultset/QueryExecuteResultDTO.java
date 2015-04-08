@@ -30,8 +30,8 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 	public QueryExecuteResultDTO() {
 	}
 
-	public QueryExecuteResultDTO(Map<Integer, String> columnName, Map<Integer, Integer> columnType, TadpoleResultSet dataList) {
-		super(columnName, columnType, dataList);
+	public QueryExecuteResultDTO(UserDBDAO userDB, Map<Integer, String> columnName, Map<Integer, Integer> columnType, TadpoleResultSet dataList) {
+		super(userDB, columnName, columnType, dataList);
 	}
 
 	public QueryExecuteResultDTO(UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {

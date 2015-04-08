@@ -362,7 +362,7 @@ public class DBListComposite extends Composite {
 		
 		TreeViewerColumn colTermsOfUser = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colTermsOfUser.getColumn().setWidth(300);
-		colTermsOfUser.getColumn().setText("Terms of user");
+		colTermsOfUser.getColumn().setText("Terms of use");
 		
 		tvDBList.setContentProvider(new DBListContentProvider());
 		tvDBList.setLabelProvider(new DBListLabelProvider());

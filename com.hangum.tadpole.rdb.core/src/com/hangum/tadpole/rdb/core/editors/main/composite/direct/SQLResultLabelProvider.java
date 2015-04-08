@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.util.tables;
+package com.hangum.tadpole.rdb.core.editors.main.composite.direct;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -32,6 +32,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -147,7 +148,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 						tableViewer.refresh();
 					}
 				});
-//				tc.setEditingSupport(new FirstNameEditingSupport(viewer));
+				if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
 				
 			}	// end for
 			
