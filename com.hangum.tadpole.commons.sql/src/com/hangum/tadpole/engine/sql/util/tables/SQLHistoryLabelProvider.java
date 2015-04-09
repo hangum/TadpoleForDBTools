@@ -13,6 +13,8 @@ package com.hangum.tadpole.engine.sql.util.tables;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -46,7 +48,7 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 				// 쿼리에 개행 문자가 있으면 테이블에 개행 문자 이후 쿼리가 보이지 않으므로 보여줄 때는 개행 문자를 제거합니다.
 				case 1: 
 //					System.out.println(historyDAO.getStrSQLText());
-					return historyDAO.getStrSQLText();//StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", " ");
+					return StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", "<br/>");
 //					return StringEscapeUtils.escapeXml(StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", "<br> "));
 				case 2: 
 					return ""+( (historyDAO.getEndDateExecute().getTime() - historyDAO.getStartDateExecute().getTime()) / 1000f);
