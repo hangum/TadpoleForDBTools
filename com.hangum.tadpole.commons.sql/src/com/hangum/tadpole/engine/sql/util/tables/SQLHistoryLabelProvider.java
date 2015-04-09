@@ -45,7 +45,7 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 				case 0: return dateToStr(historyDAO.getStartDateExecute());
 				// 쿼리에 개행 문자가 있으면 테이블에 개행 문자 이후 쿼리가 보이지 않으므로 보여줄 때는 개행 문자를 제거합니다.
 				case 1: 
-					System.out.println(historyDAO.getStrSQLText());
+//					System.out.println(historyDAO.getStrSQLText());
 					return historyDAO.getStrSQLText();//StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", " ");
 //					return StringEscapeUtils.escapeXml(StringUtils.replaceChars(historyDAO.getStrSQLText(), "\n", "<br> "));
 				case 2: 

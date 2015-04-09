@@ -11,7 +11,6 @@
 package com.hangum.tadpole.commons.dialogs.message.dao;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 

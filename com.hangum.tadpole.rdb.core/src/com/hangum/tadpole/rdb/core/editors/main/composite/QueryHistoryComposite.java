@@ -91,6 +91,7 @@ public class QueryHistoryComposite extends Composite {
 		tableSQLHistory.setLinesVisible(true);
 		tableSQLHistory.setHeaderVisible(true);
 		tableSQLHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
 //		tableSQLHistory.setSortDirection(SWT.DOWN);
 		
 		// auto column layout
