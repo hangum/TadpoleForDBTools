@@ -148,7 +148,11 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 						tableViewer.refresh();
 					}
 				});
-				if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
+
+				// if select statement update
+				if(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT == rsDAO.getStatementType()) {
+					if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
+				}
 				
 			}	// end for
 			

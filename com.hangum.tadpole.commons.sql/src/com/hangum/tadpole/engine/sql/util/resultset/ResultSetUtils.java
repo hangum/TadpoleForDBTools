@@ -118,6 +118,124 @@ public class ResultSetUtils {
 	}
 	
 	/**
+	 * column of type
+	 * 
+	 * @param isShowRowNum 로우넘 보여주기위해 첫번째 컬럼을 추가하는 데이터를 만듭니다.
+	 * @param rsm
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Map<Integer, Integer> getColumnType(boolean isShowRowNum, ResultSetMetaData rsm) throws SQLException {
+		Map<Integer, Integer> mapColumnType = new HashMap<>();
+		int intStartIndex = 0;
+		
+		if(isShowRowNum) {
+			intStartIndex++;
+			mapColumnType.put(0, java.sql.Types.INTEGER);
+		}
+		
+		for(int i=0;i<rsm.getColumnCount(); i++) {
+//			logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
+//			logger.debug("\tColumnLabel  		:  " 	+ rsm.getColumnLabel(i+1));
+			
+//			logger.debug("\t AutoIncrement  	:  " 	+ rsm.isAutoIncrement(i+1));
+//			logger.debug("\t Nullable		  	:  " 	+ rsm.isNullable(i+1));
+//			logger.debug("\t CaseSensitive  	:  " 	+ rsm.isCaseSensitive(i+1));
+//			logger.debug("\t Currency		  	:  " 	+ rsm.isCurrency(i+1));
+//			
+//			logger.debug("\t DefinitelyWritable :  " 	+ rsm.isDefinitelyWritable(i+1));
+//			logger.debug("\t ReadOnly		  	:  " 	+ rsm.isReadOnly(i+1));
+//			logger.debug("\t Searchable		  	:  " 	+ rsm.isSearchable(i+1));
+//			logger.debug("\t Signed			  	:  " 	+ rsm.isSigned(i+1));
+////			logger.debug("\t Currency		  	:  " 	+ rsm.isWrapperFor(i+1));
+//			logger.debug("\t Writable		  	:  " 	+ rsm.isWritable(i+1));
+//			
+//			logger.debug("\t ColumnClassName  	:  " 	+ rsm.getColumnClassName(i+1));
+//			logger.debug("\t CatalogName  		:  " 	+ rsm.getCatalogName(i+1));
+//			logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
+//			logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
+//			logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
+			mapColumnType.put(i+intStartIndex, rsm.getColumnType(i+1));
+			
+//			logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
+//			logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
+//			logger.debug("\t SchemaName		 	:  " 	+ rsm.getSchemaName(i+1));
+//			logger.debug("\t TableName		 	:  " 	+ rsm.getTableName(i+1));
+//			logger.debug("\t ==[column end]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
+		}
+		
+		return mapColumnType; 
+	}
+	
+	/**
+	 * column of name
+	 * 
+	 * @param isShowRowNum
+	 * @param rs
+	 * @return
+	 * @throws Exception
+	 */
+	public static Map<Integer, String> getColumnName(boolean isShowRowNum, ResultSet rs) throws Exception {
+		Map<Integer, String> mapColumnName = new HashMap<Integer, String>();
+		int intStartIndex = 0;
+		
+		if(isShowRowNum) {
+			intStartIndex++;
+			mapColumnName.put(0, "#");
+		}
+		
+		ResultSetMetaData rsm = rs.getMetaData();
+		for(int i=0; i<rsm.getColumnCount(); i++) {
+			mapColumnName.put(i+intStartIndex, rsm.getColumnLabel(i+1));
+		}
+		
+		return mapColumnName;
+	}
+	
+	public static Map<Integer, String> getColumnTableName(ResultSet rs) throws Exception {
+		return getColumnTableName(false, rs);
+	}
+	
+	/**
+	 * 컬럼에 table name
+	 * 
+	 * @param isShowRowNum
+	 * @param rs
+	 * @return
+	 * @throws Exception
+	 */
+	public static Map<Integer, String> getColumnTableName(boolean isShowRowNum, ResultSet rs) throws Exception {
+		Map<Integer, String> mapColumnName = new HashMap<Integer, String>();
+		int intStartIndex = 0;
+		
+		if(isShowRowNum) {
+			intStartIndex++;
+			mapColumnName.put(0, "#");
+		}
+		
+		ResultSetMetaData rsm = rs.getMetaData();
+		for(int i=0; i<rsm.getColumnCount(); i++) {
+			if(rsm.getSchemaName(i+1) == null || "".equals(rsm.getSchemaName(i+1))) {
+				mapColumnName.put(i+intStartIndex, rsm.getTableName(i+1));
+			} else {
+				mapColumnName.put(i+intStartIndex, rsm.getSchemaName(i+1) + "." + rsm.getTableName(i+1));
+			}
+		}
+		
+		return mapColumnName;
+	}
+
+	/**
+	 * metadata를 바탕으로 결과를 컬럼 정보를 수집힌다.
+	 * 
+	 * @param rs
+	 * @return index순번에 컬럼명
+	 */
+	public static Map<Integer, String> getColumnName(ResultSet rs) throws Exception {
+		return getColumnName(false, rs);
+	}
+	
+	/**
 	 * 쿼리결과의 실제 테이블 컬럼 정보를 넘겨 받습니다.
 	 * 현재는 pgsql 만 지원합니다.
 	 * 
@@ -202,90 +320,5 @@ public class ResultSetUtils {
 		
 		return mapTableColumn;
 	}
-	
-	/**
-	 * get column types
-	 * 
-	 * @param isShowRowNum 로우넘 보여주기위해 첫번째 컬럼을 추가하는 데이터를 만듭니다.
-	 * @param rsm
-	 * @return
-	 * @throws SQLException
-	 */
-	public static Map<Integer, Integer> getColumnType(boolean isShowRowNum, ResultSetMetaData rsm) throws SQLException {
-		Map<Integer, Integer> mapColumnType = new HashMap<>();
-		int intStartIndex = 0;
-		
-		if(isShowRowNum) {
-			intStartIndex++;
-			mapColumnType.put(0, java.sql.Types.INTEGER);
-		}
-		
-		for(int i=0;i<rsm.getColumnCount(); i++) {
-//			logger.debug("\t ==[column start]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
-//			logger.debug("\tColumnLabel  		:  " 	+ rsm.getColumnLabel(i+1));
-			
-//			logger.debug("\t AutoIncrement  	:  " 	+ rsm.isAutoIncrement(i+1));
-//			logger.debug("\t Nullable		  	:  " 	+ rsm.isNullable(i+1));
-//			logger.debug("\t CaseSensitive  	:  " 	+ rsm.isCaseSensitive(i+1));
-//			logger.debug("\t Currency		  	:  " 	+ rsm.isCurrency(i+1));
-//			
-//			logger.debug("\t DefinitelyWritable :  " 	+ rsm.isDefinitelyWritable(i+1));
-//			logger.debug("\t ReadOnly		  	:  " 	+ rsm.isReadOnly(i+1));
-//			logger.debug("\t Searchable		  	:  " 	+ rsm.isSearchable(i+1));
-//			logger.debug("\t Signed			  	:  " 	+ rsm.isSigned(i+1));
-////			logger.debug("\t Currency		  	:  " 	+ rsm.isWrapperFor(i+1));
-//			logger.debug("\t Writable		  	:  " 	+ rsm.isWritable(i+1));
-//			
-//			logger.debug("\t ColumnClassName  	:  " 	+ rsm.getColumnClassName(i+1));
-//			logger.debug("\t CatalogName  		:  " 	+ rsm.getCatalogName(i+1));
-//			logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
-//			logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
-//			logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
-			mapColumnType.put(i+intStartIndex, rsm.getColumnType(i+1));
-			
-//			logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
-//			logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
-//			logger.debug("\t SchemaName		 	:  " 	+ rsm.getSchemaName(i+1));
-//			logger.debug("\t TableName		 	:  " 	+ rsm.getTableName(i+1));
-//			logger.debug("\t ==[column end]================================ ColumnName  :  " 	+ rsm.getColumnName(i+1));
-		}
-		
-		return mapColumnType; 
-	}
-	
-	/**
-	 * 컬럼에 rownumber를 추가할 것인지.
-	 * 
-	 * @param isShowRowNum
-	 * @param rs
-	 * @return
-	 * @throws Exception
-	 */
-	public static Map<Integer, String> getColumnName(boolean isShowRowNum, ResultSet rs) throws Exception {
-		Map<Integer, String> mapColumnName = new HashMap<Integer, String>();
-		int intStartIndex = 0;
-		
-		if(isShowRowNum) {
-			intStartIndex++;
-			mapColumnName.put(0, "#");
-		}
-		
-		ResultSetMetaData  rsm = rs.getMetaData();
-		int columnCount = rsm.getColumnCount();
-		for(int i=0; i<columnCount; i++) {
-			mapColumnName.put(i+intStartIndex, rsm.getColumnLabel(i+1));
-		}
-		
-		return mapColumnName;
-	}
 
-	/**
-	 * metadata를 바탕으로 결과를 컬럼 정보를 수집힌다.
-	 * 
-	 * @param rs
-	 * @return index순번에 컬럼명
-	 */
-	public static Map<Integer, String> getColumnName(ResultSet rs) throws Exception {
-		return getColumnName(false, rs);
-	}
 }

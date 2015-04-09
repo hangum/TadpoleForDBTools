@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -24,15 +25,24 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public class ResultSetUtilDTO {
+		
 	/**
 	 * userDB dao
 	 */
 	private UserDBDAO userDB;
 	
+	/** EXECUTE STATEMENT TYPE */
+	private PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType = PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT;
+	
 	/** 
 	 * column 이름. <columnIndex, name>
 	 */
 	private Map<Integer, String> columnName = new HashMap<Integer, String>();
+	
+	/** 
+	 * column of table name <columnIndex, name>
+	 */
+	private Map<Integer, String> columnTableName = new HashMap<Integer, String>();
 	
 	/**
 	 * column type <columnIndex, java.sql.Type>
@@ -56,14 +66,23 @@ public class ResultSetUtilDTO {
 	
 	/**
 	 * 
+	 * @param statementType
 	 * @param userDB
 	 * @param mapColumns
 	 * @param mapColumnType
 	 * @param sourceDataList
 	 */
-	public ResultSetUtilDTO(UserDBDAO userDB, Map<Integer, String> columnName, Map<Integer, Integer> columnType, TadpoleResultSet dataList) {
+	public ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, 
+			UserDBDAO userDB, 
+			Map<Integer, String> columnName,
+			Map<Integer, String> columnTableName,
+			Map<Integer, Integer> columnType, 
+			TadpoleResultSet dataList
+	) {
+		this.statementType = statementType;
 		this.userDB 	= userDB;
 		this.columnName = columnName;
+		this.columnTableName = columnTableName;
 		this.columnType = columnType;
 		this.dataList 	= dataList;
 	}
@@ -71,6 +90,7 @@ public class ResultSetUtilDTO {
 	/**
 	 * 메인에디터에서 보여주기위한 정보를 만듭니다.
 	 *
+	 * @param statementType
 	 * @param userDB
 	 * @param isShowRownum
 	 * @param rs
@@ -78,11 +98,13 @@ public class ResultSetUtilDTO {
 	 * @param isResultComma
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO(UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int limitCount) throws Exception {
+	public ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int limitCount) throws Exception {
+		this.statementType = statementType;
 		this.userDB = userDB;
 		
 		if(rs != null) {
 			columnName = ResultSetUtils.getColumnName(isShowRownum, rs);
+			columnTableName = ResultSetUtils.getColumnTableName(isShowRownum, rs);
 			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
 			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
 			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());
@@ -155,6 +177,34 @@ public class ResultSetUtilDTO {
 
 	public void setColumnMetaData(Map<Integer, Map> columnMetaData) {
 		this.columnMetaData = columnMetaData;
+	}
+
+	/**
+	 * @return the statementType
+	 */
+	public PublicTadpoleDefine.SQL_STATEMENTS_TYPE getStatementType() {
+		return statementType;
+	}
+
+	/**
+	 * @param statementType the statementType to set
+	 */
+	public void setStatementType(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType) {
+		this.statementType = statementType;
+	}
+
+	/**
+	 * @return the columnTableName
+	 */
+	public Map<Integer, String> getColumnTableName() {
+		return columnTableName;
+	}
+
+	/**
+	 * @param columnTableName the columnTableName to set
+	 */
+	public void setColumnTableName(Map<Integer, String> columnTableName) {
+		this.columnTableName = columnTableName;
 	}
 	
 }

@@ -107,8 +107,10 @@ public class SQLResultEditingSupport extends EditingSupport {
 			if(RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(intColumnIndex))) strColumnValue = value.toString();
 			else strColumnValue = "'" + value.toString() + "'";
 			
+			String tableName = rsDAO.getColumnTableName().get(intColumnIndex);
+			
 			final String strUpdateStatement = String.format("UPDATE %s SET %s=%s WHERE %s", 
-						"Baby", 
+						tableName, 
 						strColumnName, 
 						strColumnValue, 
 						makeWhereStaement(oldDataMap));
@@ -141,10 +143,17 @@ public class SQLResultEditingSupport extends EditingSupport {
 		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
 		
 		for(int i=1;i<mapColumnNames.size(); i++) {
-			sbWhere.append(mapColumnNames.get(i) + "=");
+			sbWhere.append(mapColumnNames.get(i));
+			
+			if(data.get(i) == null) {
+				sbWhere.append( " IS ");
+			} else {
+				sbWhere.append( " = ");
+			}
+			
 			if(RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))) sbWhere.append(data.get(i));
 			else sbWhere.append("'" + data.get(i) + "'");
-
+		
 			if(i != mapColumnNames.size()-1) sbWhere.append(" AND ");
 		}
 		logger.debug("make where statement is : " + sbWhere);

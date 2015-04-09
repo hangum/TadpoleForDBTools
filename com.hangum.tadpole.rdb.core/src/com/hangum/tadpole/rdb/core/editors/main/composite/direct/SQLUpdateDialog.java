@@ -28,7 +28,6 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**

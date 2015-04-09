@@ -11,13 +11,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.math.BigInteger;
-import java.sql.Blob;
-import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -65,7 +61,6 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -75,8 +70,6 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
-import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -87,7 +80,6 @@ import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
-import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
@@ -157,8 +149,6 @@ public class ResultSetComposite extends Composite {
 	
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
-	/** 쿼리결과 export */
-//	private Button btnSQLResultExport;
     /** content download를 위한 더미 composite */
     private Composite compositeDumy;
     
@@ -725,8 +715,8 @@ public class ResultSetComposite extends Composite {
 			statement.setFetchSize(intSelectLimitCnt);
 			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
 					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT
-			)) {
+					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+			) {
 				statement.setQueryTimeout(queryTimeOut);
 				statement.setMaxRows(intSelectLimitCnt);
 			}
@@ -734,14 +724,14 @@ public class ResultSetComposite extends Composite {
 			// check stop thread
 			esCheckStop = Executors.newSingleThreadExecutor();
 			CheckStopThread cst = new CheckStopThread(statement);
-			cst.setName("Check Stop Thread "); //$NON-NLS-1$
+			cst.setName("Stop thread checker"); //$NON-NLS-1$
 			esCheckStop.execute(cst);
 			
 			// execute query
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
 			
-			rsDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt/*, isResultComma*/);
+			rsDAO = new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT, getUserDB(), true, resultSet, intSelectLimitCnt);
 		} catch(SQLException e) {
 			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
@@ -908,7 +898,7 @@ public class ResultSetComposite extends Composite {
 			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter);
 			
 			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
-			tvQueryResult.setContentProvider(new ArrayContentProvider());// SQLResultContentProvider(trs.getData().subList(0, getPageCount())));
+			tvQueryResult.setContentProvider(new ArrayContentProvider());
 			
 			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
 			if(trs.getData().size() > GetPreferenceGeneral.getPageCount()) {
@@ -924,7 +914,6 @@ public class ResultSetComposite extends Composite {
 			if(trs.isEndOfRead()) {
 				strResultMsg = String.format("%s %s (%s %s)", trs.getData().size(), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
 			} else {
-				// 
 				// 데이터가 한계가 넘어 갔습니다.
 				String strMsg = String.format(Messages.MainEditor_34, GetPreferenceGeneral.getSelectLimitCount());
 				strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
@@ -974,7 +963,6 @@ public class ResultSetComposite extends Composite {
 			
 		});
 	}
-
 	
 	/**
 	 * 필터를 설정합니다.

@@ -30,12 +30,19 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 	public QueryExecuteResultDTO() {
 	}
 
-	public QueryExecuteResultDTO(UserDBDAO userDB, Map<Integer, String> columnName, Map<Integer, Integer> columnType, TadpoleResultSet dataList) {
-		super(userDB, columnName, columnType, dataList);
+	public QueryExecuteResultDTO(
+			PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, 
+			UserDBDAO userDB, 
+			Map<Integer, String> columnName, 
+			Map<Integer, String> columnTableName, 
+			Map<Integer, Integer> columnType, 
+			TadpoleResultSet dataList
+	) {
+		super(statementType, userDB, columnName, columnTableName, columnType, dataList);
 	}
 
-	public QueryExecuteResultDTO(UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
-		super(userDB, isShowRownum, rs, queryResultCount);
+	public QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
+		super(statementType, userDB, isShowRownum, rs, queryResultCount);
 	}
 
 	/**

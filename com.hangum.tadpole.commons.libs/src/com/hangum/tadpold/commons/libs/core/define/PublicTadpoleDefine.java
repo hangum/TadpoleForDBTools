@@ -141,6 +141,9 @@ public class PublicTadpoleDefine {
 	/** executed sql history type */
 	public static enum EXECUTE_SQL_TYPE {EDITOR, SESSION};
 	
+	/** SQL STATEMENT TYPE */
+	public static enum SQL_STATEMENTS_TYPE {SELECT, INSERT, UPDATE, DELETE, DROP, EXECUTE_PLAN, PROCEDURE};
+	
 	/** objec explorer에서 정의한 action */
 	public static enum DB_ACTION {
 		TABLES, 

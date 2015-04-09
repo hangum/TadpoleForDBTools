@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -129,7 +130,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-			return new QueryExecuteResultDTO(userDB, true, rs, limitCount);
+			return new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT, userDB, true, rs, limitCount);
 		} catch(Exception e) {
 			logger.error("Tajo select", e);
 			throw e;
