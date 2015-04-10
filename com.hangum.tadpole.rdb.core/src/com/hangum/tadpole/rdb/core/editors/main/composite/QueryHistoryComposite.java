@@ -39,6 +39,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * query history composite
@@ -262,6 +263,10 @@ public class QueryHistoryComposite extends Composite {
 		
 		item.setText(6, convLineToHtml(sqlHistoryDAO.getMesssage()));
 		item.setToolTipText(6, sqlHistoryDAO.getMesssage());
+		
+		if("F".equals(sqlHistoryDAO.getResult())) {
+			item.setBackground(SWTResourceManager.getColor(240, 180, 167));
+		}
 	}
 	
 	/**
