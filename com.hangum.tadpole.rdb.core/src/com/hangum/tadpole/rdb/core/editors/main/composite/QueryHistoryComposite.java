@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistoryLabelProvider;
 import com.hangum.tadpole.rdb.core.Messages;
 
 /**
@@ -70,12 +70,13 @@ public class QueryHistoryComposite extends Composite {
 		gridSQLHistory.setLinesVisible(true);
 		gridSQLHistory.setHeaderVisible(true);
 		gridSQLHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		gridSQLHistory.setToolTipText("");
 		
 		gridSQLHistory.addMouseListener(new MouseAdapter() {
 			public void mouseDoubleClick(MouseEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
 				if(gridItems != null) {
-					appendText(convHtmlToLine(gridItems[0].getText(1)));
+					appendText(convHtmlToLine(gridItems[0].getText(2)));
 				}
 			}
 		});
@@ -96,7 +97,7 @@ public class QueryHistoryComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
 				if(gridItems != null) {
-					appendText(convHtmlToLine(gridItems[0].getText(1)));
+					appendText(convHtmlToLine(gridItems[0].getText(2)));
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}
@@ -111,7 +112,7 @@ public class QueryHistoryComposite extends Composite {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
 				if(gridItems != null) {
 					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getShell(), Messages.MainEditor_11, 
-							gridItems[0].getText(0), convHtmlToLine(gridItems[0].getText(1)) );
+							gridItems[0].getText(1), convHtmlToLine(gridItems[0].getText(2)) );
 					dlg.open();
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
@@ -183,23 +184,6 @@ public class QueryHistoryComposite extends Composite {
 		return rdbResultComposite;
 	}
 	
-//	/**
-//	 * sql history를 텍스트로 만듭니다.
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	private String getHistoryTabelSelectData() {
-//		IStructuredSelection is = (IStructuredSelection)tvSQLHistory.getTable().getSelection();
-//		SQLHistoryDAO historyDAO = (SQLHistoryDAO)is;
-//		StringBuffer sbData = new StringBuffer();
-//		
-//		for(TableItem ti : tvSQLHistory.getTable().getSelection()) {
-//			sbData.append(ti.getText(1));
-//		}
-//		
-//		return sbData.toString();
-//	}
-	
 	private void clearGrid() {
 		GridItem[] gridItems = gridSQLHistory.getItems();
 		for (GridItem gridItem : gridItems) {
@@ -217,29 +201,19 @@ public class QueryHistoryComposite extends Composite {
 							PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, 
 							sqlHistoryDAO);
 		
-			GridItem item = new GridItem(gridSQLHistory, SWT.NONE);
-			
-			int intLine = StringUtils.countMatches(sqlHistoryDAO.getStrSQLText(), "\n");
-			if(intLine >= 2) {
-				item.setHeight(intLine * 22);
-			}
-			
-			item.setText(0, SQLHistoryLabelProvider.dateToStr(sqlHistoryDAO.getStartDateExecute()));
-			item.setText(1, convLineToHtml(sqlHistoryDAO.getStrSQLText())); 
-			item.setText(2, ""+( (sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()) / 1000f));
-			item.setText(3, ""+sqlHistoryDAO.getRows());
-			item.setText(4, sqlHistoryDAO.getResult());
-			item.setText(5, sqlHistoryDAO.getMesssage());
+			addRowData(sqlHistoryDAO);
 		} catch(Exception e) {
 			logger.error("save the user query", e); //$NON-NLS-1$
 		}
 	}
 	
 	private String convLineToHtml(String str) {
-		return StringUtils.replace(str, "\n", "<br/>");
+		if(str == null) return "";
+//		str = StringUtils.replace(str, "\n", "<br/>");
+		return StringUtils.replace(str, PublicTadpoleDefine.LINE_SEPARATOR, "<br/>");
 	}
 	private String convHtmlToLine(String str) {
-		return StringUtils.replace(str, "<br/>", "\n");
+		return StringUtils.replace(str, "<br/>", PublicTadpoleDefine.LINE_SEPARATOR);
 	}
 	
 	/**
@@ -254,23 +228,40 @@ public class QueryHistoryComposite extends Composite {
 										getRdbResultComposite().getUserDB().getSeq(), 
 										textHistoryFilter.getText().trim());
 			for (SQLHistoryDAO sqlHistoryDAO : listSQLHistory) {
-				GridItem item = new GridItem(gridSQLHistory, SWT.NONE);
-				
-				int intLine = StringUtils.countMatches(sqlHistoryDAO.getStrSQLText(), "\n");
-				if(intLine >= 2) {
-					item.setHeight(intLine * 22);
-				}
-				
-				item.setText(0, sqlHistoryDAO.getStartDateExecute().toString());
-				item.setText(1, StringUtils.replace(sqlHistoryDAO.getStrSQLText(), "\n", "<br/>")); 
-				item.setText(2, ""+( (sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()) / 1000f));
-				item.setText(3, ""+sqlHistoryDAO.getRows());
-				item.setText(4, sqlHistoryDAO.getResult());
-				item.setText(5, sqlHistoryDAO.getMesssage());
+				addRowData(sqlHistoryDAO);
 			}
 		} catch(Exception ee) {
 			logger.error("Executed SQL History call", ee); //$NON-NLS-1$
 		}
+	}
+	
+	/**
+	 * add grid row
+	 * 
+	 * @param sqlHistoryDAO
+	 */
+	private void addRowData(SQLHistoryDAO sqlHistoryDAO) {
+		GridItem item = new GridItem(gridSQLHistory, SWT.V_SCROLL | SWT.H_SCROLL);
+		
+		String strSQL = StringUtils.strip(sqlHistoryDAO.getStrSQLText());
+		int intLine = StringUtils.countMatches(strSQL, "\n");
+		if(intLine >= 1) {
+			int height = (intLine+1) * 24;
+			if(height > 100) item.setHeight(100); 
+			else item.setHeight(height);
+		}
+		
+		item.setText(0, ""+gridSQLHistory.getRootItemCount());
+		item.setText(1, Utils.dateToStr(sqlHistoryDAO.getStartDateExecute()));
+		item.setText(2, convLineToHtml(strSQL));
+		item.setToolTipText(2, strSQL);
+		
+		item.setText(3, ""+( (sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()) / 1000f));
+		item.setText(4, ""+sqlHistoryDAO.getRows());
+		item.setText(5, sqlHistoryDAO.getResult());
+		
+		item.setText(6, convLineToHtml(sqlHistoryDAO.getMesssage()));
+		item.setToolTipText(6, sqlHistoryDAO.getMesssage());
 	}
 	
 	/**
@@ -298,8 +289,13 @@ public class QueryHistoryComposite extends Composite {
 	 */
 	private void createTableHistoryColumn() {
 		// time
+		GridColumn tvcSeq = new GridColumn(gridSQLHistory, SWT.LEFT);
+		tvcSeq.setWidth(50);
+		tvcSeq.setText("#");
+				
+		// time
 		GridColumn tvcDate = new GridColumn(gridSQLHistory, SWT.LEFT);
-		tvcDate.setWidth(155);
+		tvcDate.setWidth(150);
 		tvcDate.setText("Date");
 		
 		// sql
@@ -338,5 +334,4 @@ public class QueryHistoryComposite extends Composite {
 //		}
 //	}
 	
-
 }

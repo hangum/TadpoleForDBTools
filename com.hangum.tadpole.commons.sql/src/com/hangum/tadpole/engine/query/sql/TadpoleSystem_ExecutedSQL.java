@@ -106,8 +106,10 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			String ipAddress = (String) resultMap.get("ipaddress");
 			int dbSeq2 = (Integer) resultMap.get("dbseq");
+			
+			String strMessage = (String)resultMap.get("message");
 
-			SQLHistoryDAO dao = new SQLHistoryDAO(userName, dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, "",
+			SQLHistoryDAO dao = new SQLHistoryDAO(userName, dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
 					ipAddress, dbSeq2);
 			dao.setSeq(seq);
 			returnSQLHistory.add(dao);
@@ -157,10 +159,12 @@ public class TadpoleSystem_ExecutedSQL {
 				enddateexecute = ((Timestamp)resultMap.get("enddateexecute")).getTime();
 			}
 			
+			String strMessage 		= (String)resultMap.get("message");
+			
 			int row 			= (Integer)resultMap.get("row");
 			String result 		= (String)resultMap.get("result");
 			
-			SQLHistoryDAO dao = new SQLHistoryDAO(new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, "");
+			SQLHistoryDAO dao = new SQLHistoryDAO(new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage);
 			dao.setSeq(seq);
 			returnSQLHistory.add(dao);
 		}
@@ -190,7 +194,7 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			executeSQLResourceDao.setRow(sqlHistoryDAO.getRows());
 			executeSQLResourceDao.setResult(sqlHistoryDAO.getResult());
-			executeSQLResourceDao.setMessage(""+(sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()));
+			executeSQLResourceDao.setMessage(sqlHistoryDAO.getMesssage());//""+(sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()));
 			executeSQLResourceDao.setIpAddress(sqlHistoryDAO.getIpAddress());
 			// 기존에 등록 되어 있는지 검사한다
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

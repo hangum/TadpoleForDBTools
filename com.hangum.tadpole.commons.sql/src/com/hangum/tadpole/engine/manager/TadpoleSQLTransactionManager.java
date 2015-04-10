@@ -215,6 +215,10 @@ public class TadpoleSQLTransactionManager {
 		return dbManager;
 	}
 	
+	public static boolean isInstance(final String userId, final UserDBDAO userDB) {
+		return getDbManager().containsKey(getKey(userId, userDB));
+	}
+	
 	/**
 	 * map의 카를 가져옵니다.
 	 * @param userDB

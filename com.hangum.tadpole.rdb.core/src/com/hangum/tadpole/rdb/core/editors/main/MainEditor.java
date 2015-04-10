@@ -583,10 +583,12 @@ public class MainEditor extends EditorExtension {
 			tiAutoCommitRollback.setEnabled(false);
 			
 			if(!isFirst) {
-				if(MessageDialog.openConfirm(null, Messages.MainEditor_30, Messages.MainEditor_47)) {
-					TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
-				} else {
-					TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);
+				if(TadpoleSQLTransactionManager.isInstance(getUserEMail(), userDB)) {
+					if(MessageDialog.openConfirm(null, Messages.MainEditor_30, Messages.MainEditor_47)) {
+						TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
+					} else {
+						TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);
+					}
 				}
 			}
 		} else {
