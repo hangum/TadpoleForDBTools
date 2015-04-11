@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.editors.main.composite.direct;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -100,35 +101,32 @@ public class SQLResultEditingSupport extends EditingSupport {
 			return;
 		} 
 
-		// 
-//		if(MessageDialog.openConfirm(getViewer().getControl().getShell(), "Confirm", "Do you want to modify")) {
-			String strColumnName = rsDAO.getColumnName().get(intColumnIndex);
-			String strColumnValue = "";
-			if(RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(intColumnIndex))) strColumnValue = value.toString();
-			else strColumnValue = "'" + value.toString() + "'";
-			
-			String tableName = rsDAO.getColumnTableName().get(intColumnIndex);
-			
-			final String strUpdateStatement = String.format("UPDATE %s SET %s=%s WHERE %s", 
-						tableName, 
-						strColumnName, 
-						strColumnValue, 
-						makeWhereStaement(oldDataMap));
-			String strFormatStatement = "";
-			try {
-				strFormatStatement = SQLFormater.format(strUpdateStatement);
-			} catch(Exception e) {
-				strFormatStatement = strUpdateStatement;
-			}
-			logger.debug("Update SQL Statement is " + strFormatStatement);
-			
-			SQLUpdateDialog dialog = new SQLUpdateDialog(getViewer().getControl().getShell(), rsDAO.getUserDB(),  strFormatStatement);
-			if(Dialog.OK == dialog.open()) {
-				// 수정된 데이터 표시
-				data.put(intColumnIndex, value.toString());
-				tvSQLResult.refresh();
-			}
-//		} 
+		String strColumnName = rsDAO.getColumnName().get(intColumnIndex);
+		String strColumnValue = "";
+		if(RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(intColumnIndex))) strColumnValue = value.toString();
+		else strColumnValue = "'" + value.toString() + "'";
+		
+		String tableName = rsDAO.getColumnTableName().get(intColumnIndex);
+		
+		final String strUpdateStatement = String.format("UPDATE %s SET %s=%s WHERE %s", 
+					tableName, 
+					strColumnName, 
+					strColumnValue, 
+					makeWhereStaement(oldDataMap));
+		String strFormatStatement = "";
+		try {
+			strFormatStatement = SQLFormater.format(strUpdateStatement);
+		} catch(Exception e) {
+			strFormatStatement = strUpdateStatement;
+		}
+		logger.debug("Update SQL Statement is " + strFormatStatement);
+		
+		SQLUpdateDialog dialog = new SQLUpdateDialog(getViewer().getControl().getShell(), rsDAO.getUserDB(),  strFormatStatement);
+		if(Dialog.OK == dialog.open()) {
+			// 수정된 데이터 표시
+			data.put(intColumnIndex, value.toString());
+			tvSQLResult.refresh();
+		}
 	}
 	
 	/**
@@ -138,27 +136,36 @@ public class SQLResultEditingSupport extends EditingSupport {
 	 */
 	private String makeWhereStaement(HashMap<Integer, String> data) {
 		StringBuffer sbWhere = new StringBuffer();
-		
+
+		Map<Integer, String> mapTableNames = rsDAO.getColumnTableName();
 		Map<Integer, String> mapColumnNames = rsDAO.getColumnName();
 		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
 		
+		String selectTableName = mapTableNames.get(intColumnIndex);
+		
 		for(int i=1;i<mapColumnNames.size(); i++) {
-			sbWhere.append(mapColumnNames.get(i));
+			if(selectTableName.equals(mapTableNames.get(i))) {
+				sbWhere.append(mapColumnNames.get(i));
+				
+				if(data.get(i) == null) {
+					sbWhere.append( " IS ");
+				} else {
+					sbWhere.append( " = ");
+				}
+				
+				if(RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))) sbWhere.append(data.get(i));
+				else sbWhere.append("'" + data.get(i) + "'");
 			
-			if(data.get(i) == null) {
-				sbWhere.append( " IS ");
-			} else {
-				sbWhere.append( " = ");
+				sbWhere.append(" AND ");
 			}
-			
-			if(RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))) sbWhere.append(data.get(i));
-			else sbWhere.append("'" + data.get(i) + "'");
-		
-			if(i != mapColumnNames.size()-1) sbWhere.append(" AND ");
 		}
-		logger.debug("make where statement is : " + sbWhere);
 		
-		return sbWhere.toString();
+		String returnWhere = sbWhere.toString();
+		returnWhere = StringUtils.removeEnd(returnWhere, "AND ");
+		
+		if(logger.isDebugEnabled()) logger.debug("make where statement is : " + returnWhere);
+		
+		return returnWhere;
 	}
 
 }

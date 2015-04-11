@@ -101,7 +101,7 @@ public class SQLUpdateDialog extends Dialog {
 			ExecuteOtherSQL.runSQLOther(reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
 		} catch (Exception e) {
 			logger.error("SQL Execute error", e);
-			MessageDialog.openError(getShell(), "Error", "Rise Exception:\n" + e.getMessage());
+			MessageDialog.openError(getShell(), "Error", "Rise Exception:\n\n" + e.getMessage());
 			return;
 		}
 		

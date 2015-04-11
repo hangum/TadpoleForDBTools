@@ -11,9 +11,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -61,6 +65,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -70,6 +75,8 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
+import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -80,6 +87,7 @@ import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
+import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
@@ -154,6 +162,10 @@ public class ResultSetComposite extends Composite {
     
     private OpenSingleDataDialogAction openSingleDataAction;
     
+    /** define result to editor button  */
+    private Event eventTableSelect;
+    private Button btnResultToEditor;
+    
 	/**
 	 * Create the composite.
 	 * 
@@ -211,112 +223,30 @@ public class ResultSetComposite extends Composite {
 				String[] arryFontInfo = StringUtils.split(PREFERENCE_USER_FONT, "|"); //$NON-NLS-1$
 				tableResult.setFont(ResourceManager.getFont(arryFontInfo[0], Integer.parseInt(arryFontInfo[1]), Integer.parseInt(arryFontInfo[2])));
 			} catch(Exception e) {
-				logger.error("Fail User font set", e); //$NON-NLS-1$
+				logger.error("Fail setting the user font", e); //$NON-NLS-1$
 			}
 		}
-		
-//		tableResult.addListener(SWT.MouseDown, new Listener() {
-//		    public void handleEvent(final Event event) {
-//		    	TableItem[] selection = tableResult.getSelection();
-//				if (selection.length != 1) return;
-//				
-//				final TableItem item = tableResult.getSelection()[0];
-//				for (int i=0; i<tableResult.getColumnCount(); i++) {
-//					if (item.getBounds(i).contains(event.x, event.y)) {
-//						Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
-//						// execute extension start =============================== 
-//						IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-//						for (IMainEditorExtension iMainEditorExtension : extensions) {
-//							iMainEditorExtension.resultSetClick(i, mapColumns);
-//						}
-//						break;
-//					}
-//				}	// for column count								
-//			}
-//		});
-//		
-//		tableResult.addListener(SWT.MouseDoubleClick, new Listener() {
-//		    public void handleEvent(Event event) {
-//		    	TableItem[] selection = tableResult.getSelection();
-//				if (selection.length != 1) return;
-//				
-//				TableItem item = tableResult.getSelection()[0];
-//				for (int i=0; i<tableResult.getColumnCount(); i++) {
-//					
-//					if (item.getBounds(i).contains(event.x, event.y)) {
-//						Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
-//						// execute extension start =============================== 
-//						IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-//						for (IMainEditorExtension iMainEditorExtension : extensions) {
-//							iMainEditorExtension.resultSetDoubleClick(i, mapColumns);
-//						}
-//						// execute extension stop ===============================
-//						
-//						// 첫번째 컬럼이면 전체 로우의 데이터를 상세하게 뿌려줍니
-//						if(i == 0) {
-//						} else {
-//							String strText = item.getText(i);
-//							if(strText == null || "".equals(strText)) return; //$NON-NLS-1$
-//							strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-//							
-//							//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
-//							
-//							Object columnObject = mapColumns.get(i);
-//							
-//							// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
-//							//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
-//							if (columnObject != null && columnObject instanceof java.sql.Clob ){
-//								Clob cl = (Clob) columnObject;
-//		
-//								StringBuffer clobContent = new StringBuffer();
-//								String readBuffer = new String();
-//		
-//								// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
-//								BufferedReader bufferedReader;
-//								try {
-//									bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
-//									
-//									while ((readBuffer = bufferedReader.readLine())!= null)
-//										clobContent.append(readBuffer);
-//	
-//									TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), clobContent.toString());
-//						            dlg.open();									
-//								} catch (Exception e) {
-//									logger.error("Clob column echeck", e); //$NON-NLS-1$
-//								}
-//							}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
-//								try {
-//									Blob blob = (Blob) columnObject;
-//									
-//									TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
-//									dlg.open();								
-//								} catch (Exception e) {
-//									logger.error("Blob column echeck", e); //$NON-NLS-1$
-//								}
-//			
-//							}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
-//								byte[] b = (byte[])columnObject;
-//								StringBuffer str = new StringBuffer();
-//								try {
-//									for (byte buf : b){
-//										str.append(buf);
-//									}
-//									str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
-//									TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), str.toString() );
-//					                dlg.open();
-//								} catch (Exception e) {
-//									logger.error("Clob column echeck", e); //$NON-NLS-1$
-//								}
-//							}else{
-//								appendTextAtPosition(strText);
-//							}
-//						}	// end if first column
-//					
-//						break;
-//					}	// for column index
-//				}
-//		    }
-//		});
+		tableResult.addListener(SWT.MouseDown, new Listener() {
+		    public void handleEvent(final Event event) {
+		    	TableItem[] selection = tableResult.getSelection();
+		    	
+				if (selection.length != 1) return;
+				eventTableSelect = event;
+				
+				final TableItem item = tableResult.getSelection()[0];
+				for (int i=0; i<tableResult.getColumnCount(); i++) {
+					if (item.getBounds(i).contains(event.x, event.y)) {
+						Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
+						// execute extension start =============================== 
+						IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+						for (IMainEditorExtension iMainEditorExtension : extensions) {
+							iMainEditorExtension.resultSetClick(i, mapColumns);
+						}
+						break;
+					}
+				}	// for column count								
+			}
+		});
 		
 		tableResult.setLinesVisible(true);
 		tableResult.setHeaderVisible(true);
@@ -348,17 +278,14 @@ public class ResultSetComposite extends Composite {
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
 		
-//		btnSql = new Button(compositeBtn, SWT.NONE);
-//		btnSql.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				if(rsDAO != null & reqQuery != null) {
-//					SQLSourceViewDialog dialog = new SQLSourceViewDialog(null, reqQuery.getSql());
-//					dialog.open();
-//				}
-//			}
-//		});
-//		btnSql.setText(Messages.ResultSetComposite_btnSql_text);
+		btnResultToEditor = new Button(compositeBtn, SWT.NONE);
+		btnResultToEditor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectColumnToEditor();
+			}
+		});
+		btnResultToEditor.setText("Result to Editor");
 		
 		btnDetailView = new Button(compositeBtn, SWT.NONE);
 		GridData gd_btnDetailView = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -388,9 +315,95 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
+	}
+	
+	/**
+	 * select table column to editor
+	 */
+	private void selectColumnToEditor() {
+		if(eventTableSelect == null) return;
+		final Table tableResult = tvQueryResult.getTable();
+		
+    	TableItem[] selection = tableResult.getSelection();
+		if (selection.length != 1) return;
+		
+		TableItem item = tableResult.getSelection()[0];
+		for (int i=0; i<tableResult.getColumnCount(); i++) {
+			
+			if (item.getBounds(i).contains(eventTableSelect.x, eventTableSelect.y)) {
+				Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
+				// execute extension start =============================== 
+				IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+				for (IMainEditorExtension iMainEditorExtension : extensions) {
+					iMainEditorExtension.resultSetDoubleClick(i, mapColumns);
+				}
+				// execute extension stop ===============================
+				
+				// 첫번째 컬럼이면 전체 로우의 데이터를 상세하게 뿌려줍니
+				if(i == 0) {
+				} else {
+					String strText = item.getText(i);
+					if(strText == null || "".equals(strText)) return; //$NON-NLS-1$
+					strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					
+					//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
+					
+					Object columnObject = mapColumns.get(i);
+					
+					// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
+					//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
+					if (columnObject != null && columnObject instanceof java.sql.Clob ){
+						Clob cl = (Clob) columnObject;
+
+						StringBuffer clobContent = new StringBuffer();
+						String readBuffer = new String();
+
+						// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
+						BufferedReader bufferedReader;
+						try {
+							bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
+							
+							while ((readBuffer = bufferedReader.readLine())!= null)
+								clobContent.append(readBuffer);
+
+							TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), clobContent.toString());
+				            dlg.open();									
+						} catch (Exception e) {
+							logger.error("Clob column echeck", e); //$NON-NLS-1$
+						}
+					}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
+						try {
+							Blob blob = (Blob) columnObject;
+							
+							TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
+							dlg.open();								
+						} catch (Exception e) {
+							logger.error("Blob column echeck", e); //$NON-NLS-1$
+						}
+	
+					}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
+						byte[] b = (byte[])columnObject;
+						StringBuffer str = new StringBuffer();
+						try {
+							for (byte buf : b){
+								str.append(buf);
+							}
+							str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
+							TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), str.toString() );
+			                dlg.open();
+						} catch (Exception e) {
+							logger.error("Clob column echeck", e); //$NON-NLS-1$
+						}
+					}else{
+						appendTextAtPosition(strText);
+					}
+				}	// end if first column
+			
+				break;
+			}	// for column index
+		}
 	}
 	
 	/**
@@ -840,6 +853,7 @@ public class ResultSetComposite extends Composite {
 	 */
 	private void finallyEndExecuteCommand() {
 		controlProgress(false);
+		eventTableSelect = null;
 		
 		// 확장포인트에 실행결과를 위임합니다. 
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
