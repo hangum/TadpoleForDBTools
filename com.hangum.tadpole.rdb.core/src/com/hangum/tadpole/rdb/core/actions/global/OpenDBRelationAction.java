@@ -65,17 +65,23 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		IStructuredSelection sel = (IStructuredSelection)selection;
+		iss = sel;
+		boolean isSelect = false;
+		
 		if(sel != null) {
 			if( sel.getFirstElement() instanceof UserDBDAO ) {
 				UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-				
-				if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
-					iss = sel;
-					setEnabled(true);
+				if(TadpoleSecurityManager.getInstance().isLockStatus(userDB)) {
+					if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
+						isSelect = true;
+					}
+				} else {
+					isSelect = true;
 				}
-				setEnabled(false);
-			} else setEnabled(false);
-		} else setEnabled(false);
+			}
+		} 
+		
+		setEnabled(isSelect);
 	}
 
 }

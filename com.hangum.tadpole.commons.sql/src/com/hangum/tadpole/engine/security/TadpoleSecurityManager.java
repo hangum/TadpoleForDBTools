@@ -39,7 +39,19 @@ public class TadpoleSecurityManager {
 		return instance;
 	}
 	
-
+	/**
+	 * Is db lock status?
+	 * @param userDB
+	 * @return
+	 */
+	public boolean isLockStatus(final UserDBDAO userDB) {
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock())) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * DB is lock?
 	 * 
