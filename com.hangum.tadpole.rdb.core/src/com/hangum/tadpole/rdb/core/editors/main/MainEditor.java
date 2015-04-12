@@ -764,7 +764,7 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
-	 * 에디터의 성격을 정의 합니다.
+	 * 에디터의 성격을 정의 합니다.  
 	 * 
 	 * @return
 	 */

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,6 +30,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBConnectionUtils;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
@@ -52,7 +54,7 @@ public class DBInformationDialog extends Dialog {
 	private UserDBDAO userDB;
 	private AbstractLoginComposite loginComposite;
 	/** group name */
-	private List<String> groupName;
+	private List<String> listGroupName = new ArrayList<String>();
 	private String selGroupName;	
 
 	/**
@@ -146,14 +148,14 @@ public class DBInformationDialog extends Dialog {
 	 * db widget
 	 */
 	private void initDBWidget() {
-//		try {
-//			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
-//		} catch (Exception e1) {
-//			logger.error("get group info", e1); //$NON-NLS-1$
-//		}
+		try {
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
+		} catch (Exception e1) {
+			logger.error("get group info", e1); //$NON-NLS-1$
+		}
 		selGroupName = userDB.getGroup_name();
 		
-		loginComposite = DBConnectionUtils.getDBConnection(userDB.getDBDefine(), compositeBody, groupName, selGroupName, userDB);
+		loginComposite = DBConnectionUtils.getDBConnection(userDB.getDBDefine(), compositeBody, listGroupName, selGroupName, userDB);
 		compositeBody.layout();
 		container.layout();
 	}
@@ -176,9 +178,9 @@ public class DBInformationDialog extends Dialog {
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			return new Point(450, 460);
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
-			return new Point(450, 540);
+			return new Point(450, 480);
 		} else {
-			return new Point(450, 590);
+			return new Point(450, 530);
 		}
 	}
 

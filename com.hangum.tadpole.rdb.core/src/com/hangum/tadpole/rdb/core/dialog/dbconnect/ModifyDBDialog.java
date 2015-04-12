@@ -67,7 +67,7 @@ public class ModifyDBDialog extends Dialog {
 		
 		this.userDBDAO = userDBDAO;
 		try {
-			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup();
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}

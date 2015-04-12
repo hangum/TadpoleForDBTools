@@ -51,7 +51,7 @@ public class NewUserMailBodyTemplate extends MailBodyTemplate {
 		
 			strContent.append("<tr>");
 			strContent.append("<td width='100' valign='top'>");
-			strContent.append("Confoim key");
+			strContent.append("Confirm key");
 			strContent.append("</td>");
 			strContent.append("<td width='260' valign='top'><b>");
 			strContent.append(strConfirmKey);

@@ -130,7 +130,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<String> getUserGroup() throws Exception {
+	public static List<String> getUserGroupName() throws Exception {
 		List<String> listGroupName = new ArrayList<String>();
 		
 		List<UserDBDAO> userDBS = getCreateUserDB();
