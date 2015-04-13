@@ -44,7 +44,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TriggerComparator;
@@ -69,7 +69,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	private TriggerViewFilter triggerFilter;
 
 	private ObjectCreatAction creatAction_Trigger;
-	private ObjectDeleteAction deleteAction_Trigger;
+	private ObjectDropAction deleteAction_Trigger;
 	private ObjectRefreshAction refreshAction_Trigger;
 	private GenerateViewDDLAction viewDDLAction;
 	private OracleObjectCompileAction objectCompileAction;
@@ -129,7 +129,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	
 	private void createMenu() {
 		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
-		deleteAction_Trigger = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
+		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "View"); //$NON-NLS-1$

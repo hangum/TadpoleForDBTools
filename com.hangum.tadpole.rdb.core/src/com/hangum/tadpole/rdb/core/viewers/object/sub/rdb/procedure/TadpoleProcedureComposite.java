@@ -48,7 +48,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
@@ -77,7 +77,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 	private ObjectCreatAction creatAction_Procedure;
 	private ObjectModifyAction modifyAction_Procedure;
-	private ObjectDeleteAction deleteAction_Procedure;
+	private ObjectDropAction dropAction_Procedure;
 	private ObjectRefreshAction refreshAction_Procedure;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction_Procedure;
@@ -153,7 +153,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 		modifyAction_Procedure = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
-		deleteAction_Procedure = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
+		dropAction_Procedure = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "Procedure"); //$NON-NLS-1$
 
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, "View"); //$NON-NLS-1$
@@ -170,7 +170,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Procedure);
 					manager.add(modifyAction_Procedure);
-					manager.add(deleteAction_Procedure);
+					manager.add(dropAction_Procedure);
 				}
 				manager.add(refreshAction_Procedure);
 
@@ -210,7 +210,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 		creatAction_Procedure.setUserDB(getUserDB());
 		modifyAction_Procedure.setUserDB(getUserDB());
-		deleteAction_Procedure.setUserDB(getUserDB());
+		dropAction_Procedure.setUserDB(getUserDB());
 		refreshAction_Procedure.setUserDB(getUserDB());
 		executeAction_Procedure.setUserDB(getUserDB());
 		objectCompileAction.setUserDB(getUserDB());
@@ -263,7 +263,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		
 		creatAction_Procedure.dispose();
 		modifyAction_Procedure.dispose();
-		deleteAction_Procedure.dispose();
+		dropAction_Procedure.dispose();
 		refreshAction_Procedure.dispose();
 		viewDDLAction.dispose();
 		executeAction_Procedure.dispose();

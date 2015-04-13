@@ -55,7 +55,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -85,7 +85,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private RDBViewFilter viewFilter;
 	
 	private ObjectCreatAction creatAction_View;
-	private ObjectDeleteAction deleteAction_View;
+	private ObjectDropAction deleteAction_View;
 	private ObjectRefreshAction refreshAction_View;
 	private GenerateViewDDLAction viewDDLAction;
 	private OracleObjectCompileAction objectCompileAction;
@@ -246,7 +246,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 */
 	private void createMenu() {
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		deleteAction_View = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 //		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
 

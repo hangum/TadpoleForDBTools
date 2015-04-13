@@ -77,7 +77,7 @@ import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbRenameAct
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLInsertAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.MongoDBCollectionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -112,7 +112,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private List<CollectionFieldDAO> showTableColumns;
 	
 	private ObjectCreatAction 			creatAction_Table;
-	private ObjectDeleteAction 			deleteAction_Table;
+	private ObjectDropAction 			deleteAction_Table;
 	private ObjectMongodbCollFindAndModifyAction collFindAndModifyAction;
 	
 	private ObjectRefreshAction 		refreshAction_Table;
@@ -319,7 +319,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 */
 	private void createMenu() {
 		creatAction_Table 	= new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		deleteAction_Table 	= new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		deleteAction_Table 	= new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Find and Modify"); //$NON-NLS-1$
 		
 		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$

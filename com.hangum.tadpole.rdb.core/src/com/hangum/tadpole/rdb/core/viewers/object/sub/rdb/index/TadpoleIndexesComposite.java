@@ -51,7 +51,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.IndexColumnComparator;
@@ -86,7 +86,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private List showIndexColumns;
 
 	private ObjectCreatAction creatAction_Index;
-	private ObjectDeleteAction deleteAction_Index;
+	private ObjectDropAction dropAction_Index;
 	private ObjectRefreshAction refreshAction_Index;
 	private GenerateViewDDLAction viewDDLAction;
 
@@ -251,7 +251,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 */
 	private void createMenu() {
 		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "View"); //$NON-NLS-1$
@@ -264,7 +264,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Index);
-					manager.add(deleteAction_Index);
+					manager.add(dropAction_Index);
 					
 					manager.add(refreshAction_Index);
 					
@@ -287,7 +287,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		indexTableViewer.refresh();
 
 		creatAction_Index.setUserDB(getUserDB());
-		deleteAction_Index.setUserDB(getUserDB());
+		dropAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
@@ -344,7 +344,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		super.dispose();
 		
 		creatAction_Index.dispose();
-		deleteAction_Index.dispose();
+		dropAction_Index.dispose();
 		refreshAction_Index.dispose();
 		viewDDLAction.dispose();
 	}

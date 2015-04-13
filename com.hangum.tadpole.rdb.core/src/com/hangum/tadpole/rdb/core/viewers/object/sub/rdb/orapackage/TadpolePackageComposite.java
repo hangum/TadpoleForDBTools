@@ -53,7 +53,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
@@ -88,7 +88,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private ProcedureFunctionViewFilter packageFilter;
 
 	private ObjectCreatAction creatAction_Package;
-	private ObjectDeleteAction deleteAction_Package;
+	private ObjectDropAction dropAction_Package;
 	private ObjectRefreshAction refreshAction_Package;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction_Procedure;
@@ -215,7 +215,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 	private void createMenu() {
 		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
-		deleteAction_Package = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
+		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
 		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
 
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "View"); //$NON-NLS-1$
@@ -232,7 +232,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Package);
-					manager.add(deleteAction_Package);
+					manager.add(dropAction_Package);
 					manager.add(refreshAction_Package);
 
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -340,7 +340,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		packageTableViewer.refresh();
 
 		creatAction_Package.setUserDB(getUserDB());
-		deleteAction_Package.setUserDB(getUserDB());
+		dropAction_Package.setUserDB(getUserDB());
 		refreshAction_Package.setUserDB(getUserDB());
 		executeAction_Procedure.setUserDB(getUserDB());
 
@@ -396,7 +396,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		super.dispose();
 		
 		creatAction_Package.dispose();
-		deleteAction_Package.dispose();
+		dropAction_Package.dispose();
 		refreshAction_Package.dispose();
 		viewDDLAction.dispose();
 		executeAction_Procedure.dispose();

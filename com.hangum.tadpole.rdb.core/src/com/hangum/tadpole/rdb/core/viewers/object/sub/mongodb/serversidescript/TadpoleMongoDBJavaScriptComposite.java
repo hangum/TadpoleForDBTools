@@ -51,7 +51,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbSJavaScriptAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -76,7 +76,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	
 
 	private ObjectCreatAction creatActionJS;
-	private ObjectDeleteAction deleteActionJS;
+	private ObjectDropAction deleteActionJS;
 	private ObjectRefreshAction refreshActionJS;
 	private ObjectMongodbSJavaScriptAction serverJavaScript;
 
@@ -182,7 +182,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 */
 	private void createMenu() {
 		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
-		deleteActionJS = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
+		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
 		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
 		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Execute Java Script"); //$NON-NLS-1$)
 

@@ -45,7 +45,7 @@ import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -73,7 +73,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	private TableViewer tableColumnViewer;
 
 	private ObjectCreatAction creatAction_Index;
-	private ObjectDeleteAction deleteAction_Index;
+	private ObjectDropAction deleteAction_Index;
 	private ObjectRefreshAction refreshAction_Index;
 
 	/**
@@ -205,7 +205,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	 */
 	private void createMenu() {
 		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		deleteAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 
 		// menu

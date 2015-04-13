@@ -48,7 +48,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
@@ -77,7 +77,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private ProcedureFunctionViewFilter functionFilter;
 
 	private ObjectCreatAction creatAction_Function;
-	private ObjectDeleteAction deleteAction_Function;
+	private ObjectDropAction dropAction_Function;
 	private ObjectRefreshAction refreshAction_Function;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction_Procedure;
@@ -154,7 +154,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	
 	private void createMenu() {
 		creatAction_Function = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
-		deleteAction_Function = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+		dropAction_Function = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
 		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
 	
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "View"); //$NON-NLS-1$
@@ -170,7 +170,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					manager.add(creatAction_Function);
-					manager.add(deleteAction_Function);
+					manager.add(dropAction_Function);
 				}
 				manager.add(refreshAction_Function);
 				
@@ -206,7 +206,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		functionTableViewer.refresh();
 
 		creatAction_Function.setUserDB(getUserDB());
-		deleteAction_Function.setUserDB(getUserDB());
+		dropAction_Function.setUserDB(getUserDB());
 		refreshAction_Function.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
@@ -257,7 +257,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		super.dispose();
 		
 		creatAction_Function.dispose();
-		deleteAction_Function.dispose();
+		dropAction_Function.dispose();
 		refreshAction_Function.dispose();
 		viewDDLAction.dispose();
 		executeAction_Procedure.dispose();

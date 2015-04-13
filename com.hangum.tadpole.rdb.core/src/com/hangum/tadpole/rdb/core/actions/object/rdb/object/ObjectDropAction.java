@@ -40,14 +40,14 @@ import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
  * @author hangum
  *
  */
-public class ObjectDeleteAction extends AbstractObjectSelectAction {
+public class ObjectDropAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger .getLogger(ObjectDeleteAction.class);
-	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.delete"; //$NON-NLS-1$
+	private static final Logger logger = Logger .getLogger(ObjectDropAction.class);
+	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.drop"; //$NON-NLS-1$
 
-	public ObjectDeleteAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public ObjectDropAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		
 		setId(ID + actionType);
@@ -69,7 +69,7 @@ public class ObjectDeleteAction extends AbstractObjectSelectAction {
 							TadpoleSystemCommons.executSQL(userDB, strSQL); //$NON-NLS-1$
 						}
 						
-						//
+						// save schema history
 						TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, strSQL);
 						
 						refreshTable();
