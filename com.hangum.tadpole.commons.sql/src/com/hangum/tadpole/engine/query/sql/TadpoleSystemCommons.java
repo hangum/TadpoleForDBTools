@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -60,6 +61,8 @@ public class TadpoleSystemCommons {
 	 * @param args
 	 */
 	public static boolean executSQL(UserDBDAO userDB, String strDML, String ... args) throws Exception {
+		String strQuery = String.format(strDML, args);
+		
 		java.sql.Connection javaConn = null;
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
@@ -75,9 +78,14 @@ public class TadpoleSystemCommons {
 			
 			Statement stmt = javaConn.createStatement();
 
-			return stmt.execute(String.format(strDML, args));
+			return stmt.execute(strDML);
+			
 		} finally {
+			// save schema history
+			TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, strQuery);
+			
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
+			
 		}
 	}
 }

@@ -69,9 +69,6 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 							TadpoleSystemCommons.executSQL(userDB, strSQL); //$NON-NLS-1$
 						}
 						
-						// save schema history
-						TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, strSQL);
-						
 						refreshTable();
 					} catch(Exception e) {
 						logger.error(Messages.ObjectDeleteAction_5, e);
