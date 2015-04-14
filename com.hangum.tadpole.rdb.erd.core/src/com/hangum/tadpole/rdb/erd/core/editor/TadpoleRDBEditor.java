@@ -68,6 +68,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
+import com.hangum.tadpole.rdb.erd.core.actions.ERDRefreshAction;
 import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleAction;
 import com.hangum.tadpole.rdb.erd.core.actions.TableSelectionAction;
 import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferDropTargetListener;
@@ -104,8 +105,8 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	/** 처음로드될때부터 모든 테이블 로드 인지 */
 	private boolean isAllTable = false;
 	
-	/** auto layout action */
-	private AutoLayoutAction autoLayoutAction;
+//	/** auto layout action */
+//	private AutoLayoutAction autoLayoutAction;
 	
 	/** short key handler */
 	private KeyHandler keyHandler;
@@ -305,7 +306,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 
 	private void createDiagramAction(GraphicalViewer viewer) {
 		ActionRegistry registry = getActionRegistry();
-		autoLayoutAction = new AutoLayoutAction(this, getGraphicalViewer());
+		AutoLayoutAction autoLayoutAction = new AutoLayoutAction(this, getGraphicalViewer());
 		registry.registerAction(autoLayoutAction);
 		getSelectionActions().add(autoLayoutAction.getId());
 		
@@ -316,6 +317,10 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		ERDViewStyleAction erdStyledAction = new ERDViewStyleAction(this, getGraphicalViewer());
 		registry.registerAction(erdStyledAction);
 		getSelectionActions().add(ERDViewStyleAction.ID);
+		
+		ERDRefreshAction refreshAction = new ERDRefreshAction(this, getGraphicalViewer());
+		registry.registerAction(refreshAction);
+		getSelectionActions().add(refreshAction.getId());
 	}
 	
 	@Override
@@ -647,6 +652,13 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	
 	public DB getDb() {
 		return db;
+	}
+	
+	/**
+	 * @return the userDB
+	 */
+	public UserDBDAO getUserDB() {
+		return userDB;
 	}
 
 }

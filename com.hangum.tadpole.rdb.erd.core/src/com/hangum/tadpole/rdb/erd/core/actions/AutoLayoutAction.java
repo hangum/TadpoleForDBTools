@@ -36,6 +36,7 @@ import com.hangum.tadpole.rdb.erd.core.part.TableEditPart;
 import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.Relation;
 import com.hangum.tadpole.rdb.model.Table;
+import com.swtdesigner.ResourceManager;
 
 /**
  * autolayout action
@@ -60,6 +61,8 @@ public class AutoLayoutAction extends SelectionAction {
 		setText(Messages.AutoLayoutAction_1);
 		setToolTipText(Messages.AutoLayoutAction_0);
 		setId(ID);
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/layout_info.png"));
+		
 		setEnabled(true);
 	}
 	

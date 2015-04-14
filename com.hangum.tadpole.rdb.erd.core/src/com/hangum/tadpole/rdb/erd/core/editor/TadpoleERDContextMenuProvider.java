@@ -19,6 +19,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.actions.ActionFactory;
 
 import com.hangum.tadpole.rdb.erd.core.actions.AutoLayoutAction;
+import com.hangum.tadpole.rdb.erd.core.actions.ERDRefreshAction;
 
 /**
  * mouse right click context menu
@@ -51,6 +52,10 @@ public class TadpoleERDContextMenuProvider extends ContextMenuProvider {
 		menu.appendToGroup(GEFActionConstants.GROUP_UNDO, action);
 		
 		action = getActionRegistry().getAction(AutoLayoutAction.ID);
+		menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
+		
+		// refresh action
+		action = getActionRegistry().getAction(ERDRefreshAction.ID);
 		menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
 		
 	}

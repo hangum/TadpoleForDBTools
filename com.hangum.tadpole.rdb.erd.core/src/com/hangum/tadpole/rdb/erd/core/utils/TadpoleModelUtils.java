@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.erd.core.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public enum TadpoleModelUtils {
 	
 	private static final Logger logger = Logger.getLogger(TadpoleModelUtils.class);
 	
-	private UserDBDAO userDB;
+//	private UserDBDAO userDB;
 	
 	/** 한 행에 테이블을 표시하는 갯수 */
 	public static final int ROW_COUNT = 5;
@@ -62,20 +63,26 @@ public enum TadpoleModelUtils {
 	private RdbFactory factory = RdbFactory.eINSTANCE;
 	
 	/**
+	 * 
+	 */
+	private TadpoleModelUtils() {
+	}
+	
+	/**
 	 * logindb의  모든 테이블 정보를 리턴합니다.
 	 * 
 	 * @param userDB
 	 * @return
 	 */
-	public DB getDBAllTable(UserDBDAO userDB) throws Exception {
-		this.userDB = userDB;
+	public DB getDBAllTable(final UserDBDAO userDB) throws Exception {
+
 		DB db = factory.createDB();
 		db.setDbType(userDB.getDbms_type());
 		db.setId(userDB.getUsers());
 		db.setUrl(userDB.getUrl());
 		
 		// 테이블목록.
-		List<TableDAO> tables = getTables();
+		List<TableDAO> tables = getAllTables(userDB);
 		// 전체 참조 테이블 목록.
 		Map<String, Table> mapDBTables = new HashMap<String, Table>();
 		
@@ -120,7 +127,7 @@ public enum TadpoleModelUtils {
 			tableModel.setConstraints(prevRectangle);
 			
 			// column add
-			List<TableColumnDAO> columnList = getColumns(userDB.getDb(), table);
+			List<TableColumnDAO> columnList = getColumns(userDB, table);
 			for (TableColumnDAO columnDAO : columnList) {
 				
 				Column column = factory.createColumn();
@@ -165,26 +172,63 @@ public enum TadpoleModelUtils {
 		return db;
 	}
 	
-	
 	/**
 	 * table 정보를 가져옵니다.
 	 */
-	public List<TableDAO> getTables() throws Exception {
-		List<TableDAO> showTables = null;
+	public List<TableDAO> getAllTables(final UserDBDAO userDB) throws Exception {
+		List<TableDAO> listAllTables = null;
 		
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			showTables = new TajoConnectionManager().tableList(userDB);
+			listAllTables = new TajoConnectionManager().tableList(userDB);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			listAllTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 		}
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		for(TableDAO td : showTables) {
+		for(TableDAO td : listAllTables) {
 			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
 		}
 		
-		return showTables;
+		return listAllTables;
+	}
+	
+	/**
+	 * 테이블 이름 정보의 list를 만듭니다.
+	 * i hate this code. --;;;
+	 * 
+	 * @param userDB
+	 * @param listTableName
+	 * @return
+	 * @throws Exception
+	 */
+	public List<TableDAO> getTable(final UserDBDAO userDB, List<String> listTableName) throws Exception {
+		List<TableDAO> listAllTables = null;
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			listAllTables = new TajoConnectionManager().tableList(userDB);
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			listAllTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+		}
+
+		Map<String, TableDAO> mapTabls = new HashMap<String, TableDAO>();
+		for(TableDAO td : listAllTables) {
+			mapTabls.put(td.getName(), td);
+		}
+		
+		List<TableDAO> listWantTables = new ArrayList<TableDAO>();
+		for(String strTableName : listTableName) {
+			if(mapTabls.containsKey(strTableName)) {
+				listWantTables.add(mapTabls.get(strTableName));				
+			}
+		}
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(TableDAO td : listWantTables) {
+			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+		}
+		
+		return listWantTables;
 	}
 	
 	
@@ -195,9 +239,9 @@ public enum TadpoleModelUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<TableColumnDAO> getColumns(String db, TableDAO table) throws Exception {
+	public List<TableColumnDAO> getColumns(final UserDBDAO userDB, final TableDAO table) throws Exception {
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("db", db);
+		param.put("db", userDB.getDb());
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			param.put("table", table.getSysName());
 		} else {

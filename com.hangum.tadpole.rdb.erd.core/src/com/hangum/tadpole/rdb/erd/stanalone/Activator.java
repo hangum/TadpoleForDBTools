@@ -16,7 +16,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.hangum.tadpole.commons.log.LogConfiguration;
 import com.hangum.tadpole.commons.log.LogListener;
 
 /**
@@ -25,7 +24,7 @@ import com.hangum.tadpole.commons.log.LogListener;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "com.hangum.tadpole.erd.core"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "com.hangum.tadpole.rdb.erd.core"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
