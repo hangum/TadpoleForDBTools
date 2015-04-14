@@ -96,7 +96,7 @@ public class SQLUpdateDialog extends Dialog {
 		}
 		
 		RequestQuery reqQuery = new RequestQuery(strSQL, PublicTadpoleDefine.DB_ACTION.TABLES, 
-					EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.BLOCK, false);
+					EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.BLOCK, true);
 		try {
 			ExecuteOtherSQL.runSQLOther(reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
 		} catch (Exception e) {

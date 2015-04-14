@@ -153,8 +153,12 @@ public class SQLResultEditingSupport extends EditingSupport {
 					sbWhere.append( " = ");
 				}
 				
-				if(RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))) sbWhere.append(data.get(i));
-				else sbWhere.append("'" + data.get(i) + "'");
+				if(data.get(i) == null) {
+					sbWhere.append(" null ");
+				} else {
+					if(RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(i))) sbWhere.append(data.get(i));
+					else sbWhere.append("'" + data.get(i) + "'");
+				}
 			
 				sbWhere.append(" AND ");
 			}
