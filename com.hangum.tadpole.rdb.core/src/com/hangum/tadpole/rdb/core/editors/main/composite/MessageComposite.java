@@ -57,7 +57,7 @@ public class MessageComposite extends Composite {
 	 * @param tadpoleMessageDAO
 	 */
 	public void addAfterRefresh(TadpoleMessageDAO tadpoleMessageDAO) {
-		String strNewMessage = "==[ " + tadpoleMessageDAO.getDateExecute().toString() + " ]============\n";
+		String strNewMessage = String.format("==[ %s ]============\n", tadpoleMessageDAO.getDateExecute().toString());
 		
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if(throwable == null) {
