@@ -43,7 +43,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Messages;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.preference.get.GetAdminPreference;
 
 /**
  * Add new user Dialog
@@ -286,7 +286,7 @@ public class NewUserDialog extends Dialog {
 			emailDao.setContent(strContent);
 			emailDao.setTo(email);
 			
-			SendEmails sendEmail = new SendEmails(GetPreferenceGeneral.getSessionSMTPINFO());
+			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
 			sendEmail.sendMail(emailDao);
 		} catch(Exception e) {
 			logger.error("Error send email", e); //$NON-NLS-1$

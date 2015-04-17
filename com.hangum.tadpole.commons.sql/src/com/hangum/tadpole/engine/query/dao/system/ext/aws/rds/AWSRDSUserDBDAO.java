@@ -19,51 +19,32 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public class AWSRDSUserDBDAO extends UserDBDAO {
+	String userTadpoleDisplayName = "";
 	
-	String accessKey = "";
-	String secretKey = "";
-	String endPoint = "";
+	String endPoint 	= "";
 	
-	String strCheck = "";
+	String strCheck 	= "";
 	String strOperationType = "";
-	String strGroup = "";
-	String strName = "";
+	String strGroup 	= "";
+	String strName 	= "";
 	
 	public AWSRDSUserDBDAO() {
 		super();
 	}
 	
 	/**
-	 * @return the accessKey
+	 * @return the userTadpoleDisplayName
 	 */
-	public String getAccessKey() {
-		return accessKey;
+	public String getUserTadpoleDisplayName() {
+		return userTadpoleDisplayName;
 	}
 
 	/**
-	 * @param accessKey the accessKey to set
+	 * @param userTadpoleDisplayName the userTadpoleDisplayName to set
 	 */
-	public void setAccessKey(String accessKey) {
-		this.accessKey = accessKey;
+	public void setUserTadpoleDisplayName(String userTadpoleDisplayName) {
+		this.userTadpoleDisplayName = userTadpoleDisplayName;
 	}
-
-	/**
-	 * @return the secretKey
-	 */
-	public String getSecretKey() {
-		return secretKey;
-	}
-
-
-
-	/**
-	 * @param secretKey the secretKey to set
-	 */
-	public void setSecretKey(String secretKey) {
-		this.secretKey = secretKey;
-	}
-
-
 
 	/**
 	 * @return the endPoint
@@ -72,16 +53,12 @@ public class AWSRDSUserDBDAO extends UserDBDAO {
 		return endPoint;
 	}
 
-
-
 	/**
 	 * @param endPoint the endPoint to set
 	 */
 	public void setEndPoint(String endPoint) {
 		this.endPoint = endPoint;
 	}
-
-
 
 	/**
 	 * @return the strCheck

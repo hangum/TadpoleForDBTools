@@ -228,7 +228,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
-					SessionManager.setUserInfos(mapUserInfoData);
+					SessionManager.setUserAllPreferenceData(mapUserInfoData);
 					
 					if ("".equals(SessionManager.getPerspective())) {
 					

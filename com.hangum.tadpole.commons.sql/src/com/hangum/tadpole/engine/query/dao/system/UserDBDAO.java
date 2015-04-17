@@ -67,7 +67,7 @@ public class UserDBDAO {
     
 	protected String dbms_type;
 	protected String url;
-	protected String url_user_parameter;
+	protected String url_user_parameter = "";
 	
 	protected List<TadpoleUserDbRoleDAO> listChildren = new ArrayList<>();
 	

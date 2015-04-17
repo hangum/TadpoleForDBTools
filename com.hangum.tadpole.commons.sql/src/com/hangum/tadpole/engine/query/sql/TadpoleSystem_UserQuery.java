@@ -85,7 +85,7 @@ public class TadpoleSystem_UserQuery {
 	
 		if(isUser.size() == 0) {
 			UserDAO userdb = (UserDAO)sqlClient.insert("newUser", loginDAO); //$NON-NLS-1$
-			TadpoleSystem_UserInfoData.insertUserInfoData(userdb);
+			TadpoleSystem_UserInfoData.initializeUserPreferenceData(userdb);
 			
 			return userdb;
 		} else {

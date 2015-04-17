@@ -11,10 +11,12 @@
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -43,6 +45,8 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.preference.get.GetAmazonPreference;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.SingleAddDBDialog;
@@ -63,7 +67,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	private Combo comboRegionName;
 	
 	private TableViewer tvRDS;
-	private List<AWSRDSUserDBDAO> listUserDB;
+	private List<AWSRDSUserDBDAO> listAmazonRDS;
 
 	public AWSRDSLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
 		super("AmazonRDS", DBDefine.AMAZONRDS_DEFAULT, parent, style, listGroupName, selGroupName, userDB); //$NON-NLS-1$
@@ -92,10 +96,10 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		groupLogin.setText("Amazon User Information"); //$NON-NLS-1$
 		groupLogin.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		GridLayout gl_compositeLogin = new GridLayout(3, false);
-		gl_compositeLogin.verticalSpacing = 1;
-		gl_compositeLogin.horizontalSpacing = 1;
-		gl_compositeLogin.marginHeight = 1;
-		gl_compositeLogin.marginWidth = 1;
+		gl_compositeLogin.verticalSpacing = 3;
+		gl_compositeLogin.horizontalSpacing = 3;
+		gl_compositeLogin.marginHeight = 3;
+		gl_compositeLogin.marginWidth = 3;
 		groupLogin.setLayout(gl_compositeLogin);
 
 		Label lblAccesskey = new Label(groupLogin, SWT.NONE);
@@ -161,7 +165,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		
 		tvRDS.setContentProvider(new ArrayContentProvider());
 		tvRDS.setLabelProvider(new RDSInfoLabelProvider());
-		tvRDS.setInput(listUserDB);
+		tvRDS.setInput(listAmazonRDS);
 		
 		Composite compositeTail = new Composite(compositeBody, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
@@ -191,7 +195,12 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 			
 			SingleAddDBDialog dialog = new SingleAddDBDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
 															amazonRDSDto, getListGroupName(), getSelGroupName());
-			dialog.open();
+			if(Dialog.OK == dialog.open()) {
+				UserDBDAO registUserDB = dialog.getDTO();
+				amazonRDSDto.setUserTadpoleDisplayName(registUserDB.getDisplay_name());
+				
+				tvRDS.refresh(amazonRDSDto, true);
+			}
 		}
 		
 	}
@@ -204,13 +213,21 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		String strSecretkey = textSecretKey.getText().trim();
 		String strRegionName = comboRegionName.getText().trim();
 		
-		if(!checkTextCtl(textAccesskey, "Access key")) return; //$NON-NLS-1$
-		if(!checkTextCtl(textSecretKey, "Secret Key")) return; //$NON-NLS-1$
+		if(!checkTextCtl(textAccesskey, "Access key")) return;
+		if(!checkTextCtl(textSecretKey, "Secret Key")) return;
 		
 		try {
-			listUserDB = AmazonRDSUtsils.getDBList(strAccesskey, strSecretkey, strRegionName);
+			Map<String, UserDBDAO> mapRegisteredDB = TadpoleSystem_UserDBQuery.getUserDBByHost();
 			
-			tvRDS.setInput(listUserDB);
+			listAmazonRDS = AmazonRDSUtsils.getDBList(strAccesskey, strSecretkey, strRegionName);
+			for (AWSRDSUserDBDAO rdsDAO : listAmazonRDS) {
+				if(mapRegisteredDB.containsKey(rdsDAO.getHost())) {
+					UserDBDAO userDB = mapRegisteredDB.get(rdsDAO.getHost());
+					rdsDAO.setUserTadpoleDisplayName(userDB.getDisplay_name());
+				}
+			}
+			
+			tvRDS.setInput(listAmazonRDS);
 			tvRDS.refresh();
 			
 		} catch(Exception e) {
@@ -225,8 +242,8 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	 * create columns
 	 */
 	private void createColumns() {
-		String[] columnNames = {"Engine", "IP", "Port", "Instance", "Charset", "User", "Password"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-		int[] columnSize = {50, 200, 50, 100, 80, 80, 50};
+		String[] columnNames = {"Display Name", "Engine", "IP", "Port", "Instance", "Charset", "User", "Password"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+		int[] columnSize = {120, 50, 200, 50, 100, 80, 80, 50};
 		
 		for(int i=0; i<columnNames.length; i++) {
 			String name = columnNames[i];
@@ -242,7 +259,8 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	protected void init() {
-		// no exist code
+		textAccesskey.setText(GetAmazonPreference.getAccessValue());
+		textSecretKey.setText(GetAmazonPreference.getSecretValue());
 	}
 
 	@Override
@@ -300,13 +318,14 @@ class RDSInfoLabelProvider extends LabelProvider implements ITableLabelProvider 
 		AWSRDSUserDBDAO dto = (AWSRDSUserDBDAO)element;
 
 		switch(columnIndex) {
-		case 0: return dto.getDbms_type();
-		case 1: return dto.getHost();
-		case 2: return dto.getPort();
-		case 3: return dto.getDb();
-		case 4: return dto.getLocale();
-		case 5: return dto.getUsers();
-		case 6: return dto.getPasswd();
+		case 0: return dto.getUserTadpoleDisplayName();
+		case 1: return dto.getDbms_type();
+		case 2: return dto.getHost();
+		case 3: return dto.getPort();
+		case 4: return dto.getDb();
+		case 5: return dto.getLocale();
+		case 6: return dto.getUsers();
+		case 7: return dto.getPasswd();
 		}
 		
 		return "*** not set column ***"; //$NON-NLS-1$

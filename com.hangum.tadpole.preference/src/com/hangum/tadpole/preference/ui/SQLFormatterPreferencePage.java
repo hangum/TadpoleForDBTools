@@ -39,7 +39,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @author hangum
  *
  */
-public class SQLFormatterPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(SQLFormatterPreferencePage.class);
 	
 	private Combo comboTabsize;

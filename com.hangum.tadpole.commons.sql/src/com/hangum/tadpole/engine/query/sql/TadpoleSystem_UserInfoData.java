@@ -14,9 +14,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -78,24 +80,47 @@ public class TadpoleSystem_UserInfoData {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("userInfoDataInsert", listUserData); //$NON-NLS-1$
 	}
-	
+
+	/**
+	 * update encript  value
+	 * 
+	 * @param key
+	 * @param value
+	 * @throws Exception
+	 */
+	public static void updateEncriptValue(String key, String value) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(SessionManager.getUserSeq());
+		
+		userInfoData.setName(key);
+		userInfoData.setValue0(CipherManager.getInstance().encryption(value));
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		// session 에도 암호화 되게 저장합니다. 
+		SessionManager.setUserInfo(key, CipherManager.getInstance().encryption(value));
+	}
+
 
 	/**
 	 * update key, value
 	 * 
 	 * @param key
-	 * @param use
+	 * @param value
 	 * @throws Exception
 	 */
-	public static void updateValue(String key, String use) throws Exception {
+	public static void updateValue(String key, String value) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
 		
-		userInfoData.setName(key);//PreferenceDefine.DEFAULT_HOME_PAGE_USE);
-		userInfoData.setValue0(use);
+		userInfoData.setName(key);
+		userInfoData.setValue0(value);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		SessionManager.setUserInfo(key, value);
 	}
+	
 
 	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
@@ -234,10 +259,10 @@ public class TadpoleSystem_UserInfoData {
 	
 	
 	/**
-	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
+	 * 사용자의 프
 	 * 
 	 */
-	public static void insertUserInfoData(UserDAO userdb) throws Exception {
+	public static void initializeUserPreferenceData(UserDAO userdb) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(userdb.getSeq());
@@ -359,7 +384,20 @@ public class TadpoleSystem_UserInfoData {
 				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE);
 				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE);
 				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
+	}
+	
+	/**
+	 * 사용자 정보를 저장합니다.
+	 * 
+	 * @param userdb
+	 * @param key
+	 * @param value
+	 * @throws Exception
+	 */
+	private  void insertUserInfoData(UserDBDAO userdb, String key, String value) throws Exception {
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO(userdb.getSeq(), key, value);
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 	}
 	
 }

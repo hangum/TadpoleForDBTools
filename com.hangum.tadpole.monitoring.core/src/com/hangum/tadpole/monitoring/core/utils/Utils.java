@@ -20,6 +20,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
+import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 
 /**
@@ -132,7 +133,7 @@ public class Utils {
 			emailDao.setContent(strContent);
 			emailDao.setTo(receivers);
 			
-			SendEmails sendEmail = new SendEmails(GetPreferenceGeneral.getSMTPINFO());
+			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSMTPINFO());
 			sendEmail.sendMail(emailDao);
 		} catch(Exception e) {
 			logger.error("Error send email", e);

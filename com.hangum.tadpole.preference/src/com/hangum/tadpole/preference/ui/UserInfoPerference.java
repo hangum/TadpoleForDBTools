@@ -47,7 +47,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @author hangum
  *
  */
-public class UserInfoPerference extends PreferencePage implements IWorkbenchPreferencePage {
+public class UserInfoPerference extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(UserInfoPerference.class);
 	
 //	private Text textGroupName;

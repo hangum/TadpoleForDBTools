@@ -36,7 +36,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * 
  *  @author hangum
  */
-public class MongoDBPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(MongoDBPreferencePage.class);
 	
 	private Text textLimitCount;

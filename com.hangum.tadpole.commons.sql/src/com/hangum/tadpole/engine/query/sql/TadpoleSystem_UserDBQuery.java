@@ -60,6 +60,8 @@ public class TadpoleSystem_UserDBQuery {
 		return sqlClient.queryForList("getRegisteredDB");
 	}
 	
+	
+	
 	/**
 	 * 기존 디비 수정할 수 있는지 검사합니다.
 	 * 
@@ -300,6 +302,24 @@ public class TadpoleSystem_UserDBQuery {
 		
 		return listUserDB;
 	}
+	
+	/**
+	 * get already registered
+	 * @return
+	 */
+	public static Map<String, UserDBDAO> getUserDBByHost() {
+		Map<String, UserDBDAO> mapRegisterdDB = new HashMap<String, UserDBDAO>();
+		try {
+			for (UserDBDAO userDBDAO : getUserDB()) {
+				mapRegisterdDB.put(userDBDAO.getHost(), userDBDAO); 
+			}
+		} catch(Exception e) {
+			logger.error("get alredy regist db", e);
+		}
+		
+		return mapRegisterdDB;
+	}
+
 	
 	/**
 	 * 자신이 생성한 사용자 리스트

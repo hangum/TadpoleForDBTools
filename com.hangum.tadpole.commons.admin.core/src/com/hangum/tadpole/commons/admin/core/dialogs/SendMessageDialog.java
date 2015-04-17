@@ -33,7 +33,7 @@ import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.preference.get.GetAdminPreference;
 
 /**
  * 모든 사용자에게 메시지를 보냅니다.
@@ -130,7 +130,7 @@ public class SendMessageDialog extends Dialog {
 		// 모든 사용자에게 이메일을 보냅니다.
 		try {
 			List<UserDAO> listUser = TadpoleSystem_UserQuery.getAllUser();
-			SendEmails email = new SendEmails(GetPreferenceGeneral.getSMTPINFO());
+			SendEmails email = new SendEmails(GetAdminPreference.getSMTPINFO());
 			for (UserDAO userDAO : listUser) {
 				logger.info("admin user sender " + userDAO.getEmail());
 				

@@ -147,7 +147,7 @@ public class SingleAddDBDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 500);
+		return new Point(450, 450);
 	}
 	
 	/**

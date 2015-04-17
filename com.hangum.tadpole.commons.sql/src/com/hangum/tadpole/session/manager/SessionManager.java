@@ -62,8 +62,6 @@ public class SessionManager {
 														
 														UNLOCK_DB_LIST,
 														
-//														SECURITY_QUESTION,
-//														SECURITY_ANSWER, 
 														PERSPECTIVE
 														}
 
@@ -149,15 +147,6 @@ public class SessionManager {
 		return (String)sStore.getAttribute(NAME.LOGIN_NAME.toString());
 	}
 	
-//	public static String getSecurityQuestion() {
-//		HttpSession sStore = RWT.getRequest().getSession();
-//		return (String)sStore.getAttribute(NAME.SECURITY_QUESTION.toString());
-//	}
-//	
-//	public static String getSecurityAnswer() {
-//		HttpSession sStore = RWT.getRequest().getSession();
-//		return (String)sStore.getAttribute(NAME.SECURITY_ANSWER.toString());
-//	}
 	public static String getUseOTP() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(NAME.USE_OTP.toString());
@@ -194,9 +183,9 @@ public class SessionManager {
 	}
 
 	/**
-	 * 초기 접속시 프리퍼런스 정보를 로드합니다.
+	 * 초기 접속시 사용자의 모든 프리퍼런스 데이터를 설정합니다. 
 	 */
-	public static void setUserInfos(Map<String, Object> mapUserInfo) {
+	public static void setUserAllPreferenceData(Map<String, Object> mapUserInfo) {
 		HttpSession sStore = RWT.getRequest().getSession();
 		sStore.setAttribute(NAME.USER_INFO_DATA.toString(), mapUserInfo);		
 	}
@@ -207,6 +196,7 @@ public class SessionManager {
 	 * @param obj
 	 */
 	public static void setUserInfo(String key, String obj) {
+		
 		HttpSession sStore = RWT.getRequest().getSession();
 		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.toString());
 		UserInfoDataDAO userInfoDataDAO = (UserInfoDataDAO)mapUserInfoData.get(key);

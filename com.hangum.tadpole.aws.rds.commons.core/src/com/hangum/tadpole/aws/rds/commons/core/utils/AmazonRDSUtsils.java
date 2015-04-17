@@ -13,6 +13,8 @@ package com.hangum.tadpole.aws.rds.commons.core.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.RegionUtils;
@@ -31,7 +33,7 @@ import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
  *
  */
 public class AmazonRDSUtsils {
-	
+	private static final Logger logger = Logger.getLogger(AmazonRDSUtsils.class);	
 	/**
 	 * list region name
 	 * 
@@ -67,11 +69,11 @@ public class AmazonRDSUtsils {
 			DescribeDBInstancesResult describeDBInstance = rdsClient.describeDBInstances();
 			List<DBInstance> listDBInstance = describeDBInstance.getDBInstances();
 			for (DBInstance rdsDbInstance : listDBInstance) {
+				// if is creation database is not add database list
+				if(rdsDbInstance.getEndpoint() == null) continue; 
 				AWSRDSUserDBDAO rdsUserDB = new AWSRDSUserDBDAO();
 				
 				// rds information
-				rdsUserDB.setAccessKey(accessKey);
-				rdsUserDB.setSecretKey(secretKey);
 				rdsUserDB.setEndPoint(regionName);
 				
 				// ext information
@@ -81,19 +83,29 @@ public class AmazonRDSUtsils {
 				// db information
 				String strDBMStype = rdsDbInstance.getEngine();
 				if(strDBMStype.startsWith("sqlserver")) {
-					String strEngVer = rdsDbInstance.getEngineVersion();
-//					if(strEngVer.startsWith("11")) 
-//					else strDBMStype = "MSSQL_8_LE";
-					
+					String strEngVer = rdsDbInstance.getEngineVersion();					
 					strDBMStype = DBDefine.MSSQL_DEFAULT.getDBToString();
 				} else if(strDBMStype.startsWith("oracle")) {
 					strDBMStype = DBDefine.ORACLE_DEFAULT.getDBToString();
+				} else if(strDBMStype.startsWith("postgres")) {
+					strDBMStype = DBDefine.POSTGRE_DEFAULT.getDBToString();
+				} else if(strDBMStype.startsWith("mysql")) {
+					strDBMStype = DBDefine.MYSQL_DEFAULT.getDBToString();
+				} else {
+					logger.error(String.format("AmazonRDS type is %s. Tadpole does't suupoort this. Check your system.", strDBMStype));
 				}
 				
-				rdsUserDB.setDbms_type(DBDefine.getDBDefine(strDBMStype).getDBToString());
+				// 
+				rdsUserDB.setIs_autocommit(PublicTadpoleDefine.YES_NO.YES.name());
+				rdsUserDB.setIs_profile(PublicTadpoleDefine.YES_NO.YES.name());
+				rdsUserDB.setIs_showtables(PublicTadpoleDefine.YES_NO.YES.name());
+				rdsUserDB.setIs_summary_report(PublicTadpoleDefine.YES_NO.YES.name());
+				
+				rdsUserDB.setDbms_type(strDBMStype);//DBDefine.getDBDefine(strDBMStype).getDBToString());
 				rdsUserDB.setDisplay_name(rdsDbInstance.getDBInstanceIdentifier() + "." + rdsDbInstance.getAvailabilityZone());
 				rdsUserDB.setOperation_type(PublicTadpoleDefine.DBOperationType.DEVELOP.toString());
-				rdsUserDB.setDb(rdsDbInstance.getDBInstanceIdentifier());//getDBName());
+				rdsUserDB.setDb(rdsDbInstance.getDBName());
+				
 				rdsUserDB.setHost(rdsDbInstance.getEndpoint().getAddress());
 				rdsUserDB.setPort(""+rdsDbInstance.getEndpoint().getPort());
 				rdsUserDB.setLocale(rdsDbInstance.getCharacterSetName()==null?"":rdsDbInstance.getCharacterSetName());

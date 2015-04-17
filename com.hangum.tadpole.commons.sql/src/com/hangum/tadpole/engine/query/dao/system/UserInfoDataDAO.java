@@ -30,6 +30,12 @@ public class UserInfoDataDAO {
 	
 	public UserInfoDataDAO() {
 	}
+	
+	public UserInfoDataDAO(int seq, String name, String value) {
+		this.seq = seq;
+		this.name = name;
+		this.value0 = value;
+	}
 
 	public int getSeq() {
 		return seq;

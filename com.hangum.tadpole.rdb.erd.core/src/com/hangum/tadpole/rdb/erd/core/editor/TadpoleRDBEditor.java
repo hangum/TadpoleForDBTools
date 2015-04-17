@@ -22,7 +22,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.draw2d.LightweightSystem;
+import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.parts.ScrollableThumbnail;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
@@ -32,10 +36,13 @@ import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
+import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
@@ -47,16 +54,27 @@ import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
+import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
+import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.xml.sax.InputSource;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -74,6 +92,7 @@ import com.hangum.tadpole.rdb.erd.core.actions.TableSelectionAction;
 import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferDropTargetListener;
 import com.hangum.tadpole.rdb.erd.core.dnd.TableTransferFactory;
 import com.hangum.tadpole.rdb.erd.core.part.TadpoleEditPartFactory;
+import com.hangum.tadpole.rdb.erd.core.part.tree.TadpoleTreeEditPartFactory;
 import com.hangum.tadpole.rdb.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.DB;
@@ -443,11 +462,11 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 //	}
 	
 	
-	/**
-	 * export images
-	 * 
-	 * RAP currently, GC drawing is only supported on Canvas, but not on image.
-	 */
+//	/**
+//	 * export images
+//	 * 
+//	 * RAP currently, GC drawing is only supported on Canvas, but not on image.
+//	 */
 //	public void exportImage() {
 //		try {
 //           IFigure figure = ((AbstractGraphicalEditPart)getGraphicalViewer().getRootEditPart()).getFigure();
@@ -466,9 +485,10 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 //
 //           Dimension size = figure.getPreferredSize ();
 //           Image image = new Image (Display.getDefault (), size.width, size.height);
-//           Drawable drawable = (Drawable)image;
+////           Drawable drawable = (Drawable)image;
 //           
-//           GC gc = new GC(image);
+//           GC gc = new GC(getSite().getShell().getDisplay());
+//           gc.drawImage(image, size.width, size.height);
 //           SWTGraphics graphics = new SWTGraphics(gc);
 //           figure.paint (graphics);
 //
@@ -484,11 +504,10 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 //        	e.printStackTrace();
 //	     } finally {
 //        }
-//		
 //	}
-
 	@Override
 	public void doSave(IProgressMonitor monitor) {
+//		exportImage();
 		
 		// 신규 저장이면 
 		if(userDBErd == null) {
@@ -563,9 +582,9 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 			return ((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
 		}
  
-//		if(type == IContentOutlinePage.class) {
-//			return new OutlinePage();
-//		}
+		if(type == IContentOutlinePage.class) {
+			return new OutlinePage();
+		}
 		
 		return super.getAdapter(type);
 	}
@@ -574,81 +593,79 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		return userDBErd;
 	}
 
-//	/**
-//	 * outline page
-//	 * @author hangum
-//	 *
-//	 */
-//	protected class OutlinePage extends ContentOutlinePage {
-//		private SashForm sash;
-////		private ScrollableThumbnail thumbnail;
-////		private DisposeListener disposeListener;
-//		
-//		public OutlinePage() {
-//			super(new TreeViewer());
-//		}
-//		
-//		@Override
-//		public void createControl(Composite parent) {
-//			sash = new SashForm(parent, SWT.VERTICAL);
-//			
-//			getViewer().createControl(sash);
-//			getViewer().setEditDomain(getEditDomain());
-//			getViewer().setEditPartFactory(new TadpoleTreeEditPartFactory());
-//			getViewer().setContents(db);
-//			getSelectionSynchronizer().addViewer(getViewer());
-//
-////			
-//			// thumbnail 백그라운드가 검은색으로 나와서 주석으로 막습니다. ( http://hangumkj.blogspot.com/2012/02/rap-gef-port.html )
-////			
-////			Canvas canvas = new Canvas(sash, SWT.BORDER);
-////			LightweightSystem lws = new LightweightSystem(canvas);
-////			
-////			thumbnail = new ScrollableThumbnail((Viewport)((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getFigure());
-////			thumbnail.setSource(((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getLayer(LayerConstants.PRINTABLE_LAYERS));
-////			lws.setContents(thumbnail);
-////			
-////			disposeListener = new DisposeListener() {
-////				
-////				@Override
-////				public void widgetDisposed(DisposeEvent event) {
-////					if(thumbnail != null) {
-////						thumbnail.deactivate();
-////						thumbnail = null;
-////					}
-////				}
-////			};
-////			getGraphicalViewer().getControl().addDisposeListener(disposeListener);
-//			
-//		}
-//		
-//		@Override
-//		public void init(IPageSite pageSite) {
-//			super.init(pageSite);
-//			
-//			IActionBars bars = getSite().getActionBars();
-//			bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getActionRegistry().getAction(ActionFactory.UNDO.getId()));
-//			bars.setGlobalActionHandler(ActionFactory.REDO.getId(), getActionRegistry().getAction(ActionFactory.REDO.getId()));
-//			bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
-//			bars.updateActionBars();
-//			
-//			getViewer().setKeyHandler(keyHandler);
-//		}
-//		
-//		@Override
-//		public Control getControl() {
-//			return sash;
-//		}
-//		
-//		@Override
-//		public void dispose() {
-//			getSelectionSynchronizer().removeViewer(getViewer());
-////			if(getGraphicalViewer().getControl() != null && !getGraphicalViewer().getControl().isDisposed())
-////				getGraphicalViewer().getControl().removeDisposeListener(disposeListener);
-//			
-//			super.dispose();
-//		}
-//	}
+	/**
+	 * outline page
+	 * @author hangum
+	 *
+	 */
+	protected class OutlinePage extends ContentOutlinePage {
+		private SashForm sash;
+//		private ScrollableThumbnail thumbnail;
+//		private DisposeListener disposeListener;
+		
+		public OutlinePage() {
+			super(new TreeViewer());
+		}
+		
+		@Override
+		public void createControl(Composite parent) {
+			sash = new SashForm(parent, SWT.VERTICAL);
+			
+			getViewer().createControl(sash);
+			getViewer().setEditDomain(getEditDomain());
+			getViewer().setEditPartFactory(new TadpoleTreeEditPartFactory());
+			getViewer().setContents(db);
+			getSelectionSynchronizer().addViewer(getViewer());
+
+//			Canvas canvas = new Canvas(sash, SWT.BORDER);
+//			LightweightSystem lws = new LightweightSystem(canvas);
+//			RootEditPart rep = getGraphicalViewer().getRootEditPart();
+//			if (rep instanceof ScalableFreeformRootEditPart) {
+//				ScalableFreeformRootEditPart root = (ScalableFreeformRootEditPart) rep;
+//				thumbnail = new ScrollableThumbnail((Viewport) root.getFigure());
+//				thumbnail.setBorder(new MarginBorder(3));
+//				thumbnail.setSource(root.getLayer(LayerConstants.PRINTABLE_LAYERS));
+//				lws.setContents(thumbnail);
+//				disposeListener = new DisposeListener() {
+//					public void widgetDisposed(DisposeEvent e) {
+//						if (thumbnail != null) {
+//							thumbnail.deactivate();
+//							thumbnail = null;
+//						}
+//					}
+//				};
+//				getGraphicalViewer().getControl().addDisposeListener(disposeListener);
+//			}	
+			
+		}
+		
+		@Override
+		public void init(IPageSite pageSite) {
+			super.init(pageSite);
+			
+			IActionBars bars = getSite().getActionBars();
+			bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getActionRegistry().getAction(ActionFactory.UNDO.getId()));
+			bars.setGlobalActionHandler(ActionFactory.REDO.getId(), getActionRegistry().getAction(ActionFactory.REDO.getId()));
+			bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
+			bars.updateActionBars();
+			
+			getViewer().setKeyHandler(keyHandler);
+		}
+		
+		@Override
+		public Control getControl() {
+			return sash;
+		}
+		
+		@Override
+		public void dispose() {
+			getSelectionSynchronizer().removeViewer(getViewer());
+//			if(getGraphicalViewer().getControl() != null && !getGraphicalViewer().getControl().isDisposed())
+//				getGraphicalViewer().getControl().removeDisposeListener(disposeListener);
+			
+			super.dispose();
+		}
+	}
 	
 	public DB getDb() {
 		return db;

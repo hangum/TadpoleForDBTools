@@ -11,7 +11,6 @@
 package com.hangum.tadpole.preference.ui;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -22,7 +21,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -32,7 +30,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @author hangum
  *
  */
-public class PerspectivePreferencePage extends PreferencePage implements IWorkbenchPreferencePage{
+public class PerspectivePreferencePage extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage{
 
 	private static final Logger logger = Logger.getLogger(PerspectivePreferencePage.class);
 	

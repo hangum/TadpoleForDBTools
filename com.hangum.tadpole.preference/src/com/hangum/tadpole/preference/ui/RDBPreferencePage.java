@@ -45,7 +45,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @author hangum
  *
  */
-public class RDBPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(RDBPreferencePage.class);
 	
 	private Text textSelectLimit;
@@ -234,7 +234,6 @@ public class RDBPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_FONT, txtFontInfo);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_COMMIT_COUNT, txtCommitCount);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, txtShownInTheColumn);
-			
 			
 		} catch(Exception e) {
 			logger.error("RDBPreference saveing", e);

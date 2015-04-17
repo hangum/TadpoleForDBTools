@@ -59,7 +59,6 @@ public class TadpoleERDContextMenuProvider extends ContextMenuProvider {
 		menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
 		
 	}
-
 	
 	public ActionRegistry getActionRegistry() {
 		return actionRegistry;
