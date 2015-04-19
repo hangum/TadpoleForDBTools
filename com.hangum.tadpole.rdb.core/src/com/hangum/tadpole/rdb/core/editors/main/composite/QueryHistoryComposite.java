@@ -66,7 +66,7 @@ public class QueryHistoryComposite extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
-		gridSQLHistory = new Grid(this, SWT.V_SCROLL | SWT.BORDER);
+		gridSQLHistory = new Grid(this, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		gridSQLHistory.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		gridSQLHistory.setLinesVisible(true);
 		gridSQLHistory.setHeaderVisible(true);
