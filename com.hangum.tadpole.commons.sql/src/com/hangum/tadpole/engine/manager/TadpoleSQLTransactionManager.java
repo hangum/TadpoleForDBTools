@@ -187,7 +187,7 @@ public class TadpoleSQLTransactionManager {
 					if(logger.isDebugEnabled()) logger.debug("\tIs auto commit " + conn.getAutoCommit());
 					conn.rollback();
 				} catch(Exception e) {
-					logger.error("commit exception", e);
+					logger.error("rollback exception", e);
 				} finally {
 					try { if(conn != null) conn.close(); } catch(Exception e) {}
 				}

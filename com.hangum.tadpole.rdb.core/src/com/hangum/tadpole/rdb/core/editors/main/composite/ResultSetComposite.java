@@ -619,16 +619,17 @@ public class ResultSetComposite extends Composite {
 						}
 					} else {
 						
-						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
-						if(TransactionManger.isTransaction(reqQuery.getSql())) {
-							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
-						} else if(SQLUtil.isStatement(reqQuery.getSql())) {
+						if(SQLUtil.isStatement(reqQuery.getSql())) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
 							} else {
 								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
 								sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 							}
+						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
+						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
+							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
+
 						} else {
 							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 						}

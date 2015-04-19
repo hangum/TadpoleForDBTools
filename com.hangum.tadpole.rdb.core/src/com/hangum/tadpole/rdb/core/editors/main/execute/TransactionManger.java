@@ -20,7 +20,7 @@ public class TransactionManger {
 	 * @return
 	 */
 	public static boolean isTransaction(String query) {
-		if(StringUtils.startsWith(query, "commit") || StringUtils.startsWith(query, "rollback")) { //$NON-NLS-1$
+		if(StringUtils.startsWithIgnoreCase(query, "commit") || StringUtils.startsWithIgnoreCase(query, "rollback")) { //$NON-NLS-1$
 			return true;
 		}
 		

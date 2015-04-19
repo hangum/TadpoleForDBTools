@@ -112,6 +112,7 @@ public class TadpoleSystem_SchemaHistory {
 			if(logger.isDebugEnabled()) logger.debug("[start sql]\t" + strWorkSQL);
 			
 			String[] arrSQL = StringUtils.split(strWorkSQL);
+			if(arrSQL.length != 5) return null;
 			String strWorkType = arrSQL[0];
 			
 			// object type
