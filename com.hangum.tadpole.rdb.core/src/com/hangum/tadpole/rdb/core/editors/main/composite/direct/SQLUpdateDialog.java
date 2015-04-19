@@ -114,7 +114,7 @@ public class SQLUpdateDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Update", false);
+		createButton(parent, IDialogConstants.OK_ID, "Update", true);
 		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
 	}
 

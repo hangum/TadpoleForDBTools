@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.rap.rwt.service.UISessionEvent;
 import org.eclipse.rap.rwt.service.UISessionListener;
@@ -36,6 +39,7 @@ import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -61,9 +65,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     public void preWindowOpen() {
     	try {
-    		logger.info("Schedule start.........");
+    		logger.info("Schedule and Summary Report start.........");
 //			DBSummaryReporter.executer();
-//			ScheduleManager.getInstance();
+			ScheduleManager.getInstance();
 		} catch(Exception e) {
 			logger.error("Schedule", e);
 		}
@@ -251,6 +255,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					initSession();
 					
 	    		} catch(Exception e) {
+	    			
 	    			logger.error("session set", e); //$NON-NLS-1$
 	    		}
 	    		
@@ -264,18 +269,17 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	private void initSession() {
 		HttpSession iss = RWT.getUISession().getHttpSession();
 		
-		int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
+		final int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
 		if(sessionTimeOut <= 0) {
-			iss.setMaxInactiveInterval( 60 * 90 );
+			iss.setMaxInactiveInterval(90 * 60);
 		} else {
-			iss.setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
+			iss.setMaxInactiveInterval(sessionTimeOut * 60);
 		}
 		
-		// cleanup code
 		// user logout
 		RWT.getUISession().addUISessionListener( new UISessionListener() {
 			public void beforeDestroy( UISessionEvent event ) {
-				
+				logger.info(String.format("User has logout. session id is %s", event.getUISession().getId()));
 			}
 		});
 	}

@@ -18,7 +18,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.help.core.views.sub.shortcutkey.ShortcutKeyComposite;
+import com.hangum.tadpole.help.core.views.sub.doc.DBDocComposite;
 
 /**
  * Help main view
@@ -40,9 +40,9 @@ public class HelpViewPart extends ViewPart {
 		
 		// ------------- shortcut keys --------------------------------------------
 		CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
-		tabItem.setText("Shortcut keys");
+		tabItem.setText("Tadpole DB Hub - Document ");
 		
-		Composite composite = new ShortcutKeyComposite(tabFolder, SWT.NONE);
+		Composite composite = new DBDocComposite(tabFolder, SWT.NONE);
 		tabItem.setControl(composite);
 		// ------------- shortcut keys --------------------------------------------
 		

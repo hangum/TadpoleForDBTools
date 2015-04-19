@@ -126,6 +126,7 @@ public class SQLResultEditingSupport extends EditingSupport {
 			// 수정된 데이터 표시
 			data.put(intColumnIndex, value.toString());
 			tvSQLResult.refresh();
+			tvSQLResult.getTable().setFocus();
 		}
 	}
 	

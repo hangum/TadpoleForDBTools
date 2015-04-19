@@ -31,6 +31,7 @@ public class SchemaHistoryDAO {
 	Timestamp create_date;
 	Timestamp update_date;
 	String del_yn;
+	String ipaddress;
 	
 	public SchemaHistoryDAO() {
 	}
@@ -174,5 +175,20 @@ public class SchemaHistoryDAO {
 	public final void setDel_yn(String del_yn) {
 		this.del_yn = del_yn;
 	}
+
+	/**
+	 * @return the ipaddress
+	 */
+	public String getIpaddress() {
+		return ipaddress;
+	}
+
+	/**
+	 * @param ipaddress the ipaddress to set
+	 */
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+	
 	
 }

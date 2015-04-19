@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
@@ -133,6 +134,8 @@ public class TadpoleSystem_SchemaHistory {
 			schemaDao.setObject_id(strObjectId);
 			
 			schemaDao.setCreate_date(new Timestamp(System.currentTimeMillis()));
+			
+			schemaDao.setIpaddress(RWT.getRequest().getRemoteAddr());
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 			SchemaHistoryDAO schemaHistoryDao =  (SchemaHistoryDAO)sqlClient.insert("sqlHistoryInsert", schemaDao); //$NON-NLS-1$

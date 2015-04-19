@@ -323,6 +323,12 @@ public class MonitoringMainEditor extends EditorPart {
 									}
 								}
 								
+								// All monitoring db state to clean
+								for (Integer key : mapDBComposite.keySet()) {
+									DBStatusComposite dbComposite = mapDBComposite.get(key);
+									dbComposite.changeStatus(MonitoringDefine.MONITORING_STATUS.CLEAN.getColor(), "");	
+								}
+								
 								// total message
 								for (Integer key : mapWarning.keySet()) {
 									DBStatusComposite dbComposite = mapDBComposite.get(key);

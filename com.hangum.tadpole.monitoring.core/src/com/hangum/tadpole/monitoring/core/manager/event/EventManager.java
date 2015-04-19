@@ -55,26 +55,34 @@ public class EventManager {
 				sendEmail(resultDAO);
 				
 				JsonElement jsonElement = parser.parse(resultDAO.getQuery_result());
-				JsonObject jsonObject = jsonElement.getAsJsonObject();
-				String id = "";
-				if(DBDefine.MYSQL_DEFAULT == resultDAO.getUserDB().getDBDefine() || DBDefine.MARIADB_DEFAULT == resultDAO.getUserDB().getDBDefine()) {
-					id = jsonObject.getAsJsonPrimitive("id").getAsString();
-				} else if(DBDefine.POSTGRE_DEFAULT == resultDAO.getUserDB().getDBDefine()) {
-					id = jsonObject.getAsJsonPrimitive("pid").getAsString();
-				}
-				
-				try {
-					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-					if (userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-						client.queryForObject("killProcess", Integer.parseInt(id));
+				if(jsonElement == null) {
+					logger.info("Not found to SQL Result. Result index is " + resultDAO.getSeq());
+					continue;
+				} else {
+					JsonObject jsonObject = jsonElement.getAsJsonObject();
+					String id = "";
+					if(DBDefine.MYSQL_DEFAULT == resultDAO.getUserDB().getDBDefine() || DBDefine.MARIADB_DEFAULT == resultDAO.getUserDB().getDBDefine()) {
+						id = jsonObject.getAsJsonPrimitive("id").getAsString();
+					} else if(DBDefine.POSTGRE_DEFAULT == resultDAO.getUserDB().getDBDefine()) {
+						id = jsonObject.getAsJsonPrimitive("pid").getAsString();
 					} else {
-						client.queryForObject("killProcess", id);
+						logger.error("Do not support Session kill.");
+						continue;
 					}
-				} catch(Exception e) {
-					logger.error("=[monitoring kill session][start]==============================================================================");
-					logger.error(resultDAO.getCreate_time() + "\t[db seq]" + resultDAO.getUserDB().getSeq() + "\t [Json msg]" + jsonElement.toString());
-					logger.error("kill session", e);
-					logger.error("=[monitoring kill session][end]==============================================================================");
+					
+					try {
+						SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+						if (userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+							client.queryForObject("killProcess", Integer.parseInt(id));
+						} else {
+							client.queryForObject("killProcess", id);
+						}
+					} catch(Exception e) {
+						logger.error("=[monitoring kill session][start]==============================================================================");
+						logger.error(resultDAO.getCreate_time() + "\t[db seq]" + resultDAO.getUserDB().getSeq() + "\t [Json msg]" + jsonElement.toString());
+						logger.error("kill session", e);
+						logger.error("=[monitoring kill session][end]==============================================================================");
+					}
 				}
 			}	//  end if kill_after email
 				

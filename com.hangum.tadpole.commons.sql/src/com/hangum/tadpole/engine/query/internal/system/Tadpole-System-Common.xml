@@ -926,8 +926,8 @@ SELECT
 </select>
 
 <insert id="sqlHistoryInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO">
-    INSERT INTO schema_history(db_seq, user_seq, object_id, work_type, object_type, create_date)
-	VALUES (#db_seq#, #user_seq#, #object_id#, #work_type#, #object_type#, #create_date#)
+    INSERT INTO schema_history(db_seq, user_seq, object_id, work_type, object_type, create_date, ipaddress)
+	VALUES (#db_seq#, #user_seq#, #object_id#, #work_type#, #object_type#, #create_date#, #ipaddress#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO">
 		SELECT max(seq) seq 

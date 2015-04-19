@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -51,11 +52,19 @@ public class RDBERDViewAction implements IViewActionDelegate {
 	}
 	
 	public void run(UserDBDAO userDB) {
+		try {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IPageLayout.ID_OUTLINE);
+		} catch (PartInitException e1) {
+			logger.error("show Outline view", e1);
+		}
+		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
 			if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 				TadpoleMongoDBEditorInput input = new TadpoleMongoDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
 				page.openEditor(input, TadpoleMongoDBERDEditor.ID, false);
+				
+				
 			} else {
 				TadpoleRDBEditorInput input = new TadpoleRDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
 				page.openEditor(input, TadpoleRDBEditor.ID, false);				
