@@ -216,7 +216,7 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		strURL = StringEscapeUtils.escapeHtml(strURL);
-		labelQRCodeURL.setText(String.format("<a href='%s' target='_blank'>Show QRCode</a>", strURL));
+		labelQRCodeURL.setText(String.format("<a href='%s' target='_blank'>Show QRCode(Only support Google Chrome)</a>", strURL));
 	}
 	
 	@Override
