@@ -45,9 +45,11 @@ public class RequestQuery {
 
 	/**
 	 * 
-	 * @param sql 쿼리
+	 * @param originalSql 쿼리
+	 * @param dbAction 수행을 요청한 곳.
 	 * @param mode 전체인지, 부분인지 {@code EditorDefine.QUERY_MODE}
 	 * @param type 쿼리, 실행 계획인지 {@code EditorDefine.EXECUTE_TYPE}
+	 * @param isAutoCommit autocommit
 	 */
 	public RequestQuery(String originalSql, DB_ACTION dbAction, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type, boolean isAutoCommit) {
 		this.userIp = RWT.getRequest().getRemoteAddr();

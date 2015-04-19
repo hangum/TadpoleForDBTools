@@ -73,7 +73,7 @@ public class ExecuteBatchSQL {
 				// 쿼리 중간에 commit이나 rollback이 있으면 어떻게 해야 하나???
 				if(!TransactionManger.transactionQuery(reqQuery.getSql(), userEmail, userDB)) {
 					
-					if(StringUtils.startsWith(strQuery.trim().toUpperCase(), "CREATE TABLE")) { //$NON-NLS-1$
+					if(StringUtils.startsWithIgnoreCase(strQuery.trim(), "CREATE TABLE")) { //$NON-NLS-1$
 						strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					

@@ -34,6 +34,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
@@ -569,6 +570,22 @@ public class MainEditor extends EditorExtension {
 		
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
+	}
+	
+	/**
+	 * start sql transaction;
+	 */
+	public void beginTransaction() {
+		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if(tiAutoCommit.isEnabled()) {
+					tiAutoCommit.setEnabled(true);
+					tiAutoCommit.setSelection(true);
+					tiAutoCommitCommit.setEnabled(true);
+					tiAutoCommitRollback.setEnabled(true);
+				}
+			}
+		});
 	}
 	
 	/**

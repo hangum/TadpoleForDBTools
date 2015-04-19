@@ -600,16 +600,19 @@ public class ResultSetComposite extends Composite {
 							String strExeSQL = SQLUtil.sqlExecutable(strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
-							if(!SQLUtil.isStatement(strExeSQL)) {
-								listStrExecuteQuery.add(strExeSQL);
+							if(SQLUtil.isStatement(strExeSQL)) {
+								reqQuery.setSql(strExeSQL);											
+							} else if(TransactionManger.isStartTransaction(strExeSQL)) {
+								startTransactionMode();
+								reqQuery.setAutoCommit(false);
 							} else {
-								reqQuery.setSql(strExeSQL);					
+								listStrExecuteQuery.add(strExeSQL);
 							}
 						}
 						
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
-							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getDbUserRoleType(), intCommitCount, strUserEmail);
+							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery, getUserDB(), getDbUserRoleType(), intCommitCount, strUserEmail);
 						}
 						
 						// select 문장 실행
@@ -626,10 +629,14 @@ public class ResultSetComposite extends Composite {
 								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
 								sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 							}
-						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
-						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
-							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
 
+						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
+							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {
+								startTransactionMode();
+								reqQuery.setAutoCommit(false);
+							} else {
+								TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
+							}
 						} else {
 							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 						}
@@ -686,6 +693,13 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.setPriority(Job.INTERACTIVE);
 		jobQueryManager.setName(getUserDB().getDisplay_name() + reqQuery.getOriginalSql());
 		jobQueryManager.schedule();
+	}
+	
+	/**
+	 * 쿼리 중간에 begin 으로 시작하는 구문이 있어서 트랜잭션을 시작합니다. 
+	 */
+	private void startTransactionMode() {
+		rdbResultComposite.getMainEditor().beginTransaction();
 	}
 	
 	private boolean isCheckRunning = true;
