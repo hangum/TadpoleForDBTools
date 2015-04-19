@@ -13,6 +13,8 @@ package com.hangum.tadpole.rdb.core.dialog.dml;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -46,6 +48,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -55,6 +58,8 @@ import com.swtdesigner.ResourceManager;
  *
  */
 public class GenerateStatmentDMLDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(GenerateStatmentDMLDialog.class);
+	
 	/** generation SQL string */
 	private String genSQL = "";
 	
@@ -324,31 +329,37 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 	}
 
+	/**
+	 * Generate SELECT statment
+	 * 
+	 * @return
+	 */
 	private String buildSelectSQL() {
 		StringBuffer resultSQL = new StringBuffer();
-		if (chkComment.getSelection())
-			resultSQL.append("/* Tadpole SQL Generator */").append(PublicTadpoleDefine.LINE_SEPARATOR);
-
+		if (chkComment.getSelection()) {
+			resultSQL.append("/* Tadpole SQL Generator */");
+		}
+		resultSQL.append("SELECT ");
+		
 		int cnt = 0;
 
-		resultSQL.append("SELECT " + PublicTadpoleDefine.LINE_SEPARATOR);
-
+		StringBuffer sbColumn = new StringBuffer();
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if (allDao.isCheck()) {
-				if (cnt == 0) {
-					resultSQL.append("\t");
-				} else {
-					resultSQL.append("\t, ");
-				}
+				if (cnt != 0) sbColumn.append("\t, ");
+				
 				if ("*".equals(allDao.getField())) {
-					resultSQL.append(allDao.getSysName()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+					sbColumn.append(allDao.getSysName());
 				} else {
-					resultSQL.append(allDao.getSysName()).append(" as ").append(allDao.getColumnAlias()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+					sbColumn.append(allDao.getSysName()).append(" as ").append(allDao.getColumnAlias());
 				}
 				cnt++;
 			}
 		}
-		resultSQL.append("  FROM " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+		if(StringUtils.isEmpty(StringUtils.trim(sbColumn.toString()))) sbColumn.append(" * " );
+		
+		resultSQL.append(sbColumn.toString());
+		resultSQL.append("  FROM " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim());
 		cnt = 0;
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) {
@@ -356,66 +367,56 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				if (cnt == 0) {
 					resultSQL.append(" WHERE ");
 				} else {
-					resultSQL.append("\t AND ");
+					resultSQL.append(" AND ");
 				}
 				resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? ");
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() + " */").append(PublicTadpoleDefine.LINE_SEPARATOR);
-				} else {
-					resultSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append("/* " + allDao.getType() + " */");
 				}
 				cnt++;
 			}
 		}
-		resultSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 
-		return resultSQL.toString();
+		return lastSQLGen(resultSQL.toString());
 	}
 
+	/**
+	 * Generate UPDATE statement
+	 * @return
+	 */
 	private String buildUpdateSQL() {
 		StringBuffer resultSQL = new StringBuffer();
-		if (chkComment.getSelection())
-			resultSQL.append("/* Tadpole SQL Generator */").append(PublicTadpoleDefine.LINE_SEPARATOR);
+		if (chkComment.getSelection()) resultSQL.append("/* Tadpole SQL Generator */");
 
 		int cnt = 0;
 
-		resultSQL.append("UPDATE " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim() + PublicTadpoleDefine.LINE_SEPARATOR);
+		resultSQL.append("UPDATE " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim());
 
 		ExtendTableColumnDAO firstDao = (ExtendTableColumnDAO) tableViewer.getElementAt(0);
 		if (firstDao.isCheck()) {
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
-				if ("*".equals(allDao.getField())) {
-					continue;
-				}
-				if (cnt == 0) {
-					resultSQL.append("\t SET ");
-				} else {
-					resultSQL.append("\t, ");
-				}
+				if ("*".equals(allDao.getField())) continue;
+				
+				if (cnt == 0) resultSQL.append(" SET ");
+				else resultSQL.append(" , ");
+				
 				resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? ");
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() + " */").append(PublicTadpoleDefine.LINE_SEPARATOR);
-				} else {
-					resultSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append("/* " + allDao.getType() + " */");
 				}
 				cnt++;
-
 			}
 
 		} else {
 
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if (allDao.isCheck()) {
-					if (cnt == 0) {
-						resultSQL.append("\t SET ");
-					} else {
-						resultSQL.append("\t, ");
-					}
+					if (cnt == 0) resultSQL.append(" SET ");
+					else resultSQL.append(", ");
+					
 					resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? ");
 					if (chkComment.getSelection()) {
-						resultSQL.append("/* " + allDao.getType() + " */").append(PublicTadpoleDefine.LINE_SEPARATOR);
-					} else {
-						resultSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
+						resultSQL.append("/* " + allDao.getType() + " */");
 					}
 					cnt++;
 
@@ -426,100 +427,81 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) {
 
-				if (cnt == 0) {
-					resultSQL.append(" WHERE ");
-				} else {
-					resultSQL.append("\t AND ");
-				}
+				if (cnt == 0) resultSQL.append(" WHERE ");
+				else resultSQL.append(" AND ");
+				
 				resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? ");
+				
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() + " */").append(PublicTadpoleDefine.LINE_SEPARATOR);
-				} else {
-					resultSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append("/* " + allDao.getType() + " */");
 				}
 				cnt++;
 			}
 		}
-		resultSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
-
-		return resultSQL.toString();
+		
+		return lastSQLGen(resultSQL.toString());
 	}
 
+	/**
+	 * Generate INSERT statement
+	 * @return
+	 */
 	private String buildInsertSQL() {
 		StringBuffer resultSQL = new StringBuffer();
-		if (chkComment.getSelection())
-			resultSQL.append("/* Tadpole SQL Generator */").append(PublicTadpoleDefine.LINE_SEPARATOR);
+		if (chkComment.getSelection()) resultSQL.append("/* Tadpole SQL Generator */");
 
 		int cnt = 0;
 
-		resultSQL.append("INSERT INTO " + tableDAO.getSysName() + " ( " + PublicTadpoleDefine.LINE_SEPARATOR);
+		resultSQL.append("INSERT INTO " + tableDAO.getSysName() + " ( " );
 
 		ExtendTableColumnDAO firstDao = (ExtendTableColumnDAO) tableViewer.getElementAt(0);
 		if (firstDao.isCheck()) {
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
-				if ("*".equals(allDao.getField())) {
-					continue;
-				}
-				if (cnt > 0) {
+				if ("*".equals(allDao.getField())) continue;
 
-					resultSQL.append(", ");
-				}
-				resultSQL.append(allDao.getSysName()).append(PublicTadpoleDefine.LINE_SEPARATOR);
-				;
+				if (cnt > 0) resultSQL.append(", ");
+				resultSQL.append(allDao.getSysName());
+
 				cnt++;
-
 			}
 
 		} else {
 
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if (allDao.isCheck()) {
-					if (cnt > 0) {
-
-						resultSQL.append(", ");
-					}
-					resultSQL.append(allDao.getSysName()).append(PublicTadpoleDefine.LINE_SEPARATOR);
-					;
+					if (cnt > 0) resultSQL.append(", ");
+					resultSQL.append(allDao.getSysName());
+					
 					cnt++;
 				}
 			}
 		}
-		resultSQL.append(")" + PublicTadpoleDefine.LINE_SEPARATOR + " VALUES ( ").append(PublicTadpoleDefine.LINE_SEPARATOR);
+		resultSQL.append(")" + PublicTadpoleDefine.LINE_SEPARATOR + " VALUES ( ");
 		cnt = 0;
 
 		if (firstDao.isCheck()) {
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
-				if ("*".equals(allDao.getSysName())) {
-					continue;
-				}
-				if (cnt > 0) {
-
-					resultSQL.append(", ");
-				}
+				if ("*".equals(allDao.getSysName())) continue;
+				
+				if (cnt > 0) resultSQL.append(", ");
 				resultSQL.append("?");
+				
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getField() + ":" + allDao.getType() + " */").append(PublicTadpoleDefine.LINE_SEPARATOR);
-				} else {
-					resultSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append("/* " + allDao.getField() + ":" + allDao.getType() + " */");
 				}
 
 				cnt++;
-
 			}
 
 		} else {
 
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if (allDao.isCheck()) {
-					if (cnt > 0) {
-
-						resultSQL.append(", ");
-					}
+					if (cnt > 0) resultSQL.append(", ");
+					
 					resultSQL.append("?");
 					if (chkComment.getSelection()) {
-						resultSQL.append("/* " + allDao.getField() + ":" + allDao.getType() + " */").append(PublicTadpoleDefine.LINE_SEPARATOR);
-					} else {
-						resultSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
+						resultSQL.append("/* " + allDao.getField() + ":" + allDao.getType() + " */");
 					}
 					cnt++;
 				}
@@ -527,40 +509,49 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		}
 
 		resultSQL.append(")");
-		resultSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
-
-		return resultSQL.toString();
+		
+		return lastSQLGen(resultSQL.toString());
 	}
 
 	private String buildDeleteSQL() {
 		StringBuffer resultSQL = new StringBuffer();
-		if (chkComment.getSelection())
-			resultSQL.append("/* Tadpole SQL Generator */").append(PublicTadpoleDefine.LINE_SEPARATOR);
+		if (chkComment.getSelection()) resultSQL.append("/* Tadpole SQL Generator */");
 
 		int cnt = 0;
 
-		resultSQL.append("DELETE FROM  " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR);
-
+		resultSQL.append("DELETE FROM  " + tableDAO.getSysName());
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) {
 
-				if (cnt == 0) {
-					resultSQL.append(" WHERE ");
-				} else {
-					resultSQL.append("\t AND ");
-				}
+				if (cnt == 0) resultSQL.append(" WHERE ");
+				else resultSQL.append("\t AND ");
+				
 				resultSQL.append(allDao.getSysName()).append(" = ? ");
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() + " */").append(PublicTadpoleDefine.LINE_SEPARATOR);
-				} else {
-					resultSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
+					resultSQL.append("/* " + allDao.getType() + " */");
 				}
 				cnt++;
 			}
 		}
-		resultSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 
-		return resultSQL.toString();
+		return lastSQLGen(resultSQL.toString());
+	}
+	
+	/**
+	 * 쿼리 생성 후 후반작업을 합니다. 
+	 * 
+	 * @param strSQL
+	 * @return
+	 */
+	private String lastSQLGen(String strSQL) {
+		String retSQL = strSQL + PublicTadpoleDefine.SQL_DELIMITER;
+		try {
+			retSQL = SQLFormater.format(retSQL);
+		} catch (Exception e) {
+			logger.error("SQL Formatting", e);
+		}
+		
+		return retSQL;
 	}
 
 	/**

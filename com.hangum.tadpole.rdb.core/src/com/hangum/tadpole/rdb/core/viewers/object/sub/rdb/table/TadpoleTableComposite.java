@@ -129,7 +129,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 	private AbstractObjectAction generateSampleData;
 	
-	private GenerateSQLDMLAction selectDMLAction;
+	private GenerateSQLDMLAction generateDMLAction;
 
 	private GenerateSQLSelectAction selectStmtAction;
 	private GenerateSQLSelectAction insertStmtAction;
@@ -448,7 +448,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// generation sample data
 		generateSampleData = new GenerateSampleDataAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Table"); //$NON-NLS-1$
 		
-		selectDMLAction = new GenerateSQLDMLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "DML"); //$NON-NLS-1$
+		generateDMLAction = new GenerateSQLDMLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "DML"); //$NON-NLS-1$
 
 		selectStmtAction = new GenerateSQLSelectAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Select"); //$NON-NLS-1$
 		insertStmtAction = new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Insert"); //$NON-NLS-1$
@@ -498,7 +498,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						}
 						
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-						manager.add(selectDMLAction);
+						manager.add(generateDMLAction);
 	
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 						manager.add(selectStmtAction);
@@ -688,7 +688,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		generateSampleData.setUserDB(getUserDB());
 		
-		selectDMLAction.setUserDB(getUserDB());
+		generateDMLAction.setUserDB(getUserDB());
 
 		selectStmtAction.setUserDB(getUserDB());
 		insertStmtAction.setUserDB(getUserDB());
@@ -759,7 +759,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		dropAction_Table.dispose();
 		refreshAction_Table.dispose();
 		generateSampleData.dispose();
-		selectDMLAction.dispose();
+		generateDMLAction.dispose();
 
 		selectStmtAction.dispose();
 		insertStmtAction.dispose();
