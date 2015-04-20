@@ -1002,6 +1002,7 @@ SELECT
       a.enddateexecute <= #endTime# AND
       a.duration >= #duration# AND
       a.user_seq = u.seq AND
+      b.datas like #strSearch# AND 
       a.db_seq = db.seq
 	order by a.create_time desc
 	limit #count#

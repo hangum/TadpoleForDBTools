@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -50,7 +51,6 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
-import com.hangum.tadpole.commons.util.XMLUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -413,7 +413,7 @@ public class TableDirectEditorComposite extends Composite {
 				
 				for(int i=1;i<columnCount+1; i++) {					
 					try {
-						tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i) == null?"":rs.getString(i))); //$NON-NLS-1$
+						tmpRs.put(i, StringEscapeUtils.escapeHtml(rs.getString(i) == null?"":rs.getString(i))); //$NON-NLS-1$
 					} catch(Exception e) {
 						logger.error("ResutSet fetch error", e); //$NON-NLS-1$
 						tmpRs.put(i, ""); //$NON-NLS-1$

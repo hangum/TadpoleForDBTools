@@ -54,16 +54,11 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String dbSeq, long startTime, long endTime, int duringExecute) throws Exception {
+	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws Exception {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-//		if (user_seq != -1) { // user all check
-//			queryMap.put("user_seq",user_seq);
-//		}
-//		if (dbSeq != -1) {	// db all check
-			queryMap.put("db_seq", 	dbSeq);
-//		}
+		queryMap.put("db_seq", 	dbSeq);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(startTime);
@@ -79,6 +74,7 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		queryMap.put("duration", duringExecute);
 		queryMap.put("count", 	1000);
+		queryMap.put("strSearch", strSearch);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);

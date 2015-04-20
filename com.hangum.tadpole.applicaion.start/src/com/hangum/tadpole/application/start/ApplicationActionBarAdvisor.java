@@ -187,9 +187,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        toolbar.add(scheduleAction);
 //        toolbar.add(new Separator());
         
-        toolbar.add(monitoringRealTimeAction);
-        toolbar.add(new Separator());
-        
         toolbar.add(schemaHistoryAction);
         toolbar.add(new Separator());
             
@@ -199,6 +196,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        }
         
         toolbar.add(resourceManageAction);
+        toolbar.add(new Separator());
+        
+        toolbar.add(monitoringRealTimeAction);
         toolbar.add(new Separator());
         
         toolbar.add(preferenceAction);

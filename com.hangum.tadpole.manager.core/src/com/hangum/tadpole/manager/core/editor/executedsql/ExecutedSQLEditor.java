@@ -10,31 +10,25 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.editor.executedsql;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -43,7 +37,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -51,21 +44,16 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.engine.sql.util.tables.AutoResizeTableLayout;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistoryCreateColumn;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistoryFilter;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistoryLabelProvider;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistorySorter;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * 실행한 쿼리.
@@ -96,7 +84,7 @@ public class ExecutedSQLEditor extends EditorPart {
 	private Combo comboUser;
 	
 	private Text textMillis;
-	private TableViewer tvList;
+	private Grid gridHistory;
 
 	private Button btnSearch;
 	private Button btnShowQueryEditor;
@@ -105,12 +93,11 @@ public class ExecutedSQLEditor extends EditorPart {
 	private DateTime dateTimeEnd;
 
 	/** result list */
-	private List<SQLHistoryDAO> listSQLHistory = new ArrayList<SQLHistoryDAO>();
 	private Text textSearch;
-	private SQLHistoryFilter filter;
+//	private SQLHistoryFilter filter;
 	
-	/** cache */
-	private Map<Integer, UserDBDAO> userDBDaoCache = new HashMap<Integer, UserDBDAO>();
+	/** register key */
+	private Map<String, SQLHistoryDAO> mapSQLHistory = new HashMap<String, SQLHistoryDAO>();
 	
 	/**
 	 * 
@@ -190,12 +177,35 @@ public class ExecutedSQLEditor extends EditorPart {
 		GridData gd_textMillis = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		gd_textMillis.widthHint = 70;
 		textMillis.setLayoutData(gd_textMillis);
-		textMillis.setText("50");
+		textMillis.setText("500");
 																				
 		Label lblMilis = new Label(compositeInSearch, SWT.NONE);
 		lblMilis.setText("(ms)");
-		new Label(compositeHead, SWT.NONE);
 		
+		Label lblSQL = new Label(compositeHead, SWT.NONE);
+		GridData gd_lblSQL = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblSQL.widthHint = 65;
+		gd_lblSQL.minimumWidth = 65;
+		lblSQL.setLayoutData(gd_lblSQL);
+		lblSQL.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		lblSQL.setText("<b>SQL</b>");
+		
+		textSearch = new Text(compositeHead, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
+		textSearch.setMessage("Filter");
+		textSearch.setToolTipText("After entering a value, press the Enter key.");
+		textSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) {
+					search();
+				}
+			}
+		});
+		GridData gd_textSearch = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_textSearch.heightHint = 20;
+		textSearch.setLayoutData(gd_textSearch);
+		
+		new Label(compositeHead, SWT.NONE);
 		btnSearch = new Button(compositeHead, SWT.NONE);
 		btnSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnSearch.setImage(ResourceManager.getPluginImage("com.hangum.tadpole.manager.core", "resources/icons/search.png"));
@@ -216,20 +226,6 @@ public class ExecutedSQLEditor extends EditorPart {
 		gl_compositeSearch.marginWidth = 1;
 		compositeSearch.setLayout(gl_compositeSearch);
 
-		textSearch = new Text(compositeSearch, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
-		textSearch.setMessage("Filter");
-		textSearch.setToolTipText("After entering a value, press the Enter key.");
-		textSearch.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				filter.setSearchString(textSearch.getText());
-				tvList.refresh();
-			}
-		});
-		GridData gd_textSearch = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_textSearch.heightHint = 20;
-		textSearch.setLayoutData(gd_textSearch);
-
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -239,39 +235,21 @@ public class ExecutedSQLEditor extends EditorPart {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 
-		tvList = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
-		tvList.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				btnShowQueryEditor.setEnabled(true);
-			}
-		});
-		tvList.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+		gridHistory = new Grid(compositeBody, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+		gridHistory.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		gridHistory.setLinesVisible(true);
+		gridHistory.setHeaderVisible(true);
+		gridHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		gridHistory.setToolTipText("");
+
+		gridHistory.addMouseListener(new MouseAdapter() {
+			public void mouseDoubleClick(MouseEvent e) {
 				showQueryEditor();
 			}
 		});
-		Table table = tvList.getTable();
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		// auto column layout
-		AutoResizeTableLayout layoutColumnLayout = new AutoResizeTableLayout(tvList.getTable());
-		tvList.getTable().setLayout(layoutColumnLayout);
-
-		SQLHistorySorter sorterHistory = new SQLHistorySorter();
-		SQLHistoryCreateColumn.createTableHistoryColumn(tvList, sorterHistory, layoutColumnLayout, true);
-
-		ColumnViewerToolTipSupport.enableFor(tvList);
 		
-		tvList.setLabelProvider(new SQLHistoryLabelProvider());
-		tvList.setContentProvider(new ArrayContentProvider());
-		tvList.setInput(listSQLHistory);
-		tvList.setComparator(sorterHistory);
-
-		filter = new SQLHistoryFilter();
-		tvList.addFilter(filter);
-
+		createTableHistoryColumn();
+		
 		Composite compositeTail = new Composite(compositeBody, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeTail = new GridLayout(1, false);
@@ -294,57 +272,36 @@ public class ExecutedSQLEditor extends EditorPart {
 				showQueryEditor();
 			}
 		});
-		btnShowQueryEditor.setEnabled(false);
 		btnShowQueryEditor.setText("Show query in the Query editor");
 
 		initUIData();
-//		initBehavior();
-//		search();
 		
 		// google analytic
 		AnalyticCaller.track(ExecutedSQLEditor.ID);
 	}
 
-//	/**
-//	 * Initial configuration setting of widgets
-//	 */
-//	private void initBehavior() {
-//			
-//			comboDisplayName.setEnabled(false);
-//			comboUserName.setEnabled(false);
-//		} else {
-//			btnUserAllCheck.setSelection(false);
-//			btnUserAllCheck.setEnabled(false);
-//			
-//			comboDisplayName.setEnabled(false);
-//			comboUserName.setEnabled(true);
-//		}
-//	}
-
 	/**
 	 * show query editor
 	 */
 	private void showQueryEditor() {
-		IStructuredSelection ss = (IStructuredSelection) tvList.getSelection();
-		if (!ss.isEmpty()) {
-			SQLHistoryDAO sqlHistoryDAO = (SQLHistoryDAO) ss.getFirstElement();
-
+		GridItem[] gridItems = gridHistory.getSelection();
+		if(gridItems.length != 0) {
 			try {
-				UserDBDAO dbDao;
-				if (null != searchUserDBDAO) {
-					dbDao = searchUserDBDAO;
-				} else {
-					dbDao = userDBDaoCache.get(sqlHistoryDAO.getDbSeq());
-					if (null == dbDao) {
-						dbDao = TadpoleSystem_UserDBQuery.getUserDBInstance(sqlHistoryDAO.getDbSeq());
-						userDBDaoCache.put(sqlHistoryDAO.getDbSeq(), dbDao);
-					}
+				SQLHistoryDAO sqlHistoryDao = mapSQLHistory.get(gridItems[0].getText(0));
+				if (null != sqlHistoryDao) {
+					UserDBDAO dbDao = TadpoleSystem_UserDBQuery.getUserDBInstance(sqlHistoryDao.getDbSeq());
+					FindEditorAndWriteQueryUtil.run(dbDao, Utils.convHtmlToLine(gridItems[0].getText(3)) + PublicTadpoleDefine.SQL_DELIMITER, PublicTadpoleDefine.DB_ACTION.TABLES);
 				}
-				
-				FindEditorAndWriteQueryUtil.run(dbDao, sqlHistoryDAO.getStrSQLText() + PublicTadpoleDefine.SQL_DELIMITER, DB_ACTION.TABLES);
 			} catch (Exception e) {
 				logger.error("find editor and write query", e);
 			}
+		}
+	}
+	
+	private void clearGrid() {
+		GridItem[] gridItems = gridHistory.getItems();
+		for (GridItem gridItem : gridItems) {
+			gridItem.dispose();
 		}
 	}
 
@@ -352,8 +309,10 @@ public class ExecutedSQLEditor extends EditorPart {
 	 * search
 	 */
 	private void search() {
-		listSQLHistory.clear();
-
+		// 기존체 넣었던 데이터를 삭제한다.
+		clearGrid();
+		mapSQLHistory.clear();
+		
 		// check all db
 		String db_seq = "";
 		if (!comboDatabase.getText().equals("All")) {
@@ -375,17 +334,53 @@ public class ExecutedSQLEditor extends EditorPart {
 		cal.set(dateTimeEnd.getYear(), dateTimeEnd.getMonth(), dateTimeEnd.getDay(), 23, 59, 59);
 		long endTime = cal.getTimeInMillis();
 		int duringExecute = Integer.parseInt(textMillis.getText());
+		
+		String strSearchTxt = "%" + StringUtils.trimToEmpty(textSearch.getText()) + "%";
 
 		try {
-			listSQLHistory = TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(db_seq, startTime, endTime, duringExecute);
-			tvList.setInput(listSQLHistory);
-			tvList.refresh();
+			List<SQLHistoryDAO> listSQLHistory = TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(db_seq, startTime, endTime, duringExecute, strSearchTxt);
+			for (SQLHistoryDAO sqlHistoryDAO : listSQLHistory) {
+				mapSQLHistory.put(""+gridHistory.getRootItemCount(), sqlHistoryDAO);
+				
+				GridItem item = new GridItem(gridHistory, SWT.V_SCROLL | SWT.H_SCROLL);
+				
+				String strSQL = StringUtils.strip(sqlHistoryDAO.getStrSQLText());
+				int intLine = StringUtils.countMatches(strSQL, "\n");
+				if(intLine >= 1) {
+					int height = (intLine+1) * 24;
+					if(height > 100) item.setHeight(100); 
+					else item.setHeight(height);
+				}
+				
+				item.setText(0, ""+gridHistory.getRootItemCount());
+				item.setText(1, sqlHistoryDAO.getDbName());
+				item.setText(2, Utils.dateToStr(sqlHistoryDAO.getStartDateExecute()));
+				logger.debug(Utils.convLineToHtml(strSQL));
+				item.setText(3, Utils.convLineToHtml(strSQL));
+				item.setToolTipText(3, strSQL);
+				
+				item.setText(4, ""+( (sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()) / 1000f));
+				item.setText(5, ""+sqlHistoryDAO.getRows());
+				item.setText(6, sqlHistoryDAO.getResult());
+				
+				item.setText(7, Utils.convLineToHtml(sqlHistoryDAO.getMesssage()));
+				item.setToolTipText(7, sqlHistoryDAO.getMesssage());
+				
+				
+				item.setText(8, sqlHistoryDAO.getUserName());
+				item.setText(9, sqlHistoryDAO.getIpAddress());
+				
+				if("F".equals(sqlHistoryDAO.getResult())) {
+					item.setBackground(SWTResourceManager.getColor(240, 180, 167));
+				} else {
+					item.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+				}
+			}
 		} catch (Exception ee) {
 			logger.error("Executed SQL History call", ee); //$NON-NLS-1$
 		}
-		btnShowQueryEditor.setEnabled(false);
 	}
-
+	
 	/**
 	 * 데이터를 초기 로드합니다.
 	 */
@@ -402,20 +397,6 @@ public class ExecutedSQLEditor extends EditorPart {
 				comboDatabase.setData(userDBDAO.getDisplay_name(), userDBDAO);
 			}
 			comboDatabase.select(0);
-
-//			List<UserDBDAO> listUserDBs = TadpoleSystem_UserDBQuery.getUserDB();
-//			comboUserName.add("All");
-//			comboUserName.setData("All", null);
-//			for (UserGroupAUserDAO userGroupAUserDAO : listUserGroup) {
-//				String name = userGroupAUserDAO.getUser_group_name() + " (" + userGroupAUserDAO.getEmail() + ")";
-//				comboUserName.add(name);
-//				comboUserName.setData(name, userGroupAUserDAO.getSeq());
-//			}
-//			if (userDAO == null) {
-//				comboUserName.select(0);
-//			} else {
-//				comboUserName.setText(userDAO.getName() + " (" + userDAO.getEmail() + ")");
-//			}
 
 		} catch (Exception e) {
 			logger.error("get db list", e);
@@ -461,4 +442,56 @@ public class ExecutedSQLEditor extends EditorPart {
 		btnSearch.setFocus();
 	}
 
+	/**
+	 * grid column
+	 */
+	private void createTableHistoryColumn() {
+		// time
+		GridColumn tvcSeq = new GridColumn(gridHistory, SWT.LEFT);
+		tvcSeq.setWidth(50);
+		tvcSeq.setText("#");
+		
+		GridColumn tvcDatabase = new GridColumn(gridHistory, SWT.NONE);
+		tvcDatabase.setWidth(150);
+		tvcDatabase.setText("Database");
+				
+		// time
+		GridColumn tvcDate = new GridColumn(gridHistory, SWT.LEFT);
+		tvcDate.setWidth(150);
+		tvcDate.setText("Date");
+		
+		// sql
+		GridColumn tvcSQL = new GridColumn(gridHistory, SWT.LEFT);
+		tvcSQL.setWidth(300);
+		tvcSQL.setText("SQL");
+		tvcSQL.setWordWrap(true);
+
+		// duration
+		GridColumn tvcDuration = new GridColumn(gridHistory, SWT.RIGHT);
+		tvcDuration.setWidth(60);
+		tvcDuration.setText("Sec");
+		
+		// rows
+		GridColumn tvcRows = new GridColumn(gridHistory, SWT.RIGHT);
+		tvcRows.setWidth(60);
+		tvcRows.setText("Rows");
+		
+		// result
+		GridColumn tvcResult = new GridColumn(gridHistory, SWT.NONE);
+		tvcResult.setWidth(90);
+		tvcResult.setText("Result");
+
+		GridColumn tvcMessage = new GridColumn(gridHistory, SWT.NONE);
+		tvcMessage.setWidth(250);
+		tvcMessage.setText("Message");
+		
+		GridColumn tvcUser = new GridColumn(gridHistory, SWT.NONE);
+		tvcUser.setWidth(80);
+		tvcUser.setText("User");
+		
+		GridColumn tvcIP= new GridColumn(gridHistory, SWT.NONE);
+		tvcIP.setWidth(80);
+		tvcIP.setText("IP");
+		
+	}
 }

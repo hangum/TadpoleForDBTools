@@ -16,6 +16,11 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  *
  * Tadpole ustils class
@@ -27,6 +32,21 @@ import java.util.regex.Pattern;
  */
 public class Utils {
 
+	/**
+	 * convert line to html
+	 * @param str
+	 * @return
+	 */
+	public static String convLineToHtml(String str) {
+		if(str == null) return "";
+
+		return StringUtils.replace(StringEscapeUtils.escapeHtml(str), PublicTadpoleDefine.LINE_SEPARATOR, "<br/>");
+	}
+	
+	public static String convHtmlToLine(String str) {
+		return StringUtils.replace(str, "<br/>", PublicTadpoleDefine.LINE_SEPARATOR);
+	}
+	
 	/**
 	 * validate email
 	 * 
