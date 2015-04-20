@@ -523,8 +523,11 @@ editorService.addText = function(varText) {
 		if("" == editor.getValue()) {
 			editor.insert(varText);
 		} else {
-			editor.gotoLine(editor.session.getLength()+1);
-			editor.insert("\n" + varText);
+//			why sql append last line?
+//			editor.gotoLine(editor.session.getLength()+1);
+//			editor.insert("\n" + varText);
+			
+			editor.insert(varText);
 		}
 		editor.focus();
 	} catch(e) {
