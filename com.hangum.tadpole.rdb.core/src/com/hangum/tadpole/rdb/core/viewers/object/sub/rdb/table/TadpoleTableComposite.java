@@ -114,7 +114,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 	// table info
 	private TableViewer tableListViewer;
-	private List<TableDAO> showTables = new ArrayList<TableDAO>();
+	private List<TableDAO> listTablesDAO = new ArrayList<TableDAO>();
 	private ObjectComparator tableComparator;
 	private TableFilter tableFilter;
 	
@@ -336,7 +336,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		tableListViewer.getTable().setLayout(layoutColumnLayout);
 		tableListViewer.setContentProvider(new ArrayContentProvider());
-		tableListViewer.setInput(showTables);
+		tableListViewer.setInput(listTablesDAO);
 		
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
@@ -527,8 +527,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 	/**
 	 * table 정보를 최신으로 리프레쉬합니다.
+	 * 
+	 * @param selectUserDb
+	 * @param boolRefresh
+	 * @param strObjectName
 	 */
-	public void refreshTable(final UserDBDAO selectUserDb, boolean boolRefresh) {
+	public void refreshTable(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
 		if(!boolRefresh) if(selectUserDb == null) return;
 		this.userDB = selectUserDb;
 		
@@ -536,10 +540,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
 		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) {
-			showTables.clear();
-			showTables.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, ""));
+			listTablesDAO.clear();
+			listTablesDAO.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, ""));
 			
-			tableListViewer.setInput(showTables);
+			tableListViewer.setInput(listTablesDAO);
 			tableListViewer.refresh();
 			
 			TableUtil.packTable(tableListViewer.getTable());
@@ -554,7 +558,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				
 				try {
 					/** filter 정보가 있으면 처리합니다. */
-					showTables = getTableList(userDB);
+					listTablesDAO = getTableList(userDB);
 				} catch(Exception e) {
 					logger.error("Table Referesh", e);
 					
@@ -578,13 +582,28 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				display.asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							tableListViewer.setInput(showTables);
-							tableListViewer.refresh();
+							tableListViewer.setInput(listTablesDAO);
+							
+							// if strObjectName is not empty, select object
+							if("".equals(strObjectName) || strObjectName == null) {
+								tableListViewer.refresh();
+							} else {
+								// find select object and viewer select
+								TableDAO selectTable = null;
+								for (TableDAO tableDao : listTablesDAO) {
+									if(strObjectName.equals(tableDao.getName())) {
+										selectTable = tableDao;
+										break;
+									}
+								}
+								tableListViewer.setSelection(new StructuredSelection(selectTable), true);
+							}
+							
 							TableUtil.packTable(tableListViewer.getTable());
 							
 						} else {
-							if (showTables != null) showTables.clear();
-							tableListViewer.setInput(showTables);
+							if (listTablesDAO != null) listTablesDAO.clear();
+							tableListViewer.setInput(listTablesDAO);
 							tableListViewer.refresh();
 							TableUtil.packTable(tableListViewer.getTable());
 

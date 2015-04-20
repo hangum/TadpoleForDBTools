@@ -332,7 +332,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 	private void referExplorer() {
 		// explorer refresh합니다.
 		ExplorerViewer ev = FindTadpoleViewerOrEditor.getExplorerView(userDB);
-		if(ev != null) ev.refreshJS(true);
+		if(ev != null) ev.refreshJS(true, "");
 	}
 
 	@Override

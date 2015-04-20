@@ -669,13 +669,14 @@ public class ResultSetComposite extends Composite {
 				getRdbResultComposite().getSite().getShell().
 				getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
 						if(jobEvent.getResult().isOK()) {
 							executeFinish(sqlHistoryDAO);
 						} else {
 							executeErrorProgress(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
 						
-						// 쿼리 후 화면 정리 작업을 합니다.
+						// 히스토리 화면을 갱신합니다.
 						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(sqlHistoryDAO);
 						
 						// 주의) 일반적으로는 포커스가 잘 가지만, 
@@ -961,7 +962,7 @@ public class ResultSetComposite extends Composite {
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.
-			SchemaHistoryDAO schemaDao = null;
+			SchemaHistoryDAO schemaDao = new SchemaHistoryDAO();
 			try {
 				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(), reqQuery.getSql());
 			} catch(Exception e) {
