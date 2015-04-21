@@ -11,16 +11,19 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.SQLConstants;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -89,8 +92,11 @@ public class TadpoleSQLManager {
 					dbManager.put(searchKey, sqlMapClient);
 					
 					// metadata를 가져와서 저장해 놓습니다.
-					conn = sqlMapClient.getDataSource().getConnection(); 
-					setMetaData(searchKey, dbInfo, conn.getMetaData().getSQLKeywords());
+					conn = sqlMapClient.getDataSource().getConnection();
+					
+					// don't belive keyword. --;;
+					DatabaseMetaData dbMetadata = conn.getMetaData();
+					setMetaData(searchKey, dbInfo, dbMetadata.getSQLKeywords());
 				}
 				
 			} catch(Exception e) {
@@ -156,7 +162,10 @@ public class TadpoleSQLManager {
 		// set keyword
 		if(dbInfo.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			// not support keyword http://sqlite.org/lang_keywords.html
-			tmd.setKeywords("BORT,ACTION,ADD,AFTER,ALL,ALTER,ANALYZE,AND,AS,ASC,ATTACH,AUTOINCREMENT,BEFORE,BEGIN,BETWEEN,BY,CASCADE,CASE,CAST,CHECK,COLLATE,COLUMN,COMMIT,CONFLICT,CONSTRAINT,CREATE,CROSS,CURRENT_DATE,CURRENT_TIME,CURRENT_TIMESTAMP,DATABASE,DEFAULT,DEFERRABLE,DEFERRED,DELETE,DESC,DETACH,DISTINCT,DROP,EACH,ELSE,END,ESCAPE,EXCEPT,EXCLUSIVE,EXISTS,EXPLAIN,FAIL,FOR,FOREIGN,FROM,FULL,GLOB,GROUP,HAVING,IF,IGNORE,IMMEDIATE,IN,INDEX,INDEXED,INITIALLY,INNER,INSERT,INSTEAD,INTERSECT,INTO,IS,ISNULL,JOIN,KEY,LEFT,LIKE,LIMIT,MATCH,NATURAL,NO,NOT,NOTNULL,NULL,OF,OFFSET,ON,OR,ORDER,OUTER,PLAN,PRAGMA,PRIMARY,QUERY,RAISE,RECURSIVE,REFERENCES,REGEXP,REINDEX,RELEASE,RENAME,REPLACE,RESTRICT,RIGHT,ROLLBACK,ROW,SAVEPOINT,SELECT,SET,TABLE,TEMP,TEMPORARY,THEN,TO,TRANSACTION,TRIGGER,UNION,UNIQUE,UPDATE,USING,VACUUM,VALUES,VIEW,VIRTUAL,WHEN,WHERE,WITH,WITHOU");
+			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
+		} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			String strFullKeywords = StringUtils.join(SQLConstants.ADVANCED_KEYWORDS, ",") + "," + sqlKeywords;
+			tmd.setKeywords(strFullKeywords);
 		} else if(dbInfo.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			// not support this method
 		} else if(dbInfo.getDBDefine() == DBDefine.HIVE_DEFAULT ||

@@ -557,7 +557,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN);
 				
 				try {
-					/** filter 정보가 있으면 처리합니다. */
 					listTablesDAO = getTableList(userDB);
 				} catch(Exception e) {
 					logger.error("Table Referesh", e);

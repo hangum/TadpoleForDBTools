@@ -82,7 +82,7 @@ public class TadpoleObjectQuery {
 			}
 		}
 		
-		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		// if find the keyword is add system quote.
 		for(TableColumnDAO td : returnColumns) {
 			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
 		}
