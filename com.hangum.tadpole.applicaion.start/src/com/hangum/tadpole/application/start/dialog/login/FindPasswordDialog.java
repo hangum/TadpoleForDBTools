@@ -23,15 +23,22 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
+import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpold.commons.libs.core.mails.template.TemporaryMailBodyTemplate;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.Utils;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.swtdesigner.ResourceManager;
 
 /**
+ * find password
  * 
- * 
- * @author billygoo
+ * @author hangum
  *
  */
 public class FindPasswordDialog extends Dialog {
@@ -88,14 +95,48 @@ public class FindPasswordDialog extends Dialog {
 			textEmail.setFocus();
 			return;
 		}
-//		UserDAO validUser;
-//		try {
-//			validUser = TadpoleSystem_UserQuery.checkSecurityHint(strEmail, strQuestion, strAnswer);
-//		} catch (Exception e) {
-//			logger.error("Find password exception", e); //$NON-NLS-1$
-//			MessageDialog.openError(getShell(), Messages.LoginDialog_7, e.getMessage());
-//			return;
-//		}
+		
+		UserDAO userDao = new UserDAO();
+		userDao.setEmail(strEmail);
+		String strTmpPassword = Utils.getUniqueDigit(12);
+		userDao.setPasswd(strTmpPassword);
+		
+		try {
+			TadpoleSystem_UserQuery.updateUserPasswordWithID(userDao);
+			sendEmailAccessKey(strEmail, strTmpPassword);
+			MessageDialog.openInformation(getShell(), "Confirm", "Send you temporary password. Check your email.");
+		} catch (Exception e) {
+			logger.error("password initialize and send email ", e);
+			
+			MessageDialog.openError(getShell(), "Error", "Rise Exception:\n\t" + e.getMessage());
+		}
+		
 		super.okPressed();
+	}
+	
+	/**
+	 * send password
+	 * 
+	 * @param email
+	 * @param strConfirmKey
+	 */
+	private void sendEmailAccessKey(String email, String strConfirmKey) {
+		try {
+			// manager 에게 메일을 보낸다.
+			EmailDTO emailDao = new EmailDTO();
+			emailDao.setSubject("Temporay password."); //$NON-NLS-1$
+			// 
+			// 그룹, 사용자, 권한.
+			// 
+			TemporaryMailBodyTemplate mailContent = new TemporaryMailBodyTemplate();
+			String strContent = mailContent.getContent(email, strConfirmKey);
+			emailDao.setContent(strContent);
+			emailDao.setTo(email);
+			
+			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
+			sendEmail.sendMail(emailDao);
+		} catch(Exception e) {
+			logger.error("Error send email", e); //$NON-NLS-1$
+		}
 	}
 }

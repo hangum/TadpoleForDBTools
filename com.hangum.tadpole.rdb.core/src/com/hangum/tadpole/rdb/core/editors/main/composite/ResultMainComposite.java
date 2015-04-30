@@ -167,7 +167,7 @@ public class ResultMainComposite extends Composite {
 			// 실행해도 되는지 묻는다.
 			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(getUserDB().getQuestion_dml())) {
 				boolean isDMLQuestion = false;
-				if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {						
+				if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
 					for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
 						if(!SQLUtil.isStatement(strSQL)) {
 							isDMLQuestion = true;

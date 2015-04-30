@@ -25,9 +25,16 @@ public class SchemaHistoryDAO {
 	int user_seq;
 	String name;
 	
+	/**
+	 * 객체 이름
+	 * DDL문일 경우 공백으로 비워 둡니다.(아직은 이름을 알기 어려웁기 때문에.. 할수 있다면 DROP, ALTER)
+	 */
 	String object_id = "";
+	/** 작업이 일어 난 곳 */
 	String work_type = "";
+	/** insert, update, delete, ddl 타입 */
 	String object_type = "";
+	
 	Timestamp create_date;
 	Timestamp update_date;
 	String del_yn;

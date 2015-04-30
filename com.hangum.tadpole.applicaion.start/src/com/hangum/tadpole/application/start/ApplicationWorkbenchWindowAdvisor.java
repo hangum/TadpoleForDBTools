@@ -67,7 +67,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	try {
     		logger.info("Schedule and Summary Report start.........");
 //			DBSummaryReporter.executer();
-			ScheduleManager.getInstance();
+			
+//    		ScheduleManager.getInstance();
 		} catch(Exception e) {
 			logger.error("Schedule", e);
 		}

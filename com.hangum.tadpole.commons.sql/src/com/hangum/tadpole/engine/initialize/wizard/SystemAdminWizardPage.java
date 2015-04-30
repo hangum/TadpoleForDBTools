@@ -30,6 +30,8 @@ import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpold.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.Utils;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 /**
  *
@@ -159,9 +161,8 @@ public class SystemAdminWizardPage extends WizardPage {
 		lblPasswd_1.setText("passwd");
 		
 		textSMTPPasswd = new Text(grpSystemSmtp, SWT.BORDER | SWT.PASSWORD);
-		textSMTPPasswd.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
+		textSMTPPasswd.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
 				validatePage();
 			}
 		});

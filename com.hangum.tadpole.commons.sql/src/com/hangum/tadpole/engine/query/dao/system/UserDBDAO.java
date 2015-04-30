@@ -19,6 +19,7 @@ import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 
 /**
  * <pre>
@@ -39,7 +40,23 @@ import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 public class UserDBDAO {	
 	
 	// TadpoleUserDbRoleDAO start ======================================
+	protected int role_seq;
 	protected String role_id;
+	
+	/**
+	 * @return the role_seq
+	 */
+	public int getRole_seq() {
+		return role_seq;
+	}
+
+	/**
+	 * @param role_seq the role_seq to set
+	 */
+	public void setRole_seq(int role_seq) {
+		this.role_seq = role_seq;
+	}
+
 	/**
 	 * @return the role_id
 	 */
@@ -135,7 +152,7 @@ public class UserDBDAO {
     protected ManagerListDTO parent;
     protected List<UserDBResourceDAO> listUserDBErd;
     /** list of table column filter */
-    protected List<TableFilterDAO> listTableColumnFilter;
+//    protected List<TableFilterDAO> listTableColumnFilter;
     
     /** 디비의 버전 정보 */
     protected String version;
@@ -150,6 +167,9 @@ public class UserDBDAO {
     
     /** is db lock? */
     protected String is_lock			= PublicTadpoleDefine.YES_NO.NO.toString();
+    
+    /** db access control */
+    protected DBAccessControlDAO dbAccessCtl = new DBAccessControlDAO();
 //    /** 사용자가 채크 했는지? YES일경우 사용자가 패스워드로 검증했음을 의미합니다*/
 //    protected String is_lock_user_check = PublicTadpoleDefine.YES_NO.NO.toString();
     
@@ -305,20 +325,19 @@ public class UserDBDAO {
 		this.listUserDBErd = listUserDBErd;
 	}
 	
-	
-	/**
-	 * @return the listTableColumnFilter
-	 */
-	public List<TableFilterDAO> getListTableColumnFilter() {
-		return listTableColumnFilter;
-	}
-
-	/**
-	 * @param listTableColumnFilter the listTableColumnFilter to set
-	 */
-	public void setListTableColumnFilter(List<TableFilterDAO> listTableColumnFilter) {
-		this.listTableColumnFilter = listTableColumnFilter;
-	}
+//	/**
+//	 * @return the listTableColumnFilter
+//	 */
+//	public List<TableFilterDAO> getListTableColumnFilter() {
+//		return listTableColumnFilter;
+//	}
+//
+//	/**
+//	 * @param listTableColumnFilter the listTableColumnFilter to set
+//	 */
+//	public void setListTableColumnFilter(List<TableFilterDAO> listTableColumnFilter) {
+//		this.listTableColumnFilter = listTableColumnFilter;
+//	}
 
 	public String getDelYn() {
 		return delYn;
@@ -649,4 +668,19 @@ public class UserDBDAO {
 		this.is_lock = is_lock;
 	}
 
+	/**
+	 * @return the dbAccessCtl
+	 */
+	public DBAccessControlDAO getDbAccessCtl() {
+		return dbAccessCtl;
+	}
+
+	/**
+	 * @param dbAccessCtl the dbAccessCtl to set
+	 */
+	public void setDbAccessCtl(DBAccessControlDAO dbAccessCtl) {
+		this.dbAccessCtl = dbAccessCtl;
+	}
+
+	
 }

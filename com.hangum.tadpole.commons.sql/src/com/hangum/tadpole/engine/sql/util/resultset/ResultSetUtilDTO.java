@@ -98,13 +98,14 @@ public class ResultSetUtilDTO {
 	 * @param isResultComma
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int limitCount) throws Exception {
+	public ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, final UserDBDAO userDB, 
+								final boolean isShowRownum, final ResultSet rs, final int limitCount) throws Exception {
 		this.statementType = statementType;
 		this.userDB = userDB;
 		
 		if(rs != null) {
 			columnName = ResultSetUtils.getColumnName(isShowRownum, rs);
-			columnTableName = ResultSetUtils.getColumnTableName(isShowRownum, rs);
+			columnTableName = ResultSetUtils.getColumnTableName(userDB, isShowRownum, rs);
 			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
 			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
 			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());

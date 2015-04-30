@@ -328,6 +328,15 @@
 </update>
 
 <!-- 
+	Change user password
+ -->
+<update id="updateUserPasswordWithID" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
+	UPDATE tadpole_user SET
+		passwd = #passwd#
+	WHERE email = #email#
+</update>
+
+<!-- 
 	Change user security hint
  -->
 <update id="updateUserSecurityHint" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
@@ -473,7 +482,7 @@
 <!--  UserDB의 리스트 -->
 <select id="userDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
 <![CDATA[
-	select a.*, b.ROLE_ID role_id, c.*
+	select a.*, b.seq role_seq, b.ROLE_ID role_id, c.*
 	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
 	where a.seq = b.db_seq
 		and a.seq = c.seq
@@ -657,6 +666,15 @@
 	INSERT INTO tadpole_user_db_role
 		(user_seq,db_seq, role_id, access_ip, terms_of_use_starttime, terms_of_use_endtime)
 	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #terms_of_use_starttime#, #terms_of_use_endtime#);
+	
+	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
+		SELECT * 
+		FROM tadpole_user_db_role 
+		WHERE user_seq 	= #user_seq# AND 
+			db_seq 		= #db_seq# AND 
+			access_ip 	= #access_ip# AND
+			delYn = 'NO'
+	</selectKey>
 </insert>
 
 <update id="userDBRoleUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
@@ -860,7 +878,7 @@ SELECT
 	=========================================================================================================
  -->
  <!-- find table filter -->
-<select id="getTableFilter" resultClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO" parameterClass="java.lang.Integer">
+<!-- <select id="getTableFilter" resultClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO" parameterClass="java.lang.Integer">
 	SELECT seq, db_seq, table_name, description, table_lock, column_names, create_time, delyn 
  	FROM table_filter
  	WHERE 
@@ -869,7 +887,7 @@ SELECT
  	ORDER BY table_name;
 </select>
 
-<!-- find dbseq and table name -->
+find dbseq and table name
 <select id="getTableFilterTable" resultClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO" 
 				parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
 	SELECT seq, db_seq, table_name, description, table_lock, column_names, create_time, delyn 
@@ -881,7 +899,7 @@ SELECT
  	ORDER BY table_name;
 </select>
 
-<!-- insert table column filter -->
+insert table column filter
 <insert id="insertTableColumnFilter" parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
 	INSERT INTO table_filter
 	 (db_seq, table_name, description, table_lock, column_names) 
@@ -889,12 +907,12 @@ SELECT
 	 (#db_seq#, #table_name#, #description#, #table_lock#, #column_names#) 
 </insert>
 
-<!--  delete table filter -->
+ delete table filter
 <update id="deleteTableColumnFilters" parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
 	UPDATE table_filter
 	SET delyn = 'YES'
 	WHERE seq = #seq#
-</update>
+</update> -->
 <!-- 
 	=========================================================================================================
 	schema_history 정보를 설정합니다.

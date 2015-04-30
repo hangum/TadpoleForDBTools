@@ -17,6 +17,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import oracle.jdbc.internal.OracleResultSetMetaData;
+
 import org.apache.log4j.Logger;
 import org.postgresql.PGResultSetMetaData;
 
@@ -192,8 +194,8 @@ public class ResultSetUtils {
 		return mapColumnName;
 	}
 	
-	public static Map<Integer, String> getColumnTableName(ResultSet rs) throws Exception {
-		return getColumnTableName(false, rs);
+	public static Map<Integer, String> getColumnTableName(final UserDBDAO userDB, ResultSet rs) throws Exception {
+		return getColumnTableName(userDB, false, rs);
 	}
 	
 	/**
@@ -204,7 +206,7 @@ public class ResultSetUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Map<Integer, String> getColumnTableName(boolean isShowRowNum, ResultSet rs) throws Exception {
+	public static Map<Integer, String> getColumnTableName(final UserDBDAO userDB, boolean isShowRowNum, ResultSet rs) throws Exception {
 		Map<Integer, String> mapColumnName = new HashMap<Integer, String>();
 		int intStartIndex = 0;
 		
@@ -215,10 +217,19 @@ public class ResultSetUtils {
 		
 		ResultSetMetaData rsm = rs.getMetaData();
 		for(int i=0; i<rsm.getColumnCount(); i++) {
-			if(rsm.getSchemaName(i+1) == null || "".equals(rsm.getSchemaName(i+1))) {
-				mapColumnName.put(i+intStartIndex, rsm.getTableName(i+1));
+			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				PGResultSetMetaData pgsqlMeta = (PGResultSetMetaData)rsm;
+				mapColumnName.put(i+intStartIndex, pgsqlMeta.getBaseTableName(i+1));
+				
+				if(logger.isDebugEnabled()) logger.debug("Table name is " + pgsqlMeta.getBaseTableName(i+1));
 			} else {
-				mapColumnName.put(i+intStartIndex, rsm.getSchemaName(i+1) + "." + rsm.getTableName(i+1));
+				if(rsm.getSchemaName(i+1) == null || "".equals(rsm.getSchemaName(i+1))) {
+					if(logger.isDebugEnabled()) logger.debug("Table name is " + rsm.getTableName(i+1) + ", schema name is " + rsm.getSchemaName(i+1));
+					
+					mapColumnName.put(i+intStartIndex, rsm.getTableName(i+1));
+				} else {
+					mapColumnName.put(i+intStartIndex, rsm.getSchemaName(i+1) + "." + rsm.getTableName(i+1));
+				}
 			}
 		}
 		

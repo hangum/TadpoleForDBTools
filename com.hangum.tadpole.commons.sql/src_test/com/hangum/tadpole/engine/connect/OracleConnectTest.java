@@ -14,7 +14,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.Properties;
+
+import oracle.jdbc.internal.OracleResultSetMetaData;
 
 /**
  * oracle connect test 
@@ -27,21 +30,28 @@ public class OracleConnectTest extends AbstractDriverInfo {
 	public static void main(String args[]) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@172.16.187.139:1521:XE";
+			String url = "jdbc:oracle:thin:@172.16.187.132:1521:XE";
 	
 			Properties props = new Properties();
-			props.setProperty("user", "scott");
-			props.setProperty("password", "tiger");
+			props.put("user", "HR");
+			props.put("password", "tadpole");
+			props.put("ResultSetMetaDataOptions", "1");
 	
 			Connection conn = DriverManager.getConnection(url, props);
-			printMetaData(conn.getMetaData());
+//			printMetaData(conn.getMetaData());
 	
-			PreparedStatement preStatement = conn.prepareStatement("select * from v$version");
+			PreparedStatement preStatement = conn.prepareStatement("SELECT DEPARTMENT_ID, DEPARTMENT_NAME, MANAGER_ID, LOCATION_ID  FROM DEPARTMENTS");//select * from v$version");
 			ResultSet result = preStatement.executeQuery();
+			
+			ResultSetMetaData rsm = result.getMetaData();
+			OracleResultSetMetaData orsm = (OracleResultSetMetaData)rsm;
+			System.out.println("Table name is " + rsm.getTableName(1) + "." + " column is " + rsm.getColumnName(1)) ;
+			System.out.println("Table name is " + orsm.getTableName(1) + "." + orsm.getCatalogName(1)) ;
+			
 	
-			while (result.next()) {
-				System.out.println("Information is : " + result.getString(1));
-			}
+//			while (result.next()) {
+//				System.out.println("Information is : " + result.getString(1) + ", table name is " + result.getString(1));
+//			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

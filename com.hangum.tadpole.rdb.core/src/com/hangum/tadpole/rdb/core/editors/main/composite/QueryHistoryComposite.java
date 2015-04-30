@@ -269,7 +269,7 @@ public class QueryHistoryComposite extends Composite {
 	}
 	
 	private void appendText(String cmd) {
-		getRdbResultComposite().appendText(cmd);
+		getRdbResultComposite().appendText(PublicTadpoleDefine.LINE_SEPARATOR + cmd);
 	}
 
 	@Override

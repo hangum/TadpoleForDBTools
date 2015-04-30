@@ -29,11 +29,11 @@ public class TadpoleSystemCommonsTest extends TestCase {
 	public void testExecutSQL() {
 		try {
 			
-			TadpoleSystemCommons.executSQL(TadpoleSystemInitializer.getUserDB(), "CREATE TABLE   sample_table_a   (  id INTEGER NOT NULL,   name char(60) default NULL,  PRIMARY KEY (id)  );");
+			TadpoleSystemCommons.executSQL(TadpoleSystemInitializer.getUserDB(), "DDL", "CREATE TABLE   sample_table_a   (  id INTEGER NOT NULL,   name char(60) default NULL,  PRIMARY KEY (id)  );");
 			
-			TadpoleSystemCommons.executSQL(TadpoleSystemInitializer.getUserDB(), "INSERT INTO sample_table_a  (id, name)  VALUES  ( 1, '11' ); ");
+			TadpoleSystemCommons.executSQL(TadpoleSystemInitializer.getUserDB(), "INSERT", "INSERT INTO sample_table_a  (id, name)  VALUES  ( 1, '11' ); ");
 			
-			TadpoleSystemCommons.executSQL(TadpoleSystemInitializer.getUserDB(), "drop table sample_table_a; ");
+			TadpoleSystemCommons.executSQL(TadpoleSystemInitializer.getUserDB(), "DDL", "drop table sample_table_a; ");
 			
 		} catch (Exception e) {
 			fail("execute sql " + e.getMessage());

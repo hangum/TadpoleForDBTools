@@ -323,6 +323,18 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
+	 * 유저의 패스워드 번경
+	 * @param user
+	 * @throws Exception
+	 */
+	public static void updateUserPasswordWithID(UserDAO user) throws Exception {
+		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserPasswordWithID", user); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 사용자 힌트 변경
 	 * 
 	 * @param user

@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.editors.main.composite.direct;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -104,7 +105,7 @@ public class SQLResultEditingSupport extends EditingSupport {
 		String strColumnName = rsDAO.getColumnName().get(intColumnIndex);
 		String strColumnValue = "";
 		if(RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(intColumnIndex))) strColumnValue = value.toString();
-		else strColumnValue = "'" + value.toString() + "'";
+		else strColumnValue = "'" + StringEscapeUtils.escapeSql(value.toString()) + "'";
 		
 		String tableName = rsDAO.getColumnTableName().get(intColumnIndex);
 		

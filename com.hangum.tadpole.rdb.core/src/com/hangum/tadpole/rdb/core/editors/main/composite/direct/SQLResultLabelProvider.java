@@ -107,7 +107,8 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 */
 	public static void createTableColumn(final TableViewer tableViewer,
 										final ResultSetUtilDTO rsDAO,
-										final SQLResultSorter tableSorter) {
+										final SQLResultSorter tableSorter, 
+										final boolean isEditable) {
 		// 기존 column을 삭제한다.
 		Table table = tableViewer.getTable();
 		int columnCount = table.getColumnCount();
@@ -150,7 +151,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				});
 
 				// if select statement update
-				if(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT == rsDAO.getStatementType()) {
+				if(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT == rsDAO.getStatementType() && isEditable) {
 					if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
 				}
 				

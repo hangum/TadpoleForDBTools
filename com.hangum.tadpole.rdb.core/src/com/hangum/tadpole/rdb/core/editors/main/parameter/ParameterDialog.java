@@ -100,7 +100,7 @@ public class ParameterDialog extends Dialog {
 
 		this.userDB = userDB;
 		this.calcParamCount(executeQuery);
-		makeParamCount();
+		this.makeParamCount();
 	}
 
 	/**
@@ -227,13 +227,12 @@ public class ParameterDialog extends Dialog {
 			throw e;
 		} finally {
 			try {
-				stmt.close();
-			} catch (Exception e) {
-			}
+				if(stmt != null) stmt.close();
+			} catch (Exception e) {}
+			
 			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
+				if(javaConn != null) javaConn.close();
+			} catch (Exception e) {}
 		}
 	}
 

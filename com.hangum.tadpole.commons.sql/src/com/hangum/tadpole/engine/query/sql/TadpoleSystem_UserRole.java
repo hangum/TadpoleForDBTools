@@ -59,7 +59,7 @@ public class TadpoleSystem_UserRole {
 	 * @param roleType
 	 * @throws Exception
 	 */
-	public static void insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType) throws Exception {
+	public static TadpoleUserDbRoleDAO insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType) throws Exception {
 		TadpoleUserDbRoleDAO userDBRoleDao = new TadpoleUserDbRoleDAO();
 		userDBRoleDao.setUser_seq(userSeq);
 		userDBRoleDao.setDb_seq(dbSeq);
@@ -72,7 +72,9 @@ public class TadpoleSystem_UserRole {
 		
 		// Insert tadpole_user_db_role table. 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.insert("userDBRoleInsert", userDBRoleDao);
+		TadpoleUserDbRoleDAO roleDao = (TadpoleUserDbRoleDAO)sqlClient.insert("userDBRoleInsert", userDBRoleDao);
+		
+		return roleDao;
 	}
 	
 	
@@ -99,8 +101,10 @@ public class TadpoleSystem_UserRole {
 		
 		// Insert tadpole_user_db_role table. 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.insert("userDBRoleInsert", userDBRoleDao);
-
+		userDBRoleDao = (TadpoleUserDbRoleDAO)sqlClient.insert("userDBRoleInsert", userDBRoleDao);
+		
+		// save db access control
+		TadpoleSystem_AccessControl.saveDBAccessControl(userDBRoleDao);
 	}
 	
 	/**

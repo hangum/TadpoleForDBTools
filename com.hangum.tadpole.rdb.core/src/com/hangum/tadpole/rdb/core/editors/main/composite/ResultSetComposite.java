@@ -535,6 +535,8 @@ public class ResultSetComposite extends Composite {
 	
 	/**
 	 * 쿼리를 수행합니다.
+	 * 
+	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
 		// 쿼리를 이미 실행 중이라면 무시합니다.
@@ -555,7 +557,7 @@ public class ResultSetComposite extends Composite {
 		
 		final Shell runShell = textFilter.getShell();
 		
-		if(reqQuery.getType() != EditorDefine.EXECUTE_TYPE.ALL) {
+		if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
 			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)) {
 				try {
 					ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
@@ -565,7 +567,7 @@ public class ResultSetComposite extends Composite {
 							String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
 							reqQuery.setSql(repSQL);
 							
-							if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL); //$NON-NLS-1$
+							if(logger.isDebugEnabled()) logger.debug("User parameter query is  " + repSQL); //$NON-NLS-1$
 						}
 					}
 				} catch(Exception e) {
@@ -577,10 +579,10 @@ public class ResultSetComposite extends Composite {
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
-		final String strPlanTBName = GetPreferenceGeneral.getPlanTableName();
+		final String strPlanTBName 	= GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
-		final int intCommitCount = Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
+		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
 		
 		jobQueryManager = new Job(Messages.MainEditor_45) {
 			@Override
@@ -593,7 +595,7 @@ public class ResultSetComposite extends Composite {
 				
 				try {
 					
-					if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {
+					if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
@@ -642,7 +644,7 @@ public class ResultSetComposite extends Composite {
 						}
 					}
 					
-					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
+//					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
 					
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
@@ -925,7 +927,9 @@ public class ResultSetComposite extends Composite {
 			final TadpoleResultSet trs = rsDAO.getDataList();
 			sqlSorter = new SQLResultSorter(-999);
 			
-			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter);
+			boolean isEditable = true;
+			if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false;
+			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter, isEditable);
 			
 			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
 			tvQueryResult.setContentProvider(new ArrayContentProvider());
@@ -964,7 +968,12 @@ public class ResultSetComposite extends Composite {
 			// working schema_history 에 history 를 남깁니다.
 			SchemaHistoryDAO schemaDao = new SchemaHistoryDAO();
 			try {
-				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(), reqQuery.getSql());
+//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
+				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
+						"EDITOR",
+						reqQuery.getQueryType().toString(),
+						"",
+						reqQuery.getSql());
 			} catch(Exception e) {
 				logger.error("save schemahistory", e); //$NON-NLS-1$
 			}
