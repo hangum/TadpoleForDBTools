@@ -50,6 +50,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -316,6 +317,12 @@ public class DBListComposite extends Composite {
 					
 					tltmQueryHistory.setEnabled(false);
 					tltmSQLEditor.setEnabled(false);
+					
+					// don't use mongodb
+					if(userDBRole.getParent().getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+						tltmDBAccessCtl.setEnabled(false);
+					}
+					
 				} else if(objSelect instanceof ManagerListDTO) {
 
 					tltmConfigurationDB.setEnabled(false);

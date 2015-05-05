@@ -44,15 +44,18 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_AccessControl;
+
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.custom.CCombo;
 
 /**
  *  SQLAudit
@@ -67,14 +70,14 @@ public class DBAccessControlDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(DBAccessControlDialog.class);
 	
 	private UserDBDAO useDB;
+	private Text textDBName;
+	private Combo comboUser;
 	
 	private Button btnSelectDelete;
 	private TadpoleUserDbRoleDAO userRoleDB;
 	private TableViewer tvSelect;
+	private Button btnSelectAdd;
 	private List<AccessCtlObjectDAO> listTableColumn = new ArrayList<AccessCtlObjectDAO>();
-	private Text textDBName;
-
-	private Combo comboUser;
 	
 	private Button btnSelect;
 	private Button btnInsert;
@@ -149,6 +152,7 @@ public class DBAccessControlDialog extends Dialog {
 			comboUser.setData(""+i, tadpoleUserDbRoleDAO);
 		}
 		comboUser.select(0);
+		new Label(compositeHead, SWT.NONE);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
@@ -168,7 +172,7 @@ public class DBAccessControlDialog extends Dialog {
 		compositeSelectBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeSelectBtn.setLayout(new GridLayout(3, false));
 		
-		Button btnSelectAdd = new Button(compositeSelectBtn, SWT.NONE);
+		btnSelectAdd = new Button(compositeSelectBtn, SWT.NONE);
 		btnSelectAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -275,6 +279,19 @@ public class DBAccessControlDialog extends Dialog {
 	 */
 	private void firstInit() {
 		comboUser.setText(String.format("%s (%s)", 	userRoleDB.getName(), userRoleDB.getEmail()));
+		
+		// oracle, tajo, hive, cubrid 는 사용하지 못하도록.
+		UserDBDAO userDB = userRoleDB.getParent();
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT |
+				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT |
+				userDB.getDBDefine() == DBDefine.TAJO_DEFAULT |
+				userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT |
+				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT
+		) {
+			btnSelectAdd.setEnabled(false);
+		}
+			
 	}
 		
 	/**

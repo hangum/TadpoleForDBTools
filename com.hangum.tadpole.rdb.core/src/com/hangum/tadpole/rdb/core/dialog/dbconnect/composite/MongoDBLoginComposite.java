@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,7 +48,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	 * 
 	 */
 	private static final long serialVersionUID = 8245123047846049939L;
-//	private static final Logger logger = Logger.getLogger(MongoDBLoginComposite.class);
+	private static final Logger logger = Logger.getLogger(MongoDBLoginComposite.class);
 	
 	protected Text textHost;
 	protected Text textUser;
