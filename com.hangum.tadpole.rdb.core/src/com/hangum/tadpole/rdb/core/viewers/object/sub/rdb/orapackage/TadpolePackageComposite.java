@@ -231,8 +231,10 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_Package);
-					manager.add(dropAction_Package);
+					if(!isDDLLock()) {
+						manager.add(creatAction_Package);
+						manager.add(dropAction_Package);
+					}
 					manager.add(refreshAction_Package);
 
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));

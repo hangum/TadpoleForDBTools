@@ -15,6 +15,8 @@ import java.sql.Statement;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
@@ -27,6 +29,13 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
+/**
+ * 
+ *
+ * @author hangum
+ * @version 1.6.1
+ *
+ */
 public class ExecuteOtherSQL {
 	private static final Logger logger = Logger.getLogger(ExecuteOtherSQL.class);
 	
@@ -44,6 +53,28 @@ public class ExecuteOtherSQL {
 	{
 		if(!PermissionChecker.isExecute(userType, userDB, reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
+		}
+		
+		PublicTadpoleDefine.QUERY_TYPE queryType = reqQuery.getQueryType();
+		if(queryType == QUERY_TYPE.DDL) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
+				throw new Exception(Messages.MainEditor_21);
+			}
+		}
+		if(queryType == QUERY_TYPE.INSERT) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock())) {
+				throw new Exception(Messages.MainEditor_21);
+			}
+		}
+		if(queryType == QUERY_TYPE.UPDATE) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock())) {
+				throw new Exception(Messages.MainEditor_21);
+			}
+		}
+		if(queryType == QUERY_TYPE.DELETE) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl())) {
+				throw new Exception(Messages.MainEditor_21);
+			}
 		}
 		
 		// is tajo

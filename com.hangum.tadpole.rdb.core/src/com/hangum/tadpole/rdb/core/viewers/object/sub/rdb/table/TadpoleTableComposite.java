@@ -66,6 +66,7 @@ import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
@@ -473,9 +474,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || 
 									userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							manager.add(creatAction_Table);
-							manager.add(dropAction_Table);
-							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							
+							if(!isDDLLock()) {
+								manager.add(creatAction_Table);
+								manager.add(dropAction_Table);
+								manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							}
 						}	
 						
 						manager.add(refreshAction_Table);
@@ -484,9 +488,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					// others rdb
 					} else {
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							manager.add(creatAction_Table);
-							manager.add(dropAction_Table);
-							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							if(!isDDLLock()) {
+								manager.add(creatAction_Table);
+								manager.add(dropAction_Table);
+								manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							}
 						}	
 						
 						manager.add(refreshAction_Table);
@@ -504,17 +510,19 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						manager.add(selectStmtAction);
 						
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							manager.add(insertStmtAction);
-							manager.add(updateStmtAction);
-							manager.add(deleteStmtAction);
+							if(!isInsertLock()) manager.add(insertStmtAction);
+							if(!isUpdateLock()) manager.add(updateStmtAction);
+							if(!isDeleteLock()) manager.add(deleteStmtAction);
 							
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(alterTableAction);
 	
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(viewDDLAction);
-							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-							manager.add(tableDataEditorAction);
+							if(!(isInsertLock() | isUpdateLock() | isDeleteLock())) {
+								manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+								manager.add(tableDataEditorAction);
+							}
 						}
 					}	// if rdb
 				}	// if hive and tajo
@@ -644,7 +652,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		}
 		
 		/** filter 정보가 있으면 처리합니다. */
-//		List<TableDAO> listTables = filter(userDB, showTables);
+		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 		for(TableDAO td : showTables) {

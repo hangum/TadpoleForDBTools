@@ -13,7 +13,6 @@ package com.hangum.tadpole.preference.ui;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -74,7 +73,6 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblNumberColumnAdd = new Label(container, SWT.NONE);
-		lblNumberColumnAdd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNumberColumnAdd.setText(Messages.RDBPreferencePage_lblNumberColumnAdd_text);
 		
 		comboRDBNumberComma = new Combo(container, SWT.READ_ONLY);

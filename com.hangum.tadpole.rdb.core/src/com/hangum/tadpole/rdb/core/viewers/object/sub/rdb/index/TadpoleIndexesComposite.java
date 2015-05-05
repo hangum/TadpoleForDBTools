@@ -263,8 +263,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_Index);
-					manager.add(dropAction_Index);
+					if(!isDDLLock()) {
+						manager.add(creatAction_Index);
+						manager.add(dropAction_Index);
+					}
 					
 					manager.add(refreshAction_Index);
 					

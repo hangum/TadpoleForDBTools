@@ -149,6 +149,7 @@ public class ResultMainComposite extends Composite {
 	
 	/**
 	 * execute command
+	 * 
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {

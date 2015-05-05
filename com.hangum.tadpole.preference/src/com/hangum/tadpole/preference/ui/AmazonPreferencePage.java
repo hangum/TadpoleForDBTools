@@ -85,15 +85,15 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtAccessKey	= textAccessKey.getText();
 		String txtSecretKey = textSecretKey.getText();
 		
-		if(txtAccessKey.equals("")) {
-			MessageDialog.openError(getShell(), "Error", "Access Key is empty. Please input this value.");
-			textAccessKey.setFocus();
-			return false;
-		} else if(txtSecretKey.equals("")) {
-			MessageDialog.openError(getShell(), "Error", "Secret Key is empty. Please input this value.");
-			textSecretKey.setFocus();
-			return false;
-		}
+//		if(txtAccessKey.equals("")) {
+//			MessageDialog.openError(getShell(), "Error", "Access Key is empty. Please input this value.");
+//			textAccessKey.setFocus();
+//			return false;
+//		} else if(txtSecretKey.equals("")) {
+//			MessageDialog.openError(getShell(), "Error", "Secret Key is empty. Please input this value.");
+//			textSecretKey.setFocus();
+//			return false;
+//		}
 
 		try {			
 			updateEncriptInfo(PreferenceDefine.AMAZON_ACCESS_NAME, txtAccessKey);

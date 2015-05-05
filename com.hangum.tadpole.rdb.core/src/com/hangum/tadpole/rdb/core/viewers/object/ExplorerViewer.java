@@ -623,7 +623,6 @@ public class ExplorerViewer extends ViewPart {
 		}
 	}
 	
-
 	@Override
 	public void setFocus() {
 	}

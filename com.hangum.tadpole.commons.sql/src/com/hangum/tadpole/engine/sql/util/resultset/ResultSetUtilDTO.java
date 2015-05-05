@@ -104,10 +104,16 @@ public class ResultSetUtilDTO {
 		this.userDB = userDB;
 		
 		if(rs != null) {
-			columnName = ResultSetUtils.getColumnName(isShowRownum, rs);
 			columnTableName = ResultSetUtils.getColumnTableName(userDB, isShowRownum, rs);
+			columnName = ResultSetUtils.getColumnName(userDB, columnTableName, isShowRownum, rs);
 			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
-			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
+			
+			if(isShowRownum && (columnName.size() == 1)) {
+				dataList = new TadpoleResultSet();
+			} else {
+				dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
+			}
+			
 			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());
 		}
 	}

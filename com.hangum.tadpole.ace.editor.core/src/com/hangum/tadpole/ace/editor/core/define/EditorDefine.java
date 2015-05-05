@@ -42,9 +42,6 @@ public class EditorDefine {
 	/** query editor에서 실행 모드 */
 	public static enum QUERY_MODE {QUERY, EXPLAIN_PLAN};
 	
-	/** query type */
-	public static enum QUERY_TYPE {SELECT, INSERT, UPDATE, DELETE, DDL, UNKNWON};
-	
     /** 에디터의 커서 포인트 */
     public enum EXECUTE_TYPE {ALL, BLOCK, NONE};
 

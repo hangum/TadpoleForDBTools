@@ -23,8 +23,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
+import org.eclipse.swt.widgets.Button;
 
 /**
  * table column filter dialog
@@ -36,15 +38,19 @@ import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlD
  *
  */
 public class TableColumnFilterDialog extends Dialog {
+	
 	private DBAccessControlDAO dbAccessDetail;
 	private Text textTableName;
+	private Button btnDoNotUseObject;
 	private Text textColumnNames;
 	
 	private AccessCtlObjectDAO returnObjectDao = new AccessCtlObjectDAO();
 
 	/**
-	 * Create the dialog.
+	 * new access ctl
+	 * 
 	 * @param parentShell
+	 * @wbp.parser.constructor
 	 */
 	public TableColumnFilterDialog(Shell parentShell, DBAccessControlDAO dbAccessDetail) {
 		super(parentShell);
@@ -52,6 +58,18 @@ public class TableColumnFilterDialog extends Dialog {
 		this.dbAccessDetail = dbAccessDetail;
 	}
 	
+	/**
+	 * modify access ctl.
+	 * 
+	 * @param shell
+	 * @param acObject
+	 */
+	public TableColumnFilterDialog(Shell parentShell, DBAccessControlDAO dbAccessDetail, AccessCtlObjectDAO acObject) {
+		super(parentShell);
+		this.dbAccessDetail = dbAccessDetail;
+		this.returnObjectDao = acObject;
+	}
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -75,6 +93,10 @@ public class TableColumnFilterDialog extends Dialog {
 		
 		textTableName = new Text(container, SWT.BORDER);
 		textTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(container, SWT.NONE);
+		
+		btnDoNotUseObject = new Button(container, SWT.CHECK);
+		btnDoNotUseObject.setText("Do not use this object");
 		
 		Label lblColumnName = new Label(container, SWT.NONE);
 		lblColumnName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -82,8 +104,25 @@ public class TableColumnFilterDialog extends Dialog {
 		
 		textColumnNames = new Text(container, SWT.BORDER | SWT.MULTI);
 		textColumnNames.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		initUI();
+		
+		textTableName.setFocus();
 
 		return container;
+	}
+	
+	/**
+	 * initialize ui
+	 */
+	private void initUI() {
+		textTableName.setText(returnObjectDao.getObj_name());
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(returnObjectDao.getDontuse_object())) {
+			btnDoNotUseObject.setSelection(true);
+		} else {
+			btnDoNotUseObject.setSelection(false);
+		}
+		textColumnNames.setText(returnObjectDao.getDetail_obj());
 	}
 	
 	/* (non-Javadoc)
@@ -110,6 +149,9 @@ public class TableColumnFilterDialog extends Dialog {
 		returnObjectDao.setType("SELECT");
 		returnObjectDao.setAccess_seq(dbAccessDetail.getSeq());
 		returnObjectDao.setObj_name(textTableName.getText());
+		if(btnDoNotUseObject.getSelection()) returnObjectDao.setDontuse_object("YES");
+		else returnObjectDao.setDontuse_object("NO");
+		
 		returnObjectDao.setDetail_obj(textColumnNames.getText());
 		
 		super.okPressed();

@@ -162,6 +162,9 @@ public class PublicTadpoleDefine {
 	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
 	
+	/** query type */
+	public static enum QUERY_TYPE {SELECT, INSERT, UPDATE, DELETE, DDL, UNKNWON};
+	
 	/** 디비들의 키 이름을 정의합니다 */
 //	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
 	

@@ -12,6 +12,8 @@ package com.hangum.tadpole.engine.query.dao.system.accesscontrol;
 
 import java.sql.Timestamp;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * access_ctl_object table dao
  *
@@ -31,6 +33,7 @@ public class AccessCtlObjectDAO {
 	 */
 	String type; 
 	String obj_name;
+	String dontuse_object = PublicTadpoleDefine.YES_NO.NO.name();
 	String detail_obj;
 	String description;
 	String delyn;
@@ -154,6 +157,18 @@ public class AccessCtlObjectDAO {
 		this.create_date = create_date;
 	}
 
-	
-	
+	/**
+	 * @return the dontuse_object
+	 */
+	public String getDontuse_object() {
+		return dontuse_object;
+	}
+
+	/**
+	 * @param dontuse_object the dontuse_object to set
+	 */
+	public void setDontuse_object(String dontuse_object) {
+		this.dontuse_object = dontuse_object;
+	}
+
 }

@@ -142,8 +142,10 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_Trigger);
-					manager.add(deleteAction_Trigger);
+					if(!isDDLLock()) {
+						manager.add(creatAction_Trigger);
+						manager.add(deleteAction_Trigger);
+					}
 				}
 					
 				manager.add(refreshAction_Trigger);

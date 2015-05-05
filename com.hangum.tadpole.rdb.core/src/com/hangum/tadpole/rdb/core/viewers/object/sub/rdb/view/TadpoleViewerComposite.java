@@ -261,8 +261,10 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_View);
-					manager.add(deleteAction_View);
+					if(!isDDLLock()) {
+						manager.add(creatAction_View);
+						manager.add(deleteAction_View);
+					}
 				}
 //				manager.add(modifyAction_View);
 				manager.add(refreshAction_View);

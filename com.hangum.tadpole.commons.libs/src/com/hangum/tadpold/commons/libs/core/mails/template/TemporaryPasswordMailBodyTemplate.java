@@ -16,7 +16,7 @@ package com.hangum.tadpold.commons.libs.core.mails.template;
  * @author hangum
  *
  */
-public class TemporaryMailBodyTemplate extends MailBodyTemplate {
+public class TemporaryPasswordMailBodyTemplate extends MailBodyTemplate {
 
 	/**
 	 * 
@@ -27,7 +27,7 @@ public class TemporaryMailBodyTemplate extends MailBodyTemplate {
 	public String getContent(String strEmail, String strConfirmKey) {
 		StringBuffer strContent = new StringBuffer("<html>");
 		
-		strContent.append(makeHead("Tadpole DB Hub user has been added.\n Please check."));
+		strContent.append(makeHead("Tadpole DB Hub temporary password sended.\n Please check."));
 		strContent.append("<table border='1' cellpadding='0' cellspacing='0' width='100%'>");
 				
 	

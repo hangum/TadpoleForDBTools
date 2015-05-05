@@ -52,8 +52,10 @@
  -->
 <select id="getAccessCtlDetail" resultClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO" 
 	parameterClass="java.lang.Integer">
-	SELECT * FROM access_ctl_object
+	SELECT * 
+	FROM access_ctl_object
 	WHERE access_seq = #access_seq#
+		AND delyn = 'NO'
 	ORDER BY obj_name
 </select>
 
@@ -61,8 +63,8 @@
 	save object detail
  -->
 <insert id="saveAccessCtlDetail" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO">
-	INSERT INTO access_ctl_object (access_seq, type, obj_name, detail_obj, description) 
-	VALUES (#access_seq#, #type#, #obj_name#, #detail_obj#, #description#) 
+	INSERT INTO access_ctl_object (access_seq, type, obj_name, dontuse_object, detail_obj, description) 
+	VALUES (#access_seq#, #type#, #obj_name#, #dontuse_object#, #detail_obj#, #description#) 
 </insert>
 	
 <!-- 
@@ -78,15 +80,15 @@
 <update id="removeAccessControlDetail" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO">
 	UPDATE access_ctl_object
 	SET delyn = 'YES'
-	WHERE seq = #seq#
+	WHERE access_seq = #seq#
 </update>
 
 <!-- 
 	insertAccessControlDetail table
  -->
 <insert id="insertAccessControlDetail" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO">
-	INSERT INTO  access_ctl_object (access_seq, type, obj_name, detail_obj, description)
-	VALUES (#access_seq#, #type#, #obj_name#, #detail_obj#, #description#)
+	INSERT INTO  access_ctl_object (access_seq, type, obj_name, dontuse_object, detail_obj, description)
+	VALUES (#access_seq#, #type#, #obj_name#, #dontuse_object#, #detail_obj#, #description#)
 </insert>
 	
 </sqlMap>

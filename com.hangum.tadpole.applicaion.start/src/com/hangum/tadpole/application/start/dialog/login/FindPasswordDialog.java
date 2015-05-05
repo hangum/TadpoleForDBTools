@@ -13,6 +13,7 @@ package com.hangum.tadpole.application.start.dialog.login;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -25,7 +26,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
-import com.hangum.tadpold.commons.libs.core.mails.template.TemporaryMailBodyTemplate;
+import com.hangum.tadpold.commons.libs.core.mails.template.TemporaryPasswordMailBodyTemplate;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
@@ -78,6 +79,8 @@ public class FindPasswordDialog extends Dialog {
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 		
+		textEmail.setFocus();
+		
 		return container;
 	}
 
@@ -111,7 +114,18 @@ public class FindPasswordDialog extends Dialog {
 			MessageDialog.openError(getShell(), "Error", "Rise Exception:\n\t" + e.getMessage());
 		}
 		
+		
 		super.okPressed();
+	}
+	
+	/**
+	 * Create contents of the button bar.
+	 * @param parent
+	 */
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false); //$NON-NLS-1$
 	}
 	
 	/**
@@ -128,7 +142,7 @@ public class FindPasswordDialog extends Dialog {
 			// 
 			// 그룹, 사용자, 권한.
 			// 
-			TemporaryMailBodyTemplate mailContent = new TemporaryMailBodyTemplate();
+			TemporaryPasswordMailBodyTemplate mailContent = new TemporaryPasswordMailBodyTemplate();
 			String strContent = mailContent.getContent(email, strConfirmKey);
 			emailDao.setContent(strContent);
 			emailDao.setTo(email);

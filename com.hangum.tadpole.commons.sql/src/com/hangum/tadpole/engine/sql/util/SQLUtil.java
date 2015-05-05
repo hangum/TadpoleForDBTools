@@ -15,6 +15,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.delete.Delete;
+import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.update.Update;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -133,23 +140,22 @@ public class SQLUtil {
 		strSQL = removeComment(strSQL);
 		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
 			return true;
-		} else {
-//			add issue https://github.com/JSQLParser/JSqlParser/issues/31
-			try {
-				// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
-				// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
-//				if(!isEnglish(strSQL)) return false;
+//		} else {
+//			try {
+			//	// 영문일때만 검사하도록 합니다. 영문이 아닐 경우 무조건 false 입니다.
+			//	// 검사를 하는 이유는 한글이 파서에 들어가면 무한루프돌면서 에디터 전체가 데드락으로 빠집니다.
+//			//	//if(!isEnglish(strSQL)) return false;
 //				
 //				CCJSqlParserManager parserManager = new CCJSqlParserManager();
 //				Statement statement = parserManager.parse(new StringReader(strSQL));
 //				if(statement instanceof Select) return true;
-			} catch(Exception e) {
-				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
-			}
-			return false;
+//			} catch(Exception e) {
+//				logger.error("SQL Parser Exception.\n sql is [" + strSQL + "]");
+//			}
+//			return false;
 		}
 		
-//		return false;
+		return false;
 	}
 	
 //	/**
@@ -366,4 +372,36 @@ public class SQLUtil {
 		
 		return false;
 	}
+	
+	/**
+	 * sql of query type
+	 * 
+	 * @param sql
+	 * @return query type
+	 */
+	public static PublicTadpoleDefine.QUERY_TYPE sqlQueryType(String sql) {
+		PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+		
+		try {
+			Statement statement =CCJSqlParserUtil.parse(sql);
+			if(statement instanceof Select) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+			} else if(statement instanceof Insert) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.INSERT;
+			} else if(statement instanceof Update) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.UPDATE;
+			} else if(statement instanceof Delete) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.DELETE;
+			} else {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.DDL;
+			}
+			
+		} catch (Throwable e) {
+			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
+			queryType = PublicTadpoleDefine.QUERY_TYPE.UNKNWON;
+		}
+		
+		return queryType;
+	}
+	
 }

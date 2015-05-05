@@ -49,6 +49,10 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_AccessControl;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  *  SQLAudit
@@ -63,9 +67,10 @@ public class DBAccessControlDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(DBAccessControlDialog.class);
 	
 	private UserDBDAO useDB;
+	
+	private Button btnSelectDelete;
 	private TadpoleUserDbRoleDAO userRoleDB;
 	private TableViewer tvSelect;
-//	private List<TableFilterDAO> listTableColumns = new ArrayList<TableFilterDAO>();
 	private List<AccessCtlObjectDAO> listTableColumn = new ArrayList<AccessCtlObjectDAO>();
 	private Text textDBName;
 
@@ -152,7 +157,7 @@ public class DBAccessControlDialog extends Dialog {
 		Group grpAuthority = new Group(compositeBody, SWT.NONE);
 		grpAuthority.setLayout(new GridLayout(2, false));
 		grpAuthority.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpAuthority.setText("Authority");
+		grpAuthority.setText("Authority(Does't use check)");
 		
 		btnSelect = new Button(grpAuthority, SWT.CHECK);
 		btnSelect.setEnabled(false);
@@ -176,7 +181,7 @@ public class DBAccessControlDialog extends Dialog {
 		});
 		btnSelectAdd.setText("Add");
 		
-		Button btnSelectDelete = new Button(compositeSelectBtn, SWT.NONE);
+		btnSelectDelete = new Button(compositeSelectBtn, SWT.NONE);
 		btnSelectDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -192,22 +197,46 @@ public class DBAccessControlDialog extends Dialog {
 			}
 		});
 		btnSelectDelete.setText("Delete");
+		btnSelectDelete.setEnabled(false);
 		new Label(compositeSelectBtn, SWT.NONE);
 		
-//		Button btnSelectUpdate = new Button(compositeSelectBtn, SWT.NONE);
-//		btnSelectUpdate.setText("Update");
 		new Label(grpAuthority, SWT.NONE);
 		
 		tvSelect = new TableViewer(grpAuthority, SWT.BORDER | SWT.FULL_SELECTION);
+		tvSelect.addPostSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				btnSelectDelete.setEnabled(true);
+			}
+		});
+		tvSelect.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection iss = (IStructuredSelection)event.getSelection();
+				if(!iss.isEmpty()) {
+					AccessCtlObjectDAO acObject = (AccessCtlObjectDAO)iss.getFirstElement();
+					
+					TableColumnFilterDialog tableColumnDialog = new TableColumnFilterDialog(getShell(), dbAccessDetail, acObject);
+					if(Dialog.OK == tableColumnDialog.open()) {
+//						listTableColumn.add(tableColumnDialog.getUpdateData());
+						tvSelect.refresh();
+					}
+				}
+				
+			}
+		});
 		Table table = tvSelect.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvSelect, SWT.NONE);
-		TableColumn tblclmnTable = tableViewerColumn.getColumn();
+		TableViewerColumn tvColumnName = new TableViewerColumn(tvSelect, SWT.NONE);
+		TableColumn tblclmnTable = tvColumnName.getColumn();
 		tblclmnTable.setWidth(150);
 		tblclmnTable.setText("Table");
+		
+		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvSelect, SWT.NONE);
+		TableColumn tblclmnDoNotUse = tableViewerColumn_2.getColumn();
+		tblclmnDoNotUse.setWidth(60);
+		tblclmnDoNotUse.setText("Do not use");
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvSelect, SWT.NONE);
 		TableColumn tblclmnColumn = tableViewerColumn_1.getColumn();
@@ -354,6 +383,7 @@ class SelectTableFilterLabelprovider extends LabelProvider implements ITableLabe
 		
 		switch (columnIndex) {
 		case 0: return dao.getObj_name();
+		case 1: return dao.getDontuse_object();
 		default: return dao.getDetail_obj();
 		}
 		

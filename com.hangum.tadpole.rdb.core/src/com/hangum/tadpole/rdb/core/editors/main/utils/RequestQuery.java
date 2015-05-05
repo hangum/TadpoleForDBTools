@@ -10,19 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.update.Update;
-
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine.QUERY_TYPE;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
@@ -56,7 +49,7 @@ public class RequestQuery {
 	private EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
 	
 	/** User request query type */
-	private EditorDefine.QUERY_TYPE queryType = EditorDefine.QUERY_TYPE.INSERT;
+	private PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.INSERT;
 
 	/**
 	 * 
@@ -72,37 +65,12 @@ public class RequestQuery {
 		this.originalSql = originalSql;
 		this.dbAction = dbAction;
 		this.sql = SQLUtil.sqlExecutable(originalSql);
-		sqlParser();
+		this.queryType = SQLUtil.sqlQueryType(sql);
 		
 		this.mode = mode;
 		this.executeType = type;
 		this.isAutoCommit = isAutoCommit;
 	}
-
-	/**
-	 * sql parser
-	 */
-	private void sqlParser() {
-		try {
-			Statement statement =CCJSqlParserUtil.parse(this.sql);
-			if(statement instanceof Select) {
-				queryType = QUERY_TYPE.SELECT;
-			} else if(statement instanceof Insert) {
-				queryType = QUERY_TYPE.INSERT;
-			} else if(statement instanceof Update) {
-				queryType = QUERY_TYPE.UPDATE;
-			} else if(statement instanceof Delete) {
-				queryType = QUERY_TYPE.DELETE;
-			} else {
-				queryType = QUERY_TYPE.DDL;
-			}
-			
-		} catch (Throwable e) {
-			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
-			queryType = QUERY_TYPE.UNKNWON;
-		}
-	}
-	
 
 	/**
 	 * @return the sql
@@ -149,14 +117,14 @@ public class RequestQuery {
 	/**
 	 * @return the queryType
 	 */
-	public EditorDefine.QUERY_TYPE getQueryType() {
+	public PublicTadpoleDefine.QUERY_TYPE getQueryType() {
 		return queryType;
 	}
 
 	/**
 	 * @param queryType the queryType to set
 	 */
-	public void setQueryType(EditorDefine.QUERY_TYPE queryType) {
+	public void setQueryType(PublicTadpoleDefine.QUERY_TYPE queryType) {
 		this.queryType = queryType;
 	}
 

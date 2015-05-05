@@ -17,13 +17,14 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import oracle.jdbc.internal.OracleResultSetMetaData;
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.postgresql.PGResultSetMetaData;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
+import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 
 /**
  * ResultSet utils
@@ -170,7 +171,59 @@ public class ResultSetUtils {
 	}
 	
 	/**
-	 * column of name
+	 * column name of table.
+	 * but this method is db access control.
+	 * 
+	 * @param userDB
+	 * @param columnTableName
+	 * @param isShowRownum
+	 * @param rs
+	 * @return
+	 */
+	public static Map<Integer, String> getColumnName(UserDBDAO userDB, Map<Integer, String> columnTableName,
+			boolean isShowRowNum, ResultSet rs) throws Exception {
+		Map<Integer, String> mapColumnName = getColumnName(isShowRowNum, rs);
+		DBAccessControlDAO dbAccessCtlDao = userDB.getDbAccessCtl();
+		Map<String, AccessCtlObjectDAO> mapDetailCtl = dbAccessCtlDao.getMapSelectAccessCtl();
+		
+		if(!mapDetailCtl.isEmpty()) {
+			Map<Integer, String> mapReturnColumnName = new HashMap<Integer, String>();
+			int intColumnCnt = 0;
+
+			// 컬럼 중에 db access 관련 있는 테이블이 있는 지 검증합니다.
+			for(int i=0; i<mapColumnName.size(); i++) {
+				String strTableName = columnTableName.get(i);
+				
+				// Is filter column?
+				if(mapDetailCtl.containsKey(strTableName)) {
+					// is filter table?
+					AccessCtlObjectDAO acDao = mapDetailCtl.get(strTableName);
+
+					String strTableOfAccessColumns = acDao.getDetail_obj();
+					String strResultColumn = mapColumnName.get(i);
+					if(StringUtils.containsIgnoreCase(strTableOfAccessColumns, strResultColumn)
+							| acDao.getDontuse_object().equals("YES")
+					) {
+						if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
+					} else {
+						if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
+						mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+						intColumnCnt++;
+					}
+				} else {
+					mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+					intColumnCnt++;
+				}
+			}
+			
+			return mapReturnColumnName;
+		} else {
+			return mapColumnName;			
+		}
+	}
+	
+	/**
+	 * column name of table
 	 * 
 	 * @param isShowRowNum
 	 * @param rs
@@ -331,5 +384,7 @@ public class ResultSetUtils {
 		
 		return mapTableColumn;
 	}
+
+	
 
 }

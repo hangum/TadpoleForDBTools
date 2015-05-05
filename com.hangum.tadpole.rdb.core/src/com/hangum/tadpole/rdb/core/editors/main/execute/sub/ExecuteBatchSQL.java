@@ -16,10 +16,13 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -55,6 +58,30 @@ public class ExecuteBatchSQL {
 		if(!PermissionChecker.isExecute(userType, userDB, listQuery)) {
 			throw new Exception(Messages.MainEditor_21);
 		}
+		// Check the db access control 
+		for (String strQuery : listQuery) {
+			PublicTadpoleDefine.QUERY_TYPE queryType = SQLUtil.sqlQueryType(strQuery);
+			if(queryType == QUERY_TYPE.DDL) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
+					throw new Exception(Messages.MainEditor_21);
+				}
+			}
+			if(queryType == QUERY_TYPE.INSERT) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock())) {
+					throw new Exception(Messages.MainEditor_21);
+				}
+			}
+			if(queryType == QUERY_TYPE.UPDATE) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock())) {
+					throw new Exception(Messages.MainEditor_21);
+				}
+			}
+			if(queryType == QUERY_TYPE.DELETE) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl())) {
+					throw new Exception(Messages.MainEditor_21);
+				}
+			}
+		}
 		
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -87,6 +114,7 @@ public class ExecuteBatchSQL {
 			}
 			statement.executeBatch();
 		} catch(Exception e) {
+//			javaConn.rollback();
 			logger.error("Execute batch update", e); //$NON-NLS-1$
 			throw e;
 		} finally {
