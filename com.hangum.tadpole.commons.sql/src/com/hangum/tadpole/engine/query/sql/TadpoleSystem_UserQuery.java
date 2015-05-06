@@ -223,7 +223,7 @@ public class TadpoleSystem_UserQuery {
 //	
 //		if(null == userInfo) {
 //			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
-//		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
+//		} else if(PublicTadpoleDefine.YES_NO.NO.name().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
 //			throw new Exception(Messages.TadpoleSystem_UserQuery_6);
 //		} else {
 //			if(question.equals(CipherManager.getInstance().decryption(userInfo.getSecurity_question())) &&

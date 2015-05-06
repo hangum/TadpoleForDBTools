@@ -267,7 +267,7 @@ public class ExplorerViewer extends ViewPart {
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 			
 			// is dblock
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock()) &&
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) &&
 					!SessionManager.isUnlockDB(selectUserDb)) {
 				userDB = null;
 				createTable();

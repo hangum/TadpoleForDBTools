@@ -76,7 +76,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, strBaseImage);
 		
 		try {
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
 				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {				
 					baseImage = ResourceManager.decorateImage(baseImage, 
 													ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/lock_0.28.png"), 

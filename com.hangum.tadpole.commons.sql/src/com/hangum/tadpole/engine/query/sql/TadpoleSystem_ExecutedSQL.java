@@ -177,7 +177,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @param sqlHistoryDAO
 	 */
 	public static void saveExecuteSQUeryResource(int user_seq, UserDBDAO userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE sqlType, SQLHistoryDAO sqlHistoryDAO) throws Exception {
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_profile())) {
 			ExecutedSqlResourceDAO executeSQLResourceDao = new ExecutedSqlResourceDAO();
 			executeSQLResourceDao.setDb_seq(userDB.getSeq());
 			executeSQLResourceDao.setUser_seq(user_seq);

@@ -122,7 +122,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		viewListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 

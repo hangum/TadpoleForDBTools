@@ -234,7 +234,7 @@ public class LoginDialog extends Dialog {
 			UserDAO userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
 			
 			// firsttime email confirm
-			if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDao.getIs_email_certification())) {
+			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
 				InputDialog inputDialog=new InputDialog(getShell(), "Email Key Dialog", "Input email confirm KEY", "", null);
 				if(inputDialog.open() == Window.OK) {
 					if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
@@ -247,13 +247,13 @@ public class LoginDialog extends Dialog {
 				}
 			}
 			
-			if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDao.getApproval_yn())) {
+			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
 				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_27);
 				
 				return;
 			}
 			
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDao.getUse_otp())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDao.getUse_otp())) {
 				OTPLoginDialog otpDialog = new OTPLoginDialog(getShell());
 				otpDialog.open(); 
 

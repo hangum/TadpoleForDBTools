@@ -267,7 +267,7 @@ public class MonitoringMainEditor extends EditorPart {
 						/** collect error data */
 						final List<MonitoringResultDAO> listErrorMonitoringResult = new ArrayList<MonitoringResultDAO>();
 						for (MonitoringResultDAO monitoringResultDAO : listMonitoringResult) {
-							if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringResultDAO.getResult())) listErrorMonitoringResult.add(monitoringResultDAO);
+							if(PublicTadpoleDefine.YES_NO.YES.name().equals(monitoringResultDAO.getResult())) listErrorMonitoringResult.add(monitoringResultDAO);
 						}
 						
 						final List<MonitoringResultDAO> listNetworkIn = new ArrayList<MonitoringResultDAO>();

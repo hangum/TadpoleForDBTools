@@ -195,7 +195,7 @@ public class ApplicationArgumentUtils {
 	public static boolean getNewUserPermit() {
 		if(isNewUserPermit()) {
 			try {
-				return PublicTadpoleDefine.YES_NO.YES.toString().equals(getValue("-newUserPermit"))?true:false;
+				return PublicTadpoleDefine.YES_NO.YES.name().equals(getValue("-newUserPermit"))?true:false;
 			} catch (Exception e) {
 				logger.error("check option : -newUserPermit exeception ", e);
 				return false;

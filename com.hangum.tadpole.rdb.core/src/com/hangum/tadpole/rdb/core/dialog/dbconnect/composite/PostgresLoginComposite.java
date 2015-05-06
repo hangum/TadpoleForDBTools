@@ -143,8 +143,8 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		
 		comboSSL = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboSSL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
-		comboSSL.add(PublicTadpoleDefine.YES_NO.YES.toString());
-		comboSSL.add(PublicTadpoleDefine.YES_NO.NO.toString());
+		comboSSL.add(PublicTadpoleDefine.YES_NO.YES.name());
+		comboSSL.add(PublicTadpoleDefine.YES_NO.NO.name());
 		comboSSL.select(1);
 		
 		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
@@ -225,7 +225,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 								StringUtils.trimToEmpty(textDatabase.getText())
 							);
 		
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(comboSSL.getText())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboSSL.getText())) {
 			dbUrl += "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 			
 			if(!"".equals(textJDBCOptions.getText())) {

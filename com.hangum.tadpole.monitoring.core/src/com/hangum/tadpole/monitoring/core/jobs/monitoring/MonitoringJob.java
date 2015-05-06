@@ -76,12 +76,12 @@ public class MonitoringJob implements Job {
 						resultDao.setUser_seq(userDB.getUser_seq());
 						resultDao.setDb_seq(userDB.getSeq());
 						
-						if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringIndexDAO.getIs_result_save())) {
+						if(PublicTadpoleDefine.YES_NO.YES.name().equals(monitoringIndexDAO.getIs_result_save())) {
 							resultDao.setQuery_result(jsonObj.toString());
 						}
 						resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 						resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
-						if(isError & PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringIndexDAO.getIs_snapshot_save())) {
+						if(isError & PublicTadpoleDefine.YES_NO.YES.name().equals(monitoringIndexDAO.getIs_snapshot_save())) {
 							resultDao.setSnapshot(Utils.getDBVariable(userDB));	
 						}
 						
@@ -117,7 +117,7 @@ public class MonitoringJob implements Job {
 					resultDao.setQuery_result("");
 					resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 					resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
-					if(PublicTadpoleDefine.YES_NO.YES.toString().equals(monitoringIndexDAO.getIs_snapshot_save())) {
+					if(PublicTadpoleDefine.YES_NO.YES.name().equals(monitoringIndexDAO.getIs_snapshot_save())) {
 						resultDao.setSnapshot(Utils.getDBVariable(userDB));
 					}
 					

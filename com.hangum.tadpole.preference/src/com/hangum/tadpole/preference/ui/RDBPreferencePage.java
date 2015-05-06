@@ -77,8 +77,8 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		
 		comboRDBNumberComma = new Combo(container, SWT.READ_ONLY);
 		comboRDBNumberComma.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboRDBNumberComma.add(PublicTadpoleDefine.YES_NO.YES.toString());
-		comboRDBNumberComma.add(PublicTadpoleDefine.YES_NO.NO.toString());
+		comboRDBNumberComma.add(PublicTadpoleDefine.YES_NO.YES.name());
+		comboRDBNumberComma.add(PublicTadpoleDefine.YES_NO.NO.name());
 		comboRDBNumberComma.select(0);
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);

@@ -220,7 +220,7 @@ public class GetPreferenceGeneral {
 			if (userInfo!=null){
 				strYesNo = userInfo.getValue0();
 				if(null == strYesNo || "".equals(strYesNo)) {
-					return PublicTadpoleDefine.YES_NO.YES.toString();
+					return PublicTadpoleDefine.YES_NO.YES.name();
 				}
 			}
 			
@@ -232,7 +232,7 @@ public class GetPreferenceGeneral {
 		 * @return
 		 */
 		public static boolean getISRDBNumberIsComma() {
-			return getRDBNumberISComma().equals(PublicTadpoleDefine.YES_NO.YES.toString())?true:false;
+			return getRDBNumberISComma().equals(PublicTadpoleDefine.YES_NO.YES.name())?true:false;
 		}
 		
 }

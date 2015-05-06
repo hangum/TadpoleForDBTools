@@ -148,7 +148,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 				generateGoogleOTP();
 			}
 		});
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(SessionManager.getUseOTP())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(SessionManager.getUseOTP())) {
 			btnGetOptCode.setSelection(true);
 		}
 		btnGetOptCode.setText(Messages.UserInfoPerference_btnGoogleOtp_text_1);
