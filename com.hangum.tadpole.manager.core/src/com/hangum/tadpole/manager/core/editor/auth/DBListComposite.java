@@ -570,7 +570,7 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 		} else if(element instanceof TadpoleUserDbRoleDAO) {
 			TadpoleUserDbRoleDAO roleDao = (TadpoleUserDbRoleDAO)element;
 			switch(columnIndex) {
-				case 0: return String.format("%s ( %s )", roleDao.getName(), roleDao.getEmail());
+				case 0: return String.format("%s (%s)", roleDao.getName(), roleDao.getEmail());
 				case 1: return roleDao.getRole_id();
 				case 5: return roleDao.getTerms_of_use_starttime() + " ~ " + roleDao.getTerms_of_use_endtime();
 			}

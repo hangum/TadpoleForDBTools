@@ -264,8 +264,8 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 * crate columns
 	 */
 	private void createColumns() {
-		String[] colNames = {"Email", "Name", "Create Time"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		int[] colSize = {130, 150, 120};
+		String[] colNames = {"Name", "Email", "Create Time"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		int[] colSize = {150, 150, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -313,8 +313,8 @@ class UserLabelProvider extends LabelProvider implements ITableLabelProvider {
 		UserDAO user = (UserDAO)element;
 
 		switch(columnIndex) {
-		case 0: return user.getEmail();
-		case 1: return user.getName();
+		case 0: return user.getName();
+		case 1: return user.getEmail();
 		case 2: return user.getCreate_time();
 		}
 		

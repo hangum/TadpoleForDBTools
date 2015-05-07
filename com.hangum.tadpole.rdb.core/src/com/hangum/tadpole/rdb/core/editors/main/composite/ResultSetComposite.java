@@ -645,7 +645,6 @@ public class ResultSetComposite extends Composite {
 					}
 					
 //					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
-					
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
@@ -971,14 +970,18 @@ public class ResultSetComposite extends Composite {
 //				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
 				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
 						"EDITOR",
-						reqQuery.getQueryType().toString(),
+						reqQuery.getQueryType().name(),
 						"",
 						reqQuery.getSql());
 			} catch(Exception e) {
 				logger.error("save schemahistory", e); //$NON-NLS-1$
 			}
-			
-			refreshExplorerView(getUserDB(), schemaDao);
+		
+			if(reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.DDL |
+					reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.UNKNWON
+					) {
+				refreshExplorerView(getUserDB(), reqQuery.getQueryDDLType());
+			}
 		}
 	}
 	
@@ -988,13 +991,13 @@ public class ResultSetComposite extends Composite {
 	 * @param userDB
 	 * @param schemaDao
 	 */
-	private void refreshExplorerView(final UserDBDAO userDB, final SchemaHistoryDAO schemaDao) {
+	private void refreshExplorerView(final UserDBDAO userDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
 		rdbResultComposite.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
-					ev.refreshCurrentTab(userDB, schemaDao);
+					ev.refreshCurrentTab(userDB, queryDDLType);
 				} catch (PartInitException e) {
 					logger.error("ExplorerView show", e); //$NON-NLS-1$
 				}

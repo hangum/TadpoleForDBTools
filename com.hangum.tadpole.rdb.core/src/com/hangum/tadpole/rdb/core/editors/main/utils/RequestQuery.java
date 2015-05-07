@@ -10,11 +10,22 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.create.index.CreateIndex;
+import net.sf.jsqlparser.statement.create.table.CreateTable;
+import net.sf.jsqlparser.statement.create.view.CreateView;
+import net.sf.jsqlparser.statement.delete.Delete;
+import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.update.Update;
+
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
@@ -49,7 +60,10 @@ public class RequestQuery {
 	private EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
 	
 	/** User request query type */
-	private PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.INSERT;
+	private PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+	
+	/** TABLE, INDEX, VIEW, OTHERES */
+	private QUERY_DDL_TYPE queryDDLType = QUERY_DDL_TYPE.UNKNOWN;
 
 	/**
 	 * 
@@ -65,12 +79,53 @@ public class RequestQuery {
 		this.originalSql = originalSql;
 		this.dbAction = dbAction;
 		this.sql = SQLUtil.sqlExecutable(originalSql);
-		this.queryType = SQLUtil.sqlQueryType(sql);
+		sqlQueryType(sql);
 		
 		this.mode = mode;
 		this.executeType = type;
 		this.isAutoCommit = isAutoCommit;
 	}
+	
+	/**
+	 * sql of query type
+	 * 
+	 * @param sql
+	 * @return query type
+	 */
+	public void sqlQueryType(String sql) {
+		
+		try {
+			Statement statement = CCJSqlParserUtil.parse(sql);
+			if(statement instanceof Select) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+			} else if(statement instanceof Insert) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.INSERT;
+			} else if(statement instanceof Update) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.UPDATE;
+			} else if(statement instanceof Delete) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.DELETE;
+			} else {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.DDL;
+				
+				
+				if(statement instanceof CreateTable) {
+//					logger.debug( "table name is " + ((CreateTable) statement).getTable().getName() );
+					queryDDLType = QUERY_DDL_TYPE.TABLE;
+				} else if(statement instanceof CreateView) {
+//					logger.debug( "view name is " + ((CreateView) statement).getView().getName() );
+					queryDDLType = QUERY_DDL_TYPE.VIEW;
+				} else if(statement instanceof CreateIndex) {
+//					logger.debug( "index name is " + ((CreateIndex) statement).getIndex().getName() );
+					queryDDLType = QUERY_DDL_TYPE.INDEX;
+				}		
+			}
+			
+		} catch (Throwable e) {
+			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
+			queryType = PublicTadpoleDefine.QUERY_TYPE.UNKNWON;
+		}
+	}
+	
 
 	/**
 	 * @return the sql
@@ -183,5 +238,19 @@ public class RequestQuery {
 	public void setDbAction(DB_ACTION dbAction) {
 		this.dbAction = dbAction;
 	}
-	
+
+	/**
+	 * @return the queryDDLType
+	 */
+	public QUERY_DDL_TYPE getQueryDDLType() {
+		return queryDDLType;
+	}
+
+	/**
+	 * @param queryDDLType the queryDDLType to set
+	 */
+	public void setQueryDDLType(QUERY_DDL_TYPE queryDDLType) {
+		this.queryDDLType = queryDDLType;
+	}
+
 }

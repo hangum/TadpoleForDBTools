@@ -34,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
@@ -413,11 +414,12 @@ public class ExplorerViewer extends ViewPart {
 			if(tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
 			refreshTable(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
-			refreshView(false, strObjectName);
+			if(tabFolderObject.getSelectionIndex() != 1) tabFolderObject.setSelection(1);
+			refreshView(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.toString())) {
 			refreshSynonym(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
-			refreshIndexes(false, strObjectName);
+			refreshIndexes(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
 			refreshProcedure(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
@@ -425,13 +427,21 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
 			refreshFunction(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.toString())) {
-			refreshTrigger(false, strObjectName);
+			refreshTrigger(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.toString())) {
 			refreshJS(false, strObjectName);
 		}
 		
 		// google analytic
 		AnalyticCaller.track(ExplorerViewer.ID, strSelectItemText);
+	}
+	
+	/**
+	 * selected tab refresh
+	 */
+	private void refreshSelectTab() {
+		if(logger.isDebugEnabled()) logger.debug("tabFolderObject.getSelection().getText()" + tabFolderObject.getSelection().getText());
+		refershSelectObject(tabFolderObject.getSelection().getText(), "");
 	}
 	
 	/**
@@ -605,20 +615,21 @@ public class ExplorerViewer extends ViewPart {
 	 * @param chgUserDB
 	 * @param schemaDao
 	 */
-	public void refreshCurrentTab(UserDBDAO chgUserDB, final SchemaHistoryDAO schemaDao) {
+	public void refreshCurrentTab(UserDBDAO chgUserDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
 		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
 		
-		if(schemaDao != null) {
-			if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "TABLE")) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), schemaDao.getObject_id());
-			} else if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "VIEW")) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name(), schemaDao.getObject_id());
-			} else if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "INDEX")) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name(), schemaDao.getObject_id());
-				
-			// TO DO This code is temporary. do not understand refresh object is table view refresh. --;; - 15.4.20. hangum
-			} else {
+		if(queryDDLType != null) {
+			if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.TABLE) {
 				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), "");
+			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.VIEW) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name(), "");
+			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.INDEX) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name(), "");
+			} else {
+				refreshSelectTab();
+			// TO DO This code is temporary. do not understand refresh object is table view refresh. --;; - 15.4.20. hangum
+//			} else {
+//				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), "");
 			}
 		}
 	}

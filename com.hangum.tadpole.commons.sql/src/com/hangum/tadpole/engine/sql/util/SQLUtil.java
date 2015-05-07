@@ -17,6 +17,9 @@ import java.util.regex.Pattern;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.create.index.CreateIndex;
+import net.sf.jsqlparser.statement.create.table.CreateTable;
+import net.sf.jsqlparser.statement.create.view.CreateView;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
@@ -383,7 +386,7 @@ public class SQLUtil {
 		PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
 		
 		try {
-			Statement statement =CCJSqlParserUtil.parse(sql);
+			Statement statement = CCJSqlParserUtil.parse(sql);
 			if(statement instanceof Select) {
 				queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
 			} else if(statement instanceof Insert) {

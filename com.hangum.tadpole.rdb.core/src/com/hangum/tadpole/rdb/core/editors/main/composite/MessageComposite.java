@@ -22,6 +22,10 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.swtdesigner.SWTResourceManager;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Result Message Composite
@@ -49,6 +53,15 @@ public class MessageComposite extends Composite {
 		
 		// text limit
 		textMessage.setTextLimit(10000);
+		
+		Button btnClear = new Button(this, SWT.NONE);
+		btnClear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textMessage.setText("");
+			}
+		});
+		btnClear.setText("Clear");
 	}
 
 	/**

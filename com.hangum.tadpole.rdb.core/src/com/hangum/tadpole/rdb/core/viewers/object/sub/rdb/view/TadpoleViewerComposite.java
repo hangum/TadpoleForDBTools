@@ -167,7 +167,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-					if (is != null) {
+					if (!is.isEmpty()) {
 						if (is.getFirstElement() != null) {
 							String strTBName = is.getFirstElement().toString();
 							Map<String, String> param = new HashMap<String, String>();
@@ -179,6 +179,11 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 						} else
 							showViewColumns = null;
 
+						viewColumnViewer.setInput(showViewColumns);
+						viewColumnViewer.refresh();
+						TableUtil.packTable(viewColumnViewer.getTable());
+					} else {
+						if(showViewColumns != null) showViewColumns.clear();
 						viewColumnViewer.setInput(showViewColumns);
 						viewColumnViewer.refresh();
 						TableUtil.packTable(viewColumnViewer.getTable());
@@ -306,6 +311,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			viewListViewer.refresh();
 			
 			TableUtil.packTable(viewListViewer.getTable());
+			
 		} catch (Exception e) {
 			logger.error("view refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +50,7 @@ public class ExecuteOtherSQL {
 			final RequestQuery reqQuery, 
 			final UserDBDAO userDB,
 			final String userType,
-			final String userEmail) throws Exception 
+			final String userEmail) throws SQLException, Exception 
 	{
 		if(!PermissionChecker.isExecute(userType, userDB, reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);

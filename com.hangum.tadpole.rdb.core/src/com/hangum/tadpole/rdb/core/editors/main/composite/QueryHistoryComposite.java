@@ -77,7 +77,8 @@ public class QueryHistoryComposite extends Composite {
 			public void mouseDoubleClick(MouseEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
 				if(gridItems != null) {
-					appendText(Utils.convHtmlToLine(gridItems[0].getText(2)) + PublicTadpoleDefine.SQL_DELIMITER);
+					String strTmpSQL = gridItems[0].getText(2);
+					appendText(Utils.convHtmlToLine(strTmpSQL));
 				}
 			}
 		});
@@ -98,7 +99,7 @@ public class QueryHistoryComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
 				if(gridItems != null) {
-					appendText(Utils.convHtmlToLine(gridItems[0].getText(2)) + PublicTadpoleDefine.SQL_DELIMITER);
+					appendText(Utils.convHtmlToLine(gridItems[0].getText(2)));
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
 				}
@@ -269,7 +270,7 @@ public class QueryHistoryComposite extends Composite {
 	}
 	
 	private void appendText(String cmd) {
-		getRdbResultComposite().appendText(PublicTadpoleDefine.LINE_SEPARATOR + cmd);
+		getRdbResultComposite().appendText(cmd);
 	}
 
 	@Override

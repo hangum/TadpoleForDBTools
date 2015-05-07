@@ -448,6 +448,10 @@ public class MainEditor extends EditorExtension {
 	 */
 	public void appendText(String strText) {
 		try {
+			if(!StringUtils.endsWith(strText, PublicTadpoleDefine.SQL_DELIMITER)) {
+				strText += PublicTadpoleDefine.SQL_DELIMITER;
+			}
+			
 			browserEvaluate(EditorFunctionService.APPEND_TEXT, strText);
 		} catch(Exception ee){
 			logger.error("query text" , ee); //$NON-NLS-1$
