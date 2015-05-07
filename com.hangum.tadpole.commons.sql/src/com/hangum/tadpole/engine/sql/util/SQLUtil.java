@@ -17,9 +17,6 @@ import java.util.regex.Pattern;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.create.index.CreateIndex;
-import net.sf.jsqlparser.statement.create.table.CreateTable;
-import net.sf.jsqlparser.statement.create.view.CreateView;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
@@ -59,7 +56,7 @@ public class SQLUtil {
 	 * 		PRAGMA는 sqlite의 시스템 쿼리 얻는 거.
 	 * </PRE>
 	 */
-	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*";
+	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*|^PRAGMA.*";
 	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile(PATTERN_STATEMENT, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
