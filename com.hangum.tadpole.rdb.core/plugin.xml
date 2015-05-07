@@ -493,7 +493,7 @@
          <visibility>
             <objectState
                   name="db_type"
-                  value="Apache Hive,Apache Tajo">
+                  value="Apache Hive,Apache Hive2,Apache Tajo">
             </objectState>
          </visibility>
       </objectContribution>

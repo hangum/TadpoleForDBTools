@@ -105,14 +105,14 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		
 		comboDriverType = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboDriverType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
-		comboDriverType.add("Hive Server 1");
-		comboDriverType.setData("Hive Server 1", DBDefine.HIVE_DEFAULT);
+//		comboDriverType.add("Hive Server 1");
+//		comboDriverType.setData("Hive Server 1", DBDefine.HIVE_DEFAULT);
 		
 		comboDriverType.add("Hive Server 2");
 		comboDriverType.setData("Hive Server 2", DBDefine.HIVE2_DEFAULT);
 		
-		comboDriverType.select(1);
-		comboDriverType.setEnabled(false);
+		comboDriverType.select(0);
+//		comboDriverType.setEnabled(false);
 		
 		Label lblHost = new Label(grpConnectionType, SWT.NONE);
 		lblHost.setText(Messages.DBLoginDialog_1);
@@ -206,8 +206,8 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 			
 			textHost.setText("127.0.0.1");
 			textPort.setText("10002");
-			textDatabase.setText("testdb");
-			textUser.setText("hangum");
+			textDatabase.setText("default");
+			textUser.setText("");
 			textPassword.setText("");
 			
 		} else {

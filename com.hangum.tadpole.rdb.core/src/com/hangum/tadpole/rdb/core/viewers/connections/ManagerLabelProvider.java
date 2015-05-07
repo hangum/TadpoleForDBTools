@@ -70,7 +70,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "resources/icons/postgresSQL-add.png";
 		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
 		else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) strBaseImage = "resources/icons/hive-add.png";
-		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "resources/icons/tajo-add.png";
+		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "resources/icons/tajo-add.jpg";
 		else  strBaseImage = "resources/icons/database-add.png";
 		
 		Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, strBaseImage);
