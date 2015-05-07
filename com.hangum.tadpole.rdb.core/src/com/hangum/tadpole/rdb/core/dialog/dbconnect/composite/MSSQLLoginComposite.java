@@ -194,7 +194,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
-			textHost.setText("192.168.32.128"); //$NON-NLS-1$
+			textHost.setText("172.16.187.132"); //$NON-NLS-1$
 			textPort.setText("1433"); //$NON-NLS-1$
 			textDatabase.setText("northwind"); //$NON-NLS-1$
 			textUser.setText("sa"); //$NON-NLS-1$

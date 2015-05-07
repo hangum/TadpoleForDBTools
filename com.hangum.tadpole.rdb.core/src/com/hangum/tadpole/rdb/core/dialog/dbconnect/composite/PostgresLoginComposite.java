@@ -186,10 +186,10 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textHost.setText("127.0.0.1");
 			textPort.setText("5432");
 			textDatabase.setText("tadpole");
-			textUser.setText("postgis");
+			textUser.setText("postgres");
 			textPassword.setText("tadpole");
 			
-			comboSSL.setText("YES");
+			comboSSL.setText("NO");
 			
 		} else {
 			textPort.setText("5432");

@@ -65,7 +65,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "resources/icons/mariadb-add.png";
 		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
 		else if(DBDefine.SQLite_DEFAULT == dbType) 	strBaseImage = "resources/icons/sqlite-add.png";
-		else if(DBDefine.MSSQL_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
+		else if(DBDefine.MSSQL_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
 		else if(DBDefine.CUBRID_DEFAULT == dbType) 	strBaseImage = "resources/icons/cubrid-add.png";
 		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "resources/icons/postgresSQL-add.png";
 		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
