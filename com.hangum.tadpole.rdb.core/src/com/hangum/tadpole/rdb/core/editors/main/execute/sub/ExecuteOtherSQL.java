@@ -121,8 +121,16 @@ public class ExecuteOtherSQL {
 				}
 				
 				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT) statement.execute(reqQuery.getSql());
-				else statement.executeUpdate(reqQuery.getSql());
+				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | 
+					userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT |
+					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
+				) { 
+					
+					statement.execute(reqQuery.getSql());
+				
+				} else {
+					statement.executeUpdate(reqQuery.getSql());
+				}
 				
 			} finally {
 				try { statement.close();} catch(Exception e) {}
