@@ -276,7 +276,7 @@ public class ResultSetUtils {
 				
 				if(logger.isDebugEnabled()) logger.debug("Table name is " + pgsqlMeta.getBaseTableName(i+1));
 			} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
-				mapColumnName.put(i+intStartIndex, "Not support this function");
+				mapColumnName.put(i+intStartIndex, "Apache Hive is not support this method.");
 			} else {
 				if(rsm.getSchemaName(i+1) == null || "".equals(rsm.getSchemaName(i+1))) {
 					if(logger.isDebugEnabled()) logger.debug("Table name is " + rsm.getTableName(i+1) + ", schema name is " + rsm.getSchemaName(i+1));
