@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -62,8 +63,6 @@ import com.hangum.tadpole.manager.core.Messages;
 public class FindUserAndDBRoleDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(FindUserAndDBRoleDialog.class);
 	
-	private int BTN_ADD = IDialogConstants.CLIENT_ID + 1;
-	
 	private UserDBDAO userDBDao;
 	
 	private Text textEMail;
@@ -74,6 +73,8 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	private DateTime dateTimeStart;
 	private DateTime dateTimeEndDay;
 	private DateTime dateTimeEndTime;
+	
+	private TadpoleUserDbRoleDAO tadpoleUserRoleDao;
 
 	/**
 	 * Create the dialog.
@@ -199,47 +200,49 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		dateTimeEndTime.setTime(23, 59, 59);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+	 */
 	@Override
-	protected void buttonPressed(int buttonId) {
-		super.buttonPressed(buttonId);
+	protected void okPressed() {
+		IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
+		if(iss.isEmpty()) return;
+		UserDAO userDAO = (UserDAO)iss.getFirstElement();
 		
-		if(buttonId == BTN_ADD) {
-			IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
-			if(iss.isEmpty()) return;
-			UserDAO userDAO = (UserDAO)iss.getFirstElement();
-			
-			if("NONE".equals(comboRoleType.getText())) {
-				MessageDialog.openError(getShell(), "Error", "Please select Role type.");
-				comboRoleType.setFocus();
-				return;
-			}
-			
-			// 사용자가 해당 디비에 추가 될수 있는지 검사합니다. 
-			try {
-				boolean isAddDBRole = TadpoleSystem_UserRole.isDBAddRole(userDBDao, userDAO);
-				if(isAddDBRole) {
-					if(!MessageDialog.openConfirm(getShell(), "Confirm", Messages.FindUserDialog_4)) return;
-					
-					Calendar calStart = Calendar.getInstance();
-					calStart.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
-
-					Calendar calEnd = Calendar.getInstance();
-					calEnd.set(dateTimeEndDay.getYear(), dateTimeEndDay.getMonth(), dateTimeEndDay.getDay(), dateTimeEndTime.getHours(), dateTimeEndTime.getMinutes(), 00);
-					
-					TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(), userDBDao.getSeq(), comboRoleType.getText(), "*", 
-							new Timestamp(calStart.getTimeInMillis()), 
-							new Timestamp(calEnd.getTimeInMillis())
-							);
-					
-					MessageDialog.openInformation(getShell(), "Comfirm", "Save user role data.");
-				} else {
-					MessageDialog.openError(getShell(), "Comfirm", "Already exist user.");
-				}
-			} catch (Exception e) {
-				logger.error("Is DB add role error.", e);
-				MessageDialog.openError(getShell(), "Error", "Error saveing...\n" + e.getMessage());
-			}
+		if("NONE".equals(comboRoleType.getText())) {
+			MessageDialog.openError(getShell(), "Error", "Please select Role type.");
+			comboRoleType.setFocus();
+			return;
 		}
+		
+		// 사용자가 해당 디비에 추가 될수 있는지 검사합니다. 
+		try {
+			boolean isAddDBRole = TadpoleSystem_UserRole.isDBAddRole(userDBDao, userDAO);
+			if(isAddDBRole) {
+				if(!MessageDialog.openConfirm(getShell(), "Confirm", Messages.FindUserDialog_4)) return;
+				
+				Calendar calStart = Calendar.getInstance();
+				calStart.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
+
+				Calendar calEnd = Calendar.getInstance();
+				calEnd.set(dateTimeEndDay.getYear(), dateTimeEndDay.getMonth(), dateTimeEndDay.getDay(), dateTimeEndTime.getHours(), dateTimeEndTime.getMinutes(), 00);
+				
+				tadpoleUserRoleDao = TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(), userDBDao.getSeq(), comboRoleType.getText(), "*", 
+						new Timestamp(calStart.getTimeInMillis()), 
+						new Timestamp(calEnd.getTimeInMillis())
+						);
+				
+				MessageDialog.openInformation(getShell(), "Comfirm", "Save user role.");
+				
+				super.okPressed();
+			} else {
+				MessageDialog.openError(getShell(), "Comfirm", "Already exist user.");
+			}
+		} catch (Exception e) {
+			logger.error("Is DB add role error.", e);
+			MessageDialog.openError(getShell(), "Error", "Error saveing...\n" + e.getMessage());
+		}
+		
 	}
 	
 	/**
@@ -274,6 +277,10 @@ public class FindUserAndDBRoleDialog extends Dialog {
 			tableColumn.setText(colNames[i]);
 		}
 	}
+	
+	public TadpoleUserDbRoleDAO getUserRoleDAO() {
+		return tadpoleUserRoleDao;
+	}
 
 	/**
 	 * Create contents of the button bar.
@@ -281,7 +288,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, BTN_ADD, "Add", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, "Add", false); //$NON-NLS-1$
 		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false); //$NON-NLS-1$
 	}
 

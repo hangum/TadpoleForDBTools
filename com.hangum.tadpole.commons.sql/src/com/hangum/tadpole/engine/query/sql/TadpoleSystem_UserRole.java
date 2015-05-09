@@ -90,7 +90,7 @@ public class TadpoleSystem_UserRole {
 	 * 
 	 * @throws Exception
 	 */
-	public static void insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType, String accessIp, Timestamp terms_of_use_starttime, Timestamp terms_of_use_endtime) throws Exception {
+	public static TadpoleUserDbRoleDAO insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType, String accessIp, Timestamp terms_of_use_starttime, Timestamp terms_of_use_endtime) throws Exception {
 		TadpoleUserDbRoleDAO userDBRoleDao = new TadpoleUserDbRoleDAO();
 		userDBRoleDao.setUser_seq(userSeq);
 		userDBRoleDao.setDb_seq(dbSeq);
@@ -105,6 +105,8 @@ public class TadpoleSystem_UserRole {
 		
 		// save db access control
 		TadpoleSystem_AccessControl.saveDBAccessControl(userDBRoleDao);
+		
+		return userDBRoleDao;
 	}
 	
 	/**

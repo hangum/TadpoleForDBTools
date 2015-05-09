@@ -566,12 +566,14 @@
 	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #terms_of_use_starttime#, #terms_of_use_endtime#);
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
-		SELECT * 
-		FROM tadpole_user_db_role 
-		WHERE user_seq 	= #user_seq# AND 
-			db_seq 		= #db_seq# AND 
-			access_ip 	= #access_ip# AND
-			delYn = 'NO'
+		SELECT *, b.email, b.name
+		FROM tadpole_user_db_role  a,
+			tadpole_user b 
+		WHERE a.user_seq 	= #user_seq#  
+			AND a.db_seq 		= #db_seq# 
+			AND a.access_ip 	= #access_ip# 
+			AND a.user_seq = b.seq
+			AND a.delYn = 'NO'
 	</selectKey>
 </insert>
 

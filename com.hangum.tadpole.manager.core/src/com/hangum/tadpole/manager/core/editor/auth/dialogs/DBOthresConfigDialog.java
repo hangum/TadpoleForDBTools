@@ -106,20 +106,18 @@ public class DBOthresConfigDialog extends Dialog {
 	protected void okPressed() {
 		if(MessageDialog.openConfirm(getShell(), "Confirm", "Do you want to save?")) {
 			try {
-				final UserDBDAO updateUserDB = new UserDBDAO();
-				updateUserDB.setIs_visible(btnVisible.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
-				updateUserDB.setIs_lock(btnDbLock.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
-				updateUserDB.setSeq(userDB.getSeq());
+				userDB.setIs_visible(btnVisible.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+				userDB.setIs_lock(btnDbLock.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 				
-				TadpoleSystem_UserDBQuery.updateDBOtherInformation(updateUserDB);
+				TadpoleSystem_UserDBQuery.updateDBOtherInformation(userDB);
 			} catch (Exception e) {
 				logger.error("update faile", e);
 			}
+			
+			super.okPressed();
 		} else {
 			return;
 		}
-
-		super.okPressed();
 	}
 	
 	/**
@@ -149,6 +147,14 @@ public class DBOthresConfigDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(300, 200);
+	}
+	
+	/**
+	 * 나중에 결과 리턴용.
+	 * @return
+	 */
+	public UserDBDAO getUserDBDAO() {
+		return userDB;
 	}
 
 }

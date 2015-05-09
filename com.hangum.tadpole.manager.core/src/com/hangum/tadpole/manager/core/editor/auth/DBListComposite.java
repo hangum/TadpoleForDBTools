@@ -154,7 +154,9 @@ public class DBListComposite extends Composite {
 				if(ss.isEmpty()) return;
 				
 				DBOthresConfigDialog othersDialog = new DBOthresConfigDialog(getShell(), (UserDBDAO)ss.getFirstElement());
-				othersDialog.open();
+				if(othersDialog.open() == Dialog.OK) {
+					tvDBList.refresh(othersDialog.getUserDBDAO());
+				}
 			}
 		});
 		tltmOtherInformation.setEnabled(false);
@@ -171,8 +173,16 @@ public class DBListComposite extends Composite {
 				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 				if(ss.isEmpty()) return;
 				
+				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
+				
 				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell(), (UserDBDAO)ss.getFirstElement());
-				dialog.open();
+				if(Dialog.OK == dialog.open()) {
+					TadpoleUserDbRoleDAO userRole = dialog.getUserRoleDAO();
+					userRole.setParent(userDB);
+					userDB.getListChildren().add(userRole);
+					
+					tvDBList.refresh(userDB);
+				}
 			}
 		});
 		tltmAddUser.setToolTipText("Add user");
@@ -398,10 +408,8 @@ public class DBListComposite extends Composite {
 			UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 			
 			final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
-			final int ret = dialog.open();
-			
-			if(ret == Dialog.OK) {
-				initData();
+			if(dialog.open() == Dialog.OK) {
+				tvDBList.refresh(dialog.getDTO());
 			}
 		}
 	}
@@ -434,7 +442,11 @@ public class DBListComposite extends Composite {
 
 		try {
 			TadpoleSystem_UserDBQuery.removeUserRoleDB(userDBRole.getSeq());
-			initData();
+			UserDBDAO userDB = userDBRole.getParent();
+			userDB.getListChildren().remove(userDBRole);
+			
+			tvDBList.refresh(userDB);
+
 		} catch (Exception e) { 
 			logger.error("delete user exception", e);				
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
