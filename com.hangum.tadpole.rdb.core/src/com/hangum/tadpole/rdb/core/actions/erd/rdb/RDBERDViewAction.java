@@ -52,11 +52,11 @@ public class RDBERDViewAction implements IViewActionDelegate {
 	}
 	
 	public void run(UserDBDAO userDB) {
-		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IPageLayout.ID_OUTLINE);
-		} catch (PartInitException e1) {
-			logger.error("show Outline view", e1);
-		}
+//		try {
+//			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IPageLayout.ID_OUTLINE);
+//		} catch (PartInitException e1) {
+//			logger.error("show Outline view", e1);
+//		}
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {

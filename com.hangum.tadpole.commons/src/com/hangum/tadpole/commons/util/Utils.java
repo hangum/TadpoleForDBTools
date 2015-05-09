@@ -44,7 +44,7 @@ public class Utils {
 	}
 	
 	public static String convHtmlToLine(String str) {
-		return StringUtils.replace(str, "<br/>", PublicTadpoleDefine.LINE_SEPARATOR);
+		return StringUtils.replace(StringEscapeUtils.unescapeHtml(str), "<br/>", PublicTadpoleDefine.LINE_SEPARATOR);
 	}
 	
 	/**

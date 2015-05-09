@@ -155,6 +155,9 @@ public class ResultMainComposite extends Composite {
 	public void executeCommand(final RequestQuery reqQuery) {
 		if(logger.isDebugEnabled()) logger.debug("==> executeQuery user query is " + reqQuery.getOriginalSql());
 		
+		// selected first tab request quring.
+		resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
+		
 		try {
 			// 요청쿼리가 없다면 무시합니다. 
 			if(StringUtils.isEmpty(reqQuery.getSql())) return;

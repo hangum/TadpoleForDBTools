@@ -78,6 +78,7 @@ public class QueryHistoryComposite extends Composite {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
 				if(gridItems != null) {
 					String strTmpSQL = gridItems[0].getText(2);
+					if(logger.isDebugEnabled()) logger.debug(strTmpSQL);
 					appendText(Utils.convHtmlToLine(strTmpSQL));
 				}
 			}

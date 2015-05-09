@@ -163,7 +163,7 @@ public class PublicTadpoleDefine {
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
 	
 	/** query type */
-	public static enum QUERY_TYPE {SELECT, INSERT, UPDATE, DELETE, DDL, UNKNWON};
+	public static enum QUERY_TYPE {SELECT, INSERT, UPDATE, DELETE, DDL, UNKNOWN};
 	
 	/** query ddl type, 현재 jsqlparser에서는 이 세가지 타입만을 지원합니다 */
 	public static enum QUERY_DDL_TYPE {TABLE, VIEW, INDEX, UNKNOWN};

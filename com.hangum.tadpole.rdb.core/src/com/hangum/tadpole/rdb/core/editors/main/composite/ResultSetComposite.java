@@ -346,7 +346,10 @@ public class ResultSetComposite extends Composite {
 				} else {
 					String strText = item.getText(i);
 					if(strText == null || "".equals(strText)) return; //$NON-NLS-1$
-					strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					
+					// if select value is null can 
+					if(mapColumns.get(i) == null) strText = "null";
+					else strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					
 					//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
 					
@@ -981,7 +984,7 @@ public class ResultSetComposite extends Composite {
 			}
 		
 			if(reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.DDL |
-					reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.UNKNWON
+					reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.UNKNOWN
 					) {
 				refreshExplorerView(getUserDB(), reqQuery.getQueryDDLType());
 			}

@@ -290,7 +290,9 @@ public class ExecutedSQLEditor extends EditorPart {
 				SQLHistoryDAO sqlHistoryDao = mapSQLHistory.get(gridItems[0].getText(0));
 				if (null != sqlHistoryDao) {
 					UserDBDAO dbDao = TadpoleSystem_UserDBQuery.getUserDBInstance(sqlHistoryDao.getDbSeq());
-					FindEditorAndWriteQueryUtil.run(dbDao, Utils.convHtmlToLine(gridItems[0].getText(3)) + PublicTadpoleDefine.SQL_DELIMITER, PublicTadpoleDefine.DB_ACTION.TABLES);
+					FindEditorAndWriteQueryUtil.run(dbDao, 
+								Utils.convHtmlToLine(gridItems[0].getText(3)) + PublicTadpoleDefine.SQL_DELIMITER, 
+								PublicTadpoleDefine.DB_ACTION.TABLES);
 				}
 			} catch (Exception e) {
 				logger.error("find editor and write query", e);

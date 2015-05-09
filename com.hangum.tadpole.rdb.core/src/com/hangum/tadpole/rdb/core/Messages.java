@@ -175,6 +175,8 @@ public class Messages extends NLS {
 	public static String ExplorerViewer_76;
 	public static String ExplorerViewer_81;
 	public static String ExplorerViewer_86;
+	public static String ExtensionBrowserAction_1;
+	public static String ExtensionBrowserAction_3;
 	public static String ExtensionBrowserURLDialog_0;
 	public static String ExtensionBrowserURLDialog_18;
 	public static String ExtensionBrowserURLDialog_21;
