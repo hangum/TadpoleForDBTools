@@ -344,15 +344,8 @@ public class ResultSetComposite extends Composite {
 				// 첫번째 컬럼이면 전체 로우의 데이터를 상세하게 뿌려줍니
 				if(i == 0) {
 				} else {
-					String strText = item.getText(i);
-					if(strText == null || "".equals(strText)) return; //$NON-NLS-1$
-					
-					// if select value is null can 
-					if(mapColumns.get(i) == null) strText = "null";
-					else strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					
 					//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
-					
 					Object columnObject = mapColumns.get(i);
 					
 					// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
@@ -400,6 +393,12 @@ public class ResultSetComposite extends Composite {
 							logger.error("Clob column echeck", e); //$NON-NLS-1$
 						}
 					}else{
+						String strText = columnObject.toString();
+						
+						// if select value is null can 
+						if(columnObject == null) strText = "null";
+						else strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						
 						appendTextAtPosition(strText);
 					}
 				}	// end if first column
@@ -678,7 +677,7 @@ public class ResultSetComposite extends Composite {
 					public void run() {
 						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
 						if(jobEvent.getResult().isOK()) {
-							executeFinish(sqlHistoryDAO);
+							executeFinish(reqQuery, sqlHistoryDAO);
 						} else {
 							executeErrorProgress(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
@@ -925,7 +924,7 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
-	public void executeFinish(SQLHistoryDAO executingSQLDAO) {
+	public void executeFinish(RequestQuery reqQuery, SQLHistoryDAO executingSQLDAO) {
 		if(SQLUtil.isStatement(reqQuery.getSql())) {			
 
 			// table data를 생성한다.
@@ -936,7 +935,7 @@ public class ResultSetComposite extends Composite {
 			if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false;
 			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter, isEditable);
 			
-			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
+			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
 			tvQueryResult.setContentProvider(new ArrayContentProvider());
 			
 			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.

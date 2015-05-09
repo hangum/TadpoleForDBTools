@@ -32,9 +32,9 @@ public class AccessCtlObjectDAO {
 	 * This time only SELECT - hangum. 15.04.27
 	 */
 	String type; 
-	String obj_name;
+	String obj_name = "";
 	String dontuse_object = PublicTadpoleDefine.YES_NO.NO.name();
-	String detail_obj;
+	String detail_obj = "";
 	String description;
 	String delyn;
 	Timestamp create_date;

@@ -150,7 +150,7 @@ public class UserDBDAO {
     protected String question_dml = "";
     
     protected ManagerListDTO parent;
-    protected List<UserDBResourceDAO> listUserDBErd;
+    protected List<UserDBResourceDAO> listUserDBErd = new ArrayList<UserDBResourceDAO>();
     /** list of table column filter */
 //    protected List<TableFilterDAO> listTableColumnFilter;
     

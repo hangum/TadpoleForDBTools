@@ -17,14 +17,12 @@ import java.util.Map;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- *
- *
+ * db access control
  *
  * @author hangum
  * @version 1.6.1

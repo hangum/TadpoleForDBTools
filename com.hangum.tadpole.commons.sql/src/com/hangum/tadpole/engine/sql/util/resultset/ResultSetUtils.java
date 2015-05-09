@@ -204,9 +204,9 @@ public class ResultSetUtils {
 					if(StringUtils.containsIgnoreCase(strTableOfAccessColumns, strResultColumn)
 							| acDao.getDontuse_object().equals("YES")
 					) {
-						if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
+//						if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
 					} else {
-						if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
+//						if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
 						mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
 						intColumnCnt++;
 					}

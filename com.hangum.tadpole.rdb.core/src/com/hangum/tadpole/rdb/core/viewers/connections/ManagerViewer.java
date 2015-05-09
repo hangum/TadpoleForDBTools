@@ -340,15 +340,15 @@ public class ManagerViewer extends ViewPart {
 			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
-					if(userDB.getListUserDBErd() != null) userDB.getListUserDBErd().clear();
+					List<UserDBResourceDAO> listResources = userDB.getListUserDBErd();
+					listResources.clear();
+					
 					try {
-						List<UserDBResourceDAO> listUserDBErd = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
-						if(null != listUserDBErd) {
-							for (UserDBResourceDAO userDBResouceDAO : listUserDBErd) {
-								userDBResouceDAO.setParent(userDB);
-							}
-							userDB.setListUserDBErd(listUserDBErd);
+						listResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
+						for (UserDBResourceDAO userDBResouceDAO : listResources) {
+							userDBResouceDAO.setParent(userDB);
 						}
+							userDB.setListUserDBErd(listResources);
 					} catch (Exception e) {
 						logger.error("erd list", e); //$NON-NLS-1$
 						
@@ -359,7 +359,7 @@ public class ManagerViewer extends ViewPart {
 					managerTV.refresh(userDB);					
 					managerTV.expandToLevel(userDB, 3);
 					
-					break;
+					return;
 				}	// if(userDB.getSeq() == dbSeq) {
 				
 			}	// for(UserDBDAO

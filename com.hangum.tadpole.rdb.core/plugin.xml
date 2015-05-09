@@ -683,7 +683,7 @@
       <objectContribution
             adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.resource"
-            objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+            objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
          <action
                class="com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDDeleteAction"
                enablesFor="1"
@@ -710,7 +710,7 @@
          </adapter>
       </factory>
       <factory
-            adaptableType="com.hangum.tadpole.engine.query.dao.system.UserDBDAO"
+            adaptableType="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO"
             class="com.hangum.tadpole.rdb.core.actions.adapter.resource.ResourceTypeAdapterFactory">
          <adapter
                type="org.eclipse.ui.IActionFilter">

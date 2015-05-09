@@ -203,7 +203,7 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		textHomePage.setText(GetPreferenceGeneral.getValue(PreferenceDefine.DEFAULT_HOME_PAGE, PreferenceDefine.DEFAULT_HOME_PAGE_VALUE)); //$NON-NLS-1$
 		
 		String use = GetPreferenceGeneral.getValue(PreferenceDefine.DEFAULT_HOME_PAGE_USE, PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE);//GetPreferenceGeneral.getDefaultHomePageUse();
-		if(Boolean.getBoolean(use)) {
+		if(Boolean.parseBoolean(use)) {
 			btnCheckButtonHomepage.setSelection(true);
 		} else {
 			btnCheckButtonHomepage.setSelection(false);
