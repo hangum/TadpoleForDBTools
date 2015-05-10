@@ -52,7 +52,7 @@ public class DailySummaryReportJOB implements Job {
 				
 				
 				// 현재(14.06.02)는 mysql 일 경우만 섬머리 레포트를 보여줍니다.
-				if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDBDAO.getIs_summary_report())) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDBDAO.getIs_summary_report())) {
 					if(userDBDAO.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDBDAO.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
 						String strSummarySQl = MySQLSummaryReport.getSQL(userDBDAO.getDb());

@@ -165,7 +165,7 @@ public abstract class ProcedureExecutor {
 	 */
 	protected void setResultCursor(ResultSet rs) throws Exception {
 		Map<Integer, String> mapColumns = ResultSetUtils.getColumnName(rs);
-		Map<Integer, String> mapTableColum = ResultSetUtils.getColumnTableName(rs);
+		Map<Integer, String> mapTableColum = ResultSetUtils.getColumnTableName(userDB, rs);
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
 		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(rs, 1000);
 

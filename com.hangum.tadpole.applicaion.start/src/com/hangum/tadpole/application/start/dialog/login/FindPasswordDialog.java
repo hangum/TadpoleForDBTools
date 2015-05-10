@@ -13,6 +13,7 @@ package com.hangum.tadpole.application.start.dialog.login;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -23,15 +24,22 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
+import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpold.commons.libs.core.mails.template.TemporaryPasswordMailBodyTemplate;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.Utils;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.swtdesigner.ResourceManager;
 
 /**
+ * find password
  * 
- * 
- * @author billygoo
+ * @author hangum
  *
  */
 public class FindPasswordDialog extends Dialog {
@@ -71,6 +79,8 @@ public class FindPasswordDialog extends Dialog {
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 		
+		textEmail.setFocus();
+		
 		return container;
 	}
 
@@ -88,14 +98,59 @@ public class FindPasswordDialog extends Dialog {
 			textEmail.setFocus();
 			return;
 		}
-//		UserDAO validUser;
-//		try {
-//			validUser = TadpoleSystem_UserQuery.checkSecurityHint(strEmail, strQuestion, strAnswer);
-//		} catch (Exception e) {
-//			logger.error("Find password exception", e); //$NON-NLS-1$
-//			MessageDialog.openError(getShell(), Messages.LoginDialog_7, e.getMessage());
-//			return;
-//		}
+		
+		UserDAO userDao = new UserDAO();
+		userDao.setEmail(strEmail);
+		String strTmpPassword = Utils.getUniqueDigit(12);
+		userDao.setPasswd(strTmpPassword);
+		
+		try {
+			TadpoleSystem_UserQuery.updateUserPasswordWithID(userDao);
+			sendEmailAccessKey(strEmail, strTmpPassword);
+			MessageDialog.openInformation(getShell(), "Confirm", "Send you temporary password. Check your email.");
+		} catch (Exception e) {
+			logger.error("password initialize and send email ", e);
+			
+			MessageDialog.openError(getShell(), "Error", "Rise Exception:\n\t" + e.getMessage());
+		}
+		
+		
 		super.okPressed();
+	}
+	
+	/**
+	 * Create contents of the button bar.
+	 * @param parent
+	 */
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false); //$NON-NLS-1$
+	}
+	
+	/**
+	 * send password
+	 * 
+	 * @param email
+	 * @param strConfirmKey
+	 */
+	private void sendEmailAccessKey(String email, String strConfirmKey) {
+		try {
+			// manager 에게 메일을 보낸다.
+			EmailDTO emailDao = new EmailDTO();
+			emailDao.setSubject("Temporay password."); //$NON-NLS-1$
+			// 
+			// 그룹, 사용자, 권한.
+			// 
+			TemporaryPasswordMailBodyTemplate mailContent = new TemporaryPasswordMailBodyTemplate();
+			String strContent = mailContent.getContent(email, strConfirmKey);
+			emailDao.setContent(strContent);
+			emailDao.setTo(email);
+			
+			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
+			sendEmail.sendMail(emailDao);
+		} catch(Exception e) {
+			logger.error("Error send email", e); //$NON-NLS-1$
+		}
 	}
 }

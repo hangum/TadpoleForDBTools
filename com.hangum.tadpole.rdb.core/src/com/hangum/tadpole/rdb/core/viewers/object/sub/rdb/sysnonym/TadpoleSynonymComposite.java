@@ -274,8 +274,10 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 				if (userDB != null) {
 					IStructuredSelection is = (IStructuredSelection) synonymListViewer.getSelection();
 
-					manager.add(dropAction_Synonym);
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					if(!isDDLLock()) {
+						manager.add(dropAction_Synonym);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					}
 					manager.add(refreshAction_Synonym);
 
 					if (!is.isEmpty()) {

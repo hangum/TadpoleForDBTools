@@ -40,6 +40,11 @@ public class ResultSetUtilDTO {
 	private Map<Integer, String> columnName = new HashMap<Integer, String>();
 	
 	/** 
+	 * column label 이름. <columnIndex, name>
+	 */
+	private Map<Integer, String> columnLabelName = new HashMap<Integer, String>();
+	
+	/** 
 	 * column of table name <columnIndex, name>
 	 */
 	private Map<Integer, String> columnTableName = new HashMap<Integer, String>();
@@ -98,15 +103,23 @@ public class ResultSetUtilDTO {
 	 * @param isResultComma
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int limitCount) throws Exception {
+	public ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, final UserDBDAO userDB, 
+								final boolean isShowRownum, final ResultSet rs, final int limitCount) throws Exception {
 		this.statementType = statementType;
 		this.userDB = userDB;
 		
 		if(rs != null) {
-			columnName = ResultSetUtils.getColumnName(isShowRownum, rs);
-			columnTableName = ResultSetUtils.getColumnTableName(isShowRownum, rs);
+			columnTableName = ResultSetUtils.getColumnTableName(userDB, isShowRownum, rs);
+			columnName 		= ResultSetUtils.getColumnName(userDB, columnTableName, isShowRownum, rs);
+			columnLabelName = ResultSetUtils.getColumnLabelName(userDB, columnTableName, isShowRownum, rs);
 			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
-			dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
+			
+			if(isShowRownum && (columnName.size() == 1)) {
+				dataList = new TadpoleResultSet();
+			} else {
+				dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
+			}
+			
 			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());
 		}
 	}
@@ -206,5 +219,19 @@ public class ResultSetUtilDTO {
 	public void setColumnTableName(Map<Integer, String> columnTableName) {
 		this.columnTableName = columnTableName;
 	}
-	
+
+	/**
+	 * @return the columnLabelName
+	 */
+	public Map<Integer, String> getColumnLabelName() {
+		return columnLabelName;
+	}
+
+	/**
+	 * @param columnLabelName the columnLabelName to set
+	 */
+	public void setColumnLabelName(Map<Integer, String> columnLabelName) {
+		this.columnLabelName = columnLabelName;
+	}
+
 }

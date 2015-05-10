@@ -105,14 +105,14 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		
 		comboDriverType = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboDriverType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
-		comboDriverType.add("Hive Server 1");
-		comboDriverType.setData("Hive Server 1", DBDefine.HIVE_DEFAULT);
+//		comboDriverType.add("Hive Server 1");
+//		comboDriverType.setData("Hive Server 1", DBDefine.HIVE_DEFAULT);
 		
 		comboDriverType.add("Hive Server 2");
 		comboDriverType.setData("Hive Server 2", DBDefine.HIVE2_DEFAULT);
 		
-		comboDriverType.select(1);
-		comboDriverType.setEnabled(false);
+		comboDriverType.select(0);
+//		comboDriverType.setEnabled(false);
 		
 		Label lblHost = new Label(grpConnectionType, SWT.NONE);
 		lblHost.setText(Messages.DBLoginDialog_1);
@@ -206,8 +206,8 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 			
 			textHost.setText("127.0.0.1");
 			textPort.setText("10002");
-			textDatabase.setText("testdb");
-			textUser.setText("hangum");
+			textDatabase.setText("default");
+			textUser.setText("");
 			textPassword.setText("");
 			
 		} else {
@@ -284,18 +284,18 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		// others connection 정보를 입력합니다.
 //		setOtherConnectionInfo();
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
-		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
-//		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+//		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 //		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
 //		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
 		
-		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
-		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
 		// 처음 등록자는 권한이 어드민입니다.
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());

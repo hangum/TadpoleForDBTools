@@ -30,7 +30,7 @@ public class CubridTest {
 			System.out.println("Start cubrid...............................");
 
 			Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-			conn = DriverManager.getConnection("jdbc:cubrid:192.168.32.128:33000:demodb:::", "dba", "");
+			conn = DriverManager.getConnection("jdbc:cubrid:172.16.187.132:33000:demodb:::", "dba", "");
 
 			String sql = "select name, players from event";
 			System.out.println("success cubrid connect");

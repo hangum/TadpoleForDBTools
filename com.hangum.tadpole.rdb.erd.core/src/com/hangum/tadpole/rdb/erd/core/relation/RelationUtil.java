@@ -69,7 +69,7 @@ public class RelationUtil {
 		} else if(DBDefine.CUBRID_DEFAULT  == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
 		
-		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB) | DBDefine.HIVE2_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, new ArrayList<ReferencedTableDAO>());
 		// tajo relation not set
 		} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
@@ -97,7 +97,7 @@ public class RelationUtil {
 		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
 			
-		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB) | DBDefine.HIVE2_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, new ArrayList<ReferencedTableDAO>());
 		} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			

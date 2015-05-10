@@ -109,7 +109,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		fileNameLabel = new Text(grpConnectionType, SWT.BORDER);
 		fileNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		fileNameLabel.setEnabled(false);
+//		fileNameLabel.setEnabled(false);
 		fileNameLabel.setEditable(false);
 		fileNameLabel.setText(INITIAL_TEXT);
 		

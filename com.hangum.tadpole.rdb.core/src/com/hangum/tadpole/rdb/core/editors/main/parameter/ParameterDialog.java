@@ -100,7 +100,7 @@ public class ParameterDialog extends Dialog {
 
 		this.userDB = userDB;
 		this.calcParamCount(executeQuery);
-		makeParamCount();
+		this.makeParamCount();
 	}
 
 	/**
@@ -206,6 +206,7 @@ public class ParameterDialog extends Dialog {
 		return param;
 	}
 
+//	private Map<Integer, String> mapParamType = new HashMap<Integer, String>();
 	protected void calcParamCount(String executeQuery) throws Exception {
 
 		java.sql.Connection javaConn = null;
@@ -220,20 +221,23 @@ public class ParameterDialog extends Dialog {
 			} else {
 				paramCount = 0;
 			}
-
+			
+//			for(int i=0; i<pmd.getParameterCount(); i++) {
+//				mapParamType.put(i, pmd.getParameterTypeName(i));
+//			}
+			
 		} catch (Exception e) {
 			logger.error("Count parameter error", e);
 			paramCount = 0;
 			throw e;
 		} finally {
 			try {
-				stmt.close();
-			} catch (Exception e) {
-			}
+				if(stmt != null) stmt.close();
+			} catch (Exception e) {}
+			
 			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
+				if(javaConn != null) javaConn.close();
+			} catch (Exception e) {}
 		}
 	}
 
@@ -246,6 +250,7 @@ public class ParameterDialog extends Dialog {
 			map.put(2, RDBTypeToJavaTypeUtils.supportParameterTypes(userDB)[0]);
 			// map.put(2, "VARCHAR");
 			map.put(3, "");
+			
 			parameters.add(map);
 		}
 	}

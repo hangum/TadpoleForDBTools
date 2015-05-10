@@ -223,7 +223,7 @@ public class TadpoleSystem_UserQuery {
 //	
 //		if(null == userInfo) {
 //			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
-//		} else if(PublicTadpoleDefine.YES_NO.NO.toString().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
+//		} else if(PublicTadpoleDefine.YES_NO.NO.name().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
 //			throw new Exception(Messages.TadpoleSystem_UserQuery_6);
 //		} else {
 //			if(question.equals(CipherManager.getInstance().decryption(userInfo.getSecurity_question())) &&
@@ -320,6 +320,18 @@ public class TadpoleSystem_UserQuery {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 유저의 패스워드 번경
+	 * @param user
+	 * @throws Exception
+	 */
+	public static void updateUserPasswordWithID(UserDAO user) throws Exception {
+		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserPasswordWithID", user); //$NON-NLS-1$
 	}
 	
 	/**

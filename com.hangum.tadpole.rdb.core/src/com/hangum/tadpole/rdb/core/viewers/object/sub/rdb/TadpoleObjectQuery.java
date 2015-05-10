@@ -24,6 +24,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteForeignKeyListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -41,19 +42,18 @@ public class TadpoleObjectQuery {
 	 * 선택된 Table 정보를 리턴합니다.
 	 * 
 	 * @param userDB
-	 * @param table
+	 * @param tableDao
 	 * @throws Exception
 	 */
-	public static List<TableColumnDAO> makeShowTableColumns(UserDBDAO userDB, TableDAO table) throws Exception {
+	public static List<TableColumnDAO> makeShowTableColumns(UserDBDAO userDB, TableDAO tableDao) throws Exception {
 		List<TableColumnDAO> returnColumns = new ArrayList<TableColumnDAO>();
 		
 		Map<String, String> mapParam = new HashMap<String, String>();
 		mapParam.put("db", userDB.getDb());
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-			mapParam.put("table", table.getSysName());
-		} else {
-			mapParam.put("table", table.getName());
-		}
+		String strTableName = "";
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) strTableName = tableDao.getSysName();
+		else 												strTableName = tableDao.getName();
+		mapParam.put("table", strTableName);
 
 		if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -78,16 +78,18 @@ public class TadpoleObjectQuery {
 					}
 				}
 			}catch(Exception e){
-				logger.error("not found foreignkey for " + table.getName());
+				logger.error("not found foreignkey for " + tableDao.getName());
 			}
 		}
 		
-		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		// if find the keyword is add system quote.
 		for(TableColumnDAO td : returnColumns) {
 			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
 		}
 		
+		returnColumns = DBAccessCtlManager.getInstance().getColumnFilter(tableDao, returnColumns, userDB);
+		
 		return returnColumns;
 	}
-
+	
 }

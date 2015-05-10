@@ -45,7 +45,7 @@ public class TadpoleSecurityManager {
 	 * @return
 	 */
 	public boolean isLockStatus(final UserDBDAO userDB) {
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
 			return true;
 		}
 		
@@ -59,7 +59,7 @@ public class TadpoleSecurityManager {
 	 * @return
 	 */
 	public boolean isLock(final UserDBDAO userDB) {
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
 			if(!SessionManager.isUnlockDB(userDB)) {
 				return false;
 			}

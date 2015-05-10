@@ -448,6 +448,10 @@ public class MainEditor extends EditorExtension {
 	 */
 	public void appendText(String strText) {
 		try {
+			if(!StringUtils.endsWith(strText, PublicTadpoleDefine.SQL_DELIMITER)) {
+				strText += PublicTadpoleDefine.SQL_DELIMITER;
+			}
+			
 			browserEvaluate(EditorFunctionService.APPEND_TEXT, strText);
 		} catch(Exception ee){
 			logger.error("query text" , ee); //$NON-NLS-1$
@@ -569,6 +573,22 @@ public class MainEditor extends EditorExtension {
 		
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
+	}
+	
+	/**
+	 * start sql transaction;
+	 */
+	public void beginTransaction() {
+		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if(tiAutoCommit.isEnabled()) {
+					tiAutoCommit.setEnabled(true);
+					tiAutoCommit.setSelection(true);
+					tiAutoCommitCommit.setEnabled(true);
+					tiAutoCommitRollback.setEnabled(true);
+				}
+			}
+		});
 	}
 	
 	/**

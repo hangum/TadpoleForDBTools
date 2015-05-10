@@ -13,7 +13,6 @@ package com.hangum.tadpole.preference.ui;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,7 +26,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -205,7 +203,7 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		textHomePage.setText(GetPreferenceGeneral.getValue(PreferenceDefine.DEFAULT_HOME_PAGE, PreferenceDefine.DEFAULT_HOME_PAGE_VALUE)); //$NON-NLS-1$
 		
 		String use = GetPreferenceGeneral.getValue(PreferenceDefine.DEFAULT_HOME_PAGE_USE, PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE);//GetPreferenceGeneral.getDefaultHomePageUse();
-		if(Boolean.getBoolean(use)) {
+		if(Boolean.parseBoolean(use)) {
 			btnCheckButtonHomepage.setSelection(true);
 		} else {
 			btnCheckButtonHomepage.setSelection(false);

@@ -155,7 +155,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
@@ -177,7 +177,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		});
 		tableListViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
@@ -411,7 +411,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		this.userDB = selectUserDb;
 		
 		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
-		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) {
+		if(PublicTadpoleDefine.YES_NO.NO.name().equals(this.userDB.getIs_showtables())) {
 			showTables.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, "")); //$NON-NLS-2$
 			
 			tableListViewer.setInput(showTables);

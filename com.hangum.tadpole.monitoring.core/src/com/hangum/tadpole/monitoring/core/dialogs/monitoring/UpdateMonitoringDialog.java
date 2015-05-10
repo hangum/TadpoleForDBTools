@@ -334,7 +334,7 @@ public class UpdateMonitoringDialog extends Dialog {
 		 
 		 mainDao.setCron_exp("*/10 * * * * ?");
 		 mainDao.setQuery(textQuery.getText());
-		 mainDao.setIs_result_save(PublicTadpoleDefine.YES_NO.YES.toString());
+		 mainDao.setIs_result_save(PublicTadpoleDefine.YES_NO.YES.name());
 		 mainDao.setReceiver(textReceiver.getText());
 		 
 		 mainDao.setParam_1_column(textParameter1_name.getText());

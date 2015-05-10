@@ -10,9 +10,20 @@
  ******************************************************************************/
 package com.hangum.tadpole.sql.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.delete.Delete;
+import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.update.Update;
+
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.sql.rule.SQLFormatRule;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 
 /**
  * SQL parser
@@ -26,65 +37,36 @@ public class SQLParser {
 	 */
 	private static final Logger logger = Logger.getLogger(SQLParser.class);
 	
-//	/**
-//	 * sql parser
-//	 * 
-//	 * @param sql
-//	 * @return
-//	 */
-//	public static INode parserSql(String sql) {
-//		INode node = new ASTRoot();
-//		ISqlParser parser = null;
-//		
-//		try {
-//			parser = new SqlParser(sql, SQLFormatRule.getSqlFormatRule());
-//			parser.parse(node);
-//			
-//		} catch(Exception e) {
-//			logger.error("SQL Parser exeception", e);
-//		} finally {
-//			if(parser != null) parser = null;
-//		}
-//		
-//		return node;
-//	}
-//	
-//	public static SqlFormatRule getSqlFormatRule() {
-//		SqlFormatRule rule = new SqlFormatRule();
-//		rule.setRemoveEmptyLine(true);
-//
-//		rule.setOutSqlSeparator(SqlFormatRule.SQL_SEPARATOR_SEMICOLON);
-//		rule.setRemoveEmptyLine(true);
-//		rule.setIndentEmptyLine(true);
-//		rule.setConvertName(ISqlFormatRule.CONVERT_STRING_NONE);
-//		rule.setConvertKeyword(ISqlFormatRule.CONVERT_STRING_NONE);
-//		rule.setNewLineBeforeAndOr(false);
-//		rule.setNewLineBeforeComma(false);
-//		
-//		rule.setWordBreak(false);
-//		
-//		return rule;
-//	}
-//	
-//	public static void main(String[] args) throws Exception {
-//		INode node = new ASTRoot();
-//		ISqlParser parser = new SqlParser("SELECT * FROM sample_table a WHERE a.id = ?", getSqlFormatRule());
-//		parser.parse(node);
-//		
-//		ASTVisitorToString visitor = new ASTVisitorToString();
-//		node.accept(visitor, null);
-//		visitor.print();
-//		
-//		System.out.println("[name]" +  node.getName() );
-//		
-//		System.out.println( node.getChildrenSize() );
-//		System.out.println( node.getASTSelectStatement().getName() );
-//		
-//		
-////		System.out.println("[Aliase ]" + node.getASTAlias() );
-////		System.out.println( node.getName() );
-//		
-//		
-//		
-//	}
+
+	public static SQLParserVO sqlParser(String strSql) {
+		SQLParserVO sqlParserVO = new SQLParserVO();
+		PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.UNKNOWN;
+		
+		try {
+			Statement statement = CCJSqlParserUtil.parse(strSql);
+			if(statement instanceof Select) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+				
+				Select select = (Select)statement;
+				
+				
+//				logger.debug( "table name is " + ((Select) statement).getTable().getName() );
+				
+			} else if(statement instanceof Insert) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.INSERT;
+			} else if(statement instanceof Update) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.UPDATE;
+			} else if(statement instanceof Delete) {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.DELETE;
+			} else {
+				queryType = PublicTadpoleDefine.QUERY_TYPE.DDL;
+			}
+			
+		} catch (Throwable e) {
+			logger.error(String.format("sql parse exception. [ %s ]", strSql),  e);
+			queryType = PublicTadpoleDefine.QUERY_TYPE.UNKNOWN;
+		}
+		
+		return sqlParserVO;
+	}
 }

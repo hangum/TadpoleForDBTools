@@ -32,7 +32,7 @@ public class MongoDBCollectionFieldsLabelProvider extends LabelProvider implemen
 		CollectionFieldDAO dao = (CollectionFieldDAO) element;
 		
 		if(columnIndex == 0) {
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(dao.getKey())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getKey())) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/index_column.png"); //$NON-NLS-1$
 			}
 			

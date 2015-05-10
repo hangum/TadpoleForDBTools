@@ -32,22 +32,6 @@
 </select>
 
 <!-- 
-	UPDATE System version 
- -->
-<!-- <update id="update_system" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO">
-    UPDATE tadpole_system SET
-		major_version = #major_version#, sub_version = #sub_version# 
-</update> -->
-
-<!-- 
-	신규 시스템 정보를 입력합니다.
- -->
-<!-- <insert id="newSystem" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO">
-	INSERT INTO tadpole_system(name, major_version, sub_version, information)
-	VALUES (#name#, #major_version#, #sub_version#, #information#)    
-</insert> -->
-
-<!-- 
 	=====================================================================
 	Tadpole Sequence
 	=====================================================================
@@ -65,47 +49,6 @@
 	UPDATE tadpole_sequence SET no=#no# WHERE name = #name# 
 </update>
     
-<!-- 
-	============================================================================================================================
-	user group
-	============================================================================================================================
- -->
-<!-- <select id="isUserGroup" resultClass="com.hangum.tadpole.engine.query.dao.system.UserGroupDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserGroupDAO">
-	SELECT name 
-	FROM user_group 
-	WHERE 
-		name = #name#
-</select> -->
-
-<!-- 
-	신규 그룹 등록.
- 
-<insert id="newGroup" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserGroupDAO">
-	INSERT INTO user_group (name)
-	VALUES(#name#)
-	
-	<selectKey keyProperty="seq" resultClass="int">
-		select seq from user_group
-		where name = #name# 
-	</selectKey>
-</insert>
-
-<select id ="userDBList" resultClass="com.hangum.tadpole.engine.query.dao.system.UserGroupDAO">
-	SELECT * 
-	FROM user_group
-	WHERE delYn = 'NO'
-</select> 
-
-
-	그룹 seq로 이름
-
-<select id="findGroupName" resultClass="java.lang.String" parameterClass="java.lang.Integer">
-	SELECT name
-	FROM user_group
-	WHERE seq = #seq#
-</select>
-
- -->
 <!--
 	모든 사용자 리스트 정보. 
  -->
@@ -328,6 +271,15 @@
 </update>
 
 <!-- 
+	Change user password
+ -->
+<update id="updateUserPasswordWithID" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
+	UPDATE tadpole_user SET
+		passwd = #passwd#
+	WHERE email = #email#
+</update>
+
+<!-- 
 	Change user security hint
  -->
 <update id="updateUserSecurityHint" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
@@ -424,19 +376,7 @@
  		users = #users#  AND
 		delYn = 'NO'
  </select>
- 
- <!-- 
- 	유저디비 그룹정보를 가져옵니다.
-  -->
- <!-- <select id="userDBGroup" resultClass="java.lang.String" parameterClass="java.lang.Integer">
- 	SELECT group_name
- 	FROM tadpole_db
- 	WHERE 
-		group_seq in (#group_seqs#) AND
-		delYn = 'NO'
- 	group by group_name 
- </select> -->
- 
+
  <!-- 
 	1) userDB 중복 저장 용도
 	2) 저장 후 seq가져오는 용도로 사용
@@ -473,7 +413,7 @@
 <!--  UserDB의 리스트 -->
 <select id="userDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
 <![CDATA[
-	select a.*, b.ROLE_ID role_id, c.*
+	select a.*, b.seq role_seq, b.ROLE_ID role_id, c.*
 	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
 	where a.seq = b.db_seq
 		and a.seq = c.seq
@@ -495,18 +435,6 @@
 	    and a.delyn = 'NO'
 	    and b.delyn = 'NO'
 </select>
-
-<!-- <select id="userDBManager" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.String">
-	SELECT a.seq, user_seq, ext_seq, group_seq, operation_type, dbms_type, url, db, group_name, display_name, host, port, locale, passwd, users, is_profile, profile_select_mill, question_dml, is_readonlyconnect, is_autocommit, is_showtables, is_monitoring, is_external_browser, is_visible, is_summary_report, is_monitoring, create_time, delyn,
-	  ext1, ext2, ext3, ext4, ext5, ext6, ext7, ext8, ext9, ext10 
-	FROM tadpole_db a
-		, user_db_ext b 
-	WHERE 
-		group_seq in ($group_seqs$) AND
-		a.seq = b.seq AND
-		delYn = 'NO'
-	ORDER BY group_name
-</select> -->
 
 <!--  UserDB의 인스턴스 -->
 <select id="userDBInstance" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
@@ -540,16 +468,6 @@
 			delYn = 'NO'
 	</selectKey>
 </insert>
-
-<!-- 
-	add user_db_filter
- -->
- <!-- <insert id="userDBFilterInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
-	INSERT INTO user_db_filter
-		(seq, is_table_filter, table_filter_include, table_filter_exclude)
-	VALUES
-		(#seq#, #is_table_filter#, #table_filter_include#, #table_filter_exclude#)
-</insert> -->
  
  <!-- 
 	add user_db_filter
@@ -588,17 +506,6 @@
 		is_monitoring			= #is_monitoring#
 	WHERE seq = #seq#	
 </update>
-
-<!-- 
-	add user_db_filter
- -->
- <!-- <update id="userDBFilterUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
-	UPDATE user_db_filter SET
-		is_table_filter = #is_table_filter#, 
-		table_filter_include = #table_filter_include#, 
-		table_filter_exclude = #table_filter_exclude#
-	WHERE seq = #seq#	
-</update> -->
 
 <!--
 	db type은 업데이트 되지 않도록 합니다. 
@@ -657,6 +564,17 @@
 	INSERT INTO tadpole_user_db_role
 		(user_seq,db_seq, role_id, access_ip, terms_of_use_starttime, terms_of_use_endtime)
 	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #terms_of_use_starttime#, #terms_of_use_endtime#);
+	
+	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
+		SELECT *, b.email, b.name
+		FROM tadpole_user_db_role  a,
+			tadpole_user b 
+		WHERE a.user_seq 	= #user_seq#  
+			AND a.db_seq 		= #db_seq# 
+			AND a.access_ip 	= #access_ip# 
+			AND a.user_seq = b.seq
+			AND a.delYn = 'NO'
+	</selectKey>
 </insert>
 
 <update id="userDBRoleUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
@@ -856,47 +774,6 @@ SELECT
 
 <!-- 
 	=========================================================================================================
-	table_filter
-	=========================================================================================================
- -->
- <!-- find table filter -->
-<select id="getTableFilter" resultClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO" parameterClass="java.lang.Integer">
-	SELECT seq, db_seq, table_name, description, table_lock, column_names, create_time, delyn 
- 	FROM table_filter
- 	WHERE 
- 			db_seq = #seq#
- 		AND delyn = 'NO'
- 	ORDER BY table_name;
-</select>
-
-<!-- find dbseq and table name -->
-<select id="getTableFilterTable" resultClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO" 
-				parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
-	SELECT seq, db_seq, table_name, description, table_lock, column_names, create_time, delyn 
- 	FROM table_filter
- 	WHERE 
- 			db_seq 		= #seq#
- 		AND table_name 	= #table_name#
- 		AND delyn 		= 'NO'
- 	ORDER BY table_name;
-</select>
-
-<!-- insert table column filter -->
-<insert id="insertTableColumnFilter" parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
-	INSERT INTO table_filter
-	 (db_seq, table_name, description, table_lock, column_names) 
-	VALUES 
-	 (#db_seq#, #table_name#, #description#, #table_lock#, #column_names#) 
-</insert>
-
-<!--  delete table filter -->
-<update id="deleteTableColumnFilters" parameterClass="com.hangum.tadpole.engine.query.dao.system.TableFilterDAO">
-	UPDATE table_filter
-	SET delyn = 'YES'
-	WHERE seq = #seq#
-</update>
-<!-- 
-	=========================================================================================================
 	schema_history 정보를 설정합니다.
 	=========================================================================================================
  -->
@@ -1002,6 +879,7 @@ SELECT
       a.enddateexecute <= #endTime# AND
       a.duration >= #duration# AND
       a.user_seq = u.seq AND
+      b.datas like #strSearch# AND 
       a.db_seq = db.seq
 	order by a.create_time desc
 	limit #count#

@@ -22,9 +22,10 @@ import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
-import com.hangum.tadpole.engine.query.dao.system.TableFilterDAO;
+import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBOriginalDAO;
+import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -203,13 +204,14 @@ public class TadpoleSystem_UserDBQuery {
 		userDb.setSeq(insertedUserDB.getSeq());
 		
 		// tadpole_user_db_role
-		TadpoleSystem_UserRole.insertTadpoleUserDBRole(userSeq, 
+		TadpoleUserDbRoleDAO roleDao = TadpoleSystem_UserRole.insertTadpoleUserDBRole(userSeq, 
 					insertedUserDB.getSeq(), 
 					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString()
 				);
 		
-		// table_filter 등록
-//		sqlClient.insert("userDBFilterInsert", userDb);
+		// to save access control
+		DBAccessControlDAO dbAccessCtl = TadpoleSystem_AccessControl.saveDBAccessControl(roleDao);
+		userDb.setDbAccessCtl(dbAccessCtl);
 		
 		// 데이터베이스 확장속성 등록
 		sqlClient.insert("userDBEXTInsert", userDb);
@@ -294,10 +296,10 @@ public class TadpoleSystem_UserDBQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", SessionManager.getUserSeq());
 
-		// add filter information
+		// set db access control
 		for (UserDBDAO userDBDAO : listUserDB) {
-			List<TableFilterDAO> listTableFilter = TadpoleSystem_TableColumnFilter.getTableColumnFilters(userDBDAO.getSeq());
-			userDBDAO.setListTableColumnFilter(listTableFilter);
+			DBAccessControlDAO dbAccessCtl = TadpoleSystem_AccessControl.getDBAccessControl(userDBDAO.getRole_seq());
+			userDBDAO.setDbAccessCtl(dbAccessCtl);
 		}
 		
 		return listUserDB;

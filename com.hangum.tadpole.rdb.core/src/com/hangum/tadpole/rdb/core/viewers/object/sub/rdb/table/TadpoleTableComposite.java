@@ -66,6 +66,7 @@ import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
@@ -114,7 +115,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 	// table info
 	private TableViewer tableListViewer;
-	private List<TableDAO> showTables = new ArrayList<TableDAO>();
+	private List<TableDAO> listTablesDAO = new ArrayList<TableDAO>();
 	private ObjectComparator tableComparator;
 	private TableFilter tableFilter;
 	
@@ -185,7 +186,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
@@ -199,7 +200,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		});
 		tableListViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
@@ -336,7 +337,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		tableListViewer.getTable().setLayout(layoutColumnLayout);
 		tableListViewer.setContentProvider(new ArrayContentProvider());
-		tableListViewer.setInput(showTables);
+		tableListViewer.setInput(listTablesDAO);
 		
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
@@ -473,9 +474,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || 
 									userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							manager.add(creatAction_Table);
-							manager.add(dropAction_Table);
-							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							
+							if(!isDDLLock()) {
+								manager.add(creatAction_Table);
+								manager.add(dropAction_Table);
+								manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							}
 						}	
 						
 						manager.add(refreshAction_Table);
@@ -484,9 +488,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					// others rdb
 					} else {
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							manager.add(creatAction_Table);
-							manager.add(dropAction_Table);
-							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							if(!isDDLLock()) {
+								manager.add(creatAction_Table);
+								manager.add(dropAction_Table);
+								manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+							}
 						}	
 						
 						manager.add(refreshAction_Table);
@@ -504,17 +510,19 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						manager.add(selectStmtAction);
 						
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							manager.add(insertStmtAction);
-							manager.add(updateStmtAction);
-							manager.add(deleteStmtAction);
+							if(!isInsertLock()) manager.add(insertStmtAction);
+							if(!isUpdateLock()) manager.add(updateStmtAction);
+							if(!isDeleteLock()) manager.add(deleteStmtAction);
 							
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(alterTableAction);
 	
 							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 							manager.add(viewDDLAction);
-							manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-							manager.add(tableDataEditorAction);
+							if(!(isInsertLock() | isUpdateLock() | isDeleteLock())) {
+								manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+								manager.add(tableDataEditorAction);
+							}
 						}
 					}	// if rdb
 				}	// if hive and tajo
@@ -527,19 +535,23 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 	/**
 	 * table 정보를 최신으로 리프레쉬합니다.
+	 * 
+	 * @param selectUserDb
+	 * @param boolRefresh
+	 * @param strObjectName
 	 */
-	public void refreshTable(final UserDBDAO selectUserDb, boolean boolRefresh) {
+	public void refreshTable(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
 		if(!boolRefresh) if(selectUserDb == null) return;
 		this.userDB = selectUserDb;
 		
 		selectTableName = "";
 		
 		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
-		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) {
-			showTables.clear();
-			showTables.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, ""));
+		if(PublicTadpoleDefine.YES_NO.NO.name().equals(this.userDB.getIs_showtables())) {
+			listTablesDAO.clear();
+			listTablesDAO.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, ""));
 			
-			tableListViewer.setInput(showTables);
+			tableListViewer.setInput(listTablesDAO);
 			tableListViewer.refresh();
 			
 			TableUtil.packTable(tableListViewer.getTable());
@@ -553,8 +565,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN);
 				
 				try {
-					/** filter 정보가 있으면 처리합니다. */
-					showTables = getTableList(userDB);
+					listTablesDAO = getTableList(userDB);
 				} catch(Exception e) {
 					logger.error("Table Referesh", e);
 					
@@ -578,13 +589,28 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				display.asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							tableListViewer.setInput(showTables);
-							tableListViewer.refresh();
+							tableListViewer.setInput(listTablesDAO);
+							
+							// if strObjectName is not empty, select object
+							if("".equals(strObjectName) || strObjectName == null) {
+								tableListViewer.refresh();
+							} else {
+								// find select object and viewer select
+								TableDAO selectTable = null;
+								for (TableDAO tableDao : listTablesDAO) {
+									if(strObjectName.equals(tableDao.getName())) {
+										selectTable = tableDao;
+										break;
+									}
+								}
+								tableListViewer.setSelection(new StructuredSelection(selectTable), true);
+							}
+							
 							TableUtil.packTable(tableListViewer.getTable());
 							
 						} else {
-							if (showTables != null) showTables.clear();
-							tableListViewer.setInput(showTables);
+							if (listTablesDAO != null) listTablesDAO.clear();
+							tableListViewer.setInput(listTablesDAO);
 							tableListViewer.refresh();
 							TableUtil.packTable(tableListViewer.getTable());
 
@@ -626,7 +652,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		}
 		
 		/** filter 정보가 있으면 처리합니다. */
-//		List<TableDAO> listTables = filter(userDB, showTables);
+		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 		for(TableDAO td : showTables) {

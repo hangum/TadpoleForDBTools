@@ -68,7 +68,7 @@ public class TadpoleSystem_Schedule {
 	public static void saveScheduleResult(int seq, boolean isResult, String msg) throws Exception {
 		ScheduleResultDAO dao = new ScheduleResultDAO();
 		dao.setSchedule_main_seq(seq);
-		dao.setResult(isResult?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		dao.setResult(isResult?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		dao.setDescription(msg);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

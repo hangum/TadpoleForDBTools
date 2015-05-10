@@ -525,6 +525,7 @@ editorService.addText = function(varText) {
 		} else {
 			editor.gotoLine(editor.session.getLength()+1);
 			editor.insert("\n" + varText);
+			
 		}
 		editor.focus();
 	} catch(e) {

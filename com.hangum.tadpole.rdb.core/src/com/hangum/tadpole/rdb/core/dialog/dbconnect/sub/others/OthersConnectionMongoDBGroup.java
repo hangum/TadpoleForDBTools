@@ -196,7 +196,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		ExternalBrowserInfoDAO extBrowserDAO = new ExternalBrowserInfoDAO();
 		extBrowserDAO.setName("AdminBrowser");
 		extBrowserDAO.setUrl(String.format("http://%s:%s", strIp, intPort));
-		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		listBrowser.add(extBrowserDAO);
 		
 		return listBrowser;

@@ -250,15 +250,15 @@ public class MongoDBImportEditor extends EditorPart {
 		
 		try {
 			int visibleItemCount = 0;
-//			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
-//			for (UserDBDAO userDBDAO : userDBS) {
-//				// 임포트 하려는 자신은 제외 
-//				if(targetDBDAO.getSeq() != userDBDAO.getSeq()) {
-//					comboDBList.add(userDBDAO.getDisplay_name());
-//					comboDBList.setData(userDBDAO.getDisplay_name(), userDBDAO);
-//					visibleItemCount++;
-//				}
-//			}
+			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+			for (UserDBDAO userDBDAO : userDBS) {
+				// 임포트 하려는 자신은 제외 
+				if(targetDBDAO.getSeq() != userDBDAO.getSeq()) {
+					comboDBList.add(userDBDAO.getDisplay_name());
+					comboDBList.setData(userDBDAO.getDisplay_name(), userDBDAO);
+					visibleItemCount++;
+				}
+			}
 			comboDBList.setVisibleItemCount(visibleItemCount);
 			comboDBList.select(0);
 			initCombo();

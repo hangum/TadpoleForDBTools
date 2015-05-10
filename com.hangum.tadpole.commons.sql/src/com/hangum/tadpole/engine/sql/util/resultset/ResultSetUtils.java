@@ -17,11 +17,14 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.postgresql.PGResultSetMetaData;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
+import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 
 /**
  * ResultSet utils
@@ -156,6 +159,7 @@ public class ResultSetUtils {
 //			logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
 //			logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
 			mapColumnType.put(i+intStartIndex, rsm.getColumnType(i+1));
+//			logger.debug("\t Column Label " + rsm.getColumnLabel(i+1) );
 			
 //			logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
 //			logger.debug("\t Scale			 	:  " 	+ rsm.getScale(i+1));
@@ -168,7 +172,59 @@ public class ResultSetUtils {
 	}
 	
 	/**
-	 * column of name
+	 * column name of table.
+	 * but this method is db access control.
+	 * 
+	 * @param userDB
+	 * @param columnTableName
+	 * @param isShowRownum
+	 * @param rs
+	 * @return
+	 */
+	public static Map<Integer, String> getColumnName(UserDBDAO userDB, Map<Integer, String> columnTableName,
+			boolean isShowRowNum, ResultSet rs) throws Exception {
+		Map<Integer, String> mapColumnName = getColumnName(isShowRowNum, rs);
+		DBAccessControlDAO dbAccessCtlDao = userDB.getDbAccessCtl();
+		Map<String, AccessCtlObjectDAO> mapDetailCtl = dbAccessCtlDao.getMapSelectAccessCtl();
+		
+		if(!mapDetailCtl.isEmpty()) {
+			Map<Integer, String> mapReturnColumnName = new HashMap<Integer, String>();
+			int intColumnCnt = 0;
+
+			// 컬럼 중에 db access 관련 있는 테이블이 있는 지 검증합니다.
+			for(int i=0; i<mapColumnName.size(); i++) {
+				String strTableName = columnTableName.get(i);
+				
+				// Is filter column?
+				if(mapDetailCtl.containsKey(strTableName)) {
+					// is filter table?
+					AccessCtlObjectDAO acDao = mapDetailCtl.get(strTableName);
+
+					String strTableOfAccessColumns = acDao.getDetail_obj();
+					String strResultColumn = mapColumnName.get(i);
+					if(StringUtils.containsIgnoreCase(strTableOfAccessColumns, strResultColumn)
+							| acDao.getDontuse_object().equals("YES")
+					) {
+//						if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
+					} else {
+//						if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
+						mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+						intColumnCnt++;
+					}
+				} else {
+					mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+					intColumnCnt++;
+				}
+			}
+			
+			return mapReturnColumnName;
+		} else {
+			return mapColumnName;			
+		}
+	}
+	
+	/**
+	 * column name of table
 	 * 
 	 * @param isShowRowNum
 	 * @param rs
@@ -186,25 +242,63 @@ public class ResultSetUtils {
 		
 		ResultSetMetaData rsm = rs.getMetaData();
 		for(int i=0; i<rsm.getColumnCount(); i++) {
-			mapColumnName.put(i+intStartIndex, rsm.getColumnLabel(i+1));
+			mapColumnName.put(i+intStartIndex, rsm.getColumnName(i+1));
 		}
 		
 		return mapColumnName;
 	}
 	
-	public static Map<Integer, String> getColumnTableName(ResultSet rs) throws Exception {
-		return getColumnTableName(false, rs);
+	
+	public static Map<Integer, String> getColumnLabelName(UserDBDAO userDB, Map<Integer, String> columnTableName, boolean isShowRowNum, ResultSet rs) throws Exception {
+		Map<Integer, String> mapColumnName = getColumnLabelName(isShowRowNum, rs);
+		DBAccessControlDAO dbAccessCtlDao = userDB.getDbAccessCtl();
+		Map<String, AccessCtlObjectDAO> mapDetailCtl = dbAccessCtlDao.getMapSelectAccessCtl();
+		
+		if(!mapDetailCtl.isEmpty()) {
+			Map<Integer, String> mapReturnColumnName = new HashMap<Integer, String>();
+			int intColumnCnt = 0;
+		
+			// 컬럼 중에 db access 관련 있는 테이블이 있는 지 검증합니다.
+			for(int i=0; i<mapColumnName.size(); i++) {
+				String strTableName = columnTableName.get(i);
+				
+				// Is filter column?
+				if(mapDetailCtl.containsKey(strTableName)) {
+					// is filter table?
+					AccessCtlObjectDAO acDao = mapDetailCtl.get(strTableName);
+		
+					String strTableOfAccessColumns = acDao.getDetail_obj();
+					String strResultColumn = mapColumnName.get(i);
+					if(StringUtils.containsIgnoreCase(strTableOfAccessColumns, strResultColumn)
+							| acDao.getDontuse_object().equals("YES")
+					) {
+		//				if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
+					} else {
+		//				if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
+						mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+						intColumnCnt++;
+					}
+				} else {
+					mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+					intColumnCnt++;
+				}
+			}
+			
+			return mapReturnColumnName;
+		} else {
+			return mapColumnName;			
+		}
 	}
 	
 	/**
-	 * 컬럼에 table name
+	 * column label name of table
 	 * 
 	 * @param isShowRowNum
 	 * @param rs
 	 * @return
 	 * @throws Exception
 	 */
-	public static Map<Integer, String> getColumnTableName(boolean isShowRowNum, ResultSet rs) throws Exception {
+	public static Map<Integer, String> getColumnLabelName(boolean isShowRowNum, ResultSet rs) throws Exception {
 		Map<Integer, String> mapColumnName = new HashMap<Integer, String>();
 		int intStartIndex = 0;
 		
@@ -215,10 +309,50 @@ public class ResultSetUtils {
 		
 		ResultSetMetaData rsm = rs.getMetaData();
 		for(int i=0; i<rsm.getColumnCount(); i++) {
-			if(rsm.getSchemaName(i+1) == null || "".equals(rsm.getSchemaName(i+1))) {
-				mapColumnName.put(i+intStartIndex, rsm.getTableName(i+1));
+			mapColumnName.put(i+intStartIndex, rsm.getColumnLabel(i+1));
+		}
+		
+		return mapColumnName;
+	}
+	
+	public static Map<Integer, String> getColumnTableName(final UserDBDAO userDB, ResultSet rs) throws Exception {
+		return getColumnTableName(userDB, false, rs);
+	}
+	
+	/**
+	 * 컬럼에 table name
+	 * 
+	 * @param isShowRowNum
+	 * @param rs
+	 * @return
+	 * @throws Exception
+	 */
+	public static Map<Integer, String> getColumnTableName(final UserDBDAO userDB, boolean isShowRowNum, ResultSet rs) throws Exception {
+		Map<Integer, String> mapColumnName = new HashMap<Integer, String>();
+		int intStartIndex = 0;
+		
+		if(isShowRowNum) {
+			intStartIndex++;
+			mapColumnName.put(0, "#");
+		}
+		
+		ResultSetMetaData rsm = rs.getMetaData();
+		for(int i=0; i<rsm.getColumnCount(); i++) {
+			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				PGResultSetMetaData pgsqlMeta = (PGResultSetMetaData)rsm;
+				mapColumnName.put(i+intStartIndex, pgsqlMeta.getBaseTableName(i+1));
+				
+//				if(logger.isDebugEnabled()) logger.debug("Table name is " + pgsqlMeta.getBaseTableName(i+1));
+			} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+				mapColumnName.put(i+intStartIndex, "Apache Hive is not support this method.");
 			} else {
-				mapColumnName.put(i+intStartIndex, rsm.getSchemaName(i+1) + "." + rsm.getTableName(i+1));
+				if(rsm.getSchemaName(i+1) == null || "".equals(rsm.getSchemaName(i+1))) {
+//					if(logger.isDebugEnabled()) logger.debug("Table name is " + rsm.getTableName(i+1) + ", schema name is " + rsm.getSchemaName(i+1));
+					
+					mapColumnName.put(i+intStartIndex, rsm.getTableName(i+1));
+				} else {
+					mapColumnName.put(i+intStartIndex, rsm.getSchemaName(i+1) + "." + rsm.getTableName(i+1));
+				}
 			}
 		}
 		
@@ -265,9 +399,9 @@ public class ResultSetUtils {
 					metaData.put("type", 	""+rsm.getColumnType(columnSeq));
 					metaData.put("typeName", 	""+rsm.getColumnTypeName(columnSeq));
 					
-					if(logger.isDebugEnabled()) {
-						logger.debug("\tschema :" + pgsqlMeta.getBaseSchemaName(columnSeq) + "\ttable:" + pgsqlMeta.getBaseTableName(columnSeq) + "\tcolumn:" + pgsqlMeta.getBaseColumnName(columnSeq));
-					}
+//					if(logger.isDebugEnabled()) {
+//						logger.debug("\tschema :" + pgsqlMeta.getBaseSchemaName(columnSeq) + "\ttable:" + pgsqlMeta.getBaseTableName(columnSeq) + "\tcolumn:" + pgsqlMeta.getBaseColumnName(columnSeq));
+//					}
 					
 					mapTableColumn.put(i+1, metaData);
 				}
@@ -295,7 +429,10 @@ public class ResultSetUtils {
 //					mapTableColumn.put(i+1, metaData);
 //				}
 				
-			} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+			} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT 
+							|| userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
+							|| userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT							
+					) {
 				for(int i=0;i<rsm.getColumnCount(); i++) {
 					int columnSeq = i+1;
 					Map<String, String> metaData = new HashMap<String, String>();
@@ -320,5 +457,7 @@ public class ResultSetUtils {
 		
 		return mapTableColumn;
 	}
+
+	
 
 }

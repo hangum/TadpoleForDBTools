@@ -65,7 +65,7 @@ public class ExternalBrowserEditor extends EditorPart {
 		tfMain.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 	
 		for(ExternalBrowserInfoDAO dao : listExternalBrowser) {
-			if(dao.getIs_used().equals(PublicTadpoleDefine.YES_NO.YES.toString())) {
+			if(dao.getIs_used().equals(PublicTadpoleDefine.YES_NO.YES.name())) {
 				createExtBrowser(dao);
 			}
 		}

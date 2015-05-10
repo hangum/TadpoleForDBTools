@@ -19,6 +19,7 @@ import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 
 /**
  * <pre>
@@ -36,10 +37,26 @@ import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
  * @author hangum
  *
  */
-public class UserDBDAO {	
+public class UserDBDAO implements Cloneable {	
 	
 	// TadpoleUserDbRoleDAO start ======================================
+	protected int role_seq;
 	protected String role_id;
+	
+	/**
+	 * @return the role_seq
+	 */
+	public int getRole_seq() {
+		return role_seq;
+	}
+
+	/**
+	 * @param role_seq the role_seq to set
+	 */
+	public void setRole_seq(int role_seq) {
+		this.role_seq = role_seq;
+	}
+
 	/**
 	 * @return the role_id
 	 */
@@ -133,25 +150,28 @@ public class UserDBDAO {
     protected String question_dml = "";
     
     protected ManagerListDTO parent;
-    protected List<UserDBResourceDAO> listUserDBErd;
+    protected List<UserDBResourceDAO> listUserDBErd = new ArrayList<UserDBResourceDAO>();
     /** list of table column filter */
-    protected List<TableFilterDAO> listTableColumnFilter;
+//    protected List<TableFilterDAO> listTableColumnFilter;
     
     /** 디비의 버전 정보 */
     protected String version;
     
     /** 디비 정보를 커넥션 메이저에 보일 것인지 	- 2014.05.22 hangum */
-    protected String is_visible 		= PublicTadpoleDefine.YES_NO.YES.toString();
+    protected String is_visible 		= PublicTadpoleDefine.YES_NO.YES.name();
     /** 디비의 요약 정보를 보낼 것인지 			- 2014.05.22 hangum */
-    protected String is_summary_report 	= PublicTadpoleDefine.YES_NO.YES.toString();
+    protected String is_summary_report 	= PublicTadpoleDefine.YES_NO.YES.name();
     
     /** Is DB monitoring? */
-    protected String is_monitoring 		= PublicTadpoleDefine.YES_NO.YES.toString();
+    protected String is_monitoring 		= PublicTadpoleDefine.YES_NO.YES.name();
     
     /** is db lock? */
-    protected String is_lock			= PublicTadpoleDefine.YES_NO.NO.toString();
+    protected String is_lock			= PublicTadpoleDefine.YES_NO.NO.name();
+    
+    /** db access control */
+    protected DBAccessControlDAO dbAccessCtl = new DBAccessControlDAO();
 //    /** 사용자가 채크 했는지? YES일경우 사용자가 패스워드로 검증했음을 의미합니다*/
-//    protected String is_lock_user_check = PublicTadpoleDefine.YES_NO.NO.toString();
+//    protected String is_lock_user_check = PublicTadpoleDefine.YES_NO.NO.name();
     
 //    /** userdb를 그룹으로 표시 하고자 할때 사용합니다. 현재는 로그인창에서 디비 관리하면에서 사용. */
 //    protected List<UserDBDAO> listUserDBGroup = new ArrayList<UserDBDAO>();
@@ -305,20 +325,19 @@ public class UserDBDAO {
 		this.listUserDBErd = listUserDBErd;
 	}
 	
-	
-	/**
-	 * @return the listTableColumnFilter
-	 */
-	public List<TableFilterDAO> getListTableColumnFilter() {
-		return listTableColumnFilter;
-	}
-
-	/**
-	 * @param listTableColumnFilter the listTableColumnFilter to set
-	 */
-	public void setListTableColumnFilter(List<TableFilterDAO> listTableColumnFilter) {
-		this.listTableColumnFilter = listTableColumnFilter;
-	}
+//	/**
+//	 * @return the listTableColumnFilter
+//	 */
+//	public List<TableFilterDAO> getListTableColumnFilter() {
+//		return listTableColumnFilter;
+//	}
+//
+//	/**
+//	 * @param listTableColumnFilter the listTableColumnFilter to set
+//	 */
+//	public void setListTableColumnFilter(List<TableFilterDAO> listTableColumnFilter) {
+//		this.listTableColumnFilter = listTableColumnFilter;
+//	}
 
 	public String getDelYn() {
 		return delYn;
@@ -647,6 +666,49 @@ public class UserDBDAO {
 	 */
 	public void setIs_lock(String is_lock) {
 		this.is_lock = is_lock;
+	}
+
+	/**
+	 * @return the dbAccessCtl
+	 */
+	public DBAccessControlDAO getDbAccessCtl() {
+		return dbAccessCtl;
+	}
+
+	/**
+	 * @param dbAccessCtl the dbAccessCtl to set
+	 */
+	public void setDbAccessCtl(DBAccessControlDAO dbAccessCtl) {
+		this.dbAccessCtl = dbAccessCtl;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "UserDBDAO [role_seq=" + role_seq + ", role_id=" + role_id + ", seq=" + seq + ", user_seq=" + user_seq
+				+ ", group_name=" + group_name + ", operation_type=" + operation_type + ", dbms_type=" + dbms_type
+				+ ", url=" + url + ", url_user_parameter=" + url_user_parameter + ", listChildren=" + listChildren
+				+ ", db=" + db + ", display_name=" + display_name + ", host=" + host + ", port=" + port + ", locale="
+				+ locale + ", passwd=" + passwd + ", users=" + users + ", create_time=" + create_time + ", delYn="
+				+ delYn + ", ext1=" + ext1 + ", ext2=" + ext2 + ", ext3=" + ext3 + ", ext4=" + ext4 + ", ext5=" + ext5
+				+ ", ext6=" + ext6 + ", ext7=" + ext7 + ", ext8=" + ext8 + ", ext9=" + ext9 + ", ext10=" + ext10
+				+ ", is_profile=" + is_profile + ", profile_select_mill=" + profile_select_mill
+				+ ", is_readOnlyConnect=" + is_readOnlyConnect + ", is_autocommit=" + is_autocommit
+				+ ", is_showtables=" + is_showtables + ", is_external_browser=" + is_external_browser
+				+ ", listExternalBrowserdao=" + listExternalBrowserdao + ", question_dml=" + question_dml + ", parent="
+				+ parent + ", listUserDBErd=" + listUserDBErd + ", version=" + version + ", is_visible=" + is_visible
+				+ ", is_summary_report=" + is_summary_report + ", is_monitoring=" + is_monitoring + ", is_lock="
+				+ is_lock + ", dbAccessCtl=" + dbAccessCtl + "]";
 	}
 
 }

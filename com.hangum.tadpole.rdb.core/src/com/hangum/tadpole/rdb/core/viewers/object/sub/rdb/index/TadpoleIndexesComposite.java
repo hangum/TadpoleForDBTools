@@ -131,7 +131,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 						//DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
 				)  return;
 				
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
@@ -263,8 +263,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_Index);
-					manager.add(dropAction_Index);
+					if(!isDDLLock()) {
+						manager.add(creatAction_Index);
+						manager.add(dropAction_Index);
+					}
 					
 					manager.add(refreshAction_Index);
 					

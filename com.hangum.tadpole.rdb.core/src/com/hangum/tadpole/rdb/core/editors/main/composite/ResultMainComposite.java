@@ -149,10 +149,14 @@ public class ResultMainComposite extends Composite {
 	
 	/**
 	 * execute command
+	 * 
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
 		if(logger.isDebugEnabled()) logger.debug("==> executeQuery user query is " + reqQuery.getOriginalSql());
+		
+		// selected first tab request quring.
+		resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		try {
 			// 요청쿼리가 없다면 무시합니다. 
@@ -165,9 +169,9 @@ public class ResultMainComposite extends Composite {
 			}
 			
 			// 실행해도 되는지 묻는다.
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(getUserDB().getQuestion_dml())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())) {
 				boolean isDMLQuestion = false;
-				if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {						
+				if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
 					for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
 						if(!SQLUtil.isStatement(strSQL)) {
 							isDMLQuestion = true;

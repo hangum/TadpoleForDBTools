@@ -344,12 +344,8 @@ public class ResultSetComposite extends Composite {
 				// 첫번째 컬럼이면 전체 로우의 데이터를 상세하게 뿌려줍니
 				if(i == 0) {
 				} else {
-					String strText = item.getText(i);
-					if(strText == null || "".equals(strText)) return; //$NON-NLS-1$
-					strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					
 					//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
-					
 					Object columnObject = mapColumns.get(i);
 					
 					// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
@@ -397,6 +393,15 @@ public class ResultSetComposite extends Composite {
 							logger.error("Clob column echeck", e); //$NON-NLS-1$
 						}
 					}else{
+						String strText = "";
+						
+						// if select value is null can 
+						if(columnObject == null) strText = "null";
+						else {
+							strText = columnObject.toString();
+							strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						}
+						
 						appendTextAtPosition(strText);
 					}
 				}	// end if first column
@@ -535,6 +540,8 @@ public class ResultSetComposite extends Composite {
 	
 	/**
 	 * 쿼리를 수행합니다.
+	 * 
+	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
 		// 쿼리를 이미 실행 중이라면 무시합니다.
@@ -555,8 +562,11 @@ public class ResultSetComposite extends Composite {
 		
 		final Shell runShell = textFilter.getShell();
 		
-		if(reqQuery.getType() != EditorDefine.EXECUTE_TYPE.ALL) {
-			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)) {
+		if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
+			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || 
+					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+			) {
 				try {
 					ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
 					if (epd.getParamCount() > 0){
@@ -565,7 +575,7 @@ public class ResultSetComposite extends Composite {
 							String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
 							reqQuery.setSql(repSQL);
 							
-							if(logger.isDebugEnabled()) logger.debug("Parameter Query is  " + repSQL); //$NON-NLS-1$
+							if(logger.isDebugEnabled()) logger.debug("User parameter query is  " + repSQL); //$NON-NLS-1$
 						}
 					}
 				} catch(Exception e) {
@@ -577,10 +587,10 @@ public class ResultSetComposite extends Composite {
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
-		final String strPlanTBName = GetPreferenceGeneral.getPlanTableName();
+		final String strPlanTBName 	= GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
-		final int intCommitCount = Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
+		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
 		
 		jobQueryManager = new Job(Messages.MainEditor_45) {
 			@Override
@@ -593,23 +603,26 @@ public class ResultSetComposite extends Composite {
 				
 				try {
 					
-					if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {
+					if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
 							String strExeSQL = SQLUtil.sqlExecutable(strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
-							if(!SQLUtil.isStatement(strExeSQL)) {
-								listStrExecuteQuery.add(strExeSQL);
+							if(SQLUtil.isStatement(strExeSQL)) {
+								reqQuery.setSql(strExeSQL);											
+							} else if(TransactionManger.isStartTransaction(strExeSQL)) {
+								startTransactionMode();
+								reqQuery.setAutoCommit(false);
 							} else {
-								reqQuery.setSql(strExeSQL);					
+								listStrExecuteQuery.add(strExeSQL);
 							}
 						}
 						
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
-							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery,getUserDB(), getDbUserRoleType(), intCommitCount, strUserEmail);
+							ExecuteBatchSQL.runSQLExecuteBatch(listStrExecuteQuery, reqQuery, getUserDB(), getDbUserRoleType(), intCommitCount, strUserEmail);
 						}
 						
 						// select 문장 실행
@@ -626,17 +639,20 @@ public class ResultSetComposite extends Composite {
 								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
 								sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
 							}
-						// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
-						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
-							TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
 
+						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
+							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {
+								startTransactionMode();
+								reqQuery.setAutoCommit(false);
+							} else {
+								TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
+							}
 						} else {
 							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 						}
 					}
 					
-					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
-					
+//					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
@@ -662,13 +678,14 @@ public class ResultSetComposite extends Composite {
 				getRdbResultComposite().getSite().getShell().
 				getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
 						if(jobEvent.getResult().isOK()) {
-							executeFinish(sqlHistoryDAO);
+							executeFinish(reqQuery, sqlHistoryDAO);
 						} else {
 							executeErrorProgress(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
 						
-						// 쿼리 후 화면 정리 작업을 합니다.
+						// 히스토리 화면을 갱신합니다.
 						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(sqlHistoryDAO);
 						
 						// 주의) 일반적으로는 포커스가 잘 가지만, 
@@ -686,6 +703,13 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.setPriority(Job.INTERACTIVE);
 		jobQueryManager.setName(getUserDB().getDisplay_name() + reqQuery.getOriginalSql());
 		jobQueryManager.schedule();
+	}
+	
+	/**
+	 * 쿼리 중간에 begin 으로 시작하는 구문이 있어서 트랜잭션을 시작합니다. 
+	 */
+	private void startTransactionMode() {
+		rdbResultComposite.getMainEditor().beginTransaction();
 	}
 	
 	private boolean isCheckRunning = true;
@@ -903,16 +927,18 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
-	public void executeFinish(SQLHistoryDAO executingSQLDAO) {
+	public void executeFinish(RequestQuery reqQuery, SQLHistoryDAO executingSQLDAO) {
 		if(SQLUtil.isStatement(reqQuery.getSql())) {			
 
 			// table data를 생성한다.
 			final TadpoleResultSet trs = rsDAO.getDataList();
 			sqlSorter = new SQLResultSorter(-999);
 			
-			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter);
+			boolean isEditable = true;
+			if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false;
+			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter, isEditable);
 			
-			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
+			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
 			tvQueryResult.setContentProvider(new ArrayContentProvider());
 			
 			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
@@ -947,14 +973,23 @@ public class ResultSetComposite extends Composite {
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.
-			SchemaHistoryDAO schemaDao = null;
+			SchemaHistoryDAO schemaDao = new SchemaHistoryDAO();
 			try {
-				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(), reqQuery.getSql());
+//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
+				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
+						"EDITOR",
+						reqQuery.getQueryType().name(),
+						"",
+						reqQuery.getSql());
 			} catch(Exception e) {
 				logger.error("save schemahistory", e); //$NON-NLS-1$
 			}
-			
-			refreshExplorerView(getUserDB(), schemaDao);
+		
+			if(reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.DDL |
+					reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.UNKNOWN
+					) {
+				refreshExplorerView(getUserDB(), reqQuery.getQueryDDLType());
+			}
 		}
 	}
 	
@@ -964,13 +999,13 @@ public class ResultSetComposite extends Composite {
 	 * @param userDB
 	 * @param schemaDao
 	 */
-	private void refreshExplorerView(final UserDBDAO userDB, final SchemaHistoryDAO schemaDao) {
+	private void refreshExplorerView(final UserDBDAO userDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
 		rdbResultComposite.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
-					ev.refreshCurrentTab(userDB, schemaDao);
+					ev.refreshCurrentTab(userDB, queryDDLType);
 				} catch (PartInitException e) {
 					logger.error("ExplorerView show", e); //$NON-NLS-1$
 				}

@@ -188,7 +188,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("192.168.32.128");
+			textHost.setText("172.16.187.132");
 			textPort.setText(Messages.OracleLoginComposite_4);
 			textDatabase.setText(Messages.OracleLoginComposite_3);
 			textUser.setText(Messages.OracleLoginComposite_1);

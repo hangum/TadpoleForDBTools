@@ -54,16 +54,11 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String dbSeq, long startTime, long endTime, int duringExecute) throws Exception {
+	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws Exception {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-//		if (user_seq != -1) { // user all check
-//			queryMap.put("user_seq",user_seq);
-//		}
-//		if (dbSeq != -1) {	// db all check
-			queryMap.put("db_seq", 	dbSeq);
-//		}
+		queryMap.put("db_seq", 	dbSeq);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(startTime);
@@ -79,6 +74,7 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		queryMap.put("duration", duringExecute);
 		queryMap.put("count", 	1000);
+		queryMap.put("strSearch", strSearch);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
@@ -181,7 +177,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @param sqlHistoryDAO
 	 */
 	public static void saveExecuteSQUeryResource(int user_seq, UserDBDAO userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE sqlType, SQLHistoryDAO sqlHistoryDAO) throws Exception {
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_profile())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_profile())) {
 			ExecutedSqlResourceDAO executeSQLResourceDao = new ExecutedSqlResourceDAO();
 			executeSQLResourceDao.setDb_seq(userDB.getSeq());
 			executeSQLResourceDao.setUser_seq(user_seq);

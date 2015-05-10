@@ -2,6 +2,7 @@ package com.hangum.tadpole.rdb.core.editors.main.execute;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
@@ -12,6 +13,15 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public class TransactionManger {
+	/** define begin statement */
+	public static final String BEGIN_STATEMENT 		= "begin";// + PublicTadpoleDefine.SQL_DELIMITER;
+	
+	/** define commit statement */
+	public static final String COMMIT_STATEMENT 	= "commit";// + PublicTadpoleDefine.SQL_DELIMITER;
+	
+	/** rollback statement */
+	public static final String ROLLBACK_STATEMENT 	= "rollback";// + PublicTadpoleDefine.SQL_DELIMITER;
+	
 	
 	/**
 	 * is transaction
@@ -20,7 +30,11 @@ public class TransactionManger {
 	 * @return
 	 */
 	public static boolean isTransaction(String query) {
-		if(StringUtils.startsWithIgnoreCase(query, "commit") || StringUtils.startsWithIgnoreCase(query, "rollback")) { //$NON-NLS-1$
+		if(
+				StringUtils.startsWithIgnoreCase(query, BEGIN_STATEMENT) ||
+				StringUtils.startsWithIgnoreCase(query, COMMIT_STATEMENT) || 
+				StringUtils.startsWithIgnoreCase(query, ROLLBACK_STATEMENT) 
+		) { //$NON-NLS-1$
 			return true;
 		}
 		
@@ -34,16 +48,25 @@ public class TransactionManger {
 	 * @return
 	 */
 	public static boolean transactionQuery(String query, String userEmail, UserDBDAO userDB) {
-		if(StringUtils.startsWith(query, "commit")) { //$NON-NLS-1$
+		if(StringUtils.startsWithIgnoreCase(query, COMMIT_STATEMENT)) {
 			TadpoleSQLTransactionManager.commit(userEmail, userDB);
 			return true;
-		}
-		// 
-		if(StringUtils.startsWith(query, "rollback")) { //$NON-NLS-1$
+		} else if(StringUtils.startsWithIgnoreCase(query, ROLLBACK_STATEMENT)) {
 			TadpoleSQLTransactionManager.rollback(userEmail, userDB);
 			return true;
 		}
 		
+		return false;
+	}
+	
+	/**
+	 * Is statement are begin?
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public static boolean isStartTransaction(String query) {
+		if(StringUtils.startsWithIgnoreCase(query, BEGIN_STATEMENT)) return true;
 		return false;
 	}
 

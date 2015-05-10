@@ -147,11 +147,11 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		if(getSelectDB() == DBDefine.TAJO_DEFAULT) {
 			extBrowserDAO.setName("TAJO");
 			extBrowserDAO.setUrl(String.format("http://%s:26080/", getStrIp()));
-			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		} else {
 			extBrowserDAO.setName("Hive");
 			extBrowserDAO.setUrl(String.format("http://%s:9999/hwi", getStrIp()));
-			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		}
 		listBrowser.add(extBrowserDAO);
 		
@@ -159,21 +159,21 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		extBrowserDAO = new ExternalBrowserInfoDAO();
 		extBrowserDAO.setName("Name Node");
 		extBrowserDAO.setUrl(String.format("http://%s:50070/", getStrIp()));
-		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		listBrowser.add(extBrowserDAO);
 		
 		// job tracker 
 		extBrowserDAO = new ExternalBrowserInfoDAO();
 		extBrowserDAO.setName("Job Tracker");
 		extBrowserDAO.setUrl(String.format("http://%s:50030/", getStrIp()));
-		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		listBrowser.add(extBrowserDAO);
 		
 		// task tracker 
 		extBrowserDAO = new ExternalBrowserInfoDAO();
 		extBrowserDAO.setName("Task Tracker");
 		extBrowserDAO.setUrl(String.format("http://%s:50060/", getStrIp()));
-		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		listBrowser.add(extBrowserDAO);
 		
 		return listBrowser;

@@ -65,18 +65,18 @@ public class ManagerLabelProvider extends LabelProvider {
 		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "resources/icons/mariadb-add.png";
 		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
 		else if(DBDefine.SQLite_DEFAULT == dbType) 	strBaseImage = "resources/icons/sqlite-add.png";
-		else if(DBDefine.MSSQL_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
+		else if(DBDefine.MSSQL_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
 		else if(DBDefine.CUBRID_DEFAULT == dbType) 	strBaseImage = "resources/icons/cubrid-add.png";
 		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "resources/icons/postgresSQL-add.png";
 		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
 		else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) strBaseImage = "resources/icons/hive-add.png";
-		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "resources/icons/tajo-add.png";
+		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "resources/icons/tajo-add.jpg";
 		else  strBaseImage = "resources/icons/database-add.png";
 		
 		Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, strBaseImage);
 		
 		try {
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDB.getIs_lock())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
 				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {				
 					baseImage = ResourceManager.decorateImage(baseImage, 
 													ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/lock_0.28.png"), 

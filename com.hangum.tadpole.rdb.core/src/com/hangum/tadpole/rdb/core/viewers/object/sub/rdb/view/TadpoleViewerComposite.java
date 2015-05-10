@@ -122,7 +122,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		viewListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
@@ -167,7 +167,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-					if (is != null) {
+					if (!is.isEmpty()) {
 						if (is.getFirstElement() != null) {
 							String strTBName = is.getFirstElement().toString();
 							Map<String, String> param = new HashMap<String, String>();
@@ -179,6 +179,11 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 						} else
 							showViewColumns = null;
 
+						viewColumnViewer.setInput(showViewColumns);
+						viewColumnViewer.refresh();
+						TableUtil.packTable(viewColumnViewer.getTable());
+					} else {
+						if(showViewColumns != null) showViewColumns.clear();
 						viewColumnViewer.setInput(showViewColumns);
 						viewColumnViewer.refresh();
 						TableUtil.packTable(viewColumnViewer.getTable());
@@ -261,8 +266,10 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_View);
-					manager.add(deleteAction_View);
+					if(!isDDLLock()) {
+						manager.add(creatAction_View);
+						manager.add(deleteAction_View);
+					}
 				}
 //				manager.add(modifyAction_View);
 				manager.add(refreshAction_View);
@@ -304,6 +311,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			viewListViewer.refresh();
 			
 			TableUtil.packTable(viewListViewer.getTable());
+			
 		} catch (Exception e) {
 			logger.error("view refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

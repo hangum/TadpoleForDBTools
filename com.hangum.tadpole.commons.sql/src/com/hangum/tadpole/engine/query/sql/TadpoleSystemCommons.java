@@ -57,22 +57,17 @@ public class TadpoleSystemCommons {
 	 * 쿼리중에 quote sql을 반영해서 작업합니다.
 	 * 
 	 * @param userDB
+	 * @param executeType
 	 * @param strDML
 	 * @param args
 	 */
-	public static boolean executSQL(UserDBDAO userDB, String strDML, String ... args) throws Exception {
+	public static boolean executSQL(UserDBDAO userDB, String executeType, String strDML, String ... args) throws Exception {
 		String strQuery = String.format(strDML, args);
 		
 		java.sql.Connection javaConn = null;
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
-			
-//			String quoteString = TadpoleSQLManager.getConnectionInfo(userDB).getIdentifierQuoteString();
-//			String[] queryArg = new String[args.length];
-//			for(int i=0; i<queryArg.length; i++) {
-//				queryArg[i] = quoteString + args[i] + quoteString;
-//			}
 			
 			if(logger.isDebugEnabled()) logger.debug(String.format(strDML, args));
 			
@@ -82,7 +77,12 @@ public class TadpoleSystemCommons {
 			
 		} finally {
 			// save schema history
-			TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, strQuery);
+			
+			TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, 
+				"EDITOR",
+				executeType,
+				"",
+				strQuery);
 			
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 			

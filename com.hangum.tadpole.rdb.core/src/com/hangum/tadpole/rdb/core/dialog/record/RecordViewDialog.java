@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -45,7 +47,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  *
  */
 public class RecordViewDialog extends Dialog {
-
+	private static final Logger logger = Logger.getLogger(RecordViewDialog.class);
 	private QueryExecuteResultDTO dto;
 	private Composite container;
 
@@ -201,7 +203,7 @@ public class RecordViewDialog extends Dialog {
 		Map<Integer, Object> record = resultSet.get(loc);
 		for (Integer index : record.keySet()) {
 			Text txt = controlList.get(index);
-			txt.setText(record.get(index).toString());
+			txt.setText(record.get(index)==null?"":record.get(index).toString());
 		}
 		if (getDialogArea() != null) {
 			getDialogArea().redraw();

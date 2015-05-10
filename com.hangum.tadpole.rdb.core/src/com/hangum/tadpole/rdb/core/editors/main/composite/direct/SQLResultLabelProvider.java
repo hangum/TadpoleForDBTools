@@ -29,11 +29,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine.QUERY_MODE;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
@@ -48,6 +51,8 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(SQLResultLabelProvider.class);
+	
+	private EditorDefine.QUERY_MODE queryMode = QUERY_MODE.QUERY;
 	private boolean isPretty = false;
 	private ResultSetUtilDTO rsDAO;
 	
@@ -59,7 +64,8 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		this.isPretty = isPretty;
 	}
 	
-	public SQLResultLabelProvider(final boolean isPretty, final ResultSetUtilDTO rsDAO) {
+	public SQLResultLabelProvider(EditorDefine.QUERY_MODE queryMode, final boolean isPretty, final ResultSetUtilDTO rsDAO) {
+		this.queryMode = queryMode;
 		this.isPretty = isPretty;
 		this.rsDAO = rsDAO;
 	}
@@ -95,11 +101,17 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)element;
 		
 		Object obj = rsResult.get(columnIndex);
-		if(rsDAO != null && rsDAO.getColumnType().get(columnIndex) != null) {
+		if(rsDAO != null && rsDAO.getColumnType().get(columnIndex) != null && queryMode == QUERY_MODE.QUERY) {
 			if(isPretty & RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) return addComma(obj);
 		}
 		
-		return obj == null ? PublicTadpoleDefine.DEFINE_NULL_VALUE : StringUtils.abbreviate(obj.toString(), 0, Integer.parseInt(getRDBShowInTheColumn()));
+		if(obj == null) {
+			return PublicTadpoleDefine.DEFINE_NULL_VALUE;
+		} else {
+			return queryMode == QUERY_MODE.QUERY ? 
+					StringUtils.abbreviate(obj.toString(), 0, Integer.parseInt(getRDBShowInTheColumn())) :
+					obj.toString();
+		}
 	}
 	
 	/**
@@ -107,7 +119,8 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 */
 	public static void createTableColumn(final TableViewer tableViewer,
 										final ResultSetUtilDTO rsDAO,
-										final SQLResultSorter tableSorter) {
+										final SQLResultSorter tableSorter, 
+										final boolean isEditable) {
 		// 기존 column을 삭제한다.
 		Table table = tableViewer.getTable();
 		int columnCount = table.getColumnCount();
@@ -115,13 +128,13 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			table.getColumn(0).dispose();
 		}
 		
-		if(rsDAO.getColumnName() == null) return;
+		if(rsDAO.getColumnLabelName() == null) return;
 			
 		try {			
-			for(int i=0; i<rsDAO.getColumnName().size(); i++) {
+			for(int i=0; i<rsDAO.getColumnLabelName().size(); i++) {
 				final int index = i;
 				final int columnAlign = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))?SWT.RIGHT:SWT.LEFT;
-				String strColumnName = rsDAO.getColumnName().get(i);
+				String strColumnName = rsDAO.getColumnLabelName().get(i);
 		
 				/** 표시 되면 안되는 컬럼을 제거 합니다 */
 				if(StringUtils.startsWithIgnoreCase(strColumnName, PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN)) continue;
@@ -150,7 +163,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				});
 
 				// if select statement update
-				if(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT == rsDAO.getStatementType()) {
+				if(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT == rsDAO.getStatementType() && isEditable) {
 					if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
 				}
 				
@@ -172,8 +185,9 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		
 		try{
 			NumberFormat nf = NumberFormat.getNumberInstance();
-			return nf.format(value);
+			return nf.format(Double.parseDouble(value.toString()));
 		} catch(Exception e){
+			logger.error("number format exception", e);
 			// ignore exception
 		}
 

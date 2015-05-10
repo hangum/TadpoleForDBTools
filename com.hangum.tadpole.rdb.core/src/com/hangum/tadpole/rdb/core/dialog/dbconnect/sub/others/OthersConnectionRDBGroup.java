@@ -39,17 +39,17 @@ public class OthersConnectionRDBGroup extends OthersConnectionGroup {
 	 * @param oldUserDB
 	 */
 	public void setUserData(UserDBDAO oldUserDB) {
-		setBtnReadOnlyConnection(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_readOnlyConnect())?true:false);
-		setBtnAutoCommit(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_autocommit())?true:false);
-		setBtnShowTables(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_showtables())?true:false);
+		setBtnReadOnlyConnection(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_readOnlyConnect())?true:false);
+		setBtnAutoCommit(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_autocommit())?true:false);
+		setBtnShowTables(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_showtables())?true:false);
 		
-		setBtnProfiler(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_profile())?true:false);
+		setBtnProfiler(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_profile())?true:false);
 		
-		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getQuestion_dml())?true:false);
+		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getQuestion_dml())?true:false);
 		
-		setIsVisible(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_visible())?true:false);
-//		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_summary_report())?true:false);
-//		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_monitoring())?true:false);
+		setIsVisible(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_visible())?true:false);
+//		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_summary_report())?true:false);
+//		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_monitoring())?true:false);
 	}
 	
 	@Override

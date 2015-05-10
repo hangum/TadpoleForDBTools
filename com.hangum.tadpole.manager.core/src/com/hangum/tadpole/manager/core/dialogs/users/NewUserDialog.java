@@ -244,11 +244,11 @@ public class NewUserDialog extends Dialog {
 			/**
 			 * 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
 			 */
-			String approvalYn = ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.toString():PublicTadpoleDefine.YES_NO.YES.toString();
+			String approvalYn = ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name();
 			String strEmailConformKey = Utils.getUniqueDigit(7);
 			TadpoleSystem_UserQuery.newUser(
 					PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
-					strEmail, strEmailConformKey, PublicTadpoleDefine.YES_NO.NO.toString(), 
+					strEmail, strEmailConformKey, PublicTadpoleDefine.YES_NO.NO.name(), 
 					passwd, 
 					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
 					name, comboLanguage.getText(), approvalYn,  

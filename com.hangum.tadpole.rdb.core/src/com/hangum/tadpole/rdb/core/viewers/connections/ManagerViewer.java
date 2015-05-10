@@ -296,7 +296,7 @@ public class ManagerViewer extends ViewPart {
 	 * @param userDB
 	 */ 
 	public void addUserResouceData(UserDBDAO userDB) {
-		if(userDB.getListUserDBErd() == null) {
+		if(userDB.getListUserDBErd().isEmpty()) {
 			// user_resource_data 목록을 추가해 줍니다.
 			try {
 				List<UserDBResourceDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
@@ -340,15 +340,15 @@ public class ManagerViewer extends ViewPart {
 			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
-					if(userDB.getListUserDBErd() != null) userDB.getListUserDBErd().clear();
+					List<UserDBResourceDAO> listResources = userDB.getListUserDBErd();
+					listResources.clear();
+					
 					try {
-						List<UserDBResourceDAO> listUserDBErd = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
-						if(null != listUserDBErd) {
-							for (UserDBResourceDAO userDBResouceDAO : listUserDBErd) {
-								userDBResouceDAO.setParent(userDB);
-							}
-							userDB.setListUserDBErd(listUserDBErd);
+						listResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
+						for (UserDBResourceDAO userDBResouceDAO : listResources) {
+							userDBResouceDAO.setParent(userDB);
 						}
+							userDB.setListUserDBErd(listResources);
 					} catch (Exception e) {
 						logger.error("erd list", e); //$NON-NLS-1$
 						
@@ -359,7 +359,7 @@ public class ManagerViewer extends ViewPart {
 					managerTV.refresh(userDB);					
 					managerTV.expandToLevel(userDB, 3);
 					
-					break;
+					return;
 				}	// if(userDB.getSeq() == dbSeq) {
 				
 			}	// for(UserDBDAO

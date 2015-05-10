@@ -168,9 +168,11 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_Procedure);
-					manager.add(modifyAction_Procedure);
-					manager.add(dropAction_Procedure);
+					if(!isDDLLock()) {
+						manager.add(creatAction_Procedure);
+						manager.add(modifyAction_Procedure);
+						manager.add(dropAction_Procedure);
+					}
 				}
 				manager.add(refreshAction_Procedure);
 

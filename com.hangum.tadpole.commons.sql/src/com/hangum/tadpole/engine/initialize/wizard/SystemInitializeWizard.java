@@ -49,10 +49,10 @@ public class SystemInitializeWizard extends Wizard {
 		
 		try {
 			UserDAO newUserDAO = TadpoleSystem_UserQuery.newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
-					adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.toString(),
+					adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
 					adminDao.getPasswd(), 	
 					PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-					"Tadpole System Admin", "en", PublicTadpoleDefine.YES_NO.YES.toString(), PublicTadpoleDefine.YES_NO.NO.toString(), ""); //$NON-NLS-1$ //$NON-NLS-2$
+					"Tadpole System Admin", "en", PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), ""); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			insertUserPreferenceValue(newUserDAO, PreferenceDefine.SMTP_HOST_NAME, 	adminDao.getsMTPServer());
 			insertUserPreferenceValue(newUserDAO, PreferenceDefine.SMTP_PORT, 		adminDao.getPort());
