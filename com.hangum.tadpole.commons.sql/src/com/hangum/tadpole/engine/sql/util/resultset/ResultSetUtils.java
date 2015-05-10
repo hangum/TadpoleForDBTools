@@ -399,9 +399,9 @@ public class ResultSetUtils {
 					metaData.put("type", 	""+rsm.getColumnType(columnSeq));
 					metaData.put("typeName", 	""+rsm.getColumnTypeName(columnSeq));
 					
-					if(logger.isDebugEnabled()) {
-						logger.debug("\tschema :" + pgsqlMeta.getBaseSchemaName(columnSeq) + "\ttable:" + pgsqlMeta.getBaseTableName(columnSeq) + "\tcolumn:" + pgsqlMeta.getBaseColumnName(columnSeq));
-					}
+//					if(logger.isDebugEnabled()) {
+//						logger.debug("\tschema :" + pgsqlMeta.getBaseSchemaName(columnSeq) + "\ttable:" + pgsqlMeta.getBaseTableName(columnSeq) + "\tcolumn:" + pgsqlMeta.getBaseColumnName(columnSeq));
+//					}
 					
 					mapTableColumn.put(i+1, metaData);
 				}
@@ -429,7 +429,10 @@ public class ResultSetUtils {
 //					mapTableColumn.put(i+1, metaData);
 //				}
 				
-			} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+			} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT 
+							|| userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
+							|| userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT							
+					) {
 				for(int i=0;i<rsm.getColumnCount(); i++) {
 					int columnSeq = i+1;
 					Map<String, String> metaData = new HashMap<String, String>();
