@@ -16,9 +16,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * TableEditor의 input

@@ -19,11 +19,11 @@ import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * main editor의 input
@@ -122,12 +122,12 @@ public class MainEditorInput implements IEditorInput {
 	@Override
 	public String getToolTipText() {
 
-		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
+		if(PermissionChecker.isShow(userDB.getRole_id())) {
 			if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 				String fileName = new File(userDB.getDb()).getName();			
-				return String.format(userDB.getDbms_types() + " - %s", fileName);
+				return String.format(userDB.getDbms_type() + " - %s", fileName);
 			} else {
-				return String.format(userDB.getDbms_types() + " - %s:%s", userDB.getHost(), userDB.getUsers());
+				return String.format(userDB.getDbms_type() + " - %s:%s", userDB.getHost(), userDB.getUsers());
 			}	
 		}
 		

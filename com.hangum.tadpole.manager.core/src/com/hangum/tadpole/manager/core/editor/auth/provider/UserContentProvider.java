@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
+import com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO;
 
 /**
 * content provider

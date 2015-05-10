@@ -14,7 +14,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -27,12 +28,15 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.SQLUtil;
 
 /**
  * RDB Result Composite
@@ -40,6 +44,7 @@ import com.hangum.tadpole.sql.util.SQLUtil;
  * @author hangum
  *
  */
+@SuppressWarnings("serial")
 public class ResultMainComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultMainComposite.class);
@@ -122,7 +127,7 @@ public class ResultMainComposite extends Composite {
 		tbtmMessage.setControl(compositeMessage);
 		///////////////////// tab Message //////////////////////////		
 	    
-		tabFolderResult.setSelection(0);
+		tabFolderResult.setSelection(1);
 	}
 	
 	/**
@@ -144,29 +149,29 @@ public class ResultMainComposite extends Composite {
 	
 	/**
 	 * execute command
+	 * 
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
 		if(logger.isDebugEnabled()) logger.debug("==> executeQuery user query is " + reqQuery.getOriginalSql());
 		
+		// selected first tab request quring.
+		resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
+		
 		try {
-			
-			// 쿼리를 이미 실행 중이라면 무시합니다.
-			if(compositeResultSet.getJobQueryManager() != null) {
-				if(Job.RUNNING == compositeResultSet.getJobQueryManager().getState()) {
-					if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job ");
-					return;
-				}
-			}
-			
 			// 요청쿼리가 없다면 무시합니다. 
 			if(StringUtils.isEmpty(reqQuery.getSql())) return;
 			this.reqQuery = reqQuery;
+
+			// security check.
+			if(!TadpoleSecurityManager.getInstance().isLock(getUserDB())) {
+				throw new Exception("This DB status is locking. Please contact admin.");
+			}
 			
 			// 실행해도 되는지 묻는다.
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(getUserDB().getQuestion_dml())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())) {
 				boolean isDMLQuestion = false;
-				if(reqQuery.getType() == EditorDefine.EXECUTE_TYPE.ALL) {						
+				if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
 					for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
 						if(!SQLUtil.isStatement(strSQL)) {
 							isDMLQuestion = true;
@@ -185,6 +190,8 @@ public class ResultMainComposite extends Composite {
 			
 		} catch(Exception e) {
 			logger.error("execute query", e);
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Executing Query", "Executing query", errStatus); //$NON-NLS-1$
 		} finally {
 			// 에디터가 작업이 끝났음을 알립니다.
 //			browserEvaluate(EditorFunctionService.EXECUTE_DONE);
@@ -229,8 +236,14 @@ public class ResultMainComposite extends Composite {
 		mainEditor.appendText(cmd);
 	}
 
-	public void refreshMessageView(String msg) {
-		compositeMessage.addAfterRefresh(new TadpoleMessageDAO(new Date(), msg));		
+	/**
+	 * Message windows write the system message
+	 * 
+	 * @param throwable
+	 * @param msg
+	 */
+	public void refreshMessageView(Throwable throwable, String msg) {
+		compositeMessage.addAfterRefresh(new TadpoleMessageDAO(new Date(), msg, throwable));		
 	}
 
 	public IWorkbenchPartSite getSite() {

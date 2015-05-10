@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 
 /**
  * TABLE의 FILTER

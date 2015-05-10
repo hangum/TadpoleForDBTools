@@ -31,7 +31,7 @@ public class DBFigure extends Figure {
 		layout = new XYLayout();
 		setLayoutManager(layout);
 		
-		labelDBType.setForegroundColor(ColorConstants.black);
+		labelDBType.setForegroundColor(ColorConstants.black());
 		labelDBType.setBorder(new LineBorder(1));
 		labelDBType.setBackgroundColor(SWTResourceManager.getColor(100, 149, 237));
 		labelDBType.setOpaque(true);
@@ -47,7 +47,7 @@ public class DBFigure extends Figure {
 //		add(labelURL);
 //		setConstraint(labelURL, new Rectangle(5, 29, -1, -1));
 		
-		setForegroundColor(ColorConstants.black);
+		setForegroundColor(ColorConstants.black());
 		setBorder(new LineBorder(1));
 		
 	}

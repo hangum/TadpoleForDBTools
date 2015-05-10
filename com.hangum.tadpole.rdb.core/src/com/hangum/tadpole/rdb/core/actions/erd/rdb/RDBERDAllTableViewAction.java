@@ -23,11 +23,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditorInput;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * 전체 table의 erd를 그립니다.

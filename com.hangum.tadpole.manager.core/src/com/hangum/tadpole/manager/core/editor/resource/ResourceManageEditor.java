@@ -57,7 +57,14 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
@@ -68,14 +75,6 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumn
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.ManagerListDTO;
-import com.hangum.tadpole.sql.dao.ResourceManagerDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
@@ -266,8 +265,7 @@ public class ResourceManageEditor extends EditorPart {
 					//reLoadResource();
 					addUserResouceData();
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					logger.error("save resource", e1);
 				}
 			}
 		});
@@ -347,7 +345,7 @@ public class ResourceManageEditor extends EditorPart {
 
 	}
 
-	public void initUI() {
+	private void initUI() {
 		treeViewer.setContentProvider(new ResourceManagerContentProvider());
 		treeViewer.setLabelProvider(new ResourceManagerLabelProvider());
 		treeViewer.setInput(treeList);
@@ -444,13 +442,15 @@ public class ResourceManageEditor extends EditorPart {
 
 		try {
 			treeList.clear();
-			List<String> groupNames = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
-			for (String groupName : groupNames) {
-				ManagerListDTO parent = new ManagerListDTO(groupName);
-				treeList.add(parent);
+			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+			// 그룹 이름을 생성합니다.
+			List<String> groupNames = new ArrayList<String>();
+			for (UserDBDAO userDBDAO : userDBS) {
+				if(!groupNames.contains(userDBDAO.getGroup_name())) {
+					groupNames.add(userDBDAO.getGroup_name());
+				}
 			}
 
-			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
 			for (UserDBDAO userDBDAO : userDBS) {
 				addUserDB(userDBDAO, false);
 			}

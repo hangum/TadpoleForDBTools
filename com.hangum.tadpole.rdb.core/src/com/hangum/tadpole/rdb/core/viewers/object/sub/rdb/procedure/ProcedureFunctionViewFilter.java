@@ -13,7 +13,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
-import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 
 /**
  * Procedure Function 의 FILTER

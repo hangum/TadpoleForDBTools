@@ -17,8 +17,8 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;

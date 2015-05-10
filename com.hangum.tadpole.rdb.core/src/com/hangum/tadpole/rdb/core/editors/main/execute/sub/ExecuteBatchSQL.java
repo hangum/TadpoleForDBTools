@@ -16,13 +16,16 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -38,16 +41,46 @@ public class ExecuteBatchSQL {
 	 * select문의 execute 쿼리를 수행합니다.
 	 * 
 	 * @param listQuery
+	 * @param reqQuery
+	 * @param userDB
+	 * @param userType
+	 * @param intCommitCount
+	 * @param userEmail
 	 * @throws Exception
-	 */
+	 */     
 	public static void runSQLExecuteBatch(List<String> listQuery, 
 			final RequestQuery reqQuery,
 			final UserDBDAO userDB,
 			final String userType,
+			final int intCommitCount,
 			final String userEmail
 	) throws Exception {
 		if(!PermissionChecker.isExecute(userType, userDB, listQuery)) {
 			throw new Exception(Messages.MainEditor_21);
+		}
+		// Check the db access control 
+		for (String strQuery : listQuery) {
+			PublicTadpoleDefine.QUERY_TYPE queryType = SQLUtil.sqlQueryType(strQuery);
+			if(queryType == QUERY_TYPE.DDL) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
+					throw new Exception(Messages.MainEditor_21);
+				}
+			}
+			if(queryType == QUERY_TYPE.INSERT) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock())) {
+					throw new Exception(Messages.MainEditor_21);
+				}
+			}
+			if(queryType == QUERY_TYPE.UPDATE) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock())) {
+					throw new Exception(Messages.MainEditor_21);
+				}
+			}
+			if(queryType == QUERY_TYPE.DELETE) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl())) {
+					throw new Exception(Messages.MainEditor_21);
+				}
+			}
 		}
 		
 		java.sql.Connection javaConn = null;
@@ -62,19 +95,26 @@ public class ExecuteBatchSQL {
 			}
 			statement = javaConn.createStatement();
 			
+			int count = 0;
 			for (String strQuery : listQuery) {
 				// 쿼리 중간에 commit이나 rollback이 있으면 어떻게 해야 하나???
 				if(!TransactionManger.transactionQuery(reqQuery.getSql(), userEmail, userDB)) {
 					
-					if(StringUtils.startsWith(strQuery.trim().toUpperCase(), "CREATE TABLE")) { //$NON-NLS-1$
+					if(StringUtils.startsWithIgnoreCase(strQuery.trim(), "CREATE TABLE")) { //$NON-NLS-1$
 						strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					
 				}
 				statement.addBatch(strQuery);
+				
+				if (++count % intCommitCount == 0) {
+					statement.executeBatch();
+					count = 0;
+				}
 			}
 			statement.executeBatch();
 		} catch(Exception e) {
+//			javaConn.rollback();
 			logger.error("Execute batch update", e); //$NON-NLS-1$
 			throw e;
 		} finally {

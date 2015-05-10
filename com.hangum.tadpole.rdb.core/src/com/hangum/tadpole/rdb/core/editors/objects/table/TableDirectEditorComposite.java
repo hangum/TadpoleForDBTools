@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -49,24 +50,23 @@ import org.eclipse.swt.widgets.ToolItem;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.util.ImageUtils;
-import com.hangum.tadpole.commons.util.XMLUtils;
+import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
+import com.hangum.tadpole.engine.sql.util.sqlscripts.DDLScriptManager;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultContentProvider;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
+import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.resultset.ResultSetUtils;
-import com.hangum.tadpole.sql.util.sqlscripts.DDLScriptManager;
-import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
-import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
-import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -161,7 +161,7 @@ public class TableDirectEditorComposite extends Composite {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -175,7 +175,7 @@ public class TableDirectEditorComposite extends Composite {
 		tltmRefresh.setToolTipText(Messages.TableDirectEditorComposite_tltmRefersh_text);
 		
 		tltmSave = new ToolItem(toolBar, SWT.NONE);
-		tltmSave.setImage(ImageUtils.getSave());
+		tltmSave.setImage(ToobalImageUtils.getSave());
 		tltmSave.setEnabled(false);
 		tltmSave.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -186,7 +186,7 @@ public class TableDirectEditorComposite extends Composite {
 		tltmSave.setToolTipText(Messages.TableEditPart_0);
 		
 		tltmInsert = new ToolItem(toolBar, SWT.NONE);
-		tltmInsert.setImage(ImageUtils.getAdd());
+		tltmInsert.setImage(ToobalImageUtils.getAdd());
 		tltmInsert.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -196,7 +196,7 @@ public class TableDirectEditorComposite extends Composite {
 		tltmInsert.setToolTipText(Messages.TableEditPart_tltmInsert_text);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
-		tltmDelete.setImage(ImageUtils.getDelete());
+		tltmDelete.setImage(ToobalImageUtils.getDelete());
 		tltmDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -413,7 +413,7 @@ public class TableDirectEditorComposite extends Composite {
 				
 				for(int i=1;i<columnCount+1; i++) {					
 					try {
-						tmpRs.put(i, XMLUtils.xmlToString(rs.getString(i) == null?"":rs.getString(i))); //$NON-NLS-1$
+						tmpRs.put(i, StringEscapeUtils.escapeHtml(rs.getString(i) == null?"":rs.getString(i))); //$NON-NLS-1$
 					} catch(Exception e) {
 						logger.error("ResutSet fetch error", e); //$NON-NLS-1$
 						tmpRs.put(i, ""); //$NON-NLS-1$

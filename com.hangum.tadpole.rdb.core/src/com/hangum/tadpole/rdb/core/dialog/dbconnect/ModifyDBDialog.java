@@ -30,11 +30,10 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STAT
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 
 /**
  * Modify DB Dialog
@@ -67,9 +66,8 @@ public class ModifyDBDialog extends Dialog {
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.userDBDAO = userDBDAO;
-		// db groupData 
 		try {
-			listGroupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}
@@ -78,7 +76,7 @@ public class ModifyDBDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(userDBDAO.getDbms_types() + " Database"); //$NON-NLS-1$
+		newShell.setText(userDBDAO.getDbms_type() + " Database"); //$NON-NLS-1$
 	}
 
 	/**
@@ -119,7 +117,7 @@ public class ModifyDBDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
+		if (!loginComposite.saveDBData()) return;
 		this.retuserDb = loginComposite.getDBDTO();
 		refreshManagerView();
 		
@@ -159,7 +157,7 @@ public class ModifyDBDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 500);
+		return new Point(450, 470);
 	}
 	
 	/**

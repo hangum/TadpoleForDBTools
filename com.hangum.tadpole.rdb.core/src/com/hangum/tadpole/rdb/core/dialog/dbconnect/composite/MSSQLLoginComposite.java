@@ -29,20 +29,20 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.DBInfoDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.DBInfoDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.template.DBOperationType;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -63,6 +63,8 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	protected Text textPassword;
 	protected Text textDatabase;
 	protected Text textPort;
+	
+	protected Text textJDBCOptions;
 	
 	/**
 	 * Create the composite.
@@ -97,7 +99,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
 		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
-		grpConnectionType.setLayout(new GridLayout(3, false));
+		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.MSSQLLoginComposite_grpConnectionType_text);
 		
@@ -105,7 +107,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		lblHost.setText(Messages.DBLoginDialog_1);
 		
 		textHost = new Text(grpConnectionType, SWT.BORDER);
-		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
 		lblNewLabelPort.setText(Messages.DBLoginDialog_5);
@@ -143,19 +145,26 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
-		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));		
+		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));		
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.DBLoginDialog_2);
 		
 		textUser = new Text(grpConnectionType, SWT.BORDER);
-		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
 		lblPassword.setText(Messages.DBLoginDialog_3);
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -169,7 +178,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
-			preDBInfo.getComboOperationType().setText(DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName());
+			preDBInfo.getComboOperationType().setText(PublicTadpoleDefine.DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName());
 			
 			textHost.setText(oldUserDB.getHost());
 			textPort.setText(oldUserDB.getPort());
@@ -177,13 +186,15 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
 			
+			textJDBCOptions.setText(oldUserDB.getUrl_user_parameter());
+			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
 		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
-			textHost.setText("192.168.32.128"); //$NON-NLS-1$
+			textHost.setText("172.16.187.132"); //$NON-NLS-1$
 			textPort.setText("1433"); //$NON-NLS-1$
 			textDatabase.setText("northwind"); //$NON-NLS-1$
 			textUser.setText("sa"); //$NON-NLS-1$
@@ -247,7 +258,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	}
 	
 	@Override
-	public boolean connection() {
+	public boolean saveDBData() {
 		if(!testConnection(false)) return false;
 		
 		// 기존 데이터 업데이트
@@ -255,7 +266,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -267,28 +278,29 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		// 신규 데이터 저장.
 		} else {
 			
-			int intVersion = 0;
-			
-			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
-				// 디비 버전을 찾아옵니다.
-				DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
-				intVersion = Integer.parseInt( StringUtils.substringBefore(dbInfo.getProductversion(), ".") );
+			if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+				int intVersion = 0;
 				
-			} catch (Exception e) {
-				logger.error("MSSQL Connection", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
-				
-				return false;
+				try {
+					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				
+					// 디비 버전을 찾아옵니다.
+					DBInfoDAO dbInfo = (DBInfoDAO)sqlClient.queryForObject("findDBInfo"); //$NON-NLS-1$
+					intVersion = Integer.parseInt( StringUtils.substringBefore(dbInfo.getProductversion(), ".") );
+					
+					if(intVersion <= 8) {
+						userDB.setDbms_type(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
+					}
+				} catch (Exception e) {
+					logger.error("MSSQL Connection", e); //$NON-NLS-1$
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
+					
+					return false;
+				}				
 			}
 			
 			try {
-				if(intVersion <= 8) {
-					userDB.setDbms_types(DBDefine.MSSQL_8_LE_DEFAULT.getDBToString());
-				}
-				
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error("MSSQL", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -338,21 +350,28 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 					strPort, 
 					strDB);
 		}
+		if(!"".equals(textJDBCOptions.getText())) {
+			dbUrl += "?" + textJDBCOptions.getText();
+		}
+
 		if(logger.isDebugEnabled()) logger.debug("[db url]" + dbUrl);
 
 		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
+		userDB.setUrl_user_parameter(textJDBCOptions.getText());
 		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
-		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
+		userDB.setOperation_type( PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
+		
+		// 처음 등록자는 권한이 어드민입니다.
+		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 		// others connection 정보를 입력합니다.
 		setOtherConnectionInfo();

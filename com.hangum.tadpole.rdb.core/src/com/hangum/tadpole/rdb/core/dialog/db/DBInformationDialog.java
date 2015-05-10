@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -27,13 +28,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBConnectionUtils;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * DB 정보를 보여 주는 다이얼로그
@@ -53,7 +54,7 @@ public class DBInformationDialog extends Dialog {
 	private UserDBDAO userDB;
 	private AbstractLoginComposite loginComposite;
 	/** group name */
-	private List<String> groupName;
+	private List<String> listGroupName = new ArrayList<String>();
 	private String selGroupName;	
 
 	/**
@@ -116,7 +117,7 @@ public class DBInformationDialog extends Dialog {
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText(Messages.DBInformationDialog_4);
 		
-		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
+		if(PermissionChecker.isShow(userDB.getRole_id())) {
 			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
 			lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			lblNameValue.setText(SessionManager.getName());
@@ -148,13 +149,13 @@ public class DBInformationDialog extends Dialog {
 	 */
 	private void initDBWidget() {
 		try {
-			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}
 		selGroupName = userDB.getGroup_name();
 		
-		loginComposite = DBConnectionUtils.getDBConnection(userDB.getDBDefine(), compositeBody, groupName, selGroupName, userDB);
+		loginComposite = DBConnectionUtils.getDBConnection(userDB.getDBDefine(), compositeBody, listGroupName, selGroupName, userDB);
 		compositeBody.layout();
 		container.layout();
 	}
@@ -177,9 +178,9 @@ public class DBInformationDialog extends Dialog {
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			return new Point(450, 460);
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
-			return new Point(450, 540);
+			return new Point(450, 480);
 		} else {
-			return new Point(450, 590);
+			return new Point(450, 530);
 		}
 	}
 

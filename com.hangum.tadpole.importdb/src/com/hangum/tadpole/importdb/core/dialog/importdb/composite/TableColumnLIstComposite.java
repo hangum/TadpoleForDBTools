@@ -29,6 +29,8 @@ import org.eclipse.swt.widgets.Table;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.ExistOnDeleteColumnEditingSupport;
@@ -36,8 +38,6 @@ import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.editingsupport.RenameColumnEditingSupport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
@@ -159,7 +159,7 @@ public class TableColumnLIstComposite extends Composite {
 		this.userDB = userDB;
 
 		try {
-			if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB.getDbms_types())) {
+			if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
 				List<TableDAO> listCollection = MongoDBQuery.listCollection(userDB);
 				for (TableDAO tableDao : listCollection) {
 					listTables.add( new ModTableDAO(tableDao.getName()) );

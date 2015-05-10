@@ -3,7 +3,7 @@ package com.hangum.tadpole.manager.core.editor.auth.provider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
+import com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO;
 
 /**
 * User composite filter

@@ -192,7 +192,7 @@ editorService.setFocus = function() {
 
 
 //==[ Define short key ]======================================================================================================================
-var shortcutErrMsg = 'Sorry. Broken shortcuts. \nOpen a new editor window. \nPlease use the Toolbar.';
+var shortcutErrMsg = 'Opps, an execution error has occured!\nEither click the "SQL" button of the tool bar, or open a new editor window.';
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
@@ -525,6 +525,7 @@ editorService.addText = function(varText) {
 		} else {
 			editor.gotoLine(editor.session.getLength()+1);
 			editor.insert("\n" + varText);
+			
 		}
 		editor.focus();
 	} catch(e) {

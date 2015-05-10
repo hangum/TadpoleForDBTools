@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 
 /**
  * Main Editor extension handler
@@ -37,13 +37,13 @@ public class MainEditorContributionsHandler {
 	 * 
 	 * @return
 	 */
-	public AMainEditorExtension[] evaluateCreateWidgetContribs(final UserDBDAO userDB) {
+	public IMainEditorExtension[] evaluateCreateWidgetContribs(final UserDBDAO userDB) {
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(MAIN_EDITOR_ID);
 		final LinkedList list = new LinkedList();
 		try {
 			for (IConfigurationElement e : config) {
 				final Object mainEditorExtension = e.createExecutableExtension("class");
-				if (mainEditorExtension instanceof AMainEditorExtension) {
+				if (mainEditorExtension instanceof IMainEditorExtension) {
 					ISafeRunnable runnable = new ISafeRunnable() {
 
 						@Override
@@ -53,7 +53,7 @@ public class MainEditorContributionsHandler {
 
 						@Override
 						public void run() throws Exception {
-							AMainEditorExtension compositeExt = (AMainEditorExtension) mainEditorExtension;
+							IMainEditorExtension compositeExt = (IMainEditorExtension) mainEditorExtension;
 							compositeExt.initExtension(userDB);
 							if(compositeExt.isEnableExtension()) list.add(compositeExt);
 						}
@@ -64,7 +64,7 @@ public class MainEditorContributionsHandler {
 		} catch (CoreException ex) {
 			logger.error("create main editor", ex);
 		}
-		return (AMainEditorExtension[]) list.toArray(new AMainEditorExtension[list.size()]);
+		return (IMainEditorExtension[]) list.toArray(new IMainEditorExtension[list.size()]);
 	}
 
 //	/**

@@ -27,17 +27,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
-import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManagerListener;
-import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.dao.system.ext.UserGroupAUserDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
  * admin의 사용자 수정 다이얼로그
@@ -191,17 +188,17 @@ public class ModifyUserDialog extends Dialog {
 		
 		comboApproval.setText(userDAO.getApproval_yn());
 		comboDel.setText(userDAO.getDelYn());
-		String question = CipherManager.getInstance().decryption(userDAO.getSecurity_question());
-		if (null!= question && !"".equals(question.trim())) {
-			try {
-				SecurityHint questionKey = PublicTadpoleDefine.SecurityHint.valueOf(question);
-				textQuestion.setText(questionKey.toString());
-			} catch (Exception e) {
-				// skip
-				textQuestion.setText(question);
-			}
-		}
-		textAnswer.setText(CipherManager.getInstance().decryption(userDAO.getSecurity_answer()));
+//		String question = CipherManager.getInstance().decryption(userDAO.getSecurity_question());
+//		if (null!= question && !"".equals(question.trim())) {
+//			try {
+//				SecurityHint questionKey = PublicTadpoleDefine.SecurityHint.valueOf(question);
+//				textQuestion.setText(questionKey.toString());
+//			} catch (Exception e) {
+//				// skip
+//				textQuestion.setText(question);
+//			}
+//		}
+//		textAnswer.setText(CipherManager.getInstance().decryption(userDAO.getSecurity_answer()));
 	}
 	
 	@Override
@@ -211,8 +208,8 @@ public class ModifyUserDialog extends Dialog {
 			user.setApproval_yn(comboApproval.getText());
 			user.setDelYn(comboDel.getText());
 			user.setSeq(userDAO.getSeq());
-			user.setSecurity_question(textQuestion.getText());
-			user.setSecurity_answer(textAnswer.getText());
+//			user.setSecurity_question(textQuestion.getText());
+//			user.setSecurity_answer(textAnswer.getText());
 			
 			// 사용자의 권한을 no로 만들면 session에서 삭제 하도록 합니다.
 			if("YES".equals(user.getDelYn()) || "YES".equals(user.getApproval_yn())) {

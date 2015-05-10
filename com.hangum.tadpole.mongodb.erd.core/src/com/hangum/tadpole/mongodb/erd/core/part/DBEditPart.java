@@ -93,7 +93,7 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		
 		// connection router 조절
 		ConnectionLayer cLayer = (ConnectionLayer)getLayer(CONNECTION_LAYER);
-		cLayer.setForegroundColor(ColorConstants.lightBlue);
+		cLayer.setForegroundColor(ColorConstants.lightBlue());
 		cLayer.setConnectionRouter(new ShortestPathConnectionRouter(getFigure()));
 	}
 

@@ -17,13 +17,13 @@ import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.ConnectionDecorationContributionsHandler;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.ManagerListDTO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.template.DBOperationType;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -43,53 +43,101 @@ public class ManagerLabelProvider extends LabelProvider {
 	/** Markup end tag */
 	public static String END_TAG = "</em>"; //$NON-NLS-1$
 	
+	/**
+	 * get group image
+	 * 
+	 * @return
+	 */
+	public static Image getGroupImage() {
+		return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/server_database.png"); //$NON-NLS-1$
+	}
+	/**
+	 * get db image
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static Image getDBImage(UserDBDAO userDB) {
+		String strBaseImage = "";
+		
+		DBDefine dbType = DBDefine.getDBDefine(userDB);
+		if(DBDefine.MYSQL_DEFAULT == dbType) 		strBaseImage = "resources/icons/mysql-add.png";
+		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "resources/icons/mariadb-add.png";
+		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
+		else if(DBDefine.SQLite_DEFAULT == dbType) 	strBaseImage = "resources/icons/sqlite-add.png";
+		else if(DBDefine.MSSQL_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
+		else if(DBDefine.CUBRID_DEFAULT == dbType) 	strBaseImage = "resources/icons/cubrid-add.png";
+		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "resources/icons/postgresSQL-add.png";
+		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
+		else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) strBaseImage = "resources/icons/hive-add.png";
+		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "resources/icons/tajo-add.jpg";
+		else  strBaseImage = "resources/icons/database-add.png";
+		
+		Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, strBaseImage);
+		
+		try {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
+				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {				
+					baseImage = ResourceManager.decorateImage(baseImage, 
+													ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/lock_0.28.png"), 
+													ResourceManager.BOTTOM_LEFT);
+				} else {
+					baseImage = ResourceManager.decorateImage(baseImage, 
+							ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unlock_0.28.png"), 
+							ResourceManager.BOTTOM_LEFT);
+				}
+			}
+		} catch(Exception e) {
+			logger.error("Image decoration", e);
+		}
+		
+		// extension image decoration
+		try {
+			ConnectionDecorationContributionsHandler handler = new ConnectionDecorationContributionsHandler();
+			Image extensionImage = handler.getImage(userDB);
+			if(extensionImage != null) {
+				return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
+			}
+		} catch(Exception e) {
+			logger.error("extension point exception", e);
+		}
+		
+		return baseImage;
+	}
+	
+	/**
+	 * user label text
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static String getDBText(UserDBDAO userDB) {
+		String retText = "";
+		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
+			retText = PRODUCTION_SERVER_START_TAG + "[" + StringUtils.substring(userDB.getOperation_type(), 0, 3) + "] " + END_TAG;
+		} else {
+			retText = DEVELOPMENT_SERVER_START_TAG + "[" + StringUtils.substring(userDB.getOperation_type(), 0, 3) + "] " + END_TAG;
+		}
+		
+		// 자신의 디비만 보이도록 수정
+		if(userDB.getUser_seq() == SessionManager.getUserSeq()) {
+			retText += userDB.getDisplay_name() + " (" + userDB.getUsers() + "@" + userDB.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} else {
+			retText += userDB.getDisplay_name(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+		
+		return retText;
+	}
+	
 	@Override
 	public Image getImage(Object element) {
 
 		if(element instanceof ManagerListDTO) {
-			
-			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/server_database.png"); //$NON-NLS-1$
-			
+			return getGroupImage();
+
 		} else if(element instanceof UserDBDAO) {
-			Image baseImage = null;
-			UserDBDAO dto = (UserDBDAO)element;
-			
-			DBDefine dbType = DBDefine.getDBDefine(dto);
-			if(DBDefine.MYSQL_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$
-			else if(DBDefine.MARIADB_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mariadb-add.png"); //$NON-NLS-1$
-			else if(DBDefine.ORACLE_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/oracle-add.png"); //$NON-NLS-1$
-			else if(DBDefine.SQLite_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlite-add.png"); //$NON-NLS-1$
-			else if(DBDefine.MSSQL_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mssql-add.png"); //$NON-NLS-1$
-			else if(DBDefine.CUBRID_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/cubrid-add.png"); //$NON-NLS-1$
-			else if(DBDefine.POSTGRE_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/postgresSQL-add.png"); //$NON-NLS-1$
-			else if(DBDefine.MONGODB_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb-add.png"); //$NON-NLS-1$
-			else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/hive-add.png"); //$NON-NLS-1$
-			else if(DBDefine.TAJO_DEFAULT == dbType) 
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/tajo-add.jpg"); //$NON-NLS-1$
-			else
-				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/database-add.png"); //$NON-NLS-1$
-			
-			// extension image decoration
-			try {
-				ConnectionDecorationContributionsHandler handler = new ConnectionDecorationContributionsHandler();
-				Image extensionImage = handler.getImage(dto);
-				if(extensionImage != null) {
-					return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
-				}
-			} catch(Exception e) {
-				logger.error("extension point exception", e);
-			}
-			
-			return baseImage;			
+			return getDBImage((UserDBDAO)element);			
+		
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			if(PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals( dao.getResource_types())) {
@@ -109,23 +157,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			return dto.getName();
 			
 		} else if(element instanceof UserDBDAO) {
-			UserDBDAO dao = (UserDBDAO)element;
-			
-			String retText = "";
-			if(DBOperationType.PRODUCTION.toString().equals(dao.getOperation_type())) {
-				retText = PRODUCTION_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 3) + "] " + END_TAG;
-			} else {
-				retText = DEVELOPMENT_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 3) + "] " + END_TAG;
-			}
-			
-			// 자신의 디비만 보이도록 수정
-			if(dao.getUser_seq() == SessionManager.getSeq()) {
-				retText += dao.getDisplay_name() + " (" + dao.getUsers() + "@" + dao.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			} else {
-				retText += dao.getDisplay_name(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			}
-			
-			return retText;
+			return getDBText((UserDBDAO)element);
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			String strComment = "".equals(dao.getDescription())?"":" (" + dao.getDescription() + ")";

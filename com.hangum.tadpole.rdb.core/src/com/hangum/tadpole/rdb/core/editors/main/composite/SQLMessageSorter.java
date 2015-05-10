@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
-import com.hangum.tadpole.sql.util.tables.DefaultViewerSorter;
+import com.hangum.tadpole.engine.sql.util.tables.DefaultViewerSorter;
 
 /**
  * sql history, message sorter 

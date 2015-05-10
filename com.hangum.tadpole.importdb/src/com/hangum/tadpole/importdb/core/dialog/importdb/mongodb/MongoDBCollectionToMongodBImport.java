@@ -19,11 +19,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.dialog.importdb.dao.ModTableDAO;
 import com.hangum.tadpole.importdb.core.dialog.importdb.utils.MongoDBQueryUtil;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.DBObject;
 
 /**

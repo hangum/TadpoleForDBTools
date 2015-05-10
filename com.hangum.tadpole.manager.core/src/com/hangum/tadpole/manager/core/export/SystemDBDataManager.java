@@ -19,10 +19,10 @@ import com.google.gson.Gson;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 
 /**
  * System DB 인 UserDB 테이블 데이터를 export 하려는 클래스.
@@ -32,7 +32,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
  *  			IS_READONLYCONNECT, IS_AUTOCOMMIT, IS_SHOWTABLES, DELYN
  * 
  * @author hangum
- *
+ * @deprecated
  */
 public class SystemDBDataManager {
 	public static String EXPORT_VER = "00001"; //$NON-NLS-1$
@@ -67,10 +67,10 @@ public class SystemDBDataManager {
 		Gson gson = new Gson();
 		
 		for (UserDBDAO userDBDAO : listUserDB) {
-			if(userDBDAO.getGroup_seq() == SessionManager.getGroupSeq()) {
-				retStr += gson.toJson(userDBDAO);
-				retStr += PublicTadpoleDefine.LINE_SEPARATOR;
-			}
+//			if(userDBDAO.getGroup_seq() == SessionManager.getGroupSeq()) {
+//				retStr += gson.toJson(userDBDAO);
+//				retStr += PublicTadpoleDefine.LINE_SEPARATOR;
+//			}
 		}
 		// google analytic
 		AnalyticCaller.track("export user DB");
@@ -93,7 +93,7 @@ public class SystemDBDataManager {
 		// int 가 1인 이유는 시스템 버전 정보를 빼서입니다.
 		for (int i=3; i<strUserdb.length; i++) {
 			UserDBDAO userDBDAO = gson.fromJson(strUserdb[i], UserDBDAO.class);
-			TadpoleSystem_UserDBQuery.newUserDB(userDBDAO, SessionManager.getSeq());
+			TadpoleSystem_UserDBQuery.newUserDB(userDBDAO, SessionManager.getUserSeq());
 		}
 		
 		// google analytic

@@ -26,12 +26,10 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilterDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.ExtensionBrowserURLDialog;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
-import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
 
 /**
  * Others connection info
@@ -48,7 +46,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 	private String strIp = "", strPort = "";
 	private OthersConnectionInfoDAO otherConnectionDAO = new OthersConnectionInfoDAO();
 	
-	private Button btnTableFilters;
+//	private Button btnTableFilters;
 	private Button btnReadOnlyConnection;
 	private Button btnShowTables;
 	private Button btnExternalBrowser;
@@ -77,21 +75,21 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setText(Messages.OthersConnectionMongoDBGroup_1);
 		
-		btnTableFilters = new Button(this, SWT.NONE);
-		btnTableFilters.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				if(Dialog.OK == dialog.open()) {
-					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
-					
-					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
-					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
-					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
-				}
-			}
-		});
-		btnTableFilters.setText(Messages.OthersConnectionMongoDBGroup_2);
+//		btnTableFilters = new Button(this, SWT.NONE);
+//		btnTableFilters.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+//				if(Dialog.OK == dialog.open()) {
+//					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
+//					
+//					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
+//					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
+//					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
+//				}
+//			}
+//		});
+//		btnTableFilters.setText(Messages.OthersConnectionMongoDBGroup_2);
 		
 		btnExternalBrowser = new Button(this, SWT.NONE);
 		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {
@@ -119,6 +117,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		btnSendMonitoring = new Button(this, SWT.CHECK);
 		btnSendMonitoring.setEnabled(false);
 		btnSendMonitoring.setText(Messages.OthersConnectionMongoDBGroup_btnSendMonitoring_text);
+		new Label(this, SWT.NONE);
 	}
 	
 	/**
@@ -197,7 +196,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		ExternalBrowserInfoDAO extBrowserDAO = new ExternalBrowserInfoDAO();
 		extBrowserDAO.setName("AdminBrowser");
 		extBrowserDAO.setUrl(String.format("http://%s:%s", strIp, intPort));
-		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		listBrowser.add(extBrowserDAO);
 		
 		return listBrowser;

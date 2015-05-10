@@ -11,7 +11,7 @@
 package com.hangum.tadpole.mongodb.core.test;
 
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 public class MakeUserDBDAO {
 	
@@ -28,7 +28,7 @@ public class MakeUserDBDAO {
 				"127.0.0.1", "27017", "Sample MondogoDB");
 		
 		
-		userDB.setDbms_types(DBDefine.MONGODB_DEFAULT.getDBToString());
+		userDB.setDbms_type(DBDefine.MONGODB_DEFAULT.getDBToString());
 		userDB.setUrl(dbUrl);
 		userDB.setDb("test");
 		userDB.setDisplay_name("Sample MondogoDB");

@@ -22,8 +22,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 
 import cubrid.jdbc.driver.CUBRIDStatement;
 

@@ -10,6 +10,20 @@
             id="com.hangum.tadpole.monitoring.core.editor.schedule"
             name="Schedule">
       </editor>
+      <editor
+            class="com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringMainEditor"
+            default="false"
+            icon="resources/icons/monitoring.png"
+            id="com.hangum.tadpole.monitoring.core.editor.main"
+            name="Monitoring Dashboard">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.monitoring.core.editors.monitoring.manage.MonitoringManagerEditor"
+            default="false"
+            icon="resources/icons/preferences.png"
+            id="com.hangum.tadpole.monitoring.core.editor.manage"
+            name="Monitoring Manage">
+      </editor>
    </extension>
 
 </plugin>

@@ -50,6 +50,12 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
@@ -60,11 +66,6 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.ManagerListDTO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
 
 /**
  * connection manager 정보를 
@@ -106,13 +107,18 @@ public class ManagerViewer extends ViewPart {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(is.getFirstElement() instanceof UserDBDAO) {
-					UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
-					addUserResouceData(userDB);
+					final UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
 					
-					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_types());
+					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+					
+					// Rice lock icode change event
+					managerTV.refresh(userDB, true);
+					
+					addUserResouceData(userDB);
+					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
 				}
 				
-				//
+				// 
 				// 아래 코드(managerTV.getControl().setFocus();)가 없으면, 오브젝트 탐색기의 event listener가 동작하지 않는다. 
 				// 이유는 글쎄 모르겠어.
 				//
@@ -127,11 +133,14 @@ public class ManagerViewer extends ViewPart {
 				
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if(selElement instanceof UserDBDAO) {
+					final UserDBDAO userDB= (UserDBDAO)selElement;
+					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+					
 					QueryEditorAction qea = new QueryEditorAction();
-					qea.run((UserDBDAO)selElement);
+					qea.run(userDB);
 				// erd를 클릭하면 erd가 오픈되도록 수정. 
 				} else if(selElement instanceof UserDBResourceDAO) {
-					UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
+					final UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					
 					if( PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
 						UserDBDAO userDB = dao.getParent();
@@ -189,17 +198,8 @@ public class ManagerViewer extends ViewPart {
 		
 		try {
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
-			// 그룹 이름을 생성합니다.
-			List<String> groupNames = new ArrayList<String>();
 			for (UserDBDAO userDBDAO : userDBS) {
-				if(!groupNames.contains(userDBDAO.getGroup_name())) {
-					groupNames.add(userDBDAO.getGroup_name());
-				}
-			}
-			
-			// 그룹의 자세한 항목을 넣습니다.
-			for (UserDBDAO userDBDAO : userDBS) {
-				addUserDB(userDBDAO, false);
+				addUserDB(userDBDAO, false);				
 			}
 			
 		} catch (Exception e) {
@@ -296,7 +296,7 @@ public class ManagerViewer extends ViewPart {
 	 * @param userDB
 	 */ 
 	public void addUserResouceData(UserDBDAO userDB) {
-		if(userDB.getListUserDBErd() == null) {
+		if(userDB.getListUserDBErd().isEmpty()) {
 			// user_resource_data 목록을 추가해 줍니다.
 			try {
 				List<UserDBResourceDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
@@ -310,7 +310,7 @@ public class ManagerViewer extends ViewPart {
 						} else {
 							
 							// 리소스 중에서 개인 리소스만 넣도록 합니다.
-							if(SessionManager.getSeq() == userDBResourceDAO.getUser_seq()) {
+							if(SessionManager.getUserSeq() == userDBResourceDAO.getUser_seq()) {
 								userDBResourceDAO.setParent(userDB);
 								listRealResource.add(userDBResourceDAO);
 							}
@@ -340,15 +340,15 @@ public class ManagerViewer extends ViewPart {
 			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
-					if(userDB.getListUserDBErd() != null) userDB.getListUserDBErd().clear();
+					List<UserDBResourceDAO> listResources = userDB.getListUserDBErd();
+					listResources.clear();
+					
 					try {
-						List<UserDBResourceDAO> listUserDBErd = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
-						if(null != listUserDBErd) {
-							for (UserDBResourceDAO userDBResouceDAO : listUserDBErd) {
-								userDBResouceDAO.setParent(userDB);
-							}
-							userDB.setListUserDBErd(listUserDBErd);
+						listResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
+						for (UserDBResourceDAO userDBResouceDAO : listResources) {
+							userDBResouceDAO.setParent(userDB);
 						}
+							userDB.setListUserDBErd(listResources);
 					} catch (Exception e) {
 						logger.error("erd list", e); //$NON-NLS-1$
 						
@@ -359,7 +359,7 @@ public class ManagerViewer extends ViewPart {
 					managerTV.refresh(userDB);					
 					managerTV.expandToLevel(userDB, 3);
 					
-					break;
+					return;
 				}	// if(userDB.getSeq() == dbSeq) {
 				
 			}	// for(UserDBDAO
@@ -461,5 +461,6 @@ public class ManagerViewer extends ViewPart {
 			ExceptionDetailsErrorDialog.openError(null, "Error", "DB Download Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
+	
 }
 

@@ -71,8 +71,8 @@ public class RelationEditPart extends AbstractConnectionEditPart {
 		labelSource.setText(relation.getReferenced_column_name());
 		labelSource.setLabelAlignment(PositionConstants.CENTER);
 		labelSource.setOpaque(true);
-		labelSource.setBackgroundColor(ColorConstants.white);
-		labelSource.setForegroundColor(ColorConstants.darkBlue);
+		labelSource.setBackgroundColor(ColorConstants.white());
+		labelSource.setForegroundColor(ColorConstants.darkBlue());
 		conn.add(labelSource, new ConnectionEndpointLocator(conn, true));
 
 		// target
@@ -82,8 +82,8 @@ public class RelationEditPart extends AbstractConnectionEditPart {
 		labelTarget.setText(relation.getColumn_name());
 		labelTarget.setLabelAlignment(PositionConstants.CENTER);
 		labelTarget.setOpaque(true);
-		labelTarget.setBackgroundColor(ColorConstants.white);
-		labelTarget.setForegroundColor(ColorConstants.darkBlue);
+		labelTarget.setBackgroundColor(ColorConstants.white());
+		labelTarget.setForegroundColor(ColorConstants.darkBlue());
 		conn.add(labelTarget, new ConnectionEndpointLocator(conn, false));
 		
 		return conn;

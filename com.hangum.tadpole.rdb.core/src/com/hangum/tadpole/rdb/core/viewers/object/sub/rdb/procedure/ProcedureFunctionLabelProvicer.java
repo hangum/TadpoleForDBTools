@@ -14,8 +14,8 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
 import com.swtdesigner.ResourceManager;
 
 /**

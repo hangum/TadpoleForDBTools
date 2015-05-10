@@ -175,6 +175,8 @@ public class Messages extends NLS {
 	public static String ExplorerViewer_76;
 	public static String ExplorerViewer_81;
 	public static String ExplorerViewer_86;
+	public static String ExtensionBrowserAction_1;
+	public static String ExtensionBrowserAction_3;
 	public static String ExtensionBrowserURLDialog_0;
 	public static String ExtensionBrowserURLDialog_18;
 	public static String ExtensionBrowserURLDialog_21;
@@ -446,6 +448,9 @@ public class Messages extends NLS {
 	public static String ResultSetComposite_btnDmlGenerator_text;
 	public static String ResultSetComposite_btnDMLGenerator_text;
 	public static String ResultSetComposite_btnSql_text;
+	public static String OthersConnectionGroup_btnIsMonitoring_text;
+	public static String ResultSetComposite_lblFilter_text;
+	public static String MySQLLoginComposite_lblJdbcOptions_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -42,7 +42,7 @@ public class ObjectEditor extends MainEditor {
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
 
-		strRoleType = SessionManager.getRoleType(userDB);
+		strRoleType = userDB.getRole_id();//SessionManager.getRoleType(userDB);
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());

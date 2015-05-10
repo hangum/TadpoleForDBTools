@@ -11,7 +11,6 @@
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -56,6 +55,11 @@ import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
@@ -64,18 +68,9 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
-import com.hangum.tadpole.rdb.core.extensionpoint.definition.AMainEditorExtension;
+import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.sql.format.SQLFormater;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.sql.util.SQLUtil;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -110,8 +105,9 @@ public class MainEditor extends EditorExtension {
 	
 	/** db table list */
 	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
-	
-	private AMainEditorExtension[] compMainExtions;
+
+	private SashForm sashFormExtension;
+	private IMainEditorExtension[] compMainExtions;
 	
 	public MainEditor() {
 		super();
@@ -131,7 +127,7 @@ public class MainEditor extends EditorExtension {
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
 
-		strRoleType = SessionManager.getRoleType(userDB);
+		strRoleType = userDB.getRole_id();//SessionManager.getRoleType(userDB);
 		super.setUserType(strRoleType);
 	}
 	
@@ -156,7 +152,7 @@ public class MainEditor extends EditorExtension {
 		parent.setLayout(gl_parent);
 		
 		// 에디터 확장을 위한 기본 베이스 위젲을 설정합니다.
-		SashForm sashFormExtension = new SashForm(parent, SWT.NONE);
+		sashFormExtension = new SashForm(parent, SWT.NONE);
 		sashFormExtension.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 				
 		SashForm sashForm = new SashForm(sashFormExtension, SWT.VERTICAL);
@@ -379,7 +375,7 @@ public class MainEditor extends EditorExtension {
 		MainEditorContributionsHandler editorExtension = new MainEditorContributionsHandler();
 		compMainExtions = editorExtension.evaluateCreateWidgetContribs(userDB);
 		int intSashCnt = 1;
-		for (AMainEditorExtension aMainEditorExtension : compMainExtions) {
+		for (IMainEditorExtension aMainEditorExtension : compMainExtions) {
 			
 			if(aMainEditorExtension.isEnableExtension()) {
 				intSashCnt++;
@@ -391,12 +387,12 @@ public class MainEditor extends EditorExtension {
 				gl_compositeExt.marginWidth = 0;
 				compExt.setLayout(gl_compositeExt);
 	
-				aMainEditorExtension.createPartControl(compExt);
+				aMainEditorExtension.createPartControl(compExt, this);
 			}
 		}
 		
 		if(intSashCnt >= 2) {
-			sashFormExtension.setWeights(new int[] {70, 30});
+			sashFormExtension.setWeights(new int[] {100, 0});
 		}
 		// 올챙이 확장에 관한 코드를 넣습니다. ===================================================================
 		
@@ -452,6 +448,10 @@ public class MainEditor extends EditorExtension {
 	 */
 	public void appendText(String strText) {
 		try {
+			if(!StringUtils.endsWith(strText, PublicTadpoleDefine.SQL_DELIMITER)) {
+				strText += PublicTadpoleDefine.SQL_DELIMITER;
+			}
+			
 			browserEvaluate(EditorFunctionService.APPEND_TEXT, strText);
 		} catch(Exception ee){
 			logger.error("query text" , ee); //$NON-NLS-1$
@@ -474,9 +474,9 @@ public class MainEditor extends EditorExtension {
 			public void completed( ProgressEvent event ) {
 				try {
 					/*
-					 * 
+					 * getAssistTableList()
 					 */
-					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), getAssistTableList(), getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), "", getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
@@ -504,52 +504,52 @@ public class MainEditor extends EditorExtension {
 		return ext;
 	}
 	
-	/**
-	 * List of assist table column name
-	 * 
-	 * @param tableName
-	 * @return
-	 */
-	public String getAssistColumnList(String tableName) {
-		String strColumnlist = ""; //$NON-NLS-1$
-		
-		try {
-			TableDAO table = mapTableList.get(tableName);
-			
-			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
-			for (TableColumnDAO tableDao : showTableColumns) {
-				strColumnlist += tableDao.getSysName() + "|"; //$NON-NLS-1$
-			}
-			strColumnlist = StringUtils.removeEnd(strColumnlist, "|"); //$NON-NLS-1$
-		} catch(Exception e) {
-			logger.error("MainEditor get the table column list", e); //$NON-NLS-1$
-		}
-		
-		return strColumnlist;
-	}
-	
-	/**
-	 * List of assist table name 
-	 * 
-	 * @return
-	 */
-	private String getAssistTableList() {
-		String strTablelist = ""; //$NON-NLS-1$
-		
-		try {
-			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
-			for (TableDAO tableDao : showTables) {
-				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
-				mapTableList.put(tableDao.getSysName(), tableDao);
-			}
-			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
-			
-		} catch(Exception e) {
-			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
-		}
-		
-		return strTablelist;
-	}
+//	/**
+//	 * List of assist table column name
+//	 * 
+//	 * @param tableName
+//	 * @return
+//	 */
+//	public String getAssistColumnList(String tableName) {
+//		String strColumnlist = ""; //$NON-NLS-1$
+//		
+//		try {
+//			TableDAO table = mapTableList.get(tableName);
+//			
+//			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
+//			for (TableColumnDAO tableDao : showTableColumns) {
+//				strColumnlist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+//			}
+//			strColumnlist = StringUtils.removeEnd(strColumnlist, "|"); //$NON-NLS-1$
+//		} catch(Exception e) {
+//			logger.error("MainEditor get the table column list", e); //$NON-NLS-1$
+//		}
+//		
+//		return strColumnlist;
+//	}
+//	
+//	/**
+//	 * List of assist table name 
+//	 * 
+//	 * @return
+//	 */
+//	private String getAssistTableList() {
+//		String strTablelist = ""; //$NON-NLS-1$
+//		
+//		try {
+//			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
+//			for (TableDAO tableDao : showTables) {
+//				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+//				mapTableList.put(tableDao.getSysName(), tableDao);
+//			}
+//			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
+//			
+//		} catch(Exception e) {
+//			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
+//		}
+//		
+//		return strTablelist;
+//	}
 
 	/**
 	 * initialize editor
@@ -572,7 +572,23 @@ public class MainEditor extends EditorExtension {
 		resultMainComposite.initMainComposite();
 		
 		// google analytic
-		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_types());
+		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
+	}
+	
+	/**
+	 * start sql transaction;
+	 */
+	public void beginTransaction() {
+		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if(tiAutoCommit.isEnabled()) {
+					tiAutoCommit.setEnabled(true);
+					tiAutoCommit.setSelection(true);
+					tiAutoCommitCommit.setEnabled(true);
+					tiAutoCommitRollback.setEnabled(true);
+				}
+			}
+		});
 	}
 	
 	/**
@@ -587,10 +603,12 @@ public class MainEditor extends EditorExtension {
 			tiAutoCommitRollback.setEnabled(false);
 			
 			if(!isFirst) {
-				if(MessageDialog.openConfirm(null, Messages.MainEditor_30, Messages.MainEditor_47)) {
-					TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
-				} else {
-					TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);
+				if(TadpoleSQLTransactionManager.isInstance(getUserEMail(), userDB)) {
+					if(MessageDialog.openConfirm(null, Messages.MainEditor_30, Messages.MainEditor_47)) {
+						TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
+					} else {
+						TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);
+					}
 				}
 			}
 		} else {
@@ -606,7 +624,7 @@ public class MainEditor extends EditorExtension {
 	
 	public void executeCommand(final RequestQuery reqQuery) {
 		resultMainComposite.executeCommand(reqQuery);
-		
+
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, "executeCommand"); //$NON-NLS-1$
 	}
@@ -766,7 +784,7 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
-	 * 에디터의 성격을 정의 합니다.
+	 * 에디터의 성격을 정의 합니다.  
 	 * 
 	 * @return
 	 */
@@ -826,7 +844,11 @@ public class MainEditor extends EditorExtension {
 //		return uploadHandler.getUploadUrl();
 //	}
 
-	public AMainEditorExtension[] getMainEditorExtions() {
+	public IMainEditorExtension[] getMainEditorExtions() {
 		return compMainExtions;
-	}	
+	}
+	
+	public SashForm getSashFormExtension() {
+		return sashFormExtension;
+	}
 }

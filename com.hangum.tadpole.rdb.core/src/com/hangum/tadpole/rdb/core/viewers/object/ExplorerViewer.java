@@ -34,10 +34,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
@@ -51,9 +55,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
-import com.hangum.tadpole.sql.dao.system.SchemaHistoryDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * object explorer viewer
@@ -261,10 +263,18 @@ public class ExplorerViewer extends ViewPart {
 
 			// 디비 선택
 			userDB = selectUserDb;
-			
+
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
-			initObjectDetail(DBDefine.getDBDefine(userDB));
+			
+			// is dblock
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) &&
+					!SessionManager.isUnlockDB(selectUserDb)) {
+				userDB = null;
+				createTable();
+			} else {
+				initObjectDetail(DBDefine.getDBDefine(userDB));
+			}
 		} else {
 			userDB = null;
 
@@ -381,8 +391,16 @@ public class ExplorerViewer extends ViewPart {
 			strSelectItem = PublicTadpoleDefine.DB_ACTION.TABLES.toString();
 		}
 		
-		refreshTable(false);
-		
+		refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.toString());
+	}
+	
+	/**
+	 * Refresh the select tab.
+	 * 
+	 * @param strSelectItemText
+	 */
+	private void refershSelectObject(String strSelectItemText) {
+		refershSelectObject(strSelectItemText, "");
 	}
 	
 	/**
@@ -390,31 +408,40 @@ public class ExplorerViewer extends ViewPart {
 	 * 
 	 * @param strSelectItemText TabItem text
 	 */
-	private void refershSelectObject(String strSelectItemText) {
+	private void refershSelectObject(String strSelectItemText, String strObjectName) {
 //		테이블 초기화 될때 무조건 리프레쉬 되므로 다시리프레쉬 되는것을 막습니다.
 		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
 			if(tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
-			refreshTable(false);
+			refreshTable(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
-			refreshView(false);
+			if(tabFolderObject.getSelectionIndex() != 1) tabFolderObject.setSelection(1);
+			refreshView(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.toString())) {
-			refreshSynonym(false);
+			refreshSynonym(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
-			refreshIndexes(false);
+			refreshIndexes(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
-			refreshProcedure(false);
+			refreshProcedure(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
-			refreshPackage(false);
+			refreshPackage(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
-			refreshFunction(false);
+			refreshFunction(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.toString())) {
-			refreshTrigger(false);
+			refreshTrigger(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.toString())) {
-			refreshJS(false);
+			refreshJS(false, strObjectName);
 		}
 		
 		// google analytic
 		AnalyticCaller.track(ExplorerViewer.ID, strSelectItemText);
+	}
+	
+	/**
+	 * selected tab refresh
+	 */
+	private void refreshSelectTab() {
+		if(logger.isDebugEnabled()) logger.debug("tabFolderObject.getSelection().getText()" + tabFolderObject.getSelection().getText());
+		refershSelectObject(tabFolderObject.getSelection().getText(), "");
 	}
 	
 	/**
@@ -510,21 +537,21 @@ public class ExplorerViewer extends ViewPart {
 	/**
 	 * Synonym 정보를 최신으로 리프레쉬합니다.
 	 */
-	public void refreshSynonym(boolean boolRefresh) {
+	public void refreshSynonym(boolean boolRefresh, String strObjectName) {
 		synonymComposite.refreshSynonym(getUserDB(), boolRefresh);
 	}
 
 	/**
 	 * view 정보를 최신으로 리프레쉬합니다.
 	 */
-	public void refreshView(boolean boolRefresh) {
+	public void refreshView(boolean boolRefresh, String strObjectName) {
 		viewComposite.refreshView(getUserDB(), boolRefresh);
 	}
 
 	/**
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshIndexes(boolean boolRefresh) {
+	public void refreshIndexes(boolean boolRefresh, String strObjectName) {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			mongoIndexComposite.refreshIndexes(userDB, boolRefresh);
 		} else {
@@ -535,46 +562,46 @@ public class ExplorerViewer extends ViewPart {
 	/**
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshProcedure(boolean boolRefresh) {
+	public void refreshProcedure(boolean boolRefresh, String strObjectName) {
 		procedureComposite.refreshProcedure(userDB, boolRefresh);
 	}
 
 	/**
 	 * package 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshPackage(boolean boolRefresh) {
+	public void refreshPackage(boolean boolRefresh, String strObjectName) {
 		packageComposite.refreshPackage(userDB, boolRefresh);
 	}
 
 	/**
 	 * trigger 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshTrigger(boolean boolRefresh) {
+	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
 		triggerComposite.refreshTrigger(userDB, boolRefresh);
 	}
 
 	/**
 	 * function 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshFunction(boolean boolRefresh) {
+	public void refreshFunction(boolean boolRefresh, String strObjectName) {
 		functionCompostite.refreshFunction(userDB, boolRefresh);
 	}
 
 	/**
 	 * table 정보를 최신으로 리프레쉬합니다.
 	 */
-	public void refreshTable(boolean boolRefresh) {
+	public void refreshTable(boolean boolRefresh, String strObjectName) {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {		
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
 		} else {
-			tableComposite.refreshTable(userDB, boolRefresh);
+			tableComposite.refreshTable(userDB, boolRefresh, strObjectName);
 		}		
 	}
 	
 	/**
 	 * mongodb server side javascript define
 	 */
-	public void refreshJS(boolean boolRefresh) {
+	public void refreshJS(boolean boolRefresh, String strObjectName) {
 		mongoJavaScriptComposite.refreshJavaScript(userDB, boolRefresh);
 	}
 
@@ -588,16 +615,21 @@ public class ExplorerViewer extends ViewPart {
 	 * @param chgUserDB
 	 * @param schemaDao
 	 */
-	public void refreshCurrentTab(UserDBDAO chgUserDB, final SchemaHistoryDAO schemaDao) {
+	public void refreshCurrentTab(UserDBDAO chgUserDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
 		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
 		
-		if(schemaDao != null) {
-			if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "TABLE")) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name());
-			} else if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "VIEW")) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name());
-			} else if(StringUtils.containsIgnoreCase(schemaDao.getObject_type(), "INDEX")) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name());
+		if(queryDDLType != null) {
+			if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.TABLE) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), "");
+			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.VIEW) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name(), "");
+			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.INDEX) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name(), "");
+			} else {
+				refreshSelectTab();
+			// TO DO This code is temporary. do not understand refresh object is table view refresh. --;; - 15.4.20. hangum
+//			} else {
+//				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), "");
 			}
 		}
 	}

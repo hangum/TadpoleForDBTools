@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.rap.rwt.service.UISessionEvent;
 import org.eclipse.rap.rwt.service.UISessionListener;
@@ -35,16 +37,13 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
-import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
+import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.summary.report.DBSummaryReporter;
 
 /**
  * Configures the initial size and appearance of a workbench window.
@@ -66,9 +65,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     public void preWindowOpen() {
     	try {
-    		logger.info("Schedule start.........");
-			DBSummaryReporter.executer();
-			ScheduleManager.getInstance();
+    		logger.info("Schedule and Summary Report start.........");
+//			DBSummaryReporter.executer();
+			
+//    		ScheduleManager.getInstance();
 		} catch(Exception e) {
 			logger.error("Schedule", e);
 		}
@@ -112,7 +112,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    	
     	// main ui callback thread
 //    	mainUICallback();
-    	   
+
     	// If login after does not DB exist, DB connect Dialog open.
     	try {
 //    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
@@ -206,24 +206,25 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      */
     private void login() {
     	// If you already login?
-    	if(0 == SessionManager.getSeq()) {
+    	if(0 == SessionManager.getUserSeq()) {
     	
 	    	// Open login dialog    
 	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
 	    	
 	    	// When login cancel button, i use in manager authority.
 	    	if(Dialog.OK != loginDialog.open()) {
-	    		
-	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
-				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
-		    	try {
-					SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
-					initSession();
-				} catch (Exception e) {
-					logger.error("demo mode user login", e); //$NON-NLS-1$
-					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
-					return;
-				}	
+	    		//not flow this logic
+//	    		
+//	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
+//				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
+//		    	try {
+//					SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
+//					initSession();
+//				} catch (Exception e) {
+//					logger.error("demo mode user login", e); //$NON-NLS-1$
+//					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
+//					return;
+//				}	
 	    	} else {
 	    		try {
 		    		// Stored user session.
@@ -232,7 +233,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
 						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 					}
-					SessionManager.setUserInfos(mapUserInfoData);
+					SessionManager.setUserAllPreferenceData(mapUserInfoData);
 					
 					if ("".equals(SessionManager.getPerspective())) {
 					
@@ -255,6 +256,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 					initSession();
 					
 	    		} catch(Exception e) {
+	    			
 	    			logger.error("session set", e); //$NON-NLS-1$
 	    		}
 	    		
@@ -268,18 +270,17 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	private void initSession() {
 		HttpSession iss = RWT.getUISession().getHttpSession();
 		
-		int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
+		final int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
 		if(sessionTimeOut <= 0) {
-			iss.setMaxInactiveInterval( 60 * 90 );
+			iss.setMaxInactiveInterval(90 * 60);
 		} else {
-			iss.setMaxInactiveInterval(Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()) * 60);
+			iss.setMaxInactiveInterval(sessionTimeOut * 60);
 		}
 		
-		// cleanup code
 		// user logout
 		RWT.getUISession().addUISessionListener( new UISessionListener() {
 			public void beforeDestroy( UISessionEvent event ) {
-				
+				logger.info(String.format("User has logout. session id is %s", event.getUISession().getId()));
 			}
 		});
 	}

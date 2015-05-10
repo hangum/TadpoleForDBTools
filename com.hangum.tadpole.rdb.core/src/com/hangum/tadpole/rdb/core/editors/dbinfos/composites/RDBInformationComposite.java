@@ -29,10 +29,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.hangum.tadpold.commons.libs.core.dao.KeyValueDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * RDB 디비 summary 정보를 출력하는 composite.
@@ -91,21 +90,21 @@ public class RDBInformationComposite extends Composite {
 		listInfo.add(new KeyValueDAO("Group Name", 		userDB.getGroup_name())); //$NON-NLS-1$
 		listInfo.add(new KeyValueDAO("Display Name", 	userDB.getDisplay_name())); //$NON-NLS-1$
 		
-		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getShowUrl(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getUrl(userDB.getRole_id()))); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getShowHost(SessionManager.getRoleType(userDB)) + "/" + userDB.getShowPort(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$ //$NON-NLS-2$
+			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost(userDB.getRole_id()) + "/" + userDB.getPort(userDB.getRole_id()))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		listInfo.add(new KeyValueDAO("Database", 		userDB.getShowDb(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO("Database", 		userDB.getDb(userDB.getRole_id()))); //$NON-NLS-1$
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
-			listInfo.add(new KeyValueDAO("User",	 		userDB.getShowUsers(SessionManager.getRoleType(userDB)))); //$NON-NLS-1$
+			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers(userDB.getRole_id()))); //$NON-NLS-1$
 		}
 		
 		listInfo.add(new KeyValueDAO("Read Only", 		userDB.getIs_readOnlyConnect())); //$NON-NLS-1$
-		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter())); //$NON-NLS-1$
-		if("YES".equals(userDB.getIs_table_filter())) { //$NON-NLS-1$
-			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include())); //$NON-NLS-1$
-			listInfo.add(new KeyValueDAO("\tExclude Filter",	userDB.getTable_filter_exclude())); //$NON-NLS-1$
-		}
+//		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter())); //$NON-NLS-1$
+//		if("YES".equals(userDB.getIs_table_filter())) { //$NON-NLS-1$
+//			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include())); //$NON-NLS-1$
+//			listInfo.add(new KeyValueDAO("\tExclude Filter",	userDB.getTable_filter_exclude())); //$NON-NLS-1$
+//		}
 		// 몽고디비는 없으므로.. 
 		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 			listInfo.add(new KeyValueDAO("Auto Commit",		userDB.getIs_autocommit())); //$NON-NLS-1$

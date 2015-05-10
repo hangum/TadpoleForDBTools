@@ -32,9 +32,9 @@ import com.hangum.tadpole.cipher.core.manager.CipherManager;
  */
 public class BasicEntryPoint extends AbstractEntryPoint {
 	private static String defaultContent = "DB=MYSQL \r\n"
-						+ "ip=127.0.01 \r\n" 
+						+ "ip=172.16.187.132 \r\n" 
 						+ "port=3306 \r\n"
-						+ "database=tadpole \r\n" 
+						+ "database=tadpole20 \r\n" 
 						+ "user=root \r\n" 
 						+ "password=tadpole  \r\n" 
 						+ "isSSL=true" ;
@@ -120,6 +120,18 @@ public class BasicEntryPoint extends AbstractEntryPoint {
 			String strEncrypt = CipherManager.getInstance().encryption(txtOriginal.getText());
 			textEncrypt.setText(strEncrypt);
 
+			// System.out.println(strEncrypt);
+			// String strDecrypt = EncryptiDecryptUtil.decryption(strEncrypt);
+			// System.out.println(strDecrypt);
+		} catch (Exception ee) {
+			ee.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		try {
+			String strEncrypt = CipherManager.getInstance().encryption(defaultContent);
+			System.out.println(strEncrypt);
 			// System.out.println(strEncrypt);
 			// String strDecrypt = EncryptiDecryptUtil.decryption(strEncrypt);
 			// System.out.println(strDecrypt);

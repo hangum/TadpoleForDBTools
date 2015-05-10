@@ -47,21 +47,21 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableColumnLabelprovider;
-import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
@@ -85,7 +85,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private RDBViewFilter viewFilter;
 	
 	private ObjectCreatAction creatAction_View;
-	private ObjectDeleteAction deleteAction_View;
+	private ObjectDropAction deleteAction_View;
 	private ObjectRefreshAction refreshAction_View;
 	private GenerateViewDDLAction viewDDLAction;
 	private OracleObjectCompileAction objectCompileAction;
@@ -122,7 +122,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		viewListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
@@ -167,7 +167,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-					if (is != null) {
+					if (!is.isEmpty()) {
 						if (is.getFirstElement() != null) {
 							String strTBName = is.getFirstElement().toString();
 							Map<String, String> param = new HashMap<String, String>();
@@ -179,6 +179,11 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 						} else
 							showViewColumns = null;
 
+						viewColumnViewer.setInput(showViewColumns);
+						viewColumnViewer.refresh();
+						TableUtil.packTable(viewColumnViewer.getTable());
+					} else {
+						if(showViewColumns != null) showViewColumns.clear();
 						viewColumnViewer.setInput(showViewColumns);
 						viewColumnViewer.refresh();
 						TableUtil.packTable(viewColumnViewer.getTable());
@@ -246,7 +251,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 */
 	private void createMenu() {
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		deleteAction_View = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
 //		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
 
@@ -261,8 +266,10 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_View);
-					manager.add(deleteAction_View);
+					if(!isDDLLock()) {
+						manager.add(creatAction_View);
+						manager.add(deleteAction_View);
+					}
 				}
 //				manager.add(modifyAction_View);
 				manager.add(refreshAction_View);
@@ -304,6 +311,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			viewListViewer.refresh();
 			
 			TableUtil.packTable(viewListViewer.getTable());
+			
 		} catch (Exception e) {
 			logger.error("view refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

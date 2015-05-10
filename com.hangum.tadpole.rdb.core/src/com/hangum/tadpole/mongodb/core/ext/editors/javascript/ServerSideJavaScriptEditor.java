@@ -52,6 +52,9 @@ import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -61,9 +64,6 @@ import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.util.FindTadpoleViewerOrEditor;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -129,7 +129,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png"));
 		tltmConnectURL.setToolTipText("Connection Info"); //$NON-NLS-1$
-		if(PermissionChecker.isShow(SessionManager.getRoleType(userDB))) {
+		if(PermissionChecker.isShow(userDB.getRole_id())) {
 			tltmConnectURL.setText("Connect [ " +  userDB.getHost() + ":" + userDB.getDb() + " ]"); //$NON-NLS-1$
 		} else {
 			tltmConnectURL.setText("Connect Information"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -332,7 +332,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 	private void referExplorer() {
 		// explorer refresh합니다.
 		ExplorerViewer ev = FindTadpoleViewerOrEditor.getExplorerView(userDB);
-		if(ev != null) ev.refreshJS(true);
+		if(ev != null) ev.refreshJS(true, "");
 	}
 
 	@Override

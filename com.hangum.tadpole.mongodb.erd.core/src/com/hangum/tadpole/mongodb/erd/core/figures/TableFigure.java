@@ -44,18 +44,18 @@ public class TableFigure extends Figure {
 	public TableFigure() {
 		tableName = new Label();
 		tableName.setBorder(new MarginBorder(2, 2, 0, 2));
-		tableName.setForegroundColor(ColorConstants.blue);
+		tableName.setForegroundColor(ColorConstants.blue());
 		tableName.setOpaque(true);
 
 		// key
 		colKeyFigure = new ColumnDetailFigure();
-		colKeyFigure.setForegroundColor(ColorConstants.red);
+		colKeyFigure.setForegroundColor(ColorConstants.red());
 		// name 
 		colNameFigure = new ColumnDetailFigure();
-		colNameFigure.setForegroundColor(ColorConstants.black);
+		colNameFigure.setForegroundColor(ColorConstants.black());
 		// type
 		colTypeFigure = new ColumnDetailFigure();
-		colTypeFigure.setForegroundColor(ColorConstants.buttonDarker);
+		colTypeFigure.setForegroundColor(ColorConstants.buttonDarker());
 
 		columnFigure = new ColumnLayoutFigure(this);
 		columnFigure.add(colKeyFigure);
@@ -65,7 +65,7 @@ public class TableFigure extends Figure {
 		ToolbarLayout layout = new ToolbarLayout();
 		setLayoutManager(layout);
 		setBackgroundColor(SWTResourceManager.getColor(255, 255, 206));
-		setBorder(new LineBorder(ColorConstants.black, 1));
+		setBorder(new LineBorder(ColorConstants.black(), 1));
 		setOpaque(true);
 		
 		add(this.tableName);

@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -32,7 +32,7 @@ public class MongoDBCollectionFieldsLabelProvider extends LabelProvider implemen
 		CollectionFieldDAO dao = (CollectionFieldDAO) element;
 		
 		if(columnIndex == 0) {
-			if(PublicTadpoleDefine.YES_NO.YES.toString().equals(dao.getKey())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getKey())) {
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/index_column.png"); //$NON-NLS-1$
 			}
 			

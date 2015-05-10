@@ -31,7 +31,7 @@ SELECT name FROM sqlite_master where 1 = 0
 <!-- 
 	table 이름
  -->
-<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 	SELECT name, sql as comment
 	FROM sqlite_master
 	WHERE type = 'table'
@@ -41,11 +41,11 @@ SELECT name FROM sqlite_master where 1 = 0
 <!-- 
 	table, view의 컬럼 정보
  -->
-<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	 PRAGMA table_info($table$)
 </select>
 
-<select id="tableForeignKeyList" resultClass="com.hangum.tadpole.sql.dao.sqlite.SQLiteForeignKeyListDAO" parameterClass="java.util.HashMap">
+<select id="tableForeignKeyList" resultClass="com.hangum.tadpole.engine.query.dao.sqlite.SQLiteForeignKeyListDAO" parameterClass="java.util.HashMap">
 	 PRAGMA foreign_key_list($table$)
 </select>
 
@@ -53,7 +53,7 @@ SELECT name FROM sqlite_master where 1 = 0
 	테이블간의 관계 목록 정보를 얻습니다.
 	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
  -->
-<select id="referencedTableList"  resultClass="com.hangum.tadpole.sql.dao.sqlite.SQLiteRefTableDAO" parameterClass="java.lang.String">
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.sqlite.SQLiteRefTableDAO" parameterClass="java.lang.String">
 select tbl_name, sql 
 from sqlite_master
 where type = 'table'
@@ -61,7 +61,7 @@ where type = 'table'
 and sql like '%FOREIGN KEY%'
 </select>
 
-<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.sql.dao.sqlite.SQLiteRefTableDAO" >
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.sqlite.SQLiteRefTableDAO" >
 select tbl_name, sql 
 from sqlite_master
 where type = 'table'
@@ -81,7 +81,7 @@ and sql like '%FOREIGN KEY%'
 <!-- 
 	index 정보
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
  SELECT name as index_name,
  		tbl_name as table_name
 	FROM sqlite_master
@@ -92,7 +92,7 @@ and sql like '%FOREIGN KEY%'
 <!-- 
 	index의 디테일 정보
  -->
- <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
     SELECT *
     FROM information_schema.CONSTRAINT_COLUMN_USAGE
     WHERE 1=0
@@ -100,7 +100,7 @@ and sql like '%FOREIGN KEY%'
 <!-- 
 	procedure list - sqlite는 없음.
  -->
-<select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 SELECT name as procedure_name,
  		tbl_name as db_name
 	FROM sqlite_master
@@ -111,7 +111,7 @@ SELECT name as procedure_name,
 <!-- 
 	function list - sqlite는 없음.
  -->
-<select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 SELECT name as function_name,
  		tbl_name as db_name
 	FROM sqlite_master
@@ -122,7 +122,7 @@ SELECT name as function_name,
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	SELECT name as trigger,
  		tbl_name as table_name,
  		sql as statement

@@ -27,8 +27,8 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * External Browser editor
@@ -65,7 +65,7 @@ public class ExternalBrowserEditor extends EditorPart {
 		tfMain.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 	
 		for(ExternalBrowserInfoDAO dao : listExternalBrowser) {
-			if(dao.getIs_used().equals(PublicTadpoleDefine.YES_NO.YES.toString())) {
+			if(dao.getIs_used().equals(PublicTadpoleDefine.YES_NO.YES.name())) {
 				createExtBrowser(dao);
 			}
 		}

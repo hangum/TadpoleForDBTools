@@ -31,6 +31,8 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.PingTest;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -38,8 +40,6 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -130,12 +130,12 @@ public abstract class AbstractLoginComposite extends Composite {
 	protected abstract void init();
 	
 	/**
-	 * DB 연결
+	 * DB 정보 저장.
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean connection() {
+	public boolean saveDBData() {
 		if(!testConnection(false)) return false;
 		
 		// 기존 데이터 업데이트
@@ -143,7 +143,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
-				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error(Messages.SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -155,7 +155,7 @@ public abstract class AbstractLoginComposite extends Composite {
 		// 신규 데이터 저장.
 		} else {
 			try {
-				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getSeq());
+				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error(Messages.AbstractLoginComposite_0, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -251,7 +251,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			if(getDataActionStatus() == DATA_STATUS.MODIFY) {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
-				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getSeq(), userDBDao, oldUserDB)) {
+				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getUserSeq(), userDBDao, oldUserDB)) {
 					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
 					return false;
 				}
@@ -259,14 +259,14 @@ public abstract class AbstractLoginComposite extends Composite {
 			} else {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
-				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getSeq(), userDBDao)) {
+				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getUserSeq(), userDBDao)) {
 					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
 					
 					return false;
 				}
 				
 				// 이름은 틀리지만, 다른 정보는 같은 이미 등록된 디비 인지 검사합니다.
-				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getSeq(), userDBDao)){
+				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getUserSeq(), userDBDao)){
 					
 					// 중복 디비 등록시 사용자의 의견을 묻습니다.
 					if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {
@@ -443,22 +443,23 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	protected void setOtherConnectionInfo() {
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
-		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
-		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
-		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+//		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+//		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+//		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
 		
-		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
-		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
 		
-		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_monitoring(otherConnectionDAO.isMonitoring()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 	}
 
 }

@@ -18,11 +18,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.rap.addons.fileupload.DiskFileUploadReceiver;
-import org.eclipse.rap.addons.fileupload.FileDetails;
-import org.eclipse.rap.addons.fileupload.FileUploadEvent;
-import org.eclipse.rap.addons.fileupload.FileUploadHandler;
-import org.eclipse.rap.addons.fileupload.FileUploadListener;
+import org.eclipse.rap.fileupload.DiskFileUploadReceiver;
+import org.eclipse.rap.fileupload.FileDetails;
+import org.eclipse.rap.fileupload.FileUploadEvent;
+import org.eclipse.rap.fileupload.FileUploadHandler;
+import org.eclipse.rap.fileupload.FileUploadListener;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.rap.rwt.widgets.FileUpload;
 import org.eclipse.swt.SWT;
@@ -39,12 +39,11 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBWithoutTunnelingGroup;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * sqlite login composite
@@ -110,7 +109,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		fileNameLabel = new Text(grpConnectionType, SWT.BORDER);
 		fileNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		fileNameLabel.setEnabled(false);
+//		fileNameLabel.setEnabled(false);
 		fileNameLabel.setEditable(false);
 		fileNameLabel.setText(INITIAL_TEXT);
 		
@@ -216,7 +215,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
-			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
+			preDBInfo.getComboOperationType().setText( PublicTadpoleDefine.DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textCreationDB.setText(oldUserDB.getDb());
 			textCreationDB.setEnabled(false);
@@ -347,15 +346,18 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		}
 		
 		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(strDBUrl);
 		userDB.setDb(strDBFile);
-		userDB.setGroup_seq(SessionManager.getGroupSeq());
+//		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type(DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
+		userDB.setOperation_type(PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
 		userDB.setUsers(""); //$NON-NLS-1$
 		userDB.setPasswd(""); //$NON-NLS-1$
+		
+		// 처음 등록자는 권한이 어드민입니다.
+		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 		// others connection 정보를 입력합니다.
 		setOtherConnectionInfo();

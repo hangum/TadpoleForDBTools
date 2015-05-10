@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * Others RDB connection information
@@ -31,6 +31,7 @@ public class OthersConnectionRDBGroup extends OthersConnectionGroup {
 	 */
 	public OthersConnectionRDBGroup(Composite parent, int style, DBDefine selectDB) {
 		super(parent, style, selectDB);
+		btnSendMonitoring.setText("Summary ");
 	}
 	
 	/**
@@ -38,24 +39,27 @@ public class OthersConnectionRDBGroup extends OthersConnectionGroup {
 	 * @param oldUserDB
 	 */
 	public void setUserData(UserDBDAO oldUserDB) {
-		setBtnReadOnlyConnection(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_readOnlyConnect())?true:false);
-		setBtnAutoCommit(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_autocommit())?true:false);
-		setBtnShowTables(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_showtables())?true:false);
+		setBtnReadOnlyConnection(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_readOnlyConnect())?true:false);
+		setBtnAutoCommit(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_autocommit())?true:false);
+		setBtnShowTables(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_showtables())?true:false);
 		
-		setBtnProfiler(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_profile())?true:false);
+		setBtnProfiler(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_profile())?true:false);
 		
-		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getQuestion_dml())?true:false);
+		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getQuestion_dml())?true:false);
 		
-		setIsVisible(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_visible())?true:false);
-		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_summary_report())?true:false);
+		setIsVisible(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_visible())?true:false);
+//		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_summary_report())?true:false);
+//		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_monitoring())?true:false);
 	}
 	
 	@Override
 	public void initUI() {
 		if(getSelectDB() == DBDefine.MYSQL_DEFAULT || getSelectDB() == DBDefine.MARIADB_DEFAULT) {
 			btnSendMonitoring.setEnabled(true);
+//			btnIsMonitoring.setEnabled(true);
 		} else {
 			btnSendMonitoring.setEnabled(false);
+//			btnIsMonitoring.setEnabled(false);
 		}
 	}
 	

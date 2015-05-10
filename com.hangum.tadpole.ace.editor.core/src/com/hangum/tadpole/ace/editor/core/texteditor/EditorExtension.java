@@ -18,8 +18,8 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Editor의 확장을 정의한다.
@@ -49,9 +49,9 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	/**
 	 * 사용자 seq
 	 */
-	private final int userSeq 			= SessionManager.getSeq();
+	private final int userSeq 			= SessionManager.getUserSeq();
 	protected String strRoleType 		= "";
-	protected final int intUserSeq 		= SessionManager.getSeq();
+//	protected final int intUserSeq 		= SessionManager.getSeq();
 	
 	/** 현재 에디터에서 처리해야하는 디비 정보. */
 	protected UserDBDAO userDB;
@@ -144,6 +144,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 			browserQueryEditor.evaluate(EditorFunctionService.SET_FOCUS);
 		} catch(Exception e) {
 			// ignore exception
+//			logger.error("set focous", e);
 		}
 	}
 	

@@ -21,16 +21,12 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
-import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpold.commons.libs.core.mails.template.DailySummaryReport;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.monitoring.core.utils.Utils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -56,7 +52,7 @@ public class DailySummaryReportJOB implements Job {
 				
 				
 				// 현재(14.06.02)는 mysql 일 경우만 섬머리 레포트를 보여줍니다.
-				if(PublicTadpoleDefine.YES_NO.YES.toString().equals(userDBDAO.getIs_summary_report())) {
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDBDAO.getIs_summary_report())) {
 					if(userDBDAO.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDBDAO.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
 						String strSummarySQl = MySQLSummaryReport.getSQL(userDBDAO.getDb());
@@ -72,7 +68,7 @@ public class DailySummaryReportJOB implements Job {
 						String mailContent = report.makeFullSummaryReport(userDBDAO.getDisplay_name(), strMailContent.toString());
 
 						// 보고서를 보냅니다.						
-						sendEmail(userDBDAO.getDisplay_name(), userDBDAO.getUser_seq(), mailContent);
+						Utils.sendEmail(userDBDAO.getUser_seq(), userDBDAO.getDisplay_name(), mailContent);
 						
 						if(logger.isDebugEnabled()) logger.debug(mailContent);
 					} // end mysql db
@@ -83,31 +79,6 @@ public class DailySummaryReportJOB implements Job {
 			logger.error("daily summary report", e);
 		}
 	}
-	
-	/**
-	 * 
-	 * @param title
-	 * @param userSeq
-	 * @param strContent
-	 */
-	public static void sendEmail(String title, int userSeq, String strContent) throws Exception {
-		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.getUserInfo(userSeq);
-			
-			// manager 에게 메일을 보낸다.
-			EmailDTO emailDao = new EmailDTO();
-			emailDao.setSubject(title + " Report.");
-			emailDao.setContent(strContent);
-			emailDao.setTo(userDao.getEmail());
-			
-			SendEmails sendEmail = new SendEmails(GetPreferenceGeneral.getSMTPINFO());
-			sendEmail.sendMail(emailDao);
-		} catch(Exception e) {
-			logger.error("Error send email", e);
-			throw e;
-		}
-	}
-	
 	
 	/**
 	 * 쿼리중에 quote sql을 반영해서 작업합니다.

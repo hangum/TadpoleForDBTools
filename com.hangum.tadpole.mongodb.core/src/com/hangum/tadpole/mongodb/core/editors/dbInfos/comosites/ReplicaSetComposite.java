@@ -21,11 +21,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.CommandResult;
 import com.mongodb.DBObject;
 
@@ -79,7 +79,7 @@ public class ReplicaSetComposite extends Composite {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

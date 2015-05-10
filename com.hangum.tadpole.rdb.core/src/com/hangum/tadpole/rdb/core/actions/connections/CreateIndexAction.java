@@ -13,9 +13,9 @@ package com.hangum.tadpole.rdb.core.actions.connections;
 import org.eclipse.jface.action.IAction;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * index 생성 action

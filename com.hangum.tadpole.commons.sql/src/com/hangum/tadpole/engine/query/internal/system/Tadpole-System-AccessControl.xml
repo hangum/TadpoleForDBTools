@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2015 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<!-- 
+
+	Access Control 
+	
+ -->
+
+<sqlMap namespace="Tadpole-AccessControl">
+
+<!--  save access control -->
+<insert id="saveAccessControl" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO">
+	INSERT INTO db_access_control (db_role_seq, select_lock, insert_lock, update_lock, delete_locl, ddl_lock) 
+	VALUES ( #db_role_seq#, #select_lock#, #insert_lock#, #update_lock#, #delete_locl#, #ddl_lock# ); 
+	
+	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO">
+		SELECT * FROM db_access_control 
+		WHERE db_role_seq = #db_role_seq# 
+			AND select_lock = #select_lock#
+			AND insert_lock = #insert_lock#
+			AND update_lock = #update_lock#
+			AND delete_locl = #delete_locl#
+			AND ddl_lock  = #ddl_lock#
+			AND delyn = 'NO'
+	</selectKey>
+</insert>
+
+<!-- 
+	get db access control object
+ -->
+<select id="getAccessControl" resultClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO"
+				 parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
+	SELECT * FROM db_access_control 
+		WHERE db_role_seq = #seq#
+</select>
+
+<!-- 
+	get db object detial
+ -->
+<select id="getAccessCtlDetail" resultClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO" 
+	parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM access_ctl_object
+	WHERE access_seq = #access_seq#
+		AND delyn = 'NO'
+	ORDER BY obj_name
+</select>
+
+<!-- 
+	save object detail
+ -->
+<insert id="saveAccessCtlDetail" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO">
+	INSERT INTO access_ctl_object (access_seq, type, obj_name, dontuse_object, detail_obj, description) 
+	VALUES (#access_seq#, #type#, #obj_name#, #dontuse_object#, #detail_obj#, #description#) 
+</insert>
+	
+<!-- 
+	update db_access_control
+ -->
+<update id="updateAccessControl" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO">
+	UPDATE db_access_control
+		SET select_lock= #select_lock#,  insert_lock= #insert_lock#,  update_lock= #update_lock#,  delete_locl= #delete_locl#,  ddl_lock= #ddl_lock#
+	WHERE 
+		seq = #seq# 
+</update>
+
+<update id="removeAccessControlDetail" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO">
+	UPDATE access_ctl_object
+	SET delyn = 'YES'
+	WHERE access_seq = #seq#
+</update>
+
+<!-- 
+	insertAccessControlDetail table
+ -->
+<insert id="insertAccessControlDetail" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO">
+	INSERT INTO  access_ctl_object (access_seq, type, obj_name, dontuse_object, detail_obj, description)
+	VALUES (#access_seq#, #type#, #obj_name#, #dontuse_object#, #detail_obj#, #description#)
+</insert>
+	
+</sqlMap>

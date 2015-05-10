@@ -15,8 +15,8 @@ import java.util.HashMap;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultLabelProvider;
 
 /**
  * SQLResult의 TableEditorLabelProvider

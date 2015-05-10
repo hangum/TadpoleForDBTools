@@ -135,9 +135,24 @@ public class PreferenceDefine {
 	
 	/** RDB 결과 테이블의 결과에서 ,를 붙일 것인지 지정 할 수 있도록 */
 	public static final String RDB_RESULT_NUMBER_IS_COMMA = "RDB_RESULT_NUMBER_IS_COMMA";
-	public static final String RDB_RESULT_NUMBER_IS_COMMA_VALUE = PublicTadpoleDefine.YES_NO.YES.toString();
+	public static final String RDB_RESULT_NUMBER_IS_COMMA_VALUE = PublicTadpoleDefine.YES_NO.YES.name();
 	
 	/** RDB 결과 테이블의 폰트를 설정합니다 */
 	public static final String RDB_RESULT_FONT = "RDB_RESULT_FONT";
 	public static final String RDB_RESULT_FONT_VALUE = "";
+	
+	/** RDB COMMIT COUNT 설정합니다 */
+	public static final String RDB_COMMIT_COUNT = "RDB_COMMIT_COUNT";
+	public static final String RDB_COMMIT_COUNT_VALUE = "1000";
+	
+	/** RDB의 결과 화면에서 컬럼에서 보여지는 캐릭터 숫자. */
+	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN = "RDB_CHARACTER_SHOW_IN_THE_COLUMN";
+	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "30";
+	
+	/** define Amazon key */ 
+	public static final String AMAZON_ACCESS_NAME = "AMAZON_ACCESS_NAME";
+	public static final String AMAZON_ACCESS_VALUE = "";
+	
+	public static final String AMAZON_SECRET_NAME = "AMAZON_SECRET_NAME";
+	public static final String AMAZON_SECRET_VALUE = "";
 }

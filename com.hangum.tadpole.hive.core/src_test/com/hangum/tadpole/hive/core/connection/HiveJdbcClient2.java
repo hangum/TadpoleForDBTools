@@ -43,7 +43,7 @@ public class HiveJdbcClient2 {
 	    System.out.println("loaded hive driver...");
 	    
 	    //replace "hive" here with the name of the user the queries should run as
-	    Connection con = DriverManager.getConnection("jdbc:hive2://127.0.0.1:10002/default", "hangum", "xxx");
+	    Connection con = DriverManager.getConnection("jdbc:hive2://127.0.0.1:10002/default", "", "");
 	    
 	    printMetaData(con.getMetaData());
 	    

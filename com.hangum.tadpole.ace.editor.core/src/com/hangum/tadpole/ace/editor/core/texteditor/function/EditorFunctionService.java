@@ -34,7 +34,6 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 	
 	@Override
 	public Object function(Object[] arguments) {
-		
 		int intActionId =  NumberUtils.toInt(arguments[0].toString());
 		
 		switch (intActionId) {

@@ -19,9 +19,9 @@ import org.eclipse.jface.viewers.TableViewer;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.CommentCellEditor;
-import com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -65,8 +65,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 	@Override
 	protected boolean canEdit(Object element) {
 		if (column == 1 || column == 3) {
-			if (logger.isDebugEnabled())
-				logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB.getDbms_types()));
+			if (logger.isDebugEnabled()) logger.debug("DBMS Type is " + userDB.getDBDefine());
 
 			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || 
 					DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT || 

@@ -5,7 +5,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.hangum.tadpole.sql.dao.rdb.AbstractDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
 
 public class DefaultTableColumnFilter extends ViewerFilter {
 	private String searchString;

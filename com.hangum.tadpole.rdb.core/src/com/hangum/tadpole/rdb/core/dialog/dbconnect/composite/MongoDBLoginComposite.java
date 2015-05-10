@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -29,14 +30,12 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionMongoDBGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * oracle login composite
@@ -49,7 +48,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	 * 
 	 */
 	private static final long serialVersionUID = 8245123047846049939L;
-//	private static final Logger logger = Logger.getLogger(MongoDBLoginComposite.class);
+	private static final Logger logger = Logger.getLogger(MongoDBLoginComposite.class);
 	
 	protected Text textHost;
 	protected Text textUser;
@@ -58,7 +57,9 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	protected Text textPort;
 	protected Combo comboLocale;
 	
-	private Text textReplicaSet;
+	protected Text textReplicaSet;
+	
+	protected Text textJDBCOptions;
 	
 	protected OthersConnectionMongoDBGroup othersConnectionInfo;
 	
@@ -95,7 +96,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
 		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
-		grpConnectionType.setLayout(new GridLayout(3, false));
+		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.MSSQLLoginComposite_grpConnectionType_text);
 		
@@ -103,7 +104,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblHost.setText(Messages.DBLoginDialog_1);
 		
 		textHost = new Text(grpConnectionType, SWT.BORDER);
-		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
 		lblNewLabelPort.setText(Messages.DBLoginDialog_5);
@@ -140,11 +141,11 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblReplicaSet.setText(Messages.MongoDBLoginComposite_lblReplicaSet_text);
 		
 		textReplicaSet = new Text(grpConnectionType, SWT.BORDER);
-		textReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		new Label(grpConnectionType, SWT.NONE);
 		
 		Label lblExLocalhostlocalhost = new Label(grpConnectionType, SWT.NONE);
-		lblExLocalhostlocalhost.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		lblExLocalhostlocalhost.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
 		lblExLocalhostlocalhost.setText(Messages.MongoDBLoginComposite_lblExLocalhostlocalhost_text);
 		
 		Label lblNewLabelDatabase = new Label(grpConnectionType, SWT.NONE);
@@ -152,13 +153,13 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
-		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));		
+		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));		
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.DBLoginDialog_2);
 		
 		textUser = new Text(grpConnectionType, SWT.BORDER);
-		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
 		lblPassword.setText(Messages.DBLoginDialog_3);
@@ -170,11 +171,18 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
 		
 		comboLocale = new Combo(grpConnectionType, SWT.NONE);
-		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 			
 		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
 		comboLocale.setVisibleItemCount(12);
 		comboLocale.select(0);
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 
 		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -189,7 +197,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
-			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
+			preDBInfo.getComboOperationType().setText( PublicTadpoleDefine.DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textHost.setText(oldUserDB.getHost());
 			textPort.setText(oldUserDB.getPort());
@@ -198,6 +206,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			textPassword.setText(oldUserDB.getPasswd());
 			
 			textReplicaSet.setText(oldUserDB.getExt1()==null?"":oldUserDB.getExt1());
+			
+			textJDBCOptions.setText(oldUserDB.getUrl_user_parameter());
 		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
@@ -248,21 +258,24 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	public boolean makeUserDBDao(boolean isTest) {
 		if(!isValidateInput(isTest)) return false;
 		
-		final String dbUrl = String.format(
+		String dbUrl = String.format(
 								getSelectDB().getDB_URL_INFO(), 
 								StringUtils.trimToEmpty(textHost.getText()), 
 								StringUtils.trimToEmpty(textPort.getText()), 
 								StringUtils.trimToEmpty(textDatabase.getText())
 							);
+		if(!"".equals(textJDBCOptions.getText())) {
+			dbUrl += "?" + textJDBCOptions.getText();
+		}
 
 		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
+		userDB.setUrl_user_parameter(textJDBCOptions.getText());
 		userDB.setDb(textDatabase.getText());
-		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
+		userDB.setOperation_type( PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
@@ -272,22 +285,25 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		// others connection 정보를 입력합니다.
 		OthersConnectionInfoDAO otherConnectionDAO =  othersConnectionInfo.getOthersConnectionInfo();
-		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_readOnlyConnect(otherConnectionDAO.isReadOnlyConnection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_autocommit(otherConnectionDAO.isAutoCommit()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_showtables(otherConnectionDAO.isShowTables()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
-		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
-		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
+//		userDB.setIs_table_filter(otherConnectionDAO.isTableFilter()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+//		userDB.setTable_filter_include(otherConnectionDAO.getStrTableFilterInclude());
+//		userDB.setTable_filter_exclude(otherConnectionDAO.getStrTableFilterExclude());
 		
-		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_profile(otherConnectionDAO.isProfiling()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setQuestion_dml(otherConnectionDAO.isDMLStatement()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
-		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
 		
-		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
-		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.toString():PublicTadpoleDefine.YES_NO.NO.toString());
+		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+		
+		// 처음 등록자는 권한이 어드민입니다.
+		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 		return true;
 	}

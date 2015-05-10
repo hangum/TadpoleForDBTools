@@ -34,14 +34,14 @@
 <!-- 
 	table 이름
  -->
-<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 	show tables
 </select>
 
 <!-- 
 	table, view의 컬럼 정보
  -->
-<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 	 describe $table$
 </select>
 

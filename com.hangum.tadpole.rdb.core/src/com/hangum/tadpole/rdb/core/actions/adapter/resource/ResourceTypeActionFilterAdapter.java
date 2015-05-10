@@ -13,7 +13,7 @@ package com.hangum.tadpole.rdb.core.actions.adapter.resource;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.IActionFilter;
 
-import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 
 /**
  * resource type adapter

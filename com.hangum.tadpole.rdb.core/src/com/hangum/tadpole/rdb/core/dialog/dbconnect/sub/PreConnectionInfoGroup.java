@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * DB 등록시 공통으로 들어가는 정보를 나열합니다.
@@ -58,7 +58,7 @@ public class PreConnectionInfoGroup extends Group {
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 0;
+		gridLayout.marginWidth = 2;
 		setLayout(gridLayout);
 		
 		Label lblOperationType = new Label(this, SWT.NONE);
@@ -66,7 +66,7 @@ public class PreConnectionInfoGroup extends Group {
 		
 		comboOperationType = new Combo(this, SWT.READ_ONLY);
 		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (DBOperationType opType : DBOperationType.values()) {
+		for (PublicTadpoleDefine.DBOperationType opType : PublicTadpoleDefine.DBOperationType.values()) {
 			comboOperationType.add(opType.getTypeName());
 		}
 		comboOperationType.select(1);
@@ -77,8 +77,8 @@ public class PreConnectionInfoGroup extends Group {
 		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (String strGroup : listGroupName) comboGroup.add(strGroup);
 		
-		Label lblNewLabel_1 = new Label(this, SWT.NONE);
-		lblNewLabel_1.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
+		Label lblConnectName = new Label(this, SWT.NONE);
+		lblConnectName.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
 		
 		textDisplayName = new Text(this, SWT.BORDER);
 		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

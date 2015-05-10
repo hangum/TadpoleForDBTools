@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Table decoration contribution handler

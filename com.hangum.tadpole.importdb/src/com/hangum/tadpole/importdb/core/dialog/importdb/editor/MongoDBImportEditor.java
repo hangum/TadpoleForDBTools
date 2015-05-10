@@ -43,6 +43,8 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.importdb.Activator;
 import com.hangum.tadpole.importdb.core.Messages;
 import com.hangum.tadpole.importdb.core.dialog.importdb.composite.TableColumnLIstComposite;
@@ -50,8 +52,6 @@ import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.DBImport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.MongoDBCollectionToMongodBImport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.QueryToMongoDBImport;
 import com.hangum.tadpole.importdb.core.dialog.importdb.mongodb.RDBTableToMongoDBImport;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 
 /**
  * mongodb import
@@ -297,7 +297,7 @@ public class MongoDBImportEditor extends EditorPart {
 			if(tabFolderQuery.getSelectionIndex() == 0) {
 				
 				DBImport dbImport = null;
-				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(sourceDBDAO.getDbms_types())) {
+				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == sourceDBDAO.getDBDefine()) {
 					dbImport = new MongoDBCollectionToMongodBImport(sourceDBDAO, targetDBDAO, tableColumnListComposite.getSelectListTables());
 				} else {
 					dbImport = new RDBTableToMongoDBImport(sourceDBDAO, targetDBDAO, tableColumnListComposite.getSelectListTables());
@@ -307,7 +307,7 @@ public class MongoDBImportEditor extends EditorPart {
 				
 				
 			} else if(tabFolderQuery.getSelectionIndex() == 1) {	
-				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(sourceDBDAO.getDbms_types())) {
+				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == sourceDBDAO.getDBDefine()) {
 					MessageDialog.openInformation(null, "Confirm", "Not support MongoDB.");
 					return;
 				} else {

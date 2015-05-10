@@ -15,8 +15,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Object Explorer에서 사용하는 공통 action

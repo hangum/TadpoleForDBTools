@@ -48,8 +48,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.util.ImageUtils;
+import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
@@ -58,9 +61,6 @@ import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBCollectionComparat
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 
@@ -116,7 +116,7 @@ public class CollectionInformationComposite extends Composite {
 		ToolBar toolBar = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ImageUtils.getRefresh());
+		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

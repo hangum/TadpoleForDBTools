@@ -36,19 +36,19 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TriggerComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.sql.dao.mysql.TriggerDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -69,7 +69,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	private TriggerViewFilter triggerFilter;
 
 	private ObjectCreatAction creatAction_Trigger;
-	private ObjectDeleteAction deleteAction_Trigger;
+	private ObjectDropAction deleteAction_Trigger;
 	private ObjectRefreshAction refreshAction_Trigger;
 	private GenerateViewDDLAction viewDDLAction;
 	private OracleObjectCompileAction objectCompileAction;
@@ -129,7 +129,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	
 	private void createMenu() {
 		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
-		deleteAction_Trigger = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
+		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "View"); //$NON-NLS-1$
@@ -142,8 +142,10 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_Trigger);
-					manager.add(deleteAction_Trigger);
+					if(!isDDLLock()) {
+						manager.add(creatAction_Trigger);
+						manager.add(deleteAction_Trigger);
+					}
 				}
 					
 				manager.add(refreshAction_Trigger);

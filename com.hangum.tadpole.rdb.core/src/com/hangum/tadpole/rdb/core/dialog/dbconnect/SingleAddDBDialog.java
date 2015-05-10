@@ -28,10 +28,10 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
 
 /**
  * Single DB ADD Dialog
@@ -71,7 +71,7 @@ public class SingleAddDBDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(amazonRDSDto.getDbms_types() + " add Database"); //$NON-NLS-1$
+		newShell.setText(amazonRDSDto.getDbms_type() + " add Database"); //$NON-NLS-1$
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class SingleAddDBDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if (!loginComposite.connection()) return;
+		if (!loginComposite.saveDBData()) return;
 		this.retuserDb = loginComposite.getDBDTO();
 		refreshManagerView();
 		
@@ -147,7 +147,7 @@ public class SingleAddDBDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 500);
+		return new Point(450, 450);
 	}
 	
 	/**

@@ -35,17 +35,17 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
+import com.hangum.tadpole.engine.sql.util.executer.procedure.ProcedureExecutor;
+import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultContentProvider;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultLabelProvider;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
+import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.executer.ProcedureExecuterManager;
-import com.hangum.tadpole.sql.util.executer.procedure.ProcedureExecutor;
-import com.hangum.tadpole.sql.util.resultset.ResultSetUtilDTO;
-import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
-import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
-import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
 
 /**
  * procedure 실행 다이얼로그.
@@ -207,6 +207,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		if(sqlResultTableViewer != null) {
 			for(int i=0; i<sqlResultTableViewer.length; i++) {
 				TableViewer tv = sqlResultTableViewer[i];
+				tv.getTable().clearAll();
 				tv.getTable().dispose();
 			}
 		}

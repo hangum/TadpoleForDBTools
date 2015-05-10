@@ -43,20 +43,20 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.DefaultComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.IndexColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -86,7 +86,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private List showIndexColumns;
 
 	private ObjectCreatAction creatAction_Index;
-	private ObjectDeleteAction deleteAction_Index;
+	private ObjectDropAction dropAction_Index;
 	private ObjectRefreshAction refreshAction_Index;
 	private GenerateViewDDLAction viewDDLAction;
 
@@ -131,7 +131,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 						//DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
 				)  return;
 				
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
@@ -251,7 +251,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 */
 	private void createMenu() {
 		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		deleteAction_Index = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "View"); //$NON-NLS-1$
@@ -263,8 +263,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					manager.add(creatAction_Index);
-					manager.add(deleteAction_Index);
+					if(!isDDLLock()) {
+						manager.add(creatAction_Index);
+						manager.add(dropAction_Index);
+					}
 					
 					manager.add(refreshAction_Index);
 					
@@ -287,7 +289,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		indexTableViewer.refresh();
 
 		creatAction_Index.setUserDB(getUserDB());
-		deleteAction_Index.setUserDB(getUserDB());
+		dropAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
@@ -344,7 +346,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		super.dispose();
 		
 		creatAction_Index.dispose();
-		deleteAction_Index.dispose();
+		dropAction_Index.dispose();
 		refreshAction_Index.dispose();
 		viewDDLAction.dispose();
 	}

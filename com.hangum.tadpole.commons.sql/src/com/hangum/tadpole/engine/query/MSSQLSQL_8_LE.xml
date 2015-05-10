@@ -33,7 +33,7 @@ SELECT getdate()
 	
 	select substring(convert(varchar(100), SERVERPROPERTY('ProductVersion')), 1, charindex('.', convert(varchar(100), SERVERPROPERTY('ProductVersion')) )-1) as version
  -->
-<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 		
 	select o.name, c.value as comment 
 		from sysobjects o
@@ -47,7 +47,7 @@ SELECT getdate()
 <!-- 
 	table, view의 컬럼 정보
  -->
-<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 <!-- 
 	column comment
 	   fisusr이라는 사용자 소유의 t_users테이블에 user_id컬럼에 comment를 지정할때. 
@@ -81,7 +81,7 @@ ORDER BY a.id, b.colid
 	테이블간의 관계 목록 정보를 얻습니다.
 	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
  -->
-<select id="referencedTableList"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
   SELECT X.TABLE_NAME
        ,X.CONSTRAINT_NAME
        , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.COLUMN_NAME ELSE '' END)) AS COLUMN_NAME
@@ -114,7 +114,7 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 <!-- 
 	모든 erd 보기
  -->
-<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" >
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
 SELECT X.TABLE_NAME
        ,X.CONSTRAINT_NAME
        , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.COLUMN_NAME ELSE '' END)) AS COLUMN_NAME
@@ -157,7 +157,7 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
 SELECT 
     i.table_schema 
     , i.table_name
@@ -170,7 +170,7 @@ SELECT
 <!-- 
 	index의 디테일 정보
  -->
- <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
     	SELECT 
     	 0 as seq_in_index,
     	 table_name,
@@ -184,7 +184,7 @@ SELECT
 <!-- 
 	procedure list
  -->
-<select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT s.name,
 		s.type,
 	   #db_name# as db,
@@ -197,7 +197,7 @@ SELECT
 <!-- 
 	function list
  -->
-<select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT s.name,
 		s.type,
 	   #db_name# as db,
@@ -210,7 +210,7 @@ SELECT
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	SELECT s.name,
 	 	#db_name# as db,
 	   crdate as created 

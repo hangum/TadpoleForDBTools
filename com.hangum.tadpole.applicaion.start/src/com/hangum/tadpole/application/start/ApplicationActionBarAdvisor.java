@@ -27,12 +27,13 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
-import com.hangum.tadpole.monitoring.core.actions.schedule.ScheduleAction;
+import com.hangum.tadpole.monitoring.core.actions.monitoring.MonitoringRealTimeAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
@@ -40,7 +41,6 @@ import com.hangum.tadpole.rdb.core.actions.global.OpenDBRelationAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenQueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.global.PreferenceAction;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
 
 /**
  * Define at action, toolbar, menu
@@ -71,7 +71,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction executedSQLAction;
     
     /** schedule action */
-    private IAction scheduleAction;
+//    private IAction monitoringRealTimeAction;
     
     /** schema history */
     private IAction schemaHistoryAction;
@@ -119,9 +119,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	executedSQLAction = new ExecutedSQLAction(window);
     	register(executedSQLAction);
     	
-    	scheduleAction = new ScheduleAction(window);
-    	register(scheduleAction);
-    	
+//    	scheduleAction = new ScheduleAction(window);
+//    	register(scheduleAction);
+
+//    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
+//    	register(monitoringRealTimeAction);
+    	    	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
     	
@@ -146,37 +149,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
      * Comment at 2.1 RC3 has error(https://bugs.eclipse.org/bugs/show_bug.cgi?id=410260) 
      */
     protected void fillMenuBar(IMenuManager menuBar) {
-//        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
-//        MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
-//        MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
-//        
-//        menuBar.add(fileMenu);
-//        
-//        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-//        menuBar.add(windowMenu);
-//        
-//        // Add a group marker indicating where action set menus will appear.
-//        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-//        menuBar.add(helpMenu);
-//        
-//        // File
-//        fileMenu.add(new Separator());
-//        fileMenu.add(saveAction);
-////        fileMenu.add(saveAsAction);
-//        fileMenu.add(new Separator());
-//        fileMenu.add(connectAction);
-//        fileMenu.add(new Separator());
-//        fileMenu.add(queryOpenAction);
-//        fileMenu.add(dbRelationOpenAction);
-//        fileMenu.add(deleteResourceAction);
-//        fileMenu.add(new Separator());
-////        fileMenu.add(exitAction);
-//        
-//        windowMenu.add(preferenceAction);        
-//        //        
-//        // Help
-//        helpMenu.add(bugIssueAction);
-//        helpMenu.add(aboutAction);
     }
     
     protected void fillCoolBar(ICoolBarManager coolBar) {
@@ -212,8 +184,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	toolbar.add(executedSQLAction);
         toolbar.add(new Separator());
         
-        toolbar.add(scheduleAction);
-        toolbar.add(new Separator());
+//        toolbar.add(scheduleAction);
+//        toolbar.add(new Separator());
         
         toolbar.add(schemaHistoryAction);
         toolbar.add(new Separator());
@@ -225,6 +197,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         toolbar.add(resourceManageAction);
         toolbar.add(new Separator());
+        
+//        toolbar.add(monitoringRealTimeAction);
+//        toolbar.add(new Separator());
         
         toolbar.add(preferenceAction);
         toolbar.add(new Separator());

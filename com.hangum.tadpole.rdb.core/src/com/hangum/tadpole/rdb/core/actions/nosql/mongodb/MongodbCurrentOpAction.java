@@ -23,10 +23,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.ext.editors.currentOp.CurrentOpEditorInput;
 import com.hangum.tadpole.mongodb.core.ext.editors.currentOp.CurrentOperationEditor;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * mongodb currentOp action

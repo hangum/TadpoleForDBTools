@@ -47,11 +47,18 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymColumnDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
+import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.OracleDDLScript;
+import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
@@ -60,13 +67,6 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumn
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.sql.dao.rdb.OracleSynonymColumnDAO;
-import com.hangum.tadpole.sql.dao.rdb.OracleSynonymDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
-import com.hangum.tadpole.sql.util.sqlscripts.scripts.OracleDDLScript;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -93,7 +93,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	private TableViewer synonymColumnViewer;
 	private List<OracleSynonymColumnDAO> showSynonymColumns;
 
-	private AbstractObjectAction deleteAction_Synonym;
+	private AbstractObjectAction dropAction_Synonym;
 	private AbstractObjectAction refreshAction_Synonym;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction;
@@ -260,7 +260,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	 * create Table menu
 	 */
 	private void createSynonymMenu() {
-		deleteAction_Synonym = new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "Synonym"); //$NON-NLS-1$
+		dropAction_Synonym = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "Synonym"); //$NON-NLS-1$
 		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "Synonym"); //$NON-NLS-1$
 		executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "Synonym");
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "View"); //$NON-NLS-1$
@@ -274,8 +274,10 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 				if (userDB != null) {
 					IStructuredSelection is = (IStructuredSelection) synonymListViewer.getSelection();
 
-					manager.add(deleteAction_Synonym);
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					if(!isDDLLock()) {
+						manager.add(dropAction_Synonym);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					}
 					manager.add(refreshAction_Synonym);
 
 					if (!is.isEmpty()) {
@@ -379,7 +381,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	 * initialize action
 	 */
 	public void initAction() {
-		deleteAction_Synonym.setUserDB(getUserDB());
+		dropAction_Synonym.setUserDB(getUserDB());
 		refreshAction_Synonym.setUserDB(getUserDB());
 		executeAction.setUserDB(getUserDB());
 		viewDDLAction.setUserDB(getUserDB());
@@ -416,7 +418,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	@Override
 	public void dispose() {
 		super.dispose();
-		deleteAction_Synonym.dispose();
+		dropAction_Synonym.dispose();
 		refreshAction_Synonym.dispose();
 		viewDDLAction.dispose();
 		executeAction.dispose();

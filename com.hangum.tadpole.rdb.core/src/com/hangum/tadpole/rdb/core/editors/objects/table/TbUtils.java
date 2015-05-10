@@ -10,9 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.objects.table;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
-import com.hangum.tadpole.commons.util.XMLUtils;
 import com.hangum.tadpole.rdb.core.Messages;
 
 /**
@@ -62,7 +62,7 @@ public class TbUtils {
 	public static String MODIFY_DATA = MODIFY_DATA_START + "%s" + MODIFY_DATA_END; //$NON-NLS-1$
 	/** 데이터 항목 수정 */
 	public static String getModifyData(String value) {
-		return String.format(MODIFY_DATA, XMLUtils.xmlToString(value));
+		return String.format(MODIFY_DATA, StringEscapeUtils.escapeHtml(value));
 	}
 	/** is modify data */
 	public static boolean isModifyData(String value) {
@@ -73,7 +73,7 @@ public class TbUtils {
 		value = StringUtils.replace(value, TbUtils.MODIFY_DATA_START, ""); //$NON-NLS-1$
 		value = StringUtils.replace(value, TbUtils.MODIFY_DATA_END, ""); //$NON-NLS-1$
 		
-		return XMLUtils.stringToXml(value);
+		return StringEscapeUtils.unescapeHtml(value);
 	}
 
 }

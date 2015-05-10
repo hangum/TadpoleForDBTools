@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.swt.graphics.Image;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IConnectionDecoration;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Connection decoration extension handler

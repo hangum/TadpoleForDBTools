@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.dialog.record.RecordViewDialog;
-import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
  * Query Result 창에서 선택된 데이터를 한번에 보기 위한 창을 

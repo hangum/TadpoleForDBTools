@@ -14,8 +14,8 @@ import java.sql.Statement;
 
 import junit.framework.TestCase;
 
+import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
-import com.hangum.tadpole.sql.query.TadpoleSystemInitializer;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

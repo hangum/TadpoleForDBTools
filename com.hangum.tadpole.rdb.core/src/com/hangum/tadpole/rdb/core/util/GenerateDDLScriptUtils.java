@@ -19,12 +19,12 @@ import org.eclipse.core.runtime.Status;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
-import com.hangum.tadpole.sql.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * generate ddl script utils
@@ -56,7 +56,6 @@ public class GenerateDDLScriptUtils {
 			}
 			
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getSysName() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
-			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR);
 			
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLSelectAction_8, e);

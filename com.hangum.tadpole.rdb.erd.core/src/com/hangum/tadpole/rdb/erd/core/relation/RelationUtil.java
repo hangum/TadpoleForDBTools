@@ -21,15 +21,15 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO;
+import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteRefTableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.model.Column;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.Relation;
 import com.hangum.tadpole.rdb.model.RelationKind;
 import com.hangum.tadpole.rdb.model.Table;
-import com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO;
-import com.hangum.tadpole.sql.dao.sqlite.SQLiteRefTableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -69,7 +69,7 @@ public class RelationUtil {
 		} else if(DBDefine.CUBRID_DEFAULT  == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
 		
-		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB) | DBDefine.HIVE2_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, new ArrayList<ReferencedTableDAO>());
 		// tajo relation not set
 		} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
@@ -97,7 +97,7 @@ public class RelationUtil {
 		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
 			
-		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB) | DBDefine.HIVE2_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			calRelation(userDB, mapDBTables, db, new ArrayList<ReferencedTableDAO>());
 		} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			

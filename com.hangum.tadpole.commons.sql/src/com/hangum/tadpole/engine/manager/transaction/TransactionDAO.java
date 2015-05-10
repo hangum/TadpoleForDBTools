@@ -13,7 +13,7 @@ package com.hangum.tadpole.engine.manager.transaction;
 import java.sql.Connection;
 import java.sql.Date;
 
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * transaction dao

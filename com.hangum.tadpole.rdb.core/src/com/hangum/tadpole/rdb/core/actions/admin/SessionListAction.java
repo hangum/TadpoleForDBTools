@@ -24,11 +24,11 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListEditor;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListEditorInput;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Session List Action

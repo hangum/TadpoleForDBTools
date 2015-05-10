@@ -55,6 +55,12 @@ import org.eclipse.ui.PartInitException;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
+import com.hangum.tadpole.engine.sql.util.tables.TreeUtil;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBEditorInput;
 import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -71,19 +77,13 @@ import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbRenameAct
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLInsertAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.MongoDBCollectionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableDragListener;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.system.permission.PermissionChecker;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
-import com.hangum.tadpole.sql.util.tables.TreeUtil;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -112,7 +112,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private List<CollectionFieldDAO> showTableColumns;
 	
 	private ObjectCreatAction 			creatAction_Table;
-	private ObjectDeleteAction 			deleteAction_Table;
+	private ObjectDropAction 			deleteAction_Table;
 	private ObjectMongodbCollFindAndModifyAction collFindAndModifyAction;
 	
 	private ObjectRefreshAction 		refreshAction_Table;
@@ -155,7 +155,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
@@ -177,7 +177,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		});
 		tableListViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if(PublicTadpoleDefine.YES_NO.NO.toString().equals(userDB.getIs_showtables())) return;
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
@@ -319,7 +319,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 */
 	private void createMenu() {
 		creatAction_Table 	= new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
-		deleteAction_Table 	= new ObjectDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
+		deleteAction_Table 	= new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
 		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Find and Modify"); //$NON-NLS-1$
 		
 		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection"); //$NON-NLS-1$
@@ -411,7 +411,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		this.userDB = selectUserDb;
 		
 		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
-		if(PublicTadpoleDefine.YES_NO.NO.toString().equals(this.userDB.getIs_showtables())) {
+		if(PublicTadpoleDefine.YES_NO.NO.name().equals(this.userDB.getIs_showtables())) {
 			showTables.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, "")); //$NON-NLS-2$
 			
 			tableListViewer.setInput(showTables);

@@ -25,12 +25,13 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExternalBrowser;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.externalbrowser.ExternalBrowserEditor;
 import com.hangum.tadpole.rdb.core.editors.externalbrowser.ExternalBrowserInput;
-import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_ExternalBrowser;
 
 /**
  * Extension browser Action
@@ -55,7 +56,7 @@ public class ExtensionBrowserAction implements IViewActionDelegate {
 				List<ExternalBrowserInfoDAO> listExternalBrowser = TadpoleSystem_ExternalBrowser.getExternalBrowser(userDB);
 				
 				if(listExternalBrowser.isEmpty()) {
-					MessageDialog.openError(null, "Error", "외부 확장 브라우저가 지정되어 있지 않습니다.\n 데이터베이스 연결 창에서 입력하여 주십시오.");					
+					MessageDialog.openError(null, "Error", Messages.ExtensionBrowserAction_1);					 //$NON-NLS-1$
 				} else {
 					ExternalBrowserInput exi = new ExternalBrowserInput(userDB, listExternalBrowser);
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -63,10 +64,10 @@ public class ExtensionBrowserAction implements IViewActionDelegate {
 				}
 				
 			} catch(Exception e) {
-				logger.error("Get external browser exception", e);
+				logger.error("Get external browser exception", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "External Browser exception", errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExtensionBrowserAction_3, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

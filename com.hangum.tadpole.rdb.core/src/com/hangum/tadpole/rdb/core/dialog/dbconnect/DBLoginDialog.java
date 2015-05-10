@@ -34,11 +34,10 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -64,7 +63,7 @@ public class DBLoginDialog extends Dialog {
 	private Composite container;
 	
 	/** group name */
-	protected List<String> groupName;
+	protected List<String> listGroupName;
 	/** 초기 선택한 그룹 */
 	private String selGroupName;
 	
@@ -163,7 +162,8 @@ public class DBLoginDialog extends Dialog {
 		
 		// db groupData 
 		try {
-			groupName = TadpoleSystem_UserDBQuery.getUserGroup(SessionManager.getGroupSeqs());
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
+			
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}
@@ -202,7 +202,7 @@ public class DBLoginDialog extends Dialog {
 	private void createDBWidget(UserDBDAO userDB) {
 		
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
-		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, groupName, selGroupName, userDB);
+		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, userDB);
 	}
 
 	@Override
@@ -216,7 +216,7 @@ public class DBLoginDialog extends Dialog {
 	 * add db
 	 */
 	private boolean addDB() {
-		if (loginComposite.connection()) {
+		if (loginComposite.saveDBData()) {
 			this.retuserDb = loginComposite.getDBDTO();	
 			return true;
 		}
@@ -264,7 +264,7 @@ public class DBLoginDialog extends Dialog {
 	 * @return
 	 */
 	public List<String> getGroupName() {
-		return groupName;
+		return listGroupName;
 	}
 
 	/**
@@ -272,6 +272,6 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(570, 540);
+		return new Point(500, 470);
 	}
 }

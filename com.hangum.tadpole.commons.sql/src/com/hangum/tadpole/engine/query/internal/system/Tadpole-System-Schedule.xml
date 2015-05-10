@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2015 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<!-- 
+
+	Schedule 	
+ -->
+
+<sqlMap namespace="Tadpole-System-Schedule">
+    
+<insert id="scheduleMainInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO">
+	INSERT INTO schedule_main 	(user_seq, db_seq, title, description, cron_exp) 
+	VALUES 						(#user_seq#, #db_seq#, #title#, #description#, #cron_exp#);
+	
+	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO">
+		SELECT * 
+		FROM schedule_main 
+		WHERE user_seq = #user_seq# AND 
+			db_seq = #db_seq# AND 
+			title = #title# AND 
+			description = #description# AND
+			cron_exp = #cron_exp# AND
+			delYn = 'NO'
+	</selectKey> 
+</insert>
+
+<insert id="scheduleInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.ScheduleDAO">
+	INSERT INTO schedule (schedule_main_seq, send_seq, name, description) 
+	VALUES (#schedule_main_seq#, #send_seq#, #name#, #description#) 
+	
+	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.ScheduleDAO">
+		SELECT * 
+		FROM schedule 
+		WHERE schedule_main_seq = #schedule_main_seq# AND 
+			send_seq = #send_seq# AND 
+			name = #name# AND 
+			description = #description# AND
+			delYn = 'NO'
+	</selectKey> 
+</insert>
+
+<insert id="scheduleDetailInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.ScheduleDetailDAO">
+	INSERT INTO schedule_detail (schedule_seq, datas) 
+	VALUES (#schedule_seq#, #datas#); 
+</insert>
+
+<insert id="scheduleResultInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.ScheduleResultDAO">
+	INSERT INTO schedule_result (schedule_main_seq, result, description) 
+	VALUES (#schedule_main_seq#, #result#, #description#); 
+</insert>
+
+<select id="getAllScheduleMain" resultClass="com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO">
+	SELECT a.* 
+	FROM schedule_main a, user_db b 
+	WHERE  
+		a.user_seq = b.seq AND
+		b.delYn = 'NO' AND
+		a.delYn = 'NO'
+</select>
+
+<select id="getScheduleMain" resultClass="com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM schedule_main 
+	WHERE seq = #seq# AND 
+		delYn = 'NO'
+</select>
+
+<update id="scheduleMainUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO">
+	UPDATE schedule_main 
+	SET 
+		title = #title#,  description = #description#,  cron_exp = #cron_exp#
+	WHERE seq = #seq#
+</update>
+
+<update id="deleteSchedule" parameterClass="java.lang.Integer">
+	UPDATE schedule 
+	SET delYn = 'YES'
+	WHERE schedule_main_seq = #seq#
+</update>
+
+<update id="deleteScheduleMain" parameterClass="java.lang.Integer">
+	UPDATE schedule_main 
+	SET delYn = 'YES'
+	WHERE seq = #seq# 
+</update>
+
+<select id="getSchedule" resultClass="com.hangum.tadpole.engine.query.dao.system.ScheduleDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM schedule 
+	WHERE schedule_main_seq = #seq# AND
+		delYn = 'NO'
+	ORDER BY send_seq
+</select>
+
+<select id="getScheduleDetail" resultClass="com.hangum.tadpole.engine.query.dao.system.ScheduleDetailDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM schedule_detail 
+	WHERE schedule_seq = #schedule_seq#
+</select>
+
+<select id="getUserScheduleMain" resultClass="com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM schedule_main 
+	WHERE user_seq = #seq# AND 
+		delYn = 'NO'
+</select>
+
+<select id="getScheduleResult" resultClass="com.hangum.tadpole.engine.query.dao.system.ScheduleResultDAO" parameterClass="java.lang.Integer">
+	SELECT * FROM schedule_result
+	where schedule_main_seq = #seq#
+</select>
+
+</sqlMap>

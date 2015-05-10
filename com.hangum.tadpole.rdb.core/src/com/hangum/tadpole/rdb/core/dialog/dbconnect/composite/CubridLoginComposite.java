@@ -16,12 +16,11 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.template.DBOperationType;
 
 /**
  * cubrid login composite
@@ -51,7 +50,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			
 			selGroupName = oldUserDB.getGroup_name();
 			preDBInfo.setTextDisplayName(oldUserDB.getDisplay_name());
-			preDBInfo.getComboOperationType().setText( DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
+			preDBInfo.getComboOperationType().setText( PublicTadpoleDefine.DBOperationType.valueOf(oldUserDB.getOperation_type()).getTypeName() );
 			
 			textHost.setText(oldUserDB.getHost());
 			textPort.setText(oldUserDB.getPort());
@@ -59,13 +58,16 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
 			
+			textJDBCOptions.setText(oldUserDB.getUrl_user_parameter());
+			comboLocale.setText(oldUserDB.getLocale());
+			
 			othersConnectionInfo.setUserData(oldUserDB);
 			
 		} else if(ApplicationArgumentUtils.isTestMode() || ApplicationArgumentUtils.isTestDBMode()) {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("192.168.32.128");
+			textHost.setText("172.16.187.132");
 			textPort.setText("33000");
 			textDatabase.setText("demodb");
 			textUser.setText("dba");
@@ -106,27 +108,38 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 				StringUtils.trimToEmpty(textPort.getText()), 
 				StringUtils.trimToEmpty(textDatabase.getText())
 			);
+			
+			if(!"".equals(textJDBCOptions.getText())) {
+				dbUrl += "?" + textJDBCOptions.getText();
+			}
 		} else {
 			dbUrl = String.format(
 					getSelectDB().getDB_URL_INFO(), 
 					StringUtils.trimToEmpty(textHost.getText()), 
 					StringUtils.trimToEmpty(textPort.getText()), 
 					StringUtils.trimToEmpty(textDatabase.getText())) + "?charset=" + selectLocale;
+			
+			if(!"".equals(textJDBCOptions.getText())) {
+				dbUrl += "&" + textJDBCOptions.getText();
+			}
 		}
 
 		userDB = new UserDBDAO();
-		userDB.setDbms_types(getSelectDB().getDBToString());
+		userDB.setDbms_type(getSelectDB().getDBToString());
 		userDB.setUrl(dbUrl);
+		userDB.setUrl_user_parameter(textJDBCOptions.getText());
 		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
-		userDB.setGroup_seq(SessionManager.getGroupSeq());
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type( DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
+		userDB.setOperation_type( PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		userDB.setLocale(StringUtils.trimToEmpty(comboLocale.getText()));
+		
+		// 처음 등록자는 권한이 어드민입니다.
+		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 		// others connection 정보를 입력합니다.
 		setOtherConnectionInfo();

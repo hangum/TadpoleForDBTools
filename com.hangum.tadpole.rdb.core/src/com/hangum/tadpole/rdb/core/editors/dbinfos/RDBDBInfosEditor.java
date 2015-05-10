@@ -25,10 +25,10 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnsComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.RDBInformationComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TablesComposite;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * RDB DB Information editor
@@ -120,7 +120,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		tabFolder.setSelection(0);
 		
 		// google analytic
-		AnalyticCaller.track(RDBDBInfosEditor.ID, userDB.getDbms_types());
+		AnalyticCaller.track(RDBDBInfosEditor.ID, userDB.getDbms_type());
 	}
 
 	@Override

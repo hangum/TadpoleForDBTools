@@ -13,14 +13,15 @@ package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.util.bander.cubrid.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.util.bander.oracle.OracleExecutePlanUtils;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.PartQueryUtil;
-import com.hangum.tadpole.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
  * Query plan을 관리합니다.
@@ -90,7 +91,7 @@ public class ExecuteQueryPlan {
 				rs = pstmt.executeQuery();
 			}
 
-			rsDAO = new QueryExecuteResultDTO(userDBDAO, true, rs, 1000/*, true*/);
+			rsDAO = new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.EXECUTE_PLAN, userDBDAO, true, rs, 1000/*, true*/);
 			return rsDAO;
 			
 		} finally {

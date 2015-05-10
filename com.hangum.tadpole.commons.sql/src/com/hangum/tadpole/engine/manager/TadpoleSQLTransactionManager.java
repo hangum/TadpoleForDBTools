@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.transaction.DBCPConnectionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * Tadpole SQL Transaction manager
@@ -187,7 +187,7 @@ public class TadpoleSQLTransactionManager {
 					if(logger.isDebugEnabled()) logger.debug("\tIs auto commit " + conn.getAutoCommit());
 					conn.rollback();
 				} catch(Exception e) {
-					logger.error("commit exception", e);
+					logger.error("rollback exception", e);
 				} finally {
 					try { if(conn != null) conn.close(); } catch(Exception e) {}
 				}
@@ -215,6 +215,10 @@ public class TadpoleSQLTransactionManager {
 		return dbManager;
 	}
 	
+	public static boolean isInstance(final String userId, final UserDBDAO userDB) {
+		return getDbManager().containsKey(getKey(userId, userDB));
+	}
+	
 	/**
 	 * map의 카를 가져옵니다.
 	 * @param userDB
@@ -223,7 +227,7 @@ public class TadpoleSQLTransactionManager {
 	public static String getKey(final String userId, final UserDBDAO userDB) {
 		return userId + PublicTadpoleDefine.DELIMITER + 
 				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
-				userDB.getDbms_types() 		+ PublicTadpoleDefine.DELIMITER +
+				userDB.getDbms_type() 		+ PublicTadpoleDefine.DELIMITER +
 				userDB.getSeq()  			+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUsers() 			+ PublicTadpoleDefine.DELIMITER ;
 	}

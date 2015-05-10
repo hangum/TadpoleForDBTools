@@ -13,7 +13,7 @@ package com.hangum.tadpole.mongodb.core.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 
 /**
  * mongodb collection infos

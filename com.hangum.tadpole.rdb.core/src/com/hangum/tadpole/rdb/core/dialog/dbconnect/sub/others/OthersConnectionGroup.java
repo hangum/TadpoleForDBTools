@@ -21,18 +21,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilterDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.ExtensionBrowserURLDialog;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
-import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Others connection group
@@ -55,7 +52,8 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	protected Button btnShowTables;
 	protected Button btnIsVisible;
 	protected Button btnSendMonitoring;
-
+//	protected Button btnIsMonitoring;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -80,21 +78,21 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnAutoCommit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnAutoCommit.setText(Messages.OthersConnectionRDBGroup_2);
 		
-		Button btnTableFilters = new Button(this, SWT.NONE);
-		btnTableFilters.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				if(Dialog.OK == dialog.open()) {
-					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
-					
-					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
-					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
-					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
-				}
-			}
-		});
-		btnTableFilters.setText(Messages.OthersConnectionRDBGroup_3);
+//		Button btnTableFilters = new Button(this, SWT.NONE);
+//		btnTableFilters.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+//				if(Dialog.OK == dialog.open()) {
+//					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
+//					
+//					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
+//					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
+//					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
+//				}
+//			}
+//		});
+//		btnTableFilters.setText(Messages.OthersConnectionRDBGroup_3);
 		
 		btnExternalBrowser = new Button(this, SWT.NONE);
 		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {
@@ -127,9 +125,12 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnSendMonitoring = new Button(this, SWT.CHECK);
 		btnSendMonitoring.setSelection(true);
 		btnSendMonitoring.setText(Messages.OthersConnectionRDBGroup_btnSendMonitoring_text);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
+		
+//		btnIsMonitoring = new Button(this, SWT.CHECK);
+//		btnIsMonitoring.setSelection(true);
+//		btnIsMonitoring.setText(Messages.OthersConnectionGroup_btnIsMonitoring_text);
+//		new Label(this, SWT.NONE);
+//		new Label(this, SWT.NONE);
 		
 		initUI();
 	}
@@ -144,16 +145,17 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	 * @param oldUserDB
 	 */
 	public void setUserData(UserDBDAO oldUserDB) {
-		setBtnReadOnlyConnection(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_readOnlyConnect())?true:false);
-		setBtnAutoCommit(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_autocommit())?true:false);
-		setBtnShowTables(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_showtables())?true:false);
+		setBtnReadOnlyConnection(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_readOnlyConnect())?true:false);
+		setBtnAutoCommit(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_autocommit())?true:false);
+		setBtnShowTables(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_showtables())?true:false);
 		
-		setBtnProfiler(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_profile())?true:false);
+		setBtnProfiler(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_profile())?true:false);
 		
-		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getQuestion_dml())?true:false);
+		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getQuestion_dml())?true:false);
 		
-		setIsVisible(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_visible())?true:false);
-		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.toString().equals(oldUserDB.getIs_summary_report())?true:false);
+		setIsVisible(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_visible())?true:false);
+//		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_summary_report())?true:false);
+//		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_monitoring())?true:false);
 	}
 
 	/**
@@ -171,6 +173,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		
 		otherConnectionDAO.setVisible(getIsVisible());
 		otherConnectionDAO.setSummaryReport(getSendMonitoring());
+//		otherConnectionDAO.setMonitoring(getIsMonitoring());
 		
 		return otherConnectionDAO;
 	}
@@ -229,9 +232,16 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	public boolean getSendMonitoring() {
 		return btnSendMonitoring.getSelection();
 	}
-	public void setSendMonitoring(boolean isSelect) {
-		btnSendMonitoring.setSelection(isSelect);
-	}
+//	public void setSendMonitoring(boolean isSelect) {
+//		btnIsMonitoring.setSelection(isSelect);
+//	}
+//	
+//	public boolean getIsMonitoring() {
+//		return btnSendMonitoring.getSelection();
+//	}
+//	public void setIsMonitoring(boolean isSelect) {
+//		btnIsMonitoring.setSelection(isSelect);
+//	}
 
 	/**
 	 * @param btnShowTables

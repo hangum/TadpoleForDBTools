@@ -17,9 +17,9 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditorInput;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * This workbench advisor creates the window advisor, and specifies

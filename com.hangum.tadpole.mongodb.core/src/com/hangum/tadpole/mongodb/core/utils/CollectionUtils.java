@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * mongodb collection 다루는 utils.

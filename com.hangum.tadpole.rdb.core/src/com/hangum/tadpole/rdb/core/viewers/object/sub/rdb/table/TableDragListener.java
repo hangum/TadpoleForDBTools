@@ -17,8 +17,8 @@ import org.eclipse.swt.dnd.DragSourceListener;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * table의 컬럼의 0번째 값을 소스로 설정합니다. 
@@ -44,7 +44,7 @@ public class TableDragListener implements DragSourceListener {
 		if(!iss.isEmpty()) {
 
 			TableDAO td = (TableDAO)iss.getFirstElement();
-			if(userDB.getDbms_types().equals(DBDefine.SQLite_DEFAULT)) {
+			if(userDB.getDbms_type().equals(DBDefine.SQLite_DEFAULT)) {
 				event.data = userDB.getSeq() + PublicTadpoleDefine.DELIMITER + td.getName() + PublicTadpoleDefine.DELIMITER + "";
 			} else {
 				event.data = userDB.getSeq() + PublicTadpoleDefine.DELIMITER + td.getName() + PublicTadpoleDefine.DELIMITER + td.getComment();

@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
 
 /**
  * 브라우저 URL을 기록합니다.

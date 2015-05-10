@@ -14,37 +14,31 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.SecurityHint;
 import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
-import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserRole;
-
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Group;
 
 /**
  * 사용자 정보 수정
@@ -52,17 +46,13 @@ import org.eclipse.swt.widgets.Group;
  * @author hangum
  *
  */
-public class UserInfoPerference extends PreferencePage implements IWorkbenchPreferencePage {
+public class UserInfoPerference extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(UserInfoPerference.class);
 	
-//	private Text textGroupName;
 	private Text textEmail;
 	private Text textPassword;
 	private Text textRePassword;
 	private Text textName;
-	
-	private Combo comboQuestion;
-	private Text textAnswer;
 	
 	/** OTP code */
 	private String secretKey = ""; //$NON-NLS-1$
@@ -86,21 +76,10 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
 		
-//		Label lblGroupName = new Label(container, SWT.NONE);
-//		lblGroupName.setText(Messages.UserInfoPerference_1);
-//		
-//		textGroupName = new Text(container, SWT.BORDER);
-//		textGroupName.setEnabled(false);
-//		textGroupName.setEditable(false);
-//		textGroupName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		textGroupName.setText(SessionManager.getGroupName());
-		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setText(Messages.UserInfoPerference_2);
 		
 		textEmail = new Text(container, SWT.BORDER);
-		textEmail.setEnabled(false);
-		textEmail.setEditable(false);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textEmail.setText(SessionManager.getEMAIL());
 		
@@ -108,7 +87,6 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		lblName.setText(Messages.UserInfoPerference_5);
 		
 		textName = new Text(container, SWT.BORDER);
-		textName.setEnabled(false);
 		textName.setEditable(false);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textName.setText(SessionManager.getName());
@@ -157,27 +135,6 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		lblPasswordDescription.setText(Messages.UserInfoPerference_11);
 		lblPasswordDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblQuestion = new Label(container, SWT.NONE);
-		lblQuestion.setText(Messages.UserInfoPerference_12);
-
-		comboQuestion = new Combo(container, SWT.READ_ONLY);
-		comboQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (SecurityHint q : PublicTadpoleDefine.SecurityHint.values()) {
-			comboQuestion.add(q.toString(), q.getOrderIndex());
-			comboQuestion.setData(q.getOrderIndex()+q.toString(), q.getKey());
-		}
-		
-		Label lblAnswer = new Label(container, SWT.NONE);
-		lblAnswer.setText(Messages.UserInfoPerference_13);
-
-		textAnswer = new Text(container, SWT.BORDER);
-		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textAnswer.setText(CipherManager.getInstance().decryption(SessionManager.getSecurityAnswer()));
-		
-
-		// because of reference of textAnswer
-		comboQuestion.select(0);
-		
 		// google auth
 		Group grpGoogleAuth = new Group(container, SWT.NONE);
 		grpGoogleAuth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -191,7 +148,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 				generateGoogleOTP();
 			}
 		});
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(SessionManager.getUseOTP())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(SessionManager.getUseOTP())) {
 			btnGetOptCode.setSelection(true);
 		}
 		btnGetOptCode.setText(Messages.UserInfoPerference_btnGoogleOtp_text_1);
@@ -236,7 +193,7 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 			public void widgetSelected(SelectionEvent e) {
 				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserInfoPerference_9)) { //$NON-NLS-1$
 					try {
-						TadpoleSystem_UserRole.withdrawal(SessionManager.getSeq());
+//						TadpoleSystem_UserRole.withdrawal(SessionManager.getSeq());
 						
 						TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
 						SessionManager.logout();
@@ -250,16 +207,6 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		buttonWithdrawal.setText(Messages.UserInfoPerference_button_text);
 		new Label(container, SWT.NONE);
 		
-		String questionKey = CipherManager.getInstance().decryption(SessionManager.getSecurityQuestion());
-		if (null!= questionKey && !"".equals(questionKey.trim())) { //$NON-NLS-1$
-			try {
-				SecurityHint question = PublicTadpoleDefine.SecurityHint.valueOf(questionKey);
-				comboQuestion.select(question.getOrderIndex());
-			} catch (IllegalStateException e) {
-				// skip
-			}
-		}
-
 		return container;
 	}
 	
@@ -295,8 +242,6 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 	public boolean performOk() {
 		String pass = textPassword.getText().trim();
 		String rePass = textRePassword.getText().trim();
-		String questionKey = StringUtils.trimToEmpty((String)comboQuestion.getData(comboQuestion.getSelectionIndex() + comboQuestion.getText()));
-		String answer = StringUtils.trimToEmpty(textAnswer.getText());
 		String useOTP = btnGetOptCode.getSelection()?"YES":"NO";
 		String otpSecretKey = textSecretKey.getText();
 		
@@ -321,10 +266,8 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 		boolean isPasswordUpdated = !pass.equals(SessionManager.getPassword());
 		
 		UserDAO user = new UserDAO();
-		user.setSeq(SessionManager.getSeq());
+		user.setSeq(SessionManager.getUserSeq());
 		user.setPasswd(pass);
-		user.setSecurity_question(questionKey);
-		user.setSecurity_answer(answer);
 		
 		user.setUse_otp(useOTP);
 		user.setOtp_secret(otpSecretKey);
@@ -334,10 +277,6 @@ public class UserInfoPerference extends PreferencePage implements IWorkbenchPref
 				TadpoleSystem_UserQuery.updateUserPassword(user);
 				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), user.getPasswd());			
 			}
-			
-			TadpoleSystem_UserQuery.updateUserSecurityHint(user);
-			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_QUESTION.toString(), CipherManager.getInstance().encryption(questionKey));			
-			SessionManager.updateSessionAttribute(SessionManager.NAME.SECURITY_ANSWER.toString(), CipherManager.getInstance().encryption(answer));
 			
 			TadpoleSystem_UserQuery.updateUserOTPCode(user);
 			SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.toString(), useOTP);			

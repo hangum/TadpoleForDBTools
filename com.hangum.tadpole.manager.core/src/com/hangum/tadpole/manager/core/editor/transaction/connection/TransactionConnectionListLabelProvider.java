@@ -34,7 +34,7 @@ public class TransactionConnectionListLabelProvider extends LabelProvider implem
 		TransactionDAO dto = (TransactionDAO)element;
 
 		switch(columnIndex) {
-		case 0: return dto.getUserDB().getDbms_types();
+		case 0: return dto.getUserDB().getDbms_type();
 		case 1: return dto.getUserDB().getDisplay_name();
 		case 2: return dto.getUserId();
 		case 3: return dto.getStartTransaction().toLocaleString();

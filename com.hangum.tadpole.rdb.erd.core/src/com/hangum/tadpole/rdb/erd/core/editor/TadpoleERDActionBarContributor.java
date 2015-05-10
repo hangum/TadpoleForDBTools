@@ -11,7 +11,6 @@
 package com.hangum.tadpole.rdb.erd.core.editor;
 
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.gef.internal.GEFMessages;
 import org.eclipse.gef.internal.InternalImages;
 import org.eclipse.gef.ui.actions.ActionBarContributor;
 import org.eclipse.gef.ui.actions.AlignmentRetargetAction;
@@ -28,6 +27,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 
+import com.hangum.tadpole.rdb.erd.core.actions.ERDRefreshAction;
 import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleAction;
 import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleRetargetAction;
 
@@ -41,6 +41,7 @@ public class TadpoleERDActionBarContributor extends ActionBarContributor {
 
 	@Override
 	protected void buildActions() {
+		
 		addRetargetAction(new UndoRetargetAction());
 		addRetargetAction(new RedoRetargetAction());
 		addRetargetAction(new DeleteRetargetAction());

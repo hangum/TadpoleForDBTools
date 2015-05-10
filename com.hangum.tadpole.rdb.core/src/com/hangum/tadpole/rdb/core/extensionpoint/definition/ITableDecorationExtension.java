@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * Table, column image decoration

@@ -26,11 +26,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.rap.addons.fileupload.DiskFileUploadReceiver;
-import org.eclipse.rap.addons.fileupload.FileDetails;
-import org.eclipse.rap.addons.fileupload.FileUploadEvent;
-import org.eclipse.rap.addons.fileupload.FileUploadHandler;
-import org.eclipse.rap.addons.fileupload.FileUploadListener;
+import org.eclipse.rap.fileupload.DiskFileUploadReceiver;
+import org.eclipse.rap.fileupload.FileDetails;
+import org.eclipse.rap.fileupload.FileUploadEvent;
+import org.eclipse.rap.fileupload.FileUploadHandler;
+import org.eclipse.rap.fileupload.FileUploadListener;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.rap.rwt.widgets.FileUpload;
@@ -52,8 +52,8 @@ import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importdb.core.Messages;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**

@@ -66,6 +66,9 @@ public class PublicTadpoleDefine {
 	/** NULL VALUE */
 	public static final String DEFINE_NULL_VALUE = "{null}";
 	
+	/** user login type */
+	public static enum INPUT_TYPE {NORMAL, GOOGLE_OAUTH, LDAP};
+	
 	/** 쿼리 실행 결과  */
 	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};
 
@@ -89,9 +92,43 @@ public class PublicTadpoleDefine {
 	/** Tadpole support browser list  */
 	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI, IE};
 	
-	/** USER TYPE */
-	public static enum USER_TYPE {ADMIN, DBA, MANAGER, USER/*, GUEST*/};
+	/** 
+	 * This variable is user_role_table. 
+	 */
+	public static enum USER_ROLE_TYPE {SYSTEM_ADMIN, ADMIN, DBA, MANAGER, USER, GUEST};
 	
+	/**
+	 * db operation type
+	 * 
+	 * @author hangum
+	 *
+	 */
+	public enum DBOperationType {
+		PRODUCTION("Production Sever"), 
+		DEVELOP("Develop Sever"), 
+		TEST("Test Sever"),
+		BACKUP("Backup Sever"),
+		OTHERS("Others Sever");
+
+		private String typeName;
+		
+		private DBOperationType(String typeName) {
+			this.typeName = typeName;
+		}
+		
+		public String getTypeName() {
+			return typeName;
+		}
+		
+		public static DBOperationType getNameToType(String name) {
+			if(PRODUCTION.typeName.equals(name)) 	return PRODUCTION;
+			else if(DEVELOP.typeName.equals(name)) 	return DEVELOP;
+			else if(TEST.typeName.equals(name)) 	return TEST;
+			else if(BACKUP.typeName.equals(name)) 	return BACKUP;
+			else return OTHERS;
+		}
+	};
+
 	/** 에디터를 열때 오픈하는 타입을 적습니다. */
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
@@ -103,6 +140,9 @@ public class PublicTadpoleDefine {
 	
 	/** executed sql history type */
 	public static enum EXECUTE_SQL_TYPE {EDITOR, SESSION};
+	
+	/** SQL STATEMENT TYPE */
+	public static enum SQL_STATEMENTS_TYPE {SELECT, INSERT, UPDATE, DELETE, DROP, EXECUTE_PLAN, PROCEDURE};
 	
 	/** objec explorer에서 정의한 action */
 	public static enum DB_ACTION {
@@ -121,6 +161,12 @@ public class PublicTadpoleDefine {
 	
 	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
+	
+	/** query type */
+	public static enum QUERY_TYPE {SELECT, INSERT, UPDATE, DELETE, DDL, UNKNOWN};
+	
+	/** query ddl type, 현재 jsqlparser에서는 이 세가지 타입만을 지원합니다 */
+	public static enum QUERY_DDL_TYPE {TABLE, VIEW, INDEX, UNKNOWN};
 	
 	/** 디비들의 키 이름을 정의합니다 */
 //	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
@@ -199,43 +245,4 @@ public class PublicTadpoleDefine {
 		
 		return isReturn;
 	}
-	
-	/**
-	 * This is questions for security hint.<br>
-	 * Maybe you will put the value in the DB for common code.
-	 * 
-	 * @author billygoo
-	 *
-	 */
-	public enum SecurityHint {
-		QUESTION1("What is your alternate email address?", 0), //$NON-NLS-1$
-		QUESTION2("What is your favorite thing?", 1), //$NON-NLS-1$
-		QUESTION3("What elementary school did you graduate?", 2), //$NON-NLS-1$
-		QUESTION4("What is your ideal match?", 3), //$NON-NLS-1$
-		QUESTION5("What is your mother's name?", 4), //$NON-NLS-1$
-		QUESTION6("What is your father's name?", 5), //$NON-NLS-1$
-		QUESTION7("What is your favorite color?", 6), //$NON-NLS-1$
-		QUESTION8("What is your favorite food?", 7); //$NON-NLS-1$
-		
-		private String value;
-		private int order;
-		
-		private SecurityHint(String value, int order) {
-			this.value = value;
-			this.order = order;
-		}
-		
-		public String getKey() {
-			return super.toString();
-		}
-		
-		public int getOrderIndex() {
-			return order;
-		}
-
-		@Override
-		public String toString() {
-			return this.value;
-		}
-	};
 }

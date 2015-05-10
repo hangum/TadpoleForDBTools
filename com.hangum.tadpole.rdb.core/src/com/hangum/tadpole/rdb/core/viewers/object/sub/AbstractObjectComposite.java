@@ -20,10 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPartSite;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 
 /**
  * Object explorer composite
@@ -43,6 +43,39 @@ public abstract class AbstractObjectComposite extends Composite {
 	 */
 	protected static DBDefine[] editType = {DBDefine.ORACLE_DEFAULT, DBDefine.POSTGRE_DEFAULT, DBDefine.MYSQL_DEFAULT, DBDefine.MARIADB_DEFAULT};
 
+	/**
+	 * is insert lock?
+	 * @return
+	 */
+	public boolean isInsertLock() {
+		return PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock());
+	}
+	
+	/**
+	 * is update lock?
+	 * @return
+	 */
+	public boolean isUpdateLock() {
+		return PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock());
+	}
+	
+	/**
+	 * is delete lock?
+	 * @return
+	 */
+	public boolean isDeleteLock() {
+		return PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl());
+	}
+	
+	/**
+	 * is ddl lock?
+	 * 
+	 * @return
+	 */
+	public boolean isDDLLock() {
+		return PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock());
+	}
+	
 	/**
 	 * 
 	 * @param site
@@ -65,7 +98,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	}
 	
 	protected String getUserRoleType() {
-		return SessionManager.getRoleType(getUserDB());
+		return userDB.getRole_id();//SessionManager.getRoleType(getUserDB());
 	}
 	
 	/**

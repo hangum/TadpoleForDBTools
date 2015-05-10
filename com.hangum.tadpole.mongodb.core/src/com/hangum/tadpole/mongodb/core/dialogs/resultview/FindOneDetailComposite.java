@@ -27,12 +27,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.sql.util.tables.TreeUtil;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoContentProvider;
 import com.hangum.tadpole.mongodb.core.composite.result.TreeMongoLabelProvider;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
-import com.hangum.tadpole.sql.util.tables.TreeUtil;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;

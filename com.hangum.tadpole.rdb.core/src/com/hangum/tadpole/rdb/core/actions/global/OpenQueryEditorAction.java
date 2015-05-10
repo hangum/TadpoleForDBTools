@@ -19,10 +19,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -68,12 +69,15 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 		if(sel != null) {
 			if( sel.getFirstElement() instanceof UserDBDAO ) {
 				UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-				if(DBDefine.getDBDefine(userDB.getDbms_types()) != DBDefine.MONGODB_DEFAULT) {				
-					iss = sel;					
-					setEnabled(true);
-					
-					return;
-				} 
+				
+				if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
+					if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {				
+						iss = sel;					
+						setEnabled(true);
+						
+						return;
+					}
+				}
 			} 
 		} 
 		

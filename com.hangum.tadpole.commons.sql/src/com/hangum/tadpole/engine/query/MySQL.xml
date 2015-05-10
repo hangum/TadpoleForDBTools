@@ -31,14 +31,14 @@ SELECT TABLE_NAME name	FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0
 <!--
 	get database version 
  -->
-<select id="findDBInfo" resultClass="com.hangum.tadpole.sql.dao.DBInfoDAO">
+<select id="findDBInfo" resultClass="com.hangum.tadpole.engine.query.dao.DBInfoDAO">
 	SELECT version() as productversion, version() as productlevel, version() as edition;
 </select>
 
 <!-- 
 	table 이름
  -->
-<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 	SELECT TABLE_NAME name, TABLE_COMMENT comment
 	FROM INFORMATION_SCHEMA.TABLES
 	WHERE TABLE_SCHEMA = #db# AND TABLE_TYPE = 'BASE TABLE'
@@ -57,7 +57,7 @@ SELECT TABLE_NAME name	FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0
 	Extra			: 특수컬럼(예: auto_increment)
 	Comment
  -->
-<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.Map">
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.Map">
 	SELECT   
          column_name field,
          column_type type,
@@ -79,7 +79,7 @@ SELECT TABLE_NAME name	FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0
  WHERE  referenced_table_name IS NOT NULL
  ORDER BY table_name, column_name;
  -->
-<select id="referencedTableList"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
 SELECT constraint_name, table_name, column_name, referenced_table_name, referenced_column_name
  FROM     information_schema.key_column_usage
  WHERE  referenced_table_name IS NOT NULL 		and  
@@ -91,7 +91,7 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 <!-- 
 	모든 관계 테이블 목록을 가져옵니다.
  -->
-<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" >
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
 SELECT constraint_name, table_name, column_name, referenced_table_name, referenced_column_name
  FROM     information_schema.key_column_usage
  WHERE  referenced_table_name IS NOT NULL
@@ -109,7 +109,7 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
 	SELECT * 
 	FROM information_schema.statistics 
 	WHERE TABLE_SCHEMA = #table_schema#
@@ -119,7 +119,7 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 <!-- 
 	index의 디테일 정보
  -->
- <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 	SELECT * 
 	FROM information_schema.statistics 
 	WHERE TABLE_SCHEMA = #table_schema# AND
@@ -131,28 +131,28 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 <!-- 
 	procedure list
  -->
-<select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SHOW PROCEDURE STATUS WHERE db = #db_name#
 </select>
 
 <!-- 
 	function list
  -->
-<select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SHOW FUNCTION STATUS WHERE db = #db_name#
 </select>
 
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	SHOW TRIGGERS 
 </select>
 
 <!-- 
 	SESSION LIST
  -->
-<select id="sessionList" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
+<select id="sessionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO">
 	SHOW PROCESSLIST
 </select>
 
@@ -214,7 +214,7 @@ order by c.ordinal_position
 <!-- 
 	RDB Information - Column summary page
  -->
-<select id="columnInformation" resultClass="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
 select   
          t.table_name,
          t.table_comment,
@@ -268,7 +268,7 @@ select
  show create trigger $object_name$
 </select>
 
-<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
 
 select 
    p.ordinal_position as "order"
@@ -288,7 +288,7 @@ order by ordinal_position
   
 </select> 
    
-<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
 
 select 
    p.ordinal_position as "order"

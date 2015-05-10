@@ -36,7 +36,7 @@ SELECT sysdate	FROM dual
 	컬럼 설명
 	TNAME 		: 테이블 명
  -->
-<select id="tableList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
   SELECT 
       T.table_name AS "NAME"
       , S.COMMENTS AS "COMMENT"
@@ -57,7 +57,7 @@ ORDER BY T.table_name
 	Default			: 기본값
 	Extra			: 특수컬럼(예: auto_increment)
  -->
-<select id="tableColumnList" resultClass="com.hangum.tadpole.sql.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
      SELECT C.COLUMN_NAME AS "FIELD",
         C.DATA_TYPE || CASE WHEN C.DATA_TYPE = 'NUMBER' AND C.DATA_PRECISION > 0 AND C.DATA_SCALE > 0 THEN '('||C.DATA_PRECISION || ',' || C.DATA_SCALE||')'
         WHEN C.DATA_TYPE = 'NUMBER' AND C.DATA_PRECISION > 0 THEN '('||C.DATA_PRECISION ||')'
@@ -93,7 +93,7 @@ ORDER BY T.table_name
 	referenced_table_name	:	타켓 테이블 이름
 	referenced_column_name	: 	타켓 테이블 컬럼
  -->
-<select id="referencedTableList"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
  SELECT t.constraint_name ,
         t.table_name,
        max(decode(rno,1,t.column_name)) ||','|| max(decode(rno,2,t.column_name)) AS column_name ,
@@ -140,7 +140,7 @@ GROUP BY t.table_name,
 	referenced_table_name	:	타켓 테이블 이름
 	referenced_column_name	: 	타켓 테이블 컬럼
  -->
-<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.sql.dao.mysql.ReferencedTableDAO" >
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
  SELECT t.table_name,
        t.constraint_name ,
        max(decode(rno,1,t.column_name)) ||','|| max(decode(rno,2,t.column_name)) AS column_name ,
@@ -193,7 +193,7 @@ ORDER BY 1
 	컬럼 설명
 	oebjt_name		: view 이름
  -->
-<select id="synonymList" resultClass="com.hangum.tadpole.sql.dao.rdb.OracleSynonymDAO">
+<select id="synonymList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO">
 	SELECT s.synonym_name
 	      ,s.table_owner
 	      ,s.table_name
@@ -212,7 +212,7 @@ ORDER BY 1
 <!-- 
 	Synonym세부정보.
  -->
-<select id="synonymColumnList" resultClass="com.hangum.tadpole.sql.dao.rdb.OracleSynonymColumnDAO" parameterClass="java.util.HashMap">
+<select id="synonymColumnList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymColumnDAO" parameterClass="java.util.HashMap">
     SELECT 
         C.COLUMN_ID,
         C.OWNER AS TABLE_OWNER,
@@ -311,7 +311,7 @@ ORDER BY 1
     status				:
     #table_schema# AS table_schema
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
   SELECT i.table_name
         ,i.index_name
         ,i.uniqueness
@@ -344,7 +344,7 @@ ORDER BY 1
 ORDER BY i.table_name, i.index_name
 </select>
 
- <select id="indexDetailList" resultClass="com.hangum.tadpole.sql.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
   SELECT m.table_name,
          m.index_name,
          m.column_name,
@@ -381,7 +381,7 @@ ORDER BY m.column_position
 	database				:
 	collation				:
  -->
-<select id="procedureList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 SELECT  
           s.object_name AS name
         , s.object_type AS TYPE
@@ -397,7 +397,7 @@ ORDER BY s.object_type DESC, s.object_name
 	Oracle Pakage & PackageBody 내역	
 -->
 
-<select id="packageList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="packageList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT  
           s.object_name AS name
         , s.object_type AS TYPE
@@ -423,7 +423,7 @@ ORDER BY s.object_type DESC, s.object_name
 	ORDER BY OBJECT_NAME, OVERLOAD, SEQUENCE
 
  -->
-<select id="packageBodyList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="packageBodyList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 select 
 	s.object_name as packagename
 	,s.procedure_name as name
@@ -462,7 +462,7 @@ select
 	database				:
 	collation				:
  -->
-<select id="functionList" resultClass="com.hangum.tadpole.sql.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 SELECT  
           s.object_name AS name
         , s.object_type AS TYPE
@@ -492,7 +492,7 @@ ORDER BY s.object_name
 	database				:
 	collation				:
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.sql.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
   SELECT s.object_name AS name
         ,t.table_name AS table_name
         ,t.triggering_event AS event
@@ -571,7 +571,7 @@ ORDER BY a.position
 	지정한 컬럼에 정의된 제약조건 목록을 조회한다.
 	
  -->
-<select id="constraintList" resultClass="com.hangum.tadpole.sql.dao.mysql.ConstraintDAO" parameterClass="java.util.HashMap">
+<select id="constraintList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ConstraintDAO" parameterClass="java.util.HashMap">
   SELECT SUBSTR ( a.column_name, 1, 15 ) column_name 
        , b.constraint_type constraint_type 
        , DECODE ( b.constraint_type, 'P', 'PRIMARY KEY', 'U', 'UNIQUE KEY', 'C', 'CHECK OR NOT NULL', 'R', 'FOREIGN KEY' ) constraint_type_nm 
@@ -613,7 +613,7 @@ SELECT TO_NUMBER(SUBSTR (version, 1, INSTR (version, '.') - 1)) AS version
 ]]>
 </select>
 
-<select id="sessionList_9" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
+<select id="sessionList_9" resultClass="com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO">
 <![CDATA[
   SELECT s.sid || ',' || s.serial## AS id
         ,s.username AS "USER"
@@ -633,7 +633,7 @@ ORDER BY s.module, s.username
 ]]>
 </select> 
 
-<select id="sessionList" resultClass="com.hangum.tadpole.sql.dao.mysql.SessionListDAO">
+<select id="sessionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO">
 <![CDATA[
 	  SELECT S.SID || ',' || S.SERIAL## AS ID
 	        ,s.USERNAME AS "USER"
@@ -676,7 +676,7 @@ ORDER BY s.module, s.username
 <!-- 
 	column information
  -->
-<select id="columnInformation" resultClass="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
 select cols.table_name as table_name
            , tbls.comments as table_comment
             ,cols.column_name as column_name
@@ -959,7 +959,7 @@ ORDER BY IC.COLUMN_POSITION
 	프로시져의 아규먼트 목록을 리턴한다.
 	
  -->
-<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
+<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
 
   SELECT ua.position AS "order"
         ,ua.argument_name AS name
@@ -981,7 +981,7 @@ ORDER BY ua.object_name, ua.overload, ua.sequence
 	프로시져의 아규먼트 목록을 리턴한다.
 	
  -->
-<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
+<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
 
   SELECT ua.position AS "order"
         ,ua.argument_name AS name

@@ -10,23 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.get;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
-import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.system.UserDAO;
-import com.hangum.tadpole.sql.dao.system.UserInfoDataDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserQuery;
 
 /**
  * preference의 일반적인 정보를 얻습니다.
@@ -47,65 +38,8 @@ public class GetPreferenceGeneral {
 		return userInfo.getValue0();
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public static SMTPDTO getSessionSMTPINFO() {
-		SMTPDTO dto = new SMTPDTO();
-		
-		HttpSession sStore = RWT.getRequest().getSession();
-		dto = (SMTPDTO)sStore.getAttribute("smtpinfo");
-		
-		if(dto == null) {
-			dto = new SMTPDTO();
-			
-			try {
-				UserDAO userDao = TadpoleSystem_UserQuery.getAdmin();
-				List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
-				Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
-				for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-					mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
-				}
-			
-				dto.setHost(getValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
-				dto.setPort(getValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
-				dto.setEmail(getValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
-				dto.setPasswd(getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
-				
-				sStore.setAttribute("smtpinfo", dto);
-			} catch (Exception e) {
-				logger.error("get stmt info", e);
-			}
-		}
-		
-		return dto;
-	}
 	
-	public static SMTPDTO getSMTPINFO() {
-		SMTPDTO dto = new SMTPDTO();
-		
-		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.getAdmin();
-			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
-			Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
-			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
-			}
-		
-			dto.setHost(getValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
-			dto.setPort(getValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
-			dto.setEmail(getValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
-			dto.setPasswd(getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
-			
-		} catch (Exception e) {
-			logger.error("get stmt info", e);
-		}
-		
-		return dto;
-	}
-	
-	private static String getValue(Map<String, UserInfoDataDAO> mapUserInfoData, String key, String defaultValue) {
+	protected static String getValue(Map<String, UserInfoDataDAO> mapUserInfoData, String key, String defaultValue) {
 		UserInfoDataDAO userInfoDao = mapUserInfoData.get(key);
 		if(null == userInfoDao) return defaultValue;
 		else return userInfoDao.getValue0();
@@ -121,7 +55,7 @@ public class GetPreferenceGeneral {
 	}
 	
 	/**
-	 *export dilimit
+	 *export delimiter
 	 *
 	 * @return
 	 */
@@ -189,6 +123,26 @@ public class GetPreferenceGeneral {
 	 */
 	public static String getRDBResultFont() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_FONT);
+		return userInfo.getValue0();
+	}
+	
+	/**
+	 * RDB Commit count
+	 * @return
+	 */
+	public static String getRDBCommitCount() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_COMMIT_COUNT);
+		if(null == userInfo) return PreferenceDefine.RDB_COMMIT_COUNT_VALUE;
+		return userInfo.getValue0();
+	}
+	
+	/**
+	 * RDB Character shown in the column
+	 * @return
+	 */
+	public static String getRDBShowInTheColumn() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
+		if(null == userInfo) return PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE;
 		return userInfo.getValue0();
 	}
 	
@@ -266,7 +220,7 @@ public class GetPreferenceGeneral {
 			if (userInfo!=null){
 				strYesNo = userInfo.getValue0();
 				if(null == strYesNo || "".equals(strYesNo)) {
-					return PublicTadpoleDefine.YES_NO.YES.toString();
+					return PublicTadpoleDefine.YES_NO.YES.name();
 				}
 			}
 			
@@ -278,7 +232,7 @@ public class GetPreferenceGeneral {
 		 * @return
 		 */
 		public static boolean getISRDBNumberIsComma() {
-			return getRDBNumberISComma().equals(PublicTadpoleDefine.YES_NO.YES.toString())?true:false;
+			return getRDBNumberISComma().equals(PublicTadpoleDefine.YES_NO.YES.name())?true:false;
 		}
 		
 }

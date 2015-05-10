@@ -16,12 +16,11 @@ import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.dao.ManagerListDTO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.sql.template.DBOperationType;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -103,14 +102,14 @@ public class ResourceManagerLabelProvider extends LabelProvider {
 			UserDBDAO dao = (UserDBDAO)element;
 			
 			String retText = "";
-			if(DBOperationType.PRODUCTION.toString().equals(dao.getOperation_type())) {
+			if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(dao.getOperation_type())) {
 				retText = PRODUCTION_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 1) + "] " + END_TAG;
 			} else {
 				retText = DEVELOPMENT_SERVER_START_TAG + "[" + StringUtils.substring(dao.getOperation_type(), 0, 1) + "] " + END_TAG;
 			}
 			
 			// 자신의 디비만 보이도록 수정
-			if(dao.getUser_seq() == SessionManager.getSeq()) {
+			if(dao.getUser_seq() == SessionManager.getUserSeq()) {
 				retText += dao.getDisplay_name() + " (" + dao.getUsers() + "@" + dao.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
 				retText += dao.getDisplay_name(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

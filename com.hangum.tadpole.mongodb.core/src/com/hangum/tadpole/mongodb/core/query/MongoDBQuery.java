@@ -23,15 +23,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
+import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
+import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBIndexDAO;
+import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBIndexFieldDAO;
+import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBServerSideJavaScriptDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
-import com.hangum.tadpole.sql.dao.mongodb.CollectionFieldDAO;
-import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexDAO;
-import com.hangum.tadpole.sql.dao.mongodb.MongoDBIndexFieldDAO;
-import com.hangum.tadpole.sql.dao.mongodb.MongoDBServerSideJavaScriptDAO;
-import com.hangum.tadpole.sql.dao.mysql.TableDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
@@ -144,36 +144,36 @@ public class MongoDBQuery {
 	 */
 	public static List<TableDAO> filter(UserDBDAO userDB, List<TableDAO> listDAO) {
 		
-		if("YES".equals(userDB.getIs_table_filter())){
-			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
-			String includeFilter = userDB.getTable_filter_include();
-			if("".equals(includeFilter)) {
-				tmpShowTables.addAll(listDAO);					
-			} else {
-				for (TableDAO tableDao : listDAO) {
-					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
-					for (String strFilter : strArryFilters) {
-						if(tableDao.getName().matches(strFilter)) {
-							tmpShowTables.add(tableDao);
-						}
-					}
-				}
-			}
-			
-			String excludeFilter = userDB.getTable_filter_exclude();
-			if(!"".equals(excludeFilter)) {
-				for (TableDAO tableDao : tmpShowTables) {
-					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
-					for (String strFilter : strArryFilters) {
-						if(tableDao.getName().matches(strFilter)) {
-							tmpShowTables.remove(tableDao);
-						}
-					}
-				}
-			}
-			
-			return tmpShowTables;
-		}
+//		if("YES".equals(userDB.getIs_table_filter())){
+//			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
+//			String includeFilter = userDB.getTable_filter_include();
+//			if("".equals(includeFilter)) {
+//				tmpShowTables.addAll(listDAO);					
+//			} else {
+//				for (TableDAO tableDao : listDAO) {
+//					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
+//					for (String strFilter : strArryFilters) {
+//						if(tableDao.getName().matches(strFilter)) {
+//							tmpShowTables.add(tableDao);
+//						}
+//					}
+//				}
+//			}
+//			
+//			String excludeFilter = userDB.getTable_filter_exclude();
+//			if(!"".equals(excludeFilter)) {
+//				for (TableDAO tableDao : tmpShowTables) {
+//					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
+//					for (String strFilter : strArryFilters) {
+//						if(tableDao.getName().matches(strFilter)) {
+//							tmpShowTables.remove(tableDao);
+//						}
+//					}
+//				}
+//			}
+//			
+//			return tmpShowTables;
+//		}
 		
 		return listDAO;
 	}

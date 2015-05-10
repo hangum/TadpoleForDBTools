@@ -25,12 +25,10 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.DBConnectTablesFilterDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.ExtensionBrowserURLDialog;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog.dao.DBConnectionTableFilterDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
-import com.hangum.tadpole.sql.dao.system.ExternalBrowserInfoDAO;
 
 /**
  * hive Others connection info
@@ -72,21 +70,21 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_1);
 		
-		Button btnTableFilters = new Button(this, SWT.NONE);
-		btnTableFilters.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-				if(Dialog.OK == dialog.open()) {
-					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
-					
-					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
-					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
-					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
-				}
-			}
-		});
-		btnTableFilters.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_3);
+//		Button btnTableFilters = new Button(this, SWT.NONE);
+//		btnTableFilters.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				DBConnectTablesFilterDialog dialog = new DBConnectTablesFilterDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+//				if(Dialog.OK == dialog.open()) {
+//					DBConnectionTableFilterDAO tableFilterDao = dialog.getTableFilterDAO();
+//					
+//					otherConnectionDAO.setTableFilter(tableFilterDao.isEnable());
+//					otherConnectionDAO.setStrTableFilterInclude(tableFilterDao.getIncludeFilter());
+//					otherConnectionDAO.setStrTableFilterExclude(tableFilterDao.getExcludeFilter());
+//				}
+//			}
+//		});
+//		btnTableFilters.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_3);
 		
 		btnExternalBrowser = new Button(this, SWT.NONE);
 		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {
@@ -149,11 +147,11 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		if(getSelectDB() == DBDefine.TAJO_DEFAULT) {
 			extBrowserDAO.setName("TAJO");
 			extBrowserDAO.setUrl(String.format("http://%s:26080/", getStrIp()));
-			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		} else {
 			extBrowserDAO.setName("Hive");
 			extBrowserDAO.setUrl(String.format("http://%s:9999/hwi", getStrIp()));
-			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		}
 		listBrowser.add(extBrowserDAO);
 		
@@ -161,21 +159,21 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		extBrowserDAO = new ExternalBrowserInfoDAO();
 		extBrowserDAO.setName("Name Node");
 		extBrowserDAO.setUrl(String.format("http://%s:50070/", getStrIp()));
-		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		listBrowser.add(extBrowserDAO);
 		
 		// job tracker 
 		extBrowserDAO = new ExternalBrowserInfoDAO();
 		extBrowserDAO.setName("Job Tracker");
 		extBrowserDAO.setUrl(String.format("http://%s:50030/", getStrIp()));
-		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		listBrowser.add(extBrowserDAO);
 		
 		// task tracker 
 		extBrowserDAO = new ExternalBrowserInfoDAO();
 		extBrowserDAO.setName("Task Tracker");
 		extBrowserDAO.setUrl(String.format("http://%s:50060/", getStrIp()));
-		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.toString());
+		extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
 		listBrowser.add(extBrowserDAO);
 		
 		return listBrowser;

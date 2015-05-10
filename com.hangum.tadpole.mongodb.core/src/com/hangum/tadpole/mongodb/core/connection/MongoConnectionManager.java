@@ -19,8 +19,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.Mongo;
@@ -148,6 +148,6 @@ public class MongoConnectionManager {
 	 * @return
 	 */
 	private static String getKey(UserDBDAO userDB) {
-		return userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd();
+		return userDB.getDbms_type()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd();
 	}
 }

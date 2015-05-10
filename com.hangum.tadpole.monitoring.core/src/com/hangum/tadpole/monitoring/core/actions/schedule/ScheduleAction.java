@@ -58,8 +58,8 @@ public class ScheduleAction extends Action implements ISelectionListener, IWorkb
 	@Override
 	public void run() {
 		try {
-			ScheduleEditorInput executedSQL = new ScheduleEditorInput();
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(executedSQL, ScheduleEditor.ID);
+			ScheduleEditorInput scheduleEditor = new ScheduleEditorInput();
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(scheduleEditor, ScheduleEditor.ID);
 		} catch (PartInitException e) {
 			logger.error("Schedule editor", e); //$NON-NLS-1$
 			

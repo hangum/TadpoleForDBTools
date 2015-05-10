@@ -21,12 +21,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
-import com.hangum.tadpole.sql.dao.ManagerListDTO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -46,7 +46,7 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 		setId(ID);
 		setText(Messages.ConnectDatabaseAction_1);
 		setToolTipText(Messages.ConnectDatabaseAction_2);
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/connect.png"));
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/add_database.png"));
 		
 		window.getSelectionService().addPostSelectionListener(this);
 	}

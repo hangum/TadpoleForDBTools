@@ -45,14 +45,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO;
+import com.hangum.tadpole.engine.query.dao.system.ScheduleResultDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Schedule;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.dialogs.schedule.AddScheduleDialog;
-import com.hangum.tadpole.monitoring.core.manager.ScheduleManager;
-import com.hangum.tadpole.sql.dao.system.ScheduleMainDAO;
-import com.hangum.tadpole.sql.dao.system.ScheduleResultDAO;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.query.TadpoleSystem_Schedule;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
 
 /**
  * Tadpole Monitoring editor

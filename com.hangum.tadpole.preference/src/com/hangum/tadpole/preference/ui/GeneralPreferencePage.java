@@ -13,7 +13,6 @@ package com.hangum.tadpole.preference.ui;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -31,7 +30,6 @@ import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
 
 /**
  * general preference
@@ -39,7 +37,7 @@ import com.hangum.tadpole.sql.query.TadpoleSystem_UserInfoData;
  * @author hangum
  *
  */
-public class GeneralPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(GeneralPreferencePage.class);
 	
 	private Text textSessionTime;
@@ -176,11 +174,6 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		return super.performOk();
 	}
 	
-	private void updateInfo(String key, String value) throws Exception {
-		TadpoleSystem_UserInfoData.updateValue(key, value);
-		SessionManager.setUserInfo(key, value);
-	}
-	
 	@Override
 	public boolean performCancel() {
 		initDefaultValue();
@@ -210,7 +203,7 @@ public class GeneralPreferencePage extends PreferencePage implements IWorkbenchP
 		textHomePage.setText(GetPreferenceGeneral.getValue(PreferenceDefine.DEFAULT_HOME_PAGE, PreferenceDefine.DEFAULT_HOME_PAGE_VALUE)); //$NON-NLS-1$
 		
 		String use = GetPreferenceGeneral.getValue(PreferenceDefine.DEFAULT_HOME_PAGE_USE, PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE);//GetPreferenceGeneral.getDefaultHomePageUse();
-		if("true".equals(use)) {
+		if(Boolean.parseBoolean(use)) {
 			btnCheckButtonHomepage.setSelection(true);
 		} else {
 			btnCheckButtonHomepage.setSelection(false);

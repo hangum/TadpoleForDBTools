@@ -23,7 +23,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * DBCP connection manager
@@ -88,7 +88,7 @@ public class ConnectionPoolManager {
 	 * @return
 	 */
 	private static String getKey(final UserDBDAO userDB) {
-		return userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
+		return userDB.getSeq() + userDB.getDbms_type()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
 	}
 
 }

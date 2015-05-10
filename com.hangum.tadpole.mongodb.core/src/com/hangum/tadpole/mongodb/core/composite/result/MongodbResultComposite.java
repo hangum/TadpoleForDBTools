@@ -61,6 +61,16 @@ import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.tables.DefaultViewerSorter;
+import com.hangum.tadpole.engine.sql.util.tables.SQLHistoryLabelProvider;
+import com.hangum.tadpole.engine.sql.util.tables.SQLHistorySorter;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultContentProvider;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultLabelProvider;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
+import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
+import com.hangum.tadpole.engine.sql.util.tables.TreeUtil;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
@@ -74,16 +84,6 @@ import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
-import com.hangum.tadpole.sql.util.tables.DefaultViewerSorter;
-import com.hangum.tadpole.sql.util.tables.SQLHistoryLabelProvider;
-import com.hangum.tadpole.sql.util.tables.SQLHistorySorter;
-import com.hangum.tadpole.sql.util.tables.SQLResultContentProvider;
-import com.hangum.tadpole.sql.util.tables.SQLResultFilter;
-import com.hangum.tadpole.sql.util.tables.SQLResultLabelProvider;
-import com.hangum.tadpole.sql.util.tables.SQLResultSorter;
-import com.hangum.tadpole.sql.util.tables.TableUtil;
-import com.hangum.tadpole.sql.util.tables.TreeUtil;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -581,7 +581,7 @@ public class MongodbResultComposite extends Composite {
 							setResult();
 						} else {
 							sbConsoleErrorMsg.append(jobEvent.getResult().getMessage());
-							appendMessage(jobEvent.getResult().getMessage());
+							appendMessage(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
 					}
 				});	// end display.asyncExec				
@@ -1049,11 +1049,12 @@ public class MongodbResultComposite extends Composite {
 	/**
 	 * append tadpole message 
 	 * 
+	 * @param throwable
 	 * @param msg
 	 */
-	public void appendMessage(String msg) {
+	public void appendMessage(Throwable throwable, String msg) {
 		tabFolderMongoDB.setSelection(2);
-		listMessage.add(new TadpoleMessageDAO(new Date(), msg));
+		listMessage.add(new TadpoleMessageDAO(new Date(), msg, throwable));
 		tableViewerMessage.refresh();
 	}
 

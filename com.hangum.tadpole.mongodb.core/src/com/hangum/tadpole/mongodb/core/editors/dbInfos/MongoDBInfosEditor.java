@@ -26,6 +26,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.CollectionInformationComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.InstanceInformationComposite;
@@ -33,7 +34,6 @@ import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.LockComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.ReplicaSetComposite;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites.ShardingComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 import com.mongodb.CommandResult;
 
 /**
