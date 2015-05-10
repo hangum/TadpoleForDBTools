@@ -37,7 +37,7 @@ import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlD
  * @author hangum
  *
  */
-public class UserDBDAO {	
+public class UserDBDAO implements Cloneable {	
 	
 	// TadpoleUserDbRoleDAO start ======================================
 	protected int role_seq;
@@ -681,6 +681,34 @@ public class UserDBDAO {
 	public void setDbAccessCtl(DBAccessControlDAO dbAccessCtl) {
 		this.dbAccessCtl = dbAccessCtl;
 	}
-
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "UserDBDAO [role_seq=" + role_seq + ", role_id=" + role_id + ", seq=" + seq + ", user_seq=" + user_seq
+				+ ", group_name=" + group_name + ", operation_type=" + operation_type + ", dbms_type=" + dbms_type
+				+ ", url=" + url + ", url_user_parameter=" + url_user_parameter + ", listChildren=" + listChildren
+				+ ", db=" + db + ", display_name=" + display_name + ", host=" + host + ", port=" + port + ", locale="
+				+ locale + ", passwd=" + passwd + ", users=" + users + ", create_time=" + create_time + ", delYn="
+				+ delYn + ", ext1=" + ext1 + ", ext2=" + ext2 + ", ext3=" + ext3 + ", ext4=" + ext4 + ", ext5=" + ext5
+				+ ", ext6=" + ext6 + ", ext7=" + ext7 + ", ext8=" + ext8 + ", ext9=" + ext9 + ", ext10=" + ext10
+				+ ", is_profile=" + is_profile + ", profile_select_mill=" + profile_select_mill
+				+ ", is_readOnlyConnect=" + is_readOnlyConnect + ", is_autocommit=" + is_autocommit
+				+ ", is_showtables=" + is_showtables + ", is_external_browser=" + is_external_browser
+				+ ", listExternalBrowserdao=" + listExternalBrowserdao + ", question_dml=" + question_dml + ", parent="
+				+ parent + ", listUserDBErd=" + listUserDBErd + ", version=" + version + ", is_visible=" + is_visible
+				+ ", is_summary_report=" + is_summary_report + ", is_monitoring=" + is_monitoring + ", is_lock="
+				+ is_lock + ", dbAccessCtl=" + dbAccessCtl + "]";
+	}
+
 }

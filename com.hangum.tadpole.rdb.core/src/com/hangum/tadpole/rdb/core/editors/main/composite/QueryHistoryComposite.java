@@ -99,7 +99,7 @@ public class QueryHistoryComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
-				if(gridItems != null) {
+				if(gridItems.length != 0) {
 					appendText(Utils.convHtmlToLine(gridItems[0].getText(2)));
 				} else {
 					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
@@ -113,7 +113,7 @@ public class QueryHistoryComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
-				if(gridItems != null) {
+				if(gridItems.length != 0) {
 					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getShell(), Messages.MainEditor_11, 
 							gridItems[0].getText(1), Utils.convHtmlToLine(gridItems[0].getText(2)) );
 					dlg.open();

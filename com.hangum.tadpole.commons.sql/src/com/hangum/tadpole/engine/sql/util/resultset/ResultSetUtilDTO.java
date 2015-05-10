@@ -40,6 +40,11 @@ public class ResultSetUtilDTO {
 	private Map<Integer, String> columnName = new HashMap<Integer, String>();
 	
 	/** 
+	 * column label 이름. <columnIndex, name>
+	 */
+	private Map<Integer, String> columnLabelName = new HashMap<Integer, String>();
+	
+	/** 
 	 * column of table name <columnIndex, name>
 	 */
 	private Map<Integer, String> columnTableName = new HashMap<Integer, String>();
@@ -105,7 +110,8 @@ public class ResultSetUtilDTO {
 		
 		if(rs != null) {
 			columnTableName = ResultSetUtils.getColumnTableName(userDB, isShowRownum, rs);
-			columnName = ResultSetUtils.getColumnName(userDB, columnTableName, isShowRownum, rs);
+			columnName 		= ResultSetUtils.getColumnName(userDB, columnTableName, isShowRownum, rs);
+			columnLabelName = ResultSetUtils.getColumnLabelName(userDB, columnTableName, isShowRownum, rs);
 			columnType = ResultSetUtils.getColumnType(isShowRownum, rs.getMetaData());
 			
 			if(isShowRownum && (columnName.size() == 1)) {
@@ -213,5 +219,19 @@ public class ResultSetUtilDTO {
 	public void setColumnTableName(Map<Integer, String> columnTableName) {
 		this.columnTableName = columnTableName;
 	}
-	
+
+	/**
+	 * @return the columnLabelName
+	 */
+	public Map<Integer, String> getColumnLabelName() {
+		return columnLabelName;
+	}
+
+	/**
+	 * @param columnLabelName the columnLabelName to set
+	 */
+	public void setColumnLabelName(Map<Integer, String> columnLabelName) {
+		this.columnLabelName = columnLabelName;
+	}
+
 }

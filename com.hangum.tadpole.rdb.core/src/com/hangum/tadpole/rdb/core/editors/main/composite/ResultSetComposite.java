@@ -393,11 +393,14 @@ public class ResultSetComposite extends Composite {
 							logger.error("Clob column echeck", e); //$NON-NLS-1$
 						}
 					}else{
-						String strText = columnObject.toString();
+						String strText = "";
 						
 						// if select value is null can 
 						if(columnObject == null) strText = "null";
-						else strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						else {
+							strText = columnObject.toString();
+							strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						}
 						
 						appendTextAtPosition(strText);
 					}

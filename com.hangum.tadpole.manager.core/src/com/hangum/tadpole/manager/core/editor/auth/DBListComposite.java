@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -409,7 +410,20 @@ public class DBListComposite extends Composite {
 			
 			final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 			if(dialog.open() == Dialog.OK) {
-				tvDBList.refresh(dialog.getDTO());
+				UserDBDAO modifyUserDB = dialog.getDTO();
+
+				// 마음에 안들어................. -----------------------------------;;;
+				for (ManagerListDTO managerListDTO : listUserDBs) {
+					List<UserDBDAO> listDBs = managerListDTO.getManagerList();
+					if(listDBs.contains(userDB)) {
+						listDBs.remove(userDB);
+						listDBs.add(modifyUserDB);
+						break;
+					}
+				}
+			
+				tvDBList.refresh();
+				tvDBList.setSelection(new StructuredSelection(modifyUserDB), true);
 			}
 		}
 	}
