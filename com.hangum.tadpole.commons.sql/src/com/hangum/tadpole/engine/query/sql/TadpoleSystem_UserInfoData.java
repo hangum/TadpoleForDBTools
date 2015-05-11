@@ -185,7 +185,11 @@ public class TadpoleSystem_UserInfoData {
 	 * @param resultSelect
 	 * @param sqlFormatIn
 	 */
-	public static void updateSQLFormatterInfoData(String tabSize, String sqlFormatDecode, String sqlFormatIn) throws Exception {
+	public static void updateSQLFormatterInfoData(String tabSize, String sqlFormatDecode, String sqlFormatIn,
+			String txtNewLineBefeoreAndOr, String txtNewLineBefeoreComma, String  txtRemoveEmptyLine,
+			String txtWordbreak, String strTextWidth
+			
+			) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB()); 
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
@@ -200,6 +204,26 @@ public class TadpoleSystem_UserInfoData {
 		
 		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
 		userInfoData.setValue0(sqlFormatIn);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE);
+		userInfoData.setValue0(txtNewLineBefeoreAndOr);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE);
+		userInfoData.setValue0(txtNewLineBefeoreComma);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE);
+		userInfoData.setValue0(txtRemoveEmptyLine);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE);
+		userInfoData.setValue0(txtWordbreak);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE);
+		userInfoData.setValue0(strTextWidth);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
 	

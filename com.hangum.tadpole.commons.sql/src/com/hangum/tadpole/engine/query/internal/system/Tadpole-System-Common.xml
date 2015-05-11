@@ -329,7 +329,7 @@
  registered database
   -->
  <select id="getRegisteredDB" resultClass="java.util.HashMap">
- 	SELECT dbms_type, count(*) tot
+ 	SELECT dbms_type as dbms_type, count(*) tot
 	FROM tadpole_db a,
 		tadpole_user b
 	WHERE 
@@ -410,23 +410,9 @@
 	ORDER BY group_name
 </select>
 
-<!--  UserDB의 리스트 -->
-<select id="userDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
-<![CDATA[
-	select a.*, b.seq role_seq, b.ROLE_ID role_id, c.*
-	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
-	where a.seq = b.db_seq
-		and a.seq = c.seq
-		and b.user_seq = #user_seq#
-	    and a.delyn = 'NO'
-	    and b.delyn = 'NO'
-	    AND a.is_visible = 'YES'
-	    AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
-]]>	
-</select>
-
 <select id="getCreateUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
-	select a.*, b.ROLE_ID role_id, c.*
+	select a.*, b.ROLE_ID role_id, 
+			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
 	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
 	where a.seq = b.db_seq
 		and a.seq = c.seq
@@ -566,7 +552,7 @@
 	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #terms_of_use_starttime#, #terms_of_use_endtime#);
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
-		SELECT *, b.email, b.name
+		SELECT a.*, b.email, b.name
 		FROM tadpole_user_db_role  a,
 			tadpole_user b 
 		WHERE a.user_seq 	= #user_seq#  
