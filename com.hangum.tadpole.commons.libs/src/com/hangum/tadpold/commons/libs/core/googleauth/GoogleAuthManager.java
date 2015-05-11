@@ -69,10 +69,12 @@ public class GoogleAuthManager {
 	 */
 	public boolean isValidate(String secret, int code) {
 		GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
-		googleAuthenticator.setWindowSize(5);  //should give 5 * 30 seconds of grace...
-
+//		googleAuthenticator.setWindowSize(5);  //should give 5 * 30 seconds of grace...
+		
+		
         boolean isCodeValid = googleAuthenticator.authorize(secret, code);
         return isCodeValid;
 	}
+	
 	
 }
