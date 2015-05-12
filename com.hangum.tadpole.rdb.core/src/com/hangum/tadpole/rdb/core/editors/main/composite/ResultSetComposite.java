@@ -563,9 +563,13 @@ public class ResultSetComposite extends Composite {
 		final Shell runShell = textFilter.getShell();
 		
 		if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
-			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || 
-					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+			
+			final DBDefine selectDBDefine = getUserDB().getDBDefine();
+			if(!(selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
+					selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
+					selectDBDefine == DBDefine.TAJO_DEFAULT 	||
+					// not support this java.sql.ParameterMetaData 
+					selectDBDefine == DBDefine.CUBRID_DEFAULT)
 			) {
 				try {
 					ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
