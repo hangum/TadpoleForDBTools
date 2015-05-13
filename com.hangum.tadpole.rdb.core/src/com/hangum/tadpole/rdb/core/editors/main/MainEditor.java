@@ -498,8 +498,9 @@ public class MainEditor extends EditorExtension {
 			ext = EditorDefine.EXT_PGSQL;
 		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
 			ext = EditorDefine.EXT_SQLite;
+		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_MSSQL;
 		}
-		
 		return ext;
 	}
 	
