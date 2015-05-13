@@ -136,11 +136,6 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 		var doc = new EditSession(varInitText);
 		doc.setUndoManager(new UndoManager());
 		
-		//
-		
-		
-		//
-		
 		doc.setMode(varMode);
 		doc.on('change', function() {
 			if(!isEdited) {
@@ -153,10 +148,10 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 			}
 		});
 		
-//		editor.session.$mode.$highlightRules.setKeywords({"keyword": "foo|bar|baz"})
+//		doc.$mode.$highlightRules.setKeywords({"keyword": "foo|bar|baz"})
 //		// force rehighlight whole document
-//		editor.session.bgTokenizer.start(0)
-		
+//		doc.bgTokenizer.start(0)
+			
 		editor.setSession(doc);
 		editor.focus();
 	} catch(e) {
