@@ -5,6 +5,9 @@ var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var XmlHighlightRules = function(normalize) {
+
+    var tagRegex = "[a-zA-Z][-_a-zA-Z0-9]*";
+
     this.$rules = {
         start : [
             {token : "string.cdata.xml", regex : "<\\!\\[CDATA\\[", next : "cdata"},
@@ -14,7 +17,7 @@ var XmlHighlightRules = function(normalize) {
             },
             {
                 token : ["punctuation.instruction.xml", "keyword.instruction.xml"],
-                regex : "(<\\?)([-_a-zA-Z0-9]+)", next : "processing_instruction",
+                regex : "(<\\?)(" + tagRegex + ")", next : "processing_instruction",
             },
             {token : "comment.xml", regex : "<\\!--", next : "comment"},
             {
@@ -30,7 +33,7 @@ var XmlHighlightRules = function(normalize) {
 
         xml_decl : [{
             token : "entity.other.attribute-name.decl-attribute-name.xml",
-            regex : "(?:[-_a-zA-Z0-9]+:)?[-_a-zA-Z0-9]+"
+            regex : "(?:" + tagRegex + ":)?" + tagRegex + ""
         }, {
             token : "keyword.operator.decl-attribute-equals.xml",
             regex : "="
@@ -66,7 +69,7 @@ var XmlHighlightRules = function(normalize) {
             next: "pop"
         }, {
             token : ["punctuation.markup-decl.xml", "keyword.markup-decl.xml"],
-            regex : "(<\\!)([-_a-zA-Z0-9]+)",
+            regex : "(<\\!)(" + tagRegex + ")",
             push : [{
                 token : "text",
                 regex : "\\s+"
@@ -102,7 +105,7 @@ var XmlHighlightRules = function(normalize) {
 
         tag : [{
             token : ["meta.tag.punctuation.tag-open.xml", "meta.tag.punctuation.end-tag-open.xml", "meta.tag.tag-name.xml"],
-            regex : "(?:(<)|(</))((?:[-_a-zA-Z0-9]+:)?[-_a-zA-Z0-9]+)",
+            regex : "(?:(<)|(</))((?:" + tagRegex + ":)?" + tagRegex + ")",
             next: [
                 {include : "attributes"},
                 {token : "meta.tag.punctuation.tag-close.xml", regex : "/?>", next : "start"}
@@ -133,7 +136,7 @@ var XmlHighlightRules = function(normalize) {
 
         attributes: [{
             token : "entity.other.attribute-name.xml",
-            regex : "(?:[-_a-zA-Z0-9]+:)?[-_a-zA-Z0-9]+"
+            regex : "(?:" + tagRegex + ":)?" + tagRegex + ""
         }, {
             token : "keyword.operator.attribute-equals.xml",
             regex : "="
@@ -208,12 +211,13 @@ oop.inherits(XmlHighlightRules, TextHighlightRules);
 exports.XmlHighlightRules = XmlHighlightRules;
 });
 
-ace.define("ace/mode/behaviour/xml",["require","exports","module","ace/lib/oop","ace/mode/behaviour","ace/token_iterator"], function(require, exports, module) {
+ace.define("ace/mode/behaviour/xml",["require","exports","module","ace/lib/oop","ace/mode/behaviour","ace/token_iterator","ace/lib/lang"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../../lib/oop");
 var Behaviour = require("../behaviour").Behaviour;
 var TokenIterator = require("../../token_iterator").TokenIterator;
+var lang = require("../../lib/lang");
 
 function is(token, type) {
     return token.type.lastIndexOf(type + ".xml") > -1;
@@ -311,29 +315,58 @@ var XmlBehaviour = function () {
                  return;
 
             return {
-               text: '>' + '</' + element + '>',
+               text: ">" + "</" + element + ">",
                selection: [1, 1]
             };
         }
     });
 
-    this.add('autoindent', 'insertion', function (state, action, editor, session, text) {
+    this.add("autoindent", "insertion", function (state, action, editor, session, text) {
         if (text == "\n") {
             var cursor = editor.getCursorPosition();
             var line = session.getLine(cursor.row);
-            var rightChars = line.substring(cursor.column, cursor.column + 2);
-            if (rightChars == '</') {
-                var next_indent = this.$getIndent(line);
-                var indent = next_indent + session.getTabString();
+            var iterator = new TokenIterator(session, cursor.row, cursor.column);
+            var token = iterator.getCurrentToken();
 
-                return {
-                    text: '\n' + indent + '\n' + next_indent,
-                    selection: [1, indent.length, 1, indent.length]
-                };
+            if (token && token.type.indexOf("tag-close") !== -1) {
+                if (token.value == "/>")
+                    return;
+                while (token && token.type.indexOf("tag-name") === -1) {
+                    token = iterator.stepBackward();
+                }
+
+                if (!token) {
+                    return;
+                }
+
+                var tag = token.value;
+                var row = iterator.getCurrentTokenRow();
+                token = iterator.stepBackward();
+                if (!token || token.type.indexOf("end-tag") !== -1) {
+                    return;
+                }
+
+                if (this.voidElements && !this.voidElements[tag]) {
+                    var nextToken = session.getTokenAt(cursor.row, cursor.column+1);
+                    var line = session.getLine(row);
+                    var nextIndent = this.$getIndent(line);
+                    var indent = nextIndent + session.getTabString();
+
+                    if (nextToken && nextToken.value === "</") {
+                        return {
+                            text: "\n" + indent + "\n" + nextIndent,
+                            selection: [1, indent.length, 1, indent.length]
+                        };
+                    } else {
+                        return {
+                            text: "\n" + indent
+                        };
+                    }
+                }
             }
         }
     });
-    
+
 };
 
 oop.inherits(XmlBehaviour, Behaviour);
@@ -497,9 +530,6 @@ function is(token, type) {
             if (!tag || top.tagName == tag.tagName) {
                 return stack.pop();
             }
-            else if (this.optionalEndTags.hasOwnProperty(tag.tagName)) {
-                return;
-            }
             else if (this.optionalEndTags.hasOwnProperty(top.tagName)) {
                 stack.pop();
                 continue;
@@ -525,6 +555,8 @@ function is(token, type) {
                 row: row,
                 column: firstTag.start.column + firstTag.tagName.length + 2
             };
+            if (firstTag.start.row == firstTag.end.row)
+                start.column = firstTag.end.column;
             while (tag = this._readTagForward(iterator)) {
                 if (tag.selfClosing) {
                     if (!stack.length) {
@@ -566,6 +598,8 @@ function is(token, type) {
                     this._pop(stack, tag);
                     if (stack.length == 0) {
                         tag.start.column += tag.tagName.length + 2;
+                        if (tag.start.row == tag.end.row && tag.start.column < tag.end.column)
+                            tag.start.column = tag.end.column;
                         return Range.fromPoints(tag.start, end);
                     }
                 }
@@ -581,7 +615,7 @@ function is(token, type) {
 
 });
 
-ace.define("ace/mode/xml",["require","exports","module","ace/lib/oop","ace/lib/lang","ace/mode/text","ace/mode/xml_highlight_rules","ace/mode/behaviour/xml","ace/mode/folding/xml"], function(require, exports, module) {
+ace.define("ace/mode/xml",["require","exports","module","ace/lib/oop","ace/lib/lang","ace/mode/text","ace/mode/xml_highlight_rules","ace/mode/behaviour/xml","ace/mode/folding/xml","ace/worker/worker_client"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
@@ -590,11 +624,12 @@ var TextMode = require("./text").Mode;
 var XmlHighlightRules = require("./xml_highlight_rules").XmlHighlightRules;
 var XmlBehaviour = require("./behaviour/xml").XmlBehaviour;
 var XmlFoldMode = require("./folding/xml").FoldMode;
+var WorkerClient = require("../worker/worker_client").WorkerClient;
 
 var Mode = function() {
-    this.HighlightRules = XmlHighlightRules;
-    this.$behaviour = new XmlBehaviour();
-    this.foldingRules = new XmlFoldMode();
+   this.HighlightRules = XmlHighlightRules;
+   this.$behaviour = new XmlBehaviour();
+   this.foldingRules = new XmlFoldMode();
 };
 
 oop.inherits(Mode, TextMode);
@@ -605,6 +640,21 @@ oop.inherits(Mode, TextMode);
 
     this.blockComment = {start: "<!--", end: "-->"};
 
+     this.createWorker = function(session) {
+        var worker = new WorkerClient(["ace"], "ace/mode/xml_worker", "Worker");
+        worker.attachToDocument(session.getDocument());
+
+        worker.on("error", function(e) {
+            session.setAnnotations(e.data);
+        });
+
+        worker.on("terminate", function() {
+            session.clearAnnotations();
+        });
+
+        return worker;
+    };
+    
     this.$id = "ace/mode/xml";
 }).call(Mode.prototype);
 

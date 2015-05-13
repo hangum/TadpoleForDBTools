@@ -5,21 +5,27 @@ var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var DocCommentHighlightRules = function() {
-
     this.$rules = {
         "start" : [ {
             token : "comment.doc.tag",
             regex : "@[\\w\\d_]+" // TODO: fix email addresses
-        }, {
-            token : "comment.doc.tag",
-            regex : "\\bTODO\\b"
-        }, {
-            defaultToken : "comment.doc"
+        }, 
+        DocCommentHighlightRules.getTagRule(),
+        {
+            defaultToken : "comment.doc",
+            caseInsensitive: true
         }]
     };
 };
 
 oop.inherits(DocCommentHighlightRules, TextHighlightRules);
+
+DocCommentHighlightRules.getTagRule = function(start) {
+    return {
+        token : "comment.doc.tag.storage.type",
+        regex : "\\b(?:TODO|FIXME|XXX|HACK)\\b"
+    };
+}
 
 DocCommentHighlightRules.getStartRule = function(start) {
     return {
@@ -138,11 +144,11 @@ var TextMode = require("../mode/text").Mode;
 var MysqlHighlightRules = require("./mysql_highlight_rules").MysqlHighlightRules;
 var Range = require("../range").Range;
 //add filding 
-var CStyleFoldMode = require("./folding/cstyle").FoldMode;
+var SQLFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = MysqlHighlightRules;
-    this.foldingRules = new CStyleFoldMode();
+    this.foldingRules = new SQLFoldMode();
 };
 oop.inherits(Mode, TextMode);
 
@@ -179,9 +185,6 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 
 	(function() {
 
-//	    this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
-//	    this.foldingStopMarker  = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
-		
 		this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)|^(\s)*(select|insert|update|delete|create|alter|drop)( .*$| ?[\r\n]?)+/i;
 
 	    this.getFoldWidgetRange = function(session, foldStyle, row, forceMultiline) {
@@ -212,15 +215,6 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 	        if (foldStyle === "markbegin")
 	            return;
 
-//	        var match = line.match(this.foldingStopMarker);
-//	        if (match) {
-//	            var i = match.index + match[0].length;
-//
-//	            if (match[1])
-//	                return this.closingBracketBlock(session, match[1], row, i);
-//
-//	            return session.getCommentFoldRange(row, i, -1);
-//	        }
 	    };
 	    
 	    this.getSectionRange = function(session, row) {

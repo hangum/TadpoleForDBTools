@@ -462,9 +462,6 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 	oop.inherits(FoldMode, BaseFoldMode);
 
 	(function() {
-
-//	    this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
-//	    this.foldingStopMarker  = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
 		
 		this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)|^(\s)*(select|insert|update|delete|create|alter|drop)( .*$| ?[\r\n]?)+/i;
 
@@ -482,7 +479,6 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 	            
 	            var range = session.getCommentFoldRange(row, i + match[0].length, 1);
 	            
-	            
 	            if (range && !range.isMultiLine()) {
 	                if (forceMultiline) {
 	                    range = this.getSectionRange(session, row);
@@ -495,16 +491,6 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 
 	        if (foldStyle === "markbegin")
 	            return;
-
-//	        var match = line.match(this.foldingStopMarker);
-//	        if (match) {
-//	            var i = match.index + match[0].length;
-//
-//	            if (match[1])
-//	                return this.closingBracketBlock(session, match[1], row, i);
-//
-//	            return session.getCommentFoldRange(row, i, -1);
-//	        }
 	    };
 	    
 	    this.getSectionRange = function(session, row) {
