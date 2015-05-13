@@ -1,7 +1,7 @@
 {
 	"name": "Tadpole DB Hub (SQL Client)",
 	"description": "DB managing tools(Amazon RDS, Apache Hive, Apache Tajo, CUBRID, MariaDB, MySQL, Oracle, SQLite, MSSQL, PostgreSQL and MongoDB)",
-	"version": "1.3.8.821",
+	"version": "1.6.1.b3",
 	"manifest_version":2,
 	"icons": {
 		"16": "icon_16.png",
